@@ -161,11 +161,11 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 
 	// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 	if (!navit_handle_button(this_->nav, pressed, button, p, NULL)) {
-		dbg(lvl_debug,"navit has handled button\n");
+		dbg(lvl_debug,"navit has handled button");
 		return;
 	}
 
-	dbg(lvl_debug,"enter %d %d\n", pressed, button);
+	dbg(lvl_debug,"enter %d %d", pressed, button);
 	if (this_->signal_on_map_click) {
 		gui_qml_dbus_signal(this_, p);
 		return;
@@ -278,7 +278,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 		if (xid.length()>0) {
 			_mainWindow->embedInto(xid.toULong(&ok,0));
 		}else{
-			dbg(lvl_error, "\nFATAL: Environment variable NAVIT_XID not set.\n"
+			dbg(lvl_error, "FATAL: Environment variable NAVIT_XID not set."
 			       "       Please set NAVIT_XID to the window ID of the window to embed into.\n");
 			exit(1);
 		}
@@ -322,7 +322,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 
 	QString mainQml = QString(this_->source)+"/"+this_->skin+"/main.qml";
 	if (!QFile(mainQml).exists()){
-		dbg(lvl_error, "FATAL: QML file %s not found. Navit is not installed correctly.\n", mainQml.toAscii().constData());
+		dbg(lvl_error, "FATAL: QML file %s not found. Navit is not installed correctly.", mainQml.toAscii().constData());
 		exit(1);
 	}
 	this_->guiWidget->setSource(QUrl::fromLocalFile(mainQml));
@@ -380,7 +380,7 @@ gui_qml_set_attr(struct gui_priv *this_, struct attr *attr)
 		this_->radius=attr->u.num;
 		return 1;
 	default:
-		dbg(lvl_error,"unknown attr: %s\n",attr_to_name(attr->type));
+		dbg(lvl_error,"unknown attr: %s",attr_to_name(attr->type));
 		return 1;
 	}
 }

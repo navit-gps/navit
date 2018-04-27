@@ -65,7 +65,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 {
 	if (!paintev) {
 #ifndef QT_QPAINTER_NO_WIDGET
-		dbg(lvl_debug,"update %d,%d %d x %d\n", r->x(), r->y(), r->width(), r->height());
+		dbg(lvl_debug,"update %d,%d %d x %d", r->x(), r->y(), r->width(), r->height());
 		if (r->x() <= -r->width())
 			return;
 		if (r->y() <= -r->height())
@@ -74,7 +74,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 			return;
 		if (r->y() > gr->widget->pixmap->height())
 			return;
-		dbg(lvl_debug,"update valid %d,%d %dx%d\n", r->x(), r->y(), r->width(), r->height());
+		dbg(lvl_debug,"update valid %d,%d %dx%d", r->x(), r->y(), r->width(), r->height());
 		gr->widget->update(*r);
 #endif
 		return;
@@ -359,7 +359,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 //##############################################################################################################
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
+	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
@@ -496,7 +496,7 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 //##############################################################################################################
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	dbg(lvl_debug,"mode for %p %d\n", gr, mode);
+	dbg(lvl_debug,"mode for %p %d", gr, mode);
 	QRect r;
 	if (mode == draw_mode_begin) {
 		if (gr->widget->pixmap->paintingActive()) {
@@ -574,7 +574,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 	bool ok;
 
 	if (!strcmp(type, "resize")) {
-		dbg(lvl_debug,"resize %d %d\n",this_->w,this_->h);
+		dbg(lvl_debug,"resize %d %d",this_->w,this_->h);
 		QSize size(this_->w,this_->h);
 		this_->widget->do_resize(size);
 	}
@@ -743,14 +743,14 @@ event_qt_main_loop_run(void)
 
 static void event_qt_main_loop_quit(void)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	exit(0);
 }
 
 static struct event_watch *
 event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 {
-	dbg(lvl_debug,"enter fd=%d\n",(int)(long)fd);
+	dbg(lvl_debug,"enter fd=%d",(int)(long)fd);
 	struct event_watch *ret=g_new0(struct event_watch, 1);
 	ret->fd=fd;
 	ret->cb=cb;
@@ -790,21 +790,21 @@ event_qt_remove_timeout(struct event_timeout *ev)
 static struct event_idle *
 event_qt_add_idle(int priority, struct callback *cb)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	return (struct event_idle *)event_qt_add_timeout(0, 1, cb);
 }
 
 static void
 event_qt_remove_idle(struct event_idle *ev)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	event_qt_remove_timeout((struct event_timeout *) ev);
 }
 
 static void
 event_qt_call_callback(struct callback_list *cb)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 }
 
 static struct event_methods event_qt_methods = {
@@ -825,7 +825,7 @@ struct event_priv {
 struct event_priv *
 event_qt_new(struct event_methods *meth)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	*meth=event_qt_methods;
 	return NULL;
 }
@@ -842,7 +842,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct attr *attr;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 #ifdef QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
@@ -856,7 +856,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #ifdef QT_QPAINTER_USE_FREETYPE
 	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_category_font("freetype");
 	if (!font_freetype_new) {
-		dbg(lvl_error,"no freetype\n");
+		dbg(lvl_error,"no freetype");
 		return NULL;
 	}
 #endif
@@ -909,7 +909,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	else
 		ret->window_title=g_strdup("Navit");
 
-	dbg(lvl_debug,"return\n");
+	dbg(lvl_debug,"return");
 	return ret;
 }
 

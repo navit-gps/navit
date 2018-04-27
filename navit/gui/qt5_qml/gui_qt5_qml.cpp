@@ -102,14 +102,14 @@ gui_qt5_qml_button(void* data, int pressed, int button, struct point* p)
 
     /* check if navit wants to handle this */
     if (!navit_handle_button(gui_priv->nav, pressed, button, p, NULL)) {
-        dbg(lvl_debug, "navit has handled button\n");
+        dbg(lvl_debug, "navit has handled button");
         return;
     }
-    dbg(lvl_debug, "enter %d %d\n", pressed, button);
+    dbg(lvl_debug, "enter %d %d", pressed, button);
 
     /* check if user requested menu */
     if (button == 1 && gui_priv->menu_on_map_click) {
-        dbg(lvl_debug, "navit wants us to enter menu\n");
+        dbg(lvl_debug, "navit wants us to enter menu");
         /*TODO: want to emit a signal somewhere? */
         gui_priv->backend->showMenu(p);
     }
@@ -119,7 +119,7 @@ static void
 gui_qt5_qml_motion(void* data, struct point* p)
 {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
-    dbg(lvl_debug, "enter (%d, %d)\n", p->x, p->y);
+    dbg(lvl_debug, "enter (%d, %d)", p->x, p->y);
     /* forward this to navit  */
     navit_handle_motion(gui_priv->nav, p);
 }
@@ -128,7 +128,7 @@ static void
 gui_qt5_qml_resize(void* data, int w, int h)
 {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     /* forward this to navit */
     navit_handle_resize(gui_priv->nav, w, h);
 }
@@ -142,7 +142,7 @@ gui_qml_keypress(void* data, char* key)
     transform_get_size(navit_get_trans(this_->nav), &w, &h);
     switch (*key) {
     case NAVIT_KEY_UP:
-        dbg(lvl_debug, "got KEY_UP\n");
+        dbg(lvl_debug, "got KEY_UP");
         p.x = w / 2;
         p.y = 0;
         navit_set_center_screen(this_->nav, &p, 1);
@@ -163,7 +163,7 @@ gui_qml_keypress(void* data, char* key)
         navit_set_center_screen(this_->nav, &p, 1);
         break;
     case NAVIT_KEY_ZOOM_IN:
-        dbg(lvl_debug, "got ZOOM_IN\n");
+        dbg(lvl_debug, "got ZOOM_IN");
         navit_zoom_in(this_->nav, 2, NULL);
         break;
     case NAVIT_KEY_ZOOM_OUT:
@@ -183,7 +183,7 @@ static int
 gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
 {
     struct transformation* trans;
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
 
     /* get navit transition */
     trans = navit_get_trans(gui_priv->nav);
@@ -212,14 +212,14 @@ gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
     /* get main navit window */
     gui_priv->win = (struct window*)graphics_get_data(gra, "window");
     if (!gui_priv->win) {
-        dbg(lvl_error, "failed to obtain window from graphics plugin, cannot set graphics\n");
+        dbg(lvl_error, "failed to obtain window from graphics plugin, cannot set graphics");
         return 1;
     }
 
     /* expect to have qt5 graphics. So get the qml engine prepared by graphics */
     gui_priv->engine = (QQmlApplicationEngine*)graphics_get_data(gra, "engine");
     if (gui_priv->engine == NULL) {
-        dbg(lvl_error, "Graphics doesn't seem to be qt5, or doesn't have QML. Cannot set graphics\n");
+        dbg(lvl_error, "Graphics doesn't seem to be qt5, or doesn't have QML. Cannot set graphics");
         return 1;
     }
 
@@ -233,13 +233,13 @@ gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
     /* find the loader component */
     gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject*>("navit_loader");
     if (gui_priv->loader != NULL) {
-        dbg(lvl_debug, "navit_loader found\n");
+        dbg(lvl_debug, "navit_loader found");
         /* load our root window into the loader component */
         gui_priv->loader->setProperty("source", "qrc:///skins/modern/main.qml");
     }
 
     transform_get_size(trans, &gui_priv->w, &gui_priv->h);
-    dbg(lvl_debug, "navit provided geometry: (%d, %d)\n", gui_priv->w, gui_priv->h);
+    dbg(lvl_debug, "navit provided geometry: (%d, %d)", gui_priv->w, gui_priv->h);
 
     /* Was resize callback already issued? */
     //    if (navit_get_ready(gui_priv->nav) & 2)
@@ -254,14 +254,14 @@ gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
 static int
 gui_qt5_qml_get_attr(struct gui_priv* gui_priv, enum attr_type type, struct attr* attr)
 {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     return 1;
 }
 
 static int
 gui_qt5_qml_set_attr(struct gui_priv* gui_priv, struct attr* attr)
 {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     return 1;
 }
 
@@ -284,7 +284,7 @@ gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs
     struct gui_priv* gui_priv;
     struct attr* attr;
 
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
 
     /* tell navit our methods */
     *meth = gui_qt5_qml_methods;

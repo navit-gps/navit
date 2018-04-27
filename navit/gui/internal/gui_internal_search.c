@@ -87,7 +87,7 @@ gui_internal_search_cmp(gconstpointer _a, gconstpointer _b)
   sa=removecase(a->text);
   sb=removecase(b->text);
   r=strcmp(sa,sb);
-  dbg(lvl_debug,"%s %s %d\n",sa,sb,r);
+  dbg(lvl_debug,"%s %s %d",sa,sb,r);
   g_free(sa);
   g_free(sb);
   return r;
@@ -210,7 +210,7 @@ gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *poss
 				possible_keys[len]=trunk_name[next_char_pos];
 				possible_keys[len+1]='\0';
 			}
-			dbg(lvl_info,"searching for %s, found: %s, currently possible_keys: %s \n", search_text, item_name, possible_keys);
+			dbg(lvl_info,"searching for %s, found: %s, currently possible_keys: %s ", search_text, item_name, possible_keys);
 		}
 	}
 }
@@ -290,7 +290,7 @@ gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_
 			if(!exp)
 				continue;
 			if(!strcmp(exp,folded_query)) {
-				dbg(lvl_debug,"exact match for the whole string %s\n", exp);
+				dbg(lvl_debug,"exact match for the whole string %s", exp);
 				match_quality=full_string_match;
 				g_free(exp);
 				break;
@@ -298,7 +298,7 @@ gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_
 			if((p=strstr(exp,folded_query))!=NULL) {
 				p+=strlen(folded_query);
 				if(!*p||strchr(LINGUISTICS_WORD_SEPARATORS_ASCII,*p)) {
-					dbg(lvl_debug,"exact matching word found inside string %s\n",exp);
+					dbg(lvl_debug,"exact matching word found inside string %s",exp);
 					match_quality=word_match;
 				}
 			}
@@ -385,7 +385,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		widget_name=g_strdup(result_main_label);
 	}
 	if(!item_name) {
-		dbg(lvl_error, "Skipping nameless item in search (search type: %s). Please report this as a bug.\n", wm_name);
+		dbg(lvl_error, "Skipping nameless item in search (search type: %s). Please report this as a bug.", wm_name);
 		return;
 	}
 
@@ -444,13 +444,13 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 		param=(void *)5;
 	if (! strcmp(wm->name,"House number"))
 		param=(void *)6;
-	dbg(lvl_debug,"%s now '%s'\n", wm->name, wm->text);
+	dbg(lvl_debug,"%s now '%s'", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
 	if (wm->text && g_utf8_strlen(wm->text, -1) > 0) {
 		struct attr search_attr;
 
-		dbg(lvl_debug,"process\n");
+		dbg(lvl_debug,"process");
 		if (! strcmp(wm->name,"Country"))
 			search_attr.type=attr_country_all;
 		if (! strcmp(wm->name,"Town"))
@@ -488,7 +488,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 		item=country_search_get_item(cs);
 		if (item && item_attr_get(item, attr_country_name, &country_name)) {
 			search_attr.type=attr_country_all;
-			dbg(lvl_debug,"country %s\n", country_name.u.str);
+			dbg(lvl_debug,"country %s", country_name.u.str);
 			search_attr.u.str=country_name.u.str;
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
@@ -501,9 +501,9 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 		}
 		country_search_destroy(cs);
 	} else {
-		dbg(lvl_error,"warning: no default country found\n");
+		dbg(lvl_error,"warning: no default country found");
 		if (this->country_iso2) {
-		    dbg(lvl_debug,"attempting to use country '%s'\n",this->country_iso2);
+		    dbg(lvl_debug,"attempting to use country '%s'",this->country_iso2);
 		    search_attr.type=attr_country_iso2;
 		    search_attr.u.str=this->country_iso2;
             search_list_search(this->sl, &search_attr, 0);
@@ -604,7 +604,7 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
 void
 gui_internal_search_house_number_in_street(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(lvl_info,"id %d\n", widget->selection_id);
+	dbg(lvl_info,"id %d", widget->selection_id);
 	search_list_select(this->sl, attr_street_name, 0, 0);
 	search_list_select(this->sl, attr_street_name, widget->selection_id, 1);
 	gui_internal_search(this,_("House number"),"House number",0);
@@ -613,7 +613,7 @@ gui_internal_search_house_number_in_street(struct gui_priv *this, struct widget 
 void
 gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(lvl_info,"id %d\n", widget->selection_id);
+	dbg(lvl_info,"id %d", widget->selection_id);
 	search_list_select(this->sl, attr_town_or_district_name, 0, 0);
 	search_list_select(this->sl, attr_town_or_district_name, widget->selection_id, 1);
 	gui_internal_search(this,_("Street"),"Street",0);
@@ -623,7 +623,7 @@ void
 gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget)
 {
 	struct search_list_common *slc;
-	dbg(lvl_info,"id %d\n", widget->selection_id);
+	dbg(lvl_info,"id %d", widget->selection_id);
 	search_list_select(this->sl, attr_country_all, 0, 0);
 	slc=search_list_select(this->sl, attr_country_all, widget->selection_id, 1);
 	if (slc) {

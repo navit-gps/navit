@@ -63,7 +63,7 @@ speech_cmdline_search(GList *samples, int suffix_len, const char *text, int deco
 {
 	GList *loop_samples=samples,*result=NULL,*recursion_result;
 	int shortest_result_length=INT_MAX;
-	dbg(lvl_debug,"searching samples for text: '%s'\n",text);
+	dbg(lvl_debug,"searching samples for text: '%s'",text);
 	while (loop_samples) {
 		char *sample_name=loop_samples->data;
 		int sample_name_len;
@@ -77,7 +77,7 @@ speech_cmdline_search(GList *samples, int suffix_len, const char *text, int deco
 			const char *remaining_text=text+sample_name_len;
 			while (*remaining_text == ' ' || *remaining_text == ',')
 				remaining_text++;
-			dbg(lvl_debug,"sample '%s' matched; remaining text: '%s'\n",sample_name,remaining_text);
+			dbg(lvl_debug,"sample '%s' matched; remaining text: '%s'",sample_name,remaining_text);
 			if (*remaining_text) {
 				recursion_result=speech_cmdline_search(samples, suffix_len, remaining_text, decode);
 				if (recursion_result && g_list_length(recursion_result) < shortest_result_length) {
@@ -141,15 +141,15 @@ speechd_say(struct speech_priv *this, const char *text)
 		argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text, !!(this->flags & 1));
 		samplesmode=1;
 		listlen=g_list_length(argl);
-		dbg(lvl_debug,"For text: '%s', found %d samples.\n",text,listlen);
+		dbg(lvl_debug,"For text: '%s', found %d samples.",text,listlen);
 		if (!listlen){
-			dbg(lvl_error,"No matching samples found. Cannot speak text: '%s'\n",text);
+			dbg(lvl_error,"No matching samples found. Cannot speak text: '%s'",text);
 		}
 	} else {
 		listlen=1;
 	}
 	if(listlen>0) {
-		dbg(lvl_debug,"Speaking text '%s'\n",text);
+		dbg(lvl_debug,"Speaking text '%s'",text);
 		int argc;
 		char**argv;
 		int j;
@@ -168,7 +168,7 @@ speechd_say(struct speech_priv *this, const char *text)
 					while(l) {
 						char *new_arg;
 						new_arg=g_strdup_printf("%s/%s",this->sample_dir,(char *)l->data);
-						dbg(lvl_debug,"new_arg %s\n",new_arg);
+						dbg(lvl_debug,"new_arg %s",new_arg);
 						argv[j++]=g_strdup_printf(cmdv[i],new_arg);
 						g_free(new_arg);
 						l=g_list_next(l);
@@ -246,7 +246,7 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 			int len=strlen(name);
 			if (len > suffix_len) {
 				if (!strcmp(name+len-suffix_len, this->sample_suffix)) {
-					dbg(lvl_debug,"found %s\n",name);
+					dbg(lvl_debug,"found %s",name);
 					this->samples=g_list_prepend(this->samples, g_strdup(name));
 				}
 			}

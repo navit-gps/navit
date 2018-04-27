@@ -54,11 +54,11 @@ get_line(struct map_rect_priv *mr)
 		else
 			mr->pos+=mr->lastlen;
 		fgets(mr->line, TEXTFILE_LINE_SIZE, mr->f);
-	        dbg(lvl_debug,"read textfile line: %s\n", mr->line);
+	        dbg(lvl_debug,"read textfile line: %s", mr->line);
 		remove_comment_line(mr->line);
 		mr->lastlen=strlen(mr->line)+1;
 		if (strlen(mr->line) >= TEXTFILE_LINE_SIZE-1) 
-			dbg(lvl_error, "line too long: %s\n", mr->line);
+			dbg(lvl_error, "line too long: %s", mr->line);
 	}
 }
 
@@ -94,12 +94,12 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
 	int ret=0;
-	dbg(lvl_warning,"enter, count: %d\n",count);
+	dbg(lvl_warning,"enter, count: %d",count);
 	while (count--) {
 		if (mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc) && parse_line(mr, mr->item.id_hi)) {
 			if (c){
 				*c=mr->c;
-				dbg(lvl_debug,"c=0x%x,0x%x\n", c->x, c->y);
+				dbg(lvl_debug,"c=0x%x,0x%x", c->x, c->y);
 				c++;
 			}
 			ret++;		
@@ -138,7 +138,7 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	char *str=NULL;
 	dbg(lvl_debug,"mr=%p attrs='%s' ", mr, mr->attrs);
 	if (attr_type != mr->attr_last) {
-		dbg(lvl_debug,"reset attr_pos\n");
+		dbg(lvl_debug,"reset attr_pos");
 		mr->attr_pos=0;
 		mr->attr_last=attr_type;
 	}
@@ -146,7 +146,7 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		dbg(lvl_debug,"attr_any");
 		if (attr_from_line(mr->attrs,NULL,&mr->attr_pos,mr->attr, mr->attr_name)) {
 			attr_type=attr_from_name(mr->attr_name);
-			dbg(lvl_debug,"found attr '%s' 0x%x\n", mr->attr_name, attr_type);
+			dbg(lvl_debug,"found attr '%s' 0x%x", mr->attr_name, attr_type);
 			attr->type=attr_type;
 			textfile_encode_attr(mr->attr, attr_type, attr);
 			return 1;
@@ -156,11 +156,11 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		dbg(lvl_debug,"attr='%s' ",str);
 		if (attr_from_line(mr->attrs,str,&mr->attr_pos,mr->attr, NULL)) {
 			textfile_encode_attr(mr->attr, attr_type, attr);
-			dbg(lvl_debug,"found\n");
+			dbg(lvl_debug,"found");
 			return 1;
 		}
 	}
-	dbg(lvl_debug,"not found\n");
+	dbg(lvl_debug,"not found");
 	return 0;
 }
 
@@ -176,7 +176,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
@@ -204,20 +204,20 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 			}
 			sel=sel->next;
 		}
-		dbg(lvl_debug,"popen args %s\n", args);
+		dbg(lvl_debug,"popen args %s", args);
 		mr->args=args;
 		mr->f=popen(mr->args, "r");
 		mr->pos=0;
 		mr->lastlen=0;
 #else
-		dbg(lvl_error,"unable to work with pipes %s\n",map->filename);
+		dbg(lvl_error,"unable to work with pipes %s",map->filename);
 #endif 
 	} else {
 		mr->f=fopen(map->filename, "r");
 	}
 	if(!mr->f) {
 		if (!(errno == ENOENT && map->no_warning_if_map_file_missing)) {
-			dbg(lvl_error, "error opening textfile %s: %s\n", map->filename, strerror(errno));
+			dbg(lvl_error, "error opening textfile %s: %s", map->filename, strerror(errno));
 		}
 	}
 	get_line(mr);
@@ -255,7 +255,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 	}
 	for(;;) {
 		if (feof(mr->f)) {
-			dbg(lvl_debug,"map_rect_get_item_textfile: eof %d\n",mr->item.id_hi);
+			dbg(lvl_debug,"map_rect_get_item_textfile: eof %d",mr->item.id_hi);
 			if (mr->m->flags & 1) {
 				if (!mr->item.id_hi) 
 					return NULL;
@@ -286,7 +286,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				get_line(mr);
 				continue;
 			}
-			dbg(lvl_debug,"map_rect_get_item_textfile: point found\n");
+			dbg(lvl_debug,"map_rect_get_item_textfile: point found");
 			mr->eoc=0;
 			mr->item.id_lo=mr->pos;
 		} else {
@@ -294,7 +294,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				get_line(mr);
 				continue;
 			}
-			dbg(lvl_debug,"map_rect_get_item_textfile: line found\n");
+			dbg(lvl_debug,"map_rect_get_item_textfile: line found");
 			if (! mr->line[0]) {
 				get_line(mr);
 				continue;
@@ -302,21 +302,21 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			mr->item.id_lo=mr->pos;
 			strcpy(mr->attrs, mr->line);
 			get_line(mr);
-			dbg(lvl_debug,"mr=%p attrs=%s\n", mr, mr->attrs);
+			dbg(lvl_debug,"mr=%p attrs=%s", mr, mr->attrs);
 		}
-		dbg(lvl_debug,"get_attrs %s\n", mr->attrs);
+		dbg(lvl_debug,"get_attrs %s", mr->attrs);
 		if (attr_from_line(mr->attrs,"type",NULL,type,NULL)) {
-			dbg(lvl_debug,"type='%s'\n", type);
+			dbg(lvl_debug,"type='%s'", type);
 			mr->item.type=item_from_name(type);
 			if (mr->item.type == type_none) 
-				dbg(lvl_error, "Warning: type '%s' unknown\n", type);
+				dbg(lvl_error, "Warning: type '%s' unknown", type);
 		} else {
 			get_line(mr);
 			continue;
 		}
 		mr->attr_last=attr_none;
 		mr->more=1;
-		dbg(lvl_debug,"return attr='%s'\n", mr->attrs);
+		dbg(lvl_debug,"return attr='%s'", mr->attrs);
 		return &mr->item;
 	}
 }
@@ -362,7 +362,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
 	char **wexp_data;
 	if (! data)
 		return NULL;
-	dbg(lvl_debug,"map_new_textfile %s\n", data->u.str);	
+	dbg(lvl_debug,"map_new_textfile %s", data->u.str);	
 	wdata=g_strdup(data->u.str);
 	len=strlen(wdata);
 	if (len && wdata[len-1] == '|') {
@@ -380,7 +380,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
 	m->no_warning_if_map_file_missing=(no_warn!=NULL) && (no_warn->u.num);
 	if (flags) 
 		m->flags=flags->u.num;
-	dbg(lvl_debug,"map_new_textfile %s %s\n", m->filename, wdata);
+	dbg(lvl_debug,"map_new_textfile %s %s", m->filename, wdata);
 	if (charset) {
 		m->charset=g_strdup(charset->u.str);
 		meth->charset=m->charset;
@@ -393,7 +393,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
 void
 plugin_init(void)
 {
-	dbg(lvl_debug,"textfile: plugin_init\n");
+	dbg(lvl_debug,"textfile: plugin_init");
 	plugin_register_category_map("textfile", map_new_textfile);
 }
 
