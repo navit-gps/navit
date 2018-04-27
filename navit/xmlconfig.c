@@ -793,6 +793,7 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 				dbg(lvl_debug,"result[%d]='%s'", i, included_filename);
 				if (file_exists(included_filename)) {
 					doc_new.href=included_filename;
+					parse_file(&doc_new, error);	/* Now run the parser on the included XML file */
 				} else {
 					dbg(lvl_error,"Unable to include '%s'",included_filename);
 				}
