@@ -1019,7 +1019,7 @@ xi_text (xml_context *context,
 				struct xmldocument *doc=user_data;
 				struct xmlstate *curr, **state = doc->user_data;
 				struct attr attr;
-				char *text_dup = malloc(text_len+1);
+				char *text_dup = g_malloc(text_len+1);
 
 				curr=*state;
 				strncpy(text_dup, text, text_len);
@@ -1028,7 +1028,7 @@ xi_text (xml_context *context,
 				attr.u.str=text_dup;
 				if (curr->object_func && curr->object_func->add_attr && curr->element_attr.u.data)
 					curr->object_func->add_attr(curr->element_attr.u.data, &attr);
-				free(text_dup);
+				g_free(text_dup);
 				return;
 			}
 		}
