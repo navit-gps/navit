@@ -51,7 +51,7 @@
 		
 		<!--
 		The action that appears on map click is configurable with the attribute "on_map_click".
-		To get the prvious behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
+		To get the previous behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
 		-->
 		<gui type="internal" enabled="yes"><![CDATA[
 			<html>
@@ -432,12 +432,12 @@ Waypoint</text></img>
 		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)
 		One layout is a specifid theme. The user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file.
 		-->
-		<xi:include href="./navit_layout_car.xml"/>
-		<xi:include href="./navit_layout_car_dark.xml"/>
-		<xi:include href="./navit_layout_car_android.xml"/>
-		<xi:include href="./navit_layout_car_simple.xml"/>
-		<xi:include href="./navit_layout_bike.xml"/>
-		<xi:include href="./navit_layout_th.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_dark.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_android.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_simple.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_bike.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_th.xml"/>
 		<layout name="Route">
 			<layer name="streets">
 				<itemgra item_types="street_route_occluded" order="0-">

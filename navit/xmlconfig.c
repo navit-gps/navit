@@ -709,6 +709,15 @@ end_element (xml_context *context,
 
 static gboolean parse_file(struct xmldocument *document, xmlerror **error);
 
+/**
+ * @brief Handle xi:include XML tags
+ *
+ * @param context The XML context in which we are parsing
+ * @param[in] attribute_names An array of strings containing all XML attributes of the xi:include tag
+ * @param[in] attribute_values An array of strings containing all XML values (one per entry in @p attribute_names)
+ * @param doc_old The current document being parsed (before moving to the one referenced in this xi:include
+ * @param[out] error A description of the error encountered if any
+ */
 static void
 xinclude(xml_context *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error)
 {
@@ -717,6 +726,9 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 	int i,count;
 	const char *href=NULL;
 	char **we_files;
+	char *included_filename=NULL;
+	char *doc_base=NULL;
+	char *tmp=NULL;
 
 	if (doc_old->level >= 16) {
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include recursion too deep");
@@ -762,23 +774,37 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
 	} else {
 		dbg(lvl_debug,"expanding '%s'\n", href);
 		we=file_wordexp_new(href);
-		we_files=file_wordexp_get_array(we);
+		we_files=file_wordexp_get_array(we);	/* Expand wildcards (if any) into a list of files */
 		count=file_wordexp_get_count(we);
 		dbg(lvl_debug,"%d results\n", count);
-		if (file_exists(we_files[0])) {
-			for (i = 0 ; i < count ; i++) {
-				dbg(lvl_debug,"result[%d]='%s'\n", i, we_files[i]);
-				doc_new.href=we_files[i];
-				parse_file(&doc_new, error);
+		for (i = 0 ; i < count ; i++) {
+			included_filename = g_strdup(we_files[i]);
+			if (*included_filename != '\0') { /* Non empty href */
+				if (*included_filename != '/') {	/* The filename's path is relative */
+					doc_base = file_get_dirname(doc_old->href);	/* Get our own absolute path */
+					if (*doc_base && file_is_dir(doc_base)) {
+						tmp = included_filename;
+						included_filename = g_strconcat(doc_base, "/", tmp, NULL);
+						g_free(tmp); /* Free initial included_filename buffer (saved in tmp) */
+					}
+					g_free(doc_base);
+					dbg(lvl_debug,"converted relative filename='%s' to absolute filename='%s'\n", we_files[i], included_filename);
+				}
+				dbg(lvl_debug,"result[%d]='%s'\n", i, included_filename);
+				if (file_exists(included_filename)) {
+					doc_new.href=included_filename;
+				} else {
+					dbg(lvl_error,"Unable to include '%s'\n",included_filename);
+				}
 			}
-		} else {
-			dbg(lvl_error,"Unable to include %s\n",we_files[0]);
+			g_free(included_filename);
 		}
 		file_wordexp_destroy(we);
 
 	}
 
 }
+
 static int
 strncmp_len(const char *s1, int s1len, const char *s2)
 {

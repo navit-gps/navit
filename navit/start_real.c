@@ -192,13 +192,13 @@ int main_real(int argc, char * const* argv)
 		li = g_list_next(li);
 	}
 
-	dbg(lvl_debug,"Loading %s\n",config_file); /* Set env NAVIT_CONFDIR */
+	dbg(lvl_debug,"Loading config from '%s'\n",config_file);
 	config_dir=file_get_dirname(config_file);
-	if (setenv("NAVIT_CONFDIR", config_dir, 1)==-1) {
-		dbg(lvl_error, _("Could not set environment variable %s\n"), "NAVIT_CONFDIR");
+	if (setenv("NAVIT_ACTIVECONFDIR", config_dir, 1)==-1) {
+		dbg(lvl_error, _("Could not set environment variable %s\n"), "NAVIT_ACTIVECONFDIR");
 	}
 	else {
-		dbg(lvl_info, _("Setting %s to '%s'\n"), "NAVIT_CONFDIR", config_dir);
+		dbg(lvl_info, _("Setting %s to '%s'\n"), "NAVIT_ACTIVECONFDIR", config_dir);
 	}
 	g_free(config_dir);
 	if (!config_load(config_file, &error)) {
