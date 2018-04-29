@@ -1683,7 +1683,7 @@ msgid "Shopping"
 msgstr "Shopping"
 
 msgid "Distance from screen center (km)"
-msgstr "Distance from screen centre (km)"
+msgstr "Select a search radius from screen center"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1708,7 +1708,7 @@ msgid "Select a category"
 msgstr "Select a category"
 
 msgid "Select a distance to look for (km)"
-msgstr "Select a distance to look for (km)"
+msgstr "Select a search radius from screen center"
 
 msgid "Select a POI"
 msgstr "Select a POI"
@@ -1722,8 +1722,9 @@ msgstr "Category"
 msgid "Direction"
 msgstr "Direction"
 
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
 msgid "Distance(m)"
-msgstr "Distance(m)"
+msgstr "Distance"
 
 msgid "Name"
 msgstr "Name"
