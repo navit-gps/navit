@@ -414,6 +414,7 @@ public class Navit extends Activity
 			Log.e(TAG, "using xxxhdpi values");
 			my_display_density = "xxxhdpi";
 		}
+		Log.i(TAG, "Device density detected: " + my_display_density);
 		
 		String[] navitConfigFiles = {"navit", "navit_layout_car", "navit_layout_car_dark", "navit_layout_car_android", "navit_layout_car_simple", "navit_layout_bike", "navit_layout_th"};
 		for (String configFile : navitConfigFiles)
