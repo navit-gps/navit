@@ -37,6 +37,7 @@
 
 #include "navigation.h"         /* for KILOMETERS_TO_MILES */
 
+<<<<<<< HEAD
 static struct gtk_poi_search {
     GtkWidget *entry_distance;
     GtkWidget *label_distance;
@@ -49,6 +50,20 @@ static struct gtk_poi_search {
     GtkTreeModel *store_cat_sorted;
     char *selected_cat;
     struct navit *nav;
+=======
+static struct gtk_poi_search{
+	GtkWidget *entry_distance;
+	GtkWidget *label_distance;
+	GtkWidget *treeview_cat;
+	GtkWidget *treeview_poi;
+	GtkWidget *button_visit, *button_destination, *button_map;
+	GtkListStore *store_poi;
+	GtkListStore *store_cat;
+	GtkTreeModel *store_poi_sorted;
+	GtkTreeModel *store_cat_sorted;
+	char *selected_cat;
+	struct navit *nav;
+>>>>>>> 1) Changed the translation string for "Distance(m)" from "" to "Distance". Rational: the "m" is ambiguous, it could be meters or miles. However, in the POI context, feet are more likely than miles. So take it out entirely. I did it this way rather than run sed on the entire collection of po input files.
 } gtk_poi_search;
 
 static GdkPixbuf *geticon(const char *name) {
@@ -101,6 +116,7 @@ static GtkTreeModel *category_list_model(struct gtk_poi_search *search) {
 
 
 /** Construct model of POIs from map information. */
+<<<<<<< HEAD
 static GtkTreeModel *model_poi (struct gtk_poi_search *search) {
     GtkTreeIter iter;
     struct map_selection *sel,*selm;
@@ -181,6 +197,94 @@ static GtkTreeModel *model_poi (struct gtk_poi_search *search) {
     mapset_close(h);
 
     return GTK_TREE_MODEL (search->store_poi_sorted);
+=======
+static GtkTreeModel *
+model_poi (struct gtk_poi_search *search)
+{
+	GtkTreeIter iter;
+	struct map_selection *sel,*selm;
+	struct coord coord_item,center;
+	struct pcoord pc;
+	struct mapset_handle *h;
+	int search_distance_meters; /* distance to search the POI database, in meters, from the center of the screen. */
+        int idist; /* idist appears to be the distance in meters from the center of the screen to a POI. */
+	struct map *m;
+	struct map_rect *mr;
+	struct item *item;
+	struct point cursor_position;
+	enum item_type selected;
+
+        /* Respect the Imperial attribute as we enlighten the user. */
+	struct attr attr;
+        int imperial = FALSE;  /* default to using metric measures. */
+        if (navit_get_attr(gtk_poi_search.nav, attr_imperial, &attr, NULL))
+            imperial=attr.u.num;
+
+        if (imperial == FALSE) {
+                /* Input is in kilometers */
+                search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
+        } else {
+                /* Input is in miles. */
+                search_distance_meters=atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)))/METERS_TO_MILES;
+        }
+
+	cursor_position.x=navit_get_width(search->nav)/2;
+	cursor_position.y=navit_get_height(search->nav)/2;
+	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
+
+	transform_reverse(navit_get_trans(search->nav), &cursor_position, &center);
+	pc.pro = transform_get_projection(navit_get_trans(search->nav));
+	pc.x = center.x;
+	pc.y = center.y;
+
+	//Search in the map, for pois
+	sel=map_selection_rect_new(&pc ,search_distance_meters*transform_scale(abs(center.y)+search_distance_meters*1.5),18);
+	gtk_list_store_clear(search->store_poi);
+
+	h=mapset_open(navit_get_mapset(search->nav));
+
+	selected=item_from_name(search->selected_cat);
+	while ((m=mapset_next(h, 1))) {
+		selm=map_selection_dup_pro(sel, projection_mg, map_projection(m));
+		mr=map_rect_new(m, selm);
+		if (mr) {
+			while ((item=map_rect_get_item(mr))) {
+				struct attr label_attr;
+				item_attr_get(item,attr_label,&label_attr);
+				item_coord_get(item,&coord_item,1);
+				idist=transform_distance(1,&center,&coord_item);
+				if (item->type==selected && idist<=search_distance_meters){
+					char direction[5];
+					gtk_list_store_append(search->store_poi, &iter);
+					get_compass_direction(direction,transform_get_angle_delta(&center,&coord_item,0),1);
+
+                                        /* If the user has selected
+                                         * imperial, translate idist
+                                         * from meters to feet. We
+                                         * convert to feet only
+                                         * because the code sorts on
+                                         * the numeric value of the
+                                         * distance, so it doesn't
+                                         * like two different
+                                         * units. Possible future
+                                         * enhancement? */
+                                        if (imperial != FALSE) {
+                                                idist = idist * (FEET_PER_METER); /* convert meters to feet. */
+                                        }
+
+					gtk_list_store_set(search->store_poi, &iter, 0,direction, 1,idist,
+						2,g_strdup(label_attr.u.str), 3,coord_item.x, 4,coord_item.y ,-1);
+				}
+			}
+			map_rect_destroy(mr);
+		}
+		map_selection_destroy(selm);
+	}
+	map_selection_destroy(sel);
+	mapset_close(h);
+
+	return GTK_TREE_MODEL (search->store_poi_sorted);
+>>>>>>> 1) Changed the translation string for "Distance(m)" from "" to "Distance". Rational: the "m" is ambiguous, it could be meters or miles. However, in the POI context, feet are more likely than miles. So take it out entirely. I did it this way rather than run sed on the entire collection of po input files.
 }
 
 /** Enable button if there is a selected row. */
