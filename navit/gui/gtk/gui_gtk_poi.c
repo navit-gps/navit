@@ -111,26 +111,26 @@ model_poi (struct gtk_poi_search *search)
 	struct pcoord pc;
 	struct mapset_handle *h;
 	int search_distance_meters; /* distance to search the POI database, in meters, from the center of the screen. */
-        int idist; /* idist appears to be the distance in meters from the center of the screen to a POI. */
+	int idist; /* idist appears to be the distance in meters from the center of the screen to a POI. */
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
 	struct point cursor_position;
 	enum item_type selected;
 
-        /* Respect the Imperial attribute as we enlighten the user. */
+	/* Respect the Imperial attribute as we enlighten the user. */
 	struct attr attr;
-        int imperial = FALSE;  /* default to using metric measures. */
-        if (navit_get_attr(gtk_poi_search.nav, attr_imperial, &attr, NULL))
-            imperial=attr.u.num;
+	int imperial = FALSE;  /* default to using metric measures. */
+	if (navit_get_attr(gtk_poi_search.nav, attr_imperial, &attr, NULL))
+	    imperial=attr.u.num;
 
-        if (imperial == FALSE) {
-                /* Input is in kilometers */
-                search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
-        } else {
-                /* Input is in miles. */
-                search_distance_meters=atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)))/METERS_TO_MILES;
-        }
+	if (imperial == FALSE) {
+		/* Input is in kilometers */
+		search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
+	} else {
+		/* Input is in miles. */
+		search_distance_meters=atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)))/METERS_TO_MILES;
+	}
 
 	cursor_position.x=navit_get_width(search->nav)/2;
 	cursor_position.y=navit_get_height(search->nav)/2;
@@ -162,19 +162,15 @@ model_poi (struct gtk_poi_search *search)
 					gtk_list_store_append(search->store_poi, &iter);
 					get_compass_direction(direction,transform_get_angle_delta(&center,&coord_item,0),1);
 
-                                        /* If the user has selected
-                                         * imperial, translate idist
-                                         * from meters to feet. We
-                                         * convert to feet only
-                                         * because the code sorts on
-                                         * the numeric value of the
-                                         * distance, so it doesn't
-                                         * like two different
-                                         * units. Possible future
-                                         * enhancement? */
-                                        if (imperial != FALSE) {
-                                                idist = idist * (FEET_PER_METER); /* convert meters to feet. */
-                                        }
+                                        /**
+                                         * If the user has selected imperial, translate idist from meters to
+                                         * feet. We convert to feet only, and not miles, because the code
+                                         * sorts on the numeric value of the distance, so it doesn't like two
+                                         * different units. Possible future enhancement?
+                                         */
+					if (imperial != FALSE) {
+						idist = idist * (FEET_PER_METER); /* convert meters to feet. */
+					}
 
 					gtk_list_store_set(search->store_poi, &iter, 0,direction, 1,idist,
 						2,g_strdup(label_attr.u.str), 3,coord_item.x, 4,coord_item.y ,-1);
