@@ -1595,7 +1595,7 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 		l = int_sqrt(dxs+dys)*lscale;
 	else
 		l = int_sqrt((dxs+dys)*lscales);
-#endif
+	
 	shape->fow=fowler(-shape->dy, shape->dx);
 	dbg(lvl_debug,"fow=%d",shape->fow);
 	if (! l)
