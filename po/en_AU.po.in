@@ -1666,8 +1666,8 @@ msgstr ""
 msgid "Shopping"
 msgstr ""
 
-msgid "Distance from screen center (km)"
-msgstr "Select a search radius from screen center"
+msgid "Select a search radius from screen center"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"

@@ -1665,7 +1665,7 @@ msgstr "計程車"
 msgid "Shopping"
 msgstr "購物處"
 
-msgid "Distance from screen center (km)"
+msgid "Select a search radius from screen center"
 msgstr "距螢幕中心的距離 (公里)"
 
 #, c-format

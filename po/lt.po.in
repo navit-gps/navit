@@ -1676,8 +1676,8 @@ msgstr "Taksi"
 msgid "Shopping"
 msgstr "Parduotuvė"
 
-msgid "Distance from screen center (km)"
-msgstr "Atstumas nuo ekrano vidaus (km)"
+msgid "Select a search radius from screen center"
+msgstr "Atstumas nuo ekrano vidaus"
 
 #, c-format
 msgid "POI %s. %s"
