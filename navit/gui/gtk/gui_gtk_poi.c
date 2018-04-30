@@ -230,7 +230,7 @@ model_poi (struct gtk_poi_search *search)
 
 	cursor_position.x=navit_get_width(search->nav)/2;
 	cursor_position.y=navit_get_height(search->nav)/2;
-	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
+	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Select a search radius from screen center"));
 
 	transform_reverse(navit_get_trans(search->nav), &cursor_position, &center);
 	pc.pro = transform_get_projection(navit_get_trans(search->nav));
