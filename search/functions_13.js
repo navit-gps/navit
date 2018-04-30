@@ -189,7 +189,6 @@ var searchData=
   ['route_5fclear_5faction',['route_clear_action',['../gui__gtk__action_8c.html#a254cc6837a227dd828e43bda7e2c2595',1,'gui_gtk_action.c']]],
   ['route_5fclear_5fdestinations',['route_clear_destinations',['../route_8c.html#a404947957e2f0bbf557dc699e8f1c5c5',1,'route.c']]],
   ['route_5fcontains',['route_contains',['../route_8c.html#a81663bf28ea85cc76c4ffe71edb6ba6c',1,'route_contains(struct route *this, struct item *item):&#160;route.c'],['../route_8h.html#a126e01d89edb53634a6805233970fdd9',1,'route_contains(struct route *this_, struct item *item):&#160;route.c']]],
-  ['route_5fcrossings_5fget',['route_crossings_get',['../route_8c.html#a9904a53f743876344695c1ef3dab283b',1,'route.c']]],
   ['route_5fdestination_5freached',['route_destination_reached',['../route_8c.html#aee9c34f3d6046134e05c4ba794e42119',1,'route_destination_reached(struct route *this):&#160;route.c'],['../route_8h.html#a90ef6d40a0268bcf04ca06938affbaa3',1,'route_destination_reached(struct route *this_):&#160;route.c']]],
   ['route_5fdestroy',['route_destroy',['../route_8c.html#ae7d2ff1bc3006c9967b0a4ae3e54fe90',1,'route_destroy(struct route *this_):&#160;route.c'],['../route_8h.html#ae7d2ff1bc3006c9967b0a4ae3e54fe90',1,'route_destroy(struct route *this_):&#160;route.c']]],
   ['route_5fdestroy_5fpy',['route_destroy_py',['../binding_2python_2route_8c.html#a8779ebf3511455f5c042d69696c3ec5e',1,'route.c']]],

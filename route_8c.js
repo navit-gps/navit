@@ -33,7 +33,6 @@ var route_8c =
     [ "route_check_roundabout", "route_8c.html#ac6c2ea074996da9478ae0f04327d2253", null ],
     [ "route_clear_destinations", "route_8c.html#a404947957e2f0bbf557dc699e8f1c5c5", null ],
     [ "route_contains", "route_8c.html#a81663bf28ea85cc76c4ffe71edb6ba6c", null ],
-    [ "route_crossings_get", "route_8c.html#a9904a53f743876344695c1ef3dab283b", null ],
     [ "route_destination_reached", "route_8c.html#aee9c34f3d6046134e05c4ba794e42119", null ],
     [ "route_destroy", "route_8c.html#ae7d2ff1bc3006c9967b0a4ae3e54fe90", null ],
     [ "route_dup", "route_8c.html#acd539fe25796de904f57342b14dde071", null ],
