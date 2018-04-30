@@ -403,9 +403,6 @@ debug_dump_mallocs(void)
 		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
 		for (i = 0 ; i < 8 ; i++)
 			fprintf(stderr,"\tlist *%p\n",head->return_address[i]);
-#if 0
-		fprintf(stderr,"%s\n",head+1);
-#endif
 		head=head->next;
 	}
 }

@@ -1982,9 +1982,6 @@ maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct n
 	dc = m.delta;
 
 	dbg(lvl_debug,"enter %p %p %p",old, new, maneuver);
-#if 0
-	dbg(lvl_debug, "old=%s %s, new=%s %s, angle old=%d, angle new=%d, d=%i ", old->way.name, old->way.name_systematic, new->way.name, new->way.name_systematic, old->angle_end, new->way.angle2, d);
-#endif
 	if (!new->way.next || (new->way.next && (new->way.next->angle2 == new->way.angle2) && !new->way.next->next)) {
 		/* No announcement necessary (with extra magic to eliminate duplicate ways) */
 		r="no: Only one possibility";

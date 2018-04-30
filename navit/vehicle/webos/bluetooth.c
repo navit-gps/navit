@@ -252,14 +252,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-#if 0
-		if (priv->file_type == file_type_file) {
-			if (priv->watch) {
-				vehicle_file_disable_watch(priv);
-				event_add_timeout(priv->time, 0, priv->cbt);
-			}
-		}
-#endif
 		ret = 1;
 	}
 	if (!strncmp(&buffer[3], "VTG", 3)) {
@@ -302,13 +294,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			strptime(time,"%H%M%S%d%m%y",&tm);
 
 			priv->fix_time = mktime(&tm);
-#if 0
-			sscanf(item[9], "%02d%02d%02d",
-				&priv->fixday,
-				&priv->fixmonth,
-				&priv->fixyear);
-			priv->fixyear += 2000;
-#endif
 		}
 		ret = 1;
 	}
@@ -329,46 +314,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		if (item[3]) {
 			sscanf(item[3], "%d", &priv->sats_visible);
 		}
-#if 0
-		j=4;
-		while (j+4 <= i && priv->current_count < 24) {
-			struct gps_sat *sat=&priv->next[priv->next_count++];
-			sat->prn=atoi(item[j]);
-			sat->elevation=atoi(item[j+1]);
-			sat->azimuth=atoi(item[j+2]);
-			sat->snr=atoi(item[j+3]);
-			j+=4;
-		}
-		if (!strcmp(item[1], item[2])) {
-			priv->sats_signal=0;
-			for (i = 0 ; i < priv->next_count ; i++) {
-				priv->current[i]=priv->next[i];
-				if (priv->current[i].snr)
-					priv->sats_signal++;
-			}
-			priv->current_count=priv->next_count;
-			priv->next_count=0;
-		}
-#endif
 	}
-#if 0
-	if (!strncmp(&buffer[3], "ZDA", 3)) {
-	/*
-		0        1        2  3  4    5  6
-		$GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
-			hhmmss    HrMinSec(UTC)
-			dd,mm,yyy Day,Month,Year
-			xx        local zone hours -13..13
-			yy        local zone minutes 0..59
-	*/
-		if (item[1] && item[2] && item[3] && item[4]) {
-			strncpy(priv->fixtime, item[1], strlen(priv->fixtime));
-			priv->fixday = atoi(item[2]);
-			priv->fixmonth = atoi(item[3]);
-			priv->fixyear = atoi(item[4]);
-		}
-	}
-#endif
 	if (!strncmp(buffer, "$IISMD", 6)) {
 	/*
 		0      1   2     3      4
@@ -464,13 +410,6 @@ vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int length)
 			priv,
 			PDL_FALSE
 			);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCall failed with (%d): (%s)", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 }
 
 static void
@@ -569,23 +508,9 @@ vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr)
 			(PDL_ServiceCallbackFunc)vehicle_webos_spp_notify,
 			priv,
 			PDL_FALSE);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCallWithCallback failed with (%d): (%s)", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 
 	snprintf(parameters, sizeof(parameters), "{\"address\":\"%s\"}", addr);
 	mlPDL_ServiceCall("palm://com.palm.bluetooth/spp/connect", parameters);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCall failed with (%d): (%s)", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 
 	priv->spp_address = addr;
 }

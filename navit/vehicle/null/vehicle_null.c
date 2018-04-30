@@ -85,11 +85,6 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 {
 	dbg(lvl_debug,"enter %s",attr_to_name(type));
 	switch (type) {
-#if 0
-	case attr_position_fix_type:
-		attr->u.num = priv->fix_type;
-		break;
-#endif
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -102,15 +97,6 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_radius:
 		attr->u.numd = &priv->radius;
 		break;
-
-#if 0
-	case attr_position_qual:
-		attr->u.num = priv->sats;
-		break;
-	case attr_position_sats_used:
-		attr->u.num = priv->sats_used;
-		break;
-#endif
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
 		if (!priv->have_coords)
