@@ -219,12 +219,6 @@ block_next(struct map_rect_priv *mr)
 			bt->order=0;
 			dbg(lvl_debug,"size 0x%x next 0x%x", block_get_size(bt->b), block_get_next(bt->b));
 			if (! mr->b.bt.block_count) {
-#if 0
-				if (debug) {
-					printf("idx rect ");
-					block_rect_print(&mr->b.bt.b->r);
-				}
-#endif
 				block_get_r(bt->b, &bt->r);
 				bt->r_curr=bt->r;
 				coord=get_u32(&mr->b.bt.p);
@@ -243,13 +237,6 @@ block_next(struct map_rect_priv *mr)
 		
 			r_w=bt->r_curr.rl.x-bt->r_curr.lu.x;
 			r_h=bt->r_curr.lu.y-bt->r_curr.rl.y;
-#if 0
-			if (debug) {
-				printf(" rect1 ");
-				block_rect_print(&bt->r_curr);
-				printf(" %dx%d", r_w, r_h);
-			}
-#endif
 			mr->b.b=NULL;
 			if (blk_num != -1) {
 				block_mem+=8;

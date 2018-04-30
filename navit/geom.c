@@ -93,19 +93,10 @@ geom_poly_area(struct coord *c, int count)
 {
 	long long area=0;
 	int i,j=0;
-#if 0
-	fprintf(stderr,"count=%d\n",count);
-#endif
 	for (i=0; i<count; i++) {
 		if (++j == count)
 			j=0;
-#if 0
-		fprintf(stderr,"(%d+%d)*(%d-%d)=%d*%d="LONGLONG_FMT"\n",c[i].x,c[j].x,c[i].y,c[j].y,c[i].x+c[j].x,c[i].y-c[j].y,(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y));
-#endif
 		area+=(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y);
-#if 0
-		fprintf(stderr,"area="LONGLONG_FMT"\n",area);
-#endif
 	}
   	return area/2;
 }
@@ -205,12 +196,6 @@ geom_poly_point_inside(struct coord *cp, int count, struct coord *c)
 	while (cp < last) {
 		if ((cp[0].y > c->y) != (cp[1].y > c->y) &&
 			c->x < ((long long)cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x) {
-#if 0
-			fprintf(stderr," cross 0x%x,0x%x-0x%x,0x%x %dx%d",cp,cp[0].x,cp[0].y,cp[1].x,cp[1].y,cp[1].x-cp[0].x,c->y-cp[0].y);
-			printf("type=selected_line\n");
-			coord_print(projection_mg, &cp[0], stdout);
-			coord_print(projection_mg, &cp[1], stdout);
-#endif
 			ret=!ret;
 		}
 		cp++;
@@ -236,15 +221,6 @@ geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct g
 		count+=(first->last-first->first);
 	if (third)
 		count+=(third->last-third->first);
-#if 0
-	fprintf(stderr,"count=%d first=%p second=%p third=%p\n",count,first,second,third);	
-	if (first) 
-		fprintf(stderr,"first:0x%x,0x%x-0x%x,0x%x (%d)\n",first->first->x,first->first->y,first->last->x,first->last->y, first->last-first->first+1);
-	if (second) 
-		fprintf(stderr,"second:0x%x,0x%x-0x%x,0x%x (%d)\n",second->first->x,second->first->y,second->last->x,second->last->y, second->last-second->first+1);
-	if (third) 
-		fprintf(stderr,"third:0x%x,0x%x-0x%x,0x%x (%d)\n",third->first->x,third->first->y,third->last->x,third->last->y, third->last-third->first+1);
-#endif
 	ret->first=g_new(struct coord, count);
 	pos=ret->first;
 	if (first) {
@@ -262,13 +238,7 @@ geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct g
 		pos+=count;
 	}
 	ret->last=pos-1;	
-#if 0
-	fprintf(stderr,"result:0x%x,0x%x-0x%x,0x%x (%d)\n",ret->first->x,ret->first->y,ret->last->x,ret->last->y, ret->last-ret->first+1);
-#endif
 	list=g_list_prepend(list, ret);
-#if 0
-	fprintf(stderr,"List=%p\n",list);
-#endif
 	return list;
 }
 
@@ -361,30 +331,17 @@ int
 geom_poly_segments_point_inside(GList *in, struct coord *c)
 {
 	int open_matches=0,closed_matches=0;
-#if 0
-	fprintf(stderr,"try 0x%x,0x%x:",c->x,c->y);
-#endif
 	while (in) {
 		struct geom_poly_segment *seg=in->data;
 		if (geom_poly_point_inside(seg->first, seg->last-seg->first+1, c)) {
-#if 0
-			fprintf(stderr," inside");
-#endif
 			if (coord_is_equal(*seg->first,*seg->last)) 
 				closed_matches++;
 			else
 				open_matches++;
 		} else {
-#if 0
-			fprintf(stderr," outside");
-#endif
 		}
 		in=g_list_next(in);
 	}
-#if 0
-	fprintf(stderr,"\n");
-	fprintf(stderr,"open_matches %d closed_matches %d\n",open_matches,closed_matches);
-#endif
 	if (closed_matches) {
 		if (closed_matches & 1)
 			return 1;

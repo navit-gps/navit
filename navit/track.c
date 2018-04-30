@@ -735,10 +735,6 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	}
 	tr->time=time;
 	tr->pro=pro;
-#if 0
-
-	tracking_process_cdf(&tr->cdf, pc, &pcf, angle, &anglef, speed, fixtime);
-#endif
 	tr->curr_angle=tr->direction=direction;
 	tr->speed=speed;
 	tr->last_in=tr->curr_in;
