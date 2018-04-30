@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -38,7 +36,6 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -57,27 +54,27 @@ public class NavitGraphics
 {
 	private NavitGraphics            parent_graphics;
 	private ArrayList<NavitGraphics> overlays          = new ArrayList<NavitGraphics>();
-	int                              bitmap_w;
-	int                              bitmap_h;
-	int                              pos_x;
-	int                              pos_y;
-	int                              pos_wraparound;
-	int                              overlay_disabled;
-	int                              bgcolor;
-	float                            trackball_x, trackball_y;
-	View                             view;
-	SystemBarTintView                navigationTintView;
-	SystemBarTintView                statusTintView;
-	FrameLayout                      frameLayout;
-	RelativeLayout                   relativelayout;
-	NavitCamera                      camera;
-	Activity                         activity;
+	private int                              bitmap_w;
+	private int                              bitmap_h;
+	private int                              pos_x;
+	private int                              pos_y;
+	private int                              pos_wraparound;
+	private int                              overlay_disabled;
+	private int                              bgcolor;
+	private float                            trackball_x, trackball_y;
+	private View                             view;
+	private SystemBarTintView                navigationTintView;
+	private SystemBarTintView                statusTintView;
+	private FrameLayout                      frameLayout;
+	private RelativeLayout                   relativelayout;
+	private NavitCamera                      camera;
+	private Navit                         activity;
 
-	public static Boolean            in_map            = false;
+	private static Boolean            in_map            = false;
 
 	// for menu key
 	private static long              time_for_long_press               = 300L;
-	private static long              interval_for_long_press           = 200L;
+
 
 	private Handler timer_handler = new Handler();
 	
@@ -89,7 +86,7 @@ public class NavitGraphics
 			statusTintView.setBackgroundColor(bgcolor);
 	}
 
-	public void SetCamera(int use_camera)
+	private void SetCamera(int use_camera)
 	{
 		if (use_camera != 0 && camera == null)
 		{
@@ -100,7 +97,7 @@ public class NavitGraphics
 		}
 	}
 
-	protected Rect get_rect()
+	private Rect get_rect()
 	{
 		Rect ret=new Rect();
 		ret.left=pos_x;
@@ -243,7 +240,9 @@ public class NavitGraphics
 					e.printStackTrace();
 				}
 			}
-			catch (NoSuchFieldException ex) {}
+			catch (NoSuchFieldException ex) {
+				ex.printStackTrace();
+			}
 
 			return ret_value;
 		}
@@ -385,7 +384,9 @@ public class NavitGraphics
 					pos.set(x.floatValue(), y.floatValue());
 					
 				}
-				catch (Exception e){}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 			return pos;
 		}
@@ -396,6 +397,7 @@ public class NavitGraphics
 			int i;
 			String s = null;
 			boolean handled = true;
+			long interval_for_long_press = 200L;
 			i = event.getUnicodeChar();
 			//Log.e("NavitGraphics", "onKeyDown " + keyCode + " " + i);
 			// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
@@ -434,17 +436,15 @@ public class NavitGraphics
 						// if in menu view:
 						// use as OK (Enter) key
 						s = java.lang.String.valueOf((char) 13);
-						handled = true;
 						// dont use menu key here (use it in onKeyUp)
-						return handled;
+						return true;
 					}
 					else
 					{
 						// if on map view:
 						// volume UP
 						//s = java.lang.String.valueOf((char) 1);
-						handled = false;
-						return handled;
+						return true;
 					}
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH)
@@ -471,15 +471,13 @@ public class NavitGraphics
 						// if in menu view:
 						// use as UP key
 						s = java.lang.String.valueOf((char) 16);
-						handled = true;
 					}
 					else
 					{
 						// if on map view:
 						// volume UP
 						//s = java.lang.String.valueOf((char) 21);
-						handled = false;
-						return handled;
+						return false;
 					}
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
@@ -489,15 +487,13 @@ public class NavitGraphics
 						// if in menu view:
 						// use as DOWN key
 						s = java.lang.String.valueOf((char) 14);
-						handled = true;
 					}
 					else
 					{
 						// if on map view:
 						// volume DOWN
 						//s = java.lang.String.valueOf((char) 4);
-						handled = false;
-						return handled;
+						return false;
 					}
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER)
@@ -530,7 +526,7 @@ public class NavitGraphics
 			{
 				KeypressCallback(KeypressCallbackID, s);
 			}
-			return handled;
+			return true;
 		}
 
 		@Override
@@ -547,33 +543,11 @@ public class NavitGraphics
 			{
 				if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
 				{
-					if (!in_map)
-					{
-						//s = java.lang.String.valueOf((char) 16);
-						handled = true;
-						return handled;
-					}
-					else
-					{
-						//s = java.lang.String.valueOf((char) 21);
-						handled = false;
-						return handled;
-					}
+					return (!in_map);
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
 				{
-					if (!in_map)
-					{
-						//s = java.lang.String.valueOf((char) 14);
-						handled = true;
-						return handled;
-					}
-					else
-					{
-						//s = java.lang.String.valueOf((char) 4);
-						handled = false;
-						return handled;
-					}
+					return (!in_map);
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH) {
 					/* Handle event in Main Activity if map is shown */
@@ -588,8 +562,7 @@ public class NavitGraphics
 					}
 					//Log.e("NavitGraphics", "KEYCODE_BACK up");
 					//s = java.lang.String.valueOf((char) 27);
-					handled = true;
-					return handled;
+					return true;
 				}
 				else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
 				{
@@ -604,7 +577,6 @@ public class NavitGraphics
 							// if in menu view:
 							// use as OK (Enter) key
 							s = java.lang.String.valueOf((char) 13);
-							handled = true;
 						}
 					}
 					else
@@ -612,8 +584,7 @@ public class NavitGraphics
 						// if on map view:
 						// volume UP
 						//s = java.lang.String.valueOf((char) 1);
-						handled = false;
-						return handled;
+						return false;
 					}
 				}
 			}
@@ -626,7 +597,7 @@ public class NavitGraphics
 			{
 				KeypressCallback(KeypressCallbackID, s);
 			}
-			return handled;
+			return true;
 
 		}
 
@@ -716,7 +687,7 @@ public class NavitGraphics
 	{
 		if (parent == null)
 		{
-			this.activity = activity;
+			this.activity = (Navit) activity;
 			view = new NavitView(activity);
 			//activity.registerForContextMenu(view);
 			view.setClickable(false);
@@ -767,7 +738,7 @@ public class NavitGraphics
 		, CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
 	};
 
-	static public msg_type[] msg_values = msg_type.values();
+	static private msg_type[] msg_values = msg_type.values();
 	
 	public Handler	callback_handler	= new Handler()
 		{
@@ -849,8 +820,8 @@ public class NavitGraphics
 		if (frameLayout == null)
 			return;
 
-		if (!(activity instanceof Navit)) {
-			Log.e("NavitGraphics", "Main Activity is not a Navit instance, cannot update padding");
+		if (activity == null) {
+			Log.w("NavitGraphics", "Main Activity is not a Navit instance, cannot update padding");
 			return;
 		}
 
@@ -976,14 +947,18 @@ public class NavitGraphics
 	public void setMotionCallback(int id)
 	{
 		MotionCallbackID = id;
-		Navit.setMotionCallback(id, this);
+		if(activity != null){
+			activity.setMotionCallback(id, this);
+		}
 	}
 
 	public void setKeypressCallback(int id)
 	{
 		KeypressCallbackID = id;
 		// set callback id also in main intent (for menus)
-		Navit.setKeypressCallback(id, this);
+		if(activity != null) {
+			activity.setKeypressCallback(id, this);
+		}
 	}
 
 
@@ -1140,8 +1115,8 @@ public class NavitGraphics
 	}
 
 	/* These constants must be synchronized with enum draw_mode_num in graphics.h. */
-	public static final int draw_mode_begin = 0;
-	public static final int draw_mode_end = 1;
+	private static final int draw_mode_begin = 0;
+	private static final int draw_mode_end = 1;
 
 	protected void draw_mode(int mode)
 	{
@@ -1194,9 +1169,7 @@ public class NavitGraphics
 
 	public static String getLocalizedString(String text)
 	{
-		String ret = CallbackLocalizedString(text);
-		//Log.e("NavitGraphics", "callback_handler -> lozalized string=" + ret);
-		return ret;
+		return CallbackLocalizedString(text);
 	}
 
 

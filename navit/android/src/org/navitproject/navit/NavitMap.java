@@ -3,11 +3,11 @@ package org.navitproject.navit;
 import java.io.File;
 
 public class NavitMap {
-	String fileName;
+	private String fileName;
 	String mapName;
-	String mapPath;
+	private String mapPath;
 
-	public NavitMap(String path, String map_file_name) {
+	NavitMap(String path, String map_file_name) {
 		mapPath = path;
 		fileName = map_file_name;
 		if (map_file_name.endsWith(".bin")) {
@@ -17,7 +17,7 @@ public class NavitMap {
 		}
 	}
 
-	public NavitMap(String map_location) {
+	NavitMap(String map_location) {
 		File mapFile = new File(map_location);
 		
 		mapPath = mapFile.getParent() + "/";
