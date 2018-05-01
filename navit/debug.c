@@ -320,7 +320,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #endif
 	message_origin -= len;
 	dbg_assert(message_origin >= debug_message);
-	bcopy(function, message_origin, len);
+	memmove(message_origin, function, len);
 	message_origin--;
 	dbg_assert(message_origin >= debug_message);
 	*message_origin = ':';
@@ -331,7 +331,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #endif
 	message_origin -= len;
 	dbg_assert(message_origin >= debug_message);
-	bcopy(module, message_origin, len);
+	memmove(message_origin, module, len);
 
 	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
@@ -354,7 +354,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 			*end++ = ':';
 			len=strlen(message_origin);
 			dbg_assert(end+len < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
-			bcopy(message_origin,end,len);	/* Note: from this point, do not use message_origin as it may point to garbage. We use bcopy here as both message_origin and destination may overlap */
+			memmove(end,message_origin,len);	/* Note: from this point, do not use message_origin as it may point to garbage. We use memmove here as both message_origin and destination may overlap */
 			end+=len;
 			dbg_assert(end+1 < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow for both ':' and terminating '\0' */
 			*end++ = ':';
