@@ -1685,8 +1685,8 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Nakupování"
 
-msgid "Distance from screen center (km)"
-msgstr "Vzdálenost od středu mapy (km)"
+msgid "Select a search radius from screen center"
+msgstr "Vzdálenost od středu mapy"
 
 #, c-format
 msgid "POI %s. %s"

@@ -61,10 +61,6 @@ street_name_debug(struct street_name *sn, FILE *out)
 static void
 street_name_get(struct street_name *name, unsigned char **p)
 {
-#if 0
-	static FILE *out;
-	static GHashTable *hash;
-#endif
 	unsigned char *start=*p;
 	name->len=get_u16_unal(p);
 	name->country=get_u16_unal(p);
@@ -79,18 +75,6 @@ street_name_get(struct street_name *name, unsigned char **p)
 	name->tmp_len=name->aux_len;
 	name->tmp_data=name->aux_data;
 	*p=start+name->len;
-#if 0
-	if (! out) {
-		out=fopen("hn.txt","a");
-	}
-	if (! hash) {
-		hash=g_hash_table_new(NULL,NULL);
-	}
-	if (! g_hash_table_lookup(hash, *p)) {
-		g_hash_table_insert(hash, *p, (void *)1);
-		street_name_debug(name, out);
-	}
-#endif
 }
 
 static int
@@ -414,13 +398,6 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 			struct coord c;
 			street_coord_get(street, &c, 1);
 		}
-#if 0
-		if (street->housenumber) {
-			if (street_get_housenumber(mr, street, item))
-				return 1;
-			street->housenumber=0;
-		}
-#endif
 		if (mr->b.p == mr->b.p_start) {
 			street_get_data(street, &mr->b.p);
 			street->name_file=mr->m->file[file_strname_stn];
@@ -445,16 +422,8 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 			return 0;
 		if (street_str_get_segid(street->str) < 0)
 			street->type++;
-#if 0
-		dbg_assert(street->p != NULL);
-#endif
 		street->next=NULL;
 		street->status_rewind=street->status=street_str_get_segid(&street->str[1]) >= 0 ? 0:1;
-#if 0
-		if (street->type->country != 0x31) {
-			printf("country=0x%x\n", street->type->country);
-		}
-#endif
 		item->id_hi=street_type_get_country(street->type) | (mr->current_file << 16);
 		item->id_lo=street_str_get_segid(street->str) > 0 ? street_str_get_segid(street->str) : -street_str_get_segid(street->str);
 		switch(street_str_get_type(street->str) & 0x1f) {
@@ -530,13 +499,6 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 			street->flags|=(street_str_get_limit(street->str) & 0x30) ? AF_ONEWAY:0;
 			street->flags|=(street_str_get_limit(street->str) & 0x03) ? AF_ONEWAYREV:0;
 		}
-#if 0
-		coord_debug=(street->str->unknown2 != 0x40 || street->str->unknown3 != 0x40);
-		if (coord_debug) {
-			item->type=type_street_unkn;
-			printf("%d %02x %02x %02x %02x\n", street->str->segid, street->str->type, street->str->limit, street->str->unknown2, street->str->unknown3);
-		}
-#endif
 		street->p_rewind=street->p;
 		street->name.len=0;
 		street->attr_next=attr_label;
@@ -580,12 +542,6 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
 	street->str+=(res & 0xfff)-1;
 	dbg(lvl_debug,"segid 0x%x", street_str_get_segid(&street->str[1]));
 	return street_get(mr, street, item);
-#if 0
-        mr->b.p=mr->b.block_start+(res & 0xffff);
-        return town_get(mr, twn, item);
-#endif
-
-	return 0;
 }
 
 struct street_name_index {
@@ -999,9 +955,6 @@ housenumber_search_setup(struct map_rect_priv *mr)
 	mr->search_str=g_strdup(mr->search_attr->u.str);
 	dbg(lvl_debug,"last %p",mr->b.p);
 	street_name_get(&mr->street.name, &mr->b.p);
-#if 0
-	debug(mr);
-#endif
 	while (id > 0) {
 		id--;
 		dbg(lvl_debug,"loop");

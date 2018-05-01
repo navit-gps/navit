@@ -102,15 +102,6 @@ speech_cmdline_search(GList *samples, int suffix_len, const char *text, int deco
 	}
 	return result;
 }
-#if 0
-
-	r=search(l, strlen(path)+1, suffix_len, argv[1]);
-	while (r) {
-		printf("%s/%s\n",path,r->data);
-		r=g_list_next(r);
-	}
-	return 0;
-#endif
 
 struct speech_priv {
 	char *cmdline;

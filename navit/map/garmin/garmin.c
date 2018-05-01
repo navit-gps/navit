@@ -814,17 +814,6 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		}
 		return -1;
 	}
-#if 0
-	sl = (18-(gm->maxlevel - gm->minlevel))/2;
-	el = sl + (gm->maxlevel - gm->minlevel);
-	if (level < sl)
-		level = sl;
-	if (level > el)
-		level = el;
-	level = level - sl;
-	level = (gm->maxlevel - gm->minlevel) - level;
-	dlog(3, "sl=%d el=%d level=%d\n", sl, el, level);
-#endif
 	sl = (18-gm->zoomlevels)/2;
 	el = sl + gm->zoomlevels;
 	if (level < sl)

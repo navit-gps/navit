@@ -23,20 +23,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager.TaskDescription;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -51,9 +44,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.Manifest;
 import android.media.AudioManager;
@@ -63,11 +53,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -77,11 +62,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.NotificationCompat;
-
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 public class Navit extends Activity
 {
@@ -117,8 +101,13 @@ public class Navit extends Activity
 	Boolean                          isFullscreen                   = false;
 	private static final int         MY_PERMISSIONS_REQUEST_ALL     = 101;
 	public static NotificationManager       nm;
+	private static Navit navit;
 
-	
+	public static Navit getInstance() {
+		return navit;
+	}
+
+
 	/**
 	 * @brief A Runnable to restore soft input when the user returns to the activity.
 	 * 
@@ -168,7 +157,6 @@ public class Navit extends Activity
 			if (os != null)
                 		os.close();
 		}
-		return;
 	}
 
 
@@ -259,7 +247,7 @@ public class Navit extends Activity
 			infobox.show();
 			SharedPreferences.Editor edit_settings = settings.edit();
 			edit_settings.putBoolean("firstStart", false);
-			edit_settings.commit();
+			edit_settings.apply();
 		}
 	}
 
@@ -273,6 +261,7 @@ public class Navit extends Activity
 		else
 			this.getActionBar().hide();
 
+		navit = this;
 		dialogs = new NavitDialogs(this);
 
 		NavitResources = getResources();
@@ -327,14 +316,13 @@ public class Navit extends Activity
 		// get the local language -------------
 		Locale locale = java.util.Locale.getDefault();
 		String lang = locale.getLanguage();
-		String langu = lang;
 		String langc = lang;
 		Log.d(TAG, "lang=" + lang);
-		int pos = langu.indexOf('_');
+		int pos = lang.indexOf('_');
 		if (pos != -1)
 		{
-			langc = langu.substring(0, pos);
-			NavitLanguage = langc + langu.substring(pos).toUpperCase(locale);
+			langc = lang.substring(0, pos);
+			NavitLanguage = langc + lang.substring(pos).toUpperCase(locale);
 			Log.d(TAG, "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
 			// set lang. for translation
 			NavitTextTranslations.main_language = langc;
@@ -420,7 +408,6 @@ public class Navit extends Activity
 			Log.e(TAG, "Failed to extract navit.xml for " + my_display_density);
 		}
 
-		// --> dont use android.os.Build.VERSION.SDK_INT, needs API >= 4
 		Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
 
@@ -488,22 +475,20 @@ public class Navit extends Activity
 		switch (requestCode) {
 			case MY_PERMISSIONS_REQUEST_ALL: {
 				if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-						&& grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-						// ok, we got permissions
-				} else {
-					AlertDialog.Builder infobox = new AlertDialog.Builder(this);
-					infobox.setTitle(getString(R.string.permissions_info_box_title)); // TRANS
-					infobox.setCancelable(false);
-					infobox.setMessage(getString(R.string.permissions_not_granted));
-					// TRANS
-					infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface arg0, int arg1) {
-							exit();
-						}
-					});
-					infobox.show();
+                                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+					return;
 				}
-				return;
+				AlertDialog.Builder infobox = new AlertDialog.Builder(this);
+				infobox.setTitle(getString(R.string.permissions_info_box_title)); // TRANS
+				infobox.setCancelable(false);
+				infobox.setMessage(getString(R.string.permissions_not_granted));
+				// TRANS
+				infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        exit();
+                    }
+                });
+				infobox.show();
 			}
 		}
 	}
@@ -552,7 +537,9 @@ public class Navit extends Activity
 						msg.setData(b);
 						msg.sendToTarget();
 						Log.e(TAG, "target found (b): " + geoString);
-					} catch (NumberFormatException e) { } // nothing to do here
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			else {
@@ -599,18 +586,23 @@ public class Navit extends Activity
 	}
 
 	// define callback id here
-	public static NavitGraphics N_NavitGraphics = null;
+	private NavitGraphics N_NavitGraphics = null;
 
 	// callback id gets set here when called from NavitGraphics
-	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
+	public void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
 	{
 		N_NavitGraphics = ng;
 	}
 
-	public static void setMotionCallback(int mo_cb_id, NavitGraphics ng)
+	public void setMotionCallback(int mo_cb_id, NavitGraphics ng)
 	{
 		N_NavitGraphics = ng;
 	}
+
+	public NavitGraphics getNavitGraphics() {
+		return N_NavitGraphics;
+	}
+
 
 	public void start_targetsearch_from_intent(String target_address)
 	{
@@ -711,8 +703,6 @@ public class Navit extends Activity
 	
 	/**
 	 * @brief Shows the native keyboard or other input method.
-	 * 
-	 * @return {@code true} if an input method is going to be displayed, {@code false} if not
 	 */
 	public int showNativeKeyboard() {
 		/*
@@ -803,7 +793,7 @@ public class Navit extends Activity
 				SharedPreferences prefs = this.getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE); 
 				SharedPreferences.Editor  prefs_editor = prefs.edit(); 
 				prefs_editor.putString("filenamePath", newDir); 
-				prefs_editor.commit();
+				prefs_editor.apply();
 				Toast.makeText(this, String.format(Navit.T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();                 
 			} 
 				else Log.w(TAG, "select path failed"); 
@@ -834,15 +824,13 @@ public class Navit extends Activity
 		return true;
 	}
 
-	public boolean setMapLocation() 
+	public void setMapLocation()
 	{ 
 		Intent fileExploreIntent = new Intent(this,FileBrowserActivity.class); 
 		fileExploreIntent
 			.putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
 			.setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
-		startActivityForResult(fileExploreIntent,NavitSelectStorage_id); 
-		                 
-		return true; 
+		startActivityForResult(fileExploreIntent,NavitSelectStorage_id);
 	} 
 
 	@Override
