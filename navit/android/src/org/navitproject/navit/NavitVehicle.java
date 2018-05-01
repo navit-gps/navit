@@ -20,7 +20,6 @@
 package org.navitproject.navit;
 
 import java.util.List;
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +39,7 @@ import android.support.v4.content.ContextCompat;
 
 public class NavitVehicle {
 	
-	public static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
+	private static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
 
 	public static Location lastLocation = null;
 
