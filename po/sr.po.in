@@ -1678,8 +1678,8 @@ msgstr "Такси"
 msgid "Shopping"
 msgstr "Куповина"
 
-msgid "Distance from screen center (km)"
-msgstr "Растојање од средишта екрана (km)"
+msgid "Select a search radius from screen center"
+msgstr "Растојање од средишта екрана"
 
 #, c-format
 msgid "POI %s. %s"
