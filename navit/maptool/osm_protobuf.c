@@ -184,15 +184,9 @@ process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val)
 {
 	char keybuff[1024];
 	char valbuff[1024];
-#if 0
-	get_string(keybuff, sizeof(keybuff), primitive_block, key, 1);
-	get_string(valbuff, sizeof(valbuff), primitive_block, val, 1);
-	printf("\t\t<tag k=\"%s\" v=\"%s\" />\n",keybuff,valbuff);
-#else
 	get_string(keybuff, sizeof(keybuff), primitive_block, key, 0);
 	get_string(valbuff, sizeof(valbuff), primitive_block, val, 0);
 	osm_add_tag(keybuff, valbuff);
-#endif
 }
 
 
@@ -216,26 +210,12 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 		timestamp+=dense->denseinfo->timestamp[i];
 		has_tags=dense->keys_vals && dense->keys_vals[j];
 		osm_add_node(id, lat/latlon_scale,lon/latlon_scale);
-#if 0
-		printf("\t<node id=\"%Ld\" lat=\"%.7f\" lon=\"%.7f\" version=\"%d\" changeset=\"%Ld\"",id,lat/latlon_scale,lon/latlon_scale,dense->denseinfo->version[i],changeset);
-		process_user(primitive_block, user_sid, uid, 0);
-		process_timestamp(timestamp);
-#endif
 		if (has_tags) {
-#if 0
-			printf(">\n");
-#endif
 			while (dense->keys_vals[j]) {
 				process_tag(primitive_block, dense->keys_vals[j], dense->keys_vals[j+1]);
 				j+=2;
 			}
-#if 0
-			printf("\t</node>\n");
-		} else
-			printf("/>\n");
-#else
 		}
-#endif
 		osm_end_node(osm);
 		j++;
 	}
@@ -258,25 +238,12 @@ process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct ma
 	long long ref=0;
 
 	osm_add_way(way->id);
-#if 0
-	printf("\t<way id=\"%Ld\"",way->id);
-	process_info(primitive_block, way->info);
-	printf(">\n");
-#else
-#endif
 	for (i = 0 ; i < way->n_refs ; i++) {
 		ref+=way->refs[i];
 		osm_add_nd(ref);
-#if 0
-		printf("\t\t<nd ref=\"%Ld\"/>\n",ref);
-#else
-#endif
 	}
 	for (i = 0 ; i < way->n_keys ; i++) 
 		process_tag(primitive_block, way->keys[i], way->vals[i]);
-#if 0
-	printf("\t</way>\n");
-#endif
 	osm_end_way(osm);
 }
 
@@ -287,45 +254,15 @@ process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *rela
 	long long ref=0;
 	char rolebuff[1024];
 
-#if 0
-	printf("\t<relation id=\"%Ld\"",relation->id);
-	process_info(primitive_block, relation->info);
-	printf(">\n");
-#endif
 	osm_add_relation(relation->id);
 	for (i = 0 ; i < relation->n_roles_sid ; i++) {
-#if 0
-		printf("\t\t<member type=\"");
-		switch (relation->types[i]) {
-		case 0:
-			printf("node");
-			break;
-		case 1:
-			printf("way");
-			break;
-		case 2:
-			printf("relation");
-			break;
-		default:
-			printf("unknown");
-			break;
-		}
-#endif
 		ref+=relation->memids[i];
 		get_string(rolebuff, sizeof(rolebuff), primitive_block, relation->roles_sid[i], 1);
-#if 0
-		printf("\" ref=\"%Ld\" role=\"%s\"/>\n",ref,rolebuff);
-#else
 		osm_add_member(relation->types[i]+1,ref,rolebuff);
-#endif
 	}
 	for (i = 0 ; i < relation->n_keys ; i++) 
 		process_tag(primitive_block, relation->keys[i], relation->vals[i]);
-#if 0
-	printf("\t</relation>\n");
-#else
 	osm_end_relation(osm);
-#endif
 }
 
 static void
@@ -341,9 +278,6 @@ process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm
 			process_way(primitive_block, primitive_group->ways[j], osm);
 		for (j = 0 ; j < primitive_group->n_relations ; j++)
 			process_relation(primitive_block, primitive_group->relations[j], osm);
-#if 0
-		printf("Group %p %d %d %d %d\n",primitive_group->dense,primitive_group->n_nodes,primitive_group->n_ways,primitive_group->n_relations,primitive_group->n_changesets);
-#endif
 	}
 	osmpbf__primitive_block__free_unpacked(primitive_block, &protobuf_c_system_allocator);
 }
@@ -357,10 +291,6 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 	unsigned char *data;
 	unsigned char *buffer=g_malloc(MAX_BLOB_LENGTH);
 
-#if 0
-	printf("<?xml version='1.0' encoding='UTF-8'?>\n");
-	printf("<osm version=\"0.6\" generator=\"pbf2osm\">\n");
-#endif
 	while ((header=read_header(in))) {
 		blob=read_blob(header, in, buffer);
 		data=uncompress_blob(blob);
@@ -378,8 +308,5 @@ map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm)
 		osmpbf__blob_header__free_unpacked(header, &protobuf_c_system_allocator);
 	}
 	g_free(buffer);
-#if 0
-	printf("</osm>\n");
-#endif
 	return 1;
 }

@@ -20,7 +20,6 @@
 package org.navitproject.navit;
 
 import android.content.Intent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.app.AlertDialog;
@@ -31,17 +30,17 @@ import android.util.Log;
 public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
 	private TextToSpeech mTts;
 	private Navit navit;
-	int MY_DATA_CHECK_CODE=1;
+	private int MY_DATA_CHECK_CODE=1;
 
 
 	public void onInit(int status)
 	{
-		Log.e("NavitSpeech2","Status "+status);
+		Log.d("NavitSpeech2","Status "+status);
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Log.e("NavitSpeech2","onActivityResult "+requestCode+" "+resultCode);
+		Log.d("NavitSpeech2","onActivityResult "+requestCode+" "+resultCode);
 		if (requestCode == MY_DATA_CHECK_CODE) {
 			if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
 				// success, create the TTS instance

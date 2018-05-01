@@ -308,14 +308,14 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
-		gchar *fmt_newline;
+		vsnprintf(debug_message+strlen(debug_message),sizeof(debug_message)-1-strlen(debug_message),fmt,ap);
 #ifdef HAVE_API_WIN32_BASE
-		fmt_newline = g_strconcat(fmt, "\r\n");
-#else
-		fmt_newline = g_strconcat(fmt, "\n");
+		if (strlen(debug_message)<sizeof(debug_message))
+			debug_message[strlen(debug_message)] = '\r';	/* For Windows platforms, add \r at the end of the buffer (if any room) */
 #endif
-		vsnprintf(debug_message+strlen(debug_message),4095-strlen(debug_message),fmt_newline,ap);
-		g_free(fmt_newline);
+		if (strlen(debug_message)<sizeof(debug_message))
+			debug_message[strlen(debug_message)] = '\n';	/* Add \n at the end of the buffer (if any room) */
+		debug_message[sizeof(debug_message)-1] = '\0';	/* Force NUL-termination of the string (if buffer size contraints did not allow for full string to fit */
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
 		mbstowcs(muni, debug_message, strlen(debug_message)+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
@@ -403,9 +403,6 @@ debug_dump_mallocs(void)
 		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
 		for (i = 0 ; i < 8 ; i++)
 			fprintf(stderr,"\tlist *%p\n",head->return_address[i]);
-#if 0
-		fprintf(stderr,"%s\n",head+1);
-#endif
 		head=head->next;
 	}
 }

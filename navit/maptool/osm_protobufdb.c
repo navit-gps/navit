@@ -464,86 +464,13 @@ osm_protobufdb_start_file(struct osm_protobufdb_context *ctx, int type, int num)
 static void
 test(void) 
 {
-#if 0
-	struct node n,o;
-	long long id=1;
-	long long lat=0;
-	long long lon=0;
-	long long timestamp=0;
-	long long changeset=0;
-	int version=1;
-	int user_sid=0;
-	int uid=0;
-	int p;
-	n.id=1;
-#endif
-#if 0
-	OSMPBF__DenseInfo di=OSMPBF__DENSE_INFO__INIT;
-	OSMPBF__DenseNodes dn=OSMPBF__DENSE_NODES__INIT;
-#endif
-
 	context.current_file=-1;
-
-#if 0
-	context.di=g_malloc(sizeof(*context.di));
-	*context.di=di;
-	context.dn=g_malloc(sizeof(*context.dn));
-	*context.dn=dn;
-#endif
-
-#if 0
-	di.n_version=1;
-	di.version=&version;
-	di.n_timestamp=1;
-	di.timestamp=&timestamp;
-	di.n_changeset=1;
-	di.changeset=&changeset;
-	di.n_user_sid=1;
-	di.user_sid=&user_sid;
-	di.n_uid=1;
-	di.uid=&uid;
-#endif
-#if 0
-	n.id=1;
-	n.lat=1;
-	n.lon=1;
-	n.timestamp=1;
-	n.changeset=1;
-	n.version=1;
-	n.user_sid=0;
-	n.uid=0;
-	p=osm_protobufdb_insert_densenode(&n.id, &o, &dn);
-	osm_protobufdb_modify(&n, &o, p, &dn);
-	p=osm_protobufdb_insert_densenode(&n.id, &o, &dn);
-	osm_protobufdb_modify(&n, &o, p, &dn);
-#endif
-
-
-#if 0
-	dn.n_id=1;
-	dn.id=&id;
-	dn.n_lat=1;
-	dn.lat=&lat;
-	dn.n_lon=1;
-	dn.lon=&lon;
-#endif
-#if 0
-	st.n_s=1;
-	data.data="Test";
-	data.len=4;
-	st.s=&data;
-#endif
 }
 
 static void
 finish(void)
 {
 	osm_protobufdb_finish_file(&context);
-#if 0
-	osm_protobufdb_write_primitive_group(context.pg, context.pb);
-	osm_protobufdb_write_primitive_block(context.pb, context.blob);
-	osm_protobufdb_write_blob_to_file();
-#endif
 }
 
 static long long
@@ -632,16 +559,8 @@ static int
 osm_protobufdb_end_node(struct osm_protobufdb_context *ctx)
 {
 	int p;
-#if 0
-	OSMPBF__Node *n=&ctx->n,offset;
-	OSMPBF__Info *i=&ctx->i,offseti;
-	osm_protobufdb_start_densenode(ctx);
-	p=osm_protobufdb_insert_densenode(n->id, &offset, &offseti, context.dn);
-	osm_protobufdb_modify_densenode(n, i, &offset, &offseti, p, context.dn);
-#else
 	p=osm_protobufdb_insert_node(ctx->n.id, ctx->pg);
 	osm_protobufdb_modify_node(&ctx->n, &ctx->i, p, ctx->pg);
-#endif
 	ctx->in_node=0;
 	return 1;
 }

@@ -43,11 +43,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#if 0
-#include <assert.h>
-#include <unistd.h>
-#include <sys/time.h>
-#endif
 #include "navit_nls.h"
 #include "glib_slice.h"
 #include "config.h"
@@ -2142,9 +2137,6 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 {
 	int ret;
 	struct route_traffic_distortion dist,*distp=NULL;
-#if 0
-	dbg(lvl_debug,"flags 0x%x mask 0x%x flags 0x%x", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
-#endif
 	if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
 	if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
@@ -2766,9 +2758,6 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	posinfo=pos;
 	while (s && !dstinfo) { /* following start->seg, which indicates the least costly way to reach our destination */
 		segs++;
-#if 0
-		printf("start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
-#endif
 		if (s->start == start) {		
 			if (item_is_equal(s->data.item, dst->street->item) && (s->end->seg == s || !posinfo))
 				dstinfo=dst;
@@ -3297,34 +3286,6 @@ route_info_street(struct route_info *rinf)
 	return rinf->street;
 }
 
-#if 0
-struct route_crossings *
-route_crossings_get(struct route *this, struct coord *c)
-{
-      struct route_point *pnt;
-      struct route_segment *seg;
-      int crossings=0;
-      struct route_crossings *ret;
-
-       pnt=route_graph_get_point(this, c);
-       seg=pnt->start;
-       while (seg) {
-		printf("start: 0x%x 0x%x\n", seg->item.id_hi, seg->item.id_lo);
-               crossings++;
-               seg=seg->start_next;
-       }
-       seg=pnt->end;
-       while (seg) {
-		printf("end: 0x%x 0x%x\n", seg->item.id_hi, seg->item.id_lo);
-               crossings++;
-               seg=seg->end_next;
-       }
-       ret=g_malloc(sizeof(struct route_crossings)+crossings*sizeof(struct route_crossing));
-       ret->count=crossings;
-       return ret;
-}
-#endif
-
 
 /**
  * @brief Implementation-specific map rect data
@@ -3708,16 +3669,6 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct map_rect_priv * mr;
 	dbg(lvl_debug,"enter");
-#if 0
-	if (! route_get_pos(priv->route))
-		return NULL;
-	if (! route_get_dst(priv->route))
-		return NULL;
-#endif
-#if 0
-	if (! priv->route->path2)
-		return NULL;
-#endif
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->mpriv = priv;
 	mr->item.priv_data = mr;

@@ -424,9 +424,6 @@ add_tile_hash(struct tile_head *th)
 	int idx,len,maxnamelen=0;
 	char **data;
 
-#if 0
-	g_hash_table_insert(tile_hash2, string_hash_lookup( th->name ), th);
-#endif
 	for( idx = 0; idx < th->num_subtiles; idx++ ) {
 
 		data = th_get_subtile( th, idx );
@@ -502,13 +499,7 @@ load_tilesdir(FILE *in)
 		th->zipnum=zipnum++;
 		th->zip_data=NULL;
 		th->name=string_hash_lookup(tile);
-#if 0
-		printf("tile '%s' %d\n",tile,size);
-#endif
 		while (fscanf(in,":%[^:\n]",subtile) == 1) {
-#if 0
-			printf("subtile '%s'\n",subtile);
-#endif
 			th=g_realloc(th, sizeof(struct tile_head)+(th->num_subtiles+1)*sizeof(char*));
 			*th_get_subtile( th, th->num_subtiles ) = string_hash_lookup(subtile);
 			th->num_subtiles++;
@@ -548,9 +539,6 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 	}
 	len=maxlen;
 	while (len >= 0) {
-#if 0
-		fprintf(stderr,"PROGRESS: collecting tiles with len=%d\n", len);
-#endif
 		next=g_list_first(tiles_list);
 		while (next) {
 			if (strlen(next->data) == len) {
