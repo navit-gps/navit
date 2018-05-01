@@ -218,17 +218,28 @@ debug_level_get(const char *message_category)
 	return GPOINTER_TO_INT(level);
 }
 
+/**
+ * @brief Write a timestamp to a string buffer
+ *
+ * Timestamp has the format "HH:MM:SS:mmm|" (with mmm=milliseconds), or under Windows "SSSSS:uuuuuu|" (with uuuuuu=microseconds)
+ *
+ * @param[out] buffer The buffer to write to
+ *
+ * @warning Buffer overflow may occur on @p buffer, if it is less than 14-bytes long (13 chars will be stored at max)
+ */
 static void debug_timestamp(char *buffer)
 {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
 	LARGE_INTEGER counter, frequency;
 	double val;
+	unsigned int intpart;
 	QueryPerformanceCounter(&counter);
 	QueryPerformanceFrequency(&frequency);
 	val=counter.HighPart * 4294967296.0 + counter.LowPart;
 	val/=frequency.HighPart * 4294967296.0 + frequency.LowPart;
+	intpart=((unsigned int)val)/100000; /* Extract all digits above 5 lower from integer part */
+	val = val - (intpart * 100000); /* Limit val integer part to 5 digits */
 	sprintf(buffer,"%.6f|",val);
-
 #else
 	struct timeval tv;
 
@@ -281,43 +292,95 @@ dbg_level_to_android(dbg_level level)
 }
 #endif
 
+/**
+ * @brief Write a log message
+ *
+ * @param level The level of the message. The message will only be written if \p level is higher than the minimum (global, per module or per function)
+ * @param module The name of the module that is initiating the log message
+ * @param mlen The length of string \p module
+ * @param function The name of the function that is initiating the log message
+ * @param flen The length of string \p function
+ * @param prefix Force prepending the message with context information (a timestamp, if timestamp_prefix is set), and the module and function name
+ * @param fmt The format string that specifies how subsequent arguments are output
+ * @param ap A list of arguments to use for substitution in the format string
+ */
 void
 debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
-#if defined HAVE_API_WIN32_CE || defined _MSC_VER
-	char message_origin[4096];
-#else
-	char message_origin[mlen+flen+3];
-#endif
+	char *end;	/* Pointer to the NUL terminating byte of debug_message */
+	char debug_message[4096];
+	char *message_origin = debug_message + sizeof(debug_message) -1;	/* message_origin is actually stored at the very end of debug_message buffer */
+	size_t len;	/* Length of the currently processed C-string */
 
-	sprintf(message_origin, "%s:%s", module, function);
+	*message_origin = '\0';	/* Force string termination of message_origin (last byte of debug_message) */
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
+	len = strlen(function);
+#else
+	len = flen;
+#endif
+	message_origin -= len;
+	dbg_assert(message_origin >= debug_message);
+	bcopy(function, message_origin, len);
+	message_origin--;
+	dbg_assert(message_origin >= debug_message);
+	*message_origin = ':';
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
+	len = strlen(module);
+#else
+	len = mlen;
+#endif
+	message_origin -= len;
+	dbg_assert(message_origin >= debug_message);
+	bcopy(module, message_origin, len);
+
 	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
 		wchar_t muni[4096];
 #endif
-		char debug_message[4096];
 		debug_message[0]='\0';
+		end = debug_message;
 		if (prefix) {
-			if (timestamp_prefix)
+			if (timestamp_prefix) {
+				dbg_assert(sizeof(debug_message)>=14);
 				debug_timestamp(debug_message);
-			strcpy(debug_message+strlen(debug_message),dbg_level_to_string(level));
-			strcpy(debug_message+strlen(debug_message),":");
-			strcpy(debug_message+strlen(debug_message),message_origin);
-			strcpy(debug_message+strlen(debug_message),":");
+				len = strlen(debug_message);
+				end = debug_message+len;
+			}
+			dbg_assert(end+strlen(dbg_level_to_string(level))+1 < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
+			strcpy(end,dbg_level_to_string(level));
+			len = strlen(debug_message);
+			end = debug_message+len;
+			dbg_assert(end < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
+			*end++ = ':';
+			len=strlen(message_origin);
+			dbg_assert(end+len < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
+			bcopy(message_origin,end,len);	/* Note: from this point, do not use message_origin as it may point to garbage. We use bcopy here as both message_origin and destination may overlap */
+			end+=len;
+			dbg_assert(end+1 < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow for both ':' and terminating '\0' */
+			*end++ = ':';
+			*end = '\0';
 		}
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
-		vsnprintf(debug_message+strlen(debug_message),sizeof(debug_message)-1-strlen(debug_message),fmt,ap);
+		len = strlen(debug_message);
+		vsnprintf(end,sizeof(debug_message) - len,fmt,ap);
+		len = strlen(debug_message);
+		end = debug_message+len;
 #ifdef HAVE_API_WIN32_BASE
-		if (strlen(debug_message)<sizeof(debug_message))
-			debug_message[strlen(debug_message)] = '\r';	/* For Windows platforms, add \r at the end of the buffer (if any room) */
+		if (len + 1 < sizeof(debug_message) - 1) { /* For Windows platforms, add \r at the end of the buffer (if any room), check if e have room for one more character */
+			*end++ = '\r';
+			len++;
+			*end = '\0';
+		}
 #endif
-		if (strlen(debug_message)<sizeof(debug_message))
-			debug_message[strlen(debug_message)] = '\n';	/* Add \n at the end of the buffer (if any room) */
-		debug_message[sizeof(debug_message)-1] = '\0';	/* Force NUL-termination of the string (if buffer size contraints did not allow for full string to fit */
+		if (len + 1 < sizeof(debug_message)) { /* Add \n at the end of the buffer (if any room) */
+			*end++ = '\n';
+			len++;
+			*end = '\0';
+		}
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
-		mbstowcs(muni, debug_message, strlen(debug_message)+1);
+		mbstowcs(muni, debug_message, len+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
 #else
 #ifdef HAVE_API_ANDROID
@@ -325,7 +388,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #else
 #ifdef HAVE_SOCKET
 		if (debug_socket != -1) {
-			sendto(debug_socket, debug_message, strlen(debug_message), 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
+			sendto(debug_socket, debug_message, len, 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
 			return;
 		}
 #endif
