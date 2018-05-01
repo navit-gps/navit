@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#aeb00fd68dc05c4ea341fd9480f5f810f":[2,0,1,0,0,13,3],
+"classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html":[2,0,1,0,0,14],
 "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a02727414f9ce45fa734aacca3726e33f":[2,0,1,0,0,14,3],
 "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a53375d1c4b645297b803d77b235a2f52":[2,0,1,0,0,14,1],
 "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a5ce5cff803fb38558e698a95f5909637":[2,0,1,0,0,14,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "config___8c.html#a0cb3c721c950a944cff53df4153b3c07":[3,0,38,11],
 "config___8c.html#a158deb79fab4dbc72aff7d8e3ad1297d":[3,0,38,1],
 "config___8c.html#a18363ec6c557c346dd08a7525dc7331d":[3,0,38,12],
-"config___8c.html#a18db71389873bac46dbc64cbdffdd561":[3,0,38,3],
-"config___8c.html#a306b9a1c8876777587063b536050dd65":[3,0,38,5],
-"config___8c.html#a36f602b9d5b893f09c3eb59de9216e1b":[3,0,38,2]
+"config___8c.html#a18db71389873bac46dbc64cbdffdd561":[3,0,38,3]
 };

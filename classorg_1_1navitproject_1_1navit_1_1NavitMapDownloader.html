@@ -109,9 +109,8 @@ $(document).ready(function(){initNavTree('classorg_1_1navitproject_1_1navit_1_1N
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pac-methods">Package Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
@@ -134,8 +133,6 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a83ccbe82c078cecf702cc72f177509b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4">NavitMapDownloader</a> (<a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a66e5838b06299545e41baa92e7ff9c57">map_id</a>)</td></tr>
-<tr class="separator:a83ccbe82c078cecf702cc72f177509b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f208cba6608cf9fdb06512951dccd65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8f208cba6608cf9fdb06512951dccd65">run</a> ()</td></tr>
 <tr class="separator:a8f208cba6608cf9fdb06512951dccd65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8ec89fc35d3236496b202c23a4bc84c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ab8ec89fc35d3236496b202c23a4bc84c">stop_thread</a> ()</td></tr>
@@ -151,8 +148,13 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a665709fdb680501039d2ddad95a52b45"><td class="memItemLeft" align="right" valign="top">static final <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html">osm_map_values</a>[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a665709fdb680501039d2ddad95a52b45">osm_maps</a></td></tr>
 <tr class="separator:a665709fdb680501039d2ddad95a52b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-methods"></a>
+Package Functions</h2></td></tr>
+<tr class="memitem:a83ccbe82c078cecf702cc72f177509b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4">NavitMapDownloader</a> (<a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a66e5838b06299545e41baa92e7ff9c57">map_id</a>)</td></tr>
+<tr class="separator:a83ccbe82c078cecf702cc72f177509b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
 <tr class="memitem:aaa3bdd3fb3f6a3a3c55611dd8acb1dd3"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aaa3bdd3fb3f6a3a3c55611dd8acb1dd3">checkFreeSpace</a> (long needed_bytes)</td></tr>
 <tr class="separator:aaa3bdd3fb3f6a3a3c55611dd8acb1dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12a0b560b4368a8c8bb07dbface8f541"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a12a0b560b4368a8c8bb07dbface8f541">deleteMap</a> ()</td></tr>
@@ -189,14 +191,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:af5b522f2ba4df330837369d4ea100c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abea98518e1b8936435adf49e8787af74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#abea98518e1b8936435adf49e8787af74">writeFileInfo</a> (URLConnection <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, long sizeInBytes)</td></tr>
 <tr class="separator:abea98518e1b8936435adf49e8787af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a2741b57e67d9dd939ca6e6affc9b6d7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c">retry_counter</a> = 0</td></tr>
-<tr class="separator:a2741b57e67d9dd939ca6e6affc9b6d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-methods"></a>
-Package Functions</h2></td></tr>
 <tr class="memitem:a8c9d4b53cfa1eb21b3857d05686a6027"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8c9d4b53cfa1eb21b3857d05686a6027">enableRetry</a> ()</td></tr>
 <tr class="separator:a8c9d4b53cfa1eb21b3857d05686a6027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -214,6 +208,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a41fd4b3da968b2efe9154697719c2bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ee1a91b21cb3ab241f7623fe03b84a1"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a5ee1a91b21cb3ab241f7623fe03b84a1">retryDownload</a> = false</td></tr>
 <tr class="separator:a5ee1a91b21cb3ab241f7623fe03b84a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2741b57e67d9dd939ca6e6affc9b6d7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c">retry_counter</a> = 0</td></tr>
+<tr class="separator:a2741b57e67d9dd939ca6e6affc9b6d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -254,7 +250,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -281,7 +277,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -308,7 +304,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -335,7 +331,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -398,7 +394,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -425,7 +421,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -477,7 +473,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -504,7 +500,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -531,7 +527,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -557,7 +553,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -584,7 +580,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -611,7 +607,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -649,7 +645,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -677,7 +673,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -727,7 +723,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -754,7 +750,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -832,7 +828,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -882,7 +878,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -926,7 +922,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -962,7 +958,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1159,7 +1155,7 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

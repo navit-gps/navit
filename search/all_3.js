@@ -24,7 +24,7 @@ var searchData=
   ['activechanged',['activeChanged',['../classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6',1,'MapObject::activeChanged()'],['../classVehicleObject.html#acd961866c99a279b7bb01e2f7445fe12',1,'VehicleObject::activeChanged()']]],
   ['activepoi',['activePoi',['../classBackend.html#a12abc5c9b5082efa9cf3d3aa0f39980d',1,'Backend::activePoi()'],['../classBackend.html#af6166b6f8ddb49d9bd0f42d4aca75f8e',1,'Backend::activePoi()']]],
   ['activepoichanged',['activePoiChanged',['../classBackend.html#af9e5b1076b3b2a0dfa4f07d628c316ef',1,'Backend']]],
-  ['activity',['activity',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a9e770d39650a23e5287cb7a2ecfd2f34',1,'org::navitproject::navit::NavitGraphics']]],
+  ['activity',['activity',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a3049304a3a340afc3364febab0421dfd',1,'org::navitproject::navit::NavitGraphics']]],
   ['activityresults',['ActivityResults',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ab6fa4e96f78fb5abc1b553ed5bbe7989',1,'org::navitproject::navit::Navit']]],
   ['adapter',['adapter',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a7f339fa9d8704cfa9afb352a6b013686',1,'org.navitproject.navit.FileBrowserActivity.adapter()'],['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a95698adb741b65a90ab32c6d3c3503fc',1,'org.navitproject.navit.NavitDownloadSelectMapActivity.adapter()']]],
   ['add',['add',['../structdatawindow__methods.html#a03558c9f3c11cb64d2ad3dba2f007cea',1,'datawindow_methods::add()'],['../structmenu__methods.html#ae3fe2b9e8f48b38a52c7abf551b31e2d',1,'menu_methods::add()'],['../xmlconfig_8c.html#a46ca9b7fd65d2e4327cb9d41b65b6f89',1,'ADD():&#160;xmlconfig.c']]],

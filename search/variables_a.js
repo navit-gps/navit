@@ -80,7 +80,6 @@ var searchData=
   ['inter',['inter',['../structsearch__list.html#abd2e8a8831705f196b51d1c8913be675',1,'search_list']]],
   ['interpol_5fincrement',['interpol_increment',['../structhn__interpol__attr.html#a3af4f623150ff336ca68a6894e532cc0',1,'hn_interpol_attr']]],
   ['interval',['interval',['../structcursor.html#a16e4e114ccfa4c2b236a208b613185f7',1,'cursor::interval()'],['../structg2scolumns.html#a647b3ef1123296e34798c8196dbd7d3a',1,'g2scolumns::interval()'],['../structpathattr.html#a3be73715e7e57a38df9b908e866fad68',1,'pathattr::interval()'],['../group__vehicle-iphone.html#ga3e5c188914c0e05452af81047321cc21',1,'vehicle_priv::interval()']]],
-  ['interval_5ffor_5flong_5fpress',['interval_for_long_press',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ab3ab870aaa5ed993b34d2d4e2e2246af',1,'org::navitproject::navit::NavitGraphics']]],
   ['invalid_5fangle',['invalid_angle',['../navigation_8c.html#a98a37034ecd960b2954025973c1d8e1a',1,'navigation.c']]],
   ['invoke',['invoke',['../struct__ProtobufCService.html#ab0db6ab06d85bef7d42da961522f7b19',1,'_ProtobufCService']]],
   ['iochan',['iochan',['../structevent__watch.html#a1fb56af36b08f149bf358d3d6268fa86',1,'event_watch']]],

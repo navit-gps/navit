@@ -1,5 +1,7 @@
 var NAVTREEINDEX36 =
 {
+"speech_8h.html#a5fa135539802315f6cca449d76cf7d74":[3,0,124,7],
+"speech_8h.html#a6ec30628f76ddce19fb5e4f539cdb8bd":[3,0,124,2],
 "speech_8h.html#a7992027b7a4f49da3d85a6b6c4c067c7":[3,0,124,6],
 "speech_8h.html#a8dc25b748ae11766626811888767cdcf":[3,0,124,3],
 "speech_8h.html#a8ed5390910ddee601d559763f65324ec":[3,0,124,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX36 =
 "struct__OSMPBF____PrimitiveGroup.html#afca177d19b54727f15cb2e3135d67d0f":[2,0,14,4],
 "struct__OSMPBF____Relation.html":[2,0,15],
 "struct__OSMPBF____Relation.html#a0ce518a78e8e67d8d6427eb6f76b15b8":[2,0,15,7],
-"struct__OSMPBF____Relation.html#a17adad6262d8690f8ffef32c4a00d636":[2,0,15,9],
-"struct__OSMPBF____Relation.html#a2e49f55d24057829bfe3ec0036d57f55":[2,0,15,4],
-"struct__OSMPBF____Relation.html#a46bd00cc244da70426db3cffe8c448cc":[2,0,15,12]
+"struct__OSMPBF____Relation.html#a17adad6262d8690f8ffef32c4a00d636":[2,0,15,9]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX39 =
 {
+"structcursor.html#aa87bbc52482fd3baf3c2d01370591e3e":[2,0,100,5],
+"structcursor.html#adac9065ff2dbf78cd9f3711a3040bdaf":[2,0,100,4],
 "structdata__window.html":[2,0,101],
 "structdata__window.html#aac0ae6bee5846f43ace41cedda1d8fdd":[2,0,101,0],
 "structdata__window.html#ac90a773f316bacebc387e6052ed3dafb":[2,0,101,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX39 =
 "structfile.html":[2,0,136],
 "structfile.html#a07933ed4e00500de90ab37013de4d904":[2,0,136,2],
 "structfile.html#a19862bc9d6935f7b6b806f97c42cfc59":[2,0,136,3],
-"structfile.html#a25b09204a859bbeb0e294b265ea41012":[2,0,136,5],
-"structfile.html#a2b675977cc6c2eadfdd5fe236248219a":[2,0,136,12],
-"structfile.html#a402d6c3ee49f9e34e6d99b62f5d4ea55":[2,0,136,13]
+"structfile.html#a25b09204a859bbeb0e294b265ea41012":[2,0,136,5]
 };

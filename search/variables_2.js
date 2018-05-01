@@ -12,7 +12,7 @@ var searchData=
   ['active_5fblock',['active_block',['../structosm__protobufdb__context.html#a5285e72fd13c451e6bb792a71f9d3a20',1,'osm_protobufdb_context']]],
   ['active_5fcallback',['active_callback',['../structvehicleprofile.html#abbad446c0de35cce19dad679a657b360',1,'vehicleprofile']]],
   ['active_5fcolor',['active_color',['../structroute__guard.html#ad60b84c55bf342cb15cbde9c3a44b80f',1,'route_guard']]],
-  ['activity',['activity',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a9e770d39650a23e5287cb7a2ecfd2f34',1,'org::navitproject::navit::NavitGraphics']]],
+  ['activity',['activity',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a3049304a3a340afc3364febab0421dfd',1,'org::navitproject::navit::NavitGraphics']]],
   ['activityresults',['ActivityResults',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ab6fa4e96f78fb5abc1b553ed5bbe7989',1,'org::navitproject::navit::Navit']]],
   ['adapter',['adapter',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a7f339fa9d8704cfa9afb352a6b013686',1,'org.navitproject.navit.FileBrowserActivity.adapter()'],['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a95698adb741b65a90ab32c6d3c3503fc',1,'org.navitproject.navit.NavitDownloadSelectMapActivity.adapter()']]],
   ['add',['add',['../structdatawindow__methods.html#a03558c9f3c11cb64d2ad3dba2f007cea',1,'datawindow_methods::add()'],['../structmenu__methods.html#ae3fe2b9e8f48b38a52c7abf551b31e2d',1,'menu_methods::add()']]],
