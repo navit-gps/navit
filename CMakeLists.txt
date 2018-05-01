@@ -708,6 +708,7 @@ if(ANDROID)
    set_with_reason(vehicle/android "Android detected" TRUE)
    set_with_reason(vehicle/file "Android detected" FALSE)
    set_with_reason(map/filter "Android detected" FALSE)
+   set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Android detected" TRUE)
    set(SHARED_LIBNAVIT TRUE)
 
    add_feature(XPM2PNG "Android detected" TRUE)
