@@ -44,6 +44,7 @@
 #include "coord.h"
 #include "point.h"
 #include "transform.h"
+#include "traffic.h"
 #include "param.h"
 #include "menu.h"
 #include "graphics.h"
