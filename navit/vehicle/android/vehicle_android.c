@@ -34,7 +34,7 @@
 /**
  * @defgroup vehicle-android Vehicle Android
  * @ingroup vehicle-plugins
- * @brief The Vehicle to gain position data from android. Android uses dbus signals
+ * @brief The Vehicle to gain position data from android.
  * @author Tim Niemeyer <reddog@mastersword.de>
  * @date 2008-2009
  *
