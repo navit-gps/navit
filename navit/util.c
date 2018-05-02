@@ -62,7 +62,7 @@ navit_utf8_strcasecmp(const char *s1, const char *s2)
 	s1_folded=g_utf8_casefold(s1,-1);
 	s2_folded=g_utf8_casefold(s2,-1);
 	cmpres=strcmp(s1_folded,s2_folded);
-	dbg(lvl_debug,"Compared %s with %s, got %d\n",s1_folded,s2_folded,cmpres);
+	dbg(lvl_debug,"Compared %s with %s, got %d",s1_folded,s2_folded,cmpres);
 	g_free(s1_folded);
 	g_free(s2_folded);
 	return cmpres;
@@ -509,7 +509,7 @@ spawn_process(char **argv)
 		pid_t pid;
 		
 		sigset_t set, old;
-		dbg(lvl_debug,"spawning process for '%s'\n", argv[0]);
+		dbg(lvl_debug,"spawning process for '%s'", argv[0]);
 		sigemptyset(&set);
 		sigaddset(&set,SIGCHLD);
 		spawn_process_sigmask(SIG_BLOCK,&set,&old);
@@ -550,7 +550,7 @@ spawn_process(char **argv)
 		args=newSysString(cmdline);
 		cmd = newSysString(argv[0]);
 		dwRet=CreateProcess(cmd, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
-		dbg(lvl_debug, "CreateProcess(%s,%s), PID=%i\n",argv[0],cmdline,r->pr.dwProcessId);
+		dbg(lvl_debug, "CreateProcess(%s,%s), PID=%i",argv[0],cmdline,r->pr.dwProcessId);
 		g_free(cmd);
 #else
 		TCHAR* args;
@@ -560,7 +560,7 @@ spawn_process(char **argv)
 		cmdline=spawn_process_compose_cmdline(argv);
 		args=newSysString(cmdline);
 		dwRet=CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, &startupInfo, &(r->pr));
-		dbg(lvl_debug, "CreateProcess(%s), PID=%i\n",cmdline,r->pr.dwProcessId);
+		dbg(lvl_debug, "CreateProcess(%s), PID=%i",cmdline,r->pr.dwProcessId);
 #endif
 		g_free(cmdline);
 		g_free(args);
@@ -570,7 +570,7 @@ spawn_process(char **argv)
 	{
 		char *cmdline=spawn_process_compose_cmdline(argv);
 		int status;
-		dbg(lvl_error,"Unblocked spawn_process isn't availiable on this platform.\n");
+		dbg(lvl_error,"Unblocked spawn_process isn't availiable on this platform.");
 		status=system(cmdline);
 		g_free(cmdline);
 		r->status=status;
@@ -593,7 +593,7 @@ spawn_process(char **argv)
 int spawn_process_check_status(struct spawn_process_info *pi, int block)
 {
 	if(pi==NULL) {
-		dbg(lvl_error,"Trying to get process status of NULL, assuming process is terminated.\n");
+		dbg(lvl_error,"Trying to get process status of NULL, assuming process is terminated.");
 		return 255;
 	}
 #ifdef HAVE_API_WIN32_BASE
@@ -633,9 +633,9 @@ int spawn_process_check_status(struct spawn_process_info *pi, int block)
 				pi->status=WEXITSTATUS(status);
 				return pi->status;
 			if(WIFSTOPPED(status)) {
-				dbg(lvl_debug,"child is stopped by %i signal\n",WSTOPSIG(status));
+				dbg(lvl_debug,"child is stopped by %i signal",WSTOPSIG(status));
 			} else if (WIFSIGNALED(status)) {
-				dbg(lvl_debug,"child terminated by signal %i\n",WEXITSTATUS(status));
+				dbg(lvl_debug,"child terminated by signal %i",WEXITSTATUS(status));
 				pi->status=255;
 				return 255;
 			}
@@ -647,12 +647,12 @@ int spawn_process_check_status(struct spawn_process_info *pi, int block)
 		} else {
 			if(pi->status!=-1) // Signal handler has changed pi->status while in this function
 				return pi->status;
-			dbg(lvl_error,"waitpid() indicated error, reporting process termination.\n");
+			dbg(lvl_error,"waitpid() indicated error, reporting process termination.");
 			return 255;
 		}
 	}
 #else
-	dbg(lvl_error, "Non-blocking spawn_process isn't availiable for this platform, repoting process exit status.\n");
+	dbg(lvl_error, "Non-blocking spawn_process isn't availiable for this platform, repoting process exit status.");
 	return pi->status;
 #endif
 #endif

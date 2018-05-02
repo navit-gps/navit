@@ -110,7 +110,7 @@ cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	attr.type=attr_cursor;
 	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 	if(!navit_set_attr(gui->nav, &attr)) {
-		dbg(lvl_error, "Failed to set attr_cursor\n");
+		dbg(lvl_error, "Failed to set attr_cursor");
 	}
 }
 
@@ -122,7 +122,7 @@ tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	attr.type=attr_tracking;
 	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 	if(!navit_set_attr(gui->nav, &attr)) {
-		dbg(lvl_error, "Failed to set attr_tracking\n");
+		dbg(lvl_error, "Failed to set attr_tracking");
 	}
 }
 
@@ -143,7 +143,7 @@ follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	attr.type=attr_follow_cursor;
 	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 	if(!navit_set_attr(gui->nav, &attr)) {
-		dbg(lvl_error, "Failed to set attr_follow_gps\n");
+		dbg(lvl_error, "Failed to set attr_follow_gps");
 	}
 }
 
@@ -155,7 +155,7 @@ orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	attr.type=attr_orientation;
 	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w)) ? 0:-1;
 	if(!navit_set_attr(gui->nav, &attr)) {
-		dbg(lvl_error, "Failed to set attr_orientation\n");
+		dbg(lvl_error, "Failed to set attr_orientation");
 	}
 }
 

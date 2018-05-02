@@ -61,21 +61,21 @@ graphics_opengl_egl_new(void *display, void *window, struct graphics_opengl_plat
 	*methods=&graphics_opengl_egl_methods;
 	ret->egldisplay = eglGetDisplay((EGLNativeDisplayType)display);
 	if (!ret->egldisplay) {
-		dbg(lvl_error, "can't get display\n");
+		dbg(lvl_error, "can't get display");
 		goto error;
 	}
 	if (!eglInitialize(ret->egldisplay, &major, &minor)) {
-		dbg(lvl_error, "eglInitialize failed\n");
+		dbg(lvl_error, "eglInitialize failed");
 		goto error;
 	}
-	dbg(lvl_debug,"eglInitialize ok with version %d.%d\n",major,minor);
+	dbg(lvl_debug,"eglInitialize ok with version %d.%d",major,minor);
     	eglBindAPI(EGL_OPENGL_ES_API);
 	if (!eglChooseConfig(ret->egldisplay, attributeList, ret->config, sizeof(ret->config)/sizeof(EGLConfig), &nconfig)) {
-		dbg(lvl_error, "eglChooseConfig failed\n");
+		dbg(lvl_error, "eglChooseConfig failed");
 		goto error;
 	}
 	if (nconfig != 1) {
-		dbg(lvl_error, "unexpected number of configs %d\n",nconfig);
+		dbg(lvl_error, "unexpected number of configs %d",nconfig);
 		goto error;
 	}
 	ret->eglwindow = eglCreateWindowSurface(ret->egldisplay, ret->config[0], (NativeWindowType) window, NULL);

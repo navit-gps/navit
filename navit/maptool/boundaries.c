@@ -308,37 +308,6 @@ process_boundaries_finish(GList *boundaries_list)
 		}
 		
 	}
-#if 0
-	printf("hierarchy\n");
-#endif
-#if 0
-	boundaries_list=g_list_sort(boundaries_list, boundary_bbox_compare);
-	l=boundaries_list;
-	while (l) {
-		struct boundary *boundary=l->data;
-		GList *l2,*ln;
-		ln=l2=g_list_next(l);
-		while (l2) {
-			struct boundary *boundary2=l2->data;
-			if (bbox_contains_bbox(&boundary2->r, &boundary->r)) {
-				boundaries_list=g_list_remove(boundaries_list, boundary);
-				boundary2->children=g_list_append(boundary2->children, boundary);
-#if 0
-				printf("found\n");
-#endif
-				break;
-			}
-			l2=g_list_next(l2);
-		}
-		l=ln;
-	}
-	dump_hierarchy(boundaries_list,"");
-#if 0
-	printf("hierarchy done\n");
-	printf("test\n");
-	test(boundaries_list);
-#endif
-#endif
 	return ret;
 }
 

@@ -7,7 +7,6 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 
 public class NavitAppConfig extends Application {
@@ -66,6 +65,6 @@ public class NavitAppConfig extends Application {
 		editSettings.putFloat("LastAddress_Lat_" + String.valueOf(mLastAddressField), newAddress.lat);
 		editSettings.putFloat("LastAddress_Lon_" + String.valueOf(mLastAddressField), newAddress.lon);
 
-		editSettings.commit();
+		editSettings.apply();
 	}
 }

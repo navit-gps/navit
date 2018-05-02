@@ -25,10 +25,10 @@ static void
 mlPDL_ServiceCall_callback(struct callback_list *cbl, char *service, char *parameters/*, struct callback *fail_cb*/)
 {
 	PDL_Err err;
-	dbg(lvl_debug,"PDL_ServiceCall(%s) parameters(%s)\n",service,parameters);
+	dbg(lvl_debug,"PDL_ServiceCall(%s) parameters(%s)",service,parameters);
 	err = PDL_ServiceCall(service, parameters);
 	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCall to (%s) with (%s) failed with (%d): (%s)\n", service, parameters, err, PDL_GetError());
+		dbg(lvl_error,"PDL_ServiceCall to (%s) with (%s) failed with (%d): (%s)", service, parameters, err, PDL_GetError());
 	}
 
 	callback_list_destroy(cbl);
@@ -50,7 +50,7 @@ mlPDL_ServiceCall(const char *service, const char *parameters/*, struct callback
 
 	callback_list_add(cbl, cb);
 
-dbg(lvl_debug,"event_call_callback(%p)\n",cbl);
+dbg(lvl_debug,"event_call_callback(%p)",cbl);
 	event_call_callback(cbl);
 }
 
@@ -65,10 +65,10 @@ mlPDL_ServiceCallWithCallback_callback(struct callback_list *cbl,
 		PDL_bool removeAfterResponse)
 {
 	PDL_Err err;
-	dbg(lvl_debug,"PDL_ServiceCallWithCallback(%s) parameters(%s)\n",service,parameters);
+	dbg(lvl_debug,"PDL_ServiceCallWithCallback(%s) parameters(%s)",service,parameters);
 	err = PDL_ServiceCallWithCallback(service, parameters, callback, user, removeAfterResponse);
 	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCallWithCallback to (%s) with (%s) failed with (%d): (%s)\n", service, parameters, err, PDL_GetError());
+		dbg(lvl_error,"PDL_ServiceCallWithCallback to (%s) with (%s) failed with (%d): (%s)", service, parameters, err, PDL_GetError());
 	}
 
 	callback_list_destroy(cbl);
@@ -94,7 +94,7 @@ mlPDL_ServiceCallWithCallback(const char *service,
 
 	callback_list_add(cbl, cb);
 
-	dbg(lvl_debug,"event_call_callback(%p)\n",cbl);
+	dbg(lvl_debug,"event_call_callback(%p)",cbl);
 	event_call_callback(cbl);
 }
 
@@ -107,11 +107,11 @@ vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, stru
 
 	priv->gps_type = param ? GPS_TYPE_INT: GPS_TYPE_NONE;
 
-	dbg(lvl_debug,"Calling PDL_EnableLocationTracking(%i)\n",param);
+	dbg(lvl_debug,"Calling PDL_EnableLocationTracking(%i)",param);
 	err = PDL_EnableLocationTracking(param);
 
 	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_EnableLocationTracking failed with (%d): (%s)\n", err, PDL_GetError());
+		dbg(lvl_error,"PDL_EnableLocationTracking failed with (%d): (%s)", err, PDL_GetError());
 //		vehicle_webos_close(priv);
 //		return 0;
 	}
@@ -146,10 +146,10 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 	int valid=0;
 	int ret = 0;
 
-	dbg(lvl_info, "enter: buffer='%s'\n", buffer);
+	dbg(lvl_info, "enter: buffer='%s'", buffer);
 	for (;;) {
 		if (len < 4) {
-			dbg(lvl_error, "'%s' too short\n", buffer);
+			dbg(lvl_error, "'%s' too short", buffer);
 			return ret;
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n') {
@@ -160,22 +160,22 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			break;
 	}
 	if (buffer[0] != '$') {
-		dbg(lvl_error, "no leading $ in '%s'\n", buffer);
+		dbg(lvl_error, "no leading $ in '%s'", buffer);
 		return ret;
 	}
 	if (buffer[len - 3] != '*') {
-		dbg(lvl_error, "no *XX in '%s'\n", buffer);
+		dbg(lvl_error, "no *XX in '%s'", buffer);
 		return ret;
 	}
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
 	if (!sscanf(buffer + len - 2, "%x", &bcsum) /*&& priv->checksum_ignore != 2*/) {
-		dbg(lvl_error, "no checksum in '%s'\n", buffer);
+		dbg(lvl_error, "no checksum in '%s'", buffer);
 		return ret;
 	}
 	if (bcsum != csum /*&& priv->checksum_ignore == 0*/) {
-		dbg(lvl_error, "wrong checksum in '%s was %x should be %x'\n", buffer,bcsum,csum);
+		dbg(lvl_error, "wrong checksum in '%s was %x should be %x'", buffer,bcsum,csum);
 		return ret;
 	}
 
@@ -184,7 +184,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data_buf);
 		priv->nmea_data_buf=nmea_data_buf;
 	} else {
-		dbg(lvl_error, "nmea buffer overflow, discarding '%s'\n", buffer);
+		dbg(lvl_error, "nmea buffer overflow, discarding '%s'", buffer);
 	}
 	i = 0;
 	p = buffer;
@@ -203,7 +203,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 
 		priv->delta = 0; //			(unsigned int)difftime(tv.tv_sec, priv->fix_time);
 //		priv->fix_time = tv.tv_sec;
-//		dbg(lvl_info,"delta(%i)\n",priv->delta);
+//		dbg(lvl_info,"delta(%i)",priv->delta);
 //	}
 
 	if (!strncmp(&buffer[3], "GGA", 3)) {
@@ -230,7 +230,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
 			priv->valid=attr_position_valid_valid;
-         dbg(lvl_info, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
+         dbg(lvl_info, "latitude '%2.4f' longitude %2.4f", priv->geo.lat, priv->geo.lng);
 
 		} else
 			priv->valid=attr_position_valid_invalid;
@@ -252,14 +252,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-#if 0
-		if (priv->file_type == file_type_file) {
-			if (priv->watch) {
-				vehicle_file_disable_watch(priv);
-				event_add_timeout(priv->time, 0, priv->cbt);
-			}
-		}
-#endif
 		ret = 1;
 	}
 	if (!strncmp(&buffer[3], "VTG", 3)) {
@@ -275,7 +267,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		if (valid) {
 			priv->track = g_ascii_strtod( item[1], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
-			dbg(lvl_info,"direction %lf, speed %2.1lf\n", priv->track, priv->speed);
+			dbg(lvl_info,"direction %lf, speed %2.1lf", priv->track, priv->speed);
 		}
 	}
 	if (!strncmp(&buffer[3], "RMC", 3)) {
@@ -302,13 +294,6 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 			strptime(time,"%H%M%S%d%m%y",&tm);
 
 			priv->fix_time = mktime(&tm);
-#if 0
-			sscanf(item[9], "%02d%02d%02d",
-				&priv->fixday,
-				&priv->fixmonth,
-				&priv->fixyear);
-			priv->fixyear += 2000;
-#endif
 		}
 		ret = 1;
 	}
@@ -329,46 +314,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 		if (item[3]) {
 			sscanf(item[3], "%d", &priv->sats_visible);
 		}
-#if 0
-		j=4;
-		while (j+4 <= i && priv->current_count < 24) {
-			struct gps_sat *sat=&priv->next[priv->next_count++];
-			sat->prn=atoi(item[j]);
-			sat->elevation=atoi(item[j+1]);
-			sat->azimuth=atoi(item[j+2]);
-			sat->snr=atoi(item[j+3]);
-			j+=4;
-		}
-		if (!strcmp(item[1], item[2])) {
-			priv->sats_signal=0;
-			for (i = 0 ; i < priv->next_count ; i++) {
-				priv->current[i]=priv->next[i];
-				if (priv->current[i].snr)
-					priv->sats_signal++;
-			}
-			priv->current_count=priv->next_count;
-			priv->next_count=0;
-		}
-#endif
 	}
-#if 0
-	if (!strncmp(&buffer[3], "ZDA", 3)) {
-	/*
-		0        1        2  3  4    5  6
-		$GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
-			hhmmss    HrMinSec(UTC)
-			dd,mm,yyy Day,Month,Year
-			xx        local zone hours -13..13
-			yy        local zone minutes 0..59
-	*/
-		if (item[1] && item[2] && item[3] && item[4]) {
-			strncpy(priv->fixtime, item[1], strlen(priv->fixtime));
-			priv->fixday = atoi(item[2]);
-			priv->fixmonth = atoi(item[3]);
-			priv->fixyear = atoi(item[4]);
-		}
-	}
-#endif
 	if (!strncmp(buffer, "$IISMD", 6)) {
 	/*
 		0      1   2     3      4
@@ -380,7 +326,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(lvl_debug,"magnetic %d\n", priv->magnetic_direction);
+			dbg(lvl_debug,"magnetic %d", priv->magnetic_direction);
 		}
 	}
 	return ret;
@@ -396,14 +342,14 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 	//PDL_Err err;
 	size = PDL_GetParamInt(params, "dataLength");
 	if (size > buffer_size) {
-		dbg(lvl_error, "read returned too much data\n");
+		dbg(lvl_error, "read returned too much data");
 		return;
 	}
 
 	char buffer[buffer_size];
 
 	PDL_GetParamString(params,"data",buffer,buffer_size);
-	dbg(lvl_debug,"data(%s) dataLength(%i)\n",buffer,size);
+	dbg(lvl_debug,"data(%s) dataLength(%i)",buffer,size);
 
 	memmove(priv->buffer + priv->buffer_pos, buffer, size);
 
@@ -411,12 +357,12 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 
 	priv->buffer_pos += size;
 	priv->buffer[priv->buffer_pos] = '\0';
-	dbg(lvl_debug, "size=%d pos=%d buffer='%s'\n", size,
+	dbg(lvl_debug, "size=%d pos=%d buffer='%s'", size,
 	    priv->buffer_pos, priv->buffer);
 	str = priv->buffer;
 	while ((tok = strchr(str, '\n'))) {
 		*tok++ = '\0';
-		dbg(lvl_debug, "line='%s'\n", str);
+		dbg(lvl_debug, "line='%s'", str);
 		rc += vehicle_webos_parse_nmea(priv, str);
 		str = tok;
 //		if (priv->file_type == file_type_file && rc)
@@ -427,10 +373,10 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user)
 		size = priv->buffer + priv->buffer_pos - str;
 		memmove(priv->buffer, str, size + 1);
 		priv->buffer_pos = size;
-		dbg(lvl_debug,"now pos=%d buffer='%s'\n",
+		dbg(lvl_debug,"now pos=%d buffer='%s'",
 		    priv->buffer_pos, priv->buffer);
 	} else if (priv->buffer_pos == buffer_size - 1) {
-		dbg(lvl_error,"Overflow. Most likely wrong baud rate or no nmea protocol\n");
+		dbg(lvl_error,"Overflow. Most likely wrong baud rate or no nmea protocol");
 		priv->buffer_pos = 0;
 	}
 	if (rc) {
@@ -464,13 +410,6 @@ vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int length)
 			priv,
 			PDL_FALSE
 			);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCall failed with (%d): (%s)\n", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 }
 
 static void
@@ -481,7 +420,7 @@ vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user)
 	if (!priv->buffer)
 		priv->buffer = g_malloc(buffer_size);
 	
-	dbg(lvl_debug,"instanceId(%i)\n",priv->spp_instance_id);
+	dbg(lvl_debug,"instanceId(%i)",priv->spp_instance_id);
 
 	priv->gps_type = GPS_TYPE_BT;
 
@@ -497,27 +436,27 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user)
 	char parameters[128];
 
 	const char *params_json = PDL_GetParamJson(params);
-	dbg(lvl_info,"params_json(%s)\n", params_json);
+	dbg(lvl_info,"params_json(%s)", params_json);
 
 	if (PDL_ParamExists(params, "errorText")) {
 		PDL_GetParamString(params, "errorText", notification, sizeof(notification));
-		dbg(lvl_error,"errorText(%s)\n",notification);
+		dbg(lvl_error,"errorText(%s)",notification);
 		return;
 	}
 
 	PDL_GetParamString(params, "notification", notification, sizeof(notification));
 	notification[sizeof(notification)-1] = '\0';
 
-	dbg(lvl_warning,"notification(%s) %i\n",notification,PDL_ParamExists(params, "notification"));
+	dbg(lvl_warning,"notification(%s) %i",notification,PDL_ParamExists(params, "notification"));
 
 	if(strcmp(notification,"notifnservicenames") == 0) {
 		int instance_id = PDL_GetParamInt(params, "instanceId");
 
-		dbg(lvl_debug,"instanceId(%i)\n", instance_id);
+		dbg(lvl_debug,"instanceId(%i)", instance_id);
 
 		cJSON *root = cJSON_Parse(params_json);
 		if (!root) {
-			dbg(lvl_error,"parsing json failed\n");
+			dbg(lvl_error,"parsing json failed");
 			return;
 		}
 
@@ -544,7 +483,7 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user)
 					PDL_TRUE);
 		}
 		else {
-			dbg(lvl_error,"notifnconnected error(%i)\n",PDL_GetParamInt(params,"error"));
+			dbg(lvl_error,"notifnconnected error(%i)",PDL_GetParamInt(params,"error"));
 		}
 	}
 	else if(strcmp(notification,"notifndisconnected") == 0) {
@@ -563,29 +502,15 @@ vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr)
 {
 	char parameters[128];
 
-	dbg(lvl_debug,"subscribeNotifications\n");
+	dbg(lvl_debug,"subscribeNotifications");
 	mlPDL_ServiceCallWithCallback("palm://com.palm.bluetooth/spp/subscribenotifications",
 			"{\"subscribe\":true}",
 			(PDL_ServiceCallbackFunc)vehicle_webos_spp_notify,
 			priv,
 			PDL_FALSE);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 
 	snprintf(parameters, sizeof(parameters), "{\"address\":\"%s\"}", addr);
 	mlPDL_ServiceCall("palm://com.palm.bluetooth/spp/connect", parameters);
-#if 0
-	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCall failed with (%d): (%s)\n", err, PDL_GetError());
-		vehicle_webos_close(priv);
-		return;
-	}
-#endif
 
 	priv->spp_address = addr;
 }
@@ -598,38 +523,38 @@ vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param)
 	char *device_addr = NULL;
 	cJSON *root;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 
 	PDL_Err err;
 	err = PDL_GetParamInt(params, "errorCode");
 	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"BT GAP Callback errorCode %d\n", err);
+		dbg(lvl_error,"BT GAP Callback errorCode %d", err);
 		return /*PDL_EOTHER*/;
 	}
 
 	params_json = PDL_GetParamJson(params);
-	dbg(lvl_info,"params_json(%s)\n",params_json);
+	dbg(lvl_info,"params_json(%s)",params_json);
 
 	root = cJSON_Parse(params_json);
 	if (!root) {
-		dbg(lvl_error,"parsing json failed\n");
+		dbg(lvl_error,"parsing json failed");
 		return;
 	}
 
 	cJSON *trusted_devices = cJSON_GetObjectItem(root, "trusteddevices");
 
 	unsigned int i,c = cJSON_GetArraySize(trusted_devices);
-	dbg(lvl_debug, "trusted_devices(%i)\n",c);
+	dbg(lvl_debug, "trusted_devices(%i)",c);
 	for(i=0; i < c && !device_addr; i++) {
 		cJSON *device = cJSON_GetArrayItem(trusted_devices,i);
 		char *name = cJSON_GetObjectItem(device, "name")->valuestring;
 		char *address = cJSON_GetObjectItem(device, "address")->valuestring;
 		char *status = cJSON_GetObjectItem(device, "status")->valuestring;
 
-		dbg(lvl_debug,"i(%i) name(%s) address(%s) status(%s)\n",i,name,address,status);
+		dbg(lvl_debug,"i(%i) name(%s) address(%s) status(%s)",i,name,address,status);
 
 		if (/*strncmp(status, "connected",9) == 0 && */strstr(name, "GPS") != NULL) {
-			dbg(lvl_debug,"choose name(%s) address(%s)\n",name,address);
+			dbg(lvl_debug,"choose name(%s) address(%s)",name,address);
 			device_addr = g_strdup(address);
 			break;
 		}
@@ -649,7 +574,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv)
 {
 	// Try to connect to BT GPS, or use PDL method
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 
 	PDL_Err err;
 	err = PDL_ServiceCallWithCallback("palm://com.palm.bluetooth/gap/gettrusteddevices",
@@ -658,7 +583,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv)
 			priv,
 			PDL_TRUE);
 	if (err != PDL_NOERROR) {
-		dbg(lvl_error,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
+		dbg(lvl_error,"PDL_ServiceCallWithCallback failed with (%d): (%s)", err, PDL_GetError());
 		vehicle_webos_close(priv);
 		return 0;
 	}
@@ -668,7 +593,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv)
 void
 vehicle_webos_bt_close(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug,"XXX\n");
+	dbg(lvl_debug,"XXX");
 	char parameters[128];
 	if (priv->spp_instance_id) {
 		snprintf(parameters, sizeof(parameters), "{\"instanceId\":%i}", priv->spp_instance_id);

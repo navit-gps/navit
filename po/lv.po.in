@@ -1674,8 +1674,8 @@ msgstr "Taksometrs"
 msgid "Shopping"
 msgstr "Iepirkšanās"
 
-msgid "Distance from screen center (km)"
-msgstr "Attālums no ekrāna centra (km)"
+msgid "Select a search radius from screen center"
+msgstr "Attālums no ekrāna centra"
 
 #, c-format
 msgid "POI %s. %s"

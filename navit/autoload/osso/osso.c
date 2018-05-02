@@ -33,7 +33,7 @@ osso_display_on(struct navit *this_)
 static gboolean
 osso_cb_hw_state_idle(struct cb_hw_state_trail * params)
 {
-	dbg(lvl_debug, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)\n",
+	dbg(lvl_debug, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)",
 	    params->state->system_inactivity_ind,
 	    params->state->save_unsaved_data_ind, params->state->shutdown_ind,
 	    params->state->memory_low_ind, params->state->sig_device_mode_ind);
@@ -69,10 +69,10 @@ osso_cb_hw_state(osso_hw_state_t * state, gpointer data)
 static void
 osso_navit(struct navit *nav, int add)
 {
-	dbg(lvl_debug, "Installing osso context for org.navit_project.navit\n");
+	dbg(lvl_debug, "Installing osso context for org.navit_project.navit");
 	osso_context = osso_initialize("org.navit_project.navit", version, TRUE, NULL);
 	if (osso_context == NULL) {
-		dbg(lvl_error, "error initiating osso context\n");
+		dbg(lvl_error, "error initiating osso context");
 	}
 	osso_hw_set_event_cb(osso_context, NULL, osso_cb_hw_state, nav);
 
@@ -87,7 +87,7 @@ plugin_init(void)
 {
 	//struct callback *cb;
 
-	dbg(lvl_info, "enter\n");
+	dbg(lvl_info, "enter");
 
 	callback.u.callback = callback_new_attr_0(callback_cast(osso_navit), attr_navit);
 	config_add_attr(config, &callback);

@@ -67,7 +67,7 @@ struct vehicle_priv {
 static void
 vehicle_null_destroy(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	g_free(priv);
 }
 
@@ -83,13 +83,8 @@ static int
 vehicle_null_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
-	dbg(lvl_debug,"enter %s\n",attr_to_name(type));
+	dbg(lvl_debug,"enter %s",attr_to_name(type));
 	switch (type) {
-#if 0
-	case attr_position_fix_type:
-		attr->u.num = priv->fix_type;
-		break;
-#endif
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -102,15 +97,6 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_radius:
 		attr->u.numd = &priv->radius;
 		break;
-
-#if 0
-	case attr_position_qual:
-		attr->u.num = priv->sats;
-		break;
-	case attr_position_sats_used:
-		attr->u.num = priv->sats_used;
-		break;
-#endif
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
 		if (!priv->have_coords)
@@ -122,7 +108,7 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 	default:
 		return 0;
 	}
-	dbg(lvl_debug,"ok\n");
+	dbg(lvl_debug,"ok");
 	attr->type = type;
 	return 1;
 }
@@ -170,11 +156,11 @@ vehicle_null_new_null(struct vehicle_methods *meth,
 {
 	struct vehicle_priv *ret;
 
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	*meth = vehicle_null_methods;
-	dbg(lvl_debug, "return\n");
+	dbg(lvl_debug, "return");
 	return ret;
 }
 
@@ -186,6 +172,6 @@ vehicle_null_new_null(struct vehicle_methods *meth,
 void
 plugin_init(void)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	plugin_register_category_vehicle("null", vehicle_null_new_null);
 }

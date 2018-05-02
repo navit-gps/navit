@@ -1686,8 +1686,8 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Winkelen"
 
-msgid "Distance from screen center (km)"
-msgstr "Afstand vanaf schem midden (km)"
+msgid "Select a search radius from screen center"
+msgstr "Afstand vanaf schem midden"
 
 #, c-format
 msgid "POI %s. %s"

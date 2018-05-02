@@ -349,7 +349,7 @@ log_timer(struct log *this_)
 	int delta;
 	gettimeofday(&tv, NULL);
 	delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
-	dbg(lvl_debug,"delta=%d flush_time=%d\n", delta, this_->flush_time);
+	dbg(lvl_debug,"delta=%d flush_time=%d", delta, this_->flush_time);
 	if (this_->flush_time && delta >= this_->flush_time*1000)
 		log_flush(this_,0);
 #endif
@@ -386,7 +386,7 @@ log_new(struct attr * parent,struct attr **attrs)
 	struct file_wordexp *wexp;
 	char *filename, **wexp_data;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	ret->func=&log_func;
 	navit_object_ref((struct navit_object *)ret);
 	data=attr_search(attrs, NULL, attr_data);
@@ -418,7 +418,7 @@ log_new(struct attr * parent,struct attr **attrs)
 	if (flush_time)
 		ret->flush_time=flush_time->u.num;
 	if (ret->flush_time) {
-		dbg(lvl_debug,"interval %d\n", ret->flush_time*1000);
+		dbg(lvl_debug,"interval %d", ret->flush_time*1000);
 		ret->timer_callback=callback_new_1(callback_cast(log_timer), ret);
 		ret->timer=event_add_timeout(ret->flush_time*1000, 1, ret->timer_callback);
 	}
@@ -492,7 +492,7 @@ log_set_trailer(struct log *this_, char *data, int len)
 void
 log_write(struct log *this_, char *data, int len, enum log_flags flags)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	if (log_change_required(this_)) {
 		dbg(lvl_debug,"log_change");
 		log_change(this_);
@@ -500,7 +500,7 @@ log_write(struct log *this_, char *data, int len, enum log_flags flags)
 	if (flags & log_flag_replace_buffer)
 		this_->data.len=0;
 	if (this_->data.len + len > this_->data.max_len) {
-		dbg(lvl_info,"overflow\n");
+		dbg(lvl_info,"overflow");
 		this_->data.max_len+=16384; // FIXME: what if len exceeds this->data.max_len by more than 16384 bytes?
 		this_->data.data=g_realloc(this_->data.data,this_->data.max_len);
 	}
@@ -561,7 +561,7 @@ log_printf(struct log *this_, char *fmt, ...)
 void
 log_destroy(struct log *this_)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	attr_list_free(this_->attrs);
 	callback_destroy(this_->timer_callback);
 	event_remove_timeout(this_->timer);

@@ -488,7 +488,7 @@ item_hash_insert(struct item_hash *h, struct item *item, void *val)
 {
 	struct item *hitem=g_new(struct item, 1);
         *hitem=*item;
-	dbg(lvl_info,"inserting (0x%x,0x%x) into %p\n", item->id_hi, item->id_lo, h->h);
+	dbg(lvl_info,"inserting (0x%x,0x%x) into %p", item->id_hi, item->id_lo, h->h);
 	g_hash_table_insert(h->h, hitem, val);
 }
 
@@ -497,9 +497,9 @@ item_hash_remove(struct item_hash *h, struct item *item)
 {
 	int ret;
 
-	dbg(lvl_info,"removing (0x%x,0x%x) from %p\n", item->id_hi, item->id_lo, h->h);
+	dbg(lvl_info,"removing (0x%x,0x%x) from %p", item->id_hi, item->id_lo, h->h);
 	ret=g_hash_table_remove(h->h, item);
-	dbg(lvl_info,"ret=%d\n", ret);
+	dbg(lvl_info,"ret=%d", ret);
 
 	return ret;
 }
