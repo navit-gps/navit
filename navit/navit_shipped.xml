@@ -428,16 +428,11 @@ Waypoint</text></img>
 		</layer>
 		
 		<!--
-		Layouts are defined in their own specific XML files and are included below (one file per layout)
+		Layouts are defined in their own specific XML files and are included below (one file per layout, all files matching the wildcard expression below will be used)
 		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)
 		One layout is a specifid theme. The user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file.
 		-->
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car.xml"/>
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_dark.xml"/>
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_android.xml"/>
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_car_simple.xml"/>
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_bike.xml"/>
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_th.xml"/>
+		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_*.xml"/>
 		<layout name="Route">
 			<layer name="streets">
 				<itemgra item_types="street_route_occluded" order="0-">
