@@ -75,9 +75,9 @@ setenv(char *var, char *val, int overwrite)
 #endif
 
 /*
- * \def environment_vars
+ * @def environment_vars
  *
- * \brief Environment variables automatically added (and expanded) by navit at startup
+ * @brief Environment variables automatically added (and expanded) by navit at startup
  *
  * A NUL-terminated string array
  * environment_vars[0] is the name of the variable
