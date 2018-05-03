@@ -346,8 +346,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 				len = strlen(debug_message);
 				end = debug_message+len;
 			}
-			dbg_assert(end+strlen(dbg_level_to_string(level))+1 < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
-			strcpy(end,dbg_level_to_string(level));
+			g_strlcpy(end, dbg_level_to_string(level), sizeof(debug_message) - (end - debug_message));
 			len = strlen(debug_message);
 			end = debug_message+len;
 			dbg_assert(end < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
