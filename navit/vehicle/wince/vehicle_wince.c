@@ -42,7 +42,6 @@
 #include <winioctl.h>
 #include <winbase.h>
 #include <wchar.h>
-#include "support/win32/ConvertUTF.h"
 
 /**
  * @defgroup vehicle-wince Vehicle WinCE
