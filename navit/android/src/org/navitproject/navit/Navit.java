@@ -70,38 +70,38 @@ import android.support.v4.content.ContextCompat;
 public class Navit extends Activity
 {
 
-	public NavitDialogs              dialogs;
-	private PowerManager.WakeLock    wl;
-	private NavitActivityResult      ActivityResults[];
-	public static InputMethodManager mgr                            = null;
-	public static DisplayMetrics     metrics                        = null;
-	public static int                status_bar_height              = 0;
-	public static int                action_bar_default_height      = 0;
-	public static int                navigation_bar_height          = 0;
-	public static int                navigation_bar_height_landscape= 0;
-	public static int                navigation_bar_width           = 0;
-	public static Boolean            show_soft_keyboard             = false;
-	public static Boolean            show_soft_keyboard_now_showing = false;
-	public static long               last_pressed_menu_key          = 0L;
-	public static long               time_pressed_menu_key          = 0L;
-	private static Intent            startup_intent                 = null;
-	private static long              startup_intent_timestamp       = 0L;
-	public static String             my_display_density             = "mdpi";
-	public static final int          NavitDownloaderSelectMap_id    = 967;
-	public static final int          NavitAddressSearch_id          = 70;
-	public static final int          NavitSelectStorage_id          = 43;
-	public static String             NavitLanguage;
-	public static Resources          NavitResources                 = null;
-	static final String              NAVIT_PACKAGE_NAME             = "org.navitproject.navit";
-	static final String              TAG                            = "Navit";
-	static String                    map_filename_path              = null;
-	static final String              NAVIT_DATA_DIR                 = "/data/data/" + NAVIT_PACKAGE_NAME;
-	static final String              NAVIT_DATA_SHARE_DIR           = NAVIT_DATA_DIR + "/share";
-	public static final String       NAVIT_PREFS                    = "NavitPrefs";
-	Boolean                          isFullscreen                   = false;
-	private static final int         MY_PERMISSIONS_REQUEST_ALL     = 101;
-	public static NotificationManager       nm;
-	private static Navit navit;
+	private NavitDialogs               dialogs;
+	private PowerManager.WakeLock      wl;
+	private NavitActivityResult        ActivityResults[];
+	public static InputMethodManager   mgr                             = null;
+	public static DisplayMetrics       metrics                         = null;
+	public static int                  status_bar_height               = 0;
+	private static int                 action_bar_default_height       = 0;
+	public static int                  navigation_bar_height           = 0;
+	public static int                  navigation_bar_height_landscape = 0;
+	public static int                  navigation_bar_width            = 0;
+	public static Boolean              show_soft_keyboard              = false;
+	public static Boolean              show_soft_keyboard_now_showing  = false;
+	public static long                 last_pressed_menu_key           = 0L;
+	public static long                 time_pressed_menu_key           = 0L;
+	private static Intent              startup_intent                  = null;
+	private static long                startup_intent_timestamp        = 0L;
+	private static String              my_display_density              = "mdpi";
+	private static final int           NavitDownloaderSelectMap_id     = 967;
+	private static final int           NavitAddressSearch_id           = 70;
+	private static final int           NavitSelectStorage_id           = 43;
+	private static String              NavitLanguage;
+	public static Resources            NavitResources                  = null;
+	private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
+	private static final String        TAG                             = "Navit";
+	static String                      map_filename_path               = null;
+	static final String                NAVIT_DATA_DIR                  = "/data/data/" + NAVIT_PACKAGE_NAME;
+	private static final String        NAVIT_DATA_SHARE_DIR            = NAVIT_DATA_DIR + "/share";
+	public static final String         NAVIT_PREFS                     = "NavitPrefs";
+	Boolean                            isFullscreen                    = false;
+	private static final int           MY_PERMISSIONS_REQUEST_ALL      = 101;
+	private static NotificationManager nm;
+	private static Navit               navit;
 
 	public static Navit getInstance() {
 		return navit;
@@ -119,14 +119,14 @@ public class Navit extends Activity
 			Navit.this.showNativeKeyboard();
 		}
 	}
-	
-	
+
+
 	public void removeFileIfExists(String source) {
 		File file = new File(source);
 
 		if (!file.exists())
 			return;
-        
+
 		file.delete();
     	}
 
@@ -159,10 +159,9 @@ public class Navit extends Activity
 		}
 	}
 
-
-	public static String T(String in)
+	public String T(String in)
 	{
-		return NavitTextTranslations.get_text(in);
+		return getLocalizedString(in);
 	}
 
 	private boolean extractRes(String resname, String result) {
@@ -226,7 +225,7 @@ public class Navit extends Activity
 			infobox.setCancelable(false);
 			
 			infobox.setMessage(R.string.initial_info_box_message);
-	
+
 			// TRANS
 			infobox.setPositiveButton(getString(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
@@ -273,15 +272,12 @@ public class Navit extends Activity
 		Log.d(TAG, "**1**A " + startup_intent.getAction());
 		Log.d(TAG, "**1**D " + startup_intent.getDataString());
 
-		// init translated text
-		NavitTextTranslations.init();
-		
 		// NOTIFICATION
 		// Setup the status bar notification		
 		// This notification is removed in the exit() function
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);	// Grab a handle to the NotificationManager
 		PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
-		
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentIntent(appIntent);
 		builder.setAutoCancel(false).setOngoing(true);
@@ -290,7 +286,7 @@ public class Navit extends Activity
 		builder.setSmallIcon(R.drawable.ic_notify);
 		Notification NavitNotification = builder.build();
 		nm.notify(R.string.app_name, NavitNotification);// Show the notification
-		
+
 		// Status and navigation bar sizes
 		// These are platform defaults and do not change with rotation, but we have to figure out which ones apply
 		// (is the navigation bar visible? on the side or at the bottom?)
@@ -324,9 +320,6 @@ public class Navit extends Activity
 			langc = lang.substring(0, pos);
 			NavitLanguage = langc + lang.substring(pos).toUpperCase(locale);
 			Log.d(TAG, "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
-			// set lang. for translation
-			NavitTextTranslations.main_language = langc;
-			NavitTextTranslations.sub_language = NavitLanguage.substring(pos).toUpperCase(locale);
 		}
 		else
 		{
@@ -334,9 +327,6 @@ public class Navit extends Activity
 			Log.d(TAG, "Country1 " + country);
 			Log.d(TAG, "Country2 " + country.toUpperCase(locale));
 			NavitLanguage = langc + "_" + country.toUpperCase(locale);
-			// set lang. for translation
-			NavitTextTranslations.main_language = langc;
-			NavitTextTranslations.sub_language = country.toUpperCase(locale);
 		}
 		Log.d(TAG, "Language " + lang);
 
@@ -458,7 +448,7 @@ public class Navit extends Activity
 				cf.getHandler().post(new SoftInputRestorer());
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -469,7 +459,7 @@ public class Navit extends Activity
 			show_soft_keyboard_now_showing = true;
 		}
 	}
-	
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 		switch (requestCode) {
@@ -492,28 +482,28 @@ public class Navit extends Activity
 			}
 		}
 	}
-	
+
 	private void parseNavigationURI(String schemeSpecificPart) {
 		String naviData[]= schemeSpecificPart.split("&");
 		Pattern p = Pattern.compile("(.*)=(.*)");
 		Map<String,String> params = new HashMap<String,String>();
 		for (int count=0; count < naviData.length; count++) {
 			Matcher m = p.matcher(naviData[count]);
-			
+
 			if (m.matches()) {
 				params.put(m.group(1), m.group(2));
 			}
 		}
-		
+
 		// d: google.navigation:q=blabla-strasse # (this happens when you are offline, or from contacts)
 		// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
 		// c: google.navigation:ll=48.25676,16.643
 		// b: google.navigation:q=48.25676,16.643
-		
+
 		Float lat;
 		Float lon;
 		Bundle b = new Bundle();
-		
+
 		String geoString = params.get("ll");
 		if (geoString != null) {
 			String address = params.get("q");
@@ -581,7 +571,7 @@ public class Navit extends Activity
 		/* Only show the Backup to SD-Card Option if we really have one */
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		    menu.add(1, 7, 700, getString(R.string.optionsmenu_backup_restore)); //TRANS
-		
+
 		return true;
 	}
 
@@ -688,8 +678,8 @@ public class Navit extends Activity
 				break;
 		}
 	}
-	
-	
+
+
 	/**
 	 * @brief Shows the Options menu.
 	 * 
@@ -737,8 +727,8 @@ public class Navit extends Activity
 		Log.d(TAG, "showNativeKeyboard:return (assuming true)");
 		return inputHeight;
 	}
-	
-	
+
+
 	/**
 	 * @brief Hides the native keyboard or other input method.
 	 */
@@ -746,8 +736,8 @@ public class Navit extends Activity
 		mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 		show_soft_keyboard_now_showing = false;
 	}
-	
-	
+
+
 	void setDestination(float latitude, float longitude, String address) {
 		Toast.makeText( getApplicationContext(),getString(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
 
@@ -794,7 +784,7 @@ public class Navit extends Activity
 				SharedPreferences.Editor  prefs_editor = prefs.edit(); 
 				prefs_editor.putString("filenamePath", newDir); 
 				prefs_editor.apply();
-				Toast.makeText(this, String.format(Navit.T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();                 
+				Toast.makeText(this, String.format(T("New location set to %s\nRestart Navit to apply the changes."),newDir),Toast.LENGTH_LONG).show();
 			} 
 				else Log.w(TAG, "select path failed"); 
 			break; 			
@@ -806,7 +796,7 @@ public class Navit extends Activity
 
 	@Override
     protected void onPrepareDialog(int id, Dialog dialog) {
-	    dialogs.prepareDialog(id, dialog);
+	    dialogs.prepareDialog(id);
         super.onPrepareDialog(id, dialog);
     }
 
@@ -824,7 +814,7 @@ public class Navit extends Activity
 		return true;
 	}
 
-	public void setMapLocation()
+	private void setMapLocation()
 	{ 
 		Intent fileExploreIntent = new Intent(this,FileBrowserActivity.class); 
 		fileExploreIntent
@@ -838,15 +828,15 @@ public class Navit extends Activity
 	{
 		super.onDestroy();
 		Log.d(TAG, "OnDestroy");
-		// TODO next call will kill our app the hard way. This should not be necessary, but ensures navit is
+		// next call will kill our app the hard way. This should not be necessary, but ensures navit is
 		// properly restarted and no resources are wasted with navit in background. Remove this call after 
 		// code review
 		NavitDestroy();
 	}
-	
+
 	public void fullscreen(int fullscreen) {
 		int w, h;
-		
+
 		isFullscreen = (fullscreen != 0);
 		if (isFullscreen) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -856,7 +846,7 @@ public class Navit extends Activity
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
-		
+
 		Display display_ = getWindowManager().getDefaultDisplay();
 		if (Build.VERSION.SDK_INT < 17) {
 			w = display_.getWidth();
@@ -877,7 +867,7 @@ public class Navit extends Activity
 		wl.release();
 	}
 
-	public void exit()
+	private void exit()
 	{
 		nm.cancelAll();
 		NavitVehicle.removeListener();
@@ -886,6 +876,13 @@ public class Navit extends Activity
 
 	public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path, String path2);
 	public native void NavitDestroy();
+
+
+	protected String getLocalizedString(String text)
+	{
+		return NavitGraphics.CallbackLocalizedString(text);
+	}
+
 
 	/*
 	 * this is used to load the 'navit' native library on

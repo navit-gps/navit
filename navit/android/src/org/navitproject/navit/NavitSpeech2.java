@@ -27,10 +27,11 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 
+@SuppressWarnings("unused")
 public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
 	private TextToSpeech mTts;
-	private Navit navit;
-	private int MY_DATA_CHECK_CODE=1;
+	private final Navit navit;
+	private final int MY_DATA_CHECK_CODE=1;
 
 
 	public void onInit(int status)
@@ -52,7 +53,7 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
 				.setTitle(R.string.TTS_title_data_missing)
 				.setMessage(R.string.TTS_qery_install_data)
 				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {			      	
+					public void onClick(DialogInterface dialog, int which) {
 						Intent installIntent = new Intent();
 						installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
 						navit.startActivity(installIntent);
@@ -68,11 +69,11 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
 	{
 		this.navit=navit;
 		navit.setActivityResult(1, this);
-		Log.e("NavitSpeech2","Create");
+		Log.d("NavitSpeech2","Create");
 		Intent checkIntent = new Intent();
 		checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 		if (navit.getPackageManager().resolveActivity(checkIntent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-			Log.e("NavitSpeech2","ACTION_CHECK_TTS_DATA available");
+			Log.d("NavitSpeech2","ACTION_CHECK_TTS_DATA available");
 			navit.startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
 		} else {
 			Log.e("NavitSpeech2","ACTION_CHECK_TTS_DATA not available, assume tts is working");

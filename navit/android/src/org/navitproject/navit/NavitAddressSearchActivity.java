@@ -63,10 +63,10 @@ public class NavitAddressSearchActivity extends Activity {
 			addr = address;
 		}
 
-		int    result_type;
-		float  lat;
-		float  lon;
-		String addr;
+		final int    result_type;
+		final float  lat;
+		final float  lon;
+		final String addr;
 	}
 
 	private static final String TAG                         = "NavitAddress";
@@ -78,7 +78,7 @@ public class NavitAddressSearchActivity extends Activity {
 	private boolean            mPartialSearch               = false;
 	private String             mCountry;
 	private ImageButton        mCountryButton;
-	ProgressDialog             search_results_wait          = null;
+	private ProgressDialog             search_results_wait          = null;
 	public RelativeLayout      NavitAddressSearchActivity_layout;
 	private int                search_results_towns           = 0;
 	private int                search_results_streets         = 0;
@@ -97,7 +97,7 @@ public class NavitAddressSearchActivity extends Activity {
 			Field field = res.getField(resourceName);
 			drawableId = field.getInt(null);
 		} catch (Exception e) {
-			Log.e("NavitAddressSearch", "Failure to get drawable id.", e);
+			Log.e(TAG, "Failure to get drawable id.", e);
 		}
 		return drawableId;
 	}
@@ -152,7 +152,7 @@ public class NavitAddressSearchActivity extends Activity {
 			mCountry = defaultLocale.getCountry().toLowerCase(defaultLocale);
 			SharedPreferences.Editor edit_settings = settings.edit();
 			edit_settings.putString("DefaultCountry", mCountry);
-			edit_settings.commit();
+			edit_settings.apply();
 		}
 
 		mCountryButton = new ImageButton(this);
@@ -167,14 +167,14 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// address: label and text field
 		TextView addr_view = new TextView(this);
-		addr_view.setText(Navit.T("Enter Destination")); // TRANS
+		addr_view.setText(Navit.getInstance().T("Enter Destination")); // TRANS
 		addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 		addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addr_view.setPadding(4, 4, 4, 4);
 
 		// partial match checkbox
 		final CheckBox checkboxPartialMatch = new CheckBox(this);
-		checkboxPartialMatch.setText(Navit.T("partial match")); // TRANS
+		checkboxPartialMatch.setText(Navit.getInstance().T("partial match")); // TRANS
 		checkboxPartialMatch.setChecked(last_address_partial_match);
 		checkboxPartialMatch.setGravity(Gravity.CENTER);
 
@@ -184,7 +184,7 @@ public class NavitAddressSearchActivity extends Activity {
 
 		// search button
 		final Button btnSearch = new Button(this);
-		btnSearch.setText(Navit.T("Search")); // TRANS
+		btnSearch.setText(Navit.getInstance().T("Search")); // TRANS
 		btnSearch.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		btnSearch.setGravity(Gravity.CENTER);
 		btnSearch.setOnClickListener(new OnClickListener() {
@@ -226,9 +226,7 @@ public class NavitAddressSearchActivity extends Activity {
 		}
 
 		String title = getString(R.string.address_search_title);
-
-		if (title != null && title.length() > 0)
-			this.setTitle(title);
+		this.setTitle(title);
 
 		LinearLayout searchSettingsLayout = new LinearLayout(this);
 		searchSettingsLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -269,7 +267,7 @@ public class NavitAddressSearchActivity extends Activity {
 				mCountry = all_countries[item][0];
 				SharedPreferences.Editor edit_settings = settings.edit();
 				edit_settings.putString("DefaultCountry", mCountry);
-				edit_settings.commit();
+				edit_settings.apply();
 
 				setCountryButtonImage();
 			}
@@ -298,8 +296,8 @@ public class NavitAddressSearchActivity extends Activity {
 			break;
 
 		}
-		search_results_wait.setMessage(Navit.T("Towns") + ":" + search_results_towns + " "
-		        + Navit.T("Streets") + ":" + search_results_streets + "/"
+		search_results_wait.setMessage(Navit.getInstance().T("Towns") + ":" + search_results_towns + " "
+		        + Navit.getInstance().T("Streets") + ":" + search_results_streets + "/"
 		        + search_results_streets_hn);
 
 		search_results_wait.setProgress(Addresses_found.size() % (ADDRESS_RESULT_PROGRESS_MAX + 1));
@@ -378,7 +376,7 @@ public class NavitAddressSearchActivity extends Activity {
 		return search_results_wait;
 	}
 	
-	void executeSearch() {
+	private void executeSearch() {
 		showDialog(0);
 	}
 }
