@@ -6,7 +6,6 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView =
     [ "getFloatValue", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ae7f93ff4be582a0b9b82ad7b44d30216", null ],
     [ "onCreateContextMenu", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440", null ],
     [ "onDraw", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96", null ],
-    [ "onFocusChanged", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#aba9d9db3fdd780fa8e92f69a8d0b1f2e", null ],
     [ "onKeyDown", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ab8cbb1ca67564d84cfb4529d56a6d067", null ],
     [ "onKeyMultiple", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a0d55967c53feabded38b3eb52b49964c", null ],
     [ "onKeyUp", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a55a97bcaf4a1f197a56335fdf23e06d6", null ],

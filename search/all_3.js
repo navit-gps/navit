@@ -46,7 +46,7 @@ var searchData=
   ['adddestination',['addDestination',['../classNGQProxyRoute.html#abd5b0881ad82ee0319d93d003ee94c78',1,'NGQProxyRoute']]],
   ['addfolder',['AddFolder',['../classNGQProxyBookmarks.html#ad968825f3e52d01a5776b98952995d68',1,'NGQProxyBookmarks']]],
   ['addlastaddress',['addLastAddress',['../classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#a0f5e46a4ebdcd288ad571b422c6aca68',1,'org::navitproject::navit::NavitAppConfig']]],
-  ['addr',['addr',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a94e70f8db57df87c7a39372c718e02ed',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
+  ['addr',['addr',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a5f160017880ddc96f486dfc11c4cb621',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
   ['address',['address',['../group__vehicle-gpsd-dbus.html#ga058586e665d875c82e96d3af0f968cbb',1,'vehicle_priv']]],
   ['address_5fresult_5fprogress_5fmax',['ADDRESS_RESULT_PROGRESS_MAX',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a13adfa50043ff7b380a5b8f533730872',1,'org::navitproject::navit::NavitAddressSearchActivity']]],
   ['address_5fresults',['address_results',['../structsearch__list.html#a0d468a6922a1f2a76171d86094918e32',1,'search_list']]],

@@ -1,8 +1,8 @@
 var classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress =
 [
     [ "NavitAddress", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a32509ef161dd80107252de17b1efada0", null ],
-    [ "addr", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a94e70f8db57df87c7a39372c718e02ed", null ],
-    [ "lat", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a3fcbfaf86f01a77609133aed180c467f", null ],
-    [ "lon", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a8d3e905a5f3dbb1aa348fbd3dbd156b7", null ],
-    [ "result_type", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#ad181d43141dd923158cbabb9d9d6dcaf", null ]
+    [ "addr", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a5f160017880ddc96f486dfc11c4cb621", null ],
+    [ "lat", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#ad12b653254823bf5ff29565e6fad2190", null ],
+    [ "lon", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a9b998d084b8c76cc0f5babbd0017ed6f", null ],
+    [ "result_type", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a68bfc1f6b4f66a5aaebb92386e892a2d", null ]
 ];

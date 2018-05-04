@@ -71,7 +71,7 @@ var searchData=
   ['response',['response',['../structdbus__method.html#aa5d5d4f09db9d34a937aa598c0c4b4b7',1,'dbus_method']]],
   ['response_5fname',['response_name',['../structdbus__method.html#a0dfeebdd6af52b181fefd58c1dd860bc',1,'dbus_method']]],
   ['result',['result',['../structmaptool__params.html#a3971450fe8b2e46259c1518b9bbcc06c',1,'maptool_params::result()'],['../structsearch__list.html#a01e0ed8f12680467c4c7c658c9e0e8e8',1,'search_list::result()']]],
-  ['result_5ftype',['result_type',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#ad181d43141dd923158cbabb9d9d6dcaf',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
+  ['result_5ftype',['result_type',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a68bfc1f6b4f66a5aaebb92386e892a2d',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
   ['results_5fmap_5fpopulation',['results_map_population',['../structgui__priv.html#aa9103b2ca23225c384ce74c9036b223a',1,'gui_priv']]],
   ['retry_5fcounter',['retry_counter',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['retry_5finterval',['retry_interval',['../group__vehicle-gpsd.html#gabe05855028e4bdfa1454eedba20e5fcd',1,'vehicle_priv']]],

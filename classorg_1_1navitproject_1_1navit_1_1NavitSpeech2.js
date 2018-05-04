@@ -5,6 +5,6 @@ var classorg_1_1navitproject_1_1navit_1_1NavitSpeech2 =
     [ "onInit", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a5ce5cff803fb38558e698a95f5909637", null ],
     [ "say", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a02727414f9ce45fa734aacca3726e33f", null ],
     [ "mTts", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#afdd4e94e364c48a45c60cd83a543ce97", null ],
-    [ "MY_DATA_CHECK_CODE", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a6a7f0febb787b39e32e2b33e936daa2c", null ],
-    [ "navit", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#acfaef2a28d4d22c0b5ea5393f324a564", null ]
+    [ "MY_DATA_CHECK_CODE", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#af7782773a77ba6aee3b580cba163132a", null ],
+    [ "navit", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a87a06efe3383681bb4d9f7835cb414b8", null ]
 ];

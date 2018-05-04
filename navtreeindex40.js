@@ -1,14 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structfile.html#a2b675977cc6c2eadfdd5fe236248219a":[2,0,136,12],
-"structfile.html#a402d6c3ee49f9e34e6d99b62f5d4ea55":[2,0,136,13],
-"structfile.html#a79f1e9d69a869ef922e67ea0244eda24":[2,0,136,9],
-"structfile.html#a7b72869346a12d1d8f1934a31ae5e345":[2,0,136,10],
-"structfile.html#a7bd67df9611c4c3e15810a10378750cb":[2,0,136,17],
-"structfile.html#a88015b7e593a9f276614c613399004e1":[2,0,136,0],
-"structfile.html#a91abe96a48655022661d39b377ee8981":[2,0,136,8],
-"structfile.html#a93164d6663f12c00df3d65b7b0990cc2":[2,0,136,11],
-"structfile.html#ab3d1fdd2b550e3dbb5c1d55e5a60d529":[2,0,136,16],
 "structfile.html#abcdc3058fcb2b789cd4ce5f62f274363":[2,0,136,7],
 "structfile.html#abd7f34cc53378ce024d1163c5af805cd":[2,0,136,18],
 "structfile.html#abe06876c668097ad750c2cc4cc75f9d9":[2,0,136,1],
@@ -199,8 +190,8 @@ var NAVTREEINDEX40 =
 "structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb":[2,0,157,0],
 "structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16":[2,0,157,2],
 "structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4":[2,0,157,1],
-"structgps__sat.html":[0,2,0,10,0],
 "structgps__sat.html":[0,2,0,2,0],
+"structgps__sat.html":[0,2,0,10,0],
 "structgps__status.html":[2,0,159],
 "structgps__status.html#a30a0f4080c2b22c302725c0cd53cd971":[2,0,159,2],
 "structgps__status.html#a85d3b4b02b2162d86649eef8a0c0c0ca":[2,0,159,3],
@@ -249,5 +240,14 @@ var NAVTREEINDEX40 =
 "structgraphics__gc__methods.html":[2,0,166],
 "structgraphics__gc__methods.html#a1689d86e4caa53dc127a181330fea3f5":[2,0,166,0],
 "structgraphics__gc__methods.html#a53482a05d32eca1636e4086510844b74":[2,0,166,3],
-"structgraphics__gc__methods.html#a5388fb154b93384d03c4bf3e9e470d6b":[2,0,166,2]
+"structgraphics__gc__methods.html#a5388fb154b93384d03c4bf3e9e470d6b":[2,0,166,2],
+"structgraphics__gc__methods.html#acaa66ed7c8bb8ca9370bd276771f3563":[2,0,166,4],
+"structgraphics__gc__methods.html#ae4c07f0a1dd03e70e505be6a082a58f7":[2,0,166,1],
+"structgraphics__gc__priv.html":[2,0,167],
+"structgraphics__gc__priv.html#a03013c4cf9c7fb7c4f2ce69e24ad0b9a":[2,0,167,7],
+"structgraphics__gc__priv.html#a03f844dfd8b8e85cfcf34f8060c39c11":[2,0,167,34],
+"structgraphics__gc__priv.html#a0733f9c97fb3defad5a74bbc1762b27b":[2,0,167,4],
+"structgraphics__gc__priv.html#a08c3813db179b81826eb59fbd131cb7c":[2,0,167,42],
+"structgraphics__gc__priv.html#a0d2b5b98ee49a40d3e81798a77ea74d5":[2,0,167,32],
+"structgraphics__gc__priv.html#a0df5e770eca7d60a9378b01336e9ab86":[2,0,167,41]
 };

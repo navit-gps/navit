@@ -11,8 +11,6 @@ var searchData=
   ['failedid',['failedid',['../structparsedata.html#a4175b55c6e39f0f6aeb1fb03541616c6',1,'parsedata']]],
   ['failtowriteattr',['failToWriteAttr',['../gpx2navit__txt_8h.html#a3c7d2000fbfe075b4d0ae7c98b32a840',1,'gpx2navit_txt.h']]],
   ['failtowriteattrrep',['failToWriteAttrRep',['../gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733',1,'failToWriteAttrRep(int iShape, int col, char *file, int line):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a29b4907543ad84078a98a49afff18733',1,'failToWriteAttrRep(int iShape, int col, char *file, int line):&#160;misc.c']]],
-  ['fallback_5flanguage',['fallback_language',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#a5d4c071d28d6bdd3b4632dccf1462f38',1,'org::navitproject::navit::NavitTextTranslations']]],
-  ['fallback_5fsub_5flanguage',['fallback_sub_language',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#a73d49cd79ab39330526e40f2640a3c16',1,'org::navitproject::navit::NavitTextTranslations']]],
   ['false',['FALSE',['../protobuf-c_8c.html#aa93f0eb578d23995850d61f7d61c55c1',1,'protobuf-c.c']]],
   ['fastlocationlistener',['fastLocationListener',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a23b64fbbbdafd6dfea5a8f5a1639ea07',1,'org::navitproject::navit::NavitVehicle']]],
   ['fastprovider',['fastProvider',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a31642af388ac10487f83072a3ceb2713',1,'org::navitproject::navit::NavitVehicle']]],

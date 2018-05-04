@@ -18,7 +18,6 @@ var searchData=
   ['index_5finit',['index_init',['../maptool_8h.html#a8b6b13f8ba692828514165937cb053a5',1,'index_init(struct zip_info *info, int version):&#160;tile.c'],['../tile_8c.html#a8b6b13f8ba692828514165937cb053a5',1,'index_init(struct zip_info *info, int version):&#160;tile.c']]],
   ['index_5fsubmap_5fadd',['index_submap_add',['../maptool_8h.html#a6ba92fdf2dee0cea83f67e235cafa05d',1,'index_submap_add(struct tile_info *info, struct tile_head *th):&#160;tile.c'],['../tile_8c.html#a6ba92fdf2dee0cea83f67e235cafa05d',1,'index_submap_add(struct tile_info *info, struct tile_head *th):&#160;tile.c']]],
   ['info_5faction',['info_action',['../gui__gtk__action_8c.html#a52dfff3fadf9203ec123cbed827accb9',1,'gui_gtk_action.c']]],
-  ['init',['init',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#afc67dcd57f910511ccee26a6fd68c6df',1,'org::navitproject::navit::NavitTextTranslations']]],
   ['init_5fitem',['init_item',['../itembin__buffer_8c.html#a68c70420acd20c1c2b50ad89baa2ce75',1,'init_item(enum item_type type):&#160;itembin_buffer.c'],['../maptool_8h.html#a68c70420acd20c1c2b50ad89baa2ce75',1,'init_item(enum item_type type):&#160;itembin_buffer.c']]],
   ['init_5flv_5fcolumns',['init_lv_columns',['../win32__gui__destination_8c.html#a21cc768d4dc1436ac4c111713ca8c592',1,'win32_gui_destination.c']]],
   ['init_5fwithframe_3a',['init_withFrame:',['../interfaceNavitViewController.html#a208fe965f1ef25eb4c6986e8429a5fc4',1,'NavitViewController']]],

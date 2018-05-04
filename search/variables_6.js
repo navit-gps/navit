@@ -52,7 +52,7 @@ var searchData=
   ['errormode',['errormode',['../tell__navit_8c.html#af7c778465a6d361eb08624fc65e07a1e',1,'tell_navit.c']]],
   ['espeak_5fmeth',['espeak_meth',['../speak_8c.html#a1a0c3e69d3bcfabf08f77c945d567cb7',1,'speak.c']]],
   ['espeak_5fok',['espeak_ok',['../structspeech__priv.html#a67006f4f26282dd6d45956333deb8f85',1,'speech_priv']]],
-  ['est_5fsize_5fbytes',['est_size_bytes',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html#ae910c6cce3baaeaf93db9f31e08acbcb',1,'org::navitproject::navit::NavitMapDownloader::osm_map_values']]],
+  ['est_5fsize_5fbytes',['est_size_bytes',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html#a7fd0bf58a934ad61efdbf1d6b3c7523d',1,'org::navitproject::navit::NavitMapDownloader::osm_map_values']]],
   ['ev_5ffix_5ftimeout',['ev_fix_timeout',['../group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330',1,'vehicle_priv']]],
   ['ev_5ftimeout',['ev_timeout',['../structvehicle__priv.html#a499c508875e6ae64e5ffe147da6d3f08',1,'vehicle_priv']]],
   ['event_5fandroid_5fmethods',['event_android_methods',['../graphics__android_8c.html#ad7db0ce8ce2af569f0787e517cfb346c',1,'graphics_android.c']]],

@@ -66,7 +66,6 @@ var searchData=
   ['ondestroy',['onDestroy',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a30b7dab0eb9f226eb47ba0c25edd24a2',1,'org::navitproject::navit::Navit']]],
   ['ondraw',['onDraw',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['onef',['ONEF',['../structgeodesic.html#ab39f00c50b63ab80922b4ec34b328d30',1,'geodesic::ONEF()'],['../geodesic_8h.html#a93ddffb2da5fb46787c0fc85315cf617',1,'onef():&#160;geodesic.h']]],
-  ['onfocuschanged',['onFocusChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#aba9d9db3fdd780fa8e92f69a8d0b1f2e',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['ongpsstatuschanged',['onGpsStatusChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#ab89871618830967fbe365758636743ca',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
   ['oninit',['onInit',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a5ce5cff803fb38558e698a95f5909637',1,'org::navitproject::navit::NavitSpeech2']]],
   ['onkeydown',['onKeyDown',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ab8cbb1ca67564d84cfb4529d56a6d067',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
@@ -513,7 +512,7 @@ var searchData=
   ['overlay_5ftexture',['overlay_texture',['../structgraphics__priv.html#a7fe6610babf44ff0dbc393c3dee862f2',1,'graphics_priv']]],
   ['overlay_5fx',['overlay_x',['../structgraphics__priv.html#a56fa940b5e40f0129567cc7def94e32e',1,'graphics_priv']]],
   ['overlay_5fy',['overlay_y',['../structgraphics__priv.html#ac8a71097c97b500f5746390218cae51e',1,'graphics_priv']]],
-  ['overlays',['overlays',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a1baa2d1eb3c4d8ba0544bd03e81acc12',1,'org.navitproject.navit.NavitGraphics.overlays()'],['../structgraphics__priv.html#aca2dcc2f59ee363fb84e5a48a6708476',1,'graphics_priv::overlays()'],['../structgraphics__priv.html#af326d43e187fefb43998badd31c53ef6',1,'graphics_priv::overlays()']]],
+  ['overlays',['overlays',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#afa2f9536dcc2fa0c82c59681a811c400',1,'org.navitproject.navit.NavitGraphics.overlays()'],['../structgraphics__priv.html#aca2dcc2f59ee363fb84e5a48a6708476',1,'graphics_priv::overlays()'],['../structgraphics__priv.html#af326d43e187fefb43998badd31c53ef6',1,'graphics_priv::overlays()']]],
   ['overspeed_5fpercent_5fpref',['overspeed_percent_pref',['../structtracking.html#a274e9ff065aafe495e0d422aecadc96a',1,'tracking']]],
   ['overspeed_5fpref',['overspeed_pref',['../structtracking.html#a076fcd8ec5b3e540a5ef6b9bf31b7d15',1,'tracking']]],
   ['overwrite',['overwrite',['../structlog.html#a4ab7089019c9941ab79ffcea05a0f1d4',1,'log']]]

@@ -240,7 +240,6 @@ var searchData=
   ['strings_5fhash',['strings_hash',['../tile_8c.html#aa92cdf1dc93ddf803babaa7d804f6a0b',1,'tile.c']]],
   ['stringtable',['stringtable',['../struct__OSMPBF____PrimitiveBlock.html#aa080371802281cad077299fc08fe5eaf',1,'_OSMPBF__PrimitiveBlock']]],
   ['stub',['stub',['../structelement.html#ac561e962bca3a8369172146c01be8517',1,'element']]],
-  ['sub_5flanguage',['sub_language',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#a5f172b6036f3dbceb79830194383f94e',1,'org::navitproject::navit::NavitTextTranslations']]],
   ['subdiv',['subdiv',['../structmap__rect__priv.html#a87a939195667bf308b0982b1b8abac8b',1,'map_rect_priv']]],
   ['subdiv_5flevel_5fcount',['subdiv_level_count',['../structmap__rect__priv.html#a3fc2a7f42a1a2207ea230acf9476ca71',1,'map_rect_priv']]],
   ['subdiv_5fnext',['subdiv_next',['../garmin__img_8c.html#ac0cb10397d797d702ddd9fd9c13eca1d',1,'garmin_img.c']]],

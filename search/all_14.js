@@ -244,7 +244,7 @@ var searchData=
   ['result_5flist',['result_list',['../structresult__list.html',1,'']]],
   ['result_5fop',['result_op',['../command_8c.html#afd71b440583152ef21c4370e22dfbc17',1,'command.c']]],
   ['result_5fset',['result_set',['../command_8c.html#a95e151c2e1bfea5e0a4873005143f094',1,'command.c']]],
-  ['result_5ftype',['result_type',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#ad181d43141dd923158cbabb9d9d6dcaf',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
+  ['result_5ftype',['result_type',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html#a68bfc1f6b4f66a5aaebb92386e892a2d',1,'org::navitproject::navit::NavitAddressSearchActivity::NavitAddress']]],
   ['results_5fmap_5fpopulation',['results_map_population',['../structgui__priv.html#aa9103b2ca23225c384ce74c9036b223a',1,'gui_priv']]],
   ['resume',['resume',['../classQt5EspeakAudioOut.html#a2106f16a66b9cf94dd2025763f96c968',1,'Qt5EspeakAudioOut']]],
   ['retry_5fcounter',['retry_counter',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2741b57e67d9dd939ca6e6affc9b6d7c',1,'org::navitproject::navit::NavitMapDownloader']]],

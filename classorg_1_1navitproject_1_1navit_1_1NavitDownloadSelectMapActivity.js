@@ -11,5 +11,6 @@ var classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity =
     [ "currentLocationKnown", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a2992faf220a8787ccd869b6b294e7e76", null ],
     [ "downloaded_maps_childs", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a742565f9fd07dd6e5a0f95dabc87e3be", null ],
     [ "MAP_BULLETPOINT", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#ab4a4911aa2148bb8f8a3dfa0acd7c58d", null ],
-    [ "maps_current_position_childs", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a55bbc6ce58dba5959dd32b6d07a97003", null ]
+    [ "maps_current_position_childs", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a55bbc6ce58dba5959dd32b6d07a97003", null ],
+    [ "TAG", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a236b9c3eb702c9b373a74a92ba812b45", null ]
 ];

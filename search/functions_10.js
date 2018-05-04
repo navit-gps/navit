@@ -21,7 +21,6 @@ var searchData=
   ['oncreatedialog',['onCreateDialog',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#abfd5f22784cae532c39b9b10aead52d0',1,'org.navitproject.navit.Navit.onCreateDialog()'],['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6dfb7ab51e346941748da59ede4d21f8',1,'org.navitproject.navit.NavitAddressSearchActivity.onCreateDialog()']]],
   ['ondestroy',['onDestroy',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a30b7dab0eb9f226eb47ba0c25edd24a2',1,'org::navitproject::navit::Navit']]],
   ['ondraw',['onDraw',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
-  ['onfocuschanged',['onFocusChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#aba9d9db3fdd780fa8e92f69a8d0b1f2e',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['ongpsstatuschanged',['onGpsStatusChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#ab89871618830967fbe365758636743ca',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
   ['oninit',['onInit',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a5ce5cff803fb38558e698a95f5909637',1,'org::navitproject::navit::NavitSpeech2']]],
   ['onkeydown',['onKeyDown',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ab8cbb1ca67564d84cfb4529d56a6d067',1,'org::navitproject::navit::NavitGraphics::NavitView']]],

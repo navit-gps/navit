@@ -53,9 +53,6 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
     [ "NavitSpeech2.java", "NavitSpeech2_8java.html", [
       [ "NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2" ]
     ] ],
-    [ "NavitTextTranslations.java", "NavitTextTranslations_8java.html", [
-      [ "NavitTextTranslations", "classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html", "classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations" ]
-    ] ],
     [ "NavitTimeout.java", "NavitTimeout_8java.html", [
       [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ]
     ] ],

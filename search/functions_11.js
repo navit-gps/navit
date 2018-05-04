@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['p',['p',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#aca5dfced28bd0af28e1a8e8dbadcf461',1,'org::navitproject::navit::NavitTextTranslations']]],
   ['pack_5fbuffer_5fpacked_5fpayload',['pack_buffer_packed_payload',['../protobuf-c_8c.html#a1a4673dcfeb7f4ee5d5def64059495ea',1,'protobuf-c.c']]],
   ['padding_5fcallback',['padding_callback',['../graphics__android_8c.html#a92ff60dd0d9b560dd4edeb9d65db09fe',1,'graphics_android.c']]],
   ['paddingchangedcallback',['PaddingChangedCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a1556f4b57a6e606bfd07faf242271a70',1,'org::navitproject::navit::NavitGraphics']]],
@@ -143,7 +142,7 @@ var searchData=
   ['postal_5fmatch',['postal_match',['../search_8c.html#a21740eadbd56344d704ee6d93c415708',1,'search.c']]],
   ['postal_5fstr',['postal_str',['../android_8c.html#a55e6a400a09eb5a026bfa47d433450c7',1,'postal_str(struct search_list_result *res, int level):&#160;android.c'],['../gui__internal__search_8c.html#a55e6a400a09eb5a026bfa47d433450c7',1,'postal_str(struct search_list_result *res, int level):&#160;gui_internal_search.c']]],
   ['prefixed_5fmessage_5fpack',['prefixed_message_pack',['../protobuf-c_8c.html#a9b08c2ecbe774a39f758fb06b49fa1c2',1,'protobuf-c.c']]],
-  ['preparedialog',['prepareDialog',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#a0ea99f158c355aec865f9d54099120d4',1,'org::navitproject::navit::NavitDialogs']]],
+  ['preparedialog',['prepareDialog',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#a222388ed3f6115c892efea6482f29314',1,'org::navitproject::navit::NavitDialogs']]],
   ['print_5farray',['print_array',['../cJSON_8c.html#af1dcc8f2114d998599b506cd5e0645a1',1,'cJSON.c']]],
   ['print_5fescaped',['print_escaped',['../osm__o5m_8c.html#ada1481925f4f72212ddd41eaba684ad3',1,'osm_o5m.c']]],
   ['print_5fheader',['print_header',['../gentypes_8c.html#a983e12ff365733e2dca1e1b3c02d7b53',1,'gentypes.c']]],

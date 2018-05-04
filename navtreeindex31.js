@@ -1,14 +1,5 @@
 var NAVTREEINDEX31 =
 {
-"osm__protobufdb_8c.html":[3,0,9,14],
-"osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9":[3,0,9,14,22],
-"osm__protobufdb_8c.html#a13eda00dd5efd9440b0eaf5430b73e84":[3,0,9,14,29],
-"osm__protobufdb_8c.html#a13fdec16484ee8a4223016c2acdb91d7":[3,0,9,14,17],
-"osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28":[3,0,9,14,13],
-"osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604":[3,0,9,14,30],
-"osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab":[3,0,9,14,10],
-"osm__protobufdb_8c.html#a1f19561947b469c855ba3e13ef9f6505":[3,0,9,14,18],
-"osm__protobufdb_8c.html#a2abb2eca5228a2424e6fb5ec43154d28":[3,0,9,14,8],
 "osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262":[3,0,9,14,25],
 "osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e":[3,0,9,14,23],
 "osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc":[3,0,9,14,7],
@@ -249,5 +240,14 @@ var NAVTREEINDEX31 =
 "osmformat_8pb-c_8h.html#a6f87482272ffd6899b294cc06497e61b":[3,0,9,0,3,48],
 "osmformat_8pb-c_8h.html#a6fd6e53d7edd07d542ab8db035bb36a6":[3,0,9,0,3,119],
 "osmformat_8pb-c_8h.html#a6fdfb026fa8cd488b6aeb4e20a5d513a":[3,0,9,0,3,47],
-"osmformat_8pb-c_8h.html#a71eb3c50478db22e48dc0da6bda67f00":[3,0,9,0,3,98]
+"osmformat_8pb-c_8h.html#a71eb3c50478db22e48dc0da6bda67f00":[3,0,9,0,3,98],
+"osmformat_8pb-c_8h.html#a722ecd89768d7464866a26395a0e73f6":[3,0,9,0,3,57],
+"osmformat_8pb-c_8h.html#a727fc83db8a46495ce4000475401cfdc":[3,0,9,0,3,71],
+"osmformat_8pb-c_8h.html#a74623446c5e6f6406bc887c5f88c33de":[3,0,9,0,3,49],
+"osmformat_8pb-c_8h.html#a74623446c5e6f6406bc887c5f88c33dea6d684a2ea31b5d401ca80f774275339c":[3,0,9,0,3,49,0],
+"osmformat_8pb-c_8h.html#a74623446c5e6f6406bc887c5f88c33dea9052ef6c0c358a7c666b00a8863a0472":[3,0,9,0,3,49,2],
+"osmformat_8pb-c_8h.html#a74623446c5e6f6406bc887c5f88c33deafd8a7209b9461a3ea42772bb2131d9dc":[3,0,9,0,3,49,1],
+"osmformat_8pb-c_8h.html#a752218467fda7ec980a52c8e339ddf7f":[3,0,9,0,3,133],
+"osmformat_8pb-c_8h.html#a77d93cf7269d55519bdb1a5fb3711f98":[3,0,9,0,3,66],
+"osmformat_8pb-c_8h.html#a7af51cc61efdd4a7b251bdfa75d5a61b":[3,0,9,0,3,99]
 };

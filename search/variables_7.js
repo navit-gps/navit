@@ -5,8 +5,6 @@ var searchData=
   ['fa',['fa',['../structgraphics__gc__priv.html#ae2617f3cc5725d32701a66a0247a005b',1,'graphics_gc_priv']]],
   ['failed',['failed',['../structparsedata.html#a80adf87336cf82d88319d9b6621f7143',1,'parsedata']]],
   ['failedid',['failedid',['../structparsedata.html#a4175b55c6e39f0f6aeb1fb03541616c6',1,'parsedata']]],
-  ['fallback_5flanguage',['fallback_language',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#a5d4c071d28d6bdd3b4632dccf1462f38',1,'org::navitproject::navit::NavitTextTranslations']]],
-  ['fallback_5fsub_5flanguage',['fallback_sub_language',['../classorg_1_1navitproject_1_1navit_1_1NavitTextTranslations.html#a73d49cd79ab39330526e40f2640a3c16',1,'org::navitproject::navit::NavitTextTranslations']]],
   ['fastlocationlistener',['fastLocationListener',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a23b64fbbbdafd6dfea5a8f5a1639ea07',1,'org::navitproject::navit::NavitVehicle']]],
   ['fastprovider',['fastProvider',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a31642af388ac10487f83072a3ceb2713',1,'org::navitproject::navit::NavitVehicle']]],
   ['fb',['fb',['../structgraphics__gc__priv.html#a30fe1598df7f4f0ccf12b44409ad46ee',1,'graphics_gc_priv']]],
