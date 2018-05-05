@@ -44,6 +44,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.Manifest;
 import android.media.AudioManager;
@@ -214,6 +215,72 @@ public class Navit extends Activity
 		return true;
 	}
 
+	private boolean extractAsset(String assetFileName, String result) {
+		boolean needs_update = false;
+		AssetManager assetMgr = NavitResources.getAssets();
+		InputStream assetstream;
+		Log.d(TAG, "Asset Name " + assetFileName + ", result " + result);
+		try
+		{
+			assetstream = assetMgr.open(assetFileName);
+		}
+		catch (IOException e)
+		{
+			Log.e(TAG, "Failed opening asset '" + assetFileName + "'");
+			return false;
+		}
+		File resultfile = new File(result);
+		if (!resultfile.exists())
+		{
+			needs_update = true;
+			File path = resultfile.getParentFile();
+			if ( !path.exists() && !resultfile.getParentFile().mkdirs())
+				return false;
+		}
+		else
+		{
+			PackageManager pm = getPackageManager();
+			ApplicationInfo appInfo;
+			long apkUpdateTime = 0;
+			try
+			{
+				appInfo = pm.getApplicationInfo(NAVIT_PACKAGE_NAME, 0);
+				apkUpdateTime = new File(appInfo.sourceDir).lastModified();
+			}
+			catch (NameNotFoundException e)
+			{
+				Log.e(TAG, "Could not read package infos");
+				e.printStackTrace();
+			}
+			if (apkUpdateTime > resultfile.lastModified())
+					needs_update = true;
+		}
+	
+		if (needs_update)
+		{
+			Log.d(TAG, "Extracting asset '" + assetFileName + "'");
+
+			try
+			{
+				FileOutputStream resultfilestream = new FileOutputStream(resultfile);
+				byte[] buf = new byte[1024];
+				int i = 0;
+				while ((i = assetstream.read(buf)) != -1)
+				{
+					resultfilestream.write(buf, 0, i);
+				}
+				 resultfilestream.close();
+			}
+			catch (Exception e)
+			{
+				Log.e(TAG, "Exception " + e.getMessage());
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	private void showInfos()
 	{
 		SharedPreferences settings = getSharedPreferences(NAVIT_PREFS, MODE_PRIVATE);
@@ -398,22 +465,30 @@ public class Navit extends Activity
 		}
 		else
 		{
-			Log.e(TAG, "found device of very high density ("+densityDpi+")");
-			Log.e(TAG, "using xxxhdpi values");
+			Log.w(TAG, "found device of very high density ("+densityDpi+")");
+			Log.w(TAG, "using xxxhdpi values");
 			my_display_density = "xxxhdpi";
 		}
 		Log.i(TAG, "Device density detected: " + my_display_density);
-		
-		String[] navitConfigFiles = {"navit", "navit_layout_car", "navit_layout_car_dark", "navit_layout_car_android", "navit_layout_car_simple", "navit_layout_bike", "navit_layout_th"};
-		for (String configFile : navitConfigFiles)
+
+		try
 		{
-			Log.d(TAG, "Extracting config file '" + configFile + "'");
-			if (!extractRes(configFile + "_" + my_display_density, NAVIT_DATA_DIR + "/share/" + configFile + ".xml"))
+			AssetManager assetMgr = NavitResources.getAssets();
+			String[] children = assetMgr.list("config/" + my_display_density);
+			for (String child : children)
 			{
-				Log.e(TAG, "Failed to extract " + configFile + ".xml for " + my_display_density);
+				Log.d(TAG, "Processing config file '" + child + "' from assets");
+				if (!extractAsset("config/" + my_display_density + "/" + child, NAVIT_DATA_DIR + "/share/" + child))
+				{
+					Log.e(TAG, "Failed to extract asset config/" + my_display_density + "/" + child);
+				}
 			}
 		}
-
+		catch (IOException e)
+		{
+			Log.e(TAG, "Failed to access assets using AssetManager");
+		}
+		
 		Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
 		NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
 
