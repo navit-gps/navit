@@ -40,6 +40,7 @@
 	<string name="map_download_not_enough_free_space">Not enough free space</string>
 	<string name="map_no_fix">No location. Reopen after location fix.</string>
 	<string name="maps_for_current_location">Maps containing current location</string>
+	<string name="maps_installed">Installed maps</string>
 
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Address search</string>
