@@ -760,7 +760,7 @@ public class NavitGraphics
 		 * This logic is based on the presence of a hardware menu button and is known to work on
 		 * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
 		 */
-		final Boolean isNavShowing = ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
+		final Boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
 			Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
 
 		/*
