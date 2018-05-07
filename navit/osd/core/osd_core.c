@@ -1529,7 +1529,7 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 
 	struct point p,bbox[4];
 	struct attr attr_dir, destination_attr, position_attr, imperial_attr;
-	double dir, vdir = 0;
+	double dir, yaw = 0;
 	char *buffer;
 	struct coord c1, c2;
 	enum projection pro;
@@ -1544,10 +1544,8 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 	graphics_draw_circle(opc->osd_item.gr,
 			     opc->osd_item.graphic_fg, &p, opc->osd_item.w*5/6);
 	if (v) {
-		if (vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)) {
-			vdir = *attr_dir.u.numd;
-			draw_compass(opc->osd_item.gr, this->north_gc, opc->osd_item.graphic_fg, &p, opc->osd_item.w/3, -vdir); /* Draw a compass */
-		}
+		yaw=transform_get_yaw(navit_get_trans(nav));
+		handle(this->osd_item.gr, this->osd_item.graphic_fg_white, &p, this->osd_item.w/3, -yaw);
 
 		if (navit_get_attr(nav, attr_destination, &destination_attr, NULL)
 		    && vehicle_get_attr(v, attr_position_coord_geo,&position_attr, NULL)) {
@@ -1556,7 +1554,7 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 			c2.x = destination_attr.u.pcoord->x;
 			c2.y = destination_attr.u.pcoord->y;
 			dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
-			dir -= vdir;
+			dir -= yaw;
 			draw_handle(opc->osd_item.gr, this->destination_dir_gc, &p, opc->osd_item.w/3, dir); /* Draw the green arrow pointing to the destination */
 			buffer=format_distance(transform_distance(pro, &c1, &c2),"",imperial);
 			graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, buffer, 0x10000, 0, bbox, 0);
