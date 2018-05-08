@@ -312,7 +312,14 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 	char *message_origin = debug_message + sizeof(debug_message) -1;	/* message_origin is actually stored at the very end of debug_message buffer */
 	size_t len;	/* Length of the currently processed C-string */
 
+	/* Here we store a description of the source of the debugging message (message_origin)
+	 * For this, we use the last bytes of the debug_message[] buffer.
+	 * For example, if message_origin is "gui_internal:gui_internal_set_attr", debug_message[] will contain:
+	 * "gui_internal:gui_internal_set_attr\0" with '\0' being the last byte (stored in debug_message[sizeof(debug_message) -1])
+	 */
+
 	*message_origin = '\0';	/* Force string termination of message_origin (last byte of debug_message) */
+
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
 	len = strlen(function);
 #else
@@ -333,41 +340,56 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 	dbg_assert(message_origin >= debug_message);
 	memmove(message_origin, module, len);
 
-	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
+	/* The source of the debug message has been created, is terminated with '\0' and stored at the very end of the debug_message buffer. */
+
+	if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level)
+	{	/* Do we output a debug message, based on the current debug level set */
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
 		wchar_t muni[4096];
 #endif
 		debug_message[0]='\0';
 		end = debug_message;
 		if (prefix) {
-			if (timestamp_prefix) {
+			if (timestamp_prefix)
+			{	/* Do we prepend with a timestamp? */
 				dbg_assert(sizeof(debug_message)>=14);
 				debug_timestamp(debug_message);
 				len = strlen(debug_message);
 				end = debug_message+len;
 			}
-			g_strlcpy(end, dbg_level_to_string(level), sizeof(debug_message) - (end - debug_message));
+			/* When we reach this part of the code, end is a pointer to the beginning of the debug message (inside the buffer debug_message) */
+			g_strlcpy(end, dbg_level_to_string(level), sizeof(debug_message) - (end - debug_message));	/* Add the debug level for the current debug message level */
 			len = strlen(debug_message);
-			end = debug_message+len;
+			end = debug_message+len; /* Have len points to the end of the constructed string */
 			dbg_assert(end < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
 			*end++ = ':';
+			/* In the code below, we add the message_origin to the debug message */
 			len=strlen(message_origin);
 			dbg_assert(end+len < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
-			memmove(end,message_origin,len);	/* Note: from this point, do not use message_origin as it may point to garbage. We use memmove here as both message_origin and destination may overlap */
+			memmove(end,message_origin,len);	/* We use memmove here as both message_origin and destination may overlap */
+			message_origin = NULL; /* Warning: from this point, we must not use the pointer message_origin as the content of the debug_message may be overwritten at any time. */
 			end+=len;
 			dbg_assert(end+1 < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow for both ':' and terminating '\0' */
 			*end++ = ':';
-			*end = '\0';
+			*end = '\0'; /* Force termination of the string */
+			/* When we get here, debug_message contains:
+			 * "ttttttttttttt|error:gui_internal:gui_internal_set_attr:\0" (if timestamps are enabled) or
+			 * "error:gui_internal:gui_internal_set_attr:\0" otherwise.
+			 * end points to the terminating '\0'
+			 */
 		}
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
 		len = strlen(debug_message);
-		vsnprintf(end,sizeof(debug_message) - len,fmt,ap);
-		len = strlen(debug_message);
-		end = debug_message+len;
+		vsnprintf(end,sizeof(debug_message) - len,fmt,ap); /* Concatenate the debug log message itself to the prefix constructed above */
+		len = strlen(debug_message); /* Adjust len to store the length of the current string */
+		end = debug_message+len;	/* Adjust end to point to the terminating '\0' of the current string */
+
+		/* In the code below, we prepend the end-of-line sequence to the current string pointed by debug_message ("\r\n" for Windows, "\r" otherwise */
 #ifdef HAVE_API_WIN32_BASE
-		if (len + 1 < sizeof(debug_message) - 1) { /* For Windows platforms, add \r at the end of the buffer (if any room), check if e have room for one more character */
+		if (len + 1 < sizeof(debug_message) - 1)
+		{ /* For Windows platforms, add \r at the end of the buffer (if any room), make sure that we have room for one more character */
 			*end++ = '\r';
 			len++;
 			*end = '\0';
