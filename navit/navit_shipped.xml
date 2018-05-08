@@ -430,9 +430,12 @@ Waypoint</text></img>
 		<!--
 		Layouts are defined in their own specific XML files and are included below (one file per layout, all files matching the wildcard expression below will be used)
 		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)
-		One layout is a specifid theme. The user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file.
+		One layout is a specifid theme. At runtime, the user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file).
+		If two layouts with the same name are included, the first one takes precedence.
+		In the list below, we use the user-defined layouts first (in $NAVIT_USER_DATADIR), they take precedence. Being next in the list, the default layouts (in $NAVIT_SHAREDIR) will only be used if there is no user-defined layout that was already defined with the same name.
 		-->
-		<xi:include href="$NAVIT_ACTIVECONFDIR/navit_layout_*.xml"/>
+		<xi:include href="$NAVIT_USER_DATADIR/navit_layout_*.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/navit_layout_*.xml"/>
 		<layout name="Route">
 			<layer name="streets">
 				<itemgra item_types="street_route_occluded" order="0-">
