@@ -51,7 +51,7 @@ layout_new(struct attr *parent, struct attr **attrs)
 	iter=navit_attr_iter_new();
 	while (navit_get_attr(navit, attr_layout, &layout_attr, iter))
 	{
-		if (g_strcmp0(layout_attr.u.layout->name, name_attr->u.str) == 0)
+		if (strcmp(layout_attr.u.layout->name, name_attr->u.str) == 0)
 		{
 			duplicate_layout_name++;
 		}
