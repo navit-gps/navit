@@ -25,20 +25,49 @@
 #include "layout.h"
 #include "coord.h"
 #include "debug.h"
+#include "navit.h"
 
-
-struct layout * layout_new(struct attr *parent, struct attr **attrs)
+/**
+ * @brief Create a new layout object and attach it to a navit parent
+ *
+ * @param parent The parent for this layout (a navit attr)
+ * @param attrs An array of attributes that for this layout
+ * @return The newly created layout object
+ */
+struct layout *
+layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
+	struct navit *navit;
 	struct color def_color = {COLOR_BACKGROUND_};
 	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
+	struct attr_iter *iter;
+	struct attr layout_attr;
+	int duplicate_layout_name = 0;
 
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
 		return NULL;
+	navit = parent->u.navit;
+	iter=navit_attr_iter_new();
+	while (navit_get_attr(navit, attr_layout, &layout_attr, iter))
+	{
+		if (g_strcmp0(layout_attr.u.layout->name, name_attr->u.str) == 0)
+		{
+			duplicate_layout_name++;
+		}
+	}
+	navit_attr_iter_destroy(iter);
+	if (duplicate_layout_name)
+	{
+		dbg(lvl_error, "Another layout with name '%s' has already been parsed. Discarding subsequent duplicate.", name_attr->u.str);
+		return NULL;
+	}
+
 	l = g_new0(struct layout, 1);
 	l->func=&layout_func;
 	navit_object_ref((struct navit_object *)l);
 	l->name = g_strdup(name_attr->u.str);
+
 	if ((font_attr=attr_search(attrs, NULL, attr_font))) {
 		l->font = g_strdup(font_attr->u.str);
 	}
@@ -56,7 +85,7 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 		l->order_delta=order_delta_attr->u.num;
 	if ((active_attr=attr_search(attrs, NULL, attr_active)))
 		l->active = active_attr->u.num;
-	l->navit=parent->u.navit;
+	l->navit=navit;
 	return l;
 }
 
