@@ -34,7 +34,7 @@
 /**
  * @defgroup vehicle-android Vehicle Android
  * @ingroup vehicle-plugins
- * @brief The Vehicle to gain position data from android. Android uses dbus signals
+ * @brief The Vehicle to gain position data from android.
  * @author Tim Niemeyer <reddog@mastersword.de>
  * @date 2008-2009
  *
@@ -72,7 +72,7 @@ struct vehicle_priv {
 static void
 vehicle_android_destroy(struct vehicle_priv *priv)
 {
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	g_free(priv);
 }
 
@@ -88,7 +88,7 @@ static int
 vehicle_android_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
-	dbg(lvl_debug,"enter %s\n",attr_to_name(type));
+	dbg(lvl_debug,"enter %s",attr_to_name(type));
 	switch (type) {
 	case attr_position_fix_type:
 		attr->u.num = priv->fix_type;
@@ -125,7 +125,7 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 	default:
 		return 0;
 	}
-	dbg(lvl_debug,"ok\n");
+	dbg(lvl_debug,"ok");
 	attr->type = type;
 	return 1;
 }
@@ -147,7 +147,7 @@ static void
 vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
 	time_t tnow;
 	struct tm *tm;
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 
 	v->geo.lat = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLatitude);
 	v->geo.lng = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLongitude);
@@ -158,7 +158,7 @@ vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
 	tnow=(*jnienv)->CallLongMethod(jnienv, location, v->Location_getTime)/1000;
 	tm = gmtime(&tnow);
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
-	dbg(lvl_debug,"lat %f lon %f time %s\n",v->geo.lat,v->geo.lng,v->fixiso8601);
+	dbg(lvl_debug,"lat %f lon %f time %s",v->geo.lat,v->geo.lng,v->fixiso8601);
 	if (v->valid != attr_position_valid_valid) {
 		v->valid = attr_position_valid_valid;
 		callback_list_call_attr_0(v->cbl, attr_position_valid);
@@ -240,16 +240,16 @@ vehicle_android_init(struct vehicle_priv *ret)
                 return 0;
 	if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
                 return 0;
-        dbg(lvl_debug,"at 3\n");
+        dbg(lvl_debug,"at 3");
         cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;III)V");
         if (cid == NULL) {
-                dbg(lvl_error,"no method found\n");
+                dbg(lvl_error,"no method found");
                 return 0; /* exception thrown */
         }
-        dbg(lvl_debug, "at 4 android_activity=%p\n", android_activity);
+        dbg(lvl_debug, "at 4 android_activity=%p", android_activity);
         ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity,
                                                   (int) ret->pcb, (int) ret->scb, (int) ret->fcb);
-        dbg(lvl_debug,"result=%p\n",ret->NavitVehicle);
+        dbg(lvl_debug,"result=%p",ret->NavitVehicle);
 	if (!ret->NavitVehicle)
 		return 0;
         if (ret->NavitVehicle)
@@ -273,7 +273,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 {
 	struct vehicle_priv *ret;
 
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	ret->pcb = callback_new_1(callback_cast(vehicle_android_position_callback), ret);
@@ -284,7 +284,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 	ret->sats_used = 0;
 	*meth = vehicle_android_methods;
 	vehicle_android_init(ret);
-	dbg(lvl_debug, "return\n");
+	dbg(lvl_debug, "return");
 	return ret;
 }
 
@@ -296,7 +296,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
 void
 plugin_init(void)
 {
-	dbg(lvl_debug, "enter\n");
+	dbg(lvl_debug, "enter");
 	plugin_register_category_vehicle("android", vehicle_android_new_android);
 }
 

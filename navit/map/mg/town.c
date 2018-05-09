@@ -105,7 +105,7 @@ town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		twn->attr_next=attr_none;
 		return 1;
 	default:
-                dbg(lvl_warning, "Don't know about attribute %d[%04X]=%s yet\n",
+                dbg(lvl_warning, "Don't know about attribute %d[%04X]=%s yet",
 			attr_type, attr_type, attr_to_name(attr_type));
 		return 0;
 	}
@@ -137,9 +137,6 @@ town_get_data(struct town_priv *twn, unsigned char **p)
 	twn->unknown3=get_u8(p);
 	twn->postal_code2=get_string(p);
 	twn->unknown4=get_u32_unal(p);
-#if 0
-		printf("%s\t%s\t%s\t%d\t%d\t%d\n",twn->name,twn->district,twn->postal_code1,twn->order, twn->country, twn->type);
-#endif
 }
                             /*0 1 2 3 4 5 6 7  8  9  10 11 12 13 14 15 16 17 18 */
 static unsigned char limit[]={0,1,2,2,4,6,8,10,11,13,14,14,14,20,20,20,20,20,20};
@@ -237,7 +234,7 @@ town_search_compare(unsigned char **p, struct map_rect_priv *mr)
 		else
 			d=strcasecmp(mr->search_str, name);
 	}
-	dbg(lvl_debug,"%d \n",d);
+	dbg(lvl_debug,"%d ",d);
 	return d;
 
 }
@@ -250,7 +247,7 @@ town_search_get_item(struct map_rect_priv *mr)
 	int dir=1,leaf;
 
 	if (! mr->search_blk_count) {
-		dbg(lvl_debug,"partial %d 0x%x '%s' ***\n", mr->search_partial, mr->search_country, mr->search_str);
+		dbg(lvl_debug,"partial %d 0x%x '%s' ***", mr->search_partial, mr->search_country, mr->search_str);
 		if (! mr->search_linear) {
 			while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 				dir=town_search_compare(&mr->search_p, mr);
@@ -261,23 +258,23 @@ town_search_get_item(struct map_rect_priv *mr)
 				}
 			}
 			if (! mr->search_linear) {
-				dbg(lvl_warning,"not found\n");
+				dbg(lvl_warning,"not found");
 				return NULL;
 			}
 		}
 		if (! tree_search_next_lin(&mr->ts, &mr->search_p)) {
-			dbg(lvl_debug,"linear not found\n");
+			dbg(lvl_debug,"linear not found");
 			return NULL;
 		}
 		if (town_search_compare(&mr->search_p, mr)) {
-			dbg(lvl_debug,"no match\n");
+			dbg(lvl_debug,"no match");
 			return NULL;
 		}
-		dbg(lvl_debug,"found %d blocks\n",mr->search_blk_count);
+		dbg(lvl_debug,"found %d blocks",mr->search_blk_count);
 	}
 	if (! mr->search_blk_count)
 		return NULL;
-	dbg(lvl_debug,"block 0x%x offset 0x%x\n", block_offset_get_block(mr->search_blk_off), block_offset_get_offset(mr->search_blk_off));
+	dbg(lvl_debug,"block 0x%x offset 0x%x", block_offset_get_block(mr->search_blk_off), block_offset_get_offset(mr->search_blk_off));
 	block_get_byindex(mr->m->file[mr->current_file], block_offset_get_block(mr->search_blk_off), &mr->b);
 	mr->b.p=mr->b.block_start+block_offset_get_offset(mr->search_blk_off);
 	town_get(mr, &mr->town, &mr->item);

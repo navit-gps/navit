@@ -86,7 +86,7 @@ object_new(char *type, void *object)
 {
 	int id;
 	char *ret;
-	dbg(lvl_debug,"enter %s\n", type);
+	dbg(lvl_debug,"enter %s", type);
 	if ((ret=g_hash_table_lookup(object_hash_rev, object)))
 		return ret;
 	id=GPOINTER_TO_INT(g_hash_table_lookup(object_count, type));
@@ -94,7 +94,7 @@ object_new(char *type, void *object)
 	ret=g_strdup_printf("%s/%s/%d", object_path, type, id);
 	g_hash_table_insert(object_hash, ret, object);
 	g_hash_table_insert(object_hash_rev, object, ret);
-	dbg(lvl_debug,"return %s\n", ret);
+	dbg(lvl_debug,"return %s", ret);
 	return (ret);
 }
 
@@ -136,7 +136,7 @@ resolve_object(const char *opath, char *type)
 	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
-		dbg(lvl_error,"wrong object path %s\n",opath);
+		dbg(lvl_error,"wrong object path %s",opath);
 		return NULL;
 	}
 	prefix=g_strdup_printf("%s/%s/", object_path, type);
@@ -153,7 +153,7 @@ resolve_object(const char *opath, char *type)
 		if (!config_get_attr(config, attr_navit, &navit, NULL))
 			return NULL;
 		if (!oprefix[0]) {
-			dbg(lvl_debug,"default_navit\n");
+			dbg(lvl_debug,"default_navit");
 			return navit.u.navit;
 		}
 		if (!strncmp(oprefix,def_graphics,strlen(def_graphics))) {
@@ -396,42 +396,42 @@ dbus_dump_iter(char *prefix, DBusMessageIter *iter)
 		switch (arg) {
 		case DBUS_TYPE_INT32:
             		dbus_message_iter_get_basic(iter, &vali);
-			dbg(lvl_debug,"%sDBUS_TYPE_INT32: %d\n",prefix,vali);
+			dbg(lvl_debug,"%sDBUS_TYPE_INT32: %d",prefix,vali);
 			break;
 		case DBUS_TYPE_STRING:
             		dbus_message_iter_get_basic(iter, &vals);
-			dbg(lvl_debug,"%sDBUS_TYPE_STRING: %s\n",prefix,vals);
+			dbg(lvl_debug,"%sDBUS_TYPE_STRING: %s",prefix,vals);
 			break;
 		case DBUS_TYPE_STRUCT:
-			dbg(lvl_debug,"%sDBUS_TYPE_STRUCT:\n",prefix);
+			dbg(lvl_debug,"%sDBUS_TYPE_STRUCT:",prefix);
 			prefixr=g_strdup_printf("%s  ",prefix);
         		dbus_message_iter_recurse(iter, &iterr);
 			dbus_dump_iter(prefixr, &iterr);
 			g_free(prefixr);
 			break;
 		case DBUS_TYPE_VARIANT:
-			dbg(lvl_debug,"%sDBUS_TYPE_VARIANT:\n",prefix);
+			dbg(lvl_debug,"%sDBUS_TYPE_VARIANT:",prefix);
 			prefixr=g_strdup_printf("%s  ",prefix);
         		dbus_message_iter_recurse(iter, &iterr);
 			dbus_dump_iter(prefixr, &iterr);
 			g_free(prefixr);
 			break;
 		case DBUS_TYPE_DICT_ENTRY:
-			dbg(lvl_debug,"%sDBUS_TYPE_DICT_ENTRY:\n",prefix);
+			dbg(lvl_debug,"%sDBUS_TYPE_DICT_ENTRY:",prefix);
 			prefixr=g_strdup_printf("%s  ",prefix);
         		dbus_message_iter_recurse(iter, &iterr);
 			dbus_dump_iter(prefixr, &iterr);
 			g_free(prefixr);
 			break;
 		case DBUS_TYPE_ARRAY:
-			dbg(lvl_debug,"%sDBUS_TYPE_ARRAY:\n",prefix);
+			dbg(lvl_debug,"%sDBUS_TYPE_ARRAY:",prefix);
 			prefixr=g_strdup_printf("%s  ",prefix);
         		dbus_message_iter_recurse(iter, &iterr);
 			dbus_dump_iter(prefixr, &iterr);
 			g_free(prefixr);
 			break;
 		default:
-			dbg(lvl_debug,"%c\n",arg);
+			dbg(lvl_debug,"%c",arg);
 		}
 		dbus_message_iter_next(iter);
 	}
@@ -531,7 +531,7 @@ decode_attr_type_from_iter(DBusMessageIter *iter)
 	dbus_message_iter_get_basic(iter, &attr_type);
 	dbus_message_iter_next(iter);
 	ret=attr_from_name(attr_type);
-	dbg(lvl_debug, "attr value: 0x%x string: %s\n", ret, attr_type);
+	dbg(lvl_debug, "attr value: 0x%x string: %s", ret, attr_type);
 	return ret;
 }
 
@@ -548,7 +548,7 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 
 	dbus_message_iter_recurse(iter, &iterattr);
 	dbus_message_iter_next(iter);
-	dbg(lvl_debug, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
+	dbg(lvl_debug, "seems valid. signature: %s", dbus_message_iter_get_signature(&iterattr));
 
 	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
 		return 0;
@@ -830,9 +830,9 @@ request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, ch
 		destroy_attr(&attr);
 		if (ret)
 			return empty_reply(connection, message);
-		dbg(lvl_error,"failed to set/add/remove attr\n");
+		dbg(lvl_error,"failed to set/add/remove attr");
 	} else {
-		dbg(lvl_error,"failed to decode attr\n");
+		dbg(lvl_error,"failed to decode attr");
 	}
     	return dbus_error_invalid_parameter(connection, message);
 }
@@ -1014,7 +1014,7 @@ request_map_dump(DBusConnection *connection, DBusMessage *message)
 		char *file;
 		FILE *f;
 		dbus_message_iter_get_basic(&iter, &file);
-		/* dbg(0,"File '%s'\n",file); */
+		/* dbg(0,"File '%s'",file); */
 		f=fopen(file,"w");
 		map_dump_filedesc(map,f);
 		fclose(f);
@@ -1164,7 +1164,7 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 {
 	DBusMessageIter iter2;
 
-	dbg(lvl_debug,"%s\n", dbus_message_iter_get_signature(iter));
+	dbg(lvl_debug,"%s", dbus_message_iter_get_signature(iter));
 
 	dbus_message_iter_recurse(iter, &iter2);
 
@@ -1178,7 +1178,7 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &p->y);
 
-	dbg(lvl_debug, " x -> %x  y -> %x\n", p->x, p->y);
+	dbg(lvl_debug, " x -> %x  y -> %x", p->x, p->y);
 
 	dbus_message_iter_next(&iter2);
 
@@ -1307,7 +1307,7 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_navit_quit(DBusConnection *connection, DBusMessage *message)
 {
-        dbg(lvl_debug,"Got a quit request from DBUS\n");
+        dbg(lvl_debug,"Got a quit request from DBUS");
         struct attr navit;
         navit.type=attr_navit;
         struct navit *nav;
@@ -1384,7 +1384,7 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
-	dbg(lvl_debug,"%s\n", dbus_message_iter_get_signature(&iter));
+	dbg(lvl_debug,"%s", dbus_message_iter_get_signature(&iter));
 
 	dbus_message_iter_get_basic(&iter, &factor);
 
@@ -1416,7 +1416,7 @@ request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
-	dbg(lvl_debug,"%s\n", dbus_message_iter_get_signature(&iter));
+	dbg(lvl_debug,"%s", dbus_message_iter_get_signature(&iter));
 
 	navit_zoom_to_route(navit,0);
 
@@ -1451,7 +1451,7 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
                 return dbus_error_navigation_not_configured(connection, message);
         }
 
-	dbg(lvl_debug,"Dumping route from dbus to %s\n", filename);
+	dbg(lvl_debug,"Dumping route from dbus to %s", filename);
 
 	struct map * map=NULL;
 	struct map_rect * mr=NULL;
@@ -1522,7 +1522,7 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
                         return dbus_error_invalid_parameter(connection, message);
         }
 
-        dbg(lvl_debug,"Dumping route from dbus to %s\n", filename);
+        dbg(lvl_debug,"Dumping route from dbus to %s", filename);
 
         struct map * map=NULL;
         struct navigation * nav = NULL;
@@ -1614,7 +1614,7 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
-	dbg(lvl_debug,"%s\n", dbus_message_iter_get_signature(&iter));
+	dbg(lvl_debug,"%s", dbus_message_iter_get_signature(&iter));
 
 	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
 		return dbus_error_invalid_parameter(connection, message);
@@ -1626,7 +1626,7 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &h);
 
-	dbg(lvl_debug, " w -> %i  h -> %i\n", w, h);
+	dbg(lvl_debug, " w -> %i  h -> %i", w, h);
 
 	navit_handle_resize(navit, w, h);
 
@@ -1725,7 +1725,7 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 
 	dbus_message_iter_next(&iter);
 	dbus_message_iter_get_basic(&iter, &description);
-	dbg(lvl_debug, " destination -> %s\n", description);
+	dbg(lvl_debug, " destination -> %s", description);
 
 	navit_set_destination(navit, &pc, description, 1);
 	return empty_reply(connection, message);
@@ -2092,7 +2092,7 @@ introspect_path(const char *object)
 	if (strncmp(object, object_path, strlen(object_path)))
 		return NULL;
 	ret=g_strdup(object+strlen(object_path));
-	dbg(lvl_debug,"path=%s\n",ret);
+	dbg(lvl_debug,"path=%s",ret);
 	for (i = strlen(ret)-1 ; i >= 0 ; i--) {
 		if (ret[i] == '/' || (ret[i] >= '0' && ret[i] <= '9'))
 			ret[i]='\0';
@@ -2120,7 +2120,7 @@ generate_navitintrospectxml(const char *object)
     char *path=introspect_path(object);
     if (!path)
 	return NULL;
-    dbg(lvl_debug,"path=%s\n",path);
+    dbg(lvl_debug,"path=%s",path);
 
     // write header and make navit introspectable
     navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object, navitintrospectxml_head2);
@@ -2163,11 +2163,11 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 {
 	int i;
 	char *path;
-	dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
+	dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
 		DBusMessage *reply;
             	char *navitintrospectxml = generate_navitintrospectxml(dbus_message_get_path(message));
-		dbg(lvl_debug,"Introspect %s:Result:%s\n",dbus_message_get_path(message), navitintrospectxml);
+		dbg(lvl_debug,"Introspect %s:Result:%s",dbus_message_get_path(message), navitintrospectxml);
 		if (navitintrospectxml) {
 			reply = dbus_message_new_method_return(message);
 			dbus_message_append_args(reply, DBUS_TYPE_STRING, &navitintrospectxml, DBUS_TYPE_INVALID);
@@ -2201,7 +2201,7 @@ static DBusObjectPathVTable dbus_navit_vtable = {
 DBusHandlerResult
 filter(DBusConnection *connection, DBusMessage *message, void *user_data)
 {
-	dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
+	dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
 	if (dbus_message_is_signal(message, DBUS_INTERFACE_DBUS, "NameOwnerChanged")) {
 	}
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -2214,7 +2214,7 @@ dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struc
 	DBusMessage* msg;
 	char *opath=object_new("navit",navit);
 	char *interface=g_strdup_printf("%s%s", service_name, ".navit");
-	dbg(lvl_debug,"enter %s %s %s\n",opath,command,interface);
+	dbg(lvl_debug,"enter %s %s %s",opath,command,interface);
 	msg = dbus_message_new_signal(opath, interface, "signal");
 	if (msg) {
 		DBusMessageIter iter1,iter2,iter3;
@@ -2269,7 +2269,7 @@ void plugin_init(void)
 	object_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	object_hash_rev=g_hash_table_new(NULL, NULL);
 	object_count=g_hash_table_new(g_str_hash, g_str_equal);
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	dbus_error_init(&error);
 #ifdef DBUS_USE_SYSTEM_BUS
 	connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
@@ -2277,7 +2277,7 @@ void plugin_init(void)
 	connection = dbus_bus_get(DBUS_BUS_SESSION, &error);
 #endif
 	if (!connection) {
-		dbg(lvl_error,"Failed to open connection to session message bus: %s\n", error.message);
+		dbg(lvl_error,"Failed to open connection to session message bus: %s", error.message);
 		dbus_error_free(&error);
 		return;
 	}

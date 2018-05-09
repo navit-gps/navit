@@ -31,7 +31,7 @@ static int has_quit;
 
 #define require_method_helper(m)\
 	if(!event_methods.m) {\
-		dbg(lvl_error, "Can't find event system method %s. Event system is %s%s\n",\
+		dbg(lvl_error, "Can't find event system method %s. Event system is %s%s",\
 			#m ,e_system?"set to ":"not set.", e_system?e_system:"");\
 
 #define require_method(m)\
@@ -133,14 +133,14 @@ event_request_system(const char *system, const char *requestor)
 	void (*event_type_new)(struct event_methods *meth);
 	if (e_system) {
 		if (strcmp(e_system, system)) {
-			dbg(lvl_error,"system '%s' already requested by '%s', can't set to '%s' as requested from '%s'\n", e_system, e_requestor, system, requestor);
+			dbg(lvl_error,"system '%s' already requested by '%s', can't set to '%s' as requested from '%s'", e_system, e_requestor, system, requestor);
 			return 0;
 		}
 		return 1;
 	}
 	event_type_new=plugin_get_category_event(system);
         if (! event_type_new) {
-		dbg(lvl_error,"unsupported event system '%s' requested from '%s'\n", system, requestor);
+		dbg(lvl_error,"unsupported event system '%s' requested from '%s'", system, requestor);
                 return 0;
 	}
 	event_type_new(&event_methods);

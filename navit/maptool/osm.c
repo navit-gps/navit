@@ -1359,12 +1359,7 @@ static void
 extend_buffer(struct buffer *b)
 {
 	b->malloced+=b->malloced_step;
-	b->base=realloc(b->base, b->malloced);
-	if (b->base == NULL) {
-		fprintf(stderr,"realloc of %d bytes failed\n",(int)b->malloced);
-		exit(1);
-	}
-
+	b->base=g_realloc(b->base, b->malloced);
 }
 
 /** The node currently being processed. */
@@ -1475,10 +1470,6 @@ node_item_find_index_in_ordered_list(osmid id)
       if (node_buffer_base[node_count-1].nd_id < id)
 	      return -1;
       while (node_buffer_base[search_index].nd_id != id) {
-#if 0
-	      fprintf(stderr,"search_index=%d node_count=%d search_step=%d id=%d node_buffer_base[search_index].id=%d\n",
-		  search_index, node_count, search_step, id, node_buffer_base[search_index].id);
-#endif
 	      if (node_buffer_base[search_index].nd_id < id) {
 		      search_index+=search_step;
 		      if (search_step == 1) {
@@ -1726,9 +1717,6 @@ static void
 relation_add_tag(char *k, char *v)
 {
 	int add_tag=1;
-#if 0
-	fprintf(stderr,"add tag %s %s\n",k,v);
-#endif
 	if (!strcmp(k,"type")) {
 		g_strlcpy(relation_type, v, sizeof(relation_type));
 		add_tag=0;
@@ -2245,7 +2233,7 @@ osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix)
 		if (!item_is_district(*ib))
 		{
 			char *townname=item_bin_get_attr(ib, attr_town_name, NULL);
-			char *dup=strdup(townname);
+			char *dup=g_strdup(townname);
 			g_hash_table_replace(town_hash, dup, dup);
 		}
 	}
@@ -3206,17 +3194,9 @@ write_item_way_subsection(FILE *out, FILE *out_index, FILE *out_graph, struct it
 	new.len=new.clen+attr_len+2;
 	if (out_index)
 		write_item_way_subsection_index(out, out_index, out_graph, orig, last_id);
-#if 0
-	fprintf(stderr,"first %d last %d type 0x%x len %d clen %d attr_len %d\n", first, last, new.type, new.len, new.clen, attr_len);
-#endif
 	dbg_assert(fwrite(&new, sizeof(new), 1, out)==1);
 	dbg_assert(fwrite(c+first, new.clen*4, 1, out)==1);
 	dbg_assert(fwrite(attr, attr_len*4, 1, out)==1);
-#if 0
-		fwrite(&new, sizeof(new), 1, out_graph);
-		fwrite(c+first, new.clen*4, 1, out_graph);
-		fwrite(attr, attr_len*4, 1, out_graph);
-#endif
 }
 
 void
@@ -3307,9 +3287,6 @@ map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out_ind
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	sig_alrm(0);
 	while ((ib=read_item(in))) {
-#if 0
-		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
-#endif
 		ccount=ib->clen/2;
 		if (ccount <= 1)
 			continue;

@@ -35,6 +35,8 @@
 #include "attr.h"
 #include "util.h"
 
+#include "navigation.h"         /* for KILOMETERS_TO_MILES */
+
 static struct gtk_poi_search{
 	GtkWidget *entry_distance;
 	GtkWidget *label_distance;
@@ -55,7 +57,7 @@ geticon(const char *name){
 	GError *error=NULL;
 	icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
 	if (error) {
-		dbg(lvl_error, "failed to load icon '%s': %s\n", name, error->message);
+		dbg(lvl_error, "failed to load icon '%s': %s", name, error->message);
 	}
 	return icon;
 }
@@ -108,18 +110,31 @@ model_poi (struct gtk_poi_search *search)
 	struct coord coord_item,center;
 	struct pcoord pc;
 	struct mapset_handle *h;
-	int search_distance_meters,idist;
+	int search_distance_meters; /* distance to search the POI database, in meters, from the center of the screen. */
+	int idist; /* idist appears to be the distance in meters from the center of the screen to a POI. */
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
 	struct point cursor_position;
 	enum item_type selected;
 
-	search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
+	/* Respect the Imperial attribute as we enlighten the user. */
+	struct attr attr;
+	int imperial = FALSE;  /* default to using metric measures. */
+	if (navit_get_attr(gtk_poi_search.nav, attr_imperial, &attr, NULL))
+	    imperial=attr.u.num;
+
+	if (imperial == FALSE) {
+		/* Input is in kilometers */
+		search_distance_meters=1000*atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)));
+	} else {
+		/* Input is in miles. */
+		search_distance_meters=atoi((char *) gtk_entry_get_text(GTK_ENTRY(search->entry_distance)))/METERS_TO_MILES;
+	}
 
 	cursor_position.x=navit_get_width(search->nav)/2;
 	cursor_position.y=navit_get_height(search->nav)/2;
-	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Distance from screen center (km)"));
+	gtk_label_set_text(GTK_LABEL(search->label_distance),_("Select a search radius from screen center"));
 
 	transform_reverse(navit_get_trans(search->nav), &cursor_position, &center);
 	pc.pro = transform_get_projection(navit_get_trans(search->nav));
@@ -146,6 +161,17 @@ model_poi (struct gtk_poi_search *search)
 					char direction[5];
 					gtk_list_store_append(search->store_poi, &iter);
 					get_compass_direction(direction,transform_get_angle_delta(&center,&coord_item,0),1);
+
+                                        /**
+                                         * If the user has selected imperial, translate idist from meters to
+                                         * feet. We convert to feet only, and not miles, because the code
+                                         * sorts on the numeric value of the distance, so it doesn't like two
+                                         * different units. Possible future enhancement?
+                                         */
+					if (imperial != FALSE) {
+						idist = idist * (FEET_PER_METER); /* convert meters to feet. */
+					}
+
 					gtk_list_store_set(search->store_poi, &iter, 0,direction, 1,idist,
 						2,g_strdup(label_attr.u.str), 3,coord_item.x, 4,coord_item.y ,-1);
 				}
@@ -228,7 +254,7 @@ button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	dest.y=lon;
 	dest.pro=1;
 	navit_set_destination(search->nav, &dest, buffer, 1);
-	dbg(lvl_debug,_("Set destination to %ld, %ld \n"),lat,lon);
+	dbg(lvl_debug,_("Set destination to %ld, %ld "),lat,lon);
 }
 
 /* Show the POI's position in the map. */
@@ -251,7 +277,7 @@ button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	dest.y=lon;
 	dest.pro=1;
 	navit_set_center(search->nav, &dest,1);
-	dbg(lvl_debug,_("Set map to %ld, %ld \n"),lat,lon);
+	dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }
 
 /** Set POI as the first "visit before". */
@@ -268,7 +294,7 @@ button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search)
 	if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(search->store_poi_sorted), &iter, path)) return;
 	gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
 	gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
-	dbg(lvl_debug,_("Set next visit to %ld, %ld \n"),lat,lon);
+	dbg(lvl_debug,_("Set next visit to %ld, %ld "),lat,lon);
 
 	struct pcoord dest;
 	dest.x=lat;

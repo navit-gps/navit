@@ -41,7 +41,7 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category)
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
     if (!info.isFormatSupported(format)) {
         dbg(lvl_error,
-            "Raw audio format not supported by backend, cannot play audio.\n");
+            "Raw audio format not supported by backend, cannot play audio.");
         return;
     }
 
@@ -54,7 +54,7 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category)
    * systems with
    * really low memory.*/
     audio->setBufferSize((samplerate * 1 /*ch*/ * 2 /*samplezize*/) * 5 /*seconds*/);
-    dbg(lvl_debug, "Buffer size is: %d\n", audio->bufferSize());
+    dbg(lvl_debug, "Buffer size is: %d", audio->bufferSize());
     if (category != NULL)
         audio->setCategory(QString(category));
 
@@ -76,7 +76,7 @@ Qt5EspeakAudioOut::~Qt5EspeakAudioOut()
 
 void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState)
 {
-    dbg(lvl_debug, "Enter %d\n", newState);
+    dbg(lvl_debug, "Enter %d", newState);
     switch (newState) {
     case QAudio::ActiveState:
         break;
@@ -88,21 +88,21 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState)
         /*remove all data that was already read*/
         data->remove(0, buffer->pos());
         buffer->seek(0);
-        dbg(lvl_debug, "Size %d\n", data->size());
+        dbg(lvl_debug, "Size %d", data->size());
         break;
     }
 }
 
 void Qt5EspeakAudioOut::resume(int state)
 {
-    dbg(lvl_debug, "Enter %d\n", state);
+    dbg(lvl_debug, "Enter %d", state);
     if (audio->state() != QAudio::ActiveState)
         audio->start(buffer);
 }
 
 void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples)
 {
-    dbg(lvl_debug, "Enter (%d samples)\n", numsamples);
+    dbg(lvl_debug, "Enter (%d samples)", numsamples);
 
     /*remove all data that was already read (if any)*/
     data->remove(0, buffer->pos());
@@ -110,7 +110,7 @@ void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples)
 
     if (numsamples > 0) {
         data->append((const char*)wav, numsamples * sizeof(short));
-        dbg(lvl_debug, "%ld samples in buffer\n",
+        dbg(lvl_debug, "%ld samples in buffer",
             (long int)(buffer->size() / sizeof(short)));
         emit call_resume(numsamples);
     }

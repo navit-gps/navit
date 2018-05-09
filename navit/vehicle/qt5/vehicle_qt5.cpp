@@ -63,14 +63,14 @@ QNavitGeoReceiver::QNavitGeoReceiver(QObject* parent, struct vehicle_priv* c)
 }
 void QNavitGeoReceiver::satellitesInUseUpdated(const QList<QGeoSatelliteInfo>& sats)
 {
-    dbg(lvl_debug, "Sats in use: %d\n", sats.count());
+    dbg(lvl_debug, "Sats in use: %d", sats.count());
     priv->sats_used = sats.count();
     callback_list_call_attr_0(priv->cbl, attr_position_sats_used);
 }
 
 void QNavitGeoReceiver::satellitesInViewUpdated(const QList<QGeoSatelliteInfo>& sats)
 {
-    dbg(lvl_debug, "Sats in view: %d\n", sats.count());
+    dbg(lvl_debug, "Sats in view: %d", sats.count());
     priv->sats = sats.count();
     callback_list_call_attr_0(priv->cbl, attr_position_qual);
 }
@@ -81,23 +81,23 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info)
     /* ignore stale view */
     if (info.coordinate().isValid()) {
         if (info.timestamp().toUTC().secsTo(QDateTime::currentDateTimeUtc()) > 20) {
-            dbg(lvl_debug, "Ignoring old FIX\n");
+            dbg(lvl_debug, "Ignoring old FIX");
             return;
         }
     }
 
     if (info.hasAttribute(QGeoPositionInfo::HorizontalAccuracy)) {
-        dbg(lvl_debug, "Horizontal acc (%f)\n", info.attribute(QGeoPositionInfo::HorizontalAccuracy));
+        dbg(lvl_debug, "Horizontal acc (%f)", info.attribute(QGeoPositionInfo::HorizontalAccuracy));
         priv->radius = info.attribute(QGeoPositionInfo::HorizontalAccuracy);
         callback_list_call_attr_0(priv->cbl, attr_position_radius);
     }
     if (info.hasAttribute(QGeoPositionInfo::GroundSpeed)) {
-        dbg(lvl_debug, "Got ground speed (%f)\n", info.attribute(QGeoPositionInfo::GroundSpeed));
+        dbg(lvl_debug, "Got ground speed (%f)", info.attribute(QGeoPositionInfo::GroundSpeed));
         priv->speed = info.attribute(QGeoPositionInfo::GroundSpeed) * 3.6;
         callback_list_call_attr_0(priv->cbl, attr_position_speed);
     }
     if (info.hasAttribute(QGeoPositionInfo::Direction)) {
-        dbg(lvl_debug, "Direction (%f)\n", info.attribute(QGeoPositionInfo::Direction));
+        dbg(lvl_debug, "Direction (%f)", info.attribute(QGeoPositionInfo::Direction));
         priv->direction = info.attribute(QGeoPositionInfo::Direction);
         callback_list_call_attr_0(priv->cbl, attr_position_direction);
     }
@@ -115,19 +115,19 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info)
     }
 
     if (info.coordinate().isValid()) {
-        dbg(lvl_debug, "Got valid coordinate (lat %f, lon %f)\n", info.coordinate().latitude(), info.coordinate().longitude());
+        dbg(lvl_debug, "Got valid coordinate (lat %f, lon %f)", info.coordinate().latitude(), info.coordinate().longitude());
         priv->geo.lat = info.coordinate().latitude();
         priv->geo.lng = info.coordinate().longitude();
         priv->have_coords = 1;
         if (info.coordinate().type() == QGeoCoordinate::Coordinate3D) {
-            dbg(lvl_debug, "Got valid altitude (alt %f)\n", info.coordinate().altitude());
+            dbg(lvl_debug, "Got valid altitude (alt %f)", info.coordinate().altitude());
             priv->height = info.coordinate().altitude();
         }
-        //dbg(lvl_debug, "Time %s\n", info.timestamp().toUTC().toString().toLatin1().data());
+        //dbg(lvl_debug, "Time %s", info.timestamp().toUTC().toString().toLatin1().data());
         priv->fix_time = info.timestamp().toUTC().toTime_t();
         callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
     } else {
-        dbg(lvl_debug, "Got invalid coordinate\n");
+        dbg(lvl_debug, "Got invalid coordinate");
         priv->have_coords = 0;
         callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
     }
@@ -142,7 +142,7 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info)
 static void
 vehicle_qt5_destroy(struct vehicle_priv* priv)
 {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     if (priv->receiver != NULL)
         delete priv->receiver;
     if (priv->source != NULL)
@@ -163,7 +163,7 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
     enum attr_type type, struct attr* attr)
 {
     struct attr* active = NULL;
-    dbg(lvl_debug, "enter %s\n", attr_to_name(type));
+    dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
     case attr_position_valid:
         attr->u.num = priv->have_coords;
@@ -205,9 +205,9 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
                 priv->fix_time = 0;
                 return 0;
             }
-            //dbg(lvl_debug,"Fix Time: %s\n", priv->fixiso8601);
+            //dbg(lvl_debug,"Fix Time: %s", priv->fixiso8601);
         } else {
-            //dbg(lvl_debug,"Fix Time: 0\n");
+            //dbg(lvl_debug,"Fix Time: 0");
             return 0;
         }
         break;
@@ -224,7 +224,7 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
     default:
         return 0;
     }
-    dbg(lvl_debug, "ok\n");
+    dbg(lvl_debug, "ok");
     attr->type = type;
     return 1;
 }
@@ -271,7 +271,7 @@ vehicle_qt5_new_qt5(struct vehicle_methods* meth,
 {
     struct vehicle_priv* ret;
 
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     ret = g_new0(struct vehicle_priv, 1);
     ret->cbl = cbl;
     *meth = vehicle_null_methods;
@@ -279,16 +279,16 @@ vehicle_qt5_new_qt5(struct vehicle_methods* meth,
     ret->source = QGeoPositionInfoSource::createDefaultSource(NULL);
     ret->satellites = QGeoSatelliteInfoSource::createDefaultSource(NULL);
     if (ret->source == NULL) {
-        dbg(lvl_error, "Got NO QGeoPositionInfoSource\n");
+        dbg(lvl_error, "Got NO QGeoPositionInfoSource");
     } else {
-        dbg(lvl_debug, "Using %s\n", ret->source->sourceName().toLatin1().data());
+        dbg(lvl_debug, "Using %s", ret->source->sourceName().toLatin1().data());
         ret->receiver = new QNavitGeoReceiver(NULL, ret);
         ret->satellites->setUpdateInterval(1000);
         ret->satellites->startUpdates();
         ret->source->setUpdateInterval(500);
         ret->source->startUpdates();
     }
-    dbg(lvl_debug, "return\n");
+    dbg(lvl_debug, "return");
     return ret;
 }
 
@@ -299,6 +299,6 @@ vehicle_qt5_new_qt5(struct vehicle_methods* meth,
  */
 void plugin_init(void)
 {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("qt5", vehicle_qt5_new_qt5);
 }

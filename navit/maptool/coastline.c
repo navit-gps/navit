@@ -52,11 +52,11 @@ find_next(struct rect *bbox, GList *segments, struct coord *c, int exclude, stru
 
 	for (i = 0 ; i < 2 ; i++) {
 		curr=segments;
-		dbg(lvl_debug,"search distance %d\n",search);
+		dbg(lvl_debug,"search distance %d",search);
 		while (curr) {
 			struct geom_poly_segment *seg=curr->data;
 			int dist=distance_from_ll(seg->first, bbox);
-			dbg(lvl_debug,"0x%x 0x%x dist %d\n",seg->first->x,seg->first->y,dist);
+			dbg(lvl_debug,"0x%x 0x%x dist %d",seg->first->x,seg->first->y,dist);
 			if (dist != -1 && seg->first != seg->last && dist < min && (dist >= search)) {
 				min=dist;
 				ci[0]=*seg->first;
@@ -86,14 +86,8 @@ close_polygon(struct item_bin *ib, struct coord *from, struct coord *to, int dir
 		fromdist=distance_from_ll(to, bbox);
 		todist=distance_from_ll(from, bbox);
 	}
-#if 0
-	fprintf(stderr,"close_polygon fromdist %d todist %d full %d dir %d\n", fromdist, todist, full, dir);
-#endif
 	if (fromdist > todist)
 		todist+=full;
-#if 0
-	fprintf(stderr,"close_polygon corrected fromdist %d todist %d full %d dir %d\n", fromdist, todist, full, dir);
-#endif
 	for (i = 0 ; i < 8 ; i++) {
 		if (dir > 0)
 			e=i;
@@ -118,14 +112,8 @@ close_polygon(struct item_bin *ib, struct coord *from, struct coord *to, int dir
 		dist=distance_from_ll(&c, bbox);
 		if (e & 4)
 			dist+=full;
-#if 0
-		fprintf(stderr,"dist %d %d\n",e,dist);
-#endif
 		if (dist > fromdist && dist < todist) {
 			item_bin_add_coord(ib, &c, 1);
-#if 0
-			fprintf(stderr,"add\n");
-#endif
 		}
 		if (dist >= fromdist && dist <= todist) {
 			if (!corners)
@@ -161,9 +149,6 @@ tile_data_to_segments(int *tile_data)
 		curr+=ib->len+1;
 		count++;
 	}
-#if 0
-	fprintf(stderr,"%d segments\n",count);
-#endif
 	return segments;
 }
 
@@ -181,42 +166,12 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	struct item_bin *ibt=(struct item_bin *)(tile_data+1);
 	struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
 	ct->wayid=item_bin_get_wayid(ibt);
-#if 0
-	if (strncmp(tile,"bcdbdcabddddba",7))
-		return;
-#endif
-#if 0
-	if (strncmp(tile,"bcdbdcaaaaddba",14))
-		return;
-#endif
-#if 0
-	fprintf(stderr,"tile %s of size %d\n", tile, *tile_data);
-#endif
 	tile_bbox(tile, &bbox, 0);
 	curr=tile_data_to_segments(tile_data);
 	sorted_segments=geom_poly_segments_sort(curr, geom_poly_segment_type_way_right_side);
 	g_list_foreach(curr,(GFunc)geom_poly_segment_destroy,NULL);
 	g_list_free(curr);
 	
-#if 0
-{
-	GList *sort_segments=sorted_segments;
-	int count=0;
-	while (sort_segments) {
-		struct geom_poly_segment *seg=sort_segments->data;
-		struct item_bin *ib=(struct item_bin *)buffer;
-		char *text=g_strdup_printf("segment %d type %d %p %s area "LONGLONG_FMT,count++,seg->type,sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
-		item_bin_init(ib, type_rg_segment);
-		item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
-		item_bin_add_attr_string(ib, attr_debug, text);
-		// fprintf(stderr,"%s\n",text);
-		g_free(text);
-		// item_bin_dump(ib, stderr);
-		item_bin_write_to_sink(ib, out, NULL);
-		sort_segments=g_list_next(sort_segments);
-	}
-}
-#endif
 	flags=0;
 	curr=sorted_segments;
 	while (curr) {
@@ -243,7 +198,6 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
 		return;
 	}
-#if 1
 	end=bbox.l;
 	tile_start_valid=0;
 	poly_start_valid=0;
@@ -255,7 +209,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	for (;;) {
 		search++;
 		// item_bin_write_debug_point_to_sink(out, &end, "Search %d",search);
-		dbg(lvl_debug,"searching next polygon from 0x%x 0x%x\n",end.x,end.y);
+		dbg(lvl_debug,"searching next polygon from 0x%x 0x%x",end.x,end.y);
 		first=find_next(&bbox, sorted_segments, &end, exclude, cn);
 		exclude=1;
 		if (!first)
@@ -265,7 +219,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			tile_start_valid=1;
 		} else {
 			if (cn[0].x == tile_start.x && cn[0].y == tile_start.y) {
-				dbg(lvl_debug,"end of tile reached\n");
+				dbg(lvl_debug,"end of tile reached");
 				break;
 			}
 		}
@@ -274,7 +228,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			continue;
 		}
 		poly_start_valid=0;
-		dbg(lvl_debug,"start of polygon 0x%x 0x%x\n",cn[0].x,cn[0].y);
+		dbg(lvl_debug,"start of polygon 0x%x 0x%x",cn[0].x,cn[0].y);
 		for (;;) {
 			if (!poly_start_valid) {
 				poly_start=cn[0];
@@ -283,7 +237,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			} else {
 				close_polygon(ib, &end, &cn[0], 1, &bbox, &edges);
 				if (cn[0].x == poly_start.x && cn[0].y == poly_start.y) {
-					dbg(lvl_debug,"poly end reached\n");
+					dbg(lvl_debug,"poly end reached");
 					item_bin_add_attr_longlong(ib, attr_osm_wayid, ct->wayid);
 					item_bin_write_to_sink(ib, out, NULL);
 					end=cn[0];
@@ -296,60 +250,20 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			first->type=geom_poly_segment_type_none;
 			end=cn[1];
 			if (distance_from_ll(&end, &bbox) == -1) {
-				dbg(lvl_debug,"incomplete\n");
+				dbg(lvl_debug,"incomplete");
 				break;
 			}
 			first=find_next(&bbox, sorted_segments, &end, 1, cn);
-			dbg(lvl_debug,"next segment of polygon 0x%x 0x%x\n",cn[0].x,cn[0].y);
+			dbg(lvl_debug,"next segment of polygon 0x%x 0x%x",cn[0].x,cn[0].y);
 		}
 		if (search > 55)
 			break;
 	}
 	g_list_foreach(sorted_segments,(GFunc)geom_poly_segment_destroy,NULL);
 	g_list_free(sorted_segments);
-#endif
 
-#if 0
-	{
-		int *end=tile_data+tile_data[0];
-		int *curr=tile_data+1;
-		while (curr < end) {
-			struct item_bin *ib=(struct item_bin *)curr;
-			// item_bin_dump(ib);
-			ib->type=type_rg_segment;
-			item_bin_write_to_sink(ib, out, NULL);
-			curr+=ib->len+1;
-#if 0
-			{
-				struct coord *c[2];
-				int i;
-				char *s;
-				c[0]=(struct coord *)(ib+1);
-				c[1]=c[0]+ib->clen/2-1;
-				for (i = 0 ; i < 2 ; i++) {
-					s=coord_to_str(c[i]);
-					item_bin_write_debug_point_to_sink(out, c[i], "%s",s);
-					g_free(s);
-				}
-				
-			}
-#endif
-		}
-	}
-#endif
 	ct->edges=edges;
 	g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
-#if 0
-	item_bin_init(ib, type_border_country);
-	item_bin_bbox(ib, &bbox);
-	item_bin_add_attr_string(ib, attr_debug, tile);
-	item_bin_write_to_sink(ib, out, NULL);
-#endif
-#if 0
-	c.x=(bbox.l.x+bbox.h.x)/2;
-	c.y=(bbox.l.y+bbox.h.y)/2;
-	item_bin_write_debug_point_to_sink(out, &c, "%s %d",tile,edges);
-#endif
 }
 
 static void
@@ -377,20 +291,6 @@ ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct item_bin_si
 	ct->edges=15;
 	ct->wayid=wayid;
 	g_hash_table_insert(hash, g_strdup(tile2), ct);
-#if 0
-	item_bin_init(ib, type_border_country);
-	item_bin_bbox(ib, &bbox);
-	item_bin_add_attr_string(ib, attr_debug, tile2);
-	item_bin_write_to_sink(ib, out, NULL);
-#endif
-#if 0
-	{
-		struct coord co;
-		co.x=(bbox.l.x+bbox.h.x)/2;
-		co.y=(bbox.l.y+bbox.h.y)/2;
-		item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
-	}
-#endif
 }
 
 /* ba */
@@ -404,10 +304,6 @@ tile_collector_add_siblings(char *tile, struct coastline_tile *ct, struct coastl
 	struct item_bin_sink *out=data->sink->priv_data[1];
 	int edges=ct->edges;
 	int debug=0;
-#if 0
-	if (!strncmp(tile,"bcacccaadbdcd",10))
-		debug=1;
-#endif
 	if (debug)
 		fprintf(stderr,"%s (%c) has %d edges active\n",tile,t,edges);
 	if (t == 'a' && (edges & 1)) 
@@ -489,10 +385,6 @@ tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, struct coast
 	char t=tile[len-1];
 	strcpy(tile2, tile);
 	tile2[len-1]='\0';
-#if 0
-	if (!strncmp(tile,"bcacccaadbdcd",10))
-		debug=1;
-#endif
 	if (debug) 
 		fprintf(stderr,"len of %s %d vs %d\n",tile,len,data->level);
 
@@ -593,15 +485,6 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 		foreach_tile(&data, tile_collector_add_siblings2);
 		fprintf(stderr,"*\n");
 	}
-#if 0
-	data.level=13;
-	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
-	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
-	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
-	data.level=12;
-	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
-	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
-#endif
 	item_bin_sink_func_destroy(tile_collector);
 	fprintf(stderr,"tile_collector_finish done\n");
 	return 0;
@@ -611,14 +494,6 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 static int
 coastline_processor_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data)
 {
-#if 0
-	int i;
-	struct coord *c=(struct coord *)(ib+1);
-	for (i = 0 ; i < 19 ; i++) {
-		c[i]=c[i+420];
-	}
-	ib->clen=(i-1)*2;
-#endif
 	item_bin_write_clipped(ib, func->priv_data[0], func->priv_data[1]);
 	return 0;
 }

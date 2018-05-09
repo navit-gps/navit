@@ -164,7 +164,7 @@ static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn 
 	char *str;
 	int column;
 
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
 	if(!path)
 		return;
@@ -184,11 +184,11 @@ static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn 
 		column=4;
 		break;
 	default:
-		dbg(lvl_debug,"Unknown mode\n");
+		dbg(lvl_debug,"Unknown mode");
 		return;
 	}
 	gtk_tree_model_get(search->liststore2, &iter, column, &str, -1);
-	dbg(lvl_debug,"str=%s\n", str);
+	dbg(lvl_debug,"str=%s", str);
 	search->partial=0;
 	gtk_entry_set_text(GTK_ENTRY(entry_widget), str);
 }
@@ -222,13 +222,13 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	printf("changed %s partial %d\n", search->attr.u.str, search->partial);
 	if (widget == search->entry_country) {
 		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 3, GTK_SORT_ASCENDING);
-		dbg(lvl_debug,"country\n");
+		dbg(lvl_debug,"country");
 		search->attr.type=attr_country_all;
 		set_columns(search, 0);
 	}
 	if (widget == search->entry_postal) {
 		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 1, GTK_SORT_ASCENDING);
-		dbg(lvl_debug,"postal\n");
+		dbg(lvl_debug,"postal");
 		search->attr.type=attr_town_postal;
 		if (strlen(search->attr.u.str) < 2)
 			return;
@@ -236,14 +236,14 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	}
 	if (widget == search->entry_city) {
 		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 2, GTK_SORT_ASCENDING);
-		dbg(lvl_debug,"town\n");
+		dbg(lvl_debug,"town");
 		search->attr.type=attr_town_name;
 		if (strlen(search->attr.u.str) < 3)
 			return;
 		set_columns(search, 1);
 	}
 	if (widget == search->entry_street) {
-		dbg(lvl_debug,"street\n");
+		dbg(lvl_debug,"street");
 		search->attr.type=attr_street_name;
 		// Searching for a street by just its first letter generates too many hits to be useful, 
 		// plus it causes the GUI to become unresponsive because the search is single-threaded.
@@ -575,7 +575,7 @@ int destination_address(struct navit *nav)
 			gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
 		country_search_destroy(cs);
 	} else {
-		dbg(lvl_error,"warning: no default country found\n");
+		dbg(lvl_error,"warning: no default country found");
 	}
 	search->partial=1;
 	return 0;

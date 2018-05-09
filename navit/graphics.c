@@ -242,7 +242,7 @@ graphics_set_attr(struct graphics *gra, struct attr *attr)
 {
 	int ret=1;
 	/* FIXME if gra->meth doesn't have a setter, we don't even try the generic attrs - is that what we want? */
-	dbg(lvl_debug,"enter\n");
+	dbg(lvl_debug,"enter");
 	if (gra->meth.set_attr)
 		ret=gra->meth.set_attr(gra->priv, attr);
 	if (!ret)
@@ -270,13 +270,13 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
         if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
-		dbg(lvl_error,"Graphics plugin type is not set.\n");
+		dbg(lvl_error,"Graphics plugin type is not set.");
                 return NULL;
         }
 
 	graphicstype_new=plugin_get_category_graphics(type_attr->u.str);
 	if (! graphicstype_new) {
-		dbg(lvl_error,"Failed to load graphics plugin %s.\n", type_attr->u.str);
+		dbg(lvl_error,"Failed to load graphics plugin %s.", type_attr->u.str);
 		return NULL;
 	}
 	this_=g_new0(struct graphics, 1);
@@ -758,7 +758,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 
 		this_->width=width;
 		this_->height=height;
-		dbg(lvl_debug,"Trying to load image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+		dbg(lvl_debug,"Trying to load image '%s' for '%s' at %dx%d", new_name, path, width, height);
 		if (zip) {
 			unsigned char *start;
 			int len;
@@ -774,7 +774,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
 				this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
 		}
 		if (this_->priv) {
-			dbg(lvl_info,"Using image '%s' for '%s' at %dx%d\n", new_name, path, width, height);
+			dbg(lvl_info,"Using image '%s' for '%s' at %dx%d", new_name, path, width, height);
 			g_free(new_name);
 			break;
 		}
@@ -803,7 +803,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 
 	if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
 		g_free(hash_key);
-		dbg(lvl_debug,"Found cached image%sfor '%s'\n",this_?" ":" miss ",path);
+		dbg(lvl_debug,"Found cached image%sfor '%s'",this_?" ":" miss ",path);
 		return this_;
 	}
 
@@ -882,7 +882,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
 	file_wordexp_destroy(we);
 
 	if (! this_->priv) {
-		dbg(lvl_error,"No image for '%s'\n", path);
+		dbg(lvl_error,"No image for '%s'", path);
 		g_free(this_);
 		this_=NULL;
 	}
@@ -1117,7 +1117,7 @@ int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keybo
 		ret = -1;
 	else
 		ret = this_->meth.show_native_keyboard(kbd);
-	dbg(lvl_debug, "return %d\n", ret);
+	dbg(lvl_debug, "return %d", ret);
 	return ret;
 }
 
@@ -1331,11 +1331,11 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 	      struct point * res)
 {
 	int n, a, b;
-	dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d\n",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
+	dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
 	n = bdy * adx - bdx * ady;
 	a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
 	b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
-	dbg(lvl_debug,"a %d b %d n %d\n",a,b,n);
+	dbg(lvl_debug,"a %d b %d n %d",a,b,n);
 	if (n < 0) {
 		n = -n;
 		a = -a;
@@ -1345,7 +1345,7 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 		return 0;
 	res->x = a1->x + a * adx / n;
 	res->y = a1->y + a * ady / n;
-	dbg(lvl_debug,"%d,%d\n",res->x,res->y);
+	dbg(lvl_debug,"%d,%d",res->x,res->y);
 	return 1;
 }
 
@@ -1574,10 +1574,6 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 	struct draw_polyline_shape *shape=&ctx->shape;
 	struct draw_polyline_shape *prev=&ctx->prev_shape;
 
-#if 0
-	dbg(lvl_debug,"enter %d,%d - %d,%d %d\n",pnt[0].x,pnt[0].y,pnt[1].x,pnt[1].y,wi);
-#endif
-
 	*prev=*shape;
 	if (prev->wi != wi && prev->l) {
 		prev->wi=wi;
@@ -1592,9 +1588,6 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 		shape->step=8;
 	else
 		shape->step=16;
-#if 0
-	l = int_sqrt(dx * dx * lscale * lscale + dy * dy * lscale * lscale);
-#else
 	dxs=shape->dx*shape->dx;
 	dys=shape->dy*shape->dy;
 	lscales=lscale*lscale;
@@ -1602,9 +1595,9 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi)
 		l = int_sqrt(dxs+dys)*lscale;
 	else
 		l = int_sqrt((dxs+dys)*lscales);
-#endif
+	
 	shape->fow=fowler(-shape->dy, shape->dx);
-	dbg(lvl_debug,"fow=%d\n",shape->fow);
+	dbg(lvl_debug,"fow=%d",shape->fow);
 	if (! l)
 		l=1;
 	if (wi*lscale > 10000)
@@ -1653,7 +1646,7 @@ draw_middle(struct draw_polyline_context *ctx, struct point *p)
 		draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
 		return 1;
 	}
-	dbg(lvl_debug,"delta %d\n",delta);
+	dbg(lvl_debug,"delta %d",delta);
 	if (delta > 0) {
 		struct point pos,poso;
 		draw_point(&ctx->shape, p, &pos, 1);
@@ -1712,11 +1705,6 @@ graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphic
 	int max_circle_points=20;
 	if (count < 2)
 		return;
-#if 0
-	dbg(lvl_debug,"count=%d\n",count);
-	for (i = 0 ; i < count ; i++)
-		dbg(lvl_debug,"%d,%d width %d\n",pnt[i].x,pnt[i].y,width[i]);
-#endif
 	ctx.shape.l=0;
 	ctx.shape.wi=0;
 	ctx.res=g_alloca(sizeof(struct point)*maxpoints);
@@ -1875,10 +1863,10 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 			segment_end.x=pa[i].x;
 			segment_end.y=pa[i].y;
 			segment_end.w=width[i];
-			dbg(lvl_debug, "Segment: [%d, %d] - [%d, %d]...\n", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
+			dbg(lvl_debug, "Segment: [%d, %d] - [%d, %d]...", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
 			clip_result=clip_line(&segment_start, &segment_end, &r);
 			if (clip_result != CLIPRES_INVISIBLE) {
-			        dbg(lvl_debug, "....clipped to [%d, %d] - [%d, %d]\n", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
+			        dbg(lvl_debug, "....clipped to [%d, %d] - [%d, %d]", segment_start.x, segment_start.y, segment_end.x, segment_end.y);
 				if ((i == 1) || (clip_result & CLIPRES_START_CLIPPED)) {
 					points_to_draw[points_to_draw_cnt].x=segment_start.x;
 					points_to_draw[points_to_draw_cnt].y=segment_start.y;
@@ -1895,9 +1883,6 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 				if (points_to_draw_cnt > 1) {
 					if (poly) {
 						graphics_draw_polyline_as_polygon(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt, w, gra->meth.draw_polygon);
-#if 0
-						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
-#endif
 					} else
 						gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
 					points_to_draw_cnt=0;
@@ -1967,12 +1952,6 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 	struct point *pa2=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
 	int count_out,edge=3;
 	int i;
-#if 0
-	r.lu.x+=20;
-	r.lu.y+=20;
-	r.rl.x-=20;
-	r.rl.y-=20;
-#endif
 	if (count_in < limit) {
 		p1=pa1;
 		p2=pa2;
@@ -2069,7 +2048,7 @@ graphics_icon_path(const char *icon)
 	static char *navit_sharedir;
 	char *ret=NULL;
 	struct file_wordexp *wordexp=NULL;
-	dbg(lvl_debug,"enter %s\n",icon);
+	dbg(lvl_debug,"enter %s",icon);
 	if (strchr(icon, '$')) {
 		wordexp=file_wordexp_new(icon);
 		if (file_wordexp_get_count(wordexp))
@@ -2082,7 +2061,7 @@ graphics_icon_path(const char *icon)
 		// get resources for the correct screen density
 		//
 		// this part not needed, android unpacks only the correct version into res/drawable dir!
-		// dbg(lvl_debug,"android icon_path %s\n",icon);
+		// dbg(lvl_debug,"android icon_path %s",icon);
 		// static char *android_density;
 		// android_density = getenv("ANDROID_DENSITY");
 		// ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
@@ -2136,18 +2115,6 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		count=limit_count(di->c, count);
 	if (dc->type == type_poly_water_tiled)
 		mindist=0;
-#if 0
-	if (dc->e->type == element_polygon) {
-		int max=1000;
-		int offset=5600;
-		c+=offset;
-		count-=offset;
-		if (count < 0)
-			count=0;
-		if (count > max)
-			count=max;
-	}
-#endif
 	if (dc->e->type == element_polyline)
 		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
 	else
@@ -2189,7 +2156,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				if (font)
 					gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, di->label, &p, 0x10000, 0);
 				else
-					dbg(lvl_error,"Failed to get font with size %d\n",e->text_size);
+					dbg(lvl_error,"Failed to get font with size %d",e->text_size);
 			}
 		}
 		break;
@@ -2205,7 +2172,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 			if (font)
 				label_line(gra, gc, gc_background, font, pa, count, di->label);
 			else
-				dbg(lvl_error,"Failed to get font with size %d\n",e->text_size);
+				dbg(lvl_error,"Failed to get font with size %d",e->text_size);
 		}
 		break;
 	case element_icon:
@@ -2228,7 +2195,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				if (img)
 					dc->img=img;
 				else
-					dbg(lvl_debug,"failed to load icon '%s'\n", path);
+					dbg(lvl_debug,"failed to load icon '%s'", path);
 				g_free(path);
 			}
 			if (img) {
@@ -2244,19 +2211,19 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		}
 		break;
 	case element_image:
-		dbg(lvl_debug,"image: '%s'\n", di->label);
+		dbg(lvl_debug,"image: '%s'", di->label);
 		if (gra->meth.draw_image_warp) {
 			img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
 			if (img)
 				gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, img->priv);
 		} else
-			dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
+			dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
 		break;
 	case element_arrows:
 		display_draw_arrows(gra,gc,pa,count);
 		break;
 	default:
-		dbg(lvl_error, "Unhandled element type %d\n", e->type);
+		dbg(lvl_error, "Unhandled element type %d", e->type);
 
 	}
 	di=di->next;
@@ -2321,7 +2288,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 		struct element *e=es->data;
 		if (e->coord_count) {
 			if (e->coord_count > max_coord) {
-				dbg(lvl_error,"maximum number of coords reached: %d > %d\n",e->coord_count,max_coord);
+				dbg(lvl_error,"maximum number of coords reached: %d > %d",e->coord_count,max_coord);
 				di->count=max_coord;
 			} else
 				di->count=e->coord_count;
@@ -2423,7 +2390,7 @@ displaylist_update_hash(struct displaylist *displaylist)
 	displaylist->max_offset=0;
 	clear_hash(displaylist);
 	displaylist_update_layers(displaylist, displaylist->layout->layers, displaylist->order);
-	dbg(lvl_debug,"max offset %d\n",displaylist->max_offset);
+	dbg(lvl_debug,"max offset %d",displaylist->max_offset);
 }
 
 
@@ -2527,13 +2494,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
-#if 0
-				dbg(lvl_debug,"%s 0x%x 0x%x\n",item_to_name(item->type), item->id_hi, item->id_lo);
-#endif
 				if (displaylist->dc.pro != pro)
 					transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
 				if (count == max) {
-					dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
+					dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT"", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
 					displaylist->dc.maxlen=max*2;
 				}
 				if (item_is_custom_poi(*item)) {
@@ -2645,7 +2609,7 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 		do_draw(displaylist, 1, flags);
 	}
 	xdisplay_free(displaylist);
-	dbg(lvl_debug,"order=%d\n", order);
+	dbg(lvl_debug,"order=%d", order);
 
 	displaylist->dc.gra=gra;
 	displaylist->ms=mapset;

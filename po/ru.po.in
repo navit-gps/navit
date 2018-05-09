@@ -1692,7 +1692,7 @@ msgstr "Такси"
 msgid "Shopping"
 msgstr "Магазин"
 
-msgid "Distance from screen center (km)"
+msgid "Select a search radius from screen center"
 msgstr "Расстояние от центра экрана (км)"
 
 #, c-format

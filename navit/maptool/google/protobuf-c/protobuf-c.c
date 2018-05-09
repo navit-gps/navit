@@ -106,7 +106,7 @@ static void *system_alloc(void *allocator_data, size_t size)
   (void) allocator_data;
   if (size == 0)
     return NULL;
-  rv = malloc (size);
+  rv = g_malloc (size);
   if (rv == NULL)
     protobuf_c_out_of_memory ();
   return rv;
@@ -114,9 +114,8 @@ static void *system_alloc(void *allocator_data, size_t size)
 
 static void system_free (void *allocator_data, void *data)
 {
-  (void) allocator_data;
-  if (data)
-    free (data);
+	(void) allocator_data;
+	g_free (data);
 }
 
 /* Some users may configure the default allocator;

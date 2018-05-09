@@ -520,19 +520,8 @@ item_bin_sort_compare(const void *p1, const void *p2)
 		if(ret)
 			return ret;
 	}
-#if 0
-	dbg_assert(ib1->clen==2);
-	dbg_assert(ib2->clen==2);
-	attr1=(struct attr_bin *)((int *)(ib1+1)+ib1->clen);
-	attr2=(struct attr_bin *)((int *)(ib2+1)+ib1->clen);
-#else
 	attr1=item_bin_get_attr_bin_last(ib1);
 	attr2=item_bin_get_attr_bin_last(ib2);
-#endif
-#if 0
-	dbg_assert(attr1->type == attr_town_name || attr1->type == attr_town_name_match);
-	dbg_assert(attr2->type == attr_town_name || attr2->type == attr_town_name_match);
-#endif
 	s1=(char *)(attr1+1);
 	s2=(char *)(attr2+1);
 	if (attr1->type == attr_house_number && attr2->type == attr_house_number) {
@@ -554,9 +543,6 @@ item_bin_sort_compare(const void *p1, const void *p2)
 		match2=(attr2->type == attr_town_name_match || attr2->type == attr_district_name_match);
 		ret=match1-match2;
 	}
-#if 0
-	fprintf(stderr,"sort_countries_compare p1=%p p2=%p %s %s\n",p1,p2,s1,s2);
-#endif
 	return ret;
 }
 

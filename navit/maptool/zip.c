@@ -126,11 +126,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
 
-	compbuffer = malloc(destlen);
-	if (!compbuffer) {
-	  fprintf(stderr, "No more memory.\n");
-	  exit (1);
-	}
+	compbuffer = g_malloc(destlen);
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
 	lfh.zipmthd=zip_info->compression_level ? 8:0;
@@ -179,7 +175,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		zip_info->dir_size+=sizeof(cd_ext);
 	}
 	
-	free(compbuffer);
+	g_free(compbuffer);
 }
 
 int

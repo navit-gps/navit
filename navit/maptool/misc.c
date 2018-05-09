@@ -326,8 +326,7 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 	struct tile_info info;
 	int i;
 
-	slice_data=malloc(size);
-	assert(slice_data != NULL);
+	slice_data=g_malloc(size);
 	zip_data=slice_data;
 	th=tile_head_root;
 	while (th) {
@@ -365,7 +364,7 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
 			dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info))==1);
 		}
 	}
-	free(slice_data);
+	g_free(slice_data);
 
 	return zipfiles;
 }
