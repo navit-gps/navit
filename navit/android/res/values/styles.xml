@@ -1,32 +1,4 @@
 <resources>
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by NavitBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="NavitBaseTheme" parent="android:Theme.Holo">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
-    <!-- Theme for Navit's main Activity. -->
-    <style name="NavitTheme" parent="NavitBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
-    <!-- TODO complete list of shades for both colors -->
-    <!--
-			 Primary color is derived average of icon colors (500 in Android parlance):
-			 213 164  19  #d5a411  hsl  45    92    84
-			 
-			 Dark color is normally the 600 color (i.e. slightly darker than 500)
-			 209 155  19  #d19b13  hsl  43    91    82
-    -->
-
-
     <!-- Yellow from Navit icon background (300 and 700 are the extremes of the gradient, 500 is the average, 900 is the line color) -->
     <color name="navitYellow300">#e9cb14</color>
     <color name="navitYellow500">#d5a411</color>
@@ -38,5 +10,4 @@
     <color name="navitBlue300">#329eff</color>
     <color name="navitBlue500">#1a6cb6</color>
     <color name="navitBlue900">#1f3157</color>
-
 </resources>
