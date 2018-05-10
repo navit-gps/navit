@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
-   <xsl:param name="DPI_SUFFIX" select="mdpi"/>
    <xsl:param name="OSD_SIZE" select="1.33"/>
    <xsl:param name="ICON_SMALL" select="32"/>
    <xsl:param name="ICON_MEDIUM" select="32"/>
@@ -67,21 +66,6 @@
          <xsl:copy-of select="@*[not(name()='data')]"/>
          <xsl:attribute name="type">android</xsl:attribute>
          <xsl:apply-templates/>
-      </xsl:copy>
-   </xsl:template>
-   <xsl:template match="/config/navit/xi:include">
-      <xsl:copy>
-         <xsl:copy-of select="@*[not(name()='href')]"/>
-         <xsl:if test="@href">
-            <xsl:choose>
-               <xsl:when test="$DPI_SUFFIX!=''">
-                  <xsl:attribute name="href"><xsl:value-of select="concat(substring-before(@href, '.xml'), concat('_', $DPI_SUFFIX, '.xml'))"/></xsl:attribute>
-               </xsl:when>
-               <xsl:otherwise>
-                  <xsl:copy-of select="@*[name()='href']"/>
-               </xsl:otherwise>
-            </xsl:choose>
-         </xsl:if>
       </xsl:copy>
    </xsl:template>
    <xsl:template match="/config/navit/layout/layer/itemgra/child::*|layout/layer/itemgra/child::*">
