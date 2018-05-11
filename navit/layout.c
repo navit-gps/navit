@@ -59,7 +59,7 @@ layout_new(struct attr *parent, struct attr **attrs)
 	navit_attr_iter_destroy(iter);
 	if (duplicate_layout_name)
 	{
-		dbg(lvl_error, "Another layout with name '%s' has already been parsed. Discarding subsequent duplicate.", name_attr->u.str);
+		dbg(lvl_warning, "Another layout with name '%s' has already been parsed. Discarding subsequent duplicate.", name_attr->u.str);
 		return NULL;
 	}
 
@@ -67,7 +67,6 @@ layout_new(struct attr *parent, struct attr **attrs)
 	l->func=&layout_func;
 	navit_object_ref((struct navit_object *)l);
 	l->name = g_strdup(name_attr->u.str);
-
 	if ((font_attr=attr_search(attrs, NULL, attr_font))) {
 		l->font = g_strdup(font_attr->u.str);
 	}
