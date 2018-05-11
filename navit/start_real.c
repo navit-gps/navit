@@ -75,7 +75,7 @@ extern void builtin_init(void);
 int main_real(int argc, char * const* argv)
 {
 	xmlerror *error = NULL;
-	char *config_file = NULL, *config_dir = NULL, *command=NULL, *startup_file=NULL;
+	char *config_file = NULL, *command=NULL, *startup_file=NULL;
 	int opt;
 	char *cp;
 	struct attr navit, conf;
@@ -193,14 +193,6 @@ int main_real(int argc, char * const* argv)
 	}
 
 	dbg(lvl_debug,"Loading config from '%s'",config_file);
-	config_dir=file_get_dirname(config_file);
-	if (setenv("NAVIT_ACTIVECONFDIR", config_dir, 1)==-1) {
-		dbg(lvl_error, _("Could not set environment variable %s"), "NAVIT_ACTIVECONFDIR");
-	}
-	else {
-		dbg(lvl_info, _("Setting %s to '%s'"), "NAVIT_ACTIVECONFDIR", config_dir);
-	}
-	g_free(config_dir);
 	if (!config_load(config_file, &error)) {
 		dbg(lvl_error, _("Error parsing config file '%s': %s"), config_file, error ? error->message : "");
 	} else {

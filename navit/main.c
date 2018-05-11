@@ -90,14 +90,13 @@ setenv(char *var, char *val, int overwrite)
  * '~'  is replaced with HOME
 */
 static char *environment_vars[][5]={
-	{"NAVIT_LIBDIR",         ":",          ":/"LIB_DIR,     ":\\lib",       ":/lib"},
-	{"NAVIT_SHAREDIR",       ":",          ":/"SHARE_DIR,   ":",            ":/share"},
-	{"NAVIT_LOCALEDIR",      ":/../locale",":/"LOCALE_DIR,  ":\\locale",    ":/locale"},
-	{"NAVIT_USER_DATADIR",   ":",          "~/.navit",      ":\\data",      ":/home"},
-	{"NAVIT_ACTIVECONFDIR",  ":",          ":/"SHARE_DIR,   ":",            ":/share"},	/* Note: this variable will be overwritten in main_real() to point to the navit XML config we actually decide to use */
-	{"NAVIT_LOGFILE",        NULL,         NULL,            ":\\navit.log", NULL},
-	{"NAVIT_LIBPREFIX",      "*/.libs/",   NULL,            NULL,           NULL},
-	{NULL,                   NULL,         NULL,            NULL,           NULL},
+	{"NAVIT_LIBDIR",      ":",          ":/"LIB_DIR,     ":\\lib",      ":/lib"},
+	{"NAVIT_SHAREDIR",    ":",          ":/"SHARE_DIR,   ":",           ":/share"},
+	{"NAVIT_LOCALEDIR",   ":/../locale",":/"LOCALE_DIR,  ":\\locale",   ":/locale"},
+	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data",     ":/home"},
+	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL},
+	{"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL},
+	{NULL,                NULL,         NULL,            NULL,          NULL},
 };
 
 static void
