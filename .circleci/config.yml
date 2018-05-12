@@ -110,10 +110,14 @@ jobs:
           path: navit/android/build/outputs/apk
           destination: apk
       - store_artifacts:
+          name: Store translations
+          path: po
+          destination: translations
+      - store_artifacts:
           path: navit/android/build/outputs/logs
           destination: logs
       - store_test_results:
-          path: navit/android/build/test-results  
+          path: navit/android/build/test-results
   build_win32:
     <<: *defaults
     steps:
