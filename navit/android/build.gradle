@@ -10,8 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk { // because mips was a problem with ndk 14
-              // and no need for, 'x86_64' and , 'armeabi' and , 'arm64-v8a'
+        ndk { // need for now for 'x86_64' and , 'armeabi' and , 'arm64-v8a'
             abiFilters 'x86', 'armeabi-v7a'
         }
         externalNativeBuild {
@@ -19,7 +18,6 @@ android {
                 arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n'
             }
         }
-        // https://github.com/googlesamples/android-ndk/blob/master/native-media/app/build.gradle
     }
     buildTypes {
         release {
@@ -27,15 +25,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'UnusedResources'
+        abortOnError true
+    }
     sourceSets {
-	    	main {
-		    	manifest.srcFile "AndroidManifest.xml"
-			    java.srcDirs = ["src"]
-			    resources.srcDirs = ["src"]
-			    renderscript.srcDirs = ["src"]
-			    res.srcDirs = ["res"]
+        main {
+            manifest.srcFile "AndroidManifest.xml"
+            java.srcDirs = ["src"]
+            resources.srcDirs = ["src"]
+            renderscript.srcDirs = ["src"]
+            res.srcDirs = ["res"]
             }
-	}
+    }
     externalNativeBuild {
         cmake {
             path '../../CMakeLists.txt'

@@ -2,7 +2,6 @@ version: 2
 defaults: &defaults
   docker:
     - image: ubuntu:14.04
-
 jobs:
   build_linux:
     <<: *defaults
@@ -105,15 +104,21 @@ jobs:
           command: ./gradlew assembleDebug
       - run:
           name: Run Tests
-          command: ./gradlew tasks --all
+          command: |
+            ln -s navit/navit.dtd navit.dtd
+            ls -la
+            ./gradlew tasks --all
+            ./gradlew lint test
       - store_artifacts:
           path: navit/android/build/outputs/apk
           destination: apk
       - store_artifacts:
           path: navit/android/build/outputs/logs
           destination: logs
-      - store_test_results:
-          path: navit/android/build/test-results  
+      - store_artifacts:
+          name: Store reports
+          path: navit/android/build/reports
+          destination: reports
   build_win32:
     <<: *defaults
     steps:
