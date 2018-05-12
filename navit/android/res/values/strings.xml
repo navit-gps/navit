@@ -47,6 +47,10 @@
 	<string name="map_download_medium_unavailable">Media selected for map storage is not available</string>
   <string name="map_download_error_writing_map">Error writing map!</string>
 
+  <!-- STORAGE -->
+  <string name="map_location_changed">New location set to %s Restart Navit to apply the changes.</string>
+  <string name="map_location_unavailable">Current map location %s is not available Please restart Navit after you attach an SD card or select a different map location.</string>
+
 	<!-- ADDRESS SEARCH -->
 	<string name="address_search_title">Address search</string>
 	<string name="address_enter_destination">Enter destination</string>
