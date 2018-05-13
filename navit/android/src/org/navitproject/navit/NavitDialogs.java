@@ -149,7 +149,7 @@ public class NavitDialogs extends Handler {
 
             case DIALOG_BACKUP_RESTORE:
                 /* Create a Dialog that Displays Options wether to Backup or Restore */
-                builder.setTitle(mActivity.getString(R.string.choose_an_action)).
+                builder.setTitle(mActivity.getTstring(R.string.choose_an_action)).
                         setCancelable(true).
                         setItems(R.array.dialog_backup_restore_items,
                                 new DialogInterface.OnClickListener() {
@@ -160,7 +160,7 @@ public class NavitDialogs extends Handler {
                                         if (!Environment.getExternalStorageState()
                                                 .equals(Environment.MEDIA_MOUNTED)) {
                                             Toast.makeText(mActivity, mActivity
-                                                            .getString(R.string.please_insert_an_sd_card),
+                                                            .getTstring(R.string.please_insert_an_sd_card),
                                                     Toast.LENGTH_LONG).show();
                                         }
 
@@ -190,12 +190,12 @@ public class NavitDialogs extends Handler {
 
                 if (backups == null || backups.length == 0) {
                     /* No Backups were found */
-                    builder.setTitle(mActivity.getText(R.string.no_backup_found));
-                    builder.setNegativeButton(mActivity.getText(android.R.string.cancel), null);
+                    builder.setTitle(mActivity.getTstring(R.string.no_backup_found));
+                    builder.setNegativeButton(mActivity.getTstring(android.R.string.cancel), null);
                     return builder.create();
                 }
 
-                builder.setTitle(mActivity.getString(R.string.select_backup));
+                builder.setTitle(mActivity.getTstring(R.string.select_backup));
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity,
                         android.R.layout.simple_spinner_item, backups);
                 builder.setAdapter(adapter, new OnClickListener() {
@@ -205,7 +205,7 @@ public class NavitDialogs extends Handler {
                         new NavitRestoreTask(mActivity, adapter.getItem(which)).execute();
                     }
                 });
-                builder.setNegativeButton(mActivity.getString(android.R.string.cancel), null);
+                builder.setNegativeButton(mActivity.getTstring(android.R.string.cancel), null);
 
                 return builder.create();
         }
