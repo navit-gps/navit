@@ -1,5 +1,6 @@
 var NAVTREEINDEX47 =
 {
+"structosd__methods.html#a207136f94792143c8b5c184239c02cd3":[2,0,298,2],
 "structosd__methods.html#aff429d03792ffa42f49f18adfd212e63":[2,0,298,1],
 "structosd__priv__common.html":[2,0,299],
 "structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f":[2,0,299,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX47 =
 "structresult.html#a9d7cd84d9629a28384b91f188209c572":[2,0,345,2],
 "structresult.html#ac460c26e1c42c97646716e229a167841":[2,0,345,4],
 "structresult.html#aed7e18a096ec1cc99923858a9f68c436":[2,0,345,5],
-"structresult__list.html":[2,0,346],
-"structresult__list.html#a108bd5e0c4b611dcc68b4d2282fda203":[2,0,346,0]
+"structresult__list.html":[2,0,346]
 };

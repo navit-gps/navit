@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"group__vehicle-iphone.html#ga00f19b9613cf48b42ea1606b19327167":[0,2,0,10,1,112],
 "group__vehicle-iphone.html#ga00f19b9613cf48b42ea1606b19327167":[0,2,0,4,0,112],
 "group__vehicle-iphone.html#ga00f19b9613cf48b42ea1606b19327167":[0,2,0,2,1,112],
 "group__vehicle-iphone.html#ga00f19b9613cf48b42ea1606b19327167":[0,2,0,5,0,112],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,3,0,47],
 "group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,7,0,47],
 "group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,10,1,47],
-"group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,2,1,47],
-"group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,4,0,47]
+"group__vehicle-wince.html#gacd78d7c6bc1f2b0c2ac932d9074efb8b":[0,2,0,2,1,47]
 };

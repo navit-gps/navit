@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042":[3,0,6,1,11,0,9],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adde945958ab7a98c9ee0d30a5f569cf7":[3,0,6,1,11,0,7],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22":[3,0,6,1,11,0,0],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186afdd99ee4ac06bd7e771f8e8499047890":[3,0,6,1,11,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "gui__qt5__qml_8cpp.html#ab2e9c766ebd2d1ae75e0e3ffe77932ae":[3,0,6,3,3,10],
 "gui__qt5__qml_8cpp.html#ab3a3fdcc664d441df92d89ac072945d9":[3,0,6,3,3,6],
 "gui__qt5__qml_8cpp.html#ae6584a457f267616bf4d5155a100ecf7":[3,0,6,3,3,5],
-"gui__win32_8c.html":[3,0,6,4,3],
-"gui__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef":[3,0,6,4,3,15]
+"gui__win32_8c.html":[3,0,6,4,3]
 };

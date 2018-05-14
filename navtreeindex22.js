@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"gui__internal_8c.html#a753483ffd990f0ce15a75f26fdbb5bdf":[3,0,6,1,0,65],
 "gui__internal_8c.html#a756426e334809f29f3196545deff9c24":[3,0,6,1,0,55],
 "gui__internal_8c.html#a759a0b4dfa4f4292c763d7e4dde71507":[3,0,6,1,0,59],
 "gui__internal_8c.html#a79b45619a5131141e564306cb1404e77":[3,0,6,1,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a65b37ee78f60cb83d41387dfd8f62822":[3,0,6,1,11,0,6],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45":[3,0,6,1,11,0,1],
 "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23":[3,0,6,1,11,0,3],
-"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ab477653b79aac5ff4f1ac1e013aa1cf9":[3,0,6,1,11,0,10],
-"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042":[3,0,6,1,11,0,9]
+"gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ab477653b79aac5ff4f1ac1e013aa1cf9":[3,0,6,1,11,0,10]
 };

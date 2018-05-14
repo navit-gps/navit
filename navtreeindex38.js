@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structblock__bt__priv.html#af63831ebf64f16a65b1cd3366cb170d7":[2,0,51,2],
 "structblock__data.html":[2,0,52],
 "structblock__data.html#a4a826798dda42fe1579ebea30bcab163":[2,0,52,0],
 "structblock__index.html":[2,0,53],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structdata__window.html#ac90a773f316bacebc387e6052ed3dafb":[2,0,101,1],
 "structdata__window.html#ad1dad895ff0e516121619713f33cc483":[2,0,101,2],
 "structdata__window.html#af66759c457a75fff2eb1eaab1b879a5d":[2,0,101,3],
-"structdatawindow.html":[2,0,102],
-"structdatawindow.html#a6f1b23c19c118b3e1a8d96f6b7ef035e":[2,0,102,0]
+"structdatawindow.html":[2,0,102]
 };

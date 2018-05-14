@@ -224,6 +224,7 @@ var searchData=
   ['getspeed',['getSpeed',['../gpx2navit__txt_8h.html#ae1346355b49884207f632b74832a3c2f',1,'getSpeed(double length, double ti, double to_meter, int to_sec):&#160;utils.c'],['../utils_8c.html#ae1346355b49884207f632b74832a3c2f',1,'getSpeed(double length, double ti, double to_meter, int to_sec):&#160;utils.c']]],
   ['gettext_5fnoop',['gettext_noop',['../navit__nls_8h.html#a1a0ef2e42374f90a13299cc06f437847',1,'navit_nls.h']]],
   ['gettimeinterval',['getTimeInterval',['../gpx2navit__txt_8h.html#a6525e88995be546da14436017c0cdd51',1,'getTimeInterval(char *_t, char *t):&#160;utils.c'],['../utils_8c.html#a6525e88995be546da14436017c0cdd51',1,'getTimeInterval(char *_t, char *t):&#160;utils.c']]],
+  ['gettstring',['getTstring',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a4f2d0f976fa5790b56260acfebd999d3',1,'org::navitproject::navit::Navit']]],
   ['getvehicles',['getVehicles',['../classBackend.html#a41b2447cddc77fbd7f2d78e2619ddaa2',1,'Backend']]],
   ['getvframelen',['GETVFRAMELEN',['../ceglue_8c.html#af35b9ac1a3f45ea1939dcaa98ef3dff5',1,'ceglue.c']]],
   ['getvframephysical',['GETVFRAMEPHYSICAL',['../ceglue_8c.html#a71b36436b0a5ec084727a21c7691cab5',1,'ceglue.c']]],

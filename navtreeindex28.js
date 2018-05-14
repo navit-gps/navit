@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"mg_8h.html#afd636039dbd024eeca4533b1ab908b58":[3,0,8,5,2,35],
 "mg_8h_source.html":[3,0,8,5,2],
 "modules.html":[0],
 "namespaceeval.html":[1,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "navit_8c.html#gaadc1fe8e1f303d3cee6f836d7ac6c5fb":[3,0,26,10],
 "navit_8c.html#gab059a4aca70ca8da61aab4ee461f8392":[3,0,26,105],
 "navit_8c.html#gab2579b94d38d34257aab8259820a35be":[3,0,26,123],
-"navit_8c.html#gab37b47270568b7381e7070349ffe5483":[3,0,26,16],
-"navit_8c.html#gab48d5a6fae20c89466d5b8cf2d91af4e":[3,0,26,49]
+"navit_8c.html#gab37b47270568b7381e7070349ffe5483":[3,0,26,16]
 };

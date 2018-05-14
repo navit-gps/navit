@@ -1,5 +1,6 @@
 var NAVTREEINDEX49 =
 {
+"structshmem__header.html#a064ec679701b8b49eac4df68ee278483":[2,0,381,3],
 "structshmem__header.html#a30b518231a39f91af772531694d19314":[2,0,381,1],
 "structshmem__header.html#a7d3b0b69a6c98cae0e14947f6da0d2e1":[2,0,381,0],
 "structshmem__header.html#a7f09e915036c63594a6395ea1146ef8b":[2,0,381,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX49 =
 "structtown__priv.html#a80870a2ceb8f306d3fceee9555b72ba3":[2,0,416,10],
 "structtown__priv.html#aa4959a35f9b7da757a97e1ec91f91cbb":[2,0,416,15],
 "structtown__priv.html#ab68c6f9c8ab0e7f1e8b418a3ed5df74d":[2,0,416,12],
-"structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa":[2,0,416,5],
-"structtown__priv.html#ab8b84bca7ecb60be3e7b212120e3f854":[2,0,416,14]
+"structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa":[2,0,416,5]
 };

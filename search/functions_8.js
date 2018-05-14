@@ -144,6 +144,7 @@ var searchData=
   ['getsearchresults',['getSearchResults',['../classBackend.html#ade8e3983e5b07dfa5c4da5e63a3edf94',1,'Backend']]],
   ['getspeed',['getSpeed',['../gpx2navit__txt_8h.html#ae1346355b49884207f632b74832a3c2f',1,'getSpeed(double length, double ti, double to_meter, int to_sec):&#160;utils.c'],['../utils_8c.html#ae1346355b49884207f632b74832a3c2f',1,'getSpeed(double length, double ti, double to_meter, int to_sec):&#160;utils.c']]],
   ['gettimeinterval',['getTimeInterval',['../gpx2navit__txt_8h.html#a6525e88995be546da14436017c0cdd51',1,'getTimeInterval(char *_t, char *t):&#160;utils.c'],['../utils_8c.html#a6525e88995be546da14436017c0cdd51',1,'getTimeInterval(char *_t, char *t):&#160;utils.c']]],
+  ['gettstring',['getTstring',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a4f2d0f976fa5790b56260acfebd999d3',1,'org::navitproject::navit::Navit']]],
   ['getvehicles',['getVehicles',['../classBackend.html#a41b2447cddc77fbd7f2d78e2619ddaa2',1,'Backend']]],
   ['gfxprimitivescompareint',['gfxPrimitivesCompareInt',['../raster_8c.html#a1feca81b44d578d0673414dd9babee1a',1,'raster.c']]],
   ['glut_5fclose',['glut_close',['../graphics__opengl_8c.html#a494d22576a8584313b8f747424c5e289',1,'graphics_opengl.c']]],

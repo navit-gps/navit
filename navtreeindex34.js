@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"quadtree_8c.html#a631c01ae0c44947cfbca7ec3923de74f":[3,0,8,1,2,15],
 "quadtree_8c.html#a67526c4e22ecd014a9837a0711c8df6c":[3,0,8,1,2,12],
 "quadtree_8c.html#a6b65f4b50d2d129e2fe16f8febc172c4":[3,0,8,1,2,2],
 "quadtree_8c.html#a70c3cfdd454c62fa4d1901faf0ff4610":[3,0,8,1,2,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "route_8h.html#a248081bb540de81b2fbbcbe2593dc29c":[3,0,117,27],
 "route_8h.html#a25508afaaf0b6f06ec5bf467593b81fc":[3,0,117,21],
 "route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87":[3,0,117,4],
-"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a467af9642a5e7b543f884615951548d5":[3,0,117,4,3],
-"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a5fe6ac02ecfb847b72ae215a4045fff7":[3,0,117,4,2]
+"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a467af9642a5e7b543f884615951548d5":[3,0,117,4,3]
 };
