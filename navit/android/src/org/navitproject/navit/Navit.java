@@ -67,8 +67,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Navit extends Activity
-{
+public class Navit extends Activity {
 
     private NavitDialogs               dialogs;
     private PowerManager.WakeLock      wl;
@@ -110,7 +109,7 @@ public class Navit extends Activity
 
     /**
      * @brief A Runnable to restore soft input when the user returns to the activity.
-     * 
+     *
      * An instance of this class can be passed to the main message queue in the Activity's
      * {@code onRestore()} method.
      */
@@ -128,7 +127,7 @@ public class Navit extends Activity
             return;
 
         file.delete();
-        }
+    }
 
     public void copyFileIfExists(String source, String destination) throws IOException {
         File file = new File(source);
@@ -152,10 +151,10 @@ public class Navit extends Activity
         } finally {
             /* Close the FileStreams to prevent Resource leaks */
             if (is != null)
-                        is.close();
+                is.close();
 
             if (os != null)
-                        os.close();
+                os.close();
         }
     }
 
@@ -165,7 +164,7 @@ public class Navit extends Activity
      * @param Rid resource identifier
      * @retrun translated string
      */
-    String getTstring(int Rid){
+    String getTstring(int Rid) {
         return getLocalizedString(getString(Rid));
     }
 
@@ -209,7 +208,7 @@ public class Navit extends Activity
                 while ((i = resourcestream.read(buf)) != -1) {
                     resultfilestream.write(buf, 0, i);
                 }
-                 resultfilestream.close();
+                resultfilestream.close();
             } catch (Exception e) {
                 Log.e(TAG, "Exception " + e.getMessage());
                 return false;
@@ -218,17 +217,15 @@ public class Navit extends Activity
         return true;
     }
 
-    private void showInfos()
-    {
+    private void showInfos() {
         SharedPreferences settings = getSharedPreferences(NAVIT_PREFS, MODE_PRIVATE);
         boolean firstStart = settings.getBoolean("firstStart", true);
 
-        if (firstStart)
-        {
+        if (firstStart) {
             AlertDialog.Builder infobox = new AlertDialog.Builder(this);
             infobox.setTitle(getTstring(R.string.initial_info_box_title)); // TRANS
             infobox.setCancelable(false);
-            
+
             infobox.setMessage(getTstring(R.string.initial_info_box_message));
 
             infobox.setPositiveButton(getTstring(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
@@ -255,8 +252,7 @@ public class Navit extends Activity
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -276,7 +272,7 @@ public class Navit extends Activity
         Log.d(TAG, "**1**D " + startup_intent.getDataString());
 
         // NOTIFICATION
-        // Setup the status bar notification        
+        // Setup the status bar notification
         // This notification is removed in the exit() function
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
@@ -304,13 +300,17 @@ public class Navit extends Activity
         navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
         navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
         navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
-        Log.d(TAG, String.format("status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, navigation_bar_height_landscape=%d, navigation_bar_width=%d", 
-                status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape, navigation_bar_width));
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+        Log.d(TAG,
+              String.format("status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, navigation_bar_height_landscape=%d, navigation_bar_width=%d",
+                            status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape,
+                            navigation_bar_width));
+        if ((ContextCompat.checkSelfPermission(this,
+                                               Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
+                (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             Log.d (TAG,"ask for permission(s)");
             ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_ALL);
+                                              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_ALL);
         }
         // get the local language -------------
         Locale locale = java.util.Locale.getDefault();
@@ -318,14 +318,11 @@ public class Navit extends Activity
         String langc = lang;
         Log.d(TAG, "lang=" + lang);
         int pos = lang.indexOf('_');
-        if (pos != -1)
-        {
+        if (pos != -1) {
             langc = lang.substring(0, pos);
             NavitLanguage = langc + lang.substring(pos).toUpperCase(locale);
             Log.d(TAG, "substring lang " + NavitLanguage.substring(pos).toUpperCase(locale));
-        }
-        else
-        {
+        } else {
             String country = locale.getCountry();
             Log.d(TAG, "Country1 " + country);
             Log.d(TAG, "Country2 " + country.toUpperCase(locale));
@@ -360,49 +357,35 @@ public class Navit extends Activity
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"NavitDoNotDimScreen");
 
-        if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo"))
-        {
+        if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo")) {
             Log.e(TAG, "Failed to extract language resource " + langc);
         }
 
-        if (densityDpi <= 120)
-        {
+        if (densityDpi <= 120) {
             my_display_density = "ldpi";
-        }
-        else if (densityDpi <= 160)
-        {
+        } else if (densityDpi <= 160) {
             my_display_density = "mdpi";
-        }
-        else if (densityDpi < 240)
-        {
+        } else if (densityDpi < 240) {
             my_display_density = "hdpi";
-        }
-        else if (densityDpi < 320)
-        {
+        } else if (densityDpi < 320) {
             my_display_density = "xhdpi";
-        }
-        else if (densityDpi < 480)
-        {
+        } else if (densityDpi < 480) {
             my_display_density = "xxhdpi";
-        }
-        else if (densityDpi < 640)
-        {
+        } else if (densityDpi < 640) {
             my_display_density = "xxxhdpi";
-        }
-        else
-        {
+        } else {
             Log.e(TAG, "found device of very high density ("+densityDpi+")");
             Log.e(TAG, "using xxxhdpi values");
             my_display_density = "xxxhdpi";
         }
 
-        if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml"))
-        {
+        if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml")) {
             Log.e(TAG, "Failed to extract navit.xml for " + my_display_density);
         }
 
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
-        NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density, NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
+        NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
+                  NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
 
         showInfos();
 
@@ -410,8 +393,7 @@ public class Navit extends Activity
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Log.d(TAG, "OnResume");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -426,18 +408,15 @@ public class Navit extends Activity
         // intent_data = "google.navigation:q=48.25676,16.643";
         // intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
         // intent_data = "google.navigation:ll=48.25676,16.643";
-        if (startup_intent != null)
-        {
-            if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L)
-            {
+        if (startup_intent != null) {
+            if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L) {
                 Log.d(TAG, "**2**A " + startup_intent.getAction());
                 Log.d(TAG, "**2**D " + startup_intent.getDataString());
                 String navi_scheme = startup_intent.getScheme();
                 if ( navi_scheme != null && navi_scheme.equals("google.navigation")) {
                     parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
                 }
-            }
-            else {
+            } else {
                 Log.e(TAG, "timestamp for navigate_to expired! not using data");
             }
         }
@@ -466,23 +445,23 @@ public class Navit extends Activity
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ALL: {
-                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                AlertDialog.Builder infobox = new AlertDialog.Builder(this);
-                infobox.setTitle(getTstring(R.string.permissions_info_box_title)); // TRANS
-                infobox.setCancelable(false);
-                infobox.setMessage(getTstring(R.string.permissions_not_granted));
-                // TRANS
-                infobox.setPositiveButton(getTstring(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        exit();
-                    }
-                });
-                infobox.show();
+        case MY_PERMISSIONS_REQUEST_ALL: {
+            if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                return;
             }
+            AlertDialog.Builder infobox = new AlertDialog.Builder(this);
+            infobox.setTitle(getTstring(R.string.permissions_info_box_title)); // TRANS
+            infobox.setCancelable(false);
+            infobox.setMessage(getTstring(R.string.permissions_not_granted));
+            // TRANS
+            infobox.setPositiveButton(getTstring(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    exit();
+                }
+            });
+            infobox.show();
+        }
         }
     }
 
@@ -511,8 +490,7 @@ public class Navit extends Activity
         if (geoString != null) {
             String address = params.get("q");
             if (address != null) b.putString("q", address);
-        }
-        else {
+        } else {
             geoString = params.get("q");
         }
 
@@ -534,22 +512,19 @@ public class Navit extends Activity
                         e.printStackTrace();
                     }
                 }
-            }
-            else {
+            } else {
                 start_targetsearch_from_intent(geoString);
             }
         }
     }
 
-    public void setActivityResult(int requestCode, NavitActivityResult ActivityResult)
-    {
+    public void setActivityResult(int requestCode, NavitActivityResult ActivityResult) {
         ActivityResults[requestCode] = ActivityResult;
     }
 
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         //Log.e("Navit","onPrepareOptionsMenu");
         // this gets called every time the menu is opened!!
@@ -567,7 +542,7 @@ public class Navit extends Activity
         menu.add(1, 10, 600, getTstring(R.string.optionsmenu_set_map_location));
 
         menu.add(1, 99, 900, getTstring(R.string.optionsmenu_exit_navit)); //TRANS
-        
+
         /* Only show the Backup to SD-Card Option if we really have one */
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
             menu.add(1, 7, 700, getTstring(R.string.optionsmenu_backup_restore)); //TRANS
@@ -579,13 +554,11 @@ public class Navit extends Activity
     private NavitGraphics N_NavitGraphics = null;
 
     // callback id gets set here when called from NavitGraphics
-    public void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
-    {
+    public void setKeypressCallback(int kp_cb_id, NavitGraphics ng) {
         N_NavitGraphics = ng;
     }
 
-    public void setMotionCallback(int mo_cb_id, NavitGraphics ng)
-    {
+    public void setMotionCallback(int mo_cb_id, NavitGraphics ng) {
         N_NavitGraphics = ng;
     }
 
@@ -594,15 +567,12 @@ public class Navit extends Activity
     }
 
 
-    public void start_targetsearch_from_intent(String target_address)
-    {
-        if (target_address == null || target_address.equals(""))
-        {
+    public void start_targetsearch_from_intent(String target_address) {
+        if (target_address == null || target_address.equals("")) {
             // empty search string entered
-            Toast.makeText(getApplicationContext(), getTstring(R.string.address_search_not_found), Toast.LENGTH_LONG).show(); //TRANS
-        }
-        else
-        {
+            Toast.makeText(getApplicationContext(), getTstring(R.string.address_search_not_found),
+                           Toast.LENGTH_LONG).show(); //TRANS
+        } else {
             Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
             search_intent.putExtra("search_string", target_address);
             this.startActivityForResult(search_intent, NavitAddressSearch_id);
@@ -610,79 +580,76 @@ public class Navit extends Activity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         runOptionsItem(item.getItemId());
         return true;
     }
-    
-    public void runOptionsItem(int id)
-    {
-        switch (id)
-        {
-            case 1 :
-                // zoom in
-                Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
-                // if we zoom, hide the bubble
-                Log.d(TAG, "onOptionsItemSelected -> zoom in");
-                break;
-            case 2 :
-                // zoom out
-                Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
-                // if we zoom, hide the bubble
-                Log.d(TAG, "onOptionsItemSelected -> zoom out");
-                break;
-            case 3 :
-                // map download menu
-                Intent map_download_list_activity = new Intent(this, NavitDownloadSelectMapActivity.class);
-                startActivityForResult(map_download_list_activity, Navit.NavitDownloaderSelectMap_id);
-                break;
-            case 5 :
-                // toggle the normal POI layers and labels (to avoid double POIs)
-                Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
-                Bundle b = new Bundle();
-                b.putString("cmd", "toggle_layer(\"POI Symbols\");");
-                msg.setData(b);
-                msg.sendToTarget();
 
-                msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
-                b = new Bundle();
-                b.putString("cmd", "toggle_layer(\"POI Labels\");");
-                msg.setData(b);
-                msg.sendToTarget();
+    public void runOptionsItem(int id) {
+        switch (id) {
+        case 1 :
+            // zoom in
+            Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
+            // if we zoom, hide the bubble
+            Log.d(TAG, "onOptionsItemSelected -> zoom in");
+            break;
+        case 2 :
+            // zoom out
+            Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
+            // if we zoom, hide the bubble
+            Log.d(TAG, "onOptionsItemSelected -> zoom out");
+            break;
+        case 3 :
+            // map download menu
+            Intent map_download_list_activity = new Intent(this, NavitDownloadSelectMapActivity.class);
+            startActivityForResult(map_download_list_activity, Navit.NavitDownloaderSelectMap_id);
+            break;
+        case 5 :
+            // toggle the normal POI layers and labels (to avoid double POIs)
+            Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+            Bundle b = new Bundle();
+            b.putString("cmd", "toggle_layer(\"POI Symbols\");");
+            msg.setData(b);
+            msg.sendToTarget();
 
-                // toggle full POI icons on/off
-                msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
-                b = new Bundle();
-                b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
-                msg.setData(b);
-                msg.sendToTarget();
+            msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+            b = new Bundle();
+            b.putString("cmd", "toggle_layer(\"POI Labels\");");
+            msg.setData(b);
+            msg.sendToTarget();
 
-                break;
-            case 6 :
-                // ok startup address search activity
-                Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-                this.startActivityForResult(search_intent, NavitAddressSearch_id);
-                break;
-            case 7 :
-                /* Backup / Restore */
-                showDialog(NavitDialogs.DIALOG_BACKUP_RESTORE);
-                break;
-            case 10:
-                setMapLocation();
-                break;
-            case 99 :
-                // exit
-                this.onStop();
-                this.exit();
-                break;
+            // toggle full POI icons on/off
+            msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+            b = new Bundle();
+            b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
+            msg.setData(b);
+            msg.sendToTarget();
+
+            break;
+        case 6 :
+            // ok startup address search activity
+            Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
+            this.startActivityForResult(search_intent, NavitAddressSearch_id);
+            break;
+        case 7 :
+            /* Backup / Restore */
+            showDialog(NavitDialogs.DIALOG_BACKUP_RESTORE);
+            break;
+        case 10:
+            setMapLocation();
+            break;
+        case 99 :
+            // exit
+            this.onStop();
+            this.exit();
+            break;
         }
     }
 
 
     /**
      * @brief Shows the Options menu.
-     * 
+     *
      * Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
      * the overflow button in the Action bar.
      */
@@ -690,7 +657,7 @@ public class Navit extends Activity
         openOptionsMenu();
     }
 
-    
+
     /**
      * @brief Shows the native keyboard or other input method.
      */
@@ -702,7 +669,8 @@ public class Navit extends Activity
          * screen it occupies, so our best bet is guesswork.
          */
         Configuration config = getResources().getConfiguration();
-        if ((config.keyboard == Configuration.KEYBOARD_QWERTY) && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO))
+        if ((config.keyboard == Configuration.KEYBOARD_QWERTY)
+                && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO))
             /* physical keyboard present, exit */
             return 0;
 
@@ -710,7 +678,7 @@ public class Navit extends Activity
         mgr.showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_FORCED);
         show_soft_keyboard_now_showing = true;
 
-        /* 
+        /*
          * Crude way to estimate the height occupied by the keyboard: for AOSP on KitKat and Lollipop it
          * is about 62-63% of available screen width (in portrait mode) but no more than slightly above
          * 46% of height (in landscape mode).
@@ -739,7 +707,8 @@ public class Navit extends Activity
 
 
     void setDestination(float latitude, float longitude, String address) {
-        Toast.makeText( getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address, Toast.LENGTH_LONG).show(); //TRANS
+        Toast.makeText( getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address,
+                        Toast.LENGTH_LONG).show(); //TRANS
 
         Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
         Bundle b = new Bundle();
@@ -750,45 +719,43 @@ public class Navit extends Activity
         msg.sendToTarget();
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        switch (requestCode)
-        {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
         case Navit.NavitDownloaderSelectMap_id :
-            if (resultCode == Activity.RESULT_OK)
-            {
+            if (resultCode == Activity.RESULT_OK) {
                 Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD
-                        , data.getIntExtra("map_index", -1), 0);
+                                                    , data.getIntExtra("map_index", -1), 0);
                 msg.sendToTarget();
             }
             break;
         case NavitAddressSearch_id :
             if (resultCode == Activity.RESULT_OK) {
                 Bundle destination = data.getExtras();
-                Toast.makeText( getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")), Toast.LENGTH_LONG).show(); //TRANS
+                Toast.makeText( getApplicationContext(),
+                                getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")),
+                                Toast.LENGTH_LONG).show(); //TRANS
 
                 Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
                 msg.setData(destination);
                 msg.sendToTarget();
             }
             break;
-        case NavitSelectStorage_id : 
-            if(resultCode == RESULT_OK) {                        
-                String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter); 
-                Log.d(TAG, "selected path= "+newDir);  
-                if(!newDir.contains("/navit")) 
+        case NavitSelectStorage_id :
+            if(resultCode == RESULT_OK) {
+                String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter);
+                Log.d(TAG, "selected path= "+newDir);
+                if(!newDir.contains("/navit"))
                     newDir = newDir+"/navit/";
                 else
                     newDir = newDir+"/";
-                SharedPreferences prefs = this.getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE); 
-                SharedPreferences.Editor  prefs_editor = prefs.edit(); 
-                prefs_editor.putString("filenamePath", newDir); 
+                SharedPreferences prefs = this.getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
+                SharedPreferences.Editor  prefs_editor = prefs.edit();
+                prefs_editor.putString("filenamePath", newDir);
                 prefs_editor.apply();
 
                 Toast.makeText(this, String.format(getTstring(R.string.map_location_changed),newDir),Toast.LENGTH_LONG).show();
-            } 
-                else Log.w(TAG, "select path failed"); 
-            break;          
+            } else Log.w(TAG, "select path failed");
+            break;
         default :
             ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
             break;
@@ -801,36 +768,33 @@ public class Navit extends Activity
         super.onPrepareDialog(id, dialog);
     }
 
-    protected Dialog onCreateDialog(int id)
-    {
+    protected Dialog onCreateDialog(int id) {
         return dialogs.createDialog(id);
     }
-    
+
     @Override
     public boolean onSearchRequested() {
         /* Launch the internal Search Activity */
         Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
         this.startActivityForResult(search_intent, NavitAddressSearch_id);
-        
+
         return true;
     }
 
-    private void setMapLocation()
-    { 
-        Intent fileExploreIntent = new Intent(this,FileBrowserActivity.class); 
+    private void setMapLocation() {
+        Intent fileExploreIntent = new Intent(this,FileBrowserActivity.class);
         fileExploreIntent
-            .putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
-            .setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
+        .putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
+        .setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
         startActivityForResult(fileExploreIntent,NavitSelectStorage_id);
-    } 
+    }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "OnDestroy");
         // next call will kill our app the hard way. This should not be necessary, but ensures navit is
-        // properly restarted and no resources are wasted with navit in background. Remove this call after 
+        // properly restarted and no resources are wasted with navit in background. Remove this call after
         // code review
         NavitDestroy();
     }
@@ -842,8 +806,7 @@ public class Navit extends Activity
         if (isFullscreen) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        }
-        else {
+        } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
@@ -862,25 +825,23 @@ public class Navit extends Activity
         N_NavitGraphics.handleResize(w, h);
     }
 
-    public void disableSuspend()
-    {
+    public void disableSuspend() {
         wl.acquire();
         wl.release();
     }
 
-    private void exit()
-    {
+    private void exit() {
         nm.cancelAll();
         NavitVehicle.removeListener();
         NavitDestroy();
     }
 
-    public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path, String path2);
+    public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path,
+                                 String path2);
     public native void NavitDestroy();
 
 
-    private String getLocalizedString(String text)
-    {
+    private String getLocalizedString(String text) {
         return NavitGraphics.CallbackLocalizedString(text);
     }
 
@@ -890,8 +851,7 @@ public class Navit extends Activity
      * application startup. The library has already been unpacked at
      * installation time by the package manager.
      */
-    static
-    {
+    static {
         System.loadLibrary("navit");
     }
 }

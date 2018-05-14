@@ -62,19 +62,19 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
                 // missing data, ask to install it
                 AlertDialog.Builder builder = new AlertDialog.Builder(navit);
                 builder
-                        .setTitle(navit.getTstring(R.string.TTS_title_data_missing))
-                        .setMessage(navit.getTstring(R.string.TTS_qery_install_data))
-                        .setPositiveButton(navit.getTstring(R.string.yes),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent installIntent = new Intent();
-                                        installIntent.setAction(
-                                                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                                        navit.startActivity(installIntent);
-                                    }
-                                })
-                        .setNegativeButton(navit.getTstring(R.string.no), null)
-                        .show();
+                .setTitle(navit.getTstring(R.string.TTS_title_data_missing))
+                .setMessage(navit.getTstring(R.string.TTS_qery_install_data))
+                .setPositiveButton(navit.getTstring(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent installIntent = new Intent();
+                        installIntent.setAction(
+                            TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                        navit.startActivity(installIntent);
+                    }
+                })
+                .setNegativeButton(navit.getTstring(R.string.no), null)
+                .show();
             }
         }
     }
