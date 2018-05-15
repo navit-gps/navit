@@ -37,6 +37,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewConfigurationCompat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -759,7 +760,7 @@ public class NavitGraphics
 		 * This logic is based on the presence of a hardware menu button and is known to work on
 		 * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
 		 */
-		final Boolean isNavShowing = !ViewConfiguration.get(navit.getApplication()).hasPermanentMenuKey();
+		final Boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
 			Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
 
 		/*
