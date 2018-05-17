@@ -2409,6 +2409,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		min=p_min->value;
 		if (debug_route)
 			printf("extract p=%p free el=%p min=%d, 0x%x, 0x%x\n", p_min, p_min->el, min, p_min->c.x, p_min->c.y);
+		p_min->rhs = p_min->value;
 		p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */

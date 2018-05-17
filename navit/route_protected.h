@@ -74,6 +74,8 @@ struct route_graph_point {
 	int value;                           /**< The cost at which one can reach the destination from this point on.
 	                                      *  {@code INT_MAX} indicates that the destination is unreachable from this
 	                                      *  point, or that this point has not yet been examined. */
+	int rhs;                             /**< Lookahead value based on neighbors’ `value`; used for recalculation and
+	                                      *   equal to `value` after the route graph has been flooded. */
 	struct coord c;                      /**< Coordinates of this point */
 	int flags;                           /**< Flags for this point (e.g. traffic distortion) */
 	GList * changes;                     /**< List of `struct route_traffic_distortion_change` leading towards
