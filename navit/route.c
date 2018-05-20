@@ -2619,11 +2619,6 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
 	/* This heap will hold all points with "temporarily" calculated costs */
 	struct fibheap *heap;
 
-	struct route_graph_segment *s, *s2, *old_seg;
-	int val, old_val;
-	int flags;
-	GList *c_list, *c_list_next;
-
 	if (!changes)
 		return;
 
