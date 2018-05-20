@@ -2036,7 +2036,7 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 	ret=route_time_seg(profile, &over->data, distp);
 	if (ret == INT_MAX)
 		return ret;
-	if (!route_through_traffic_allowed(profile, over) && from && route_through_traffic_allowed(profile, from->seg)) 
+	if (!route_through_traffic_allowed(profile, over) && from && from->seg && route_through_traffic_allowed(profile, from->seg))
 		ret+=profile->through_traffic_penalty;
 	return ret;
 }
@@ -2357,6 +2357,100 @@ static int route_value_add(int val1, int val2) {
 }
 
 /**
+ * @brief Updates the lookahead value of a point in the route graph and updates its heap membership.
+ *
+ * This recalculates the lookahead value (the `rhs` member) of point `p`, based on the `value` of each neighbor and the
+ * cost to reach that neighbor. If the resulting `p->rhs` differs from `p->value`, `p` is inserted into `heap` using
+ * the lower of the two as its key (if `p` is already a member of `heap`, its key is changed accordingly). If the
+ * resulting `p->rhs` is equal to `p->value` and `p` is a member of `heap`, it is removed.
+ *
+ * This is part of a modified LPA* implementation.
+ *
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
+ * are calculated.
+ * @param p The point to evaluate
+ * @param heap The heap
+ */
+static void route_graph_point_update(struct vehicleprofile *profile, struct route_graph_point * p,
+		struct fibheap * heap) {
+	struct route_graph_segment *s = NULL;
+	int new, val;
+
+	p->rhs = INT_MAX;
+
+	for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
+		val = route_value_seg(profile, p, s, -1);
+		/* TODO do we need to consider the turnaround penalty? */
+		if (val != INT_MAX) {
+			new = route_value_add(val, s->end->value);
+			if (new < p->rhs) {
+				p->rhs = new;
+				p->seg = s;
+			}
+		}
+	}
+
+	for (s = p->end; s; s = s->end_next) { /* Iterate over all the segments leading towards our point */
+		val = route_value_seg(profile, p, s, 1);
+		/* TODO do we need to consider the turnaround penalty? */
+		if (val != INT_MAX) {
+			new = route_value_add(val, s->start->value);
+			if (new < p->rhs) {
+				p->rhs = new;
+				p->seg = s;
+			}
+		}
+	}
+
+	if (p->el) {
+		/* Due to a limitation of the Fibonacci heap implementation, which causes fh_replacekey() to fail if the new
+		 * key is greater than the current one, we always remove the point from the heap (and, if locally inconsistent,
+		 * re-add it afterwards). */
+		fh_delete(heap, p->el);
+		p->el = NULL;
+	}
+
+	if (p->rhs != p->value)
+		/* The point is locally inconsistent, add (or re-add) it to the heap */
+		p->el = fh_insertkey(heap, MIN(p->rhs, p->value), p);
+}
+
+/**
+ * @brief Expands (i.e. calculates the costs for) the points on the heap.
+ *
+ * This calculates the cost for every point on the heap, as well as any neighbors affected by the cost change, and sets
+ * the next segment.
+ *
+ * This is part of a modified LPA* implementation.
+ *
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
+ * are calculated.
+ * @param heap The Fibonacci heap which stores the locally inconsistent points
+ */
+static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct fibheap * heap) {
+	struct route_graph_point *p_min;
+	struct route_graph_segment *s = NULL;
+
+	while ((p_min = fh_extractmin(heap))) {
+		p_min->el = NULL;
+		if (p_min->value > p_min->rhs)
+			/* cost has decreased, update point value */
+			p_min->value = p_min->rhs;
+		else {
+			/* cost has increased, re-evaluate */
+			p_min->value = INT_MAX;
+			route_graph_point_update(profile, p_min, heap);
+		}
+
+		/* in any case, update rhs of neighbors */
+		for (s = p_min->start; s; s = s->start_next)
+			route_graph_point_update(profile, s->end, heap);
+		for (s = p_min->end; s; s = s->end_next)
+			route_graph_point_update(profile, s->start, heap);
+	}
+}
+
+/**
  * @brief Calculates the routing costs for each point
  *
  * This function is the heart of routing. It assigns each point in the route graph a
@@ -2492,28 +2586,68 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
  * removed or changed, as well as nodes affected by this change. After that, the route path is
  * updated as needed.
  *
+ * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
+ * the algorithm used for the initial routing:
+ * \li The `value` of a node represents the cost to reach the destination and thus decreases along the route
+ * (eliminating the need for recalculations as the vehicle moves within the route graph)
+ * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, the basis of the main routing
+ * algorithm, and makes our keys one-dimensional)
+ * \li Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this
+ * may change in the future).
+ *
  * The list pointed to by `changes` is emptied and its elements are freed by this function.
  *
  * @param this_ The route
  * @param changes Points to a `GList` of `struct route_traffic_distortion_change` elements describing
  * the segments for which the traffic situation has changed
  */
+// FIXME this is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood()
 void route_process_traffic_changes(struct route *this_, GList ** changes) {
-	struct route_traffic_distortion_change *curr = NULL;
+	struct route_traffic_distortion_change *c = NULL;
+	struct route_graph_point *p_min;
+
+	/* This heap will hold all points with "temporarily" calculated costs */
+	struct fibheap *heap;
+
+	struct route_graph_segment *s, *s2, *old_seg;
+	int val, old_val;
+	int flags;
+	GList *c_list, *c_list_next;
 
 	if (!changes)
 		return;
 
+	heap = fh_makekeyheap();
+
 	while (*changes) {
-		curr = g_list_nth_data(*changes, 0);
-		*changes = g_list_remove(*changes, curr);
+		c = g_list_nth_data(*changes, 0);
+		*changes = g_list_remove(*changes, c);
 
-		/* TODO process changes */
+		if (c->from) {
+			if (c->from->value < c->to->value) {
+				/* if needed, swap from and to so they agree with the route graph direction */
+				p_min = c->from;
+				c->from = c->to;
+				c->to = p_min;
+			}
 
-		g_free(curr);
+		}
+
+		if (c->from)
+			route_graph_point_update(this_->vehicleprofile, c->from, heap);
+
+		/* TODO we may need to evaluate c->to as well (or maybe only c->to in some cases) */
+
+		g_free(c);
 	}
 
 	g_free(changes);
+
+	route_graph_compute_shortest_path(this_->vehicleprofile, heap);
+
+	/* TODO change route path if necessary */
+
+	fh_deleteheap(heap);
 }
 
 /**
