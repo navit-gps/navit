@@ -913,7 +913,7 @@ public class NavitGraphics
         paint.setPathEffect(null);
     }
 
-    protected void draw_polygon(Paint paint, int[] )
+    protected void draw_polygon(Paint paint, int[] c)
     {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
