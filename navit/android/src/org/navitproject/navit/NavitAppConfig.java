@@ -3,11 +3,10 @@ package org.navitproject.navit;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 
 public class NavitAppConfig extends Application {
 
