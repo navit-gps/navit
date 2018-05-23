@@ -498,9 +498,9 @@ public class NavitMapDownloader extends Thread {
                 return (filename.endsWith(".bin"));
             }
         }
-        NavitMap maps[] = new NavitMap[0];
+        NavitMap[] maps = new NavitMap[0];
         File map_dir = new File(Navit.map_filename_path);
-        String map_file_names[] = map_dir.list(new filterMaps());
+        String[] map_file_names = map_dir.list(new filterMaps());
         if (map_file_names != null) {
             maps = new NavitMap[map_file_names.length];
             for (int map_file_index = 0; map_file_index < map_file_names.length; map_file_index++) {
