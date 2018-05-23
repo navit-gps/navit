@@ -84,7 +84,9 @@
         </module>
         <module name="OneStatementPerLine"/>
         <module name="MultipleVariableDeclarations"/>
-        <module name="ArrayTypeStyle"/>
+        <module name="ArrayTypeStyle">
+            <property name="severity" value="error"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="FallThrough"/>
         <module name="UpperEll"/>
