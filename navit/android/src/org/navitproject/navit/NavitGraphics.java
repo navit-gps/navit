@@ -882,7 +882,7 @@ public class NavitGraphics
     }
 
 
-    protected void draw_polyline(Paint paint, int c[])
+    protected void draw_polyline(Paint paint, int[] c)
     {
         int i, ndashes;
         float [] intervals;

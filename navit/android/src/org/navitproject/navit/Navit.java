@@ -72,7 +72,7 @@ public class Navit extends Activity
 
     private NavitDialogs               dialogs;
     private PowerManager.WakeLock      wl;
-    private NavitActivityResult        ActivityResults[];
+    private NavitActivityResult[]        ActivityResults;
     public static InputMethodManager   mgr                             = null;
     public static DisplayMetrics       metrics                         = null;
     public static int                  status_bar_height               = 0;
@@ -144,7 +144,7 @@ public class Navit extends Activity
             os = new FileOutputStream(destination);
 
             int len;
-            byte buffer[] = new byte[1024];
+            byte[] buffer = new byte[1024];
 
             while ((len = is.read(buffer)) != -1) {
                 os.write(buffer, 0, len);
