@@ -13,6 +13,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
 import java.io.File;
 
 public class NavitDialogs extends Handler {
