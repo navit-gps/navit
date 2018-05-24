@@ -22,7 +22,7 @@ cd ~/
 git clone git@github.com:navit-gps/infrastructure-blackbox.git
 cd infrastructure-blackbox/keyrings/
 openssl aes-256-cbc -d -in keystore.gpg -k $KEY > ~/.keystore
-openssl aes-256-cbc -d -in client_secrets.gpg -k $KEY > /root/project/ci/client_secrets.json
+openssl aes-256-cbc -d -in client_secrets.gpg -k $KEY > /root/project/scripts/client_secrets.json
 openssl aes-256-cbc -d -in androidpublisher.gpg -k $KEY > /root/project/androidpublisher.dat
 cd ~/project
 
@@ -32,4 +32,4 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $SP $BINPATH/n
 
 zipalign 4 $BINPATH/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk $BINPATH/navit-$CIRCLE_SHA1-${ARCH}-release-signed.apk
 apksigner verify -v $BINPATH/navit-$CIRCLE_SHA1-${ARCH}-release-signed.apk
-python ~/project/ci/basic_upload_apks.py org.navitproject.navit $BINPATH/navit-$CIRCLE_SHA1-${ARCH}-release-signed.apk --noauth_local_webserver
+python ~/project/scripts/basic_upload_apks.py org.navitproject.navit $BINPATH/navit-$CIRCLE_SHA1-${ARCH}-release-signed.apk --noauth_local_webserver
