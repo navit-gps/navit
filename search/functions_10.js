@@ -37,7 +37,7 @@ var searchData=
   ['onproviderdisabled',['onProviderDisabled',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#a5f1bc6ca3c533d20885d038bc9bdb9aa',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
   ['onproviderenabled',['onProviderEnabled',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#adb12b57e42f91fbe1443373ac173a588',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
   ['onreceive',['onReceive',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#ac87c76d6920eae3f49f5c775abbf3f4d',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
-  ['onrequestpermissionsresult',['onRequestPermissionsResult',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a7e60a9d41754e54dc91caea4dd2b66bc',1,'org::navitproject::navit::Navit']]],
+  ['onrequestpermissionsresult',['onRequestPermissionsResult',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ac4cf627e2942fca4b8cee3a1e46b2805',1,'org::navitproject::navit::Navit']]],
   ['onresume',['onResume',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a2ed696de31ab8070d8f1e4f02b2af6e6',1,'org::navitproject::navit::Navit']]],
   ['onsearchrequested',['onSearchRequested',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a73ee9b7f4e8fd443dce9ff2631b17f6c',1,'org::navitproject::navit::Navit']]],
   ['onsensorchanged',['onSensorChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a5c32ad97daf4cec5b922d15caf12f3d7',1,'org::navitproject::navit::NavitSensors']]],

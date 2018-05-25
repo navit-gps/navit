@@ -25,7 +25,7 @@ var searchData=
   ['activepoi',['activePoi',['../classBackend.html#a12abc5c9b5082efa9cf3d3aa0f39980d',1,'Backend::activePoi()'],['../classBackend.html#af6166b6f8ddb49d9bd0f42d4aca75f8e',1,'Backend::activePoi()']]],
   ['activepoichanged',['activePoiChanged',['../classBackend.html#af9e5b1076b3b2a0dfa4f07d628c316ef',1,'Backend']]],
   ['activity',['activity',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a3049304a3a340afc3364febab0421dfd',1,'org::navitproject::navit::NavitGraphics']]],
-  ['activityresults',['ActivityResults',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ab6fa4e96f78fb5abc1b553ed5bbe7989',1,'org::navitproject::navit::Navit']]],
+  ['activityresults',['ActivityResults',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a6acd1ff3150f579d01fb09de87970c14',1,'org::navitproject::navit::Navit']]],
   ['adapter',['adapter',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a7f339fa9d8704cfa9afb352a6b013686',1,'org.navitproject.navit.FileBrowserActivity.adapter()'],['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a95698adb741b65a90ab32c6d3c3503fc',1,'org.navitproject.navit.NavitDownloadSelectMapActivity.adapter()']]],
   ['add',['add',['../structdatawindow__methods.html#a03558c9f3c11cb64d2ad3dba2f007cea',1,'datawindow_methods::add()'],['../structmenu__methods.html#ae3fe2b9e8f48b38a52c7abf551b31e2d',1,'menu_methods::add()'],['../xmlconfig_8c.html#a46ca9b7fd65d2e4327cb9d41b65b6f89',1,'ADD():&#160;xmlconfig.c']]],
   ['add_5fattr',['add_attr',['../structgui__methods.html#af995d9fd279289b937bc97f1bf4f4c22',1,'gui_methods::add_attr()'],['../structobject__func.html#aa92106f3c169bdd1c791412f2d22a4d4',1,'object_func::add_attr()']]],

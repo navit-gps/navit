@@ -6,7 +6,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity =
     [ "onChildClick", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a4d57c6306c327466dca0575f66dc4893", null ],
     [ "onCreate", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a71f1a4f8da5956a5388faccee7d1f6cd", null ],
     [ "updateDownloadedMaps", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a542f1d5e81e841fb5f9d1c5f34f03d92", null ],
-    [ "updateMapsForLocation", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a00c864fd14c7a96de48b2a375bc31961", null ],
+    [ "updateMapsForLocation", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#ad0d3f6a7fa016dafdaa52284ed4ff1d4", null ],
     [ "adapter", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a95698adb741b65a90ab32c6d3c3503fc", null ],
     [ "currentLocationKnown", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a2992faf220a8787ccd869b6b294e7e76", null ],
     [ "downloaded_maps_childs", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a742565f9fd07dd6e5a0f95dabc87e3be", null ],
