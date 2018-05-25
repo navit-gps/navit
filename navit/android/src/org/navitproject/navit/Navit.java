@@ -72,7 +72,7 @@ public class Navit extends Activity
 
     private NavitDialogs               dialogs;
     private PowerManager.WakeLock      wl;
-    private NavitActivityResult        ActivityResults[];
+    private NavitActivityResult[]        ActivityResults;
     public static InputMethodManager   mgr                             = null;
     public static DisplayMetrics       metrics                         = null;
     public static int                  status_bar_height               = 0;
@@ -144,7 +144,7 @@ public class Navit extends Activity
             os = new FileOutputStream(destination);
 
             int len;
-            byte buffer[] = new byte[1024];
+            byte[] buffer = new byte[1024];
 
             while ((len = is.read(buffer)) != -1) {
                 os.write(buffer, 0, len);
@@ -464,7 +464,7 @@ public class Navit extends Activity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ALL: {
                 if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -487,7 +487,7 @@ public class Navit extends Activity
     }
 
     private void parseNavigationURI(String schemeSpecificPart) {
-        String naviData[]= schemeSpecificPart.split("&");
+        String[] naviData = schemeSpecificPart.split("&");
         Pattern p = Pattern.compile("(.*)=(.*)");
         Map<String,String> params = new HashMap<String,String>();
         for (int count=0; count < naviData.length; count++) {
@@ -518,7 +518,7 @@ public class Navit extends Activity
 
         if ( geoString != null) {
             if (geoString.matches("^[+-]{0,1}\\d+(|\\.\\d*),[+-]{0,1}\\d+(|\\.\\d*)$")) {
-                String geo[] = geoString.split(",");
+                String[] geo = geoString.split(",");
                 if (geo.length == 2) {
                     try {
                         lat = Float.valueOf(geo[0]);

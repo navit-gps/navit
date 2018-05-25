@@ -61,7 +61,6 @@ jobs:
           command: |
             cd navit/icons
             make  
-            sudo ls -la
             mkdir ../android/res/drawable-nodpi
             rename 'y/A-Z/a-z/' *
             cp *.png ../android/res/drawable-nodpi
@@ -71,13 +70,12 @@ jobs:
           command: |
             cd po  
             make
-            sudo ls -la
             mkdir ../navit/android/res/raw
             rename 'y/A-Z/a-z/' *
             cp *.mo ../navit/android/res/raw
             cd ../
       - run:
-          name: Move xml's
+          name: Process xml's
           command: |
             cd navit
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48
@@ -86,7 +84,6 @@ jobs:
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256
-            sudo ls -la
             mv *dpi.xml android/res/raw
             cd ../
       - run:
@@ -103,26 +100,39 @@ jobs:
           name: Build
           command: ./gradlew assembleDebug
       - run:
-          name: Run Tests
+          name: Run Lint Test
           command: |
             ln -s navit/navit.dtd navit.dtd
-            ls -la
-            ./gradlew tasks --all
+            mkdir /home/circleci/code/test-results
             ./gradlew lint test
+      - run:
+          name: Run CheckStyle Test
+          command: ./gradlew checkstyleMain
+      - run:
+          name: Run Javadoc
+          command: ./gradlew generateDebugJavadoc
       - store_artifacts:
+          name: Store APK
           path: navit/android/build/outputs/apk
           destination: apk
       - store_artifacts:
-          name: Store translations
-          path: po
-          destination: translations
-      - store_artifacts:
+          name: Store logs
           path: navit/android/build/outputs/logs
           destination: logs
       - store_artifacts:
-          name: Store reports
+          name: Store Javadoc
+          path: navit/android/build/outputs/docs/javadoc
+          destination: doc  
+      - store_artifacts:
+          name: Store Lint reports
           path: navit/android/build/reports
           destination: reports
+      - store_artifacts:
+          name: Store checkstyle report
+          path: /home/circleci/code/navit/android/checkstyle
+          destination: reports
+      - store_test_results:
+          path: test-results
   build_win32:
     <<: *defaults
     steps:
