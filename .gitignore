@@ -1,2 +1,6 @@
+/.settings/
+/build/
+/.cproject
 /.gitk-tmp.*
+/.project
 /CMakeLists.txt.user*
