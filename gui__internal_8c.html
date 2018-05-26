@@ -2531,7 +2531,7 @@ Variables</h2></td></tr>
 <p>Figures out whether the given vehicle is the active vehicle.</p>
 <dl class="section return"><dt>Returns</dt><dd>true if the vehicle is active, false otherwise. </dd></dl>
 
-<p>References <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>, and <a class="el" href="popup_8c.html#a07d15c2a7a5d86165bb3b4209dc9f671">vehicle</a>.</p>
+<p>References <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="popup_8c.html#a07d15c2a7a5d86165bb3b4209dc9f671">vehicle</a>, and <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>.</p>
 
 <p>Referenced by <a class="el" href="gui__internal_8c.html#ad794146f2cd33dc53f92b8e2519c955d">gui_internal_cmd_set_active_profile()</a>, and <a class="el" href="gui__internal__priv_8h.html#a740c6b2e98e9b223a1094551d22c7db4">gui_internal_menu_vehicle_settings()</a>.</p>
 
@@ -4250,10 +4250,10 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">={</div>
-<div class="line">      {545,32,48,96,10}</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    {545,32,48,96,10}</div>
 <div class="line">    , {300,32,48,64,3}</div>
-<div class="line">      ,{200,16,32,48,2}</div>
+<div class="line">    ,{200,16,32,48,2}</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>The default config profiles.</p>
 <p>[0] =&gt; LARGE_PROFILE (screens 640 in one dimension) [1] =&gt; MEDIUM PROFILE (screens larger than 320 in one dimension [2] =&gt; Small profile (default) </p>
@@ -4270,22 +4270,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a>,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        NULL,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    NULL,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    NULL,</div>
+<div class="line">    NULL,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="gui__internal_8c_html_a5b17ef0a88b0e101f3a4615f3c67bad5"><div class="ttname"><a href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a></div><div class="ttdeci">static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2358</div></div>
-<div class="ttc" id="gui__internal_8c_html_a2d40b1d17a4dea0b735080892f69077b"><div class="ttname"><a href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a></div><div class="ttdeci">static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2407</div></div>
-<div class="ttc" id="gui__internal_8c_html_a7e352b9135c2fe853c9158bcca0629fc"><div class="ttname"><a href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a></div><div class="ttdeci">static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2988</div></div>
-<div class="ttc" id="gui__internal_8c_html_a8a03d72c29bf13bf8ff111c80bcc3345"><div class="ttname"><a href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a></div><div class="ttdeci">static void gui_internal_disable_suspend(struct gui_priv *this)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3023</div></div>
-<div class="ttc" id="gui__internal_8c_html_a79b45619a5131141e564306cb1404e77"><div class="ttname"><a href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a></div><div class="ttdeci">static int gui_internal_add_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2394</div></div>
+<div class="ttc" id="gui__internal_8c_html_a5b17ef0a88b0e101f3a4615f3c67bad5"><div class="ttname"><a href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a></div><div class="ttdeci">static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2308</div></div>
+<div class="ttc" id="gui__internal_8c_html_a2d40b1d17a4dea0b735080892f69077b"><div class="ttname"><a href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a></div><div class="ttdeci">static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2355</div></div>
+<div class="ttc" id="gui__internal_8c_html_a7e352b9135c2fe853c9158bcca0629fc"><div class="ttname"><a href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a></div><div class="ttdeci">static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2926</div></div>
+<div class="ttc" id="gui__internal_8c_html_a8a03d72c29bf13bf8ff111c80bcc3345"><div class="ttname"><a href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a></div><div class="ttdeci">static void gui_internal_disable_suspend(struct gui_priv *this)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2960</div></div>
+<div class="ttc" id="gui__internal_8c_html_a79b45619a5131141e564306cb1404e77"><div class="ttname"><a href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a></div><div class="ttdeci">static int gui_internal_add_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2343</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="gui__internal_8c.html#a17946220aad4f37e599da2431c9aa783">gui_internal_new()</a>.</p>
 
@@ -4309,17 +4309,17 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a08f973ad94428d4359d98819cf329e5a">image_new_xs</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a4b17969080bc271e2840706abbf3127c">image_new_l</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a08f973ad94428d4359d98819cf329e5a">image_new_xs</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a4b17969080bc271e2840706abbf3127c">image_new_l</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="gui__internal_8c_html_a08f973ad94428d4359d98819cf329e5a"><div class="ttname"><a href="gui__internal_8c.html#a08f973ad94428d4359d98819cf329e5a">image_new_xs</a></div><div class="ttdeci">struct graphics_image * image_new_xs(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to xs (extra small) size. </div><div class="ttdef"><b>Definition:</b> gui_internal.c:167</div></div>
-<div class="ttc" id="gui__internal_8c_html_ac5c6fd1c4b4260a0548264ff63d6f033"><div class="ttname"><a href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a></div><div class="ttdeci">static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3049</div></div>
-<div class="ttc" id="gui__internal_8c_html_a4b17969080bc271e2840706abbf3127c"><div class="ttname"><a href="gui__internal_8c.html#a4b17969080bc271e2840706abbf3127c">image_new_l</a></div><div class="ttdeci">struct graphics_image * image_new_l(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to l (large) size. </div><div class="ttdef"><b>Definition:</b> gui_internal.c:194</div></div>
-<div class="ttc" id="gui__internal__menu_8c_html_a8effabae5efb5065b298aa3ca495ee7c"><div class="ttname"><a href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a></div><div class="ttdeci">void gui_internal_menu_render(struct gui_priv *this)</div><div class="ttdef"><b>Definition:</b> gui_internal_menu.c:227</div></div>
-<div class="ttc" id="gui__internal_8c_html_af205c9c6fb57d8ca2b20ac1ea1358605"><div class="ttname"><a href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a></div><div class="ttdeci">static void gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3055</div></div>
+<div class="ttc" id="gui__internal_8c_html_a08f973ad94428d4359d98819cf329e5a"><div class="ttname"><a href="gui__internal_8c.html#a08f973ad94428d4359d98819cf329e5a">image_new_xs</a></div><div class="ttdeci">struct graphics_image * image_new_xs(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to xs (extra small) size. </div><div class="ttdef"><b>Definition:</b> gui_internal.c:165</div></div>
+<div class="ttc" id="gui__internal_8c_html_ac5c6fd1c4b4260a0548264ff63d6f033"><div class="ttname"><a href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a></div><div class="ttdeci">static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2985</div></div>
+<div class="ttc" id="gui__internal_8c_html_a4b17969080bc271e2840706abbf3127c"><div class="ttname"><a href="gui__internal_8c.html#a4b17969080bc271e2840706abbf3127c">image_new_l</a></div><div class="ttdeci">struct graphics_image * image_new_l(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to l (large) size. </div><div class="ttdef"><b>Definition:</b> gui_internal.c:190</div></div>
+<div class="ttc" id="gui__internal__menu_8c_html_a8effabae5efb5065b298aa3ca495ee7c"><div class="ttname"><a href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a></div><div class="ttdeci">void gui_internal_menu_render(struct gui_priv *this)</div><div class="ttdef"><b>Definition:</b> gui_internal_menu.c:220</div></div>
+<div class="ttc" id="gui__internal_8c_html_af205c9c6fb57d8ca2b20ac1ea1358605"><div class="ttname"><a href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a></div><div class="ttdeci">static void gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:2990</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="gui__internal_8c.html#a17946220aad4f37e599da2431c9aa783">gui_internal_new()</a>.</p>
 
@@ -4343,37 +4343,37 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#aade37df2755f91704b80f529bbb42772">gui_internal_button_new</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#ad0ecaba1467a05c0ae2079388cb864f4">gui_internal_button_new_with_callback</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27">gui_internal_box_new</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#a66ce2bf1c23d7043191c2e1b822a3efb">gui_internal_label_new</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__widget_8c.html#a70c9c4e5552dfa3812168ed14b5a4278">gui_internal_image_new</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a756426e334809f29f3196545deff9c24">gui_internal_keyboard</a>,</div>
-<div class="line">        <a class="code" href="gui__internal__menu_8c.html#ad6707ec6bbe8e3d0a5581fc189e042f7">gui_internal_menu</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a>,</div>
-<div class="line">        <a class="code" href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#aade37df2755f91704b80f529bbb42772">gui_internal_button_new</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#ad0ecaba1467a05c0ae2079388cb864f4">gui_internal_button_new_with_callback</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27">gui_internal_box_new</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#a66ce2bf1c23d7043191c2e1b822a3efb">gui_internal_label_new</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__widget_8c.html#a70c9c4e5552dfa3812168ed14b5a4278">gui_internal_image_new</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a756426e334809f29f3196545deff9c24">gui_internal_keyboard</a>,</div>
+<div class="line">    <a class="code" href="gui__internal__menu_8c.html#ad6707ec6bbe8e3d0a5581fc189e042f7">gui_internal_menu</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a>,</div>
+<div class="line">    <a class="code" href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="gui__internal_8c_html_a188a93f0cd5b6cb95827453e057f0a80"><div class="ttname"><a href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a></div><div class="ttdeci">static void gui_internal_set_flags(struct widget *widget, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3077</div></div>
-<div class="ttc" id="gui__internal_8c_html_a9abfde2c256b26e1222d4723c38c9969"><div class="ttname"><a href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a></div><div class="ttdeci">static int gui_internal_get_state(struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3083</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_a70c9c4e5552dfa3812168ed14b5a4278"><div class="ttname"><a href="gui__internal__widget_8c.html#a70c9c4e5552dfa3812168ed14b5a4278">gui_internal_image_new</a></div><div class="ttdeci">struct widget * gui_internal_image_new(struct gui_priv *this, struct graphics_image *image)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:85</div></div>
-<div class="ttc" id="gui__internal_8c_html_a756426e334809f29f3196545deff9c24"><div class="ttname"><a href="gui__internal_8c.html#a756426e334809f29f3196545deff9c24">gui_internal_keyboard</a></div><div class="ttdeci">struct widget * gui_internal_keyboard(struct gui_priv *this, int mode)</div><div class="ttdoc">Creates a keyboard widget. </div><div class="ttdef"><b>Definition:</b> gui_internal_keyboard.c:404</div></div>
-<div class="ttc" id="gui__internal_8c_html_a42a9260bce254e9987674ddb187d669c"><div class="ttname"><a href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a></div><div class="ttdeci">static void gui_internal_set_data(struct widget *widget, void *data)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3101</div></div>
-<div class="ttc" id="gui__internal_8c_html_a54921ca353606bbfe738c5389b371ec4"><div class="ttname"><a href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a></div><div class="ttdeci">static void gui_internal_set_default_background(struct gui_priv *this, struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3107</div></div>
-<div class="ttc" id="gui__internal_8c_html_ad5c5d0795232c315a51939cb0e0c0b20"><div class="ttname"><a href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a></div><div class="ttdeci">static enum flags gui_internal_get_flags(struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3071</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_aade37df2755f91704b80f529bbb42772"><div class="ttname"><a href="gui__internal__widget_8c.html#aade37df2755f91704b80f529bbb42772">gui_internal_button_new</a></div><div class="ttdeci">struct widget * gui_internal_button_new(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:209</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_ad0ecaba1467a05c0ae2079388cb864f4"><div class="ttname"><a href="gui__internal__widget_8c.html#ad0ecaba1467a05c0ae2079388cb864f4">gui_internal_button_new_with_callback</a></div><div class="ttdeci">struct widget * gui_internal_button_new_with_callback(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:203</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_a66ce2bf1c23d7043191c2e1b822a3efb"><div class="ttname"><a href="gui__internal__widget_8c.html#a66ce2bf1c23d7043191c2e1b822a3efb">gui_internal_label_new</a></div><div class="ttdeci">struct widget * gui_internal_label_new(struct gui_priv *this, const char *text)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:56</div></div>
-<div class="ttc" id="gui__internal__menu_8c_html_ad6707ec6bbe8e3d0a5581fc189e042f7"><div class="ttname"><a href="gui__internal__menu_8c.html#ad6707ec6bbe8e3d0a5581fc189e042f7">gui_internal_menu</a></div><div class="ttdeci">struct widget * gui_internal_menu(struct gui_priv *this, const char *label)</div><div class="ttdoc">Initializes a GUI screen. </div><div class="ttdef"><b>Definition:</b> gui_internal_menu.c:110</div></div>
-<div class="ttc" id="gui__internal_8c_html_a06bf743053b89f875eb16064d003319f"><div class="ttname"><a href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a></div><div class="ttdeci">static void gui_internal_set_state(struct widget *widget, int state)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3089</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_ab21759441179bdbabb886f9e7e11cc27"><div class="ttname"><a href="gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27">gui_internal_box_new</a></div><div class="ttdeci">struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:311</div></div>
-<div class="ttc" id="gui__internal__widget_8c_html_a90d1f528dbfb40b8b54053fe8bbde8c5"><div class="ttname"><a href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a></div><div class="ttdeci">void gui_internal_widget_append(struct widget *parent, struct widget *child)</div><div class="ttdoc">Adds a child widget to a parent widget, making it the last child. </div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:648</div></div>
-<div class="ttc" id="gui__internal_8c_html_a0bb5b3871f3aac731b7cc55df8c65a3c"><div class="ttname"><a href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a></div><div class="ttdeci">static void gui_internal_set_func(struct widget *widget, void(*func)(struct gui_priv *priv, struct widget *widget, void *data))</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3095</div></div>
+<div class="ttc" id="gui__internal_8c_html_a188a93f0cd5b6cb95827453e057f0a80"><div class="ttname"><a href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a></div><div class="ttdeci">static void gui_internal_set_flags(struct widget *widget, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3010</div></div>
+<div class="ttc" id="gui__internal_8c_html_a9abfde2c256b26e1222d4723c38c9969"><div class="ttname"><a href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a></div><div class="ttdeci">static int gui_internal_get_state(struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3015</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_a70c9c4e5552dfa3812168ed14b5a4278"><div class="ttname"><a href="gui__internal__widget_8c.html#a70c9c4e5552dfa3812168ed14b5a4278">gui_internal_image_new</a></div><div class="ttdeci">struct widget * gui_internal_image_new(struct gui_priv *this, struct graphics_image *image)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:81</div></div>
+<div class="ttc" id="gui__internal_8c_html_a756426e334809f29f3196545deff9c24"><div class="ttname"><a href="gui__internal_8c.html#a756426e334809f29f3196545deff9c24">gui_internal_keyboard</a></div><div class="ttdeci">struct widget * gui_internal_keyboard(struct gui_priv *this, int mode)</div><div class="ttdoc">Creates a keyboard widget. </div><div class="ttdef"><b>Definition:</b> gui_internal_keyboard.c:549</div></div>
+<div class="ttc" id="gui__internal_8c_html_a42a9260bce254e9987674ddb187d669c"><div class="ttname"><a href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a></div><div class="ttdeci">static void gui_internal_set_data(struct widget *widget, void *data)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3030</div></div>
+<div class="ttc" id="gui__internal_8c_html_a54921ca353606bbfe738c5389b371ec4"><div class="ttname"><a href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a></div><div class="ttdeci">static void gui_internal_set_default_background(struct gui_priv *this, struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3035</div></div>
+<div class="ttc" id="gui__internal_8c_html_ad5c5d0795232c315a51939cb0e0c0b20"><div class="ttname"><a href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a></div><div class="ttdeci">static enum flags gui_internal_get_flags(struct widget *widget)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3005</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_aade37df2755f91704b80f529bbb42772"><div class="ttname"><a href="gui__internal__widget_8c.html#aade37df2755f91704b80f529bbb42772">gui_internal_button_new</a></div><div class="ttdeci">struct widget * gui_internal_button_new(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:201</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_ad0ecaba1467a05c0ae2079388cb864f4"><div class="ttname"><a href="gui__internal__widget_8c.html#ad0ecaba1467a05c0ae2079388cb864f4">gui_internal_button_new_with_callback</a></div><div class="ttdeci">struct widget * gui_internal_button_new_with_callback(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:195</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_a66ce2bf1c23d7043191c2e1b822a3efb"><div class="ttname"><a href="gui__internal__widget_8c.html#a66ce2bf1c23d7043191c2e1b822a3efb">gui_internal_label_new</a></div><div class="ttdeci">struct widget * gui_internal_label_new(struct gui_priv *this, const char *text)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:54</div></div>
+<div class="ttc" id="gui__internal__menu_8c_html_ad6707ec6bbe8e3d0a5581fc189e042f7"><div class="ttname"><a href="gui__internal__menu_8c.html#ad6707ec6bbe8e3d0a5581fc189e042f7">gui_internal_menu</a></div><div class="ttdeci">struct widget * gui_internal_menu(struct gui_priv *this, const char *label)</div><div class="ttdoc">Initializes a GUI screen. </div><div class="ttdef"><b>Definition:</b> gui_internal_menu.c:106</div></div>
+<div class="ttc" id="gui__internal_8c_html_a06bf743053b89f875eb16064d003319f"><div class="ttname"><a href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a></div><div class="ttdeci">static void gui_internal_set_state(struct widget *widget, int state)</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3020</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_ab21759441179bdbabb886f9e7e11cc27"><div class="ttname"><a href="gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27">gui_internal_box_new</a></div><div class="ttdeci">struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags)</div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:298</div></div>
+<div class="ttc" id="gui__internal__widget_8c_html_a90d1f528dbfb40b8b54053fe8bbde8c5"><div class="ttname"><a href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a></div><div class="ttdeci">void gui_internal_widget_append(struct widget *parent, struct widget *child)</div><div class="ttdoc">Adds a child widget to a parent widget, making it the last child. </div><div class="ttdef"><b>Definition:</b> gui_internal_widget.c:631</div></div>
+<div class="ttc" id="gui__internal_8c_html_a0bb5b3871f3aac731b7cc55df8c65a3c"><div class="ttname"><a href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a></div><div class="ttdeci">static void gui_internal_set_func(struct widget *widget, void(*func)(struct gui_priv *priv, struct widget *widget, void *data))</div><div class="ttdef"><b>Definition:</b> gui_internal.c:3025</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="gui__internal_8c.html#a17946220aad4f37e599da2431c9aa783">gui_internal_new()</a>.</p>
 

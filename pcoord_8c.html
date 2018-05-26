@@ -301,8 +301,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        {<span class="stringliteral">&quot;func&quot;</span>,        (PyCFunction) <a class="code" href="pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8">pcoord_func</a>, METH_VARARGS },</div>
-<div class="line">        {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>,    (PyCFunction) <a class="code" href="pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8">pcoord_func</a>, METH_VARARGS },</div>
+<div class="line">    {NULL, NULL },</div>
 <div class="line">}</div>
 <div class="ttc" id="pcoord_8c_html_addda55a27d0544b444ff40adc35e26c8"><div class="ttname"><a href="pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8">pcoord_func</a></div><div class="ttdeci">static PyObject * pcoord_func(pcoordObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> pcoord.c:29</div></div>
 </div><!-- fragment -->
@@ -320,16 +320,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        <a class="code" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">        .tp_name=<span class="stringliteral">&quot;pcoord&quot;</span>,</div>
-<div class="line">        .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code" href="structpcoordObject.html">pcoordObject</a>),</div>
-<div class="line">        .tp_dealloc=(destructor)<a class="code" href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a>,</div>
-<div class="line">        .tp_getattr=<a class="code" href="pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35">pcoord_getattr_py</a>,</div>
+<div class="line">    <a class="code" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
+<div class="line">    .tp_name=<span class="stringliteral">&quot;pcoord&quot;</span>,</div>
+<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code" href="structpcoordObject.html">pcoordObject</a>),</div>
+<div class="line">    .tp_dealloc=(destructor)<a class="code" href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a>,</div>
+<div class="line">    .tp_getattr=<a class="code" href="pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35">pcoord_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="pcoord_8c_html_a0a4d1a34526e0fa45d731cd0d900ae35"><div class="ttname"><a href="pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35">pcoord_getattr_py</a></div><div class="ttdeci">static PyObject * pcoord_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition:</b> pcoord.c:47</div></div>
+<div class="ttc" id="pcoord_8c_html_a0a4d1a34526e0fa45d731cd0d900ae35"><div class="ttname"><a href="pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35">pcoord_getattr_py</a></div><div class="ttdeci">static PyObject * pcoord_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition:</b> pcoord.c:46</div></div>
 <div class="ttc" id="binding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition:</b> binding_python.c:39</div></div>
 <div class="ttc" id="structpcoordObject_html"><div class="ttname"><a href="structpcoordObject.html">pcoordObject</a></div><div class="ttdef"><b>Definition:</b> pcoord.c:23</div></div>
-<div class="ttc" id="pcoord_8c_html_a0d5896988dd908b8631c736e5a17df5b"><div class="ttname"><a href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a></div><div class="ttdeci">static void pcoord_destroy_py(pcoordObject *self)</div><div class="ttdef"><b>Definition:</b> pcoord.c:53</div></div>
+<div class="ttc" id="pcoord_8c_html_a0d5896988dd908b8631c736e5a17df5b"><div class="ttname"><a href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a></div><div class="ttdeci">static void pcoord_destroy_py(pcoordObject *self)</div><div class="ttdef"><b>Definition:</b> pcoord.c:51</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="binding_2python_2navit_8c.html#acdd5eb41a990cee8452533cc27131705">navit_set_center_py()</a>, <a class="el" href="binding_2python_2navit_8c.html#ab9dd5970d3f38031d00e2a5a959e6610">navit_set_destination_py()</a>, and <a class="el" href="binding_2python_2navit_8c.html#ab0c60ce0d474439eb6c37742c5bf24d2">navit_set_position_py()</a>.</p>
 

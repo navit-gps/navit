@@ -319,8 +319,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        {<span class="stringliteral">&quot;func&quot;</span>,        (PyCFunction) <a class="code" href="template_8c.html#ae1f8a776fcd1510891ae80e672d3b7e4">template_func</a>, METH_VARARGS },</div>
-<div class="line">        {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>,    (PyCFunction) <a class="code" href="template_8c.html#ae1f8a776fcd1510891ae80e672d3b7e4">template_func</a>, METH_VARARGS },</div>
+<div class="line">    {NULL, NULL },</div>
 <div class="line">}</div>
 <div class="ttc" id="template_8c_html_ae1f8a776fcd1510891ae80e672d3b7e4"><div class="ttname"><a href="template_8c.html#ae1f8a776fcd1510891ae80e672d3b7e4">template_func</a></div><div class="ttdeci">static PyObject * template_func(templateObject *self, PyObject *args)</div><div class="ttdef"><b>Definition:</b> template.c:30</div></div>
 </div><!-- fragment -->
@@ -338,15 +338,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        <a class="code" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">        .tp_name=<span class="stringliteral">&quot;template&quot;</span>,</div>
-<div class="line">        .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code" href="structtemplateObject.html">templateObject</a>),</div>
-<div class="line">        .tp_dealloc=(destructor)<a class="code" href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a>,</div>
-<div class="line">        .tp_getattr=<a class="code" href="template_8c.html#afcdf2619e38c63e8916186556d8f70e1">template_getattr_py</a>,</div>
+<div class="line">    <a class="code" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
+<div class="line">    .tp_name=<span class="stringliteral">&quot;template&quot;</span>,</div>
+<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code" href="structtemplateObject.html">templateObject</a>),</div>
+<div class="line">    .tp_dealloc=(destructor)<a class="code" href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a>,</div>
+<div class="line">    .tp_getattr=<a class="code" href="template_8c.html#afcdf2619e38c63e8916186556d8f70e1">template_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="template_8c_html_afcdf2619e38c63e8916186556d8f70e1"><div class="ttname"><a href="template_8c.html#afcdf2619e38c63e8916186556d8f70e1">template_getattr_py</a></div><div class="ttdeci">static PyObject * template_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition:</b> template.c:49</div></div>
+<div class="ttc" id="template_8c_html_afcdf2619e38c63e8916186556d8f70e1"><div class="ttname"><a href="template_8c.html#afcdf2619e38c63e8916186556d8f70e1">template_getattr_py</a></div><div class="ttdeci">static PyObject * template_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition:</b> template.c:48</div></div>
 <div class="ttc" id="structtemplateObject_html"><div class="ttname"><a href="structtemplateObject.html">templateObject</a></div><div class="ttdef"><b>Definition:</b> template.c:23</div></div>
-<div class="ttc" id="template_8c_html_a1fe49fcc7fb0ea1cbf9fc491be32adf0"><div class="ttname"><a href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a></div><div class="ttdeci">static void template_destroy_py(templateObject *self)</div><div class="ttdef"><b>Definition:</b> template.c:55</div></div>
+<div class="ttc" id="template_8c_html_a1fe49fcc7fb0ea1cbf9fc491be32adf0"><div class="ttname"><a href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a></div><div class="ttdeci">static void template_destroy_py(templateObject *self)</div><div class="ttdef"><b>Definition:</b> template.c:53</div></div>
 <div class="ttc" id="binding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition:</b> binding_python.c:39</div></div>
 </div><!-- fragment -->
 </div>

@@ -228,7 +228,7 @@ Variables</h2></td></tr>
 <tr class="separator:ae069ffd543bc86fae1ed03fd8dfc5ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64f1cebc727c8b322ad281422ec92a5e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#a64f1cebc727c8b322ad281422ec92a5e">gtk_argc</a></td></tr>
 <tr class="separator:a64f1cebc727c8b322ad281422ec92a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c68ea679c3f4c085f5fa5a8c3577af2"><td class="memItemLeft" align="right" valign="top">static char **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#a1c68ea679c3f4c085f5fa5a8c3577af2">gtk_argv</a> ={NULL}</td></tr>
+<tr class="memitem:a1c68ea679c3f4c085f5fa5a8c3577af2"><td class="memItemLeft" align="right" valign="top">static char **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#a1c68ea679c3f4c085f5fa5a8c3577af2">gtk_argv</a> = {NULL}</td></tr>
 <tr class="separator:a1c68ea679c3f4c085f5fa5a8c3577af2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -1328,7 +1328,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">char** gtk_argv ={NULL}</td>
+          <td class="memname">char** gtk_argv = {NULL}</td>
         </tr>
       </table>
   </td>
@@ -1352,17 +1352,17 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        NULL,</div>
-<div class="line">        <a class="code" href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a>,</div>
-<div class="line">        <a class="code" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a>,</div>
-<div class="line">        NULL,</div>
-<div class="line">        <a class="code" href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a>,</div>
-<div class="line">        <a class="code" href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    <a class="code" href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a>,</div>
+<div class="line">    <a class="code" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    <a class="code" href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a>,</div>
+<div class="line">    <a class="code" href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="gui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:208</div></div>
-<div class="ttc" id="gui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:253</div></div>
+<div class="ttc" id="gui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:204</div></div>
+<div class="ttc" id="gui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:247</div></div>
 <div class="ttc" id="graphics__win32_8h_html_a033bfd57391341071819b9b338d1e4ee"><div class="ttname"><a href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a></div><div class="ttdeci">struct datawindow_priv * gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth)</div></div>
-<div class="ttc" id="graphics__win32_8h_html_a49a9d00040f4c52e6c6433d880f5411c"><div class="ttname"><a href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a></div><div class="ttdeci">struct menu_priv * gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth)</div><div class="ttdef"><b>Definition:</b> gui_gtk_action.c:664</div></div>
+<div class="ttc" id="graphics__win32_8h_html_a49a9d00040f4c52e6c6433d880f5411c"><div class="ttname"><a href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a></div><div class="ttdeci">struct menu_priv * gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth)</div><div class="ttdef"><b>Definition:</b> gui_gtk_action.c:638</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="gui__gtk__window_8c.html#a5ada493099f0df9555959dbeef8d66e4">gui_gtk_new()</a>.</p>
 

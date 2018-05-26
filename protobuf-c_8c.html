@@ -492,7 +492,7 @@ Variables</h2></td></tr>
 <div class="line">      fail_code;                                                            \</div>
 <div class="line">    }                                                                       \</div>
 <div class="line">}</div>
-<div class="ttc" id="garmin__img_8c_html_ad2d6a0619c2be768bdc2eeade6cc3073"><div class="ttname"><a href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> garmin_img.c:131</div></div>
+<div class="ttc" id="garmin__img_8c_html_ad2d6a0619c2be768bdc2eeade6cc3073"><div class="ttname"><a href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> garmin_img.c:128</div></div>
 <div class="ttc" id="protobuf-c_8c_html_a3d610832b16ff93918dda87801f1f8cd"><div class="ttname"><a href="protobuf-c_8c.html#a3d610832b16ff93918dda87801f1f8cd">alloc_failed_warning</a></div><div class="ttdeci">static void alloc_failed_warning(unsigned size, const char *filename, unsigned line)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:62</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="protobuf-c_8c.html#a874f1ea25637add4ea9d0e0210113461">parse_required_member()</a>, <a class="el" href="protobuf-c_8c.html#a2d0ce0ce60dd7b9daf26af2c7e408d5d">protobuf_c_buffer_simple_append()</a>, and <a class="el" href="protobuf-c_8h.html#ae44d7db85770b0d68a5741349e265029">protobuf_c_message_unpack()</a>.</p>
@@ -581,8 +581,8 @@ Variables</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">(<span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*)*8 - 1                                   \</div>
 <div class="line">   - <a class="code" href="protobuf-c_8c.html#a14b27841c76a2ea74b9177b709be140e">BOUND_SIZEOF_SCANNED_MEMBER_LOG2</a>                    \</div>
 <div class="line">   - <a class="code" href="protobuf-c_8c.html#a839f5a00dfd895de179af9d537aa3c43">FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2</a>)</div>
-<div class="ttc" id="protobuf-c_8c_html_a14b27841c76a2ea74b9177b709be140e"><div class="ttname"><a href="protobuf-c_8c.html#a14b27841c76a2ea74b9177b709be140e">BOUND_SIZEOF_SCANNED_MEMBER_LOG2</a></div><div class="ttdeci">#define BOUND_SIZEOF_SCANNED_MEMBER_LOG2</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:1468</div></div>
-<div class="ttc" id="protobuf-c_8c_html_a839f5a00dfd895de179af9d537aa3c43"><div class="ttname"><a href="protobuf-c_8c.html#a839f5a00dfd895de179af9d537aa3c43">FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2</a></div><div class="ttdeci">#define FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:2080</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a14b27841c76a2ea74b9177b709be140e"><div class="ttname"><a href="protobuf-c_8c.html#a14b27841c76a2ea74b9177b709be140e">BOUND_SIZEOF_SCANNED_MEMBER_LOG2</a></div><div class="ttdeci">#define BOUND_SIZEOF_SCANNED_MEMBER_LOG2</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:1331</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a839f5a00dfd895de179af9d537aa3c43"><div class="ttname"><a href="protobuf-c_8c.html#a839f5a00dfd895de179af9d537aa3c43">FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2</a></div><div class="ttdeci">#define FIRST_SCANNED_MEMBER_SLAB_SIZE_LOG2</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:1893</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="protobuf-c_8h.html#ae44d7db85770b0d68a5741349e265029">protobuf_c_message_unpack()</a>.</p>
 
@@ -3606,16 +3606,15 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">{</div>
-<div class="line">  <a class="code" href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a>,</div>
-<div class="line">  <a class="code" href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a>,</div>
-<div class="line">  NULL,</div>
-<div class="line">  8192,</div>
-<div class="line">  NULL</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    <a class="code" href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a>,</div>
+<div class="line">    <a class="code" href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    8192,</div>
+<div class="line">    NULL</div>
 <div class="line">}</div>
-<div class="ttc" id="protobuf-c_8c_html_a852323854e72b273234aee07966ea925"><div class="ttname"><a href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a></div><div class="ttdeci">static void * system_alloc(void *allocator_data, size_t size)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:103</div></div>
-<div class="ttc" id="protobuf-c_8c_html_a5617963612bbbad4a42a0276f393c75b"><div class="ttname"><a href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a></div><div class="ttdeci">static void system_free(void *allocator_data, void *data)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:115</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a852323854e72b273234aee07966ea925"><div class="ttname"><a href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a></div><div class="ttdeci">static void * system_alloc(void *allocator_data, size_t size)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:101</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a5617963612bbbad4a42a0276f393c75b"><div class="ttname"><a href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a></div><div class="ttdeci">static void system_free(void *allocator_data, void *data)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:112</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="protobuf-c_8h.html#af1cdf87e9105fb1517d2406a6ca14fbe">protobuf_c_message_free_unpacked()</a>, and <a class="el" href="protobuf-c_8h.html#ae44d7db85770b0d68a5741349e265029">protobuf_c_message_unpack()</a>.</p>
 
@@ -3644,16 +3643,15 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">{</div>
-<div class="line">  <a class="code" href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a>,</div>
-<div class="line">  <a class="code" href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a>,</div>
-<div class="line">  NULL,</div>
-<div class="line">  8192,</div>
-<div class="line">  NULL</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    <a class="code" href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a>,</div>
+<div class="line">    <a class="code" href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a>,</div>
+<div class="line">    NULL,</div>
+<div class="line">    8192,</div>
+<div class="line">    NULL</div>
 <div class="line">}</div>
-<div class="ttc" id="protobuf-c_8c_html_a852323854e72b273234aee07966ea925"><div class="ttname"><a href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a></div><div class="ttdeci">static void * system_alloc(void *allocator_data, size_t size)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:103</div></div>
-<div class="ttc" id="protobuf-c_8c_html_a5617963612bbbad4a42a0276f393c75b"><div class="ttname"><a href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a></div><div class="ttdeci">static void system_free(void *allocator_data, void *data)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:115</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a852323854e72b273234aee07966ea925"><div class="ttname"><a href="protobuf-c_8c.html#a852323854e72b273234aee07966ea925">system_alloc</a></div><div class="ttdeci">static void * system_alloc(void *allocator_data, size_t size)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:101</div></div>
+<div class="ttc" id="protobuf-c_8c_html_a5617963612bbbad4a42a0276f393c75b"><div class="ttname"><a href="protobuf-c_8c.html#a5617963612bbbad4a42a0276f393c75b">system_free</a></div><div class="ttdeci">static void system_free(void *allocator_data, void *data)</div><div class="ttdef"><b>Definition:</b> protobuf-c.c:112</div></div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf()</a>, <a class="el" href="osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc">osm_protobufdb_finish_block()</a>, <a class="el" href="osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28">osm_protobufdb_modify_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a833337735c381caa19116073d7b7d577">osm_protobufdb_modify_relation()</a>, <a class="el" href="osm__protobufdb_8c.html#a7594fedd426f2bd8a3e216f555b55506">osm_protobufdb_modify_way()</a>, <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>, <a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader()</a>, <a class="el" href="osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee">read_blob()</a>, and <a class="el" href="osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68">read_header()</a>.</p>
 

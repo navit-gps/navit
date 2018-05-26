@@ -226,7 +226,7 @@ Variables</h2></td></tr>
 <tr class="separator:afbc9fd6521f1f3c7f623dde0fe7bebd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bced267a3d076c21cfba540e3f4c97b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a4bced267a3d076c21cfba540e3f4c97b">ch_suffix</a> [] =&quot;r&quot;</td></tr>
 <tr class="separator:a4bced267a3d076c21cfba540e3f4c97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a713314f11517dd29053c8836a25ca149"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a713314f11517dd29053c8836a25ca149">experimental_feature_description</a> = &quot;Move coastline <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a> to order 6 tiles. Makes <a class="el" href="structmap.html">map</a> look more smooth, but may affect drawing/searching performance.&quot;</td></tr>
+<tr class="memitem:a713314f11517dd29053c8836a25ca149"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a713314f11517dd29053c8836a25ca149">experimental_feature_description</a></td></tr>
 <tr class="separator:a713314f11517dd29053c8836a25ca149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54e2108415a31c0d39887c1ae09d2c56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a54e2108415a31c0d39887c1ae09d2c56">experimental</a></td></tr>
 <tr class="separator:a54e2108415a31c0d39887c1ae09d2c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1388,11 +1388,13 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* experimental_feature_description = &quot;Move coastline <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a> to order 6 tiles. Makes <a class="el" href="structmap.html">map</a> look more smooth, but may affect drawing/searching performance.&quot;</td>
+          <td class="memname">char* experimental_feature_description</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Textual description of available experimental features, or NULL (=none available). </p>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    <span class="stringliteral">&quot;Move coastline data to order 6 tiles. Makes map look more smooth, but may affect drawing/searching performance.&quot;</span></div>
+</div><!-- fragment --><p>Textual description of available experimental features, or NULL (=none available). </p>
 
 <p>Referenced by <a class="el" href="maptool_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="maptool_8c.html#ad96d407a911fbb914fa8e4cfbf2faf0f">usage()</a>.</p>
 
@@ -1422,7 +1424,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        64*1024*1024,</div>
+<div class="line">    64*1024*1024,</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 <p>Referenced by <a class="el" href="osm_8c.html#a08beb6f898ae370f6a45f52b3d381f09">allocate_node_item_in_buffer()</a>, <a class="el" href="osm_8c.html#a35792faf148f5c8fee71cca00fe92617">clear_node_item_buffer()</a>, <a class="el" href="osm_8c.html#a9e537c7d63876ec943f9cd48300c3a4d">flush_nodes()</a>, <a class="el" href="osm_8c.html#a92d93496e7d9c5cbd543109e29cee001">node_buffer_to_hash()</a>, <a class="el" href="osm_8c.html#a15d515ba1cd262819e992e07f9e14b80">node_item_find_index_in_ordered_list()</a>, <a class="el" href="osm_8c.html#a67a051e34bd6d1b8a4f05038f778da64">node_item_get()</a>, <a class="el" href="osm_8c.html#ae71f3d48c70c87462aab963cab03823c">osm_add_node()</a>, and <a class="el" href="osm_8c.html#a4f9967fd452aed0c702c60ef97c1e2a8">remove_last_node_item_from_buffer()</a>.</p>
