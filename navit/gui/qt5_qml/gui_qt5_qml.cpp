@@ -68,7 +68,7 @@ struct gui_priv {
     /* list of callbacks to navit */
     struct callback_list* callbacks;
     /* own callbacks *
-	 * TODO: Why do we need them as members? */
+     * TODO: Why do we need them as members? */
     struct callback* button_cb;
     struct callback* motion_cb;
     struct callback* resize_cb;
@@ -96,8 +96,7 @@ struct gui_priv {
 #include "backend.h"
 
 static void
-gui_qt5_qml_button(void* data, int pressed, int button, struct point* p)
-{
+gui_qt5_qml_button(void* data, int pressed, int button, struct point* p) {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
 
     /* check if navit wants to handle this */
@@ -116,8 +115,7 @@ gui_qt5_qml_button(void* data, int pressed, int button, struct point* p)
 }
 
 static void
-gui_qt5_qml_motion(void* data, struct point* p)
-{
+gui_qt5_qml_motion(void* data, struct point* p) {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
     dbg(lvl_debug, "enter (%d, %d)", p->x, p->y);
     /* forward this to navit  */
@@ -125,8 +123,7 @@ gui_qt5_qml_motion(void* data, struct point* p)
 }
 
 static void
-gui_qt5_qml_resize(void* data, int w, int h)
-{
+gui_qt5_qml_resize(void* data, int w, int h) {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
     dbg(lvl_debug, "enter");
     /* forward this to navit */
@@ -134,8 +131,7 @@ gui_qt5_qml_resize(void* data, int w, int h)
 }
 
 static void
-gui_qml_keypress(void* data, char* key)
-{
+gui_qml_keypress(void* data, char* key) {
     struct gui_priv* this_ = (struct gui_priv*)data;
     int w, h;
     struct point p;
@@ -180,8 +176,7 @@ gui_qml_keypress(void* data, char* key)
 }
 
 static int
-gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
-{
+gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra) {
     struct transformation* trans;
     dbg(lvl_debug, "enter");
 
@@ -252,15 +247,13 @@ gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra)
 }
 
 static int
-gui_qt5_qml_get_attr(struct gui_priv* gui_priv, enum attr_type type, struct attr* attr)
-{
+gui_qt5_qml_get_attr(struct gui_priv* gui_priv, enum attr_type type, struct attr* attr) {
     dbg(lvl_debug, "enter");
     return 1;
 }
 
 static int
-gui_qt5_qml_set_attr(struct gui_priv* gui_priv, struct attr* attr)
-{
+gui_qt5_qml_set_attr(struct gui_priv* gui_priv, struct attr* attr) {
     dbg(lvl_debug, "enter");
     return 1;
 }
@@ -279,8 +272,7 @@ struct gui_methods gui_qt5_qml_methods = {
 };
 
 static struct gui_priv*
-gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs, struct gui* gui)
-{
+gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs, struct gui* gui) {
     struct gui_priv* gui_priv;
     struct attr* attr;
 
@@ -315,8 +307,7 @@ gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs
     return gui_priv;
 }
 
-void plugin_init(void)
-{
+void plugin_init(void) {
     Q_INIT_RESOURCE(gui_qt5_qml);
     plugin_register_category_gui("qt5_qml", gui_qt5_qml_new);
 }
