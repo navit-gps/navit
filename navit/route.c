@@ -1898,7 +1898,7 @@ route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct ve
     struct route_traffic_distortion result;
 
     if (!dir) {
-        dbg(lvl_warning, "dir is zero, assuming positive\n");
+        dbg(lvl_warning, "dir is zero, assuming positive");
         dir = 1;
     }
 
@@ -1965,7 +1965,7 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
     int ret;
     struct route_traffic_distortion dist,*distp=NULL;
     if (!dir) {
-        dbg(lvl_warning, "dir is zero, assuming positive\n");
+        dbg(lvl_warning, "dir is zero, assuming positive");
         dir = 1;
     }
     if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)

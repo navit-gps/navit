@@ -849,7 +849,7 @@ static void tm_destroy(struct map_priv *priv) {
  */
 static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct map_rect_priv * mr;
-    dbg(lvl_debug,"enter\n");
+    dbg(lvl_debug,"enter");
     mr=g_new0(struct map_rect_priv, 1);
     mr->mpriv = priv;
     mr->next_item = priv->items;
@@ -1023,7 +1023,7 @@ static int tm_type_set(void *priv_data, enum item_type type) {
     struct item_priv * ip = priv_data;
 
     if (!ip->mr || !ip->mr->item || (ip->mr->item->priv_data != priv_data)) {
-        dbg(lvl_error, "this function can only be called for the last item retrieved from its map rect\n");
+        dbg(lvl_error, "this function can only be called for the last item retrieved from its map rect");
         return 0;
     }
 
@@ -1756,7 +1756,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
     start_value = PENALTY_OFFROAD * transform_distance(projection_mg, c_start, c_dst);
     ret = NULL;
 
-    dbg(lvl_debug, "start flooding route graph, start_value=%d\n", start_value);
+    dbg(lvl_debug, "start flooding route graph, start_value=%d", start_value);
 
     for (i = 0; i < HASH_SIZE; i++) {
         p = rg->hash[i];
@@ -1776,7 +1776,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         if (!p) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
             break;
 
-        dbg(lvl_debug, "p=%p, value=%d\n", p, p->value);
+        dbg(lvl_debug, "p=%p, value=%d", p, p->value);
 
         min = p->value;
         p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
@@ -1784,7 +1784,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
             val = traffic_route_get_seg_cost(s, -1);
 
-            dbg(lvl_debug, "  negative segment, val=%d\n", val);
+            dbg(lvl_debug, "  negative segment, val=%d", val);
 
             if (val != INT_MAX) {
                 new = min + val;
@@ -1809,7 +1809,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         while (s) { /* Doing the same as above with the segments leading towards our point */
             val = traffic_route_get_seg_cost(s, 1);
 
-            dbg(lvl_debug, "  positive segment, val=%d\n", val);
+            dbg(lvl_debug, "  positive segment, val=%d", val);
 
             if (val != INT_MAX) {
                 new = min + val;
@@ -1871,12 +1871,12 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
     int is_ambiguous;
 
     if (end->seg) {
-        dbg(lvl_error, "end point cannot have a next segment\n");
+        dbg(lvl_error, "end point cannot have a next segment");
         return NULL;
     }
 
     if ((end != last->end) && (end != last->start)) {
-        dbg(lvl_error, "last segment must begin or end at end point\n");
+        dbg(lvl_error, "last segment must begin or end at end point");
         return NULL;
     }
 
@@ -1944,7 +1944,7 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
             break;
     }
     p->seg = NULL;
-    dbg(lvl_debug, "return, last=%p, ret=%p\n", last, ret);
+    dbg(lvl_debug, "return, last=%p, ret=%p", last, ret);
     return ret;
 }
 
@@ -2036,7 +2036,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
             s_prev = NULL;
         }
     }
-    dbg(lvl_debug, "return, start=%p, ret=%p\n", start, ret);
+    dbg(lvl_debug, "return, start=%p, ret=%p", start, ret);
     return ret;
 }
 
@@ -2139,7 +2139,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
             if (!(score = traffic_point_match_attributes(trpoint, item)))
                 continue;
 
-            dbg(lvl_debug, "adding item, score: %d\n", score);
+            dbg(lvl_debug, "adding item, score: %d", score);
 
             data = g_new0(struct point_data, 1);
             data->score = score;
@@ -2277,7 +2277,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     int is_junction;
 
     if (!data) {
-        dbg(lvl_error, "no data for segments, aborting\n");
+        dbg(lvl_error, "no data for segments, aborting");
         return 0;
     }
 
@@ -2290,7 +2290,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* get point triple and enclosing rectangle */
     endpoints = traffic_location_get_point_triple(this_->location, &coords[0]);
     if (!endpoints) {
-        dbg(lvl_error, "invalid location (mandatory points missing)\n");
+        dbg(lvl_error, "invalid location (mandatory points missing)");
         return 0;
     }
     traffic_location_set_enclosing_rect(this_->location, &coords[0]);
@@ -2388,7 +2388,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     if (val < minval) {
                         minval = val;
                         p_to = p_iter;
-                        dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
+                        dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d", p_iter, points_iter ? pd : NULL, val);
                     }
                 }
 
@@ -2455,7 +2455,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     if (val < minval) {
                         minval = val;
                         p_from = p_iter;
-                        dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d\n", p_iter, points_iter ? pd : NULL, val);
+                        dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d", p_iter, points_iter ? pd : NULL, val);
                     }
                 }
 
@@ -2519,7 +2519,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
             /* set first point to be the start point */
             if (p_from != p_start) {
-                dbg(lvl_debug, "changing p_start from %p to %p\n", p_start, p_from);
+                dbg(lvl_debug, "changing p_start from %p to %p", p_start, p_from);
             }
             p_start = p_from;
         }
@@ -2529,7 +2529,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         p_iter = p_start;
 
         if (!s)
-            dbg(lvl_error, "no segments\n");
+            dbg(lvl_error, "no segments");
 
         /* count segments and calculate length */
         count = 0;
@@ -2550,7 +2550,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         p_iter = p_start;
 
         if (this_->priv->items) {
-            dbg(lvl_error, "internal error: message should not yet have any linked items at this point\n");
+            dbg(lvl_error, "internal error: message should not yet have any linked items at this point");
         }
 
         this_->priv->items = g_new0(struct item *, count + 1);
@@ -2695,7 +2695,7 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
     char * timestamp = NULL;
 
     if (!this_) {
-        dbg(lvl_debug, "(null)\n");
+        dbg(lvl_debug, "(null)");
         return;
     }
 
@@ -2705,78 +2705,78 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
     points[3] = this_->location->not_via;
     points[4] = this_->location->to;
 
-    dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d\n",
+    dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d",
         this_->id, this_->is_cancellation, this_->is_forecast);
     if (this_->receive_time) {
         timestamp = time_to_iso8601(this_->receive_time);
-        dbg(lvl_debug, "  First received: %s (%ld)\n", timestamp, this_->receive_time);
+        dbg(lvl_debug, "  First received: %s (%ld)", timestamp, this_->receive_time);
         g_free(timestamp);
     }
     if (this_->update_time) {
         timestamp = time_to_iso8601(this_->update_time);
-        dbg(lvl_debug, "  Last updated:   %s (%ld)\n", timestamp, this_->update_time);
+        dbg(lvl_debug, "  Last updated:   %s (%ld)", timestamp, this_->update_time);
         g_free(timestamp);
     }
     if (this_->start_time) {
         timestamp = time_to_iso8601(this_->start_time);
-        dbg(lvl_debug, "  Start time:     %s (%ld)\n", timestamp, this_->start_time);
+        dbg(lvl_debug, "  Start time:     %s (%ld)", timestamp, this_->start_time);
         g_free(timestamp);
     }
     if (this_->end_time) {
         timestamp = time_to_iso8601(this_->end_time);
-        dbg(lvl_debug, "  End time:       %s (%ld)\n", timestamp, this_->end_time);
+        dbg(lvl_debug, "  End time:       %s (%ld)", timestamp, this_->end_time);
         g_free(timestamp);
     }
     if (this_->expiration_time) {
         timestamp = time_to_iso8601(this_->expiration_time);
-        dbg(lvl_debug, "  Expires:        %s (%ld)\n", timestamp, this_->expiration_time);
+        dbg(lvl_debug, "  Expires:        %s (%ld)", timestamp, this_->expiration_time);
         g_free(timestamp);
     }
 
     /* dump replaced message IDs */
-    dbg(lvl_debug, "  replaced_count=%d\n",
+    dbg(lvl_debug, "  replaced_count=%d",
         this_->replaced_count);
     for (i = 0; i < this_->replaced_count; i++) {
-        dbg(lvl_debug, "  Replaces: '%s'\n", this_->replaces[i]);
+        dbg(lvl_debug, "  Replaces: '%s'", this_->replaces[i]);
     }
 
     /* dump location */
-    dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'\n",
+    dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'",
         item_to_name(this_->location->road_type), this_->location->road_ref,
         this_->location->road_name);
-    dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'\n",
+    dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'",
         this_->location->directionality, this_->location->destination, this_->location->direction);
-    dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d\n",
+    dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d",
         location_fuzziness_to_string(this_->location->fuzziness),
         location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
         this_->location->tmc_direction);
     for (i = 0; i < 5; i++) {
         if (points[i]) {
-            dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f\n",
+            dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f",
                 point_names[i], points[i]->coord.lat, points[i]->coord.lng);
-            dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'\n",
+            dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'",
                 points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
         } else {
-            dbg(lvl_debug, "    %s: (null)\n",
+            dbg(lvl_debug, "    %s: (null)",
                 point_names[i]);
         }
     }
 
     /* dump events */
-    dbg(lvl_debug, "  event_count=%d\n",
+    dbg(lvl_debug, "  event_count=%d",
         this_->event_count);
     for (i = 0; i < this_->event_count; i++) {
-        dbg(lvl_debug, "  Event: event_class=%s, type=%s, length=%d m, speed=%d km/h\n",
+        dbg(lvl_debug, "  Event: event_class=%s, type=%s, length=%d m, speed=%d km/h",
             event_class_to_string(this_->events[i]->event_class),
             event_type_to_string(this_->events[i]->type),
             this_->events[i]->length, this_->events[i]->speed);
         /* TODO quantifier */
 
         /* dump supplementary information */
-        dbg(lvl_debug, "    si_count=%d\n",
+        dbg(lvl_debug, "    si_count=%d",
             this_->events[i]->si_count);
         for (j = 0; j < this_->events[i]->si_count; j++) {
-            dbg(lvl_debug, "    Supplementary Information: si_class=%s, type=%s\n",
+            dbg(lvl_debug, "    Supplementary Information: si_class=%s, type=%s",
                 si_class_to_string(this_->events[i]->si[j]->si_class),
                 si_type_to_string(this_->events[i]->si[j]->type));
             /* TODO quantifier */
@@ -3074,7 +3074,7 @@ static void traffic_set_shared(struct traffic *this_) {
     struct attr attr;
     struct traffic * traffic;
 
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
 
     if (!this_->shared) {
         iter = navit_attr_iter_new();
@@ -3342,12 +3342,12 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
             if (messages[i]->is_cancellation)
                 traffic_message_destroy(messages[i]);
         } else {
-            dbg(lvl_debug, "message is no longer valid, ignoring\n");
+            dbg(lvl_debug, "message is no longer valid, ignoring");
             traffic_message_destroy(messages[i]);
         }
 
     if (i)
-        dbg(lvl_debug, "processed %d message(s)\n", i);
+        dbg(lvl_debug, "processed %d message(s)", i);
 
     if (flags & PROCESS_MESSAGES_PURGE_EXPIRED) {
         /* find and remove expired messages */
@@ -3367,7 +3367,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                 traffic_message_destroy(stored_msg);
             }
 
-            dbg(lvl_debug, "%d message(s) expired\n", g_list_length(msgs_to_remove));
+            dbg(lvl_debug, "%d message(s) expired", g_list_length(msgs_to_remove));
 
             g_list_free(msgs_to_remove);
         }
@@ -3426,35 +3426,35 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 
     attr = attr_search(attrs, NULL, attr_type);
     if (!attr) {
-        dbg(lvl_error, "type missing\n");
+        dbg(lvl_error, "type missing");
         return NULL;
     }
-    dbg(lvl_debug, "type='%s'\n", attr->u.str);
+    dbg(lvl_debug, "type='%s'", attr->u.str);
     traffic_new = plugin_get_category_traffic(attr->u.str);
-    dbg(lvl_debug, "new=%p\n", traffic_new);
+    dbg(lvl_debug, "new=%p", traffic_new);
     if (!traffic_new) {
-        dbg(lvl_error, "wrong type '%s'\n", attr->u.str);
+        dbg(lvl_error, "wrong type '%s'", attr->u.str);
         return NULL;
     }
     this_ = (struct traffic *) navit_object_new(attrs, &traffic_func, sizeof(struct traffic));
     if (parent->type == attr_navit)
         this_->navit = parent->u.navit;
     else {
-        dbg(lvl_error, "wrong parent type '%s', only navit is permitted\n", attr_to_name(parent->type));
+        dbg(lvl_error, "wrong parent type '%s', only navit is permitted", attr_to_name(parent->type));
         navit_object_destroy((struct navit_object *) this_);
         return NULL;
     }
 
     this_->priv = traffic_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
-    dbg(lvl_debug, "get_messages=%p\n", this_->meth.get_messages);
-    dbg(lvl_debug, "priv=%p\n", this_->priv);
+    dbg(lvl_debug, "get_messages=%p", this_->meth.get_messages);
+    dbg(lvl_debug, "priv=%p", this_->priv);
     if (!this_->priv) {
-        dbg(lvl_error, "plugin initialization failed\n");
+        dbg(lvl_error, "plugin initialization failed");
         navit_object_destroy((struct navit_object *) this_);
         return NULL;
     }
     navit_object_ref((struct navit_object *) this_);
-    dbg(lvl_debug,"return %p\n", this_);
+    dbg(lvl_debug,"return %p", this_);
 
     // TODO do this once and cycle through all plugins
     this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
@@ -3609,7 +3609,7 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
     if (!state->is_valid)
         return;
 
-    dbg(lvl_debug, "OPEN: %s\n", tag_name);
+    dbg(lvl_debug, "OPEN: %s", tag_name);
 
     if (!g_ascii_strcasecmp((char *) tag_name, "supplementary_info")) {
         state->si = g_list_append(state->si, traffic_suppl_info_new(
@@ -3663,7 +3663,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     float lat, lon;
 
     if (state->is_valid) {
-        dbg(lvl_debug, "  END:  %s\n", tag_name);
+        dbg(lvl_debug, "  END:  %s", tag_name);
 
         if (!g_ascii_strcasecmp((char *) tag_name, "message")) {
             count = g_list_length(state->events);
@@ -3689,7 +3689,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           count,
                                           (struct traffic_event **) children);
             if (!traffic_message_is_valid(message)) {
-                dbg(lvl_error, "malformed message detected, skipping\n");
+                dbg(lvl_error, "malformed message detected, skipping");
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -3773,7 +3773,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                            traffic_xml_get_attr("junction_ref", el->names, el->values),
                                            traffic_xml_get_attr("tmc_id", el->names, el->values));
             } else {
-                dbg(lvl_error, "%s has no valid lat/lon pair, skipping\n", tag_name);
+                dbg(lvl_error, "%s has no valid lat/lon pair, skipping", tag_name);
             }
         }
     }
@@ -3797,7 +3797,7 @@ static void traffic_xml_text(xml_context *dummy, const char *text, gsize len, vo
     char * text_sz = g_strndup(text, len);
     struct xml_element * el = state->tagstack ? (struct xml_element *) state->tagstack->data : NULL;
 
-    dbg(lvl_debug, " TEXT: '%s'\n", text_sz);
+    dbg(lvl_debug, " TEXT: '%s'", text_sz);
     if (state->is_valid && state->is_opened) {
         /* this will work only for leaf nodes, which is not an issue at the moment as the only nodes
          * with actual text data are leaf nodes */
@@ -4513,7 +4513,7 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
 }
 
 void traffic_init(void) {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
     plugin_register_category_map("traffic", traffic_map_new);
 }
 
