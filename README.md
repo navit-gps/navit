@@ -42,7 +42,7 @@ You can help translating via our web based translation page:
 For help or more information, please refer to the wiki:
  http://wiki.navit-project.org
 
-If you don't know where to start, we recommend you to read the 
+If you don't know where to start, we recommend you to read the
 Interactive Help : http://wiki.navit-project.org/index.php/Interactive_help
 
 

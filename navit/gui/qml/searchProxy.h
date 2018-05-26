@@ -52,7 +52,7 @@ public:
 				search_list_search(this->sl, &search_attr, 0);
 				while((res=search_list_get_result(this->sl)));
 			}
-		}		
+		}
 	}
 	~NGQProxySearch() {
 		search_list_destroy(this->sl);
@@ -131,7 +131,7 @@ public slots:
 				}
 				if (res->town->common.district_name) {
 					entry.appendChild(this->_fieldValueHelper(retDoc,QString("name"), QString::fromLocal8Bit(res->town->common.district_name)));
-				} 
+				}
 			}
 			if (this->search_context=="street") {
 				entry.appendChild(this->_fieldValueHelper(retDoc,QString("id"), QString::number(counter)));
@@ -150,8 +150,8 @@ public slots:
 		this->country_name=countryName;
 		struct attr attr;
 		struct search_list_result *res;
-		
-		//We need to update ISO2 
+
+		//We need to update ISO2
 		attr.type=attr_country_name;
 		attr.u.str=countryName.toLocal8Bit().data();
 		search_list_search(this->sl,&attr,0);
@@ -183,7 +183,7 @@ public slots:
 		attr.type=attr_town_or_district_name;
 		attr.u.str=townName.toLocal8Bit().data();
 		search_list_search(this->sl,&attr,0);
-     
+
 		//...and street
 		this->street_name="";
 

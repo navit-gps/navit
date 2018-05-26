@@ -87,7 +87,7 @@ struct coord_geo {
 	navit_float lat; /*!< Latitude */
 };
 
-//! A cartesian coordinate 
+//! A cartesian coordinate
 struct coord_geo_cart {
 	navit_float x; /*!< X-Value */
 	navit_float y; /*!< Y-Value */
@@ -98,7 +98,7 @@ struct coord_geo_cart {
  * An enumeration of formats for printing geographic coordinates in.
  *
  */
-enum coord_format 
+enum coord_format
 {
 	/**
 	 * Degrees with decimal places.
@@ -115,7 +115,7 @@ enum coord_format
 	 * Degrees, minutes and seconds.
 	 * ie 20 30 30.00 N 110 30 30 E
 	 */
-	DEGREES_MINUTES_SECONDS	
+	DEGREES_MINUTES_SECONDS
 };
 
 enum projection;

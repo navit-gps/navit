@@ -4,7 +4,7 @@
 	$bbox=split(',',urldecode($HTTP_GET_VARS['bbox']));
 	if (count($bbox) == 4) {
 		$mapextract = new mapExtract();
-		$mapextract->setBbox($bbox[0], $bbox[1], $bbox[2], $bbox[3]);		
+		$mapextract->setBbox($bbox[0], $bbox[1], $bbox[2], $bbox[3]);
 		$fp=fopen('php://output','w');
 		$mapextract->setInput('../../planet.bin');
 		$mapextract->setOutputFD($fp);
@@ -13,7 +13,7 @@
 		else
 			header('Content-Type: application/octet-stream');
 		$name='osm_bbox_';
-		$name.=round($bbox[0],1) . ',' . round($bbox[1],1) . ','; 
+		$name.=round($bbox[0],1) . ',' . round($bbox[1],1) . ',';
 		$name.=round($bbox[2],1) . ',' . round($bbox[3],1);
 		$name.='.bin';
 		header("Content-disposition: attachment; filename=\"$name\"");
@@ -37,6 +37,6 @@
 			$urlf=$url . "?bbox=$bbox";
 			echo "$area <a href='$urlf'>$urlf</a><br />\n";
 		}
-		
+
 	}
 ?>

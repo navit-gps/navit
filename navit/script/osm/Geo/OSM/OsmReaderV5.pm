@@ -26,7 +26,7 @@ use constant STATE_EXPECT_BODY => 4;
 
 # With this initialiser, your process will get called with instantiated objects
 sub init
-{ 
+{
   my $obj = bless{}, shift;
   my $proc = shift;
   my $prog = shift;
@@ -41,7 +41,7 @@ sub init
 sub _process
 {
   my($self, $entity, $attr, $tags, $members) = @_;
-  
+
   my $ent;
   if( $entity eq "node" )
   {
@@ -65,7 +65,7 @@ sub load($)
   my ($self, $file_name) = @_;
 
   $self->{state} = STATE_INIT;
-  
+
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     my $fh = data_open($file_name);
@@ -94,7 +94,7 @@ sub parse($)
   my ($self, $string) = @_;
 
   $self->{state} = STATE_INIT;
-  
+
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     $self->{input_length} = length($string);
@@ -119,14 +119,14 @@ sub parse($)
 # Function is called whenever an XML tag is started
 sub DoStart
 {
-#print @_,"\n";   
+#print @_,"\n";
   my ($self, $Expat, $Name, %Attr) = @_;
 
   if( $self->{state} == STATE_INIT )
   {
     if($Name eq "osm"){
       $self->{state} = STATE_EXPECT_ENTITY;
-      
+
       if( $Attr{version} ne "0.5" )
       { die "OsmReaderV5 can only read 0.5 files, found '$Attr{version}'\n" }
     } else {
@@ -209,7 +209,7 @@ OsmReaderV5 - Module for reading OpenStreetMap V5 XML data files
 
   my $OSM = new Geo::OSM::OsmReader(\&process);
   $OSM->load("Data/changes.osc");
-  
+
   sub process
   {
     my($OSM, $entity) = @_;

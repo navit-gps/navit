@@ -21,12 +21,12 @@ git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=for
     IFS=';'; arrLine=($line); unset IFS;
     author=${arrLine[1]}
     commitDate=`date +%s --date="${arrLine[0]}"`
-  
+
     # Exclude circleci
     if [[ $author =~ [Cc]ircle\s*[Cc][Ii] ]]; then
       continue
     fi
-  
+
     # indicates that the commits are now older than 2 years so we print the
     # sorted list of active contributors and reset the authors array
     if [ "$retiredTitleWritten" = false ]; then
@@ -38,7 +38,7 @@ git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=for
         retiredTitleWritten=true
       fi
     fi
-  
+
     # using the map as an easy way to check if the author has already been listed
     if [ -z "${CONTRIBUTORS[${author}]}" ]; then
       CONTRIBUTORS[${author}]=${arrLine[0]}

@@ -10,14 +10,14 @@ Item {
             color: "#ff0000"
             radius: 2
             border.width: 1
-    
+
             Image {
                 id: image1
                 height: parent.height - 4;
                 source : model.modelData.active ? "icons/appbar.layer.svg" : "icons/appbar.layer.delete.svg"
                 opacity: model.modelData.active ? 1 : 0.4
             }
-    
+
             Text {
                 width: 128
                 id: distanceText
@@ -27,7 +27,7 @@ Item {
                 anchors.left: image1.right
                 anchors.leftMargin: 8
             }
-    
+
             Text {
                 text: name
                 color: "#ffffff"
@@ -35,7 +35,7 @@ Item {
                 anchors.left: distanceText.right
                 anchors.leftMargin: 8
             }
-    
+
             MouseArea{
                 anchors.fill: parent
                 hoverEnabled: true
@@ -44,7 +44,7 @@ Item {
                 }
             }
         }
-    
+
         Component.onCompleted: backend.get_pois()
     }
 

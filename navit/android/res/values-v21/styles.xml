@@ -24,22 +24,22 @@
     <style name="NavitTheme" parent="NavitBaseTheme">
 
         <!-- API 21 theme customizations can go here. -->
-        
+
         <!--
             Don't use translucent system bars on API 21 as they are drawn with a semitransparent
             black background which can't be changed.
         -->
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">false</item>
-        
-        <!-- 
+
+        <!--
             We could set any semi-transparent color here (or change it in code), but this would not
             be available on API 19/20. Simply specifying full transparency allows us to implement a
-            separate mechanism that will work on all versions. 
+            separate mechanism that will work on all versions.
         -->
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        
+
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 

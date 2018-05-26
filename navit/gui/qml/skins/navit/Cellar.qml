@@ -3,14 +3,14 @@ import "pagenavigation.js" as Navit
 
 Rectangle {
 
-    function onStartup(currentPage) {    
+    function onStartup(currentPage) {
 	btnBack.opacity=0;
 	btnQuit.opacity=0;
        	if ( gui.lengthPage() > 1  ) {
 		btnBack.opacity=1;
 	}
 	if ( gui.lengthPage() == 1 && currentPage == "PageMain.qml" ) {
-		btnQuit.opacity=1;		
+		btnQuit.opacity=1;
 	}
     }
 
