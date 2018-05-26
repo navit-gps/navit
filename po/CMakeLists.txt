@@ -52,7 +52,7 @@ ADD_CUSTOM_COMMAND(
    COMMAND ${XGETTEXT} --no-location --default-domain=navit_tmp --add-comments --keyword=_ --keyword=_n --keyword=navit_nls_gettext --keyword=navit_nls_ngettext:1,2 ${POTFILES}
    COMMAND ${CMAKE_COMMAND} -DMATCHES="CHARSET" -DREPLACE="utf-8"
                             -DSRC=${CMAKE_CURRENT_BINARY_DIR}/navit_tmp.po -DDST=${CMAKE_CURRENT_BINARY_DIR}/navit.pot
-                            -P ${PROJECT_SOURCE_DIR}/cmake/replace.cmake 
+                            -P ${PROJECT_SOURCE_DIR}/cmake/replace.cmake
 )
 
 FILE(GLOB POIN_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.po.in")
@@ -73,8 +73,8 @@ foreach (LANG ${LANGUAGES})
    ADD_CUSTOM_COMMAND(
       OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${LANG}.mo
       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po
-      COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check --verbose --statistics --output-file="${CMAKE_CURRENT_BINARY_DIR}/${LANG}.mo" "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po" 
-      COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_BINARY_DIR}/locale/${LANG}/LC_MESSAGES" 
+      COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check --verbose --statistics --output-file="${CMAKE_CURRENT_BINARY_DIR}/${LANG}.mo" "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.po"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_BINARY_DIR}/locale/${LANG}/LC_MESSAGES"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.mo" "${PROJECT_BINARY_DIR}/locale/${LANG}/LC_MESSAGES/navit.mo"
    )
    SET(MOFILES ${CMAKE_CURRENT_BINARY_DIR}/${LANG}.mo ${MOFILES})

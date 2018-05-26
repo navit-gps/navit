@@ -75,7 +75,7 @@ mkdir navit-build
 %build
 %define debug_package %{nil}
 %{__rm} -rf %{buildroot}
-#cmake git files directly 
+#cmake git files directly
 cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DPACKAGE:STRING=harbour-navit \
        -DNAVIT_BINARY:STRING=harbour-navit \
@@ -99,7 +99,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
          %{navit_real_source}
 %{__make}
 
-#       -DMAN_DIR:PATH=share/harbour-navit/man1 
+#       -DMAN_DIR:PATH=share/harbour-navit/man1
 
 %install
 %make_install
@@ -144,7 +144,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 *Mon Apr 10 2017 metalstrolch 0.5.1-1
 - Almost harbour valid
 
-*Mon Dec 14 2015 metalstrolch 0.5.1-0 
+*Mon Dec 14 2015 metalstrolch 0.5.1-0
 - Initial sailfish release
 - Initial package.
 

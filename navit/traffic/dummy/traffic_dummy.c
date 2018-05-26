@@ -44,8 +44,8 @@
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-	struct navit * nav;         /*!< The navit instance */
-	int reports_requested;      /*!< How many reports have been requested */
+    struct navit * nav;         /*!< The navit instance */
+    int reports_requested;      /*!< How many reports have been requested */
 };
 
 struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_);
@@ -73,87 +73,87 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
  * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
  */
 struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_) {
-	struct traffic_message ** messages;
-	struct traffic_point * from;
-	struct traffic_point * to;
-	struct traffic_point * at;
-	struct traffic_point * via;
-	struct traffic_location * location;
+    struct traffic_message ** messages;
+    struct traffic_point * from;
+    struct traffic_point * to;
+    struct traffic_point * at;
+    struct traffic_point * via;
+    struct traffic_location * location;
 
-	this_->reports_requested++;
+    this_->reports_requested++;
 
-	switch (this_->reports_requested) {
-	case 10:
-		messages = g_new0(struct traffic_message *, 6);
+    switch (this_->reports_requested) {
+    case 10:
+        messages = g_new0(struct traffic_message *, 6);
 
-		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
-		to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
-		location = traffic_location_new(NULL, from, to, NULL, NULL, "Nürnberg", NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
-		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
+        from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
+        to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
+        location = traffic_location_new(NULL, from, to, NULL, NULL, "Nürnberg", NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
+        messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL), time(NULL),
+                      time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_queue);
 
-		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
-		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
-		location = traffic_location_new(NULL, from, to, NULL, NULL, "München", NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
-		messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+        from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
+        to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
+        location = traffic_location_new(NULL, from, to, NULL, NULL, "München", NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
+        messages[1] = traffic_message_new_single_event("dummy:A96-36b-38", time(NULL), time(NULL),
+                      time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 
-		from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
-		to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
-		via = traffic_point_new(11.5728, 48.178, "Petueltunnel", NULL, "29829");
-		location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", 1);
-		messages[2] = traffic_message_new_single_event("dummy:B2R-N", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+        from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
+        to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
+        via = traffic_point_new(11.5728, 48.178, "Petueltunnel", NULL, "29829");
+        location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", 1);
+        messages[2] = traffic_message_new_single_event("dummy:B2R-N", time(NULL), time(NULL),
+                      time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 
-		from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
-		to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
-		via = traffic_point_new(11.55085, 48.11225, "Brudermühltunnel", NULL, "35329");
-		location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", -1);
-		messages[3] = traffic_message_new_single_event("dummy:B2R-S", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+        from = traffic_point_new(11.6143, 48.15255, "Effnertunnel", NULL, "60922");
+        to = traffic_point_new(11.53225, 48.13255, "Trappentreutunnel", NULL, "35333");
+        via = traffic_point_new(11.55085, 48.11225, "Brudermühltunnel", NULL, "35329");
+        location = traffic_location_new(NULL, from, to, via, NULL, NULL, NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_line_unspecified, NULL, "B2R", "58:1", -1);
+        messages[3] = traffic_message_new_single_event("dummy:B2R-S", time(NULL), time(NULL),
+                      time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
 
-		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12727+5");
-		at = traffic_point_new(11.6405, 48.2435, "Garching-Süd", "71", "12727");
-		location = traffic_location_new(at, from, NULL, NULL, NULL, NULL, NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", 1);
-		messages[4] = traffic_message_new_single_event("dummy:A9-71-S", time(NULL), time(NULL),
-				time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
-		break;
+        from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12727+5");
+        at = traffic_point_new(11.6405, 48.2435, "Garching-Süd", "71", "12727");
+        location = traffic_location_new(at, from, NULL, NULL, NULL, NULL, NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", 1);
+        messages[4] = traffic_message_new_single_event("dummy:A9-71-S", time(NULL), time(NULL),
+                      time(NULL) + 86400, 0, location, event_class_congestion, event_congestion_slow_traffic);
+        break;
 
-	case 20:
-		messages = g_new0(struct traffic_message *, 4);
+    case 20:
+        messages = g_new0(struct traffic_message *, 4);
 
-		from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
-		to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
-		location = traffic_location_new(NULL, from, to, NULL, NULL, "Nürnberg", NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
-		messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL) - 10, time(NULL),
-				time(NULL) + 10, 0, location, event_class_congestion, event_congestion_queue);
+        from = traffic_point_new(11.6208, 48.3164, "Neufahrn", "68", "12732-4");
+        to = traffic_point_new(11.5893, 48.429, "Allershausen", "67", "12732");
+        location = traffic_location_new(NULL, from, to, NULL, NULL, "Nürnberg", NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A9", "58:1", -1);
+        messages[0] = traffic_message_new_single_event("dummy:A9-68-67", time(NULL) - 10, time(NULL),
+                      time(NULL) + 10, 0, location, event_class_congestion, event_congestion_queue);
 
-		from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
-		to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
-		location = traffic_location_new(NULL, from, to, NULL, NULL, "München", NULL, location_dir_one,
-				location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
-		messages[1] = traffic_message_new_cancellation("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
-				time(NULL) + 10, location);
-		break;
+        from = traffic_point_new(11.4481, 48.1266, "Gräfelfing", "36b", "12961-2");
+        to = traffic_point_new(11.5028, 48.1258, "München-Laim", "38", "12961");
+        location = traffic_location_new(NULL, from, to, NULL, NULL, "München", NULL, location_dir_one,
+                                        location_fuzziness_low_res, location_ramps_none, type_highway_land, NULL, "A96", "58:1", -1);
+        messages[1] = traffic_message_new_cancellation("dummy:A96-36b-38", time(NULL) - 10, time(NULL),
+                      time(NULL) + 10, location);
+        break;
 
-	default:
-		return NULL;
-	}
+    default:
+        return NULL;
+    }
 
-	return messages;
+    return messages;
 }
 
 /**
  * @brief The methods implemented by this plugin
  */
 static struct traffic_methods traffic_dummy_meth = {
-		traffic_dummy_get_messages,
+    traffic_dummy_get_messages,
 };
 
 /**
@@ -167,15 +167,15 @@ static struct traffic_methods traffic_dummy_meth = {
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
 static struct traffic_priv * traffic_dummy_new(struct navit *nav, struct traffic_methods *meth,
-		struct attr **attrs, struct callback_list *cbl) {
-	struct traffic_priv *ret;
+        struct attr **attrs, struct callback_list *cbl) {
+    struct traffic_priv *ret;
 
-	dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter\n");
 
-	ret = g_new0(struct traffic_priv, 1);
-	*meth = traffic_dummy_meth;
+    ret = g_new0(struct traffic_priv, 1);
+    *meth = traffic_dummy_meth;
 
-	return ret;
+    return ret;
 }
 
 /**
@@ -184,7 +184,7 @@ static struct traffic_priv * traffic_dummy_new(struct navit *nav, struct traffic
  * This function is called once on startup.
  */
 void plugin_init(void) {
-	dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter\n");
 
-	plugin_register_category_traffic("dummy", traffic_dummy_new);
+    plugin_register_category_traffic("dummy", traffic_dummy_new);
 }

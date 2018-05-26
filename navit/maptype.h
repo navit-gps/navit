@@ -26,7 +26,7 @@ enum projection;
 struct maptype {
 	char *name;
 	struct map_priv *(*map_new)(struct map_methods *meth, char *data, char **charset, enum projection *pro);
-	struct maptype *next;	
+	struct maptype *next;
 };
 
 /* prototypes */

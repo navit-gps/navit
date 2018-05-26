@@ -13,7 +13,7 @@
 
 	<!-- OPTIONS MENU -->
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	
+
 	<!--  Backup Restore -->
 	<string-array name="dialog_backup_restore_items">
 		<item >@string/backup</item>

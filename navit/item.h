@@ -51,7 +51,7 @@ extern int default_flags[];
 #define item_is_town(item) ((item).type >= type_town_label && (item).type <= type_district_label_1e7)
 #define item_is_district(item) ((item).type >= type_district_label && (item).type <= type_district_label_1e7)
 #define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
-#define item_is_point(item) ((item).type < type_line) 
+#define item_is_point(item) ((item).type < type_line)
 #define item_is_custom_poi(item) ((item).type >= type_poi_customg && (item).type < type_line)
 #define item_is_street(item) (((item).type >= type_street_nopass && (item).type <= type_roundabout) \
                                ||  (item).type == type_street_service \

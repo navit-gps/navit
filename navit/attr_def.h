@@ -19,7 +19,7 @@
 
 /** @file attr_def.h
  * @brief Attribute definitions.
- * 
+ *
  * Any attribute used by a Navit object must be defined in this file.
  *
  * @author Navit Team

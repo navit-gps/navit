@@ -46,7 +46,7 @@
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-	struct navit * nav;         /*!< The navit instance */
+    struct navit * nav;         /*!< The navit instance */
 };
 
 struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_);
@@ -57,14 +57,14 @@ struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_)
  * @return Always `NULL`
  */
 struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_) {
-	return NULL;
+    return NULL;
 }
 
 /**
  * @brief The methods implemented by this plugin
  */
 static struct traffic_methods traffic_null_meth = {
-		traffic_null_get_messages,
+    traffic_null_get_messages,
 };
 
 /**
@@ -78,15 +78,15 @@ static struct traffic_methods traffic_null_meth = {
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
 static struct traffic_priv * traffic_null_new(struct navit *nav, struct traffic_methods *meth,
-		struct attr **attrs, struct callback_list *cbl) {
-	struct traffic_priv *ret;
+        struct attr **attrs, struct callback_list *cbl) {
+    struct traffic_priv *ret;
 
-	dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter\n");
 
-	ret = g_new0(struct traffic_priv, 1);
-	*meth = traffic_null_meth;
+    ret = g_new0(struct traffic_priv, 1);
+    *meth = traffic_null_meth;
 
-	return ret;
+    return ret;
 }
 
 /**
@@ -95,7 +95,7 @@ static struct traffic_priv * traffic_null_new(struct navit *nav, struct traffic_
  * This function is called once on startup.
  */
 void plugin_init(void) {
-	dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter\n");
 
-	plugin_register_category_traffic("null", traffic_null_new);
+    plugin_register_category_traffic("null", traffic_null_new);
 }

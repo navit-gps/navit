@@ -18,11 +18,11 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
 
 	tar xfz /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz --no-same-owner -C /usr/local/share/
 	export PATH=/usr/local/share/cov-analysis-linux64-${COVERITY_VERSION}/bin:$PATH
-	
+
 	cmake ${cmake_opts} ../
 	cov-build --dir cov-int make -j $(nproc --all)
 	tar czvf navit.tgz cov-int
-	
+
 	curl --form token=$COVERITY_TOKEN \
   --form email=$COVERITY_EMAIL \
   --form file=@navit.tgz \

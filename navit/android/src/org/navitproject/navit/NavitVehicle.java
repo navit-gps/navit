@@ -39,7 +39,7 @@ import java.util.List;
 
 
 public class NavitVehicle {
-    
+
     private static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
 
     public static Location lastLocation = null;
@@ -68,11 +68,11 @@ public class NavitVehicle {
                 sLocationManager.removeUpdates(fastLocationListener);
                 fastProvider = null;
             }
-            
+
             VehicleCallback(vehicle_pcbid, location);
             VehicleCallback(vehicle_fcbid, 1);
         }
-        public void onProviderDisabled(String provider){}
+        public void onProviderDisabled(String provider) {}
         public void onProviderEnabled(String provider) {}
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
@@ -81,9 +81,9 @@ public class NavitVehicle {
          */
         public void onGpsStatusChanged (int event) {
             if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            return;
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                return;
             }
             GpsStatus status = sLocationManager.getGpsStatus(null);
             int satsInView = 0;
@@ -97,7 +97,7 @@ public class NavitVehicle {
             }
             VehicleCallback(vehicle_scbid, satsInView, satsUsed);
         }
-        
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GPS_FIX_CHANGE)) {
@@ -111,7 +111,7 @@ public class NavitVehicle {
 
     /**
      * @brief Creates a new {@code NavitVehicle}
-     * 
+     *
      * @param context
      * @param pcbid The address of the position callback function which will be called when a location update is received
      * @param scbid The address of the status callback function which will be called when a status update is received

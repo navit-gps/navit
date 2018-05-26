@@ -8,7 +8,7 @@ Item {
         width: parent.width
         y: topBar.height
         height: parent.height - ( topBar.height + bottomBar.height )
-        
+
         Loader {
             id: menucontent
             width: parent.width

@@ -187,7 +187,7 @@ if (NOT DISABLE_QT)
     # and actually requires all components to be installed. Maybe this can
     # be fixed later...
     find_package(Qt4 4.7 COMPONENTS QtCore OPTIONAL_COMPONENTS QtGui QtXml QtDeclarative QtSvg)
-  endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)      
+  endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)
 endif (NOT DISABLE_QT)
 
 #pkg-config based detection
@@ -364,7 +364,7 @@ endif ()
 if (Qt5Positioning_FOUND)
    set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
 		${Qt5Positioning_LIBRARIES}
-		${Qt5Sensors_LIBRARIES}) 
+		${Qt5Sensors_LIBRARIES})
 endif ()
 if(GTK2_FOUND)
    # Include gtk.h with "SYSTEM" to avoid GCC compiler warning for gtkitemfactory.h.
@@ -687,7 +687,7 @@ if(ANDROID)
    message(STATUS "Using generator "${CMAKE_GENERATOR})
    if (NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
      find_program(ANDROID_LOCATION NAMES android android.bat)
-     find_program(ANT_LOCATION NAMES ant) 
+     find_program(ANT_LOCATION NAMES ant)
      if (NOT ANT_LOCATION)
        message_error("Could not find ant. Please install ant and add it to the search path.")
      else()

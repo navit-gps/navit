@@ -39,7 +39,7 @@ Rectangle {
 	}
 	MouseArea {
 		anchors.fill: parent
-		onReleased: { knob.x=mouse.x-15; slider.value=Math.round(fromSlider(knob.x)); slider.changed(); } 
+		onReleased: { knob.x=mouse.x-15; slider.value=Math.round(fromSlider(knob.x)); slider.changed(); }
 	}
 
 	radius: 8; opacity: 0.7

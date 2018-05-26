@@ -24,7 +24,7 @@ Courier New.
 
 3.2 Build from the source
 
-  Change into directory liberation-fonts-[VERSION]/ and build from sources by 
+  Change into directory liberation-fonts-[VERSION]/ and build from sources by
   following commands:
 
     $ cd liberation-fonts-[VERSION]
@@ -42,7 +42,7 @@ Courier New.
 4. Usage
 ========
 
-The fonts should be installed and detected by the system after installation. 
+The fonts should be installed and detected by the system after installation.
 
 
 5. License

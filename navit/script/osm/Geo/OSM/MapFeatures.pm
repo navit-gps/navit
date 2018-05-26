@@ -49,7 +49,7 @@ sub load($;$){
 	return;
     }
     my $self = XMLin($fh);
-    
+
     if (not $self) {
 	print STDERR "WARNING: Could not parse osm data from $filename\n";
 	return;
@@ -61,7 +61,7 @@ sub load($;$){
     #warn Dumper(\$self->{rule});
     #warn Dumper(keys %{$self});
     #warn Dumper(%{$self});
-    
+
     bless($self,$class);
     return $self;
 }
@@ -97,7 +97,7 @@ sub load_icons($$){
 		last;
 	    }
 	}
-	
+
 	if ( ! $rule->{png} ) {
 	    warn "missing $img\n";
 	}
@@ -139,7 +139,7 @@ sub get_icons($$$){
 
 	my $condition = $rule->{condition};
 #	print STDERR "condition: $condition->{k}=$condition->{v}\n";
-	if ( defined ( $attr{scale_max}) && 
+	if ( defined ( $attr{scale_max}) &&
 	     $scale > $attr{scale_max}) {
 	    next;
 	}
@@ -150,7 +150,7 @@ sub get_icons($$$){
 	    print STDERR "get_icon() image: $img\t";
 	    $png = $rule->{png};
 	}
-	
+
 	return $png if $png;
     }
     return undef;

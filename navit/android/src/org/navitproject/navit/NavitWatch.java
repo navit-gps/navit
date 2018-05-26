@@ -42,8 +42,7 @@ public class NavitWatch implements Runnable {
     public native void poll(int func, int fd, int cond);
     public native void WatchCallback(int id);
 
-    NavitWatch(int func, int fd, int cond, int callbackid) 
-    {
+    NavitWatch(int func, int fd, int cond, int callbackid) {
         // Log.e("NavitWatch","Creating new thread for "+fd+" "+cond+" from current thread " + java.lang.Thread.currentThread().getName());
         watch_func=func;
         watch_fd=fd;
@@ -51,16 +50,14 @@ public class NavitWatch implements Runnable {
         watch_callbackid=callbackid;
         final NavitWatch navitwatch=this;
         callback_runnable = new Runnable() {
-            public void run()
-            {
+            public void run() {
                 navitwatch.callback();
             }
         };
         thread = new Thread(this, "poll thread");
         thread.start();
     }
-    public void run()
-    {
+    public void run() {
         for (;;) {
             // Log.e("NavitWatch","Polling "+watch_fd+" "+watch_cond + " from " + java.lang.Thread.currentThread().getName());
             poll(watch_func, watch_fd, watch_cond);
@@ -68,11 +65,11 @@ public class NavitWatch implements Runnable {
             if (removed)
                 break;
             callback_pending=true;
-            handler.post(callback_runnable);    
+            handler.post(callback_runnable);
             try {
                 // Log.e("NavitWatch","wait");
                 synchronized(this) {
-                    if (callback_pending) 
+                    if (callback_pending)
                         this.wait();
                 }
                 // Log.e("NavitWatch","wait returned");
@@ -83,8 +80,7 @@ public class NavitWatch implements Runnable {
                 break;
         }
     }
-    public void callback()
-    {
+    public void callback() {
         // Log.e("NavitWatch","Calling Callback");
         if (!removed)
             WatchCallback(watch_callbackid);
@@ -94,8 +90,7 @@ public class NavitWatch implements Runnable {
             this.notify();
         }
     }
-    public void remove()
-    {
+    public void remove() {
         removed=true;
         thread.interrupt();
     }

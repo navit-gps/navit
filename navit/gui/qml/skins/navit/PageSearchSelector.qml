@@ -40,15 +40,15 @@ Rectangle {
 	  }
           page.opacity = 1;
       }
-    
-      Component.onCompleted: pageOpen();    
-    
+
+      Component.onCompleted: pageOpen();
+
       Behavior on opacity {
           NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
       }
 
      TextInput{
-     	  id: searchTxt; 
+     	  id: searchTxt;
 	  anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	  width: page.width; font.pointSize: 14; color: "White";focus: true; readOnly: false; cursorVisible: true;
      }
@@ -78,8 +78,8 @@ Rectangle {
 			id: imgIcon; source: gui.iconPath+itemIcon
 			width: 20; height: 20;
 		}
-                Text { 
-		    id: txtItemName; text: itemName; color: "White"; 
+                Text {
+		    id: txtItemName; text: itemName; color: "White";
 		    anchors.left: imgIcon.right;anchors.leftMargin: 5
 		    width: list.width-imgIcon.width
 		}
@@ -98,7 +98,7 @@ Rectangle {
         }
     }
 
-    ListSelector { 
+    ListSelector {
 	id:layoutList; text: search.searchContext; onChanged: setSearchResult()
 	anchors.top: searchTxt.bottom; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height/2-cellar.height

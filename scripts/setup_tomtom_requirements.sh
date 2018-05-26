@@ -17,7 +17,7 @@ cp Toolchain/$ARCH.cmake /tmp
 
 # toolchain
 export TOMTOM_SDK_DIR=/opt/tomtom-sdk
-mkdir -p $TOMTOM_SDK_DIR >/dev/null 2>&1 || export TOMTOM_SDK_DIR=$HOME/tomtom-sdk 
+mkdir -p $TOMTOM_SDK_DIR >/dev/null 2>&1 || export TOMTOM_SDK_DIR=$HOME/tomtom-sdk
 export PREFIX=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/$ARCH/sys-root
 export PATH=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/bin:$PREFIX/bin/:$PATH
 export CFLAGS="-O2 -I$PREFIX/include -I$PREFIX/usr/include"
@@ -33,7 +33,7 @@ export STRIP=$ARCH-strip
 export OBJCOPY=$ARCH-objcopy
 export LN_S="ln -s"
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
-JOBS=$(nproc --all) 
+JOBS=$(nproc --all)
 
 echo "Jobs"
 echo $JOBS
@@ -41,12 +41,12 @@ echo $JOBS
 mkdir -p ~/tomtom_assets
 
 if ! [ -e "~/tomtom_assets/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz" ]
- then 
+ then
   wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/toolchain_redhat_gcc-3.3.4_glibc-2.3.2-20060131a.tar.gz -P ~/tomtom_assets
 fi
 
 if ! test -f "~/tomtom_assets/libpng-1.6.29.tar.gz"
-then 
+then
   wget -nv -c https://github.com/navit-gps/dependencies/raw/master/tomtom/libpng-1.6.29.tar.gz -P ~/tomtom_assets
 fi
 
@@ -77,7 +77,7 @@ make install
 # libpng
 cd /tmp/
 tar xzf ~/tomtom_assets/libpng-1.6.29.tar.gz
-cd libpng-1.6.29/ 
+cd libpng-1.6.29/
 ./configure --prefix=$PREFIX --host=$ARCH
 make -j$JOBS
 make install

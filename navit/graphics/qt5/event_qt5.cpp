@@ -58,26 +58,23 @@ struct event_watch {
 static void event_qt5_remove_timeout(struct event_timeout* to);
 
 qt5_navit_timer::qt5_navit_timer(QObject* parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
     timer_type = g_hash_table_new(NULL, NULL);
     timer_callback = g_hash_table_new(NULL, NULL);
     watches = g_hash_table_new(NULL, NULL);
     dbg(lvl_debug, "qt5_navit_timer object created");
 }
 
-void qt5_navit_timer::watchEvent(int id)
-{
-   struct event_watch* ret = g_new0(struct event_watch, 1);
-   ret = (struct event_watch*)g_hash_table_lookup(watches, (void*)(long)id);
-   if (ret) {
+void qt5_navit_timer::watchEvent(int id) {
+    struct event_watch* ret = g_new0(struct event_watch, 1);
+    ret = (struct event_watch*)g_hash_table_lookup(watches, (void*)(long)id);
+    if (ret) {
         dbg(lvl_debug, "callback found, calling it");
         callback_call_0(ret->cb);
     }
 }
 
-void qt5_navit_timer::timerEvent(QTimerEvent* event)
-{
+void qt5_navit_timer::timerEvent(QTimerEvent* event) {
     int id = event->timerId();
     void* multi = NULL;
     //        dbg(lvl_debug, "TimerEvent (%d)", id);
@@ -96,23 +93,20 @@ void qt5_navit_timer::timerEvent(QTimerEvent* event)
 qt5_navit_timer* qt5_timer = NULL;
 
 static void
-event_qt5_main_loop_run(void)
-{
+event_qt5_main_loop_run(void) {
 
     dbg(lvl_debug, "enter");
     if (navit_app != NULL)
         navit_app->exec();
 }
 
-static void event_qt5_main_loop_quit(void)
-{
+static void event_qt5_main_loop_quit(void) {
     dbg(lvl_debug, "enter");
     exit(0);
 }
 
 static struct event_watch*
-event_qt5_add_watch(int fd, enum event_watch_cond cond, struct callback* cb)
-{
+event_qt5_add_watch(int fd, enum event_watch_cond cond, struct callback* cb) {
     dbg(lvl_debug, "enter fd=%d", (int)(long)fd);
     struct event_watch* ret = g_new0(struct event_watch, 1);
     ret->fd = fd;
@@ -124,8 +118,7 @@ event_qt5_add_watch(int fd, enum event_watch_cond cond, struct callback* cb)
 }
 
 static void
-event_qt5_remove_watch(struct event_watch* ev)
-{
+event_qt5_remove_watch(struct event_watch* ev) {
     dbg(lvl_debug, "enter");
     g_hash_table_remove(qt5_timer->watches, GINT_TO_POINTER(ev->fd));
     delete (ev->sn);
@@ -133,8 +126,7 @@ event_qt5_remove_watch(struct event_watch* ev)
 }
 
 static struct event_timeout*
-event_qt5_add_timeout(int timeout, int multi, struct callback* cb)
-{
+event_qt5_add_timeout(int timeout, int multi, struct callback* cb) {
     int id;
     dbg(lvl_debug, "add timeout %d, mul %d, %p ==", timeout, multi, cb);
     id = qt5_timer->startTimer(timeout);
@@ -145,8 +137,7 @@ event_qt5_add_timeout(int timeout, int multi, struct callback* cb)
 }
 
 static void
-event_qt5_remove_timeout(struct event_timeout* to)
-{
+event_qt5_remove_timeout(struct event_timeout* to) {
     dbg(lvl_debug, "remove timeout (%d)", (int)(long)to);
     qt5_timer->killTimer((int)(long)to);
     g_hash_table_remove(qt5_timer->timer_callback, to);
@@ -154,22 +145,19 @@ event_qt5_remove_timeout(struct event_timeout* to)
 }
 
 static struct event_idle*
-event_qt5_add_idle(int priority, struct callback* cb)
-{
+event_qt5_add_idle(int priority, struct callback* cb) {
     dbg(lvl_debug, "add idle event");
     return (struct event_idle*)event_qt5_add_timeout(0, 1, cb);
 }
 
 static void
-event_qt5_remove_idle(struct event_idle* ev)
-{
+event_qt5_remove_idle(struct event_idle* ev) {
     dbg(lvl_debug, "Remove idle timeout");
     event_qt5_remove_timeout((struct event_timeout*)ev);
 }
 
 static void
-event_qt5_call_callback(struct callback_list* cb)
-{
+event_qt5_call_callback(struct callback_list* cb) {
     dbg(lvl_debug, "enter");
 }
 
@@ -186,14 +174,12 @@ static struct event_methods event_qt5_methods = {
 };
 
 static struct event_priv*
-event_qt5_new(struct event_methods* meth)
-{
+event_qt5_new(struct event_methods* meth) {
     *meth = event_qt5_methods;
     qt5_timer = new qt5_navit_timer(NULL);
     return NULL;
 }
 
-void qt5_event_init(void)
-{
+void qt5_event_init(void) {
     plugin_register_category_event("qt5", event_qt5_new);
 }

@@ -68,7 +68,7 @@ Rectangle {
 				NumberAnimation {
 					properties: "x,y,opacity";duration: 200
 				}
-				onRunningChanged: { 
+				onRunningChanged: {
 					if ((mainMenu.opacity == 0) && (!running)){
 						backend.resize(navit1.width, navit1.height);
 						console.log("transition done, hiding menu window size " + navit1.width + " x " + navit1.height)
