@@ -44,8 +44,8 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
 
         /* This is the Directory where all Subdirectories are stored by date */
         File backupDir = new File(
-                Environment.getExternalStorageDirectory().getPath() + "/navit/backup/"
-                        + mTimestamp);
+            Environment.getExternalStorageDirectory().getPath() + "/navit/backup/"
+            + mTimestamp);
 
         /* Check if there is a Backup Directory */
         if (!backupDir.isDirectory()) {
@@ -62,19 +62,19 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
 
             /* Restore Files in home */
             mActivity.copyFileIfExists(backupDir.getPath() + "/bookmark.txt",
-                    Navit.NAVIT_DATA_DIR + "/home/bookmark.txt");
+                                       Navit.NAVIT_DATA_DIR + "/home/bookmark.txt");
             mActivity.copyFileIfExists(backupDir.getPath() + "/destination.txt",
-                    Navit.NAVIT_DATA_DIR + "/home/destination.txt");
+                                       Navit.NAVIT_DATA_DIR + "/home/destination.txt");
             mActivity.copyFileIfExists(backupDir.getPath() + "/gui_internal.txt",
-                    Navit.NAVIT_DATA_DIR + "/home/gui_internal.txt");
+                                       Navit.NAVIT_DATA_DIR + "/home/gui_internal.txt");
 
             /* Restore Shared Preferences */
             preferenceOIS = new ObjectInputStream(
-                    new FileInputStream(backupDir.getPath() + "/preferences.bak"));
+                new FileInputStream(backupDir.getPath() + "/preferences.bak"));
             Map<String, ?> entries = (Map<String, ?>) preferenceOIS.readObject();
 
             Editor prefEditor = mActivity
-                    .getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE).edit();
+                                .getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE).edit();
 
             /* Remove all old Preferences */
             prefEditor.clear();
@@ -133,10 +133,10 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
 
         /* Navit needs to be restarted. Currently the User has to restart it by himself */
         Toast.makeText(mActivity,
-                mActivity.getTstring(R.string.restore_successful_please_restart_navit),
-                Toast.LENGTH_LONG).show();
+                       mActivity.getTstring(R.string.restore_successful_please_restart_navit),
+                       Toast.LENGTH_LONG).show();
         NotificationManager nm = (NotificationManager) mActivity
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+                                 .getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(R.string.app_name);
         NavitVehicle.removeListener();
         mActivity.finish();
@@ -146,7 +146,7 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
     protected void onCancelled() {
         super.onCancelled();
         Toast.makeText(mActivity, mActivity.getTstring(R.string.restore_failed), Toast.LENGTH_LONG)
-                .show();
+        .show();
         mDialog.dismiss();
     }
 }

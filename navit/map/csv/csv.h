@@ -32,13 +32,13 @@ struct map_priv {
 	GHashTable*qitem_hash;
 	char* filename;
 	/*need to write map file on exit*/
-	int dirty;  
+	int dirty;
 	int attr_cnt;
 	enum attr_type *attr_types;
 	int next_item_idx;
 	enum item_type item_type;
 	/*list of quadtree items that have no coord set yet ()*/
-	GList* new_items;  
+	GList* new_items;
 	char *charset;
 };
 

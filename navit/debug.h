@@ -30,7 +30,7 @@ extern "C" {
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCTION__
 
-/* Uncomment the following define to enable MSVC's memory debugging support */ 
+/* Uncomment the following define to enable MSVC's memory debugging support */
 /*#define _CRTDBG_MAP_ALLOC*/
 #ifdef _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

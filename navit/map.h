@@ -18,7 +18,7 @@
  */
 
 /** @file
- * 
+ *
  * @brief Contains exported functions / structures for map.c
  *
  * This file contains code that works together with map.c and that is exported

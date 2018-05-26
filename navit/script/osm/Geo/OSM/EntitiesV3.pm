@@ -67,9 +67,9 @@ sub tag_xml
 {
   my ($self,$writer) = @_;
   my @a = @{$self->{tags}};
-  
+
   my $str = "";
-  
+
   while( my($k,$v) = splice @a, 0, 2 )
   {
     $writer->emptyTag( "tag", 'k' => $k, 'v' => $v );
@@ -83,9 +83,9 @@ sub set_id
   my($self,$id) = @_;
 
   if( not defined $id )
-  { $id = $_ID-- }  
+  { $id = $_ID-- }
   $self->{id} = $id;
-}  
+}
 
 sub id
 {
@@ -120,14 +120,14 @@ our @ISA = qw(Geo::OSM::Entity);
 sub new
 {
   my($class, $attr, $tags, $segs) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_segs($segs);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
-  
+
   return $obj;
 }
 
@@ -168,11 +168,11 @@ sub map
   my $incomplete = 0;
   my ($new_id) = $mapper->map('way',$self->id);   # Determine mapped ID
   # It is ok for the new_id to be incomplete; it may be a create request
-  
+
   my @new_segs = map { [ $mapper->map('segment',$_) ] } @{$self->segs};
   map { $incomplete |= $_->[1] } @new_segs;
   # incomplete tracks if any of the segs are incomplete
-  
+
   my $new_ent = new Geo::OSM::Way( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_segs] );
   return($new_ent,$incomplete);
 }
@@ -183,15 +183,15 @@ our @ISA = qw(Geo::OSM::Entity);
 sub new
 {
   my($class, $attr, $tags) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
   $obj->{from} = $attr->{from};
   $obj->{to} = $attr->{to};
-  
+
   return $obj;
 }
 
@@ -242,15 +242,15 @@ our @ISA = qw(Geo::OSM::Entity);
 sub new
 {
   my($class, $attr, $tags) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
   $obj->{lon} = $attr->{lon};
   $obj->{lat} = $attr->{lat};
-  
+
   return $obj;
 }
 
@@ -277,7 +277,7 @@ sub xml
   my $self = shift;
   my $str = "";
   my $writer = $self->_get_writer(\$str);
-  
+
   $writer->startTag( "node", id => $self->id, lat => $self->lat, lon => $self->lon, timestamp => $self->timestamp );
   $self->tag_xml( $writer );
   $writer->endTag( "node" );

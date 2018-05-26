@@ -30,7 +30,7 @@ struct speech_priv {
 	VSSpeechSynthesizer *speech;
 };
 
-static int 
+static int
 speech_iphone_say(struct speech_priv *this, const char *text)
 {
 	dbg(0,"enter %s",text);
@@ -41,7 +41,7 @@ speech_iphone_say(struct speech_priv *this, const char *text)
 	return 1;
 }
 
-static void 
+static void
 speech_iphone_destroy(struct speech_priv *this)
 {
 	[this->speech release];

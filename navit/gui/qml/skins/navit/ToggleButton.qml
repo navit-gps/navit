@@ -13,14 +13,14 @@ import Qt 4.7
      function toggle() {
          if (togglebutton.state == "on")
              togglebutton.state = "off";
-         else 
+         else
 	     togglebutton.state = "on";
      }
 
      function startup () {
-	 if (togglebutton.stOn == "1" ) 
+	 if (togglebutton.stOn == "1" )
        		togglebutton.stOn = "true";
-	 else if (togglebutton.stOn == "0" ) 
+	 else if (togglebutton.stOn == "0" )
 		togglebutton.stOn = "false";
          if (togglebutton.stOn == "true")
              togglebutton.state = "on";
@@ -38,7 +38,7 @@ import Qt 4.7
    }
 
     Text {
-        id: txtItem; text: togglebutton.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: togglebutton.horizontalCenter; 
+        id: txtItem; text: togglebutton.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: togglebutton.horizontalCenter;
 	color: "White"; font.pointSize: gui.height/64; horizontalAlignment: Qt.AlignHCenter
     }
 

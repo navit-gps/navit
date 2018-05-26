@@ -11,7 +11,7 @@ cp Toolchain/$ARCH.cmake /tmp
 
 # toolchain
 export TOMTOM_SDK_DIR=/opt/tomtom-sdk
-mkdir -p $TOMTOM_SDK_DIR >/dev/null 2>&1 || export TOMTOM_SDK_DIR=$HOME/tomtom-sdk 
+mkdir -p $TOMTOM_SDK_DIR >/dev/null 2>&1 || export TOMTOM_SDK_DIR=$HOME/tomtom-sdk
 export PREFIX=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/$ARCH/sys-root
 export PATH=$TOMTOM_SDK_DIR/gcc-3.3.4_glibc-2.3.2/bin:$PREFIX/bin/:$PATH
 export CFLAGS="-O2 -I$PREFIX/include -I$PREFIX/usr/include"
@@ -27,7 +27,7 @@ export STRIP=$ARCH-strip
 export OBJCOPY=$ARCH-objcopy
 export LN_S="ln -s"
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
-JOBS=$(nproc --all) 
+JOBS=$(nproc --all)
 
 echo "Jobs"
 echo $JOBS
@@ -99,7 +99,7 @@ cp $PREFIX/usr/bin/testvidinfo $OUT_PATH/navit/sdl
 
 # navit executable and wrapper
 cp $PREFIX/bin/navit $OUT_PATH/navit/bin
-cp ../contrib/tomtom/navit-wrapper $OUT_PATH/navit/bin/navit-wrapper 
+cp ../contrib/tomtom/navit-wrapper $OUT_PATH/navit/bin/navit-wrapper
 
 # fonts
 cp -r ../navit/fonts/*.ttf $OUT_PATH/navit/share/fonts

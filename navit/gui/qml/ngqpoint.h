@@ -94,7 +94,7 @@ public:
         this->c.x = c->x;
         this->c.y = c->y;
         this->type=type;
-        
+
         this->name=name;
         this->coord=this->_coordString();
     }
@@ -116,7 +116,7 @@ public slots:
             this->coord=this->_coordString();
     }
     QString pointName() {
-            return this->name;    
+            return this->name;
     }
     QString coordString() {
             return this->coord;
@@ -311,12 +311,12 @@ protected:
                         mr=map_rect_new(m, &sel);
                         if (! mr)
                                 continue;
-                        while ((item=map_rect_get_item(mr))) {                             
+                        while ((item=map_rect_get_item(mr))) {
                                 data=street_get_data(item);
-                                if (transform_within_dist_item(&co, item->type, data->c, data->count, dist)) {                                     
+                                if (transform_within_dist_item(&co, item->type, data->c, data->count, dist)) {
                                         if (item_attr_get(item, attr_label, &attr)) {
                                                 label=map_convert_string(m, attr.u.str);
-                                                this->item=*item;             
+                                                this->item=*item;
                                                 this->_setUrl(item);
                                                  if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
                                                          ret=QString::fromLocal8Bit(item_to_name(item->type));

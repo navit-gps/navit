@@ -22,7 +22,7 @@ NAVIT="./navit"
 function check_wmctrl()
 {
 	which wmctrl > /dev/null
-	
+
 	if [ $? -ne 0 ] ; then
 		echo "I need the 'wmctrl' program. Exit."
 		exit 1
@@ -33,7 +33,7 @@ function start_navit()
 {
 	if [ "x" != "x$CONFIG" ] ; then
 		$NAVIT -c $CONFIG &
-	else 
+	else
 		$NAVIT &
 	fi
 

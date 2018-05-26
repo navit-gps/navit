@@ -38,7 +38,7 @@ my $pipe = open_outputhandle();
 # ...feed the pipe...
 run();
 
-# ...and close it properly 
+# ...and close it properly
 close $pipe;
 
 ###############################################################################
@@ -110,7 +110,7 @@ sub determine_filename {
         $filename = "$onefile.bin";
         $filename = "$onefile.xml" if ($write_osm);
     }
-    
+
     print "$0 writing output to $filename\n";
 }
 
@@ -119,14 +119,14 @@ sub run {
     print $pipe '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
     print $pipe '<osm version="0.5">' . "\n";
 
-    # set the amenity and 
+    # set the amenity and
     my @amenities = keys %files;
     while (my $amenity = shift @amenities) {
         foreach my $file (@{$files{$amenity}}) {
             process_file($file);
         }
     }
-    
+
     # close the osm file
     print $pipe '</osm>';
     # and show up some stats

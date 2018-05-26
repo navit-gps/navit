@@ -12,9 +12,9 @@ Rectangle {
     function pageOpen() {
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -43,9 +43,9 @@ Rectangle {
 		}
 	}
     }
-	CommonHighlight { id: listHighlight} 
+	CommonHighlight { id: listHighlight}
 
-	ListSelector { 
+	ListSelector {
 		id:vehicleList; text: "Current vehicle profile"; itemId: navit.itemId; onChanged: {navit.setObjectByName("vehicle",vehicleList.value) }
 		anchors.top: parent.top; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 		anchors.left: parent.left; width: page.width/2;height: page.height/2

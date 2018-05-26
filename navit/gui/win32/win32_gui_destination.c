@@ -13,8 +13,7 @@
 
 static const TCHAR g_szDestinationClassName[] = TEXT("navit_gui_destinationwindow_class");
 
-struct datawindow_priv
-{
+struct datawindow_priv {
     HWND hwnd;
     HWND hwndLabel;
     HWND hwndEdit;
@@ -27,8 +26,7 @@ struct datawindow_priv
     struct notify_priv *notifications;
 };
 
-static void setlayout(struct datawindow_priv *datawindow)
-{
+static void setlayout(struct datawindow_priv *datawindow) {
     LVCOLUMN lvc;
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 
@@ -39,22 +37,18 @@ static void setlayout(struct datawindow_priv *datawindow)
     lvc.cx = (winrect.right -  winrect.left) - 52  ;
     lvc.fmt = LVCFMT_LEFT;  // left-aligned column
 
-    switch (datawindow->currentSearchState)
-    {
-    case attr_country_name:
-    {
+    switch (datawindow->currentSearchState) {
+    case attr_country_name: {
         Edit_SetText(datawindow->hwndLabel, TEXT("Country"));
         lvc.pszText = TEXT("Country");
     }
     break;
-    case attr_town_name:
-    {
+    case attr_town_name: {
         Edit_SetText(datawindow->hwndLabel, TEXT("Postal or Town"));
         lvc.pszText = TEXT("Town");
     }
     break;
-    case attr_street_name:
-    {
+    case attr_street_name: {
         Edit_SetText(datawindow->hwndLabel, TEXT("Street"));
         lvc.pszText = TEXT("Street");
     }
@@ -70,16 +64,14 @@ static void setlayout(struct datawindow_priv *datawindow)
     SetFocus(datawindow->hwndEdit);
 }
 
-static void notify_apply(struct datawindow_priv *datawindow, int index, int param2)
-{
+static void notify_apply(struct datawindow_priv *datawindow, int index, int param2) {
     TCHAR txtBuffer[1024];
     char search_string[1024];
     struct attr search_attr;
     struct search_list_result *res;
-    
 
-    if ( index >= 0 )
-    {
+
+    if ( index >= 0 ) {
         ListView_GetItemText(datawindow->hwndList, index, 1, txtBuffer, 1024);
 
         TCHAR_TO_UTF8(txtBuffer, search_string);
@@ -91,20 +83,16 @@ static void notify_apply(struct datawindow_priv *datawindow, int index, int para
         res=search_list_get_result(datawindow->sl);
     }
 
-    switch (datawindow->currentSearchState)
-    {
-    case attr_country_name:
-    {
+    switch (datawindow->currentSearchState) {
+    case attr_country_name: {
         datawindow->currentSearchState = attr_town_name;
     }
     break;
-    case attr_town_name:
-    {
+    case attr_town_name: {
         datawindow->currentSearchState = attr_street_name;
     }
     break;
-    case attr_street_name:
-    {
+    case attr_street_name: {
         navit_set_destination(datawindow->nav, res->c, "Mein Test", 1);
         DestroyWindow(datawindow->hwnd);
     }
@@ -118,19 +106,15 @@ static void notify_apply(struct datawindow_priv *datawindow, int index, int para
 
 }
 
-static void notify_back(struct datawindow_priv *datawindow, int param1, int param2)
-{
-    switch (datawindow->currentSearchState)
-    {
+static void notify_back(struct datawindow_priv *datawindow, int param1, int param2) {
+    switch (datawindow->currentSearchState) {
     case attr_country_name:
-    break;
-    case attr_town_name:
-    {
+        break;
+    case attr_town_name: {
         datawindow->currentSearchState = attr_country_name;
     }
     break;
-    case attr_street_name:
-    {
+    case attr_street_name: {
         datawindow->currentSearchState = attr_town_name;
     }
     break;
@@ -142,14 +126,13 @@ static void notify_back(struct datawindow_priv *datawindow, int param1, int para
     setlayout(datawindow);
 }
 
-static void notify_textchange(struct datawindow_priv *datawindow, int param1, int param2)
-{
+static void notify_textchange(struct datawindow_priv *datawindow, int param1, int param2) {
 
     struct attr search_attr;
     struct search_list_result *res;
     char search_string[1024];
     TCHAR converted_iso2[32];
-    
+
 
     int lineLength = Edit_LineLength(datawindow->hwndEdit, 0);
     TCHAR line[lineLength + 1];
@@ -178,11 +161,9 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
     lvI.state = 0;
     lvI.stateMask = 0;
 
-    while ((res=search_list_get_result(datawindow->sl)) && listIndex < 50)
-    {
+    while ((res=search_list_get_result(datawindow->sl)) && listIndex < 50) {
 
-        switch (search_attr.type)
-        {
+        switch (search_attr.type) {
         case attr_country_name:
             tcharBuffer = newSysString(res->country->name);
             break;
@@ -190,12 +171,9 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
             tcharBuffer = newSysString(res->town->common.town_name);
             break;
         case attr_street_name:
-            if (res->street->name)
-            {
+            if (res->street->name) {
                 tcharBuffer = newSysString(res->street->name);
-            }
-            else
-            {
+            } else {
                 continue;
             }
             break;
@@ -217,19 +195,15 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
     }
 }
 
-static void notify_destroy(struct datawindow_priv *datawindow, int param1, int param2)
-{
-    if ( datawindow )
-    {
+static void notify_destroy(struct datawindow_priv *datawindow, int param1, int param2) {
+    if ( datawindow ) {
         search_list_destroy(datawindow->sl);
         g_free(datawindow);
     }
 }
 
-static void notify_size(struct datawindow_priv *datawindow, int width, int height)
-{
-   if (datawindow)
-   {
+static void notify_size(struct datawindow_priv *datawindow, int width, int height) {
+    if (datawindow) {
         MoveWindow(datawindow->hwndLabel,
                    0, 0,                  // starting x- and y-coordinates
                    width,        // width of client area
@@ -261,8 +235,7 @@ static void notify_size(struct datawindow_priv *datawindow, int width, int heigh
     }
 }
 
-static BOOL init_lv_columns(HWND hWndListView)
-{
+static BOOL init_lv_columns(HWND hWndListView) {
 
 //    struct LVCOLUMN lvc = {LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
 //                LVCFMT_LEFT, 100, szText[iCol], 0, iCol, 0, 0 };
@@ -273,8 +246,7 @@ static BOOL init_lv_columns(HWND hWndListView)
 
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 
-    for (iCol = 0; iCol < 2; iCol++)
-    {
+    for (iCol = 0; iCol < 2; iCol++) {
         lvc.iSubItem = iCol;
         lvc.pszText = szText[iCol];
         lvc.cx = 50;     // width of column in pixels
@@ -290,8 +262,7 @@ static BOOL init_lv_columns(HWND hWndListView)
     return TRUE;
 }
 
-BOOL register_destination_window()
-{
+BOOL register_destination_window() {
     WNDCLASS wc;
 
     wc.style		 = 0;
@@ -305,16 +276,14 @@ BOOL register_destination_window()
     wc.lpszClassName = g_szDestinationClassName;
     wc.hIcon		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 
-    if (!RegisterClass(&wc))
-    {
+    if (!RegisterClass(&wc)) {
         dbg(lvl_error, "Window Registration Failed!");
         return FALSE;
     }
     return TRUE;
 }
 
-HANDLE create_destination_window( struct navit *nav )
-{
+HANDLE create_destination_window( struct navit *nav ) {
 
 
     struct datawindow_priv *this_;
@@ -337,18 +306,17 @@ HANDLE create_destination_window( struct navit *nav )
 #endif
                       NULL, NULL, NULL, NULL);
 
-    if (this_->hwnd == NULL)
-    {
+    if (this_->hwnd == NULL) {
         dbg(lvl_error, "Window Creation Failed!");
         return 0;
     }
 
     this_->notifications = win32_gui_notify_new(this_);
-    SetWindowLongPtr( this_->hwnd , DWLP_USER, (LONG_PTR) this_->notifications );
+    SetWindowLongPtr( this_->hwnd, DWLP_USER, (LONG_PTR) this_->notifications );
 
     this_->hwndLabel = CreateWindow(WC_STATIC,      // predefined class
                                     TEXT("Country"),        // no window title
-                                    WS_CHILD | WS_VISIBLE | ES_LEFT , //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
+                                    WS_CHILD | WS_VISIBLE | ES_LEFT,  //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
                                     0, 0, 0, 0,  // set size in WM_SIZE message
                                     this_->hwnd,        // parent window
                                     NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
@@ -357,7 +325,7 @@ HANDLE create_destination_window( struct navit *nav )
 
     this_->hwndEdit = CreateWindow(WC_EDIT,      // predefined class
                                    NULL,        // no window title
-                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER , //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
+                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,  //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
                                    0, 0, 0, 0,  // set size in WM_SIZE message
                                    this_->hwnd,        // parent window
                                    NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
@@ -366,7 +334,7 @@ HANDLE create_destination_window( struct navit *nav )
 
     this_->hwndList = CreateWindow(WC_LISTVIEW,      // predefined class
                                    NULL,        // no window title
-                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT  , //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
+                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT,   //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
                                    0, 0, 0, 0,  // set size in WM_SIZE message
                                    this_->hwnd,        // parent window
                                    NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
@@ -374,21 +342,21 @@ HANDLE create_destination_window( struct navit *nav )
                                    NULL);       // pointer not needed
 
     this_->hwndButtonPrev = CreateWindow(WC_BUTTON,      // predefined class
-                                   TEXT("<<"),        // no window title
-                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT  , //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
-                                   0, 0, 0, 0,  // set size in WM_SIZE message
-                                   this_->hwnd,        // parent window
-                                   NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
-                                   (HINSTANCE) GetWindowLong(this_->hwnd, GWL_HINSTANCE),
-                                   NULL);       // pointer not needed
+                                         TEXT("<<"),        // no window title
+                                         WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT,   //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
+                                         0, 0, 0, 0,  // set size in WM_SIZE message
+                                         this_->hwnd,        // parent window
+                                         NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
+                                         (HINSTANCE) GetWindowLong(this_->hwnd, GWL_HINSTANCE),
+                                         NULL);       // pointer not needed
     this_->hwndButtonNext = CreateWindow(WC_BUTTON,      // predefined class
-                                   TEXT(">>"),        // no window title
-                                   WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT  , //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
-                                   0, 0, 0, 0,  // set size in WM_SIZE message
-                                   this_->hwnd,        // parent window
-                                   NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
-                                   (HINSTANCE) GetWindowLong(this_->hwnd, GWL_HINSTANCE),
-                                   NULL);       // pointer not needed
+                                         TEXT(">>"),        // no window title
+                                         WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | LVS_REPORT,   //| WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL
+                                         0, 0, 0, 0,  // set size in WM_SIZE message
+                                         this_->hwnd,        // parent window
+                                         NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
+                                         (HINSTANCE) GetWindowLong(this_->hwnd, GWL_HINSTANCE),
+                                         NULL);       // pointer not needed
 #ifdef LVS_EX_FULLROWSELECT
     (void)ListView_SetExtendedListViewStyle(this_->hwndList,LVS_EX_FULLROWSELECT);
 #endif
