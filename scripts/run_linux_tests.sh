@@ -15,9 +15,9 @@ linux_test () {
 	import -window root $CIRCLE_ARTIFACTS/logs_${1}/default.png
 
 	# run tests on X11
-	bash ~/navit/ci/xdotools.sh ${1}
+	bash ~/navit/scripts/xdotools.sh ${1}
 
-	# python ~/navit/ci/dbus_tests.py $CIRCLE_TEST_REPORTS/
+	# python ~/navit/scripts/dbus_tests.py $CIRCLE_TEST_REPORTS/
 	# dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.quit
 
 	# kill navit instance

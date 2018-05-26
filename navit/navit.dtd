@@ -17,7 +17,7 @@
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
 <!ATTLIST log attr_types CDATA #IMPLIED>
-<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking,vehicleprofile*,route,navigation,speech,mapset+,layout+)*>
+<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,layout+) >
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
