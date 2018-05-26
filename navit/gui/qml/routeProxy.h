@@ -14,13 +14,13 @@ public slots:
 		QList<struct attr> destinations=this->_routeDestinations();
 		struct pcoord *coords=(struct pcoord*)malloc(sizeof(struct pcoord)*(destinations.size()+1)); //Additional destination included
 
-		for (QList<struct attr>::const_iterator iter=destinations.begin();iter!=destinations.end();iter++) {			
+		for (QList<struct attr>::const_iterator iter=destinations.begin();iter!=destinations.end();iter++) {
 			coords[counter]=*(iter->u.pcoord);
 			counter++;
 		}
 
 		//Add new one
-		coords[counter]=*(this->object->currentPoint->pc());		
+		coords[counter]=*(this->object->currentPoint->pc());
 
 		//Propagate to route engine
 		route_set_destinations(navit_get_route(this->object->nav),coords,counter+1,1);

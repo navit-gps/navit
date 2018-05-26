@@ -64,10 +64,10 @@ my $estimations = {
 };
 
 # ------------------------------------------------------------------
-# This routine estimates the maximum id for way,elem,seg,... 
+# This routine estimates the maximum id for way,elem,seg,...
 # The values are taken from older planet.osm Files
 # So they mostly are a little bit to low
-# ARGS: 
+# ARGS:
 #   $type: line|way|tag|...
 # RETURNS:
 #   $result: number of estimated max_id
@@ -81,10 +81,10 @@ sub estimated_max_id($){
 }
 
 # ------------------------------------------------------------------
-# This routine estimates the maximim number of elements for way,elem,seg,... 
+# This routine estimates the maximim number of elements for way,elem,seg,...
 # The values are taken from older planet.osm Files
 # So they mostly are a little bit to low
-# ARGS: 
+# ARGS:
 #   $type: line|way|tag|...
 # RETURNS:
 #   $result: number of estimated elements
@@ -112,7 +112,7 @@ sub osm_dir() {
 	chomp $home;
 	$home = "/home/$home";
     }
-    
+
     $dir = "$home/osm";
     return $dir;
 }
@@ -144,22 +144,22 @@ sub sort_unique(@){
     }
     return @erg
 }
-    
+
 
 # ------------------------------------------------------------------
 # mirror the newest planet.osm File to
 #  ~/osm/planet/planet.osm.bz2
-# and the resulting 
+# and the resulting
 # Filename is returned
 #
-# the file is -----NO LONGER--- Sanitized afterwards  
+# the file is -----NO LONGER--- Sanitized afterwards
 sub mirror_planet(){
     my $planet_server="http://planet.openstreetmap.org";
     my $url = "$planet_server";
 
     my $mirror_dir=planet_dir();
     mkdir_if_needed( $mirror_dir );
-    
+
     my $current_file;
     if ( !$Utils::LWP::Utils::NO_MIRROR ) {
 	# Get Index.html of Planet.osm.org
@@ -194,11 +194,11 @@ sub mirror_planet(){
 	print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
     }
     $current_file = $files[0];
-    
+
     if ( $DEBUG) {
 	print STDERR "Chosen File: $current_file\n";
     }
-    
+
     return undef unless $current_file;
 
 #    $current_file = UTF8sanitize($current_file);
@@ -220,7 +220,7 @@ sub mirror_planet(){
 #    ~/osm/planet/planet-07XXXX-a.osm.bz2
 # If a recent enought Version is found in ~/osm/planet/
 # nothing is done, but the filename of the file is returned
-# if the routine finds an uncompressed up to date Version 
+# if the routine finds an uncompressed up to date Version
 #   ~/osm/planet/planet-07XXXX-a.osm
 # this Filename is returned.
 sub UTF8sanitize($){
@@ -259,7 +259,7 @@ sub UTF8sanitize($){
     print "Command: $cmd" if $DEBUG || $VERBOSE;
     my $result = `$cmd`;
     print $result if $DEBUG || $VERBOSE;
-  
+
     print "Sanitized $filename " if $DEBUG || $VERBOSE;
 	print_time($start_time);
 
@@ -279,7 +279,7 @@ sub UTF8sanitize($){
 }
 
 # ------------------------------------------------------------------
-# find a file in the current Perl Search path. For now this was the 
+# find a file in the current Perl Search path. For now this was the
 # easiest solution to find programms like UTF8Sanitize
 # ARGS: relative filename (relative to @INC-path
 # RETURNS: Absolute path to file
@@ -295,7 +295,7 @@ sub find_file_in_perl_path($){
 	    last;
 	};
     }
-    
+
     print "find_file_in_perl_path($file): --> $found_file\n" if $DEBUG;
     return $found_file;
 }

@@ -51,7 +51,7 @@ sub bounds(){
 sub DoStart()
 {
   my ($Expat, $Name, %Attr) = @_;
-  
+
   if($Name eq "node"){
     undef %OsmXML::Tags;
     %OsmXML::MainAttr = %Attr;
@@ -97,7 +97,7 @@ sub DoEnd(){
     $OsmXML::Ways{$ID}{"segments"} = join(",",@OsmXML::WaySegments);
     foreach(keys(%OsmXML::Tags)){
       $OsmXML::Ways{$ID}{$_} = $OsmXML::Tags{$_};
-    }    
+    }
   }
 }
 
@@ -118,16 +118,16 @@ OsmXML - Module for reading OpenStreetMap XML data files
 
   $OSM = new OsmXML();
   $OSM->load("Data/nottingham.osm");
-  
+
   foreach $Way(%OsmXML::Ways){
     @Segments = split(/,/, $Way->{"segments"});
-    
+
     foreach $SegmentID(@Segments){
       $Segment = $OsmXML::Segments{$SegmentID};
-    
+
       $Node1 = $OsmXML::Nodes{$Segment->{"from"}};
       $Node2 = $OsmXML::Nodes{$Segment->{"to"}};
-    
+
       printf "Node at %f,%f, named %s, is a %s",
         $Node2->{"lat"},
         $Node2->{"lon"},

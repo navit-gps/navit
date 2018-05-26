@@ -1,4 +1,4 @@
-module_add_library(binding_dbus binding_dbus.c) 
+module_add_library(binding_dbus binding_dbus.c)
 set(bindir ${CMAKE_INSTALL_PREFIX}/${BIN_DIR})
 
 configure_file (

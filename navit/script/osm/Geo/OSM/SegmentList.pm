@@ -54,7 +54,7 @@ sub load_segment_list($;$){
 	my $osm_filename = "${path}/csv/osm-segments.csv";
 	$osm_filename =~ s,\~/,$home/,;
 	printf STDERR "check $osm_filename for loading\n" if $DEBUG;
-	
+
 	die "Cannot open $osm_filename\n" unless -s $osm_filename;
 	$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename, $bounds);
     };
@@ -111,7 +111,7 @@ sub LoadOSM_segment_csv($;$){
     $main::dont_write_osm_storable=1 ||  $check_bounds;
     $main::dont_read_osm_storable=1;
 
-    if ( -s "$filename.storable" && 
+    if ( -s "$filename.storable" &&
 	 ! file_needs_re_generation($filename,"$filename.storable")
 	 && ! $main::dont_read_osm_storable ) {
 	# later we should compare if the file also is newer than the source
@@ -178,7 +178,7 @@ sub LoadOSM_segment_csv($;$){
 # -------------------------------------------------------
 # Load the segment list from postgis
 # Args: {lat_min=> .., lat_max => ..., lon_min => .., lon_max => .. }
-# This is a test to see if we can handle all segments of the world 
+# This is a test to see if we can handle all segments of the world
 # with reasonable query times
 sub LoadOSM_segment_postgis($;$){
     my $bounds  = shift;
@@ -192,7 +192,7 @@ sub LoadOSM_segment_postgis($;$){
     my $sth;
 
     use DBI;
-    
+
     my $dbname="gis";
     my $dbhost="/var/run/postgresql";
     my $dbh = DBI->connect("dbi:Pg:dbname=$dbname;host=$dbhost", "", "", {AutoCommit => 0});
@@ -205,7 +205,7 @@ sub LoadOSM_segment_postgis($;$){
     # WHERE  the_geom && setsrid('BOX(47.36 21.40,51.185 21.53)'::box2d, 42102)
     # WHERE GeomFromText('POINT(25.3 25.40)', 42102) && the_geom \
     #       AND distance(the_geom, GeomFromText('POINT(25.7 5.3)', 42102)) = 0
-    # WHERE distance(the_geom, setsrid('BOX(4.36 2.3,1.5 2.8)'::box2d, 42102)) = 0 
+    # WHERE distance(the_geom, setsrid('BOX(4.36 2.3,1.5 2.8)'::box2d, 42102)) = 0
     # WHERE  the_point && setsrid('BOX(295149 2315499, 465992 2163790)'::box2d, -1)
 
     ##############################
@@ -223,12 +223,12 @@ sub LoadOSM_segment_postgis($;$){
 
     my $polygon_text=sprintf("POLYGON((%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f))",
 			     $bounds->{lat_min}-0.1 , $bounds->{lon_min}-0.1,
-			     $bounds->{lat_max}+0.1 , $bounds->{lon_min}-0.1 , 
-			     $bounds->{lat_max}+0.1 , $bounds->{lon_max}+0.1 , 
-			     $bounds->{lat_min}-0.1 , $bounds->{lon_max}+0.1 , 
+			     $bounds->{lat_max}+0.1 , $bounds->{lon_min}-0.1 ,
+			     $bounds->{lat_max}+0.1 , $bounds->{lon_max}+0.1 ,
+			     $bounds->{lat_min}-0.1 , $bounds->{lon_max}+0.1 ,
 			     $bounds->{lat_min}-0.1 , $bounds->{lon_min}-0.1);
     my $polygon="transform(GeomFromText('$polygon_text',${SRID_WGS84}),$SRID_OSM)";
-   
+
     my $select = "select osm_id,highway,name from planet_osm_line where highway is not null and way && ".
 	" $polygon ".
 	"limit 5;";
@@ -240,9 +240,9 @@ sub LoadOSM_segment_postgis($;$){
     }
     printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
 
-    
+
 #     $select = "SELECT name ,astext(way),$distance FROM planet_osm_roads WHERE  $distance < 500 order by  $distance;";
-    
+
     #SELECT * FROM planet_osm_roads WHERE way in ?",
     #$select = "SELECT name FROM planet_osm_roads WHERE distance(way,GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;";
 #    my $distance="distance(way,     GeomFromText('POINT(856371.58 6683083.41)', 3395))";
@@ -277,7 +277,7 @@ sub LoadOSM_segment_postgis($;$){
     }
 
     printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
-        
+
     my $count=0;
     my $count_read=0;
     while ( @row = $sth->fetchrow_array ) {
@@ -359,7 +359,7 @@ my $from_node=0;
 sub DoStart()
 {
     my ($Expat, $Name, %Attr) = @_;
-    
+
     if($Name eq "node"){
 	undef %Tags;
 	%MainAttr = %Attr;
@@ -389,7 +389,7 @@ sub DoStart()
 	my $to_node   =  $Attr{"ref"};
 	if ( $from_node &&
 	     defined($Nodes{$from_node}) &&
-	     defined($Nodes{$to_node}) 
+	     defined($Nodes{$to_node})
 	     ) {
 	    my ($lat1,$lon1)=split(",",$Nodes{$from_node});
 	    my ($lat2,$lon2)=split(",",$Nodes{$to_node});
@@ -407,12 +407,12 @@ sub DoStart()
 sub DoEnd(){
     my ($Expat, $Element) = @_;
     my $ID = $MainAttr{"id"};
-    
+
     if($Element eq "node"){
 	my $node={};
 	$node->{"lat"} = $MainAttr{"lat"};
 	$node->{"lon"} = $MainAttr{"lon"};
-	
+
 	if ( $AREA_FILTER->inside($node) ) {
 	    $Nodes{$ID} = sprintf("%f,%f",$MainAttr{lat}, $MainAttr{lon});
 	    foreach(keys(%Tags)){
@@ -452,16 +452,16 @@ sub read_osm_file($;$) { # Insert Segments from osm File
     print("Reading OSM Segment from File $filename\n") if $VERBOSE || $DEBUG;
     if ( file_needs_re_generation($filename,"$filename.storable")) {
 	print "$filename:	".(-s $filename)." Bytes\n" if $DEBUG;
-	
+
 	print STDERR "Parsing file: $filename\n" if $DEBUG;
 	my $p = new XML::Parser( Handlers => {
-	    Start => \&DoStart, 
-	    End => \&DoEnd, 
+	    Start => \&DoStart,
+	    End => \&DoEnd,
 	    Char => \&DoChar,
 			     },
 				 ErrorContext => 10,
 	    );
-	
+
 	my $fh = data_open($filename);
 	if (not $fh) {
 	    print STDERR "WARNING: Could not open osm data from $filename\n";
@@ -476,7 +476,7 @@ sub read_osm_file($;$) { # Insert Segments from osm File
 	    return;
 	}
 	#warn Dumper(\$read_osm_segments);
-	Storable_save($filename,$read_osm_segments);  	
+	Storable_save($filename,$read_osm_segments);
     } else {
 	$read_osm_segments=Storable_load($filename);
     }

@@ -1,6 +1,6 @@
 add_custom_target( fonts ALL DEPENDS ${NAVIT_FONTS}
    COMMAND ${CMAKE_COMMAND}
-                  -D GLOB_EXP="${CMAKE_CURRENT_SOURCE_DIR}/*.ttf" #${NAVIT_FONTS}" 
+                  -D GLOB_EXP="${CMAKE_CURRENT_SOURCE_DIR}/*.ttf" #${NAVIT_FONTS}"
                   -D DST=${CMAKE_CURRENT_BINARY_DIR}
                   -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 )

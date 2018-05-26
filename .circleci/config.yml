@@ -60,7 +60,7 @@ jobs:
           name: Process icons
           command: |
             cd navit/icons
-            make  
+            make
             mkdir ../android/res/drawable-nodpi
             rename 'y/A-Z/a-z/' *
             cp *.png ../android/res/drawable-nodpi
@@ -68,7 +68,7 @@ jobs:
       - run:
           name: Process translations
           command: |
-            cd po  
+            cd po
             make
             mkdir ../navit/android/res/raw
             rename 'y/A-Z/a-z/' *
@@ -122,7 +122,7 @@ jobs:
       - store_artifacts:
           name: Store Javadoc
           path: navit/android/build/outputs/docs/javadoc
-          destination: doc  
+          destination: doc
       - store_artifacts:
           name: Store Lint reports
           path: navit/android/build/reports

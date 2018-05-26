@@ -364,7 +364,7 @@ msgstr "Dê meia-volta à direita %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "siga"
 
@@ -1948,10 +1948,10 @@ msgstr "Pontos"
 msgid "Enter Coordinates"
 msgstr "Introduzir coordenadas"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

@@ -11,7 +11,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="navit"/>
 		</xsl:copy>
-	</xsl:template>	
+	</xsl:template>
 
 	<xsl:template match="navit">
 		<xsl:copy>
@@ -30,7 +30,7 @@
 			<osd enabled="yes" type="compass" x="400" y="80" w="80" h="112" background_color="#00008080" font_size="300"/>
 			<osd enabled="yes" type="gps_status" x="0" y="80" w="80" h="40" background_color="#00008080"/>
 			<osd enabled="yes" type="speed_warner" x="0" y="120" w="80" h="72" background_color="#00008080" font_size="300"/>
-			<osd enabled="yes" type="navigation_next_turn" x="0" y="192" w="80" h="80" icon_w="48" icon_h="48" icon_src="%s_wh_48_48.png" background_color="#00008080"/> 
+			<osd enabled="yes" type="navigation_next_turn" x="0" y="192" w="80" h="80" icon_w="48" icon_h="48" icon_src="%s_wh_48_48.png" background_color="#00008080"/>
 			<osd enabled="yes" type="button" x="400" y="0" command="zoom_in()" src="tomtom_plus_80_80.png"/>
 			<osd enabled="yes" type="button" x="0" y="0" command="zoom_out()" src="tomtom_minus_80_80.png"/>
 			<vehicle name="Local GPS" profilename="car" enabled="yes" active="yes" follow="1" source="file:/var/run/gpspipe">
@@ -39,13 +39,13 @@
 			</vehicle>
 			<vehicle name="Demo" profilename="car" enabled="yes" active="no" follow="1" source="demo://" speed="100"/>
 			<xsl:copy-of select="tracking"/>
-			
+
 			<xsl:copy-of select="vehicleprofile[@name='car']"/>
 			<xsl:copy-of select="vehicleprofile[@name='car_shortest']"/>
 			<xsl:copy-of select="vehicleprofile[@name='car_avoid_tolls']"/>
 			<xsl:copy-of select="vehicleprofile[@name='bike']"/>
 			<xsl:copy-of select="vehicleprofile[@name='pedestrian']"/>
-			
+
 			<xsl:copy-of select="route"/>
 			<xsl:copy-of select="navigation"/>
 

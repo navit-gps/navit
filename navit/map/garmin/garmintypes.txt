@@ -300,7 +300,7 @@ POINT
 0, 0x1614 = poi_marine_type, lighted Navaid, violet
 0, 0x1615 = poi_marine_type, lighted Navaid, blue
 0, 0x1616 = poi_marine_type, lighted Navaid, multi colored
-# RGN2-4 types 
+# RGN2-4 types
 # Marine types start
 1, 0x0100 = point_unkn, Light
 1, 0x0102 = point_unkn, Light with north topmark
@@ -409,7 +409,7 @@ POINT
 1, 0x0d07 = poi_zoo, Zoo
 1, 0x0d08 = poi_stadium, Sportpark, Stadium
 1, 0x0d0a = poi_bar, Wine Bar
-1, 0x0d14 = poi_hospital, Hospital 
+1, 0x0d14 = poi_hospital, Hospital
 1, 0x0e01 = poi_theater, Theater
 1, 0x0e02 = poi_bar, Bar
 1, 0x0e03 = poi_cinema, Cinema
@@ -440,7 +440,7 @@ POINT
 1, 0x100e = poi_car_wash, Car Wash
 1, 0x1011 = poi_business_service, Business Service
 1, 0x1012 = poi_communication, Communication
-1, 0x1013 = poi_repair_service, Repair Service 
+1, 0x1013 = poi_repair_service, Repair Service
 1, 0x1014 = poi_social_service, Social Service
 1, 0x1015 = poi_public_utilities, Utility
 1, 0x1101 = poi_police, Police Station
@@ -633,7 +633,7 @@ POLYGONE
 0, 0x51 = poly_wetland, Wetland
 0, 0x52 = tundra, Tundra
 0, 0x53 = poly_flats, Flats
-# RGN2-4 
+# RGN2-4
 # Marine
 1, 0x0100 = street_unkn, Land - white
 1, 0x0101 = street_unkn, Land - non-urban

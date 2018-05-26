@@ -20,7 +20,7 @@
 #define VEHICLE_IPHONE_CORELOCATION_H
 
 typedef void(*FT_LOCATION_CB)(void *, double , double , double , double, char *, double);
-void corelocation_update(double lat, 
+void corelocation_update(double lat,
 		double lng,
 		double dir,
 		double spd,

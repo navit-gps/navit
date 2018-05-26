@@ -3,7 +3,7 @@
 #define NAVIT_KEY_RIGHT 6	/* ^R */
 #define NAVIT_KEY_BACKSPACE 8	/* ^H */
 #define NAVIT_KEY_RETURN 13	/* ^M */
-#define NAVIT_KEY_DOWN 14	/* ^N */	
+#define NAVIT_KEY_DOWN 14	/* ^N */
 #define NAVIT_KEY_ZOOM_OUT 15	/* ^O */
 #define NAVIT_KEY_UP 16		/* ^P */
 #define NAVIT_KEY_ZOOM_IN 17	/* ^Q */

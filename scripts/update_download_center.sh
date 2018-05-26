@@ -56,7 +56,7 @@ trap cleanup EXIT
 #############################################
 
 echo "Init Git Repo"
-export GIT_TERMINAL_PROMPT=0 
+export GIT_TERMINAL_PROMPT=0
 cd $TMP_DIR
 mkdir -p ~/.ssh/
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -83,7 +83,7 @@ git config --global push.default simple
 git config user.name "Circle CI"
 git config user.email "circleci@navit-project.org"
 git add ${BUILD_NUM}.json
-git commit -m "add:artifacts:Add artifacts for build #${BUILD_NUM} with SHA1:${CIRCLE_SHA1}" 
+git commit -m "add:artifacts:Add artifacts for build #${BUILD_NUM} with SHA1:${CIRCLE_SHA1}"
 git push
 RC=$?
 if [ $RC -ne 0 ]; then

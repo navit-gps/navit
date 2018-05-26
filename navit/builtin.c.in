@@ -1,5 +1,5 @@
 ${MODULES_PROTOTYPE};
-extern void builtin_init(void); 
-void builtin_init(void) { 
+extern void builtin_init(void);
+void builtin_init(void) {
     ${MODULES_FUNC};
 }

@@ -28,7 +28,7 @@ main(int argc, char **argv)
 	int ret;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
-	NSString *locale = [[NSLocale currentLocale] localeIdentifier]; 
+	NSString *locale = [[NSLocale currentLocale] localeIdentifier];
 	char *lang=g_strdup_printf("%s.UTF-8",[locale UTF8String]);
 	dbg(0,"lang %s",lang);
 	setenv("LANG",lang,0);
