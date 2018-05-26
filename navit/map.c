@@ -58,10 +58,10 @@
  * This structure holds information about a map.
  */
 struct map {
-	NAVIT_OBJECT
-	struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
-	struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
-	struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
+    NAVIT_OBJECT
+    struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
+    struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
+    struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
 };
 
 /**
@@ -70,8 +70,8 @@ struct map {
  * This structure describes a rectangular extract of a map.
  */
 struct map_rect {
-	struct map *m;				/**< The map this extract is from */
-	struct map_rect_priv *priv; /**< Private data of this map rect, only known to the map plugin */
+    struct map *m;				/**< The map this extract is from */
+    struct map_rect_priv *priv; /**< Private data of this map rect, only known to the map plugin */
 };
 
 /**
@@ -89,33 +89,32 @@ struct map_rect {
  * @return The opened map or NULL on failure
  */
 struct map *
-map_new(struct attr *parent, struct attr **attrs)
-{
-	struct map *m;
-	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl);
-	struct attr *type=attr_search(attrs, NULL, attr_type);
+map_new(struct attr *parent, struct attr **attrs) {
+    struct map *m;
+    struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl);
+    struct attr *type=attr_search(attrs, NULL, attr_type);
 
-	if (! type) {
-		dbg(lvl_error,"missing type");
-		return NULL;
-	}
-	maptype_new=plugin_get_category_map(type->u.str);
-	if (! maptype_new) {
-		dbg(lvl_error,"invalid type '%s'", type->u.str);
-		return NULL;
-	}
+    if (! type) {
+        dbg(lvl_error,"missing type");
+        return NULL;
+    }
+    maptype_new=plugin_get_category_map(type->u.str);
+    if (! maptype_new) {
+        dbg(lvl_error,"invalid type '%s'", type->u.str);
+        return NULL;
+    }
 
-	m=g_new0(struct map, 1);
-	m->attrs=attr_list_dup(attrs);
-	m->func=&map_func;
-	navit_object_ref((struct navit_object *)m);
-	m->attr_cbl=callback_list_new();
-	m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
-	if (! m->priv) {
-		map_destroy(m);
-		m=NULL;
-	}
-	return m;
+    m=g_new0(struct map, 1);
+    m->attrs=attr_list_dup(attrs);
+    m->func=&map_func;
+    navit_object_ref((struct navit_object *)m);
+    m->attr_cbl=callback_list_new();
+    m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
+    if (! m->priv) {
+        map_destroy(m);
+        m=NULL;
+    }
+    return m;
 }
 
 /**
@@ -128,19 +127,18 @@ map_new(struct attr *parent, struct attr **attrs)
  * @return True if the attribute type was found, false if not
  */
 int
-map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
-{
-	int ret=0;
-	if (this_->meth.map_get_attr)
-		ret=this_->meth.map_get_attr(this_->priv, type, attr);
-	if (!ret)
-		ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
-	if (!ret && type == attr_active) {
-		attr->type=type;
-		attr->u.num=1;
-		return 1;
-	}
-	return ret;
+map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+    int ret=0;
+    if (this_->meth.map_get_attr)
+        ret=this_->meth.map_get_attr(this_->priv, type, attr);
+    if (!ret)
+        ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+    if (!ret && type == attr_active) {
+        attr->type=type;
+        attr->u.num=1;
+        return 1;
+    }
+    return ret;
 }
 
 /**
@@ -155,13 +153,12 @@ map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct a
  * @return True if the attr could be set, false otherwise
  */
 int
-map_set_attr(struct map *this_, struct attr *attr)
-{
-	this_->attrs=attr_generic_set_attr(this_->attrs, attr);
-	if (this_->meth.map_set_attr)
-		this_->meth.map_set_attr(this_->priv, attr);
-	callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
-	return 1;
+map_set_attr(struct map *this_, struct attr *attr) {
+    this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+    if (this_->meth.map_set_attr)
+        this_->meth.map_set_attr(this_->priv, attr);
+    callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+    return 1;
 }
 
 /**
@@ -174,9 +171,8 @@ map_set_attr(struct map *this_, struct attr *attr)
  * @param cb The callback to add
  */
 void
-map_add_callback(struct map *this_, struct callback *cb)
-{
-	callback_list_add(this_->attr_cbl, cb);
+map_add_callback(struct map *this_, struct callback *cb) {
+    callback_list_add(this_->attr_cbl, cb);
 }
 
 /**
@@ -189,9 +185,8 @@ map_add_callback(struct map *this_, struct callback *cb)
  * @param cb The callback to remove
  */
 void
-map_remove_callback(struct map *this_, struct callback *cb)
-{
-	callback_list_remove(this_->attr_cbl, cb);
+map_remove_callback(struct map *this_, struct callback *cb) {
+    callback_list_remove(this_->attr_cbl, cb);
 }
 
 
@@ -202,35 +197,33 @@ map_remove_callback(struct map *this_, struct callback *cb)
  * @return True if strings from the map have to be converted, false otherwise
  */
 int
-map_requires_conversion(struct map *this_)
-{
-	return (this_->meth.charset != NULL && strcmp(this_->meth.charset, "utf-8"));
+map_requires_conversion(struct map *this_) {
+    return (this_->meth.charset != NULL && strcmp(this_->meth.charset, "utf-8"));
 }
 
 char *map_converted_string_tmp=NULL;
 
 /**
- * @brief Converts a string from a map into a temporary allocated buffer. Conversion is not performed and original string is returned 
- * if map doesn't require conversion. So lifetime of returned value is very limited. 
+ * @brief Converts a string from a map into a temporary allocated buffer. Conversion is not performed and original string is returned
+ * if map doesn't require conversion. So lifetime of returned value is very limited.
  *
  * @param this_ The map the string to be converted is from
  * @param str The string to be converted
  * @return The converted string. Don't care about it after use.
  */
 char *
-map_convert_string_tmp(struct map *this_, char *str)
-{
-	if(map_converted_string_tmp!=NULL)
-		g_free(map_converted_string_tmp);
-	map_converted_string_tmp=NULL;
-	if(!this_ || !this_->meth.charset || !strcmp(this_->meth.charset, "utf-8"))
-		return str;
-	map_converted_string_tmp=g_convert(str, -1, "utf-8", this_->meth.charset, NULL, NULL, NULL);
-	if(!map_converted_string_tmp) {
-		dbg(lvl_error,"Error converting '%s' from %s to utf-8", str, this_->meth.charset);
-		return str;
-	}	
-	return map_converted_string_tmp;
+map_convert_string_tmp(struct map *this_, char *str) {
+    if(map_converted_string_tmp!=NULL)
+        g_free(map_converted_string_tmp);
+    map_converted_string_tmp=NULL;
+    if(!this_ || !this_->meth.charset || !strcmp(this_->meth.charset, "utf-8"))
+        return str;
+    map_converted_string_tmp=g_convert(str, -1, "utf-8", this_->meth.charset, NULL, NULL, NULL);
+    if(!map_converted_string_tmp) {
+        dbg(lvl_error,"Error converting '%s' from %s to utf-8", str, this_->meth.charset);
+        return str;
+    }
+    return map_converted_string_tmp;
 }
 
 /**
@@ -241,20 +234,18 @@ map_convert_string_tmp(struct map *this_, char *str)
  * @return The converted string. It has to be map_convert_free()d after use.
  */
 char *
-map_convert_string(struct map *this_, char *str)
-{
-	return map_convert_dup(map_convert_string_tmp(this_,str));
+map_convert_string(struct map *this_, char *str) {
+    return map_convert_dup(map_convert_string_tmp(this_,str));
 }
 
 
 char *
-map_convert_dup(char *str)
-{
-	if(map_converted_string_tmp==str) {
-		map_converted_string_tmp=NULL;
-		return str;
-	}
-	return g_strdup(str);
+map_convert_dup(char *str) {
+    if(map_converted_string_tmp==str) {
+        map_converted_string_tmp=NULL;
+        return str;
+    }
+    return g_strdup(str);
 }
 
 /**
@@ -263,9 +254,8 @@ map_convert_dup(char *str)
  * @param str The string to be freed
  */
 void
-map_convert_free(char *str)
-{
-	g_free(str);
+map_convert_free(char *str) {
+    g_free(str);
 }
 
 /**
@@ -275,9 +265,8 @@ map_convert_free(char *str)
  * @return The projection of the map
  */
 enum projection
-map_projection(struct map *this_)
-{
-	return this_->meth.pro;
+map_projection(struct map *this_) {
+    return this_->meth.pro;
 }
 
 /**
@@ -287,9 +276,8 @@ map_projection(struct map *this_)
  * @param pro The projection to be set
  */
 void
-map_set_projection(struct map *this_, enum projection pro)
-{
-	this_->meth.pro=pro;
+map_set_projection(struct map *this_, enum projection pro) {
+    this_->meth.pro=pro;
 }
 
 /**
@@ -299,15 +287,14 @@ map_set_projection(struct map *this_, enum projection pro)
  */
 
 void
-map_destroy(struct map *m)
-{
-	if (!m)
-		return;
-	if (m->priv)
-		m->meth.map_destroy(m->priv);
-	attr_list_free(m->attrs);
-	callback_list_destroy(m->attr_cbl);
-	g_free(m);
+map_destroy(struct map *m) {
+    if (!m)
+        return;
+    if (m->priv)
+        m->meth.map_destroy(m->priv);
+    attr_list_free(m->attrs);
+    callback_list_destroy(m->attr_cbl);
+    g_free(m);
 }
 
 /**
@@ -322,22 +309,21 @@ map_destroy(struct map *m)
  * @return A new map rect
  */
 struct map_rect *
-map_rect_new(struct map *m, struct map_selection *sel)
-{
-	struct map_rect *mr;
+map_rect_new(struct map *m, struct map_selection *sel) {
+    struct map_rect *mr;
 
 #if 0
-	printf("map_rect_new 0x%x,0x%x-0x%x,0x%x\n", r->lu.x, r->lu.y, r->rl.x, r->rl.y);
+    printf("map_rect_new 0x%x,0x%x-0x%x,0x%x\n", r->lu.x, r->lu.y, r->rl.x, r->rl.y);
 #endif
-	mr=g_new0(struct map_rect, 1);
-	mr->m=m;
-	mr->priv=m->meth.map_rect_new(m->priv, sel);
-	if (! mr->priv) {
-		g_free(mr);
-		mr=NULL;
-	}
+    mr=g_new0(struct map_rect, 1);
+    mr->m=m;
+    mr->priv=m->meth.map_rect_new(m->priv, sel);
+    if (! mr->priv) {
+        g_free(mr);
+        mr=NULL;
+    }
 
-	return mr;
+    return mr;
 }
 
 /**
@@ -350,16 +336,15 @@ map_rect_new(struct map *m, struct map_selection *sel)
  * @return An item from the map rect
  */
 struct item *
-map_rect_get_item(struct map_rect *mr)
-{
-	struct item *ret;
-	dbg_assert(mr != NULL);
-	dbg_assert(mr->m != NULL);
-	dbg_assert(mr->m->meth.map_rect_get_item != NULL);
-	ret=mr->m->meth.map_rect_get_item(mr->priv);
-	if (ret)
-		ret->map=mr->m;
-	return ret;
+map_rect_get_item(struct map_rect *mr) {
+    struct item *ret;
+    dbg_assert(mr != NULL);
+    dbg_assert(mr->m != NULL);
+    dbg_assert(mr->m->meth.map_rect_get_item != NULL);
+    ret=mr->m->meth.map_rect_get_item(mr->priv);
+    if (ret)
+        ret->map=mr->m;
+    return ret;
 }
 
 /**
@@ -371,16 +356,15 @@ map_rect_get_item(struct map_rect *mr)
  * @return The item with the specified ID or NULL if not found
  */
 struct item *
-map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo)
-{
-	struct item *ret=NULL;
-	dbg_assert(mr != NULL);
-	dbg_assert(mr->m != NULL);
-	if (mr->m->meth.map_rect_get_item_byid)
-		ret=mr->m->meth.map_rect_get_item_byid(mr->priv, id_hi, id_lo);
-	if (ret)
-		ret->map=mr->m;
-	return ret;
+map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo) {
+    struct item *ret=NULL;
+    dbg_assert(mr != NULL);
+    dbg_assert(mr->m != NULL);
+    if (mr->m->meth.map_rect_get_item_byid)
+        ret=mr->m->meth.map_rect_get_item_byid(mr->priv, id_hi, id_lo);
+    if (ret)
+        ret->map=mr->m;
+    return ret;
 }
 
 /**
@@ -389,12 +373,11 @@ map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo)
  * @param mr The map rect to be destroyed
  */
 void
-map_rect_destroy(struct map_rect *mr)
-{
-	if (mr) {
-		mr->m->meth.map_rect_destroy(mr->priv);
-		g_free(mr);
-	}
+map_rect_destroy(struct map_rect *mr) {
+    if (mr) {
+        mr->m->meth.map_rect_destroy(mr->priv);
+        g_free(mr);
+    }
 }
 
 /**
@@ -404,9 +387,9 @@ map_rect_destroy(struct map_rect *mr)
  * used as "handle" to retrieve items from a search.
  */
 struct map_search {
-        struct map *m;
-        struct attr search_attr;
-        void *priv;
+    struct map *m;
+    struct attr search_attr;
+    void *priv;
 };
 
 /**
@@ -422,13 +405,13 @@ struct map_search {
  * strings - a search for a street named "street" would match to "streetfoo", but not to
  * "somestreet". Search is case insensitive.
  *
- * The item passed to this function specifies a "superior item" to "search within" - e.g. a town 
+ * The item passed to this function specifies a "superior item" to "search within" - e.g. a town
  * in which we want to search for a street, or a country in which to search for a town.
  *
  * Please also note that the search for countries is not handled by map plugins but by navit internally -
  * have a look into country.c for details. Because of that every map plugin has to accept a country item
  * to be passed as "superior item".
- * 
+ *
  * Note: If you change something here, please make sure to also update the documentation of mapset_search_new()
  * in mapset.c!
  *
@@ -439,31 +422,31 @@ struct map_search {
  * @return A new map search struct for this search
  */
 struct map_search *
-map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial)
-{
-	struct map_search *this_;
-	dbg(lvl_debug,"enter(%p,%p,%p,%d)", m, item, search_attr, partial);
-	dbg(lvl_debug,"0x%x 0x%x 0x%x", attr_country_all, search_attr->type, attr_country_name);
-	this_=g_new0(struct map_search,1);
-	this_->m=m;
-	this_->search_attr=*search_attr;
-	if ((search_attr->type >= attr_country_all && search_attr->type <= attr_country_name) || search_attr->type == attr_country_id)
-		this_->priv=country_search_new(&this_->search_attr, partial);
-	else {
-		if (m->meth.map_search_new) {
-			if (m->meth.charset)
-				this_->search_attr.u.str=g_convert(this_->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
-			this_->priv=m->meth.map_search_new(m->priv, item, &this_->search_attr, partial);
-			if (! this_->priv) {
-				g_free(this_);
-				this_=NULL;
-			}
-		} else {
-			g_free(this_);
-			this_=NULL;
-		}
-	}
-	return this_;
+map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial) {
+    struct map_search *this_;
+    dbg(lvl_debug,"enter(%p,%p,%p,%d)", m, item, search_attr, partial);
+    dbg(lvl_debug,"0x%x 0x%x 0x%x", attr_country_all, search_attr->type, attr_country_name);
+    this_=g_new0(struct map_search,1);
+    this_->m=m;
+    this_->search_attr=*search_attr;
+    if ((search_attr->type >= attr_country_all && search_attr->type <= attr_country_name)
+            || search_attr->type == attr_country_id)
+        this_->priv=country_search_new(&this_->search_attr, partial);
+    else {
+        if (m->meth.map_search_new) {
+            if (m->meth.charset)
+                this_->search_attr.u.str=g_convert(this_->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
+            this_->priv=m->meth.map_search_new(m->priv, item, &this_->search_attr, partial);
+            if (! this_->priv) {
+                g_free(this_);
+                this_=NULL;
+            }
+        } else {
+            g_free(this_);
+            this_=NULL;
+        }
+    }
+    return this_;
 }
 
 /**
@@ -477,18 +460,18 @@ map_search_new(struct map *m, struct item *item, struct attr *search_attr, int p
  * @return One item of the result
  */
 struct item *
-map_search_get_item(struct map_search *this_)
-{
-	struct item *ret;
+map_search_get_item(struct map_search *this_) {
+    struct item *ret;
 
-	if (! this_)
-		return NULL;
-	if ((this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name) || this_->search_attr.type == attr_country_id)
-		return country_search_get_item(this_->priv);
-	ret=this_->m->meth.map_search_get_item(this_->priv);
-	if (ret)
-		ret->map=this_->m;
-	return ret;
+    if (! this_)
+        return NULL;
+    if ((this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
+            || this_->search_attr.type == attr_country_id)
+        return country_search_get_item(this_->priv);
+    ret=this_->m->meth.map_search_get_item(this_->priv);
+    if (ret)
+        ret->map=this_->m;
+    return ret;
 }
 
 /**
@@ -497,18 +480,17 @@ map_search_get_item(struct map_search *this_)
  * @param this_ The map search struct to be destroyed
  */
 void
-map_search_destroy(struct map_search *this_)
-{
-	if (! this_)
-		return;
-	if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
-		country_search_destroy(this_->priv);
-	else {
-		if (this_->m->meth.charset)
-				g_free(this_->search_attr.u.str);
-		this_->m->meth.map_search_destroy(this_->priv);
-	}
-	g_free(this_);
+map_search_destroy(struct map_search *this_) {
+    if (! this_)
+        return;
+    if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
+        country_search_destroy(this_->priv);
+    else {
+        if (this_->m->meth.charset)
+            g_free(this_->search_attr.u.str);
+        this_->m->meth.map_search_destroy(this_->priv);
+    }
+    g_free(this_);
 }
 
 /**
@@ -520,16 +502,15 @@ map_search_destroy(struct map_search *this_)
  * @return The new map selection
  */
 struct map_selection *
-map_selection_rect_new(struct pcoord *center, int distance, int order)
-{
-	struct map_selection *ret=g_new0(struct map_selection, 1);
-	ret->order=order;
-	ret->range=item_range_all;
-	ret->u.c_rect.lu.x=center->x-distance;
-	ret->u.c_rect.lu.y=center->y+distance;
-	ret->u.c_rect.rl.x=center->x+distance;
-	ret->u.c_rect.rl.y=center->y-distance;
-	return ret;
+map_selection_rect_new(struct pcoord *center, int distance, int order) {
+    struct map_selection *ret=g_new0(struct map_selection, 1);
+    ret->order=order;
+    ret->range=item_range_all;
+    ret->u.c_rect.lu.x=center->x-distance;
+    ret->u.c_rect.lu.y=center->y+distance;
+    ret->u.c_rect.rl.x=center->x+distance;
+    ret->u.c_rect.rl.y=center->y-distance;
+    return ret;
 }
 
 /**
@@ -544,23 +525,22 @@ map_selection_rect_new(struct pcoord *center, int distance, int order)
  * @return A duplicated, transformed map selection
  */
 struct map_selection *
-map_selection_dup_pro(struct map_selection *sel, enum projection from, enum projection to)
-{
-	struct map_selection *next,**last;
-	struct map_selection *ret=NULL;
-	last=&ret;
-	while (sel) {
-		next = g_new(struct map_selection, 1);
-		*next=*sel;
-		if (from != projection_none || to != projection_none) {
-			transform_from_to(&sel->u.c_rect.lu, from, &next->u.c_rect.lu, to);
-			transform_from_to(&sel->u.c_rect.rl, from, &next->u.c_rect.rl, to);
-		}
-		*last=next;
-		last=&next->next;
-		sel = sel->next;
-	}
-	return ret;
+map_selection_dup_pro(struct map_selection *sel, enum projection from, enum projection to) {
+    struct map_selection *next,**last;
+    struct map_selection *ret=NULL;
+    last=&ret;
+    while (sel) {
+        next = g_new(struct map_selection, 1);
+        *next=*sel;
+        if (from != projection_none || to != projection_none) {
+            transform_from_to(&sel->u.c_rect.lu, from, &next->u.c_rect.lu, to);
+            transform_from_to(&sel->u.c_rect.rl, from, &next->u.c_rect.rl, to);
+        }
+        *last=next;
+        last=&next->next;
+        sel = sel->next;
+    }
+    return ret;
 }
 
 /**
@@ -570,9 +550,8 @@ map_selection_dup_pro(struct map_selection *sel, enum projection from, enum proj
  * @return The duplicated map selection
  */
 struct map_selection *
-map_selection_dup(struct map_selection *sel)
-{
-	return map_selection_dup_pro(sel, projection_none, projection_none);
+map_selection_dup(struct map_selection *sel) {
+    return map_selection_dup_pro(sel, projection_none, projection_none);
 }
 
 /**
@@ -581,14 +560,13 @@ map_selection_dup(struct map_selection *sel)
  * @param sel The map selection to be destroyed
  */
 void
-map_selection_destroy(struct map_selection *sel)
-{
-	struct map_selection *next;
-	while (sel) {
-		next = sel->next;
-		g_free(sel);
-		sel = next;
-	}
+map_selection_destroy(struct map_selection *sel) {
+    struct map_selection *next;
+    while (sel) {
+        next = sel->next;
+        g_free(sel);
+        sel = next;
+    }
 }
 
 /**
@@ -602,22 +580,21 @@ map_selection_destroy(struct map_selection *sel)
  * @return True if the rectangle is within the selection, false otherwise
  */
 int
-map_selection_contains_item_rect(struct map_selection *sel, struct item *item)
-{
-	struct coord c;
-	struct coord_rect r;
-	int count=0;
-	while (item_coord_get(item, &c, 1)) {
-		if (! count) {
-			r.lu=c;
-			r.rl=c;
-		} else
-			coord_rect_extend(&r, &c);
-		count++;
-	}
-	if (! count)
-		return 0;
-	return map_selection_contains_rect(sel, &r);
+map_selection_contains_item_rect(struct map_selection *sel, struct item *item) {
+    struct coord c;
+    struct coord_rect r;
+    int count=0;
+    while (item_coord_get(item, &c, 1)) {
+        if (! count) {
+            r.lu=c;
+            r.rl=c;
+        } else
+            coord_rect_extend(&r, &c);
+        count++;
+    }
+    if (! count)
+        return 0;
+    return map_selection_contains_rect(sel, &r);
 
 }
 
@@ -635,24 +612,23 @@ map_selection_contains_item_rect(struct map_selection *sel, struct item *item)
  */
 
 int
-map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count)
-{
-	int i;
-	if (! sel)
-		return 1;
-	while (sel) {
-		for (i = 0 ; i < count ; i++) {
-			if (item_range_intersects_range(&sel->range, &range[i]))
-				return 1;
-		}
-		if (! follow)
-			break;
-		sel=sel->next;
-	}
-	return 0;
+map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count) {
+    int i;
+    if (! sel)
+        return 1;
+    while (sel) {
+        for (i = 0 ; i < count ; i++) {
+            if (item_range_intersects_range(&sel->range, &range[i]))
+                return 1;
+        }
+        if (! follow)
+            break;
+        sel=sel->next;
+    }
+    return 0;
 }
 /**
- * @brief Checks if a selection contains a item 
+ * @brief Checks if a selection contains a item
  *
  * This function checks if a selection contains a item type
  *
@@ -663,18 +639,17 @@ map_selection_contains_item_range(struct map_selection *sel, int follow, struct 
  */
 
 int
-map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type)
-{
-	if (! sel)
-		return 1;
-	while (sel) {
-		if (item_range_contains_item(&sel->range, type))
-			return 1;
-		if (! follow)
-			break;
-		sel=sel->next;
-	}
-	return 0;
+map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type) {
+    if (! sel)
+        return 1;
+    while (sel) {
+        if (item_range_contains_item(&sel->range, type))
+            return 1;
+        if (! follow)
+            break;
+        sel=sel->next;
+    }
+    return 0;
 }
 
 
@@ -687,65 +662,59 @@ map_selection_contains_item(struct map_selection *sel, int follow, enum item_typ
  * @return True if priv is the private data of map
  */
 int
-map_priv_is(struct map *map, struct map_priv *priv)
-{
-	return (map->priv == priv);
+map_priv_is(struct map *map, struct map_priv *priv) {
+    return (map->priv == priv);
 }
 
 void
-map_dump_filedesc(struct map *map, FILE *out)
-{
-	struct map_rect *mr=map_rect_new(map, NULL);
-	struct item *item;
+map_dump_filedesc(struct map *map, FILE *out) {
+    struct map_rect *mr=map_rect_new(map, NULL);
+    struct item *item;
 
-	while ((item = map_rect_get_item(mr))) 
-		item_dump_filedesc(item, map, out);
-	map_rect_destroy(mr);
+    while ((item = map_rect_get_item(mr)))
+        item_dump_filedesc(item, map, out);
+    map_rect_destroy(mr);
 }
 
 void
-map_dump_file(struct map *map, const char *file)
-{
-	FILE *f;
-	f=fopen(file,"w");
-	if (f) {
-		map_dump_filedesc(map, f);
-		fclose(f);
-	} else 
-		dbg(lvl_error,"failed to open file '%s'",file);
+map_dump_file(struct map *map, const char *file) {
+    FILE *f;
+    f=fopen(file,"w");
+    if (f) {
+        map_dump_filedesc(map, f);
+        fclose(f);
+    } else
+        dbg(lvl_error,"failed to open file '%s'",file);
 }
 
 void
-map_dump(struct map *map)
-{
-	map_dump_filedesc(map, stdout);
+map_dump(struct map *map) {
+    map_dump_filedesc(map, stdout);
 }
 
-struct item * 
-map_rect_create_item(struct map_rect *mr, enum item_type type_)
-{
-	if(mr && mr->priv && mr->m) {
-		return mr->m->meth.map_rect_create_item(mr->priv, type_) ;
-	}
-	else {
-		return NULL;
-	}
+struct item *
+map_rect_create_item(struct map_rect *mr, enum item_type type_) {
+    if(mr && mr->priv && mr->m) {
+        return mr->m->meth.map_rect_create_item(mr->priv, type_) ;
+    } else {
+        return NULL;
+    }
 }
 
 struct object_func map_func = {
-	attr_map,
-	(object_func_new)map_new,
-	(object_func_get_attr)map_get_attr,
-	(object_func_iter_new)NULL,
-	(object_func_iter_destroy)NULL,
-	(object_func_set_attr)map_set_attr,
-	(object_func_add_attr)NULL,
-	(object_func_remove_attr)NULL,
-	(object_func_init)NULL,
-	(object_func_destroy)map_destroy,
-	(object_func_dup)NULL,
-	(object_func_ref)navit_object_ref,
-	(object_func_unref)navit_object_unref,
+    attr_map,
+    (object_func_new)map_new,
+    (object_func_get_attr)map_get_attr,
+    (object_func_iter_new)NULL,
+    (object_func_iter_destroy)NULL,
+    (object_func_set_attr)map_set_attr,
+    (object_func_add_attr)NULL,
+    (object_func_remove_attr)NULL,
+    (object_func_init)NULL,
+    (object_func_destroy)map_destroy,
+    (object_func_dup)NULL,
+    (object_func_ref)navit_object_ref,
+    (object_func_unref)navit_object_unref,
 };
 
 

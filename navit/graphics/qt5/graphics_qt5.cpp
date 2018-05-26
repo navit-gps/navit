@@ -64,17 +64,14 @@ extern "C" {
 #endif
 
 #if USE_QML
-GraphicsPriv::GraphicsPriv(struct graphics_priv* gp)
-{
+GraphicsPriv::GraphicsPriv(struct graphics_priv* gp) {
     this->gp = gp;
 }
 
-GraphicsPriv::~GraphicsPriv()
-{
+GraphicsPriv::~GraphicsPriv() {
 }
 
-void GraphicsPriv::emit_update()
-{
+void GraphicsPriv::emit_update() {
     emit update();
 }
 #endif
@@ -90,8 +87,7 @@ struct graphics_image_priv {
 };
 
 static void
-graphics_destroy(struct graphics_priv* gr)
-{
+graphics_destroy(struct graphics_priv* gr) {
 //        dbg(lvl_debug,"enter");
 #if HAVE_FREETYPE
     gr->freetype_methods.destroy();
@@ -144,8 +140,7 @@ graphics_destroy(struct graphics_priv* gr)
     g_free(gr);
 }
 
-static void font_destroy(struct graphics_font_priv* font)
-{
+static void font_destroy(struct graphics_font_priv* font) {
     //        dbg(lvl_debug,"enter");
     if (font->font != NULL)
         delete (font->font);
@@ -186,8 +181,8 @@ static const char* fontfamilies[] = {
  *
  * Allocates a font handle and returnes filled interface stucture
  */
-static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags)
-{
+static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font,
+        int size, int flags) {
     int a = 0;
     struct graphics_font_priv* font_priv;
     dbg(lvl_debug, "enter (font %s, %d, 0x%x)", font, size, flags);
@@ -225,8 +220,7 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
 }
 
 static void
-gc_destroy(struct graphics_gc_priv* gc)
-{
+gc_destroy(struct graphics_gc_priv* gc) {
     //        dbg(lvl_debug,"enter gc=%p", gc);
     delete (gc->pen);
     delete (gc->brush);
@@ -234,15 +228,13 @@ gc_destroy(struct graphics_gc_priv* gc)
 }
 
 static void
-gc_set_linewidth(struct graphics_gc_priv* gc, int w)
-{
+gc_set_linewidth(struct graphics_gc_priv* gc, int w) {
     //        dbg(lvl_debug,"enter gc=%p, %d", gc, w);
     gc->pen->setWidth(w);
 }
 
 static void
-gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* dash_list, int n)
-{
+gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* dash_list, int n) {
     if (n <= 0) {
         dbg(lvl_error, "Refuse to set dashes without dash pattern");
     }
@@ -263,8 +255,7 @@ gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* das
 }
 
 static void
-gc_set_foreground(struct graphics_gc_priv* gc, struct color* c)
-{
+gc_set_foreground(struct graphics_gc_priv* gc, struct color* c) {
     QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8);
     //        dbg(lvl_debug,"context %p: color %02x%02x%02x",gc, c->r >> 8, c->g >> 8, c->b >> 8);
     gc->pen->setColor(col);
@@ -273,8 +264,7 @@ gc_set_foreground(struct graphics_gc_priv* gc, struct color* c)
 }
 
 static void
-gc_set_background(struct graphics_gc_priv* gc, struct color* c)
-{
+gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
     QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8);
     //        dbg(lvl_debug,"context %p: color %02x%02x%02x",gc, c->r >> 8, c->g >> 8, c->b >> 8);
     //gc->pen->setColor(col);
@@ -289,8 +279,7 @@ static struct graphics_gc_methods gc_methods = {
     gc_set_background
 };
 
-static struct graphics_gc_priv* gc_new(struct graphics_priv* gr, struct graphics_gc_methods* meth)
-{
+static struct graphics_gc_priv* gc_new(struct graphics_priv* gr, struct graphics_gc_methods* meth) {
     struct graphics_gc_priv* graphics_gc_priv = NULL;
     //        dbg(lvl_debug,"enter gr==%p", gr);
     graphics_gc_priv = g_new0(struct graphics_gc_priv, 1);
@@ -302,8 +291,7 @@ static struct graphics_gc_priv* gc_new(struct graphics_priv* gr, struct graphics
     return graphics_gc_priv;
 }
 
-static void image_destroy(struct graphics_image_priv* img)
-{
+static void image_destroy(struct graphics_image_priv* img) {
     //    dbg(lvl_debug, "enter");
     if (img->pixmap != NULL)
         delete (img->pixmap);
@@ -315,8 +303,8 @@ struct graphics_image_methods image_methods = {
 };
 
 static struct graphics_image_priv*
-image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* path, int* w, int* h, struct point* hot, int rotation)
-{
+image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* path, int* w, int* h, struct point* hot,
+          int rotation) {
     struct graphics_image_priv* image_priv;
     //        dbg(lvl_debug,"enter %s, %d %d", path, *w, *h);
     if (path[0] == 0) {
@@ -376,7 +364,8 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
         /* check if we need to scale this */
         if ((*w > 0) && (*h > 0)) {
             if ((image_priv->pixmap->width() != *w) || (image_priv->pixmap->height() != *h)) {
-                dbg(lvl_debug, "scale pixmap %s, %d->%d,%d->%d", path, image_priv->pixmap->width(), *w, image_priv->pixmap->height(), *h);
+                dbg(lvl_debug, "scale pixmap %s, %d->%d,%d->%d", path, image_priv->pixmap->width(), *w, image_priv->pixmap->height(),
+                    *h);
                 QPixmap* scaled = new QPixmap(image_priv->pixmap->scaled(*w, *h, Qt::IgnoreAspectRatio, Qt::FastTransformation));
                 delete (image_priv->pixmap);
                 image_priv->pixmap = scaled;
@@ -396,8 +385,7 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
 }
 
 static void
-draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count)
-{
+draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
     int i;
     QPolygon polygon;
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)", gr, gc, p->x, p->y);
@@ -411,8 +399,7 @@ draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* 
 }
 
 static void
-draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count)
-{
+draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
     int i;
     QPolygon polygon;
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)", gr, gc, p->x, p->y);
@@ -434,8 +421,7 @@ draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point
 }
 
 static void
-draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h)
-{
+draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h) {
     //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
     if (gr->painter == NULL)
         return;
@@ -450,8 +436,7 @@ draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct poi
 }
 
 static void
-draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int r)
-{
+draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int r) {
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d,%d) r=%d", gr, gc, p->x, p->y, r);
     if (gr->painter == NULL)
         return;
@@ -473,8 +458,8 @@ draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point*
  * Renders given text on gr surface. Draws nice contrast outline around text.
  */
 static void
-draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg, struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy)
-{
+draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg,
+          struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy) {
     dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) d(%d, %d) %s", gr, fg, bg, p->x, p->y, dx, dy, text);
     QPainter* painter = gr->painter;
     if (painter == NULL)
@@ -566,8 +551,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
 }
 
 static void
-draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* p, struct graphics_image_priv* img)
-{
+draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* p, struct graphics_image_priv* img) {
     //        dbg(lvl_debug,"enter");
     if (gr->painter != NULL)
         gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
@@ -584,8 +568,7 @@ draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* 
  * called for root layer. There the content of the root layer is to be moved
  * by given vector. On root layer, NULL indicates the end of a drag.
  */
-static void draw_drag(struct graphics_priv* gr, struct point* p)
-{
+static void draw_drag(struct graphics_priv* gr, struct point* p) {
     struct point vector;
 
     if (p != NULL) {
@@ -622,15 +605,13 @@ static void draw_drag(struct graphics_priv* gr, struct point* p)
 }
 
 static void
-background_gc(struct graphics_priv* gr, struct graphics_gc_priv* gc)
-{
+background_gc(struct graphics_priv* gr, struct graphics_gc_priv* gc) {
     //        dbg(lvl_debug,"register context %p on %p", gc, gr);
     gr->background_graphics_gc_priv = gc;
 }
 
 static void
-draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
-{
+draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     switch (mode) {
     case draw_mode_begin:
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
@@ -672,18 +653,17 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode)
     }
 }
 
-static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound);
+static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p,
+        int w, int h, int wraparound);
 
-void resize_callback(struct graphics_priv* gr, int w, int h)
-{
+void resize_callback(struct graphics_priv* gr, int w, int h) {
     //        dbg(lvl_debug,"enter (%d, %d)", w, h);
     callback_list_call_attr_2(gr->callbacks, attr_resize,
-        GINT_TO_POINTER(w), GINT_TO_POINTER(h));
+                              GINT_TO_POINTER(w), GINT_TO_POINTER(h));
 }
 
 static int
-graphics_qt5_fullscreen(struct window* w, int on)
-{
+graphics_qt5_fullscreen(struct window* w, int on) {
     struct graphics_priv* gr;
     //        dbg(lvl_debug,"enter");
     gr = (struct graphics_priv*)w->priv;
@@ -708,8 +688,7 @@ graphics_qt5_fullscreen(struct window* w, int on)
 
 #ifdef SAILFISH_OS
 static void
-keep_display_on(struct graphics_priv* priv)
-{
+keep_display_on(struct graphics_priv* priv) {
     //        dbg(lvl_debug,"enter");
     QDBusConnection system = QDBusConnection::connectToBus(QDBusConnection::SystemBus, "system");
     QDBusInterface interface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", system);
@@ -719,8 +698,7 @@ keep_display_on(struct graphics_priv* priv)
 #endif
 
 static void
-graphics_qt5_disable_suspend(struct window* w)
-{
+graphics_qt5_disable_suspend(struct window* w) {
 //        dbg(lvl_debug,"enter");
 #ifdef SAILFISH_OS
     struct graphics_priv* gr;
@@ -734,8 +712,7 @@ graphics_qt5_disable_suspend(struct window* w)
 }
 
 static void*
-get_data(struct graphics_priv* this_priv, char const* type)
-{
+get_data(struct graphics_priv* this_priv, char const* type) {
     //        dbg(lvl_debug,"enter: %s", type);
     if (strcmp(type, "window") == 0) {
         struct window* win;
@@ -754,8 +731,7 @@ get_data(struct graphics_priv* this_priv, char const* type)
     return NULL;
 }
 
-static void image_free(struct graphics_priv* gr, struct graphics_image_priv* priv)
-{
+static void image_free(struct graphics_priv* gr, struct graphics_image_priv* priv) {
     //        dbg(lvl_debug,"enter");
     delete (priv->pixmap);
     g_free(priv);
@@ -773,8 +749,8 @@ static void image_free(struct graphics_priv* gr, struct graphics_image_priv* pri
  *
  * Calculates the bounding box around the given text.
  */
-static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy, struct point* ret, int estimate)
-{
+static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy,
+                          struct point* ret, int estimate) {
     int i;
     struct point pt;
     QString tmp = QString::fromUtf8(text);
@@ -807,8 +783,7 @@ static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* f
     }
 }
 
-static void overlay_disable(struct graphics_priv* gr, int disable)
-{
+static void overlay_disable(struct graphics_priv* gr, int disable) {
     GHashTableIter iter;
     struct graphics_priv *key, *value;
     //        dbg(lvl_debug,"enter gr=%p, %d", gr, disable);
@@ -820,8 +795,7 @@ static void overlay_disable(struct graphics_priv* gr, int disable)
     }
 }
 
-static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound)
-{
+static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound) {
     //        dbg(lvl_debug,"enter");
     gr->x = p->x;
     gr->y = p->y;
@@ -860,8 +834,7 @@ static struct graphics_methods graphics_methods = {
 
 /* create new graphics context on given context */
 static struct graphics_priv*
-overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound)
-{
+overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound) {
     struct graphics_priv* graphics_priv = NULL;
     graphics_priv = g_new0(struct graphics_priv, 1);
     *meth = graphics_methods;
@@ -869,8 +842,10 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
     if (gr->font_freetype_new) {
         graphics_priv->font_freetype_new = gr->font_freetype_new;
         gr->font_freetype_new(&graphics_priv->freetype_methods);
-        meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int, int))graphics_priv->freetype_methods.font_new;
-        meth->get_text_bbox = (void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))graphics_priv->freetype_methods.get_text_bbox;
+        meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int,
+                          int))graphics_priv->freetype_methods.font_new;
+        meth->get_text_bbox = (void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*,
+                                        int))graphics_priv->freetype_methods.get_text_bbox;
     }
 #endif
 #if USE_QML
@@ -904,8 +879,7 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
 
 /* create application and initial graphics context */
 static struct graphics_priv*
-graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr** attrs, struct callback_list* cbl)
-{
+graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr** attrs, struct callback_list* cbl) {
     struct graphics_priv* graphics_priv = NULL;
     struct attr* event_loop_system = NULL;
     struct attr* platform = NULL;
@@ -971,7 +945,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         graphics_priv->argv[graphics_priv->argc] = g_strdup(platform->u.str);
         graphics_priv->argc++;
     }
-/* create surrounding application */
+    /* create surrounding application */
 #if USE_QWIDGET
     QApplication* internal_app = new QApplication(graphics_priv->argc, graphics_priv->argv);
     navit_app = internal_app;
@@ -982,8 +956,10 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
 #if HAVE_FREETYPE
     graphics_priv->font_freetype_new = font_freetype_new;
     font_freetype_new(&graphics_priv->freetype_methods);
-    meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int, int))graphics_priv->freetype_methods.font_new;
-    meth->get_text_bbox = (void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))graphics_priv->freetype_methods.get_text_bbox;
+    meth->font_new = (struct graphics_font_priv * (*)(struct graphics_priv*, struct graphics_font_methods*, char*, int,
+                      int))graphics_priv->freetype_methods.font_new;
+    meth->get_text_bbox = (void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*,
+                                    int))graphics_priv->freetype_methods.get_text_bbox;
 #endif
     graphics_priv->callbacks = cbl;
     graphics_priv->pixmap = NULL;
@@ -1004,7 +980,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
         /* register our QtQuick widget to allow it's usage within QML */
         qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
         /* get our qml application from embedded resources. May be replaced by the
-	         * QtQuick gui component if enabled */
+             * QtQuick gui component if enabled */
         graphics_priv->engine = new QQmlApplicationEngine();
         if (graphics_priv->engine != NULL) {
             graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
@@ -1024,7 +1000,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     }
 #endif
     if ((fullscreen = attr_search(attrs, NULL, attr_fullscreen)) && (fullscreen->u.num)) {
-/* show this maximized */
+        /* show this maximized */
 #if USE_QML
         if (graphics_priv->window != NULL)
             graphics_priv->window->setWindowState(Qt::WindowFullScreen);
@@ -1083,7 +1059,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     /* tell Navit our geometry */
     resize_callback(graphics_priv, graphics_priv->pixmap->width(), graphics_priv->pixmap->height());
 
-/* show our window */
+    /* show our window */
 #if USE_QML
     if (graphics_priv->window != NULL)
         graphics_priv->window->show();
@@ -1096,8 +1072,7 @@ graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr**
     return graphics_priv;
 }
 
-void plugin_init(void)
-{
+void plugin_init(void) {
 #if USE_QML
     Q_INIT_RESOURCE(graphics_qt5);
 #endif
