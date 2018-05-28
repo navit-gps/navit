@@ -30,7 +30,7 @@ endif()
 foreach ( PLUGIN_PATH ${ALL_PLUGINS})
    if (${PLUGIN_PATH})
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PATH}")
-      
+
       string(REPLACE "/" "_" MODULE_INC ${PLUGIN_PATH})
       list(APPEND NAVIT_SUPPORT_LIBS ${MODULE_INC})
    endif()
@@ -39,11 +39,11 @@ endforeach()
 foreach ( MODULE_PATH ${ALL_MODULES})
    if ( ${MODULE_PATH} )
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
-      
+
       string(REPLACE "/" "_" MODULE_INC ${MODULE_PATH})
       list(APPEND MODULES_PROTOTYPE "\nvoid\tmodule_${MODULE_INC}_init(void)")
       list(APPEND MODULES_FUNC "\nmodule_${MODULE_INC}_init()")
-      
+
       if (NOT USE_PLUGINS)
          list(APPEND MODULES_NAME ${MODULE_INC})
       else()
@@ -103,7 +103,7 @@ endif(SHARED_LIBNAVIT)
 if(NOT MSVC)
    SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 endif(NOT MSVC)
-target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} ) 
+target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} )
 set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
    set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
@@ -179,7 +179,7 @@ if(ANDROID)
    set(XSLT_HDPI_ARGS OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96)
    set(XSLT_MDPI_ARGS OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64)
    set(XSLT_LDPI_ARGS OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48)
-   
+
    set(XMLCFG_OUTPUT_LIST "")	# Used to build the list of generated *xml filenames (only file basename, directory part excluded)
    foreach(XMLCFG_FILE_PREFIX ${XMLCFG_ALL_FILE_PREFIXES})
       set(XMLCFG_FILE_SHIPPED ${XMLCFG_FILE_PREFIX}_shipped.xml)
@@ -236,7 +236,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/navit.xml
 
 get_directory_property(INCLUDE_DIRECTORIES INCLUDE_DIRECTORIES)
 WRITE_FILE("cmake_plugin_settings.txt"
-   "set(APPLE ${APPLE} CACHE BOOL init)\n" 
+   "set(APPLE ${APPLE} CACHE BOOL init)\n"
    "set(ANDROID ${ANDROID} CACHE BOOL init)\n"
    "set(USE_PLUGINS ${USE_PLUGINS} CACHE BOOL init)\n"
    "set(MODULE_BUILD_TYPE \"${MODULE_BUILD_TYPE}\" CACHE STRING init)\n"

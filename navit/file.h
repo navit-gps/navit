@@ -44,7 +44,7 @@ struct file {
 #ifndef __CEGCC__
 	time_t mtime;
 	time_t ctime;
-	int version;			
+	int version;
 #endif
 #if defined(_WIN32) || defined(__CEGCC__)
 	long map_handle;

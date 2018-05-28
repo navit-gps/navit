@@ -367,7 +367,7 @@ msgstr "Faça o retorno a direita %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "siga por"
 
@@ -1952,10 +1952,10 @@ msgstr "Pontos da via"
 msgid "Enter Coordinates"
 msgstr "Digite as coordenadas"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

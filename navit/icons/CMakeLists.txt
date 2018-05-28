@@ -55,10 +55,10 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
       else()
          set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png)
       endif()
-      
+
       if(NOT CURRENT_SCALE EQUAL -1)
         convert_to_png(
-           ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC} 
+           ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC}
            ${IMAGE_DST}
            ${CURRENT_SCALE}
         )
@@ -82,7 +82,7 @@ install(FILES  desktop_icons/256x256/navit.png DESTINATION share/icons/hicolor/2
 
 if (USE_SVG OR SVG2PNG)
    FILE(GLOB SVG_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.svg" "*.svgz")
-   
+
    if(USE_SVG)
       list(APPEND IMAGES_TO_COPY ${SVG_FILES})
    endif(USE_SVG)
@@ -112,7 +112,7 @@ endif(XPM2PNG)
 
 foreach (IMAGE_SRC ${FILES_TO_PNG})
    string(REGEX REPLACE ".[a-z]*\$" "" IMAGE ${IMAGE_SRC})
-   
+
    if ( IMAGE_SRC MATCHES ".*svgz*" )
       if ( DEFINED svg2png_scaling_nav AND ${IMAGE} MATCHES "^nav_")
          add_scale_targets(${IMAGE_SRC} ${IMAGE} ${svg2png_scaling_nav})
@@ -124,7 +124,7 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
    else()
       add_scale_targets(${IMAGE_SRC} ${IMAGE} 0)
    endif()
-      
+
 endforeach()
 
 foreach (IMAGE_FILE ${IMAGES_TO_COPY})

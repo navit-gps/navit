@@ -4,7 +4,7 @@ import QtQuick.Window 2.0
 
 Window {
    width: 200; height: 200
-    
+
    Item {
        id: root
        anchors.fill: parent

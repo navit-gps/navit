@@ -45,7 +45,7 @@ struct quadtree_node {
     int ref_count;
 };
 
-struct quadtree_iter; 
+struct quadtree_iter;
 
 struct quadtree_node* quadtree_node_new(struct quadtree_node* parent, double xmin, double xmax, double ymin, double ymax );
 struct quadtree_item* quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* item, double current_max, struct quadtree_node* toSkip);

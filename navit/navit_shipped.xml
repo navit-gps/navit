@@ -48,7 +48,7 @@
 		Here's an example for a freerunner:
 		<gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/>
 		-->
-		
+
 		<!--
 		The action that appears on map click is configurable with the attribute "on_map_click".
 		To get the previous behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
@@ -104,9 +104,9 @@ Navigation</text></img>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
 				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
-				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last
 Waypoint</text></img>
-				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
 Waypoint</text></img>
 			</a>
 			<a name='Map Point'><text>Map Point</text>
@@ -175,7 +175,7 @@ Waypoint</text></img>
 		You can find a list of all the available OSDs items here:
 		http://wiki.navit-project.org/index.php/OSD -->
 		<osd enabled="no" type="compass"/>
-		<osd enabled="no" type="navigation_next_turn"/> 
+		<osd enabled="no" type="navigation_next_turn"/>
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
 			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
@@ -183,12 +183,12 @@ Waypoint</text></img>
 		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.png"/>
 		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu(1)" src="menu.png"/>
 		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.png"/>
-		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/> 
+		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/>
 
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
 		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->
-		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1" 
+		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1"
 				source="serial:COM4 baudrate=4800 parity=N data=8 stop=1" > -->
 
 			<!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
@@ -290,7 +290,7 @@ Waypoint</text></img>
 			<roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7" />
 			<!-- Those types do not appear in maptool.c and therefore are not used ATM -->
 			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7" />
-			<!--roundabout does not apply to OSMaps -->	
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
@@ -426,7 +426,7 @@ Waypoint</text></img>
 				<circle color="#008080" radius="24" width="2" text_size="12"/>
 			</itemgra>
 		</layer>
-		
+
 		<!--
 		Layouts are defined in their own specific XML files and are included below (one file per layout, all files matching the wildcard expression below will be used)
 		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)

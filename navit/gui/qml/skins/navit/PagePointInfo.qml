@@ -12,9 +12,9 @@ Rectangle {
     function pageOpen() {
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -68,7 +68,7 @@ Rectangle {
         }
     }
 
-    ListSelector { 
+    ListSelector {
 	id:layoutList; text: "Attributes";
 	anchors.top: urlTxt.bottom;
 	anchors.left: parent.left;

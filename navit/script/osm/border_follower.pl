@@ -122,10 +122,10 @@ do {
 		}
 	}
 	if ($count == 0) {
-		error "No connection" 
-	} else { 
+		error "No connection"
+	} else {
 		if ($count > 1) {
-			error "Multiple connections ($count)" 
+			error "Multiple connections ($count)"
 		} else {
 			$path="$path $wayid";
 		}

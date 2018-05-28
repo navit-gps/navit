@@ -14,7 +14,7 @@
     android:layout_gravity="top"
     android:background = "#f00"
     android:background = "#0f0"
-    
+
     -->
 
     <LinearLayout

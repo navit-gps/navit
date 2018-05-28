@@ -53,7 +53,7 @@ RUN wget -nv -c http://download.savannah.gnu.org/releases/freetype/freetype-2.5.
 	&& tar xzf freetype-2.5.0.tar.gz && cd freetype-2.5.0 \
 	&& ./configure --prefix=$PREFIX --host=$ARCH &&  make && make install \
 	&& rm -rf /tmp/freetype-2.5.0 /tmp/freetype-2.5.0.tar.gz
- 
+
 # freetype-config --cflags
 
 # glib

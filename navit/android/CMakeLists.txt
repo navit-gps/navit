@@ -86,28 +86,28 @@ if (ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/drawable-nodpi
                      -D LOWER=1
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
-      COMMAND ${CMAKE_COMMAND} 
+      COMMAND ${CMAKE_COMMAND}
                      -D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/lib[b-z]*.so"
 		     -D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
-      COMMAND ${CMAKE_COMMAND} 
-                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/po/*.mo" 
+      COMMAND ${CMAKE_COMMAND}
+                     -D GLOB_EXP="${PROJECT_BINARY_DIR}/po/*.mo"
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
                      -D LOWER=1
                      -P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
    )
-   
+
    add_dependencies (android_resources images locales ${NAVIT_LIBNAME})
-   
+
    add_custom_target ( apkg
       COMMAND ant debug
    )
-   
+
    add_custom_target ( apkg-release
       COMMAND ant release
    )
 
    add_dependencies(apkg android_resources)
    add_dependencies(apkg-release android_resources)
-   
+
 endif(ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)

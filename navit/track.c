@@ -138,7 +138,7 @@ tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
 // Minimum average speed
 #define CDF_MINAVG 1.f
 // Maximum average speed
-#define CDF_MAXAVG 6.f // only ~ 20 km/h 
+#define CDF_MAXAVG 6.f // only ~ 20 km/h
 // We need a low value here because otherwise we would extrapolate whenever we are not accelerating
 
 // Mininum distance (square of it..), below which we ignore gps updates

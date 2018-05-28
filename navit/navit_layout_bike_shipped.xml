@@ -996,7 +996,7 @@
 		<!-- This entry shows all unknown linear elements as blue lines -->
 		<!--
 				<itemgra item_types="street_unkn" order="0-">
-					<polyline color="#8080ff" width="3"/> 
+					<polyline color="#8080ff" width="3"/>
 				</itemgra>
 				-->
 	</layer>

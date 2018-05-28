@@ -27,8 +27,8 @@ else
 fi
 [ "$2" != "" ] && SRCDIR="$2"
 [ "$3" != "" ] && BASEDIR="$3"
-if [ "$4" != "" ]; 
-then 
+if [ "$4" != "" ];
+then
 	NAVITXML="$4"
 else
 	NAVITXML=""

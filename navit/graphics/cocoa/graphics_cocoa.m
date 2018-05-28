@@ -175,7 +175,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
+
 	dbg(1,"Enter %d %d",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
@@ -185,7 +185,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
+
 	dbg(1,"Enter %d %d",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
@@ -195,7 +195,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
+
 	dbg(1,"Enter %d %d",p.x,p.y);
 	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
@@ -233,7 +233,7 @@ struct graphics_font_priv {
 	return [self init];
 }
 
-static 
+static
 void free_graphics(struct graphics_priv *gr)
 {
 	if (gr->layer) {
@@ -355,7 +355,7 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 
 	if (global_graphics_cocoa) {
 		callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)appFrame.size.width, (int)appFrame.size.height);
-		
+
 	}
 
 #if USE_UIKIT
@@ -404,7 +404,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     	CGContextBeginPath(gr->layer_context);
 	CGContextAddLines(gr->layer_context, points, count);
 	CGContextStrokePath(gr->layer_context);
-	
+
 }
 
 static void
@@ -533,8 +533,8 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 }
 
 static struct graphics_gc_methods gc_methods = {
-	gc_destroy, 
-	gc_set_linewidth, 
+	gc_destroy,
+	gc_set_linewidth,
 	gc_set_dashes,
 	gc_set_foreground,
 	gc_set_background,
@@ -630,14 +630,14 @@ static struct graphics_methods graphics_methods = {
 	draw_polygon,
 	draw_rectangle,
 	NULL, /* draw_circle, */
-	draw_text, 
+	draw_text,
 	draw_image,
 	NULL, /* draw_image_warp, */
 	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
-	overlay_new, 
+	overlay_new,
 	image_new,
 	get_data,
 	image_free,
@@ -748,7 +748,7 @@ static void
 event_cocoa_remove_timeout(struct event_timeout *ev)
 {
 	NavitTimer *t=(NavitTimer *)ev;
-	
+
 	[t->timer invalidate];
 	[t release];
 }
@@ -769,7 +769,7 @@ static void
 event_cocoa_remove_idle(struct event_idle *ev)
 {
 	NavitTimer *t=(NavitTimer *)ev;
-	
+
 	[t->timer invalidate];
 	[t release];
 }
@@ -782,7 +782,7 @@ static struct event_methods event_cocoa_methods = {
 	event_cocoa_add_timeout,
 	event_cocoa_remove_timeout,
 	event_cocoa_add_idle,
-	event_cocoa_remove_idle, 
+	event_cocoa_remove_idle,
 	NULL, /* event_cocoa_call_callback, */
 };
 

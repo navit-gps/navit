@@ -345,7 +345,7 @@ msgstr "%1$s 右迴轉"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "沿著"
 
@@ -1924,10 +1924,10 @@ msgstr "航點"
 msgid "Enter Coordinates"
 msgstr "輸入座標"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

@@ -39,7 +39,7 @@ void corelocation_init(void * pv_arg, FT_LOCATION_CB pf_cb) {
 
 	/** Save callbacks */
 	locationcontroller->pv_arg = pv_arg;
-	locationcontroller->pf_cb = pf_cb; 
+	locationcontroller->pf_cb = pf_cb;
 
 	/** Start location process */
 	[locationcontroller.locationManager startUpdatingLocation];
@@ -64,7 +64,7 @@ void corelocation_exit(void) {
 	self = [super init];
 	if (self != nil) {
 		self.locationManager = [[[CLLocationManager alloc] init] autorelease];
-		self.locationManager.distanceFilter = kCLDistanceFilterNone; 
+		self.locationManager.distanceFilter = kCLDistanceFilterNone;
 		self.locationManager.delegate = self; // send loc updates to myself
 		self.pf_cb = NULL;
 		self.pv_arg = NULL;
@@ -82,7 +82,7 @@ fromLocation:(CLLocation *)oldLocation
 {
 	NSLog(@"New Location: %@", [newLocation description]);
 	NSString *newDateString = [self.dateFormatter stringFromDate:newLocation.timestamp];
-	const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding]; 
+	const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding];
 
 	if(self.pf_cb) {
 		self.pf_cb(
