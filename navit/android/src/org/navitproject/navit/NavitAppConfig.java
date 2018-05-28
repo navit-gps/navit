@@ -34,10 +34,10 @@ public class NavitAppConfig extends Application {
 
                     if (addr_str.length() > 0) {
                         mLastAddresses.add(new NavitAddress(
-                                1,
-                                mSettings.getFloat("LastAddress_Lat_" + String.valueOf(index), 0),
-                                mSettings.getFloat("LastAddress_Lon_" + String.valueOf(index), 0),
-                                addr_str));
+                                               1,
+                                               mSettings.getFloat("LastAddress_Lat_" + String.valueOf(index), 0),
+                                               mSettings.getFloat("LastAddress_Lon_" + String.valueOf(index), 0),
+                                               addr_str));
                     }
 
                     if (--index < 0) index = MAX_LAST_ADDRESSES - 1;

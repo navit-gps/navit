@@ -21,7 +21,6 @@
 #include "plugin.h"
 
 void
-plugin_init(void)
-{
-	plugin_get_category_vehicle("file");
+plugin_init(void) {
+    plugin_get_category_vehicle("file");
 }
