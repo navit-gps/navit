@@ -15,7 +15,7 @@ send_event (){
 
     import -window root $FRAME_DIR/tmp.png
     if [[ "$1" == "mousemove" ]]; then
-        composite -gravity NorthWest -geometry +$2+$3 ~/navit/ci/pointer-64.png $FRAME_DIR/tmp.png $FRAME_DIR/${file}.png
+        composite -gravity NorthWest -geometry +$2+$3 ~/navit/scripts/pointer-64.png $FRAME_DIR/tmp.png $FRAME_DIR/${file}.png
     else
         mv $FRAME_DIR/tmp.png $FRAME_DIR/${file}.png
     fi

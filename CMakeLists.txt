@@ -710,6 +710,7 @@ if(ANDROID)
    set_with_reason(map/filter "Android detected" FALSE)
    set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Android detected" TRUE)
 #   set_with_reason(plugin/pedestrian "Android detected" TRUE)
+   set_with_reason(support/libpng "Android detected" FALSE)
    set(SHARED_LIBNAVIT TRUE)
 
    add_feature(XPM2PNG "Android detected" TRUE)

@@ -1,6 +1,5 @@
 package org.navitproject.navit;
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -13,6 +12,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
 import java.io.File;
 
 public class NavitDialogs extends Handler {
