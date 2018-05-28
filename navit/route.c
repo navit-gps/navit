@@ -2559,12 +2559,20 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 void route_process_traffic_changes(struct route *this_, GList ** changes) {
     struct route_traffic_distortion_change *c = NULL;
     struct route_graph_point *p_min;
+    struct attr route_status;
 
     /* This heap will hold all points with "temporarily" calculated costs */
     struct fibheap *heap;
 
+    struct route_path *oldpath;
+
     if (!changes)
         return;
+
+    route_status.type = attr_route_status;
+
+    route_status.u.num = route_status_building_graph;
+    //route_set_attr(this_, &route_status);
 
     heap = fh_makekeyheap();
 
@@ -2594,9 +2602,19 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
 
     route_graph_compute_shortest_path(this_->vehicleprofile, heap);
 
-    /* TODO change route path if necessary */
-
     fh_deleteheap(heap);
+
+    oldpath = this_->path2;
+    this_->path2 = route_path_new(this_->graph, this_->path2, route_previous_destination(this_), this_->current_dst,
+            this_->vehicleprofile);
+    if (this_->path2) {
+        if (this_->path2->updated)
+            route_status.u.num = route_status_path_done_incremental;
+        else
+            route_status.u.num = route_status_path_done_new;
+    } else
+        route_status.u.num = route_status_not_found;
+    route_set_attr(this_, &route_status);
 }
 
 /**
