@@ -994,29 +994,29 @@ static void relation_add_tag(char *k, char *v);
 
 static int
 access_value(char *v) {
-    if (!strcmp(v,"1"))
+    if (!g_strcmp0(v,"1"))
         return 1;
-    if (!strcmp(v,"yes"))
+    if (!g_strcmp0(v,"yes"))
         return 1;
-    if (!strcmp(v,"designated"))
+    if (!g_strcmp0(v,"designated"))
         return 1;
-    if (!strcmp(v,"official"))
+    if (!g_strcmp0(v,"official"))
         return 1;
-    if (!strcmp(v,"permissive"))
+    if (!g_strcmp0(v,"permissive"))
         return 1;
-    if (!strcmp(v,"0"))
+    if (!g_strcmp0(v,"0"))
         return 2;
-    if (!strcmp(v,"no"))
+    if (!g_strcmp0(v,"no"))
         return 2;
-    if (!strcmp(v,"agricultural"))
+    if (!g_strcmp0(v,"agricultural"))
         return 2;
-    if (!strcmp(v,"forestry"))
+    if (!g_strcmp0(v,"forestry"))
         return 2;
-    if (!strcmp(v,"private"))
+    if (!g_strcmp0(v,"private"))
         return 2;
-    if (!strcmp(v,"delivery"))
+    if (!g_strcmp0(v,"delivery"))
         return 2;
-    if (!strcmp(v,"destination"))
+    if (!g_strcmp0(v,"destination"))
         return 2;
     return 3;
 }
@@ -1031,31 +1031,31 @@ osm_add_tag(char *k, char *v) {
         relation_add_tag(k,v);
         return;
     }
-    if (! strcmp(k,"ele")) {
+    if (! g_strcmp0(k,"ele")) {
         attr_strings_save(attr_string_label, v);
         level=9;
     }
-    if (! strcmp(k,"time"))
+    if (! g_strcmp0(k,"time"))
         level=9;
-    if (! strcmp(k,"created_by"))
+    if (! g_strcmp0(k,"created_by"))
         level=9;
-    if (! strncmp(k,"tiger:",6) || !strcmp(k,"AND_nodes"))
+    if (! strncmp(k,"tiger:",6) || !g_strcmp0(k,"AND_nodes"))
         level=9;
-    if (! strcmp(k,"converted_by") || ! strcmp(k,"source"))
+    if (! g_strcmp0(k,"converted_by") || ! g_strcmp0(k,"source"))
         level=8;
     if (! strncmp(k,"osmarender:",11) || !strncmp(k,"svg:",4))
         level=8;
-    if (! strcmp(k,"layer"))
+    if (! g_strcmp0(k,"layer"))
         level=7;
     if (! strcasecmp(v,"true") || ! strcasecmp(v,"yes"))
         v="1";
     if (! strcasecmp(v,"false") || ! strcasecmp(v,"no"))
         v="0";
-    if (! strcmp(k,"oneway")) {
-        if (!strcmp(v,"1")) {
+    if (! g_strcmp0(k,"oneway")) {
+        if (!g_strcmp0(v,"1")) {
             flags[0] |= AF_ONEWAY | AF_ROUNDABOUT_VALID;
         }
-        if (! strcmp(v,"-1")) {
+        if (! g_strcmp0(v,"-1")) {
             flags[0] |= AF_ONEWAYREV | AF_ROUNDABOUT_VALID;
         }
         if (!in_way)
@@ -1063,11 +1063,11 @@ osm_add_tag(char *k, char *v) {
         else
             level=5;
     }
-    if (! strcmp(k,"junction")) {
-        if (! strcmp(v,"roundabout"))
+    if (! g_strcmp0(k,"junction")) {
+        if (! g_strcmp0(v,"roundabout"))
             flags[0] |= AF_ONEWAY | AF_ROUNDABOUT | AF_ROUNDABOUT_VALID;
     }
-    if (! strcmp(k,"maxspeed")) {
+    if (! g_strcmp0(k,"maxspeed")) {
         if (strstr(v, "mph")) {
             maxspeed_attr_value = (int)floor(atof(v) * 1.609344);
         } else {
@@ -1077,183 +1077,183 @@ osm_add_tag(char *k, char *v) {
             flags[0] |= AF_SPEED_LIMIT;
         level=5;
     }
-    if (! strcmp(k,"toll")) {
-        if (!strcmp(v,"1")) {
+    if (! g_strcmp0(k,"toll")) {
+        if (!g_strcmp0(v,"1")) {
             flags[0] |= AF_TOLL;
         }
     }
-    if (! strcmp(k,"access")) {
-        if (strcmp(v,"destination"))
+    if (! g_strcmp0(k,"access")) {
+        if (g_strcmp0(v,"destination"))
             flagsa[access_value(v)] |=
                 AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
         else
             flags[0] |= AF_THROUGH_TRAFFIC_LIMIT;
-        if (! strcmp(v,"hov"))
+        if (! g_strcmp0(v,"hov"))
             flags[0] |= AF_HIGH_OCCUPANCY_CAR_ONLY;
         level=5;
     }
-    if (! strcmp(k,"vehicle")) {
+    if (! g_strcmp0(k,"vehicle")) {
         flags[access_value(v)] |=
             AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_BIKE;
         level=5;
     }
-    if (! strcmp(k,"motor_vehicle")) {
+    if (! g_strcmp0(k,"motor_vehicle")) {
         flags[access_value(v)] |=
             AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED;
         level=5;
     }
-    if (! strcmp(k,"bicycle")) {
+    if (! g_strcmp0(k,"bicycle")) {
         flags[access_value(v)] |= AF_BIKE;
         level=5;
     }
-    if (! strcmp(k,"foot")) {
+    if (! g_strcmp0(k,"foot")) {
         flags[access_value(v)] |= AF_PEDESTRIAN;
         level=5;
     }
-    if (! strcmp(k,"horse")) {
+    if (! g_strcmp0(k,"horse")) {
         flags[access_value(v)] |= AF_HORSE;
         level=5;
     }
-    if (! strcmp(k,"moped")) {
+    if (! g_strcmp0(k,"moped")) {
         flags[access_value(v)] |= AF_MOPED;
         level=5;
     }
-    if (! strcmp(k,"motorcycle")) {
+    if (! g_strcmp0(k,"motorcycle")) {
         flags[access_value(v)] |= AF_MOTORCYCLE;
         level=5;
     }
-    if (! strcmp(k,"motorcar")) {
+    if (! g_strcmp0(k,"motorcar")) {
         flags[access_value(v)] |= AF_CAR;
         level=5;
     }
-    if (! strcmp(k,"hov")) {
+    if (! g_strcmp0(k,"hov")) {
         flags[access_value(v)] |= AF_HIGH_OCCUPANCY_CAR;
         level=5;
     }
-    if (! strcmp(k,"bus")) {
+    if (! g_strcmp0(k,"bus")) {
         flags[access_value(v)] |= AF_PUBLIC_BUS;
         level=5;
     }
-    if (! strcmp(k,"taxi")) {
+    if (! g_strcmp0(k,"taxi")) {
         flags[access_value(v)] |= AF_TAXI;
         level=5;
     }
-    if (! strcmp(k,"goods")) {
+    if (! g_strcmp0(k,"goods")) {
         flags[access_value(v)] |= AF_DELIVERY_TRUCK;
         level=5;
     }
-    if (! strcmp(k,"hgv")) {
+    if (! g_strcmp0(k,"hgv")) {
         flags[access_value(v)] |= AF_TRANSPORT_TRUCK;
         level=5;
     }
-    if (! strcmp(k,"emergency")) {
+    if (! g_strcmp0(k,"emergency")) {
         flags[access_value(v)] |= AF_EMERGENCY_VEHICLES;
         level=5;
     }
-    if (! strcmp(k,"hazmat")) {
+    if (! g_strcmp0(k,"hazmat")) {
         flags[access_value(v)] |= AF_DANGEROUS_GOODS;
         level=5;
     }
-    if (! strcmp(k,"tunnel") && !strcmp(v,"1")) {
+    if (! g_strcmp0(k,"tunnel") && !g_strcmp0(v,"1")) {
         flags[0] |= AF_UNDERGROUND;
     }
-    if (! strcmp(k,"note"))
+    if (! g_strcmp0(k,"note"))
         level=5;
-    if (! strcmp(k,"name")) {
+    if (! g_strcmp0(k,"name")) {
         attr_strings_save(attr_string_label, v);
         level=5;
     }
-    if (! strcmp(k,"addr:email")) {
+    if (! g_strcmp0(k,"addr:email")) {
         attr_strings_save(attr_string_email, v);
         level=5;
     }
-    if (! strcmp(k,"addr:suburb")) {
+    if (! g_strcmp0(k,"addr:suburb")) {
         attr_strings_save(attr_string_district_name, v);
         level=5;
     }
-    if (! strcmp(k,"addr:housenumber")) {
+    if (! g_strcmp0(k,"addr:housenumber")) {
         attr_strings_save(attr_string_house_number, v);
         level=5;
     }
-    if (! strcmp(k,"addr:street")) {
+    if (! g_strcmp0(k,"addr:street")) {
         attr_strings_save(attr_string_street_name, v);
         level=5;
     }
-    if (! strcmp(k,"phone")) {
+    if (! g_strcmp0(k,"phone")) {
         attr_strings_save(attr_string_phone, v);
         level=5;
     }
-    if (! strcmp(k,"fax")) {
+    if (! g_strcmp0(k,"fax")) {
         attr_strings_save(attr_string_fax, v);
         level=5;
     }
-    if (! strcmp(k,"postal_code")) {
+    if (! g_strcmp0(k,"postal_code")) {
         attr_strings_save(attr_string_postal, v);
         level=5;
     }
-    if (! strcmp(k,"addr:postcode") && !attr_strings[attr_string_postal]) {
+    if (! g_strcmp0(k,"addr:postcode") && !attr_strings[attr_string_postal]) {
         attr_strings_save(attr_string_postal, v);
         level=5;
     }
-    if (! strcmp(k,"openGeoDB:postal_codes") && !attr_strings[attr_string_postal]) {
+    if (! g_strcmp0(k,"openGeoDB:postal_codes") && !attr_strings[attr_string_postal]) {
         attr_strings_save(attr_string_postal, v);
         level=5;
     }
-    if (! strcmp(k,"population")) {
+    if (! g_strcmp0(k,"population")) {
         attr_strings_save(attr_string_population, v);
         level=5;
     }
-    if (! strcmp(k,"openGeoDB:population") && !attr_strings[attr_string_population]) {
+    if (! g_strcmp0(k,"openGeoDB:population") && !attr_strings[attr_string_population]) {
         attr_strings_save(attr_string_population, v);
         level=5;
     }
-    if ((! strcmp(k,"ref")) || (! strcmp(k,"destination:ref"))) {
+    if ((! g_strcmp0(k,"ref")) || (! g_strcmp0(k,"destination:ref"))) {
         if (in_way)
             attr_strings_save(attr_string_street_name_systematic, v);
         /* for exit number of highway_exit poi */
         else attr_strings_save(attr_string_ref, v);
         level=5;
     }
-    if (! strcmp(k,"nat_ref")) {
+    if (! g_strcmp0(k,"nat_ref")) {
         if (in_way)
             attr_strings_save(attr_string_street_name_systematic_nat, v);
         level=5;
     }
-    if (! strcmp(k,"int_ref")) {
+    if (! g_strcmp0(k,"int_ref")) {
         if (in_way)
             attr_strings_save(attr_string_street_name_systematic_int, v);
         level=5;
     }
-    if (! strcmp(k,"destination")) {
+    if (! g_strcmp0(k,"destination")) {
         if (in_way)
             attr_strings_save(attr_string_street_destination, v);
         level=5;
     }
-    if (! strcmp(k,"destination:forward")) {
+    if (! g_strcmp0(k,"destination:forward")) {
         if (in_way)
             attr_strings_save(attr_string_street_destination_forward, v);
         level=5;
     }
-    if (! strcmp(k,"destination:backward")) {
+    if (! g_strcmp0(k,"destination:backward")) {
         if (in_way)
             attr_strings_save(attr_string_street_destination_backward, v);
         level=5;
     }
-    if (! strcmp(k,"exit_to")) {
+    if (! g_strcmp0(k,"exit_to")) {
         attr_strings_save(attr_string_exit_to, v);
         level=5;
     }
-    if (! strcmp(k,"openGeoDB:is_in")) {
+    if (! g_strcmp0(k,"openGeoDB:is_in")) {
         if (!is_in_buffer[0])
             g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
         level=5;
     }
-    if (! strcmp(k,"is_in")) {
+    if (! g_strcmp0(k,"is_in")) {
         if (!is_in_buffer[0])
             g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
         level=5;
     }
-    if (! strcmp(k,"is_in:country")) {
+    if (! g_strcmp0(k,"is_in:country")) {
         /**
         * Sometimes there is no is_in tag, only is_in:country.
         * I put this here so it can be overwritten by the previous if clause if there IS an is_in tag.
@@ -1261,7 +1261,7 @@ osm_add_tag(char *k, char *v) {
         g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
         level=5;
     }
-    if (! strcmp(k,"place_county")) {
+    if (! g_strcmp0(k,"place_county")) {
         /**
         * Ireland uses the place_county OSM tag to describe what county a town is in.
         * This would be equivalent to is_in: Town; Locality; Country
@@ -1273,7 +1273,7 @@ osm_add_tag(char *k, char *v) {
         attr_strings_save(attr_string_county_name, v);
         level=5;
     }
-    if (! strcmp(k,"gnis:ST_alpha")) {
+    if (! g_strcmp0(k,"gnis:ST_alpha")) {
         /*	assume a gnis tag means it is part of the USA:
         	http://en.wikipedia.org/wiki/Geographic_Names_Information_System
         	many US towns do not have is_in tags
@@ -1281,7 +1281,7 @@ osm_add_tag(char *k, char *v) {
         g_strlcpy(is_in_buffer, "USA", sizeof(is_in_buffer));
         level=5;
     }
-    if (! strcmp(k,"lanes")) {
+    if (! g_strcmp0(k,"lanes")) {
         level=5;
     }
     if (attr_debug_level >= level) {
@@ -1653,15 +1653,15 @@ osm_end_relation(struct maptool_osm *osm) {
     } else
         type=type_none;
 
-    if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && (boundary || type!=type_none)) {
+    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary")) && (boundary || type!=type_none)) {
         item_bin_write(tmp_item_bin, osm->boundaries);
     }
 
-    if (!strcmp(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
+    if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
         item_bin_write(tmp_item_bin, osm->turn_restrictions);
 
-    if (!strcmp(relation_type, "associatedStreet") )
+    if (!g_strcmp0(relation_type, "associatedStreet") )
         item_bin_write(tmp_item_bin, osm->associated_streets);
 
     attr_longest_match_clear();
@@ -1681,10 +1681,10 @@ osm_add_member(enum relation_member_type type, osmid ref, char *role) {
 static void
 relation_add_tag(char *k, char *v) {
     int add_tag=1;
-    if (!strcmp(k,"type")) {
+    if (!g_strcmp0(k,"type")) {
         g_strlcpy(relation_type, v, sizeof(relation_type));
         add_tag=0;
-    } else if (!strcmp(k,"restriction")) {
+    } else if (!g_strcmp0(k,"restriction")) {
         if (!strncmp(v,"no_",3)) {
             tmp_item_bin->type=type_street_turn_restriction_no;
             add_tag=0;
@@ -1695,11 +1695,11 @@ relation_add_tag(char *k, char *v) {
             tmp_item_bin->type=type_none;
             osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
         }
-    } else if (!strcmp(k,"boundary")) {
-        if (!strcmp(v,"administrative") || !strcmp(v,"postal_code")) {
+    } else if (!g_strcmp0(k,"boundary")) {
+        if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code")) {
             boundary=1;
         }
-    } else if (!strcmp(k,"ISO3166-1") || !strcmp(k,"ISO3166-1:alpha2")) {
+    } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
     }
     if (add_tag) {
@@ -2346,7 +2346,7 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
     while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
         parse_relation_member_string(str, memb);
         count++;
-        if (!strcmp(memb->role, role) && (!min_count || *min_count < count)) {
+        if (!g_strcmp0(memb->role, role) && (!min_count || *min_count < count)) {
             if (min_count)
                 *min_count=count;
             return 1;
@@ -3352,7 +3352,7 @@ write_countrydir(struct zip_info *zip_info, int max_index_size) {
                      - adding new tile would make index part too big, or
                      - item just read belongs to a different tile than the previous one,
                     then close existing output file, put reference to the country index tile.*/
-                if(out && (!r || (partsize && ((partsize+ibsize)>max_index_size)) || strcmp(tileprev,tilecur)) ) {
+                if(out && (!r || (partsize && ((partsize+ibsize)>max_index_size)) || g_strcmp0(tileprev,tilecur)) ) {
                     partsize=ftello(out);
                     fclose(out);
                     out=NULL;

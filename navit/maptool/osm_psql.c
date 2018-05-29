@@ -234,13 +234,13 @@ map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm) {
                 long member_relation_id=atol(PQgetvalue(member, k, 0));
                 if (member_relation_id == id) {
                     int relmember_type=0; //type unknown
-                    if (!strcmp(PQgetvalue(member,k, 2),"W")) {
+                    if (!g_strcmp0(PQgetvalue(member,k, 2),"W")) {
                         relmember_type=2;
                     } else {
-                        if (!strcmp(PQgetvalue(member,k, 2),"N")) {
+                        if (!g_strcmp0(PQgetvalue(member,k, 2),"N")) {
                             relmember_type=1;
                         } else {
-                            if (!strcmp(PQgetvalue(member,k, 2),"R")) {
+                            if (!g_strcmp0(PQgetvalue(member,k, 2),"R")) {
                                 relmember_type=3;
                             }
                         }

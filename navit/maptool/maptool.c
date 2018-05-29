@@ -774,7 +774,7 @@ maptool_generate_tiles(struct maptool_params *p, char *suffix, char **filenames,
     }
     zipnum=zip_get_zipnum(zip_info);
     tilesdir=tempfile(suffix,"tilesdir",1);
-    if (!strcmp(suffix,ch_suffix)) { /* Makes compiler happy due to bug 35903 in gcc */
+    if (!g_strcmp0(suffix,ch_suffix)) { /* Makes compiler happy due to bug 35903 in gcc */
         ch_generate_tiles(suffix0,suffix,tilesdir,zip_info);
     } else {
         for (f = 0 ; f < filename_count ; f++)
@@ -815,7 +815,7 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
         }
         index_init(zip_info, 1);
     }
-    if (!strcmp(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
+    if (!g_strcmp0(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
         ch_assemble_map(suffix0,suffix,zip_info);
     } else {
         for (f = 0 ; f < filename_count ; f++) {

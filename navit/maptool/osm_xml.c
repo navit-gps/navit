@@ -148,11 +148,11 @@ parse_member(char *p) {
         return 0;
     if (!osm_xml_get_attribute(p, "role", role_buffer, BUFFER_SIZE))
         return 0;
-    if (!strcmp(type_buffer,"node"))
+    if (!g_strcmp0(type_buffer,"node"))
         type=rel_member_node;
-    else if (!strcmp(type_buffer,"way"))
+    else if (!g_strcmp0(type_buffer,"way"))
         type=rel_member_way;
-    else if (!strcmp(type_buffer,"relation"))
+    else if (!g_strcmp0(type_buffer,"relation"))
         type=rel_member_relation;
     else {
         fprintf(stderr,"Unknown type '%s'\n",type_buffer);

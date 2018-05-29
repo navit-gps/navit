@@ -2258,7 +2258,7 @@ protobuf_c_enum_descriptor_get_value_by_name
     unsigned start = 0, count = desc->n_value_names;
     while (count > 1) {
         unsigned mid = start + count / 2;
-        int rv = strcmp (desc->values_by_name[mid].name, name);
+        int rv = g_strcmp0(desc->values_by_name[mid].name, name);
         if (rv == 0)
             return desc->values + desc->values_by_name[mid].index;
         else if (rv < 0) {
@@ -2269,7 +2269,7 @@ protobuf_c_enum_descriptor_get_value_by_name
     }
     if (count == 0)
         return NULL;
-    if (strcmp (desc->values_by_name[start].name, name) == 0)
+    if (g_strcmp0(desc->values_by_name[start].name, name) == 0)
         return desc->values + desc->values_by_name[start].index;
     return NULL;
 }
@@ -2293,7 +2293,7 @@ protobuf_c_message_descriptor_get_field_by_name
         unsigned mid = start + count / 2;
         int rv;
         field = desc->fields + desc->fields_sorted_by_name[mid];
-        rv = strcmp (field->name, name);
+        rv = g_strcmp0(field->name, name);
         if (rv == 0)
             return field;
         else if (rv < 0) {
@@ -2305,7 +2305,7 @@ protobuf_c_message_descriptor_get_field_by_name
     if (count == 0)
         return NULL;
     field = desc->fields + desc->fields_sorted_by_name[start];
-    if (strcmp (field->name, name) == 0)
+    if (g_strcmp0(field->name, name) == 0)
         return field;
     return NULL;
 }
@@ -2331,7 +2331,7 @@ protobuf_c_service_descriptor_get_method_by_name
         unsigned mid = start + count / 2;
         unsigned mid_index = desc->method_indices_by_name[mid];
         const char *mid_name = desc->methods[mid_index].name;
-        int rv = strcmp (mid_name, name);
+        int rv = g_strcmp0(mid_name, name);
         if (rv == 0)
             return desc->methods + desc->method_indices_by_name[mid];
         if (rv < 0) {
@@ -2343,7 +2343,7 @@ protobuf_c_service_descriptor_get_method_by_name
     }
     if (count == 0)
         return NULL;
-    if (strcmp (desc->methods[desc->method_indices_by_name[start]].name, name) == 0)
+    if (g_strcmp0(desc->methods[desc->method_indices_by_name[start]].name, name) == 0)
         return desc->methods + desc->method_indices_by_name[start];
     return NULL;
 }

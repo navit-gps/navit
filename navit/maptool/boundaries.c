@@ -83,10 +83,10 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations) {
         if(!iso)
             iso=osm_tag_value(ib, "iso3166-1:alpha2");
 
-        if (admin_level && !strcmp(admin_level, "2")) {
+        if (!g_strcmp0(admin_level, "2")) {
             if(!iso) {
                 char *int_name=osm_tag_value(ib,"int_name");
-                if(int_name && !strcmp(int_name,"France"))
+                if(!g_strcmp0(int_name,"France"))
                     iso="FR";
             }
             if (iso) {
@@ -115,17 +115,17 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations) {
             rolestr=member+read;
 
             if(member_type==rel_member_node) {
-                if(!strcmp(rolestr,"admin_centre") || !strcmp(rolestr,"admin_center"))
+                if(!g_strcmp0(rolestr,"admin_centre") || !g_strcmp0(rolestr,"admin_center"))
                     boundary->admin_centre=osm_id;
             }
             if(member_type==rel_member_way) {
                 enum geom_poly_segment_type role;
-                if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave")) {
+                if (!g_strcmp0(rolestr,"outer") || !g_strcmp0(rolestr,"exclave")) {
                     has_outer_ways=1;
                     role=geom_poly_segment_type_way_outer;
-                } else if (!strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
+                } else if (!g_strcmp0(rolestr,"inner") || !g_strcmp0(rolestr,"enclave"))
                     role=geom_poly_segment_type_way_inner;
-                else if (!strcmp(rolestr,""))
+                else if (!g_strcmp0(rolestr,""))
                     role=geom_poly_segment_type_way_unknown;
                 else {
                     osm_warning("relation",item_bin_get_relationid(ib),0,"Unknown role %s in member ",rolestr);
@@ -135,7 +135,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations) {
                 relations_add_relation_member_entry(relations, relations_func, boundary, (gpointer)role, rel_member_way, osm_id);
             }
             if(member_type==rel_member_relation) {
-                if (!strcmp(rolestr,"outer") || !strcmp(rolestr,"exclave") || !strcmp(rolestr,"inner") || !strcmp(rolestr,"enclave"))
+                if (!g_strcmp0(rolestr,"outer") || !g_strcmp0(rolestr,"exclave") || !g_strcmp0(rolestr,"inner") || !g_strcmp0(rolestr,"enclave"))
                     has_subrelations++;
             }
         }
