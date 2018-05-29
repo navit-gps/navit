@@ -23,8 +23,7 @@ struct graphics_opengl_window_system {
 };
 
 
-static void
-graphics_opengl_x11_destroy(struct graphics_opengl_window_system *x11) {
+static void graphics_opengl_x11_destroy(struct graphics_opengl_window_system *x11) {
     if (x11->watch)
         event_remove_watch(x11->watch);
     if (x11->cb)
@@ -39,19 +38,17 @@ graphics_opengl_x11_destroy(struct graphics_opengl_window_system *x11) {
     g_free(x11);
 }
 
-static void *
-graphics_opengl_get_display(struct graphics_opengl_window_system *x11) {
+static void *graphics_opengl_get_display(struct graphics_opengl_window_system *x11) {
     return x11->display;
 }
 
-static void *
-graphics_opengl_get_window(struct graphics_opengl_window_system *x11) {
+static void *graphics_opengl_get_window(struct graphics_opengl_window_system *x11) {
     return (void *)x11->window;
 }
 
-static void
-graphics_opengl_set_callbacks(struct graphics_opengl_window_system *x11, void *data, void *resize, void *button,
-                              void *motion, void *keypress) {
+static void graphics_opengl_set_callbacks(struct graphics_opengl_window_system *x11, void *data, void *resize,
+        void *button,
+        void *motion, void *keypress) {
     x11->data=data;
     x11->resize=resize;
     x11->button=button;
@@ -67,8 +64,7 @@ struct graphics_opengl_window_system_methods graphics_opengl_x11_methods = {
     graphics_opengl_set_callbacks,
 };
 
-static void
-graphics_opengl_x11_watch(struct graphics_opengl_window_system *x11) {
+static void graphics_opengl_x11_watch(struct graphics_opengl_window_system *x11) {
     XEvent event;
     while (XPending(x11->display)) {
         XNextEvent(x11->display, &event);

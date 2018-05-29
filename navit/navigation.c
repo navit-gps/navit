@@ -374,8 +374,7 @@ static void navigation_flush(struct navigation *this_);
  * @param angle2 The second angle
  * @return The difference between the angles, see description
  */
-static int
-angle_delta(int angle1, int angle2) {
+static int angle_delta(int angle1, int angle2) {
     int delta=angle2-angle1;
     if (delta <= -180)
         delta+=360;
@@ -384,8 +383,7 @@ angle_delta(int angle1, int angle2) {
     return delta;
 }
 
-static int
-angle_median(int angle1, int angle2) {
+static int angle_median(int angle1, int angle2) {
     int delta=angle_delta(angle1, angle2);
     int ret=angle1+delta/2;
     if (ret < 0)
@@ -395,8 +393,7 @@ angle_median(int angle1, int angle2) {
     return ret;
 }
 
-static int
-angle_opposite(int angle) {
+static int angle_opposite(int angle) {
     return ((angle+180)%360);
 }
 
@@ -414,8 +411,7 @@ angle_opposite(int angle) {
  * @param new_name_systematic The systematic name of the second item to be checked
  * @return True if both old and new are on the same street
  */
-static int
-is_same_street2(char *old_name, char *old_name_systematic, char *new_name, char *new_name_systematic) {
+static int is_same_street2(char *old_name, char *old_name_systematic, char *new_name, char *new_name_systematic) {
     if (old_name && new_name && !strcmp(old_name, new_name)) {
         dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)", old_name_systematic, new_name_systematic, old_name,
             new_name);
@@ -449,8 +445,7 @@ is_same_street2(char *old_name, char *old_name_systematic, char *new_name, char 
  * Note that way geometry (other than {@code angle2}) is not compared. If necessary, the caller needs to
  * make geometry-related comparisons separately.
  */
-static int
-is_same_way(struct navigation_way * w1, struct navigation_way * w2) {
+static int is_same_way(struct navigation_way * w1, struct navigation_way * w2) {
     if (!is_same_street2(w1->name, w1->name_systematic, w2->name, w2->name_systematic))
         return 0;
     if ((w1->angle2 == w2->angle2) && (w1->item.type == w2->item.type))
@@ -465,8 +460,7 @@ is_same_way(struct navigation_way * w1, struct navigation_way * w2) {
  *
  * @param list the list to be freed
  */
-static void
-free_list(struct street_destination *list) {
+static void free_list(struct street_destination *list) {
 
     if (list) {
         struct street_destination *clist;
@@ -491,8 +485,7 @@ free_list(struct street_destination *list) {
  * @param sep a char to be used as separator to split the raw_string
  * @return the number of entries in the list
  */
-static int
-split_string_to_list(struct navigation_way *way, char* raw_string, char sep) {
+static int split_string_to_list(struct navigation_way *way, char* raw_string, char sep) {
 
     struct street_destination *new_street_destination = NULL;
     struct street_destination *next_street_destination_remember = NULL;
@@ -537,8 +530,7 @@ split_string_to_list(struct navigation_way *way, char* raw_string, char sep) {
  *
  * If all items in the list have a zero rank, the first one will be returned.
  */
-static struct street_destination *
-get_bestranked(struct street_destination *street_destination) {
+static struct street_destination *get_bestranked(struct street_destination *street_destination) {
     struct street_destination *selected_street_destination;
 
     selected_street_destination = street_destination;
@@ -558,8 +550,7 @@ get_bestranked(struct street_destination *street_destination) {
  * @param command
  * @return 1 if successful, zero otherwise
  */
-static int
-set_highrank(struct street_destination *street_destination, struct navigation_command *command) {
+static int set_highrank(struct street_destination *street_destination, struct navigation_command *command) {
     struct street_destination *future_street_destination = NULL;
     struct navigation_command *next_command;
     char* destination_string;
@@ -599,8 +590,7 @@ set_highrank(struct street_destination *street_destination, struct navigation_co
  *         command items so that the destination name has a relevance over several announcements. If there is no 'winner'
  *         the entry is selected that is at top of the destination.
  */
-static char*
-select_announced_destinations(struct navigation_command *current_command) {
+static char* select_announced_destinations(struct navigation_command *current_command) {
     struct street_destination *current_destination =
             NULL;  /* the list pointer of the destination_names of the current command. */
     struct street_destination *search_destination =
@@ -715,8 +705,7 @@ char *nav_status_to_text(int status) {
 }
 
 
-int
-navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     struct map_rect *mr;
     struct item *item;
     dbg(lvl_debug,"enter %s", attr_to_name(type));
@@ -760,8 +749,7 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
     return 1;
 }
 
-static void
-navigation_set_turnaround(struct navigation *this_, int val) {
+static void navigation_set_turnaround(struct navigation *this_, int val) {
     if (this_->turn_around_count != val) {
         struct attr attr=ATTR_INT(turn_around_count, val);
         this_->turn_around_count=val;
@@ -769,8 +757,7 @@ navigation_set_turnaround(struct navigation *this_, int val) {
     }
 }
 
-int
-navigation_set_attr(struct navigation *this_, struct attr *attr) {
+int navigation_set_attr(struct navigation *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_speech:
         this_->speech=attr->u.speech;
@@ -818,8 +805,7 @@ navigation_new(struct attr *parent, struct attr **attrs) {
     return ret;
 }
 
-int
-navigation_set_announce(struct navigation *this_, enum item_type type, int *level) {
+int navigation_set_announce(struct navigation *this_, enum item_type type, int *level) {
     int i;
     if (type < route_item_first || type > route_item_last) {
         dbg(lvl_debug,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
@@ -830,8 +816,7 @@ navigation_set_announce(struct navigation *this_, enum item_type type, int *leve
     return 1;
 }
 
-static enum announcement_level
-navigation_get_announce_level(struct navigation *this_, enum item_type type, int dist) {
+static enum announcement_level navigation_get_announce_level(struct navigation *this_, enum item_type type, int dist) {
     enum announcement_level level;
 
     if (type < route_item_first || type > route_item_last) {
@@ -847,9 +832,9 @@ navigation_get_announce_level(struct navigation *this_, enum item_type type, int
 
 static int is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode);
 
-static enum announcement_level
-navigation_get_announce_level_cmd(struct navigation *this_, struct navigation_itm *itm, struct navigation_command *cmd,
-                                  int distance) {
+static enum announcement_level navigation_get_announce_level_cmd(struct navigation *this_, struct navigation_itm *itm,
+        struct navigation_command *cmd,
+        int distance) {
     enum announcement_level level2,level=navigation_get_announce_level(this_, itm->way.item.type, distance);
     if (this_->cmd_first->itm->prev) {
         level2=navigation_get_announce_level(this_, cmd->itm->prev->way.item.type, distance);
@@ -870,8 +855,7 @@ navigation_get_announce_level_cmd(struct navigation *this_, struct navigation_it
  *
  * @return The bearing in degrees, {@code 0 <= result < 360}.
  */
-static int
-road_angle(struct coord *c1, struct coord *c2, int dir) {
+static int road_angle(struct coord *c1, struct coord *c2, int dir) {
     int ret=transform_get_angle_delta(c1, c2, dir);
     dbg(lvl_debug, "road_angle(0x%x,0x%x - 0x%x,0x%x)=%d", c1->x, c1->y, c2->x, c2->y, ret);
     return ret;
@@ -923,8 +907,7 @@ static const char
     }
 }
 
-static int
-round_distance(int dist) {
+static int round_distance(int dist) {
     if (dist < 100) {
         dist=(dist+5)/10;
         return dist*10;
@@ -957,8 +940,7 @@ round_distance(int dist) {
 *   @param  dist       The distance to be processed
 *   @return distance   Simplified distance value
 */
-static int
-round_distance_reduced( int dist ) {
+static int round_distance_reduced( int dist ) {
     int factor = 1;
     if (dist > distances[LAST_DISTANCE]) {
         dist=(dist+500)/1000;
@@ -992,8 +974,7 @@ round_distance_reduced( int dist ) {
 *   @param is_length   1 for length statement, 0 for distance statement.
 *   @return            String with length/distance statement.
 */
-static char *
-get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length) {
+static char *get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, int is_length) {
     int imperial=0,vocabulary=1; /* default configuration */
 
     /* Get configuration */
@@ -1094,8 +1075,7 @@ get_distance_str(struct navigation *nav, int dist_meters, enum attr_type type, i
  * @param w The way to initialize. The {@code item}, {@code id_hi}, {@code id_lo} and {@code dir}
  * members of this struct must be set prior to calling this function.
  */
-static void
-navigation_way_init(struct navigation_way *w) {
+static void navigation_way_init(struct navigation_way *w) {
     struct coord cbuf[2];
     struct item *realitem;
     struct coord c;
@@ -1189,8 +1169,8 @@ navigation_way_init(struct navigation_way *w) {
  *
  * @return The delta, {@code -180 < delta <= 180}, or {@code invalid_angle} if an error occurred.
  */
-static int
-navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int angle, double dist, int dir) {
+static int navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int angle, double dist,
+                                        int dir) {
     double dist_left = dist; /* distance from last examined point */
     int ret = invalid_angle;
     int tmp_delta;
@@ -1270,8 +1250,7 @@ navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int 
  *
  * @param itm The item that should have its ways cleared
  */
-static void
-navigation_itm_ways_clear(struct navigation_itm *itm) {
+static void navigation_itm_ways_clear(struct navigation_itm *itm) {
     struct navigation_way *c,*n;
 
     c = itm->way.next;
@@ -1295,8 +1274,7 @@ navigation_itm_ways_clear(struct navigation_itm *itm) {
  * @param itm The item that should be updated
  * @param graph_map The route graph's map that these items are on
  */
-static void
-navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map) {
+static void navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map) {
     struct map_selection coord_sel;
     struct map_rect *g_rect; /* Contains a map rectangle from the route graph's map */
     struct item *i,*sitem;
@@ -1389,8 +1367,7 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map) {
  * @param end The first navigation item to keep. If it is NULL or not found in the list, all items
  * will be destroyed.
  */
-static void
-navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *end) {
+static void navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *end) {
     struct navigation_itm *itm;
     struct navigation_command *cmd;
     dbg(lvl_info,"enter this_=%p this_->first=%p this_->cmd_first=%p end=%p", this_, this_->first, this_->cmd_first, end);
@@ -1429,8 +1406,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
     dbg(lvl_info,"ret this_->first=%p this_->cmd_first=%p",this_->first, this_->cmd_first);
 }
 
-static void
-navigation_itm_update(struct navigation_itm *itm, struct item *ritem) {
+static void navigation_itm_update(struct navigation_itm *itm, struct item *ritem) {
     struct attr length, time, speed;
 
     if (! item_attr_get(ritem, attr_length, &length)) {
@@ -1468,8 +1444,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem) {
  * @param routeitem the routeitem from which to create a navigation item
  * @return the new navigation_itm (used nowhere)
  */
-static struct navigation_itm *
-navigation_itm_new(struct navigation *this_, struct item *routeitem) {
+static struct navigation_itm *navigation_itm_new(struct navigation *this_, struct item *routeitem) {
     struct navigation_itm *ret=g_new0(struct navigation_itm, 1);
     int i=0;
     struct item *streetitem;
@@ -1666,8 +1641,8 @@ navigation_itm_new(struct navigation *this_, struct item *routeitem) {
  * @param direction Set to < 0 to count turns to the left >= 0 for turns to the right
  * @return The number of possibilities to turn or -1 on error
  */
-static int
-count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct navigation_itm *to, int direction) {
+static int count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct navigation_itm *to,
+                                int direction) {
     int count;
     struct navigation_itm *curr;
     struct navigation_way *w;
@@ -1714,8 +1689,7 @@ count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct
  * @param this_ The navigation whose destination / time should be calculated
  * @param incr Set this to true to only calculate the first item. See description.
  */
-static void
-calculate_dest_distance(struct navigation *this_, int incr) {
+static void calculate_dest_distance(struct navigation *this_, int incr) {
     int len=0, time=0, count=0;
     struct navigation_itm *next,*itm=this_->last;
     dbg(lvl_debug, "enter this_=%p, incr=%d", this_, incr);
@@ -1809,8 +1783,7 @@ static int maneuver_category(enum item_type type) {
 *
 */
 
-static int
-is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode) {
+static int is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode) {
     if (!nav->vehicleprofile || !way->flags)
         return 1;
     if (mode)
@@ -1833,8 +1806,7 @@ is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode) {
  * @param extended Whether to consider ramps and service roads to be motorway-like
  * @return True for motorway-like, false otherwise
  */
-static int
-is_motorway_like(struct navigation_way *way, int extended) {
+static int is_motorway_like(struct navigation_way *way, int extended) {
     if ((way->item.type == type_highway_land) || (way->item.type == type_highway_city)
             || ((way->item.type == type_street_n_lanes) && (way->flags & AF_ONEWAYMASK)))
         return 1;
@@ -1849,8 +1821,7 @@ is_motorway_like(struct navigation_way *way, int extended) {
  * @param way The way to be examined
  * @return True for ramp, false otherwise
  */
-static int
-is_ramp(struct navigation_way *way) {
+static int is_ramp(struct navigation_way *way) {
     if (way->item.type == type_ramp)
         return 1;
     return 0;
@@ -1870,9 +1841,8 @@ is_ramp(struct navigation_way *way) {
  * for freeing up the buffer once it is no longer needed.
  * @return True if navit should guide the user, false otherwise
  */
-static int
-maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct navigation_itm *new,
-                    struct navigation_maneuver **maneuver) {
+static int maneuver_required2 (struct navigation *nav, struct navigation_itm *old, struct navigation_itm *new,
+                               struct navigation_maneuver **maneuver) {
     struct navigation_maneuver m; /* if the function returns true, this will be passed in the maneuver argument */
     struct navigation_itm
         *ni; /* temporary navigation item used for comparisons that examine previous or subsequent maneuvers */
@@ -2624,8 +2594,8 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
  *
  * @return The new command
  */
-static struct navigation_command *
-command_new(struct navigation *this_, struct navigation_itm *itm, struct navigation_maneuver *maneuver) {
+static struct navigation_command *command_new(struct navigation *this_, struct navigation_itm *itm,
+        struct navigation_maneuver *maneuver) {
     struct navigation_command *ret=g_new0(struct navigation_command, 1);
     struct navigation_way *w;	/* the way in which to turn. */
     int more_ways_for_strength = 0;	/* Counts the number of ways of the current node that turn
@@ -2810,8 +2780,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, struct navigat
  * @param this_ The navigation object for which to create turn instructions
  * @param route Not used
  */
-static void
-make_maneuvers(struct navigation *this_, struct route *route) {
+static void make_maneuvers(struct navigation *this_, struct route *route) {
     struct navigation_itm *itm, *last=NULL, *last_itm=NULL;
     struct navigation_maneuver *maneuver;
     itm=this_->first;
@@ -2832,8 +2801,7 @@ make_maneuvers(struct navigation *this_, struct route *route) {
     command_new(this_, last_itm, maneuver);
 }
 
-static int
-contains_suffix(char *name, char *suffix) {
+static int contains_suffix(char *name, char *suffix) {
     if (!suffix)
         return 0;
     if (strlen(name) < strlen(suffix))
@@ -2843,8 +2811,7 @@ contains_suffix(char *name, char *suffix) {
 
 
 
-static char *
-replace_suffix(char *name, char *search, char *replace) {
+static char *replace_suffix(char *name, char *search, char *replace) {
     int len=strlen(name)-strlen(search);
     char *ret=g_malloc(len+strlen(replace)+1);
     strncpy(ret, name, len);
@@ -2868,9 +2835,9 @@ replace_suffix(char *name, char *search, char *replace) {
  *             the {@code navigation_item} associated with the previous {@code navigation_command}
  * @param prefix A space will be added as a prefix to the string returned, or a null string for no prefix
  */
-static char *
-navigation_item_destination(struct navigation *nav, struct navigation_command *cmd, struct navigation_itm *next,
-                            char *prefix) {
+static char *navigation_item_destination(struct navigation *nav, struct navigation_command *cmd,
+        struct navigation_itm *next,
+        char *prefix) {
     char *ret  = NULL, *name1 = NULL, *sep = "", *name2 = "";
     char *name = NULL, *name_systematic=NULL;
     int i, gender = unknown;
@@ -3021,8 +2988,7 @@ navigation_item_destination(struct navigation *nav, struct navigation_command *c
  * @param street_destination_announce The name of the street following the maneuver. This argument
  * may be NULL, in which case the exit name will not be suppressed.
  */
-static char *
-navigation_cmd_get_exit_announce(struct navigation_command *this_, char *street_destination_announce) {
+static char *navigation_cmd_get_exit_announce(struct navigation_command *this_, char *street_destination_announce) {
     char * ret = NULL;
     char *folded_exit_label=NULL;
     char *folded_street_destination_announce=NULL;
@@ -3069,9 +3035,9 @@ navigation_cmd_get_exit_announce(struct navigation_command *this_, char *street_
  * @param connect Whether this is the second of two connected announcements, as in "turn left
  * in..., then turn right"
  */
-static char *
-show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type,
-              enum announcement_level level) {
+static char *show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd,
+                           enum attr_type type,
+                           enum announcement_level level) {
 
     int distance=itm->dest_length-cmd->itm->dest_length;
     char *d=NULL,*ret=NULL;
@@ -3492,9 +3458,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
  *
  * @return An announcement that should be made
  */
-static char *
-show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd,
-                    enum attr_type type) {
+static char *show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd,
+                                 enum attr_type type) {
     int distance = itm->dest_length
                    -cmd->itm->dest_length; /* distance from e.g. current GPS position to next announced turn position */
     enum announcement_level level;
@@ -3554,8 +3519,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
     return ret;
 }
 
-static void
-navigation_call_callbacks(struct navigation *this_, int force_speech) {
+static void navigation_call_callbacks(struct navigation *this_, int force_speech) {
     int distance, level = 0;
     void *p=this_;
     if (!this_->cmd_first)
@@ -3628,8 +3592,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech) {
  * @param cancel If true, only cleanup (deallocation of objects) will be done and no maneuvers will be generated.
  * If false, maneuvers will be generated.
  */
-static void
-navigation_update_done(struct navigation *this_, int cancel) {
+static void navigation_update_done(struct navigation *this_, int cancel) {
     int incr = 0;
     struct map_rect *mr = this_->route_mr;
     struct attr nav_status;
@@ -3676,8 +3639,7 @@ navigation_update_done(struct navigation *this_, int cancel) {
  * {@code route_mr} member. After processing completes, the {@code route_mr} member will no longer
  * be valid.
  */
-static void
-navigation_update_idle(struct navigation *this_) {
+static void navigation_update_idle(struct navigation *this_) {
     int count = 100;            /* Maximum number of items retrieved in one run of this function.
 	                             * This should be set low enough for each pass to complete in less
 	                             * than a second even on low-performance devices. */
@@ -3746,8 +3708,7 @@ navigation_update_idle(struct navigation *this_) {
  * @param route The route
  * @param attr The route status attribute
  */
-static void
-navigation_update(struct navigation *this_, struct route *route, struct attr *attr) {
+static void navigation_update(struct navigation *this_, struct route *route, struct attr *attr) {
     struct map *map;
     struct attr vehicleprofile;
     struct attr nav_status;
@@ -3812,14 +3773,12 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
     }
 }
 
-static void
-navigation_flush(struct navigation *this_) {
+static void navigation_flush(struct navigation *this_) {
     navigation_destroy_itms_cmds(this_, NULL);
 }
 
 
-void
-navigation_destroy(struct navigation *this_) {
+void navigation_destroy(struct navigation *this_) {
     navigation_flush(this_);
     item_hash_destroy(this_->hash);
     callback_list_destroy(this_->callback);
@@ -3851,8 +3810,7 @@ navigation_destroy(struct navigation *this_) {
  *
  * @return true on success, false on failure
  */
-int
-navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb) {
+int navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb) {
     struct attr attr_cbl;
 
     if (type == attr_navigation_speech)
@@ -3880,8 +3838,7 @@ navigation_register_callback(struct navigation *this_, enum attr_type type, stru
  * @param type The attribute type
  * @param cb The callback function
  */
-void
-navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb) {
+void navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb) {
     struct attr attr_cbl;
 
     if (type == attr_navigation_speech)
@@ -3936,8 +3893,7 @@ struct map_rect_priv {
     char *str;
 };
 
-static int
-navigation_map_item_coord_get(void *priv_data, struct coord *c, int count) {
+static int navigation_map_item_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *this=priv_data;
     if (this->ccount || ! count)
         return 0;
@@ -3946,15 +3902,13 @@ navigation_map_item_coord_get(void *priv_data, struct coord *c, int count) {
     return 1;
 }
 
-static void
-navigation_map_item_coord_rewind(void *priv_data) {
+static void navigation_map_item_coord_rewind(void *priv_data) {
     struct map_rect_priv *this=priv_data;
     this->ccount=0;
 }
 
 
-static int
-navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *this_=priv_data;
     struct navigation_command *cmd=this_->cmd;
     struct navigation_maneuver *maneuver = NULL;
@@ -4171,8 +4125,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
     }
 }
 
-static void
-navigation_map_item_attr_rewind(void *priv_data) {
+static void navigation_map_item_attr_rewind(void *priv_data) {
     struct map_rect_priv *priv = priv_data;
     priv->debug_idx=0;
     priv->attr_next=attr_navigation_short;
@@ -4186,19 +4139,16 @@ static struct item_methods navigation_map_item_methods = {
 };
 
 
-static void
-navigation_map_destroy(struct map_priv *priv) {
+static void navigation_map_destroy(struct map_priv *priv) {
     g_free(priv);
 }
 
-static void
-navigation_map_rect_init(struct map_rect_priv *priv) {
+static void navigation_map_rect_init(struct map_rect_priv *priv) {
     priv->cmd_next=priv->nav->cmd_first;
     priv->cmd_itm_next=priv->itm_next=priv->nav->first;
 }
 
-static struct map_rect_priv *
-navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
+static struct map_rect_priv *navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct navigation *nav=priv->navigation;
     struct map_rect_priv *ret=g_new0(struct map_rect_priv, 1);
     ret->nav=nav;
@@ -4211,8 +4161,7 @@ navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
     return ret;
 }
 
-static void
-navigation_map_rect_destroy(struct map_rect_priv *priv) {
+static void navigation_map_rect_destroy(struct map_rect_priv *priv) {
     g_free(priv->str);
     g_free(priv);
 }
@@ -4237,8 +4186,7 @@ navigation_map_rect_destroy(struct map_rect_priv *priv) {
  *
  * @return The item, or NULL if there are no more items in the map rectangle
  */
-static struct item *
-navigation_map_get_item(struct map_rect_priv *priv) {
+static struct item *navigation_map_get_item(struct map_rect_priv *priv) {
     struct item *ret=&priv->item;
     if (!priv->itm_next)
         return NULL;
@@ -4312,8 +4260,7 @@ navigation_map_get_item(struct map_rect_priv *priv) {
  *
  * @return The item, or NULL if an item with the ID specified was not found in the map rectangle
  */
-static struct item *
-navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo) {
+static struct item *navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo) {
     struct item *ret;
     navigation_map_rect_init(priv);
     while ((ret=navigation_map_get_item(priv))) {
@@ -4336,8 +4283,7 @@ static struct map_methods navigation_map_meth = {
     NULL,
 };
 
-static struct map_priv *
-navigation_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *navigation_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret;
     struct attr *navigation_attr;
 
@@ -4351,8 +4297,7 @@ navigation_map_new(struct map_methods *meth, struct attr **attrs, struct callbac
     return ret;
 }
 
-void
-navigation_set_route(struct navigation *this_, struct route *route) {
+void navigation_set_route(struct navigation *this_, struct route *route) {
     struct attr callback;
     if (!this_->route_cb)
         this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route_status, this_);
@@ -4369,8 +4314,7 @@ navigation_set_route(struct navigation *this_, struct route *route) {
     }
 }
 
-void
-navigation_init(void) {
+void navigation_init(void) {
     plugin_register_category_map("navigation", navigation_map_new);
 }
 

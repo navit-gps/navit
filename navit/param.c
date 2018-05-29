@@ -22,8 +22,7 @@
 #include <stdlib.h>
 #include "param.h"
 
-void
-param_add_string(const char *name, const char *value, struct param_list **param, int *count) {
+void param_add_string(const char *name, const char *value, struct param_list **param, int *count) {
     char *param_name;
     char *param_value;
     if (*count > 0) {
@@ -40,23 +39,20 @@ param_add_string(const char *name, const char *value, struct param_list **param,
 
 }
 
-void
-param_add_dec(const char *name, unsigned long value, struct param_list **param, int *count) {
+void param_add_dec(const char *name, unsigned long value, struct param_list **param, int *count) {
     char buffer[1024];
     sprintf(buffer, "%ld", value);
     param_add_string(name, buffer, param, count);
 }
 
 
-void
-param_add_hex(const char *name, unsigned long value, struct param_list **param, int *count) {
+void param_add_hex(const char *name, unsigned long value, struct param_list **param, int *count) {
     char buffer[1024];
     sprintf(buffer, "0x%lx", value);
     param_add_string(name, buffer, param, count);
 }
 
-void
-param_add_hex_sig(const char *name, long value, struct param_list **param, int *count) {
+void param_add_hex_sig(const char *name, long value, struct param_list **param, int *count) {
     char buffer[1024];
     if (value < 0)
         sprintf(buffer, "-0x%lx", -value);

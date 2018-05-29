@@ -78,8 +78,7 @@ mapset_attr_iter_new(void) {
     return g_new0(struct attr_iter, 1);
 }
 
-void
-mapset_attr_iter_destroy(struct attr_iter *iter) {
+void mapset_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
@@ -89,8 +88,7 @@ mapset_attr_iter_destroy(struct attr_iter *iter) {
  * @param ms The mapset to add the map to
  * @param m The map to be added
  */
-int
-mapset_add_attr(struct mapset *ms, struct attr *attr) {
+int mapset_add_attr(struct mapset *ms, struct attr *attr) {
     switch (attr->type) {
     case attr_map:
         ms->attrs=attr_generic_add_attr(ms->attrs,attr);
@@ -101,8 +99,7 @@ mapset_add_attr(struct mapset *ms, struct attr *attr) {
     }
 }
 
-int
-mapset_remove_attr(struct mapset *ms, struct attr *attr) {
+int mapset_remove_attr(struct mapset *ms, struct attr *attr) {
     switch (attr->type) {
     case attr_map:
         ms->attrs=attr_generic_remove_attr(ms->attrs,attr);
@@ -113,8 +110,7 @@ mapset_remove_attr(struct mapset *ms, struct attr *attr) {
     }
 }
 
-int
-mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     GList *map;
     map=ms->maps;
     attr->type=type;
@@ -253,8 +249,7 @@ mapset_get_map_by_name(struct mapset *ms, const char*map_name) {
  *
  * @param msh Mapset handle to be closed
  */
-void
-mapset_close(struct mapset_handle *msh) {
+void mapset_close(struct mapset_handle *msh) {
     g_free(msh);
 }
 
@@ -373,8 +368,7 @@ mapset_search_get_item(struct mapset_search *this_) {
  *
  * @param this The mapset search to be destroyed
  */
-void
-mapset_search_destroy(struct mapset_search *this_) {
+void mapset_search_destroy(struct mapset_search *this_) {
     if (this_) {
         map_search_destroy(this_->ms);
         g_free(this_);

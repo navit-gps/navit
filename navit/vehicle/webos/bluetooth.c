@@ -21,8 +21,8 @@ static void vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int 
 
 /********************************************************************/
 
-static void
-mlPDL_ServiceCall_callback(struct callback_list *cbl, char *service, char *parameters/*, struct callback *fail_cb*/) {
+static void mlPDL_ServiceCall_callback(struct callback_list *cbl, char *service,
+                                       char *parameters/*, struct callback *fail_cb*/) {
     PDL_Err err;
     dbg(lvl_debug,"PDL_ServiceCall(%s) parameters(%s)",service,parameters);
     err = PDL_ServiceCall(service, parameters);
@@ -35,8 +35,7 @@ mlPDL_ServiceCall_callback(struct callback_list *cbl, char *service, char *param
     g_free(parameters);
 }
 
-static void
-mlPDL_ServiceCall(const char *service, const char *parameters/*, struct callback *fail_cb = NULL*/) {
+static void mlPDL_ServiceCall(const char *service, const char *parameters/*, struct callback *fail_cb = NULL*/) {
     struct callback *cb = NULL;
     struct callback_list *cbl = NULL;
 
@@ -54,13 +53,12 @@ mlPDL_ServiceCall(const char *service, const char *parameters/*, struct callback
 
 /********************************************************************/
 
-static void
-mlPDL_ServiceCallWithCallback_callback(struct callback_list *cbl,
-                                       char *service,
-                                       char *parameters,
-                                       PDL_ServiceCallbackFunc callback,
-                                       void *user,
-                                       PDL_bool removeAfterResponse) {
+static void mlPDL_ServiceCallWithCallback_callback(struct callback_list *cbl,
+        char *service,
+        char *parameters,
+        PDL_ServiceCallbackFunc callback,
+        void *user,
+        PDL_bool removeAfterResponse) {
     PDL_Err err;
     dbg(lvl_debug,"PDL_ServiceCallWithCallback(%s) parameters(%s)",service,parameters);
     err = PDL_ServiceCallWithCallback(service, parameters, callback, user, removeAfterResponse);
@@ -74,12 +72,11 @@ mlPDL_ServiceCallWithCallback_callback(struct callback_list *cbl,
     g_free(parameters);
 }
 
-static void
-mlPDL_ServiceCallWithCallback(const char *service,
-                              const char *parameters,
-                              PDL_ServiceCallbackFunc callback,
-                              void *user,
-                              PDL_bool removeAfterResponse) {
+static void mlPDL_ServiceCallWithCallback(const char *service,
+        const char *parameters,
+        PDL_ServiceCallbackFunc callback,
+        void *user,
+        PDL_bool removeAfterResponse) {
     struct callback *cb = NULL;
     struct callback_list *cbl = NULL;
 
@@ -98,8 +95,8 @@ mlPDL_ServiceCallWithCallback(const char *service,
 
 /********************************************************************/
 
-static void
-vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, struct callback_list *cbl, int param) {
+static void vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, struct callback_list *cbl,
+        int param) {
     PDL_Err err;
 
     priv->gps_type = param ? GPS_TYPE_INT: GPS_TYPE_NONE;
@@ -116,8 +113,7 @@ vehicle_webos_init_pdl_locationtracking_callback(struct vehicle_priv *priv, stru
     callback_list_destroy(cbl);
 }
 
-static void
-vehicle_webos_init_pdl_locationtracking(struct vehicle_priv *priv, int param) {
+static void vehicle_webos_init_pdl_locationtracking(struct vehicle_priv *priv, int param) {
     struct callback *cb = NULL;
     struct callback_list *cbl = NULL;
 
@@ -131,8 +127,7 @@ vehicle_webos_init_pdl_locationtracking(struct vehicle_priv *priv, int param) {
 
 /********************************************************************/
 
-static int
-vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer) {
+static int vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer) {
     char *nmea_data_buf, *p, *item[32];
     double lat, lng;
     int i, bcsum;
@@ -327,8 +322,7 @@ vehicle_webos_parse_nmea(struct vehicle_priv *priv, char *buffer) {
     return ret;
 }
 
-static void
-vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user) {
+static void vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user) {
     struct vehicle_priv *priv = user;
     int size, rc = 0;
     char *str, *tok;
@@ -391,8 +385,7 @@ vehicle_webos_spp_handle_read(PDL_ServiceParameters *params, void *user) {
     vehicle_webos_spp_init_read(priv, buffer_size - priv->buffer_pos - 1);
 }
 
-static void
-vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int length) {
+static void vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int length) {
     //PDL_Err err;
     char parameters[128];
 
@@ -405,8 +398,7 @@ vehicle_webos_spp_init_read(struct vehicle_priv *priv, unsigned int length) {
                                  );
 }
 
-static void
-vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user) {
+static void vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user) {
     struct vehicle_priv *priv = (struct vehicle_priv *)user;
 
     if (!priv->buffer)
@@ -419,8 +411,7 @@ vehicle_webos_spp_handle_open(PDL_ServiceParameters *params, void *user) {
     vehicle_webos_spp_init_read(priv, buffer_size-1);
 }
 
-static void
-vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user) {
+static void vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user) {
     struct vehicle_priv *priv = user;
 
     char notification[128];
@@ -485,8 +476,7 @@ vehicle_webos_spp_notify(PDL_ServiceParameters *params, void *user) {
 
 }
 
-static void
-vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr) {
+static void vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr) {
     char parameters[128];
 
     dbg(lvl_debug,"subscribeNotifications");
@@ -502,8 +492,7 @@ vehicle_webos_init_bt_gps(struct vehicle_priv *priv, char *addr) {
     priv->spp_address = addr;
 }
 
-static void
-vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param) {
+static void vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param) {
     const char *params_json;
     struct vehicle_priv *priv = (struct vehicle_priv *)param;
     char *device_addr = NULL;
@@ -555,8 +544,7 @@ vehicle_webos_bt_gap_callback(PDL_ServiceParameters *params, void *param) {
     g_free(device_addr);
 }
 
-int
-vehicle_webos_bt_open(struct vehicle_priv *priv) {
+int vehicle_webos_bt_open(struct vehicle_priv *priv) {
     // Try to connect to BT GPS, or use PDL method
 
     dbg(lvl_debug,"enter");
@@ -575,8 +563,7 @@ vehicle_webos_bt_open(struct vehicle_priv *priv) {
     return 1;
 }
 
-void
-vehicle_webos_bt_close(struct vehicle_priv *priv) {
+void vehicle_webos_bt_close(struct vehicle_priv *priv) {
     dbg(lvl_debug,"XXX");
     char parameters[128];
     if (priv->spp_instance_id) {

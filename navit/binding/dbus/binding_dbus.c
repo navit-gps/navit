@@ -80,8 +80,7 @@ struct dbus_callback {
     char *signal;
 };
 
-static char *
-object_new(char *type, void *object) {
+static char *object_new(char *type, void *object) {
     int id;
     char *ret;
     dbg(lvl_debug,"enter %s", type);
@@ -96,13 +95,11 @@ object_new(char *type, void *object) {
     return (ret);
 }
 
-static void *
-object_get(const char *path) {
+static void *object_get(const char *path) {
     return g_hash_table_lookup(object_hash, path);
 }
 
-static void
-object_destroy(const char *path, void *object) {
+static void object_destroy(const char *path, void *object) {
     if (!path && !object)
         return;
     if (!object)
@@ -113,8 +110,7 @@ object_destroy(const char *path, void *object) {
     g_hash_table_remove(object_hash_rev, object);
 }
 
-static void *
-resolve_object(const char *opath, char *type) {
+static void *resolve_object(const char *opath, char *type) {
     char *prefix;
     const char *oprefix;
     void *ret=NULL;
@@ -213,8 +209,7 @@ resolve_object(const char *opath, char *type) {
     return NULL;
 }
 
-static void *
-object_get_from_message_arg(DBusMessageIter *iter, char *type) {
+static void *object_get_from_message_arg(DBusMessageIter *iter, char *type) {
     char *opath;
 
     if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_OBJECT_PATH)
@@ -224,13 +219,11 @@ object_get_from_message_arg(DBusMessageIter *iter, char *type) {
     return resolve_object(opath, type);
 }
 
-static void *
-object_get_from_message(DBusMessage *message, char *type) {
+static void *object_get_from_message(DBusMessage *message, char *type) {
     return resolve_object(dbus_message_get_path(message), type);
 }
 
-static enum attr_type
-attr_type_get_from_message(DBusMessageIter *iter) {
+static enum attr_type attr_type_get_from_message(DBusMessageIter *iter) {
     char *attr_type;
 
     if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING)
@@ -240,16 +233,14 @@ attr_type_get_from_message(DBusMessageIter *iter) {
     return attr_from_name(attr_type);
 }
 
-static void
-encode_variant_string(DBusMessageIter *iter, char *str) {
+static void encode_variant_string(DBusMessageIter *iter, char *str) {
     DBusMessageIter variant;
     dbus_message_iter_open_container(iter, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &variant);
     dbus_message_iter_append_basic(&variant, DBUS_TYPE_STRING, &str);
     dbus_message_iter_close_container(iter, &variant);
 }
 
-static void
-encode_dict_string_variant_string(DBusMessageIter *iter, char *key, char *value) {
+static void encode_dict_string_variant_string(DBusMessageIter *iter, char *key, char *value) {
     DBusMessageIter dict;
     dbus_message_iter_open_container(iter, DBUS_TYPE_DICT_ENTRY, NULL, &dict);
     dbus_message_iter_append_basic(&dict, DBUS_TYPE_STRING, &key);
@@ -257,8 +248,7 @@ encode_dict_string_variant_string(DBusMessageIter *iter, char *key, char *value)
     dbus_message_iter_close_container(iter, &dict);
 }
 
-static int
-encode_attr(DBusMessageIter *iter1, struct attr *attr) {
+static int encode_attr(DBusMessageIter *iter1, struct attr *attr) {
     char *name=attr_to_name(attr->type);
     DBusMessageIter iter2,iter3;
     dbus_message_iter_append_basic(iter1, DBUS_TYPE_STRING, &name);
@@ -305,8 +295,7 @@ encode_attr(DBusMessageIter *iter1, struct attr *attr) {
 }
 
 
-static DBusHandlerResult
-empty_reply(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult empty_reply(DBusConnection *connection, DBusMessage *message) {
     DBusMessage *reply;
 
     reply = dbus_message_new_method_return(message);
@@ -317,8 +306,7 @@ empty_reply(DBusConnection *connection, DBusMessage *message) {
 }
 
 
-static DBusHandlerResult
-dbus_error(DBusConnection *connection, DBusMessage *message, char *error, char *msg) {
+static DBusHandlerResult dbus_error(DBusConnection *connection, DBusMessage *message, char *error, char *msg) {
     DBusMessage *reply;
 
     reply = dbus_message_new_error(message, error, msg);
@@ -327,34 +315,28 @@ dbus_error(DBusConnection *connection, DBusMessage *message, char *error, char *
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
-static DBusHandlerResult
-dbus_error_invalid_attr_type(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_invalid_attr_type(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_INVALID_ARGS, "attribute type invalid");
 }
 
-static DBusHandlerResult
-dbus_error_invalid_parameter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_invalid_parameter(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_INVALID_ARGS, "parameter invalid");
 }
 
-static DBusHandlerResult
-dbus_error_invalid_object_path(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_invalid_object_path(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path invalid");
 }
 
-static DBusHandlerResult
-dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path parameter invalid");
 }
 
-static DBusHandlerResult
-dbus_error_navigation_not_configured(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_navigation_not_configured(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_FAILED,
                       "navigation is not configured (no <navigation> element in config file?)");
 }
 
-static DBusHandlerResult
-dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message) {
 #if 1
     return dbus_error(connection, message, DBUS_ERROR_FILE_NOT_FOUND, "no data available");
 #else
@@ -363,8 +345,7 @@ dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message) {
 }
 
 #if 0
-static void
-dbus_dump_iter(char *prefix, DBusMessageIter *iter) {
+static void dbus_dump_iter(char *prefix, DBusMessageIter *iter) {
     char *prefixr,*vals;
     int arg,vali;
     DBusMessageIter iterr;
@@ -413,8 +394,7 @@ dbus_dump_iter(char *prefix, DBusMessageIter *iter) {
     }
 }
 
-static void
-dbus_dump(DBusMessage *message) {
+static void dbus_dump(DBusMessage *message) {
     DBusMessageIter iter;
 
     dbus_message_iter_init(message, &iter);
@@ -431,8 +411,7 @@ dbus_dump(DBusMessage *message) {
  * @param pc Pointer where the data should get stored
  * @returns Returns 1 when everything went right, otherwise 0
  */
-static int
-pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoord *pc) {
+static int pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoord *pc) {
 
     if(!strcmp(dbus_message_iter_get_signature(iter), "s")) {
         char *coordstring;
@@ -476,8 +455,7 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 
 }
 
-static void
-pcoord_encode(DBusMessageIter *iter, struct pcoord *pc) {
+static void pcoord_encode(DBusMessageIter *iter, struct pcoord *pc) {
     DBusMessageIter iter2;
     dbus_message_iter_open_container(iter,DBUS_TYPE_STRUCT,NULL,&iter2);
     if (pc) {
@@ -493,8 +471,7 @@ pcoord_encode(DBusMessageIter *iter, struct pcoord *pc) {
     dbus_message_iter_close_container(iter, &iter2);
 }
 
-static enum attr_type
-decode_attr_type_from_iter(DBusMessageIter *iter) {
+static enum attr_type decode_attr_type_from_iter(DBusMessageIter *iter) {
     char *attr_type;
     enum attr_type ret;
 
@@ -507,8 +484,7 @@ decode_attr_type_from_iter(DBusMessageIter *iter) {
     return ret;
 }
 
-static int
-decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
+static int decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     DBusMessageIter iterattr, iterstruct;
     int ret=1;
     double d;
@@ -628,28 +604,25 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     return 0;
 }
 
-static int
-decode_attr(DBusMessage *message, struct attr *attr) {
+static int decode_attr(DBusMessage *message, struct attr *attr) {
     DBusMessageIter iter;
 
     dbus_message_iter_init(message, &iter);
     return decode_attr_from_iter(&iter, attr);
 }
 
-static void
-destroy_attr(struct attr *attr) {
+static void destroy_attr(struct attr *attr) {
     if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
         g_free(attr->u.numd);
     }
 }
 
-static char *
-get_iter_name(char *type) {
+static char *get_iter_name(char *type) {
     return g_strdup_printf("%s_attr_iter",type);
 }
 
-static DBusHandlerResult
-request_attr_iter(DBusConnection *connection, DBusMessage *message, char *type, struct attr_iter *(*func)(void)) {
+static DBusHandlerResult request_attr_iter(DBusConnection *connection, DBusMessage *message, char *type,
+        struct attr_iter *(*func)(void)) {
     DBusMessage *reply;
     char *iter_name;
     char *opath;
@@ -667,9 +640,8 @@ request_attr_iter(DBusConnection *connection, DBusMessage *message, char *type, 
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
-static DBusHandlerResult
-request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char *type,
-                          void (*func)(struct attr_iter *)) {
+static DBusHandlerResult request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char *type,
+        void (*func)(struct attr_iter *)) {
     struct attr_iter *attr_iter;
     DBusMessageIter iter;
     char *iter_name;
@@ -686,8 +658,8 @@ request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_destroy(DBusConnection *connection, DBusMessage *message, char *type, void *data, void (*func)(void *)) {
+static DBusHandlerResult request_destroy(DBusConnection *connection, DBusMessage *message, char *type, void *data,
+        void (*func)(void *)) {
     if (!data)
         data=object_get_from_message(message, type);
     if (!data)
@@ -699,8 +671,8 @@ request_destroy(DBusConnection *connection, DBusMessage *message, char *type, vo
 }
 
 
-static DBusHandlerResult
-request_dup(DBusConnection *connection, DBusMessage *message, char *type, void *data, void *(*func)(void *)) {
+static DBusHandlerResult request_dup(DBusConnection *connection, DBusMessage *message, char *type, void *data,
+                                     void *(*func)(void *)) {
     DBusMessage *reply;
     char *opath;
     void *obj;
@@ -719,9 +691,9 @@ request_dup(DBusConnection *connection, DBusMessage *message, char *type, void *
 }
 
 
-static DBusHandlerResult
-request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data,
-                 enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
+static DBusHandlerResult request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data,
+        int (*func)(void *data,
+                    enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
     DBusMessage *reply;
     DBusMessageIter iter;
     struct attr attr;
@@ -754,9 +726,9 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 
 }
 
-static DBusHandlerResult
-request_command(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data,
-                enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
+static DBusHandlerResult request_command(DBusConnection *connection, DBusMessage *message, char *type, void *data,
+        int (*func)(void *data,
+                    enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
     DBusMessageIter iter;
     struct attr attr;
     char *command;
@@ -779,9 +751,9 @@ request_command(DBusConnection *connection, DBusMessage *message, char *type, vo
 
 }
 
-static DBusHandlerResult
-request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data,
-                            int (*func)(void *data, struct attr *attr)) {
+static DBusHandlerResult request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, char *type,
+        void *data,
+        int (*func)(void *data, struct attr *attr)) {
     struct attr attr;
     int ret;
 
@@ -805,8 +777,7 @@ request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, ch
 /* callback */
 
 
-static void
-dbus_callback_emit_signal(struct dbus_callback *dbus_callback) {
+static void dbus_callback_emit_signal(struct dbus_callback *dbus_callback) {
     DBusMessage* msg;
     msg = dbus_message_new_signal(object_path, service_name, dbus_callback->signal);
     if (msg) {
@@ -816,20 +787,17 @@ dbus_callback_emit_signal(struct dbus_callback *dbus_callback) {
     }
 }
 
-static void
-request_callback_destroy_do(struct dbus_callback *data) {
+static void request_callback_destroy_do(struct dbus_callback *data) {
     callback_destroy(data->callback);
     g_free(data->signal);
     g_free(data);
 }
 
-static DBusHandlerResult
-request_callback_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_callback_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_destroy(connection, message, "callback", NULL, (void (*)(void *)) request_callback_destroy_do);
 }
 
-static DBusHandlerResult
-request_callback_new(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_callback_new(DBusConnection *connection, DBusMessage *message) {
     DBusMessageIter iter;
     DBusMessage *reply;
     struct dbus_callback *callback;
@@ -858,19 +826,16 @@ request_callback_new(DBusConnection *connection, DBusMessage *message) {
 }
 
 /* config */
-static DBusHandlerResult
-request_config_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_config_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "config", config, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))config_get_attr);
 }
 
-static DBusHandlerResult
-request_config_attr_iter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_config_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter(connection, message, "config", (struct attr_iter * (*)(void))config_attr_iter_new);
 }
 
-static DBusHandlerResult
-request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter_destroy(connection, message, "config", (void (*)(struct attr_iter *))config_attr_iter_destroy);
 }
 
@@ -878,8 +843,7 @@ request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *messag
 
 /* graphics */
 
-static DBusHandlerResult
-request_graphics_get_data(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_graphics_get_data(DBusConnection *connection, DBusMessage *message) {
     struct graphics *graphics;
     char *data;
     struct graphics_data_image *image;
@@ -912,30 +876,26 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message) {
 
 /* gui */
 
-static DBusHandlerResult
-request_gui_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_gui_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "gui", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))gui_get_attr);
 }
 
-static DBusHandlerResult
-request_gui_command(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_gui_command(DBusConnection *connection, DBusMessage *message) {
     return request_command(connection, message, "gui", NULL, (int (*)(void *, enum attr_type, struct attr *,
                            struct attr_iter *))gui_get_attr);
 }
 
 
 
-static DBusHandlerResult
-request_graphics_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_graphics_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "graphics", NULL, (int (*)(void *,
                                        struct attr *))graphics_set_attr);
 }
 
 /* layout */
 
-static DBusHandlerResult
-request_layout_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_layout_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "layout", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))layout_get_attr);
 }
@@ -944,20 +904,17 @@ request_layout_get_attr(DBusConnection *connection, DBusMessage *message) {
 
 /* map */
 
-static DBusHandlerResult
-request_map_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_map_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "map", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))map_get_attr);
 }
 
 
-static DBusHandlerResult
-request_map_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_map_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "map", NULL, (int (*)(void *, struct attr *))map_set_attr);
 }
 
-static DBusHandlerResult
-request_map_dump(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_map_dump(DBusConnection *connection, DBusMessage *message) {
     DBusMessageIter iter;
     struct map *map;
 
@@ -982,110 +939,93 @@ request_map_dump(DBusConnection *connection, DBusMessage *message) {
 
 /* mapset */
 
-static DBusHandlerResult
-request_mapset_attr_iter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_mapset_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter(connection, message, "mapset", (struct attr_iter * (*)(void))mapset_attr_iter_new);
 }
 
-static DBusHandlerResult
-request_mapset_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_mapset_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter_destroy(connection, message, "mapset", (void (*)(struct attr_iter *))mapset_attr_iter_destroy);
 }
 
-static DBusHandlerResult
-request_mapset_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_mapset_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "mapset", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))mapset_get_attr);
 }
 
 /* navigation */
 
-static DBusHandlerResult
-request_navigation_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navigation_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "navigation", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))navigation_get_attr);
 }
 
 /* osd */
 
-static DBusHandlerResult
-request_osd_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_osd_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "osd", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))osd_get_attr);
 }
 
 
-static DBusHandlerResult
-request_osd_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_osd_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "osd", NULL, (int (*)(void *, struct attr *))osd_set_attr);
 }
 
 /* roadprofile */
 
-static DBusHandlerResult
-request_roadprofile_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_roadprofile_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "roadprofile", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))roadprofile_get_attr);
 }
 
 
-static DBusHandlerResult
-request_roadprofile_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_roadprofile_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "roadprofile", NULL, (int (*)(void *,
                                        struct attr *))roadprofile_set_attr);
 }
 
-static DBusHandlerResult
-request_roadprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_roadprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter(connection, message, "roadprofile", (struct attr_iter * (*)(void))roadprofile_attr_iter_new);
 }
 
-static DBusHandlerResult
-request_roadprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_roadprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter_destroy(connection, message, "roadprofile",
                                      (void (*)(struct attr_iter *))roadprofile_attr_iter_destroy);
 }
 
 /* route */
 
-static DBusHandlerResult
-request_route_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "route", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))route_get_attr);
 }
 
 
-static DBusHandlerResult
-request_route_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_set_attr);
 }
 
-static DBusHandlerResult
-request_route_add_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_add_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_add_attr);
 }
 
-static DBusHandlerResult
-request_route_remove_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_remove_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *,
                                        struct attr *))route_remove_attr);
 }
 
-static DBusHandlerResult
-request_route_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_destroy(connection, message, "route", NULL, (void (*)(void *)) route_destroy);
 }
 
-static DBusHandlerResult
-request_route_dup(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_route_dup(DBusConnection *connection, DBusMessage *message) {
     return request_dup(connection, message, "route", NULL, (void *(*)(void *)) route_dup);
 }
 
 
 /* navit */
 
-static DBusHandlerResult
-request_navit_draw(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_draw(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
 
     navit=object_get_from_message(message, "navit");
@@ -1106,8 +1046,7 @@ request_navit_draw(DBusConnection *connection, DBusMessage *message) {
  * @param p Pointer where the data should get stored
  * @returns Returns 1 when everything went right, otherwise 0
  */
-static int
-point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point *p) {
+static int point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point *p) {
     DBusMessageIter iter2;
 
     dbg(lvl_debug,"%s", dbus_message_iter_get_signature(iter));
@@ -1141,8 +1080,7 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
 
-static DBusHandlerResult
-request_navit_add_message(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_add_message(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
     char *usermessage;
 
@@ -1168,8 +1106,7 @@ request_navit_add_message(DBusConnection *connection, DBusMessage *message) {
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
 
-static DBusHandlerResult
-request_navit_set_center(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_center(DBusConnection *connection, DBusMessage *message) {
     struct pcoord pc;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1193,8 +1130,7 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message) {
  * @param message The DBusMessage containing the x and y value
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
-static DBusHandlerResult
-request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message) {
     struct point p;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1217,8 +1153,7 @@ request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message
  * @param message The DBusMessage containing the name of the layout
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
-static DBusHandlerResult
-request_navit_set_layout(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_layout(DBusConnection *connection, DBusMessage *message) {
     char *new_layout_name;
     struct navit *navit;
     struct attr attr;
@@ -1246,8 +1181,7 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message) {
  * @param message The DBusMessage
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
-static DBusHandlerResult
-request_navit_quit(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_quit(DBusConnection *connection, DBusMessage *message) {
     dbg(lvl_debug,"Got a quit request from DBUS");
     struct attr navit;
     navit.type=attr_navit;
@@ -1264,8 +1198,7 @@ request_navit_quit(DBusConnection *connection, DBusMessage *message) {
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_navit_zoom(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_zoom(DBusConnection *connection, DBusMessage *message) {
     int factor;
     struct point p, *pp=NULL;
     struct navit *navit;
@@ -1296,8 +1229,7 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message) {
 
 }
 
-static DBusHandlerResult
-request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
     DBusMessageIter iter;
 
@@ -1321,8 +1253,7 @@ request_navit_zoom_to_route(DBusConnection *connection, DBusMessage *message) {
  * @param message The DBusMessage including the `filename` parameter
  * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
  */
-static DBusHandlerResult
-request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message) {
     char * filename;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1387,8 +1318,7 @@ request_navit_route_export_gpx(DBusConnection *connection, DBusMessage *message)
  * @param message The DBusMessage including the 'filename' parameter
  * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
  */
-static DBusHandlerResult
-request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *message) {
     char * filename;
     struct point p;
     struct navit *navit;
@@ -1470,8 +1400,7 @@ request_navit_route_export_geojson(DBusConnection *connection, DBusMessage *mess
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_navit_block(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_block(DBusConnection *connection, DBusMessage *message) {
     int mode;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1489,8 +1418,7 @@ request_navit_block(DBusConnection *connection, DBusMessage *message) {
 
 }
 
-static DBusHandlerResult
-request_navit_resize(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_resize(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
     int w, h;
     DBusMessageIter iter;
@@ -1520,14 +1448,12 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message) {
 
 }
 
-static DBusHandlerResult
-request_navit_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "navit", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))navit_get_attr);
 }
 
-static DBusHandlerResult
-request_navit_attr_iter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_attr_iter(DBusConnection *connection, DBusMessage *message) {
     DBusMessage *reply;
     struct attr_iter *attr_iter=navit_attr_iter_new();
     char *opath=object_new("navit_attr_iter",attr_iter);
@@ -1539,8 +1465,7 @@ request_navit_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
-static DBusHandlerResult
-request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
     struct attr_iter *attr_iter;
     DBusMessageIter iter;
 
@@ -1554,24 +1479,20 @@ request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message
 }
 
 
-static DBusHandlerResult
-request_navit_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *, struct attr *))navit_set_attr);
 }
 
-static DBusHandlerResult
-request_navit_add_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_add_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *, struct attr *))navit_add_attr);
 }
 
-static DBusHandlerResult
-request_navit_remove_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_remove_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *,
                                        struct attr *))navit_remove_attr);
 }
 
-static DBusHandlerResult
-request_navit_set_position(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_position(DBusConnection *connection, DBusMessage *message) {
     struct pcoord pc;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1588,8 +1509,7 @@ request_navit_set_position(DBusConnection *connection, DBusMessage *message) {
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_navit_set_destination(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_set_destination(DBusConnection *connection, DBusMessage *message) {
     struct pcoord pc;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1611,8 +1531,7 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message) 
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_navit_clear_destination(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_clear_destination(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
 
     navit = object_get_from_message(message, "navit");
@@ -1622,8 +1541,7 @@ request_navit_clear_destination(DBusConnection *connection, DBusMessage *message
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_navit_evaluate(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_evaluate(DBusConnection *connection, DBusMessage *message) {
     struct navit *navit;
     char *command;
     char *result;
@@ -1652,21 +1570,18 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message) {
 
 /* search_list */
 
-static DBusHandlerResult
-request_search_list_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_search_list_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) search_list_destroy);
 }
 
-static void
-request_search_list_common(struct search_list_common *slc, DBusMessageIter *iter4) {
+static void request_search_list_common(struct search_list_common *slc, DBusMessageIter *iter4) {
     if (slc->postal)
         encode_dict_string_variant_string(iter4, "postal", slc->postal);
     if (slc->postal_mask)
         encode_dict_string_variant_string(iter4, "postal_mask", slc->postal_mask);
 }
 
-static DBusHandlerResult
-request_search_list_get_result(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_search_list_get_result(DBusConnection *connection, DBusMessage *message) {
     struct search_list *search_list;
     struct search_list_result *result;
     DBusMessage *reply;
@@ -1740,8 +1655,7 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
-static DBusHandlerResult
-request_search_list_new(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_search_list_new(DBusConnection *connection, DBusMessage *message) {
     DBusMessageIter iter;
     DBusMessage *reply;
     struct mapset *mapset;
@@ -1761,8 +1675,7 @@ request_search_list_new(DBusConnection *connection, DBusMessage *message) {
     return DBUS_HANDLER_RESULT_HANDLED;
 }
 
-static DBusHandlerResult
-request_search_list_search(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_search_list_search(DBusConnection *connection, DBusMessage *message) {
     DBusMessageIter iter;
     struct search_list *search_list;
     struct attr attr;
@@ -1782,8 +1695,7 @@ request_search_list_search(DBusConnection *connection, DBusMessage *message) {
     return empty_reply(connection, message);
 }
 
-static DBusHandlerResult
-request_search_list_select(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_search_list_select(DBusConnection *connection, DBusMessage *message) {
     DBusMessageIter iter;
     struct search_list *search_list;
     int id, mode;
@@ -1809,8 +1721,7 @@ request_search_list_select(DBusConnection *connection, DBusMessage *message) {
 
 /* tracking */
 
-static DBusHandlerResult
-request_tracking_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_tracking_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "tracking", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))tracking_get_attr);
 }
@@ -1819,8 +1730,7 @@ request_tracking_get_attr(DBusConnection *connection, DBusMessage *message) {
 
 /* vehicle */
 
-static DBusHandlerResult
-request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message) {
     struct vehicle *vehicle;
     struct attr attr;
     int ret;
@@ -1839,27 +1749,23 @@ request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message) {
 
 /* vehicleprofile */
 
-static DBusHandlerResult
-request_vehicleprofile_get_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_vehicleprofile_get_attr(DBusConnection *connection, DBusMessage *message) {
     return request_get_attr(connection, message, "vehicleprofile", NULL, (int (*)(void *, enum attr_type, struct attr *,
                             struct attr_iter *))vehicleprofile_get_attr);
 }
 
 
-static DBusHandlerResult
-request_vehicleprofile_set_attr(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_vehicleprofile_set_attr(DBusConnection *connection, DBusMessage *message) {
     return request_set_add_remove_attr(connection, message, "vehicleprofile", NULL, (int (*)(void *,
                                        struct attr *))vehicleprofile_set_attr);
 }
 
-static DBusHandlerResult
-request_vehicleprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_vehicleprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter(connection, message, "vehicleprofile",
                              (struct attr_iter * (*)(void))vehicleprofile_attr_iter_new);
 }
 
-static DBusHandlerResult
-request_vehicleprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_vehicleprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter_destroy(connection, message, "vehicleprofile",
                                      (void (*)(struct attr_iter *))vehicleprofile_attr_iter_destroy);
 }
@@ -1953,8 +1859,7 @@ struct dbus_method {
     {".vehicleprofile","attr_iter_destroy","o",   "attr_iter",                               "",   "",      request_vehicleprofile_attr_iter_destroy},
 };
 
-static char *
-introspect_path(const char *object) {
+static char *introspect_path(const char *object) {
     char *ret;
     int i;
     char *def=".default_";
@@ -1982,8 +1887,7 @@ introspect_path(const char *object) {
     return ret;
 }
 
-static char *
-generate_navitintrospectxml(const char *object) {
+static char *generate_navitintrospectxml(const char *object) {
     int i,methods_size,n=0;
     char *navitintrospectxml;
     char *path=introspect_path(object);
@@ -2030,8 +1934,7 @@ generate_navitintrospectxml(const char *object) {
     return navitintrospectxml;
 }
 
-static DBusHandlerResult
-navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data) {
+static DBusHandlerResult navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data) {
     int i;
     char *path;
     dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s",
@@ -2071,8 +1974,7 @@ static DBusObjectPathVTable dbus_navit_vtable = {
 };
 
 #if 0
-DBusHandlerResult
-filter(DBusConnection *connection, DBusMessage *message, void *user_data) {
+DBusHandlerResult filter(DBusConnection *connection, DBusMessage *message, void *user_data) {
     dbg(lvl_debug,"type=%s interface=%s path=%s member=%s signature=%s",
         dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message),
         dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
@@ -2082,8 +1984,7 @@ filter(DBusConnection *connection, DBusMessage *message, void *user_data) {
 }
 #endif
 
-static int
-dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out) {
+static int dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out) {
     DBusMessage* msg;
     char *opath=object_new("navit",navit);
     char *interface=g_strdup_printf("%s%s", service_name, ".navit");
@@ -2116,8 +2017,7 @@ static struct command_table commands[] = {
 };
 
 
-static void
-dbus_main_navit(struct navit *navit, int added) {
+static void dbus_main_navit(struct navit *navit, int added) {
     struct attr attr;
     if (added==1) {
         DBusMessage* msg;

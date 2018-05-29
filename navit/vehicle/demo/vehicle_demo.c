@@ -60,8 +60,7 @@ struct vehicle_priv {
 
 };
 
-static void
-vehicle_demo_destroy(struct vehicle_priv *priv) {
+static void vehicle_demo_destroy(struct vehicle_priv *priv) {
     if (priv->timer)
         event_remove_timeout(priv->timer);
     callback_destroy(priv->timer_callback);
@@ -69,8 +68,7 @@ vehicle_demo_destroy(struct vehicle_priv *priv) {
     g_free(priv);
 }
 
-static void
-nmea_chksum(char *nmea) {
+static void nmea_chksum(char *nmea) {
     int i;
     if (nmea && strlen(nmea) > 3) {
         unsigned char csum=0;
@@ -80,9 +78,8 @@ nmea_chksum(char *nmea) {
     }
 }
 
-static int
-vehicle_demo_position_attr_get(struct vehicle_priv *priv,
-                               enum attr_type type, struct attr *attr) {
+static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     char ns='N',ew='E',*timep,*rmc,*gga;
     int hr,min,sec,year,mon,day;
     double lat,lng;
@@ -144,8 +141,7 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr) {
     switch(attr->type) {
     case attr_navit:
         priv->navit = attr->u.navit;
@@ -185,8 +181,7 @@ vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr) {
     return 1;
 }
 
-static int
-vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     return vehicle_demo_set_attr_do(priv, attr);
 }
 
@@ -196,8 +191,7 @@ struct vehicle_methods vehicle_demo_methods = {
     vehicle_demo_set_attr,
 };
 
-static void
-vehicle_demo_timer(struct vehicle_priv *priv) {
+static void vehicle_demo_timer(struct vehicle_priv *priv) {
     struct coord c, c2, pos, ci;
     int slen, len, dx, dy;
     struct route *route=NULL;
@@ -278,10 +272,9 @@ vehicle_demo_timer(struct vehicle_priv *priv) {
 
 
 
-static struct vehicle_priv *
-vehicle_demo_new(struct vehicle_methods
-                 *meth, struct callback_list
-                 *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_demo_new(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
 
     dbg(lvl_debug, "enter");
@@ -299,8 +292,7 @@ vehicle_demo_new(struct vehicle_methods
     return ret;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("demo", vehicle_demo_new);
 }

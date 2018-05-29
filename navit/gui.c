@@ -58,8 +58,7 @@ gui_new(struct attr *parent, struct attr **attrs) {
     return this_;
 }
 
-int
-gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     int ret;
     if (this_->meth.get_attr) {
         ret=this_->meth.get_attr(this_->priv, type, attr);
@@ -74,8 +73,7 @@ gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct a
 }
 
 
-int
-gui_set_attr(struct gui *this_, struct attr *attr) {
+int gui_set_attr(struct gui *this_, struct attr *attr) {
     int ret=1;
     if (this_->meth.set_attr)
         ret=this_->meth.set_attr(this_->priv, attr);
@@ -84,8 +82,7 @@ gui_set_attr(struct gui *this_, struct attr *attr) {
     return ret != 0;
 }
 
-int
-gui_add_attr(struct gui *this_, struct attr *attr) {
+int gui_add_attr(struct gui *this_, struct attr *attr) {
     int ret=0;
     if (this_->meth.add_attr)
         ret=this_->meth.add_attr(this_->priv, attr);
@@ -134,8 +131,7 @@ gui_datawindow_new(struct gui *gui, const char *name, struct callback *click, st
     return this_;
 }
 
-int
-gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description) {
+int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description) {
     int ret;
     dbg(lvl_info,"enter");
     if (! gui->meth.add_bookmark)
@@ -146,8 +142,7 @@ gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description) {
     return ret;
 }
 
-int
-gui_set_graphics(struct gui *this_, struct graphics *gra) {
+int gui_set_graphics(struct gui *this_, struct graphics *gra) {
     if (! this_->meth.set_graphics) {
         dbg(lvl_error, "cannot set graphics, method 'set_graphics' not available");
         return 1;
@@ -155,21 +150,18 @@ gui_set_graphics(struct gui *this_, struct graphics *gra) {
     return this_->meth.set_graphics(this_->priv, gra);
 }
 
-void
-gui_disable_suspend(struct gui *this_) {
+void gui_disable_suspend(struct gui *this_) {
     if (this_->meth.disable_suspend)
         this_->meth.disable_suspend(this_->priv);
 }
 
-int
-gui_has_main_loop(struct gui *this_) {
+int gui_has_main_loop(struct gui *this_) {
     if (! this_->meth.run_main_loop)
         return 0;
     return 1;
 }
 
-int
-gui_run_main_loop(struct gui *this_) {
+int gui_run_main_loop(struct gui *this_) {
     if (! gui_has_main_loop(this_))
         return 1;
     return this_->meth.run_main_loop(this_->priv);

@@ -50,8 +50,7 @@
 typedef void * GModule;
 #define G_MODULE_BIND_LOCAL 1
 #define G_MODULE_BIND_LAZY 2
-static int
-g_module_supported(void) {
+static int g_module_supported(void) {
     return 1;
 }
 
@@ -60,8 +59,7 @@ g_module_supported(void) {
 static DWORD last_error;
 static char errormsg[64];
 
-static void *
-g_module_open(char *name, int flags) {
+static void *g_module_open(char *name, int flags) {
     HINSTANCE handle;
     int len=MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name, -1, 0, 0);
     wchar_t filename[len];
@@ -73,14 +71,12 @@ g_module_open(char *name, int flags) {
     return handle;
 }
 
-static char *
-g_module_error(void) {
+static char *g_module_error(void) {
     sprintf(errormsg,"dll error %d",(int)last_error);
     return errormsg;
 }
 
-static int
-g_module_symbol(GModule *handle, char *symbol, gpointer *addr) {
+static int g_module_symbol(GModule *handle, char *symbol, gpointer *addr) {
 #ifdef HAVE_API_WIN32_CE
     int len=MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, symbol, -1, 0, 0);
     wchar_t wsymbol[len+1];
@@ -95,32 +91,27 @@ g_module_symbol(GModule *handle, char *symbol, gpointer *addr) {
     return 0;
 }
 
-static void
-g_module_close(GModule *handle) {
+static void g_module_close(GModule *handle) {
     FreeLibrary((HANDLE)handle);
 }
 
 #else
-static void *
-g_module_open(char *name, int flags) {
+static void *g_module_open(char *name, int flags) {
     return dlopen(name,
                   (flags & G_MODULE_BIND_LAZY ? RTLD_LAZY : RTLD_NOW) |
                   (flags & G_MODULE_BIND_LOCAL ? RTLD_LOCAL : RTLD_GLOBAL));
 }
 
-static char *
-g_module_error(void) {
+static char *g_module_error(void) {
     return dlerror();
 }
 
-static int
-g_module_symbol(GModule *handle, char *symbol, gpointer *addr) {
+static int g_module_symbol(GModule *handle, char *symbol, gpointer *addr) {
     *addr=dlsym(handle, symbol);
     return (*addr != NULL);
 }
 
-static void
-g_module_close(GModule *handle) {
+static void g_module_close(GModule *handle) {
     dlclose(handle);
 }
 #endif
@@ -143,8 +134,7 @@ struct plugins {
     GList *list;
 } *pls;
 
-static struct plugin *
-plugin_new_from_path(char *plugin) {
+static struct plugin *plugin_new_from_path(char *plugin) {
 #ifdef USE_PLUGINS
     struct plugin *ret;
     if (! g_module_supported()) {
@@ -158,8 +148,7 @@ plugin_new_from_path(char *plugin) {
 #endif
 }
 
-int
-plugin_load(struct plugin *pl) {
+int plugin_load(struct plugin *pl) {
 #ifdef USE_PLUGINS
     gpointer init;
 
@@ -189,53 +178,44 @@ plugin_load(struct plugin *pl) {
 #endif
 }
 
-char *
-plugin_get_name(struct plugin *pl) {
+char *plugin_get_name(struct plugin *pl) {
     return pl->name;
 }
 
-int
-plugin_get_active(struct plugin *pl) {
+int plugin_get_active(struct plugin *pl) {
     return pl->active;
 }
 
-void
-plugin_set_active(struct plugin *pl, int active) {
+void plugin_set_active(struct plugin *pl, int active) {
     pl->active=active;
 }
 
-void
-plugin_set_lazy(struct plugin *pl, int lazy) {
+void plugin_set_lazy(struct plugin *pl, int lazy) {
     pl->lazy=lazy;
 }
 
 #ifdef USE_PLUGINS
-static int
-plugin_get_ondemand(struct plugin *pl) {
+static int plugin_get_ondemand(struct plugin *pl) {
     return pl->ondemand;
 }
 #endif
 
-static void
-plugin_set_ondemand(struct plugin *pl, int ondemand) {
+static void plugin_set_ondemand(struct plugin *pl, int ondemand) {
     pl->ondemand=ondemand;
 }
 
-void
-plugin_call_init(struct plugin *pl) {
+void plugin_call_init(struct plugin *pl) {
     pl->init();
 }
 
-void
-plugin_unload(struct plugin *pl) {
+void plugin_unload(struct plugin *pl) {
 #ifdef USE_PLUGINS
     g_module_close(pl->mod);
     pl->mod=NULL;
 #endif
 }
 
-void
-plugin_destroy(struct plugin *pl) {
+void plugin_destroy(struct plugin *pl) {
     g_free(pl);
 }
 
@@ -320,8 +300,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 #endif
 }
 
-void
-plugins_init(struct plugins *pls) {
+void plugins_init(struct plugins *pls) {
 #ifdef USE_PLUGINS
     struct plugin *pl;
     GList *l;
@@ -345,8 +324,7 @@ plugins_init(struct plugins *pls) {
 #endif
 }
 
-void
-plugins_destroy(struct plugins *pls) {
+void plugins_destroy(struct plugins *pls) {
     GList *l;
     struct plugin *pl;
 
@@ -361,8 +339,7 @@ plugins_destroy(struct plugins *pls) {
     g_free(pls);
 }
 
-static void *
-find_by_name(enum plugin_category category, const char *name) {
+static void *find_by_name(enum plugin_category category, const char *name) {
     GList *name_list=plugin_categories[category];
     while (name_list) {
         struct name_val *nv=name_list->data;
@@ -373,8 +350,7 @@ find_by_name(enum plugin_category category, const char *name) {
     return NULL;
 }
 
-void *
-plugin_get_category(enum plugin_category category, const char *category_name, const char *name) {
+void *plugin_get_category(enum plugin_category category, const char *category_name, const char *name) {
     GList *plugin_list;
     struct plugin *pl;
     char *mod_name, *filename=NULL, *corename=NULL;

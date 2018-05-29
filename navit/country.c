@@ -303,8 +303,7 @@ struct country_search {
     enum attr_type attr_next;
 };
 
-static int
-country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct country_search *this_=priv_data;
     struct country *country=this_->country;
 
@@ -377,8 +376,7 @@ country_search_new(struct attr *search, int partial) {
     return ret;
 }
 
-static int
-match(struct country_search *this_, enum attr_type type, const char *name) {
+static int match(struct country_search *this_, enum attr_type type, const char *name) {
     int ret;
     if (!name)
         return 0;
@@ -425,8 +423,7 @@ country_default(void) {
     return &country_default_attr;
 }
 
-void
-country_search_destroy(struct country_search *this_) {
+void country_search_destroy(struct country_search *this_) {
     g_free(this_->search.u.str);
     g_free(this_);
 }

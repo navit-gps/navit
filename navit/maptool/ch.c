@@ -80,8 +80,7 @@ GHashTable *sgr_nodes_hash;
 
 static int ch_levels=14;
 
-static int
-road_speed(enum item_type type) {
+static int road_speed(enum item_type type) {
     switch (type) {
     case type_street_0:
     case type_street_1_city:
@@ -122,24 +121,20 @@ road_speed(enum item_type type) {
     }
 }
 
-static void
-coord_slice_free(void *data) {
+static void coord_slice_free(void *data) {
     g_slice_free(struct coord, data);
 }
 
 
-static GHashTable *
-coord_hash_new(void) {
+static GHashTable *coord_hash_new(void) {
     return g_hash_table_new_full(coord_hash, coord_equal, coord_slice_free, NULL);
 }
 
-static void
-item_id_slice_free(void *data) {
+static void item_id_slice_free(void *data) {
     g_slice_free(struct item_id, data);
 }
 
-static void
-add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes) {
+static void add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes) {
     if (! g_hash_table_lookup(hash, c)) {
         struct coord *ct=g_slice_new(struct coord);
         *ct=*c;
@@ -150,19 +145,16 @@ add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes) {
 
 }
 
-static void
-edge_hash_slice_free(void *data) {
+static void edge_hash_slice_free(void *data) {
     g_slice_free(struct edge_hash_item, data);
 }
 
-static guint
-edge_hash_hash(gconstpointer key) {
+static guint edge_hash_hash(gconstpointer key) {
     const struct edge_hash_item *itm=key;
     return itm->first*2654435761UL+itm->last;
 }
 
-static gboolean
-edge_hash_equal(gconstpointer a, gconstpointer b) {
+static gboolean edge_hash_equal(gconstpointer a, gconstpointer b) {
     const struct edge_hash_item *itm_a=a;
     const struct edge_hash_item *itm_b=b;
     return (itm_a->first == itm_b->first && itm_a->last == itm_b->last);
@@ -170,8 +162,7 @@ edge_hash_equal(gconstpointer a, gconstpointer b) {
 
 
 
-static void
-ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg) {
+static void ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg) {
     GHashTable *hash=coord_hash_new();
     struct item_bin *ib;
     int nodes=0,edges=0;
@@ -219,8 +210,7 @@ ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg) {
     g_hash_table_destroy(hash);
 }
 
-static void
-ch_generate_sgr(char *suffix) {
+static void ch_generate_sgr(char *suffix) {
 #ifndef HAVE_API_WIN32_CE
     char command[1024];
     int system_result;
@@ -243,8 +233,7 @@ ch_generate_sgr(char *suffix) {
 #endif
 }
 
-static void
-ch_process_node(FILE *out, int node, int resolve) {
+static void ch_process_node(FILE *out, int node, int resolve) {
     int first_edge_id=nodes[node].first_edge;
     int last_edge_id=nodes[node+1].first_edge;
     int edge_id;
@@ -298,8 +287,7 @@ ch_process_node(FILE *out, int node, int resolve) {
     item_bin_write(item_bin, out);
 }
 
-static void
-ch_process_nodes(FILE *out, int pos, int count, int resolve) {
+static void ch_process_nodes(FILE *out, int pos, int count, int resolve) {
     int i;
     printf("count %d sum=%d newnode_count=%d\n",count,pos,newnode_count);
     for (i = 0 ; i < count ; i++)
@@ -307,8 +295,7 @@ ch_process_nodes(FILE *out, int pos, int count, int resolve) {
 }
 
 
-static void
-ch_process(FILE **files, int depth, int resolve) {
+static void ch_process(FILE **files, int depth, int resolve) {
     int count=newnode_count;
     int pos=0;
 
@@ -321,8 +308,7 @@ ch_process(FILE **files, int depth, int resolve) {
     ch_process_nodes(files[depth], pos, newnode_count-pos, resolve);
 }
 
-static void
-ch_setup(char *suffix) {
+static void ch_setup(char *suffix) {
     int i;
     if (!sgr) {
         int *data,size,offset=0;
@@ -376,8 +362,7 @@ ch_setup(char *suffix) {
     }
 }
 
-static void
-ch_create_tempfiles(char *suffix, FILE **files, int count, int mode) {
+static void ch_create_tempfiles(char *suffix, FILE **files, int count, int mode) {
     char name[256];
     int i;
 
@@ -387,8 +372,7 @@ ch_create_tempfiles(char *suffix, FILE **files, int count, int mode) {
     }
 }
 
-static void
-ch_close_tempfiles(FILE **files, int count) {
+static void ch_close_tempfiles(FILE **files, int count) {
     int i;
 
     for (i = 0 ; i <= count ; i++) {
@@ -397,8 +381,7 @@ ch_close_tempfiles(FILE **files, int count) {
 }
 
 #if 0
-static void
-ch_remove_tempfiles(char *suffix, int count) {
+static void ch_remove_tempfiles(char *suffix, int count) {
     char name[256];
     int i;
 
@@ -409,8 +392,7 @@ ch_remove_tempfiles(char *suffix, int count) {
 }
 #endif
 
-static void
-ch_copy_to_tiles(char *suffix, int count, struct tile_info *info, FILE *ref) {
+static void ch_copy_to_tiles(char *suffix, int count, struct tile_info *info, FILE *ref) {
     char name[256];
     int i;
     FILE *f;
@@ -426,8 +408,7 @@ ch_copy_to_tiles(char *suffix, int count, struct tile_info *info, FILE *ref) {
     }
 }
 
-void
-ch_generate_tiles(char *map_suffix, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info) {
+void ch_generate_tiles(char *map_suffix, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info) {
     struct tile_info info;
     FILE *in,*ref,*ddsg_coords,*ddsg;
     FILE **graphfiles;
@@ -460,8 +441,7 @@ ch_generate_tiles(char *map_suffix, char *suffix, FILE *tilesdir_out, struct zip
     write_tilesdir(&info, zip_info, tilesdir_out);
 }
 
-void
-ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info) {
+void ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info) {
     struct tile_info info;
     struct tile_head *th;
     FILE **graphfiles=g_alloca(sizeof(FILE*)*(ch_levels+1));

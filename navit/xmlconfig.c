@@ -152,8 +152,7 @@ static const char * find_attribute(struct xmlstate *state, const char *attribute
     return NULL;
 }
 
-static int
-find_boolean(struct xmlstate *state, const char *attribute, int deflt, int required) {
+static int find_boolean(struct xmlstate *state, const char *attribute, int deflt, int required) {
     const char *value;
 
     value=find_attribute(state, attribute, required);
@@ -170,16 +169,14 @@ find_boolean(struct xmlstate *state, const char *attribute, int deflt, int requi
  * * @param val the string value to convert
  * * @returns int value of converted string
  * */
-static int
-convert_number(const char *val) {
+static int convert_number(const char *val) {
     if (val)
         return g_ascii_strtoull(val,NULL,0);
     else
         return 0;
 }
 
-static int
-xmlconfig_announce(struct xmlstate *state) {
+static int xmlconfig_announce(struct xmlstate *state) {
     const char *type,*value;
     char key[32];
     int level[3];
@@ -564,13 +561,12 @@ static void initStatic(void) {
  * * @returns nothing
  * */
 
-static void
-start_element(xml_context *context,
-              const gchar         *element_name,
-              const gchar        **attribute_names,
-              const gchar        **attribute_values,
-              gpointer             user_data,
-              xmlerror             **error) {
+static void start_element(xml_context *context,
+                          const gchar         *element_name,
+                          const gchar        **attribute_names,
+                          const gchar        **attribute_values,
+                          gpointer             user_data,
+                          xmlerror             **error) {
     struct xmlstate *new=NULL, **parent = user_data;
     struct element_func *e=elements,*func=NULL;
     struct attr_fixme *attr_fixme=attr_fixmes;
@@ -682,11 +678,10 @@ start_element(xml_context *context,
 
 
 /* Called for close tags </foo> */
-static void
-end_element (xml_context *context,
-             const gchar         *element_name,
-             gpointer             user_data,
-             xmlerror             **error) {
+static void end_element (xml_context *context,
+                         const gchar         *element_name,
+                         gpointer             user_data,
+                         xmlerror             **error) {
     struct xmlstate *curr, **state = user_data;
 
     if (!strcmp(element_name,"xml"))
@@ -703,9 +698,8 @@ end_element (xml_context *context,
 
 static gboolean parse_file(struct xmldocument *document, xmlerror **error);
 
-static void
-xinclude(xml_context *context, const gchar **attribute_names, const gchar **attribute_values,
-         struct xmldocument *doc_old, xmlerror **error) {
+static void xinclude(xml_context *context, const gchar **attribute_names, const gchar **attribute_values,
+                     struct xmldocument *doc_old, xmlerror **error) {
     struct xmldocument doc_new;
     struct file_wordexp *we;
     int i,count;
@@ -773,8 +767,7 @@ xinclude(xml_context *context, const gchar **attribute_names, const gchar **attr
     }
 
 }
-static int
-strncmp_len(const char *s1, int s1len, const char *s2) {
+static int strncmp_len(const char *s1, int s1len, const char *s2) {
     int ret;
     ret=strncmp(s1, s2, s1len);
     if (ret)
@@ -782,8 +775,7 @@ strncmp_len(const char *s1, int s1len, const char *s2) {
     return strlen(s2)-s1len;
 }
 
-static int
-xpointer_value(const char *test, int len, struct xistate *elem, const char **out, int out_len) {
+static int xpointer_value(const char *test, int len, struct xistate *elem, const char **out, int out_len) {
     int i,ret=0;
     if (len <= 0 || out_len <= 0) {
         return 0;
@@ -806,8 +798,7 @@ xpointer_value(const char *test, int len, struct xistate *elem, const char **out
     return 0;
 }
 
-static int
-xpointer_test(const char *test, int len, struct xistate *elem) {
+static int xpointer_test(const char *test, int len, struct xistate *elem) {
     int eq,i,count,vlen,cond_req=1,cond=0;
     char c;
     const char *tmp[16];
@@ -834,8 +825,7 @@ xpointer_test(const char *test, int len, struct xistate *elem) {
     return 0;
 }
 
-static int
-xpointer_element_match(const char *xpointer, int len, struct xistate *elem) {
+static int xpointer_element_match(const char *xpointer, int len, struct xistate *elem) {
     int start,tlen;
     start=strcspn(xpointer, "[");
     if (start > len)
@@ -857,8 +847,7 @@ xpointer_element_match(const char *xpointer, int len, struct xistate *elem) {
     }
 }
 
-static int
-xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first) {
+static int xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first) {
     const char *c;
     int s;
     dbg(lvl_info,"%s", xpointer);
@@ -881,8 +870,7 @@ xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first) {
     return 1;
 }
 
-static int
-xpointer_match(const char *xpointer, struct xistate *first) {
+static int xpointer_match(const char *xpointer, struct xistate *first) {
     char *prefix="xpointer(";
     int len;
     if (! xpointer)
@@ -896,13 +884,12 @@ xpointer_match(const char *xpointer, struct xistate *first) {
 
 }
 
-static void
-xi_start_element(xml_context *context,
-                 const gchar         *element_name,
-                 const gchar        **attribute_names,
-                 const gchar        **attribute_values,
-                 gpointer             user_data,
-                 xmlerror             **error) {
+static void xi_start_element(xml_context *context,
+                             const gchar         *element_name,
+                             const gchar        **attribute_names,
+                             const gchar        **attribute_values,
+                             gpointer             user_data,
+                             xmlerror             **error) {
     struct xmldocument *doc=user_data;
     struct xistate *xistate;
     int i,count=0;
@@ -944,11 +931,10 @@ xi_start_element(xml_context *context,
  * * @returns nothing
  * */
 
-static void
-xi_end_element (xml_context *context,
-                const gchar         *element_name,
-                gpointer             user_data,
-                xmlerror             **error) {
+static void xi_end_element (xml_context *context,
+                            const gchar         *element_name,
+                            gpointer             user_data,
+                            xmlerror             **error) {
     struct xmldocument *doc=user_data;
     struct xistate *xistate=doc->last;
     int i=0;
@@ -976,12 +962,11 @@ xi_end_element (xml_context *context,
 
 /* Called for character data */
 /* text is not nul-terminated */
-static void
-xi_text (xml_context *context,
-         const gchar            *text,
-         gsize                   text_len,
-         gpointer                user_data,
-         xmlerror               **error) {
+static void xi_text (xml_context *context,
+                     const gchar            *text,
+                     gsize                   text_len,
+                     gpointer                user_data,
+                     xmlerror               **error) {
     struct xmldocument *doc=user_data;
     int i;
     if (doc->active) {
@@ -1005,11 +990,11 @@ xi_text (xml_context *context,
 }
 
 #if USE_EZXML
-static void
-parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, const char **, const char **, void *,
-                void *),
-                void (*end)(void *, const char *, void *, void *),
-                void (*text)(void *, const char *, int, void *, void *)) {
+static void parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, const char **, const char **,
+                            void *,
+                            void *),
+                            void (*end)(void *, const char *, void *, void *),
+                            void (*text)(void *, const char *, int, void *, void *)) {
     while (node) {
         if (start)
             start(NULL, node->name, (const char **)node->attr, (const char **)(node->attr+1), data, NULL);
@@ -1024,11 +1009,10 @@ parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, co
 }
 #endif
 
-void
-xml_parse_text(const char *document, void *data,
-               void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
-               void (*end)(xml_context *, const char *, void *, GError **),
-               void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+void xml_parse_text(const char *document, void *data,
+                    void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                    void (*end)(xml_context *, const char *, void *, GError **),
+                    void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
     GMarkupParser parser = { start, end, text, NULL, NULL};
     xml_context *context;
@@ -1074,8 +1058,7 @@ static const GMarkupParser parser = {
  * * @returns boolean TRUE or FALSE
  * */
 
-static gboolean
-parse_file(struct xmldocument *document, xmlerror **error) {
+static gboolean parse_file(struct xmldocument *document, xmlerror **error) {
     xml_context *context;
     gchar *contents, *message;
     gsize len;
@@ -1132,8 +1115,7 @@ parse_file(struct xmldocument *document, xmlerror **error) {
     return result;
 }
 #else
-static void
-parse_node(struct xmldocument *document, ezxml_t node) {
+static void parse_node(struct xmldocument *document, ezxml_t node) {
     while (node) {
         xi_start_element(NULL,node->name, node->attr, node->attr+1, document, NULL);
         if (node->txt)
@@ -1145,8 +1127,7 @@ parse_node(struct xmldocument *document, ezxml_t node) {
     }
 }
 
-static gboolean
-parse_file(struct xmldocument *document, xmlerror **error) {
+static gboolean parse_file(struct xmldocument *document, xmlerror **error) {
     FILE *f;
     ezxml_t root;
 
@@ -1199,8 +1180,7 @@ gboolean config_load(const char *filename, xmlerror **error) {
     return result;
 }
 
-int
-navit_object_set_methods(void *in, int in_size, void *out, int out_size) {
+int navit_object_set_methods(void *in, int in_size, void *out, int out_size) {
     int ret,size=out_size;
     if (out_size > in_size) {
         ret=-1;
@@ -1230,8 +1210,7 @@ navit_object_ref(struct navit_object *obj) {
     return obj;
 }
 
-void
-navit_object_unref(struct navit_object *obj) {
+void navit_object_unref(struct navit_object *obj) {
     if (obj) {
         obj->refcount--;
         dbg(lvl_debug,"refcount %s %p %d",attr_to_name(obj->func->type),obj,obj->refcount);
@@ -1249,8 +1228,7 @@ navit_object_attr_iter_new(void) {
     return g_new0(struct attr_iter, 1);
 }
 
-void
-navit_object_attr_iter_destroy(struct attr_iter *iter) {
+void navit_object_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
@@ -1279,27 +1257,23 @@ navit_object_attr_iter_destroy(struct attr_iter *iter) {
  *
  * @return True if a matching attribute was found, false if not.
  */
-int
-navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     return attr_generic_get_attr(obj->attrs, NULL, type, attr, iter);
 }
 
-void
-navit_object_callbacks(struct navit_object *obj, struct attr *attr) {
+void navit_object_callbacks(struct navit_object *obj, struct attr *attr) {
     if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list)
         callback_list_call_attr_2(obj->attrs[0]->u.callback_list, attr->type, attr->u.data, 0);
 }
 
-int
-navit_object_set_attr(struct navit_object *obj, struct attr *attr) {
+int navit_object_set_attr(struct navit_object *obj, struct attr *attr) {
     dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)", obj, attr, attr_to_name(attr->type));
     obj->attrs=attr_generic_set_attr(obj->attrs, attr);
     navit_object_callbacks(obj, attr);
     return 1;
 }
 
-int
-navit_object_add_attr(struct navit_object *obj, struct attr *attr) {
+int navit_object_add_attr(struct navit_object *obj, struct attr *attr) {
     dbg(lvl_debug, "enter, obj=%p, attr=%p (%s)", obj, attr, attr_to_name(attr->type));
     if (attr->type == attr_callback) {
         struct callback_list *cbl;
@@ -1321,8 +1295,7 @@ navit_object_add_attr(struct navit_object *obj, struct attr *attr) {
     return 1;
 }
 
-int
-navit_object_remove_attr(struct navit_object *obj, struct attr *attr) {
+int navit_object_remove_attr(struct navit_object *obj, struct attr *attr) {
     if (attr->type == attr_callback) {
         if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) {
             callback_list_remove(obj->attrs[0]->u.callback_list, attr->u.callback);
@@ -1336,8 +1309,7 @@ navit_object_remove_attr(struct navit_object *obj, struct attr *attr) {
     return 1;
 }
 
-void
-navit_object_destroy(struct navit_object *obj) {
+void navit_object_destroy(struct navit_object *obj) {
     attr_list_free(obj->attrs);
     g_free(obj);
 }

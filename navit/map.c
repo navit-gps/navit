@@ -126,8 +126,7 @@ map_new(struct attr *parent, struct attr **attrs) {
  * @param iter (NOT IMPLEMENTED) Used to iterate through all attributes of a type. Set this to NULL to get the first attribute, set this to an attr_iter to get the next attribute
  * @return True if the attribute type was found, false if not
  */
-int
-map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     int ret=0;
     if (this_->meth.map_get_attr)
         ret=this_->meth.map_get_attr(this_->priv, type, attr);
@@ -152,8 +151,7 @@ map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct a
  * @param attr The attribute to set
  * @return True if the attr could be set, false otherwise
  */
-int
-map_set_attr(struct map *this_, struct attr *attr) {
+int map_set_attr(struct map *this_, struct attr *attr) {
     this_->attrs=attr_generic_set_attr(this_->attrs, attr);
     if (this_->meth.map_set_attr)
         this_->meth.map_set_attr(this_->priv, attr);
@@ -170,8 +168,7 @@ map_set_attr(struct map *this_, struct attr *attr) {
  * @param this_ The map to associate the callback with
  * @param cb The callback to add
  */
-void
-map_add_callback(struct map *this_, struct callback *cb) {
+void map_add_callback(struct map *this_, struct callback *cb) {
     callback_list_add(this_->attr_cbl, cb);
 }
 
@@ -184,8 +181,7 @@ map_add_callback(struct map *this_, struct callback *cb) {
  * @param this_ The map to remove the callback from
  * @param cb The callback to remove
  */
-void
-map_remove_callback(struct map *this_, struct callback *cb) {
+void map_remove_callback(struct map *this_, struct callback *cb) {
     callback_list_remove(this_->attr_cbl, cb);
 }
 
@@ -196,8 +192,7 @@ map_remove_callback(struct map *this_, struct callback *cb) {
  * @param this_ Map to be checked for the need to convert strings
  * @return True if strings from the map have to be converted, false otherwise
  */
-int
-map_requires_conversion(struct map *this_) {
+int map_requires_conversion(struct map *this_) {
     return (this_->meth.charset != NULL && strcmp(this_->meth.charset, "utf-8"));
 }
 
@@ -211,8 +206,7 @@ char *map_converted_string_tmp=NULL;
  * @param str The string to be converted
  * @return The converted string. Don't care about it after use.
  */
-char *
-map_convert_string_tmp(struct map *this_, char *str) {
+char *map_convert_string_tmp(struct map *this_, char *str) {
     if(map_converted_string_tmp!=NULL)
         g_free(map_converted_string_tmp);
     map_converted_string_tmp=NULL;
@@ -233,14 +227,12 @@ map_convert_string_tmp(struct map *this_, char *str) {
  * @param str The string to be converted
  * @return The converted string. It has to be map_convert_free()d after use.
  */
-char *
-map_convert_string(struct map *this_, char *str) {
+char *map_convert_string(struct map *this_, char *str) {
     return map_convert_dup(map_convert_string_tmp(this_,str));
 }
 
 
-char *
-map_convert_dup(char *str) {
+char *map_convert_dup(char *str) {
     if(map_converted_string_tmp==str) {
         map_converted_string_tmp=NULL;
         return str;
@@ -253,8 +245,7 @@ map_convert_dup(char *str) {
  *
  * @param str The string to be freed
  */
-void
-map_convert_free(char *str) {
+void map_convert_free(char *str) {
     g_free(str);
 }
 
@@ -264,8 +255,7 @@ map_convert_free(char *str) {
  * @param this_ The map to return the projection of
  * @return The projection of the map
  */
-enum projection
-map_projection(struct map *this_) {
+enum projection map_projection(struct map *this_) {
     return this_->meth.pro;
 }
 
@@ -275,8 +265,7 @@ map_projection(struct map *this_) {
  * @param this_ The map to set the projection of
  * @param pro The projection to be set
  */
-void
-map_set_projection(struct map *this_, enum projection pro) {
+void map_set_projection(struct map *this_, enum projection pro) {
     this_->meth.pro=pro;
 }
 
@@ -286,8 +275,7 @@ map_set_projection(struct map *this_, enum projection pro) {
  * @param m The map to be destroyed
  */
 
-void
-map_destroy(struct map *m) {
+void map_destroy(struct map *m) {
     if (!m)
         return;
     if (m->priv)
@@ -372,8 +360,7 @@ map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo) {
  *
  * @param mr The map rect to be destroyed
  */
-void
-map_rect_destroy(struct map_rect *mr) {
+void map_rect_destroy(struct map_rect *mr) {
     if (mr) {
         mr->m->meth.map_rect_destroy(mr->priv);
         g_free(mr);
@@ -479,8 +466,7 @@ map_search_get_item(struct map_search *this_) {
  *
  * @param this_ The map search struct to be destroyed
  */
-void
-map_search_destroy(struct map_search *this_) {
+void map_search_destroy(struct map_search *this_) {
     if (! this_)
         return;
     if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
@@ -559,8 +545,7 @@ map_selection_dup(struct map_selection *sel) {
  *
  * @param sel The map selection to be destroyed
  */
-void
-map_selection_destroy(struct map_selection *sel) {
+void map_selection_destroy(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next = sel->next;
@@ -579,8 +564,7 @@ map_selection_destroy(struct map_selection *sel) {
  * @param item The item that the rectangle should be built around
  * @return True if the rectangle is within the selection, false otherwise
  */
-int
-map_selection_contains_item_rect(struct map_selection *sel, struct item *item) {
+int map_selection_contains_item_rect(struct map_selection *sel, struct item *item) {
     struct coord c;
     struct coord_rect r;
     int count=0;
@@ -611,8 +595,7 @@ map_selection_contains_item_rect(struct map_selection *sel, struct item *item) {
  * @return True if there is a match, false otherwise
  */
 
-int
-map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count) {
+int map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count) {
     int i;
     if (! sel)
         return 1;
@@ -638,8 +621,7 @@ map_selection_contains_item_range(struct map_selection *sel, int follow, struct 
  * @return True if there is a match, false otherwise
  */
 
-int
-map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type) {
+int map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type) {
     if (! sel)
         return 1;
     while (sel) {
@@ -661,13 +643,11 @@ map_selection_contains_item(struct map_selection *sel, int follow, enum item_typ
  * @param priv The private data that should be checked.
  * @return True if priv is the private data of map
  */
-int
-map_priv_is(struct map *map, struct map_priv *priv) {
+int map_priv_is(struct map *map, struct map_priv *priv) {
     return (map->priv == priv);
 }
 
-void
-map_dump_filedesc(struct map *map, FILE *out) {
+void map_dump_filedesc(struct map *map, FILE *out) {
     struct map_rect *mr=map_rect_new(map, NULL);
     struct item *item;
 
@@ -676,8 +656,7 @@ map_dump_filedesc(struct map *map, FILE *out) {
     map_rect_destroy(mr);
 }
 
-void
-map_dump_file(struct map *map, const char *file) {
+void map_dump_file(struct map *map, const char *file) {
     FILE *f;
     f=fopen(file,"w");
     if (f) {
@@ -687,8 +666,7 @@ map_dump_file(struct map *map, const char *file) {
         dbg(lvl_error,"failed to open file '%s'",file);
 }
 
-void
-map_dump(struct map *map) {
+void map_dump(struct map *map) {
     map_dump_filedesc(map, stdout);
 }
 

@@ -156,8 +156,7 @@ static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
     g_free(b_item);
 }
 
-static void
-bookmarks_clear_hash(struct bookmarks *this_) {
+static void bookmarks_clear_hash(struct bookmarks *this_) {
     if (this_->mr) {
         map_rect_destroy(this_->mr);
     }
@@ -166,8 +165,7 @@ bookmarks_clear_hash(struct bookmarks *this_) {
     g_list_free(this_->bookmarks_list);
 }
 
-static void
-bookmarks_load_hash(struct bookmarks *this_) {
+static void bookmarks_load_hash(struct bookmarks *this_) {
     struct bookmark_item_priv *b_item;
     struct item *item;
     struct attr attr;
@@ -270,8 +268,7 @@ bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *t
     return this_;
 }
 
-void
-bookmarks_destroy(struct bookmarks *this_) {
+void bookmarks_destroy(struct bookmarks *this_) {
 
     bookmarks_clear_hash(this_);
 
@@ -293,13 +290,11 @@ bookmarks_get_map(struct bookmarks *this_) {
 enum projection bookmarks_get_projection(struct bookmarks *this_) {
     return map_projection(this_->bookmark);
 }
-void
-bookmarks_add_callback(struct bookmarks *this_, struct callback *cb) {
+void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb) {
     callback_list_add(this_->attr_cbl, cb);
 }
 
-static int
-bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
+static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
     FILE *f;
     struct bookmark_item_priv *item,*parent_item;
     char *fullname;
@@ -391,8 +386,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
  * full path. Should be freed using g_free.
  *
  */
-char*
-bookmarks_get_destination_file(gboolean create) {
+char* bookmarks_get_destination_file(gboolean create) {
     return g_strjoin(NULL, navit_get_user_data_directory(create), "/destination.txt", NULL);
 }
 
@@ -405,13 +399,11 @@ bookmarks_get_destination_file(gboolean create) {
  * arg: gboolean create: create the directory where the file is stored
  * if it does not exist
  */
-char*
-bookmarks_get_center_file(gboolean create) {
+char* bookmarks_get_center_file(gboolean create) {
     return g_strjoin(NULL, navit_get_user_data_directory(create), "/center.txt", NULL);
 }
 
-void
-bookmarks_set_center_from_file(struct bookmarks *this_, char *file) {
+void bookmarks_set_center_from_file(struct bookmarks *this_, char *file) {
     FILE *f;
     char *line = NULL;
 
@@ -433,8 +425,7 @@ bookmarks_set_center_from_file(struct bookmarks *this_, char *file) {
     return;
 }
 
-void
-bookmarks_write_center_to_file(struct bookmarks *this_, char *file) {
+void bookmarks_write_center_to_file(struct bookmarks *this_, char *file) {
     FILE *f;
     enum projection pro;
     struct coord *center;
@@ -451,8 +442,7 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file) {
     return;
 }
 
-static void
-bookmarks_emit_dbus_signal(struct bookmarks *this_, struct pcoord *c, const char *description,int create) {
+static void bookmarks_emit_dbus_signal(struct bookmarks *this_, struct pcoord *c, const char *description,int create) {
     struct attr attr1,attr2,attr3,attr4,cb,*attr_list[5];
     int valid=0;
     attr1.type=attr_type;
@@ -480,8 +470,7 @@ bookmarks_emit_dbus_signal(struct bookmarks *this_, struct pcoord *c, const char
  * @param description A label which allows the user to later identify this bookmark
  * @returns nothing
  */
-int
-bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description) {
+int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description) {
     struct bookmark_item_priv *b_item=g_new0(struct bookmark_item_priv,1);
     int result;
 
@@ -512,16 +501,14 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
     return result;
 }
 
-int
-bookmarks_cut_bookmark(struct bookmarks *this_, const char *label) {
+int bookmarks_cut_bookmark(struct bookmarks *this_, const char *label) {
     if (bookmarks_copy_bookmark(this_,label)) {
         return bookmarks_delete_bookmark(this_,label);
     }
 
     return FALSE;
 }
-int
-bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
+int bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
     bookmarks_item_rewind(this_);
     if (this_->current->children==NULL) {
         return 0;
@@ -543,8 +530,7 @@ bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
     }
     return FALSE;
 }
-int
-bookmarks_paste_bookmark(struct bookmarks *this_) {
+int bookmarks_paste_bookmark(struct bookmarks *this_) {
     int result;
     struct bookmark_item_priv* b_item;
 
@@ -576,8 +562,7 @@ bookmarks_paste_bookmark(struct bookmarks *this_) {
 }
 
 
-int
-bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
+int bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
     int result;
 
     bookmarks_item_rewind(this_);
@@ -606,8 +591,7 @@ bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
     return FALSE;
 }
 
-int
-bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName) {
+int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName) {
     int result;
 
     bookmarks_item_rewind(this_);
@@ -678,8 +662,8 @@ static GList* read_former_destination_map_as_list(struct map *map) {
     return g_list_reverse(list);
 }
 
-static int
-destination_equal(struct former_destination* dest1, struct former_destination* dest2, int ignore_descriptions) {
+static int destination_equal(struct former_destination* dest1, struct former_destination* dest2,
+                             int ignore_descriptions) {
     if ((dest1->type == dest2->type) &&
             (ignore_descriptions || !strcmp(dest1->description, dest2->description)) &&
             (coord_equal((struct coord *)g_list_last(dest1->c)->data, (struct coord *)g_list_last(dest2->c)->data))) {
@@ -692,8 +676,8 @@ destination_equal(struct former_destination* dest1, struct former_destination* d
  * Find destination in given GList. If remove_found is non-zero, any matching items are removed and new beginning of the list is returned.
  * If remove_found is zero, last matching item is returned. In the latter case, description is ignored and can be NULL.
  */
-static GList*
-find_destination_in_list(struct former_destination* dest_to_remove, GList* former_destinations, int remove_found) {
+static GList* find_destination_in_list(struct former_destination* dest_to_remove, GList* former_destinations,
+                                       int remove_found) {
     GList* curr_el = former_destinations;
     GList* prev_el = NULL;
     GList* found_el = NULL;
@@ -721,8 +705,7 @@ find_destination_in_list(struct former_destination* dest_to_remove, GList* forme
 }
 
 
-static void
-write_former_destinations(GList* former_destinations, char *former_destination_file, enum projection proj) {
+static void write_former_destinations(GList* former_destinations, char *former_destination_file, enum projection proj) {
     FILE *f;
     GList* currdest = NULL;
     GList* c_list = NULL;
@@ -764,9 +747,8 @@ write_former_destinations(GList* former_destinations, char *former_destination_f
  *   to get description.
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
-void
-bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file,
-                              struct pcoord *c, int count, enum item_type type, const char *description, int limit) {
+void bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file,
+                                   struct pcoord *c, int count, enum item_type type, const char *description, int limit) {
     struct former_destination *new_dest=NULL;
     GList* former_destinations = NULL;
     GList* former_destinations_shortened = NULL;

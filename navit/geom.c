@@ -20,8 +20,7 @@
 #include <math.h>
 #include "geom.h"
 
-void
-geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse) {
+void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse) {
     int i;
     if (!reverse) {
         memcpy(to, from, count*sizeof(struct coord));
@@ -39,8 +38,7 @@ geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse) {
   * @param out *c coordinates of middle point
   * @returns number of first vertex of segment containing middle point
   */
-int
-geom_line_middle(struct coord *p, int count, struct coord *c) {
+int geom_line_middle(struct coord *p, int count, struct coord *c) {
     double length=0,half=0,len=0;
     int i;
 
@@ -72,8 +70,7 @@ geom_line_middle(struct coord *p, int count, struct coord *c) {
 }
 
 
-void
-geom_coord_revert(struct coord *c, int count) {
+void geom_coord_revert(struct coord *c, int count) {
     struct coord tmp;
     int i;
 
@@ -85,8 +82,7 @@ geom_coord_revert(struct coord *c, int count) {
 }
 
 
-long long
-geom_poly_area(struct coord *c, int count) {
+long long geom_poly_area(struct coord *c, int count) {
     long long area=0;
     int i,j=0;
     for (i=0; i<count; i++) {
@@ -104,8 +100,7 @@ geom_poly_area(struct coord *c, int count) {
   * @param out *c coordinates of poly centroid
   * @returns 1 on success, 0 if poly area is 0
   */
-int
-geom_poly_centroid(struct coord *p, int count, struct coord *c) {
+int geom_poly_centroid(struct coord *p, int count, struct coord *c) {
     long long area=0;
     long long sx=0,sy=0,tmp;
     int i,j;
@@ -140,8 +135,7 @@ geom_poly_centroid(struct coord *p, int count, struct coord *c) {
   * @param out *c coordinates of polyline point most close to given point.
   * @returns first vertex number of polyline segment to which c belongs
   */
-int
-geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c) {
+int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c) {
     int i,vertex=0;
     long long x, y, xi, xj, yi, yj, u, d, dmin=0;
     if(count<2) {
@@ -182,8 +176,7 @@ geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coo
   * @param in *c point coordinates
   * @returns 1 - inside, 0 - outside
   */
-int
-geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
+int geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
     int ret=0;
     struct coord *last=cp+count-1;
     while (cp < last) {
@@ -198,9 +191,8 @@ geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
 
 
 
-GList *
-geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second,
-                          struct geom_poly_segment *third) {
+GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second,
+                                 struct geom_poly_segment *third) {
     int count;
     struct geom_poly_segment *ret;
     struct coord *pos;
@@ -235,14 +227,12 @@ geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct g
     return list;
 }
 
-void
-geom_poly_segment_destroy(struct geom_poly_segment *seg) {
+void geom_poly_segment_destroy(struct geom_poly_segment *seg) {
     g_free(seg->first);
     g_free(seg);
 }
 
-GList *
-geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg) {
+GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg) {
     if (seg) {
         list=g_list_remove(list, seg);
         geom_poly_segment_destroy(seg);
@@ -250,8 +240,7 @@ geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg) {
     return list;
 }
 
-int
-geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir) {
+int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir) {
     int same=0,opposite=0;
     if (s1->type == geom_poly_segment_type_none || s2->type == geom_poly_segment_type_none)
         return 0;
@@ -280,8 +269,7 @@ geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segm
 }
 
 
-GList *
-geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type) {
+GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type) {
     GList *ret=NULL;
     while (in) {
         struct geom_poly_segment *seg=in->data;
@@ -316,8 +304,7 @@ geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type) {
     return ret;
 }
 
-int
-geom_poly_segments_point_inside(GList *in, struct coord *c) {
+int geom_poly_segments_point_inside(GList *in, struct coord *c) {
     int open_matches=0,closed_matches=0;
     while (in) {
         struct geom_poly_segment *seg=in->data;
@@ -345,8 +332,7 @@ geom_poly_segments_point_inside(GList *in, struct coord *c) {
     return 0;
 }
 
-static int
-clipcode(struct coord *p, struct rect *r) {
+static int clipcode(struct coord *p, struct rect *r) {
     int code=0;
     if (p->x < r->l.x)
         code=1;
@@ -360,8 +346,7 @@ clipcode(struct coord *p, struct rect *r) {
 }
 
 
-int
-geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r) {
+int geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r) {
     int code1,code2,ret=1;
     long long dx,dy;
     code1=clipcode(p1, r);
@@ -411,8 +396,7 @@ geom_clip_line_code(struct coord *p1, struct coord *p2, struct rect *r) {
     return ret;
 }
 
-int
-geom_is_inside(struct coord *p, struct rect *r, int edge) {
+int geom_is_inside(struct coord *p, struct rect *r, int edge) {
     switch(edge) {
     case 0:
         return p->x >= r->l.x;
@@ -427,8 +411,7 @@ geom_is_inside(struct coord *p, struct rect *r, int edge) {
     }
 }
 
-void
-geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret) {
+void geom_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret) {
     int dx=p2->x-p1->x;
     int dy=p2->y-p1->y;
     switch(edge) {

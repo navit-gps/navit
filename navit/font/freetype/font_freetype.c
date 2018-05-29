@@ -86,11 +86,10 @@ static int library_init = 0;
 static int library_deinit = 0;
 
 
-static void
-font_freetype_get_text_bbox(struct graphics_priv *gr,
-                            struct font_freetype_font *font, char *text,
-                            int dx, int dy, struct point *ret,
-                            int estimate) {
+static void font_freetype_get_text_bbox(struct graphics_priv *gr,
+                                        struct font_freetype_font *font, char *text,
+                                        int dx, int dy, struct point *ret,
+                                        int estimate) {
     char *p = text;
     FT_BBox bbox;
     FT_UInt glyph_index;
@@ -191,9 +190,8 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
     }
 }
 
-static struct font_freetype_text *
-font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
-                       int dy) {
+static struct font_freetype_text *font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
+        int dy) {
     FT_Matrix matrix;
     FT_Vector pen;
     FT_UInt glyph_index;
@@ -319,8 +317,7 @@ static char *fontfamilies[] = {
     NULL,
 };
 
-static void
-font_destroy(struct graphics_font_priv *font) {
+static void font_destroy(struct graphics_font_priv *font) {
     g_free(font);
     /* TODO: free font->face */
 }
@@ -330,8 +327,7 @@ static struct graphics_font_methods font_methods = {
 };
 
 
-static void
-font_freetype_text_destroy(struct font_freetype_text *text) {
+static void font_freetype_text_destroy(struct font_freetype_text *text) {
     int i;
     struct font_freetype_glyph **gp;
 
@@ -370,10 +366,9 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 #endif
 
 /** Implementation of font_freetype_methods.font_new */
-static struct font_freetype_font *
-font_freetype_font_new(struct graphics_priv *gr,
-                       struct graphics_font_methods *meth,
-                       char *fontfamily, int size, int flags) {
+static struct font_freetype_font *font_freetype_font_new(struct graphics_priv *gr,
+        struct graphics_font_methods *meth,
+        char *fontfamily, int size, int flags) {
     struct font_freetype_font *font =
         g_new(struct font_freetype_font, 1);
     int exact, found=0;
@@ -527,9 +522,8 @@ font_freetype_font_new(struct graphics_priv *gr,
 }
 
 /** Implementation of font_freetype_methods.get_shadow. */
-static int
-font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
-                               unsigned char *data, int stride, struct color *foreground, struct color *background) {
+static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
+        unsigned char *data, int stride, struct color *foreground, struct color *background) {
     int x, y, w = g->w, h = g->h;
     unsigned int bg, fg;
     unsigned char *pm, *psp,*ps,*psn;
@@ -581,9 +575,8 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 }
 
 /** Implementation of font_freetype_methods.get_glyph. */
-static int
-font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
-                              unsigned char *data, int stride, struct color *fg, struct color *bg, struct color *transparent) {
+static int font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
+        unsigned char *data, int stride, struct color *fg, struct color *bg, struct color *transparent) {
     int x, y, w = g->w, h = g->h;
     unsigned int tr;
     unsigned char v,vi,*pm, *ps;
@@ -617,8 +610,7 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
     return 1;
 }
 
-static void
-font_freetype_destroy(void) {
+static void font_freetype_destroy(void) {
     // Do not call FcFini here: GdkPixbuf also (indirectly) uses fontconfig (for SVGs with
     // text), but does not properly deallocate all objects, so FcFini assert()s.
     if (!library_deinit) {
@@ -640,14 +632,12 @@ static struct font_freetype_methods methods = {
     font_freetype_glyph_get_glyph,
 };
 
-static struct font_priv *
-font_freetype_new(void *meth) {
+static struct font_priv *font_freetype_new(void *meth) {
     *((struct font_freetype_methods *) meth) = methods;
     return &dummy;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_font("freetype", font_freetype_new);
 #ifdef HAVE_FONTCONFIG
     FcInit();

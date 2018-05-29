@@ -248,8 +248,7 @@ const char fragment_src [] =
 ";
 #endif
 
-static void
-graphics_destroy(struct graphics_priv *gr) {
+static void graphics_destroy(struct graphics_priv *gr) {
     /*FIXME graphics_destroy is never called */
     /*TODO add destroy code for image cache(delete entries in hImageData) */
     gr->freetype_methods.destroy();
@@ -257,20 +256,17 @@ graphics_destroy(struct graphics_priv *gr) {
     gr = NULL;
 }
 
-static void
-gc_destroy(struct graphics_gc_priv *gc) {
+static void gc_destroy(struct graphics_gc_priv *gc) {
     g_free(gc);
     gc = NULL;
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     gc->linewidth = w;
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset,
-              unsigned char *dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset,
+                          unsigned char *dash_list, int n) {
     int i;
     const int cOpenglMaskBits = 16;
     gc->dash_count = n;
@@ -325,16 +321,14 @@ gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset,
 }
 
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->fr = c->r / 65535.0;
     gc->fg = c->g / 65535.0;
     gc->fb = c->b / 65535.0;
     gc->fa = c->a / 65535.0;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
     gc->br = c->r / 65535.0;
     gc->bg = c->g / 65535.0;
     gc->bb = c->b / 65535.0;
@@ -349,8 +343,7 @@ static struct graphics_gc_methods gc_methods = {
     gc_set_background
 };
 
-static struct graphics_gc_priv *
-gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
+static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
     struct graphics_gc_priv *gc = g_new0(struct graphics_gc_priv, 1);
 
     *meth = gc_methods;
@@ -361,9 +354,8 @@ gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
 
 static struct graphics_image_priv image_error;
 
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
-          char *path, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
+        char *path, int *w, int *h, struct point *hot, int rotation) {
 #ifdef HAVE_FREEIMAGE
     FIBITMAP *image;
     RGBQUAD aPixel;
@@ -526,8 +518,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
 }
 
 
-static void
-set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+static void set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
 #ifdef USE_OPENGLES2
     GLfloat col[4];
     col[0]=gc->fr;
@@ -540,8 +531,7 @@ set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
 #endif
 }
 
-static void
-draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode) {
+static void draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode) {
     int i;
 #ifdef USE_OPENGLES
     GLf x[count*2];
@@ -569,8 +559,7 @@ draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode) {
 #endif
 }
 
-static void
-draw_rectangle_do(struct graphics_priv *gr, struct point *p, int w, int h) {
+static void draw_rectangle_do(struct graphics_priv *gr, struct point *p, int w, int h) {
     struct point pa[4];
     pa[0]=pa[1]=pa[2]=pa[3]=*p;
     pa[0].x+=w;
@@ -589,8 +578,7 @@ static int next_power2(int x) {
     return r;
 }
 
-static void
-draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned char *data) {
+static void draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned char *data) {
     GLf x[8];
 
     memset(x, 0, sizeof(x));
@@ -640,8 +628,7 @@ draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned 
 
 #endif
 
-static void
-get_overlay_pos(struct graphics_priv *gr, struct point *point_out) {
+static void get_overlay_pos(struct graphics_priv *gr, struct point *point_out) {
     if (gr->parent == NULL) {
         point_out->x = 0;
         point_out->y = 0;
@@ -658,9 +645,8 @@ get_overlay_pos(struct graphics_priv *gr, struct point *point_out) {
     }
 }
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-           struct point *p, int count) {
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
+                       struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -691,8 +677,7 @@ static int tess_count;
 static struct point tess_array[512];
 static GLenum tess_type;
 
-const char *
-getPrimitiveType(GLenum type) {
+const char *getPrimitiveType(GLenum type) {
     char *ret = "";
 
     switch (type) {
@@ -730,8 +715,7 @@ getPrimitiveType(GLenum type) {
     return ret;
 }
 
-void APIENTRY
-tessBeginCB(GLenum which) {
+void APIENTRY tessBeginCB(GLenum which) {
     dbg(lvl_debug, "glBegin( %s );", getPrimitiveType(which));
     tess_type=which;
     tess_count=0;
@@ -739,16 +723,14 @@ tessBeginCB(GLenum which) {
 
 
 
-void APIENTRY
-tessEndCB(void) {
+void APIENTRY tessEndCB(void) {
     dbg(lvl_debug, "glEnd();");
     draw_array(graphics_priv_root, tess_array, tess_count, tess_type);
 }
 
 
 
-void APIENTRY
-tessVertexCB(const GLvoid * data) {
+void APIENTRY tessVertexCB(const GLvoid * data) {
     // cast back to double type
     const GLdouble *ptr = (const GLdouble *) data;
     dbg(lvl_debug, "  glVertex3d();");
@@ -761,8 +743,7 @@ tessVertexCB(const GLvoid * data) {
         dbg(lvl_error,"overflow");
 }
 
-void APIENTRY
-tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out) {
+void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out) {
     GLdouble *nv = (GLdouble *) malloc(sizeof(GLdouble) * 3);
     nv[0] = c[0];
     nv[1] = c[1];
@@ -773,9 +754,8 @@ tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out) {
 #endif
 
 
-static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-             struct point *p, int count) {
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
+                         struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -828,9 +808,8 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 #endif
 }
 
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-               struct point *p, int w, int h) {
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
+                           struct point *p, int w, int h) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -841,10 +820,9 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
     graphics_priv_root->dirty = 1;
 }
 
-static void
-display_text_draw(struct font_freetype_text *text,
-                  struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                  struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text,
+                              struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                              struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
@@ -995,10 +973,9 @@ display_text_draw(struct font_freetype_text *text,
     }
 }
 
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-          struct graphics_gc_priv *bg, struct graphics_font_priv *font,
-          char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                      struct graphics_gc_priv *bg, struct graphics_font_priv *font,
+                      char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -1028,9 +1005,8 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 }
 
 
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-           struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                       struct point *p, struct graphics_image_priv *img) {
 #ifdef USE_OPENGLES
     draw_image_es(gr, p, img->w, img->h, img->data);
 #else
@@ -1059,8 +1035,7 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 
 }
 
-static void
-draw_drag(struct graphics_priv *gr, struct point *p) {
+static void draw_drag(struct graphics_priv *gr, struct point *p) {
 
     if (p) {
         gr->p.x = p->x;
@@ -1068,13 +1043,11 @@ draw_drag(struct graphics_priv *gr, struct point *p) {
     }
 }
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     gr->background_gc = gc;
 }
 
-static void
-handle_mouse_queue(void) {
+static void handle_mouse_queue(void) {
 #ifdef USE_OPENGLES
 #else
     static int locked = 0;
@@ -1124,8 +1097,7 @@ handle_mouse_queue(void) {
 
 
 /*draws root graphics and its overlays*/
-static int
-redraw_screen(struct graphics_priv *gr) {
+static int redraw_screen(struct graphics_priv *gr) {
 #ifdef USE_OPENGLES
 #else
     graphics_priv_root->dirty = 0;
@@ -1154,8 +1126,7 @@ redraw_screen(struct graphics_priv *gr) {
 
 #ifndef USE_OPENGLES
 /*filters call to redraw in overlay enabled(map) mode*/
-static gboolean
-redraw_filter(gpointer data) {
+static gboolean redraw_filter(gpointer data) {
     struct graphics_priv *gr = (struct graphics_priv*) data;
     if (gr->overlay_enabled && gr->dirty) {
         redraw_screen(gr);
@@ -1166,8 +1137,7 @@ redraw_filter(gpointer data) {
 
 
 
-static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (gr->parent) {	//overlay
 #ifdef USE_OPENGLES
 #else
@@ -1207,18 +1177,15 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr,
         struct point *p, int w, int h,
         int wraparound);
 
-static int
-graphics_opengl_fullscreen(struct window *w, int on) {
+static int graphics_opengl_fullscreen(struct window *w, int on) {
     return 1;
 }
 
-static void
-graphics_opengl_disable_suspend(struct window *w) {
+static void graphics_opengl_disable_suspend(struct window *w) {
 }
 
 #ifdef USE_OPENGLES2
-static GLuint
-load_shader(const char *shader_source, GLenum type) {
+static GLuint load_shader(const char *shader_source, GLenum type) {
     GLuint shader = glCreateShader(type);
 
     glShaderSource(shader, 1, &shader_source, NULL);
@@ -1228,8 +1195,7 @@ load_shader(const char *shader_source, GLenum type) {
 }
 #endif
 
-static void *
-get_data(struct graphics_priv *this, const char *type) {
+static void *get_data(struct graphics_priv *this, const char *type) {
     /*TODO initialize gtkglext context when type=="gtk_widget" */
     if (!strcmp(type, "gtk_widget")) {
         fprintf(stderr,
@@ -1313,8 +1279,7 @@ get_data(struct graphics_priv *this, const char *type) {
 
 }
 
-static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
 //TODO free image data in hashtable when graphics is destroyed
 //currently graphics destroy is not called !!!
     /*
@@ -1325,16 +1290,14 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
     */
 }
 
-static void
-overlay_disable(struct graphics_priv *gr, int disable) {
+static void overlay_disable(struct graphics_priv *gr, int disable) {
     gr->overlay_enabled = !disable;
     gr->force_redraw = 1;
     draw_mode(gr, draw_mode_end);
 }
 
-static void
-overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
-               int wraparound) {
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
+                           int wraparound) {
     int changed = 0;
     int w2, h2;
 
@@ -1401,8 +1364,7 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *
-graphics_opengl_new_helper(struct graphics_methods *meth) {
+static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods *meth) {
     struct font_priv *(*font_freetype_new) (void *meth);
     font_freetype_new = plugin_get_category_font("freetype");
 
@@ -1425,9 +1387,8 @@ graphics_opengl_new_helper(struct graphics_methods *meth) {
     return this;
 }
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
-            struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
+        struct point *p, int w, int h, int wraparound) {
     struct graphics_priv *this = graphics_opengl_new_helper(meth);
     this->p = *p;
     this->width = w;
@@ -1453,16 +1414,14 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
 
 
 #ifdef USE_OPENGLES
-static void
-click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y) {
+static void click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y) {
     struct point p= {x,y};
     dbg(lvl_debug,"enter state %d button %d",state,button);
     callback_list_call_attr_3(priv->cbl, attr_button, (void *) state, (void *)button, (void *) &p);
 }
 #endif
 
-static void
-click_notify(int button, int state, int x, int y) {
+static void click_notify(int button, int state, int x, int y) {
     mouse_queue[mouse_event_queue_end_idx %
                                           mouse_event_queue_size].button = button;
     mouse_queue[mouse_event_queue_end_idx %
@@ -1479,8 +1438,7 @@ click_notify(int button, int state, int x, int y) {
     ++mouse_event_queue_end_idx;
 }
 
-static void
-motion_notify_do(struct graphics_priv *priv, int x, int y) {
+static void motion_notify_do(struct graphics_priv *priv, int x, int y) {
     struct point p;
 #ifdef MIRRORED_VIEW
     p.x = priv->width - x;
@@ -1493,14 +1451,12 @@ motion_notify_do(struct graphics_priv *priv, int x, int y) {
     return;
 }
 
-static void
-motion_notify(int x, int y) {
+static void motion_notify(int x, int y) {
     motion_notify_do(graphics_priv_root, x, y);
 }
 
 #ifndef USE_OPENGLES
-static gboolean
-graphics_opengl_idle(void *data) {
+static gboolean graphics_opengl_idle(void *data) {
     static int opengl_init_ok = 0;
     if (!opengl_init_ok) {
         callback_list_call_attr_2(graphics_priv_root->cbl,
@@ -1521,8 +1477,7 @@ graphics_opengl_idle(void *data) {
 }
 #endif
 
-static void
-ProcessNormalKeys(unsigned char key_in, int x, int y) {
+static void ProcessNormalKeys(unsigned char key_in, int x, int y) {
     int key = 0;
     char keybuf[2];
 
@@ -1541,8 +1496,7 @@ ProcessNormalKeys(unsigned char key_in, int x, int y) {
                               (void *) keybuf);
 }
 
-static void
-ProcessSpecialKeys(int key_in, int x, int y) {
+static void ProcessSpecialKeys(int key_in, int x, int y) {
     int key = 0;
     char keybuf[2];
 
@@ -1576,8 +1530,7 @@ ProcessSpecialKeys(int key_in, int x, int y) {
                               (void *) keybuf);
 }
 
-static void
-resize_callback_do(struct graphics_priv *priv, int w, int h) {
+static void resize_callback_do(struct graphics_priv *priv, int w, int h) {
     glViewport(0, 0, w, h);
 #ifndef USE_OPENGLES2
     glMatrixMode(GL_PROJECTION);
@@ -1595,29 +1548,25 @@ resize_callback_do(struct graphics_priv *priv, int w, int h) {
                               GINT_TO_POINTER(w), GINT_TO_POINTER(h));
 }
 
-static void
-resize_callback(int w, int h) {
+static void resize_callback(int w, int h) {
     resize_callback_do(graphics_priv_root, w, h);
 }
 
-static void
-display(void) {
+static void display(void) {
     graphics_priv_root->force_redraw = 1;
     redraw_screen(graphics_priv_root);
     resize_callback(graphics_priv_root->width,
                     graphics_priv_root->height);
 }
 
-static void
-glut_close(void) {
+static void glut_close(void) {
     callback_list_call_attr_0(graphics_priv_root->cbl,
                               attr_window_closed);
 }
 
 
-static struct graphics_priv *
-graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
-                    struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
+        struct attr **attrs, struct callback_list *cbl) {
     struct attr *attr;
 
     if (!event_request_system("glib", "graphics_opengl_new"))
@@ -1686,54 +1635,45 @@ graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
 }
 
 
-static void
-event_opengl_main_loop_run(void) {
+static void event_opengl_main_loop_run(void) {
     dbg(lvl_info, "enter");
 }
 
-static void
-event_opengl_main_loop_quit(void) {
+static void event_opengl_main_loop_quit(void) {
     dbg(lvl_debug, "enter");
 }
 
-static struct event_watch *
-event_opengl_add_watch(int fd, enum event_watch_cond cond,
-                       struct callback *cb) {
+static struct event_watch *event_opengl_add_watch(int fd, enum event_watch_cond cond,
+        struct callback *cb) {
     dbg(lvl_debug, "enter");
     return NULL;
 }
 
-static void
-event_opengl_remove_watch(struct event_watch *ev) {
+static void event_opengl_remove_watch(struct event_watch *ev) {
     dbg(lvl_debug, "enter");
 }
 
 
-static struct event_timeout *
-event_opengl_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_opengl_add_timeout(int timeout, int multi, struct callback *cb) {
     dbg(lvl_debug, "enter");
     return NULL;
 }
 
-static void
-event_opengl_remove_timeout(struct event_timeout *to) {
+static void event_opengl_remove_timeout(struct event_timeout *to) {
     dbg(lvl_debug, "enter");
 }
 
 
-static struct event_idle *
-event_opengl_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_opengl_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug, "enter");
     return NULL;
 }
 
-static void
-event_opengl_remove_idle(struct event_idle *ev) {
+static void event_opengl_remove_idle(struct event_idle *ev) {
     dbg(lvl_debug, "enter");
 }
 
-static void
-event_opengl_call_callback(struct callback_list *cb) {
+static void event_opengl_call_callback(struct callback_list *cb) {
     dbg(lvl_debug, "enter");
 }
 
@@ -1749,14 +1689,12 @@ static struct event_methods event_opengl_methods = {
     event_opengl_call_callback,
 };
 
-static struct event_priv *
-event_opengl_new(struct event_methods *meth) {
+static struct event_priv *event_opengl_new(struct event_methods *meth) {
     *meth = event_opengl_methods;
     return NULL;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_graphics("opengl", graphics_opengl_new);
     plugin_register_category_event("opengl", event_opengl_new);
 }

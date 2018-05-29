@@ -88,20 +88,17 @@ callback_new_args(void (*func)(void), int count, ...) {
     return callback_new(func, count, p);
 }
 
-void
-callback_destroy(struct callback *cb) {
+void callback_destroy(struct callback *cb) {
     g_free(cb);
 }
 
-void
-callback_set_arg(struct callback *cb, int arg, void *p) {
+void callback_set_arg(struct callback *cb, int arg, void *p) {
     if (arg < 0 || arg > cb->pcount)
         return;
     cb->p[arg]=p;
 }
 
-void
-callback_list_add(struct callback_list *l, struct callback *cb) {
+void callback_list_add(struct callback_list *l, struct callback *cb) {
     l->list=g_list_prepend(l->list, cb);
 }
 
@@ -115,19 +112,16 @@ callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, v
     return ret;
 }
 
-void
-callback_list_remove(struct callback_list *l, struct callback *cb) {
+void callback_list_remove(struct callback_list *l, struct callback *cb) {
     l->list=g_list_remove(l->list, cb);
 }
 
-void
-callback_list_remove_destroy(struct callback_list *l, struct callback *cb) {
+void callback_list_remove_destroy(struct callback_list *l, struct callback *cb) {
     callback_list_remove(l, cb);
     g_free(cb);
 }
 
-void
-callback_call(struct callback *cb, int pcount, void **p) {
+void callback_call(struct callback *cb, int pcount, void **p) {
     int i;
     void *pf[8];
     if (! cb)
@@ -187,8 +181,7 @@ callback_call(struct callback *cb, int pcount, void **p) {
     }
 }
 
-void
-callback_call_args(struct callback *cb, int count, ...) {
+void callback_call_args(struct callback *cb, int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -199,8 +192,7 @@ callback_call_args(struct callback *cb, int count, ...) {
     callback_call(cb, count, p);
 }
 
-void
-callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p) {
+void callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p) {
     GList *cbi;
     struct callback *cb;
 
@@ -218,8 +210,7 @@ callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount
 
 }
 
-void
-callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...) {
+void callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -230,13 +221,11 @@ callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int
     callback_list_call_attr(cbl, type, count, p);
 }
 
-void
-callback_list_call(struct callback_list *l, int pcount, void **p) {
+void callback_list_call(struct callback_list *l, int pcount, void **p) {
     callback_list_call_attr(l, attr_any, pcount, p);
 }
 
-void
-callback_list_call_args(struct callback_list *cbl, int count, ...) {
+void callback_list_call_args(struct callback_list *cbl, int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -247,8 +236,7 @@ callback_list_call_args(struct callback_list *cbl, int count, ...) {
     callback_list_call(cbl, count, p);
 }
 
-void
-callback_list_destroy(struct callback_list *l) {
+void callback_list_destroy(struct callback_list *l) {
     GList *cbi;
     cbi=l->list;
     while (cbi) {

@@ -25,8 +25,7 @@ typedef struct {
     struct pcoord pc;
 } pcoordObject;
 
-static PyObject *
-pcoord_func(pcoordObject *self, PyObject *args) {
+static PyObject *pcoord_func(pcoordObject *self, PyObject *args) {
     const char *file;
     int ret=0;
     if (!PyArg_ParseTuple(args, "s", &file))
@@ -42,13 +41,11 @@ static PyMethodDef pcoord_methods[] = {
 };
 
 
-static PyObject *
-pcoord_getattr_py(PyObject *self, char *name) {
+static PyObject *pcoord_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(pcoord_methods, self, name);
 }
 
-static void
-pcoord_destroy_py(pcoordObject *self) {
+static void pcoord_destroy_py(pcoordObject *self) {
 }
 
 PyTypeObject pcoord_Type = {
@@ -59,8 +56,7 @@ PyTypeObject pcoord_Type = {
     .tp_getattr=pcoord_getattr_py,
 };
 
-PyObject *
-pcoord_py(PyObject *self, PyObject *args) {
+PyObject *pcoord_py(PyObject *self, PyObject *args) {
     pcoordObject *ret;
     const char *str;
     enum projection pro;
