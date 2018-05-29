@@ -1501,8 +1501,7 @@ void command_interpreter(struct attr *attr) {
 }
 #endif
 
-static void command_table_call(struct command_table *table, int count, void *data, char *command, struct attr **in,
-                               struct attr ***out, int *valid) {
+static void command_table_call(struct command_table *table, int count, void *data, char *command, struct attr **in, struct attr ***out, int *valid) {
     int i;
     for (i = 0 ; i < count ; i++) {
         if (!strcmp(command,table->command)) {

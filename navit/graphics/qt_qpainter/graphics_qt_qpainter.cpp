@@ -170,8 +170,7 @@ static struct graphics_font_methods font_methods = {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth,
-        char *fontfamily, int size, int flags) {
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     ret->font=new QFont("Arial",size/20);
     *meth=font_methods;
@@ -257,8 +256,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
-        int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *ret;
     QPixmap *cachedPixmap;
     QString key(path);
@@ -364,8 +362,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
-                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     QPainter *painter=gr->painter;
 #ifndef QT_QPAINTER_USE_FREETYPE
     QString tmp=QString::fromUtf8(text);
@@ -438,8 +435,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
-                       struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
 }
 
@@ -588,9 +584,7 @@ static void image_free(struct graphics_priv *gr, struct graphics_image_priv *pri
     g_free(priv);
 }
 
-static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
-                          struct point *ret,
-                          int estimate) {
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate) {
     QPainter *painter=gr->painter;
     QString tmp=QString::fromUtf8(text);
     painter->setFont(*font->font);
@@ -678,8 +672,7 @@ static struct graphics_methods graphics_methods = {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h,int wraparound) {
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
     *meth=graphics_methods;
     struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 #ifdef QT_QPAINTER_USE_FREETYPE
@@ -793,8 +786,7 @@ event_qt_new(struct event_methods *meth) {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *ret;
     struct font_priv * (*font_freetype_new)(void *meth);
     struct attr *attr;

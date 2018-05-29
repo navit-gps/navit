@@ -181,9 +181,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
-        int *w, int *h, struct point *hot,
-        int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
     GdkPixbuf *pixbuf;
     struct graphics_image_priv *ret;
     const char *option;
@@ -312,9 +310,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
     cairo_stroke(gr->cairo);
 }
 
-static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y,
-                                  int stride,
-                                  unsigned char *buffer) {
+static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y, int stride, unsigned char *buffer) {
     cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
                                           buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
     cairo_set_source_surface(cairo, buffer_surface, draw_pos_x, draw_pos_y);
@@ -322,8 +318,7 @@ static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_h
     cairo_surface_destroy(buffer_surface);
 }
 
-static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                              struct graphics_gc_priv *bg, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p) {
     int i,x,y,stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent= {0x0,0x0,0x0,0x0};
@@ -364,8 +359,7 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
-                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     struct font_freetype_text *t;
 
     if (! font) {
@@ -390,16 +384,13 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     gr->freetype_methods.text_destroy(t);
 }
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
-                       struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     gdk_cairo_set_source_pixbuf(gr->cairo, img->pixbuf, p->x, p->y);
     cairo_paint(gr->cairo);
 }
 
 #ifdef HAVE_IMLIB2
-static unsigned char* create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h,
-        size_t bytes_per_pixel,
-        size_t output_stride) {
+static unsigned char* create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel, size_t output_stride) {
     int line;
     size_t input_offset, output_offset;
     unsigned char *out_buf;
@@ -417,8 +408,7 @@ static unsigned char* create_buffer_with_stride_if_required(unsigned char *input
     return out_buf;
 }
 
-static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count,
-                            struct graphics_image_priv *img) {
+static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img) {
     int w,h;
     DATA32 *intermediate_buffer;
     unsigned char* intermediate_buffer_aligned;
@@ -513,8 +503,7 @@ static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *ove
         r->height += parent->height;
 }
 
-static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re,
-                         cairo_t *cairo) {
+static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo) {
     GdkRectangle or, ir;
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
@@ -877,8 +866,7 @@ static int set_attr(struct graphics_priv *gr, struct attr *attr) {
     }
 }
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
     int w2,h2;
     struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
     this->widget=gr->widget;
@@ -1022,9 +1010,7 @@ static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphic
     return this;
 }
 
-static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth,
-        struct attr **attrs,
-        struct callback_list *cbl) {
+static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     int i;
     GtkWidget *draw;
     struct attr *attr;

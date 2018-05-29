@@ -235,8 +235,7 @@ static void gui_internal_button_attr_pressed(struct gui_priv *this, struct widge
 }
 
 struct widget *
-gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on,
-                                   struct attr *off) {
+gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on, struct attr *off) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     if (!on && !off)
@@ -258,8 +257,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum
 }
 
 struct widget *
-gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map,
-                                 struct attr *on, struct attr *off, int deflt) {
+gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     image=image_new_xs(this, "gui_inactive");
@@ -1049,9 +1047,7 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * 2048: "Show search results on the map"
  * TODO define constants for these values
  */
-void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in,
-                                  struct widget *wm,
-                                  const char *name, int flags) {
+void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, const char *name, int flags) {
     struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
     struct coord_geo g;
     struct pcoord pc;
@@ -1965,8 +1961,7 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
     vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
     vehicle_name = vehicle_name_attr.u.str;
 
-    dbg(lvl_debug, "Changing vehicle %s to profile %s", vehicle_name,
-        profilename);
+    dbg(lvl_debug, "Changing vehicle %s to profile %s", vehicle_name, profilename);
 
     // Change the profile name
     profilename_attr.type = attr_profilename;
@@ -2029,8 +2024,7 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
         active_profile = profile_attr.u.str;
     active = active_profile != NULL && !strcmp(name, active_profile);
 
-    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name,
-        active_profile, active);
+    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
 
     // Build a translatable label.
     if(active) {
@@ -2654,8 +2648,7 @@ static int gui_internal_keynav_find_prev(struct widget *wi, struct widget *curre
     return NO_RESULT_YET;
 }
 
-static void gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance,
-        struct widget **result) {
+static void gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result) {
     GList *l=wi->children;
     // Skip hidden elements
     if (wi->p.x==0 && wi->p.y==0 && wi->w==0 && wi->h==0)
@@ -3162,8 +3155,7 @@ void gui_internal_populate_route_table(struct gui_priv * this, struct navit * na
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs,
-        struct gui *gui) {
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) {
     struct color color_white= {0xffff,0xffff,0xffff,0xffff};
     struct color color_black= {0x0,0x0,0x0,0xffff};
     struct color back2_color= {0x4141,0x4141,0x4141,0xffff};

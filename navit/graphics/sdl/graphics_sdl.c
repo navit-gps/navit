@@ -252,9 +252,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
-        int *w, int *h,
-        struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
@@ -528,9 +526,7 @@ static void resize_ft_buffer (unsigned int new_size) {
     }
 }
 
-static void display_text_draw(struct font_freetype_text *text,
-                              struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                              struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
@@ -665,9 +661,7 @@ static void display_text_draw(struct font_freetype_text *text,
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                      struct graphics_gc_priv *bg, struct graphics_font_priv *font,
-                      char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable)
             || (gr->overlay_parent && gr->overlay_parent->overlay_enable
                 && !gr->overlay_enable)) {
@@ -681,9 +675,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
         dbg(lvl_error, "no font, returning");
         return;
     }
-    t = gr->freetype_methods.text_new(text,
-                                      (struct font_freetype_font *) font,
-                                      dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -693,8 +685,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
     gr->freetype_methods.text_destroy(t);
 }
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
-                       struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -736,8 +727,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
                         if(rect.y<0) rect.y += gr->screen->h;
                         rect.w = ov->screen->w;
                         rect.h = ov->screen->h;
-                        SDL_BlitSurface(ov->screen, NULL,
-                                        gr->screen, &rect);
+                        SDL_BlitSurface(ov->screen, NULL, gr->screen, &rect);
                     }
                 }
             }
@@ -827,8 +817,7 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h,int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
     struct graphics_priv *ov;
     Uint32 rmask, gmask, bmask, amask;
     int i;
@@ -1286,8 +1275,7 @@ static gboolean graphics_sdl_idle(void *data) {
 }
 
 
-static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-        struct callback_list *cbl) {
+static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct font_priv *(*font_freetype_new) (void *meth);
     struct attr *attr;

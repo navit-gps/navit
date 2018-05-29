@@ -142,8 +142,7 @@ struct graphics_priv {
     void *resize_callback_data;
     void (*motion_callback) (void *data, struct point * p);
     void *motion_callback_data;
-    void (*button_callback) (void *data, int press, int button,
-                             struct point * p);
+    void (*button_callback) (void *data, int press, int button, struct point * p);
     void *button_callback_data;
 #ifdef USE_OPENGLES
     GLuint program;
@@ -265,8 +264,7 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     gc->linewidth = w;
 }
 
-static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset,
-                          unsigned char *dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char *dash_list, int n) {
     int i;
     const int cOpenglMaskBits = 16;
     gc->dash_count = n;
@@ -354,8 +352,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 static struct graphics_image_priv image_error;
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth,
-        char *path, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
 #ifdef HAVE_FREEIMAGE
     FIBITMAP *image;
     RGBQUAD aPixel;
@@ -377,25 +374,20 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         return curr_elem;
     } else {
         if (strlen(path) < 4) {
-            g_hash_table_insert(hImageData, g_strdup(path),
-                                &image_error);
+            g_hash_table_insert(hImageData, g_strdup(path), &image_error);
             return NULL;
         }
         char *ext_str = path + strlen(path) - 3;
         if (strstr(ext_str, "png") || strstr(path, "PNG")) {
             if ((image =
                         FreeImage_Load(FIF_PNG, path, 0)) == NULL) {
-                g_hash_table_insert(hImageData,
-                                    g_strdup(path),
-                                    &image_error);
+                g_hash_table_insert(hImageData, g_strdup(path), &image_error);
                 return NULL;
             }
         } else if (strstr(ext_str, "xpm") || strstr(path, "XPM")) {
             if ((image =
                         FreeImage_Load(FIF_XPM, path, 0)) == NULL) {
-                g_hash_table_insert(hImageData,
-                                    g_strdup(path),
-                                    &image_error);
+                g_hash_table_insert(hImageData, g_strdup(path), &image_error);
                 return NULL;
             }
         } else if (strstr(ext_str, "svg") || strstr(path, "SVG")) {
@@ -403,17 +395,12 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             snprintf(path_new, strlen(path) - 3, "%s", path);
             strcat(path_new, "_48_48.png");
 
-            if ((image =
-                        FreeImage_Load(FIF_PNG, path_new,
-                                       0)) == NULL) {
-                g_hash_table_insert(hImageData,
-                                    g_strdup(path),
-                                    &image_error);
+            if ((image = FreeImage_Load(FIF_PNG, path_new, 0)) == NULL) {
+                g_hash_table_insert(hImageData, g_strdup(path), &image_error);
                 return NULL;
             }
         } else {
-            g_hash_table_insert(hImageData, g_strdup(path),
-                                &image_error);
+            g_hash_table_insert(hImageData, g_strdup(path), &image_error);
             return NULL;
         }
 
@@ -456,10 +443,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             for (j = 0; j < width; j++) {
                 unsigned char idx;
                 if (FreeImage_GetBPP(image) == 8) {
-                    FreeImage_GetPixelIndex(image, j,
-                                            height -
-                                            i - 1,
-                                            &idx);
+                    FreeImage_GetPixelIndex(image, j, height - i - 1, &idx);
                     data[4 * width * i + 4 * j + 0] =
                         palette[idx].rgbRed;
                     data[4 * width * i + 4 * j + 1] =
@@ -470,12 +454,8 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
                         255;
                 } else if (FreeImage_GetBPP(image) == 16
                            || FreeImage_GetBPP(image) == 24
-                           || FreeImage_GetBPP(image) ==
-                           32) {
-                    FreeImage_GetPixelColor(image, j,
-                                            height -
-                                            i - 1,
-                                            &aPixel);
+                           || FreeImage_GetBPP(image) == 32) {
+                    FreeImage_GetPixelColor(image, j, height - i - 1, &aPixel);
                     int transparent =
                         (aPixel.rgbRed == 0
                          && aPixel.rgbBlue == 0
@@ -645,8 +625,7 @@ static void get_overlay_pos(struct graphics_priv *gr, struct point *point_out) {
     }
 }
 
-static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-                       struct point *p, int count) {
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -754,8 +733,7 @@ void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
 #endif
 
 
-static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-                         struct point *p, int count) {
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -808,8 +786,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc,
 #endif
 }
 
-static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-                           struct point *p, int w, int h) {
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -820,16 +797,13 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
     graphics_priv_root->dirty = 1;
 }
 
-static void display_text_draw(struct font_freetype_text *text,
-                              struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                              struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
     struct color black = {
-        fg->fr * 65535, fg->fg * 65535, fg->fb * 65535,
-        fg->fa * 65535
+        fg->fr * 65535, fg->fg * 65535, fg->fb * 65535, fg->fa * 65535
     };
     struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
 
@@ -877,10 +851,7 @@ static void display_text_draw(struct font_freetype_text *text,
             stride = (g->w + 2) * 4;
             if (color) {
                 shadow = g_malloc(stride * (g->h + 2));
-                gr->freetype_methods.get_shadow(g, shadow,
-                                                stride,
-                                                &white,
-                                                &transparent);
+                gr->freetype_methods.get_shadow(g, shadow, stride, &white, &transparent);
 #ifdef USE_OPENGLES
                 struct point p;
                 p.x=((x + g->x) >> 6)-1;
@@ -892,10 +863,8 @@ static void display_text_draw(struct font_freetype_text *text,
 #else
                 glPixelZoom(1.0, -1.0);
 #endif
-                glRasterPos2d((x + g->x) >> 6,
-                              (y + g->y) >> 6);
-                glDrawPixels(g->w + 2, g->h + 2, PIXEL_FORMAT,
-                             GL_UNSIGNED_BYTE, shadow);
+                glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
+                glDrawPixels(g->w + 2, g->h + 2, PIXEL_FORMAT, GL_UNSIGNED_BYTE, shadow);
 #endif
                 g_free(shadow);
             }
@@ -916,13 +885,7 @@ static void display_text_draw(struct font_freetype_text *text,
                 if (bg) {
                     glyph =
                         g_malloc(stride * g->h * 4);
-                    gr->freetype_methods.get_glyph(g,
-                                                   glyph,
-                                                   stride
-                                                   * 4,
-                                                   &black,
-                                                   &white,
-                                                   &transparent);
+                    gr->freetype_methods.get_glyph(g, glyph, stride * 4, &black, &white, &transparent);
 #ifdef USE_OPENGLES
                     struct point p;
                     p.x=(x + g->x) >> 6;
@@ -934,21 +897,14 @@ static void display_text_draw(struct font_freetype_text *text,
 #else
                     glPixelZoom(1.0, -1.0);
 #endif
-                    glRasterPos2d((x + g->x) >> 6,
-                                  (y + g->y) >> 6);
-                    glDrawPixels(g->w, g->h, PIXEL_FORMAT,
-                                 GL_UNSIGNED_BYTE,
-                                 glyph);
+                    glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
+                    glDrawPixels(g->w, g->h, PIXEL_FORMAT, GL_UNSIGNED_BYTE, glyph);
 #endif
                     g_free(glyph);
                 }
                 stride *= 4;
                 glyph = g_malloc(stride * g->h);
-                gr->freetype_methods.get_glyph(g, glyph,
-                                               stride,
-                                               &black,
-                                               &white,
-                                               &transparent);
+                gr->freetype_methods.get_glyph(g, glyph, stride, &black, &white, &transparent);
 #ifdef USE_OPENGLES
                 struct point p;
                 p.x=(x + g->x) >> 6;
@@ -960,10 +916,8 @@ static void display_text_draw(struct font_freetype_text *text,
 #else
                 glPixelZoom(1.0, -1.0);
 #endif
-                glRasterPos2d((x + g->x) >> 6,
-                              (y + g->y) >> 6);
-                glDrawPixels(g->w, g->h, PIXEL_FORMAT,
-                             GL_UNSIGNED_BYTE, glyph);
+                glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
+                glDrawPixels(g->w, g->h, PIXEL_FORMAT, GL_UNSIGNED_BYTE, glyph);
 #endif
                 g_free(glyph);
             }
@@ -973,9 +927,7 @@ static void display_text_draw(struct font_freetype_text *text,
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                      struct graphics_gc_priv *bg, struct graphics_font_priv *font,
-                      char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -992,9 +944,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 
     graphics_priv_root->dirty = 1;
 
-    t = gr->freetype_methods.text_new(text,
-                                      (struct font_freetype_font *)
-                                      font, dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -1005,8 +955,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
 }
 
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                       struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
 #ifdef USE_OPENGLES
     draw_image_es(gr, p, img->w, img->h, img->data);
 #else
@@ -1070,9 +1019,7 @@ static void handle_mouse_queue(void) {
                 mouse_queue[mouse_event_queue_begin_idx %
                                                         mouse_event_queue_size].y;
             graphics_priv_root->force_redraw = 1;
-            callback_list_call_attr_3(graphics_priv_root->cbl,
-                                      attr_button, (void *) 0,
-                                      1, (void *) &p);
+            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *) 0, 1, (void *) &p);
         } else if (mouse_queue[mouse_event_queue_begin_idx].
                    button == GLUT_LEFT_BUTTON
                    && mouse_queue[mouse_event_queue_begin_idx].
@@ -1085,9 +1032,7 @@ static void handle_mouse_queue(void) {
                 mouse_queue[mouse_event_queue_begin_idx %
                                                         mouse_event_queue_size].y;
             graphics_priv_root->force_redraw = 1;
-            callback_list_call_attr_3(graphics_priv_root->cbl,
-                                      attr_button, (void *) 1,
-                                      1, (void *) &p);
+            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *) 1, 1, (void *) &p);
         }
         ++mouse_event_queue_begin_idx;
     }
@@ -1198,8 +1143,7 @@ static GLuint load_shader(const char *shader_source, GLenum type) {
 static void *get_data(struct graphics_priv *this, const char *type) {
     /*TODO initialize gtkglext context when type=="gtk_widget" */
     if (!strcmp(type, "gtk_widget")) {
-        fprintf(stderr,
-                "Currently GTK gui is not yet supported with opengl graphics driver\n");
+        fprintf(stderr, "Currently GTK gui is not yet supported with opengl graphics driver\n");
         return NULL;
     }
     if (strcmp(type, "window") == 0) {
@@ -1215,8 +1159,7 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         this->platform=graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
                                                this->window_system_methods->get_window(this->window_system),
                                                &this->platform_methods);
-        this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do,
-                motion_notify_do, NULL);
+        this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do, motion_notify_do, NULL);
         resize_callback(this->width,this->height);
 #if 0
         glClearColor ( 0.4, 0.4, 0.4, 1);
@@ -1296,8 +1239,7 @@ static void overlay_disable(struct graphics_priv *gr, int disable) {
     draw_mode(gr, draw_mode_end);
 }
 
-static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h,
-                           int wraparound) {
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound) {
     int changed = 0;
     int w2, h2;
 
@@ -1333,9 +1275,7 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
             gr->overlay_autodisabled = 0;
         }
 
-        callback_list_call_attr_2(gr->cbl, attr_resize,
-                                  GINT_TO_POINTER(gr->width),
-                                  GINT_TO_POINTER(gr->height));
+        callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->width), GINT_TO_POINTER(gr->height));
     }
 }
 
@@ -1446,8 +1386,7 @@ static void motion_notify_do(struct graphics_priv *priv, int x, int y) {
     p.x = x;
 #endif
     p.y = y;
-    callback_list_call_attr_1(priv->cbl, attr_motion,
-                              (void *) &p);
+    callback_list_call_attr_1(priv->cbl, attr_motion, (void *) &p);
     return;
 }
 
@@ -1459,12 +1398,7 @@ static void motion_notify(int x, int y) {
 static gboolean graphics_opengl_idle(void *data) {
     static int opengl_init_ok = 0;
     if (!opengl_init_ok) {
-        callback_list_call_attr_2(graphics_priv_root->cbl,
-                                  attr_resize,
-                                  GINT_TO_POINTER
-                                  (graphics_priv_root->width),
-                                  GINT_TO_POINTER
-                                  (graphics_priv_root->height));
+        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER (graphics_priv_root->width), GINT_TO_POINTER (graphics_priv_root->height));
         opengl_init_ok = 1;
     } else {
 
@@ -1492,8 +1426,7 @@ static void ProcessNormalKeys(unsigned char key_in, int x, int y) {
     keybuf[0] = key;
     keybuf[1] = '\0';
     graphics_priv_root->force_redraw = 1;
-    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress,
-                              (void *) keybuf);
+    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *) keybuf);
 }
 
 static void ProcessSpecialKeys(int key_in, int x, int y) {
@@ -1526,8 +1459,7 @@ static void ProcessSpecialKeys(int key_in, int x, int y) {
     graphics_priv_root->force_redraw = 1;
     keybuf[0] = key;
     keybuf[1] = '\0';
-    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress,
-                              (void *) keybuf);
+    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *) keybuf);
 }
 
 static void resize_callback_do(struct graphics_priv *priv, int w, int h) {
@@ -1544,8 +1476,7 @@ static void resize_callback_do(struct graphics_priv *priv, int w, int h) {
     priv->width = w;
     priv->height = h;
 
-    callback_list_call_attr_2(priv->cbl, attr_resize,
-                              GINT_TO_POINTER(w), GINT_TO_POINTER(h));
+    callback_list_call_attr_2(priv->cbl, attr_resize, GINT_TO_POINTER(w), GINT_TO_POINTER(h));
 }
 
 static void resize_callback(int w, int h) {
@@ -1555,18 +1486,15 @@ static void resize_callback(int w, int h) {
 static void display(void) {
     graphics_priv_root->force_redraw = 1;
     redraw_screen(graphics_priv_root);
-    resize_callback(graphics_priv_root->width,
-                    graphics_priv_root->height);
+    resize_callback(graphics_priv_root->width, graphics_priv_root->height);
 }
 
 static void glut_close(void) {
-    callback_list_call_attr_0(graphics_priv_root->cbl,
-                              attr_window_closed);
+    callback_list_call_attr_0(graphics_priv_root->cbl, attr_window_closed);
 }
 
 
-static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct attr *attr;
 
     if (!event_request_system("glib", "graphics_opengl_new"))
@@ -1643,8 +1571,7 @@ static void event_opengl_main_loop_quit(void) {
     dbg(lvl_debug, "enter");
 }
 
-static struct event_watch *event_opengl_add_watch(int fd, enum event_watch_cond cond,
-        struct callback *cb) {
+static struct event_watch *event_opengl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug, "enter");
     return NULL;
 }

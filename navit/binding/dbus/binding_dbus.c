@@ -692,8 +692,7 @@ static DBusHandlerResult request_dup(DBusConnection *connection, DBusMessage *me
 
 
 static DBusHandlerResult request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data,
-        int (*func)(void *data,
-                    enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
+        int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
     DBusMessage *reply;
     DBusMessageIter iter;
     struct attr attr;
@@ -727,8 +726,7 @@ static DBusHandlerResult request_get_attr(DBusConnection *connection, DBusMessag
 }
 
 static DBusHandlerResult request_command(DBusConnection *connection, DBusMessage *message, char *type, void *data,
-        int (*func)(void *data,
-                    enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
+        int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter)) {
     DBusMessageIter iter;
     struct attr attr;
     char *command;
@@ -752,8 +750,7 @@ static DBusHandlerResult request_command(DBusConnection *connection, DBusMessage
 }
 
 static DBusHandlerResult request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, char *type,
-        void *data,
-        int (*func)(void *data, struct attr *attr)) {
+        void *data, int (*func)(void *data, struct attr *attr)) {
     struct attr attr;
     int ret;
 

@@ -747,8 +747,8 @@ static void write_former_destinations(GList* former_destinations, char *former_d
  *   to get description.
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
-void bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file,
-                                   struct pcoord *c, int count, enum item_type type, const char *description, int limit) {
+void bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file, struct pcoord *c,
+                                   int count, enum item_type type, const char *description, int limit) {
     struct former_destination *new_dest=NULL;
     GList* former_destinations = NULL;
     GList* former_destinations_shortened = NULL;

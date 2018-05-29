@@ -132,8 +132,7 @@ NP_Shutdown() {
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc,
-                char *argn[], char *argv[], NPSavedData * saved) {
+NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData * saved) {
     char *args[]= {"/usr/bin/navit",NULL};
     // Make sure we can render this plugin
     NPBool browserSupportsWindowless = false;
@@ -193,8 +192,7 @@ NPError NPP_SetWindow(NPP instance, NPWindow * window) {
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream * stream,
-                      NPBool seekable, uint16_t * stype) {
+NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream * stream, NPBool seekable, uint16_t * stype) {
     return NPERR_GENERIC_ERROR;
 }
 
@@ -244,8 +242,7 @@ int16_t NPP_HandleEvent(NPP instance, void *event) {
     return 1;
 }
 
-void NPP_URLNotify(NPP instance, const char *URL, NPReason reason,
-                   void *notifyData) {
+void NPP_URLNotify(NPP instance, const char *URL, NPReason reason, void *notifyData) {
 
 }
 
@@ -307,8 +304,7 @@ enum attr_type variant_to_attr_type(const NPVariant *variant) {
 
 
 
-bool invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args,
-            uint32_t argCount, NPVariant * result) {
+bool invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args, uint32_t argCount, NPVariant * result) {
     struct NavitObject *obj = (struct NavitObject *) npobj;
     fprintf(stderr, "invoke\n");
     printIdentifier(name);
@@ -388,8 +384,7 @@ bool invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args,
 }
 
 
-bool invokeDefault(NPObject * npobj, const NPVariant * args, uint32_t argCount,
-                   NPVariant * result) {
+bool invokeDefault(NPObject * npobj, const NPVariant * args, uint32_t argCount, NPVariant * result) {
     fprintf(stderr, "invokeDefault\n");
     return false;
 }

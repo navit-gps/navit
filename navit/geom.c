@@ -191,8 +191,7 @@ int geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
 
 
 
-GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second,
-                                 struct geom_poly_segment *third) {
+GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third) {
     int count;
     struct geom_poly_segment *ret;
     struct coord *pos;
