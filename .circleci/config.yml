@@ -3,6 +3,16 @@ defaults: &defaults
   docker:
     - image: ubuntu:14.04
 jobs:
+  sanity_check:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Setup requirements
+          command: bash scripts/setup_common_requirements.sh
+      - run:
+          name: run sanity check script
+          command: bash scripts/ci_sanity_checks.sh
   build_linux:
     <<: *defaults
     steps:
@@ -226,12 +236,25 @@ workflows:
   version: 2
   build_all:
     jobs:
-      - build_linux
-      - build_android
-      - build_win32
-      - build_wince
-      - build_tomtom_minimal
-      - build_tomtom_plugin
+      - sanity_check
+      - build_linux:
+          requires:
+            - sanity_check
+      - build_android:
+          requires:
+            - sanity_check
+      - build_win32:
+          requires:
+            - sanity_check
+      - build_wince:
+          requires:
+            - sanity_check
+      - build_tomtom_minimal:
+          requires:
+            - sanity_check
+      - build_tomtom_plugin:
+          requires:
+            - sanity_check
       - run_doxygen:
           requires:
             - build_linux
