@@ -17,8 +17,7 @@
 
 extern char *version;
 
-static void
-gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
+static void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     struct menu_data *menu_data=w->menu_data;
     if (menu_data) {
         if (menu_data->refresh_callback_obj.type) {
@@ -37,8 +36,7 @@ gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     this->root.children=g_list_remove(this->root.children, w);
 }
 
-static void
-gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render) {
+static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render) {
     GList *l;
     struct widget *wr,*wd;
     gui_internal_search_idle_end(this);
@@ -70,13 +68,11 @@ gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render) 
     }
 }
 
-void
-gui_internal_prune_menu(struct gui_priv *this, struct widget *w) {
+void gui_internal_prune_menu(struct gui_priv *this, struct widget *w) {
     gui_internal_prune_menu_do(this, w, 1);
 }
 
-void
-gui_internal_prune_menu_count(struct gui_priv *this, int count, int render) {
+void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render) {
     GList *l=g_list_last(this->root.children);
     struct widget *w=NULL;
     while (l && count-- > 0)
@@ -206,8 +202,7 @@ gui_internal_menu_data(struct gui_priv *this) {
     return menu->menu_data;
 }
 
-void
-gui_internal_menu_reset_pack(struct gui_priv *this) {
+void gui_internal_menu_reset_pack(struct gui_priv *this) {
     GList *l;
     struct widget *top_box;
 
@@ -216,8 +211,7 @@ gui_internal_menu_reset_pack(struct gui_priv *this) {
     gui_internal_widget_reset_pack(this, top_box);
 }
 
-void
-gui_internal_menu_render(struct gui_priv *this) {
+void gui_internal_menu_render(struct gui_priv *this) {
     GList *l;
     struct widget *menu;
 

@@ -37,8 +37,7 @@ struct osd {
     struct osd_priv *priv;
 };
 
-int
-osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out) {
+int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out) {
     return navit_object_set_methods(in, in_size, out, sizeof(struct osd_methods));
 }
 
@@ -74,8 +73,7 @@ osd_new(struct attr *parent, struct attr **attrs) {
     return o;
 }
 
-int
-osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     int ret=0;
     if(osd && osd->meth.get_attr)
         /* values for ret: -1: Not possible, 0: Ignored by driver, 1 valid */
@@ -87,8 +85,7 @@ osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct att
     return navit_object_get_attr((struct navit_object *)osd, type, attr, iter);
 }
 
-int
-osd_set_attr(struct osd *osd, struct attr* attr) {
+int osd_set_attr(struct osd *osd, struct attr* attr) {
     int ret=0;
     if(osd && osd->meth.set_attr)
         /* values for ret: -1: Not possible, 0: Ignored by driver, 1 set and store, 2 set, don't store */
@@ -100,8 +97,7 @@ osd_set_attr(struct osd *osd, struct attr* attr) {
     return navit_object_set_attr((struct navit_object *)osd, attr);
 }
 
-static void
-osd_destroy(struct osd *osd) {
+static void osd_destroy(struct osd *osd) {
     if (!osd)
         return;
     if (osd->meth.destroy)
@@ -110,8 +106,7 @@ osd_destroy(struct osd *osd) {
     g_free(osd);
 }
 
-void
-osd_wrap_point(struct point *p, struct navit *nav) {
+void osd_wrap_point(struct point *p, struct navit *nav) {
     if (p->x < 0)
         p->x += navit_get_width(nav);
     if (p->y < 0)
@@ -119,8 +114,7 @@ osd_wrap_point(struct point *p, struct navit *nav) {
 
 }
 
-static void
-osd_evaluate_command(struct osd_item *this, struct navit *nav) {
+static void osd_evaluate_command(struct osd_item *this, struct navit *nav) {
     struct attr navit;
     navit.type=attr_navit;
     navit.u.navit=nav;
@@ -128,8 +122,7 @@ osd_evaluate_command(struct osd_item *this, struct navit *nav) {
     command_evaluate(&navit, this->command);
 }
 
-void
-osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p) {
+void osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p) {
     int click_is_outside_item;
     struct point bp = this->p;
     if (!this->command || !this->command[0])
@@ -149,8 +142,7 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
         osd_evaluate_command(this, nav);
 }
 
-void
-osd_std_resize(struct osd_item *item) {
+void osd_std_resize(struct osd_item *item) {
     graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 1);
 }
 
@@ -175,8 +167,7 @@ osd_std_resize(struct osd_item *item) {
  * @param w Available screen width in pixels
  * @param h Available screen height in pixels
  */
-void
-osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
+void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
     struct padding *padding = NULL;
 
     if (item->gr) {
@@ -228,8 +219,7 @@ osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
  * @param h Available screen height in pixels (the height that corresponds to
  * 100%)
  */
-static void
-osd_std_calculate_sizes_and_redraw(struct osd_item *item, struct osd_priv *priv, int w, int h) {
+static void osd_std_calculate_sizes_and_redraw(struct osd_item *item, struct osd_priv *priv, int w, int h) {
     struct attr vehicle_attr;
 
     osd_std_calculate_sizes(item, w, h);
@@ -244,8 +234,7 @@ osd_std_calculate_sizes_and_redraw(struct osd_item *item, struct osd_priv *priv,
     }
 }
 
-static void
-osd_std_keypress(struct osd_item *item, struct navit *nav, char *key) {
+static void osd_std_keypress(struct osd_item *item, struct navit *nav, char *key) {
 #if 0
     int i;
     dbg(lvl_debug,"key=%s",key);
@@ -272,8 +261,7 @@ osd_std_keypress(struct osd_item *item, struct navit *nav, char *key) {
  * @param item The OSD item to reconfigure
  * @param cs The command to evaluate
  */
-static void
-osd_std_reconfigure(struct osd_item *item, struct command_saved *cs) {
+static void osd_std_reconfigure(struct osd_item *item, struct command_saved *cs) {
     char *err = NULL;	/* Error description */
 
     dbg(lvl_debug, "enter, item=%p, cs=%p", item, cs);
@@ -288,8 +276,7 @@ osd_std_reconfigure(struct osd_item *item, struct command_saved *cs) {
     }
 }
 
-void
-osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
+void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
     struct attr *attr;
     item->flags=flags;
     item->osd_configuration=-1;
@@ -367,8 +354,7 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
         item->font_name = g_strdup(attr->u.str);
 
 }
-void
-osd_std_config(struct osd_item *item, struct navit *navit) {
+void osd_std_config(struct osd_item *item, struct navit *navit) {
     struct attr attr;
     char *err = NULL;	/* Error description */
 
@@ -394,16 +380,14 @@ osd_std_config(struct osd_item *item, struct navit *navit) {
         graphics_overlay_disable(item->gr, !item->configured);
 }
 
-void
-osd_set_std_config(struct navit *nav, struct osd_item *item) {
+void osd_set_std_config(struct navit *nav, struct osd_item *item) {
     dbg(lvl_debug, "enter, item=%p", item);
     item->cb = callback_new_attr_2(callback_cast(osd_std_config), attr_osd_configuration, item, nav);
     navit_add_callback(nav, item->cb);
     osd_std_config(item, nav);
 }
 
-void
-osd_set_keypress(struct navit *nav, struct osd_item *item) {
+void osd_set_keypress(struct navit *nav, struct osd_item *item) {
     struct graphics *navit_gr = navit_get_graphics(nav);
     dbg(lvl_info,"accesskey %s",item->accesskey);
     if (item->accesskey) {
@@ -422,8 +406,7 @@ osd_set_keypress(struct navit *nav, struct osd_item *item) {
  * @param item The OSD item
  * @param priv The `struct osd_priv` for the OSD item
  */
-void
-osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv) {
+void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv) {
     struct graphics *navit_gr;
     int w, h;
     struct padding *padding = NULL;
@@ -471,8 +454,7 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
     osd_set_keypress(nav, item);
 }
 
-void
-osd_fill_with_bgcolor(struct osd_item *item) {
+void osd_fill_with_bgcolor(struct osd_item *item) {
     struct point p[1];
     graphics_draw_mode(item->gr, draw_mode_begin);
     p[0].x=0;

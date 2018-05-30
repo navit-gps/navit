@@ -22,14 +22,12 @@
 #include "gui_internal_keyboard.h"
 #include "gui_internal_search.h"
 
-static void
-gui_internal_search_country(struct gui_priv *this, struct widget *widget, void *data) {
+static void gui_internal_search_country(struct gui_priv *this, struct widget *widget, void *data) {
     gui_internal_prune_menu_count(this, 1, 0);
     gui_internal_search(this,_("Country"),"Country",0);
 }
 
-static void
-gui_internal_search_town(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_search_town(struct gui_priv *this, struct widget *wm, void *data) {
     if (this->sl)
         search_list_select(this->sl, attr_country_all, 0, 0);
     g_free(this->country_iso2);
@@ -37,20 +35,17 @@ gui_internal_search_town(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_search(this,_("Town"),"Town",0);
 }
 
-static void
-gui_internal_search_street(struct gui_priv *this, struct widget *widget, void *data) {
+static void gui_internal_search_street(struct gui_priv *this, struct widget *widget, void *data) {
     search_list_select(this->sl, attr_town_or_district_name, 0, 0);
     gui_internal_search(this,_("Street"),"Street",0);
 }
 
-static void
-gui_internal_search_house_number(struct gui_priv *this, struct widget *widget, void *data) {
+static void gui_internal_search_house_number(struct gui_priv *this, struct widget *widget, void *data) {
     search_list_select(this->sl, attr_street_name, 0, 0);
     gui_internal_search(this,_("House number"),"House number",0);
 }
 
-void
-gui_internal_search_idle_end(struct gui_priv *this) {
+void gui_internal_search_idle_end(struct gui_priv *this) {
     if (this->idle) {
         event_remove_idle(this->idle);
         this->idle=NULL;
@@ -61,8 +56,7 @@ gui_internal_search_idle_end(struct gui_priv *this) {
     }
 }
 
-static int
-gui_internal_search_cmp(gconstpointer _a, gconstpointer _b) {
+static int gui_internal_search_cmp(gconstpointer _a, gconstpointer _b) {
     struct widget *a=(struct widget *)_a, *b=(struct widget *)_b;
     char *sa,*sb;
     int r;
@@ -87,8 +81,7 @@ gui_internal_search_cmp(gconstpointer _a, gconstpointer _b) {
     return r;
 }
 
-static char *
-postal_str(struct search_list_result *res, int level) {
+static char *postal_str(struct search_list_result *res, int level) {
     char *ret=NULL;
     if (res->town->common.postal)
         ret=res->town->common.postal;
@@ -109,8 +102,7 @@ postal_str(struct search_list_result *res, int level) {
     return ret;
 }
 
-static char *
-get_string_from_attr_list(struct attr **attrs, enum attr_type type, char *dflt) {
+static char *get_string_from_attr_list(struct attr **attrs, enum attr_type type, char *dflt) {
     struct attr attr;
     if(attr_generic_get_attr(attrs,NULL,type,&attr,NULL))
         return attr.u.str;
@@ -118,8 +110,7 @@ get_string_from_attr_list(struct attr **attrs, enum attr_type type, char *dflt) 
         return dflt;
 }
 
-static char *
-district_str(struct search_list_result *res, int level, enum attr_type district, char *dflt) {
+static char *district_str(struct search_list_result *res, int level, enum attr_type district, char *dflt) {
     char *ret=dflt;
 
     ret=get_string_from_attr_list(res->town->common.attrs, district, ret);
@@ -136,8 +127,7 @@ district_str(struct search_list_result *res, int level, enum attr_type district,
     return ret;
 }
 
-static char *
-town_display_label(struct search_list_result *res, int level, int flags) {
+static char *town_display_label(struct search_list_result *res, int level, int flags) {
     char *town=district_str(res, level,attr_town_name,"");
     char *district=district_str(res, level,attr_district_name,NULL);
     char *postal=postal_str(res, level);
@@ -178,8 +168,8 @@ town_display_label(struct search_list_result *res, int level, int flags) {
                            county);
 }
 
-static void
-gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *possible_keys, char *item_name) {
+static void gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *possible_keys,
+        char *item_name) {
     gchar* trunk_name;
     if (item_name) {
 
@@ -205,8 +195,7 @@ gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *poss
     }
 }
 
-static void
-gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys) {
+static void gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys) {
     struct menu_data *md;
     int first_available_key_found = 0;
 
@@ -259,8 +248,7 @@ gui_internal_highlight_possible_keys(struct gui_priv *this, char *possible_keys)
 
 }
 
-static int
-gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_number_without_street) {
+static int gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_number_without_street) {
     enum match_quality {
         full_string_match, word_match, substring_match, housenum_but_no_street_match
     }
@@ -299,9 +287,9 @@ gui_internal_get_match_quality(char *item_name, char* search_text, int is_house_
     return match_quality;
 }
 
-static struct widget*
-gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_result *res, char *result_main_label,
-                                     char *result_sublabel, void *param, char *widget_name, struct item *item) {
+static struct widget* gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_result *res,
+        char *result_main_label,
+        char *result_sublabel, void *param, char *widget_name, struct item *item) {
     struct widget *resultlist_entry;
     if(result_sublabel) {
         struct widget *entry_sublabel;
@@ -337,8 +325,7 @@ gui_internal_create_resultlist_entry(struct gui_priv *this, struct search_list_r
  */
 char possible_keys_incremental_search[256]="";
 
-static void
-gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param) {
+static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param) {
     char *result_main_label=NULL,*result_sublabel=NULL,*item_name=NULL, *widget_name=NULL, *search_text;
     struct search_list_result *res;
     struct item *item=NULL;
@@ -408,15 +395,14 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
     g_free(result_sublabel);
 }
 
-static void
-gui_internal_search_idle_start(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param) {
+static void gui_internal_search_idle_start(struct gui_priv *this, char *wm_name, struct widget *search_list,
+        void *param) {
     this->idle_cb=callback_new_4(callback_cast(gui_internal_search_idle), this, wm_name, search_list, param);
     this->idle=event_add_idle(50,this->idle_cb);
     callback_call_0(this->idle_cb);
 }
 
-static void
-gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data) {
     GList *l;
     struct widget *search_list=gui_internal_menu_data(this)->search_list;
     void *param=(void *)3;
@@ -456,8 +442,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
     gui_internal_widget_render(this, l->data);
 }
 
-static void
-gui_internal_search_list_set_default_country(struct gui_priv *this) {
+static void gui_internal_search_list_set_default_country(struct gui_priv *this) {
     struct attr search_attr, country_name, country_iso2, *country_attr;
     struct item *item;
     struct country_search *cs;
@@ -497,8 +482,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this) {
     }
 }
 
-static void
-gui_internal_search_list_new(struct gui_priv *this) {
+static void gui_internal_search_list_new(struct gui_priv *this) {
     struct mapset *ms=navit_get_mapset(this->nav);
     if (! this->sl) {
         this->sl=search_list_new(ms);
@@ -506,16 +490,14 @@ gui_internal_search_list_new(struct gui_priv *this) {
     }
 }
 
-void
-gui_internal_search_list_destroy(struct gui_priv *this) {
+void gui_internal_search_list_destroy(struct gui_priv *this) {
     if (this->sl) {
         search_list_destroy(this->sl);
         this->sl=NULL;
     }
 }
 
-void
-gui_internal_search(struct gui_priv *this, const char *what, const char *type, int flags) {
+void gui_internal_search(struct gui_priv *this, const char *what, const char *type, int flags) {
     struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
     char *country;
     int keyboard_mode;
@@ -584,24 +566,21 @@ gui_internal_search(struct gui_priv *this, const char *what, const char *type, i
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_search_house_number_in_street(struct gui_priv *this, struct widget *widget, void *data) {
+void gui_internal_search_house_number_in_street(struct gui_priv *this, struct widget *widget, void *data) {
     dbg(lvl_info,"id %d", widget->selection_id);
     search_list_select(this->sl, attr_street_name, 0, 0);
     search_list_select(this->sl, attr_street_name, widget->selection_id, 1);
     gui_internal_search(this,_("House number"),"House number",0);
 }
 
-void
-gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget, void *data) {
+void gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget, void *data) {
     dbg(lvl_info,"id %d", widget->selection_id);
     search_list_select(this->sl, attr_town_or_district_name, 0, 0);
     search_list_select(this->sl, attr_town_or_district_name, widget->selection_id, 1);
     gui_internal_search(this,_("Street"),"Street",0);
 }
 
-void
-gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget) {
+void gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget) {
     struct search_list_common *slc;
     dbg(lvl_info,"id %d", widget->selection_id);
     search_list_select(this->sl, attr_country_all, 0, 0);

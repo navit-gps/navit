@@ -137,8 +137,7 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info) {
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_qt5_destroy(struct vehicle_priv* priv) {
+static void vehicle_qt5_destroy(struct vehicle_priv* priv) {
     dbg(lvl_debug, "enter");
     if (priv->receiver != NULL)
         delete priv->receiver;
@@ -155,9 +154,8 @@ vehicle_qt5_destroy(struct vehicle_priv* priv) {
  * @param attr
  * @returns true/false
  */
-static int
-vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
-                              enum attr_type type, struct attr* attr) {
+static int vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
+        enum attr_type type, struct attr* attr) {
     struct attr* active = NULL;
     dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
@@ -225,8 +223,7 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
     return 1;
 }
 
-static int
-vehicle_qt5_set_attr(struct vehicle_priv* priv, struct attr* attr) {
+static int vehicle_qt5_set_attr(struct vehicle_priv* priv, struct attr* attr) {
     switch (attr->type) {
     case attr_position_speed:
         priv->speed = *attr->u.numd;
@@ -259,10 +256,9 @@ struct vehicle_methods vehicle_null_methods = {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv*
-vehicle_qt5_new_qt5(struct vehicle_methods* meth,
-                    struct callback_list* cbl,
-                    struct attr** attrs) {
+static struct vehicle_priv* vehicle_qt5_new_qt5(struct vehicle_methods* meth,
+        struct callback_list* cbl,
+        struct attr** attrs) {
     struct vehicle_priv* ret;
 
     dbg(lvl_debug, "enter");

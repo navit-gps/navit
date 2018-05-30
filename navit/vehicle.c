@@ -160,8 +160,7 @@ vehicle_new(struct attr *parent, struct attr **attrs) {
  *
  * @param this_ The vehicle to destroy
  */
-void
-vehicle_destroy(struct vehicle *this_) {
+void vehicle_destroy(struct vehicle *this_) {
     dbg(lvl_debug,"enter");
     if (this_->animate_callback) {
         callback_destroy(this_->animate_callback);
@@ -191,8 +190,7 @@ vehicle_attr_iter_new(void) {
  *
  * @param iter a vehicle attr_iter
  */
-void
-vehicle_attr_iter_destroy(struct attr_iter *iter) {
+void vehicle_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
@@ -207,8 +205,7 @@ vehicle_attr_iter_destroy(struct attr_iter *iter) {
  * @param iter A vehicle attr_iter. This is only used for generic attributes; for attributes specific to the vehicle object it is ignored.
  * @return True for success, false for failure
  */
-int
-vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     int ret;
     if (type == attr_log_gpx_desc) {
         attr->u.str = this_->gpx_desc;
@@ -229,8 +226,7 @@ vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, 
  * @param attr The attribute to set
  * @return False on success, true on failure
  */
-int
-vehicle_set_attr(struct vehicle *this_, struct attr *attr) {
+int vehicle_set_attr(struct vehicle *this_, struct attr *attr) {
     int ret=1;
     if (attr->type == attr_log_gpx_desc) {
         g_free(this_->gpx_desc);
@@ -254,8 +250,7 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr) {
  *
  * @return true if the attribute was added, false if not.
  */
-int
-vehicle_add_attr(struct vehicle *this_, struct attr *attr) {
+int vehicle_add_attr(struct vehicle *this_, struct attr *attr) {
     int ret=1;
     switch (attr->type) {
     case attr_callback:
@@ -284,8 +279,7 @@ vehicle_add_attr(struct vehicle *this_, struct attr *attr) {
  * @param this_ A vehicle
  * @param attr
  */
-int
-vehicle_remove_attr(struct vehicle *this_, struct attr *attr) {
+int vehicle_remove_attr(struct vehicle *this_, struct attr *attr) {
     struct callback *cb;
     switch (attr->type) {
     case attr_callback:
@@ -314,8 +308,7 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr) {
  * @param cursor A cursor
  * @author Ralph Sennhauser (10/2009)
  */
-void
-vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) {
+void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) {
     struct point sc;
     if (this_->cursor_fixed && !overwrite)
         return;
@@ -360,8 +353,7 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) 
  * @param angle The angle relative to the map.
  * @param speed The speed of the vehicle.
  */
-void
-vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
+void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
     if (angle < 0)
         angle+=360;
     dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d", this_, gra, pnt, angle, speed);
@@ -390,8 +382,7 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
     vehicle_draw_do(this_);
 }
 
-int
-vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int *speed) {
+int vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int *speed) {
     *pnt=this->cursor_pnt;
     *angle=this->angle;
     *speed=this->speed;
@@ -410,8 +401,7 @@ static void vehicle_set_default_name(struct vehicle *this_) {
 }
 
 
-static void
-vehicle_draw_do(struct vehicle *this_) {
+static void vehicle_draw_do(struct vehicle *this_) {
     struct point p;
     struct cursor *cursor=this_->cursor;
     int speed=this_->speed;
@@ -467,8 +457,7 @@ vehicle_draw_do(struct vehicle *this_) {
  * @param this_ The vehicle supplying data
  * @param log The log to write to
  */
-static void
-vehicle_log_nmea(struct vehicle *this_, struct log *log) {
+static void vehicle_log_nmea(struct vehicle *this_, struct log *log) {
     struct attr pos_attr;
     if (!this_->meth.position_attr_get)
         return;
@@ -486,8 +475,7 @@ vehicle_log_nmea(struct vehicle *this_, struct log *log) {
  * to be inserted. If {@code *logstr} is NULL, a new string will be created for the extensions section.
  * Upon returning, {@code *logstr} will point to the new string with the additional tag inserted.
  */
-void
-vehicle_log_gpx_add_tag(char *tag, char **logstr) {
+void vehicle_log_gpx_add_tag(char *tag, char **logstr) {
     char *ext_start="\t<extensions>\n";
     char *ext_end="\t</extensions>\n";
     char *trkpt_end="</trkpt>";
@@ -524,8 +512,7 @@ vehicle_log_gpx_add_tag(char *tag, char **logstr) {
  * @param this_ The vehicle supplying data
  * @param log The log to write to
  */
-static void
-vehicle_log_gpx(struct vehicle *this_, struct log *log) {
+static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
     struct attr attr,*attrp, fix_attr;
     enum attr_type *attr_types;
     char *logstr;
@@ -608,8 +595,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log) {
  * @param this_ The vehicle supplying data
  * @param log The log to write to
  */
-static void
-vehicle_log_textfile(struct vehicle *this_, struct log *log) {
+static void vehicle_log_textfile(struct vehicle *this_, struct log *log) {
     struct attr pos_attr,fix_attr;
     char *logstr;
     if (!this_->meth.position_attr_get)
@@ -631,8 +617,7 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log) {
  * @param this_ The vehicle supplying data
  * @param log The log to write to
  */
-static void
-vehicle_log_binfile(struct vehicle *this_, struct log *log) {
+static void vehicle_log_binfile(struct vehicle *this_, struct log *log) {
     struct attr pos_attr, fix_attr;
     int *buffer;
     int *buffer_new;
@@ -692,8 +677,7 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log) {
  *
  * @return False if the log is of an unknown type, true otherwise (including when {@code attr_type} is missing).
  */
-static int
-vehicle_add_log(struct vehicle *this_, struct log *log) {
+static int vehicle_add_log(struct vehicle *this_, struct log *log) {
     struct callback *cb;
     struct attr type_attr;
     if (!log_get_attr(log, attr_type, &type_attr, NULL))

@@ -126,8 +126,7 @@ void write_to_serial_port(unsigned char *cmd, int device) {
  * taken. The buffer is then cleared and we start over.
  *
  */
-static void
-j1850_idle(struct j1850 *j1850) {
+static void j1850_idle(struct j1850 *j1850) {
     int n;             // used to keep track of the numbers of char read from the device
     int value;         // used to convert the ascii char to an int
     char buf = '\0';   // the buffer where we store the char read from the device
@@ -267,9 +266,8 @@ j1850_idle(struct j1850 *j1850) {
  * Draws the j1850 OSD. Currently it only displays the last parsed message
  *
  */
-static void
-osd_j1850_draw(struct j1850 *this, struct navit *nav,
-               struct vehicle *v) {
+static void osd_j1850_draw(struct j1850 *this, struct navit *nav,
+                           struct vehicle *v) {
     osd_std_draw(&this->osd_item);
 
     struct point p, bbox[4];
@@ -294,8 +292,7 @@ osd_j1850_draw(struct j1850 *this, struct navit *nav,
  * Initialize the j1850 OSD
  *
  */
-static void
-osd_j1850_init(struct j1850 *this, struct navit *nav) {
+static void osd_j1850_init(struct j1850 *this, struct navit *nav) {
 
     struct color c;
     osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
@@ -381,8 +378,7 @@ void send_and_read(unsigned char *cmd, int USB) {
  * Opens the serial port and saves state to the j1850 object
  *
  */
-void
-j1850_init_serial_port(struct j1850 *j1850) {
+void j1850_init_serial_port(struct j1850 *j1850) {
     j1850->callback=callback_new_1(callback_cast(j1850_idle), j1850);
     // Fixme : we should read the device path from the config file
     j1850->device = open( "/dev/ttyUSB0", O_RDWR| O_NOCTTY );
@@ -446,9 +442,8 @@ j1850_init_serial_port(struct j1850 *j1850) {
  * Creates the j1850 OSD and set some default properties
  *
  */
-static struct osd_priv *
-osd_j1850_new(struct navit *nav, struct osd_methods *meth,
-              struct attr **attrs) {
+static struct osd_priv *osd_j1850_new(struct navit *nav, struct osd_methods *meth,
+                                      struct attr **attrs) {
     struct j1850 *this=g_new0(struct j1850, 1);
     this->nav=nav;
     time_t current_time = time(NULL);
@@ -480,8 +475,7 @@ osd_j1850_new(struct navit *nav, struct osd_methods *meth,
  * The plugin entry point
  *
  */
-void
-plugin_init(void) {
+void plugin_init(void) {
     struct attr callback,navit;
     struct attr_iter *iter;
 

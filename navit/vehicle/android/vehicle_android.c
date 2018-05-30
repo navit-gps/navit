@@ -70,8 +70,7 @@ struct vehicle_priv {
  * @param priv vehicle_priv structure for the vehicle
  * @returns nothing
  */
-static void
-vehicle_android_destroy(struct vehicle_priv *priv) {
+static void vehicle_android_destroy(struct vehicle_priv *priv) {
     dbg(lvl_debug,"enter");
     g_free(priv);
 }
@@ -84,9 +83,8 @@ vehicle_android_destroy(struct vehicle_priv *priv) {
  * @param attr Points to an attr structure that will receive the attribute data
  * @returns True for success, false for failure
  */
-static int
-vehicle_android_position_attr_get(struct vehicle_priv *priv,
-                                  enum attr_type type, struct attr *attr) {
+static int vehicle_android_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     dbg(lvl_debug,"enter %s",attr_to_name(type));
     switch (type) {
     case attr_position_fix_type:
@@ -142,8 +140,7 @@ struct vehicle_methods vehicle_android_methods = {
  * @param v The {@code struct_vehicle_priv} for the vehicle
  * @param location A {@code Location} object describing the new position
  */
-static void
-vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
+static void vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
     time_t tnow;
     struct tm *tm;
     dbg(lvl_debug,"enter");
@@ -179,8 +176,7 @@ vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
  * @param sats_in_view The number of satellites in view
  * @param sats_used The number of satellites currently used to determine the position
  */
-static void
-vehicle_android_status_callback(struct vehicle_priv *v, int sats_in_view, int sats_used) {
+static void vehicle_android_status_callback(struct vehicle_priv *v, int sats_in_view, int sats_used) {
     if (v->sats != sats_in_view) {
         v->sats = sats_in_view;
         callback_list_call_attr_0(v->cbl, attr_position_qual);
@@ -199,8 +195,7 @@ vehicle_android_status_callback(struct vehicle_priv *v, int sats_in_view, int sa
  * @param v The {@code struct_vehicle_priv} for the vehicle
  * @param fix_type The fix type (1 = valid, 0 = invalid)
  */
-static void
-vehicle_android_fix_callback(struct vehicle_priv *v, int fix_type) {
+static void vehicle_android_fix_callback(struct vehicle_priv *v, int fix_type) {
     if (v->fix_type != fix_type) {
         v->fix_type = fix_type;
         callback_list_call_attr_0(v->cbl, attr_position_fix_type);
@@ -216,8 +211,7 @@ vehicle_android_fix_callback(struct vehicle_priv *v, int fix_type) {
  *
  * @return True on success, false on failure
  */
-static int
-vehicle_android_init(struct vehicle_priv *ret) {
+static int vehicle_android_init(struct vehicle_priv *ret) {
     jmethodID cid;
 
     if (!android_find_class_global("android/location/Location", &ret->LocationClass))
@@ -264,10 +258,9 @@ vehicle_android_init(struct vehicle_priv *ret) {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv *
-vehicle_android_new_android(struct vehicle_methods *meth,
-                            struct callback_list *cbl,
-                            struct attr **attrs) {
+static struct vehicle_priv *vehicle_android_new_android(struct vehicle_methods *meth,
+        struct callback_list *cbl,
+        struct attr **attrs) {
     struct vehicle_priv *ret;
 
     dbg(lvl_debug, "enter");
@@ -290,8 +283,7 @@ vehicle_android_new_android(struct vehicle_methods *meth,
  *
  * @returns nothing
  */
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("android", vehicle_android_new_android);
 }

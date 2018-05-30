@@ -207,8 +207,7 @@ struct object_func navit_func;
 
 struct navit *global_navit;
 
-void
-navit_add_mapset(struct navit *this_, struct mapset *ms) {
+void navit_add_mapset(struct navit *this_, struct mapset *ms) {
     this_->mapsets = g_list_append(this_->mapsets, ms);
 }
 
@@ -237,8 +236,7 @@ navit_get_tracking(struct navit *this_) {
  * destination.txt, bookmark.txt, ...)
  *
  */
-char*
-navit_get_user_data_directory(int create) {
+char* navit_get_user_data_directory(int create) {
     char *dir;
     dir = getenv("NAVIT_USER_DATADIR");
     if (create && !file_exists(dir)) {
@@ -252,8 +250,7 @@ navit_get_user_data_directory(int create) {
 }
 
 
-void
-navit_draw_async(struct navit *this_, int async) {
+void navit_draw_async(struct navit *this_, int async) {
 
     if (this_->blocked) {
         this_->blocked |= 2;
@@ -264,27 +261,23 @@ navit_draw_async(struct navit *this_, int async) {
                   this_->graphics_flags|1);
 }
 
-void
-navit_draw(struct navit *this_) {
+void navit_draw(struct navit *this_) {
     if (this_->ready == 3)
         navit_draw_async(this_, 0);
 }
 
-int
-navit_get_ready(struct navit *this_) {
+int navit_get_ready(struct navit *this_) {
     return this_->ready;
 }
 
 
 
-void
-navit_draw_displaylist(struct navit *this_) {
+void navit_draw_displaylist(struct navit *this_) {
     if (this_->ready == 3)
         graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, this_->graphics_flags|1);
 }
 
-static void
-navit_map_progress(struct navit *this_) {
+static void navit_map_progress(struct navit *this_) {
     struct map *map;
     struct mapset *ms;
     struct mapset_handle *msh;
@@ -310,8 +303,7 @@ navit_map_progress(struct navit *this_) {
     mapset_close(msh);
 }
 
-static void
-navit_redraw_route(struct navit *this_, struct route *route, struct attr *attr) {
+static void navit_redraw_route(struct navit *this_, struct route *route, struct attr *attr) {
     int updated;
     if (attr->type != attr_route_status)
         return;
@@ -329,8 +321,7 @@ navit_redraw_route(struct navit *this_, struct route *route, struct attr *attr) 
     navit_draw(this_);
 }
 
-void
-navit_handle_resize(struct navit *this_, int w, int h) {
+void navit_handle_resize(struct navit *this_, int w, int h) {
     struct map_selection sel;
     int callback=(this_->ready == 1);
     this_->ready |= 2;
@@ -348,26 +339,22 @@ navit_handle_resize(struct navit *this_, int w, int h) {
         navit_draw_async(this_, 1);
 }
 
-static void
-navit_resize(void *data, int w, int h) {
+static void navit_resize(void *data, int w, int h) {
     struct navit *this=data;
     if (!this->ignore_graphics_events)
         navit_handle_resize(this, w, h);
 }
 
-int
-navit_get_width(struct navit *this_) {
+int navit_get_width(struct navit *this_) {
     return this_->w;
 }
 
 
-int
-navit_get_height(struct navit *this_) {
+int navit_get_height(struct navit *this_) {
     return this_->h;
 }
 
-static void
-navit_popup(void *data) {
+static void navit_popup(void *data) {
     struct navit *this_=data;
     popup(this_, 1, &this_->pressed);
     this_->button_timeout=NULL;
@@ -389,21 +376,18 @@ navit_popup(void *data) {
  * @param this_ The navit instance
  * @return {@code true} if the caller should ignore the button event, {@code false} if it should handle it
  */
-int
-navit_ignore_button(struct navit *this_) {
+int navit_ignore_button(struct navit *this_) {
     if (this_->ignore_button)
         return 1;
     this_->ignore_button=1;
     return 0;
 }
 
-void
-navit_ignore_graphics_events(struct navit *this_, int ignore) {
+void navit_ignore_graphics_events(struct navit *this_, int ignore) {
     this_->ignore_graphics_events=ignore;
 }
 
-static int
-navit_restrict_to_range(int value, int min, int max) {
+static int navit_restrict_to_range(int value, int min, int max) {
     if (value>max) {
         value = max;
     }
@@ -413,8 +397,7 @@ navit_restrict_to_range(int value, int min, int max) {
     return value;
 }
 
-static void
-navit_restrict_map_center_to_world_boundingbox(struct transformation *tr, struct coord *new_center) {
+static void navit_restrict_map_center_to_world_boundingbox(struct transformation *tr, struct coord *new_center) {
     new_center->x = navit_restrict_to_range(new_center->x, WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_X);
     new_center->y = navit_restrict_to_range(new_center->y, WORLD_BOUNDINGBOX_MIN_Y, WORLD_BOUNDINGBOX_MAX_Y);
 }
@@ -422,8 +405,7 @@ navit_restrict_map_center_to_world_boundingbox(struct transformation *tr, struct
 /**
  * @brief Change map center position by translating from "old" to "new".
  */
-static void
-update_transformation(struct transformation *tr, struct point *old, struct point *new) {
+static void update_transformation(struct transformation *tr, struct point *old, struct point *new) {
     /* Code for rotation was removed in rev. 5252; see Trac #1078. */
     struct coord coord_old,coord_new;
     struct coord center_new,*center_old;
@@ -439,16 +421,15 @@ update_transformation(struct transformation *tr, struct point *old, struct point
     transform_set_center(tr, &center_new);
 }
 
-void
-navit_set_timeout(struct navit *this_) {
+void navit_set_timeout(struct navit *this_) {
     struct attr follow;
     follow.type=attr_follow;
     follow.u.num=this_->center_timeout;
     navit_set_attr(this_, &follow);
 }
 
-int
-navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback) {
+int navit_handle_button(struct navit *this_, int pressed, int button, struct point *p,
+                        struct callback *popup_callback) {
     int border=16;
 
     dbg(lvl_debug,"button %d %s (ignore: %d)",button,pressed?"pressed":"released",this_->ignore_button);
@@ -509,8 +490,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
     return 0;
 }
 
-static void
-navit_button(void *data, int pressed, int button, struct point *p) {
+static void navit_button(void *data, int pressed, int button, struct point *p) {
     struct navit *this=data;
     dbg(lvl_debug,"enter %d %d ignore %d",pressed,button,this->ignore_graphics_events);
     if (!this->ignore_graphics_events) {
@@ -521,8 +501,7 @@ navit_button(void *data, int pressed, int button, struct point *p) {
 }
 
 
-static void
-navit_motion_timeout(struct navit *this_) {
+static void navit_motion_timeout(struct navit *this_) {
     int dx, dy;
 
     if (this_->drag_bitmap) {
@@ -554,8 +533,7 @@ navit_motion_timeout(struct navit *this_) {
     return;
 }
 
-void
-navit_handle_motion(struct navit *this_, struct point *p) {
+void navit_handle_motion(struct navit *this_, struct point *p) {
     int dx, dy;
 
     if (this_->button_pressed && !this_->popped) {
@@ -576,15 +554,13 @@ navit_handle_motion(struct navit *this_, struct point *p) {
     }
 }
 
-static void
-navit_motion(void *data, struct point *p) {
+static void navit_motion(void *data, struct point *p) {
     struct navit *this=data;
     if (!this->ignore_graphics_events)
         navit_handle_motion(this, p);
 }
 
-static void
-navit_predraw(struct navit *this_) {
+static void navit_predraw(struct navit *this_) {
     GList *l;
     struct navit_vehicle *nv;
     transform_copy(this_->trans, this_->trans_cursor);
@@ -596,8 +572,7 @@ navit_predraw(struct navit *this_) {
     }
 }
 
-static void
-navit_scale(struct navit *this_, long scale, struct point *p, int draw) {
+static void navit_scale(struct navit *this_, long scale, struct point *p, int draw) {
     struct coord c1, c2, *center;
     if (scale < this_->zoom_min)
         scale=this_->zoom_min;
@@ -627,8 +602,7 @@ navit_scale(struct navit *this_, long scale, struct point *p, int draw) {
  * @param speed The vehicles speed in meters per second
  * @param dir The direction into which the vehicle moves
  */
-static void
-navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw) {
+static void navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw) {
     struct point pc;
     int distance,w,h;
     double new_scale;
@@ -679,8 +653,7 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw) {
  * @param p The invariant point (if set to NULL, default to center)
  * @returns nothing
  */
-void
-navit_zoom_in(struct navit *this_, int factor, struct point *p) {
+void navit_zoom_in(struct navit *this_, int factor, struct point *p) {
     long scale=transform_get_scale(this_->trans)/factor;
     if(this_->autozoom_active) {
         this_->autozoom_paused = 10;
@@ -698,8 +671,7 @@ navit_zoom_in(struct navit *this_, int factor, struct point *p) {
  * @param p The invariant point (if set to NULL, default to center)
  * @returns nothing
  */
-void
-navit_zoom_out(struct navit *this_, int factor, struct point *p) {
+void navit_zoom_out(struct navit *this_, int factor, struct point *p) {
     long scale=transform_get_scale(this_->trans)*factor;
     if(this_->autozoom_active) {
         this_->autozoom_paused = 10;
@@ -707,8 +679,7 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p) {
     navit_scale(this_, scale, p, 1);
 }
 
-void
-navit_zoom_in_cursor(struct navit *this_, int factor) {
+void navit_zoom_in_cursor(struct navit *this_, int factor) {
     struct point p;
     if (this_->vehicle && this_->vehicle->follow_curr <= 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
         navit_zoom_in(this_, factor, &p);
@@ -717,8 +688,7 @@ navit_zoom_in_cursor(struct navit *this_, int factor) {
         navit_zoom_in(this_, factor, NULL);
 }
 
-void
-navit_zoom_out_cursor(struct navit *this_, int factor) {
+void navit_zoom_out_cursor(struct navit *this_, int factor) {
     struct point p;
     if (this_->vehicle && this_->vehicle->follow_curr <= 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
         navit_zoom_out(this_, 2, &p);
@@ -727,22 +697,19 @@ navit_zoom_out_cursor(struct navit *this_, int factor) {
         navit_zoom_out(this_, 2, NULL);
 }
 
-static int
-navit_cmd_zoom_in(struct navit *this_) {
+static int navit_cmd_zoom_in(struct navit *this_) {
 
     navit_zoom_in_cursor(this_, 2);
     return 0;
 }
 
-static int
-navit_cmd_zoom_out(struct navit *this_) {
+static int navit_cmd_zoom_out(struct navit *this_) {
     navit_zoom_out_cursor(this_, 2);
     return 0;
 }
 
 
-static void
-navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)
         navit_say(this, in[0]->u.str);
 }
@@ -760,8 +727,8 @@ static GHashTable *cmd_attr_var_hash = NULL;
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                  int *valid) {
     char*key;
     struct attr*val;
     if(!cmd_int_var_hash) {
@@ -788,8 +755,8 @@ navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, stru
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
     char*key;
     struct attr*val;
     if(!cmd_attr_var_hash) {
@@ -818,8 +785,8 @@ navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, str
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         if(this->layout_current && this->layout_current->layers) {
             GList* layers = this->layout_current->layers;
@@ -846,8 +813,8 @@ navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, str
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                       int *valid) {
     struct attr **list = g_new0(struct attr *,2);
     struct attr*val = g_new0(struct attr,1);
     struct mapset* ms;
@@ -936,8 +903,8 @@ navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in,
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                        int *valid) {
     if (
         in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str  &&//map name
         in[1] && ATTR_IS_ITEM(in[1]->type)   && in[2]->u.item &&//item
@@ -1001,8 +968,8 @@ navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
     struct attr **list = g_new0(struct attr *,2);
     list[1] = NULL;
     *out = list;
@@ -1037,8 +1004,8 @@ navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, str
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                  int *valid) {
     struct attr **list = g_new0(struct attr *,2);
     list[1] = NULL;
     *out = list;
@@ -1074,8 +1041,7 @@ GList *cmd_int_var_stack = NULL;
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     if (in && in[0] && ATTR_IS_NUMERIC(in[0]->type)) {
         struct attr*val = g_new(struct attr,1);
         attr_dup_content(in[0],val);
@@ -1093,8 +1059,7 @@ navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct 
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     struct attr **list = g_new0(struct attr *,2);
     if(!cmd_int_var_stack) {
         struct attr*val = g_new0(struct attr,1);
@@ -1119,8 +1084,8 @@ navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct a
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                     int *valid) {
     struct attr **list;
     struct attr *attr  = g_new0(struct attr,1);
     attr->type  = attr_type_int_begin;
@@ -1136,8 +1101,7 @@ navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, s
     cmd_int_var_stack = g_list_remove_link(cmd_int_var_stack,cmd_int_var_stack);
 }
 
-static struct attr **
-navit_get_coord(struct navit *this, struct attr **in, struct pcoord *pc) {
+static struct attr ** navit_get_coord(struct navit *this, struct attr **in, struct pcoord *pc) {
     if (!in)
         return NULL;
     if (!in[0])
@@ -1170,8 +1134,8 @@ navit_get_coord(struct navit *this, struct attr **in, struct pcoord *pc) {
     return in;
 }
 
-static void
-navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                      int *valid) {
     struct pcoord pc;
     char *description=NULL;
     in=navit_get_coord(this, in, &pc);
@@ -1183,22 +1147,21 @@ navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, 
 }
 
 
-static void
-navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                     int *valid) {
+static void navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in,
+        struct attr ***out,
+        int *valid) {
     navit_remove_waypoint(this);
 }
 
 
-static void
-navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                     int *valid) {
+static void navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in,
+        struct attr ***out,
+        int *valid) {
     navit_remove_nth_waypoint(this, navit_get_destination_count(this)-1);
 }
 
 
-static void
-navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     struct pcoord pc;
     int set_timeout=0;
     in=navit_get_coord(this, in, &pc);
@@ -1210,8 +1173,8 @@ navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struc
 }
 
 
-static void
-navit_cmd_set_position(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_set_position(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
     struct pcoord pc;
     in=navit_get_coord(this, in, &pc);
     if (!in)
@@ -1220,8 +1183,8 @@ navit_cmd_set_position(struct navit *this, char *function, struct attr **in, str
 }
 
 
-static void
-navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                      int *valid) {
     struct attr attr;
     attr.type=attr_type_string_begin;
     attr.u.str="Fix me";
@@ -1240,8 +1203,7 @@ navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, 
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     struct attr attr;
     gchar *ret, *sep;
     int i;
@@ -1276,8 +1238,7 @@ navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct a
  * @param valid unused
  * @returns nothing
  */
-static void
-navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     int i,j, nparms, nvalid;
     char ** argv=NULL;
     struct spawn_process_info *pi;
@@ -1355,8 +1316,7 @@ static struct command_table commands[] = {
     {"switch_layout_day_night",command_cast(navit_cmd_switch_layout_day_night)},
 };
 
-void
-navit_command_add_table(struct navit*this_, struct command_table *commands, int count) {
+void navit_command_add_table(struct navit*this_, struct command_table *commands, int count) {
     command_add_table(this_->attr_cbl, commands, count, this_);
 }
 
@@ -1421,8 +1381,7 @@ navit_new(struct attr *parent, struct attr **attrs) {
     return this_;
 }
 
-static int
-navit_set_gui(struct navit *this_, struct gui *gui) {
+static int navit_set_gui(struct navit *this_, struct gui *gui) {
     if (this_->gui)
         return 0;
     this_->gui=gui;
@@ -1437,8 +1396,7 @@ navit_set_gui(struct navit *this_, struct gui *gui) {
     return 1;
 }
 
-void
-navit_add_message(struct navit *this_, const char *message) {
+void navit_add_message(struct navit *this_, const char *message) {
     message_new(this_->messages, message);
 }
 
@@ -1447,8 +1405,7 @@ struct message
     return message_get(this_->messages);
 }
 
-static int
-navit_set_graphics(struct navit *this_, struct graphics *gra) {
+static int navit_set_graphics(struct navit *this_, struct graphics *gra) {
     if (this_->gra)
         return 0;
     this_->gra=gra;
@@ -1473,13 +1430,11 @@ navit_get_vehicleprofile(struct navit *this_) {
     return this_->vehicleprofile;
 }
 
-GList *
-navit_get_vehicleprofiles(struct navit *this_) {
+GList *navit_get_vehicleprofiles(struct navit *this_) {
     return this_->vehicleprofiles;
 }
 
-static void
-navit_projection_set(struct navit *this_, enum projection pro, int draw) {
+static void navit_projection_set(struct navit *this_, enum projection pro, int draw) {
     struct coord_geo g;
     struct coord *c;
 
@@ -1491,8 +1446,7 @@ navit_projection_set(struct navit *this_, enum projection pro, int draw) {
         navit_draw(this_);
 }
 
-static void
-navit_mark_navigation_stopped(char *former_destination_file) {
+static void navit_mark_navigation_stopped(char *former_destination_file) {
     FILE *f;
     f=fopen(former_destination_file, "a");
     if (f) {
@@ -1513,8 +1467,7 @@ navit_mark_navigation_stopped(char *former_destination_file) {
  * @param async Set to 1 to do route calculation asynchronously
  * @return nothing
  */
-void
-navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
+void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
     if (c) {
@@ -1570,8 +1523,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
  * @param description A label which allows the user to later identify this destination in the former destinations selection
  * @returns nothing
  */
-void
-navit_add_destination_description(struct navit *this_, struct pcoord *c, const char *description) {
+void navit_add_destination_description(struct navit *this_, struct pcoord *c, const char *description) {
     char *destination_file;
     if (c) {
         destination_file = bookmarks_get_destination_file(TRUE);
@@ -1591,8 +1543,7 @@ navit_add_destination_description(struct navit *this_, struct pcoord *c, const c
  * @param async If routing should be done asynchronously
  * @returns nothing
  */
-void
-navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async) {
+void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async) {
     char *destination_file;
     if (c && count) {
         this_->destination=c[count-1];
@@ -1613,30 +1564,26 @@ navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const c
     }
 }
 
-int
-navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
+int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
     if(!this_->route)
         return 0;
     return route_get_destinations(this_->route, pc, count);
 
 }
 
-int
-navit_get_destination_count(struct navit *this_) {
+int navit_get_destination_count(struct navit *this_) {
     if(!this_->route)
         return 0;
     return route_get_destination_count(this_->route);
 }
 
-char*
-navit_get_destination_description(struct navit *this_, int n) {
+char* navit_get_destination_description(struct navit *this_, int n) {
     if(!this_->route)
         return NULL;
     return route_get_destination_description(this_->route, n);
 }
 
-void
-navit_remove_nth_waypoint(struct navit *this_, int n) {
+void navit_remove_nth_waypoint(struct navit *this_, int n) {
     if(!this_->route)
         return;
     if (route_get_destination_count(this_->route)>1) {
@@ -1646,8 +1593,7 @@ navit_remove_nth_waypoint(struct navit *this_, int n) {
     }
 }
 
-void
-navit_remove_waypoint(struct navit *this_) {
+void navit_remove_waypoint(struct navit *this_) {
     if(!this_->route)
         return;
     if (route_get_destination_count(this_->route)>1) {
@@ -1665,8 +1611,7 @@ navit_remove_waypoint(struct navit *this_) {
  * @param this_ The navit struct whose route should be checked.
  * @return True if the route is set, false otherwise.
  */
-int
-navit_check_route(struct navit *this_) {
+int navit_check_route(struct navit *this_) {
     if (this_->route) {
         return route_get_path_set(this_->route);
     }
@@ -1674,8 +1619,7 @@ navit_check_route(struct navit *this_) {
     return 0;
 }
 
-static int
-navit_former_destinations_active(struct navit *this_) {
+static int navit_former_destinations_active(struct navit *this_) {
     char *destination_file_name = bookmarks_get_destination_file(FALSE);
     FILE *destination_file;
     int active=0;
@@ -1721,8 +1665,7 @@ struct map* read_former_destinations_from_file() {
     return m;
 }
 
-static void
-navit_add_former_destinations_from_file(struct navit *this_) {
+static void navit_add_former_destinations_from_file(struct navit *this_) {
     struct item *item;
     int i,valid=0,count=0,maxcount=1;
     struct coord *c=g_new(struct coord, maxcount);
@@ -1765,8 +1708,7 @@ navit_add_former_destinations_from_file(struct navit *this_) {
 }
 
 
-void
-navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
+void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
     va_list ap;
     char *str1,*str2;
     va_start(ap, fmt);
@@ -1781,8 +1723,7 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
     va_end(ap);
 }
 
-void
-navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *fmt, ...) {
+void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *fmt, ...) {
     va_list ap;
     char *str1,*str2;
     va_start(ap, fmt);
@@ -1796,8 +1737,7 @@ navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *
     va_end(ap);
 }
 
-void
-navit_say(struct navit *this_, const char *text) {
+void navit_say(struct navit *this_, const char *text) {
     struct attr attr;
     if(this_->speech) {
         if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
@@ -1812,8 +1752,7 @@ navit_say(struct navit *this_, const char *text) {
  * @brief Toggles the navigation announcer for navit
  * @param this_ The navit object
  */
-static void
-navit_cmd_announcer_toggle(struct navit *this_) {
+static void navit_cmd_announcer_toggle(struct navit *this_) {
     struct attr attr, speechattr;
 
     // search for the speech attribute
@@ -1837,8 +1776,7 @@ navit_cmd_announcer_toggle(struct navit *this_) {
     callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
 }
 
-void
-navit_speak(struct navit *this_) {
+void navit_speak(struct navit *this_) {
     struct navigation *nav=this_->navigation;
     struct map *map=NULL;
     struct map_rect *mr=NULL;
@@ -1868,8 +1806,7 @@ navit_speak(struct navit *this_) {
     }
 }
 
-static void
-navit_window_roadbook_update(struct navit *this_) {
+static void navit_window_roadbook_update(struct navit *this_) {
     struct navigation *nav=this_->navigation;
     struct map *map=NULL;
     struct map_rect *mr=NULL;
@@ -1967,16 +1904,14 @@ navit_window_roadbook_update(struct navit *this_) {
     datawindow_mode(this_->roadbook_window, 0);
 }
 
-void
-navit_window_roadbook_destroy(struct navit *this_) {
+void navit_window_roadbook_destroy(struct navit *this_) {
     dbg(lvl_debug, "enter");
     navigation_unregister_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
     callback_destroy(this_->roadbook_callback);
     this_->roadbook_window=NULL;
     this_->roadbook_callback=NULL;
 }
-void
-navit_window_roadbook_new(struct navit *this_) {
+void navit_window_roadbook_new(struct navit *this_) {
     if (!this_->gui || this_->roadbook_callback || this_->roadbook_window) {
         return;
     }
@@ -1988,8 +1923,7 @@ navit_window_roadbook_new(struct navit *this_) {
     navit_window_roadbook_update(this_);
 }
 
-void
-navit_init(struct navit *this_) {
+void navit_init(struct navit *this_) {
     struct mapset *ms;
     struct map *map;
     int callback;
@@ -2123,8 +2057,7 @@ navit_init(struct navit *this_) {
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 }
 
-void
-navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
+void navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
     struct coord c;
     int w,h,scale=16;
 
@@ -2153,8 +2086,7 @@ navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
         navit_draw_async(this_,0);
 }
 
-void
-navit_zoom_to_route(struct navit *this_, int orientation) {
+void navit_zoom_to_route(struct navit *this_, int orientation) {
     struct map *map;
     struct map_rect *mr=NULL;
     struct item *item;
@@ -2190,8 +2122,7 @@ navit_zoom_to_route(struct navit *this_, int orientation) {
     navit_zoom_to_rect(this_, &r);
 }
 
-static void
-navit_cmd_zoom_to_route(struct navit *this) {
+static void navit_cmd_zoom_to_route(struct navit *this) {
     navit_zoom_to_route(this, 0);
 }
 
@@ -2203,8 +2134,7 @@ navit_cmd_zoom_to_route(struct navit *this) {
  * @param center The point where to center the map, including its projection
  * @returns nothing
  */
-void
-navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout) {
+void navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout) {
     struct coord *c=transform_center(this_->trans);
     struct coord c1,c2;
     enum projection pro = transform_get_projection(this_->trans);
@@ -2223,8 +2153,7 @@ navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout) {
         navit_draw(this_);
 }
 
-static void
-navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point *p, int set_timeout) {
+static void navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point *p, int set_timeout) {
     int width, height;
     struct point po;
     transform_set_center(this_->trans, c);
@@ -2242,8 +2171,7 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
  * @param this_ A navit instance
  * @author Ralph Sennhauser (10/2009)
  */
-static void
-navit_set_cursors(struct navit *this_) {
+static void navit_set_cursors(struct navit *this_) {
     struct attr name;
     struct navit_vehicle *nv;
     struct cursor *c;
@@ -2281,8 +2209,7 @@ navit_set_cursors(struct navit *this_) {
  *
  * @return Always 1
  */
-static int
-navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir) {
+static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir) {
     int width, height;
     struct navit_vehicle *nv=this_->vehicle;
     struct padding *padding = NULL;
@@ -2360,8 +2287,7 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation,
  * @param keep_orientation Whether to maintain the current map orientation. If false, the map will be rotated
  * so that the bearing of the vehicle is up.
  */
-void
-navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation) {
+void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation) {
     int dir;
     struct point pn;
     struct navit_vehicle *nv=this_->vehicle;
@@ -2383,8 +2309,7 @@ navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation)
  *
  *@param this_ The navit object
  */
-static void
-navit_set_center_cursor_draw(struct navit *this_) {
+static void navit_set_center_cursor_draw(struct navit *this_) {
     navit_set_center_cursor(this_,1,0);
     if (this_->ready == 3)
         navit_draw_async(this_, 1);
@@ -2398,13 +2323,11 @@ navit_set_center_cursor_draw(struct navit *this_) {
  *
  *@param this_ The navit object
  */
-static void
-navit_cmd_set_center_cursor(struct navit *this_) {
+static void navit_cmd_set_center_cursor(struct navit *this_) {
     navit_set_center_cursor_draw(this_);
 }
 
-void
-navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout) {
+void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout) {
     struct coord c;
     struct pcoord pc;
     transform_reverse(this_->trans, p, &c);
@@ -2414,8 +2337,7 @@ navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout) {
     navit_set_center(this_, &pc, set_timeout);
 }
 
-static int
-navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
+static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     int dir=0, orient_old=0, attr_updated=0;
     struct coord co;
     long zoom;
@@ -2632,13 +2554,11 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     return 1;
 }
 
-int
-navit_set_attr(struct navit *this_, struct attr *attr) {
+int navit_set_attr(struct navit *this_, struct attr *attr) {
     return navit_set_attr_do(this_, attr, 0);
 }
 
-int
-navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     struct message *msg;
     struct coord *c;
     int len,offset;
@@ -2845,8 +2765,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
     return ret;
 }
 
-static int
-navit_add_log(struct navit *this_, struct log *log) {
+static int navit_add_log(struct navit *this_, struct log *log) {
     struct attr type_attr;
     if (!log_get_attr(log, attr_type, &type_attr, NULL))
         return 0;
@@ -2861,8 +2780,7 @@ navit_add_log(struct navit *this_, struct log *log) {
     return 0;
 }
 
-static int
-navit_add_layout(struct navit *this_, struct layout *layout) {
+static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
     this_->layouts = g_list_append(this_->layouts, layout);
     layout_get_attr(layout, attr_active, &active, NULL);
@@ -2873,8 +2791,7 @@ navit_add_layout(struct navit *this_, struct layout *layout) {
     return 0;
 }
 
-int
-navit_add_attr(struct navit *this_, struct attr *attr) {
+int navit_add_attr(struct navit *this_, struct attr *attr) {
     int ret=1;
     switch (attr->type) {
     case attr_callback:
@@ -2936,8 +2853,7 @@ navit_add_attr(struct navit *this_, struct attr *attr) {
     return ret;
 }
 
-int
-navit_remove_attr(struct navit *this_, struct attr *attr) {
+int navit_remove_attr(struct navit *this_, struct attr *attr) {
     int ret=1;
     switch (attr->type) {
     case attr_callback:
@@ -2958,23 +2874,19 @@ navit_attr_iter_new(void) {
     return g_new0(struct attr_iter, 1);
 }
 
-void
-navit_attr_iter_destroy(struct attr_iter *iter) {
+void navit_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
-void
-navit_add_callback(struct navit *this_, struct callback *cb) {
+void navit_add_callback(struct navit *this_, struct callback *cb) {
     callback_list_add(this_->attr_cbl, cb);
 }
 
-void
-navit_remove_callback(struct navit *this_, struct callback *cb) {
+void navit_remove_callback(struct navit *this_, struct callback *cb) {
     callback_list_remove(this_->attr_cbl, cb);
 }
 
-static int
-coord_not_set(struct coord c) {
+static int coord_not_set(struct coord c) {
     return !(c.x || c.y);
 }
 
@@ -2987,8 +2899,7 @@ coord_not_set(struct coord c) {
  * @returns nothing
  */
 
-static void
-navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt) {
+static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt) {
     struct point cursor_pnt;
     enum projection pro;
 
@@ -3026,8 +2937,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
  * @param this_ The navit object
  * @param nv The {@code navit_vehicle} which reported a new position
  */
-static void
-navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv) {
+static void navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv) {
     struct attr attr_valid, attr_dir, attr_speed, attr_pos;
     struct pcoord cursor_pc;
     struct point cursor_pnt, *pnt=&cursor_pnt;
@@ -3143,8 +3053,7 @@ navit_vehicle_update_position(struct navit *this_, struct navit_vehicle *nv) {
  * @param nv The {@code navit_vehicle} which reported a new status attribute
  * @param type The type of attribute with has changed
  */
-static void
-navit_vehicle_update_status(struct navit *this_, struct navit_vehicle *nv, enum attr_type type) {
+static void navit_vehicle_update_status(struct navit *this_, struct navit_vehicle *nv, enum attr_type type) {
     if (this_->vehicle != nv)
         return;
     switch(type) {
@@ -3166,8 +3075,7 @@ navit_vehicle_update_status(struct navit *this_, struct navit_vehicle *nv, enum 
  * @returns nothing
  */
 
-void
-navit_set_position(struct navit *this_, struct pcoord *c) {
+void navit_set_position(struct navit *this_, struct pcoord *c) {
     if (this_->route) {
         route_set_position(this_->route, c);
         callback_list_call_attr_0(this_->attr_cbl, attr_position);
@@ -3176,8 +3084,7 @@ navit_set_position(struct navit *this_, struct pcoord *c) {
         navit_draw(this_);
 }
 
-static int
-navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
+static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
     if (this_->vehicleprofile == vp)
         return 0;
     this_->vehicleprofile=vp;
@@ -3186,8 +3093,7 @@ navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
     return 1;
 }
 
-int
-navit_set_vehicleprofile_name(struct navit *this_, char *name) {
+int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
     struct attr attr;
     GList *l;
     l=this_->vehicleprofiles;
@@ -3203,8 +3109,7 @@ navit_set_vehicleprofile_name(struct navit *this_, char *name) {
     return 0;
 }
 
-static void
-navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
+static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
     struct attr attr;
     this_->vehicle=nv;
     if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
@@ -3236,8 +3141,7 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
  * @param v The vehicle to register
  * @return True for success
  */
-static int
-navit_add_vehicle(struct navit *this_, struct vehicle *v) {
+static int navit_add_vehicle(struct navit *this_, struct vehicle *v) {
     struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
     struct attr follow, active, animate;
     nv->vehicle=v;
@@ -3299,8 +3203,7 @@ navit_get_displaylist(struct navit *this_) {
 }
 
 /*todo : make it switch to nightlayout when we are in a tunnel */
-void
-navit_layout_switch(struct navit *n) {
+void navit_layout_switch(struct navit *n) {
 
     int currTs=0;
     struct attr iso8601_attr,geo_attr,valid_attr,layout_attr;
@@ -3443,8 +3346,7 @@ void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, stru
     return;
 }
 
-int
-navit_set_vehicle_by_name(struct navit *n,const char *name) {
+int navit_set_vehicle_by_name(struct navit *n,const char *name) {
     struct vehicle *v;
     struct attr_iter *iter;
     struct attr vehicle_attr, name_attr;
@@ -3466,8 +3368,7 @@ navit_set_vehicle_by_name(struct navit *n,const char *name) {
     return 0;
 }
 
-int
-navit_set_layout_by_name(struct navit *n,const char *name) {
+int navit_set_layout_by_name(struct navit *n,const char *name) {
     struct layout *l;
     struct attr_iter iter;
     struct attr layout_attr;
@@ -3499,8 +3400,7 @@ navit_set_layout_by_name(struct navit *n,const char *name) {
     return 0;
 }
 
-void
-navit_disable_suspend() {
+void navit_disable_suspend() {
     gui_disable_suspend(global_navit->gui);
     callback_list_call_attr_0(global_navit->attr_cbl,attr_unsuspend);
 }
@@ -3523,8 +3423,7 @@ navit_disable_suspend() {
  *
  * @return {@code true} if a redraw operation was triggered, {@code false} if not
  */
-int
-navit_block(struct navit *this_, int block) {
+int navit_block(struct navit *this_, int block) {
     if (block > 0) {
         this_->blocked |= 1;
         if (graphics_draw_cancel(this_->gra, this_->displaylist))
@@ -3547,8 +3446,7 @@ int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
 }
 
-void
-navit_destroy(struct navit *this_) {
+void navit_destroy(struct navit *this_) {
     dbg(lvl_debug,"enter %p",this_);
     graphics_draw_cancel(this_->gra, this_->displaylist);
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);

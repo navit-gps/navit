@@ -30,8 +30,7 @@ static double latlon_scale=10000000.0;
 
 #define buffer_end(o,x) ((o)->buffer_start+(x) > (o)->buffer_end && !fill_buffer((o), (x)))
 
-static int
-fill_buffer(struct o5m *o, int min) {
+static int fill_buffer(struct o5m *o, int min) {
     int count;
 
     memmove(o->buffer, o->buffer_start, o->buffer_end-o->buffer_start);
@@ -44,8 +43,7 @@ fill_buffer(struct o5m *o, int min) {
     return (min <= o->buffer_end - o->buffer);
 }
 
-static unsigned long long
-get_uval(unsigned char **p) {
+static unsigned long long get_uval(unsigned char **p) {
     unsigned char c;
     unsigned long long ret=0;
     int shift=0;
@@ -59,8 +57,7 @@ get_uval(unsigned char **p) {
     }
 }
 
-static long long
-get_sval(unsigned char **p) {
+static long long get_sval(unsigned char **p) {
     unsigned long long ret=get_uval(p);
     if (ret & 1) {
         return -((long long)(ret >> 1)+1);
@@ -69,8 +66,7 @@ get_sval(unsigned char **p) {
     }
 }
 
-static void
-get_strings(struct string_table *st, unsigned char **p, char **s1, char **s2) {
+static void get_strings(struct string_table *st, unsigned char **p, char **s1, char **s2) {
     int len,xlen=0;
     *s1=(char *)*p;
     len=strlen(*s1);
@@ -88,8 +84,7 @@ get_strings(struct string_table *st, unsigned char **p, char **s1, char **s2) {
     }
 }
 
-static void
-get_strings_ref(struct string_table *st, int ref, char **s1, char **s2) {
+static void get_strings_ref(struct string_table *st, int ref, char **s1, char **s2) {
     int pos=st->pos-ref;
 
     if (pos < 0)
@@ -99,8 +94,7 @@ get_strings_ref(struct string_table *st, int ref, char **s1, char **s2) {
         *s2=*s1+strlen(*s1)+1;
 }
 
-static void
-print_escaped(char *s) {
+static void print_escaped(char *s) {
     for (;;) {
         switch (*s) {
         case 0:
@@ -122,8 +116,7 @@ print_escaped(char *s) {
     }
 }
 
-static void
-o5m_reset(struct o5m *o) {
+static void o5m_reset(struct o5m *o) {
     o->lat=0;
     o->lon=0;
     o->id=0;
@@ -134,13 +127,11 @@ o5m_reset(struct o5m *o) {
     o->timestamp=0;
 }
 
-static void
-o5m_print_start(struct o5m *o, int c) {
+static void o5m_print_start(struct o5m *o, int c) {
     printf("\t<%s id=\""LONGLONG_FMT"\"",types[c-0x10],o->id);
 }
 
-static void
-o5m_print_version(struct o5m *o, int tags) {
+static void o5m_print_version(struct o5m *o, int tags) {
     char timestamp_str[64];
     if (o->version) {
         strftime(timestamp_str, sizeof(timestamp_str), "%Y-%m-%dT%H:%M:%SZ", gmtime(&o->timestamp));
@@ -154,13 +145,11 @@ o5m_print_version(struct o5m *o, int tags) {
     printf("%s\n",tags?">":"/>");
 }
 
-static void
-o5m_print_end(char c) {
+static void o5m_print_end(char c) {
     printf("\t</%s>\n",types[c-0x10]);
 }
 
-int
-map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm) {
+int map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm) {
     struct o5m o;
     unsigned char c, *end, *rend;
     int len, rlen, ref, tags;

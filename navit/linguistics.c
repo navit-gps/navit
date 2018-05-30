@@ -285,8 +285,7 @@ static GHashTable *casefold_hash, *special_hash;
  * @param in String to prepeare.
  * @return String prepared for case insensitive search. Result shoud be g_free()d after use.
  */
-char*
-linguistics_casefold(const char *in) {
+char* linguistics_casefold(const char *in) {
     int len=strlen(in);
     const char *src=in;
     char *ret=g_new(char,len+1);
@@ -320,8 +319,7 @@ linguistics_casefold(const char *in) {
     return ret;
 }
 
-static char**
-linguistics_get_special(const char *str, const char *end) {
+static char** linguistics_get_special(const char *str, const char *end) {
     char *buf;
     int len;
     if(!end)
@@ -384,8 +382,7 @@ int linguistics_compare(const char *s1, const char *s2, enum linguistics_cmp_mod
  * replacement has multitple letter (e.g. a-umlaut -> ae)
  * @returns copy of string, with characters replaced
  */
-char *
-linguistics_expand_special(const char *str, int mode) {
+char *linguistics_expand_special(const char *str, int mode) {
     const char *in=str;
     char *out,*ret;
     int found=0;
@@ -442,16 +439,14 @@ linguistics_expand_special(const char *str, int mode) {
     return ret;
 }
 
-char *
-linguistics_next_word(char *str) {
+char *linguistics_next_word(char *str) {
     int len=strcspn(str, LINGUISTICS_WORD_SEPARATORS_ASCII);
     if (!str[len] || !str[len+1])
         return NULL;
     return str+len+1;
 }
 
-int
-linguistics_search(const char *str) {
+int linguistics_search(const char *str) {
     if (!g_ascii_strcasecmp(str,"str"))
         return 0;
     if (!g_ascii_strcasecmp(str,"str."))
@@ -478,8 +473,7 @@ static char
     return ret;
 }
 
-void
-linguistics_init(void) {
+void linguistics_init(void) {
     int i;
 
     casefold_hash=g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
@@ -501,8 +495,7 @@ linguistics_init(void) {
 
 }
 
-void
-linguistics_free(void) {
+void linguistics_free(void) {
     g_hash_table_destroy(casefold_hash);
     g_hash_table_destroy(special_hash);
     casefold_hash=NULL;

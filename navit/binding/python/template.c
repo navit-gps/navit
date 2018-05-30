@@ -26,8 +26,7 @@ typedef struct {
     struct template *template;
 } templateObject;
 
-static PyObject *
-template_func(templateObject *self, PyObject *args) {
+static PyObject *template_func(templateObject *self, PyObject *args) {
     const char *file;
     int ret;
     if (!PyArg_ParseTuple(args, "s", &file))
@@ -44,13 +43,11 @@ static PyMethodDef template_methods[] = {
 };
 
 
-static PyObject *
-template_getattr_py(PyObject *self, char *name) {
+static PyObject *template_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(template_methods, self, name);
 }
 
-static void
-template_destroy_py(templateObject *self) {
+static void template_destroy_py(templateObject *self) {
     if (! self->ref)
         template_destroy(self->template);
 }
@@ -68,8 +65,7 @@ template_py_get(PyObject *self) {
     return ((templateObject *)self)->template;
 }
 
-PyObject *
-template_new_py(PyObject *self, PyObject *args) {
+PyObject *template_new_py(PyObject *self, PyObject *args) {
     templateObject *ret;
 
     ret=PyObject_NEW(templateObject, &template_Type);
@@ -78,8 +74,7 @@ template_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-PyObject *
-template_new_py_ref(struct template *template) {
+PyObject *template_new_py_ref(struct template *template) {
     templateObject *ret;
 
     ret=PyObject_NEW(templateObject, &template_Type);

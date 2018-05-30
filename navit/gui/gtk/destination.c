@@ -195,8 +195,7 @@ static void tree_view_button_release(GtkWidget *widget, GdkEventButton *event, s
     gtk_tree_view_row_activated(GTK_TREE_VIEW(search->treeview), path, column);
 
 }
-static void
-next_focus(struct search_param *search, GtkWidget *widget) {
+static void next_focus(struct search_param *search, GtkWidget *widget) {
     if (widget == search->entry_country)
         gtk_widget_grab_focus(search->entry_city);
     if (widget == search->entry_city)
@@ -316,8 +315,7 @@ static void changed(GtkWidget *widget, struct search_param *search) {
 
 #define MAX_ARGS 8
 
-static void
-parse_xkbd_args (const char *cmd, char **argv) {
+static void parse_xkbd_args (const char *cmd, char **argv) {
     const char *p = cmd;
     char buf[strlen (cmd) + 1], *bufp = buf;
     int nargs = 0;
@@ -370,8 +368,7 @@ parse_xkbd_args (const char *cmd, char **argv) {
 
 int kbd_pid;
 
-static int
-spawn_xkbd (char *xkbd_path, char *xkbd_str) {
+static int spawn_xkbd (char *xkbd_path, char *xkbd_str) {
 #ifdef _WIN32 // AF FIXME for WIN32
 #ifndef F_SETFD
 #define F_SETFD 2

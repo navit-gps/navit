@@ -35,8 +35,7 @@
 //# Comment:
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
-static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, QRect *r) {
+static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, QRect *r) {
     struct point p;
     int w,h;
     if (clean) {
@@ -59,8 +58,7 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
     r->setRect(p.x, p.y, w, h);
 }
 
-void
-qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev) {
+void qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev) {
     if (!paintev) {
 #ifndef QT_QPAINTER_NO_WIDGET
         dbg(lvl_debug,"update %d,%d %d x %d", r->x(), r->y(), r->width(), r->height());
@@ -172,8 +170,7 @@ static struct graphics_font_methods font_methods = {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth,
-        char *fontfamily, int size, int flags) {
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     ret->font=new QFont("Arial",size/20);
     *meth=font_methods;
@@ -259,8 +256,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
-        int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *ret;
     QPixmap *cachedPixmap;
     QString key(path);
@@ -366,8 +362,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
-                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     QPainter *painter=gr->painter;
 #ifndef QT_QPAINTER_USE_FREETYPE
     QString tmp=QString::fromUtf8(text);
@@ -440,13 +435,11 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
-                       struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
 }
 
-static void
-draw_drag(struct graphics_priv *gr, struct point *p) {
+static void draw_drag(struct graphics_priv *gr, struct point *p) {
     if (!gr->cleanup) {
         gr->pclean=gr->p;
         gr->cleanup=1;
@@ -519,8 +512,7 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 static int argc=1;
 static char *argv[]= {NULL,NULL,NULL};
 
-static int
-fullscreen(struct window *win, int on) {
+static int fullscreen(struct window *win, int on) {
 #ifndef QT_QPAINTER_NO_WIDGET
     struct graphics_priv *this_=(struct graphics_priv *)win->priv;
     QWidget* _outerWidget;
@@ -537,8 +529,7 @@ fullscreen(struct window *win, int on) {
     return 1;
 }
 
-static void
-disable_suspend(struct window *win) {
+static void disable_suspend(struct window *win) {
 #ifdef HAVE_QPE
     struct graphics_priv *this_=(struct graphics_priv *)win->priv;
     this_->app->setTempScreenSaverMode(QPEApplication::DisableLightOff);
@@ -588,15 +579,12 @@ static void * get_data(struct graphics_priv *this_, const char *type) {
     return NULL;
 }
 
-static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
     delete priv->pixmap;
     g_free(priv);
 }
 
-static void
-get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret,
-              int estimate) {
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate) {
     QPainter *painter=gr->painter;
     QString tmp=QString::fromUtf8(text);
     painter->setFont(*font->font);
@@ -684,8 +672,7 @@ static struct graphics_methods graphics_methods = {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h,int wraparound) {
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
     *meth=graphics_methods;
     struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 #ifdef QT_QPAINTER_USE_FREETYPE
@@ -716,8 +703,7 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 
 static struct graphics_priv *event_gr;
 
-static void
-event_qt_main_loop_run(void) {
+static void event_qt_main_loop_run(void) {
     event_gr->app->exec();
 }
 
@@ -726,8 +712,7 @@ static void event_qt_main_loop_quit(void) {
     exit(0);
 }
 
-static struct event_watch *
-event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug,"enter fd=%d",(int)(long)fd);
     struct event_watch *ret=g_new0(struct event_watch, 1);
     ret->fd=fd;
@@ -738,16 +723,14 @@ event_qt_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     return ret;
 }
 
-static void
-event_qt_remove_watch(struct event_watch *ev) {
+static void event_qt_remove_watch(struct event_watch *ev) {
     g_hash_table_remove(event_gr->widget->watches, GINT_TO_POINTER(ev->fd));
     delete(ev->sn);
     g_free(ev);
 
 }
 
-static struct event_timeout *
-event_qt_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_qt_add_timeout(int timeout, int multi, struct callback *cb) {
     int id;
     id=event_gr->widget->startTimer(timeout);
     g_hash_table_insert(event_gr->widget->timer_callback, (void *)id, cb);
@@ -755,27 +738,23 @@ event_qt_add_timeout(int timeout, int multi, struct callback *cb) {
     return (struct event_timeout *)id;
 }
 
-void
-event_qt_remove_timeout(struct event_timeout *ev) {
+void event_qt_remove_timeout(struct event_timeout *ev) {
     event_gr->widget->killTimer((int)(long)ev);
     g_hash_table_remove(event_gr->widget->timer_callback, ev);
     g_hash_table_remove(event_gr->widget->timer_type, ev);
 }
 
-static struct event_idle *
-event_qt_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_qt_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug,"enter");
     return (struct event_idle *)event_qt_add_timeout(0, 1, cb);
 }
 
-static void
-event_qt_remove_idle(struct event_idle *ev) {
+static void event_qt_remove_idle(struct event_idle *ev) {
     dbg(lvl_debug,"enter");
     event_qt_remove_timeout((struct event_timeout *) ev);
 }
 
-static void
-event_qt_call_callback(struct callback_list *cb) {
+static void event_qt_call_callback(struct callback_list *cb) {
     dbg(lvl_debug,"enter");
 }
 
@@ -807,8 +786,7 @@ event_qt_new(struct event_methods *meth) {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *ret;
     struct font_priv * (*font_freetype_new)(void *meth);
     struct attr *attr;

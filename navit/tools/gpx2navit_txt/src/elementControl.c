@@ -27,9 +27,8 @@ void endElementControl(parsedata * pdata, const char *element);
  * This method controls tag start event.
  * It corrects attributes.
  */
-void
-startElementControl(parsedata * pdata, const char *element,
-                    const char **attr) {
+void startElementControl(parsedata * pdata, const char *element,
+                         const char **attr) {
     int i;
     static int isFirstTrk = 1;
     static int isFirstRte = 1;

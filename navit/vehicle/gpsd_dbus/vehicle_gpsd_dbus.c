@@ -57,15 +57,13 @@ struct vehicle_priv {
     char fixiso8601[128];
 };
 
-static void
-vehicle_gpsd_dbus_close(struct vehicle_priv *priv) {
+static void vehicle_gpsd_dbus_close(struct vehicle_priv *priv) {
     if (priv->connection)
         dbus_connection_unref(priv->connection);
     priv->connection=NULL;
 }
 
-static DBusHandlerResult
-vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void *user_data) {
+static DBusHandlerResult vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void *user_data) {
     struct vehicle_priv *priv=user_data;
     double time,ept,latitude,longitude,eph,altitude,epv,track,epd,speed,eps,climb,epc;
     int mode;
@@ -108,8 +106,7 @@ vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void 
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
-static int
-vehicle_gpsd_dbus_open(struct vehicle_priv *priv) {
+static int vehicle_gpsd_dbus_open(struct vehicle_priv *priv) {
     DBusError error;
 
     dbus_error_init(&error);
@@ -140,17 +137,15 @@ vehicle_gpsd_dbus_open(struct vehicle_priv *priv) {
 }
 
 
-static void
-vehicle_gpsd_dbus_destroy(struct vehicle_priv *priv) {
+static void vehicle_gpsd_dbus_destroy(struct vehicle_priv *priv) {
     vehicle_gpsd_dbus_close(priv);
     if (priv->source)
         g_free(priv->source);
     g_free(priv);
 }
 
-static int
-vehicle_gpsd_dbus_position_attr_get(struct vehicle_priv *priv,
-                                    enum attr_type type, struct attr *attr) {
+static int vehicle_gpsd_dbus_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_height:
         attr->u.numd = &priv->altitude;
@@ -183,8 +178,7 @@ vehicle_gpsd_dbus_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_gpsd_dbus_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init) {
+static int vehicle_gpsd_dbus_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init) {
     switch (attr->type) {
     case attr_source:
         if (strncmp(vehicle_gpsd_dbus_prefix,attr->u.str,strlen(vehicle_gpsd_dbus_prefix))) {
@@ -209,8 +203,7 @@ vehicle_gpsd_dbus_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int 
     }
 }
 
-static int
-vehicle_gpsd_dbus_set_attr(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_gpsd_dbus_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     return vehicle_gpsd_dbus_set_attr_do(priv, attr, 0);
 }
 
@@ -220,10 +213,9 @@ static struct vehicle_methods vehicle_gpsd_methods = {
     vehicle_gpsd_dbus_set_attr,
 };
 
-static struct vehicle_priv *
-vehicle_gpsd_dbus_new(struct vehicle_methods
-                      *meth, struct callback_list
-                      *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_gpsd_dbus_new(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
 
 
@@ -239,8 +231,7 @@ vehicle_gpsd_dbus_new(struct vehicle_methods
     return ret;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("gpsd_dbus", vehicle_gpsd_dbus_new);
 }

@@ -55,8 +55,7 @@ void event_main_loop_quit(void) {
     has_quit=1;
 }
 
-int
-event_main_loop_has_quit(void) {
+int event_main_loop_has_quit(void) {
     return has_quit;
 }
 
@@ -66,8 +65,7 @@ event_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     return event_methods.add_watch(fd, cond, cb);
 }
 
-void
-event_remove_watch(struct event_watch *ev) {
+void event_remove_watch(struct event_watch *ev) {
     require_method(remove_watch);
     event_methods.remove_watch(ev);
 }
@@ -87,8 +85,7 @@ event_add_timeout(int timeout, int multi, struct callback *cb) {
     return event_methods.add_timeout(timeout, multi, cb);
 }
 
-void
-event_remove_timeout(struct event_timeout *ev) {
+void event_remove_timeout(struct event_timeout *ev) {
     require_method(remove_timeout);
     event_methods.remove_timeout(ev);
 }
@@ -99,25 +96,21 @@ event_add_idle(int priority, struct callback *cb) {
     return event_methods.add_idle(priority,cb);
 }
 
-void
-event_remove_idle(struct event_idle *ev) {
+void event_remove_idle(struct event_idle *ev) {
     require_method(remove_idle);
     event_methods.remove_idle(ev);
 }
 
-void
-event_call_callback(struct callback_list *cb) {
+void event_call_callback(struct callback_list *cb) {
     require_method(call_callback);
     event_methods.call_callback(cb);
 }
 
-char const *
-event_system(void) {
+char const *event_system(void) {
     return e_system;
 }
 
-int
-event_request_system(const char *system, const char *requestor) {
+int event_request_system(const char *system, const char *requestor) {
     void (*event_type_new)(struct event_methods *meth);
     if (e_system) {
         if (strcmp(e_system, system)) {

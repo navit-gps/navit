@@ -83,8 +83,7 @@ static void sigsegv(int sig) {
 }
 #endif
 
-void
-debug_init(const char *program_name) {
+void debug_init(const char *program_name) {
 #ifndef HAVE_API_ANDROID
     gdb_program=g_strdup(program_name);
     signal(SIGSEGV, sigsegv);
@@ -98,14 +97,12 @@ debug_init(const char *program_name) {
 }
 
 
-static void
-debug_update_level(gpointer key, gpointer value, gpointer user_data) {
+static void debug_update_level(gpointer key, gpointer value, gpointer user_data) {
     if (max_debug_level < GPOINTER_TO_INT(value))
         max_debug_level = GPOINTER_TO_INT(value);
 }
 
-void
-debug_set_global_level(dbg_level level, int override_old_value ) {
+void debug_set_global_level(dbg_level level, int override_old_value ) {
     if (global_debug_level == GLOBAL_DEBUG_LEVEL_UNSET || override_old_value) {
         global_debug_level=level;
         if (max_debug_level < global_debug_level) {
@@ -114,8 +111,7 @@ debug_set_global_level(dbg_level level, int override_old_value ) {
     }
 }
 
-void
-debug_level_set(const char *name, dbg_level level) {
+void debug_level_set(const char *name, dbg_level level) {
     if (!strcmp(name, "segv")) {
 #ifndef HAVE_API_ANDROID
         segv_level=level;
@@ -134,8 +130,7 @@ debug_level_set(const char *name, dbg_level level) {
     }
 }
 
-static dbg_level
-parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr) {
+static dbg_level parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr) {
     if (dbg_level_attr) {
         if(!strcmp(dbg_level_attr->u.str,"error")) {
             return lvl_error;
@@ -199,8 +194,7 @@ debug_new(struct attr *parent, struct attr **attrs) {
 }
 
 
-dbg_level
-debug_level_get(const char *message_category) {
+dbg_level debug_level_get(const char *message_category) {
     if (!debug_hash)
         return DEFAULT_DEBUG_LEVEL;
     gpointer level = g_hash_table_lookup(debug_hash, message_category);
@@ -252,8 +246,7 @@ static char* dbg_level_to_string(dbg_level level) {
 }
 
 #ifdef HAVE_API_ANDROID
-static android_LogPriority
-dbg_level_to_android(dbg_level level) {
+static android_LogPriority dbg_level_to_android(dbg_level level) {
     switch(level) {
     case lvl_unset:
         return ANDROID_LOG_UNKNOWN;
@@ -270,9 +263,7 @@ dbg_level_to_android(dbg_level level) {
 }
 #endif
 
-void
-debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix,
-              const char *fmt, va_list ap) {
+void debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap) {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
     char message_origin[4096];
 #else
@@ -329,24 +320,19 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
     }
 }
 
-void
-debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen, int prefix,
-             const char *fmt, ...) {
+void debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen, int prefix, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     debug_vprintf(level, module, mlen, function, flen, prefix, fmt, ap);
     va_end(ap);
 }
 
-void
-debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file, int line,
-                  const char *expr) {
+void debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file, int line, const char *expr) {
     debug_printf(lvl_error,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
     abort();
 }
 
-void
-debug_destroy(void) {
+void debug_destroy(void) {
     if (!debug_fp)
         return;
     if (debug_fp == stderr || debug_fp == stdout)
@@ -381,8 +367,7 @@ struct malloc_tail {
 
 int mallocs,debug_malloc_size,debug_malloc_size_m;
 
-void
-debug_dump_mallocs(void) {
+void debug_dump_mallocs(void) {
     struct malloc_head *head=malloc_heads;
     int i;
     dbg(lvl_debug,"mallocs %d",mallocs);
@@ -394,8 +379,7 @@ debug_dump_mallocs(void) {
     }
 }
 
-void *
-debug_malloc(const char *where, int line, const char *func, int size) {
+void *debug_malloc(const char *where, int line, const char *func, int size) {
     struct malloc_head *head;
     struct malloc_tail *tail;
     if (!size)
@@ -433,16 +417,14 @@ debug_malloc(const char *where, int line, const char *func, int size) {
 }
 
 
-void *
-debug_malloc0(const char *where, int line, const char *func, int size) {
+void *debug_malloc0(const char *where, int line, const char *func, int size) {
     void *ret=debug_malloc(where, line, func, size);
     if (ret)
         memset(ret, 0, size);
     return ret;
 }
 
-void *
-debug_realloc(const char *where, int line, const char *func, void *ptr, int size) {
+void *debug_realloc(const char *where, int line, const char *func, void *ptr, int size) {
     void *ret=debug_malloc(where, line, func, size);
     if (ret && ptr)
         memcpy(ret, ptr, size);
@@ -450,8 +432,7 @@ debug_realloc(const char *where, int line, const char *func, void *ptr, int size
     return ret;
 }
 
-char *
-debug_strdup(const char *where, int line, const char *func, const char *ptr) {
+char *debug_strdup(const char *where, int line, const char *func, const char *ptr) {
     int size;
     char *ret;
 
@@ -463,15 +444,13 @@ debug_strdup(const char *where, int line, const char *func, const char *ptr) {
     return ret;
 }
 
-char *
-debug_guard(const char *where, int line, const char *func, char *str) {
+char *debug_guard(const char *where, int line, const char *func, char *str) {
     char *ret=debug_strdup(where, line, func, str);
     g_free(str);
     return ret;
 }
 
-void
-debug_free(const char *where, int line, const char *func, void *ptr) {
+void debug_free(const char *where, int line, const char *func, void *ptr) {
     struct malloc_head *head;
     struct malloc_tail *tail;
     if (!ptr)
@@ -495,8 +474,7 @@ debug_free(const char *where, int line, const char *func, void *ptr) {
     free(head);
 }
 
-void
-debug_free_func(void *ptr) {
+void debug_free_func(void *ptr) {
     debug_free("unknown",0,"unknown",ptr);
 }
 

@@ -67,8 +67,7 @@ static struct attr_name attr_names[]= {
 
 static GHashTable *attr_hash;
 
-void
-attr_create_hash(void) {
+void attr_create_hash(void) {
     int i;
     attr_hash=g_hash_table_new(g_str_hash, g_str_equal);
     for (i=0 ; i < sizeof(attr_names)/sizeof(struct attr_name) ; i++) {
@@ -76,8 +75,7 @@ attr_create_hash(void) {
     }
 }
 
-void
-attr_destroy_hash(void) {
+void attr_destroy_hash(void) {
     g_hash_table_destroy(attr_hash);
     attr_hash=NULL;
 }
@@ -90,8 +88,7 @@ attr_destroy_hash(void) {
  * @param name The attribute name
  * @return The corresponding {@code attr_type}, or {@code attr_none} if the string specifies a nonexistent or invalid attribute type.
  */
-enum attr_type
-attr_from_name(const char *name) {
+enum attr_type attr_from_name(const char *name) {
     int i;
 
     if (attr_hash)
@@ -116,8 +113,7 @@ static int attr_match(enum attr_type search, enum attr_type found);
  * The calling function should create a copy of the string if it needs to alter it or relies on the
  * string being available permanently.
  */
-char *
-attr_to_name(enum attr_type attr) {
+char *attr_to_name(enum attr_type attr) {
     int i;
 
     for (i=0 ; i < sizeof(attr_names)/sizeof(struct attr_name) ; i++) {
@@ -310,8 +306,7 @@ attr_new_from_text(const char *name, const char *value) {
  * @param flags The flags as a number
  * @return The flags in human-readable form
  */
-static char *
-flags_to_text(int flags) {
+static char *flags_to_text(int flags) {
     char *ret=g_strdup_printf("0x%x:",flags);
     if (flags & AF_ONEWAY) ret=g_strconcat_printf(ret,"%sAF_ONEWAY",ret?"|":"");
     if (flags & AF_ONEWAYREV) ret=g_strconcat_printf(ret,"%sAF_ONEWAYREV",ret?"|":"");
@@ -364,8 +359,7 @@ flags_to_text(int flags) {
  * @return The attribute data in human-readable form. The caller is responsible for calling {@code g_free()} on
  * the result when it is no longer needed.
  */
-char *
-attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map) {
+char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map) {
     char *ret;
     enum attr_type type=attr->type;
 
@@ -489,8 +483,7 @@ attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_f
  * @param map The translation map, see {@code attr_to_text_ext()}
  * @param pretty Not used
  */
-char *
-attr_to_text(struct attr *attr, struct map *map, int pretty) {
+char *attr_to_text(struct attr *attr, struct map *map, int pretty) {
     return attr_to_text_ext(attr, NULL, attr_format_default, attr_format_default, map);
 }
 
@@ -519,8 +512,7 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr) {
     return NULL;
 }
 
-static int
-attr_match(enum attr_type search, enum attr_type found) {
+static int attr_match(enum attr_type search, enum attr_type found) {
     switch (search) {
     case attr_any:
         return 1;
@@ -562,9 +554,8 @@ attr_match(enum attr_type search, enum attr_type found) {
  * @param iter An iterator. This parameter may be NULL.
  * @return True if a matching attribute was found, false if not.
  */
-int
-attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr,
-                      struct attr_iter *iter) {
+int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr,
+                          struct attr_iter *iter) {
     while (attrs && *attrs) {
         if (attr_match(type,(*attrs)->type)) {
             *attr=**attrs;
@@ -716,8 +707,7 @@ attr_generic_remove_attr(struct attr **attrs, struct attr *attr) {
     return curr;
 }
 
-enum attr_type
-attr_type_begin(enum attr_type type) {
+enum attr_type attr_type_begin(enum attr_type type) {
     if (type < attr_type_item_begin)
         return attr_none;
     if (type < attr_type_int_begin)
@@ -747,8 +737,7 @@ attr_type_begin(enum attr_type type) {
     return attr_none;
 }
 
-int
-attr_data_size(struct attr *attr) {
+int attr_data_size(struct attr *attr) {
     if (attr->type == attr_none)
         return 0;
     if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end)
@@ -785,8 +774,7 @@ attr_data_size(struct attr *attr) {
     return 0;
 }
 
-void *
-attr_data_get(struct attr *attr) {
+void *attr_data_get(struct attr *attr) {
     if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) ||
             (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
         return &attr->u.num;
@@ -795,8 +783,7 @@ attr_data_get(struct attr *attr) {
     return attr->u.data;
 }
 
-void
-attr_data_set(struct attr *attr, void *data) {
+void attr_data_set(struct attr *attr, void *data) {
     if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) ||
             (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
         attr->u.num=*((int *)data);
@@ -804,8 +791,7 @@ attr_data_set(struct attr *attr, void *data) {
         attr->u.data=data;
 }
 
-void
-attr_data_set_le(struct attr * attr, void * data) {
+void attr_data_set_le(struct attr * attr, void * data) {
     if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) ||
             (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
         attr->u.num=le32_to_cpu(*((int *)data));
@@ -819,8 +805,7 @@ attr_data_set_le(struct attr * attr, void * data) {
 
 }
 
-static void
-attr_free_content_do(struct attr *attr) {
+static void attr_free_content_do(struct attr *attr) {
     if (!attr)
         return;
     if (HAS_OBJECT_FUNC(attr->type)) {
@@ -834,20 +819,17 @@ attr_free_content_do(struct attr *attr) {
         g_free(attr->u.data);
 }
 
-void
-attr_free_content(struct attr *attr) {
+void attr_free_content(struct attr *attr) {
     attr_free_content_do(attr);
     memset(attr,0,sizeof(*attr));
 }
 
-void
-attr_free(struct attr *attr) {
+void attr_free(struct attr *attr) {
     attr_free_content_do(attr);
     g_free(attr);
 }
 
-void
-attr_dup_content(struct attr *src, struct attr *dst) {
+void attr_dup_content(struct attr *src, struct attr *dst) {
     int size;
     dst->type=src->type;
     if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end)
@@ -888,8 +870,7 @@ attr_dup(struct attr *attr) {
  *
  * @param attrs The attribute list to free
  */
-void
-attr_list_free(struct attr **attrs) {
+void attr_list_free(struct attr **attrs) {
     int count=0;
     while (attrs && attrs[count]) {
         attr_free(attrs[count++]);
@@ -924,8 +905,7 @@ attr_list_dup(struct attr **attrs) {
     return ret;
 }
 
-int
-attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
+int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
     int len=0,quoted;
     char *p,*e,*n;
 
@@ -985,8 +965,7 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) 
  *
  * @return True if the attribute type was found, false if it was not found or if {@code types} is empty
  */
-int
-attr_types_contains(enum attr_type *types, enum attr_type type) {
+int attr_types_contains(enum attr_type *types, enum attr_type type) {
     while (types && *types != attr_none) {
         if (*types == type)
             return 1;
@@ -1007,8 +986,7 @@ attr_types_contains(enum attr_type *types, enum attr_type type) {
  *
  * @return True if the attribute type was found, false if it was not found, {@code deflt} if types is empty.
  */
-int
-attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt) {
+int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt) {
     if (!types) {
         return deflt;
     }

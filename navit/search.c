@@ -72,15 +72,13 @@ struct search_list {
     GList *address_results,*address_results_pos;
 };
 
-static guint
-search_item_hash_hash(gconstpointer key) {
+static guint search_item_hash_hash(gconstpointer key) {
     const struct item *itm=key;
     gconstpointer hashkey=(gconstpointer)GINT_TO_POINTER(itm->id_hi^itm->id_lo);
     return g_direct_hash(hashkey);
 }
 
-static gboolean
-search_item_hash_equal(gconstpointer a, gconstpointer b) {
+static gboolean search_item_hash_equal(gconstpointer a, gconstpointer b) {
     const struct item *itm_a=a;
     const struct item *itm_b=b;
     if (item_is_equal_id(*itm_a, *itm_b))
@@ -111,8 +109,7 @@ static void search_list_search_free(struct search_list *sl, int level);
  * @param attr_type attribute value
  * @return corresponding search list level (country=0, town=1, ...)
  */
-int
-search_list_level(enum attr_type attr_type) {
+int search_list_level(enum attr_type attr_type) {
     switch(attr_type) {
     case attr_country_all:
     case attr_country_id:
@@ -139,8 +136,7 @@ search_list_level(enum attr_type attr_type) {
     }
 }
 
-static char *
-search_fix_spaces(char *str) {
+static char *search_fix_spaces(char *str) {
     int i;
     int len=strlen(str);
     char c,*s,*d,*ret=g_strdup(str);
@@ -174,8 +170,7 @@ struct phrase {
     int wordcount;
 };
 
-static GList *
-search_split_phrases(char *str) {
+static GList *search_split_phrases(char *str) {
     char *s,*d;
     int wordcount=0;
     GList *ret=NULL;
@@ -204,8 +199,7 @@ search_split_phrases(char *str) {
     return ret;
 }
 
-static char *
-search_phrase_str(struct phrase *p) {
+static char *search_phrase_str(struct phrase *p) {
     int len=p->end-p->start;
     char *ret=g_malloc(len+1);
     strncpy(ret, p->start, len);
@@ -213,8 +207,7 @@ search_phrase_str(struct phrase *p) {
     return ret;
 }
 
-static int
-search_phrase_used(struct phrase *p, GList *used_phrases) {
+static int search_phrase_used(struct phrase *p, GList *used_phrases) {
     while (used_phrases) {
         struct phrase *pu=used_phrases->data;
         dbg(lvl_debug,"'%s'-'%s' vs '%s'-'%s'",p->start,p->end,pu->start,pu->end);
@@ -226,17 +219,16 @@ search_phrase_used(struct phrase *p, GList *used_phrases) {
     return 0;
 }
 
-static gint
-search_by_address_compare(gconstpointer a, gconstpointer b) {
+static gint search_by_address_compare(gconstpointer a, gconstpointer b) {
     const struct search_list_result *slra=a;
     const struct search_list_result *slrb=b;
     return slrb->id-slra->id;
 }
 
 
-static GList *
-search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, GList *exclude, enum attr_type attr_type,
-                       int wordcount) {
+static GList *search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, GList *exclude,
+                                     enum attr_type attr_type,
+                                     int wordcount) {
     GList *tmp=phrases;
     struct attr attr;
     attr.type=attr_type;
@@ -284,8 +276,7 @@ search_by_address_attr(GList *results, struct search_list *sl, GList *phrases, G
     return results;
 }
 
-static void
-search_by_address(struct search_list *this_, char *addr) {
+static void search_by_address(struct search_list *this_, char *addr) {
     char *str=search_fix_spaces(addr);
     GList *tmp,*phrases=search_split_phrases(str);
     struct search_list *sl=search_list_new(this_->ms);
@@ -302,8 +293,7 @@ search_by_address(struct search_list *this_, char *addr) {
     // currently dead code, so no way to test it.
 }
 
-static void
-search_address_results_free(struct search_list *this_) {
+static void search_address_results_free(struct search_list *this_) {
     GList *tmp;
     tmp=this_->address_results;
     while (tmp) {
@@ -332,8 +322,7 @@ search_address_results_free(struct search_list *this_) {
  * @param search_attr attributes to use for the search
  * @param partial do partial search? (1=yes,0=no)
  */
-void
-search_list_search(struct search_list *this_, struct attr *search_attr, int partial) {
+void search_list_search(struct search_list *this_, struct attr *search_attr, int partial) {
     struct search_list_level *le;
     int level;
     dbg(lvl_info,"Starting search for '=%s' of type %s", search_attr->u.str, attr_to_name(search_attr->type));
@@ -398,8 +387,7 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
     return NULL;
 }
 
-static void
-search_list_common_addattr(struct attr* attr,struct search_list_common *common) {
+static void search_list_common_addattr(struct attr* attr,struct search_list_common *common) {
 
     common->attrs=attr_generic_prepend_attr(common->attrs,attr);
     switch(attr->type) {
@@ -427,8 +415,7 @@ search_list_common_addattr(struct attr* attr,struct search_list_common *common) 
     }
 }
 
-static void
-search_list_common_new(struct item *item, struct search_list_common *common) {
+static void search_list_common_new(struct item *item, struct search_list_common *common) {
     struct attr attr;
     int i;
     enum attr_type common_attrs[]= {
@@ -461,8 +448,7 @@ search_list_common_new(struct item *item, struct search_list_common *common) {
     }
 }
 
-static void
-search_list_common_dup(struct search_list_common *src, struct search_list_common *dst) {
+static void search_list_common_dup(struct search_list_common *src, struct search_list_common *dst) {
     int i;
 
     if(dst->attrs) {
@@ -477,8 +463,7 @@ search_list_common_dup(struct search_list_common *src, struct search_list_common
         dst->c=NULL;
 }
 
-static void
-search_list_common_destroy(struct search_list_common *common) {
+static void search_list_common_destroy(struct search_list_common *common) {
     g_free(common->c);
     attr_list_free(common->attrs);
 
@@ -491,8 +476,7 @@ search_list_common_destroy(struct search_list_common *common) {
     common->attrs=NULL;
 }
 
-static struct search_list_country *
-search_list_country_new(struct item *item) {
+static struct search_list_country *search_list_country_new(struct item *item) {
     struct search_list_country *ret=g_new0(struct search_list_country, 1);
     struct attr attr;
 
@@ -515,8 +499,7 @@ search_list_country_new(struct item *item) {
     return ret;
 }
 
-static struct search_list_country *
-search_list_country_dup(struct search_list_country *this_) {
+static struct search_list_country *search_list_country_dup(struct search_list_country *this_) {
     struct search_list_country *ret=g_new(struct search_list_country, 1);
     ret->car=g_strdup(this_->car);
     ret->iso2=g_strdup(this_->iso2);
@@ -526,8 +509,7 @@ search_list_country_dup(struct search_list_country *this_) {
     return ret;
 }
 
-static void
-search_list_country_destroy(struct search_list_country *this_) {
+static void search_list_country_destroy(struct search_list_country *this_) {
     g_free(this_->car);
     g_free(this_->iso2);
     g_free(this_->iso3);
@@ -536,8 +518,7 @@ search_list_country_destroy(struct search_list_country *this_) {
     g_free(this_);
 }
 
-static struct search_list_town *
-search_list_town_new(struct item *item) {
+static struct search_list_town *search_list_town_new(struct item *item) {
     struct search_list_town *ret=g_new0(struct search_list_town, 1);
     struct attr attr;
     struct coord c;
@@ -562,24 +543,21 @@ search_list_town_new(struct item *item) {
     return ret;
 }
 
-static struct search_list_town *
-search_list_town_dup(struct search_list_town *this_) {
+static struct search_list_town *search_list_town_dup(struct search_list_town *this_) {
     struct search_list_town *ret=g_new0(struct search_list_town, 1);
     ret->county=map_convert_dup(this_->county);
     search_list_common_dup(&this_->common, &ret->common);
     return ret;
 }
 
-static void
-search_list_town_destroy(struct search_list_town *this_) {
+static void search_list_town_destroy(struct search_list_town *this_) {
     map_convert_free(this_->county);
     search_list_common_destroy(&this_->common);
     g_free(this_);
 }
 
 
-static struct search_list_street *
-search_list_street_new(struct item *item) {
+static struct search_list_street *search_list_street_new(struct item *item) {
     struct search_list_street *ret=g_new0(struct search_list_street, 1);
     struct attr attr;
     struct coord p[1024];
@@ -603,24 +581,22 @@ search_list_street_new(struct item *item) {
     return ret;
 }
 
-static struct search_list_street *
-search_list_street_dup(struct search_list_street *this_) {
+static struct search_list_street *search_list_street_dup(struct search_list_street *this_) {
     struct search_list_street *ret=g_new0(struct search_list_street, 1);
     ret->name=map_convert_dup(this_->name);
     search_list_common_dup(&this_->common, &ret->common);
     return ret;
 }
 
-static void
-search_list_street_destroy(struct search_list_street *this_) {
+static void search_list_street_destroy(struct search_list_street *this_) {
     map_convert_free(this_->name);
     search_list_common_destroy(&this_->common);
     g_free(this_);
 }
 
-static struct search_list_house_number *
-search_list_house_number_new(struct item *item, struct house_number_interpolation *inter, char *inter_match,
-                             int inter_partial) {
+static struct search_list_house_number *search_list_house_number_new(struct item *item,
+        struct house_number_interpolation *inter, char *inter_match,
+        int inter_partial) {
     struct search_list_house_number *ret=g_new0(struct search_list_house_number, 1);
     struct attr attr;
     char *house_number=NULL;
@@ -643,23 +619,20 @@ search_list_house_number_new(struct item *item, struct house_number_interpolatio
     return ret;
 }
 
-static struct search_list_house_number *
-search_list_house_number_dup(struct search_list_house_number *this_) {
+static struct search_list_house_number *search_list_house_number_dup(struct search_list_house_number *this_) {
     struct search_list_house_number *ret=g_new0(struct search_list_house_number, 1);
     ret->house_number=map_convert_dup(this_->house_number);
     search_list_common_dup(&this_->common, &ret->common);
     return ret;
 }
 
-static void
-search_list_house_number_destroy(struct search_list_house_number *this_) {
+static void search_list_house_number_destroy(struct search_list_house_number *this_) {
     map_convert_free(this_->house_number);
     search_list_common_destroy(&this_->common);
     g_free(this_);
 }
 
-static void
-search_list_result_destroy(int level, void *p) {
+static void search_list_result_destroy(int level, void *p) {
     switch (level) {
     case 0:
         search_list_country_destroy(p);
@@ -676,8 +649,7 @@ search_list_result_destroy(int level, void *p) {
     }
 }
 
-static struct search_list_result *
-search_list_result_dup(struct search_list_result *slr) {
+static struct search_list_result *search_list_result_dup(struct search_list_result *slr) {
     struct search_list_result *ret=g_new0(struct search_list_result, 1);
     ret->id=slr->id;
     if (slr->c) {
@@ -695,8 +667,7 @@ search_list_result_dup(struct search_list_result *slr) {
     return ret;
 }
 
-static void
-search_list_search_free(struct search_list *sl, int level) {
+static void search_list_search_free(struct search_list *sl, int level) {
     struct search_list_level *le=&sl->levels[level];
     GList *next,*curr;
     if (le->search) {
@@ -722,8 +693,7 @@ search_list_search_free(struct search_list *sl, int level) {
     le->last=NULL;
 }
 
-char *
-search_postal_merge(char *mask, char *new) {
+char *search_postal_merge(char *mask, char *new) {
     int i;
     char *ret=NULL;
     dbg(lvl_debug,"enter %s %s", mask, new);
@@ -747,8 +717,7 @@ search_postal_merge(char *mask, char *new) {
     return ret;
 }
 
-char *
-search_postal_merge_replace(char *mask, char *new) {
+char *search_postal_merge_replace(char *mask, char *new) {
     char *ret=search_postal_merge(mask, new);
     if (!ret)
         return mask;
@@ -757,8 +726,7 @@ search_postal_merge_replace(char *mask, char *new) {
 }
 
 
-static int
-postal_match(char *postal, char *mask) {
+static int postal_match(char *postal, char *mask) {
     for (;;) {
         if ((*postal != *mask) && (*mask != '.'))
             return 0;
@@ -773,8 +741,7 @@ postal_match(char *postal, char *mask) {
     }
 }
 
-static int
-search_add_result(struct search_list_level *le, struct search_list_common *slc) {
+static int search_add_result(struct search_list_level *le, struct search_list_common *slc) {
     struct search_list_common *slo;
     char *merged;
     int unique=0;
@@ -982,12 +949,10 @@ search_list_get_result(struct search_list *this_) {
     return NULL;
 }
 
-void
-search_list_destroy(struct search_list *this_) {
+void search_list_destroy(struct search_list *this_) {
     g_free(this_->postal);
     g_free(this_);
 }
 
-void
-search_init(void) {
+void search_init(void) {
 }

@@ -39,16 +39,14 @@ struct zip_info {
     FILE *dir;
 };
 
-static int
-zip_write(struct zip_info *info, void *data, int len) {
+static int zip_write(struct zip_info *info, void *data, int len) {
     if (fwrite(data, len, 1, info->res2) != 1)
         return 0;
     return 1;
 }
 
 #ifdef HAVE_ZLIB
-static int
-compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level) {
+static int compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level) {
     z_stream stream;
     int err;
 
@@ -77,8 +75,7 @@ compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen,
 }
 #endif
 
-void
-write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size) {
+void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size) {
     struct zip_lfh lfh = {
         0x04034b50,
         0x0a,
@@ -175,8 +172,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
     g_free(compbuffer);
 }
 
-int
-zip_write_index(struct zip_info *info) {
+int zip_write_index(struct zip_info *info) {
     int size=ftell(info->index);
     char *buffer;
 
@@ -193,16 +189,14 @@ zip_write_index(struct zip_info *info) {
     return 0;
 }
 
-static void
-zip_write_file_data(struct zip_info *info, FILE *in) {
+static void zip_write_file_data(struct zip_info *info, FILE *in) {
     size_t size;
     char buffer[4096];
     while ((size=fread(buffer, 1, 4096, in)))
         zip_write(info, buffer, size);
 }
 
-int
-zip_write_directory(struct zip_info *info) {
+int zip_write_directory(struct zip_info *info) {
     struct zip_eoc eoc = {
         0x06054b50,
         0x0000,
@@ -261,34 +255,28 @@ zip_new(void) {
     return g_new0(struct zip_info, 1);
 }
 
-void
-zip_set_zip64(struct zip_info *info, int on) {
+void zip_set_zip64(struct zip_info *info, int on) {
     info->zip64=on;
 }
 
-void
-zip_set_compression_level(struct zip_info *info, int level) {
+void zip_set_compression_level(struct zip_info *info, int level) {
     info->compression_level=level;
 }
 
-void
-zip_set_maxnamelen(struct zip_info *info, int max) {
+void zip_set_maxnamelen(struct zip_info *info, int max) {
     info->maxnamelen=max;
 }
 
-int
-zip_get_maxnamelen(struct zip_info *info) {
+int zip_get_maxnamelen(struct zip_info *info) {
     return info->maxnamelen;
 }
 
-int
-zip_add_member(struct zip_info *info) {
+int zip_add_member(struct zip_info *info) {
     return info->zipnum++;
 }
 
 
-int
-zip_set_timestamp(struct zip_info *info, char *timestamp) {
+int zip_set_timestamp(struct zip_info *info, char *timestamp) {
     int year,month,day,hour,min,sec;
 
     if (sscanf(timestamp,"%d-%d-%dT%d:%d:%d",&year,&month,&day,&hour,&min,&sec) == 6) {
@@ -299,8 +287,7 @@ zip_set_timestamp(struct zip_info *info, char *timestamp) {
     return 0;
 }
 
-int
-zip_open(struct zip_info *info, char *out, char *dir, char *index) {
+int zip_open(struct zip_info *info, char *out, char *dir, char *index) {
     info->res2=fopen(out,"wb+");
     if(!info->res2) {
         fprintf(stderr,"Could not open output zip file %s\n", out);
@@ -319,29 +306,24 @@ zip_open(struct zip_info *info, char *out, char *dir, char *index) {
     return 1;
 }
 
-FILE *
-zip_get_index(struct zip_info *info) {
+FILE *zip_get_index(struct zip_info *info) {
     return info->index;
 }
 
-int
-zip_get_zipnum(struct zip_info *info) {
+int zip_get_zipnum(struct zip_info *info) {
     return info->zipnum;
 }
 
-void
-zip_set_zipnum(struct zip_info *info, int num) {
+void zip_set_zipnum(struct zip_info *info, int num) {
     info->zipnum=num;
 }
 
-void
-zip_close(struct zip_info *info) {
+void zip_close(struct zip_info *info) {
     fclose(info->index);
     fclose(info->dir);
     fclose(info->res2);
 }
 
-void
-zip_destroy(struct zip_info *info) {
+void zip_destroy(struct zip_info *info) {
     g_free(info);
 }
