@@ -20,15 +20,15 @@ endif()
 
 # check if we have QML
 if(USE_QML)
-		set(QML 1)
-		qt5_add_resources(QT5_QRC "graphics_qt5.qrc")
-		set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" ${QT5_QRC})
+	set(QML 1)
+	qt5_add_resources(QT5_QRC "graphics_qt5.qrc")
+	set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" ${QT5_QRC})
 endif ()
 
 #check if we have QWIDGET
 if(USE_QWIDGET)
-		set(QWIDGET 1)
-		set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitWidget.cpp")
+	set(QWIDGET 1)
+	set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitWidget.cpp")
 endif ()
 
 module_add_library(graphics_qt5 graphics_qt5.cpp event_qt5.cpp ${GRAPHICS_QT5_ADDITIONAL})

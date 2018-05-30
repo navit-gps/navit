@@ -20,4 +20,4 @@ module_add_library(gui_qml gui_qml.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/guiProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/routeProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/gui_qml.moc
-)
+	)

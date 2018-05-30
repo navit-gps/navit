@@ -5,11 +5,11 @@ if (FRIBIDI_FOUND)
 	set_property(
 		TARGET font_freetype
 		APPEND PROPERTY COMPILE_DEFINITIONS USE_FRIBIDI=1
-	)
+		)
 	if (NOT FRIBIDI2_FOUND)
 		set_property(
 			TARGET font_freetype
 			APPEND PROPERTY COMPILE_DEFINITIONS FRIBIDIOLD=1
-		)
+			)
 	endif (NOT FRIBIDI2_FOUND)
 endif (FRIBIDI_FOUND)

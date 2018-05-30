@@ -22,7 +22,7 @@ macro(convert_to_png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 			file(STRINGS  ${IMAGE_INPUT} NEW_SCALE_LINE REGEX "[^-]width=\"[0-9pxt.]*\"")
 			string(REGEX MATCH "width=\"([0-9]*)[pxt]*\"" NEW_SCALE_LINE ${NEW_SCALE_LINE})
 			set(NEW_SCALE ${CMAKE_MATCH_1})
-       endif()
+		endif()
 		set(COMMAND_ARGS ${NEW_SCALE} ${NEW_SCALE}  ${IMAGE_INPUT} ${IMAGE_OUTPUT})
 	elseif(${IMAGE_CONVERTER_${FILE_TYPE}} MATCHES "inkscape")
 		if (${SCALE} GREATER 0)
@@ -39,7 +39,7 @@ macro(convert_to_png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 		OUTPUT ${IMAGE_OUTPUT}
 		DEPENDS ${IMAGE_INPUT}
 		COMMAND ${IMAGE_CONVERTER_${FILE_TYPE}} ${COMMAND_ARGS}
-	)
+		)
 endmacro()
 
 macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
@@ -57,12 +57,12 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
 		endif()
 
 		if(NOT CURRENT_SCALE EQUAL -1)
-		convert_to_png(
-           ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC}
-           ${IMAGE_DST}
-           ${CURRENT_SCALE}
-		)
-		list(APPEND IMAGE_TARGETS ${IMAGE_DST})
+			convert_to_png(
+				${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC}
+				${IMAGE_DST}
+				${CURRENT_SCALE}
+				)
+			list(APPEND IMAGE_TARGETS ${IMAGE_DST})
 		endif()
 	endforeach()
 endmacro()
@@ -129,10 +129,10 @@ endforeach()
 
 foreach (IMAGE_FILE ${IMAGES_TO_COPY})
 	add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
-		      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
-		      COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
-		      "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
-	)
+		DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+		"${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+		)
 	list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}")
 endforeach()
 
@@ -144,4 +144,4 @@ install(
 	FILES ${IMAGE_TARGETS}
 	DESTINATION ${IMAGE_DIR}
 	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
-)
+	)
