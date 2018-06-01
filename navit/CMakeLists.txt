@@ -121,7 +121,7 @@ add_custom_command(
 	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd"
 	COMMENT "Copy navit.dtd to ${CMAKE_CURRENT_BINARY_DIR}/navit.dtd"
 	COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/navit/navit.dtd" "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd"
-)
+	)
 
 # additional parameter are passed to the stylesheet processor as parameter
 macro(process_xslt SRC_DIR SRC_XML DEST_DIR DEST_XML)
@@ -163,7 +163,7 @@ macro(process_xslt SRC_DIR SRC_XML DEST_DIR DEST_XML)
 		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/navit/xslt/
 		DEPENDS "${SRC_DIR}/${SRC_XML}" "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd" ${ALL_XSLT_FILES}
 		${XSLT_COMMANDS}
-	)
+		)
 endmacro()
 
 # Give instructions on how to build all navit_*.xml navit_layout_*.xml files, obtained applying relevant xslt tranformation on the source navit_shipped_*.xml files
