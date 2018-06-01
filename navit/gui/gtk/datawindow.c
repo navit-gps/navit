@@ -40,8 +40,7 @@ struct datawindow_priv {
 };
 
 static GValue value;
-static void
-select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, struct datawindow_priv *win) {
+static void select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, struct datawindow_priv *win) {
     char *cols[20];
     GtkTreeIter iter;
     GtkTreeModel *model;
@@ -61,8 +60,7 @@ select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, stru
     callback_call_1(win->click, cols);
 }
 
-static void
-gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, int count) {
+static void gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, int count) {
     int i;
     GtkCellRenderer *cell;
     GtkTreeIter iter;
@@ -118,8 +116,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
     }
 }
 
-static void
-gui_gtk_datawindow_mode(struct datawindow_priv *win, int start) {
+static void gui_gtk_datawindow_mode(struct datawindow_priv *win, int start) {
     if (start) {
         if (win && win->treeview) {
             gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), NULL);
@@ -127,8 +124,7 @@ gui_gtk_datawindow_mode(struct datawindow_priv *win, int start) {
     }
 }
 
-static gboolean
-gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_priv *win) {
+static gboolean gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_priv *win) {
     callback_call_0(win->close);
 
     if (win->button) {
@@ -138,8 +134,7 @@ gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_
     return FALSE;
 }
 
-void
-gui_gtk_datawindow_destroy(struct datawindow_priv *win) {
+void gui_gtk_datawindow_destroy(struct datawindow_priv *win) {
     if ((!win->gui) || (!win->gui->datawindow)) {
         return;
     }
@@ -151,13 +146,11 @@ gui_gtk_datawindow_destroy(struct datawindow_priv *win) {
     return;
 }
 
-void
-gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn) {
+void gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn) {
     this_->button = btn;
 }
 
-static gboolean
-keypress(GtkWidget *widget, GdkEventKey *event, struct datawindow_priv *win) {
+static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct datawindow_priv *win) {
     if (event->type != GDK_KEY_PRESS)
         return FALSE;
     if (event->keyval == GDK_Cancel) {

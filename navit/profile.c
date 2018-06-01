@@ -53,8 +53,7 @@
  * parameters as varargs. May be NULL; then no message is printed, and all timers with the
  * same or higher level are reset.
  */
-void
-profile_timer(int level, const char *module, const char *function, const char *fmt, ...) {
+void profile_timer(int level, const char *module, const char *function, const char *fmt, ...) {
 #ifndef _MSC_VER
     va_list ap;
     static struct timeval last[PROFILE_LEVEL_MAX+1];

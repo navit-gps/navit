@@ -3,15 +3,13 @@
 
 static GHashTable *atom_hash;
 
-char *
-atom_lookup(char *name) {
+char *atom_lookup(char *name) {
     if (!atom_hash)
         return NULL;
     return g_hash_table_lookup(atom_hash,name);
 }
 
-char *
-atom(char *name) {
+char *atom(char *name) {
     char *id=atom_lookup(name);
     if (id)
         return id;
@@ -22,7 +20,6 @@ atom(char *name) {
     return id;
 }
 
-void
-atom_init(void) {
+void atom_init(void) {
     atom_hash=g_hash_table_new(g_str_hash, g_str_equal);
 }

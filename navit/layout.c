@@ -95,13 +95,11 @@ layout_attr_iter_new(void) {
     return g_new0(struct attr_iter, 1);
 }
 
-void
-layout_attr_iter_destroy(struct attr_iter *iter) {
+void layout_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
-int
-layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     GList *cursor,*layer;
     attr->type=type;
     switch (type) {
@@ -148,8 +146,7 @@ layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, s
 }
 
 
-int
-layout_add_attr(struct layout *layout, struct attr *attr) {
+int layout_add_attr(struct layout *layout, struct attr *attr) {
     switch (attr->type) {
     case attr_cursor:
         layout->cursors = g_list_append(layout->cursors, attr->u.cursor);
@@ -224,8 +221,7 @@ cursor_new(struct attr *parent, struct attr **attrs) {
     return this;
 }
 
-void
-cursor_destroy(struct cursor *this_) {
+void cursor_destroy(struct cursor *this_) {
     if (this_->sequence_range)
         g_free(this_->sequence_range);
     if (this_->name) {
@@ -234,8 +230,7 @@ cursor_destroy(struct cursor *this_) {
     g_free(this_);
 }
 
-int
-cursor_add_attr(struct cursor *this_, struct attr *attr) {
+int cursor_add_attr(struct cursor *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_itemgra:
         this_->attrs=attr_generic_add_attr(this_->attrs, attr);
@@ -246,8 +241,7 @@ cursor_add_attr(struct cursor *this_, struct attr *attr) {
     return 0;
 }
 
-static int
-layer_set_attr_do(struct layer *l, struct attr *attr, int init) {
+static int layer_set_attr_do(struct layer *l, struct attr *attr, int init) {
     struct attr_iter *iter;
     struct navit_object *obj;
     struct attr layer;
@@ -308,8 +302,7 @@ struct layer * layer_new(struct attr *parent, struct attr **attrs) {
     return l;
 }
 
-int
-layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     attr->type=type;
     switch(type) {
     case attr_active:
@@ -330,8 +323,7 @@ layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, stru
     return 0;
 }
 
-int
-layer_add_attr(struct layer *layer, struct attr *attr) {
+int layer_add_attr(struct layer *layer, struct attr *attr) {
     switch (attr->type) {
     case attr_itemgra:
         layer->itemgras = g_list_append(layer->itemgras, attr->u.itemgra);
@@ -341,13 +333,11 @@ layer_add_attr(struct layer *layer, struct attr *attr) {
     }
 }
 
-int
-layer_set_attr(struct layer *layer, struct attr *attr) {
+int layer_set_attr(struct layer *layer, struct attr *attr) {
     return layer_set_attr_do(layer, attr, 0);
 }
 
-static void
-layer_destroy(struct layer *layer) {
+static void layer_destroy(struct layer *layer) {
     attr_list_free(layer->attrs);
     g_free(layer->name);
     g_free(layer);
@@ -392,8 +382,7 @@ struct itemgra * itemgra_new(struct attr *parent, struct attr **attrs) {
     }
     return itm;
 }
-int
-itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
+int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     switch (attr->type) {
     case attr_polygon:
     case attr_polyline:
@@ -410,8 +399,7 @@ itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     }
 }
 
-static void
-element_set_color(struct element *e, struct attr **attrs) {
+static void element_set_color(struct element *e, struct attr **attrs) {
     struct attr *color;
     color=attr_search(attrs, NULL, attr_color);
     if (color)
@@ -419,8 +407,7 @@ element_set_color(struct element *e, struct attr **attrs) {
 }
 
 
-static void
-element_set_background_color(struct color *c, struct attr **attrs) {
+static void element_set_background_color(struct color *c, struct attr **attrs) {
     struct attr *color;
     color=attr_search(attrs, NULL, attr_background_color);
     if (color)
@@ -428,32 +415,28 @@ element_set_background_color(struct color *c, struct attr **attrs) {
 }
 
 
-static void
-element_set_text_size(struct element *e, struct attr **attrs) {
+static void element_set_text_size(struct element *e, struct attr **attrs) {
     struct attr *text_size;
     text_size=attr_search(attrs, NULL, attr_text_size);
     if (text_size)
         e->text_size=text_size->u.num;
 }
 
-static void
-element_set_polyline_width(struct element *e, struct attr **attrs) {
+static void element_set_polyline_width(struct element *e, struct attr **attrs) {
     struct attr *width;
     width=attr_search(attrs, NULL, attr_width);
     if (width)
         e->u.polyline.width=width->u.num;
 }
 
-static void
-element_set_polyline_directed(struct element *e, struct attr **attrs) {
+static void element_set_polyline_directed(struct element *e, struct attr **attrs) {
     struct attr *directed;
     directed=attr_search(attrs, NULL, attr_directed);
     if (directed)
         e->u.polyline.directed=directed->u.num;
 }
 
-static void
-element_set_polyline_dash(struct element *e, struct attr **attrs) {
+static void element_set_polyline_dash(struct element *e, struct attr **attrs) {
     struct attr *dash;
     int i;
 
@@ -468,24 +451,21 @@ element_set_polyline_dash(struct element *e, struct attr **attrs) {
     }
 }
 
-static void
-element_set_polyline_offset(struct element *e, struct attr **attrs) {
+static void element_set_polyline_offset(struct element *e, struct attr **attrs) {
     struct attr *offset;
     offset=attr_search(attrs, NULL, attr_offset);
     if (offset)
         e->u.polyline.offset=offset->u.num;
 }
 
-static void
-element_set_circle_width(struct element *e, struct attr **attrs) {
+static void element_set_circle_width(struct element *e, struct attr **attrs) {
     struct attr *width;
     width=attr_search(attrs, NULL, attr_width);
     if (width)
         e->u.circle.width=width->u.num;
 }
 
-static void
-element_set_circle_radius(struct element *e, struct attr **attrs) {
+static void element_set_circle_radius(struct element *e, struct attr **attrs) {
     struct attr *radius;
     radius=attr_search(attrs, NULL, attr_radius);
     if (radius)
@@ -605,8 +585,7 @@ arrows_new(struct attr *parent, struct attr **attrs) {
     return (struct arrows *)e;
 }
 
-int
-element_add_attr(struct element *e, struct attr *attr) {
+int element_add_attr(struct element *e, struct attr *attr) {
     switch (attr->type) {
     case attr_coord:
         e->coord=g_realloc(e->coord,(e->coord_count+1)*sizeof(struct coord));

@@ -94,8 +94,7 @@ struct selector selectors[]= {
  * @return  Pointer to graphics_image object, or NULL if no picture available.
  */
 
-static struct graphics_image *
-gui_internal_poi_icon(struct gui_priv *this, struct item *item) {
+static struct graphics_image *gui_internal_poi_icon(struct gui_priv *this, struct item *item) {
     struct attr layout;
     struct attr icon_src;
     GList *layer;
@@ -155,8 +154,7 @@ gui_internal_poi_icon(struct gui_priv *this, struct item *item) {
  * @param p reference to the object to be freed.
  */
 
-void
-gui_internal_poi_param_free(void *p) {
+void gui_internal_poi_param_free(void *p) {
     if(((struct poi_param *)p)->filterstr)
         g_free(((struct poi_param *)p)->filterstr);
     if(((struct poi_param *)p)->filter)
@@ -171,8 +169,7 @@ gui_internal_poi_param_free(void *p) {
  * @return  Cloned object reference.
  */
 
-static struct poi_param *
-gui_internal_poi_param_clone(struct poi_param *p) {
+static struct poi_param *gui_internal_poi_param_clone(struct poi_param *p) {
     struct poi_param *r=g_new(struct poi_param,1);
     GList *l=p->filter;
     memcpy(r,p,sizeof(struct poi_param));
@@ -196,8 +193,7 @@ gui_internal_poi_param_clone(struct poi_param *p) {
  * @param text filter text.
  */
 
-void
-gui_internal_poi_param_set_filter(struct poi_param *param, char *text) {
+void gui_internal_poi_param_set_filter(struct poi_param *param, char *text) {
     char *s1, *s2;
 
     param->filterstr=removecase(text);
@@ -215,8 +211,7 @@ gui_internal_poi_param_set_filter(struct poi_param *param, char *text) {
     } while(s2 && *s2);
 }
 
-static struct widget *
-gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb) {
+static struct widget *gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb) {
     struct widget *wl,*wb;
     int nitems,nrows;
     int i;
@@ -266,8 +261,7 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
  * @return  Pointer to new widget.
  */
 
-static void
-format_dist(int dist, char *distbuf) {
+static void format_dist(int dist, char *distbuf) {
     if (dist > 10000)
         sprintf(distbuf,"%d ", dist/1000);
     else if (dist>0)
@@ -336,8 +330,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
  * @return  Pointer to string representation of address. To be g_free()d after use.
  */
 
-char *
-gui_internal_compose_item_address_string(struct item *item, int prependPostal) {
+char *gui_internal_compose_item_address_string(struct item *item, int prependPostal) {
     char *s=g_strdup("");
     struct attr attr;
     if(prependPostal && item_attr_get(item, attr_postal, &attr))
@@ -362,8 +355,7 @@ gui_internal_compose_item_address_string(struct item *item, int prependPostal) {
     return s;
 }
 
-static int
-gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item) {
+static int gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item) {
     enum item_type *types;
     struct selector *sel = param->sel? &selectors[param->selnb]: NULL;
     enum item_type type=item->type;
@@ -424,8 +416,7 @@ gui_internal_cmd_pois_item_selected(struct poi_param *param, struct item *item) 
  * @param wm called widget.
  * @param data event data.
  */
-static void
-gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w=g_new0(struct widget,1);
     w->data=wm->data;
     w->c=wm->c;
@@ -444,8 +435,7 @@ gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data)
  * @param wm called widget.
  * @param data event data (pointer to editor widget containg filter text).
  */
-static void
-gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w=data;
     struct poi_param *param;
 
@@ -477,8 +467,7 @@ gui_internal_cmd_pois_filter_do(struct gui_priv *this, struct widget *wm, void *
  *
  */
 
-static void
-gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, void *data) {
     if (wm->text && wm->reason==gui_internal_reason_keypress_finish) {
         gui_internal_cmd_pois_filter_do(this, wm, wm);
     }
@@ -492,8 +481,7 @@ gui_internal_cmd_pois_filter_changed(struct gui_priv *this, struct widget *wm, v
  * @param wm called widget.
  * @param data event data.
  */
-void
-gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *wb, *w, *wr, *wk, *we;
     int keyboard_mode;
     keyboard_mode = VKBD_FLAG_2 | gui_internal_keyboard_init_mode(getenv("LANG"));
@@ -544,8 +532,7 @@ gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *dat
  * @param wm called widget.
  * @param data event data, reference to poi_param or NULL.
  */
-void
-gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data) {
     struct map_selection *sel,*selm;
     struct coord c,center;
     struct mapset_handle *h;

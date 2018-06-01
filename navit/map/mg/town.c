@@ -24,15 +24,13 @@
 
 
 
-static void
-town_coord_rewind(void *priv_data) {
+static void town_coord_rewind(void *priv_data) {
     struct town_priv *twn=priv_data;
 
     twn->cidx=0;
 }
 
-static int
-town_coord_get(void *priv_data, struct coord *c, int count) {
+static int town_coord_get(void *priv_data, struct coord *c, int count) {
     struct town_priv *twn=priv_data;
 
     if (twn->cidx || count <= 0)
@@ -42,16 +40,14 @@ town_coord_get(void *priv_data, struct coord *c, int count) {
     return 1;
 }
 
-static void
-town_attr_rewind(void *priv_data) {
+static void town_attr_rewind(void *priv_data) {
     struct town_priv *twn=priv_data;
 
     twn->aidx=0;
     twn->attr_next=attr_label;
 }
 
-static int
-town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct town_priv *twn=priv_data;
     int len;
 
@@ -115,8 +111,7 @@ static struct item_methods town_meth = {
     town_attr_get,
 };
 
-static void
-town_get_data(struct town_priv *twn, unsigned char **p) {
+static void town_get_data(struct town_priv *twn, unsigned char **p) {
     twn->id=get_u32_unal(p);
     twn->c.x=get_u32_unal(p);
     twn->c.y=get_u32_unal(p);
@@ -138,8 +133,7 @@ static unsigned char limit[]= {0,1,2,2,4,6,8,10,11,13,14,14,14,20,20,20,20,20,20
 
 static enum item_type town_item[]= {type_town_label_5e1, type_town_label_1e2, type_town_label_2e2, type_town_label_5e2, type_town_label_1e3, type_town_label_1e3, type_town_label_2e3, type_town_label_5e3, type_town_label_1e4, type_town_label_2e4, type_town_label_5e4, type_town_label_1e5, type_town_label_1e5, type_town_label_2e5, type_town_label_5e5, type_town_label_1e6, type_town_label_2e6};
 static enum item_type district_item[]= {type_district_label_5e1, type_district_label_1e2, type_district_label_2e2, type_district_label_5e2, type_district_label_1e3, type_district_label_1e3, type_district_label_2e3, type_district_label_5e3, type_district_label_1e4, type_district_label_2e4, type_district_label_5e4, type_district_label_1e5, type_district_label_1e5, type_district_label_2e5, type_district_label_5e5, type_district_label_1e6, type_district_label_2e6};
-int
-town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item) {
+int town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item) {
     int size;
     for (;;) {
         if (mr->b.p >= mr->b.end)
@@ -187,8 +181,7 @@ town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item) {
     }
 }
 
-int
-town_get_byid(struct map_rect_priv *mr, struct town_priv *twn, int id_hi, int id_lo, struct item *item) {
+int town_get_byid(struct map_rect_priv *mr, struct town_priv *twn, int id_hi, int id_lo, struct item *item) {
     int country=id_hi & 0xffff;
     int res;
     if (!tree_search_hv(mr->m->dirname, "town", (id_lo >> 8) | (country << 24), id_lo & 0xff, &res))
@@ -198,8 +191,7 @@ town_get_byid(struct map_rect_priv *mr, struct town_priv *twn, int id_hi, int id
     return town_get(mr, twn, item);
 }
 
-static int
-town_search_compare(unsigned char **p, struct map_rect_priv *mr) {
+static int town_search_compare(unsigned char **p, struct map_rect_priv *mr) {
     int country, d;
     char *name;
 

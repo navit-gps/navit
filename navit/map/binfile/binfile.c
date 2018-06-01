@@ -233,8 +233,7 @@ static void eoc_to_cpu(struct zip_eoc *eoc) {
 
 static void binfile_check_version(struct map_priv *m);
 
-static struct zip_eoc *
-binfile_read_eoc(struct file *fi) {
+static struct zip_eoc *binfile_read_eoc(struct file *fi) {
     struct zip_eoc *eoc;
     eoc=(struct zip_eoc *)file_data_read(fi,fi->size-sizeof(struct zip_eoc), sizeof(struct zip_eoc));
     if (eoc) {
@@ -249,8 +248,7 @@ binfile_read_eoc(struct file *fi) {
     return eoc;
 }
 
-static struct zip64_eoc *
-binfile_read_eoc64(struct file *fi) {
+static struct zip64_eoc *binfile_read_eoc64(struct file *fi) {
     struct zip64_eocl *eocl;
     struct zip64_eoc *eoc;
     eocl=(struct zip64_eocl *)file_data_read(fi,fi->size-sizeof(struct zip_eoc)-sizeof(struct zip64_eocl),
@@ -276,13 +274,11 @@ binfile_read_eoc64(struct file *fi) {
     return eoc;
 }
 
-static int
-binfile_cd_extra(struct zip_cd *cd) {
+static int binfile_cd_extra(struct zip_cd *cd) {
     return cd->zipcfnl+cd->zipcxtl;
 }
 
-static struct zip_cd *
-binfile_read_cd(struct map_priv *m, int offset, int len) {
+static struct zip_cd *binfile_read_cd(struct map_priv *m, int offset, int len) {
     struct zip_cd *cd;
     long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
     if (len == -1) {
@@ -311,8 +307,7 @@ binfile_read_cd(struct map_priv *m, int offset, int len) {
  * @param cd pointer to zip central directory structure
  * @return pointer to ZIP64 extra field, or NULL if not available
  */
-static struct zip_cd_ext *
-binfile_cd_ext(struct zip_cd *cd) {
+static struct zip_cd_ext *binfile_cd_ext(struct zip_cd *cd) {
     struct zip_cd_ext *ext;
     if (cd->zipofst != zip_size_64bit_placeholder)
         return NULL;
@@ -329,8 +324,7 @@ binfile_cd_ext(struct zip_cd *cd) {
  * @return Offset of local file header in zip file.
  * Will use ZIP64 data if present.
  */
-static long long
-binfile_cd_offset(struct zip_cd *cd) {
+static long long binfile_cd_offset(struct zip_cd *cd) {
     struct zip_cd_ext *ext=binfile_cd_ext(cd);
     if (ext)
         return ext->zipofst;
@@ -338,8 +332,7 @@ binfile_cd_offset(struct zip_cd *cd) {
         return cd->zipofst;
 }
 
-static struct zip_lfh *
-binfile_read_lfh(struct file *fi, long long offset) {
+static struct zip_lfh *binfile_read_lfh(struct file *fi, long long offset) {
     struct zip_lfh *lfh;
 
     lfh=(struct zip_lfh *)(file_data_read(fi,offset,sizeof(struct zip_lfh)));
@@ -353,8 +346,7 @@ binfile_read_lfh(struct file *fi, long long offset) {
     return lfh;
 }
 
-static unsigned char *
-binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh) {
+static unsigned char *binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh) {
     unsigned char *ret=NULL;
 
     offset+=sizeof(struct zip_lfh)+lfh->zipfnln;
@@ -373,8 +365,7 @@ binfile_read_content(struct map_priv *m, struct file *fi, long long offset, stru
     return ret;
 }
 
-static int
-binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int skip) {
+static int binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int skip) {
     int size=4096;
     int end=m->eoc64?m->eoc64->zip64ecsz:m->eoc->zipecsz;
     int len=strlen(name);
@@ -418,30 +409,26 @@ binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int s
     return -1;
 }
 
-static void
-map_destroy_binfile(struct map_priv *m) {
+static void map_destroy_binfile(struct map_priv *m) {
     dbg(lvl_debug,"map_destroy_binfile");
     if (m->fi)
         map_binfile_close(m);
     map_binfile_destroy(m);
 }
 
-static void
-binfile_coord_rewind(void *priv_data) {
+static void binfile_coord_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t;
     t->pos_coord=t->pos_coord_start;
 }
 
-static inline int
-binfile_coord_left(void *priv_data) {
+static inline int binfile_coord_left(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t;
     return (t->pos_attr_start-t->pos_coord)/2;
 }
 
-static int
-binfile_coord_get(void *priv_data, struct coord *c, int count) {
+static int binfile_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t;
     int max,ret=0;
@@ -471,8 +458,7 @@ binfile_coord_get(void *priv_data, struct coord *c, int count) {
  * @param
  * @return
  */
-static void
-binfile_attr_rewind(void *priv_data) {
+static void binfile_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t;
     t->pos_attr=t->pos_attr_start;
@@ -481,8 +467,7 @@ binfile_attr_rewind(void *priv_data) {
 
 }
 
-static char *
-binfile_extract(struct map_priv *m, char *dir, char *filename, int partial) {
+static char *binfile_extract(struct map_priv *m, char *dir, char *filename, int partial) {
     char *full,*fulld,*sep;
     unsigned char *start;
     int len,offset=m->index_offset;
@@ -527,8 +512,7 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial) {
     return g_strdup_printf("%s/%s",dir,filename);
 }
 
-static int
-binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t;
     enum attr_type type;
@@ -610,20 +594,17 @@ struct binfile_hash_entry {
     int data[0];
 };
 
-static guint
-binfile_hash_entry_hash(gconstpointer key) {
+static guint binfile_hash_entry_hash(gconstpointer key) {
     const struct binfile_hash_entry *entry=key;
     return (entry->id.id_hi ^ entry->id.id_lo);
 }
 
-static gboolean
-binfile_hash_entry_equal(gconstpointer a, gconstpointer b) {
+static gboolean binfile_hash_entry_equal(gconstpointer a, gconstpointer b) {
     const struct binfile_hash_entry *entry1=a,*entry2=b;
     return (entry1->id.id_hi==entry2->id.id_hi && entry1->id.id_lo == entry2->id.id_lo);
 }
 
-static int *
-binfile_item_dup(struct map_priv *m, struct item *item, struct tile *t, int extend) {
+static int *binfile_item_dup(struct map_priv *m, struct item *item, struct tile *t, int extend) {
     int size=le32_to_cpu(t->pos[0]);
     struct binfile_hash_entry *entry=g_malloc(sizeof(struct binfile_hash_entry)+(size+1+extend)*sizeof(int));
     void *ret=entry->data;
@@ -640,8 +621,7 @@ binfile_item_dup(struct map_priv *m, struct item *item, struct tile *t, int exte
     return ret;
 }
 
-static int
-binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode) {
+static int binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t,*tn,new;
     int i,delta,move_len;
@@ -735,8 +715,7 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
     return 1;
 }
 
-static int
-binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode) {
+static int binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode) {
     struct map_rect_priv *mr=priv_data;
     struct tile *t=mr->t,*tn,new;
     int offset,delta,move_len;
@@ -852,8 +831,7 @@ static struct item_methods methods_binfile = {
     binfile_coord_set,
 };
 
-static void
-push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length) {
+static void push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length) {
     dbg_assert(mr->tile_depth < 8);
     mr->t=&mr->tiles[mr->tile_depth++];
     *(mr->t)=*t;
@@ -864,8 +842,7 @@ push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length) {
         mr->t->end=mr->t->pos+length;
 }
 
-static int
-pop_tile(struct map_rect_priv *mr) {
+static int pop_tile(struct map_rect_priv *mr) {
     if (mr->tile_depth <= 1)
         return 0;
     if (mr->t->mode < 2)
@@ -880,8 +857,7 @@ pop_tile(struct map_rect_priv *mr) {
 }
 
 
-static int
-zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t) {
+static int zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t) {
     char buffer[1024];
     struct zip_lfh *lfh;
     char *zipfn;
@@ -907,8 +883,7 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t) {
 }
 
 
-static int
-map_binfile_handle_redirect(struct map_priv *m) {
+static int map_binfile_handle_redirect(struct map_priv *m) {
     char *location=file_http_header(m->http, "location");
     if (!location) {
         m->redirect=0;
@@ -926,8 +901,7 @@ map_binfile_handle_redirect(struct map_priv *m) {
     return 1;
 }
 
-static int
-map_binfile_http_request(struct map_priv *m, struct attr **attrs) {
+static int map_binfile_http_request(struct map_priv *m, struct attr **attrs) {
     if (!m->http) {
         m->http=file_create(NULL, attrs);
     } else {
@@ -937,8 +911,7 @@ map_binfile_http_request(struct map_priv *m, struct attr **attrs) {
 }
 
 
-static long long
-map_binfile_download_size(struct map_priv *m) {
+static long long map_binfile_download_size(struct map_priv *m) {
     struct attr url= {attr_url};
     struct attr http_method= {attr_http_method};
     struct attr persistent= {attr_persistent};
@@ -969,8 +942,7 @@ map_binfile_download_size(struct map_priv *m) {
 }
 
 
-static int
-map_binfile_http_close(struct map_priv *m) {
+static int map_binfile_http_close(struct map_priv *m) {
     if (m->http) {
         file_destroy(m->http);
         m->http=NULL;
@@ -979,8 +951,7 @@ map_binfile_http_close(struct map_priv *m) {
 }
 
 
-static struct file *
-map_binfile_http_range(struct map_priv *m, long long offset, int size) {
+static struct file *map_binfile_http_range(struct map_priv *m, long long offset, int size) {
     struct attr *attrs[4];
     struct attr url= {attr_url};
     struct attr http_header= {attr_http_header};
@@ -999,8 +970,7 @@ map_binfile_http_range(struct map_priv *m, long long offset, int size) {
     return m->http;
 }
 
-static unsigned char *
-map_binfile_download_range(struct map_priv *m, long long offset, int size) {
+static unsigned char *map_binfile_download_range(struct map_priv *m, long long offset, int size) {
     unsigned char *ret;
     int size_ret;
     struct file *http=map_binfile_http_range(m, offset, size);
@@ -1014,8 +984,7 @@ map_binfile_download_range(struct map_priv *m, long long offset, int size) {
     return ret;
 }
 
-static struct zip_cd *
-download_cd(struct map_download *download) {
+static struct zip_cd *download_cd(struct map_download *download) {
     struct map_priv *m=download->m;
     struct zip64_eoc *zip64_eoc=(struct zip64_eoc *)file_data_read(m->fi, 0, sizeof(*zip64_eoc));
     struct zip_cd *cd=(struct zip_cd *)map_binfile_download_range(m, zip64_eoc->zip64eofst+download->zipfile*m->cde_size,
@@ -1025,8 +994,7 @@ download_cd(struct map_download *download) {
     return cd;
 }
 
-static int
-download_request(struct map_download *download) {
+static int download_request(struct map_download *download) {
     struct attr url= {attr_url};
     struct attr http_header= {attr_http_header};
     struct attr persistent= {attr_persistent};
@@ -1061,8 +1029,7 @@ download_request(struct map_download *download) {
 }
 
 
-static int
-download_start(struct map_download *download) {
+static int download_start(struct map_download *download) {
     long long offset;
     struct zip_eoc *eoc;
 
@@ -1084,8 +1051,7 @@ download_start(struct map_download *download) {
     return download_request(download);
 }
 
-static int
-download_download(struct map_download *download) {
+static int download_download(struct map_download *download) {
     int size=64*1024,size_ret;
     unsigned char *data;
     if (download->dl_size != -1 && size > download->dl_size)
@@ -1113,8 +1079,7 @@ download_download(struct map_download *download) {
     return 0;
 }
 
-static int
-download_finish(struct map_download *download) {
+static int download_finish(struct map_download *download) {
     struct zip_lfh *lfh;
     char *lfh_filename;
     struct zip_cd_ext *ext;
@@ -1147,8 +1112,7 @@ download_finish(struct map_download *download) {
     return 1;
 }
 
-static int
-download_planet_size(struct map_download *download) {
+static int download_planet_size(struct map_download *download) {
     download->size=map_binfile_download_size(download->m);
     dbg(lvl_debug,"Planet size "LONGLONG_FMT"",download->size);
     if (!download->size)
@@ -1156,8 +1120,7 @@ download_planet_size(struct map_download *download) {
     return 1;
 }
 
-static int
-download_eoc(struct map_download *download) {
+static int download_eoc(struct map_download *download) {
     download->zip64_eoc=(struct zip64_eoc *)map_binfile_download_range(download->m, download->size-98, 98);
     if (!download->zip64_eoc)
         return 0;
@@ -1172,16 +1135,14 @@ download_eoc(struct map_download *download) {
     return 1;
 }
 
-static int
-download_directory_start(struct map_download *download) {
+static int download_directory_start(struct map_download *download) {
     download->http=map_binfile_http_range(download->m, download->zip64_eoc->zip64eofst, download->zip64_eoc->zip64ecsz);
     if (!download->http)
         return 0;
     return 1;
 }
 
-static int
-download_directory_do(struct map_download *download) {
+static int download_directory_do(struct map_download *download) {
     int count;
 
     for (count = 0 ; count < 100 ; count++) {
@@ -1213,14 +1174,12 @@ download_directory_do(struct map_download *download) {
     return 1;
 }
 
-static int
-download_directory_finish(struct map_download *download) {
+static int download_directory_finish(struct map_download *download) {
     download->http=NULL;
     return 1;
 }
 
-static int
-download_initial_finish(struct map_download *download) {
+static int download_initial_finish(struct map_download *download) {
     download->zip64_eoc->zip64eofst=download->cd1offset;
     download->zip64_eocl->zip64lofst=download->offset;
     download->zip_eoc->zipeofst=download->cd1offset;
@@ -1237,8 +1196,7 @@ download_initial_finish(struct map_download *download) {
     return 1;
 }
 
-static void
-push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length)
+static void push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length)
 
 {
     struct tile t;
@@ -1264,9 +1222,9 @@ push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, i
 }
 
 
-static struct zip_cd *
-download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length,
-         int async) {
+static struct zip_cd *download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset,
+                               int length,
+                               int async) {
     struct map_download *download;
 
     if(!m->download_enabled)
@@ -1403,8 +1361,7 @@ download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zi
     }
 }
 
-static int
-push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length, int async) {
+static int push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length, int async) {
     struct map_priv *m=mr->m;
     struct file *f=m->fi;
     long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
@@ -1420,8 +1377,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length,
     return 0;
 }
 
-static struct map_rect_priv *
-map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr;
 
     binfile_check_version(map);
@@ -1439,8 +1395,7 @@ map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel) {
     return mr;
 }
 
-static void
-tile_bbox(char *tile, int len, struct coord_rect *r) {
+static void tile_bbox(char *tile, int len, struct coord_rect *r) {
     struct coord c;
     int overlap=1;
     int xo,yo;
@@ -1479,8 +1434,7 @@ tile_bbox(char *tile, int len, struct coord_rect *r) {
     }
 }
 
-static int
-map_download_selection_check(struct zip_cd *cd, struct map_selection *sel) {
+static int map_download_selection_check(struct zip_cd *cd, struct map_selection *sel) {
     struct coord_rect cd_rect;
     if (cd->zipcunc)
         return 0;
@@ -1493,8 +1447,7 @@ map_download_selection_check(struct zip_cd *cd, struct map_selection *sel) {
     return 0;
 }
 
-static void
-map_download_selection(struct map_priv *m, struct map_rect_priv *mr, struct map_selection *sel) {
+static void map_download_selection(struct map_priv *m, struct map_rect_priv *mr, struct map_selection *sel) {
     int i;
     struct zip_cd *cd;
     for (i = 0 ; i < m->zip_members ; i++) {
@@ -1505,8 +1458,7 @@ map_download_selection(struct map_priv *m, struct map_rect_priv *mr, struct map_
     }
 }
 
-static struct map_rect_priv *
-map_rect_new_binfile(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_rect_new_binfile(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr=map_rect_new_binfile_int(map, sel);
     struct tile t;
     dbg(lvl_debug,"zip_members=%d", map->zip_members);
@@ -1533,8 +1485,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel) {
     return mr;
 }
 
-static void
-write_changes_do(gpointer key, gpointer value, gpointer user_data) {
+static void write_changes_do(gpointer key, gpointer value, gpointer user_data) {
     struct binfile_hash_entry *entry=key;
     FILE *out=user_data;
     if (entry->flags) {
@@ -1544,8 +1495,7 @@ write_changes_do(gpointer key, gpointer value, gpointer user_data) {
     }
 }
 
-static void
-write_changes(struct map_priv *m) {
+static void write_changes(struct map_priv *m) {
     FILE *changes;
     char *changes_file;
     if (!m->changes)
@@ -1557,8 +1507,7 @@ write_changes(struct map_priv *m) {
     g_free(changes_file);
 }
 
-static void
-load_changes(struct map_priv *m) {
+static void load_changes(struct map_priv *m) {
     FILE *changes;
     char *changes_file;
     struct binfile_hash_entry entry,*e;
@@ -1585,8 +1534,7 @@ load_changes(struct map_priv *m) {
 }
 
 
-static void
-map_rect_destroy_binfile(struct map_rect_priv *mr) {
+static void map_rect_destroy_binfile(struct map_rect_priv *mr) {
     write_changes(mr->m);
     while (pop_tile(mr));
 #ifdef DEBUG_SIZE
@@ -1599,8 +1547,7 @@ map_rect_destroy_binfile(struct map_rect_priv *mr) {
     g_free(mr);
 }
 
-static void
-setup_pos(struct map_rect_priv *mr) {
+static void setup_pos(struct map_rect_priv *mr) {
     int size,coord_size;
     struct tile *t=mr->t;
     size=le32_to_cpu(t->pos[0]);
@@ -1618,8 +1565,7 @@ setup_pos(struct map_rect_priv *mr) {
     t->pos_attr_start=t->pos_coord_start+coord_size;
 }
 
-static int
-selection_contains(struct map_selection *sel, struct coord_rect *r, struct range *mima) {
+static int selection_contains(struct map_selection *sel, struct coord_rect *r, struct range *mima) {
     int order;
     if (! sel)
         return 1;
@@ -1637,8 +1583,7 @@ selection_contains(struct map_selection *sel, struct coord_rect *r, struct range
     return 0;
 }
 
-static void
-map_parse_country_binfile(struct map_rect_priv *mr) {
+static void map_parse_country_binfile(struct map_rect_priv *mr) {
     struct attr at;
 
     if (!binfile_attr_get(mr->item.priv_data, attr_country_id, &at))
@@ -1672,8 +1617,7 @@ map_parse_country_binfile(struct map_rect_priv *mr) {
     push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 }
 
-static int
-map_parse_submap(struct map_rect_priv *mr, int async) {
+static int map_parse_submap(struct map_rect_priv *mr, int async) {
     struct coord_rect r;
     struct coord c[2];
     struct attr at;
@@ -1700,8 +1644,7 @@ map_parse_submap(struct map_rect_priv *mr, int async) {
     return push_zipfile_tile(mr, at.u.num, 0, 0, async);
 }
 
-static int
-push_modified_item(struct map_rect_priv *mr) {
+static int push_modified_item(struct map_rect_priv *mr) {
     struct item_id id;
     struct binfile_hash_entry *entry;
     id.id_hi=mr->item.id_hi;
@@ -1719,8 +1662,7 @@ push_modified_item(struct map_rect_priv *mr) {
     return 0;
 }
 
-static struct item *
-map_rect_get_item_binfile(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_binfile(struct map_rect_priv *mr) {
     struct tile *t;
     struct map_priv *m=mr->m;
     if (m->download) {
@@ -1770,8 +1712,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr) {
     }
 }
 
-static struct item *
-map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo) {
     struct tile *t;
     if (mr->m->eoc) {
         while (pop_tile(mr));
@@ -1789,8 +1730,7 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo) {
     return &mr->item;
 }
 
-static int
-binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_priv **ret) {
+static int binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_priv **ret) {
     struct attr zipfile_ref;
     int *data;
 
@@ -1819,9 +1759,9 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
     return 0;
 }
 
-static struct map_rect_priv *
-binmap_search_street_by_place(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel,
-                              GList **boundaries) {
+static struct map_rect_priv *binmap_search_street_by_place(struct map_priv *map, struct item *town, struct coord *c,
+        struct map_selection *sel,
+        GList **boundaries) {
     struct attr town_name, poly_town_name;
     struct map_rect_priv *map_rec2;
     struct item *place;
@@ -1861,8 +1801,7 @@ binmap_search_street_by_place(struct map_priv *map, struct item *town, struct co
     return NULL;
 }
 
-static int
-binmap_get_estimated_town_size(struct item *town) {
+static int binmap_get_estimated_town_size(struct item *town) {
     int size = 10000;
     switch (town->type) {
     case type_town_label_1e5:
@@ -1911,8 +1850,8 @@ binmap_get_estimated_town_size(struct item *town) {
     return size;
 }
 
-static struct map_rect_priv *
-binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel) {
+static struct map_rect_priv *binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct coord *c,
+        struct map_selection *sel) {
     int size = binmap_get_estimated_town_size(town);
 
     sel->u.c_rect.lu.x = c->x-size;
@@ -1922,8 +1861,8 @@ binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct
     return map_rect_new_binfile(map, sel);
 }
 
-static struct map_rect_priv *
-binmap_search_housenumber_by_estimate(struct map_priv *map, struct coord *c, struct map_selection *sel) {
+static struct map_rect_priv *binmap_search_housenumber_by_estimate(struct map_priv *map, struct coord *c,
+        struct map_selection *sel) {
     int size = 400;
     sel->u.c_rect.lu.x = c->x-size;
     sel->u.c_rect.lu.y = c->y+size;
@@ -1937,8 +1876,7 @@ binmap_search_housenumber_by_estimate(struct map_priv *map, struct coord *c, str
 }
 
 
-static int
-binmap_get_estimated_boundaries (struct item *town, GList **boundaries) {
+static int binmap_get_estimated_boundaries (struct item *town, GList **boundaries) {
     int size = binmap_get_estimated_town_size(town);
     struct coord tc;
 
@@ -1966,8 +1904,8 @@ binmap_get_estimated_boundaries (struct item *town, GList **boundaries) {
     return 0;
 }
 
-static struct map_search_priv *
-binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial) {
+static struct map_search_priv *binmap_search_new(struct map_priv *map, struct item *item, struct attr *search,
+        int partial) {
     struct map_rect_priv *map_rec;
     struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
     struct item *town;
@@ -2087,14 +2025,12 @@ struct duplicate {
     char str[0];
 };
 
-static guint
-duplicate_hash(gconstpointer key) {
+static guint duplicate_hash(gconstpointer key) {
     const struct duplicate *d=key;
     return d->c.x^d->c.y^g_str_hash(d->str);
 }
 
-static gboolean
-duplicate_equal(gconstpointer a, gconstpointer b) {
+static gboolean duplicate_equal(gconstpointer a, gconstpointer b) {
     const struct duplicate *da=a;
     const struct duplicate *db=b;
     return (da->c.x == db->c.x && da->c.y == db->c.y && g_str_equal(da->str,db->str));
@@ -2109,8 +2045,8 @@ duplicate_equal(gconstpointer a, gconstpointer b) {
  * returns - pointer to new struct duplicate, if this item is not already exist in hash
  *         - NULL if this item already exists in duplicate hash or doesnt have an attr_type attr;
  */
-static struct duplicate*
-duplicate_test(struct map_search_priv *msp, struct item *item, enum attr_type attr_type, enum attr_type attr_type2) {
+static struct duplicate* duplicate_test(struct map_search_priv *msp, struct item *item, enum attr_type attr_type,
+                                        enum attr_type attr_type2) {
     struct attr attr;
     struct attr attr2;
     int len;
@@ -2152,8 +2088,7 @@ duplicate_test(struct map_search_priv *msp, struct item *item, enum attr_type at
  * @param msp pointer to private map search data
  * @param duplicate Duplicate info to insert
  */
-static void
-duplicate_insert(struct map_search_priv *msp, struct duplicate *d) {
+static void duplicate_insert(struct map_search_priv *msp, struct duplicate *d) {
     g_hash_table_insert(msp->search_results, d, GINT_TO_POINTER(1));
 }
 
@@ -2166,8 +2101,8 @@ duplicate_insert(struct map_search_priv *msp, struct duplicate *d) {
  * @returns 0 if item is not a duplicate
  * 	    1 if item is duplicate or doesn't have required attr_type attribute
  */
-static int
-duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type, enum attr_type attr_type2) {
+static int duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type,
+                     enum attr_type attr_type2) {
     struct duplicate *d=duplicate_test(msp, item, attr_type, attr_type2);
     if(!d)
         return 1;
@@ -2175,8 +2110,7 @@ duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_ty
     return 0;
 }
 
-static int
-item_inside_poly_list(struct item *it, GList *l) {
+static int item_inside_poly_list(struct item *it, GList *l) {
 
     while(l) {
         struct geom_poly_segment *p=l->data;
@@ -2208,8 +2142,7 @@ item_inside_poly_list(struct item *it, GList *l) {
     return 0;
 }
 
-static struct item *
-binmap_search_get_item(struct map_search_priv *map_search) {
+static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
     struct item* it;
     struct attr at;
     enum linguistics_cmp_mode mode=(map_search->partial?linguistics_cmp_partial:0);
@@ -2370,8 +2303,7 @@ binmap_search_get_item(struct map_search_priv *map_search) {
 }
 
 
-static void
-binmap_search_destroy(struct map_search_priv *ms) {
+static void binmap_search_destroy(struct map_search_priv *ms) {
     if (ms->search_results)
         g_hash_table_destroy(ms->search_results);
     if(ATTR_IS_STRING(ms->search.type))
@@ -2389,8 +2321,7 @@ binmap_search_destroy(struct map_search_priv *ms) {
     g_free(ms);
 }
 
-static int
-binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr) {
+static int binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr) {
     attr->type=type;
     switch (type) {
     case attr_map_release:
@@ -2410,8 +2341,7 @@ binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr) {
     return 0;
 }
 
-static int
-binmap_set_attr(struct map_priv *map, struct attr *attr) {
+static int binmap_set_attr(struct map_priv *map, struct attr *attr) {
     switch (attr->type) {
     case attr_update:
         map->download_enabled = attr->u.num;
@@ -2438,8 +2368,7 @@ static struct map_methods map_methods_binfile = {
     binmap_set_attr,
 };
 
-static int
-binfile_get_index(struct map_priv *m) {
+static int binfile_get_index(struct map_priv *m) {
     int len;
     int cde_index_size;
     int offset;
@@ -2479,8 +2408,7 @@ binfile_get_index(struct map_priv *m) {
     return 1;
 }
 
-static int
-map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap) {
+static int map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap) {
     struct zip_cd *first_cd;
     int i;
     if (!(m->eoc=binfile_read_eoc(m->fi))) {
@@ -2522,8 +2450,7 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap) {
 
 
 #if 0
-static int
-map_binfile_download_initial(struct map_priv *m) {
+static int map_binfile_download_initial(struct map_priv *m) {
     struct attr readwrite= {attr_readwrite,{(void *)1}};
     struct attr create= {attr_create,{(void *)1}};
     struct attr *attrs[4];
@@ -2601,8 +2528,7 @@ map_binfile_download_initial(struct map_priv *m) {
 }
 #endif
 
-static int
-map_binfile_open(struct map_priv *m) {
+static int map_binfile_open(struct map_priv *m) {
     int *magic;
     struct map_rect_priv *mr;
     struct item *item;
@@ -2671,8 +2597,7 @@ map_binfile_open(struct map_priv *m) {
     return 1;
 }
 
-static void
-map_binfile_close(struct map_priv *m) {
+static void map_binfile_close(struct map_priv *m) {
     int i;
     file_data_free(m->fi, (unsigned char *)m->index_cd);
     file_data_free(m->fi, (unsigned char *)m->eoc);
@@ -2687,8 +2612,7 @@ map_binfile_close(struct map_priv *m) {
         file_destroy(m->fi);
 }
 
-static void
-map_binfile_destroy(struct map_priv *m) {
+static void map_binfile_destroy(struct map_priv *m) {
     g_free(m->filename);
     g_free(m->url);
     g_free(m->progress);
@@ -2696,8 +2620,7 @@ map_binfile_destroy(struct map_priv *m) {
 }
 
 
-static void
-binfile_check_version(struct map_priv *m) {
+static void binfile_check_version(struct map_priv *m) {
     int version=-1;
     if (!m->check_version)
         return;
@@ -2711,8 +2634,7 @@ binfile_check_version(struct map_priv *m) {
 }
 
 
-static struct map_priv *
-map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
     struct attr *data=attr_search(attrs, NULL, attr_data);
     struct attr *check_version,*flags,*url,*download_enabled;
@@ -2753,8 +2675,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_l
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"binfile: plugin_init");
     if (sizeof(struct zip_cd) != 46) {
         dbg(lvl_error,"error: sizeof(struct zip_cd)=%zu",sizeof(struct zip_cd));

@@ -215,8 +215,7 @@ static void event_sdl_watch_stopthread() {
     }
 }
 
-static struct event_watch *
-event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug, "fd(%d) cond(%x) cb(%x)", fd, cond, cb);
 
     event_sdl_watch_stopthread();
@@ -267,8 +266,7 @@ static void event_sdl_remove_watch(struct event_watch *ew) {
 
 /* Timeout */
 
-static struct event_timeout *
-event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout * ret = g_new0(struct event_timeout, 1);
     if (!ret)
         return ret;
@@ -307,8 +305,7 @@ static gint sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb) {
     return 0;
 }
 
-static struct event_idle *
-event_sdl_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_sdl_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug, "add idle priority(%d) cb(%p)", priority, cb);
 
     struct idle_task *task = g_new0(struct idle_task, 1);
@@ -368,8 +365,7 @@ static struct event_methods event_sdl_methods = { event_sdl_main_loop_run,
            event_sdl_remove_idle, event_sdl_call_callback,
 };
 
-static struct event_priv *
-event_sdl_new(struct event_methods* methods) {
+static struct event_priv *event_sdl_new(struct event_methods* methods) {
     idle_tasks = g_ptr_array_new();
     *methods = event_sdl_methods;
     return NULL;

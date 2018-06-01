@@ -27,8 +27,7 @@ typedef struct {
     struct attr *attr;
 } attrObject;
 
-static PyObject *
-attr_func(attrObject *self, PyObject *args) {
+static PyObject *attr_func(attrObject *self, PyObject *args) {
     const char *file;
     int ret;
     if (!PyArg_ParseTuple(args, "s", &file))
@@ -45,13 +44,11 @@ static PyMethodDef attr_methods[] = {
 };
 
 
-static PyObject *
-attr_getattr_py(PyObject *self, char *name) {
+static PyObject *attr_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(attr_methods, self, name);
 }
 
-static void
-attr_destroy_py(attrObject *self) {
+static void attr_destroy_py(attrObject *self) {
     if (! self->ref)
         attr_free(self->attr);
 }
@@ -69,8 +66,7 @@ attr_py_get(PyObject *self) {
     return ((attrObject *)self)->attr;
 }
 
-PyObject *
-attr_new_py(PyObject *self, PyObject *args) {
+PyObject *attr_new_py(PyObject *self, PyObject *args) {
     attrObject *ret;
     const char *name,*value;
     if (!PyArg_ParseTuple(args, "ss", &name, &value))
@@ -81,8 +77,7 @@ attr_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-PyObject *
-attr_new_py_ref(struct attr *attr) {
+PyObject *attr_new_py_ref(struct attr *attr) {
     attrObject *ret;
 
     ret=PyObject_NEW(attrObject, &attr_Type);

@@ -46,8 +46,7 @@ int shift=5;
 int subdiv_next=0x10;
 
 
-static void *
-file_read(struct file *f, int offset, int size) {
+static void *file_read(struct file *f, int offset, int size) {
     void *ptr;
     int ret;
 
@@ -63,8 +62,7 @@ file_read(struct file *f, int offset, int size) {
     return ptr;
 }
 
-static void
-file_free(void *ptr) {
+static void file_free(void *ptr) {
     free(ptr);
 }
 
@@ -73,8 +71,7 @@ struct offset_len {
     int length;
 } __attribute ((packed));
 
-static void
-dump_offset_len(struct offset_len *off_len) {
+static void dump_offset_len(struct offset_len *off_len) {
     printf("offset: 0x%x(%d) length 0x%x(%d)\n", off_len->offset, off_len->offset, off_len->length, off_len->length);
 }
 
@@ -120,15 +117,13 @@ struct img_header {
     char unknown11[480];
 } __attribute__((packed));
 
-static void
-dump_ts(struct timestamp *ts) {
+static void dump_ts(struct timestamp *ts) {
     printf("%d-%02d-%02d %02d:%02d:%02d\n", ts->creation_year, ts->creation_month, ts->creation_day, ts->creation_hour,
            ts->creation_minute, ts->creation_second);
 }
 
 #if 0
-static void
-dump_img(struct img_header *img_hdr) {
+static void dump_img(struct img_header *img_hdr) {
     printf("signature: '%s'\n", img_hdr->signature);
     printf("creation: ");
     dump_ts(&img_hdr->ts);
@@ -153,8 +148,7 @@ struct fat_block {
 } __attribute__((packed));
 
 #if 0
-static void
-dump_fat_block(struct fat_block *fat_blk) {
+static void dump_fat_block(struct fat_block *fat_blk) {
     int i=0;
     char name[9];
     char type[4];
@@ -186,8 +180,7 @@ struct file_header {
     struct timestamp ts;
 } __attribute__((packed));
 
-static void
-dump_file(struct file_header *fil_hdr) {
+static void dump_file(struct file_header *fil_hdr) {
     printf("header_len: %d\n", fil_hdr->header_len);
     printf("type: '%s'\n", fil_hdr->type);
     printf("unknown1: 0x%x(%d)\n", fil_hdr->unknown1, fil_hdr->unknown1);
@@ -203,8 +196,7 @@ struct region_header {
 } __attribute__((packed));
 
 #if 0
-static void
-dump_region(struct region_header *rgn_hdr) {
+static void dump_region(struct region_header *rgn_hdr) {
     dump_offset_len(&rgn_hdr->offset_len);
 }
 #endif
@@ -266,15 +258,13 @@ struct map_rect_priv {
 
 static int map_id;
 
-static int
-contains_coord(char *line) {
+static int contains_coord(char *line) {
     return g_ascii_isdigit(line[0]);
 }
 
 static int debug=1;
 
-static int
-get_tag(char *line, char *name, int *pos, char *ret) {
+static int get_tag(char *line, char *name, int *pos, char *ret) {
     int len,quoted;
     char *p,*e,*n;
 
@@ -323,26 +313,22 @@ get_tag(char *line, char *name, int *pos, char *ret) {
     return 0;
 }
 
-static void
-get_line(struct map_rect_priv *mr) {
+static void get_line(struct map_rect_priv *mr) {
     mr->pos=ftell(mr->f);
     fgets(mr->line, 256, mr->f);
 }
 
-static void
-map_destroy_garmin_img(struct map_priv *m) {
+static void map_destroy_garmin_img(struct map_priv *m) {
     if (debug)
         printf("map_destroy_garmin_img\n");
     g_free(m);
 }
 
-static char *
-map_charset_garmin_img(struct map_priv *m) {
+static char *map_charset_garmin_img(struct map_priv *m) {
     return "iso8859-1";
 }
 
-static enum projection
-map_projection_garmin_img(struct map_priv *m) {
+static enum projection map_projection_garmin_img(struct map_priv *m) {
     return projection_garmin;
 }
 
@@ -353,8 +339,7 @@ struct label_data_offset {
 } __attribute ((packed));
 
 #if 0
-static void
-dump_label_data_offset(struct label_data_offset *lbl_dat) {
+static void dump_label_data_offset(struct label_data_offset *lbl_dat) {
     dump_offset_len(&lbl_dat->offset_len);
     printf("multiplier 0x%x(%d)\n", lbl_dat->multiplier, lbl_dat->multiplier);
     printf("data 0x%x(%d)\n", lbl_dat->data, lbl_dat->data);
@@ -367,8 +352,7 @@ struct label_data {
     int zero;
 } __attribute ((packed));
 
-static void
-dump_label_data(struct label_data *lbl_dat) {
+static void dump_label_data(struct label_data *lbl_dat) {
     dump_offset_len(&lbl_dat->offset_len);
     printf("size 0x%x(%d)\n", lbl_dat->size, lbl_dat->size);
 }
@@ -388,8 +372,7 @@ struct tree_header {
     int mapid;
 };
 
-static void
-dump_tree_header(struct tree_header *tre_hdr) {
+static void dump_tree_header(struct tree_header *tre_hdr) {
     printf("tree_header:\n");
     dump_file(&tre_hdr->fil_hdr);
     printf("level: ");
@@ -430,8 +413,7 @@ struct label_header {
 } __attribute((packed));
 
 #if 0
-static void
-dump_label(struct label_header *lbl_hdr) {
+static void dump_label(struct label_header *lbl_hdr) {
     dump_file(&lbl_hdr->fil_hdr);
     printf("label:\n");
     dump_label_data_offset(&lbl_hdr->label);
@@ -467,21 +449,18 @@ struct triple {
     unsigned char data[3];
 } __attribute((packed));
 
-static unsigned int
-triple_u(struct triple *t) {
+static unsigned int triple_u(struct triple *t) {
     return t->data[0] | (t->data[1] << 8)  | (t->data[2] << 16);
 }
 
-static int
-triple(struct triple *t) {
+static int triple(struct triple *t) {
     int ret=t->data[0] | (t->data[1] << 8)  | (t->data[2] << 16);
     if (ret > 1<<23)
         ret=ret-(1<<24);
     return ret;
 }
 
-static void
-dump_triple_u(struct triple *t) {
+static void dump_triple_u(struct triple *t) {
     int val=triple_u(t);
     printf("0x%x(%d)\n", val, val);
 }
@@ -490,8 +469,7 @@ struct tcoord {
     struct triple lng,lat;
 } __attribute((packed));
 
-static void
-dump_tcoord(struct tcoord *t) {
+static void dump_tcoord(struct tcoord *t) {
     printf ("0x%x(%d),0x%x(%d)\n", triple_u(&t->lng), triple_u(&t->lng), triple_u(&t->lat), triple_u(&t->lat));
 }
 
@@ -501,8 +479,7 @@ struct level {
     unsigned short subdivisions;
 } __attribute((packed));
 
-static void
-dump_level(struct level *lvl) {
+static void dump_level(struct level *lvl) {
     printf("level:\n");
     printf("\tzoom 0x%x(%d)\n", lvl->zoom, lvl->zoom);
     printf("\tbits_per_coord 0x%x(%d)\n", lvl->bits_per_coord, lvl->bits_per_coord);
@@ -518,8 +495,7 @@ struct subdivision {
     unsigned short next;
 } __attribute((packed));
 
-static void
-dump_subdivision(struct subdivision *sub) {
+static void dump_subdivision(struct subdivision *sub) {
     printf("subdivision:\n");
     printf("\trgn_offset: ");
     dump_triple_u(&sub->rgn_offset);
@@ -541,8 +517,7 @@ struct rgn_point {
     unsigned char subtype;
 } __attribute((packed));
 
-static void
-dump_point(struct rgn_point *pnt) {
+static void dump_point(struct rgn_point *pnt) {
     printf("point:\n");
     printf("\tinfo 0x%x(%d)\n", pnt->info, pnt->info);
     printf("\tlbl_offset 0x%x(%d)\n", triple_u(&pnt->lbl_offset), triple_u(&pnt->lbl_offset));
@@ -569,8 +544,7 @@ struct rgn_poly {
     } __attribute((packed)) u;
 } __attribute((packed));
 
-static void
-dump_poly(struct rgn_poly *ply) {
+static void dump_poly(struct rgn_poly *ply) {
     printf("poly:\n");
     printf("\tinfo 0x%x(%d)\n", ply->info, ply->info);
     printf("\tlbl_offset 0x%x(%d)\n", triple_u(&ply->lbl_offset), triple_u(&ply->lbl_offset));
@@ -586,8 +560,7 @@ dump_poly(struct rgn_poly *ply) {
     printf("\tlen: 0x%x(%d)\n", sizeof(*ply), sizeof(*ply));
 }
 
-static void
-dump_hex(void *ptr, int len) {
+static void dump_hex(void *ptr, int len) {
     unsigned char *c=ptr;
     while (len--) {
         printf("%02x ", *c++);
@@ -595,8 +568,7 @@ dump_hex(void *ptr, int len) {
     printf("\n");
 }
 
-static void
-dump_hex_r(void *ptr, int len, int rec) {
+static void dump_hex_r(void *ptr, int len, int rec) {
     unsigned char *c=ptr;
     int l=rec;
     while (len--) {
@@ -610,8 +582,7 @@ dump_hex_r(void *ptr, int len, int rec) {
 }
 
 #if 0
-static void
-dump_label_offset(struct map_rect_priv *mr, int offset) {
+static void dump_label_offset(struct map_rect_priv *mr, int offset) {
     void *p;
     p=file_read(&mr->lbl, mr->lbl_hdr->label.offset_len.offset+offset, 128);
     printf("%s\n", (char *)p);
@@ -620,8 +591,7 @@ dump_label_offset(struct map_rect_priv *mr, int offset) {
 
 
 #if 0
-static void
-dump_region_item(struct subdivision *sub, struct file *rgn, struct map_rect_priv *mr) {
+static void dump_region_item(struct subdivision *sub, struct file *rgn, struct map_rect_priv *mr) {
     int offset,item_offset,i,j;
     unsigned short count=0;
     unsigned short *offsets[4];
@@ -697,8 +667,7 @@ dump_region_item(struct subdivision *sub, struct file *rgn, struct map_rect_priv
 
 #endif
 
-static void
-dump_levels(struct map_rect_priv *mr) {
+static void dump_levels(struct map_rect_priv *mr) {
     int i,offset;
     struct level *lvl;
 
@@ -711,8 +680,7 @@ dump_levels(struct map_rect_priv *mr) {
 }
 
 #if 0
-static void
-dump_tree(struct file *f, struct file *rgn, struct map_rect_priv *mr) {
+static void dump_tree(struct file *f, struct file *rgn, struct map_rect_priv *mr) {
     struct tree_header *tre_hdr;
     struct subdivision *sub;
     int i,offset;
@@ -737,8 +705,7 @@ dump_tree(struct file *f, struct file *rgn, struct map_rect_priv *mr) {
 #endif
 
 #if 0
-static void
-dump_labels(struct file *f) {
+static void dump_labels(struct file *f) {
     struct label_header *lbl_hdr;
 
     lbl_hdr=file_read(f, 0, sizeof(*lbl_hdr));
@@ -758,12 +725,10 @@ dump_labels(struct file *f) {
 }
 #endif
 
-static void
-garmin_img_coord_rewind(void *priv_data) {
+static void garmin_img_coord_rewind(void *priv_data) {
 }
 
-static void
-parse_line(struct map_rect_priv *mr) {
+static void parse_line(struct map_rect_priv *mr) {
     int pos=0;
     sscanf(mr->line,"%lf %c %lf %c %n",&mr->lat,&mr->lat_c,&mr->lng,&mr->lng_c,&pos);
     if (pos < strlen(mr->line)) {
@@ -771,8 +736,7 @@ parse_line(struct map_rect_priv *mr) {
     }
 }
 
-static int
-get_bits(struct map_rect_priv *mr, int bits) {
+static int get_bits(struct map_rect_priv *mr, int bits) {
     unsigned long ret;
     ret=L(*((unsigned long *)(mr->ply_data+mr->ply_bitpos/8)));
     ret >>= (mr->ply_bitpos & 7);
@@ -781,8 +745,7 @@ get_bits(struct map_rect_priv *mr, int bits) {
     return ret;
 }
 
-static int
-garmin_img_coord_get(void *priv_data, struct coord *c, int count) {
+static int garmin_img_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     struct subdivision *sub=(struct subdivision *)(mr->subdiv+mr->subdiv_pos);
     int ret=0;
@@ -896,18 +859,15 @@ garmin_img_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static char *
-get_label_offset(struct map_rect_priv *mr, int offset) {
+static char *get_label_offset(struct map_rect_priv *mr, int offset) {
     g_assert(offset < mr->lbl_hdr->label.offset_len.length);
     return file_read(&mr->lbl, mr->lbl_hdr->label.offset_len.offset+offset, 128);
 }
 
-static void
-garmin_img_attr_rewind(void *priv_data) {
+static void garmin_img_attr_rewind(void *priv_data) {
 }
 
-static int
-garmin_img_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int garmin_img_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     int debug=0;
 
@@ -949,8 +909,7 @@ static int rgn_next_type(struct map_rect_priv *mr) {
     return 1;
 }
 
-static int
-sub_next(struct map_rect_priv *mr, int next) {
+static int sub_next(struct map_rect_priv *mr, int next) {
     int i,offset,first=-1,last=-1,count=-1;
     int end;
     unsigned short *offsets;
@@ -1038,8 +997,8 @@ sub_next(struct map_rect_priv *mr, int next) {
 
 int item_count;
 
-static struct map_rect_priv *
-map_rect_new_garmin_img(struct map_priv *map, struct coord_rect *r, struct layer *layers, int limit) {
+static struct map_rect_priv *map_rect_new_garmin_img(struct map_priv *map, struct coord_rect *r, struct layer *layers,
+        int limit) {
     struct map_rect_priv *mr;
     struct img_header img;
 
@@ -1163,15 +1122,13 @@ map_rect_new_garmin_img(struct map_priv *map, struct coord_rect *r, struct layer
 }
 
 
-static void
-map_rect_destroy_garmin_img(struct map_rect_priv *mr) {
+static void map_rect_destroy_garmin_img(struct map_rect_priv *mr) {
     fclose(mr->f);
     g_free(mr);
 }
 
 
-static struct item *
-map_rect_get_item_garmin_img(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_garmin_img(struct map_rect_priv *mr) {
     char *p,type[256];
     int ptype;
     int debug=0;
@@ -1433,8 +1390,7 @@ map_rect_get_item_garmin_img(struct map_rect_priv *mr) {
     }
 }
 
-static struct item *
-map_rect_get_item_byid_garmin_img(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_rect_get_item_byid_garmin_img(struct map_rect_priv *mr, int id_hi, int id_lo) {
     fseek(mr->f, id_lo, SEEK_SET);
     get_line(mr);
     mr->item.id_hi=id_hi;
@@ -1453,8 +1409,7 @@ static struct map_methods map_methods_garmin_img = {
     map_rect_get_item_byid_garmin_img,
 };
 
-static struct map_priv *
-map_new_garmin_img(struct map_methods *meth, struct attr **attrs) {
+static struct map_priv *map_new_garmin_img(struct map_methods *meth, struct attr **attrs) {
     struct map_priv *m;
     struct attr *data=attr_search(attrs, NULL, attr_data);
     if (! data)
@@ -1467,8 +1422,7 @@ map_new_garmin_img(struct map_methods *meth, struct attr **attrs) {
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_map("garmin_img", map_new_garmin_img);
 }
 

@@ -107,9 +107,8 @@ struct compass {
  * @param[in,out] p An array of points to rotate
  * @param count The number of points stored inside @p p
  */
-static void
-transform_rotate(struct point *center, int angle, struct point *p,
-                 int count) {
+static void transform_rotate(struct point *center, int angle, struct point *p,
+                             int count) {
     int i, x, y;
     double dx, dy;
     for (i = 0; i < count; i++) {
@@ -131,9 +130,8 @@ transform_rotate(struct point *center, int angle, struct point *p,
  * @param[in,out] p An array of points to move
  * @param count The number of points stored inside @p p
  */
-static void
-transform_move(int dx, int dy, struct point *p,
-               int count) {
+static void transform_move(int dx, int dy, struct point *p,
+                           int count) {
     int i;
     for (i = 0; i < count; i++) {
         p->x += dx;
@@ -152,9 +150,9 @@ transform_move(int dx, int dy, struct point *p,
  * @param r The radius of the compass (around the center point @p p)
  * @param dir The direction the compass points to (0 being up, value is in degrees counter-clockwise)
  */
-static void
-draw_compass(struct graphics *gr, struct graphics_gc *gc_n, struct graphics_gc *gc_s, struct point *p, int r,
-             int dir) {
+static void draw_compass(struct graphics *gr, struct graphics_gc *gc_n, struct graphics_gc *gc_s, struct point *p,
+                         int r,
+                         int dir) {
     struct point ph[3];
     int wh[3] = { 1, 1, 1 };	/* Width of each line of the polygon to draw */
     int l = r * 0.25;
@@ -187,9 +185,8 @@ draw_compass(struct graphics *gr, struct graphics_gc *gc_n, struct graphics_gc *
  * @param r The radius of the compass (around the center point @p p)
  * @param dir The direction the arrow points to (0 being up, value is in degrees counter-clockwise)
  */
-static void
-draw_handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
-            int dir) {
+static void draw_handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
+                        int dir) {
     struct point ph[6];
     int l = r * 0.4;
     int s = l * 0.4;
@@ -245,8 +242,7 @@ draw_handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
  * * @param sep separator character to be inserted between distance value and unit
  * * @returns a pointer to a string containing the formatted distance
  * */
-static char *
-format_distance(double distance, char *sep, int imperial) {
+static char *format_distance(double distance, char *sep, int imperial) {
     if (imperial) {
         distance *= FEET_PER_METER;
         if(distance <= 500) {
@@ -277,8 +273,7 @@ format_distance(double distance, char *sep, int imperial) {
  * * @param days days
  * * @returns a pointer to a string containing the formatted time
  * */
-static char *
-format_time(struct tm *tm, int days) {
+static char *format_time(struct tm *tm, int days) {
     if (days)
         return g_strdup_printf("%d+%02d:%02d", days, tm->tm_hour, tm->tm_min);
     else
@@ -292,8 +287,7 @@ format_time(struct tm *tm, int days) {
  * * @param sep separator character to be inserted between speed value and unit
  * * @returns a pointer to a string containing the formatted speed
  * */
-static char *
-format_speed(double speed, char *sep, char *format, int imperial) {
+static char *format_speed(double speed, char *sep, char *format, int imperial) {
     char *unit="km/h";
     if (imperial) {
         speed = speed*1000*FEET_PER_METER/FEET_PER_MILE;
@@ -310,8 +304,7 @@ format_speed(double speed, char *sep, char *format, int imperial) {
     return g_strdup("");
 }
 
-static char *
-format_float_0(double num) {
+static char *format_float_0(double num) {
     return g_strdup_printf("%.0f", num);
 }
 
@@ -440,8 +433,7 @@ static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav,
     graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
-static void
-osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav) {
     struct color red_color= {0xffff,0x0000,0x0000,0xffff};
     struct route_guard *this = (struct route_guard *)opc->data;
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -500,15 +492,13 @@ osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav) {
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_draw), attr_position_coord_geo, opc));
 }
 
-static void
-osd_route_guard_destroy(struct osd_priv_common *opc) {
+static void osd_route_guard_destroy(struct osd_priv_common *opc) {
     struct route_guard *this = (struct route_guard *)opc->data;
     g_free(this->coords);
 }
 
-static struct osd_priv *
-osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
-                    struct attr **attrs) {
+static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     struct route_guard *this = g_new0(struct route_guard, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -593,8 +583,8 @@ struct odometer {
     double acceleration;
 };
 
-static void
-osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         GList* list = odometer_list;
         while(list) {
@@ -607,8 +597,7 @@ osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, str
     }
 }
 
-static char*
-str_replace(char*output, char*input, char*pattern, char*replacement) {
+static char* str_replace(char*output, char*input, char*pattern, char*replacement) {
     char *pos;
     char *pos2;
     if (!output || !input || !pattern || !replacement) {
@@ -936,8 +925,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 }
 
 
-static void
-osd_odometer_reset(struct osd_priv_common *opc, int flags) {
+static void osd_odometer_reset(struct osd_priv_common *opc, int flags) {
     struct odometer *this = (struct odometer *)opc->data;
 
     if(!this->bDisableReset || (flags & 1)) {
@@ -952,8 +940,8 @@ osd_odometer_reset(struct osd_priv_common *opc, int flags) {
     }
 }
 
-static void
-osd_odometer_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p) {
+static void osd_odometer_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button,
+                               struct point *p) {
     struct odometer *this = (struct odometer *)opc->data;
 
     struct point bp = opc->osd_item.p;
@@ -994,8 +982,7 @@ osd_odometer_click(struct osd_priv_common *opc, struct navit *nav, int pressed, 
 }
 
 
-static int
-osd_odometer_save(struct navit* nav) {
+static int osd_odometer_save(struct navit* nav) {
     //save odometers that are persistent(ie have name)
     FILE*f;
     GList* list = odometer_list;
@@ -1018,8 +1005,7 @@ osd_odometer_save(struct navit* nav) {
 }
 
 
-static void
-osd_odometer_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_odometer_init(struct osd_priv_common *opc, struct navit *nav) {
     struct odometer *this = (struct odometer *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -1048,17 +1034,15 @@ osd_odometer_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_odometer_draw(opc, nav, NULL);
 }
 
-static void
-osd_odometer_destroy(struct navit* nav) {
+static void osd_odometer_destroy(struct navit* nav) {
     if(!odometers_saved) {
         odometers_saved = 1;
         osd_odometer_save(NULL);
     }
 }
 
-static struct osd_priv *
-osd_odometer_new(struct navit *nav, struct osd_methods *meth,
-                 struct attr **attrs) {
+static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     FILE* f;
     char* fn;
 
@@ -1178,9 +1162,8 @@ struct cmd_interface {
     int bReserved;
 };
 
-static void
-osd_cmd_interface_draw(struct osd_priv_common *opc, struct navit *nav,
-                       struct vehicle *v) {
+static void osd_cmd_interface_draw(struct osd_priv_common *opc, struct navit *nav,
+                                   struct vehicle *v) {
     struct cmd_interface *this = (struct cmd_interface *)opc->data;
 
     struct point p;
@@ -1217,8 +1200,7 @@ osd_cmd_interface_draw(struct osd_priv_common *opc, struct navit *nav,
 
 
 
-static void
-osd_cmd_interface_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_cmd_interface_init(struct osd_priv_common *opc, struct navit *nav) {
     struct cmd_interface *this = (struct cmd_interface *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -1239,8 +1221,7 @@ osd_cmd_interface_init(struct osd_priv_common *opc, struct navit *nav) {
     this->text = g_strdup("");
 }
 
-static int
-osd_cmd_interface_set_attr(struct osd_priv_common *opc, struct attr* attr) {
+static int osd_cmd_interface_set_attr(struct osd_priv_common *opc, struct attr* attr) {
     struct cmd_interface *this_ = (struct cmd_interface *)opc->data;
 
     if(NULL==attr || NULL==this_) {
@@ -1276,9 +1257,8 @@ osd_cmd_interface_set_attr(struct osd_priv_common *opc, struct attr* attr) {
 }
 
 
-static struct osd_priv *
-osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
-                      struct attr **attrs) {
+static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     struct cmd_interface *this = g_new0(struct cmd_interface, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -1330,9 +1310,8 @@ struct stopwatch {
     time_t last_click_time;     //time of last click (for double click handling)
 };
 
-static void
-osd_stopwatch_draw(struct osd_priv_common *opc, struct navit *nav,
-                   struct vehicle *v) {
+static void osd_stopwatch_draw(struct osd_priv_common *opc, struct navit *nav,
+                               struct vehicle *v) {
     struct stopwatch *this = (struct stopwatch *)opc->data;
 
     struct graphics_gc *curr_color;
@@ -1369,8 +1348,8 @@ osd_stopwatch_draw(struct osd_priv_common *opc, struct navit *nav,
 }
 
 
-static void
-osd_stopwatch_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p) {
+static void osd_stopwatch_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button,
+                                struct point *p) {
     struct stopwatch *this = (struct stopwatch *)opc->data;
 
     struct point bp = opc->osd_item.p;
@@ -1409,8 +1388,7 @@ osd_stopwatch_click(struct osd_priv_common *opc, struct navit *nav, int pressed,
 }
 
 
-static void
-osd_stopwatch_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_stopwatch_init(struct osd_priv_common *opc, struct navit *nav) {
     struct stopwatch *this = (struct stopwatch *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -1433,9 +1411,8 @@ osd_stopwatch_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_stopwatch_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
-                  struct attr **attrs) {
+static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     struct stopwatch *this = g_new0(struct stopwatch, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -1478,9 +1455,8 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
  * @param nav The global navit object
  * @param v The current vehicle
  */
-static void
-osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
-                 struct vehicle *v) {
+static void osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
+                             struct vehicle *v) {
     struct compass *this = (struct compass *)opc->data;
 
     struct point p,bbox[4];
@@ -1529,8 +1505,7 @@ osd_compass_draw(struct osd_priv_common *opc, struct navit *nav,
 
 
 
-static void
-osd_compass_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_compass_init(struct osd_priv_common *opc, struct navit *nav) {
     struct compass *this = (struct compass *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -1555,9 +1530,8 @@ osd_compass_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_compass_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_compass_new(struct navit *nav, struct osd_methods *meth,
-                struct attr **attrs) {
+static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *meth,
+                                        struct attr **attrs) {
     struct compass *this = g_new0(struct compass, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -1612,16 +1586,14 @@ struct osd_button {
  * @param opc The OSD item
  * @param img The image displayed by the item
  */
-static void
-osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img) {
+static void osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img) {
     if(opc->osd_item.rel_w==ATTR_REL_RELSHIFT)
         opc->osd_item.w=img->width;
     if(opc->osd_item.rel_h==ATTR_REL_RELSHIFT)
         opc->osd_item.h=img->height;
 }
 
-static void
-osd_button_draw(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_button_draw(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_button *this = (struct osd_button *)opc->data;
 
     // FIXME: Do we need this check?
@@ -1663,8 +1635,7 @@ osd_button_draw(struct osd_priv_common *opc, struct navit *nav) {
     }
 }
 
-static void
-osd_button_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_button_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_button *this = (struct osd_button *)opc->data;
 
     struct graphics *gra = navit_get_graphics(nav);
@@ -1710,15 +1681,13 @@ osd_button_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_button_draw(opc,nav);
 }
 
-static char *
-osd_button_icon_path(struct osd_button *this_, char *src) {
+static char *osd_button_icon_path(struct osd_button *this_, char *src) {
     if (!this_->src_dir)
         return graphics_icon_path(src);
     return g_strdup_printf("%s%s%s", this_->src_dir, G_DIR_SEPARATOR_S, src);
 }
 
-int
-osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr) {
+int osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr) {
     struct osd_button *this_ = (struct osd_button *)opc->data;
 
     if(NULL==attr || NULL==this_) {
@@ -1753,9 +1722,8 @@ osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr) {
 
 
 
-static struct osd_priv *
-osd_button_new(struct navit *nav, struct osd_methods *meth,
-               struct attr **attrs) {
+static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *meth,
+                                       struct attr **attrs) {
     struct osd_button *this = g_new0(struct osd_button, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -1808,8 +1776,7 @@ error:
     return NULL;
 }
 
-static void
-osd_image_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_image_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_button *this = (struct osd_button *)opc->data;
 
     struct graphics *gra = navit_get_graphics(nav);
@@ -1840,9 +1807,8 @@ osd_image_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_button_draw(opc,nav);
 }
 
-static struct osd_priv *
-osd_image_new(struct navit *nav, struct osd_methods *meth,
-              struct attr **attrs) {
+static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *meth,
+                                      struct attr **attrs) {
     struct osd_button *this = g_new0(struct osd_button, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -2083,9 +2049,8 @@ struct nav_next_turn {
     int level;
 };
 
-static void
-osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
-                       struct vehicle *v) {
+static void osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
+                                   struct vehicle *v) {
     struct nav_next_turn *this = (struct nav_next_turn *)opc->data;
 
     struct point p;
@@ -2167,17 +2132,15 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
     }
 }
 
-static void
-osd_nav_next_turn_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_nav_next_turn_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_draw), attr_position_coord_geo, opc));
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
     osd_nav_next_turn_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
-                      struct attr **attrs) {
+static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     struct nav_next_turn *this = g_new0(struct nav_next_turn, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -2235,8 +2198,7 @@ struct nav_toggle_announcer {
     int icon_h, icon_w, active, last_state;
 };
 
-static void
-osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
+static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct nav_toggle_announcer *this = (struct nav_toggle_announcer *)opc->data;
 
     struct point p;
@@ -2292,8 +2254,7 @@ osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, 
     }
 }
 
-static void
-osd_nav_toggle_announcer_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_nav_toggle_announcer_init(struct osd_priv_common *opc, struct navit *nav) {
     struct nav_toggle_announcer *this = (struct nav_toggle_announcer *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -2303,8 +2264,7 @@ osd_nav_toggle_announcer_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_nav_toggle_announcer_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct nav_toggle_announcer *this = g_new0(struct nav_toggle_announcer, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -2369,16 +2329,14 @@ struct osd_speed_cam {
     char *text;                 //text of label attribute for this osd
 };
 
-static double
-angle_diff(int firstAngle,int secondAngle) {
+static double angle_diff(int firstAngle,int secondAngle) {
     double difference = secondAngle - firstAngle;
     while (difference < -180) difference += 360;
     while (difference > 180) difference -= 360;
     return difference;
 }
 
-static void
-osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
+static void osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_speed_cam *this_ = (struct osd_speed_cam *)opc->data;
 
     struct attr position_attr,vehicle_attr,imperial_attr;
@@ -2558,8 +2516,7 @@ osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit, struct vehi
     }
 }
 
-static void
-osd_speed_cam_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_speed_cam_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_speed_cam *this = (struct osd_speed_cam *)opc->data;
 
     struct color red_color= {0xffff,0x0000,0x0000,0xffff};
@@ -2584,8 +2541,7 @@ osd_speed_cam_init(struct osd_priv_common *opc, struct navit *nav) {
 
 }
 
-static struct osd_priv *
-osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
 
     struct color default_color= {0xffff,0xa5a5,0x0000,0xffff};
 
@@ -2653,8 +2609,7 @@ struct osd_speed_warner {
     struct callback *click_cb;
 };
 
-static void
-osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
+static void osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
     struct point p,bbox[4];
@@ -2760,8 +2715,8 @@ osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct v
     graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
-static void
-osd_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p) {
+static void osd_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button,
+                                   struct point *p) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
     struct point bp = opc->osd_item.p;
@@ -2781,8 +2736,7 @@ osd_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int press
 }
 
 
-static void
-osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
     struct color red_color= {0xffff,0,0,0xffff};
@@ -2846,8 +2800,7 @@ osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_speed_warner_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct osd_speed_warner *this=g_new0(struct osd_speed_warner, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -2930,8 +2883,7 @@ struct osd_text {
  * @param imperial True to convert values to imperial, false to return metric values
  * @returns The formatted value
  */
-static char *
-osd_text_format_attr(struct attr *attr, char *format, int imperial) {
+static char *osd_text_format_attr(struct attr *attr, char *format, int imperial) {
     struct tm tm, text_tm, text_tm0;
     time_t textt;
     int days=0;
@@ -3065,8 +3017,7 @@ osd_text_format_attr(struct attr *attr, char *format, int imperial) {
  * fails (index with missing closed bracket or passing a null pointer as index argument when an index
  * was encountered), the return value is NULL
  */
-static char *
-osd_text_split(char *in, char **index) {
+static char *osd_text_split(char *in, char **index) {
     char *pos;
     int len;
     if (index)
@@ -3097,8 +3048,7 @@ osd_text_split(char *in, char **index) {
     return NULL;
 }
 
-static void
-osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
+static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_text *this = (struct osd_text *)opc->data;
     struct point p, p2[4];
     char *str,*last,*next,*value,*absbegin;
@@ -3330,8 +3280,7 @@ osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *
  * element of a new list
  * @returns The new {@code osd_text_item}
  */
-static struct osd_text_item *
-oti_new(struct osd_text_item * parent) {
+static struct osd_text_item *oti_new(struct osd_text_item * parent) {
     struct osd_text_item *this;
     this=g_new0(struct osd_text_item, 1);
     this->prev=parent;
@@ -3356,8 +3305,7 @@ oti_new(struct osd_text_item * parent) {
  * receive a pointer to a list of {@code osd_text_item} structures.
  * @param nav The navit structure
  */
-static void
-osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_text *this = (struct osd_text *)opc->data;
 
     char *absbegin,*str,*start,*end,*key,*subkey,*index;
@@ -3442,8 +3390,7 @@ osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
 
 }
 
-static void
-osd_text_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_text_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
     osd_text_prepare(opc,nav);
@@ -3451,8 +3398,7 @@ osd_text_init(struct osd_priv_common *opc, struct navit *nav) {
 
 }
 
-static int
-osd_text_set_attr(struct osd_priv_common *opc, struct attr* attr) {
+static int osd_text_set_attr(struct osd_priv_common *opc, struct attr* attr) {
     struct osd_text *this_ = (struct osd_text *)opc->data;
 
     if(NULL==attr || NULL==this_) {
@@ -3482,9 +3428,8 @@ osd_text_set_attr(struct osd_priv_common *opc, struct attr* attr) {
 }
 
 
-static struct osd_priv *
-osd_text_new(struct navit *nav, struct osd_methods *meth,
-             struct attr **attrs) {
+static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth,
+                                     struct attr **attrs) {
     struct osd_text *this = g_new0(struct osd_text, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -3523,9 +3468,8 @@ struct gps_status {
     int strength;
 };
 
-static void
-osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
-                    struct vehicle *v) {
+static void osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
+                                struct vehicle *v) {
     struct gps_status *this = (struct gps_status *)opc->data;
 
     struct point p;
@@ -3583,8 +3527,7 @@ osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit,
     }
 }
 
-static void
-osd_gps_status_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_gps_status_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_coord_geo, opc));
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_fix_type, opc));
@@ -3593,9 +3536,8 @@ osd_gps_status_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_gps_status_draw(opc, nav, NULL);
 }
 
-static struct osd_priv *
-osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
-                   struct attr **attrs) {
+static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
+        struct attr **attrs) {
     struct gps_status *this = g_new0(struct gps_status, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -3648,8 +3590,7 @@ struct volume {
     struct callback *click_cb;
 };
 
-static void
-osd_volume_draw(struct osd_priv_common *opc, struct navit *navit) {
+static void osd_volume_draw(struct osd_priv_common *opc, struct navit *navit) {
     struct volume *this = (struct volume *)opc->data;
 
     struct point p;
@@ -3671,8 +3612,7 @@ osd_volume_draw(struct osd_priv_common *opc, struct navit *navit) {
     graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
-static void
-osd_volume_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p) {
+static void osd_volume_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button, struct point *p) {
     struct volume *this = (struct volume *)opc->data;
 
     struct point bp = opc->osd_item.p;
@@ -3692,8 +3632,7 @@ osd_volume_click(struct osd_priv_common *opc, struct navit *nav, int pressed, in
         osd_volume_draw(opc, nav);
     }
 }
-static void
-osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
     struct volume *this = (struct volume *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
@@ -3701,9 +3640,8 @@ osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_volume_draw(opc, nav);
 }
 
-static struct osd_priv *
-osd_volume_new(struct navit *nav, struct osd_methods *meth,
-               struct attr **attrs) {
+static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *meth,
+                                       struct attr **attrs) {
     struct volume *this = g_new0(struct volume, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -3754,8 +3692,7 @@ struct osd_scale {
     struct graphics_gc *black;
 };
 
-static int
-round_to_nice_value(double value) {
+static int round_to_nice_value(double value) {
     double nearest_power_of10,mantissa;
     nearest_power_of10=pow(10,floor(log10(value)));
     mantissa=value/nearest_power_of10;
@@ -3768,8 +3705,7 @@ round_to_nice_value(double value) {
     return mantissa*nearest_power_of10;
 }
 
-static void
-osd_scale_draw(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_scale_draw(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_scale *this = (struct osd_scale *)opc->data;
 
     struct point item_pos,scale_line_start,scale_line_end;
@@ -3844,8 +3780,7 @@ osd_scale_draw(struct osd_priv_common *opc, struct navit *nav) {
         graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
-static void
-osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_scale *this = (struct osd_scale *)opc->data;
 
     struct graphics *gra = navit_get_graphics(nav);
@@ -3872,9 +3807,8 @@ osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
         osd_scale_draw(opc, nav);
 }
 
-static struct osd_priv *
-osd_scale_new(struct navit *nav, struct osd_methods *meth,
-              struct attr **attrs) {
+static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *meth,
+                                      struct attr **attrs) {
     struct osd_scale *this = g_new0(struct osd_scale, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     struct attr *attr;
@@ -3903,8 +3837,7 @@ struct auxmap {
     struct navit *nav;
 };
 
-static void
-osd_auxmap_draw(struct osd_priv_common *opc) {
+static void osd_auxmap_draw(struct osd_priv_common *opc) {
     struct auxmap *this = (struct auxmap *)opc->data;
 
     int d=10;
@@ -3942,8 +3875,7 @@ osd_auxmap_draw(struct osd_priv_common *opc) {
 
 }
 
-static void
-osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
     struct auxmap *this = (struct auxmap *)opc->data;
 
     struct graphics *gra;
@@ -3982,8 +3914,7 @@ osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
 #endif
 }
 
-static struct osd_priv *
-osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+static struct osd_priv *osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct auxmap *this = g_new0(struct auxmap, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     opc->data = (void*)this;
@@ -4002,8 +3933,7 @@ osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_osd("compass", osd_compass_new);
     plugin_register_category_osd("navigation_next_turn", osd_nav_next_turn_new);
     plugin_register_category_osd("button", osd_button_new);

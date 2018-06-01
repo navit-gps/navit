@@ -33,8 +33,7 @@ struct script {
     struct command_saved *cs;
 };
 
-static void
-script_run(struct script *scr) {
+static void script_run(struct script *scr) {
     struct attr *xml_text=attr_search(scr->attrs, NULL, attr_xml_text);
     int error;
     if (!xml_text || !xml_text->u.str) {
@@ -45,8 +44,7 @@ script_run(struct script *scr) {
     command_evaluate_to_void(&scr->parent, xml_text->u.str, &error);
 }
 
-static int
-script_set_attr_int(struct script *scr, struct attr *attr) {
+static int script_set_attr_int(struct script *scr, struct attr *attr) {
     switch (attr->type) {
     case attr_refresh_cond:
         dbg(lvl_debug,"refresh_cond");
@@ -64,8 +62,7 @@ script_set_attr_int(struct script *scr, struct attr *attr) {
     }
 }
 
-static struct script *
-script_new(struct attr *parent, struct attr **attrs) {
+static struct script *script_new(struct attr *parent, struct attr **attrs) {
     struct script *scr=g_new0(struct script, 1);
     scr->func=&script_func;
     navit_object_ref((struct navit_object *)scr);
@@ -79,8 +76,7 @@ script_new(struct attr *parent, struct attr **attrs) {
     return scr;
 }
 
-static void
-script_destroy(struct script *scr) {
+static void script_destroy(struct script *scr) {
     dbg(lvl_debug,"enter %p",scr);
     if (scr->timeout)
         event_remove_timeout(scr->timeout);

@@ -57,8 +57,7 @@ static char *urldecode(char *str) {
     return ret;
 }
 
-static GList *
-speech_cmdline_search(GList *samples, int suffix_len, const char *text, int decode) {
+static GList *speech_cmdline_search(GList *samples, int suffix_len, const char *text, int decode) {
     GList *loop_samples=samples,*result=NULL,*recursion_result;
     int shortest_result_length=INT_MAX;
     dbg(lvl_debug,"searching samples for text: '%s'",text);
@@ -110,8 +109,7 @@ struct speech_priv {
     struct spawn_process_info *spi;
 };
 
-static int
-speechd_say(struct speech_priv *this, const char *text) {
+static int speechd_say(struct speech_priv *this, const char *text) {
     char **cmdv=g_strsplit(this->cmdline," ", -1);
     int variable_arg_no=-1;
     GList *argl=NULL;
@@ -187,8 +185,7 @@ speechd_say(struct speech_priv *this, const char *text) {
 }
 
 
-static void
-speechd_destroy(struct speech_priv *this) {
+static void speechd_destroy(struct speech_priv *this) {
     GList *l=this->samples;
     g_free(this->cmdline);
     g_free(this->sample_dir);
@@ -207,8 +204,7 @@ static struct speech_methods speechd_meth = {
     speechd_say,
 };
 
-static struct speech_priv *
-speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this;
     struct attr *attr;
     attr=attr_search(attrs, NULL, attr_data);
@@ -246,7 +242,6 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_speech("cmdline", speechd_new);
 }

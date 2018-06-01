@@ -21,16 +21,14 @@
 #include "debug.h"
 #include "mg.h"
 
-static void
-poly_coord_rewind(void *priv_data) {
+static void poly_coord_rewind(void *priv_data) {
     struct poly_priv *poly=priv_data;
 
     poly->p=poly->subpoly_start;
 
 }
 
-static int
-poly_coord_get(void *priv_data, struct coord *c, int count) {
+static int poly_coord_get(void *priv_data, struct coord *c, int count) {
     struct poly_priv *poly=priv_data;
     int ret=0;
 
@@ -45,15 +43,13 @@ poly_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static void
-poly_attr_rewind(void *priv_data) {
+static void poly_attr_rewind(void *priv_data) {
     struct poly_priv *poly=priv_data;
 
     poly->aidx=0;
 }
 
-static int
-poly_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int poly_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct poly_priv *poly=priv_data;
 
     attr->type=attr_type;
@@ -83,8 +79,7 @@ static struct item_methods poly_meth = {
     poly_attr_get,
 };
 
-static void
-poly_get_data(struct poly_priv *poly, unsigned char **p) {
+static void poly_get_data(struct poly_priv *poly, unsigned char **p) {
     poly->c[0].x=get_u32_unal(p);
     poly->c[0].y=get_u32_unal(p);
     poly->c[1].x=get_u32_unal(p);
@@ -103,8 +98,7 @@ poly_get_data(struct poly_priv *poly, unsigned char **p) {
     poly->count_sum=get_u32_unal(p);
 }
 
-int
-poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item) {
+int poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item) {
     struct coord_rect r;
 
     for (;;) {
@@ -246,8 +240,7 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item) {
     }
 }
 
-int
-poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item) {
+int poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item) {
     int count=id_lo & 0xffff;
     int ret=0;
     block_get_byindex(mr->m->file[mr->current_file], id_lo >> 16, &mr->b);

@@ -46,14 +46,12 @@ struct statusbar_priv {
 };
 
 #if 0
-static void
-statusbar_destroy(struct statusbar_priv *this) {
+static void statusbar_destroy(struct statusbar_priv *this) {
     g_free(this);
 }
 
-static void
-statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng, double lat, double height,
-                     double direction, double speed) {
+static void statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng, double lat, double height,
+                                 double direction, double speed) {
     char *dirs[]= {_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
     char *dir;
     int dir_idx;
@@ -81,8 +79,7 @@ static const char *status_fix2str(int type) {
     }
 }
 
-static void
-statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct vehicle *v) {
+static void statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct vehicle *v) {
     struct navigation *nav=NULL;
     struct map *map=NULL;
     struct map_rect *mr=NULL;

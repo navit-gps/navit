@@ -55,8 +55,7 @@ char *version=PACKAGE_VERSION"+git:"GIT_VERSION""NAVIT_VARIANT;
 int main_argc;
 char * const* main_argv;
 
-static void
-print_usage(void) {
+static void print_usage(void) {
     printf("%s",_("navit usage:\n"
                   "navit [options] [configfile]\n"
                   "\t-c <file>: use <file> as config file, instead of using the default file.\n"

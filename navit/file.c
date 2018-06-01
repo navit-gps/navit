@@ -69,8 +69,7 @@ struct file_cache_id {
 #endif
 
 #ifdef HAVE_SOCKET
-static int
-file_socket_connect(char *host, char *service) {
+static int file_socket_connect(char *host, char *service) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
     int fd=-1,s;
@@ -98,8 +97,7 @@ file_socket_connect(char *host, char *service) {
     return fd;
 }
 
-static void
-file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent) {
+static void file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent) {
     char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,version,
                                   host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
     write(file->fd, request, strlen(request));
@@ -107,8 +105,7 @@ file_http_request(struct file *file, char *method, char *host, char *path, char 
     file->requests++;
 }
 
-static int
-file_request_do(struct file *file, struct attr **options, int connect) {
+static int file_request_do(struct file *file, struct attr **options, int connect) {
     struct attr *attr;
     char *name;
 
@@ -150,8 +147,7 @@ file_request_do(struct file *file, struct attr **options, int connect) {
 }
 #endif
 
-static unsigned char *
-file_http_header_end(unsigned char *str, int len) {
+static unsigned char *file_http_header_end(unsigned char *str, int len) {
     int i;
     for (i=0; i+1<len; i+=2) {
         if (str[i+1]=='\n') {
@@ -169,8 +165,7 @@ file_http_header_end(unsigned char *str, int len) {
     return NULL;
 }
 
-int
-file_request(struct file *f, struct attr **options) {
+int file_request(struct file *f, struct attr **options) {
 #ifdef HAVE_SOCKET
     return file_request_do(f, options, 0);
 #else
@@ -178,8 +173,7 @@ file_request(struct file *f, struct attr **options) {
 #endif
 }
 
-char *
-file_http_header(struct file *f, char *header) {
+char *file_http_header(struct file *f, char *header) {
     if (!f->headers)
         return NULL;
     return g_hash_table_lookup(f->headers, header);
@@ -266,8 +260,7 @@ int file_is_reg(const char *name) {
     return 0;
 }
 
-long long
-file_size(struct file *file) {
+long long file_size(struct file *file) {
     return file->size;
 }
 
@@ -301,8 +294,7 @@ int file_mkdir(char *name, int pflag) {
     return file_mkdir(buffer, 0);
 }
 
-int
-file_mmap(struct file *file) {
+int file_mmap(struct file *file) {
 #if 0
     int mmap_size=file->size+1024*1024;
 #else
@@ -325,8 +317,7 @@ file_mmap(struct file *file) {
     return 1;
 }
 
-unsigned char *
-file_data_read(struct file *file, long long offset, int size) {
+unsigned char *file_data_read(struct file *file, long long offset, int size) {
     void *ret;
     if (file->special)
         return NULL;
@@ -349,8 +340,7 @@ file_data_read(struct file *file, long long offset, int size) {
 
 }
 
-static void
-file_process_headers(struct file *file, unsigned char *headers) {
+static void file_process_headers(struct file *file, unsigned char *headers) {
     char *tok;
     char *cl;
     if (file->headers)
@@ -383,14 +373,12 @@ file_process_headers(struct file *file, unsigned char *headers) {
 #endif
 }
 
-static void
-file_shift_buffer(struct file *file, int amount) {
+static void file_shift_buffer(struct file *file, int amount) {
     memmove(file->buffer, file->buffer+amount, file->buffer_len-amount);
     file->buffer_len-=amount;
 }
 
-unsigned char *
-file_data_read_special(struct file *file, int size, int *size_ret) {
+unsigned char *file_data_read_special(struct file *file, int size, int *size_ret) {
     unsigned char *ret,*hdr;
     int rets=0,rd;
     int buffer_size=8192;
@@ -437,13 +425,11 @@ file_data_read_special(struct file *file, int size, int *size_ret) {
     return ret;
 }
 
-unsigned char *
-file_data_read_all(struct file *file) {
+unsigned char *file_data_read_all(struct file *file) {
     return file_data_read(file, 0, file->size);
 }
 
-void
-file_data_flush(struct file *file, long long offset, int size) {
+void file_data_flush(struct file *file, long long offset, int size) {
     if (file->cache) {
         struct file_cache_id id= {offset,size,file->name_id,0};
         cache_flush(file_cache,&id);
@@ -451,8 +437,7 @@ file_data_flush(struct file *file, long long offset, int size) {
     }
 }
 
-int
-file_data_write(struct file *file, long long offset, int size, const void *data) {
+int file_data_write(struct file *file, long long offset, int size, const void *data) {
     file_data_flush(file, offset, size);
     lseek(file->fd, offset, SEEK_SET);
     if (write(file->fd, data, size) != size)
@@ -462,8 +447,7 @@ file_data_write(struct file *file, long long offset, int size, const void *data)
     return 1;
 }
 
-int
-file_get_contents(char *name, unsigned char **buffer, int *size) {
+int file_get_contents(char *name, unsigned char **buffer, int *size) {
     struct file *file;
     file=file_create(name, 0);
     if (!file)
@@ -476,8 +460,7 @@ file_get_contents(char *name, unsigned char **buffer, int *size) {
 }
 
 
-static int
-uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen) {
+static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen) {
     z_stream stream;
     int err;
 
@@ -505,8 +488,7 @@ uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLe
     return err;
 }
 
-unsigned char *
-file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
+unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
     void *ret;
     char *buffer = 0;
     uLongf destLen=size_uncomp;
@@ -537,8 +519,7 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
     return ret;
 }
 
-void
-file_data_free(struct file *file, unsigned char *data) {
+void file_data_free(struct file *file, unsigned char *data) {
     if (file->begin) {
         if (data == file->begin)
             return;
@@ -551,8 +532,7 @@ file_data_free(struct file *file, unsigned char *data) {
         g_free(data);
 }
 
-void
-file_data_remove(struct file *file, unsigned char *data) {
+void file_data_remove(struct file *file, unsigned char *data) {
     if (file->begin) {
         if (data == file->begin)
             return;
@@ -565,16 +545,14 @@ file_data_remove(struct file *file, unsigned char *data) {
         g_free(data);
 }
 
-int
-file_exists(char const *name) {
+int file_exists(char const *name) {
     struct stat buf;
     if (! stat(name, &buf))
         return 1;
     return 0;
 }
 
-void
-file_remap_readonly(struct file *f) {
+void file_remap_readonly(struct file *f) {
 #if defined(_WIN32) || defined(__CEGCC__)
 #else
     void *begin;
@@ -585,8 +563,7 @@ file_remap_readonly(struct file *f) {
 #endif
 }
 
-void
-file_unmap(struct file *f) {
+void file_unmap(struct file *f) {
 #if defined(_WIN32) || defined(__CEGCC__)
     mmap_unmap_win32( f->begin, f->map_handle, f->map_file );
 #else
@@ -595,13 +572,11 @@ file_unmap(struct file *f) {
 }
 
 #ifndef _MSC_VER
-void *
-file_opendir(char *dir) {
+void *file_opendir(char *dir) {
     return opendir(dir);
 }
 #else
-void *
-file_opendir(char *dir) {
+void *file_opendir(char *dir) {
     WIN32_FIND_DATAA FindFileData;
     HANDLE hFind = INVALID_HANDLE_VALUE;
 #undef UNICODE         // we need FindFirstFileA() which takes an 8-bit c-string
@@ -613,8 +588,7 @@ file_opendir(char *dir) {
 #endif
 
 #ifndef _MSC_VER
-char *
-file_readdir(void *hnd) {
+char *file_readdir(void *hnd) {
     struct dirent *ent;
 
     ent=readdir(hnd);
@@ -623,8 +597,7 @@ file_readdir(void *hnd) {
     return ent->d_name;
 }
 #else
-char *
-file_readdir(void *hnd) {
+char *file_readdir(void *hnd) {
     WIN32_FIND_DATA FindFileData;
 
     if (FindNextFile(hnd, &FindFileData) ) {
@@ -636,13 +609,11 @@ file_readdir(void *hnd) {
 #endif /* _MSC_VER */
 
 #ifndef _MSC_VER
-void
-file_closedir(void *hnd) {
+void file_closedir(void *hnd) {
     closedir(hnd);
 }
 #else
-void
-file_closedir(void *hnd) {
+void file_closedir(void *hnd) {
     FindClose(hnd);
 }
 #endif /* _MSC_VER */
@@ -706,15 +677,13 @@ file_create_caseinsensitive(char *name, struct attr **options) {
     return ret;
 }
 
-void
-file_fsync(struct file *f) {
+void file_fsync(struct file *f) {
 #ifdef HAVE_FSYNC
     fsync(f->fd);
 #endif
 }
 
-void
-file_destroy(struct file *f) {
+void file_destroy(struct file *f) {
     if (f->headers)
         g_hash_table_destroy(f->headers);
     switch (f->special) {
@@ -750,22 +719,19 @@ file_wordexp_new(const char *pattern) {
     return ret;
 }
 
-int
-file_wordexp_get_count(struct file_wordexp *wexp) {
+int file_wordexp_get_count(struct file_wordexp *wexp) {
     if (wexp->err)
         return 1;
     return wexp->we.we_wordc;
 }
 
-char **
-file_wordexp_get_array(struct file_wordexp *wexp) {
+char ** file_wordexp_get_array(struct file_wordexp *wexp) {
     if (wexp->err)
         return &wexp->pattern;
     return wexp->we.we_wordv;
 }
 
-void
-file_wordexp_destroy(struct file_wordexp *wexp) {
+void file_wordexp_destroy(struct file_wordexp *wexp) {
     if (! wexp->err)
         wordfree(&wexp->we);
     g_free(wexp->pattern);
@@ -773,8 +739,7 @@ file_wordexp_destroy(struct file_wordexp *wexp) {
 }
 
 
-int
-file_version(struct file *file, int mode) {
+int file_version(struct file *file, int mode) {
 #ifndef HAVE_API_WIN32_BASE
     struct stat st;
     int error;
@@ -805,13 +770,11 @@ file_version(struct file *file, int mode) {
 #endif
 }
 
-void *
-file_get_os_handle(struct file *file) {
+void *file_get_os_handle(struct file *file) {
     return GINT_TO_POINTER(file->fd);
 }
 
-int
-file_set_cache_size(int cache_size) {
+int file_set_cache_size(int cache_size) {
 #ifdef CACHE_SIZE
     cache_resize(file_cache, cache_size);
     return 1;
@@ -820,8 +783,7 @@ file_set_cache_size(int cache_size) {
 #endif
 }
 
-void
-file_init(void) {
+void file_init(void) {
 #ifdef CACHE_SIZE
     file_name_hash=g_hash_table_new(g_str_hash, g_str_equal);
     file_cache=cache_new(sizeof(struct file_cache_id), CACHE_SIZE);

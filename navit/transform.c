@@ -97,16 +97,14 @@ struct transformation {
 #define HOG(t) 0
 #endif
 
-static void
-transform_set_screen_dist(struct transformation *t, int dist) {
+static void transform_set_screen_dist(struct transformation *t, int dist) {
     t->screen_dist=dist;
     t->xscale3d=dist;
     t->yscale3d=dist;
     t->wscale3d=dist << POST_SHIFT;
 }
 
-static void
-transform_setup_matrix(struct transformation *t) {
+static void transform_setup_matrix(struct transformation *t) {
     navit_float det;
     navit_float fac;
     navit_float yawc=navit_cos(-M_PI*t->yaw/180);
@@ -203,13 +201,11 @@ transform_new(struct pcoord *center, int scale, int yaw) {
     return this_;
 }
 
-int
-transform_get_hog(struct transformation *this_) {
+int transform_get_hog(struct transformation *this_) {
     return HOG(*this_);
 }
 
-void
-transform_set_hog(struct transformation *this_, int hog) {
+void transform_set_hog(struct transformation *this_, int hog) {
 #ifdef ENABLE_ROLL
     this_->hog=hog;
 #else
@@ -218,8 +214,7 @@ transform_set_hog(struct transformation *this_, int hog) {
 
 }
 
-int
-transform_get_attr(struct transformation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int transform_get_attr(struct transformation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     switch (type) {
 #ifdef ENABLE_ROLL
     case attr_hog:
@@ -233,8 +228,7 @@ transform_get_attr(struct transformation *this_, enum attr_type type, struct att
     return 1;
 }
 
-int
-transform_set_attr(struct transformation *this_, struct attr *attr) {
+int transform_set_attr(struct transformation *this_, struct attr *attr) {
     switch (attr->type) {
 #ifdef ENABLE_ROLL
     case attr_hog:
@@ -246,13 +240,11 @@ transform_set_attr(struct transformation *this_, struct attr *attr) {
     }
 }
 
-int
-transformation_get_order_base(struct transformation *this_) {
+int transformation_get_order_base(struct transformation *this_) {
     return this_->order_base;
 }
 
-void
-transform_set_order_base(struct transformation *this_, int order_base) {
+void transform_set_order_base(struct transformation *this_, int order_base) {
     this_->order_base=order_base;
 }
 
@@ -269,8 +261,7 @@ transform_dup(struct transformation *t) {
 static const navit_float gar2geo_units = 360.0/(1<<24);
 static const navit_float geo2gar_units = 1/(360.0/(1<<24));
 
-void
-transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g) {
+void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g) {
     int x,y,northern,zone;
     switch (pro) {
     case projection_mg:
@@ -297,8 +288,7 @@ transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g) {
     }
 }
 
-void
-transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c) {
+void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c) {
     switch (pro) {
     case projection_mg:
         c->x=g->lng*6371000.0*M_PI/180;
@@ -313,8 +303,8 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c) {
     }
 }
 
-void
-transform_from_to_count(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to, int count) {
+void transform_from_to_count(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to,
+                             int count) {
     struct coord_geo g;
     int i;
 
@@ -326,8 +316,7 @@ transform_from_to_count(struct coord *cfrom, enum projection from, struct coord 
     }
 }
 
-void
-transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to) {
+void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to) {
     struct coord_geo g;
     transform_to_geo(from, cfrom, &g);
     transform_from_geo(to, &g, cto);
@@ -345,8 +334,7 @@ transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, 
  * @param b Semi-minor axis of the ellipsoid
  * @param cart Points to a structure that will receive the Cartesian coordinates
  */
-void
-transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart) {
+void transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart) {
     navit_float n,ee=1-b*b/(a*a);
     n = a/sqrtf(1-ee*navit_sin(geo->lat)*navit_sin(geo->lat));
     cart->x=n*navit_cos(geo->lat)*navit_cos(geo->lng);
@@ -366,8 +354,7 @@ transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struc
  * @param b Semi-minor axis of the ellipsoid
  * @param geo Points to a structure that will receive the geodetic coordinates
  */
-void
-transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo) {
+void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo) {
     navit_float lat,lati,n,ee=1-b*b/(a*a), lng = navit_tan(cart->y/cart->x);
 
     lat = navit_tan(cart->z / navit_sqrt((cart->x * cart->x) + (cart->y * cart->y)));
@@ -390,9 +377,8 @@ transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b,
  *
  * @author Chuck Gantz- chuck.gantz@globalstar.com
  */
-void
-transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere,
-                     struct coord_geo *geo) {
+void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere,
+                          struct coord_geo *geo) {
 //East Longitudes are positive, West longitudes are negative.
 //North latitudes are positive, South latitudes are negative
 //Lat and Long are in decimal degrees.
@@ -444,8 +430,8 @@ transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int Zone
     geo->lng=Long;
 }
 
-static struct coord
-transform_correct_projection(struct transformation *t, enum projection required_projection, struct coord c) {
+static struct coord transform_correct_projection(struct transformation *t, enum projection required_projection,
+        struct coord c) {
     struct coord result;
     struct coord_geo g;
     if (required_projection == t->pro) {
@@ -457,8 +443,7 @@ transform_correct_projection(struct transformation *t, enum projection required_
     return result;
 }
 
-static struct coord
-transform_shift_by_center_and_scale(struct transformation *t, struct coord c) {
+static struct coord transform_shift_by_center_and_scale(struct transformation *t, struct coord c) {
     struct coord result;
     result.x = c.x - t->map_center.x;
     result.y = c.y - t->map_center.y;
@@ -474,8 +459,7 @@ struct coord_3d {
 };
 
 
-static struct coord_3d
-transform_rotate(struct transformation *t, struct coord c) {
+static struct coord_3d transform_rotate(struct transformation *t, struct coord c) {
     struct coord_3d result;
     result.x=c.x*t->m00+c.y*t->m01+HOG(*t)*t->m02;
     result.y=c.x*t->m10+c.y*t->m11+HOG(*t)*t->m12;
@@ -485,8 +469,7 @@ transform_rotate(struct transformation *t, struct coord c) {
     return result;
 }
 
-static struct coord_3d
-transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit) {
+static struct coord_3d transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit) {
     struct coord_3d result;
     float clip_factor = ((float)zlimit-c.z)/(c_old.z-c.z);
     dbg(lvl_debug,"in (%d,%d,%d) - (%d,%d,%d)", c.x,c.y,c.z, c_old.x,c_old.y,c_old.z);
@@ -497,8 +480,7 @@ transform_z_clip(struct coord_3d c, struct coord_3d c_old, int zlimit) {
     return result;
 }
 
-static struct point
-transform_project_onto_view_plane(struct transformation *t, struct coord_3d c) {
+static struct point transform_project_onto_view_plane(struct transformation *t, struct coord_3d c) {
     struct point result;
 #if 0
     dbg(lvl_debug,"z=%d",c.z);
@@ -508,8 +490,7 @@ transform_project_onto_view_plane(struct transformation *t, struct coord_3d c) {
     return result;
 }
 
-static int
-transform_points_too_close(struct point screen_point, struct point screen_point_old, int mindist) {
+static int transform_points_too_close(struct point screen_point, struct point screen_point_old, int mindist) {
     if (!mindist) {
         return 0;
     }
@@ -525,8 +506,8 @@ struct z_clip_result {
     int skip_coord;
 };
 
-static struct z_clip_result
-transform_z_clip_if_necessary(struct coord_3d coord, int zlimit, struct z_clip_result clip_result_old) {
+static struct z_clip_result transform_z_clip_if_necessary(struct coord_3d coord, int zlimit,
+        struct z_clip_result clip_result_old) {
     int visibility_changed;
     struct z_clip_result clip_result= {{0,0}, 0, 0, 0};
     clip_result.visible=(coord.z < zlimit ? 0:1);
@@ -546,9 +527,8 @@ transform_z_clip_if_necessary(struct coord_3d coord, int zlimit, struct z_clip_r
     return clip_result;
 }
 
-int
-transform(struct transformation *t, enum projection required_projection, struct coord *input,
-          struct point *result, int count, int mindist, int width, int *width_result) {
+int transform(struct transformation *t, enum projection required_projection, struct coord *input,
+              struct point *result, int count, int mindist, int width, int *width_result) {
     struct coord projected_coord, shifted_coord;
     struct coord_3d rotated_coord;
     struct point screen_point;
@@ -608,16 +588,15 @@ transform(struct transformation *t, enum projection required_projection, struct 
     return result_idx;
 }
 
-static void
-transform_apply_inverse_matrix(struct transformation *t, struct coord_geo_cart *in, struct coord_geo_cart *out) {
+static void transform_apply_inverse_matrix(struct transformation *t, struct coord_geo_cart *in,
+        struct coord_geo_cart *out) {
     out->x=in->x*t->im00+in->y*t->im01+in->z*t->im02;
     out->y=in->x*t->im10+in->y*t->im11+in->z*t->im12;
     out->z=in->x*t->im20+in->y*t->im21+in->z*t->im22;
 }
 
-static int
-transform_zplane_intersection(struct coord_geo_cart *p1, struct coord_geo_cart *p2, navit_float z,
-                              struct coord_geo_cart *result) {
+static int transform_zplane_intersection(struct coord_geo_cart *p1, struct coord_geo_cart *p2, navit_float z,
+        struct coord_geo_cart *result) {
     navit_float dividend=z-p1->z;
     navit_float divisor=p2->z-p1->z;
     navit_float q;
@@ -636,8 +615,8 @@ transform_zplane_intersection(struct coord_geo_cart *p1, struct coord_geo_cart *
     return 2; /* intersection without [p1,p2] */
 }
 
-static void
-transform_screen_to_3d(struct transformation *t, struct point *p, navit_float z, struct coord_geo_cart *cg) {
+static void transform_screen_to_3d(struct transformation *t, struct point *p, navit_float z,
+                                   struct coord_geo_cart *cg) {
     double xc,yc;
     double offz=t->offz << POST_SHIFT;
     xc=p->x - t->offx;
@@ -647,8 +626,7 @@ transform_screen_to_3d(struct transformation *t, struct point *p, navit_float z,
     cg->z=z-offz;
 }
 
-static int
-transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far) {
+static int transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far) {
     double xc,yc;
     dbg(lvl_debug,"%d,%d",p->x,p->y);
     if (t->ddd) {
@@ -673,13 +651,11 @@ transform_reverse_near_far(struct transformation *t, struct point *p, struct coo
     return 1;
 }
 
-int
-transform_reverse(struct transformation *t, struct point *p, struct coord *c) {
+int transform_reverse(struct transformation *t, struct point *p, struct coord *c) {
     return transform_reverse_near_far(t, p, c, t->znear, t->zfar);
 }
 
-double
-transform_pixels_to_map_distance(struct transformation *transformation, int pixels) {
+double transform_pixels_to_map_distance(struct transformation *transformation, int pixels) {
     struct point line_in_map_center[2];
     struct coord c[2];
     struct point screen_center=transformation->screen_center;
@@ -695,18 +671,15 @@ transform_pixels_to_map_distance(struct transformation *transformation, int pixe
     return transform_distance(transform_get_projection(transformation), &c[0], &c[1]);
 }
 
-enum projection
-transform_get_projection(struct transformation *this_) {
+enum projection transform_get_projection(struct transformation *this_) {
     return this_->pro;
 }
 
-void
-transform_set_projection(struct transformation *this_, enum projection pro) {
+void transform_set_projection(struct transformation *this_, enum projection pro) {
     this_->pro=pro;
 }
 
-static int
-min4(int v1,int v2, int v3, int v4) {
+static int min4(int v1,int v2, int v3, int v4) {
     int res=v1;
     if (v2 < res)
         res=v2;
@@ -717,8 +690,7 @@ min4(int v1,int v2, int v3, int v4) {
     return res;
 }
 
-static int
-max4(int v1,int v2, int v3, int v4) {
+static int max4(int v1,int v2, int v3, int v4) {
     int res=v1;
     if (v2 > res)
         res=v2;
@@ -773,35 +745,29 @@ transform_get_center(struct transformation *this_) {
     return &this_->map_center;
 }
 
-void
-transform_set_center(struct transformation *this_, struct coord *c) {
+void transform_set_center(struct transformation *this_, struct coord *c) {
     this_->map_center=*c;
 }
 
 
-void
-transform_set_yaw(struct transformation *t,int yaw) {
+void transform_set_yaw(struct transformation *t,int yaw) {
     t->yaw=yaw;
     transform_setup_matrix(t);
 }
 
-int
-transform_get_yaw(struct transformation *this_) {
+int transform_get_yaw(struct transformation *this_) {
     return this_->yaw;
 }
 
-void
-transform_set_pitch(struct transformation *this_,int pitch) {
+void transform_set_pitch(struct transformation *this_,int pitch) {
     this_->pitch=pitch;
     transform_setup_matrix(this_);
 }
-int
-transform_get_pitch(struct transformation *this_) {
+int transform_get_pitch(struct transformation *this_) {
     return this_->pitch;
 }
 
-void
-transform_set_roll(struct transformation *this_,int roll) {
+void transform_set_roll(struct transformation *this_,int roll) {
 #ifdef ENABLE_ROLL
     this_->roll=roll;
     transform_setup_matrix(this_);
@@ -810,8 +776,7 @@ transform_set_roll(struct transformation *this_,int roll) {
 #endif
 }
 
-int
-transform_get_roll(struct transformation *this_) {
+int transform_get_roll(struct transformation *this_) {
 #ifdef ENABLE_ROLL
     return this_->roll;
 #else
@@ -819,26 +784,22 @@ transform_get_roll(struct transformation *this_) {
 #endif
 }
 
-void
-transform_set_distance(struct transformation *this_,int distance) {
+void transform_set_distance(struct transformation *this_,int distance) {
     transform_set_screen_dist(this_, distance);
     transform_setup_matrix(this_);
 }
 
-int
-transform_get_distance(struct transformation *this_) {
+int transform_get_distance(struct transformation *this_) {
     return this_->screen_dist;
 }
 
-void
-transform_set_scales(struct transformation *this_, int xscale, int yscale, int wscale) {
+void transform_set_scales(struct transformation *this_, int xscale, int yscale, int wscale) {
     this_->xscale3d=xscale;
     this_->yscale3d=yscale;
     this_->wscale3d=wscale;
 }
 
-void
-transform_set_screen_selection(struct transformation *t, struct map_selection *sel) {
+void transform_set_screen_selection(struct transformation *t, struct map_selection *sel) {
     map_selection_destroy(t->screen_sel);
     t->screen_sel=map_selection_dup(sel);
     if (sel) {
@@ -848,13 +809,11 @@ transform_set_screen_selection(struct transformation *t, struct map_selection *s
     }
 }
 
-void
-transform_set_screen_center(struct transformation *t, struct point *p) {
+void transform_set_screen_center(struct transformation *t, struct point *p) {
     t->screen_center=*p;
 }
 
-void
-transform_get_size(struct transformation *t, int *width, int *height) {
+void transform_get_size(struct transformation *t, int *width, int *height) {
     struct point_rect *r;
     if (t->screen_sel) {
         r=&t->screen_sel->u.p_rect;
@@ -863,8 +822,7 @@ transform_get_size(struct transformation *t, int *width, int *height) {
     }
 }
 
-void
-transform_setup_source_rect(struct transformation *t) {
+void transform_setup_source_rect(struct transformation *t) {
     int i;
     struct coord screen[4];
     struct point screen_pnt[4];
@@ -950,20 +908,17 @@ transform_setup_source_rect(struct transformation *t) {
     }
 }
 
-long
-transform_get_scale(struct transformation *t) {
+long transform_get_scale(struct transformation *t) {
     return (int)(t->scale*16);
 }
 
-void
-transform_set_scale(struct transformation *t, long scale) {
+void transform_set_scale(struct transformation *t, long scale) {
     t->scale=scale/16.0;
     transform_setup_matrix(t);
 }
 
 
-int
-transform_get_order(struct transformation *t) {
+int transform_get_order(struct transformation *t) {
     dbg(lvl_debug,"order %d", t->order);
     return t->order;
 }
@@ -974,8 +929,7 @@ transform_get_order(struct transformation *t) {
 #define GC2RAD(c) ((c) * TWOPI/(1<<24))
 #define minf(a,b) ((a) < (b) ? (a) : (b))
 
-static double
-transform_distance_garmin(struct coord *c1, struct coord *c2) {
+static double transform_distance_garmin(struct coord *c1, struct coord *c2) {
 #ifdef USE_HALVESINE
     static const int earth_radius = 6371*1000; //m change accordingly
 // static const int earth_radius  = 3960; //miles
@@ -1012,8 +966,7 @@ transform_distance_garmin(struct coord *c1, struct coord *c2) {
 #endif
 }
 
-double
-transform_scale(int y) {
+double transform_scale(int y) {
     struct coord c;
     struct coord_geo g;
     c.x=0;
@@ -1040,8 +993,7 @@ int transform_int_scale(int y) {
 }
 #endif
 
-double
-transform_distance(enum projection pro, struct coord *c1, struct coord *c2) {
+double transform_distance(enum projection pro, struct coord *c1, struct coord *c2) {
     if (pro == projection_mg) {
 #ifndef AVOID_FLOAT
         double dx,dy,scale=transform_scale((c1->y+c2->y)/2);
@@ -1085,8 +1037,7 @@ transform_distance(enum projection pro, struct coord *c1, struct coord *c2) {
     }
 }
 
-void
-transform_project(enum projection pro, struct coord *c, int distance, int angle, struct coord *res) {
+void transform_project(enum projection pro, struct coord *c, int distance, int angle, struct coord *res) {
     double scale;
     switch (pro) {
     case projection_mg:
@@ -1102,8 +1053,7 @@ transform_project(enum projection pro, struct coord *c, int distance, int angle,
 }
 
 
-double
-transform_polyline_length(enum projection pro, struct coord *c, int count) {
+double transform_polyline_length(enum projection pro, struct coord *c, int count) {
     double ret=0;
     int i;
 
@@ -1112,8 +1062,7 @@ transform_polyline_length(enum projection pro, struct coord *c, int count) {
     return ret;
 }
 
-static int
-transform_overflow_possible_if_squared(int count, ...) {
+static int transform_overflow_possible_if_squared(int count, ...) {
     va_list ap;
     int i, value, result = 0;
 
@@ -1136,8 +1085,7 @@ transform_overflow_possible_if_squared(int count, ...) {
  *
  * @return The squared distance between `c1` and `c2`, or `INT_MAX` if an overflow occurs.
  */
-int
-transform_distance_sq(struct coord *c1, struct coord *c2) {
+int transform_distance_sq(struct coord *c1, struct coord *c2) {
     int dx=c1->x-c2->x;
     int dy=c1->y-c2->y;
 
@@ -1147,15 +1095,13 @@ transform_distance_sq(struct coord *c1, struct coord *c2) {
         return dx*dx+dy*dy;
 }
 
-navit_float
-transform_distance_sq_float(struct coord *c1, struct coord *c2) {
+navit_float transform_distance_sq_float(struct coord *c1, struct coord *c2) {
     int dx=c1->x-c2->x;
     int dy=c1->y-c2->y;
     return (navit_float)dx*dx+dy*dy;
 }
 
-int
-transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2) {
+int transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2) {
     struct coord p1,p2;
     p1.x = c1->x;
     p1.y = c1->y;
@@ -1175,8 +1121,7 @@ transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2) {
  *
  * @return The square of the Mercator distance between `ref` and `lpnt`, or `INT_MAX` if an overflow occurred
  */
-int
-transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt) {
+int transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt) {
     int vx,vy,wx,wy;
     int c1,c2;
     int climit=1000000;
@@ -1214,8 +1159,8 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
     return transform_distance_sq(&l, ref);
 }
 
-navit_float
-transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt) {
+navit_float transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coord *ref,
+        struct coord *lpnt) {
     navit_float vx,vy,wx,wy;
     navit_float c1,c2;
     struct coord l;
@@ -1256,8 +1201,7 @@ transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coor
  *
  * @return The square of the Mercator distance between `ref` and `lpnt`, or `INT_MAX` if an overflow occurred
  */
-int
-transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos) {
+int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos) {
     int i,dist,distn;
     struct coord lp;
     if (count < 2)
@@ -1278,8 +1222,7 @@ transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, st
     return dist;
 }
 
-int
-transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out) {
+int transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out) {
     int ret=0;
     int i,d,dmax=0, idx=0;
     for (i = 1; i < count-2 ; i++) {
@@ -1301,8 +1244,7 @@ transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord
     return ret;
 }
 
-int
-transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq, struct coord *out) {
+int transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq, struct coord *out) {
     int ret=0;
     int i,idx=0;
     navit_float d,dmax=0;
@@ -1326,16 +1268,14 @@ transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq
 }
 
 
-void
-transform_print_deg(double deg) {
+void transform_print_deg(double deg) {
     printf("%2.0f:%2.0f:%2.4f", floor(deg), fmod(deg*60,60), fmod(deg*3600,60));
 }
 
 #ifdef AVOID_FLOAT
 static int tab_atan[]= {0,262,524,787,1051,1317,1584,1853,2126,2401,2679,2962,3249,3541,3839,4142,4452,4770,5095,5430,5774,6128,6494,6873,7265,7673,8098,8541,9004,9490,10000,10538};
 
-static int
-atan2_int_lookup(int val) {
+static int atan2_int_lookup(int val) {
     int len=sizeof(tab_atan)/sizeof(int);
     int i=len/2;
     int p=i-1;
@@ -1350,8 +1290,7 @@ atan2_int_lookup(int val) {
     }
 }
 
-static int
-atan2_int(int dx, int dy) {
+static int atan2_int(int dx, int dy) {
     int mul=1,add=0,ret;
     if (! dx) {
         return dy < 0 ? 180 : 0;
@@ -1390,8 +1329,7 @@ atan2_int(int dx, int dy) {
  *
  * @return The bearing in degrees, {@code 0 <= result < 360}.
  */
-int
-transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir) {
+int transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir) {
     int dx=c2->x-c1->x;
     int dy=c2->y-c1->y;
 #ifndef AVOID_FLOAT
@@ -1409,8 +1347,7 @@ transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir) {
     return angle;
 }
 
-int
-transform_within_border(struct transformation *this_, struct point *p, int border) {
+int transform_within_border(struct transformation *this_, struct point *p, int border) {
     struct map_selection *ms=this_->screen_sel;
     while (ms) {
         struct point_rect *r=&ms->u.p_rect;
@@ -1422,8 +1359,7 @@ transform_within_border(struct transformation *this_, struct point *p, int borde
     return 0;
 }
 
-int
-transform_within_dist_point(struct coord *ref, struct coord *c, int dist) {
+int transform_within_dist_point(struct coord *ref, struct coord *c, int dist) {
     if (c->x-dist > ref->x)
         return 0;
     if (c->x+dist < ref->x)
@@ -1437,8 +1373,7 @@ transform_within_dist_point(struct coord *ref, struct coord *c, int dist) {
     return 0;
 }
 
-int
-transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord *c1, int dist) {
+int transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord *c1, int dist) {
     int vx,vy,wx,wy;
     int n1,n2;
     struct coord lc;
@@ -1482,8 +1417,7 @@ transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord *c1
     return transform_within_dist_point(ref, &lc, dist);
 }
 
-int
-transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist) {
+int transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist) {
     int i;
     for (i = 0 ; i < count-1 ; i++) {
         if (transform_within_dist_line(ref,c+i,c+i+1,dist)) {
@@ -1495,8 +1429,7 @@ transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, in
     return 0;
 }
 
-int
-transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist) {
+int transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist) {
     int i, j, ci = 0;
     for (i = 0, j = count-1; i < count; j = i++) {
         if ((((c[i].y <= ref->y) && ( ref->y < c[j].y )) ||
@@ -1513,8 +1446,7 @@ transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int
     return 1;
 }
 
-int
-transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist) {
+int transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist) {
     if (type < type_line)
         return transform_within_dist_point(ref, c, dist);
     if (type < type_area)
@@ -1522,13 +1454,11 @@ transform_within_dist_item(struct coord *ref, enum item_type type, struct coord 
     return transform_within_dist_polygon(ref, c, count, dist);
 }
 
-void
-transform_copy(struct transformation *src, struct transformation *dst) {
+void transform_copy(struct transformation *src, struct transformation *dst) {
     memcpy(dst, src, sizeof(*src));
 }
 
-void
-transform_destroy(struct transformation *t) {
+void transform_destroy(struct transformation *t) {
     map_selection_destroy(t->map_sel);
     map_selection_destroy(t->screen_sel);
     g_free(t);

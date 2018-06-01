@@ -122,8 +122,7 @@ static int assafe_strcp2buf(char *str, int maxlen, char *buf) {
     return i;
 }
 
-static void
-progress_time(void) {
+static void progress_time(void) {
     struct timespec ts;
     int seconds;
     const int buflen=20;
@@ -145,8 +144,7 @@ progress_time(void) {
     }
 }
 
-static void
-progress_memory(void) {
+static void progress_memory(void) {
 #ifdef HAVE_SBRK
     long mem=(long)sbrk(0)-start_brk;
     const int buflen=20;
@@ -163,8 +161,7 @@ progress_memory(void) {
 #endif
 }
 
-static void
-sig_alrm_do(int sig) {
+static void sig_alrm_do(int sig) {
     const int buflen=1024;
     char buf[buflen];
     int pos=0;
@@ -205,23 +202,20 @@ sig_alrm_do(int sig) {
 #endif
 }
 
-void
-sig_alrm(int sig) {
+void sig_alrm(int sig) {
     fflush(stderr);
     sig_alrm_do(sig);
 }
 
 
 
-void
-sig_alrm_end(void) {
+void sig_alrm_end(void) {
 #ifndef _WIN32
     alarm(0);
 #endif
 }
 
-static struct files_relation_processing *
-files_relation_processing_new(FILE *line2poi, char *suffix) {
+static struct files_relation_processing *files_relation_processing_new(FILE *line2poi, char *suffix) {
     struct files_relation_processing *result = g_new(struct files_relation_processing, 1);
     result->ways_in=tempfile(suffix,"ways_split",0);
     result->ways_out=tempfile(suffix,"ways_split_relproc_tmp",1);
@@ -236,8 +230,7 @@ files_relation_processing_new(FILE *line2poi, char *suffix) {
     return result;
 }
 
-static void
-files_relation_processing_destroy(struct files_relation_processing *files_relproc, char *suffix) {
+static void files_relation_processing_destroy(struct files_relation_processing *files_relproc, char *suffix) {
     fclose(files_relproc->ways_in);
     fclose(files_relproc->nodes_in);
     fclose(files_relproc->ways_out);
@@ -268,15 +261,13 @@ static void add_plugin(char *path) {
     plugin_new(&pl_attr,attrs);
 }
 
-static void
-maptool_init(FILE* rule_file) {
+static void maptool_init(FILE* rule_file) {
     if (plugins)
         plugins_init(plugins);
     osm_init(rule_file);
 }
 
-static void
-usage(void) {
+static void usage(void) {
     FILE *f = stdout;
     /* DEVELOPERS : don't forget to update the manpage if you modify theses options */
     fprintf(f,"\n");
@@ -358,8 +349,7 @@ struct maptool_params {
     int max_index_size;
 };
 
-static int
-parse_option(struct maptool_params *p, char **argv, int argc, int *option_index) {
+static int parse_option(struct maptool_params *p, char **argv, int argc, int *option_index) {
     char *optarg_cp,*attr_name,*attr_value;
     struct map *handle;
     struct attr *attrs[10];
@@ -538,8 +528,7 @@ parse_option(struct maptool_params *p, char **argv, int argc, int *option_index)
     return 3;
 }
 
-static int
-start_phase(struct maptool_params *p, char *str) {
+static int start_phase(struct maptool_params *p, char *str) {
     phase++;
     if (p->start <= phase && p->end >= phase) {
         fprintf(stderr,"PROGRESS: Phase %d: %s",phase,str);
@@ -552,14 +541,12 @@ start_phase(struct maptool_params *p, char *str) {
         return 0;
 }
 
-static void
-exit_with_error(char* error_message) {
+static void exit_with_error(char* error_message) {
     fprintf(stderr, "%s", error_message);
     exit(1);
 }
 
-static void
-osm_read_input_data(struct maptool_params *p, char *suffix) {
+static void osm_read_input_data(struct maptool_params *p, char *suffix) {
     unlink("coords.tmp");
     if (p->process_ways)
         p->osm.ways=tempfile(suffix,"ways",1);
@@ -627,8 +614,7 @@ osm_read_input_data(struct maptool_params *p, char *suffix) {
 }
 int debug_ref=0;
 
-static void
-osm_count_references(struct maptool_params *p, char *suffix, int clear) {
+static void osm_count_references(struct maptool_params *p, char *suffix, int clear) {
     int i,first=1;
     fprintf(stderr,"%d slices\n",slices);
     for (i = slices-1 ; i>=0 ; i--) {
@@ -663,8 +649,7 @@ osm_count_references(struct maptool_params *p, char *suffix, int clear) {
 }
 
 
-static void
-osm_resolve_coords_and_split_at_intersections(struct maptool_params *p, char *suffix) {
+static void osm_resolve_coords_and_split_at_intersections(struct maptool_params *p, char *suffix) {
     FILE *ways, *ways_split, *ways_split_index, *graph, *coastline;
     int i;
 
@@ -694,8 +679,7 @@ osm_resolve_coords_and_split_at_intersections(struct maptool_params *p, char *su
     tempfile_unlink(suffix,"ways_to_resolve");
 }
 
-static void
-osm_process_way2poi(struct maptool_params *p, char *suffix) {
+static void osm_process_way2poi(struct maptool_params *p, char *suffix) {
     FILE *poly2poi=tempfile(suffix,"poly2poi_resolved",0);
     FILE *line2poi=tempfile(suffix,"line2poi_resolved",0);
     FILE *way2poi_result=tempfile(suffix,"way2poi_result",1);
@@ -710,8 +694,7 @@ osm_process_way2poi(struct maptool_params *p, char *suffix) {
     fclose(way2poi_result);
 }
 
-static void
-osm_process_coastlines(struct maptool_params *p, char *suffix) {
+static void osm_process_coastlines(struct maptool_params *p, char *suffix) {
     FILE *coastline=tempfile(suffix,"coastline",0);
     if (coastline) {
         FILE *coastline_result=tempfile(suffix,"coastline_result",1);
@@ -721,8 +704,7 @@ osm_process_coastlines(struct maptool_params *p, char *suffix) {
     }
 }
 
-static void
-osm_process_turn_restrictions(struct maptool_params *p, char *suffix) {
+static void osm_process_turn_restrictions(struct maptool_params *p, char *suffix) {
     FILE *ways_split, *ways_split_index, *relations, *coords;
     p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",0);
     if (!p->osm.turn_restrictions)
@@ -741,8 +723,7 @@ osm_process_turn_restrictions(struct maptool_params *p, char *suffix) {
         tempfile_unlink(suffix,"turn_restrictions");
 }
 
-static void
-maptool_dump(struct maptool_params *p, char *suffix) {
+static void maptool_dump(struct maptool_params *p, char *suffix) {
     char *files[10];
     int i,files_count=0;
     if (p->process_nodes)
@@ -760,9 +741,9 @@ maptool_dump(struct maptool_params *p, char *suffix) {
     }
 }
 
-static void
-maptool_generate_tiles(struct maptool_params *p, char *suffix, char **filenames, int filename_count, int first,
-                       char *suffix0) {
+static void maptool_generate_tiles(struct maptool_params *p, char *suffix, char **filenames, int filename_count,
+                                   int first,
+                                   char *suffix0) {
     struct zip_info *zip_info;
     FILE *tilesdir;
     FILE *files[10];
@@ -789,9 +770,8 @@ maptool_generate_tiles(struct maptool_params *p, char *suffix, char **filenames,
     zip_set_zipnum(zip_info,zipnum);
 }
 
-static void
-maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, char **referencenames,
-                     int filename_count, int first, int last, char *suffix0) {
+static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, char **referencenames,
+                                 int filename_count, int first, int last, char *suffix0) {
     FILE *files[10];
     FILE *references[10];
     struct zip_info *zip_info;
@@ -867,8 +847,7 @@ maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, c
     }
 }
 
-static void
-maptool_load_node_table(struct maptool_params *p, int last) {
+static void maptool_load_node_table(struct maptool_params *p, int last) {
     if (!p->node_table_loaded) {
         slices=(sizeof_buffer("coords.tmp")+(long long)slice_size-(long long)1)/(long long)slice_size;
         assert(slices>0);
@@ -877,16 +856,14 @@ maptool_load_node_table(struct maptool_params *p, int last) {
     }
 }
 
-static void
-maptool_load_countries(struct maptool_params *p) {
+static void maptool_load_countries(struct maptool_params *p) {
     if (!p->countries_loaded) {
         load_countries();
         p->countries_loaded=1;
     }
 }
 
-static void
-maptool_load_tilesdir(struct maptool_params *p, char *suffix) {
+static void maptool_load_tilesdir(struct maptool_params *p, char *suffix) {
     if (!p->tilesdir_loaded) {
         FILE *tilesdir=tempfile(suffix,"tilesdir",0);
         load_tilesdir(tilesdir);

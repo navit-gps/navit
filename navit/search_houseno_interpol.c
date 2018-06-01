@@ -59,8 +59,7 @@ struct hn_interpol_attr house_number_interpol_attrs[] = {
     { house_number_interpol_attr_END, -1, -1 },
 };
 
-void
-house_number_interpolation_clear_current(struct house_number_interpolation *inter) {
+void house_number_interpolation_clear_current(struct house_number_interpolation *inter) {
     g_free(inter->first);
     g_free(inter->last);
     g_free(inter->curr);
@@ -68,14 +67,12 @@ house_number_interpolation_clear_current(struct house_number_interpolation *inte
     inter->increment=inter->include_end_nodes=-1;
 }
 
-void
-house_number_interpolation_clear_all(struct house_number_interpolation *inter) {
+void house_number_interpolation_clear_all(struct house_number_interpolation *inter) {
     inter->curr_interpol_attr_idx=0;
     house_number_interpolation_clear_current(inter);
 }
 
-static char *
-search_next_house_number_curr_interpol_with_ends(struct house_number_interpolation *inter) {
+static char *search_next_house_number_curr_interpol_with_ends(struct house_number_interpolation *inter) {
     dbg(lvl_debug,"interpolate %s-%s %s",inter->first,inter->last,inter->curr);
     if (!inter->first || !inter->last)
         return NULL;
@@ -98,14 +95,12 @@ search_next_house_number_curr_interpol_with_ends(struct house_number_interpolati
     return inter->curr;
 }
 
-static int
-house_number_is_end_number(char* house_number, struct house_number_interpolation *inter) {
+static int house_number_is_end_number(char* house_number, struct house_number_interpolation *inter) {
     return ( (!strcmp(house_number, inter->first))
              || (!strcmp(house_number, inter->last)) );
 }
 
-static char *
-search_next_house_number_curr_interpol(struct house_number_interpolation *inter) {
+static char *search_next_house_number_curr_interpol(struct house_number_interpolation *inter) {
     char* hn=NULL;
     switch (inter->include_end_nodes) {
     case end_nodes_yes:
@@ -120,8 +115,7 @@ search_next_house_number_curr_interpol(struct house_number_interpolation *inter)
     return hn;
 }
 
-static void
-search_house_number_interpolation_split(char *str, struct house_number_interpolation *inter) {
+static void search_house_number_interpolation_split(char *str, struct house_number_interpolation *inter) {
     char *pos=strchr(str,'-');
     char *first,*last;
     int len;
@@ -208,17 +202,16 @@ search_house_number_coordinate(struct item *item, struct house_number_interpolat
     return ret;
 }
 
-static int
-search_match(char *str, char *search, int partial) {
+static int search_match(char *str, char *search, int partial) {
     if (!partial)
         return (!g_ascii_strcasecmp(str, search));
     else
         return (!g_ascii_strncasecmp(str, search, strlen(search)));
 }
 
-char *
-search_next_interpolated_house_number(struct item *item, struct house_number_interpolation *inter, char *inter_match,
-                                      int inter_partial) {
+char *search_next_interpolated_house_number(struct item *item, struct house_number_interpolation *inter,
+        char *inter_match,
+        int inter_partial) {
     while (1) {
         char *hn;
         struct attr attr;

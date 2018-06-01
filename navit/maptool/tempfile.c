@@ -23,12 +23,10 @@
 #include "maptool.h"
 #include "debug.h"
 
-char *
-tempfile_name(char *suffix, char *name) {
+char *tempfile_name(char *suffix, char *name) {
     return g_strdup_printf("%s_%s.tmp",name, suffix);
 }
-FILE *
-tempfile(char *suffix, char *name, int mode) {
+FILE *tempfile(char *suffix, char *name, int mode) {
     char *buffer=tempfile_name(suffix, name);
     FILE *ret=NULL;
     switch (mode) {
@@ -46,15 +44,13 @@ tempfile(char *suffix, char *name, int mode) {
     return ret;
 }
 
-void
-tempfile_unlink(char *suffix, char *name) {
+void tempfile_unlink(char *suffix, char *name) {
     char buffer[4096];
     sprintf(buffer,"%s_%s.tmp",name, suffix);
     unlink(buffer);
 }
 
-void
-tempfile_rename(char *suffix, char *from, char *to) {
+void tempfile_rename(char *suffix, char *from, char *to) {
     char buffer_from[4096],buffer_to[4096];
     sprintf(buffer_from,"%s_%s.tmp",from,suffix);
     sprintf(buffer_to,"%s_%s.tmp",to,suffix);

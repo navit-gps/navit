@@ -76,8 +76,7 @@ struct map_rect_priv {
 
 int garmin_debug = 10;
 
-void
-logfn(char *file, int line, int level, char *fmt, ...) {
+void logfn(char *file, int line, int level, char *fmt, ...) {
     va_list ap;
     char fileline[256];
     int sz;
@@ -136,8 +135,7 @@ static struct gscale mapscales[] = {
 };
 
 
-static int
-garmin_object_label(struct gobject *o, struct attr *attr) {
+static int garmin_object_label(struct gobject *o, struct attr *attr) {
     struct map_rect_priv *mr = o->priv_data;
     char *codepage;
     char *label;
@@ -172,8 +170,7 @@ garmin_object_label(struct gobject *o, struct attr *attr) {
     return 0;
 }
 
-static int
-garmin_object_debug(struct gobject *o, struct attr *attr) {
+static int garmin_object_debug(struct gobject *o, struct attr *attr) {
     struct map_rect_priv *mr = o->priv_data;
     if (!mr) {
         dlog(1, "Error object do not have priv_data!!\n");
@@ -190,8 +187,8 @@ garmin_object_debug(struct gobject *o, struct attr *attr) {
 }
 
 
-static struct map_search_priv *
-gmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial) {
+static struct map_search_priv *gmap_search_new(struct map_priv *map, struct item *item, struct attr *search,
+        int partial) {
     struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
     struct gar_search *gs;
     int rc;
@@ -252,22 +249,19 @@ out_err:
 }
 
 /* Assumes that only one item will be itterated at time! */
-static void
-coord_rewind(void *priv_data) {
+static void coord_rewind(void *priv_data) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     mr->last_coord = 0;
 };
 
-static void
-attr_rewind(void *priv_data) {
+static void attr_rewind(void *priv_data) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     mr->last_attr = 0;
 };
 
-static int
-point_coord_get(void *priv_data, struct coord *c, int count) {
+static int point_coord_get(void *priv_data, struct coord *c, int count) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     struct gcoord gc;
@@ -290,16 +284,14 @@ point_coord_get(void *priv_data, struct coord *c, int count) {
     return 1;
 }
 
-static int
-coord_is_node(void *priv_data) {
+static int coord_is_node(void *priv_data) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
 
     return gar_is_object_dcoord_node(mr->gmap, g, mr->last_coord);
 }
 
-static int
-poly_coord_get(void *priv_data, struct coord *c, int count) {
+static int poly_coord_get(void *priv_data, struct coord *c, int count) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     int ndeltas = 0, total = 0;
@@ -340,8 +332,7 @@ poly_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 // for _any we must return one by one
-static int
-point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     int rc;
@@ -429,8 +420,7 @@ static struct item_methods methods_garmin_poly = {
     coord_is_node,
 };
 
-static int
-search_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int search_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     int rc;
@@ -563,8 +553,7 @@ search_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     return 0;
 }
 
-static int
-search_coord_get(void *priv_data, struct coord *c, int count) {
+static int search_coord_get(void *priv_data, struct coord *c, int count) {
     struct gobject *g = priv_data;
     struct map_rect_priv *mr = g->priv_data;
     struct gcoord gc;
@@ -595,8 +584,7 @@ static struct item_methods methods_garmin_search = {
 };
 
 
-static struct item *
-garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
+static struct item *garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
     if (mr->mpriv->conv) {
         int mask = gar_object_group(o) << G2N_KIND_SHIFT;
         mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT|mask, otype);
@@ -605,8 +593,7 @@ garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otyp
     return &mr->item;
 }
 
-static struct item *
-garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
+static struct item *garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
     if (mr->mpriv->conv) {
         int mask = gar_object_group(o) << G2N_KIND_SHIFT;
         mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYLINE|mask, otype);
@@ -615,8 +602,7 @@ garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype
     return &mr->item;
 }
 
-static struct item *
-garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
+static struct item *garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
     if (mr->mpriv->conv) {
         int mask = gar_object_group(o) << G2N_KIND_SHIFT;
         mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYGONE|mask, otype);
@@ -625,15 +611,13 @@ garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype
     return &mr->item;
 }
 
-static struct item *
-garmin_srch2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
+static struct item *garmin_srch2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype) {
     mr->item.type = type_country_label;
     mr->item.meth = &methods_garmin_search;
     return &mr->item;
 }
 
-static struct item *
-garmin_obj2item(struct map_rect_priv *mr, struct gobject *o) {
+static struct item *garmin_obj2item(struct map_rect_priv *mr, struct gobject *o) {
     unsigned short otype;
     otype = gar_obj_type(o);
     mr->item.type = type_none;
@@ -657,8 +641,7 @@ garmin_obj2item(struct map_rect_priv *mr, struct gobject *o) {
     return NULL;
 }
 
-static struct item *
-gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
     struct gobject *o;
     o = mr->objs = gar_get_object_by_id(mr->mpriv->g, id_hi, id_lo);
     if (!o) {
@@ -676,8 +659,7 @@ gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
     return &mr->item;
 }
 
-static struct item *
-gmap_rect_get_item(struct map_rect_priv *mr) {
+static struct item *gmap_rect_get_item(struct map_rect_priv *mr) {
     struct gobject *o;
     if (!mr->objs)
         return NULL;
@@ -751,13 +733,11 @@ struct nl2gl_t nl2gl[] = {
     { /* 18 */ .g = 0, .descr = "0-120m", },
 };
 
-static int
-get_level(struct map_selection *sel) {
+static int get_level(struct map_selection *sel) {
     return sel->order;
 }
 
-static int
-garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel) {
+static int garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel) {
     struct gar_rect r;
     struct gmap *gm;
     struct gobject **glast = NULL;
@@ -820,8 +800,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel) {
     return rc;
 }
 // Can not return NULL, navit segfaults
-static struct map_rect_priv *
-gmap_rect_new(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *gmap_rect_new(struct map_priv *map, struct map_selection *sel) {
     struct map_selection *ms = sel;
     struct map_rect_priv *mr;
 
@@ -846,8 +825,7 @@ gmap_rect_new(struct map_priv *map, struct map_selection *sel) {
     return mr;
 }
 
-static void
-gmap_rect_destroy(struct map_rect_priv *mr) {
+static void gmap_rect_destroy(struct map_rect_priv *mr) {
     dlog(11,"destroy maprect\n");
     if (mr->gmap)
         gar_free_gmap(mr->gmap);
@@ -858,13 +836,11 @@ gmap_rect_destroy(struct map_rect_priv *mr) {
     free(mr);
 }
 
-static void
-gmap_search_destroy(struct map_search_priv *ms) {
+static void gmap_search_destroy(struct map_search_priv *ms) {
     gmap_rect_destroy((struct map_rect_priv *)ms);
 }
 
-static void
-gmap_destroy(struct map_priv *m) {
+static void gmap_destroy(struct map_priv *m) {
     dlog(5, "garmin_map_destroy\n");
     if (m->g)
         gar_free(m->g);
@@ -886,8 +862,7 @@ static struct map_methods map_methods = {
     NULL,
 };
 
-static struct map_priv *
-gmap_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *gmap_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
     struct attr *data;
     struct attr *debug;
@@ -953,7 +928,6 @@ gmap_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cb
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_map("garmin", gmap_new);
 }

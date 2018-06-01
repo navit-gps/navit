@@ -27,8 +27,7 @@
 #include "vehicleprofile.h"
 #include "callback.h"
 
-static void
-vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
+static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     dbg(lvl_debug,"%s:%ld", attr_to_name(attr->type), attr->u.num);
     switch (attr->type) {
     case attr_flags:
@@ -95,22 +94,19 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     }
 }
 
-static void
-vehicleprofile_free_hash_item(gpointer key, gpointer value, gpointer user_data) {
+static void vehicleprofile_free_hash_item(gpointer key, gpointer value, gpointer user_data) {
     struct navit_object *obj=value;
     obj->func->unref(obj);
 }
 
-static void
-vehicleprofile_free_hash(struct vehicleprofile *this_) {
+static void vehicleprofile_free_hash(struct vehicleprofile *this_) {
     if (this_->roadprofile_hash) {
         g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_free_hash_item, NULL);
         g_hash_table_destroy(this_->roadprofile_hash);
     }
 }
 
-static void
-vehicleprofile_clear(struct vehicleprofile *this_) {
+static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->mode=0;
     this_->flags_forward_mask=0;
     this_->flags_reverse_mask=0;
@@ -133,8 +129,7 @@ vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->roadprofile_hash=g_hash_table_new(NULL, NULL);
 }
 
-static void
-vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struct navit_object *rp, int is_option) {
+static void vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struct navit_object *rp, int is_option) {
     struct attr item_types_attr;
     if (rp->func->get_attr(rp, attr_item_types, &item_types_attr, NULL)) {
         enum item_type *types=item_types_attr.u.item_types;
@@ -168,8 +163,7 @@ vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struct navit_obje
     }
 }
 
-static void
-vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navit_object *obj, int is_option) {
+static void vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navit_object *obj, int is_option) {
     struct attr attr;
     struct attr_iter *iter=obj->func->iter_new(NULL);
     while (obj->func->get_attr(obj, attr_any, &attr, iter)) {
@@ -182,14 +176,12 @@ vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navit_object *ob
     obj->func->iter_destroy(iter);
 }
 
-static void
-vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data) {
+static void vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data) {
     struct roadprofile *rp=value;
     dbg(lvl_debug,"type %s avg %d weight %d max %d",item_to_name((int)(long)key),rp->speed,rp->route_weight,rp->maxspeed);
 }
 
-static void
-vehicleprofile_update(struct vehicleprofile *this_) {
+static void vehicleprofile_update(struct vehicleprofile *this_) {
     struct attr_iter *iter=vehicleprofile_attr_iter_new();
     struct attr profile_option;
     dbg(lvl_debug,"enter");
@@ -239,26 +231,23 @@ vehicleprofile_attr_iter_new(void) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 
-void
-vehicleprofile_attr_iter_destroy(struct attr_iter *iter) {
+void vehicleprofile_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
 }
 
 
-int
-vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr,
+                            struct attr_iter *iter) {
     return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
-int
-vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr) {
+int vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr) {
     vehicleprofile_set_attr_do(this_, attr);
     this_->attrs=attr_generic_set_attr(this_->attrs, attr);
     return 1;
 }
 
-int
-vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr) {
+int vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr) {
     this_->attrs=attr_generic_add_attr(this_->attrs, attr);
     switch (attr->type) {
     case attr_roadprofile:
@@ -273,8 +262,7 @@ vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr) {
     return 1;
 }
 
-int
-vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr) {
+int vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr) {
     this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
     return 1;
 }
@@ -284,13 +272,11 @@ vehicleprofile_get_roadprofile(struct vehicleprofile *this_, enum item_type type
     return g_hash_table_lookup(this_->roadprofile_hash, (void *)(long)type);
 }
 
-char *
-vehicleprofile_get_name(struct vehicleprofile *this_) {
+char *vehicleprofile_get_name(struct vehicleprofile *this_) {
     return this_->name;
 }
 
-static void
-vehicleprofile_init(struct vehicleprofile *this_) {
+static void vehicleprofile_init(struct vehicleprofile *this_) {
     vehicleprofile_update(this_);
 }
 

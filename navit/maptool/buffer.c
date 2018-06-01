@@ -30,8 +30,7 @@
  * @param b Buffer which is saved to file.
  * @param offset
  */
-void
-save_buffer(char *filename, struct buffer *b, long long offset) {
+void save_buffer(char *filename, struct buffer *b, long long offset) {
     FILE *f;
     f=fopen(filename,"rb+");
     if (! f)
@@ -52,8 +51,7 @@ save_buffer(char *filename, struct buffer *b, long long offset) {
  * @param offset
  * @return indicator if operation suceeded
  */
-int
-load_buffer(char *filename, struct buffer *b, long long offset, long long size) {
+int load_buffer(char *filename, struct buffer *b, long long offset, long long size) {
     FILE *f;
     long long len;
     dbg_assert(size>=0);
@@ -88,8 +86,7 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size) 
  * @param  filename Name of file for which the required size of the buffer is determined
  * @return required size of buffer
  */
-long long
-sizeof_buffer(char *filename) {
+long long sizeof_buffer(char *filename) {
     long long ret;
     FILE *f=fopen(filename,"rb");
     fseeko(f, 0, SEEK_END);

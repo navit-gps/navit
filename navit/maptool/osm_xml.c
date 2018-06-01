@@ -26,8 +26,7 @@
 #endif
 #include "maptool.h"
 
-int
-osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size) {
+int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size) {
     int len=strlen(attribute);
     char *pos,*i,s,*attr;
     attr=g_alloca(len+2);
@@ -70,8 +69,7 @@ static struct entity {
     {"&#125;",'}'},
 };
 
-void
-osm_xml_decode_entities(char *buffer) {
+void osm_xml_decode_entities(char *buffer) {
     char *pos=buffer;
     int i,len;
 
@@ -88,8 +86,7 @@ osm_xml_decode_entities(char *buffer) {
     }
 }
 
-static int
-parse_tag(char *p) {
+static int parse_tag(char *p) {
     char k_buffer[BUFFER_SIZE];
     char v_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(p, "k", k_buffer, BUFFER_SIZE))
@@ -102,8 +99,7 @@ parse_tag(char *p) {
 }
 
 
-static int
-parse_node(char *p) {
+static int parse_node(char *p) {
     char id_buffer[BUFFER_SIZE];
     char lat_buffer[BUFFER_SIZE];
     char lon_buffer[BUFFER_SIZE];
@@ -118,8 +114,7 @@ parse_node(char *p) {
 }
 
 
-static int
-parse_way(char *p) {
+static int parse_way(char *p) {
     char id_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
         return 0;
@@ -127,8 +122,7 @@ parse_way(char *p) {
     return 1;
 }
 
-static int
-parse_relation(char *p) {
+static int parse_relation(char *p) {
     char id_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
         return 0;
@@ -136,8 +130,7 @@ parse_relation(char *p) {
     return 1;
 }
 
-static int
-parse_member(char *p) {
+static int parse_member(char *p) {
     char type_buffer[BUFFER_SIZE];
     char ref_buffer[BUFFER_SIZE];
     char role_buffer[BUFFER_SIZE];
@@ -163,8 +156,7 @@ parse_member(char *p) {
     return 1;
 }
 
-static int
-parse_nd(char *p) {
+static int parse_nd(char *p) {
     char ref_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
         return 0;
@@ -172,13 +164,11 @@ parse_nd(char *p) {
     return 1;
 }
 
-static int
-xml_declaration_in_line(char* buffer) {
+static int xml_declaration_in_line(char* buffer) {
     return !strncmp(buffer, "<?xml ", 6);
 }
 
-int
-map_collect_data_osm(FILE *in, struct maptool_osm *osm) {
+int map_collect_data_osm(FILE *in, struct maptool_osm *osm) {
     int size=BUFFER_SIZE;
     char buffer[BUFFER_SIZE];
     char *p;

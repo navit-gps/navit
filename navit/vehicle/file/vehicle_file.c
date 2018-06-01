@@ -212,8 +212,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv) {
 *
 * @return 1 if ok, 0 if error
 */
-static int
-vehicle_file_open(struct vehicle_priv *priv) {
+static int vehicle_file_open(struct vehicle_priv *priv) {
     char *name;
 #ifndef _WIN32
     struct termios tio;
@@ -319,8 +318,7 @@ vehicle_file_open(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_close(struct vehicle_priv *priv) {
+static void vehicle_file_close(struct vehicle_priv *priv) {
     dbg(lvl_debug, "enter, priv->fd='%d'", priv->fd);
     vehicle_file_disable_watch(priv);
 #ifdef _WIN32
@@ -352,8 +350,7 @@ vehicle_file_close(struct vehicle_priv *priv) {
 *
 * @return Always 0
 */
-static int
-vehicle_file_enable_watch_timer(struct vehicle_priv *priv) {
+static int vehicle_file_enable_watch_timer(struct vehicle_priv *priv) {
     dbg(lvl_debug, "enter");
     vehicle_file_enable_watch(priv);
 
@@ -367,8 +364,7 @@ vehicle_file_enable_watch_timer(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_fix_timeout_cb(struct vehicle_priv *priv) {
+static void vehicle_file_fix_timeout_cb(struct vehicle_priv *priv) {
     priv->valid = attr_position_valid_invalid;
     priv->ev_fix_timeout = NULL;
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
@@ -380,8 +376,7 @@ vehicle_file_fix_timeout_cb(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_restart_fix_timeout(struct vehicle_priv *priv) {
+static void vehicle_file_restart_fix_timeout(struct vehicle_priv *priv) {
     if (priv->ev_fix_timeout != NULL)
         event_remove_timeout(priv->ev_fix_timeout);
     priv->ev_fix_timeout = event_add_timeout(10000, 0, priv->cb_fix_timeout);
@@ -397,8 +392,7 @@ vehicle_file_restart_fix_timeout(struct vehicle_priv *priv) {
 * @return 1 if new coords were received (fixtime changed) or changed to invalid,
 *         0 if not found
 */
-static int
-vehicle_file_parse(struct vehicle_priv *priv, char *buffer) {
+static int vehicle_file_parse(struct vehicle_priv *priv, char *buffer) {
     char *nmea_data_buf, *p, *item[32];
     double lat, lng;
     int i, j, bcsum;
@@ -666,8 +660,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer) {
 *
 * @param  priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_io(struct vehicle_priv *priv) {
+static void vehicle_file_io(struct vehicle_priv *priv) {
     int size, rc = 0;
     char *str, *tok;
     dbg(lvl_debug, "vehicle_file_io : enter");
@@ -735,8 +728,7 @@ vehicle_file_io(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_enable_watch(struct vehicle_priv *priv) {
+static void vehicle_file_enable_watch(struct vehicle_priv *priv) {
     dbg(lvl_debug, "enter");
 #ifdef _WIN32
     // add an event : don't use glib timers and g_timeout_add
@@ -758,8 +750,7 @@ vehicle_file_enable_watch(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_file_disable_watch(struct vehicle_priv *priv) {
+static void vehicle_file_disable_watch(struct vehicle_priv *priv) {
     dbg(lvl_debug, "vehicle_file_disable_watch : enter");
 #ifdef _WIN32
     if(priv->file_type == file_type_serial) {
@@ -783,8 +774,7 @@ vehicle_file_disable_watch(struct vehicle_priv *priv) {
 *
 * @remarks private data is freed by this function (g_free)
 */
-static void
-vehicle_file_destroy(struct vehicle_priv *priv) {
+static void vehicle_file_destroy(struct vehicle_priv *priv) {
     if (priv->statefile && priv->nmea_data) {
         struct attr readwrite= {attr_readwrite};
         struct attr create= {attr_create};
@@ -820,9 +810,8 @@ vehicle_file_destroy(struct vehicle_priv *priv) {
 *
 * @return 1 if ok, 0 for unknown or invalid attribute
 */
-static int
-vehicle_file_position_attr_get(struct vehicle_priv *priv,
-                               enum attr_type type, struct attr *attr) {
+static int vehicle_file_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_fix_type:
         attr->u.num = priv->status;
@@ -897,8 +886,7 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 *
 * @return 1 if ok, 0 for unknown attribute
 */
-static int
-vehicle_file_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr) {
+static int vehicle_file_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr) {
     struct gps_sat *sat;
     struct vehicle_priv *priv=priv_data;
     if (priv->sat_item.id_lo < 1)
@@ -949,10 +937,9 @@ static struct vehicle_methods vehicle_file_methods = {
 *
 * @remarks Private data is allocated by this function (g_new0)
 */
-static struct vehicle_priv *
-vehicle_file_new_file(struct vehicle_methods
-                      *meth, struct callback_list
-                      *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *source;
     struct attr *time;

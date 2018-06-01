@@ -27,8 +27,7 @@ typedef struct {
     struct route *route;
 } routeObject;
 
-static PyObject *
-route_get_map_py(routeObject *self, PyObject *args) {
+static PyObject *route_get_map_py(routeObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     return map_py_ref(route_get_map(self->route));
@@ -42,13 +41,11 @@ static PyMethodDef route_methods[] = {
 };
 
 
-static PyObject *
-route_getattr_py(PyObject *self, char *name) {
+static PyObject *route_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(route_methods, self, name);
 }
 
-static void
-route_destroy_py(routeObject *self) {
+static void route_destroy_py(routeObject *self) {
 }
 
 PyTypeObject route_Type = {
@@ -59,16 +56,14 @@ PyTypeObject route_Type = {
     .tp_getattr=route_getattr_py,
 };
 
-PyObject *
-route_py(PyObject *self, PyObject *args) {
+PyObject *route_py(PyObject *self, PyObject *args) {
     routeObject *ret;
 
     ret=PyObject_NEW(routeObject, &route_Type);
     return (PyObject *)ret;
 }
 
-PyObject *
-route_py_ref(struct route *route) {
+PyObject *route_py_ref(struct route *route) {
     routeObject *ret;
 
     ret=PyObject_NEW(routeObject, &route_Type);
