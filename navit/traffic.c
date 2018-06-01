@@ -3656,7 +3656,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     /* Iterator for children in GList */
     GList * iter;
 
-    /* Length and speed for events */
+    /* Some elements we need to check for null */
+    char * tmc_direction;
     char * length;
     char * speed;
 
@@ -3699,6 +3700,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->events = NULL;
             /* TODO replaces */
         } else if (!g_ascii_strcasecmp((char *) tag_name, "location")) {
+            tmc_direction = traffic_xml_get_attr("tmc_direction", el->names, el->values);
             state->location = traffic_location_new(state->at, state->from,
                                                    state->to, state->via, state->not_via,
                                                    traffic_xml_get_attr("destination", el->names, el->values),
@@ -3712,7 +3714,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                                    traffic_xml_get_attr("road_name", el->names, el->values),
                                                    traffic_xml_get_attr("road_ref", el->names, el->values),
                                                    traffic_xml_get_attr("tmc_table", el->names, el->values),
-                                                   atoi(traffic_xml_get_attr("tmc_direction", el->names, el->values)));
+                                                   tmc_direction ? atoi(tmc_direction) : 0);
             state->from = NULL;
             state->to = NULL;
             state->at = NULL;
