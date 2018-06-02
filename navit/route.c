@@ -2398,12 +2398,14 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
             route_graph_point_update(profile, p_min, heap);
         }
 
-        /* in any case, update rhs of neighbors */
+        /* in any case, update rhs of successors (nodes from which we can reach p_min via a single segment) */
         for (s = p_min->start; s; s = s->start_next)
-            route_graph_point_update(profile, s->end, heap);
+            if (route_value_seg(profile, NULL, s, -1) != INT_MAX)
+                route_graph_point_update(profile, s->end, heap);
         for (s = p_min->end; s; s = s->end_next)
-            route_graph_point_update(profile, s->start, heap);
-    }
+            if (route_value_seg(profile, NULL, s, 1) != INT_MAX)
+                route_graph_point_update(profile, s->start, heap);
+	}
 }
 
 /**
