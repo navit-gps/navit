@@ -83,8 +83,7 @@ struct rocket {
     struct event_idle *idle;
 };
 
-static void
-pedestrian_rocket_idle(struct rocket *rocket) {
+static void pedestrian_rocket_idle(struct rocket *rocket) {
     struct attr follow;
     follow.type=attr_follow;
     follow.u.num=100;
@@ -112,8 +111,7 @@ pedestrian_rocket_idle(struct rocket *rocket) {
     navit_set_attr(rocket->navit, &follow);
 }
 
-static void
-pedestrian_cmd_pedestrian_rocket(struct rocket *rocket) {
+static void pedestrian_cmd_pedestrian_rocket(struct rocket *rocket) {
     struct attr attr;
     int max=0;
 #if 0
@@ -180,8 +178,7 @@ static struct command_table commands[] = {
 
 
 
-static void
-osd_rocket_init(struct navit *nav) {
+static void osd_rocket_init(struct navit *nav) {
     struct rocket *rocket=g_new0(struct rocket, 1);
     struct attr attr;
     rocket->navit=nav;
@@ -198,8 +195,7 @@ struct marker {
     struct cursor *cursor;
 };
 
-static void
-osd_marker_draw(struct marker *this, struct navit *nav) {
+static void osd_marker_draw(struct marker *this, struct navit *nav) {
 #if 0
     struct attr graphics;
     struct point p;
@@ -213,8 +209,7 @@ osd_marker_draw(struct marker *this, struct navit *nav) {
 
 }
 
-static void
-osd_marker_init(struct marker *this, struct navit *nav) {
+static void osd_marker_init(struct marker *this, struct navit *nav) {
     struct attr cursor;
     struct attr itemgra,polygon,polygoncoord1,polygoncoord2,polygoncoord3;
     struct attr *color=attr_new_from_text("color","#ff0000");
@@ -293,9 +288,8 @@ osd_marker_init(struct marker *this, struct navit *nav) {
     osd_marker_draw(this, nav);
 }
 
-static struct osd_priv *
-osd_marker_new(struct navit *nav, struct osd_methods *meth,
-               struct attr **attrs) {
+static struct osd_priv *osd_marker_new(struct navit *nav, struct osd_methods *meth,
+                                       struct attr **attrs) {
     struct marker *this = g_new0(struct marker, 1);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_marker_init), attr_navit, this));
     return (struct osd_priv *) this;
@@ -330,8 +324,7 @@ struct map_rect_priv {
     int lseg_done_base;
 };
 
-static int
-map_route_occluded_bbox(struct map *map, struct coord_rect *bbox) {
+static int map_route_occluded_bbox(struct map *map, struct coord_rect *bbox) {
     struct coord c[128];
     struct coord_rect r;
     int i,first=1,ccount;
@@ -360,8 +353,7 @@ static struct building {
     struct building *next;
 } *buildings;
 
-static void
-map_route_occluded_buildings_free(void) {
+static void map_route_occluded_buildings_free(void) {
     struct building *next,*b=buildings;
     while (b) {
         street_data_free(b->sd);
@@ -372,8 +364,7 @@ map_route_occluded_buildings_free(void) {
     buildings=NULL;
 }
 
-static void
-map_route_occluded_get_buildings(struct mapset *mapset, struct coord_rect *r) {
+static void map_route_occluded_get_buildings(struct mapset *mapset, struct coord_rect *r) {
     struct mapset_handle *msh=mapset_open(mapset);
     struct map *map;
     struct map_selection sel;
@@ -420,8 +411,7 @@ FILE *debug,*debug2;
 
 /* < 0 left, > 0 right */
 
-static int
-side(struct coord *l0, struct coord *l1, struct coord *p) {
+static int side(struct coord *l0, struct coord *l1, struct coord *p) {
     int dxl=l1->x-l0->x;
     int dyl=l1->y-l0->y;
     int dxp=p->x-l0->x;
@@ -430,8 +420,7 @@ side(struct coord *l0, struct coord *l1, struct coord *p) {
     return dxp*dyl-dyp*dxl;
 }
 
-static void
-map_route_occluded_check_buildings(struct coord *c0) {
+static void map_route_occluded_check_buildings(struct coord *c0) {
     struct building *b=buildings;
     dbg(lvl_debug,"enter");
     int i,count;
@@ -480,8 +469,7 @@ map_route_occluded_check_buildings(struct coord *c0) {
 #endif
 }
 
-static int
-intersect(struct coord *p1, struct coord *p2, struct coord *p3, struct coord *p4, struct coord *i) {
+static int intersect(struct coord *p1, struct coord *p2, struct coord *p3, struct coord *p4, struct coord *i) {
     double num=(p4->x-p3->x)*(p1->y-p3->y)-(p4->y-p3->y)*(p1->x-p3->x);
     double den=(p4->y-p3->y)*(p2->x-p1->x)-(p4->x-p3->x)*(p2->y-p1->y);
     if (num < 0 && den < 0) {
@@ -513,8 +501,7 @@ intersect(struct coord *p1, struct coord *p2, struct coord *p3, struct coord *p4
 
 /* #define DEBUG_VISIBLE */
 
-static int
-is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2) {
+static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2) {
     int res,ret=0;
     struct building *b=buildings;
     struct coord cn;
@@ -606,8 +593,7 @@ is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2) {
     return ret;
 }
 
-static void
-map_route_occluded_coord_rewind(void *priv_data) {
+static void map_route_occluded_coord_rewind(void *priv_data) {
     struct map_rect_priv *mr = priv_data;
     dbg(lvl_debug,"enter");
     mr->idx=mr->idx_base;
@@ -620,22 +606,19 @@ map_route_occluded_coord_rewind(void *priv_data) {
     item_coord_rewind(mr->route_item);
 }
 
-static void
-map_route_occluded_attr_rewind(void *priv_data) {
+static void map_route_occluded_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     dbg(lvl_debug,"enter");
     item_attr_rewind(mr->route_item);
 }
 
-static int
-map_route_occluded_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int map_route_occluded_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     dbg(lvl_debug,"enter");
     return item_attr_get(mr->route_item, attr_type, attr);
 }
 
-static int
-coord_next(struct map_rect_priv *mr, struct coord *c) {
+static int coord_next(struct map_rect_priv *mr, struct coord *c) {
     if (mr->idx >= mr->sd->count)
         return 1;
     *c=mr->sd->c[mr->idx++];
@@ -643,8 +626,7 @@ coord_next(struct map_rect_priv *mr, struct coord *c) {
 }
 
 #define DEBUG_COORD_GET
-static int
-map_route_occluded_coord_get(void *priv_data, struct coord *c, int count) {
+static int map_route_occluded_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     struct coord l0,l1;
     int vis,ret=0;
@@ -810,15 +792,13 @@ static struct item_methods methods_route_occluded_item = {
     map_route_occluded_attr_get,
 };
 
-static void
-map_route_occluded_destroy(struct map_priv *priv) {
+static void map_route_occluded_destroy(struct map_priv *priv) {
     g_free(priv);
 }
 
 static int no_recurse;
 
-static struct map_rect_priv *
-map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel) {
+static struct map_rect_priv *map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct map_rect_priv * mr;
     struct attr route;
     struct attr route_map;
@@ -860,8 +840,7 @@ map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel) {
 }
 
 
-static void
-map_route_occluded_rect_destroy(struct map_rect_priv *mr) {
+static void map_route_occluded_rect_destroy(struct map_rect_priv *mr) {
     map_rect_destroy(mr->route_map_rect);
     street_data_free(mr->sd);
     g_free(mr);
@@ -885,8 +864,7 @@ map_route_occluded_rect_destroy(struct map_rect_priv *mr) {
 #endif
 }
 
-static struct item *
-map_route_occluded_get_item(struct map_rect_priv *mr) {
+static struct item *map_route_occluded_get_item(struct map_rect_priv *mr) {
     dbg(lvl_debug,"enter last=%d",mr->last);
     while (!mr->last) {
         struct coord c[128];
@@ -915,8 +893,7 @@ map_route_occluded_get_item(struct map_rect_priv *mr) {
     return &mr->item;
 }
 
-static struct item *
-map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
     struct item *ret=NULL;
     while (id_lo-- > 0)
         ret=map_route_occluded_get_item(mr);
@@ -937,8 +914,7 @@ static struct map_methods map_route_occluded_methods = {
 };
 
 
-static struct map_priv *
-map_route_occluded_new(struct map_methods *meth, struct attr **attrs) {
+static struct map_priv *map_route_occluded_new(struct map_methods *meth, struct attr **attrs) {
     struct map_priv *ret;
     struct attr *navit;
     dbg(lvl_debug,"enter");
@@ -952,8 +928,7 @@ map_route_occluded_new(struct map_methods *meth, struct attr **attrs) {
     return ret;
 }
 
-static void
-pedestrian_graphics_resize(struct graphics *gra, int w, int h) {
+static void pedestrian_graphics_resize(struct graphics *gra, int w, int h) {
 #ifndef HAVE_API_ANDROID
     static int done;
     if (!done) {
@@ -969,8 +944,7 @@ pedestrian_graphics_resize(struct graphics *gra, int w, int h) {
 }
 
 
-static void
-pedestrian_draw_arrow(struct graphics *gra, char *name, int x, int y) {
+static void pedestrian_draw_arrow(struct graphics *gra, char *name, int x, int y) {
     char *src=graphics_icon_path(name);
     struct graphics_image *img=graphics_image_new(gra, src);
     struct graphics_gc *gc=graphics_gc_new(gra);
@@ -985,8 +959,7 @@ pedestrian_draw_arrow(struct graphics *gra, char *name, int x, int y) {
     g_free(src);
 }
 
-static void
-pedestrian_draw_arrows(struct graphics *gra) {
+static void pedestrian_draw_arrows(struct graphics *gra) {
     struct attr route, route_map;
     struct map_rect *route_map_rect;
     struct item *item;
@@ -1028,8 +1001,7 @@ pedestrian_draw_arrows(struct graphics *gra) {
     map_rect_destroy(route_map_rect);
 }
 
-static void
-pedestrian_graphics_postdraw(struct graphics *gra) {
+static void pedestrian_graphics_postdraw(struct graphics *gra) {
 #if 0
     struct graphics_gc * gc = graphics_gc_new(gra);
     struct point p;
@@ -1049,8 +1021,7 @@ struct tilt_data {
     char buffer[32];
 };
 
-void
-pedestrian_write_tilt(int fd, int axis) {
+void pedestrian_write_tilt(int fd, int axis) {
     char *buffer="01";
     int ret;
 
@@ -1061,8 +1032,7 @@ pedestrian_write_tilt(int fd, int axis) {
 }
 
 
-void
-pedestrian_read_tilt(int fd, struct navit *nav, struct tilt_data *data) {
+void pedestrian_read_tilt(int fd, struct navit *nav, struct tilt_data *data) {
     int val,ret,maxlen=3;
     ret=read(fd, data->buffer+data->len, maxlen-data->len);
     if (ret > 0) {
@@ -1090,13 +1060,11 @@ pedestrian_read_tilt(int fd, struct navit *nav, struct tilt_data *data) {
     }
 }
 
-void
-pedestrian_write_tilt_timer(int fd, struct tilt_data *data) {
+void pedestrian_write_tilt_timer(int fd, struct tilt_data *data) {
     pedestrian_write_tilt(fd, data->axis);
 }
 
-void
-pedestrian_setup_tilt(struct navit *nav) {
+void pedestrian_setup_tilt(struct navit *nav) {
     int fd,on=1;
     struct termios t;
     struct callback *cb,*cbt;
@@ -1127,8 +1095,7 @@ pedestrian_setup_tilt(struct navit *nav) {
 
 float sensors[2][3];
 
-static void
-android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z) {
+static void android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z) {
     float yaw=0,pitch=0;
     struct attr attr;
     sensors[sensor-1][0]=*x;
@@ -1206,8 +1173,7 @@ android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z) {
 }
 #endif
 
-static void
-pedestrian_log(char **logstr) {
+static void pedestrian_log(char **logstr) {
 #ifdef HAVE_API_ANDROID
     char *tag=g_strdup_printf(
                   "\t\t<navit:compass:x>%f</navit:compass:x>\n"
@@ -1223,8 +1189,7 @@ pedestrian_log(char **logstr) {
 }
 
 #ifdef DEMO
-static void
-vehicle_changed(struct vehicle *v, struct transformation *trans) {
+static void vehicle_changed(struct vehicle *v, struct transformation *trans) {
     struct attr attr;
     if (vehicle_get_attr(v, attr_position_direction, &attr, NULL)) {
         int dir=(int)(*attr.u.numd);
@@ -1236,8 +1201,7 @@ vehicle_changed(struct vehicle *v, struct transformation *trans) {
 #endif
 
 
-static void
-pedestrian_navit_init(struct navit *nav) {
+static void pedestrian_navit_init(struct navit *nav) {
     struct attr route;
     struct attr route_map;
     struct attr map;
@@ -1357,8 +1321,7 @@ pedestrian_navit_init(struct navit *nav) {
 
 }
 
-static void
-pedestrian_navit(struct navit *nav, int add) {
+static void pedestrian_navit(struct navit *nav, int add) {
     dbg(lvl_debug,"enter");
     struct attr callback;
     if (add) {
@@ -1368,8 +1331,7 @@ pedestrian_navit(struct navit *nav, int add) {
     }
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     struct attr callback,navit;
     struct attr_iter *iter;
 #ifdef HAVE_API_ANDROID

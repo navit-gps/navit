@@ -30,8 +30,7 @@ int coord_debug;
 static void street_name_numbers_get(struct street_name_numbers *name_numbers, unsigned char **p);
 static void street_name_number_get(struct street_name_number *name_number, unsigned char **p);
 
-static void
-street_name_debug(struct street_name *sn, FILE *out) {
+static void street_name_debug(struct street_name *sn, FILE *out) {
     struct street_name_numbers nns;
     unsigned char *p=sn->aux_data;
     unsigned char *end=p+sn->aux_len;
@@ -59,8 +58,7 @@ street_name_debug(struct street_name *sn, FILE *out) {
 }
 #endif
 
-static void
-street_name_get(struct street_name *name, unsigned char **p) {
+static void street_name_get(struct street_name *name, unsigned char **p) {
     unsigned char *start=*p;
     name->len=get_u16_unal(p);
     name->country=get_u16_unal(p);
@@ -77,13 +75,11 @@ street_name_get(struct street_name *name, unsigned char **p) {
     *p=start+name->len;
 }
 
-static int
-street_name_eod(struct street_name *name) {
+static int street_name_eod(struct street_name *name) {
     return (name->tmp_data >= name->aux_data+name->aux_len);
 }
 
-static void
-street_name_numbers_get(struct street_name_numbers *name_numbers, unsigned char **p) {
+static void street_name_numbers_get(struct street_name_numbers *name_numbers, unsigned char **p) {
     unsigned char *start=*p;
     name_numbers->len=get_u16_unal(p);
     name_numbers->tag=get_u8(p);
@@ -104,13 +100,11 @@ street_name_numbers_get(struct street_name_numbers *name_numbers, unsigned char 
     *p=start+name_numbers->len;
 }
 
-static int
-street_name_numbers_eod(struct street_name_numbers *name_numbers) {
+static int street_name_numbers_eod(struct street_name_numbers *name_numbers) {
     return (name_numbers->tmp_data >= name_numbers->aux_data+name_numbers->aux_len);
 }
 
-static void
-street_name_number_get(struct street_name_number *name_number, unsigned char **p) {
+static void street_name_number_get(struct street_name_number *name_number, unsigned char **p) {
     unsigned char *start=*p;
     name_number->len=get_u16_unal(p);
     name_number->tag=get_u8(p);
@@ -123,8 +117,7 @@ street_name_number_get(struct street_name_number *name_number, unsigned char **p
     *p=start+name_number->len;
 }
 
-static void
-street_name_get_by_id(struct street_name *name, struct file *file, unsigned long id) {
+static void street_name_get_by_id(struct street_name *name, struct file *file, unsigned long id) {
     unsigned char *p;
     if (id) {
         p=file->begin+id+0x2000;
@@ -190,8 +183,7 @@ static int street_get_coord(unsigned char **pos, int bytes, struct coord_rect *r
     return flags;
 }
 
-static void
-street_coord_get_begin(unsigned char **p) {
+static void street_coord_get_begin(unsigned char **p) {
     struct street_str *str;
 
     str=(struct street_str *)(*p);
@@ -203,16 +195,14 @@ street_coord_get_begin(unsigned char **p) {
 }
 
 
-static void
-street_coord_rewind(void *priv_data) {
+static void street_coord_rewind(void *priv_data) {
     struct street_priv *street=priv_data;
 
     street->p=street->next=NULL;
     street->status=street->status_rewind;
 }
 
-static int
-street_coord_get_helper(struct street_priv *street, struct coord *c) {
+static int street_coord_get_helper(struct street_priv *street, struct coord *c) {
     unsigned char *n;
     if (street->p+street->bytes*2 >= street->end)
         return 0;
@@ -229,8 +219,7 @@ street_coord_get_helper(struct street_priv *street, struct coord *c) {
     return 1;
 }
 
-static int
-street_coord_get(void *priv_data, struct coord *c, int count) {
+static int street_coord_get(void *priv_data, struct coord *c, int count) {
     struct street_priv *street=priv_data;
     int ret=0,i,scount;
 #ifdef DEBUG_COORD_GET
@@ -275,14 +264,12 @@ street_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static void
-street_attr_rewind(void *priv_data) {
+static void street_attr_rewind(void *priv_data) {
     /* struct street_priv *street=priv_data; */
 
 }
 
-static int
-street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct street_priv *street=priv_data;
     int nameid;
 
@@ -365,8 +352,7 @@ static struct item_methods street_meth = {
     street_attr_get,
 };
 
-static void
-street_get_data(struct street_priv *street, unsigned char **p) {
+static void street_get_data(struct street_priv *street, unsigned char **p) {
     street->header=(struct street_header *)(*p);
     (*p)+=sizeof(struct street_header);
     street->type_count=street_header_get_count(street->header);
@@ -377,8 +363,7 @@ street_get_data(struct street_priv *street, unsigned char **p) {
 /*0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 */
 static unsigned char limit[]= {0,0,1,1,1,2,2,4,6,6,12,13,14,20,20,20,20,20,20};
 
-int
-street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item) {
+int street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item) {
     int *flags;
     struct coord_rect r;
     for (;;) {
@@ -504,8 +489,7 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
     }
 }
 
-int
-street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item) {
+int street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item) {
     int country=id_hi & 0xffff;
     int res;
     struct coord_rect r;
@@ -541,8 +525,7 @@ struct street_name_index {
     char name[0];
 } __attribute__((packed));
 
-static unsigned char
-latin1_tolower(unsigned char c) {
+static unsigned char latin1_tolower(unsigned char c) {
     if (c >= 'A' && c <= 'Z')
         return c - 'A' + 'a';
     if (c == 0xc4 || c == 0xc9 || c == 0xd6 || c == 0xdc)
@@ -550,8 +533,7 @@ latin1_tolower(unsigned char c) {
     return c;
 }
 
-static unsigned char
-latin1_tolower_ascii(unsigned char c) {
+static unsigned char latin1_tolower_ascii(unsigned char c) {
     unsigned char ret=latin1_tolower(c);
     switch (ret) {
     case 0xe4:
@@ -569,8 +551,7 @@ latin1_tolower_ascii(unsigned char c) {
     }
 }
 
-static int
-strncasecmp_latin1(char *str1, char *str2, int len) {
+static int strncasecmp_latin1(char *str1, char *str2, int len) {
     int d;
     while (len--) {
         d=latin1_tolower((unsigned char)(*str1))-latin1_tolower((unsigned char)(*str2));
@@ -584,8 +565,7 @@ strncasecmp_latin1(char *str1, char *str2, int len) {
     return 0;
 }
 
-static int
-strncasecmp_latin1_ascii(char *str1, char *str2, int len) {
+static int strncasecmp_latin1_ascii(char *str1, char *str2, int len) {
     int d;
     while (len--) {
         d=latin1_tolower_ascii((unsigned char)(*str1))-latin1_tolower_ascii((unsigned char)(*str2));
@@ -599,8 +579,7 @@ strncasecmp_latin1_ascii(char *str1, char *str2, int len) {
     return 0;
 }
 
-static int
-street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, char *name) {
+static int street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, char *name) {
     int d,len;
 
     dbg(lvl_debug,"enter");
@@ -627,8 +606,7 @@ street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, 
     return d;
 }
 
-static int
-street_search_compare(unsigned char **p, struct map_rect_priv *mr) {
+static int street_search_compare(unsigned char **p, struct map_rect_priv *mr) {
     struct street_name_index *i;
     int ret;
 
@@ -644,20 +622,17 @@ street_search_compare(unsigned char **p, struct map_rect_priv *mr) {
     return ret;
 }
 
-static void
-street_name_coord_rewind(void *priv_data) {
+static void street_name_coord_rewind(void *priv_data) {
     /* struct street_priv *street=priv_data; */
 
 }
 
-static void
-street_name_attr_rewind(void *priv_data) {
+static void street_name_attr_rewind(void *priv_data) {
     /* struct street_priv *street=priv_data; */
 
 }
 
-static int
-street_name_coord_get(void *priv_data, struct coord *c, int count) {
+static int street_name_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     struct street_name_numbers snns;
     unsigned char *p=mr->street.name.aux_data;
@@ -673,8 +648,7 @@ street_name_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 #if 0
-static void
-debug(struct map_rect_priv *mr) {
+static void debug(struct map_rect_priv *mr) {
     int i;
     struct street_name_numbers nns;
     unsigned char *p=mr->street.name.aux_data;
@@ -715,8 +689,7 @@ debug(struct map_rect_priv *mr) {
 }
 #endif
 
-static int
-street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
 
     attr->type=attr_type;
@@ -754,8 +727,8 @@ static struct item_methods street_name_meth = {
 };
 
 
-int
-street_name_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item) {
+int street_name_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo,
+                         struct item *item) {
     mr->current_file=id_hi >> 16;
     street->name_file=mr->m->file[mr->current_file];
     item->type=type_street_name;
@@ -771,8 +744,7 @@ street_name_get_byid(struct map_rect_priv *mr, struct street_priv *street, int i
     return 1;
 }
 
-static struct item *
-street_search_get_item_street_name(struct map_rect_priv *mr) {
+static struct item *street_search_get_item_street_name(struct map_rect_priv *mr) {
     int dir=1,leaf;
     unsigned char *last;
 
@@ -853,8 +825,7 @@ street_search_get_item(struct map_rect_priv *mr) {
     }
 }
 
-static int
-street_name_numbers_next(struct map_rect_priv *mr) {
+static int street_name_numbers_next(struct map_rect_priv *mr) {
     if (street_name_eod(&mr->street.name))
         return 0;
     dbg(lvl_debug,"%p vs %p",mr->street.name.tmp_data, mr->street.name.aux_data);
@@ -862,8 +833,7 @@ street_name_numbers_next(struct map_rect_priv *mr) {
     return 1;
 }
 
-static int
-street_name_number_next(struct map_rect_priv *mr) {
+static int street_name_number_next(struct map_rect_priv *mr) {
     if (street_name_numbers_eod(&mr->street.name_numbers))
         return 0;
     street_name_number_get(&mr->street.name_number, &mr->street.name_numbers.tmp_data);
@@ -873,25 +843,21 @@ street_name_number_next(struct map_rect_priv *mr) {
     return 1;
 }
 
-static void
-housenumber_coord_rewind(void *priv_data) {
+static void housenumber_coord_rewind(void *priv_data) {
     /* struct street_priv *street=priv_data; */
 
 }
 
-static void
-housenumber_attr_rewind(void *priv_data) {
+static void housenumber_attr_rewind(void *priv_data) {
     /* struct street_priv *street=priv_data; */
 
 }
 
-static int
-housenumber_coord_get(void *priv_data, struct coord *c, int count) {
+static int housenumber_coord_get(void *priv_data, struct coord *c, int count) {
     return 0;
 }
 
-static int
-housenumber_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int housenumber_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     attr->type=attr_type;
     switch (attr_type) {
@@ -921,8 +887,7 @@ static struct item_methods housenumber_meth = {
     housenumber_attr_get,
 };
 
-int
-housenumber_search_setup(struct map_rect_priv *mr) {
+int housenumber_search_setup(struct map_rect_priv *mr) {
     dbg(lvl_debug,"enter (0x%x,0x%x)",mr->search_item.id_hi,mr->search_item.id_lo);
     int id=mr->search_item.id_hi & 0xff;
     mr->current_file=file_strname_stn;
@@ -953,8 +918,7 @@ housenumber_search_setup(struct map_rect_priv *mr) {
     return 1;
 }
 
-static int
-house_number_next(char *number, char *first, char *last, int interpolation, int *percentage) {
+static int house_number_next(char *number, char *first, char *last, int interpolation, int *percentage) {
     int firstn=atoi(first);
     int lastn=atoi(last);
     int current,delta,len=lastn-firstn;

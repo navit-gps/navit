@@ -25,8 +25,7 @@ typedef struct {
     PyObject_HEAD
 } configObject;
 
-static PyObject *
-config_navit(PyObject *self, PyObject *args) {
+static PyObject *config_navit(PyObject *self, PyObject *args) {
     struct attr navit;
     if (config_get_attr(config, attr_navit, &navit, NULL))
         return navit_py_ref(navit.u.navit);
@@ -41,13 +40,11 @@ static PyMethodDef config_methods[] = {
 };
 
 
-static PyObject *
-config_getattr_py(PyObject *self, char *name) {
+static PyObject *config_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(config_methods, self, name);
 }
 
-static void
-config_destroy_py(configObject *self) {
+static void config_destroy_py(configObject *self) {
 }
 
 PyTypeObject config_Type = {
@@ -58,8 +55,7 @@ PyTypeObject config_Type = {
     .tp_getattr=config_getattr_py,
 };
 
-PyObject *
-config_py(PyObject *self, PyObject *args) {
+PyObject *config_py(PyObject *self, PyObject *args) {
     configObject *ret;
 
     dbg(lvl_debug,"enter");

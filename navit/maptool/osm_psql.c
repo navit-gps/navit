@@ -27,8 +27,7 @@
 #ifdef HAVE_POSTGRESQL
 #include <postgresql/libpq-fe.h>
 
-int
-map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm) {
+int map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm) {
     PGconn *conn;
     PGresult *res;
     char query[256];

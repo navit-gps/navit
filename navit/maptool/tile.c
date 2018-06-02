@@ -71,8 +71,7 @@ static char** th_get_subtile( const struct tile_head* th, int idx ) {
     return (char**)subtile_ptr;
 }
 
-int
-tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect *tr) {
+int tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect *tr) {
     int x0,x2,x4;
     int y0,y2,y4;
     int xo,yo;
@@ -136,8 +135,7 @@ tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect 
     return i;
 }
 
-void
-tile_bbox(char *tile, struct rect *r, int overlap) {
+void tile_bbox(char *tile, struct rect *r, int overlap) {
     struct coord c;
     int xo,yo;
     *r=world_bbox;
@@ -168,8 +166,7 @@ tile_bbox(char *tile, struct rect *r, int overlap) {
     }
 }
 
-int
-tile_len(char *tile) {
+int tile_len(char *tile) {
     int ret=0;
     while (tile[0] >= 'a' && tile[0] <= 'd') {
         tile++;
@@ -178,8 +175,7 @@ tile_len(char *tile) {
     return ret;
 }
 
-static void
-tile_extend(char *tile, struct item_bin *ib, GList **tiles_list) {
+static void tile_extend(char *tile, struct item_bin *ib, GList **tiles_list) {
     struct tile_head *th=NULL;
     if (debug_tile(tile))
         fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p) 0x%x "LONGLONG_FMT"\n", (ib->len+1)*4, tile,
@@ -214,8 +210,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list) {
     g_hash_table_insert(tile_hash, string_hash_lookup( th->name ), th);
 }
 
-static int
-tile_data_size(char *tile) {
+static int tile_data_size(char *tile) {
     struct tile_head *th;
     th=g_hash_table_lookup(tile_hash, tile);
     if (! th)
@@ -223,8 +218,7 @@ tile_data_size(char *tile) {
     return th->total_size;
 }
 
-static int
-merge_tile(char *base, char *sub) {
+static int merge_tile(char *base, char *sub) {
     struct tile_head *thb, *ths;
     thb=g_hash_table_lookup(tile_hash, base);
     ths=g_hash_table_lookup(tile_hash, sub);
@@ -251,18 +245,15 @@ merge_tile(char *base, char *sub) {
     return 1;
 }
 
-static gint
-get_tiles_list_cmp(gconstpointer s1, gconstpointer s2) {
+static gint get_tiles_list_cmp(gconstpointer s1, gconstpointer s2) {
     return strcmp((char *)s1, (char *)s2);
 }
 
-static void
-get_tiles_list_func(char *key, struct tile_head *th, GList **list) {
+static void get_tiles_list_func(char *key, struct tile_head *th, GList **list) {
     *list=g_list_prepend(*list, key);
 }
 
-static GList *
-get_tiles_list(void) {
+static GList *get_tiles_list(void) {
     GList *ret=NULL;
     g_hash_table_foreach(tile_hash, (GHFunc)get_tiles_list_func, &ret);
     ret=g_list_sort(ret, get_tiles_list_cmp);
@@ -270,8 +261,7 @@ get_tiles_list(void) {
 }
 
 #if 0
-static void
-write_tile(char *key, struct tile_head *th, gpointer dummy) {
+static void write_tile(char *key, struct tile_head *th, gpointer dummy) {
     FILE *f;
     char buffer[1024];
     fprintf(stderr,"DEBUG: Writing %s\n", key);
@@ -289,8 +279,7 @@ write_tile(char *key, struct tile_head *th, gpointer dummy) {
 }
 #endif
 
-static void
-write_item(char *tile, struct item_bin *ib, FILE *reference) {
+static void write_item(char *tile, struct item_bin *ib, FILE *reference) {
     struct tile_head *th;
     int size;
 
@@ -337,16 +326,14 @@ write_item(char *tile, struct item_bin *ib, FILE *reference) {
     }
 }
 
-void
-tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name) {
+void tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name) {
     if (info->write)
         write_item(name, ib, reference);
     else
         tile_extend(name, ib, info->tiles_list);
 }
 
-void
-tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max) {
+void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max) {
     struct rect r;
     char buffer[1024];
     bbox((struct coord *)(ib+1), ib->clen/2, &r);
@@ -355,8 +342,7 @@ tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *refere
     tile_write_item_to_tile(info, ib, reference, buffer);
 }
 
-int
-add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size) {
+int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size) {
     struct aux_tile *at;
     GList *l;
     l=aux_tile_list;
@@ -376,8 +362,7 @@ add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size) {
     return zip_add_member(zip_info);
 }
 
-int
-write_aux_tiles(struct zip_info *zip_info) {
+int write_aux_tiles(struct zip_info *zip_info) {
     GList *l=aux_tile_list;
     struct aux_tile *at;
     char *buffer;
@@ -405,8 +390,7 @@ write_aux_tiles(struct zip_info *zip_info) {
     return count;
 }
 
-static int
-add_tile_hash(struct tile_head *th) {
+static int add_tile_hash(struct tile_head *th) {
     int idx,len,maxnamelen=0;
     char **data;
 
@@ -430,8 +414,7 @@ add_tile_hash(struct tile_head *th) {
 }
 
 
-int
-create_tile_hash(void) {
+int create_tile_hash(void) {
     struct tile_head *th;
     int len,maxnamelen=0;
 
@@ -446,8 +429,7 @@ create_tile_hash(void) {
     return maxnamelen;
 }
 
-static void
-create_tile_hash_list(GList *list) {
+static void create_tile_hash_list(GList *list) {
     GList *next;
     struct tile_head *th;
 
@@ -464,8 +446,7 @@ create_tile_hash_list(GList *list) {
     }
 }
 
-void
-load_tilesdir(FILE *in) {
+void load_tilesdir(FILE *in) {
     char tile[32],subtile[32],c;
     int size,zipnum=0;
     struct tile_head **last;
@@ -498,8 +479,7 @@ load_tilesdir(FILE *in) {
     *last=NULL;
 }
 
-void
-write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out) {
+void write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out) {
     int idx,len,maxlen;
     GList *next,*tiles_list;
     char **data;
@@ -558,8 +538,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out) {
     }
 }
 
-void
-merge_tiles(struct tile_info *info) {
+void merge_tiles(struct tile_info *info) {
     struct tile_head *th;
     char basetile[1024];
     char subtile[1024];
@@ -630,8 +609,7 @@ merge_tiles(struct tile_info *info) {
 
 struct attr map_information_attrs[32];
 
-void
-index_init(struct zip_info *info, int version) {
+void index_init(struct zip_info *info, int version) {
     struct item_bin *item_bin;
     int i;
     map_information_attrs[0].type=attr_version;
@@ -645,8 +623,7 @@ index_init(struct zip_info *info, int version) {
     item_bin_write(item_bin, zip_get_index(info));
 }
 
-void
-index_submap_add(struct tile_info *info, struct tile_head *th) {
+void index_submap_add(struct tile_info *info, struct tile_head *th) {
     int tlen=tile_len(th->name);
     int len=tlen;
     char *index_tile;

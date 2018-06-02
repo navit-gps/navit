@@ -19,8 +19,7 @@
  *
  * @param this The internal GUI instance
  */
-void
-gui_internal_keyboard_to_upper_case(struct gui_priv *this) {
+void gui_internal_keyboard_to_upper_case(struct gui_priv *this) {
     struct menu_data *md;
 
     if (!this->keyboard)
@@ -43,8 +42,7 @@ gui_internal_keyboard_to_upper_case(struct gui_priv *this) {
  *
  * @param this The internal GUI instance
  */
-void
-gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
+void gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
     struct menu_data *md;
 
     if (!this->keyboard)
@@ -70,15 +68,13 @@ gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
  * @param wm
  * @param data Not used
  */
-static void
-gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_keypress_do(this, (char *) wm->data);
 }
 
-static struct widget *
-gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, int font,
-                               void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void (*data_free)(void *data), int w,
-                               int h) {
+static struct widget *gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, int font,
+        void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void (*data_free)(void *data), int w,
+        int h) {
     struct widget *wk;
     gui_internal_widget_append(wkbd, wk=gui_internal_button_font_new_with_callback(this, text, font,
                                         NULL, gravity_center|orientation_vertical, func, data));
@@ -93,8 +89,8 @@ gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char 
     return wk;
 }
 
-static struct widget *
-gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key, int w, int h) {
+static struct widget *gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key,
+        int w, int h) {
     return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free_func,w,h);
 }
 
@@ -552,8 +548,7 @@ gui_internal_keyboard(struct gui_priv *this, int mode) {
     return gui_internal_keyboard_do(this, NULL, mode);
 }
 
-static void
-gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data) {
+static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data) {
     gui_internal_keyboard_do(this, key->data, key->datai);
 }
 
@@ -568,8 +563,7 @@ gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *da
  * @return {@code VKBD_CYRILLIC_UPPER} for countries using the Cyrillic alphabet,
  * {@code VKBD_LATIN_UPPER} otherwise
  */
-int
-gui_internal_keyboard_init_mode(char *lang) {
+int gui_internal_keyboard_init_mode(char *lang) {
     int ret=0;
     /* do not crash if lang is NULL, which may be returned by getenv*/
     if(lang == NULL)

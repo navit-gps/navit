@@ -19,8 +19,7 @@ struct cb_hw_state_trail {
     osso_hw_state_t *state;
 };
 
-static void
-osso_display_on(struct navit *this_) {
+static void osso_display_on(struct navit *this_) {
     osso_return_t err;
     err = osso_display_blanking_pause(osso_context);
     dbg(lvl_warning, "Unblank result: ",
@@ -29,8 +28,7 @@ osso_display_on(struct navit *this_) {
                                  "Invalid context"));
 }
 
-static gboolean
-osso_cb_hw_state_idle(struct cb_hw_state_trail * params) {
+static gboolean osso_cb_hw_state_idle(struct cb_hw_state_trail * params) {
     dbg(lvl_debug, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)",
         params->state->system_inactivity_ind,
         params->state->save_unsaved_data_ind, params->state->shutdown_ind,
@@ -53,8 +51,7 @@ osso_cb_hw_state_idle(struct cb_hw_state_trail * params) {
  * * @param  data ptr to private data
  * * @returns nothing
  **/
-static void
-osso_cb_hw_state(osso_hw_state_t * state, gpointer data) {
+static void osso_cb_hw_state(osso_hw_state_t * state, gpointer data) {
     struct navit *nav = (struct navit*)data;
     struct cb_hw_state_trail *params = g_new(struct cb_hw_state_trail,1);
     params->nav=nav;
@@ -63,8 +60,7 @@ osso_cb_hw_state(osso_hw_state_t * state, gpointer data) {
     g_idle_add((GSourceFunc) osso_cb_hw_state_idle, params);
 }
 
-static void
-osso_navit(struct navit *nav, int add) {
+static void osso_navit(struct navit *nav, int add) {
     dbg(lvl_debug, "Installing osso context for org.navit_project.navit");
     osso_context = osso_initialize("org.navit_project.navit", version, TRUE, NULL);
     if (osso_context == NULL) {
@@ -78,8 +74,7 @@ osso_navit(struct navit *nav, int add) {
     }
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     //struct callback *cb;
 
     dbg(lvl_info, "enter");
@@ -88,7 +83,6 @@ plugin_init(void) {
     config_add_attr(config, &callback);
 }
 
-void
-plugin_deinit(void) {
+void plugin_deinit(void) {
     osso_deinitialize(osso_context);
 }

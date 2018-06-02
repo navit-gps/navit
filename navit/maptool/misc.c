@@ -52,8 +52,7 @@ struct rect world_bbox = {
     { WORLD_BOUNDINGBOX_MAX_X, WORLD_BOUNDINGBOX_MAX_Y},
 };
 
-void
-bbox_extend(struct coord *c, struct rect *r) {
+void bbox_extend(struct coord *c, struct rect *r) {
     if (c->x < r->l.x)
         r->l.x=c->x;
     if (c->y < r->l.y)
@@ -64,8 +63,7 @@ bbox_extend(struct coord *c, struct rect *r) {
         r->h.y=c->y;
 }
 
-void
-bbox(struct coord *c, int count, struct rect *r) {
+void bbox(struct coord *c, int count, struct rect *r) {
     if (! count)
         return;
     r->l=*c;
@@ -76,8 +74,7 @@ bbox(struct coord *c, int count, struct rect *r) {
     }
 }
 
-int
-contains_bbox(int xl, int yl, int xh, int yh, struct rect *r) {
+int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r) {
     if (r->h.x < xl || r->h.x > xh) {
         return 0;
     }
@@ -93,8 +90,7 @@ contains_bbox(int xl, int yl, int xh, int yh, struct rect *r) {
     return 1;
 }
 
-int
-bbox_contains_coord(struct rect *r, struct coord *c) {
+int bbox_contains_coord(struct rect *r, struct coord *c) {
     if (r->h.x < c->x)
         return 0;
     if (r->l.x > c->x)
@@ -106,8 +102,7 @@ bbox_contains_coord(struct rect *r, struct coord *c) {
     return 1;
 }
 
-int
-bbox_contains_bbox(struct rect *out, struct rect *in) {
+int bbox_contains_bbox(struct rect *out, struct rect *in) {
     if (out->h.x < in->h.x)
         return 0;
     if (out->l.x > in->l.x)
@@ -119,13 +114,11 @@ bbox_contains_bbox(struct rect *out, struct rect *in) {
     return 1;
 }
 
-long long
-bbox_area(struct rect const *r) {
+long long bbox_area(struct rect const *r) {
     return ((long long)r->h.x-r->l.x)*(r->h.y-r->l.y);
 }
 
-void
-phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes) {
+void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes) {
     struct map_rect *mr;
     struct item *item;
     int count;
@@ -159,8 +152,7 @@ phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes) {
     }
 }
 
-int
-item_order_by_type(enum item_type type) {
+int item_order_by_type(enum item_type type) {
     int max=14;
     switch (type) {
     case type_town_label_1e7:
@@ -221,8 +213,7 @@ item_order_by_type(enum item_type type) {
     return max;
 }
 
-static void
-phase34_process_file(struct tile_info *info, FILE *in, FILE *reference) {
+static void phase34_process_file(struct tile_info *info, FILE *in, FILE *reference) {
     struct item_bin *ib;
     struct attr_bin *a;
     int max;
@@ -243,8 +234,7 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference) {
     }
 }
 
-static void
-phase34_process_file_range(struct tile_info *info, FILE *in, FILE *reference) {
+static void phase34_process_file_range(struct tile_info *info, FILE *in, FILE *reference) {
     struct item_bin *ib;
     int min,max;
 
@@ -257,8 +247,8 @@ phase34_process_file_range(struct tile_info *info, FILE *in, FILE *reference) {
     }
 }
 
-static int
-phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count, int with_range) {
+static int phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count,
+                   int with_range) {
     int i;
 
     processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
@@ -285,16 +275,14 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **ref
 }
 
 
-void
-dump(FILE *in) {
+void dump(FILE *in) {
     struct item_bin *ib;
     while ((ib=read_item(in))) {
         dump_itembin(ib);
     }
 }
 
-int
-phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info) {
+int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info) {
     struct tile_info info;
     info.write=0;
     info.maxlen=0;
@@ -304,9 +292,8 @@ phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out
     return phase34(&info, zip_info, in, NULL, in_count, with_range);
 }
 
-static int
-process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix,
-              struct zip_info *zip_info) {
+static int process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix,
+                         struct zip_info *zip_info) {
     struct tile_head *th;
     char *slice_data,*zip_data;
     int zipfiles=0;
@@ -356,8 +343,7 @@ process_slice(FILE **in, FILE **reference, int in_count, int with_range, long lo
     return zipfiles;
 }
 
-int
-phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix, struct zip_info *zip_info) {
+int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix, struct zip_info *zip_info) {
     long long size;
     int slices;
     int zipnum,written_tiles;
@@ -403,16 +389,14 @@ phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix,
     return 0;
 }
 
-void
-process_binfile(FILE *in, FILE *out) {
+void process_binfile(FILE *in, FILE *out) {
     struct item_bin *ib;
     while ((ib=read_item(in))) {
         item_bin_write(ib, out);
     }
 }
 
-void
-add_aux_tiles(char *name, struct zip_info *info) {
+void add_aux_tiles(char *name, struct zip_info *info) {
     char buffer[4096];
     char *s;
     FILE *in;

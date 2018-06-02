@@ -26,8 +26,7 @@ typedef struct {
     struct navit *navit;
 } navitObject;
 
-static PyObject *
-navit_set_attr_py(navitObject *self, PyObject *args) {
+static PyObject *navit_set_attr_py(navitObject *self, PyObject *args) {
     PyObject *attr;
     if (!PyArg_ParseTuple(args, "O!", &attr_Type, &attr))
         return NULL;
@@ -35,8 +34,7 @@ navit_set_attr_py(navitObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-static PyObject *
-navit_get_attr_py(navitObject *self, PyObject *args) {
+static PyObject *navit_get_attr_py(navitObject *self, PyObject *args) {
     char *name;
     struct attr attr;
     if (!PyArg_ParseTuple(args, "s", &name))
@@ -49,8 +47,7 @@ navit_get_attr_py(navitObject *self, PyObject *args) {
     return python_object_from_attr(&attr);
 }
 
-static PyObject *
-navit_set_center_py(navitObject *self, PyObject *args) {
+static PyObject *navit_set_center_py(navitObject *self, PyObject *args) {
     PyObject *pcoord;
     if (!PyArg_ParseTuple(args, "O!", &pcoord_Type, &pcoord))
         return NULL;
@@ -58,8 +55,7 @@ navit_set_center_py(navitObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-static PyObject *
-navit_set_destination_py(navitObject *self, PyObject *args) {
+static PyObject *navit_set_destination_py(navitObject *self, PyObject *args) {
     PyObject *pcoord;
     const char *description;
     int async;
@@ -69,8 +65,7 @@ navit_set_destination_py(navitObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-static PyObject *
-navit_set_position_py(navitObject *self, PyObject *args) {
+static PyObject *navit_set_position_py(navitObject *self, PyObject *args) {
     PyObject *pcoord;
     if (!PyArg_ParseTuple(args, "O!", &pcoord_Type, &pcoord))
         return NULL;
@@ -79,8 +74,7 @@ navit_set_position_py(navitObject *self, PyObject *args) {
 }
 
 
-static PyObject *
-navit_zoom_to_route_py(navitObject *self, PyObject *args) {
+static PyObject *navit_zoom_to_route_py(navitObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     navit_zoom_to_route(self->navit,0);
@@ -101,13 +95,11 @@ static PyMethodDef navit_methods[] = {
 };
 
 
-static PyObject *
-navit_getattr_py(PyObject *self, char *name) {
+static PyObject *navit_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(navit_methods, self, name);
 }
 
-static void
-navit_destroy_py(navitObject *self) {
+static void navit_destroy_py(navitObject *self) {
 }
 
 PyTypeObject navit_Type = {
@@ -118,8 +110,7 @@ PyTypeObject navit_Type = {
     .tp_getattr=navit_getattr_py,
 };
 
-PyObject *
-navit_py(PyObject *self, PyObject *args) {
+PyObject *navit_py(PyObject *self, PyObject *args) {
     navitObject *ret;
 
     dbg(lvl_debug,"enter");
@@ -127,8 +118,7 @@ navit_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-PyObject *
-navit_py_ref(struct navit *navit) {
+PyObject *navit_py_ref(struct navit *navit) {
     dbg(lvl_debug,"navit=%p", navit);
     navitObject *ret=PyObject_NEW(navitObject, &navit_Type);
     ret->navit=navit;

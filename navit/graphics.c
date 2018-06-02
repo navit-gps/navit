@@ -135,20 +135,17 @@ struct displaylist_icon_cache {
 
 };
 
-static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos,
-                        int dir);
+static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
 
-static void
-clear_hash(struct displaylist *dl) {
+static void clear_hash(struct displaylist *dl) {
     int i;
     for (i = 0 ; i < HASH_SIZE ; i++)
         dl->hash_entries[i].type=type_none;
 }
 
-static struct hash_entry *
-get_hash_entry(struct displaylist *dl, enum item_type type) {
+static struct hash_entry *get_hash_entry(struct displaylist *dl, enum item_type type) {
     int hashidx=(type*2654435761UL) & (HASH_SIZE-1);
     int offset=dl->max_offset;
     do {
@@ -161,8 +158,7 @@ get_hash_entry(struct displaylist *dl, enum item_type type) {
     return NULL;
 }
 
-static struct hash_entry *
-set_hash_entry(struct displaylist *dl, enum item_type type) {
+static struct hash_entry *set_hash_entry(struct displaylist *dl, enum item_type type) {
     int hashidx=(type*2654435761UL) & (HASH_SIZE-1);
     int offset=0;
     for (;;) {
@@ -194,8 +190,7 @@ set_hash_entry(struct displaylist *dl, enum item_type type) {
  *
  * @return True if the attribute was set, false if not
  */
-static int
-graphics_set_attr_do(struct graphics *gra, struct attr *attr) {
+static int graphics_set_attr_do(struct graphics *gra, struct attr *attr) {
     switch (attr->type) {
     case attr_gamma:
         gra->gamma=attr->u.num;
@@ -231,8 +226,7 @@ graphics_set_attr_do(struct graphics *gra, struct attr *attr) {
  *
  * @return True if the attribute was successfully set, false otherwise.
  */
-int
-graphics_set_attr(struct graphics *gra, struct attr *attr) {
+int graphics_set_attr(struct graphics *gra, struct attr *attr) {
     int ret=1;
     /* FIXME if gra->meth doesn't have a setter, we don't even try the generic attrs - is that what we want? */
     dbg(lvl_debug,"enter");
@@ -243,8 +237,7 @@ graphics_set_attr(struct graphics *gra, struct attr *attr) {
     return ret != 0;
 }
 
-void
-graphics_set_rect(struct graphics *gra, struct point_rect *pr) {
+void graphics_set_rect(struct graphics *gra, struct point_rect *pr) {
     gra->r=*pr;
 }
 
@@ -258,8 +251,7 @@ graphics_set_rect(struct graphics *gra, struct point_rect *pr) {
 struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     struct graphics *this_;
     struct attr *type_attr, cbl_attr;
-    struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-            struct callback_list *cbl);
+    struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
     if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
         dbg(lvl_error,"Graphics plugin type is not set.");
@@ -369,8 +361,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
  * @param h The new height of the overlay
  * @param wraparound The new wraparound of the overlay
  */
-void
-graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int wraparound) {
+void graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int wraparound) {
     if (! this_->meth.overlay_resize) {
         return;
     }
@@ -378,8 +369,7 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
     this_->meth.overlay_resize(this_->priv, p, w, h, wraparound);
 }
 
-static void
-graphics_gc_init(struct graphics *this_) {
+static void graphics_gc_init(struct graphics *this_) {
     struct color background= { COLOR_BACKGROUND_ };
     struct color black= { COLOR_BLACK_ };
     struct color white= { COLOR_WHITE_ };
@@ -542,8 +532,7 @@ void graphics_gc_destroy(struct graphics_gc *gc) {
     g_free(gc);
 }
 
-static void
-graphics_convert_color(struct graphics *gra, struct color *in, struct color *out) {
+static void graphics_convert_color(struct graphics *gra, struct color *in, struct color *out) {
     *out=*in;
     if (gra->brightness) {
         out->r+=gra->brightness;
@@ -640,9 +629,7 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
     return graphics_image_new_scaled_rotated(gra, path, w, h, 0);
 }
 
-static void
-image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path, char *name, int width, int height,
-                 int rotate, int zip) {
+static void image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path, char *name, int width, int height, int rotate, int zip) {
     int i=0;
     int stdsizes[]= {8,12,16,22,24,32,36,48,64,72,96,128,192,256};
     const int numstdsizes=sizeof(stdsizes)/sizeof(int);
@@ -738,8 +725,7 @@ image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path,
                 struct graphics_image_buffer buffer= {"buffer:",graphics_image_type_unknown};
                 buffer.start=start;
                 buffer.len=len;
-                this_->priv=gra->meth.image_new(gra->priv, &this_->meth, (char *)&buffer, &this_->width, &this_->height, &this_->hot,
-                                                rotate);
+                this_->priv=gra->meth.image_new(gra->priv, &this_->meth, (char *)&buffer, &this_->width, &this_->height, &this_->hot, rotate);
                 g_free(start);
             }
         } else {
@@ -940,8 +926,7 @@ void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, str
     this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
 
-void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
-                                     int r, int fill) {
+void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h, int r, int fill) {
     struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
     struct point pi0= {plu->x+r,plu->y+r};
     struct point pi1= {plu->x+w-r,plu->y+r};
@@ -968,8 +953,7 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2,
-                        struct graphics_font *font, char *text, struct point *p, int dx, int dy) {
+void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy) {
     this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
 }
 
@@ -980,8 +964,7 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy,
-                            struct point *ret, int estimate) {
+void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret, int estimate) {
     this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret, estimate);
 }
 
@@ -1017,16 +1000,14 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-int
-graphics_draw_drag(struct graphics *this_, struct point *p) {
+int graphics_draw_drag(struct graphics *this_, struct point *p) {
     if (!this_->meth.draw_drag)
         return 0;
     this_->meth.draw_drag(this_->priv, p);
     return 1;
 }
 
-void
-graphics_background_gc(struct graphics *this_, struct graphics_gc *gc) {
+void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc) {
     this_->meth.background_gc(this_->priv, gc ? gc->priv : NULL);
 }
 
@@ -1159,8 +1140,7 @@ static void xdisplay_free(struct displaylist *dl) {
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void display_add(struct hash_entry *entry, struct item *item, int count, struct coord *c, char **label,
-                        int label_count) {
+static void display_add(struct hash_entry *entry, struct item *item, int count, struct coord *c, char **label, int label_count) {
     struct displayitem *di;
     int len,i;
     char *p;
@@ -1204,8 +1184,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font,
-                       struct point *p, int count, char *label) {
+static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label) {
     int i,x,y,tl,tlm,th,thm,tlsq,l;
     float lsq;
     double dx,dy;
@@ -1283,9 +1262,7 @@ static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, st
     }
 }
 
-static int
-intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, int bdy,
-             struct point * res) {
+static int intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, int bdy, struct point * res) {
     int n, a, b;
     dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
     n = bdy * adx - bdx * ady;
@@ -1374,8 +1351,7 @@ struct circle {
     {-13,127,1011},
 };
 
-static void
-draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
+static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
     struct circle *c;
     int count=64;
     int end=start+len;
@@ -1435,8 +1411,7 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 }
 
 
-static int
-fowler(int dy, int dx) {
+static int fowler(int dy, int dx) {
     int adx, ady;		/* Absolute Values of Dx and Dy */
     int code;		/* Angular Region Classification Code */
 
@@ -1469,8 +1444,7 @@ fowler(int dy, int dx) {
     }
     return 0;
 }
-static int
-int_sqrt(unsigned int n) {
+static int int_sqrt(unsigned int n) {
     unsigned int h, p= 0, q= 1, r= n;
 
     /* avoid q rollover */
@@ -1511,14 +1485,12 @@ struct draw_polyline_context {
     struct draw_polyline_shape prev_shape;
 };
 
-static void
-draw_shape_update(struct draw_polyline_shape *shape) {
+static void draw_shape_update(struct draw_polyline_shape *shape) {
     shape->dxw = -(shape->dx * shape->wi * shape->lscale) / shape->l;
     shape->dyw = (shape->dy * shape->wi * shape->lscale) / shape->l;
 }
 
-static void
-draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi) {
+static void draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi) {
     int dxs,dys,lscales;
     int lscale=16;
     int l;
@@ -1560,8 +1532,7 @@ draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int wi) {
     draw_shape_update(shape);
 }
 
-static void
-draw_point(struct draw_polyline_shape *shape, struct point *src, struct point *dst, int pos) {
+static void draw_point(struct draw_polyline_shape *shape, struct point *src, struct point *dst, int pos) {
     if (pos) {
         dst->x=(src->x*2-shape->dyw)/2;
         dst->y=(src->y*2-shape->dxw)/2;
@@ -1571,8 +1542,7 @@ draw_point(struct draw_polyline_shape *shape, struct point *src, struct point *d
     }
 }
 
-static void
-draw_begin(struct draw_polyline_context *ctx, struct point *p) {
+static void draw_begin(struct draw_polyline_context *ctx, struct point *p) {
     struct draw_polyline_shape *shape=&ctx->shape;
     int i;
     for (i = 0 ; i <= 32 ; i+=shape->step) {
@@ -1582,8 +1552,7 @@ draw_begin(struct draw_polyline_context *ctx, struct point *p) {
     }
 }
 
-static int
-draw_middle(struct draw_polyline_context *ctx, struct point *p) {
+static int draw_middle(struct draw_polyline_context *ctx, struct point *p) {
     int delta=ctx->prev_shape.fow-ctx->shape.fow;
     if (delta > 512)
         delta-=1024;
@@ -1601,8 +1570,7 @@ draw_middle(struct draw_polyline_context *ctx, struct point *p) {
         draw_point(&ctx->prev_shape, p, &poso, 1);
         if (delta >= 256)
             return 0;
-        if (intersection(&pos, ctx->shape.dx, ctx->shape.dy, &poso, ctx->prev_shape.dx, ctx->prev_shape.dy,
-                         &ctx->res[ctx->ppos])) {
+        if (intersection(&pos, ctx->shape.dx, ctx->shape.dy, &poso, ctx->prev_shape.dx, ctx->prev_shape.dy, &ctx->res[ctx->ppos])) {
             ctx->ppos++;
             draw_point(&ctx->prev_shape, p, &ctx->res[ctx->npos--], 0);
             draw_point(&ctx->shape, p, &ctx->res[ctx->npos--], 0);
@@ -1614,8 +1582,7 @@ draw_middle(struct draw_polyline_context *ctx, struct point *p) {
         draw_point(&ctx->prev_shape, p, &nego, 0);
         if (delta <= -256)
             return 0;
-        if (intersection(&neg, ctx->shape.dx, ctx->shape.dy, &nego, ctx->prev_shape.dx, ctx->prev_shape.dy,
-                         &ctx->res[ctx->npos])) {
+        if (intersection(&neg, ctx->shape.dx, ctx->shape.dy, &nego, ctx->prev_shape.dx, ctx->prev_shape.dy, &ctx->res[ctx->npos])) {
             ctx->npos--;
             draw_point(&ctx->prev_shape, p, &ctx->res[ctx->ppos++], 1);
             draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
@@ -1625,8 +1592,7 @@ draw_middle(struct draw_polyline_context *ctx, struct point *p) {
     return 0;
 }
 
-static void
-draw_end(struct draw_polyline_context *ctx, struct point *p) {
+static void draw_end(struct draw_polyline_context *ctx, struct point *p) {
     int i;
     struct draw_polyline_shape *shape=&ctx->prev_shape;
     for (i = 0 ; i <= 32 ; i+=shape->step) {
@@ -1636,18 +1602,14 @@ draw_end(struct draw_polyline_context *ctx, struct point *p) {
     }
 }
 
-static void
-draw_init_ctx(struct draw_polyline_context *ctx, int maxpoints) {
+static void draw_init_ctx(struct draw_polyline_context *ctx, int maxpoints) {
     ctx->prec=1;
     ctx->ppos=maxpoints/2;
     ctx->npos=maxpoints/2-1;
 }
 
 
-static void
-graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphics_gc_priv *gc_priv, struct point *pnt,
-                                  int count, int *width,  void (*draw)(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p,
-                                          int count)) {
+static void graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphics_gc_priv *gc_priv, struct point *pnt, int count, int *width,  void (*draw)(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)) {
     int maxpoints=200;
     struct draw_polyline_context ctx;
     int i=0;
@@ -1691,8 +1653,7 @@ enum relative_pos {
     BELOW    = 8
 };
 
-static int
-relative_pos(struct wpoint *p, struct point_rect *r) {
+static int relative_pos(struct wpoint *p, struct point_rect *r) {
     int relative_pos=INSIDE;
     if (p->x < r->lu.x)
         relative_pos=LEFT_OF;
@@ -1705,8 +1666,7 @@ relative_pos(struct wpoint *p, struct point_rect *r) {
     return relative_pos;
 }
 
-static void
-clip_line_endoint_to_rect_edge(struct wpoint *p, int rel_pos, int dx, int dy, int dw, struct point_rect *clip_rect) {
+static void clip_line_endoint_to_rect_edge(struct wpoint *p, int rel_pos, int dx, int dy, int dw, struct point_rect *clip_rect) {
     // We must cast to float to avoid integer
     // overflow (i.e. undefined behaviour) at high
     // zoom levels.
@@ -1736,8 +1696,7 @@ enum clip_result {
     CLIPRES_END_CLIPPED   = 4,
 };
 
-static int
-clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect) {
+static int clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect) {
     int rel_pos1,rel_pos2;
     int ret = CLIPRES_VISIBLE;
     int dx,dy,dw;
@@ -1775,9 +1734,7 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *clip_rect) {
  * @param[in] width An array of width matching the line starting from the corresponding @p pa (if all equal, all lines will have the same width)
  * @param poly A boolean indicating whether the polyline should be closed to form a polygon (only the contour of this polygon will be drawn)
  */
-void
-graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width,
-                               int poly) {
+void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int poly) {
     struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
     int *w=g_alloca(sizeof(int)*(count+1));
     struct wpoint segment_start,segment_end;
@@ -1838,8 +1795,7 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
     }
 }
 
-static int
-is_inside(struct point *p, struct point_rect *r, int edge) {
+static int is_inside(struct point *p, struct point_rect *r, int edge) {
     switch(edge) {
     case 0:
         return p->x >= r->lu.x;
@@ -1854,8 +1810,7 @@ is_inside(struct point *p, struct point_rect *r, int edge) {
     }
 }
 
-static void
-poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int edge, struct point *ret) {
+static void poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int edge, struct point *ret) {
     int dx=p2->x-p1->x;
     int dy=p2->y-p1->y;
     switch(edge) {
@@ -1886,8 +1841,7 @@ poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int 
  * @param[in] pin An array of points forming the polygon
  * @param count_in The number of elements inside @p pin
  */
-void
-graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
+void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
     struct point *pout,*p,*s,pi,*p1,*p2;
     int limit=10000;
@@ -1941,8 +1895,7 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 }
 
 
-static void
-display_context_free(struct display_context *dc) {
+static void display_context_free(struct display_context *dc) {
     if (dc->gc)
         graphics_gc_destroy(dc->gc);
     if (dc->gc_background)
@@ -1954,8 +1907,7 @@ display_context_free(struct display_context *dc) {
     dc->img=NULL;
 }
 
-static struct graphics_font *
-get_font(struct graphics *gra, int size) {
+static struct graphics_font *get_font(struct graphics *gra, int size) {
     if (size > 64)
         size=64;
     if (size >= gra->font_len) {
@@ -1982,8 +1934,7 @@ void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, s
     graphics_draw_text(this_, this_->gc[1], this_->gc[2], font, text, p, 0x10000, 0);
 }
 
-char *
-graphics_icon_path(const char *icon) {
+char *graphics_icon_path(const char *icon) {
     static char *navit_sharedir;
     char *ret=NULL;
     struct file_wordexp *wordexp=NULL;
@@ -2016,8 +1967,7 @@ graphics_icon_path(const char *icon) {
     return ret;
 }
 
-static int
-limit_count(struct coord *c, int count) {
+static int limit_count(struct coord *c, int count) {
     int i;
     for (i = 1 ; i < count ; i++) {
         if (c[i].x == c[0].x && c[i].y == c[0].y)
@@ -2027,8 +1977,7 @@ limit_count(struct coord *c, int count) {
 }
 
 
-static void
-displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
+static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
     struct graphics *gra=dc->gra;
@@ -2063,10 +2012,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
         case element_polyline: {
             gc->meth.gc_set_linewidth(gc->priv, 1);
             if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-                graphics_gc_set_dashes(gc, e->u.polyline.width,
-                                       e->u.polyline.offset,
-                                       e->u.polyline.dash_table,
-                                       e->u.polyline.dash_num);
+                graphics_gc_set_dashes(gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table, e->u.polyline.dash_num);
             for (i = 0 ; i < count ; i++) {
                 if (width[i] < 2)
                     width[i]=2;
@@ -2195,8 +2141,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
     }
 }
 
-void
-graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t, char *label) {
+void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t, char *label) {
     GList *es;
     struct display_context dc;
     int max_coord=32;
@@ -2291,8 +2236,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 */
 extern void *route_selection;
 
-static void
-displaylist_update_layers(struct displaylist *displaylist, GList *layers, int order) {
+static void displaylist_update_layers(struct displaylist *displaylist, GList *layers, int order) {
     while (layers) {
         struct layer *layer=layers->data;
         GList *itemgras;
@@ -2315,8 +2259,7 @@ displaylist_update_layers(struct displaylist *displaylist, GList *layers, int or
     }
 }
 
-static void
-displaylist_update_hash(struct displaylist *displaylist) {
+static void displaylist_update_hash(struct displaylist *displaylist) {
     displaylist->max_offset=0;
     clear_hash(displaylist);
     displaylist_update_layers(displaylist, displaylist->layout->layers, displaylist->order);
@@ -2370,8 +2313,7 @@ GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct poin
 
 
 
-static void
-do_draw(struct displaylist *displaylist, int cancel, int flags) {
+static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     struct item *item;
     int count,max=displaylist->dc.maxlen,workload=0;
     struct coord *ca=g_alloca(sizeof(struct coord)*max);
@@ -2492,8 +2434,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags) {
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans,
-                               struct layout *l, int flags) {
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int flags) {
     int order=transform_get_order(trans);
     if(displaylist->dc.trans && displaylist->dc.trans!=trans)
         transform_destroy(displaylist->dc.trans);
@@ -2524,8 +2465,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
         gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset,
-                                 struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags) {
+static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags) {
     int order=transform_get_order(trans);
 
     dbg(lvl_debug,"enter");
@@ -2564,13 +2504,11 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset,
-                   struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags) {
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags) {
     graphics_load_mapset(gra, displaylist, mapset, trans, l, async, cb, flags);
 }
 
-int
-graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist) {
+int graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist) {
     if (!displaylist->busy)
         return 0;
     do_draw(displaylist, 1, 0);
@@ -2686,8 +2624,7 @@ int graphics_displayitem_get_z_order(struct displayitem *di) {
 }
 
 
-int
-graphics_displayitem_get_coord_count(struct displayitem *di) {
+int graphics_displayitem_get_coord_count(struct displayitem *di) {
     return di->count;
 }
 
@@ -2701,8 +2638,7 @@ char * graphics_displayitem_get_label(struct displayitem *di) {
     return di->label;
 }
 
-int
-graphics_displayitem_get_displayed(struct displayitem *di) {
+int graphics_displayitem_get_displayed(struct displayitem *di) {
     return 1;
 }
 
@@ -2817,8 +2753,7 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p,
-                                     int dist) {
+int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist) {
     struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
     int count;
 
@@ -2834,8 +2769,7 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 }
 
 
-static void
-graphics_process_selection_item(struct displaylist *dl, struct item *item) {
+static void graphics_process_selection_item(struct displaylist *dl, struct item *item) {
 #if 0 /* FIXME */
     struct displayitem di,*di_res;
     GHashTable *h;
@@ -2871,8 +2805,7 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item) {
 #endif
 }
 
-void
-graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl) {
+void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl) {
     struct item *item_dup=g_new(struct item, 1);
     *item_dup=*item;
     item_dup->priv_data=(void *)type;
@@ -2881,8 +2814,7 @@ graphics_add_selection(struct graphics *gra, struct item *item, enum item_type t
         graphics_process_selection_item(dl, item_dup);
 }
 
-void
-graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl) {
+void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl) {
     GList *curr;
     int found;
 
@@ -2916,16 +2848,14 @@ graphics_remove_selection(struct graphics *gra, struct item *item, enum item_typ
     }
 }
 
-void
-graphics_clear_selection(struct graphics *gra, struct displaylist *dl) {
+void graphics_clear_selection(struct graphics *gra, struct displaylist *dl) {
     while (gra->selection) {
         struct item *item=(struct item *)gra->selection->data;
         graphics_remove_selection(gra, item, (enum item_type)item->priv_data,dl);
     }
 }
 
-static void
-graphics_process_selection(struct graphics *gra, struct displaylist *dl) {
+static void graphics_process_selection(struct graphics *gra, struct displaylist *dl) {
     GList *curr;
 
     curr=gra->selection;

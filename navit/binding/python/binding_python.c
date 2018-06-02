@@ -79,8 +79,7 @@ PyTypeObject map_Type = {
 
 /* *** coord *** */
 
-static PyObject *
-coord_new_py(PyObject *self, PyObject *args) {
+static PyObject *coord_new_py(PyObject *self, PyObject *args) {
     coordObject *ret;
     int x,y;
     if (!PyArg_ParseTuple(args, "ii:navit.coord",&x,&y))
@@ -90,8 +89,7 @@ coord_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-static void
-coord_destroy_py(coordObject *self) {
+static void coord_destroy_py(coordObject *self) {
     coord_destroy(self->c);
 }
 
@@ -116,8 +114,7 @@ PyTypeObject coord_rect_Type = {
     .tp_dealloc=(destructor)coord_rect_destroy_py,
 };
 
-static PyObject *
-coord_rect_new_py(PyObject *self, PyObject *args) {
+static PyObject *coord_rect_new_py(PyObject *self, PyObject *args) {
     coord_rectObject *ret;
     coordObject *lu,*rd;
     if (!PyArg_ParseTuple(args, "O!O!:navit.coord_rect_rect",&coord_Type,&lu,&coord_Type,&rd))
@@ -127,8 +124,7 @@ coord_rect_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-static void
-coord_rect_destroy_py(coord_rectObject *self) {
+static void coord_rect_destroy_py(coord_rectObject *self) {
     coord_rect_destroy(self->r);
 }
 
@@ -153,8 +149,7 @@ PyTypeObject map_rect_Type = {
     .tp_dealloc=(destructor)map_rect_destroy_py,
 };
 
-static PyObject *
-map_rect_new_py(mapObject *self, PyObject *args) {
+static PyObject *map_rect_new_py(mapObject *self, PyObject *args) {
     map_rectObject *ret;
     coord_rectObject *r;
     if (!PyArg_ParseTuple(args, "O!:navit.map_rect_rect",&coord_rect_Type,&r))
@@ -164,16 +159,14 @@ map_rect_new_py(mapObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-static void
-map_rect_destroy_py(map_rectObject *self) {
+static void map_rect_destroy_py(map_rectObject *self) {
     map_rect_destroy(self->mr);
 }
 
 
 /* *** map *** */
 
-static PyObject *
-map_dump_file_py(mapObject *self, PyObject *args) {
+static PyObject *map_dump_file_py(mapObject *self, PyObject *args) {
     const char *s;
     if (!PyArg_ParseTuple(args, "s",&s))
         return NULL;
@@ -182,8 +175,7 @@ map_dump_file_py(mapObject *self, PyObject *args) {
 }
 
 
-static PyObject *
-map_set_attr_py(mapObject *self, PyObject *args) {
+static PyObject *map_set_attr_py(mapObject *self, PyObject *args) {
     PyObject *attr;
     if (!PyArg_ParseTuple(args, "O!", &attr_Type, &attr))
         return NULL;
@@ -200,14 +192,12 @@ static PyMethodDef map_methods[] = {
     {NULL, NULL },
 };
 
-static PyObject *
-map_getattr_py(PyObject *self, char *name) {
+static PyObject *map_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(map_methods, self, name);
 }
 
 
-static PyObject *
-map_new_py(PyObject *self, PyObject *args) {
+static PyObject *map_new_py(PyObject *self, PyObject *args) {
     mapObject *ret;
     char *type, *filename;
 
@@ -219,8 +209,7 @@ map_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-PyObject *
-map_py_ref(struct map *map) {
+PyObject *map_py_ref(struct map *map) {
     mapObject *ret;
     ret=PyObject_NEW(mapObject, &map_Type);
     ret->m=map;
@@ -228,8 +217,7 @@ map_py_ref(struct map *map) {
     return (PyObject *)ret;
 }
 
-static void
-map_destroy_py(mapObject *self) {
+static void map_destroy_py(mapObject *self) {
     if (!self->ref)
         map_destroy(self->m);
 }
@@ -258,8 +246,7 @@ PyTypeObject mapset_Type = {
     .tp_getattr=mapset_getattr_py,
 };
 
-static PyObject *
-mapset_add_py(mapsetObject *self, PyObject *args) {
+static PyObject *mapset_add_py(mapsetObject *self, PyObject *args) {
     mapObject *map;
     if (!PyArg_ParseTuple(args, "O:navit.mapset", &map))
         return NULL;
@@ -275,13 +262,11 @@ static PyMethodDef mapset_methods[] = {
     {NULL, NULL },
 };
 
-static PyObject *
-mapset_getattr_py(PyObject *self, char *name) {
+static PyObject *mapset_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(mapset_methods, self, name);
 }
 
-static PyObject *
-mapset_new_py(PyObject *self, PyObject *args) {
+static PyObject *mapset_new_py(PyObject *self, PyObject *args) {
     mapsetObject *ret;
     if (!PyArg_ParseTuple(args, ":navit.mapset"))
         return NULL;
@@ -290,13 +275,11 @@ mapset_new_py(PyObject *self, PyObject *args) {
     return (PyObject *)ret;
 }
 
-static void
-mapset_destroy_py(mapsetObject *self) {
+static void mapset_destroy_py(mapsetObject *self) {
     mapset_destroy(self->ms);
 }
 
-static PyObject *
-config_load_py(PyObject *self, PyObject *args) {
+static PyObject *config_load_py(PyObject *self, PyObject *args) {
     const char *file;
     int ret;
     xmlerror *error;
@@ -319,8 +302,7 @@ static PyMethodDef navitMethods[]= {
 };
 
 
-PyObject *
-python_object_from_attr(struct attr *attr) {
+PyObject *python_object_from_attr(struct attr *attr) {
     switch (attr->type) {
     case attr_navigation:
         return navigation_py_ref(attr->u.navigation);
@@ -333,8 +315,7 @@ python_object_from_attr(struct attr *attr) {
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     int fd,size;
     char buffer[65536];
 

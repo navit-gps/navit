@@ -59,8 +59,7 @@ typedef struct InstanceData {
 } InstanceData;
 
 
-static void
-fillPluginFunctionTable(NPPluginFuncs * pFuncs) {
+static void fillPluginFunctionTable(NPPluginFuncs * pFuncs) {
     pFuncs->version = 11;
     pFuncs->size = sizeof(*pFuncs);
     pFuncs->newp = NPP_New;
@@ -133,9 +132,7 @@ NP_Shutdown() {
     return NPERR_NO_ERROR;
 }
 
-NPError
-NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc,
-        char *argn[], char *argv[], NPSavedData * saved) {
+NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData * saved) {
     char *args[]= {"/usr/bin/navit",NULL};
     // Make sure we can render this plugin
     NPBool browserSupportsWindowless = false;
@@ -164,15 +161,13 @@ NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc,
     return NPERR_NO_ERROR;
 }
 
-NPError
-NPP_Destroy(NPP instance, NPSavedData ** save) {
+NPError NPP_Destroy(NPP instance, NPSavedData ** save) {
     InstanceData *instanceData = (InstanceData *) (instance->pdata);
     free(instanceData);
     return NPERR_NO_ERROR;
 }
 
-NPError
-NPP_SetWindow(NPP instance, NPWindow * window) {
+NPError NPP_SetWindow(NPP instance, NPWindow * window) {
     struct attr navit,graphics,windowid;
     InstanceData *instanceData = (InstanceData *) (instance->pdata);
     if (window->window == instanceData->window.window)
@@ -197,40 +192,32 @@ NPP_SetWindow(NPP instance, NPWindow * window) {
     return NPERR_NO_ERROR;
 }
 
-NPError
-NPP_NewStream(NPP instance, NPMIMEType type, NPStream * stream,
-              NPBool seekable, uint16_t * stype) {
+NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream * stream, NPBool seekable, uint16_t * stype) {
     return NPERR_GENERIC_ERROR;
 }
 
-NPError
-NPP_DestroyStream(NPP instance, NPStream * stream, NPReason reason) {
+NPError NPP_DestroyStream(NPP instance, NPStream * stream, NPReason reason) {
     return NPERR_GENERIC_ERROR;
 }
 
-int32_t
-NPP_WriteReady(NPP instance, NPStream * stream) {
+int32_t NPP_WriteReady(NPP instance, NPStream * stream) {
     return 0;
 }
 
-int32_t
-NPP_Write(NPP instance, NPStream * stream, int32_t offset, int32_t len,
-          void *buffer) {
+int32_t NPP_Write(NPP instance, NPStream * stream, int32_t offset, int32_t len,
+                  void *buffer) {
     return 0;
 }
 
-void
-NPP_StreamAsFile(NPP instance, NPStream * stream, const char *fname) {
+void NPP_StreamAsFile(NPP instance, NPStream * stream, const char *fname) {
 
 }
 
-void
-NPP_Print(NPP instance, NPPrint * platformPrint) {
+void NPP_Print(NPP instance, NPPrint * platformPrint) {
 
 }
 
-int16_t
-NPP_HandleEvent(NPP instance, void *event) {
+int16_t NPP_HandleEvent(NPP instance, void *event) {
 
 
     return 0;
@@ -255,9 +242,7 @@ NPP_HandleEvent(NPP instance, void *event) {
     return 1;
 }
 
-void
-NPP_URLNotify(NPP instance, const char *URL, NPReason reason,
-              void *notifyData) {
+void NPP_URLNotify(NPP instance, const char *URL, NPReason reason, void *notifyData) {
 
 }
 
@@ -269,16 +254,14 @@ struct NavitObject {
     struct attr attr;
 };
 
-void
-printIdentifier(NPIdentifier name) {
+void printIdentifier(NPIdentifier name) {
     NPUTF8 *str;
     str = sBrowserFuncs->utf8fromidentifier(name);
     fprintf(stderr, "%s\n", str);
     sBrowserFuncs->memfree(str);
 }
 
-NPObject *
-allocate(NPP npp, NPClass * aClass) {
+NPObject *allocate(NPP npp, NPClass * aClass) {
     struct NavitObject *ret = calloc(sizeof(struct NavitObject), 1);
     if (ret) {
         ret->class = aClass;
@@ -290,14 +273,12 @@ allocate(NPP npp, NPClass * aClass) {
 }
 
 
-void
-invalidate(NPObject * npobj) {
+void invalidate(NPObject * npobj) {
     fprintf(stderr, "invalidate\n");
 }
 
 
-bool
-hasMethod(NPObject * npobj, NPIdentifier name) {
+bool hasMethod(NPObject * npobj, NPIdentifier name) {
     fprintf(stderr, "hasMethod\n");
     printIdentifier(name);
     if (name == sBrowserFuncs->getstringidentifier("command"))
@@ -315,8 +296,7 @@ hasMethod(NPObject * npobj, NPIdentifier name) {
     return false;
 }
 
-enum attr_type
-variant_to_attr_type(const NPVariant *variant) {
+enum attr_type variant_to_attr_type(const NPVariant *variant) {
     if (NPVARIANT_IS_STRING(*variant))
         return attr_from_name(NPVARIANT_TO_STRING(*variant).utf8characters);
     return attr_none;
@@ -324,9 +304,7 @@ variant_to_attr_type(const NPVariant *variant) {
 
 
 
-bool
-invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args,
-       uint32_t argCount, NPVariant * result) {
+bool invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args, uint32_t argCount, NPVariant * result) {
     struct NavitObject *obj = (struct NavitObject *) npobj;
     fprintf(stderr, "invoke\n");
     printIdentifier(name);
@@ -406,16 +384,13 @@ invoke(NPObject * npobj, NPIdentifier name, const NPVariant * args,
 }
 
 
-bool
-invokeDefault(NPObject * npobj, const NPVariant * args, uint32_t argCount,
-              NPVariant * result) {
+bool invokeDefault(NPObject * npobj, const NPVariant * args, uint32_t argCount, NPVariant * result) {
     fprintf(stderr, "invokeDefault\n");
     return false;
 }
 
 
-bool
-hasProperty(NPObject * npobj, NPIdentifier name) {
+bool hasProperty(NPObject * npobj, NPIdentifier name) {
     struct NavitObject *obj = (struct NavitObject *) npobj;
     fprintf(stderr, "hasProperty\n");
     printIdentifier(name);
@@ -430,8 +405,7 @@ hasProperty(NPObject * npobj, NPIdentifier name) {
 }
 
 
-bool
-getProperty(NPObject * npobj, NPIdentifier name, NPVariant * result) {
+bool getProperty(NPObject * npobj, NPIdentifier name, NPVariant * result) {
     struct NavitObject *obj = (struct NavitObject *) npobj;
     fprintf(stderr, "getProperty %p\n", obj);
     fprintf(stderr, "instanceData %p\n", obj->instanceData);
@@ -455,15 +429,13 @@ getProperty(NPObject * npobj, NPIdentifier name, NPVariant * result) {
 }
 
 
-bool
-setProperty(NPObject * npobj, NPIdentifier name, const NPVariant * value) {
+bool setProperty(NPObject * npobj, NPIdentifier name, const NPVariant * value) {
     fprintf(stderr, "setProperty\n");
     return false;
 }
 
 
-bool
-removeProperty(NPObject * npobj, NPIdentifier name) {
+bool removeProperty(NPObject * npobj, NPIdentifier name) {
     fprintf(stderr, "removeProperty\n");
     return false;
 }
@@ -501,8 +473,7 @@ struct NPClass navitclass2 = {
 };
 
 
-NPError
-NPP_GetValue(NPP instance, NPPVariable variable, void *value) {
+NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value) {
     fprintf(stderr, "NPP_GetValue %d %d\n", variable,
             NPPVpluginScriptableNPObject);
     if (variable == NPPVpluginNeedsXEmbed) {
@@ -519,7 +490,6 @@ NPP_GetValue(NPP instance, NPPVariable variable, void *value) {
     return NPERR_GENERIC_ERROR;
 }
 
-NPError
-NPP_SetValue(NPP instance, NPNVariable variable, void *value) {
+NPError NPP_SetValue(NPP instance, NPNVariable variable, void *value) {
     return NPERR_GENERIC_ERROR;
 }

@@ -63,15 +63,13 @@ speech_new(struct attr *parent, struct attr **attrs) {
     return this_;
 }
 
-void
-speech_destroy(struct speech *this_) {
+void speech_destroy(struct speech *this_) {
     if (this_->priv)
         this_->meth.destroy(this_->priv);
     navit_object_destroy((struct navit_object *)this_);
 }
 
-int
-speech_say(struct speech *this_, const char *text) {
+int speech_say(struct speech *this_, const char *text) {
     dbg(lvl_debug, "this_=%p text='%s' calling %p", this_, text, this_->meth.say);
     return (this_->meth.say)(this_->priv, text);
 }
@@ -92,8 +90,7 @@ struct attr *speech_default_attrs[]= {
  * @return True if the attribute type was found, false if not
  */
 
-int
-speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     return attr_generic_get_attr(this_->attrs, speech_default_attrs, type, attr, iter);
 }
 
@@ -108,8 +105,7 @@ speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, st
  * @param str The string that should be estimated
  * @return Time in tenth of seconds or -1 on error
  */
-int
-speech_estimate_duration(struct speech *this_, char *str) {
+int speech_estimate_duration(struct speech *this_, char *str) {
     int count;
     struct attr cps_attr;
 
@@ -134,8 +130,7 @@ speech_estimate_duration(struct speech *this_, char *str) {
  * @return True if the attr could be set, false otherwise
  */
 
-int
-speech_set_attr(struct speech *this_, struct attr *attr) {
+int speech_set_attr(struct speech *this_, struct attr *attr) {
     this_->attrs=attr_generic_set_attr(this_->attrs, attr);
     //callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
     return 1;

@@ -35,8 +35,7 @@ struct speech_priv {
     SPDConnection *conn;
 };
 
-static int
-speechd_say(struct speech_priv *this, const char *text) {
+static int speechd_say(struct speech_priv *this, const char *text) {
     int err;
 
     err = spd_sayf(this->conn, SPD_MESSAGE, text);
@@ -45,8 +44,7 @@ speechd_say(struct speech_priv *this, const char *text) {
     return 0;
 }
 
-static void
-speechd_destroy(struct speech_priv *this) {
+static void speechd_destroy(struct speech_priv *this) {
     spd_close(this->conn);
     g_free(this);
 }
@@ -56,8 +54,7 @@ static struct speech_methods speechd_meth = {
     speechd_say,
 };
 
-static struct speech_priv *
-speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr) {
+static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr) {
     struct speech_priv *this;
     SPDConnection *conn;
 
@@ -74,7 +71,6 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr)
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_speech("speech_dispatcher", speechd_new);
 }

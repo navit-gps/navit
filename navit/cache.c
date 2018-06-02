@@ -29,8 +29,7 @@ struct cache {
     GHashTable *hash;
 };
 
-static void
-cache_entry_dump(struct cache *cache, struct cache_entry *entry) {
+static void cache_entry_dump(struct cache *cache, struct cache_entry *entry) {
     int i,size;
     dbg(lvl_debug,"Usage: %d size %d",entry->usage, entry->size);
     if (cache)
@@ -42,8 +41,7 @@ cache_entry_dump(struct cache *cache, struct cache_entry *entry) {
     }
 }
 
-static void
-cache_list_dump(char *str, struct cache *cache, struct cache_entry_list *list) {
+static void cache_list_dump(char *str, struct cache *cache, struct cache_entry_list *list) {
     struct cache_entry *first=list->first;
     dbg(lvl_debug,"dump %s %d",str, list->size);
     while (first) {
@@ -52,28 +50,24 @@ cache_list_dump(char *str, struct cache *cache, struct cache_entry_list *list) {
     }
 }
 
-static guint
-cache_hash4(gconstpointer key) {
+static guint cache_hash4(gconstpointer key) {
     int *id=(int *)key;
     return id[0];
 }
 
-static guint
-cache_hash20(gconstpointer key) {
+static guint cache_hash20(gconstpointer key) {
     int *id=(int *)key;
     return id[0]^id[1]^id[2]^id[3]^id[4];
 }
 
-static gboolean
-cache_equal4(gconstpointer a, gconstpointer b) {
+static gboolean cache_equal4(gconstpointer a, gconstpointer b) {
     int *ida=(int *)a;
     int *idb=(int *)b;
 
     return ida[0] == idb[0];
 }
 
-static gboolean
-cache_equal20(gconstpointer a, gconstpointer b) {
+static gboolean cache_equal20(gconstpointer a, gconstpointer b) {
     int *ida=(int *)a;
     int *idb=(int *)b;
 
@@ -106,13 +100,11 @@ cache_new(int id_size, int size) {
     return cache;
 }
 
-void
-cache_resize(struct cache *cache, int size) {
+void cache_resize(struct cache *cache, int size) {
     cache->size=size;
 }
 
-static void
-cache_insert_mru(struct cache *cache, struct cache_entry_list *list, struct cache_entry *entry) {
+static void cache_insert_mru(struct cache *cache, struct cache_entry_list *list, struct cache_entry *entry) {
     entry->prev=NULL;
     entry->next=list->first;
     entry->where=list;
@@ -126,8 +118,7 @@ cache_insert_mru(struct cache *cache, struct cache_entry_list *list, struct cach
         g_hash_table_insert(cache->hash, (gpointer)entry->id, entry);
 }
 
-static void
-cache_remove_from_list(struct cache_entry_list *list, struct cache_entry *entry) {
+static void cache_remove_from_list(struct cache_entry_list *list, struct cache_entry *entry) {
     if (entry->prev)
         entry->prev->next=entry->next;
     else
@@ -139,15 +130,13 @@ cache_remove_from_list(struct cache_entry_list *list, struct cache_entry *entry)
     list->size-=entry->size;
 }
 
-static void
-cache_remove(struct cache *cache, struct cache_entry *entry) {
+static void cache_remove(struct cache *cache, struct cache_entry *entry) {
     dbg(lvl_debug,"remove 0x%x 0x%x 0x%x 0x%x 0x%x", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
     g_hash_table_remove(cache->hash, (gpointer)(entry->id));
     g_slice_free1(entry->size, entry);
 }
 
-static struct cache_entry *
-cache_remove_lru_helper(struct cache_entry_list *list) {
+static struct cache_entry *cache_remove_lru_helper(struct cache_entry_list *list) {
     struct cache_entry *last=list->last;
     if (! last)
         return NULL;
@@ -160,8 +149,7 @@ cache_remove_lru_helper(struct cache_entry_list *list) {
     return last;
 }
 
-static struct cache_entry *
-cache_remove_lru(struct cache *cache, struct cache_entry_list *list) {
+static struct cache_entry *cache_remove_lru(struct cache *cache, struct cache_entry_list *list) {
     struct cache_entry *last;
     int seen=0;
     while (list->last && list->last->usage && seen < list->size) {
@@ -181,8 +169,7 @@ cache_remove_lru(struct cache *cache, struct cache_entry_list *list) {
     return last;
 }
 
-void *
-cache_entry_new(struct cache *cache, void *id, int size) {
+void *cache_entry_new(struct cache *cache, void *id, int size) {
     struct cache_entry *ret;
     size+=cache->entry_size;
     cache->misses+=size;
@@ -193,15 +180,13 @@ cache_entry_new(struct cache *cache, void *id, int size) {
     return &ret->id[cache->id_size];
 }
 
-void
-cache_entry_destroy(struct cache *cache, void *data) {
+void cache_entry_destroy(struct cache *cache, void *data) {
     struct cache_entry *entry=(struct cache_entry *)((char *)data-cache->entry_size);
     dbg(lvl_debug,"destroy 0x%x 0x%x 0x%x 0x%x 0x%x", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
     entry->usage--;
 }
 
-static struct cache_entry *
-cache_trim(struct cache *cache, struct cache_entry *entry) {
+static struct cache_entry *cache_trim(struct cache *cache, struct cache_entry *entry) {
     struct cache_entry *new_entry;
     dbg(lvl_debug,"trim 0x%x 0x%x 0x%x 0x%x 0x%x", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
     dbg(lvl_debug,"Trim %x from %d -> %d", entry->id[0], entry->size, cache->size);
@@ -221,8 +206,7 @@ cache_trim(struct cache *cache, struct cache_entry *entry) {
     return new_entry;
 }
 
-static struct cache_entry *
-cache_move(struct cache *cache, struct cache_entry_list *old, struct cache_entry_list *new) {
+static struct cache_entry *cache_move(struct cache *cache, struct cache_entry_list *old, struct cache_entry_list *new) {
     struct cache_entry *entry;
     entry=cache_remove_lru(NULL, old);
     if (! entry)
@@ -232,8 +216,7 @@ cache_move(struct cache *cache, struct cache_entry_list *old, struct cache_entry
     return entry;
 }
 
-static int
-cache_replace(struct cache *cache) {
+static int cache_replace(struct cache *cache) {
     if (cache->t1.size >= MAX(1,cache->t1_target)) {
         dbg(lvl_debug,"replace 12");
         if (!cache_move(cache, &cache->t1, &cache->b1))
@@ -252,8 +235,7 @@ cache_replace(struct cache *cache) {
     return 1;
 }
 
-void
-cache_flush(struct cache *cache, void *id) {
+void cache_flush(struct cache *cache, void *id) {
     struct cache_entry *entry=g_hash_table_lookup(cache->hash, id);
     if (entry) {
         cache_remove_from_list(entry->where, entry);
@@ -261,8 +243,7 @@ cache_flush(struct cache *cache, void *id) {
     }
 }
 
-void
-cache_flush_data(struct cache *cache, void *data) {
+void cache_flush_data(struct cache *cache, void *data) {
     struct cache_entry *entry=(struct cache_entry *)((char *)data-cache->entry_size);
     if (entry) {
         cache_remove_from_list(entry->where, entry);
@@ -271,8 +252,7 @@ cache_flush_data(struct cache *cache, void *data) {
 }
 
 
-void *
-cache_lookup(struct cache *cache, void *id) {
+void *cache_lookup(struct cache *cache, void *id) {
     struct cache_entry *entry;
 
     dbg(lvl_debug,"get %d", ((int *)id)[0]);
@@ -324,8 +304,7 @@ cache_lookup(struct cache *cache, void *id) {
     }
 }
 
-void
-cache_insert(struct cache *cache, void *data) {
+void cache_insert(struct cache *cache, void *data) {
     struct cache_entry *entry=(struct cache_entry *)((char *)data-cache->entry_size);
     dbg(lvl_debug,"insert 0x%x 0x%x 0x%x 0x%x 0x%x", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
     if (cache->insert == &cache->t1) {
@@ -347,15 +326,13 @@ cache_insert(struct cache *cache, void *data) {
     cache_insert_mru(cache, cache->insert, entry);
 }
 
-void *
-cache_insert_new(struct cache *cache, void *id, int size) {
+void *cache_insert_new(struct cache *cache, void *id, int size) {
     void *data=cache_entry_new(cache, id, size);
     cache_insert(cache, data);
     return data;
 }
 
-static void
-cache_stats(struct cache *cache) {
+static void cache_stats(struct cache *cache) {
     dbg(lvl_debug,"hits %d misses %d hitratio %d size %d entry_size %d id_size %d T1 target %d", cache->hits, cache->misses,
         cache->hits*100/(cache->hits+cache->misses), cache->size, cache->entry_size, cache->id_size, cache->t1_target);
     dbg(lvl_debug,"T1:%d B1:%d T2:%d B2:%d", cache->t1.size, cache->b1.size, cache->t2.size, cache->b2.size);
@@ -363,8 +340,7 @@ cache_stats(struct cache *cache) {
     cache->misses=0;
 }
 
-void
-cache_dump(struct cache *cache) {
+void cache_dump(struct cache *cache) {
     cache_stats(cache);
     cache_list_dump("T1", cache, &cache->t1);
     cache_list_dump("B1", cache, &cache->b1);

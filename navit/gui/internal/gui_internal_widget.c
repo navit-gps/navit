@@ -13,8 +13,7 @@
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
 
-static void
-gui_internal_background_render(struct gui_priv *this, struct widget *w) {
+static void gui_internal_background_render(struct gui_priv *this, struct widget *w) {
     struct point pnt=w->p;
     if (w->state & STATE_HIGHLIGHTED)
         graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
@@ -89,8 +88,7 @@ gui_internal_image_new(struct gui_priv *this, struct graphics_image *image) {
     return widget;
 }
 
-static void
-gui_internal_image_render(struct gui_priv *this, struct widget *w) {
+static void gui_internal_image_render(struct gui_priv *this, struct widget *w) {
     struct point pnt;
 
     gui_internal_background_render(this, w);
@@ -108,8 +106,7 @@ gui_internal_image_render(struct gui_priv *this, struct widget *w) {
  * @param this The internal GUI instance
  * @param w The widget to render
  */
-static void
-gui_internal_label_render(struct gui_priv *this, struct widget *w) {
+static void gui_internal_label_render(struct gui_priv *this, struct widget *w) {
     struct point pnt=w->p;
     gui_internal_background_render(this, w);
     if (w->state & STATE_EDIT)
@@ -231,8 +228,7 @@ gui_internal_find_widget(struct widget *wi, struct point *p, int flags) {
 
 }
 
-void
-gui_internal_highlight_do(struct gui_priv *this, struct widget *found) {
+void gui_internal_highlight_do(struct gui_priv *this, struct widget *found) {
     if (found == this->highlighted)
         return;
 
@@ -258,8 +254,7 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found) {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-void
-gui_internal_highlight(struct gui_priv *this) {
+void gui_internal_highlight(struct gui_priv *this) {
     struct widget *menu,*found=NULL;
     if (this->current.x > -1 && this->current.y > -1) {
         menu=g_list_last(this->root.children)->data;
@@ -604,8 +599,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     }
 }
 
-void
-gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w) {
+void gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     GList *l;
 
@@ -627,8 +621,7 @@ gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w) {
  * @param parent The parent widget
  * @param child The child widget
  */
-void
-gui_internal_widget_append(struct widget *parent, struct widget *child) {
+void gui_internal_widget_append(struct widget *parent, struct widget *child) {
     if (! child)
         return;
     if (! child->background)
@@ -643,8 +636,7 @@ gui_internal_widget_append(struct widget *parent, struct widget *child) {
  * @param parent The parent widget
  * @param child The child widget
  */
-void
-gui_internal_widget_prepend(struct widget *parent, struct widget *child) {
+void gui_internal_widget_prepend(struct widget *parent, struct widget *child) {
     if (! child->background)
         child->background=parent->background;
     parent->children=g_list_prepend(parent->children, child);
@@ -660,8 +652,7 @@ gui_internal_widget_prepend(struct widget *parent, struct widget *child) {
  * @param child The child widget
  * @param func The comparison function
  */
-void
-gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func) {
+void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, GCompareFunc func) {
     if (! child->background)
         child->background=parent->background;
 
@@ -678,8 +669,7 @@ gui_internal_widget_insert_sorted(struct widget *parent, struct widget *child, G
  * @param this The internal GUI instance
  * @param w The widget whose children are to be destroyed
  */
-void
-gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w) {
+void gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w) {
     GList *l;
     struct widget *wc;
 
@@ -703,8 +693,7 @@ gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w) {
  * @param this The internal GUI instance
  * @param w The widget to destroy
  */
-void
-gui_internal_widget_destroy(struct gui_priv *this, struct widget *w) {
+void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w) {
     gui_internal_widget_children_destroy(this, w);
     g_free(w->command);
     g_free(w->speech);
@@ -728,8 +717,7 @@ gui_internal_widget_destroy(struct gui_priv *this, struct widget *w) {
 }
 
 
-void
-gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
+void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
     if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
         return;
 
@@ -751,8 +739,7 @@ gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
     }
 }
 
-void
-gui_internal_widget_pack(struct gui_priv *this, struct widget *w) {
+void gui_internal_widget_pack(struct gui_priv *this, struct widget *w) {
     switch (w->type) {
     case widget_box:
         gui_internal_box_pack(this, w);
@@ -785,8 +772,7 @@ gui_internal_button_label(struct gui_priv *this, const char *label, int mode) {
     return wlb;
 }
 
-static void
-gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb) {
+static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb) {
     sb->next_button =  gui_internal_button_new_with_callback(this, _("Next"), image_new_xs(this, "gui_arrow_right"),
                        gravity_center|orientation_horizontal|flags_swap, gui_internal_table_button_next, widget);
     sb->prev_button =  gui_internal_button_new_with_callback(this, _("Prev"), image_new_xs(this, "gui_arrow_left"),
@@ -881,8 +867,7 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
  *
  * @return GList pointer to the next row in the children list, or NULL if there are no any rows left.
  */
-GList *
-gui_internal_widget_table_next_row(GList * row) {
+GList *gui_internal_widget_table_next_row(GList * row) {
     while((row=g_list_next(row))!=NULL) {
         if(row->data && ((struct widget *)(row->data))->type == widget_table_row)
             break;
@@ -897,8 +882,7 @@ gui_internal_widget_table_next_row(GList * row) {
  *
  * @return GList pointer to the previous row in the children list, or NULL if there are no any rows left.
  */
-GList *
-gui_internal_widget_table_prev_row(GList * row) {
+GList *gui_internal_widget_table_prev_row(GList * row) {
     while((row=g_list_previous(row))!=NULL) {
         if(row->data && ((struct widget *)(row->data))->type == widget_table_row)
             break;
@@ -913,8 +897,7 @@ gui_internal_widget_table_prev_row(GList * row) {
  *
  * @return GList pointer to the first row in the children list, or NULL if table is empty.
  */
-GList *
-gui_internal_widget_table_first_row(GList * row) {
+GList *gui_internal_widget_table_first_row(GList * row) {
     if(!row)
         return NULL;
 
@@ -929,8 +912,7 @@ gui_internal_widget_table_first_row(GList * row) {
  *
  * @return GList pointer to the top row in the children list, or NULL.
  */
-GList *
-gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table) {
+GList *gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table) {
     if(table && table->type==widget_table) {
         struct table_data *d=table->data;
         return gui_internal_widget_table_first_row(d->top_row);
@@ -943,8 +925,7 @@ gui_internal_widget_table_top_row(struct gui_priv *this, struct widget * table) 
  *
  * @return GList pointer to the top row in the children list of the table.
  */
-GList *
-gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * table, struct widget *row) {
+GList *gui_internal_widget_table_set_top_row(struct gui_priv *this, struct widget * table, struct widget *row) {
     if(table && table->type==widget_table) {
         struct table_data *d=table->data;
         d->top_row=table->children;
@@ -988,8 +969,7 @@ gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags) {
  *
  * The caller is responsible for freeing the returned list.
  */
-static GList *
-gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w) {
+static GList *gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w) {
 
     GList * column_desc = NULL;
     GList * current_desc=NULL;
@@ -1076,8 +1056,7 @@ gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w) 
  * @param this The graphics context
  * @param w The widget to pack.
  */
-void
-gui_internal_table_pack(struct gui_priv * this, struct widget * w) {
+void gui_internal_table_pack(struct gui_priv * this, struct widget * w) {
 
     int height=0;
     int width=0;
@@ -1140,8 +1119,7 @@ gui_internal_table_pack(struct gui_priv * this, struct widget * w) {
  *
  * @param table_data Data from the table object.
  */
-void
-gui_internal_table_hide_rows(struct table_data * table_data) {
+void gui_internal_table_hide_rows(struct table_data * table_data) {
     GList*cur_row;
     for(cur_row=table_data->top_row; cur_row ; cur_row = g_list_next(cur_row)) {
         struct widget * cur_row_widget = (struct widget*)cur_row->data;
@@ -1163,8 +1141,7 @@ gui_internal_table_hide_rows(struct table_data * table_data) {
  * @param this The graphics context
  * @param w The table widget to render.
  */
-void
-gui_internal_table_render(struct gui_priv * this, struct widget * w) {
+void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 
     int x;
     int y;
@@ -1341,8 +1318,7 @@ gui_internal_table_render(struct gui_priv * this, struct widget * w) {
  * @param wm The button widget that was pressed.
  * @param data
  */
-void
-gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data) {
+void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data) {
     struct widget * table_widget=NULL;
     struct table_data * table_data = NULL;
 
@@ -1379,8 +1355,7 @@ gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void 
  * @param this The graphics context.
  * @param wm The button widget that was pressed.
  */
-void
-gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data) {
+void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data) {
     struct widget * table_widget = NULL;
     struct table_data * table_data = NULL;
 
