@@ -246,7 +246,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         KEY("=");
         KEY("?");
         KEY(":");
-        SPACER();
+        KEY("_");
 
 
 
