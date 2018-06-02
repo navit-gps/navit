@@ -29,7 +29,7 @@ to=$(git rev-parse HEAD)
 interval=${from}..${to}
 [[ "${from}" == "${to}" ]] && interval=${to}
 
-for f in $(git show -m --pretty="format:" --name-only ${interval} | sort | uniq); do
+for f in $(git show -m --pretty="format:" --name-only ${interval} | sort -u); do
   if [[ -e "${f}" ]]; then
 
     # Checks for trailing spaces
