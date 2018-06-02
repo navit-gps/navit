@@ -409,14 +409,16 @@ void debug_vprintf(dbg_level level, const char *module, const int mlen, const ch
     }
 }
 
-void debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen, int prefix, const char *fmt, ...) {
+void debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen,
+                  int prefix, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     debug_vprintf(level, module, mlen, function, flen, prefix, fmt, ap);
     va_end(ap);
 }
 
-void debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file, int line, const char *expr) {
+void debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file,
+                       int line, const char *expr) {
     debug_printf(lvl_error,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
     abort();
 }
