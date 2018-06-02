@@ -33,7 +33,7 @@ for f in $(git diff --name-only ${interval} | sort -u); do
   if [[ -e "${f}" ]]; then
 
     # Checks for trailing spaces
-    if [[ "$f" != "*.bat" ]]; then
+    if [[ "${f: -4}" != ".bat" ]]; then
       echo "[INFO] Checking for trailing spaces on ${f}..."
       if [[ "$(file -bi """${f}""")" =~ ^text ]]; then
         sed 's/\s*$//' -i "${f}"
@@ -42,7 +42,7 @@ for f in $(git diff --name-only ${interval} | sort -u); do
     fi
 
     # Formats any *.c and *.cpp files
-    if [[ "$f" == "*.c" ]] || [[ "$f" == "*.cpp" ]]; then
+    if [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
       echo "[INFO] Checking for indentation and style compliance on ${f}..."
       astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"
       check_diff
