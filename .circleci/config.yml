@@ -59,16 +59,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Id
-          command: sudo cat /etc/*release
-      - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin
+          name: Setup Enviroment
           command: |
-            sudo apt-get install cmake gettext libsaxonb-java librsvg2-bin
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
+            bash scripts/setup_common_requirements.sh
+            bash scripts/setup_android_requirements.sh
+            gradle wrapper
       - run:
           name: Process icons
           command: |
+            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
             cd navit/icons
             make
             mkdir ../android/res/drawable-nodpi
@@ -97,12 +96,8 @@ jobs:
             mv *dpi.xml android/res/raw
             cd ../
       - run:
-         name: Chmod permissions
-         command: sudo chmod +x ./gradlew
-      - run:
           name: Download Dependencies
           command: ./gradlew -v
-#          command: ./gradlew androidDependencies
       - run:
          name: Install ndk
          command: sdkmanager ndk-bundle
