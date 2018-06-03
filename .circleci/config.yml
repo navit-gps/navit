@@ -63,8 +63,8 @@ jobs:
       - run:
           name: Setup Enviroment
           command: |
-            bash scripts/setup_common_requirements.sh
-            bash scripts/setup_android_requirements.sh
+            sudo bash scripts/setup_common_requirements.sh
+            sudo bash scripts/setup_android_requirements.sh
             gradle wrapper
       - run:
           name: Process icons
