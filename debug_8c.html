@@ -161,10 +161,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a43abf4e33d11510bc725ed0b42ca3393"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a43abf4e33d11510bc725ed0b42ca3393">debug_level_get</a> (const char *message_category)</td></tr>
 <tr class="separator:a43abf4e33d11510bc725ed0b42ca3393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad55e9dc6e1cd1e6d2925ae4e45d1b6b0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ad55e9dc6e1cd1e6d2925ae4e45d1b6b0">debug_timestamp</a> (char *<a class="el" href="structbuffer.html">buffer</a>)</td></tr>
+<tr class="memdesc:ad55e9dc6e1cd1e6d2925ae4e45d1b6b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a timestamp to a string buffer.  <a href="#ad55e9dc6e1cd1e6d2925ae4e45d1b6b0">More...</a><br/></td></tr>
 <tr class="separator:ad55e9dc6e1cd1e6d2925ae4e45d1b6b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75e24bfd0c60c06f854ebd233c322a2f"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a75e24bfd0c60c06f854ebd233c322a2f">dbg_level_to_string</a> (<a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> <a class="el" href="structlevel.html">level</a>)</td></tr>
 <tr class="separator:a75e24bfd0c60c06f854ebd233c322a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a571b0687631593ccf85d2205e06229a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a571b0687631593ccf85d2205e06229a1">debug_vprintf</a> (<a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> <a class="el" href="structlevel.html">level</a>, const char *module, const <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> mlen, const char *function, const <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> flen, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> prefix, const char *fmt, va_list ap)</td></tr>
+<tr class="memdesc:a571b0687631593ccf85d2205e06229a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a log message.  <a href="#a571b0687631593ccf85d2205e06229a1">More...</a><br/></td></tr>
 <tr class="separator:a571b0687631593ccf85d2205e06229a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0216fe3aae211a3db82a5f53d20d62a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a0216fe3aae211a3db82a5f53d20d62a1">debug_printf</a> (<a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> <a class="el" href="structlevel.html">level</a>, const char *module, const <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> mlen, const char *function, const <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> flen, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> prefix, const char *fmt,...)</td></tr>
 <tr class="separator:a0216fe3aae211a3db82a5f53d20d62a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -924,6 +926,18 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Write a timestamp to a string buffer. </p>
+<p>Timestamp has the format "HH:MM:SS:mmm|" (with mmm=milliseconds), or under Windows "SSSSS:uuuuuu|" (with uuuuuu=microseconds)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>The buffer to write to</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Buffer overflow may occur on <code>buffer</code>, if it is less than 14-bytes long (13 chars will be stored at max) </dd></dl>
+
+<p>References <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int()</a>.</p>
+
 <p>Referenced by <a class="el" href="debug_8h.html#a571b0687631593ccf85d2205e06229a1">debug_vprintf()</a>.</p>
 
 </div>
@@ -1032,7 +1046,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="debug_8c.html#a75e24bfd0c60c06f854ebd233c322a2f">dbg_level_to_string()</a>, <a class="el" href="debug_8c.html#adff672a9cdb59d57a0d142954a6a3899">debug_fp</a>, <a class="el" href="debug_8c.html#a43abf4e33d11510bc725ed0b42ca3393">debug_level_get()</a>, <a class="el" href="debug_8c.html#ad55e9dc6e1cd1e6d2925ae4e45d1b6b0">debug_timestamp()</a>, <a class="el" href="debug_8c.html#ac9fd6a3633c76f4154b13524382a8dbd">global_debug_level</a>, and <a class="el" href="debug_8c.html#a4da4ed167afb6a93f11470a2e07f14da">timestamp_prefix</a>.</p>
+<p>Write a log message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>The level of the message. The message will only be written if <code>level</code> is higher than the minimum (global, per module or per function) </td></tr>
+    <tr><td class="paramname">module</td><td>The name of the module that is initiating the log message </td></tr>
+    <tr><td class="paramname">mlen</td><td>The length of string <code>module</code> </td></tr>
+    <tr><td class="paramname">function</td><td>The name of the function that is initiating the log message </td></tr>
+    <tr><td class="paramname">flen</td><td>The length of string <code>function</code> </td></tr>
+    <tr><td class="paramname">prefix</td><td>Force prepending the message with context information (a timestamp, if timestamp_prefix is set), and the module and function name </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string that specifies how subsequent arguments are output </td></tr>
+    <tr><td class="paramname">ap</td><td>A list of arguments to use for substitution in the format string </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="debug_8c.html#a75e24bfd0c60c06f854ebd233c322a2f">dbg_level_to_string()</a>, <a class="el" href="debug_8c.html#adff672a9cdb59d57a0d142954a6a3899">debug_fp</a>, <a class="el" href="debug_8c.html#a43abf4e33d11510bc725ed0b42ca3393">debug_level_get()</a>, <a class="el" href="debug_8c.html#ad55e9dc6e1cd1e6d2925ae4e45d1b6b0">debug_timestamp()</a>, <a class="el" href="debug_8c.html#ac9fd6a3633c76f4154b13524382a8dbd">global_debug_level</a>, and <a class="el" href="debug_8c.html#a4da4ed167afb6a93f11470a2e07f14da">timestamp_prefix</a>.</p>
 
 <p>Referenced by <a class="el" href="debug_8h.html#a0216fe3aae211a3db82a5f53d20d62a1">debug_printf()</a>, <a class="el" href="garmin_8h.html#a1702a7b388b7106e27e99456ce163f86">logfn()</a>, and <a class="el" href="profile_8h.html#aa76650cead3782aa2905f4a573598d6a">profile_timer()</a>.</p>
 
