@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-apt-get update && apt-get install -y gradle libsaxonb-java
+sudo apt-get update && sudo apt-get install -y gradle libsaxonb-java
