@@ -5,6 +5,8 @@ defaults: &defaults
 jobs:
   sanity_check:
     <<: *defaults
+    docker:
+      - image: ubuntu:18.04
     steps:
       - checkout
       - run:
