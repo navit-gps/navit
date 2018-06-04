@@ -209,7 +209,7 @@ static struct route_info * route_find_nearest_street(struct vehicleprofile *vehi
 static void route_graph_update(struct route *this, struct callback *cb, int async);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos,
         struct route_info *dst, struct vehicleprofile *profile);
-static void route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
+static void route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
@@ -2058,7 +2058,7 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
  * @param item The item to add, must be of {@code type_traffic_distortion}
  */
 static void
-route_process_traffic_distortion(struct route_graph *this, struct item *item) {
+route_graph_add_traffic_distortion(struct route_graph *this, struct item *item) {
     struct route_graph_point *s_pnt,*e_pnt;
     struct coord c,l;
     struct attr flags_attr, delay_attr, maxspeed_attr;
@@ -2099,7 +2099,7 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item) {
  * @param item The item to add
  */
 static void
-route_process_turn_restriction(struct route_graph *this, struct item *item) {
+route_graph_add_turn_restriction(struct route_graph *this, struct item *item) {
     struct route_graph_point *pnt[4];
     struct coord c[5];
     int i,count;
@@ -2142,7 +2142,7 @@ route_process_turn_restriction(struct route_graph *this, struct item *item) {
  * @param profile		The vehicle profile currently in use
  */
 static void
-route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile) {
+route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile) {
 #ifdef AVOID_FLOAT
     int len=0;
 #else
@@ -3046,11 +3046,11 @@ route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile) {
             }
         }
         if (item->type == type_traffic_distortion)
-            route_process_traffic_distortion(rg, item);
+            route_graph_add_traffic_distortion(rg, item);
         else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
-            route_process_turn_restriction(rg, item);
+            route_graph_add_turn_restriction(rg, item);
         else
-            route_process_street_graph(rg, item, profile);
+            route_graph_add_street(rg, item, profile);
         count--;
     }
 }
