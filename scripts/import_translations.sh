@@ -23,7 +23,7 @@ for i in po/import_queue/*.po; do
 	# Build a clean list of the contributors
 	IFS=$'\n'
 	echo "Downloading https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details"
-	contributors=`wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | egrep '^              <a href=".+?" class="sprite person">'`
+	contributors=`wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | grep -E '^              <a href=".+?" class="sprite person">'`
         for user in $contributors; do
                 url=`echo $user|cut -d'"' -f2`
                 name=`echo $user|cut -d'>' -f2|cut -d'<' -f1`
