@@ -23,7 +23,7 @@ git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=for
     commitDate=`date +%s --date="${arrLine[0]}"`
 
     # Exclude circleci
-    if [[ $author =~ [Cc]ircle\s*[Cc][Ii] ]]; then
+    if [[ $author =~ [Cc]ircle[[:space:]]*[Cc][Ii] ]]; then
       continue
     fi
 
