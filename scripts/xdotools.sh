@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 sudo apt-get install xdotool
 # Use xinput test 4 when running x11vnc on the circleci server to find mouse coordinates
