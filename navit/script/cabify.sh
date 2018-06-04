@@ -42,7 +42,7 @@ echo "PocketPc dir: $BASEDIR"
 
 echo -n > $CABLIST.$$
 
-for i in `ls $SRCDIR/locale/*/*/*.mo`
+for i in $SRCDIR/locale/*/*/*.mo
 do
 	bn="`basename "$i"`"
 	d=${i##$SRCDIR/}
