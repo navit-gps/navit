@@ -49,8 +49,7 @@ static char *vehicle_webos_prefix="webos:";
 
 /*******************************************************************/
 
-static void
-vehicle_webos_callback(PDL_ServiceParameters *params, void *priv) {
+static void vehicle_webos_callback(PDL_ServiceParameters *params, void *priv) {
     PDL_Location *location;
     SDL_Event event;
     SDL_UserEvent userevent;
@@ -84,8 +83,7 @@ vehicle_webos_callback(PDL_ServiceParameters *params, void *priv) {
     return /*PDL_NOERROR*/;
 }
 
-static void
-vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location) {
+static void vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location) {
     if(location) {	// location may be NULL if called by bluetooth-code. priv is already prefilled there
         struct timeval tv;
         gettimeofday(&tv,NULL);
@@ -122,8 +120,7 @@ vehicle_webos_gps_update(struct vehicle_priv *priv, PDL_Location *location) {
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
-static void
-vehicle_webos_timeout_callback(struct vehicle_priv *priv) {
+static void vehicle_webos_timeout_callback(struct vehicle_priv *priv) {
     struct timeval tv;
     gettimeofday(&tv,NULL);
 
@@ -140,8 +137,7 @@ vehicle_webos_timeout_callback(struct vehicle_priv *priv) {
     }
 }
 
-void
-vehicle_webos_close(struct vehicle_priv *priv) {
+void vehicle_webos_close(struct vehicle_priv *priv) {
     event_remove_timeout(priv->ev_timeout);
     priv->ev_timeout = NULL;
 
@@ -155,8 +151,7 @@ vehicle_webos_close(struct vehicle_priv *priv) {
     }
 }
 
-static int
-vehicle_webos_open(struct vehicle_priv *priv) {
+static int vehicle_webos_open(struct vehicle_priv *priv) {
     PDL_Err err;
 
     priv->pdk_version = PDL_GetPDKVersion();
@@ -193,17 +188,15 @@ vehicle_webos_open(struct vehicle_priv *priv) {
     return 1;
 }
 
-static void
-vehicle_webos_destroy(struct vehicle_priv *priv) {
+static void vehicle_webos_destroy(struct vehicle_priv *priv) {
     vehicle_webos_close(priv);
     if (priv->source)
         g_free(priv->source);
     g_free(priv);
 }
 
-static int
-vehicle_webos_position_attr_get(struct vehicle_priv *priv,
-                                enum attr_type type, struct attr *attr) {
+static int vehicle_webos_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_height:
         dbg(lvl_info,"Altitude: %f", priv->altitude);
@@ -310,8 +303,7 @@ vehicle_webos_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_webos_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init) {
+static int vehicle_webos_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init) {
     switch (attr->type) {
     case attr_source:
         if (strncmp(vehicle_webos_prefix,attr->u.str,strlen(vehicle_webos_prefix))) {
@@ -338,8 +330,7 @@ vehicle_webos_set_attr_do(struct vehicle_priv *priv, struct attr *attr, int init
     }
 }
 
-static int
-vehicle_webos_set_attr(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_webos_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     return vehicle_webos_set_attr_do(priv, attr, 0);
 }
 
@@ -349,10 +340,9 @@ struct vehicle_methods vehicle_webos_methods = {
     vehicle_webos_set_attr,
 };
 
-static struct vehicle_priv *
-vehicle_webos_new(struct vehicle_methods
-                  *meth, struct callback_list
-                  *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_webos_new(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *priv;
 
     priv = g_new0(struct vehicle_priv, 1);
@@ -372,8 +362,7 @@ vehicle_webos_new(struct vehicle_methods
     return priv;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("webos", vehicle_webos_new);
 }

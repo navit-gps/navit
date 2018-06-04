@@ -46,15 +46,13 @@ struct event_watch {
     guint source;
 };
 
-static gboolean
-event_glib_call_watch(GIOChannel * iochan, GIOCondition condition, gpointer t) {
+static gboolean event_glib_call_watch(GIOChannel * iochan, GIOCondition condition, gpointer t) {
     struct callback *cb=t;
     callback_call_0(cb);
     return TRUE;
 }
 
-static struct event_watch *
-event_glib_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_glib_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     struct event_watch *ret=g_new0(struct event_watch, 1);
     int flags=0;
     ret->iochan = g_io_channel_unix_new(fd);
@@ -73,8 +71,7 @@ event_glib_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     return ret;
 }
 
-static void
-event_glib_remove_watch(struct event_watch *ev) {
+static void event_glib_remove_watch(struct event_watch *ev) {
     if (! ev)
         return;
     g_source_remove(ev->source);
@@ -87,22 +84,19 @@ struct event_timeout {
     struct callback *cb;
 };
 
-static gboolean
-event_glib_call_timeout_single(struct event_timeout *ev) {
+static gboolean event_glib_call_timeout_single(struct event_timeout *ev) {
     callback_call_0(ev->cb);
     g_free(ev);
     return FALSE;
 }
 
-static gboolean
-event_glib_call_timeout_multi(struct event_timeout *ev) {
+static gboolean event_glib_call_timeout_multi(struct event_timeout *ev) {
     callback_call_0(ev->cb);
     return TRUE;
 }
 
 
-static struct event_timeout *
-event_glib_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_glib_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout *ret=g_new0(struct event_timeout, 1);
     ret->cb=cb;
     ret->source = g_timeout_add(timeout,
@@ -111,8 +105,7 @@ event_glib_add_timeout(int timeout, int multi, struct callback *cb) {
     return ret;
 }
 
-static void
-event_glib_remove_timeout(struct event_timeout *ev) {
+static void event_glib_remove_timeout(struct event_timeout *ev) {
     if (! ev)
         return;
     g_source_remove(ev->source);
@@ -124,30 +117,26 @@ struct event_idle {
     struct callback *cb;
 };
 
-static gboolean
-event_glib_call_idle(struct event_idle *ev) {
+static gboolean event_glib_call_idle(struct event_idle *ev) {
     callback_call_0(ev->cb);
     return TRUE;
 }
 
-static struct event_idle *
-event_glib_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_glib_add_idle(int priority, struct callback *cb) {
     struct event_idle *ret=g_new0(struct event_idle, 1);
     ret->cb=cb;
     ret->source = g_idle_add_full(G_PRIORITY_HIGH_IDLE+priority, (GSourceFunc)event_glib_call_idle, (gpointer)ret, NULL);
     return ret;
 }
 
-static void
-event_glib_remove_idle(struct event_idle *ev) {
+static void event_glib_remove_idle(struct event_idle *ev) {
     if (! ev)
         return;
     g_source_remove(ev->source);
     g_free(ev);
 }
 
-static void
-event_glib_call_callback(struct callback_list *cb) {
+static void event_glib_call_callback(struct callback_list *cb) {
     /*
      Idea for implementation:
      Create a pipe then use add_watch
@@ -173,13 +162,11 @@ struct event_priv {
     int data;
 };
 
-static struct event_priv*
-event_glib_new(struct event_methods *meth) {
+static struct event_priv* event_glib_new(struct event_methods *meth) {
     *meth=event_glib_methods;
     return (struct event_priv *)event_glib_new;
 }
 
-void
-event_glib_init(void) {
+void event_glib_init(void) {
     plugin_register_category_event("glib", event_glib_new);
 }

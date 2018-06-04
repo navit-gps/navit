@@ -97,10 +97,9 @@ static struct vehicle_priv {
  * @param userdata
  * @returns nothing
  */
-static void
-vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
-                                gint fixstatus,
-                                gpointer userdata) {
+static void vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
+        gint fixstatus,
+        gpointer userdata) {
     struct vehicle_priv *priv = vehicle_last;
 
     if (fixstatus==GYPSY_DEVICE_FIX_STATUS_3D)
@@ -134,11 +133,10 @@ vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
  * @param userdata
  * @returns nothing
  */
-static void
-vehicle_gypsy_position_changed(GypsyPosition *position,
-                               GypsyPositionFields fields_set, int timestamp,
-                               double latitude, double longitude, double altitude,
-                               gpointer userdata) {
+static void vehicle_gypsy_position_changed(GypsyPosition *position,
+        GypsyPositionFields fields_set, int timestamp,
+        double latitude, double longitude, double altitude,
+        gpointer userdata) {
     struct vehicle_priv *priv = vehicle_last;
     int cb = FALSE;
 
@@ -177,10 +175,9 @@ vehicle_gypsy_position_changed(GypsyPosition *position,
  * @param userdata
  * @returns nothing
  */
-static void
-vehicle_gypsy_satellite_changed(GypsySatellite *satellite,
-                                GPtrArray *satellites,
-                                gpointer userdata) {
+static void vehicle_gypsy_satellite_changed(GypsySatellite *satellite,
+        GPtrArray *satellites,
+        gpointer userdata) {
     struct vehicle_priv *priv = vehicle_last;
 
     int i, sats, used=0;
@@ -215,14 +212,13 @@ vehicle_gypsy_satellite_changed(GypsySatellite *satellite,
  * @param userdata
  * @returns nothing
  */
-static void
-vehicle_gypsy_course_changed (GypsyCourse *course,
-                              GypsyCourseFields fields,
-                              int timestamp,
-                              double speed,
-                              double direction,
-                              double climb,
-                              gpointer userdata) {
+static void vehicle_gypsy_course_changed (GypsyCourse *course,
+        GypsyCourseFields fields,
+        int timestamp,
+        double speed,
+        double direction,
+        double climb,
+        gpointer userdata) {
     struct vehicle_priv *priv = vehicle_last;
     int cb = FALSE;
 
@@ -247,8 +243,7 @@ vehicle_gypsy_course_changed (GypsyCourse *course,
  * @param data
  * @returns TRUE to try again; FALSE if retry not required
  */
-static gboolean
-vehicle_gypsy_try_open(gpointer *data) {
+static gboolean vehicle_gypsy_try_open(gpointer *data) {
     struct vehicle_priv *priv = (struct vehicle_priv *)data;
     char *source = g_strdup(priv->source);
 
@@ -292,8 +287,7 @@ vehicle_gypsy_try_open(gpointer *data) {
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_gypsy_open(struct vehicle_priv *priv) {
+static void vehicle_gypsy_open(struct vehicle_priv *priv) {
     priv->retry_timer=0;
     if (vehicle_gypsy_try_open((gpointer *)priv)) {
         priv->retry_timer = g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gypsy_try_open, (gpointer *)priv);
@@ -306,8 +300,7 @@ vehicle_gypsy_open(struct vehicle_priv *priv) {
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_gypsy_close(struct vehicle_priv *priv) {
+static void vehicle_gypsy_close(struct vehicle_priv *priv) {
     if (priv->retry_timer) {
         g_source_remove(priv->retry_timer);
         priv->retry_timer=0;
@@ -337,8 +330,7 @@ vehicle_gypsy_close(struct vehicle_priv *priv) {
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_gypsy_destroy(struct vehicle_priv *priv) {
+static void vehicle_gypsy_destroy(struct vehicle_priv *priv) {
     vehicle_gypsy_close(priv);
     if (priv->source)
         g_free(priv->source);
@@ -353,9 +345,8 @@ vehicle_gypsy_destroy(struct vehicle_priv *priv) {
  * @param attr
  * @returns true/false
  */
-static int
-vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
-                                enum attr_type type, struct attr *attr) {
+static int vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     struct attr * active=NULL;
     switch (type) {
     case attr_position_fix_type:
@@ -420,10 +411,9 @@ struct vehicle_methods vehicle_gypsy_methods = {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv *
-vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
-                        struct callback_list *cbl,
-                        struct attr **attrs) {
+static struct vehicle_priv *vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
+        struct callback_list *cbl,
+        struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *source, *retry_int;
 
@@ -478,8 +468,7 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
  *
  * @returns nothing
  */
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("gypsy", vehicle_gypsy_new_gypsy);
 }

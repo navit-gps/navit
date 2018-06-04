@@ -34,13 +34,11 @@ EGLint aEGLContextAttributes[] = {
     EGL_NONE
 };
 
-static void
-graphics_opengl_egl_destroy(struct graphics_opengl_platform *egl) {
+static void graphics_opengl_egl_destroy(struct graphics_opengl_platform *egl) {
     g_free(egl);
 }
 
-static void
-graphics_opengl_egl_swap_buffers(struct graphics_opengl_platform *egl) {
+static void graphics_opengl_egl_swap_buffers(struct graphics_opengl_platform *egl) {
     eglSwapBuffers(egl->egldisplay, egl->eglwindow);
 }
 

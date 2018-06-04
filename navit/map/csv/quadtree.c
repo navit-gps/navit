@@ -58,8 +58,7 @@ struct quadtree_iter_node {
 };
 
 
-static double
-dist_sq(double x1,double y1,double x2,double y2) {
+static double dist_sq(double x1,double y1,double x2,double y2) {
     return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
 }
 
@@ -78,9 +77,8 @@ quadtree_node_new(struct quadtree_node* parent, double xmin, double xmax, double
 /*
  * searches all four subnodes recursively for the list of items within a rectangle
  */
-void
-quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax, double dYMin, double dYMax,
-                         GList**out) {
+void quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax, double dYMin, double dYMax,
+                              GList**out) {
 
     struct quadtree_node* nodes[4] = { this_->aa, this_->ab, this_->ba, this_->bb };
     if( this_->is_leaf ) {
@@ -386,8 +384,7 @@ void quadtree_node_drop_garbage(struct quadtree_node* node, struct quadtree_iter
  * @param iter Quadtree iteration context. Can be NULL if no garbage collection is needed.
  * @return nothing
  */
-void
-quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct quadtree_iter *iter) {
+void quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct quadtree_iter *iter) {
     if( this_->is_leaf ) {
         int bSame = 1;
         int i;
@@ -457,8 +454,7 @@ quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct qua
     }
 }
 
-void
-quadtree_split(struct quadtree_node* this_) {
+void quadtree_split(struct quadtree_node* this_) {
     int i;
     this_->is_leaf = 0;
     for(i=0; i<this_->node_num; ++i) {
@@ -504,8 +500,7 @@ quadtree_split(struct quadtree_node* this_) {
     this_->node_num = 0;
 }
 
-void
-quadtree_destroy(struct quadtree_node* this_) {
+void quadtree_destroy(struct quadtree_node* this_) {
     if(this_->aa) {
         quadtree_destroy(this_->aa);
         this_->aa = NULL;

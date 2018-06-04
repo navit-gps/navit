@@ -83,8 +83,7 @@ static void sigsegv(int sig) {
 }
 #endif
 
-void
-debug_init(const char *program_name) {
+void debug_init(const char *program_name) {
 #ifndef HAVE_API_ANDROID
     gdb_program=g_strdup(program_name);
     signal(SIGSEGV, sigsegv);
@@ -98,14 +97,12 @@ debug_init(const char *program_name) {
 }
 
 
-static void
-debug_update_level(gpointer key, gpointer value, gpointer user_data) {
+static void debug_update_level(gpointer key, gpointer value, gpointer user_data) {
     if (max_debug_level < GPOINTER_TO_INT(value))
         max_debug_level = GPOINTER_TO_INT(value);
 }
 
-void
-debug_set_global_level(dbg_level level, int override_old_value ) {
+void debug_set_global_level(dbg_level level, int override_old_value ) {
     if (global_debug_level == GLOBAL_DEBUG_LEVEL_UNSET || override_old_value) {
         global_debug_level=level;
         if (max_debug_level < global_debug_level) {
@@ -114,8 +111,7 @@ debug_set_global_level(dbg_level level, int override_old_value ) {
     }
 }
 
-void
-debug_level_set(const char *name, dbg_level level) {
+void debug_level_set(const char *name, dbg_level level) {
     if (!strcmp(name, "segv")) {
 #ifndef HAVE_API_ANDROID
         segv_level=level;
@@ -134,8 +130,7 @@ debug_level_set(const char *name, dbg_level level) {
     }
 }
 
-static dbg_level
-parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr) {
+static dbg_level parse_dbg_level(struct attr *dbg_level_attr, struct attr *level_attr) {
     if (dbg_level_attr) {
         if(!strcmp(dbg_level_attr->u.str,"error")) {
             return lvl_error;
@@ -199,8 +194,7 @@ debug_new(struct attr *parent, struct attr **attrs) {
 }
 
 
-dbg_level
-debug_level_get(const char *message_category) {
+dbg_level debug_level_get(const char *message_category) {
     if (!debug_hash)
         return DEFAULT_DEBUG_LEVEL;
     gpointer level = g_hash_table_lookup(debug_hash, message_category);
@@ -210,16 +204,27 @@ debug_level_get(const char *message_category) {
     return GPOINTER_TO_INT(level);
 }
 
+/**
+ * @brief Write a timestamp to a string buffer
+ *
+ * Timestamp has the format "HH:MM:SS:mmm|" (with mmm=milliseconds), or under Windows "SSSSS:uuuuuu|" (with uuuuuu=microseconds)
+ *
+ * @param[out] buffer The buffer to write to
+ *
+ * @warning Buffer overflow may occur on @p buffer, if it is less than 14-bytes long (13 chars will be stored at max)
+ */
 static void debug_timestamp(char *buffer) {
 #if defined HAVE_API_WIN32_CE || defined _MSC_VER
     LARGE_INTEGER counter, frequency;
     double val;
+    unsigned int intpart;
     QueryPerformanceCounter(&counter);
     QueryPerformanceFrequency(&frequency);
     val=counter.HighPart * 4294967296.0 + counter.LowPart;
     val/=frequency.HighPart * 4294967296.0 + frequency.LowPart;
+    intpart=((unsigned int)val)/100000; /* Extract all digits above 5 lower from integer part */
+    val = val - (intpart * 100000); /* Limit val integer part to 5 digits */
     sprintf(buffer,"%.6f|",val);
-
 #else
     struct timeval tv;
 
@@ -252,8 +257,7 @@ static char* dbg_level_to_string(dbg_level level) {
 }
 
 #ifdef HAVE_API_ANDROID
-static android_LogPriority
-dbg_level_to_android(dbg_level level) {
+static android_LogPriority dbg_level_to_android(dbg_level level) {
     switch(level) {
     case lvl_unset:
         return ANDROID_LOG_UNKNOWN;
@@ -270,44 +274,120 @@ dbg_level_to_android(dbg_level level) {
 }
 #endif
 
-void
-debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix,
-              const char *fmt, va_list ap) {
-#if defined HAVE_API_WIN32_CE || defined _MSC_VER
-    char message_origin[4096];
-#else
-    char message_origin[mlen+flen+3];
-#endif
+/**
+ * @brief Write a log message
+ *
+ * @param level The level of the message. The message will only be written if \p level is higher than the minimum (global, per module or per function)
+ * @param module The name of the module that is initiating the log message
+ * @param mlen The length of string \p module
+ * @param function The name of the function that is initiating the log message
+ * @param flen The length of string \p function
+ * @param prefix Force prepending the message with context information (a timestamp, if timestamp_prefix is set), and the module and function name
+ * @param fmt The format string that specifies how subsequent arguments are output
+ * @param ap A list of arguments to use for substitution in the format string
+ */
+void debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen,
+                   int prefix, const char *fmt, va_list ap) {
+    char *end;	/* Pointer to the NUL terminating byte of debug_message */
+    char debug_message[4096];
+    char *message_origin = debug_message + sizeof(debug_message)
+                           -1;	/* message_origin is actually stored at the very end of debug_message buffer */
+    size_t len;	/* Length of the currently processed C-string */
 
-    sprintf(message_origin, "%s:%s", module, function);
+    /* Here we store a description of the source of the debugging message (message_origin)
+     * For this, we use the last bytes of the debug_message[] buffer.
+     * For example, if message_origin is "gui_internal:gui_internal_set_attr", debug_message[] will contain:
+     * "gui_internal:gui_internal_set_attr\0" with '\0' being the last byte (stored in debug_message[sizeof(debug_message) -1])
+     */
+
+    *message_origin = '\0';	/* Force string termination of message_origin (last byte of debug_message) */
+
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
+    len = strlen(function);
+#else
+    len = flen;
+#endif
+    message_origin -= len;
+    dbg_assert(message_origin >= debug_message);
+    memmove(message_origin, function, len);
+    message_origin--;
+    dbg_assert(message_origin >= debug_message);
+    *message_origin = ':';
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
+    len = strlen(module);
+#else
+    len = mlen;
+#endif
+    message_origin -= len;
+    dbg_assert(message_origin >= debug_message);
+    memmove(message_origin, module, len);
+
+    /* The source of the debug message has been created, is terminated with '\0' and stored at the very end of the debug_message buffer. */
+
     if (global_debug_level >= level || debug_level_get(module) >= level || debug_level_get(message_origin) >= level) {
+        /* Do we output a debug message, based on the current debug level set */
 #if defined(DEBUG_WIN32_CE_MESSAGEBOX)
         wchar_t muni[4096];
 #endif
-        char debug_message[4096];
         debug_message[0]='\0';
+        end = debug_message;
         if (prefix) {
-            if (timestamp_prefix)
+            if (timestamp_prefix) {
+                /* Do we prepend with a timestamp? */
+                dbg_assert(sizeof(debug_message)>=14);
                 debug_timestamp(debug_message);
-            strcpy(debug_message+strlen(debug_message),dbg_level_to_string(level));
-            strcpy(debug_message+strlen(debug_message),":");
-            strcpy(debug_message+strlen(debug_message),message_origin);
-            strcpy(debug_message+strlen(debug_message),":");
+                len = strlen(debug_message);
+                end = debug_message+len;
+            }
+            /* When we reach this part of the code, end is a pointer to the beginning of the debug message (inside the buffer debug_message) */
+            g_strlcpy(end, dbg_level_to_string(level),
+                      sizeof(debug_message) - (end - debug_message));	/* Add the debug level for the current debug message level */
+            len = strlen(debug_message);
+            end = debug_message+len; /* Have len points to the end of the constructed string */
+            dbg_assert(end < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
+            *end++ = ':';
+            /* In the code below, we add the message_origin to the debug message */
+            len=strlen(message_origin);
+            dbg_assert(end+len < debug_message+sizeof(debug_message)); /* Make sure we don't get any overflow */
+            memmove(end,message_origin,len);	/* We use memmove here as both message_origin and destination may overlap */
+            message_origin =
+                NULL; /* Warning: from this point, we must not use the pointer message_origin as the content of the debug_message may be overwritten at any time. */
+            end+=len;
+            dbg_assert(end+1 < debug_message+sizeof(
+                           debug_message)); /* Make sure we don't get any overflow for both ':' and terminating '\0' */
+            *end++ = ':';
+            *end = '\0'; /* Force termination of the string */
+            /* When we get here, debug_message contains:
+             * "ttttttttttttt|error:gui_internal:gui_internal_set_attr:\0" (if timestamps are enabled) or
+             * "error:gui_internal:gui_internal_set_attr:\0" otherwise.
+             * end points to the terminating '\0'
+             */
         }
 #if defined HAVE_API_WIN32_CE
 #define vsnprintf _vsnprintf
 #endif
-        vsnprintf(debug_message+strlen(debug_message),sizeof(debug_message)-1-strlen(debug_message),fmt,ap);
+        len = strlen(debug_message);
+        vsnprintf(end,sizeof(debug_message) - len,fmt,
+                  ap); /* Concatenate the debug log message itself to the prefix constructed above */
+        len = strlen(debug_message); /* Adjust len to store the length of the current string */
+        end = debug_message+len;	/* Adjust end to point to the terminating '\0' of the current string */
+
+        /* In the code below, we prepend the end-of-line sequence to the current string pointed by debug_message ("\r\n" for Windows, "\r" otherwise */
 #ifdef HAVE_API_WIN32_BASE
-        if (strlen(debug_message)<sizeof(debug_message))
-            debug_message[strlen(debug_message)] = '\r';	/* For Windows platforms, add \r at the end of the buffer (if any room) */
+        if (len + 1 < sizeof(debug_message) - 1) {
+            /* For Windows platforms, add \r at the end of the buffer (if any room), make sure that we have room for one more character */
+            *end++ = '\r';
+            len++;
+            *end = '\0';
+        }
 #endif
-        if (strlen(debug_message)<sizeof(debug_message))
-            debug_message[strlen(debug_message)] = '\n';	/* Add \n at the end of the buffer (if any room) */
-        debug_message[sizeof(debug_message)-1] =
-            '\0';	/* Force NUL-termination of the string (if buffer size contraints did not allow for full string to fit */
+        if (len + 1 < sizeof(debug_message)) { /* Add \n at the end of the buffer (if any room) */
+            *end++ = '\n';
+            len++;
+            *end = '\0';
+        }
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
-        mbstowcs(muni, debug_message, strlen(debug_message)+1);
+        mbstowcs(muni, debug_message, len+1);
         MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
 #else
 #ifdef HAVE_API_ANDROID
@@ -315,7 +395,7 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
 #else
 #ifdef HAVE_SOCKET
         if (debug_socket != -1) {
-            sendto(debug_socket, debug_message, strlen(debug_message), 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
+            sendto(debug_socket, debug_message, len, 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
             return;
         }
 #endif
@@ -329,24 +409,21 @@ debug_vprintf(dbg_level level, const char *module, const int mlen, const char *f
     }
 }
 
-void
-debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen, int prefix,
-             const char *fmt, ...) {
+void debug_printf(dbg_level level, const char *module, const int mlen,const char *function, const int flen,
+                  int prefix, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     debug_vprintf(level, module, mlen, function, flen, prefix, fmt, ap);
     va_end(ap);
 }
 
-void
-debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file, int line,
-                  const char *expr) {
+void debug_assert_fail(const char *module, const int mlen,const char *function, const int flen, const char *file,
+                       int line, const char *expr) {
     debug_printf(lvl_error,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
     abort();
 }
 
-void
-debug_destroy(void) {
+void debug_destroy(void) {
     if (!debug_fp)
         return;
     if (debug_fp == stderr || debug_fp == stdout)
@@ -381,8 +458,7 @@ struct malloc_tail {
 
 int mallocs,debug_malloc_size,debug_malloc_size_m;
 
-void
-debug_dump_mallocs(void) {
+void debug_dump_mallocs(void) {
     struct malloc_head *head=malloc_heads;
     int i;
     dbg(lvl_debug,"mallocs %d",mallocs);
@@ -394,8 +470,7 @@ debug_dump_mallocs(void) {
     }
 }
 
-void *
-debug_malloc(const char *where, int line, const char *func, int size) {
+void *debug_malloc(const char *where, int line, const char *func, int size) {
     struct malloc_head *head;
     struct malloc_tail *tail;
     if (!size)
@@ -433,16 +508,14 @@ debug_malloc(const char *where, int line, const char *func, int size) {
 }
 
 
-void *
-debug_malloc0(const char *where, int line, const char *func, int size) {
+void *debug_malloc0(const char *where, int line, const char *func, int size) {
     void *ret=debug_malloc(where, line, func, size);
     if (ret)
         memset(ret, 0, size);
     return ret;
 }
 
-void *
-debug_realloc(const char *where, int line, const char *func, void *ptr, int size) {
+void *debug_realloc(const char *where, int line, const char *func, void *ptr, int size) {
     void *ret=debug_malloc(where, line, func, size);
     if (ret && ptr)
         memcpy(ret, ptr, size);
@@ -450,8 +523,7 @@ debug_realloc(const char *where, int line, const char *func, void *ptr, int size
     return ret;
 }
 
-char *
-debug_strdup(const char *where, int line, const char *func, const char *ptr) {
+char *debug_strdup(const char *where, int line, const char *func, const char *ptr) {
     int size;
     char *ret;
 
@@ -463,15 +535,13 @@ debug_strdup(const char *where, int line, const char *func, const char *ptr) {
     return ret;
 }
 
-char *
-debug_guard(const char *where, int line, const char *func, char *str) {
+char *debug_guard(const char *where, int line, const char *func, char *str) {
     char *ret=debug_strdup(where, line, func, str);
     g_free(str);
     return ret;
 }
 
-void
-debug_free(const char *where, int line, const char *func, void *ptr) {
+void debug_free(const char *where, int line, const char *func, void *ptr) {
     struct malloc_head *head;
     struct malloc_tail *tail;
     if (!ptr)
@@ -495,8 +565,7 @@ debug_free(const char *where, int line, const char *func, void *ptr) {
     free(head);
 }
 
-void
-debug_free_func(void *ptr) {
+void debug_free_func(void *ptr) {
     debug_free("unknown",0,"unknown",ptr);
 }
 

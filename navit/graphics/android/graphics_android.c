@@ -91,8 +91,7 @@ struct graphics_image_priv {
 
 static GHashTable *image_cache_hash = NULL;
 
-static int
-find_class_global(char *name, jclass *ret) {
+static int find_class_global(char *name, jclass *ret) {
     *ret=(*jnienv)->FindClass(jnienv, name);
     if (! *ret) {
         dbg(lvl_error,"Failed to get Class %s",name);
@@ -102,8 +101,7 @@ find_class_global(char *name, jclass *ret) {
     return 1;
 }
 
-static int
-find_method(jclass class, char *name, char *args, jmethodID *ret) {
+static int find_method(jclass class, char *name, char *args, jmethodID *ret) {
     *ret = (*jnienv)->GetMethodID(jnienv, class, name, args);
     if (*ret == NULL) {
         dbg(lvl_error,"Failed to get Method %s with signature %s",name,args);
@@ -112,8 +110,7 @@ find_method(jclass class, char *name, char *args, jmethodID *ret) {
     return 1;
 }
 
-static int
-find_static_method(jclass class, char *name, char *args, jmethodID *ret) {
+static int find_static_method(jclass class, char *name, char *args, jmethodID *ret) {
     *ret = (*jnienv)->GetStaticMethodID(jnienv, class, name, args);
     if (*ret == NULL) {
         dbg(lvl_error,"Failed to get static Method %s with signature %s",name,args);
@@ -122,8 +119,7 @@ find_static_method(jclass class, char *name, char *args, jmethodID *ret) {
     return 1;
 }
 
-static void
-graphics_destroy(struct graphics_priv *gr) {
+static void graphics_destroy(struct graphics_priv *gr) {
 }
 
 static void font_destroy(struct graphics_font_priv *font) {
@@ -134,8 +130,7 @@ static struct graphics_font_methods font_methods = {
     font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
-        int size, int flags) {
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font, int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     *meth=font_methods;
 
@@ -143,19 +138,16 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
     return ret;
 }
 
-static void
-gc_destroy(struct graphics_gc_priv *gc) {
+static void gc_destroy(struct graphics_gc_priv *gc) {
     g_free(gc->dashes);
     g_free(gc);
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     gc->linewidth = w;
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
     g_free(gc->dashes);
     gc->ndashes=n;
     if(n) {
@@ -166,16 +158,14 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
     }
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->r = c->r >> 8;
     gc->g = c->g >> 8;
     gc->b = c->b >> 8;
     gc->a = c->a >> 8;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -205,9 +195,7 @@ static struct graphics_image_methods image_methods = {
 };
 
 
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot,
-          int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv* ret = NULL;
 
     ret=g_new0(struct graphics_image_priv, 1);
@@ -228,8 +216,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
         id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, gra->packageName);
         dbg(lvl_debug,"id=%d",id);
         if (id)
-            localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource,
-                        gra->Resources, id);
+            localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
         (*jnienv)->DeleteLocalRef(jnienv, a);
     } else {
         string = (*jnienv)->NewStringUTF(jnienv, path);
@@ -279,8 +266,7 @@ static void initPaint(struct graphics_priv *gra, struct graphics_gc_priv *gc) {
     (*jnienv)->CallVoidMethod(jnienv, gc->gra->Paint, gra->Paint_setARGB, gc->a, gc->r, gc->g, gc->b);
 }
 
-static void
-draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
     int arrsize=1+4+1+gc->ndashes+count*2;
     jint pc[arrsize];
     int i;
@@ -306,8 +292,7 @@ draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point 
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
-static void
-draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
     int arrsize=1+4+count*2;
     jint pc[arrsize];
     int i;
@@ -329,46 +314,36 @@ draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct poin
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
-static void
-draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
+static void draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     initPaint(gra, gc);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->gra->Paint, p->x, p->y, w,
-                              h);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->gra->Paint, p->x, p->y, w, h);
 }
 
-static void
-draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r) {
+static void draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r) {
     initPaint(gra, gc);
     (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_circle, gc->gra->Paint, p->x, p->y, r);
 }
 
 
-static void
-draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
-          struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     int bgcolor=0;
     dbg(lvl_debug,"enter %s", text);
     initPaint(gra, fg);
     if(bg)
         bgcolor=(bg->a<<24)| (bg->r<<16) | (bg->g<<8) | bg->b;
     jstring string = (*jnienv)->NewStringUTF(jnienv, text);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string,
-                              font->size, dx, dy, bgcolor);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string, font->size, dx, dy, bgcolor);
     (*jnienv)->DeleteLocalRef(jnienv, string);
 }
 
-static void
-draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     dbg(lvl_debug,"enter %p",img);
     initPaint(gra, fg);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y,
-                              img->Bitmap);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y, img->Bitmap);
 
 }
 
-static void
-draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count,
-                 struct graphics_image_priv *img) {
+static void draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img) {
 
     /*
      *
@@ -379,8 +354,7 @@ draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct p
 
     if (count==3) {
         initPaint(gr, fg);
-        (*jnienv)->CallVoidMethod(jnienv, gr->NavitGraphics, gr->NavitGraphics_draw_image_warp, fg->gra->Paint,
-                                  count,  p[0].x, p[0].y,p[1].x, p[1].y, p[2].x, p[2].y, img->Bitmap);
+        (*jnienv)->CallVoidMethod(jnienv, gr->NavitGraphics, gr->NavitGraphics_draw_image_warp, fg->gra->Paint, count,  p[0].x, p[0].y,p[1].x, p[1].y, p[2].x, p[2].y, img->Bitmap);
     } else
         dbg(lvl_debug,"draw_image_warp is called with unsupported count parameter value %d", count);
 }
@@ -391,20 +365,16 @@ static void draw_drag(struct graphics_priv *gra, struct point *p) {
     (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_drag, p ? p->x : 0, p ? p->y : 0);
 }
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
 }
 
-static void
-draw_mode(struct graphics_priv *gra, enum draw_mode_num mode) {
+static void draw_mode(struct graphics_priv *gra, enum draw_mode_num mode) {
     (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_mode, (int)mode);
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
 
-static void *
-get_data(struct graphics_priv *this, const char *type) {
+static void *get_data(struct graphics_priv *this, const char *type) {
     if (!strcmp(type,"padding"))
         return this->padding;
     if (!strcmp(type,"window"))
@@ -415,8 +385,7 @@ get_data(struct graphics_priv *this, const char *type) {
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
 }
 
-static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
-                          struct point *ret, int estimate) {
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate) {
     int len = g_utf8_strlen(text, -1);
     int xMin = 0;
     int yMin = 0;
@@ -438,12 +407,10 @@ static void overlay_disable(struct graphics_priv *gra, int disable) {
 }
 
 static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int wraparound) {
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0, pnt ? pnt->y:0,
-                              w, h, wraparound);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0, pnt ? pnt->y:0, w, h, wraparound);
 }
 
-static int
-set_attr(struct graphics_priv *gra, struct attr *attr) {
+static int set_attr(struct graphics_priv *gra, struct attr *attr) {
     switch (attr->type) {
     case attr_use_camera:
         (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_SetCamera, attr->u.num);
@@ -497,15 +464,13 @@ static struct graphics_methods graphics_methods = {
     hide_native_keyboard,
 };
 
-static void
-resize_callback(struct graphics_priv *gra, int w, int h) {
+static void resize_callback(struct graphics_priv *gra, int w, int h) {
     dbg(lvl_debug,"w=%d h=%d ok",w,h);
     dbg(lvl_debug,"gra=%p, %d callbacks in list", gra, g_list_length(gra->cbl));
     callback_list_call_attr_2(gra->cbl, attr_resize, (void *)w, (void *)h);
 }
 
-static void
-padding_callback(struct graphics_priv *gra, int left, int top, int right, int bottom) {
+static void padding_callback(struct graphics_priv *gra, int left, int top, int right, int bottom) {
     dbg(lvl_debug, "win.padding left=%d top=%d right=%d bottom=%d ok", left, top, right, bottom);
     gra->padding->left = left;
     gra->padding->top = top;
@@ -513,22 +478,19 @@ padding_callback(struct graphics_priv *gra, int left, int top, int right, int bo
     gra->padding->bottom = bottom;
 }
 
-static void
-motion_callback(struct graphics_priv *gra, int x, int y) {
+static void motion_callback(struct graphics_priv *gra, int x, int y) {
     struct point p;
     p.x=x;
     p.y=y;
     callback_list_call_attr_1(gra->cbl, attr_motion, (void *)&p);
 }
 
-static void
-keypress_callback(struct graphics_priv *gra, char *s) {
+static void keypress_callback(struct graphics_priv *gra, char *s) {
     dbg(lvl_debug,"enter %s",s);
     callback_list_call_attr_1(gra->cbl, attr_keypress, s);
 }
 
-static void
-button_callback(struct graphics_priv *gra, int pressed, int button, int x, int y) {
+static void button_callback(struct graphics_priv *gra, int pressed, int button, int x, int y) {
     struct point p;
     p.x=x;
     p.y=y;
@@ -536,8 +498,7 @@ button_callback(struct graphics_priv *gra, int pressed, int button, int x, int y
 }
 
 
-static int
-set_activity(jobject graphics) {
+static int set_activity(jobject graphics) {
     jclass ActivityClass;
     jmethodID cid;
 
@@ -572,9 +533,7 @@ set_activity(jobject graphics) {
  * @param wraparound (0 for the main view)
  * @param use_camera Whether to use the camera (0 for overlays)
  */
-static int
-graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h,
-                      int wraparound, int use_camera) {
+static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int wraparound, int use_camera) {
     struct callback *cb;
     jmethodID cid, Context_getPackageName;
 
@@ -732,17 +691,14 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu,
-       Navit_showNativeKeyboard, Navit_hideNativeKeyboard;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu, Navit_showNativeKeyboard, Navit_hideNativeKeyboard;
 
-static int
-graphics_android_fullscreen(struct window *win, int on) {
+static int graphics_android_fullscreen(struct window *win, int on) {
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_fullscreen, on);
     return 1;
 }
 
-static void
-graphics_android_disable_suspend(struct window *win) {
+static void graphics_android_disable_suspend(struct window *win) {
     dbg(lvl_debug,"enter");
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_disableSuspend);
 }
@@ -758,9 +714,7 @@ graphics_android_disable_suspend(struct window *win) {
  * @param out Points to a buffer which will receive a pointer to the output of the command
  * @param valid
  */
-static void
-graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out,
-                                 int *valid) {
+static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     int ncmd=0;
     dbg(0,"Running %s",function);
     if(!strcmp(function,"map_download_dialog")) {
@@ -784,9 +738,7 @@ graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, str
  * @param out Points to a buffer which will receive a pointer to the output of the command
  * @param valid
  */
-static void
-graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out,
-                          int *valid) {
+static void graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid) {
     dbg(lvl_debug, "enter");
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_showMenu);
 }
@@ -815,8 +767,7 @@ static struct command_table commands[] = {
  *
  * @return The new graphics instance
  */
-static struct graphics_priv *
-graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *ret;
     struct attr *attr;
     int use_camera=0;
@@ -902,8 +853,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
  *
  * @return The graphics instance for the new overlay
  */
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
     struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
     *meth=graphics_methods;
     if (graphics_android_init(ret, gr, p, w, h, wraparound, 0)) {
@@ -916,8 +866,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 }
 
 
-static void
-event_android_main_loop_run(void) {
+static void event_android_main_loop_run(void) {
     dbg(lvl_debug,"enter");
 }
 
@@ -961,8 +910,7 @@ static void do_poll(JNIEnv *env, int fd, int cond) {
     poll(&pfd, 1, -1);
 }
 
-static struct event_watch *
-event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     jobject ret;
     ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, h, (int) cond, (int)cb);
     dbg(lvl_debug,"result for %d,%d,%p=%p",h,cond,cb,ret);
@@ -971,8 +919,7 @@ event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) 
     return (struct event_watch *)ret;
 }
 
-static void
-event_android_remove_watch(struct event_watch *ev) {
+static void event_android_remove_watch(struct event_watch *ev) {
     dbg(lvl_debug,"enter %p",ev);
     if (ev) {
         jobject obj=(jobject )ev;
@@ -988,8 +935,7 @@ struct event_timeout {
     struct callback *cb;
 };
 
-static void
-event_android_remove_timeout(struct event_timeout *priv) {
+static void event_android_remove_timeout(struct event_timeout *priv) {
     if (priv && priv->jni_timeout) {
         (*jnienv)->CallVoidMethod(jnienv, priv->jni_timeout, NavitTimeout_remove);
         (*jnienv)->DeleteGlobalRef(jnienv, priv->jni_timeout);
@@ -1003,8 +949,7 @@ static void event_android_handle_timeout(struct event_timeout *priv) {
         event_android_remove_timeout(priv);
 }
 
-static struct event_timeout *
-event_android_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_android_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout *ret = g_new0(struct event_timeout, 1);
     ret->cb = cb;
     ret->multi = multi;
@@ -1016,8 +961,7 @@ event_android_add_timeout(int timeout, int multi, struct callback *cb) {
 }
 
 
-static struct event_idle *
-event_android_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_android_add_idle(int priority, struct callback *cb) {
 #if 0
     jobject ret;
     dbg(lvl_debug,"enter");
@@ -1030,8 +974,7 @@ event_android_add_idle(int priority, struct callback *cb) {
     return (struct event_idle *)event_android_add_timeout(1, 1, cb);
 }
 
-static void
-event_android_remove_idle(struct event_idle *ev) {
+static void event_android_remove_idle(struct event_idle *ev) {
 #if 0
     dbg(lvl_debug,"enter %p",ev);
     if (ev) {
@@ -1043,8 +986,7 @@ event_android_remove_idle(struct event_idle *ev) {
     event_android_remove_timeout((struct event_timeout *)ev);
 }
 
-static void
-event_android_call_callback(struct callback_list *cb) {
+static void event_android_call_callback(struct callback_list *cb) {
     dbg(lvl_debug,"enter");
 }
 
@@ -1060,8 +1002,7 @@ static struct event_methods event_android_methods = {
     event_android_call_callback,
 };
 
-static struct event_priv *
-event_android_new(struct event_methods *meth) {
+static struct event_priv *event_android_new(struct event_methods *meth) {
     dbg(lvl_debug,"enter");
     if (!find_class_global("org/navitproject/navit/NavitTimeout", &NavitTimeoutClass))
         return NULL;
@@ -1166,8 +1107,7 @@ void hide_native_keyboard (struct graphics_keyboard *kbd) {
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"enter");
     plugin_register_category_graphics("android", graphics_android_new);
     plugin_register_category_event("android", event_android_new);

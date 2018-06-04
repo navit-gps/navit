@@ -33,8 +33,7 @@ struct speech_priv {
     int flags;
 };
 
-static int
-speech_android_say(struct speech_priv *this, const char *text) {
+static int speech_android_say(struct speech_priv *this, const char *text) {
     char *str=g_strdup(text);
     jstring string;
     int i;
@@ -48,8 +47,7 @@ speech_android_say(struct speech_priv *this, const char *text) {
     return 1;
 }
 
-static void
-speech_android_destroy(struct speech_priv *this) {
+static void speech_android_destroy(struct speech_priv *this) {
     g_free(this);
 }
 
@@ -58,8 +56,7 @@ static struct speech_methods speech_android_meth = {
     speech_android_say,
 };
 
-static int
-speech_android_init(struct speech_priv *ret) {
+static int speech_android_init(struct speech_priv *ret) {
     jmethodID cid;
     char *class="org/navitproject/navit/NavitSpeech2";
 
@@ -85,8 +82,7 @@ speech_android_init(struct speech_priv *ret) {
     return 1;
 }
 
-static struct speech_priv *
-speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+static struct speech_priv *speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this;
     struct attr *flags;
     *meth=speech_android_meth;
@@ -105,7 +101,6 @@ speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_speech("android", speech_android_new);
 }

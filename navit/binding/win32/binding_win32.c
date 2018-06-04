@@ -57,8 +57,7 @@ struct win32_binding_private {
 /* TODO: do something meaningful here
  *
  */
-static int
-win32_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out) {
+static int win32_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out) {
     dbg(lvl_error,"this function is a stub");
     if (in) {
         while (*in) {
@@ -75,8 +74,7 @@ static struct command_table commands[] = {
 };
 
 
-static void
-win32_wm_copydata(struct win32_binding_private *this, int *hwndSender, COPYDATASTRUCT *cpd) {
+static void win32_wm_copydata(struct win32_binding_private *this, int *hwndSender, COPYDATASTRUCT *cpd) {
     struct attr navit;
     struct navit_binding_w32_msg *msg;
     navit.type=attr_navit;
@@ -104,8 +102,7 @@ win32_wm_copydata(struct win32_binding_private *this, int *hwndSender, COPYDATAS
     command_evaluate(&navit, msg->text);
 }
 
-static void
-win32_cb_graphics_ready(struct win32_binding_private *this, struct navit *navit) {
+static void win32_cb_graphics_ready(struct win32_binding_private *this, struct navit *navit) {
     struct graphics *gra;
     struct callback *gcb;
 
@@ -115,8 +112,7 @@ win32_cb_graphics_ready(struct win32_binding_private *this, struct navit *navit)
     graphics_add_callback(gra, gcb);
 }
 
-static void
-win32_main_navit(struct win32_binding_private *this, struct navit *navit, int added) {
+static void win32_main_navit(struct win32_binding_private *this, struct navit *navit, int added) {
     struct attr attr;
     dbg(lvl_debug,"enter");
     if (added==1) {

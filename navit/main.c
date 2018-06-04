@@ -64,8 +64,7 @@ struct map_data *map_data_default;
 struct callback_list *cbl;
 
 #ifdef HAVE_API_WIN32
-void
-setenv(char *var, char *val, int overwrite) {
+void setenv(char *var, char *val, int overwrite) {
     char *str=g_strdup_printf("%s=%s",var,val);
     if (overwrite || !getenv(var))
         putenv(str);
@@ -89,8 +88,7 @@ static char *environment_vars[][5]= {
     {NULL,                NULL,         NULL,            NULL,          NULL},
 };
 
-static void
-main_setup_environment(int mode) {
+static void main_setup_environment(int mode) {
     int i=0;
     char *var,*val,*homedir;
     while ((var=environment_vars[i][0])) {
@@ -295,8 +293,7 @@ char *nls_table[][3]= {
     {NULL,NULL,NULL},		// Default - Can't find the language / Language not listed above
 };
 
-static void
-win_set_nls(void) {
+static void win_set_nls(void) {
     char country[32],lang[32];
     int i=0;
 
@@ -322,8 +319,7 @@ win_set_nls(void) {
 }
 #endif
 
-void
-main_init(const char *program) {
+void main_init(const char *program) {
     char *s;
 #ifdef _UNICODE		/* currently for wince */
     wchar_t wfilename[MAX_PATH + 1];

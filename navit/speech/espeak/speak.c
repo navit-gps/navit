@@ -341,8 +341,7 @@ static DWORD startThread( LPVOID sp_priv) {
     return 0;
 }
 
-static int
-espeak_say(struct speech_priv *this, const char *text) {
+static int espeak_say(struct speech_priv *this, const char *text) {
     char *phrase = g_strdup(text);
     dbg(lvl_debug, "Speak: '%s'", text);
 
@@ -364,8 +363,7 @@ static void free_list(gpointer pointer, gpointer this ) {
     g_free(pointer);
 }
 
-static void
-espeak_destroy(struct speech_priv *this) {
+static void espeak_destroy(struct speech_priv *this) {
     g_list_foreach( this->free_buffers, free_list, (gpointer)this );
     g_list_free( this->free_buffers );
 
@@ -381,8 +379,7 @@ static struct speech_methods espeak_meth = {
     espeak_say,
 };
 
-static struct speech_priv *
-espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+static struct speech_priv *espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this = NULL;
     struct attr *path;
     struct attr *language;
@@ -462,7 +459,6 @@ espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent
     return this;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_speech("espeak", espeak_new);
 }

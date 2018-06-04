@@ -50,18 +50,15 @@ struct menu_priv {
 
 /* Create callbacks that implement our Actions */
 
-static void
-zoom_in_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void zoom_in_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_zoom_in(gui->nav, 2, NULL);
 }
 
-static void
-zoom_out_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void zoom_out_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_zoom_out(gui->nav, 2, NULL);
 }
 
-static void
-refresh_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void refresh_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_draw(gui->nav);
 }
 
@@ -70,8 +67,7 @@ refresh_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
 void gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn);
 void gui_gtk_datawindow_destroy(struct datawindow_priv *win);
 
-static void
-roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
 
     if (! gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w))) {
         gui_gtk_datawindow_destroy(gui->datawindow);
@@ -83,8 +79,7 @@ roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     }
 }
 
-static void
-autozoom_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void autozoom_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct attr autozoom_attr;
 
     autozoom_attr.type = attr_autozoom_active;
@@ -97,8 +92,7 @@ autozoom_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_set_attr(gui->nav, &autozoom_attr);
 }
 
-static void
-cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct attr attr;
 
     attr.type=attr_cursor;
@@ -108,8 +102,7 @@ cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     }
 }
 
-static void
-tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct attr attr;
 
     attr.type=attr_tracking;
@@ -128,8 +121,7 @@ tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
  *  @return void
  */
 
-static void
-follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct attr attr;
 
     attr.type=attr_follow_cursor;
@@ -139,8 +131,7 @@ follow_vehicle_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     }
 }
 
-static void
-orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct attr attr;
 
     attr.type=attr_orientation;
@@ -150,8 +141,7 @@ orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     }
 }
 
-static void
-window_fullscreen_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void window_fullscreen_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     if(gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w)))
         gtk_window_fullscreen(GTK_WINDOW(gui->win));
     else
@@ -162,8 +152,7 @@ window_fullscreen_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
 #include "point.h"
 #include "transform.h"
 
-static void
-info_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void info_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     char buffer[512];
     int mw,mh;
     struct coord lt, rb;
@@ -185,23 +174,19 @@ info_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
 }
 
 
-static void
-route_clear_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void route_clear_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_set_destination(gui->nav, NULL, NULL, 0);
 }
 
-static void
-poi_search_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void poi_search_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     gtk_gui_poi(gui->nav);
 }
 
-static void
-destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     destination_address(gui->nav);
 }
 
-static void
-quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy) {
+static void quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy) {
     navit_destroy(gui->nav);
     exit(0);
 }
@@ -357,8 +342,7 @@ static struct {
 static gint n_stock_icons = G_N_ELEMENTS (stock_icons);
 
 
-static void
-register_my_stock_icons (void) {
+static void register_my_stock_icons (void) {
     GtkIconFactory *icon_factory;
     GtkIconSet *icon_set;
     GdkPixbuf *pixbuf;
@@ -447,16 +431,15 @@ static char layout[] =
 	</ui>";
 
 
-static void
-activate(void *dummy, struct menu_priv *menu) {
+static void activate(void *dummy, struct menu_priv *menu) {
     if (menu->cb)
         callback_call_0(menu->cb);
 }
 
 static struct menu_methods menu_methods;
 
-static struct menu_priv *
-add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb) {
+static struct menu_priv *add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type,
+                                  struct callback *cb) {
     struct menu_priv *ret;
     char *dynname;
 
@@ -490,8 +473,7 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 
 }
 
-static void
-remove_menu(struct menu_priv *item, int recursive) {
+static void remove_menu(struct menu_priv *item, int recursive) {
 
     if (recursive) {
         struct menu_priv *next,*child=item->child;
@@ -514,13 +496,11 @@ remove_menu(struct menu_priv *item, int recursive) {
     g_free(item);
 }
 
-static void
-set_toggle(struct menu_priv *menu, int active) {
+static void set_toggle(struct menu_priv *menu, int active) {
     gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(menu->action), active);
 }
 
-static  int
-get_toggle(struct menu_priv *menu) {
+static  int get_toggle(struct menu_priv *menu) {
     return gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(menu->action));
 }
 
@@ -537,14 +517,12 @@ static struct menu_methods menu_methods = {
 };
 
 
-static void
-popup_deactivate(GtkWidget *widget, struct menu_priv *menu) {
+static void popup_deactivate(GtkWidget *widget, struct menu_priv *menu) {
     g_signal_handler_disconnect(widget, menu->handler_id);
     remove_menu(menu, 1);
 }
 
-static void
-popup_activate(struct menu_priv *menu) {
+static void popup_activate(struct menu_priv *menu) {
 #ifdef _WIN32
     menu->widget=gtk_ui_manager_get_widget(menu->gui->ui_manager, menu->path );
 #endif
@@ -552,8 +530,7 @@ popup_activate(struct menu_priv *menu) {
     menu->handler_id=g_signal_connect(menu->widget, "selection-done", G_CALLBACK(popup_deactivate), menu);
 }
 
-void
-gui_gtk_ui_init(struct gui_priv *this) {
+void gui_gtk_ui_init(struct gui_priv *this) {
     GError *error = NULL;
     struct attr attr;
     GtkToggleAction *toggle_action;
@@ -603,8 +580,8 @@ gui_gtk_ui_init(struct gui_priv *this) {
 
 }
 
-static struct menu_priv *
-gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, int popup, GtkWidget **widget_ret) {
+static struct menu_priv *gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, int popup,
+        GtkWidget **widget_ret) {
     struct menu_priv *ret;
     GtkWidget *widget;
 

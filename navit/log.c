@@ -87,8 +87,7 @@ struct log {
  * @param fmt The format string
  * @return Nothing
  */
-static void
-strftime_localtime(char *buffer, int size, char *fmt) {
+static void strftime_localtime(char *buffer, int size, char *fmt) {
     time_t t;
     struct tm *tm;
 
@@ -107,8 +106,7 @@ strftime_localtime(char *buffer, int size, char *fmt) {
  *
  * @param this_ The log object.
  */
-static void
-expand_filenames(struct log *this_) {
+static void expand_filenames(struct log *this_) {
     char *pos,buffer[4096];
     int i;
 
@@ -137,8 +135,7 @@ expand_filenames(struct log *this_) {
  *
  * @param this_ The log object.
  */
-static void
-log_set_last_flush(struct log *this_) {
+static void log_set_last_flush(struct log *this_) {
 #ifdef HAVE_SYS_TIME_H
     gettimeofday(&this_->last_flush, NULL);
 #endif
@@ -162,8 +159,7 @@ log_set_last_flush(struct log *this_) {
  *
  * @param this_ The log object.
  */
-static void
-log_open(struct log *this_) {
+static void log_open(struct log *this_) {
     char *mode;
     if (this_->overwrite)
         mode="w";
@@ -189,8 +185,7 @@ log_open(struct log *this_) {
  *
  * @param this_ The log object.
  */
-static void
-log_close(struct log *this_) {
+static void log_close(struct log *this_) {
     if (! this_->f)
         return;
     if (this_->trailer.len)
@@ -225,8 +220,7 @@ log_close(struct log *this_) {
  * <br>
  * {@code log_flag_truncate}: truncates the log file at the current position. On the Win32 Base API, this flag has no effect.
  */
-static void
-log_flush(struct log *this_, enum log_flags flags) {
+static void log_flush(struct log *this_, enum log_flags flags) {
     long pos;
     if (this_->lazy && !this_->f) {
         if (!this_->data.len)
@@ -275,8 +269,7 @@ log_flush(struct log *this_, enum log_flags flags) {
  * @param this_ The log object.
  * @return True if the cache needs to be flushed, false otherwise.
  */
-static int
-log_flush_required(struct log *this_) {
+static int log_flush_required(struct log *this_) {
     return this_->data.len > this_->flush_size;
 }
 
@@ -298,8 +291,7 @@ log_flush_required(struct log *this_) {
  *
  * @param this_ The log object.
  */
-static void
-log_change(struct log *this_) {
+static void log_change(struct log *this_) {
     log_flush(this_,0);
     log_close(this_);
     expand_filenames(this_);
@@ -316,8 +308,7 @@ log_change(struct log *this_) {
  * @param this_ The log object.
  * @return True if the date/time-dependent part of the filename has changed, false otherwise.
  */
-static int
-log_change_required(struct log *this_) {
+static int log_change_required(struct log *this_) {
     char buffer[4096];
 
     strftime_localtime(buffer, 4096, this_->filename);
@@ -332,8 +323,7 @@ log_change_required(struct log *this_) {
  *
  * @param this_ The log object.
  */
-static void
-log_timer(struct log *this_) {
+static void log_timer(struct log *this_) {
 #ifdef HAVE_SYS_TIME_H
     struct timeval tv;
     int delta;
@@ -354,8 +344,7 @@ log_timer(struct log *this_) {
  * @param iter An attribute iterator
  * @return True for success, false for failure
  */
-int
-log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
@@ -429,8 +418,7 @@ log_new(struct attr * parent,struct attr **attrs) {
  * @param data The header data.
  * @param len Size of the header data to be copied, in bytes.
  */
-void
-log_set_header(struct log *this_, char *data, int len) {
+void log_set_header(struct log *this_, char *data, int len) {
     this_->header.data=g_malloc(len);
     this_->header.max_len=this_->header.len=len;
     memcpy(this_->header.data, data, len);
@@ -446,8 +434,7 @@ log_set_header(struct log *this_, char *data, int len) {
  * @param data The trailer data.
  * @param len Size of the trailer data to be copied, in bytes.
  */
-void
-log_set_trailer(struct log *this_, char *data, int len) {
+void log_set_trailer(struct log *this_, char *data, int len) {
     this_->trailer.data=g_malloc(len);
     this_->trailer.max_len=this_->trailer.len=len;
     memcpy(this_->trailer.data, data, len);
@@ -475,8 +462,7 @@ log_set_trailer(struct log *this_, char *data, int len) {
  * <br>
  * {@code log_flag_truncate}: ignored
  */
-void
-log_write(struct log *this_, char *data, int len, enum log_flags flags) {
+void log_write(struct log *this_, char *data, int len, enum log_flags flags) {
     dbg(lvl_debug,"enter");
     if (log_change_required(this_)) {
         dbg(lvl_debug,"log_change");
@@ -503,8 +489,7 @@ log_write(struct log *this_, char *data, int len, enum log_flags flags) {
  * This can be NULL, in which case no information on buffer length will be stored.
  * @return Pointer to the data buffer.
  */
-void *
-log_get_buffer(struct log *this_, int *len) {
+void *log_get_buffer(struct log *this_, int *len) {
     if (len)
         *len=this_->data.len;
     return this_->data.data;
@@ -521,8 +506,7 @@ log_get_buffer(struct log *this_, int *len) {
  * @param fmt The format string.
  * @param ... Additional arguments must be specified for each placeholder in the format string.
  */
-void
-log_printf(struct log *this_, char *fmt, ...) {
+void log_printf(struct log *this_, char *fmt, ...) {
     char buffer[LOG_BUFFER_SIZE];
     int size;
     va_list ap;
@@ -541,8 +525,7 @@ log_printf(struct log *this_, char *fmt, ...) {
  *
  * @param this_ The log object.
  */
-void
-log_destroy(struct log *this_) {
+void log_destroy(struct log *this_) {
     dbg(lvl_debug,"enter");
     attr_list_free(this_->attrs);
     callback_destroy(this_->timer_callback);

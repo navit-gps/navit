@@ -57,15 +57,13 @@ struct vehicle_priv {
     char str_time[200];
 };
 
-static void
-vehicle_iphone_destroy(struct vehicle_priv *priv) {
+static void vehicle_iphone_destroy(struct vehicle_priv *priv) {
     corelocation_exit();
     g_free(priv);
 }
 
-static int
-vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
-                                 enum attr_type type, struct attr *attr) {
+static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_speed:
         attr->u.numd = &priv->speed;
@@ -91,8 +89,7 @@ vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     if (attr->type == attr_navit) {
         priv->navit = attr->u.navit;
         return 1;
@@ -106,15 +103,14 @@ struct vehicle_methods vehicle_iphone_methods = {
     vehicle_iphone_set_attr,
 };
 
-void
-vehicle_iphone_update(void *arg,
-                      double lat,
-                      double lng,
-                      double dir,
-                      double spd,
-                      char * str_time,
-                      double radius
-                     ) {
+void vehicle_iphone_update(void *arg,
+                           double lat,
+                           double lng,
+                           double dir,
+                           double spd,
+                           char * str_time,
+                           double radius
+                          ) {
     struct vehicle_priv * priv = arg;
     priv->geo.lat = lat;
     priv->geo.lng = lng;
@@ -130,10 +126,9 @@ vehicle_iphone_update(void *arg,
 
 
 
-static struct vehicle_priv *
-vehicle_iphone_new(struct vehicle_methods
-                   *meth, struct callback_list
-                   *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_iphone_new(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *interval,*speed,*position_coord_geo;
 
@@ -161,8 +156,7 @@ vehicle_iphone_new(struct vehicle_methods
     return ret;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("iphone", vehicle_iphone_new);
 }

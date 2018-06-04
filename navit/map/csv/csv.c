@@ -45,8 +45,7 @@
 static int map_id;
 
 /*prototypes*/
-static int
-csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode);
+static int csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode);
 static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type);
 static void quadtree_item_free(void *mr, struct quadtree_item *qitem);
 static void quadtree_item_free_do(void *qitem);
@@ -73,8 +72,7 @@ struct quadtree_data *quadtree_data_dup(struct quadtree_data *qdata) {
     return ret;
 }
 
-static void
-save_map_csv(struct map_priv *m) {
+static void save_map_csv(struct map_priv *m) {
     if(m->filename && m->dirty) {
         char* filename = g_strdup_printf("%s.tmp",m->filename);
         FILE* fp;
@@ -176,8 +174,7 @@ save_map_csv(struct map_priv *m) {
 
 static const int zoom_max = 18;
 
-static void
-map_destroy_csv(struct map_priv *m) {
+static void map_destroy_csv(struct map_priv *m) {
     dbg(lvl_debug,"map_destroy_csv");
     /*save if changed */
     save_map_csv(m);
@@ -189,12 +186,10 @@ map_destroy_csv(struct map_priv *m) {
     g_free(m);
 }
 
-static void
-csv_coord_rewind(void *priv_data) {
+static void csv_coord_rewind(void *priv_data) {
 }
 
-static int
-csv_coord_get(void *priv_data, struct coord *c, int count) {
+static int csv_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     if(mr) {
         *c = mr->c;
@@ -204,13 +199,11 @@ csv_coord_get(void *priv_data, struct coord *c, int count) {
     }
 }
 
-static void
-csv_attr_rewind(void *priv_data) {
+static void csv_attr_rewind(void *priv_data) {
     /*TODO implement if needed*/
 }
 
-static int
-csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     int i, bAttrFound = 0;
     GList* attr_list;
     struct map_rect_priv *mr=priv_data;
@@ -267,8 +260,7 @@ csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     return 0;
 }
 
-static int
-csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode) {
+static int csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode) {
     struct map_rect_priv* mr;
     struct map_priv* m;
     int i, bFound;
@@ -342,8 +334,7 @@ csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode) {
     return 0;
 }
 
-static int
-csv_type_set(void *priv_data, enum item_type type) {
+static int csv_type_set(void *priv_data, enum item_type type) {
     struct map_rect_priv* mr = (struct map_rect_priv*)priv_data;
     dbg(lvl_debug,"Enter %d", type);
 
@@ -376,8 +367,7 @@ static struct item_methods methods_csv = {
 /*
  * Sets coordinate of an existing item (either on the new list or an item with coord )
  */
-static int
-csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode) {
+static int csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode) {
     struct quadtree_item query_item, *insert_item, *query_res;
     struct coord_geo cg;
     struct map_rect_priv* mr;
@@ -496,8 +486,7 @@ static void map_csv_debug_dump(struct map_priv *map) {
 }
 
 
-static struct map_rect_priv *
-map_rect_new_csv(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_rect_new_csv(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr;
     struct coord_geo lu;
     struct coord_geo rl;
@@ -533,8 +522,7 @@ map_rect_new_csv(struct map_priv *map, struct map_selection *sel) {
     return mr;
 }
 
-static void
-map_rect_destroy_csv(struct map_rect_priv *mr) {
+static void map_rect_destroy_csv(struct map_rect_priv *mr) {
     if(mr->qitem)
         mr->qitem->ref_count--;
 
@@ -544,8 +532,7 @@ map_rect_destroy_csv(struct map_rect_priv *mr) {
     g_free(mr);
 }
 
-static struct item *
-map_rect_get_item_csv(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_csv(struct map_rect_priv *mr) {
 
     if(mr->qitem)
         mr->qitem->ref_count--;
@@ -566,8 +553,7 @@ map_rect_get_item_csv(struct map_rect_priv *mr) {
     return NULL;
 }
 
-static struct item *
-map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo) {
     /*currently id_hi is ignored*/
 
     struct quadtree_item *qit = g_hash_table_lookup(mr->m->qitem_hash,&id_lo);
@@ -587,13 +573,11 @@ map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo) {
     }
 }
 
-static int
-csv_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr) {
+static int csv_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr) {
     return 0;
 }
 
-static struct item *
-csv_create_item(struct map_rect_priv *mr, enum item_type it_type) {
+static struct item *csv_create_item(struct map_rect_priv *mr, enum item_type it_type) {
     struct map_priv* m;
     struct quadtree_data* qd;
     struct quadtree_item* qi;
@@ -660,8 +644,7 @@ static struct map_methods map_methods_csv = {
     csv_get_attr,
 };
 
-static struct map_priv *
-map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m = NULL;
     struct attr *attr_types;
     struct attr *item_type_attr;
@@ -845,8 +828,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs, struct callback_list 
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"csv: plugin_init");
     plugin_register_category_map("csv", map_new_csv);
 }

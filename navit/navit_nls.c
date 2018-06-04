@@ -16,8 +16,7 @@
 static GList *textdomains;
 #endif
 
-char *
-navit_nls_add_textdomain(const char *package, const char *dir) {
+char *navit_nls_add_textdomain(const char *package, const char *dir) {
 #ifdef USE_NATIVE_LANGUAGE_SUPPORT
     char *ret=bindtextdomain(package, dir);
     bind_textdomain_codeset(package, "UTF-8");
@@ -28,8 +27,7 @@ navit_nls_add_textdomain(const char *package, const char *dir) {
 #endif
 }
 
-void
-navit_nls_remove_textdomain(const char *package) {
+void navit_nls_remove_textdomain(const char *package) {
 #ifdef USE_NATIVE_LANGUAGE_SUPPORT
     GList *i=textdomains;
     while (i) {
@@ -43,8 +41,7 @@ navit_nls_remove_textdomain(const char *package) {
 #endif
 }
 
-const char *
-navit_nls_gettext(const char *msgid) {
+const char *navit_nls_gettext(const char *msgid) {
 #ifdef USE_NATIVE_LANGUAGE_SUPPORT
     GList *i=textdomains;
     while (i) {
@@ -57,8 +54,7 @@ navit_nls_gettext(const char *msgid) {
     return msgid;
 }
 
-const char *
-navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long int n) {
+const char *navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long int n) {
 #ifdef USE_NATIVE_LANGUAGE_SUPPORT
     GList *i=textdomains;
     while (i) {
@@ -75,8 +71,7 @@ navit_nls_ngettext(const char *msgid, const char *msgid_plural, unsigned long in
     }
 }
 
-void
-navit_nls_main_init(void) {
+void navit_nls_main_init(void) {
 #ifdef USE_NATIVE_LANGUAGE_SUPPORT
 #ifdef FORCE_LOCALE
 #define STRINGIFY2(x) #x

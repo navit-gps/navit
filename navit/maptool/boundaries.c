@@ -23,8 +23,7 @@
 #define strcasecmp _stricmp
 #endif
 
-char *
-osm_tag_value(struct item_bin *ib, char *key) {
+char *osm_tag_value(struct item_bin *ib, char *key) {
     char *tag=NULL;
     int len=strlen(key);
     while ((tag=item_bin_get_attr(ib, attr_osm_tag, tag))) {
@@ -35,14 +34,12 @@ osm_tag_value(struct item_bin *ib, char *key) {
 }
 
 #if 0
-static char *
-osm_tag_name(struct item_bin *ib) {
+static char *osm_tag_name(struct item_bin *ib) {
     return osm_tag_value(ib, "name");
 }
 #endif
 
-osmid
-boundary_relid(struct boundary *b) {
+osmid boundary_relid(struct boundary *b) {
     long long *id;
     if (!b)
         return 0;
@@ -53,8 +50,8 @@ boundary_relid(struct boundary *b) {
         return *id;
     return 0;
 }
-static void
-process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin *member, void *member_priv) {
+static void process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin *member,
+                                      void *member_priv) {
     struct boundary *b=relation_priv;
     enum geom_poly_segment_type role=(long)member_priv;
     int *dup;
@@ -63,8 +60,7 @@ process_boundaries_member(void *func_priv, void *relation_priv, struct item_bin 
         b->segments=g_list_prepend(b->segments,item_bin_to_poly_segment(member, role));
 }
 
-static GList *
-process_boundaries_setup(FILE *boundaries, struct relations *relations) {
+static GList *process_boundaries_setup(FILE *boundaries, struct relations *relations) {
     struct item_bin *ib;
     GList *boundaries_list=NULL;
     struct relations_func *relations_func;
@@ -156,8 +152,7 @@ process_boundaries_setup(FILE *boundaries, struct relations *relations) {
     return boundaries_list;
 }
 
-GList *
-boundary_find_matches(GList *l, struct coord *c) {
+GList *boundary_find_matches(GList *l, struct coord *c) {
     GList *ret=NULL;
     while (l) {
         struct boundary *boundary=l->data;
@@ -172,8 +167,7 @@ boundary_find_matches(GList *l, struct coord *c) {
 }
 
 #if 0
-static void
-test(GList *boundaries_list) {
+static void test(GList *boundaries_list) {
     struct item_bin *ib;
     FILE *f=fopen("country_276.bin.unsorted","r");
     printf("start\n");
@@ -188,8 +182,7 @@ test(GList *boundaries_list) {
     printf("end\n");
 }
 
-static void
-dump_hierarchy(GList *l, char *prefix) {
+static void dump_hierarchy(GList *l, char *prefix) {
     char *newprefix=g_alloca(sizeof(char)*(strlen(prefix)+2));
     strcpy(newprefix, prefix);
     strcat(newprefix," ");
@@ -202,8 +195,7 @@ dump_hierarchy(GList *l, char *prefix) {
     }
 }
 
-static gint
-boundary_bbox_compare(gconstpointer a, gconstpointer b) {
+static gint boundary_bbox_compare(gconstpointer a, gconstpointer b) {
     const struct boundary *boundarya=a;
     const struct boundary *boundaryb=b;
     long long areaa=bbox_area(&boundarya->r);
@@ -216,8 +208,7 @@ boundary_bbox_compare(gconstpointer a, gconstpointer b) {
 }
 #endif
 
-static GList *
-process_boundaries_insert(GList *list, struct boundary *boundary) {
+static GList *process_boundaries_insert(GList *list, struct boundary *boundary) {
     GList *l=list;
     while (l) {
         struct boundary *b=l->data;
@@ -235,8 +226,7 @@ process_boundaries_insert(GList *list, struct boundary *boundary) {
 }
 
 
-static GList *
-process_boundaries_finish(GList *boundaries_list) {
+static GList *process_boundaries_finish(GList *boundaries_list) {
     GList *l,*sl;
     GList *ret=NULL;
     l=boundaries_list;
@@ -303,8 +293,7 @@ process_boundaries_finish(GList *boundaries_list) {
     return ret;
 }
 
-GList *
-process_boundaries(FILE *boundaries, FILE *ways) {
+GList *process_boundaries(FILE *boundaries, FILE *ways) {
     GList *boundaries_list;
     struct relations *relations=relations_new();
 
@@ -314,8 +303,7 @@ process_boundaries(FILE *boundaries, FILE *ways) {
     return process_boundaries_finish(boundaries_list);
 }
 
-void
-free_boundaries(GList *bl) {
+void free_boundaries(GList *bl) {
     GList *l=bl;
     while (l) {
         struct boundary *boundary=l->data;

@@ -25,8 +25,7 @@
 #include "speech.h"
 #include "phrase.h"
 
-void
-phrase_route_calc(void *speech) {
+void phrase_route_calc(void *speech) {
 #if 0
     if (! speech)
         return;
@@ -34,8 +33,7 @@ phrase_route_calc(void *speech) {
 #endif
 }
 
-void
-phrase_route_calculated(void *speech, void *route) {
+void phrase_route_calculated(void *speech, void *route) {
 #if 0
     struct tm *eta;
 #endif

@@ -46,8 +46,7 @@ static double latlon_scale=10000000.0;
 		return NULL;                                                   \
 	}
 
-static OSMPBF__BlobHeader *
-read_header(FILE *f) {
+static OSMPBF__BlobHeader *read_header(FILE *f) {
     unsigned char *buffer,lenb[4];
     int len;
 
@@ -62,8 +61,7 @@ read_header(FILE *f) {
 }
 
 
-static OSMPBF__Blob *
-read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned char *buffer) {
+static OSMPBF__Blob *read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned char *buffer) {
     int len=header->datasize;
     SANITY_CHECK_LENGTH(len, MAX_BLOB_LENGTH)
     if (fread(buffer, len, 1, f) != 1)
@@ -71,8 +69,7 @@ read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned char *buffer) {
     return osmpbf__blob__unpack(&protobuf_c_system_allocator, len, buffer);
 }
 
-static unsigned char *
-uncompress_blob(OSMPBF__Blob *blob) {
+static unsigned char *uncompress_blob(OSMPBF__Blob *blob) {
     unsigned char *ret=g_malloc(blob->raw_size);
     int zerr;
     z_stream strm;
@@ -100,8 +97,7 @@ uncompress_blob(OSMPBF__Blob *blob) {
     return ret;
 }
 
-static int
-get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape) {
+static int get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape) {
     int len=primitive_block->stringtable->s[id].len;
     char *data=(char *)primitive_block->stringtable->s[id].data;
     if (primitive_block->stringtable->s[id].len >= buffer_size) {
@@ -138,8 +134,7 @@ get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_bloc
 }
 
 
-static void
-process_osmheader(OSMPBF__Blob *blob, unsigned char *data) {
+static void process_osmheader(OSMPBF__Blob *blob, unsigned char *data) {
     OSMPBF__HeaderBlock *header_block;
     header_block=osmpbf__header_block__unpack(&protobuf_c_system_allocator, blob->raw_size, data);
     osmpbf__header_block__free_unpacked(header_block, &protobuf_c_system_allocator);
@@ -147,8 +142,7 @@ process_osmheader(OSMPBF__Blob *blob, unsigned char *data) {
 
 #if 0
 
-static void
-process_user(OSMPBF__PrimitiveBlock *primitive_block, int user_sid, int uid, int swap) {
+static void process_user(OSMPBF__PrimitiveBlock *primitive_block, int user_sid, int uid, int swap) {
     char userbuff[1024];
     get_string(userbuff, sizeof(userbuff), primitive_block, user_sid, 1);
     if (userbuff[0] && uid != -1) {
@@ -159,8 +153,7 @@ process_user(OSMPBF__PrimitiveBlock *primitive_block, int user_sid, int uid, int
     }
 }
 
-static void
-process_timestamp(long long timestamp) {
+static void process_timestamp(long long timestamp) {
     time_t ts;
     struct tm *tm;
     char tsbuff[1024];
@@ -172,8 +165,7 @@ process_timestamp(long long timestamp) {
 
 #endif
 
-static void
-process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val) {
+static void process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val) {
     char keybuff[1024];
     char valbuff[1024];
     get_string(keybuff, sizeof(keybuff), primitive_block, key, 0);
@@ -182,8 +174,7 @@ process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val) {
 }
 
 
-static void
-process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, struct maptool_osm *osm) {
+static void process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, struct maptool_osm *osm) {
     int i,j=0,has_tags;
     long long id=0,lat=0,lon=0,changeset=0,timestamp=0;
     int user_sid=0,uid=0;
@@ -213,16 +204,14 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 }
 
 #if 0
-static void
-process_info(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Info *info) {
+static void process_info(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Info *info) {
     printf(" version=\"%d\" changeset=\"%Ld\"",info->version,info->changeset);
     process_user(primitive_block, info->user_sid, info->uid, 1);
     process_timestamp(info->timestamp);
 }
 #endif
 
-static void
-process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct maptool_osm *osm) {
+static void process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct maptool_osm *osm) {
     int i;
     long long ref=0;
 
@@ -236,8 +225,8 @@ process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct ma
     osm_end_way(osm);
 }
 
-static void
-process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation, struct maptool_osm *osm) {
+static void process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation,
+                             struct maptool_osm *osm) {
     int i;
     long long ref=0;
     char rolebuff[1024];
@@ -253,8 +242,7 @@ process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *rela
     osm_end_relation(osm);
 }
 
-static void
-process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm) {
+static void process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm) {
     int i,j;
     OSMPBF__PrimitiveBlock *primitive_block;
     primitive_block=osmpbf__primitive_block__unpack(&protobuf_c_system_allocator, blob->raw_size, data);
@@ -270,8 +258,7 @@ process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm
 }
 
 
-int
-map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm) {
+int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm) {
     OSMPBF__BlobHeader *header;
     OSMPBF__Blob *blob;
     unsigned char *data;

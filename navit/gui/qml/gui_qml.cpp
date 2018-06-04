@@ -224,8 +224,7 @@ static void gui_qml_keypress(void *data, char *key) {
     return;
 }
 
-static void
-gui_qml_window_closed(struct gui_priv *data) {
+static void gui_qml_window_closed(struct gui_priv *data) {
     struct gui_priv *this_=(struct gui_priv*) data;
     this_->navitProxy->quit();
 }
@@ -328,8 +327,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra) {
     return 0;
 }
 
-static int
-gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr) {
+static int gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_fullscreen:
         attr->u.num=this_->fullscreen;
@@ -350,8 +348,7 @@ gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr)
     return 1;
 }
 
-static int
-gui_qml_set_attr(struct gui_priv *this_, struct attr *attr) {
+static int gui_qml_set_attr(struct gui_priv *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_fullscreen:
         if (!(this_->fullscreen) && (attr->u.num)) {
@@ -387,8 +384,7 @@ struct gui_methods gui_qml_methods = {
     gui_qml_set_attr,
 };
 
-static void
-gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct attr ***out, int *valid) {
     this_->guiProxy->processCommand(function);
 }
 

@@ -27,21 +27,18 @@
 #include "gui_internal_menu.h"
 #include "gui_internal_gesture.h"
 
-void
-gui_internal_gesture_ring_clear(struct gui_priv *this) {
+void gui_internal_gesture_ring_clear(struct gui_priv *this) {
     this->gesture_ring_last=this->gesture_ring_first=0;
 };
 
-static struct gesture_elem *
-gui_internal_gesture_ring_get(struct gui_priv *this, int i) {
+static struct gesture_elem *gui_internal_gesture_ring_get(struct gui_priv *this, int i) {
     int n=(this->gesture_ring_last-i+GESTURE_RINGSIZE)%GESTURE_RINGSIZE;
     if(n==this->gesture_ring_first)
         return NULL;
     return this->gesture_ring+n;
 };
 
-void
-gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p) {
+void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p) {
     long long msec;
 #ifndef HAVE_API_WIN32_CE
     struct timeval tv;
@@ -61,8 +58,7 @@ gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p) {
     dbg(lvl_info,"msec="LONGLONG_FMT" x=%d y=%d",msec,p->x,p->y);
 };
 
-int
-gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct point *p0, int *dx, int *dy) {
+int gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct point *p0, int *dx, int *dy) {
     struct gesture_elem *g;
     int x,y,dt;
     int i;
@@ -100,8 +96,7 @@ gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct po
     return dt;
 }
 
-int
-gui_internal_gesture_do(struct gui_priv *this) {
+int gui_internal_gesture_do(struct gui_priv *this) {
     int dt;
     int dx,dy;
 

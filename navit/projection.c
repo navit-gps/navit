@@ -36,8 +36,7 @@ struct projection_name projection_names[]= {
     {projection_utm, "utm"},
 };
 
-static int
-utmref_letter(char l) {
+static int utmref_letter(char l) {
     if (l < 'a' || l == 'i' || l == 'o')
         return -1;
     if (l < 'i')
@@ -56,8 +55,7 @@ utmref_letter(char l) {
  * @utm_offset Only for UTM projections: Used to return the offset for the UTM projection
  * @returns projection, or projection_none if no projection could be determined
  */
-enum projection
-projection_from_name(const char *name, struct coord *utm_offset) {
+enum projection projection_from_name(const char *name, struct coord *utm_offset) {
     int i;
     int zone,baserow;
     char ns,zone_field,square_x,square_y;
@@ -97,8 +95,7 @@ projection_from_name(const char *name, struct coord *utm_offset) {
     return projection_none;
 }
 
-char *
-projection_to_name(enum projection proj) {
+char *projection_to_name(enum projection proj) {
     int i;
 
     for (i=0 ; i < sizeof(projection_names)/sizeof(struct projection_name) ; i++) {

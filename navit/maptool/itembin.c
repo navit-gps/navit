@@ -27,8 +27,7 @@
 
 
 
-int
-item_bin_read(struct item_bin *ib, FILE *in) {
+int item_bin_read(struct item_bin *ib, FILE *in) {
     if (fread(ib, 4, 1, in) == 0)
         return 0;
     if (!ib->len)
@@ -38,21 +37,18 @@ item_bin_read(struct item_bin *ib, FILE *in) {
     return 0;
 }
 
-void
-item_bin_set_type(struct item_bin *ib, enum item_type type) {
+void item_bin_set_type(struct item_bin *ib, enum item_type type) {
     ib->type=type;
 }
 
-void
-item_bin_init(struct item_bin *ib, enum item_type type) {
+void item_bin_init(struct item_bin *ib, enum item_type type) {
     ib->clen=0;
     ib->len=2;
     item_bin_set_type(ib, type);
 }
 
 
-void
-item_bin_add_coord(struct item_bin *ib, struct coord *coords_to_add, int count) {
+void item_bin_add_coord(struct item_bin *ib, struct coord *coords_to_add, int count) {
     struct coord *coord_list=(struct coord *)(ib+1);
     coord_list+=ib->clen/2;
     memcpy(coord_list, coords_to_add, count*sizeof(struct coord));
@@ -60,15 +56,13 @@ item_bin_add_coord(struct item_bin *ib, struct coord *coords_to_add, int count) 
     ib->len+=count*2;
 }
 
-void
-item_bin_add_coord_reverse(struct item_bin *ib, struct coord *c, int count) {
+void item_bin_add_coord_reverse(struct item_bin *ib, struct coord *c, int count) {
     int i;
     for (i = count-1 ; i >= 0 ; i--)
         item_bin_add_coord(ib, &c[i], 1);
 }
 
-void
-item_bin_bbox(struct item_bin *ib, struct rect *r) {
+void item_bin_bbox(struct item_bin *ib, struct rect *r) {
     struct coord c;
     item_bin_add_coord(ib, &r->l, 1);
     c.x=r->h.x;
@@ -81,8 +75,7 @@ item_bin_bbox(struct item_bin *ib, struct rect *r) {
     item_bin_add_coord(ib, &r->l, 1);
 }
 
-void
-item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir) {
+void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir) {
     struct coord *c=(struct coord *)(from+1);
     int i,count=from->clen/2;
     if (dir >= 0) {
@@ -93,8 +86,7 @@ item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir) {
         item_bin_add_coord(ib, &c[count-i], 1);
 }
 
-void
-item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type attr) {
+void item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type attr) {
     struct attr_bin *ab=item_bin_get_attr_bin(from, attr, NULL);
     if (ab)
         item_bin_add_attr_data(ib, ab->type, (void *)(ab+1), (ab->len-1)*4);
@@ -102,14 +94,12 @@ item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type at
     assert(item_bin_get_wayid(ib) == item_bin_get_wayid(from));
 }
 
-void
-item_bin_add_coord_rect(struct item_bin *ib, struct rect *r) {
+void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r) {
     item_bin_add_coord(ib, &r->l, 1);
     item_bin_add_coord(ib, &r->h, 1);
 }
 
-int
-attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int size) {
+int attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int size) {
     int pad=(4-(size%4))%4;
     ab->type=type;
     memcpy(ab+1, data, size);
@@ -118,19 +108,16 @@ attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int si
     return ab->len+1;
 }
 
-int
-attr_bin_write_attr(struct attr_bin *ab, struct attr *attr) {
+int attr_bin_write_attr(struct attr_bin *ab, struct attr *attr) {
     return attr_bin_write_data(ab, attr->type, attr_data_get(attr), attr_data_size(attr));
 }
 
-void
-item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size) {
+void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size) {
     struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
     ib->len+=attr_bin_write_data(ab, type, data, size);
 }
 
-void
-item_bin_add_attr(struct item_bin *ib, struct attr *attr) {
+void item_bin_add_attr(struct item_bin *ib, struct attr *attr) {
     struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
     if (ATTR_IS_GROUP(attr->type)) {
         int i=0;
@@ -151,8 +138,7 @@ item_bin_add_attr(struct item_bin *ib, struct attr *attr) {
 
 }
 
-void
-item_bin_remove_attr(struct item_bin *ib, void *ptr) {
+void item_bin_remove_attr(struct item_bin *ib, void *ptr) {
     unsigned char *s=(unsigned char *)ib;
     unsigned char *e=s+(ib->len+1)*4;
     s+=sizeof(struct item_bin)+ib->clen*4;
@@ -167,16 +153,14 @@ item_bin_remove_attr(struct item_bin *ib, void *ptr) {
     }
 }
 
-void
-item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val) {
+void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val) {
     struct attr attr;
     attr.type=type;
     attr.u.num=val;
     item_bin_add_attr(ib, &attr);
 }
 
-void *
-item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last) {
+void *item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last) {
     unsigned char *s=(unsigned char *)ib;
     unsigned char *e=s+(ib->len+1)*4;
     s+=sizeof(struct item_bin)+ib->clen*4;
@@ -218,16 +202,14 @@ item_bin_get_attr_bin_last(struct item_bin *ib) {
     return ab;
 }
 
-void
-item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val) {
+void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val) {
     struct attr attr;
     attr.type=type;
     attr.u.num64=&val;
     item_bin_add_attr(ib, &attr);
 }
 
-void
-item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str) {
+void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str) {
     struct attr attr;
     if (! str)
         return;
@@ -236,8 +218,7 @@ item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str) {
     item_bin_add_attr(ib, &attr);
 }
 
-void
-item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max) {
+void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max) {
     struct attr attr;
     attr.type=type;
     attr.u.range.min=min;
@@ -245,8 +226,7 @@ item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, sho
     item_bin_add_attr(ib, &attr);
 }
 
-void
-item_bin_write(struct item_bin *ib, FILE *out) {
+void item_bin_write(struct item_bin *ib, FILE *out) {
     dbg_assert(fwrite(ib, (ib->len+1)*4, 1, out)==1);
 }
 
@@ -259,8 +239,7 @@ item_bin_dup(struct item_bin *ib) {
     return ret;
 }
 
-void
-item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out) {
+void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out) {
     struct tile_data tile_data;
     int i;
     bbox((struct coord *)(ib+1), ib->clen/2, &tile_data.item_bbox);
@@ -283,8 +262,7 @@ item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct
     }
 }
 
-static char *
-coord_to_str(struct coord *c) {
+static char *coord_to_str(struct coord *c) {
     int x=c->x;
     int y=c->y;
     char *sx="";
@@ -300,16 +278,14 @@ coord_to_str(struct coord *c) {
     return g_strdup_printf("%s0x%x %s0x%x",sx,x,sy,y);
 }
 
-static void
-dump_coord(struct coord *c, FILE *out) {
+static void dump_coord(struct coord *c, FILE *out) {
     char *str=coord_to_str(c);
     fprintf(out,"%s",str);
     g_free(str);
 }
 
 
-void
-item_bin_dump(struct item_bin *ib, FILE *out) {
+void item_bin_dump(struct item_bin *ib, FILE *out) {
     struct coord *c;
     struct attr_bin *a;
     struct attr attr;
@@ -345,8 +321,7 @@ item_bin_dump(struct item_bin *ib, FILE *out) {
     }
 }
 
-void
-dump_itembin(struct item_bin *ib) {
+void dump_itembin(struct item_bin *ib) {
     item_bin_dump(ib, stdout);
 }
 
@@ -407,8 +382,7 @@ static struct population_table district_population[] = {
     {type_district_label_1e7,10000000},
 };
 
-void
-item_bin_set_type_by_population(struct item_bin *ib, int population) {
+void item_bin_set_type_by_population(struct item_bin *ib, int population) {
     struct population_table *table;
     int i,count;
 
@@ -429,8 +403,7 @@ item_bin_set_type_by_population(struct item_bin *ib, int population) {
 }
 
 
-void
-item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out) {
+void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, int maxdepth, FILE *out) {
     char *word=item_bin_get_attr(ib, type, NULL);
     int i,words=0,len;
     char tilename[32]="";
@@ -474,8 +447,7 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
     } while (word);
 }
 
-static int
-item_bin_sort_compare(const void *p1, const void *p2) {
+static int item_bin_sort_compare(const void *p1, const void *p2) {
     struct item_bin *ib1=*((struct item_bin **)p1),*ib2=*((struct item_bin **)p2);
     struct attr_bin *attr1,*attr2;
     char *s1,*s2;
@@ -516,8 +488,7 @@ item_bin_sort_compare(const void *p1, const void *p2) {
     return ret;
 }
 
-int
-item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size) {
+int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size) {
     int j,k,count,rc=0;
     struct coord *c;
     struct item_bin *ib;
@@ -574,8 +545,7 @@ item_bin_to_poly_segment(struct item_bin *ib, int type) {
     return ret;
 }
 
-void
-clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out) {
+void clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out) {
     char *buffer=g_alloca(sizeof(char)*(ib->len*4+32));
     struct item_bin *ib_new=(struct item_bin *)buffer;
     struct coord *pa=(struct coord *)(ib+1);
@@ -619,8 +589,7 @@ clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, str
     }
 }
 
-void
-clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out) {
+void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out) {
     int count_in=ib->clen/2;
     struct coord *pin,*p,*s,pi;
     char *buffer1=g_alloca(sizeof(char)*(ib->len*4+ib->clen*7+32));

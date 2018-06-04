@@ -182,8 +182,7 @@ struct graphics_image_priv {
 };
 
 
-static void
-graphics_destroy(struct graphics_priv *gr) {
+static void graphics_destroy(struct graphics_priv *gr) {
     dbg(lvl_debug, "graphics_destroy %p %u", gr, gr->overlay_mode);
 
     if(gr->overlay_mode) {
@@ -207,24 +206,20 @@ graphics_destroy(struct graphics_priv *gr) {
 
 /* graphics_gc */
 
-static void
-gc_destroy(struct graphics_gc_priv *gc) {
+static void gc_destroy(struct graphics_gc_priv *gc) {
     g_free(gc);
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     dbg(lvl_debug, "gc_set_linewidth %p %d", gc, w);
     gc->linewidth = w;
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
     /* TODO */
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     dbg(lvl_debug, "gc_set_foreground: %p %d %d %d %d", gc, c->a, c->r, c->g, c->b);
     gc->fore_r = c->r/256;
     gc->fore_g = c->g/256;
@@ -232,8 +227,7 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->fore_a = c->a/256;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
     dbg(lvl_debug, "gc_set_background: %p %d %d %d %d", gc, c->a, c->r, c->g, c->b);
     gc->back_r = c->r/256;
     gc->back_g = c->g/256;
@@ -258,9 +252,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h,
-          struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
@@ -286,14 +278,12 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     return gi;
 }
 
-static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv * gi) {
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv * gi) {
     SDL_FreeSurface(gi->img);
     g_free(gi);
 }
 
-static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -332,8 +322,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
     }
 }
 
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -356,8 +345,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
                             gc->fore_a));
 }
 
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
+static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -388,8 +376,7 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 }
 
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -498,8 +485,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 }
 
 
-static void
-set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2) {
+static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2) {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
         return;
     }
@@ -531,8 +517,7 @@ set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint
 }
 
 
-static void
-resize_ft_buffer (unsigned int new_size) {
+static void resize_ft_buffer (unsigned int new_size) {
     if (new_size > ft_buffer_size) {
         g_free (ft_buffer);
         ft_buffer = g_malloc (new_size);
@@ -541,10 +526,7 @@ resize_ft_buffer (unsigned int new_size) {
     }
 }
 
-static void
-display_text_draw(struct font_freetype_text *text,
-                  struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                  struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
@@ -679,10 +661,7 @@ display_text_draw(struct font_freetype_text *text,
     }
 }
 
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-          struct graphics_gc_priv *bg, struct graphics_font_priv *font,
-          char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable)
             || (gr->overlay_parent && gr->overlay_parent->overlay_enable
                 && !gr->overlay_enable)) {
@@ -696,9 +675,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
         dbg(lvl_error, "no font, returning");
         return;
     }
-    t = gr->freetype_methods.text_new(text,
-                                      (struct font_freetype_font *) font,
-                                      dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -708,8 +685,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
     gr->freetype_methods.text_destroy(t);
 }
 
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -725,14 +701,12 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
     SDL_BlitSurface(img->img, NULL, gr->screen, &r);
 }
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     dbg(lvl_debug, "background_gc");
 }
 
 
-static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     struct graphics_priv *ov;
     SDL_Rect rect;
     int i;
@@ -753,8 +727,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
                         if(rect.y<0) rect.y += gr->screen->h;
                         rect.w = ov->screen->w;
                         rect.h = ov->screen->h;
-                        SDL_BlitSurface(ov->screen, NULL,
-                                        gr->screen, &rect);
+                        SDL_BlitSurface(ov->screen, NULL, gr->screen, &rect);
                     }
                 }
             }
@@ -775,8 +748,8 @@ static void overlay_disable(struct graphics_priv *gr, int disable) {
     draw_mode(curr_gr,draw_mode_end);
 }
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound);
 
 static int window_fullscreen(struct window *win, int on) {
     struct graphics_priv *gr=(struct graphics_priv *)win->priv;
@@ -798,8 +771,7 @@ static int window_fullscreen(struct window *win, int on) {
     return 1;
 }
 
-static void *
-get_data(struct graphics_priv *this, char const *type) {
+static void *get_data(struct graphics_priv *this, char const *type) {
     if(strcmp(type, "window") == 0) {
         struct window *win;
         win=g_new(struct window, 1);
@@ -845,8 +817,7 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
     struct graphics_priv *ov;
     Uint32 rmask, gmask, bmask, amask;
     int i;
@@ -1304,8 +1275,7 @@ static gboolean graphics_sdl_idle(void *data) {
 }
 
 
-static struct graphics_priv *
-graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct font_priv *(*font_freetype_new) (void *meth);
     struct attr *attr;
@@ -1456,8 +1426,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #ifdef USE_WEBOS
 /* ---------- SDL Eventhandling ---------- */
 
-static Uint32
-sdl_timer_callback(Uint32 interval, void* param) {
+static Uint32 sdl_timer_callback(Uint32 interval, void* param) {
     struct event_timeout *timeout=(struct event_timeout*)param;
 
     dbg(lvl_debug,"timer(%p) multi(%d) interval(%d) fired", param, timeout->multi, interval);
@@ -1484,22 +1453,19 @@ sdl_timer_callback(Uint32 interval, void* param) {
 
 /* SDL Mainloop */
 
-static void
-event_sdl_main_loop_run(void) {
+static void event_sdl_main_loop_run(void) {
     PDL_ScreenTimeoutEnable(PDL_FALSE);
     graphics_sdl_idle(NULL);
     PDL_ScreenTimeoutEnable(PDL_TRUE);
 }
 
-static void
-event_sdl_main_loop_quit(void) {
+static void event_sdl_main_loop_quit(void) {
     quit_event_loop = 1;
 }
 
 /* Watch */
 
-static void
-event_sdl_watch_thread (GPtrArray *watch_list) {
+static void event_sdl_watch_thread (GPtrArray *watch_list) {
     struct pollfd *pfds = g_new0 (struct pollfd, watch_list->len);
     struct event_watch *ew;
     int ret;
@@ -1537,8 +1503,7 @@ event_sdl_watch_thread (GPtrArray *watch_list) {
     pthread_exit(0);
 }
 
-static void
-event_sdl_watch_startthread(GPtrArray *watch_list) {
+static void event_sdl_watch_startthread(GPtrArray *watch_list) {
     dbg(lvl_debug,"enter");
     if (sdl_watch_thread)
         event_sdl_watch_stopthread();
@@ -1549,8 +1514,7 @@ event_sdl_watch_startthread(GPtrArray *watch_list) {
     dbg_assert (ret == 0);
 }
 
-static void
-event_sdl_watch_stopthread() {
+static void event_sdl_watch_stopthread() {
     dbg(lvl_debug,"enter");
     if (sdl_watch_thread) {
         /* Notify the watch thread that the list of FDs will change */
@@ -1560,8 +1524,7 @@ event_sdl_watch_stopthread() {
     }
 }
 
-static struct event_watch *
-event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug,"fd(%d) cond(%x) cb(%x)", fd, cond, cb);
 
     event_sdl_watch_stopthread();
@@ -1597,8 +1560,7 @@ event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     return new_ew;
 }
 
-static void
-event_sdl_remove_watch(struct event_watch *ew) {
+static void event_sdl_remove_watch(struct event_watch *ew) {
     dbg(lvl_debug,"enter %p",ew);
 
     event_sdl_watch_stopthread();
@@ -1613,8 +1575,7 @@ event_sdl_remove_watch(struct event_watch *ew) {
 
 /* Timeout */
 
-static struct event_timeout *
-event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout * ret =  g_new0(struct event_timeout, 1);
     if(!ret) {
         dbg(lvl_error,"g_new0 failed");
@@ -1628,8 +1589,7 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
     return ret;
 }
 
-static void
-event_sdl_remove_timeout(struct event_timeout *to) {
+static void event_sdl_remove_timeout(struct event_timeout *to) {
     dbg(lvl_info,"enter %p", to);
     if(to) {
         /* do not SDL_RemoveTimer if oneshot timer has already fired */
@@ -1646,8 +1606,7 @@ event_sdl_remove_timeout(struct event_timeout *to) {
 /* Idle */
 
 /* sort ptr_array by priority, increasing order */
-static gint
-sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb) {
+static gint sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb) {
     struct idle_task *a = (struct idle_task *)parama;
     struct idle_task *b = (struct idle_task *)paramb;
     if (a->priority < b->priority)
@@ -1657,8 +1616,7 @@ sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb) {
     return 0;
 }
 
-static struct event_idle *
-event_sdl_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_sdl_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug,"add idle priority(%d) cb(%p)", priority, cb);
 
     struct idle_task *task = g_new0(struct idle_task, 1);
@@ -1688,16 +1646,14 @@ event_sdl_add_idle(int priority, struct callback *cb) {
     return (struct event_idle *)task;
 }
 
-static void
-event_sdl_remove_idle(struct event_idle *task) {
+static void event_sdl_remove_idle(struct event_idle *task) {
     dbg(lvl_debug,"remove task(%p)", task);
     g_ptr_array_remove(idle_tasks, (gpointer)task);
 }
 
 /* callback */
 
-static void
-event_sdl_call_callback(struct callback_list *cbl) {
+static void event_sdl_call_callback(struct callback_list *cbl) {
     dbg(lvl_debug,"call_callback cbl(%p)",cbl);
     SDL_Event event;
     SDL_UserEvent userevent;
@@ -1725,8 +1681,7 @@ static struct event_methods event_sdl_methods = {
     event_sdl_call_callback,
 };
 
-static struct event_priv *
-event_sdl_new(struct event_methods* methods) {
+static struct event_priv *event_sdl_new(struct event_methods* methods) {
     idle_tasks = g_ptr_array_new();
     *methods = event_sdl_methods;
     return NULL;
@@ -1735,8 +1690,7 @@ event_sdl_new(struct event_methods* methods) {
 /* ---------- SDL Eventhandling ---------- */
 #endif
 
-void
-plugin_init(void) {
+void plugin_init(void) {
 #ifdef USE_WEBOS
     plugin_register_category_event("sdl", event_sdl_new);
 #endif
