@@ -58,12 +58,12 @@ function start_navit()
 function check_navit()
 {
 	if [ -f $PIDFILE ] ; then
-		pid=`cat $PIDFILE`
+    pid=$(cat $PIDFILE)
 		kill -0 $pid 2>/dev/null
 		if [ $? -eq 0 ] ; then
 			echo "Bringing Navit to front"
 
-			winid=`wmctrl -l -p | grep -e "^[^:blank:]*[:blank:]*[^:blank:]*[:blank:]*$pid[:blank:]*" | sed 's/ .*//'`
+      winid=$(wmctrl -l -p | grep -e "^[^:blank:]*[:blank:]*[^:blank:]*[:blank:]*$pid[:blank:]*" | sed 's/ .*//')
 			wmctrl -i -R $winid
 
 			exit 0
