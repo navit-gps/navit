@@ -3811,7 +3811,6 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
                                       struct attr **attrs) {
     struct osd_scale *this = g_new0(struct osd_scale, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
-    struct attr *attr;
 
     opc->data = (void*)this;
     opc->osd_item.font_size = 200;
