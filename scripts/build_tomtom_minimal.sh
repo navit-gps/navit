@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # this builds navit for tomtom
 # in case you want to build a plugin for tomtom use build_tomtom_plugin.sh instead
 # in case you want to build a standalone system

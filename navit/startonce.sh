@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # This script is part of navit, a navigation system.
 # It can be used to make sure that navit is only started
