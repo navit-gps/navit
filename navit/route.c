@@ -2051,6 +2051,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
     int new, val;
 
     p->rhs = INT_MAX;
+    p->seg = NULL;
 
     for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
         val = route_value_seg(profile, p, s, 1);
