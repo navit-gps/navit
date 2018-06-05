@@ -55,8 +55,9 @@ struct sonicStreamStruct {
     int prevMinDiff;
 };
 
+#if 0
 /* Just used for debugging */
-void sonicMSG(char *format, ...)
+static void sonicMSG(char *format, ...)
 {
     char buffer[4096];
     va_list ap;
@@ -69,6 +70,7 @@ void sonicMSG(char *format, ...)
     fprintf(file, "%s", buffer);
     fclose(file);
 }
+#endif
 
 /* Scale the samples by the factor. */
 static void scaleSamples(

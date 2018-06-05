@@ -28,6 +28,7 @@
 #include <time.h>
 #include <sys/stat.h>
 
+#include "speech.h"
 #include "speak_lib.h"
 
 // This version of the command-line speak program uses the
@@ -125,7 +126,7 @@ void strncpy0(char *dest, const char *source, int size)
 }
 
 
-void DisplayVoices(FILE *f_out, char *language)
+static void DisplayVoices(FILE *f_out, char *language)
 {//============================================
 	int ix;
 	const char *p;
@@ -213,7 +214,7 @@ static void Write4Bytes(FILE *f, int value)
 
 
 
-int OpenWavFile(char *path, int rate)
+static int OpenWavFile(char *path, int rate)
 //===================================
 {
 	static unsigned char wave_hdr[44] = {

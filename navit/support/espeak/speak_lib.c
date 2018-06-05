@@ -763,11 +763,12 @@ ESPEAK_API void espeak_SetUriCallback(int (* UriCallback)(int, const char*, cons
 	uri_callback = UriCallback;
 }
 
-
+#if 0
 ESPEAK_API void espeak_SetPhonemeCallback(int (* PhonemeCallback)(const char*))
 {//===========================================================================
 	phoneme_callback = PhonemeCallback;
 }
+#endif
 
 ESPEAK_API int espeak_Initialize(espeak_AUDIO_OUTPUT output_type, int buf_length, const char *path, int options)
 {//=============================================================================================================
