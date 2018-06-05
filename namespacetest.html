@@ -118,26 +118,14 @@ Variables</h2></td></tr>
 <tr class="separator:afe915c31f7f35d60dc601258f257e3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8687f9dd48b0d72dec61c231ff108b94"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#a8687f9dd48b0d72dec61c231ff108b94">iface</a> = dbus.Interface(<a class="el" href="namespacetest.html#afe915c31f7f35d60dc601258f257e3be">conn</a>, dbus_interface='org.navit_project.navit')</td></tr>
 <tr class="separator:a8687f9dd48b0d72dec61c231ff108b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8972821e8706c3471ad231a4c40b591"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#ae8972821e8706c3471ad231a4c40b591">_iter</a> = iface.attr_iter()</td></tr>
-<tr class="separator:ae8972821e8706c3471ad231a4c40b591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a494ed9f76f1abbe9262094006762d0c4"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#a494ed9f76f1abbe9262094006762d0c4">navit</a> = bus.get_object('org.navit_project.navit', conn.get_attr_wi(&quot;navit&quot;,_iter)[1])</td></tr>
+<tr class="memitem:a0f361724eb16b3050e5f9ce97d9088bd"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#a0f361724eb16b3050e5f9ce97d9088bd">iter</a> = iface.attr_iter()</td></tr>
+<tr class="separator:a0f361724eb16b3050e5f9ce97d9088bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494ed9f76f1abbe9262094006762d0c4"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#a494ed9f76f1abbe9262094006762d0c4">navit</a> = bus.get_object('org.navit_project.navit', conn.get_attr_wi(&quot;navit&quot;,iter)[1])</td></tr>
 <tr class="separator:a494ed9f76f1abbe9262094006762d0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab640285884a7a5be068ceba522c95eaa"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetest.html#ab640285884a7a5be068ceba522c95eaa">navit_iface</a> = dbus.Interface(<a class="el" href="structnavit.html">navit</a>, dbus_interface='org.navit_project.navit.navit')</td></tr>
 <tr class="separator:ab640285884a7a5be068ceba522c95eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="ae8972821e8706c3471ad231a4c40b591"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">tuple test._iter = iface.attr_iter()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a751f478bb788167362f41dd6e49d6046"></a>
 <div class="memitem">
 <div class="memproto">
@@ -176,12 +164,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0f361724eb16b3050e5f9ce97d9088bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tuple test.iter = iface.attr_iter()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a494ed9f76f1abbe9262094006762d0c4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">tuple test.navit = bus.get_object('org.navit_project.navit', conn.get_attr_wi(&quot;navit&quot;,_iter)[1])</td>
+          <td class="memname">tuple test.navit = bus.get_object('org.navit_project.navit', conn.get_attr_wi(&quot;navit&quot;,iter)[1])</td>
         </tr>
       </table>
 </div><div class="memdoc">

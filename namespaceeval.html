@@ -118,26 +118,14 @@ Variables</h2></td></tr>
 <tr class="separator:ab1d541504c9cacc1c914facf57fe37f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a07658d3da53e27a04c7ccc50964f82"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#a1a07658d3da53e27a04c7ccc50964f82">iface</a> = dbus.Interface(<a class="el" href="namespaceeval.html#ab1d541504c9cacc1c914facf57fe37f9">conn</a>, dbus_interface='org.navit_project.navit')</td></tr>
 <tr class="separator:a1a07658d3da53e27a04c7ccc50964f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aece97f502f0dac763ef0ee9ea0295f0c"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#aece97f502f0dac763ef0ee9ea0295f0c">_iter</a> = iface.attr_iter()</td></tr>
-<tr class="separator:aece97f502f0dac763ef0ee9ea0295f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d69fa30a65d86a400ef7f080d840f46"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#a0d69fa30a65d86a400ef7f080d840f46">navit</a> = bus.get_object('org.navit_project.navit', conn.get_attr_wi('<a class="el" href="structnavit.html">navit</a>',<a class="el" href="namespaceeval.html#aece97f502f0dac763ef0ee9ea0295f0c">_iter</a>)[1])</td></tr>
+<tr class="memitem:a1fb375ab731cfd1abc68389519e19aca"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#a1fb375ab731cfd1abc68389519e19aca">iter</a> = iface.attr_iter()</td></tr>
+<tr class="separator:a1fb375ab731cfd1abc68389519e19aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d69fa30a65d86a400ef7f080d840f46"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#a0d69fa30a65d86a400ef7f080d840f46">navit</a> = bus.get_object('org.navit_project.navit', conn.get_attr_wi('<a class="el" href="structnavit.html">navit</a>',<a class="el" href="namespaceeval.html#a1fb375ab731cfd1abc68389519e19aca">iter</a>)[1])</td></tr>
 <tr class="separator:a0d69fa30a65d86a400ef7f080d840f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad331ab41d2e6c66fa227b5266c0704c"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeval.html#aad331ab41d2e6c66fa227b5266c0704c">navit_iface</a> = dbus.Interface(<a class="el" href="structnavit.html">navit</a>, dbus_interface='org.navit_project.navit.navit')</td></tr>
 <tr class="separator:aad331ab41d2e6c66fa227b5266c0704c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="aece97f502f0dac763ef0ee9ea0295f0c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">tuple eval._iter = iface.attr_iter()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ae670e171f555cef4046c94ff608e3c43"></a>
 <div class="memitem">
 <div class="memproto">
@@ -178,12 +166,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1fb375ab731cfd1abc68389519e19aca"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tuple eval.iter = iface.attr_iter()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classNGQProxyRoute.html#aacd0f601a6acb3f52b472df69a3014db">NGQProxyRoute._routeDestinations()</a>, <a class="el" href="classNGQProxyRoute.html#abd5b0881ad82ee0319d93d003ee94c78">NGQProxyRoute.addDestination()</a>, <a class="el" href="destination_8c.html#a3f63ded87c4f4d071284995833cc3d04">button_bookmark()</a>, <a class="el" href="destination_8c.html#aaf6914a63c58d3f049dac4df81ecb924">button_destination()</a>, <a class="el" href="gui__gtk__poi_8c.html#a1c39c65efef7e2f52686801f7c56f00d">button_destination_clicked()</a>, <a class="el" href="destination_8c.html#a555516e2f17569087159471d6b4285a7">button_map()</a>, <a class="el" href="gui__gtk__poi_8c.html#a48e058fc663023680298acaf89a41975">button_map_clicked()</a>, <a class="el" href="gui__gtk__poi_8c.html#a3e7517d4a97860d2d325dad922f9eb39">button_visit_clicked()</a>, <a class="el" href="gui__gtk__poi_8c.html#a41b3e28b867e3b7e63055b36284b80f7">category_list_model()</a>, <a class="el" href="destination_8c.html#a681e98f77a60b3cc1d3c54de208b92f9">changed()</a>, <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, <a class="el" href="binding__dbus_8c.html#a329d8960ffe99eef218cec8a50bee684">dbus_dump()</a>, <a class="el" href="binding__dbus_8c.html#ac3275575a6fd24f27db46cdfadcb020f">decode_attr()</a>, <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>, <a class="el" href="classBackend.html#a6ac6e84ae8630b54403b78ad48acca19">Backend.get_maps()</a>, <a class="el" href="classBackend.html#a5fd60b3a55459cc4dae909c62cb02515">Backend.get_vehicles()</a>, <a class="el" href="classNGQProxyNavit.html#a4c52eebaae5afd82671aff582e64c5e8">NGQProxyNavit.getAttrList()</a>, <a class="el" href="classNGQProxyRoute.html#ae8822d874839df2922519f07f158ae97">NGQProxyRoute.getDestinations()</a>, <a class="el" href="datawindow_8c.html#afcf2a197db1d7b7bb2b5aafd066ba6c4">gui_gtk_datawindow_add()</a>, <a class="el" href="gui__gtk__window_8c.html#ab88cfcd6915dd7d5154d8986148730c0">gui_gtk_layouts_init()</a>, <a class="el" href="gui__gtk__window_8c.html#abd91c8009c9bd538070917277ca170b2">gui_gtk_maps_init()</a>, <a class="el" href="gui__gtk__window_8c.html#a41f585c358ac657bceb24196a3409502">gui_gtk_vehicles_update()</a>, <a class="el" href="gui__internal__command_8c.html#a58d26586f67497c51ca61aa874d56678">gui_internal_cmd2_setting_layout()</a>, <a class="el" href="gui__internal__command_8c.html#a73cff640d762b6383abd5af437342f7e">gui_internal_cmd2_setting_maps()</a>, <a class="el" href="gui__internal__command_8c.html#ab715e5ad4da5f73557e98ea61dbb9de5">gui_internal_cmd2_setting_vehicle()</a>, <a class="el" href="gui__internal__widget_8h.html#ad1402050a97dc3a962184dd0d5505959">gui_internal_widget_table_clear()</a>, <a class="el" href="layout_8c.html#a4e95510d6a3ada749ad5e87e340e2973">layer_set_attr_do()</a>, <a class="el" href="gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492">model_poi()</a>, <a class="el" href="group__navit.html#ga844c983d8e8e05a46046bfac6a146f43">navit_set_vehicle_by_name()</a>, <a class="el" href="graphics__qt5_8cpp.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable()</a>, <a class="el" href="QNavitQuick_8cpp.html#a3e27cc033e73ffddfb4a04c0ec989fe3">paintOverlays()</a>, <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, <a class="el" href="j1850_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>, <a class="el" href="binding__dbus_8c.html#a0e225f9731aaebc1c4a0f244f4ec2203">request_attr_iter_destroy()</a>, <a class="el" href="binding__dbus_8c.html#a1072bf371a908cce6e90f23f1d2dd1f1">request_callback_new()</a>, <a class="el" href="binding__dbus_8c.html#abd07d1333b62678b27aa789851a90123">request_command()</a>, <a class="el" href="binding__dbus_8c.html#afd875da7f54452b8f37755ab0b4674cf">request_get_attr()</a>, <a class="el" href="binding__dbus_8c.html#ad0730970cc19f474d43e4990d37a49e3">request_map_dump()</a>, <a class="el" href="binding__dbus_8c.html#a812794d76094843a69b2951d22a969f0">request_navit_add_message()</a>, <a class="el" href="binding__dbus_8c.html#a860b5a15fd586ec5e186928b32779fc5">request_navit_attr_iter_destroy()</a>, <a class="el" href="binding__dbus_8c.html#a5c42fd05fcc74a29ecf26e3d0b4a8d74">request_navit_block()</a>, <a class="el" href="binding__dbus_8c.html#af9ca1d3f32cfc6ef92cf4f8fc0a58405">request_navit_resize()</a>, <a class="el" href="binding__dbus_8c.html#a048f93e084c152c01ee24892e9c285b8">request_navit_route_export_geojson()</a>, <a class="el" href="binding__dbus_8c.html#abfa39940de8d6661f0e696a9a5d4f922">request_navit_route_export_gpx()</a>, <a class="el" href="binding__dbus_8c.html#a2452f62ceb308cb88eddef64dec03127">request_navit_set_center()</a>, <a class="el" href="binding__dbus_8c.html#abf2a42524a8f71b10afeaa697638641d">request_navit_set_center_screen()</a>, <a class="el" href="binding__dbus_8c.html#ac751fa0cbf392b3c617326bcb5f32c62">request_navit_set_destination()</a>, <a class="el" href="binding__dbus_8c.html#a15b4c5b542a9acac4cf3de2f1c8a0864">request_navit_set_layout()</a>, <a class="el" href="binding__dbus_8c.html#a325b3691e759ce24dbfc7e69cfc94f60">request_navit_set_position()</a>, <a class="el" href="binding__dbus_8c.html#afdd47d2aca7ecfba9916276b357afde8">request_navit_zoom()</a>, <a class="el" href="binding__dbus_8c.html#a67ad55e324ece05ac9c647fb691e6302">request_navit_zoom_to_route()</a>, <a class="el" href="binding__dbus_8c.html#aa00a074896ac28ba9c5c28a6edba60b2">request_search_list_get_result()</a>, <a class="el" href="binding__dbus_8c.html#a5ad5acde79eb759db464870568f9e628">request_search_list_new()</a>, <a class="el" href="binding__dbus_8c.html#a4a4f7f694b5429898a7962476ca8fa82">request_search_list_search()</a>, <a class="el" href="binding__dbus_8c.html#a232a6a3f0423019de3284a926cec0fc2">request_search_list_select()</a>, <a class="el" href="destination_8c.html#a9afa5b4f0ded4fdd84230abc39a29df5">row_activated()</a>, <a class="el" href="csv_8c.html#a4a7ba1cf34b823d5a9c8167d4e7c1165">save_map_csv()</a>, <a class="el" href="gui__internal_8c.html#aa532cc06603a8d87299e917f577e59c1">save_vehicle_xml()</a>, <a class="el" href="datawindow_8c.html#a0d85a6d143dbfb671bd27dd664e4d1a9">select_row()</a>, <a class="el" href="gui__gtk__poi_8c.html#abce9ecfbb58ba2bea5fe07b40b17b906">treeview_poi_changed()</a>, <a class="el" href="gui__gtk__poi_8c.html#ac1e44d77fe9152c61d2f4e5af62368e3">treeview_poi_reload()</a>, <a class="el" href="vehicleprofile_8c.html#aa5dff02fa1f955d57499b6314564310d">vehicleprofile_apply_attrs()</a>, <a class="el" href="vehicleprofile_8c.html#ad0a259b054c0f6c50a0fa0de2e31d50d">vehicleprofile_apply_roadprofile()</a>, and <a class="el" href="vehicleprofile_8c.html#a7f3d1c755716a167599fa5311966f594">vehicleprofile_update()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a0d69fa30a65d86a400ef7f080d840f46"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">tuple eval.navit = bus.get_object('org.navit_project.navit', conn.get_attr_wi('<a class="el" href="structnavit.html">navit</a>',<a class="el" href="namespaceeval.html#aece97f502f0dac763ef0ee9ea0295f0c">_iter</a>)[1])</td>
+          <td class="memname">tuple eval.navit = bus.get_object('org.navit_project.navit', conn.get_attr_wi('<a class="el" href="structnavit.html">navit</a>',<a class="el" href="namespaceeval.html#a1fb375ab731cfd1abc68389519e19aca">iter</a>)[1])</td>
         </tr>
       </table>
 </div><div class="memdoc">
