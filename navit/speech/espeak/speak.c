@@ -68,8 +68,8 @@ int GetFileLength(const char *filename) {
     return(statbuf.st_size);
 }
 
-//void MarkerEvent(int type, unsigned int char_position, int value, unsigned char *out_ptr) {
-//}
+void MarkerEvent(int type, unsigned int char_position, int value, int value2, unsigned char *out_ptr){
+}
 
 char *Alloc(int size) {
     return g_malloc(size);
