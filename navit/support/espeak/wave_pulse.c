@@ -75,14 +75,44 @@ static t_wave_callback* my_callback_is_output_enabled=NULL;
 #define MINREQ 880
 #define FRAGSIZE 0
 
+#ifdef USE_PORTAUDIO
+// rename functions to be wrapped
+#define wave_init wave_pulse_init
+#define wave_open wave_pulse_open
+#define wave_write wave_pulse_write
+#define wave_close wave_pulse_close
+#define wave_is_busy wave_pulse_is_busy
+#define wave_terminate wave_pulse_terminate
+#define wave_get_read_position wave_pulse_get_read_position
+#define wave_get_write_position wave_pulse_get_write_position
+#define wave_flush wave_pulse_flush
+#define wave_set_callback_is_output_enabled wave_pulse_set_callback_is_output_enabled
+#define wave_test_get_write_buffer wave_pulse_test_get_write_buffer
+#define wave_get_remaining_time wave_pulse_get_remaining_time
+
+// check whether we can connect to PulseAudio
+#include <pulse/simple.h>
+int is_pulse_running()
+{
+  pa_sample_spec ss;
+  ss.format = ESPEAK_FORMAT;
+  ss.rate = SAMPLE_RATE;
+  ss.channels = ESPEAK_CHANNEL;
+
+  pa_simple *s = pa_simple_new(NULL, "eSpeak", PA_STREAM_PLAYBACK, NULL, "is_pulse_running", &ss, NULL, NULL, NULL);
+  if (s) {
+    pa_simple_free(s);
+    return 1;
+  } else
+    return 0;
+}
+#endif // USE_PORTAUDIO
+
 static pthread_mutex_t pulse_mutex;
 
 static pa_context *context = NULL;
 static pa_stream *stream = NULL;
 static pa_threaded_mainloop *mainloop = NULL;
-
-static pa_cvolume volume;
-static int volume_valid = 0;
 
 static int do_trigger = 0;
 static uint64_t written = 0;
@@ -90,6 +120,7 @@ static int time_offset_msec = 0;
 static int just_flushed = 0;
 
 static int connected = 0;
+static int wave_samplerate;
 
 #define CHECK_DEAD_GOTO(label, warn) do { \
 if (!mainloop || \
@@ -131,20 +162,7 @@ do { \
 //   SHOW("ti> read_index=0x%lx\n",the_time->read_index);
 // }
 
-
-static void info_cb(struct pa_context *c, const struct pa_sink_input_info *i, int is_last, void *userdata) {
-  ENTER(__FUNCTION__);
-    assert(c);
-
-    if (!i)
-        return;
-
-    volume = i->volume;
-    volume_valid = 1;
-}
-
 static void subscribe_cb(struct pa_context *c, enum pa_subscription_event_type t, uint32_t index, void *userdata) {
-    pa_operation *o;
   ENTER(__FUNCTION__);
     
     assert(c);
@@ -154,13 +172,6 @@ static void subscribe_cb(struct pa_context *c, enum pa_subscription_event_type t
         (t != (PA_SUBSCRIPTION_EVENT_SINK_INPUT|PA_SUBSCRIPTION_EVENT_CHANGE) &&
          t != (PA_SUBSCRIPTION_EVENT_SINK_INPUT|PA_SUBSCRIPTION_EVENT_NEW)))
         return;
-
-    if (!(o = pa_context_get_sink_input_info(c, index, info_cb, NULL))) {
-        SHOW("pa_context_get_sink_input_info() failed: %s\n", pa_strerror(pa_context_errno(c)));
-        return;
-    }
-    
-    pa_operation_unref(o);
 }
 
 static void context_state_cb(pa_context *c, void *userdata) {
@@ -367,7 +378,7 @@ static void pulse_write(void* ptr, int length) {
 
   SHOW("pulse_write > length=%d\n", length);
 
-    CHECK_CONNECTED();
+    CHECK_CONNECTED_NO_RETVAL();
 
     pa_threaded_mainloop_lock(mainloop);
     CHECK_DEAD_GOTO(fail, 1);
@@ -475,17 +486,11 @@ static int pulse_open()
     pthread_mutex_init( &pulse_mutex, (const pthread_mutexattr_t *)NULL);
 
     ss.format = ESPEAK_FORMAT;
-    ss.rate = SAMPLE_RATE;
+    ss.rate = wave_samplerate;
     ss.channels = ESPEAK_CHANNEL;
 
     if (!pa_sample_spec_valid(&ss))
       return false;
-
-/*     if (!volume_valid) { */
-    pa_cvolume_reset(&volume, ss.channels);
-    volume_valid = 1;
-/*     } else if (volume.channels != ss.channels) */
-/*         pa_cvolume_set(&volume, ss.channels, pa_cvolume_avg(&volume)); */
 
     SHOW_TIME("pa_threaded_mainloop_new (call)");
     if (!(mainloop = pa_threaded_mainloop_new())) {
@@ -539,8 +544,6 @@ static int pulse_open()
     pa_stream_set_write_callback(stream, stream_request_cb, NULL);
     pa_stream_set_latency_update_callback(stream, stream_latency_update_cb, NULL);
 
-
-
     pa_buffer_attr a_attr;
 
     a_attr.maxlength = MAXLENGTH;
@@ -550,7 +553,7 @@ static int pulse_open()
     a_attr.fragsize = 0;
 
     SHOW_TIME("pa_connect_playback");
-    if (pa_stream_connect_playback(stream, NULL, &a_attr, (pa_stream_flags_t)(PA_STREAM_INTERPOLATE_TIMING|PA_STREAM_AUTO_TIMING_UPDATE), &volume, NULL) < 0) {
+    if (pa_stream_connect_playback(stream, NULL, &a_attr, (pa_stream_flags_t)(PA_STREAM_INTERPOLATE_TIMING|PA_STREAM_AUTO_TIMING_UPDATE), NULL, NULL) < 0) {
         SHOW("Failed to connect stream: %s", pa_strerror(pa_context_errno(context)));
         goto unlock_and_fail;
     }
@@ -578,43 +581,23 @@ static int pulse_open()
         pa_threaded_mainloop_wait(mainloop);
     }
 
+    pa_operation_unref(o);
+
     if (!success) {
         SHOW("pa_context_subscribe() failed: %s", pa_strerror(pa_context_errno(context)));
         goto unlock_and_fail;
     }
-
-    pa_operation_unref(o);
-
-    /* Now request the initial stream info */
-    if (!(o = pa_context_get_sink_input_info(context, pa_stream_get_index(stream), info_cb, NULL))) {
-        SHOW("pa_context_get_sink_input_info() failed: %s", pa_strerror(pa_context_errno(context)));
-        goto unlock_and_fail;
-    }
-    
-    SHOW_TIME("pa_threaded_mainloop_wait 2");
-    while (pa_operation_get_state(o) != PA_OPERATION_DONE) {
-        CHECK_DEAD_GOTO(fail, 1);
-        pa_threaded_mainloop_wait(mainloop);
-    }
-
-/*     if (!volume_valid) { */
-/*         SHOW("pa_context_get_sink_input_info() failed: %s", pa_strerror(pa_context_errno(context))); */
-/*         goto unlock_and_fail; */
-/*     } */
 
     do_trigger = 0;
     written = 0;
     time_offset_msec = 0;
     just_flushed = 0;
     connected = 1;
-    //    volume_time_event = NULL;
     
     pa_threaded_mainloop_unlock(mainloop);
     SHOW_TIME("pulse_open (ret true)");
    
-    //    return true;
     return PULSE_OK;
-
 
 unlock_and_fail:
 
@@ -677,13 +660,14 @@ void wave_set_callback_is_output_enabled(t_wave_callback* cb)
 //>
 //<wave_init
 
-void wave_init()
+int wave_init(int srate)
 {
   ENTER("wave_init");
 
   stream = NULL;
+	wave_samplerate = srate;
 
-  pulse_open();
+  return pulse_open() == PULSE_OK;
 }
 
 //>
@@ -761,19 +745,32 @@ size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t theSiz
 int wave_close(void* theHandler)
 {
   SHOW_TIME("wave_close > ENTER");
+  static int aStopStreamCount = 0;
 
-  int a_status = pthread_mutex_lock(&pulse_mutex);
-  if (a_status) {
-    SHOW("Error: pulse_mutex lock=%d (%s)\n", a_status, __FUNCTION__);
-    return PULSE_ERROR;
-  }
-  
-  drain();
+	// Avoid race condition by making sure this function only
+	// gets called once at a time
+	aStopStreamCount++;
+	if (aStopStreamCount != 1)
+	{
+		SHOW_TIME("wave_close > LEAVE (stopStreamCount)");
+		return 0;
+	}
 
-  pthread_mutex_unlock(&pulse_mutex);
-  SHOW_TIME("wave_close (ret)");
+	int a_status = pthread_mutex_lock(&pulse_mutex);
+	if (a_status)
+	{
+		SHOW("Error: pulse_mutex lock=%d (%s)\n", a_status, __FUNCTION__);
+		aStopStreamCount = 0; // last action
+		return PULSE_ERROR;
+	}
 
-  return PULSE_OK;
+	drain();
+
+	pthread_mutex_unlock(&pulse_mutex);
+	SHOW_TIME("wave_close (ret)");
+
+	aStopStreamCount = 0; // last action
+	return PULSE_OK;
 }
 
 //>
@@ -846,7 +843,7 @@ int wave_get_remaining_time(uint32_t sample, uint32_t* time)
     {
       // TBD: take in account time suplied by portaudio V18 API
       a_time = sample - a_timing_info.read_index;
-      a_time = 0.5 + (a_time * 1000.0) / SAMPLE_RATE;
+      a_time = 0.5 + (a_time * 1000.0) / wave_samplerate;
     }
   else
     {
@@ -873,7 +870,7 @@ void *wave_test_get_write_buffer()
 // notdef USE_PULSEAUDIO
 
 
-void wave_init() {}
+int wave_init(return 1;) {}
 void* wave_open(const char* the_api) {return (void *)1;}
 size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t theSize) {return theSize;}
 int wave_close(void* theHandler) {return 0;}
@@ -893,8 +890,9 @@ int wave_get_remaining_time(uint32_t sample, uint32_t* time)
 	return 0;
 }
 
-#endif  // of USE_PORTAUDIO
+#endif  // of USE_PULSEAUDIO
 
+#ifndef USE_PORTAUDIO
 //>
 //<clock_gettime2, add_time_in_ms
 
@@ -928,6 +926,7 @@ void add_time_in_ms(struct timespec *ts, int time_in_ms)
     }
   ts->tv_nsec = (long int)t_ns;
 }
+#endif  // ifndef USE_PORTAUDIO
 
 
 #endif   // USE_ASYNC
