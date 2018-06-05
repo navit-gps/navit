@@ -29,9 +29,8 @@
 #include "synthesize.h"
 #include "voice.h"
 #include "translate.h"
+#include "wavegen.h"
 
-extern int GetAmplitude(void);
-extern void DoSonicSpeed(int value);
 extern int saved_parameters[];
 
 

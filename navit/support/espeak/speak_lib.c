@@ -1252,9 +1252,8 @@ ESPEAK_API espeak_ERROR espeak_Synchronize(void)
 	return berr;
 }   //  end of espeak_Synchronize
 
-
-extern void FreePhData(void);
-extern void FreeVoiceList(void);
+#include "synthdata.h"
+#include "voices.h"
 
 ESPEAK_API espeak_ERROR espeak_Terminate(void)
 {//===========================================

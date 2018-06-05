@@ -42,6 +42,7 @@
 #include "voice.h"
 #include "translate.h"
 
+#include "voices.h"
 
 MNEM_TAB genders [] = {
 	{"unknown", 0},

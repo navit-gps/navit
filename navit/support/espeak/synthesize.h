@@ -586,4 +586,5 @@ void InitBreath(void);
 void KlattInit(void);
 void KlattReset(int control);
 int Wavegen_Klatt2(int length, int modulation, int resume, frame_t *fr1, frame_t *fr2);
-
+void DoSonicSpeed(int value);
+int FormantTransition2(frameref_t *seq, int *n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which);

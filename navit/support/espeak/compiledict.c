@@ -30,9 +30,10 @@
 #include "phoneme.h"
 #include "synthesize.h"
 #include "translate.h"
+#include "dictionary.h"
+#include "compiledict.h"
 
 extern void Write4Bytes(FILE *f, int value);
-extern int HashDictionary(const char *string);
 
 static FILE *f_log = NULL;
 extern char *dir_dictionary;

@@ -35,6 +35,7 @@
 #include "synthesize.h"
 #include "voice.h"
 
+#include "wavegen.h"
 #ifdef INCLUDE_SONIC
 #include "sonic.h"
 #endif

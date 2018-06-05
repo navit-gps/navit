@@ -36,6 +36,8 @@
 #include "translate.h"
 #include "wave.h"
 
+#include "synthdata.h"
+
 const char *version_string = "1.48.03  04.Mar.14";
 const int version_phdata  = 0x014801;
 

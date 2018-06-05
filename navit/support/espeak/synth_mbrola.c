@@ -39,8 +39,7 @@ int option_mbrola_phonemes;
 
 #ifdef INCLUDE_MBROLA
 
-extern int Read4Bytes(FILE *f);
-extern void SetPitch2(voice_t *voice, int pitch1, int pitch2, int *pitch_base, int *pitch_range);
+#include "wavegen.h"
 extern unsigned char *outbuf;
 
 #ifndef PLATFORM_WINDOWS
