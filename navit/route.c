@@ -2209,6 +2209,7 @@ route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofi
     else
         data.flags = 0;
 
+    item_coord_rewind(item);
     if (item_coord_get(item, &l, 1)) {
         s_pnt=route_graph_add_point(this,&l);
         while (item_coord_get(item, &c, 1)) {
@@ -2248,6 +2249,7 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
     struct route_graph_segment *found = NULL, *prev, *curr;
     int size;
 
+    item_coord_rewind(item);
     if (item_coord_get(item, &l, 1)) {
         s_pnt = route_graph_get_point(this, &l);
         while (item_coord_get(item, &c, 1))
