@@ -870,6 +870,8 @@ static int LoadSoundFile(const char *fname, int index)
 	}
 
 	f = NULL;
+
+#ifndef _WIN32
 #ifdef PLATFORM_POSIX
 	if((f = fopen(fname,"rb")) != NULL)
 	{
@@ -901,6 +903,7 @@ static int LoadSoundFile(const char *fname, int index)
 		}
 	}
 #endif
+#endif
 
 	if(f == NULL)
 	{
@@ -921,7 +924,9 @@ static int LoadSoundFile(const char *fname, int index)
 	}
 	length = fread(p,1,length,f);
 	fclose(f);
+#ifndef _WIN32
 	remove(fname_temp);
+#endif
 
 	ip = (int *)(&p[40]);
 	soundicon_tab[index].length = (*ip) / 2;  // length in samples

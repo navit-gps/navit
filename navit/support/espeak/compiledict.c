@@ -1894,7 +1894,9 @@ static int compile_dictrules(FILE *f_in, FILE *f_out, char *fname_temp)
 	fputc(0,f_out);
 
 	fclose(f_temp);
+#ifndef _WIN32
 	remove(fname_temp);
+#endif
 
 	fprintf(f_log,"\t%d rules, %d groups (%d)\n\n",count,n_rgroups,n_groups3);
 	return(0);
