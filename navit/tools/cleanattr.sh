@@ -28,7 +28,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 
-ATTRLIST=`grep 'ATTR(.*)' $ATTRFILE | sed 's#^ATTR(##' | sed 's#).*##'`
+ATTRLIST=$(grep 'ATTR(.*)' $ATTRFILE | sed 's#^ATTR(##' | sed 's#).*##')
 
 cp $ATTRFILE $TMPFILE
 
