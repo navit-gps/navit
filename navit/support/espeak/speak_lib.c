@@ -620,7 +620,7 @@ espeak_ERROR sync_espeak_Synth(unsigned int unique_identifier, const void *text,
 		      unsigned int position, espeak_POSITION_TYPE position_type,
 		      unsigned int end_position, unsigned int flags, void* user_data)
 {//===========================================================================
-
+	int i;
 #ifdef DEBUG_ENABLED
 	ENTER("sync_espeak_Synth");
 	SHOW("sync_espeak_Synth > position=%d, position_type=%d, end_position=%d, flags=%d, user_data=0x%x, text=%s\n", position, position_type, end_position, flags, user_data, text);
@@ -632,7 +632,7 @@ espeak_ERROR sync_espeak_Synth(unsigned int unique_identifier, const void *text,
 	my_unique_identifier = unique_identifier;
 	my_user_data = user_data;
 
-	for (int i=0; i < N_SPEECH_PARAM; i++)
+	for (i=0; i < N_SPEECH_PARAM; i++)
 		saved_parameters[i] = param_stack[0].parameter[i];
 
 	switch(position_type)
@@ -1203,6 +1203,7 @@ ESPEAK_API void espeak_CompileDictionary(const char *path, FILE *log, int flags)
 
 ESPEAK_API espeak_ERROR espeak_Cancel(void)
 {//===============================
+	int i;
 #ifdef USE_ASYNC
 	ENTER("espeak_Cancel");
 	fifo_stop();
@@ -1216,7 +1217,7 @@ ESPEAK_API espeak_ERROR espeak_Cancel(void)
 #endif
 	embedded_value[EMBED_T] = 0;    // reset echo for pronunciation announcements
 
-	for (int i=0; i < N_SPEECH_PARAM; i++)
+	for (i=0; i < N_SPEECH_PARAM; i++)
 		SetParameter(i, saved_parameters[i], 0);
 
 	return EE_OK;
