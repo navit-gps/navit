@@ -2204,6 +2204,7 @@ route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofi
     data.offset=1;
     data.maxspeed = INT_MAX;
 
+    item_attr_rewind(item);
     if (item_attr_get(item, attr_flags, &flags_attr))
         data.flags = flags_attr.u.num & AF_DISTORTIONMASK;
     else
