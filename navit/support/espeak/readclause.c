@@ -103,7 +103,7 @@ static const unsigned short punct_chars[] = {',','.','?','!',':',';',
   0xff1a,  // fullwidth colon
   0xff1b,  // fullwidth semicolon
   0xff1f,  // fullwidth question mark
-  
+
   0};
 
 
@@ -411,7 +411,7 @@ static int GetC_get(void)
 			end_of_input = 1;
 			return(0);
 		}
-	
+
 		if(!end_of_input)
 		{
 			if(option_multibyte == espeakCHARS_16BIT)
@@ -671,7 +671,6 @@ static int LoadSoundFile(const char *fname, int index)
 	char *p;
 	int *ip;
 	int  length;
-	char fname_temp[100];
 	char fname2[sizeof(path_home)+13+40];
 
 	if(fname == NULL)
@@ -699,6 +698,7 @@ static int LoadSoundFile(const char *fname, int index)
 		const char *resample;
 		int header[3];
 		char command[sizeof(fname2)+sizeof(fname2)+40];
+		char fname_temp[100];
 
 		fseek(f,20,SEEK_SET);
 		for(ix=0; ix<3; ix++)
@@ -889,7 +889,7 @@ static int AnnouncePunctuation(Translator *tr, int c1, int c2, char *buf, int bu
 		return(CLAUSE_SHORTFALL+4);
 	if(iswspace(c2) && strchr_w(punct_stop,c1)!=NULL)
 		return(punct_attributes[lookupwchar(punct_chars,c1)]);
-	
+
 	return(CLAUSE_SHORTCOMMA);
 }  //  end of AnnouncePunctuation
 
@@ -1141,7 +1141,7 @@ static wchar_t *GetSsmlAttribute(wchar_t *pw, const char *name)
 static int attrcmp(const wchar_t *string1, const char *string2)
 {//============================================================
 	int  ix;
-	
+
 	if(string1 == NULL)
 		return(1);
 
@@ -1227,7 +1227,7 @@ static int attr_prosody_value(int param_type, const wchar_t *pw, int *value_out)
 	}
 	if(*pw == '-')
 	{
-		pw++;	
+		pw++;
 		sign = -1;
 	}
 	value = (float)wcstod(pw,&tail);
@@ -1369,10 +1369,10 @@ static int GetVoiceAttributes(wchar_t *pw, int tag_type)
 			age = GetSsmlAttribute(pw,"age");
 			gender = GetSsmlAttribute(pw,"gender");
 		}
-	
+
 		if((tag_type != SSML_VOICE) && (lang==NULL))
 			return(0);  // <s> or <p> without language spec, nothing to do
-	
+
 		ssml_sp = &ssml_stack[n_ssml_stack++];
 
 		attrcopy_utf8(ssml_sp->language,lang,sizeof(ssml_sp->language));
@@ -1483,7 +1483,7 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int *outix, int n_outb
 	int voice_change_flag;
 	wchar_t *px;
 	wchar_t *attr1;
-	wchar_t *attr2; 
+	wchar_t *attr2;
 	wchar_t *attr3;
 	int terminator;
 	char *uri;
@@ -1546,7 +1546,7 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int *outix, int n_outb
 	tag_name[ix] = 0;
 
 	px = &xml_buf[ix];   // the tag's attributes
-	
+
 	if(tag_name[0] == '/')
 	{
 		tag_type = LookupMnem(ssmltags,&tag_name[1]) + SSML_CLOSE;  // closing tag
@@ -2076,9 +2076,9 @@ f_input = f_in;  // for GetC etc
 					}
 					xml_buf[n_xml_buf] = 0;
 					c2 = ' ';
-		
+
 					buf[ix++] = ' ';
-		
+
 					self_closing = 0;
 					if(xml_buf[n_xml_buf-1] == '/')
 					{
@@ -2086,14 +2086,14 @@ f_input = f_in;  // for GetC etc
 						xml_buf[n_xml_buf-1] = ' ';
 						self_closing = 1;
 					}
-		
+
 					terminator = ProcessSsmlTag(xml_buf,buf,ix,n_buf,self_closing);
-		
+
 					if(terminator != 0)
 					{
 						buf[ix] = ' ';
 						buf[ix++] = 0;
-		
+
 						if(terminator & CLAUSE_BIT_VOICE)
 						{
 							// a change in voice, write the new voice name to the end of the buf
@@ -2195,7 +2195,7 @@ f_input = f_in;  // for GetC etc
 			if(iswspace(c1))
 			{
 				char *p_word;
-	
+
 				if(tr->translator_name == 0x6a626f)
 				{
 					// language jbo : lojban
@@ -2316,13 +2316,13 @@ if(option_ssml) parag=1;
 				// note: (c2='?') is for when a smart-quote has been replaced by '?'
 				buf[ix] = ' ';
 				buf[ix+1] = 0;
-	
+
 				if((c1 == '.') && (cprev == '.'))
 				{
 					c1 = 0x2026;
 					punct = 9;   // elipsis
 				}
-	
+
 				nl_count = 0;
 				while(!Eof() && iswspace(c2))
 				{
@@ -2334,7 +2334,7 @@ if(option_ssml) parag=1;
 				{
 					UngetC(c2);
 				}
-	
+
 				if((nl_count==0) && (c1 == '.'))
 				{
 					if(iswdigit(cprev) && (tr->langopts.numbers & 0x10000) && islower(c2))
@@ -2354,7 +2354,7 @@ if(option_ssml) parag=1;
 						continue;
 					}
 				}
-	
+
 				punct_data = punct_attributes[punct];
 				if(nl_count > 1)
 				{
