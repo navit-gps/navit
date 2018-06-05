@@ -9,6 +9,7 @@ var searchData=
   ['_5fcurrent_5fstreet',['_current_street',['../classBackend.html#a98440c379802954b2e6ed78cc5918495',1,'Backend']]],
   ['_5fcurrent_5ftown',['_current_town',['../classBackend.html#a36f5e98be5e404a362ba4e73a2e31ade',1,'Backend']]],
   ['_5fitemid',['_itemId',['../classNGQProxy.html#ad68e20758e8e1643839f21c356c29ead',1,'NGQProxy']]],
+  ['_5fiter',['_iter',['../namespaceeval.html#aece97f502f0dac763ef0ee9ea0295f0c',1,'eval._iter()'],['../namespacetest.html#ae8972821e8706c3471ad231a4c40b591',1,'test._iter()']]],
   ['_5fmaps',['_maps',['../classBackend.html#ac274a2a9c7cfb25bbe5850d78cf7a441',1,'Backend']]],
   ['_5fpois',['_pois',['../classBackend.html#a0f1cb27f7b52b5f6791ff5b8983d12f2',1,'Backend']]],
   ['_5fsearch_5fcontext',['_search_context',['../classBackend.html#a4f9d5d5e5ffebf3f08a54bb4518ef341',1,'Backend']]],
