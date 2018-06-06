@@ -267,7 +267,7 @@ workflows:
       - build_android:
           requires:
             - sanity_check
-      - build_android_gradlew:
+      - build_android_gradle:
           requires:
             - sanity_check
       - build_win32:
@@ -296,7 +296,7 @@ workflows:
       - merge_trunk_in_master:
           requires:
             - build_linux
-            - build_android_gradlew
+            - build_android_gradle
             - build_android_arm
             - build_win32
             - build_wince
