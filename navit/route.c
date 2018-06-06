@@ -2011,6 +2011,138 @@ route_graph_segment_match(struct route_graph_segment *s1, struct route_graph_seg
 }
 
 /**
+ * @brief Adds two route values with protection against integer overflows.
+ *
+ * Unlike regular addition, this function is safe to use if one of the two arguments is `INT_MAX`
+ * (which Navit uses to express that a segment cannot be traversed or a point cannot be reached):
+ * If any of the two arguments is `INT_MAX`, then `INT_MAX` is returned; else the sum of the two
+ * arguments is returned.
+ *
+ * Note that this currently does not cover cases in which both arguments are less than `INT_MAX` but add
+ * up to `val1 + val2 >= INT_MAX`. With Navit’s internal cost definition, `INT_MAX` (2^31) is equivalent
+ * to approximately 7 years, making this unlikely to become a real issue.
+ */
+static int route_value_add(int val1, int val2) {
+    if (val1 == INT_MAX)
+        return INT_MAX;
+    if (val2 == INT_MAX)
+        return INT_MAX;
+    return val1 + val2;
+}
+
+/**
+ * @brief Updates the lookahead value of a point in the route graph and updates its heap membership.
+ *
+ * This recalculates the lookahead value (the `rhs` member) of point `p`, based on the `value` of each neighbor and the
+ * cost to reach that neighbor. If the resulting `p->rhs` differs from `p->value`, `p` is inserted into `heap` using
+ * the lower of the two as its key (if `p` is already a member of `heap`, its key is changed accordingly). If the
+ * resulting `p->rhs` is equal to `p->value` and `p` is a member of `heap`, it is removed.
+ *
+ * This is part of a modified LPA* implementation.
+ *
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
+ * are calculated.
+ * @param p The point to evaluate
+ * @param heap The heap
+ */
+static void route_graph_point_update(struct vehicleprofile *profile, struct route_graph_point * p,
+                                     struct fibheap * heap) {
+    struct route_graph_segment *s = NULL;
+    int new, val;
+
+    p->rhs = INT_MAX;
+
+    for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
+        val = route_value_seg(profile, p, s, -1);
+#if 0
+        /* FIXME this seems to break routing (no path found on re-route), examine */
+        if (val != INT_MAX && s->end->seg && item_is_equal(s->data.item, s->end->seg->data.item)) {
+            if (profile->turn_around_penalty2)
+                val += profile->turn_around_penalty2;
+            else
+                val = INT_MAX;
+        }
+#endif
+        if (val != INT_MAX) {
+            new = route_value_add(val, s->end->value);
+            if (new < p->rhs) {
+                p->rhs = new;
+                p->seg = s;
+            }
+        }
+    }
+
+    for (s = p->end; s; s = s->end_next) { /* Iterate over all the segments leading towards our point */
+        val = route_value_seg(profile, p, s, 1);
+#if 0
+        /* FIXME this seems to break routing (no path found on re-route), examine */
+        if (val != INT_MAX && s->start->seg && item_is_equal(s->data.item, s->start->seg->data.item)) {
+            if (profile->turn_around_penalty2)
+                val += profile->turn_around_penalty2;
+            else
+                val = INT_MAX;
+        }
+#endif
+        if (val != INT_MAX) {
+            new = route_value_add(val, s->start->value);
+            if (new < p->rhs) {
+                p->rhs = new;
+                p->seg = s;
+            }
+        }
+    }
+
+    if (p->el) {
+        /* Due to a limitation of the Fibonacci heap implementation, which causes fh_replacekey() to fail if the new
+         * key is greater than the current one, we always remove the point from the heap (and, if locally inconsistent,
+         * re-add it afterwards). */
+        fh_delete(heap, p->el);
+        p->el = NULL;
+    }
+
+    if (p->rhs != p->value)
+        /* The point is locally inconsistent, add (or re-add) it to the heap */
+        p->el = fh_insertkey(heap, MIN(p->rhs, p->value), p);
+}
+
+/**
+ * @brief Expands (i.e. calculates the costs for) the points on the heap.
+ *
+ * This calculates the cost for every point on the heap, as well as any neighbors affected by the cost change, and sets
+ * the next segment.
+ *
+ * This is part of a modified LPA* implementation.
+ *
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
+ * are calculated.
+ * @param heap The Fibonacci heap which stores the locally inconsistent points
+ */
+static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct fibheap * heap) {
+    struct route_graph_point *p_min;
+    struct route_graph_segment *s = NULL;
+
+    while ((p_min = fh_extractmin(heap))) {
+        p_min->el = NULL;
+        if (p_min->value > p_min->rhs)
+            /* cost has decreased, update point value */
+            p_min->value = p_min->rhs;
+        else {
+            /* cost has increased, re-evaluate */
+            p_min->value = INT_MAX;
+            route_graph_point_update(profile, p_min, heap);
+        }
+
+        /* in any case, update rhs of successors (nodes from which we can reach p_min via a single segment) */
+        for (s = p_min->start; s; s = s->start_next)
+            if (route_value_seg(profile, NULL, s, -1) != INT_MAX)
+                route_graph_point_update(profile, s->end, heap);
+        for (s = p_min->end; s; s = s->end_next)
+            if (route_value_seg(profile, NULL, s, 1) != INT_MAX)
+                route_graph_point_update(profile, s->start, heap);
+	}
+}
+
+/**
  * @brief Sets or clears a traffic distortion for a segment.
  *
  * This sets a delay (setting speed is not supported) or clears an existing traffic distortion.
@@ -2055,10 +2187,13 @@ route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_
  * @brief Adds a traffic distortion item to the route graph
  *
  * @param this The route graph to add to
+ * @param profile The vehicle profile to use for cost calculations
  * @param item The item to add, must be of {@code type_traffic_distortion}
+ * @param update Whether to update the point (true for LPA*, false for Dijkstra)
  */
 static void
-route_graph_add_traffic_distortion(struct route_graph *this, struct item *item) {
+route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile, struct item *item,
+        int update) {
     struct route_graph_point *s_pnt,*e_pnt;
     struct coord c,l;
     struct attr flags_attr, delay_attr, maxspeed_attr;
@@ -2089,7 +2224,135 @@ route_graph_add_traffic_distortion(struct route_graph *this, struct item *item) 
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
+        if (update) {
+            /* TODO figure out if we need to update both points */
+            route_graph_point_update(profile, s_pnt, this->heap);
+            route_graph_point_update(profile, e_pnt, this->heap);
+        }
     }
+}
+
+/**
+ * @brief Removes a traffic distortion item from the route graph
+ *
+ * Removing a traffic distortion which is not in the graph is a no-op.
+ *
+ * @param this The route graph to remove from
+ * @param profile The vehicle profile to use for cost calculations
+ * @param item The item to remove, must be of {@code type_traffic_distortion}
+ */
+static void route_graph_remove_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
+        struct item *item) {
+    struct route_graph_point *s_pnt = NULL, *e_pnt = NULL;
+    struct coord c, l;
+    struct route_graph_segment *found = NULL, *prev, *curr;
+    int size;
+
+    if (item_coord_get(item, &l, 1)) {
+        s_pnt = route_graph_get_point(this, &l);
+        while (item_coord_get(item, &c, 1))
+            l = c;
+        e_pnt = route_graph_get_point(this, &l);
+    }
+    if (s_pnt && e_pnt) {
+#if 1
+        curr = s_pnt->start;
+        prev = NULL;
+        s_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
+        for (curr = s_pnt->start; curr; curr = curr->start_next) {
+            if ((curr->end == e_pnt) && item_is_equal(curr->data.item, *item))
+                curr->data.item.type = type_none;
+            else
+                if (curr->data.item.type == type_traffic_distortion)
+                    s_pnt->flags |= RP_TRAFFIC_DISTORTION;
+        }
+
+        e_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
+        for (curr = e_pnt->end; curr; curr = curr->end_next)
+            if (curr->data.item.type == type_traffic_distortion)
+                e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+#else
+        /* this frees up memory but is slower */
+        /* remove from global list */
+        curr = this->route_segments;
+        prev = NULL;
+        while (curr && !found) {
+            if ((curr->start == s_pnt) && (curr->end == e_pnt) && (curr->data.item == item)) {
+                if (prev)
+                    prev->next = curr->next;
+                else
+                    this->route_segments = curr->next;
+                found = curr;
+            } else {
+                prev = curr;
+                curr = prev->next;
+            }
+        }
+
+        if (!found)
+            return;
+
+        /* remove from s_pnt list */
+        curr = s_pnt->start;
+        prev = NULL;
+        s_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
+        while (curr) {
+            if (curr == found) {
+                if (prev)
+                    prev->start_next = curr->start_next;
+                else
+                    s_pnt->start = curr->start_next;
+            } else {
+                if (curr->data.item.type == type_traffic_distortion)
+                    s_pnt->flags |= RP_TRAFFIC_DISTORTION;
+                prev = curr;
+            }
+            curr = prev->start_next;
+        }
+
+        /* remove from e_pnt list */
+        curr = e_pnt->end;
+        prev = NULL;
+        e_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
+        while (curr) {
+            if (curr == found) {
+                if (prev)
+                    prev->end_next = curr->end_next;
+                else
+                    s_pnt->end = curr->end_next;
+            } else {
+                if (curr->data.item.type == type_traffic_distortion)
+                    e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+                prev = curr;
+            }
+            curr = prev->end_next;
+        }
+
+        size = sizeof(struct route_graph_segment) - sizeof(struct route_segment_data)
+                    + route_segment_data_size(found->data.flags);
+        g_slice_free1(size, found);
+#endif
+
+        /* TODO figure out if we need to update both points */
+        route_graph_point_update(profile, s_pnt, this->heap);
+        route_graph_point_update(profile, e_pnt, this->heap);
+    }
+}
+
+/**
+ * @brief Changes a traffic distortion item in the route graph
+ *
+ * Attempting to change an idem which is not in the route graph will add it.
+ *
+ * @param this The route graph to change
+ * @param profile The vehicle profile to use for cost calculations
+ * @param item The item to change, must be of {@code type_traffic_distortion}
+ */
+static void route_graph_change_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
+        struct item *item) {
+    /* TODO is there a more elegant way of doing this? */
+    route_graph_remove_traffic_distortion(this, profile, item);
+    route_graph_add_traffic_distortion(this, profile, item, 1);
 }
 
 /**
@@ -2281,138 +2544,6 @@ route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struc
         }
     }
     return NULL;
-}
-
-/**
- * @brief Adds two route values with protection against integer overflows.
- *
- * Unlike regular addition, this function is safe to use if one of the two arguments is `INT_MAX`
- * (which Navit uses to express that a segment cannot be traversed or a point cannot be reached):
- * If any of the two arguments is `INT_MAX`, then `INT_MAX` is returned; else the sum of the two
- * arguments is returned.
- *
- * Note that this currently does not cover cases in which both arguments are less than `INT_MAX` but add
- * up to `val1 + val2 >= INT_MAX`. With Navit’s internal cost definition, `INT_MAX` (2^31) is equivalent
- * to approximately 7 years, making this unlikely to become a real issue.
- */
-static int route_value_add(int val1, int val2) {
-    if (val1 == INT_MAX)
-        return INT_MAX;
-    if (val2 == INT_MAX)
-        return INT_MAX;
-    return val1 + val2;
-}
-
-/**
- * @brief Updates the lookahead value of a point in the route graph and updates its heap membership.
- *
- * This recalculates the lookahead value (the `rhs` member) of point `p`, based on the `value` of each neighbor and the
- * cost to reach that neighbor. If the resulting `p->rhs` differs from `p->value`, `p` is inserted into `heap` using
- * the lower of the two as its key (if `p` is already a member of `heap`, its key is changed accordingly). If the
- * resulting `p->rhs` is equal to `p->value` and `p` is a member of `heap`, it is removed.
- *
- * This is part of a modified LPA* implementation.
- *
- * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
- * are calculated.
- * @param p The point to evaluate
- * @param heap The heap
- */
-static void route_graph_point_update(struct vehicleprofile *profile, struct route_graph_point * p,
-                                     struct fibheap * heap) {
-    struct route_graph_segment *s = NULL;
-    int new, val;
-
-    p->rhs = INT_MAX;
-
-    for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
-        val = route_value_seg(profile, p, s, -1);
-#if 0
-        /* FIXME this seems to break routing (no path found on re-route), examine */
-        if (val != INT_MAX && s->end->seg && item_is_equal(s->data.item, s->end->seg->data.item)) {
-            if (profile->turn_around_penalty2)
-                val += profile->turn_around_penalty2;
-            else
-                val = INT_MAX;
-        }
-#endif
-        if (val != INT_MAX) {
-            new = route_value_add(val, s->end->value);
-            if (new < p->rhs) {
-                p->rhs = new;
-                p->seg = s;
-            }
-        }
-    }
-
-    for (s = p->end; s; s = s->end_next) { /* Iterate over all the segments leading towards our point */
-        val = route_value_seg(profile, p, s, 1);
-#if 0
-        /* FIXME this seems to break routing (no path found on re-route), examine */
-        if (val != INT_MAX && s->start->seg && item_is_equal(s->data.item, s->start->seg->data.item)) {
-            if (profile->turn_around_penalty2)
-                val += profile->turn_around_penalty2;
-            else
-                val = INT_MAX;
-        }
-#endif
-        if (val != INT_MAX) {
-            new = route_value_add(val, s->start->value);
-            if (new < p->rhs) {
-                p->rhs = new;
-                p->seg = s;
-            }
-        }
-    }
-
-    if (p->el) {
-        /* Due to a limitation of the Fibonacci heap implementation, which causes fh_replacekey() to fail if the new
-         * key is greater than the current one, we always remove the point from the heap (and, if locally inconsistent,
-         * re-add it afterwards). */
-        fh_delete(heap, p->el);
-        p->el = NULL;
-    }
-
-    if (p->rhs != p->value)
-        /* The point is locally inconsistent, add (or re-add) it to the heap */
-        p->el = fh_insertkey(heap, MIN(p->rhs, p->value), p);
-}
-
-/**
- * @brief Expands (i.e. calculates the costs for) the points on the heap.
- *
- * This calculates the cost for every point on the heap, as well as any neighbors affected by the cost change, and sets
- * the next segment.
- *
- * This is part of a modified LPA* implementation.
- *
- * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
- * are calculated.
- * @param heap The Fibonacci heap which stores the locally inconsistent points
- */
-static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct fibheap * heap) {
-    struct route_graph_point *p_min;
-    struct route_graph_segment *s = NULL;
-
-    while ((p_min = fh_extractmin(heap))) {
-        p_min->el = NULL;
-        if (p_min->value > p_min->rhs)
-            /* cost has decreased, update point value */
-            p_min->value = p_min->rhs;
-        else {
-            /* cost has increased, re-evaluate */
-            p_min->value = INT_MAX;
-            route_graph_point_update(profile, p_min, heap);
-        }
-
-        /* in any case, update rhs of successors (nodes from which we can reach p_min via a single segment) */
-        for (s = p_min->start; s; s = s->start_next)
-            if (route_value_seg(profile, NULL, s, -1) != INT_MAX)
-                route_graph_point_update(profile, s->end, heap);
-        for (s = p_min->end; s; s = s->end_next)
-            if (route_value_seg(profile, NULL, s, 1) != INT_MAX)
-                route_graph_point_update(profile, s->start, heap);
-	}
 }
 
 /**
@@ -3046,7 +3177,7 @@ route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile) {
             }
         }
         if (item->type == type_traffic_distortion)
-            route_graph_add_traffic_distortion(rg, item);
+            route_graph_add_traffic_distortion(rg, profile, item, 0);
         else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
             route_graph_add_turn_restriction(rg, item);
         else
@@ -4006,6 +4137,29 @@ route_get_map_helper(struct route *this_, struct map **map, char *type, char *de
 }
 
 /**
+ * @brief Adds a traffic distortion item to the route
+ *
+ * @param this_ The route
+ * @param item The item to add, must be of {@code type_traffic_distortion}
+ */
+void route_add_traffic_distortion(struct route *this_, struct item *item) {
+    route_graph_add_traffic_distortion(this_->graph, this_->vehicleprofile, item, 1);
+}
+
+/**
+ * @brief Changes a traffic distortion item on the route
+ *
+ * Attempting to change an idem which is not in the route graph will add it.
+ *
+ * @param this_ The route
+ * @param item The item to change, must be of {@code type_traffic_distortion}
+ */
+void route_change_traffic_distortion(struct route *this_, struct item *item) {
+    if (route_has_graph(this_))
+        route_graph_change_traffic_distortion(this_->graph, this_->vehicleprofile, item);
+}
+
+/**
  * @brief Returns a new map containing the route path
  *
  * This function returns a new map containing the route path.
@@ -4061,6 +4215,19 @@ struct route_graph * route_get_graph(struct route *this_) {
 int
 route_has_graph(struct route *this_) {
     return (this_->graph != NULL);
+}
+
+/**
+ * @brief Removes a traffic distortion item from the route
+ *
+ * Removing a traffic distortion which is not in the route graph is a no-op.
+ *
+ * @param this_ The route
+ * @param item The item to remove, must be of {@code type_traffic_distortion}
+ */
+void route_remove_traffic_distortion(struct route *this_, struct item *item) {
+    if (route_has_graph(this_))
+        route_graph_remove_traffic_distortion(this_->graph, this_->vehicleprofile, item);
 }
 
 void
