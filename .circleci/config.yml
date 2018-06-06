@@ -264,7 +264,7 @@ workflows:
       - build_linux:
           requires:
             - sanity_check
-      - build_android:
+      - build_android_arm:
           requires:
             - sanity_check
       - build_android_gradle:
