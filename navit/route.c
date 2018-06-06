@@ -2676,9 +2676,8 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 /**
  * @brief Recalculates the route based on changes in the traffic situation.
  *
- * This re-evaluates segments in the route graph for which traffic distortions have been added,
- * removed or changed, as well as nodes affected by this change. After that, the route path is
- * updated as needed.
+ * This re-evaluates points in the route graph which are affected by traffic distortions being added, removed or
+ * changed. After that, the route path is updated as needed.
  *
  * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
  * the algorithm used for the initial routing:
@@ -2689,20 +2688,20 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
  * \li Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this
  * may change in the future).
  *
- * The list pointed to by `changes` is emptied and its elements are freed by this function.
- *
  * @param this_ The route
- * @param changes Points to a `GList` of `struct route_traffic_distortion_change` elements describing
- * the segments for which the traffic situation has changed
  */
 // FIXME this is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood()
-void route_process_traffic_changes(struct route *this_, GList ** changes) {
-    struct route_traffic_distortion_change *c = NULL;
-    struct route_graph_point *p_min;
+void route_process_traffic_changes(struct route *this_) {
     struct attr route_status;
     struct route_path *oldpath;
 
-    if (!changes)
+    /* do nothing if we don’t have a route graph */
+    if (!route_has_graph(this_))
+        return;
+
+    /* do nothing if the heap is empty */
+    /* TODO add exit criterion shared with route_graph_compute_shortest_path() */
+    if (!fh_min(this_->graph->heap))
         return;
 
     route_status.type = attr_route_status;
@@ -2710,31 +2709,11 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
     route_status.u.num = route_status_building_graph;
     //route_set_attr(this_, &route_status);
 
-    while (*changes) {
-        c = g_list_nth_data(*changes, 0);
-        *changes = g_list_remove(*changes, c);
-
-        if (c->from) {
-            if (c->from->value < c->to->value) {
-                /* if needed, swap from and to so they agree with the route graph direction */
-                p_min = c->from;
-                c->from = c->to;
-                c->to = p_min;
-            }
-
-        }
-
-        if (c->from)
-            route_graph_point_update(this_->vehicleprofile, c->from, this_->graph->heap);
-
-        /* TODO we may need to evaluate c->to as well (or maybe only c->to in some cases) */
-
-        g_free(c);
-    }
-
-    g_free(changes);
+    printf("Expanding points which have changed\n");
 
     route_graph_compute_shortest_path(this_->vehicleprofile, this_->graph->heap);
+
+    printf("Point expansion complete, recalculating route path\n");
 
     oldpath = this_->path2;
     this_->path2 = route_path_new(this_->graph, this_->path2, route_previous_destination(this_), this_->current_dst,

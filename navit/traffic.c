@@ -236,7 +236,7 @@ static void tm_coord_rewind(void *priv_data);
 static void tm_item_destroy(struct item * item);
 static struct item * tm_item_ref(struct item * item);
 static struct item * tm_item_unref(struct item * item);
-static void tm_item_update_attrs(struct item * item, struct route * route, GList ** changes);
+static void tm_item_update_attrs(struct item * item, struct route * route);
 static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
@@ -244,8 +244,8 @@ static int tm_type_set(void *priv_data, enum item_type type);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
-static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
-                                        struct seg_data * data, struct map *map, struct route * route, GList ** changes);
+static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
+        struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
 static void traffic_dump_messages_to_xml(struct traffic * this_);
@@ -378,13 +378,11 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
  * @param delay The delay for the segment, in tenths of seconds (0 for none)
  * @param attrs Additional attributes specified by the message
  * @param route The route affected by the changes
- * @param changes Points to a buffer which will receive the address of a GList holding a
- * `struct route_traffic_distortion_change` for each changed item; can be NULL
  *
  * @return true if data was changed, false if not
  */
-static int tm_item_add_message_data(struct item * item, char * msgid, int speed, int delay,
-                                    struct attr ** attrs, struct route * route, GList ** changes) {
+static int tm_item_add_message_data(struct item * item, char * msgid, int speed, int delay, struct attr ** attrs,
+                                    struct route * route) {
     int ret = 0;
     struct item_priv * priv_data = item->priv_data;
     GList * msglist;
@@ -414,7 +412,7 @@ static int tm_item_add_message_data(struct item * item, char * msgid, int speed,
     }
 
     if (ret)
-        tm_item_update_attrs(item, route, changes);
+        tm_item_update_attrs(item, route);
 
     return ret;
 }
@@ -523,20 +521,15 @@ static struct item * tm_item_unref(struct item * item) {
  *
  * @param item The item
  * @param route The route affected by the changes
- * @param changes Points to a buffer which will receive the address of a GList holding a
- * `struct route_traffic_distortion_change` for each changed item; can be NULL
  */
-static void tm_item_update_attrs(struct item * item, struct route * route, GList ** changes) {
+static void tm_item_update_attrs(struct item * item, struct route * route) {
     struct item_priv * priv_data = (struct item_priv *) item->priv_data;
     GList * msglist;
     struct item_msg_priv * msgdata;
     int speed = INT_MAX;
     int delay = 0;
     struct attr * attr = NULL;
-    int change_flags = 0;
-    struct route_traffic_distortion_change * tdc = NULL;
-    struct route_graph * graph = NULL;
-    struct vehicleprofile *profile;
+    int has_changes = 0;
 
     for (msglist = priv_data->message_data; msglist; msglist = g_list_next(msglist)) {
         msgdata = (struct item_msg_priv *) msglist->data;
@@ -567,12 +560,12 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
             priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
             g_free(attr);
             attr = NULL;
-            change_flags |= TDC_SEG_INCREASED;
+            has_changes = 1;
         } else if (speed < attr->u.num) {
-            change_flags |= TDC_SEG_INCREASED;
+            has_changes = 1;
             attr->u.num = speed;
         } else if (speed > attr->u.num) {
-            change_flags |= TDC_SEG_DECREASED;
+            has_changes = 1;
             attr->u.num = speed;
         }
     } else {
@@ -589,12 +582,12 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
             priv_data->attrs = attr_generic_add_attr(priv_data->attrs, attr);
             g_free(attr);
             attr = NULL;
-            change_flags |= TDC_SEG_INCREASED;
+            has_changes = 1;
         } else if (delay > attr->u.num) {
-            change_flags |= TDC_SEG_INCREASED;
+            has_changes = 1;
             attr->u.num = delay;
         } else if (delay < attr->u.num) {
-            change_flags |= TDC_SEG_DECREASED;
+            has_changes = 1;
             attr->u.num = delay;
         }
     } else {
@@ -606,25 +599,9 @@ static void tm_item_update_attrs(struct item * item, struct route * route, GList
         }
     }
 
-    if (change_flags && changes) {
-        attr = g_new0(struct attr, 1);
-        route_get_attr(route, attr_vehicleprofile, attr, NULL);
-        profile = attr->u.vehicleprofile;
-        g_free(attr);
-        attr = attr_search(priv_data->attrs, NULL, attr_flags);
-        if (attr && ((attr->u.num & profile->flags) == profile->flags)) {
-            graph = route_get_graph(route);
-            if (graph) {
-                tdc = g_new0(struct route_traffic_distortion_change, 1);
-                tdc->from = route_graph_get_point(graph, priv_data->coords);
-                tdc->to = route_graph_get_point(graph, &(priv_data->coords[priv_data->coord_count - 1]));
-                tdc->flags = change_flags;
-                if (tdc->from && tdc->to)
-                    *changes = g_list_append(*changes, tdc);
-                else
-                    g_free(tdc);
-            }
-        }
+    if (has_changes) {
+        // TODO add (rather than change) if we’re creating a new item
+        route_change_traffic_distortion(route, item);
     }
 }
 
@@ -2183,14 +2160,12 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
  * @param data Data for the segments added to the map
  * @param map The traffic map
  * @param route The route affected by the changes
- * @param changes Points to a buffer which will receive the address of a GList holding a
- * `struct route_traffic_distortion_change` for each changed item; can be NULL
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
 /* TODO process data->flags and data->dir */
-static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms,
-                                        struct seg_data * data, struct map *map, struct route * route, GList ** changes) {
+static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
+                                        struct map *map, struct route * route) {
     int i;
 
     struct coord_geo * coords[] = {NULL, NULL, NULL};
@@ -2657,7 +2632,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             item = tm_add_item(map, type_traffic_distortion, s->data.item.id_hi, s->data.item.id_lo, flags, data->attrs, cs, ccnt,
                                this_->id);
 
-            tm_item_add_message_data(item, this_->id, speed, delay, data->attrs, route, changes);
+            tm_item_add_message_data(item, this_->id, speed, delay, data->attrs, route);
 
             g_free(cs);
 
@@ -3022,12 +2997,9 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
  * @param old The message whose data it so be removed from its associated items
  * @param new If non-NULL, items referenced by this message will be skipped, see description
  * @param route The route affected by the changes
- * @param changes Points to a buffer which will receive the address of a GList holding a
- * `struct route_traffic_distortion_change` for each changed item; can be NULL
  */
-/* TODO populate `changes` */
 static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new,
-        struct route * route, GList ** changes) {
+        struct route * route) {
     int i, j;
     int skip;
     struct item_priv * ip;
@@ -3053,7 +3025,7 @@ static void traffic_message_remove_item_data(struct traffic_message * old, struc
                     g_free(msgdata);
                 }
             }
-            tm_item_update_attrs(old->priv->items[i], route, changes);
+            tm_item_update_attrs(old->priv->items[i], route);
         }
     }
 }
@@ -3238,6 +3210,7 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
  * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
  */
 /* TODO what if the update for a still-valid message expires in the past? */
+/* FIXME when segments are removed, remove them from route as well */
 static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags) {
     int ret = 0;
     int i = 0;
@@ -3264,16 +3237,8 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
-    /* Changed items to pass to the route */
-    GList ** changes = NULL;
-
     /* Current route status */
     struct attr route_status_attr;
-
-    if (route_get_attr(this_->rt, attr_route_status, &route_status_attr, NULL)
-            && (route_status_attr.u.num >= route_status_path_done_new))
-        /* if we are routing, assign changes */
-        changes = g_new0(GList *, 1);
 
     for (i = 0; messages && messages[i]; i++)
         if (messages[i]->expiration_time >= time(NULL)) {
@@ -3312,7 +3277,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                     swap_candidate->priv->items = swap_items;
                 } else {
                     /* else find matching segments from scratch */
-                    traffic_message_add_segments(messages[i], this_->ms, data, this_->map, this_->rt, changes);
+                    traffic_message_add_segments(messages[i], this_->ms, data, this_->map, this_->rt);
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
@@ -3329,7 +3294,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                    traffic_message_remove_item_data(stored_msg, messages[i], this_->rt, changes);
+                    traffic_message_remove_item_data(stored_msg, messages[i], this_->rt);
                     traffic_message_destroy(stored_msg);
                 }
 
@@ -3363,7 +3328,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                 if (stored_msg->priv->items)
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                traffic_message_remove_item_data(stored_msg, NULL, this_->rt, changes);
+                traffic_message_remove_item_data(stored_msg, NULL, this_->rt);
                 traffic_message_destroy(stored_msg);
             }
 
@@ -3381,14 +3346,15 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
         traffic_dump_messages_to_xml(this_);
     }
 
-    /* trigger redraw if segments have changed */
-    if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
-        navit_draw_async(this_->navit, 1);
+    if (ret & MESSAGE_UPDATE_SEGMENTS) {
+        /* trigger redraw if segments have changed */
+        if (navit_get_ready(this_->navit) == 3)
+            navit_draw_async(this_->navit, 1);
 
-    /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
-     * happen concurrently, changes introduced by the messages may not be considered */
-    if (changes && *changes)
-        route_process_traffic_changes(this_->rt, changes);
+        /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
+         * happen concurrently, changes introduced by the messages may not be considered */
+        route_process_traffic_changes(this_->rt);
+    }
 
     return ret;
 }
