@@ -1785,6 +1785,7 @@ route_graph_destroy(struct route_graph *this) {
         route_graph_build_done(this, 1);
         route_graph_free_points(this);
         route_graph_free_segments(this);
+        fh_deleteheap(this->heap);
         g_free(this);
     }
 }
@@ -2437,12 +2438,11 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
 static void
 route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile,
                   struct callback *cb) {
+    /* TODO Using this->heap here (sharing it with LPA*) will only work as long as we ensure the heap is empty before
+     * we return. The long-term solution would be to use LPA* for initial route calculation as well. */
     struct route_graph_point *p_min;
     struct route_graph_segment *s=NULL;
     int min,new,val;
-    struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
-
-    heap = fh_makekeyheap();
 
     while ((s=route_graph_get_segment(this, dst->street, s))) {
         val=route_value_seg(profile, NULL, s, -1);
@@ -2451,7 +2451,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             s->end->seg=s;
             s->end->value=val;
             s->end->rhs = val;
-            s->end->el=fh_insertkey(heap, s->end->value, s->end);
+            s->end->el=fh_insertkey(this->heap, s->end->value, s->end);
         }
         val=route_value_seg(profile, NULL, s, 1);
         if (val != INT_MAX) {
@@ -2459,11 +2459,11 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             s->start->seg=s;
             s->start->value=val;
             s->start->rhs = val;
-            s->start->el=fh_insertkey(heap, s->start->value, s->start);
+            s->start->el=fh_insertkey(this->heap, s->start->value, s->start);
         }
     }
     for (;;) {
-        p_min=fh_extractmin(heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
+        p_min=fh_extractmin(this->heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
         if (! p_min) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
             break;
         min=p_min->value;
@@ -2490,13 +2490,13 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
                     if (! s->end->el) {
                         if (debug_route)
                             printf("insert_end p=%p el=%p val=%d ", s->end, s->end->el, s->end->value);
-                        s->end->el=fh_insertkey(heap, new, s->end);
+                        s->end->el=fh_insertkey(this->heap, new, s->end);
                         if (debug_route)
                             printf("el new=%p\n", s->end->el);
                     } else {
                         if (debug_route)
                             printf("replace_end p=%p el=%p val=%d\n", s->end, s->end->el, s->end->value);
-                        fh_replacekey(heap, s->end->el, new);
+                        fh_replacekey(this->heap, s->end->el, new);
                     }
                 }
                 if (debug_route)
@@ -2523,13 +2523,13 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
                     if (! s->start->el) {
                         if (debug_route)
                             printf("insert_start p=%p el=%p val=%d ", s->start, s->start->el, s->start->value);
-                        s->start->el=fh_insertkey(heap, new, s->start);
+                        s->start->el=fh_insertkey(this->heap, new, s->start);
                         if (debug_route)
                             printf("el new=%p\n", s->start->el);
                     } else {
                         if (debug_route)
                             printf("replace_start p=%p el=%p val=%d\n", s->start, s->start->el, s->start->value);
-                        fh_replacekey(heap, s->start->el, new);
+                        fh_replacekey(this->heap, s->start->el, new);
                     }
                 }
                 if (debug_route)
@@ -2538,7 +2538,6 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             s=s->end_next;
         }
     }
-    fh_deleteheap(heap);
     callback_call_0(cb);
     dbg(lvl_debug,"return");
 }
@@ -2570,10 +2569,6 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
     struct route_traffic_distortion_change *c = NULL;
     struct route_graph_point *p_min;
     struct attr route_status;
-
-    /* This heap will hold all points with "temporarily" calculated costs */
-    struct fibheap *heap;
-
     struct route_path *oldpath;
 
     if (!changes)
@@ -2583,8 +2578,6 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
 
     route_status.u.num = route_status_building_graph;
     //route_set_attr(this_, &route_status);
-
-    heap = fh_makekeyheap();
 
     while (*changes) {
         c = g_list_nth_data(*changes, 0);
@@ -2601,7 +2594,7 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
         }
 
         if (c->from)
-            route_graph_point_update(this_->vehicleprofile, c->from, heap);
+            route_graph_point_update(this_->vehicleprofile, c->from, this_->graph->heap);
 
         /* TODO we may need to evaluate c->to as well (or maybe only c->to in some cases) */
 
@@ -2610,9 +2603,7 @@ void route_process_traffic_changes(struct route *this_, GList ** changes) {
 
     g_free(changes);
 
-    route_graph_compute_shortest_path(this_->vehicleprofile, heap);
-
-    fh_deleteheap(heap);
+    route_graph_compute_shortest_path(this_->vehicleprofile, this_->graph->heap);
 
     oldpath = this_->path2;
     this_->path2 = route_path_new(this_->graph, this_->path2, route_previous_destination(this_), this_->current_dst,
@@ -3093,6 +3084,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
     ret->h=mapset_open(ms);
     ret->done_cb=done_cb;
     ret->busy=1;
+    ret->heap = fh_makekeyheap();
     if (route_graph_build_next_map(ret)) {
         if (async) {
             ret->idle_cb=callback_new_2(callback_cast(route_graph_build_idle), ret, profile);

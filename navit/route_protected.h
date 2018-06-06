@@ -161,6 +161,7 @@ struct route_graph {
 	struct event_idle *idle_ev;                 /**< The pointer to the idle event */
 	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
 	struct route_graph_segment *avoid_seg;
+	struct fibheap *heap;                       /**< Priority queue for points to be expanded */
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
 };
