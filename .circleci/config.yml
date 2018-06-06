@@ -285,7 +285,7 @@ workflows:
       - run_doxygen:
           requires:
             - build_linux
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal
@@ -297,7 +297,7 @@ workflows:
           requires:
             - build_linux
             - build_android_gradlew
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal
