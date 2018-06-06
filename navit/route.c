@@ -2444,6 +2444,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             val=val*(100-dst->percent)/100;
             s->end->seg=s;
             s->end->value=val;
+            s->end->rhs = val;
             s->end->el=fh_insertkey(heap, s->end->value, s->end);
         }
         val=route_value_seg(profile, NULL, s, 1);
@@ -2451,6 +2452,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             val=val*dst->percent/100;
             s->start->seg=s;
             s->start->value=val;
+            s->start->rhs = val;
             s->start->el=fh_insertkey(heap, s->start->value, s->start);
         }
     }
