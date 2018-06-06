@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Build for Android ARM
           command: |
-            bash ci/build_android.sh
+            bash scripts/build_android.sh
       - run:
           name: configure ssh git
           command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -30,13 +30,13 @@ jobs:
             - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
       - run:
           name: Update beta channel on PlayStore
-          command: bash ci/publish.sh
+          command: bash scripts/publish.sh
       - store_artifacts:
           path: android-arm/navit/android/bin
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   build_linux:
     <<: *defaults
     steps:
