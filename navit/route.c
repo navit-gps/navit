@@ -2701,7 +2701,6 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 // FIXME this is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood()
 void route_process_traffic_changes(struct route *this_) {
     struct attr route_status;
-    struct route_path *oldpath;
 
     /* do nothing if we don’t have a route graph */
     if (!route_has_graph(this_))
@@ -2715,7 +2714,7 @@ void route_process_traffic_changes(struct route *this_) {
     route_status.type = attr_route_status;
 
     route_status.u.num = route_status_building_graph;
-    //route_set_attr(this_, &route_status);
+    route_set_attr(this_, &route_status);
 
     printf("Expanding points which have changed\n");
 
@@ -2723,17 +2722,7 @@ void route_process_traffic_changes(struct route *this_) {
 
     printf("Point expansion complete, recalculating route path\n");
 
-    oldpath = this_->path2;
-    this_->path2 = route_path_new(this_->graph, this_->path2, route_previous_destination(this_), this_->current_dst,
-            this_->vehicleprofile);
-    if (this_->path2) {
-        if (this_->path2->updated)
-            route_status.u.num = route_status_path_done_incremental;
-        else
-            route_status.u.num = route_status_path_done_new;
-    } else
-        route_status.u.num = route_status_not_found;
-    route_set_attr(this_, &route_status);
+    route_path_update_done(this_, 0);
 }
 
 /**
