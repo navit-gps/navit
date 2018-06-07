@@ -2135,7 +2135,7 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
             route_graph_point_update(profile, p_min, heap);
         }
 
-        /* in any case, update rhs of successors (nodes from which we can reach p_min via a single segment) */
+        /* in any case, update rhs of predecessors (nodes from which we can reach p_min via a single segment) */
         for (s = p_min->start; s; s = s->start_next)
             if ((s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
