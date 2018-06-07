@@ -65,7 +65,6 @@ jobs:
           command: |
             sudo bash scripts/setup_common_requirements.sh
             sudo bash scripts/setup_android_requirements.sh
-            gradle wrapper --gradle-version 4.7
       - run:
           name: Process icons
           command: |
@@ -99,25 +98,25 @@ jobs:
             cd ../
       - run:
           name: Download Dependencies
-          command: ./gradlew -v
+          comman: gradle -v
       - run:
          name: Install ndk
          command: sdkmanager ndk-bundle
       - run:
           name: Build
-          command: ./gradlew assembleDebug
+          command: gradle assembleDebug
       - run:
           name: Run Lint Test
           command: |
             ln -s navit/navit.dtd navit.dtd
             mkdir /home/circleci/code/test-results
-            ./gradlew lint test
+            gradle lint test
       - run:
           name: Run CheckStyle Test
-          command: ./gradlew checkstyleMain
+          command: gradle checkstyleMain
       - run:
           name: Run Javadoc
-          command: ./gradlew generateDebugJavadoc
+          command: gradle generateDebugJavadoc
       - store_artifacts:
           name: Store APK
           path: navit/android/build/outputs/apk
