@@ -3347,13 +3347,13 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     }
 
     if (ret & MESSAGE_UPDATE_SEGMENTS) {
-        /* trigger redraw if segments have changed */
-        if (navit_get_ready(this_->navit) == 3)
-            navit_draw_async(this_->navit, 1);
-
         /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
          * happen concurrently, changes introduced by the messages may not be considered */
         route_process_traffic_changes(this_->rt);
+
+        /* trigger redraw if segments have changed */
+        if (navit_get_ready(this_->navit) == 3)
+            navit_draw_async(this_->navit, 1);
     }
 
     return ret;
