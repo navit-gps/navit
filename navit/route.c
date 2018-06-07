@@ -2682,10 +2682,18 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 }
 
 /**
- * @brief Recalculates the route based on changes in the traffic situation.
+ * @brief Triggers partial recalculation of the route, based on the existing route graph.
  *
- * This re-evaluates points in the route graph which are affected by traffic distortions being added, removed or
- * changed. After that, the route path is updated as needed.
+ * This is currently used when traffic distortions have been added, changed or removed. Future versions may also use
+ * it if the current position has changed to a portion of the route graph which has not been flooded (which is
+ * currently not necessary because the route graph is always flooded completely).
+ *
+ * This tends to be faster than full recalculation, as only a subset of all points in the graph needs to be evaluated.
+ *
+ * If segment costs have changed (as is the case with traffic distortions), all affected segments must have been added
+ * to, removed from or updated in the route graph before this method is called.
+ *
+ * After recalculation, the route path is updated.
  *
  * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
  * the algorithm used for the initial routing:
@@ -2699,7 +2707,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
  * @param this_ The route
  */
 // FIXME this is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood()
-void route_process_traffic_changes(struct route *this_) {
+void route_recalculate_partial(struct route *this_) {
     struct attr route_status;
 
     /* do nothing if we don’t have a route graph */

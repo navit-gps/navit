@@ -3349,7 +3349,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     if (ret & MESSAGE_UPDATE_SEGMENTS) {
         /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
          * happen concurrently, changes introduced by the messages may not be considered */
-        route_process_traffic_changes(this_->rt);
+        route_recalculate_partial(this_->rt);
 
         /* trigger redraw if segments have changed */
         if (navit_get_ready(this_->navit) == 3)
