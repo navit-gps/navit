@@ -1329,6 +1329,7 @@ route_graph_point_new(struct route_graph *this, struct coord *f) {
     p->hash_next=this->hash[hashval];
     this->hash[hashval]=p;
     p->value=INT_MAX;
+    p->dst_val = INT_MAX;
     p->c=*f;
     return p;
 }
@@ -1380,9 +1381,9 @@ route_graph_free_points(struct route_graph *this) {
  * @brief Resets all nodes
  *
  * This iterates through all the points in the route graph, resetting them to their initial state.
- * The {@code value} member of each point (cost to reach the destination) is reset to
- * {@code INT_MAX}, the {@code seg} member (cheapest way to destination) is reset to {@code NULL}
- * and the {@code el} member (pointer to element in Fibonacci heap) is also reset to {@code NULL}.
+ * The `value` (cost to reach the destination via `seg`) and `dst_val` (cost to destination if this point is the last
+ * in the route) members of each point are reset to`INT_MAX`, the `seg` member (cheapest way to destination) is reset
+ * to `NULL` and the `el` member (pointer to element in Fibonacci heap) is also reset to `NULL`.
  *
  * References to elements of the route graph which were obtained prior to calling this function
  * remain valid after it returns.
@@ -1397,6 +1398,7 @@ route_graph_reset(struct route_graph *this) {
         curr=this->hash[i];
         while (curr) {
             curr->value=INT_MAX;
+            curr->dst_val = INT_MAX;
             curr->seg=NULL;
             curr->el=NULL;
             curr=curr->hash_next;
@@ -2050,7 +2052,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
     struct route_graph_segment *s = NULL;
     int new, val;
 
-    p->rhs = INT_MAX;
+    p->rhs = p->dst_val;
     p->seg = NULL;
 
     for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
@@ -2590,6 +2592,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             s->end->seg=s;
             s->end->value=val;
             s->end->rhs = val;
+            s->end->dst_val = val;
             s->end->el=fh_insertkey(this->heap, s->end->value, s->end);
         }
         val=route_value_seg(profile, NULL, s, 1);
@@ -2598,6 +2601,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
             s->start->seg=s;
             s->start->value=val;
             s->start->rhs = val;
+            s->start->dst_val = val;
             s->start->el=fh_insertkey(this->heap, s->start->value, s->start);
         }
     }

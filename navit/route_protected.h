@@ -58,6 +58,8 @@ struct route_graph_point {
 	                                      *  point, or that this point has not yet been examined. */
 	int rhs;                             /**< Lookahead value based on neighbors’ `value`; used for recalculation and
 	                                      *   equal to `value` after the route graph has been flooded. */
+	int dst_val;                         /**< For points close to the destination, this is the cost of the point if it
+	                                      *   is the last in the graph; `INT_MAX` for all other points. */
 	struct coord c;                      /**< Coordinates of this point */
 	int flags;                           /**< Flags for this point (e.g. traffic distortion) */
 };
