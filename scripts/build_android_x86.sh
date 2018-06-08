@@ -5,7 +5,7 @@ apt-get update && apt-get install -y wget
 
 export ARCH="x86"
 export START_PATH=~/
-export SOURCE_PATH=$START_PATH"/"${CIRCLE_PROJECT_REPONAME}"/"
+export SOURCE_PATH="${START_PATH}/${CIRCLE_PROJECT_REPONAME}/"
 export CMAKE_FILE=$SOURCE_PATH"/Toolchain/i686-android.cmake"
 export ANDROID_NDK=~/android-ndk-r11c
 export ANDROID_NDK_BIN=$ANDROID_NDK"/toolchains/x86-4.9/prebuilt/linux-x86_64/bin"

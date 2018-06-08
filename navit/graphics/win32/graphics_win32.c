@@ -1043,7 +1043,6 @@ static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image
 
     int           bit_depth;
     int           color_type;
-    int           alpha_present;
     int           ret;
     int           i;
     FILE *png_file;
@@ -1143,7 +1142,6 @@ static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image
     png_read_update_info (png_ptr, info_ptr);
 
     img->channels = 4;
-    alpha_present = 1;
 
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
@@ -1195,10 +1193,8 @@ static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, 
     HBITMAP origBmp;
     BITMAPINFO pnginfo;
     HDC dc1, dc2;
-    png_byte *origPixels;
 
     origBmp=img->hBitmap;
-    origPixels=img->png_pixels;
 
     memset(&pnginfo, 0, sizeof(pnginfo));
     pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -1516,7 +1512,6 @@ static struct graphics_priv* graphics_win32_new( struct navit *nav, struct graph
     struct attr *attr;
 
     struct graphics_priv* this_;
-    HMODULE user32;
     if (!event_request_system("win32","graphics_win32"))
         return NULL;
     this_=graphics_win32_new_helper(meth);

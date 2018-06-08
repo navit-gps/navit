@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-message=`git log -1 --pretty=%B`
+message=$(git log -1 --pretty=%B)
 git config --global user.name "CircleCI"
 git config --global user.email circleci@navit-project.org
 git rebase trunk
