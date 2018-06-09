@@ -2016,7 +2016,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
     p->seg = NULL;
 
     for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
-        val = route_value_seg(profile, p, s, 1);
+        val = route_value_seg(profile, s->end, s, 1);
 #ifdef X_TURNAROUND_PENALTY
         if (val != INT_MAX && s->end->seg && item_is_equal(s->data.item, s->end->seg->data.item)) {
             if (profile->turn_around_penalty2)
@@ -2035,7 +2035,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
     }
 
     for (s = p->end; s; s = s->end_next) { /* Iterate over all the segments leading towards our point */
-        val = route_value_seg(profile, p, s, -1);
+        val = route_value_seg(profile, s->start, s, -1);
 #ifdef X_TURNAROUND_PENALTY
         if (val != INT_MAX && s->start->seg && item_is_equal(s->data.item, s->start->seg->data.item)) {
             if (profile->turn_around_penalty2)
@@ -2097,12 +2097,12 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
         for (s = p_min->start; s; s = s->start_next)
             if ((s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
-            else if (route_value_seg(profile, NULL, s, -1) != INT_MAX)
+            else if (route_value_seg(profile, NULL, s, -2) != INT_MAX)
                 route_graph_point_update(profile, s->end, heap);
         for (s = p_min->end; s; s = s->end_next)
             if ((s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
-            else if (route_value_seg(profile, NULL, s, 1) != INT_MAX)
+            else if (route_value_seg(profile, NULL, s, 2) != INT_MAX)
                 route_graph_point_update(profile, s->start, heap);
 	}
 }
