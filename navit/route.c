@@ -68,6 +68,8 @@
 #include "roadprofile.h"
 #include "debug.h"
 
+#define X_TURNAROUND_PENALTY
+
 struct map_priv {
     struct route *route;
 };
@@ -2057,8 +2059,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
 
     for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
         val = route_value_seg(profile, p, s, 1);
-#if 0
-        /* FIXME this seems to break routing (no path found on re-route), examine */
+#ifdef X_TURNAROUND_PENALTY
         if (val != INT_MAX && s->end->seg && item_is_equal(s->data.item, s->end->seg->data.item)) {
             if (profile->turn_around_penalty2)
                 val += profile->turn_around_penalty2;
@@ -2077,8 +2078,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
 
     for (s = p->end; s; s = s->end_next) { /* Iterate over all the segments leading towards our point */
         val = route_value_seg(profile, p, s, -1);
-#if 0
-        /* FIXME this seems to break routing (no path found on re-route), examine */
+#ifdef X_TURNAROUND_PENALTY
         if (val != INT_MAX && s->start->seg && item_is_equal(s->data.item, s->start->seg->data.item)) {
             if (profile->turn_around_penalty2)
                 val += profile->turn_around_penalty2;
