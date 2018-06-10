@@ -11,7 +11,7 @@ set -e
 
 declare -A CONTRIBUTORS=()
 declare -a authors=()
-TWO_YEARS_AGO=`date +%s --date="2 years ago"`
+TWO_YEARS_AGO=$(date +%s --date="2 years ago")
 retiredTitleWritten=false
 
 git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=format:%ad;%aN" |
@@ -20,10 +20,10 @@ git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=for
   while read -r line; do
     IFS=';'; arrLine=($line); unset IFS;
     author=${arrLine[1]}
-    commitDate=`date +%s --date="${arrLine[0]}"`
+    commitDate=$(date +%s --date="${arrLine[0]}")
 
     # Exclude circleci
-    if [[ $author =~ [Cc]ircle\s*[Cc][Ii] ]]; then
+    if [[ $author =~ [Cc]ircle[[:space:]]*[Cc][Ii] ]]; then
       continue
     fi
 

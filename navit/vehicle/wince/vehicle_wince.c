@@ -314,8 +314,7 @@ static DWORD WINAPI wince_reader_thread (LPVOID lParam) {
     return TRUE;
 }
 
-static int
-vehicle_wince_available_ports(void) {
+static int vehicle_wince_available_ports(void) {
     HKEY hkResult;
     HKEY hkSubResult;
     wchar_t keyname[20];
@@ -353,8 +352,7 @@ vehicle_wince_available_ports(void) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv) {
+static void vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv) {
     priv->valid = attr_position_valid_invalid;
     priv->ev_fix_timeout = NULL;
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
@@ -366,8 +364,7 @@ vehicle_wince_fix_timeout_cb(struct vehicle_priv *priv) {
 *
 * @param priv Pointer on the private data of the plugin
 */
-static void
-vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv) {
+static void vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv) {
     if (priv->ev_fix_timeout != NULL)
         event_remove_timeout(priv->ev_fix_timeout);
     priv->ev_fix_timeout = event_add_timeout(10000, 0, priv->cb_fix_timeout);
@@ -375,8 +372,7 @@ vehicle_wince_restart_fix_timeout(struct vehicle_priv *priv) {
 
 
 
-static int
-vehicle_wince_open(struct vehicle_priv *priv) {
+static int vehicle_wince_open(struct vehicle_priv *priv) {
     char* raw_setting_str;
     char* strport;
     char* strsettings;
@@ -407,13 +403,11 @@ vehicle_wince_open(struct vehicle_priv *priv) {
     return 1;
 }
 
-static void
-vehicle_wince_close(struct vehicle_priv *priv) {
+static void vehicle_wince_close(struct vehicle_priv *priv) {
     dbg(lvl_debug,"enter");
 }
 
-static int
-vehicle_wince_parse(struct vehicle_priv *priv, char *buffer) {
+static int vehicle_wince_parse(struct vehicle_priv *priv, char *buffer) {
     char *nmea_data_buf, *p, *item[32];
     double lat, lng;
     int i, j, bcsum;
@@ -669,8 +663,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer) {
     return ret;
 }
 
-static void
-vehicle_wince_io(struct vehicle_priv *priv) {
+static void vehicle_wince_io(struct vehicle_priv *priv) {
     int size, rc = 0;
     char *str, *tok;
 
@@ -722,8 +715,7 @@ vehicle_wince_io(struct vehicle_priv *priv) {
         callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
-static void
-vehicle_wince_enable_watch(struct vehicle_priv *priv) {
+static void vehicle_wince_enable_watch(struct vehicle_priv *priv) {
     dbg(lvl_debug, "enter");
     vehicle_wince_disable_watch(priv);
     priv->is_running = 1;
@@ -740,8 +732,7 @@ vehicle_wince_enable_watch(struct vehicle_priv *priv) {
     }
 }
 
-static void
-vehicle_wince_disable_watch(struct vehicle_priv *priv) {
+static void vehicle_wince_disable_watch(struct vehicle_priv *priv) {
     int wait = 5000;
 
     dbg(lvl_debug, "enter");
@@ -762,8 +753,7 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv) {
  *
  * @param priv vehicle_priv structure for the vehicle
  */
-static void
-vehicle_wince_destroy(struct vehicle_priv *priv) {
+static void vehicle_wince_destroy(struct vehicle_priv *priv) {
     vehicle_wince_disable_watch(priv);
     vehicle_wince_close(priv);
     if (priv->BthSetMode) {
@@ -788,9 +778,8 @@ vehicle_wince_destroy(struct vehicle_priv *priv) {
  *
  * @return True for success, false for failure
  */
-static int
-vehicle_wince_position_attr_get(struct vehicle_priv *priv,
-                                enum attr_type type, struct attr *attr) {
+static int vehicle_wince_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_fix_type:
         attr->u.num = priv->status;
@@ -856,8 +845,7 @@ vehicle_wince_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr) {
+static int vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr) {
     struct vehicle_priv *priv=priv_data;
     struct gps_sat *sat;
 
@@ -912,10 +900,9 @@ struct vehicle_methods vehicle_wince_methods = {
  *
  * @return vehicle_priv
  */
-static struct vehicle_priv *
-vehicle_wince_new(struct vehicle_methods
-                  *meth, struct callback_list
-                  *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *source;
     struct attr *time;
@@ -990,8 +977,7 @@ vehicle_wince_new(struct vehicle_methods
 /**
  * @brief Registers the vehicle_wince plugin
  */
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("wince", vehicle_wince_new);
     plugin_register_category_vehicle("file", vehicle_wince_new);

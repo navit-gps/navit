@@ -73,8 +73,7 @@
 #define KEY_RIGHT GDK_Right
 #endif
 
-static gboolean
-keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this) {
+static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this) {
     int w,h;
     struct transformation *t;
 #ifdef USE_HILDON
@@ -200,8 +199,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this) {
     return TRUE;
 }
 
-static int
-gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra) {
+static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra) {
     GtkWidget *graphics;
 
     graphics=graphics_get_data(gra, "gtk_widget");
@@ -217,8 +215,7 @@ gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra) {
     return 0;
 }
 
-static void
-gui_gtk_route_callback(struct gui_priv *gui) {
+static void gui_gtk_route_callback(struct gui_priv *gui) {
     struct attr route_attr;
     GtkAction *roadbookAction=gtk_ui_manager_get_action (gui->ui_manager,"/ui/ToolBar/ToolItems/Roadbook");
     if (roadbookAction) {
@@ -235,16 +232,14 @@ gui_gtk_route_callback(struct gui_priv *gui) {
     }
 }
 
-static void
-gui_gtk_add_bookmark_do(struct gui_priv *gui) {
+static void gui_gtk_add_bookmark_do(struct gui_priv *gui) {
     struct attr attr;
     navit_get_attr(gui->nav, attr_bookmarks, &attr, NULL);
     bookmarks_add_bookmark(attr.u.bookmarks, &gui->dialog_coord, gtk_entry_get_text(GTK_ENTRY(gui->dialog_entry)));
     gtk_widget_destroy(gui->dialog_win);
 }
 
-static int
-gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description) {
+static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description) {
     GtkWidget *button_ok,*button_cancel,*label,*vbox,*hbox;
 
     gui->dialog_coord=*c;
@@ -287,8 +282,7 @@ struct gui_methods gui_gtk_methods = {
     gui_gtk_add_bookmark,
 };
 
-static gboolean
-gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav) {
+static gboolean gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav) {
     /* FIXME remove attr_navit callback */
     navit_destroy(nav);
     exit(0);
@@ -296,8 +290,7 @@ gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav) {
     return TRUE;
 }
 
-static void
-gui_gtk_toggle_init(struct gui_priv *this) {
+static void gui_gtk_toggle_init(struct gui_priv *this) {
     struct attr attr;
     GtkToggleAction *toggle_action;
 
@@ -326,8 +319,7 @@ struct action_cb_data {
     struct attr attr;
 };
 
-static void
-gui_gtk_action_activate(GtkAction *action, struct action_cb_data *data) {
+static void gui_gtk_action_activate(GtkAction *action, struct action_cb_data *data) {
     if(data->attr.type == attr_destination) {
         char * label;
         g_object_get(G_OBJECT(action), "label", &label,NULL);
@@ -341,14 +333,12 @@ struct gui_menu_info {
     GtkAction *action;
 };
 
-static void
-gui_gtk_del_menu(struct gui_priv *this, struct gui_menu_info *meninfo) {
+static void gui_gtk_del_menu(struct gui_priv *this, struct gui_menu_info *meninfo) {
     gtk_action_group_remove_action(this->dyn_group, meninfo->action);
     gtk_ui_manager_remove_ui(this->ui_manager, meninfo->merge_id);
 }
 
-static struct gui_menu_info
-gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, int submenu, struct action_cb_data *data) {
+static struct gui_menu_info gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, int submenu, struct action_cb_data *data) {
     struct gui_menu_info meninfo;
     GtkAction *action;
     guint merge_id;
@@ -366,8 +356,7 @@ gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, int
     return meninfo;
 }
 
-static void
-gui_gtk_action_toggled(GtkToggleAction *action, struct action_cb_data *data) {
+static void gui_gtk_action_toggled(GtkToggleAction *action, struct action_cb_data *data) {
     struct attr active;
     active.type=attr_active;
     active.u.num=gtk_toggle_action_get_active(action);
@@ -375,9 +364,7 @@ gui_gtk_action_toggled(GtkToggleAction *action, struct action_cb_data *data) {
     navit_draw(data->gui->nav);
 }
 
-static void
-gui_gtk_add_toggle_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data,
-                        gboolean active) {
+static void gui_gtk_add_toggle_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data, gboolean active) {
     GtkToggleAction *toggle_action;
     guint merge_id;
 
@@ -389,16 +376,13 @@ gui_gtk_add_toggle_menu(struct gui_priv *this, char *name, char *label, char *pa
     gtk_ui_manager_add_ui(this->ui_manager, merge_id, path, name, name, GTK_UI_MANAGER_MENUITEM, FALSE);
 }
 
-static void
-gui_gtk_action_changed(GtkRadioAction *action, GtkRadioAction *current, struct action_cb_data *data) {
+static void gui_gtk_action_changed(GtkRadioAction *action, GtkRadioAction *current, struct action_cb_data *data) {
     if (action == current) {
         navit_set_attr(data->gui->nav, &data->attr);
     }
 }
 
-static struct gui_menu_info
-gui_gtk_add_radio_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data,
-                       GSList **g) {
+static struct gui_menu_info gui_gtk_add_radio_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data, GSList **g) {
     struct gui_menu_info meninfo;
     GtkRadioAction *radio_action;
     guint merge_id;
@@ -416,8 +400,7 @@ gui_gtk_add_radio_menu(struct gui_priv *this, char *name, char *label, char *pat
     return meninfo;
 }
 
-static void
-gui_gtk_layouts_init(struct gui_priv *this) {
+static void gui_gtk_layouts_init(struct gui_priv *this) {
     struct attr_iter *iter;
     struct attr attr;
     struct action_cb_data *data;
@@ -438,8 +421,7 @@ gui_gtk_layouts_init(struct gui_priv *this) {
     navit_attr_iter_destroy(iter);
 }
 
-static void
-gui_gtk_projections_init(struct gui_priv *this) {
+static void gui_gtk_projections_init(struct gui_priv *this) {
     struct action_cb_data *data;
 
     data=g_new(struct action_cb_data, 1);
@@ -457,8 +439,7 @@ gui_gtk_projections_init(struct gui_priv *this) {
                            &this->projection_group);
 }
 
-static void
-gui_gtk_vehicles_update(struct gui_priv *this) {
+static void gui_gtk_vehicles_update(struct gui_priv *this) {
     struct attr_iter *iter;
     struct attr attr,vattr;
     struct action_cb_data *data;
@@ -496,14 +477,12 @@ gui_gtk_vehicles_update(struct gui_priv *this) {
     navit_attr_iter_destroy(iter);
 }
 
-static void
-gui_gtk_vehicles_init(struct gui_priv *this) {
+static void gui_gtk_vehicles_init(struct gui_priv *this) {
     navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_vehicles_update), attr_vehicle, this));
     gui_gtk_vehicles_update(this);
 }
 
-static void
-gui_gtk_maps_init(struct gui_priv *this) {
+static void gui_gtk_maps_init(struct gui_priv *this) {
     struct attr_iter *iter;
     struct attr attr,active,type,data;
     struct action_cb_data *cb_data;
@@ -532,8 +511,7 @@ gui_gtk_maps_init(struct gui_priv *this) {
 
 }
 
-static void
-gui_gtk_destinations_update(struct gui_priv *this) {
+static void gui_gtk_destinations_update(struct gui_priv *this) {
     GList *curr;
     struct attr attr;
     struct action_cb_data *data;
@@ -581,14 +559,12 @@ gui_gtk_destinations_update(struct gui_priv *this) {
     }
 }
 
-static void
-gui_gtk_destinations_init(struct gui_priv *this) {
+static void gui_gtk_destinations_init(struct gui_priv *this) {
     navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_destinations_update), attr_destination, this));
     gui_gtk_destinations_update(this);
 }
 
-static void
-gui_gtk_bookmarks_update(struct gui_priv *this) {
+static void gui_gtk_bookmarks_update(struct gui_priv *this) {
     GList *curr;
     struct attr attr;
     struct action_cb_data *data;
@@ -658,8 +634,7 @@ gui_gtk_bookmarks_update(struct gui_priv *this) {
     }
 }
 
-static void
-gui_gtk_bookmarks_init(struct gui_priv *this) {
+static void gui_gtk_bookmarks_init(struct gui_priv *this) {
     struct attr attr;
     navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
     bookmarks_add_callback(attr.u.bookmarks, callback_new_attr_1(callback_cast(gui_gtk_bookmarks_update), attr_bookmark_map,
@@ -667,8 +642,7 @@ gui_gtk_bookmarks_init(struct gui_priv *this) {
     gui_gtk_bookmarks_update(this);
 }
 
-static void
-gui_gtk_init(struct gui_priv *this, struct navit *nav) {
+static void gui_gtk_init(struct gui_priv *this, struct navit *nav) {
 
     struct attr route_attr;
 
@@ -689,8 +663,7 @@ gui_gtk_init(struct gui_priv *this, struct navit *nav) {
     gui_gtk_route_callback(this); //Set initial state
 }
 
-static struct gui_priv *
-gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) {
+static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) {
     struct gui_priv *this;
     int w=792, h=547;
     char *cp = getenv("NAVIT_XID");
@@ -782,8 +755,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, st
 static int gtk_argc;
 static char **gtk_argv= {NULL};
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
     gtk_set_locale();
 #ifdef HAVE_API_WIN32

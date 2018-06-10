@@ -93,8 +93,7 @@ static GHashTable *default_flags_hash;
 
 static GHashTable *item_hash;
 
-void
-item_create_hash(void) {
+void item_create_hash(void) {
     int i;
     item_hash=g_hash_table_new(g_str_hash, g_str_equal);
     for (i=0 ; i < sizeof(item_names)/sizeof(struct item_name) ; i++) {
@@ -102,14 +101,12 @@ item_create_hash(void) {
     }
 }
 
-void
-item_destroy_hash(void) {
+void item_destroy_hash(void) {
     g_hash_table_destroy(item_hash);
     item_hash=NULL;
 }
 
-int *
-item_get_default_flags(enum item_type type) {
+int *item_get_default_flags(enum item_type type) {
     if (!default_flags_hash) {
         int i;
         default_flags_hash=g_hash_table_new(NULL, NULL);
@@ -120,8 +117,7 @@ item_get_default_flags(enum item_type type) {
     return g_hash_table_lookup(default_flags_hash, (void *)(long)type);
 }
 
-void
-item_cleanup(void) {
+void item_cleanup(void) {
     if (default_flags_hash)
         g_hash_table_destroy(default_flags_hash);
 }
@@ -138,8 +134,7 @@ item_cleanup(void) {
  * @param it The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the
  * {@code map_rect}. There can only be one active item per {@code map_rect}.
  */
-void
-item_coord_rewind(struct item *it) {
+void item_coord_rewind(struct item *it) {
     it->meth->item_coord_rewind(it->priv_data);
 }
 
@@ -165,8 +160,7 @@ item_coord_rewind(struct item *it) {
  *
  * @return The number of coordinates actually retrieved and stored in {@code c}
  */
-int
-item_coord_get(struct item *it, struct coord *c, int count) {
+int item_coord_get(struct item *it, struct coord *c, int count) {
     return it->meth->item_coord_get(it->priv_data, c, count);
 }
 
@@ -195,15 +189,13 @@ item_coord_get(struct item *it, struct coord *c, int count) {
  * @param count TODO number of coordinates to add, delete or modify?
  * @param mode The change mode, see description
  */
-int
-item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode) {
+int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode) {
     if (!it->meth->item_coord_set)
         return 0;
     return it->meth->item_coord_set(it->priv_data, c, count, mode);
 }
 
-int
-item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel) {
+int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel) {
     int i,ret=it->meth->item_coord_get(it->priv_data, c, count);
     struct coord_rect r;
     struct map_selection *curr;
@@ -300,8 +292,7 @@ int item_coord_get_within_range(struct item *i, struct coord *c, int max,
  *
  * @return The number of coordinates actually retrieved and stored in {@code c}
  */
-int
-item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to) {
+int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to) {
     int ret=item_coord_get(it, c, count);
     int i;
     enum projection from=map_projection(it->map);
@@ -323,8 +314,7 @@ item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection 
  *
  * @return True on success, false on failure
  */
-int
-item_coord_is_node(struct item *it) {
+int item_coord_is_node(struct item *it) {
     if (it->meth->item_coord_is_node)
         return it->meth->item_coord_is_node(it->priv_data);
     return 0;
@@ -342,8 +332,7 @@ item_coord_is_node(struct item *it) {
  * @param it The map item whose pointer is to be reset. This must be the active item, i.e. the last one retrieved from the
  * {@code map_rect}. There can only be one active item per {@code map_rect}.
  */
-void
-item_attr_rewind(struct item *it) {
+void item_attr_rewind(struct item *it) {
     it->meth->item_attr_rewind(it->priv_data);
 }
 
@@ -363,8 +352,7 @@ item_attr_rewind(struct item *it) {
  *
  * @return True on success, false on failure
  */
-int
-item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr) {
+int item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr) {
     return it->meth->item_attr_get(it->priv_data, attr_type, attr);
 }
 
@@ -390,8 +378,7 @@ item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr) {
  * @param attr TODO new attr, also store for old attr (delete/modify)? Required in delete mode (type of attr to delete)?
  * @param mode The change mode, see description
  */
-int
-item_attr_set(struct item *it, struct attr *attr, enum change_mode mode) {
+int item_attr_set(struct item *it, struct attr *attr, enum change_mode mode) {
     if (!it->meth->item_attr_set)
         return 0;
     return it->meth->item_attr_set(it->priv_data, attr, mode);
@@ -405,8 +392,7 @@ item_attr_set(struct item *it, struct attr *attr, enum change_mode mode) {
  *
  * @return Non-zero if this action is supported by the map and type is set successfully, 0 on error.
  */
-int
-item_type_set(struct item *it, enum item_type type) {
+int item_type_set(struct item *it, enum item_type type) {
     if (!it->meth->item_type_set)
         return 0;
     return it->meth->item_type_set(it->priv_data, type);
@@ -422,8 +408,7 @@ struct item * item_new(char *type, int zoom) {
     return it;
 }
 
-enum item_type
-item_from_name(const char *name) {
+enum item_type item_from_name(const char *name) {
     int i;
 
     if (item_hash)
@@ -436,8 +421,7 @@ item_from_name(const char *name) {
     return type_none;
 }
 
-char *
-item_to_name(enum item_type item) {
+char *item_to_name(enum item_type item) {
     int i;
 
     for (i=0 ; i < sizeof(item_names)/sizeof(struct item_name) ; i++) {
@@ -451,15 +435,13 @@ struct item_hash {
     GHashTable *h;
 };
 
-static guint
-item_hash_hash(gconstpointer key) {
+static guint item_hash_hash(gconstpointer key) {
     const struct item *itm=key;
     gconstpointer hashkey=(gconstpointer)GINT_TO_POINTER(itm->id_hi^itm->id_lo^(GPOINTER_TO_INT(itm->map)));
     return g_direct_hash(hashkey);
 }
 
-static gboolean
-item_hash_equal(gconstpointer a, gconstpointer b) {
+static gboolean item_hash_equal(gconstpointer a, gconstpointer b) {
     const struct item *itm_a=a;
     const struct item *itm_b=b;
     if (item_is_equal(*itm_a, *itm_b))
@@ -467,14 +449,12 @@ item_hash_equal(gconstpointer a, gconstpointer b) {
     return FALSE;
 }
 
-unsigned int
-item_id_hash(const void *key) {
+unsigned int item_id_hash(const void *key) {
     const struct item_id *id=key;
     return id->id_hi^id->id_lo;
 }
 
-int
-item_id_equal(const void *a, const void *b) {
+int item_id_equal(const void *a, const void *b) {
     const struct item_id *id_a=a;
     const struct item_id *id_b=b;
     return (id_a->id_hi == id_b->id_hi && id_a->id_lo == id_b->id_lo);
@@ -487,8 +467,7 @@ item_id_equal(const void *a, const void *b) {
  * @param id pointer to derive item id from.
  * @return  Nothing.
  */
-void
-item_id_from_ptr(struct item *item, void *id) {
+void item_id_from_ptr(struct item *item, void *id) {
 #if !defined(__LP64__) && !defined(__LLP64__) && !defined(WIN64)
     item->id_lo=(int) id;
     item->id_hi=0;
@@ -511,16 +490,14 @@ item_hash_new(void) {
     return ret;
 }
 
-void
-item_hash_insert(struct item_hash *h, struct item *item, void *val) {
+void item_hash_insert(struct item_hash *h, struct item *item, void *val) {
     struct item *hitem=g_new(struct item, 1);
     *hitem=*item;
     dbg(lvl_info,"inserting (0x%x,0x%x) into %p", item->id_hi, item->id_lo, h->h);
     g_hash_table_insert(h->h, hitem, val);
 }
 
-int
-item_hash_remove(struct item_hash *h, struct item *item) {
+int item_hash_remove(struct item_hash *h, struct item *item) {
     int ret;
 
     dbg(lvl_info,"removing (0x%x,0x%x) from %p", item->id_hi, item->id_lo, h->h);
@@ -530,43 +507,37 @@ item_hash_remove(struct item_hash *h, struct item *item) {
     return ret;
 }
 
-void *
-item_hash_lookup(struct item_hash *h, struct item *item) {
+void *item_hash_lookup(struct item_hash *h, struct item *item) {
     return g_hash_table_lookup(h->h, item);
 }
 
 
-void
-item_hash_destroy(struct item_hash *h) {
+void item_hash_destroy(struct item_hash *h) {
     g_hash_table_destroy(h->h);
     g_free(h);
 }
 
-int
-item_range_intersects_range(struct item_range *range1, struct item_range *range2) {
+int item_range_intersects_range(struct item_range *range1, struct item_range *range2) {
     if (range1->max < range2->min)
         return 0;
     if (range1->min > range2->max)
         return 0;
     return 1;
 }
-int
-item_range_contains_item(struct item_range *range, enum item_type type) {
+int item_range_contains_item(struct item_range *range, enum item_type type) {
     if (type >= range->min && type <= range->max)
         return 1;
     return 0;
 }
 
-void
-item_dump_attr(struct item *item, struct map *map, FILE *out) {
+void item_dump_attr(struct item *item, struct map *map, FILE *out) {
     struct attr attr;
     fprintf(out,"type=%s", item_to_name(item->type));
     while (item_attr_get(item, attr_any, &attr))
         fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
 }
 
-void
-item_dump_filedesc(struct item *item, struct map *map, FILE *out) {
+void item_dump_filedesc(struct item *item, struct map *map, FILE *out) {
 
     int i,count,max=16384;
     struct coord *ca=g_alloca(sizeof(struct coord)*max);

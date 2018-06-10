@@ -210,8 +210,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
  * Return FALSE if retry not required
  * Return TRUE to try again
  */
-static int
-vehicle_gpsd_try_open(struct vehicle_priv *priv) {
+static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     char *source = g_strdup(priv->source);
     char *colon = index(source + 7, ':');
     char *port=NULL;
@@ -262,8 +261,7 @@ vehicle_gpsd_try_open(struct vehicle_priv *priv) {
 /**
  * Open a connection to gpsd. Will re-try the connection if it fails
  */
-static void
-vehicle_gpsd_open(struct vehicle_priv *priv) {
+static void vehicle_gpsd_open(struct vehicle_priv *priv) {
 #ifdef HAVE_GPSBT
     char errstr[256] = "";
     /* We need to start gpsd (via gpsbt) first. */
@@ -282,8 +280,7 @@ vehicle_gpsd_open(struct vehicle_priv *priv) {
         priv->retry_timer2=event_add_timeout(priv->retry_interval*1000, 1, priv->cbt);
 }
 
-static void
-vehicle_gpsd_close(struct vehicle_priv *priv) {
+static void vehicle_gpsd_close(struct vehicle_priv *priv) {
 #ifdef HAVE_GPSBT
     int err;
 #endif
@@ -320,8 +317,7 @@ vehicle_gpsd_close(struct vehicle_priv *priv) {
 #endif
 }
 
-static void
-vehicle_gpsd_io(struct vehicle_priv *priv) {
+static void vehicle_gpsd_io(struct vehicle_priv *priv) {
     dbg(lvl_debug, "enter");
     if (priv->gps) {
         vehicle_last = priv;
@@ -349,8 +345,7 @@ vehicle_gpsd_io(struct vehicle_priv *priv) {
     }
 }
 
-static void
-vehicle_gpsd_destroy(struct vehicle_priv *priv) {
+static void vehicle_gpsd_destroy(struct vehicle_priv *priv) {
     vehicle_gpsd_close(priv);
     if (priv->source)
         g_free(priv->source);
@@ -362,9 +357,8 @@ vehicle_gpsd_destroy(struct vehicle_priv *priv) {
     g_free(priv);
 }
 
-static int
-vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
-                               enum attr_type type, struct attr *attr) {
+static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     struct attr * active=NULL;
     switch (type) {
     case attr_position_fix_type:
@@ -431,10 +425,9 @@ static struct vehicle_methods vehicle_gpsd_methods = {
     vehicle_gpsd_position_attr_get,
 };
 
-static struct vehicle_priv *
-vehicle_gpsd_new_gpsd(struct vehicle_methods
-                      *meth, struct callback_list
-                      *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_gpsd_new_gpsd(struct vehicle_methods
+        *meth, struct callback_list
+        *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *source, *query, *retry_int;
 
@@ -470,8 +463,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
     return ret;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("gpsd", vehicle_gpsd_new_gpsd);
 }

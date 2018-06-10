@@ -36,8 +36,7 @@ menu_add(struct menu *menu, char *name, enum menu_type type, struct callback *cb
     return this;
 }
 
-void
-menu_popup(struct menu *menu) {
+void menu_popup(struct menu *menu) {
     if (! menu || ! menu->meth.popup)
         return;
     (*menu->meth.popup)(menu->priv);

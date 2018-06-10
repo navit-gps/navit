@@ -44,8 +44,7 @@
 #include "bookmarks.h"
 
 #if 0
-static void
-popup_set_no_passing(struct popup_item *item, void *param) {
+static void popup_set_no_passing(struct popup_item *item, void *param) {
 #if 0
     struct display_list *l=param;
     struct segment *seg=(struct segment *)(l->data);
@@ -63,8 +62,7 @@ popup_set_no_passing(struct popup_item *item, void *param) {
 
 #endif
 
-static void
-popup_traffic_distortion(struct item *item, char *attr) {
+static void popup_traffic_distortion(struct item *item, char *attr) {
     /* add the configuration directory to the name of the file to use */
     char *dist_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
                                     "/distortion.txt", NULL);
@@ -90,28 +88,24 @@ popup_traffic_distortion(struct item *item, char *attr) {
 } /* end: popup_traffic_distortion(..) */
 
 
-static void
-popup_traffic_distortion_blocked(struct item *item) {
+static void popup_traffic_distortion_blocked(struct item *item) {
     dbg(lvl_debug,"item=%p",item);
     popup_traffic_distortion(item, "maxspeed=0");
 }
 
-static void
-popup_traffic_distortion_speed(struct item *item, int maxspeed) {
+static void popup_traffic_distortion_speed(struct item *item, int maxspeed) {
     char buffer[256];
     sprintf(buffer,"maxspeed=%d",maxspeed);
     popup_traffic_distortion(item,buffer);
 }
 
-static void
-popup_traffic_distortion_delay(struct item *item, int delay) {
+static void popup_traffic_distortion_delay(struct item *item, int delay) {
     char buffer[256];
     sprintf(buffer,"delay=%d",delay*600);
     popup_traffic_distortion(item,buffer);
 }
 
-static void
-popup_set_destination(struct navit *nav, struct pcoord *pc) {
+static void popup_set_destination(struct navit *nav, struct pcoord *pc) {
     struct coord c;
     struct coord_geo g;
     char buffer[1024];
@@ -125,8 +119,7 @@ popup_set_destination(struct navit *nav, struct pcoord *pc) {
 }
 
 
-void
-popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore) {
+void popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore) {
     struct pcoord *dst;
     char buffer[1024];
     int i, dstcount_new;
@@ -144,8 +137,7 @@ popup_set_visitbefore(struct navit *nav, struct pcoord *pc,int visitbefore) {
 
 
 
-static void
-popup_set_bookmark(struct navit *nav, struct pcoord *pc) {
+static void popup_set_bookmark(struct navit *nav, struct pcoord *pc) {
     struct attr attr;
     struct coord c;
     struct coord_geo g;
@@ -165,15 +157,13 @@ popup_set_bookmark(struct navit *nav, struct pcoord *pc) {
 
 extern void *vehicle;
 
-static void
-popup_set_position(struct navit *nav, struct pcoord *pc) {
+static void popup_set_position(struct navit *nav, struct pcoord *pc) {
     dbg(lvl_debug,"%p %p", nav, pc);
     navit_set_position(nav, pc);
 }
 
 #if 0
-static void
-popup_break_crossing(struct display_list *l) {
+static void popup_break_crossing(struct display_list *l) {
     struct segment *seg=(struct segment *)(l->data);
     struct street_str *str=(struct street_str *)(seg->data[0]);
     char log[256];
@@ -190,8 +180,7 @@ popup_break_crossing(struct display_list *l) {
 
 #define popup_printf(menu, type, ...) popup_printf_cb(menu, type, NULL, __VA_ARGS__)
 
-static void *
-popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char *fmt, ...) {
+static void *popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char *fmt, ...) {
     gchar *str,*us;
     int usc=0;
     va_list ap;
@@ -227,8 +216,7 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 
 
 
-static void
-popup_show_visitbefore(struct navit *nav,struct pcoord *pc, void *menu) {
+static void popup_show_visitbefore(struct navit *nav,struct pcoord *pc, void *menu) {
     void *menuvisitbefore;
     char buffer[100];
     int i, dstcount;
@@ -243,8 +231,7 @@ popup_show_visitbefore(struct navit *nav,struct pcoord *pc, void *menu) {
     }
 }
 
-static void
-popup_show_attr_val(struct map *map, void *menu, struct attr *attr) {
+static void popup_show_attr_val(struct map *map, void *menu, struct attr *attr) {
     char *attr_name=attr_to_name(attr->type);
     char *str;
 
@@ -254,8 +241,7 @@ popup_show_attr_val(struct map *map, void *menu, struct attr *attr) {
 }
 
 #if 0
-static void
-popup_show_attr(void *menu, struct item *item, enum attr_type attr_type) {
+static void popup_show_attr(void *menu, struct item *item, enum attr_type attr_type) {
     struct attr attr;
     memset(&attr, 0, sizeof(attr));
     attr.type=attr_type;
@@ -264,8 +250,7 @@ popup_show_attr(void *menu, struct item *item, enum attr_type attr_type) {
 }
 #endif
 
-static void
-popup_show_attrs(struct map *map, void *menu, struct item *item) {
+static void popup_show_attrs(struct map *map, void *menu, struct item *item) {
 #if 0
     popup_show_attr(menu, item, attr_debug);
     popup_show_attr(menu, item, attr_address);
@@ -286,8 +271,7 @@ popup_show_attrs(struct map *map, void *menu, struct item *item) {
 #endif
 }
 
-static void
-popup_item_dump(struct item *item) {
+static void popup_item_dump(struct item *item) {
     struct map_rect *mr;
     mr=map_rect_new(item->map,NULL);
     item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
@@ -297,8 +281,7 @@ popup_item_dump(struct item *item) {
 }
 
 
-static void
-popup_show_item(struct navit *nav, void *popup, struct displayitem *di) {
+static void popup_show_item(struct navit *nav, void *popup, struct displayitem *di) {
     struct map_rect *mr;
     void *menu, *menu_item, *menu_dist;
     char *label;
@@ -374,8 +357,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di) {
     }
 }
 
-static void
-popup_display(struct navit *nav, void *popup, struct point *p) {
+static void popup_display(struct navit *nav, void *popup, struct point *p) {
     struct displaylist_handle *dlh;
     struct displaylist *display;
     struct displayitem *di;
@@ -392,8 +374,7 @@ popup_display(struct navit *nav, void *popup, struct point *p) {
 
 static struct pcoord c;
 
-void
-popup(struct navit *nav, int button, struct point *p) {
+void popup(struct navit *nav, int button, struct point *p) {
     void *popup,*men;
     char buffer[1024];
     struct coord_geo g;

@@ -51,8 +51,7 @@ static struct gtk_poi_search {
     struct navit *nav;
 } gtk_poi_search;
 
-static GdkPixbuf *
-geticon(const char *name) {
+static GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
     icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
@@ -63,8 +62,7 @@ geticon(const char *name) {
 }
 
 /** Build the category list model with icons. */
-static GtkTreeModel *
-category_list_model(struct gtk_poi_search *search) {
+static GtkTreeModel *category_list_model(struct gtk_poi_search *search) {
     GtkTreeIter iter;
     gtk_list_store_append(search->store_cat, &iter);
     gtk_list_store_set(search->store_cat, &iter, 0,geticon("pharmacy.png"), 1, _("Pharmacy"), 2, "poi_pharmacy", -1);
@@ -103,8 +101,7 @@ category_list_model(struct gtk_poi_search *search) {
 
 
 /** Construct model of POIs from map information. */
-static GtkTreeModel *
-model_poi (struct gtk_poi_search *search) {
+static GtkTreeModel *model_poi (struct gtk_poi_search *search) {
     GtkTreeIter iter;
     struct map_selection *sel,*selm;
     struct coord coord_item,center;
@@ -187,8 +184,7 @@ model_poi (struct gtk_poi_search *search) {
 }
 
 /** Enable button if there is a selected row. */
-static void
-treeview_poi_changed(GtkWidget *widget, struct gtk_poi_search *search) {
+static void treeview_poi_changed(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
@@ -203,8 +199,7 @@ treeview_poi_changed(GtkWidget *widget, struct gtk_poi_search *search) {
 }
 
 /** Reload the POI list and disable buttons. */
-static void
-treeview_poi_reload(GtkWidget *widget, struct gtk_poi_search *search) {
+static void treeview_poi_reload(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
@@ -221,8 +216,7 @@ treeview_poi_reload(GtkWidget *widget, struct gtk_poi_search *search) {
 }
 
 /** Set the selected POI as destination. */
-static void
-button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
+static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
@@ -255,8 +249,7 @@ button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
 }
 
 /* Show the POI's position in the map. */
-static void
-button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
+static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
@@ -277,8 +270,7 @@ button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
 }
 
 /** Set POI as the first "visit before". */
-static void
-button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
+static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;

@@ -86,8 +86,7 @@ struct graphics_image_priv {
     QPixmap* pixmap;
 };
 
-static void
-graphics_destroy(struct graphics_priv* gr) {
+static void graphics_destroy(struct graphics_priv* gr) {
 //        dbg(lvl_debug,"enter");
 #if HAVE_FREETYPE
     gr->freetype_methods.destroy();
@@ -181,8 +180,7 @@ static const char* fontfamilies[] = {
  *
  * Allocates a font handle and returnes filled interface stucture
  */
-static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font,
-        int size, int flags) {
+static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct graphics_font_methods* meth, char* font, int size, int flags) {
     int a = 0;
     struct graphics_font_priv* font_priv;
     dbg(lvl_debug, "enter (font %s, %d, 0x%x)", font, size, flags);
@@ -219,22 +217,19 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
     return font_priv;
 }
 
-static void
-gc_destroy(struct graphics_gc_priv* gc) {
+static void gc_destroy(struct graphics_gc_priv* gc) {
     //        dbg(lvl_debug,"enter gc=%p", gc);
     delete (gc->pen);
     delete (gc->brush);
     g_free(gc);
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv* gc, int w) {
+static void gc_set_linewidth(struct graphics_gc_priv* gc, int w) {
     //        dbg(lvl_debug,"enter gc=%p, %d", gc, w);
     gc->pen->setWidth(w);
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* dash_list, int n) {
     if (n <= 0) {
         dbg(lvl_error, "Refuse to set dashes without dash pattern");
     }
@@ -254,8 +249,7 @@ gc_set_dashes(struct graphics_gc_priv* gc, int w, int offset, unsigned char* das
     gc->pen->setDashPattern(dashes);
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv* gc, struct color* c) {
+static void gc_set_foreground(struct graphics_gc_priv* gc, struct color* c) {
     QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8);
     //        dbg(lvl_debug,"context %p: color %02x%02x%02x",gc, c->r >> 8, c->g >> 8, c->b >> 8);
     gc->pen->setColor(col);
@@ -263,8 +257,7 @@ gc_set_foreground(struct graphics_gc_priv* gc, struct color* c) {
     //gc->c=*c;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
+static void gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
     QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8);
     //        dbg(lvl_debug,"context %p: color %02x%02x%02x",gc, c->r >> 8, c->g >> 8, c->b >> 8);
     //gc->pen->setColor(col);
@@ -302,9 +295,7 @@ struct graphics_image_methods image_methods = {
     image_destroy
 };
 
-static struct graphics_image_priv*
-image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* path, int* w, int* h, struct point* hot,
-          int rotation) {
+static struct graphics_image_priv* image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* path, int* w, int* h, struct point* hot, int rotation) {
     struct graphics_image_priv* image_priv;
     //        dbg(lvl_debug,"enter %s, %d %d", path, *w, *h);
     if (path[0] == 0) {
@@ -384,8 +375,7 @@ image_new(struct graphics_priv* gr, struct graphics_image_methods* meth, char* p
     return image_priv;
 }
 
-static void
-draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
+static void draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
     int i;
     QPolygon polygon;
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)", gr, gc, p->x, p->y);
@@ -398,8 +388,7 @@ draw_lines(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* 
     gr->painter->drawPolyline(polygon);
 }
 
-static void
-draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
+static void draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int count) {
     int i;
     QPolygon polygon;
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d, %d)", gr, gc, p->x, p->y);
@@ -420,8 +409,7 @@ draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point
     gr->painter->drawPolygon(polygon);
 }
 
-static void
-draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h) {
+static void draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h) {
     //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
     if (gr->painter == NULL)
         return;
@@ -435,8 +423,7 @@ draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct poi
     gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
 }
 
-static void
-draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int r) {
+static void draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int r) {
     //        dbg(lvl_debug,"enter gr=%p, gc=%p, (%d,%d) r=%d", gr, gc, p->x, p->y, r);
     if (gr->painter == NULL)
         return;
@@ -457,9 +444,7 @@ draw_circle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point*
  *
  * Renders given text on gr surface. Draws nice contrast outline around text.
  */
-static void
-draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg,
-          struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy) {
+static void draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics_gc_priv* bg, struct graphics_font_priv* font, char* text, struct point* p, int dx, int dy) {
     dbg(lvl_debug, "enter gc=%p, fg=%p, bg=%p pos(%d,%d) d(%d, %d) %s", gr, fg, bg, p->x, p->y, dx, dy, text);
     QPainter* painter = gr->painter;
     if (painter == NULL)
@@ -550,8 +535,7 @@ draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct graphics
 #endif
 }
 
-static void
-draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* p, struct graphics_image_priv* img) {
+static void draw_image(struct graphics_priv* gr, struct graphics_gc_priv* fg, struct point* p, struct graphics_image_priv* img) {
     //        dbg(lvl_debug,"enter");
     if (gr->painter != NULL)
         gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
@@ -604,14 +588,12 @@ static void draw_drag(struct graphics_priv* gr, struct point* p) {
     }
 }
 
-static void
-background_gc(struct graphics_priv* gr, struct graphics_gc_priv* gc) {
+static void background_gc(struct graphics_priv* gr, struct graphics_gc_priv* gc) {
     //        dbg(lvl_debug,"register context %p on %p", gc, gr);
     gr->background_graphics_gc_priv = gc;
 }
 
-static void
-draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
+static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     switch (mode) {
     case draw_mode_begin:
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
@@ -653,17 +635,14 @@ draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     }
 }
 
-static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p,
-        int w, int h, int wraparound);
+static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound);
 
 void resize_callback(struct graphics_priv* gr, int w, int h) {
     //        dbg(lvl_debug,"enter (%d, %d)", w, h);
-    callback_list_call_attr_2(gr->callbacks, attr_resize,
-                              GINT_TO_POINTER(w), GINT_TO_POINTER(h));
+    callback_list_call_attr_2(gr->callbacks, attr_resize, GINT_TO_POINTER(w), GINT_TO_POINTER(h));
 }
 
-static int
-graphics_qt5_fullscreen(struct window* w, int on) {
+static int graphics_qt5_fullscreen(struct window* w, int on) {
     struct graphics_priv* gr;
     //        dbg(lvl_debug,"enter");
     gr = (struct graphics_priv*)w->priv;
@@ -687,8 +666,7 @@ graphics_qt5_fullscreen(struct window* w, int on) {
 }
 
 #ifdef SAILFISH_OS
-static void
-keep_display_on(struct graphics_priv* priv) {
+static void keep_display_on(struct graphics_priv* priv) {
     //        dbg(lvl_debug,"enter");
     QDBusConnection system = QDBusConnection::connectToBus(QDBusConnection::SystemBus, "system");
     QDBusInterface interface("com.nokia.mce", "/com/nokia/mce/request", "com.nokia.mce.request", system);
@@ -697,8 +675,7 @@ keep_display_on(struct graphics_priv* priv) {
 }
 #endif
 
-static void
-graphics_qt5_disable_suspend(struct window* w) {
+static void graphics_qt5_disable_suspend(struct window* w) {
 //        dbg(lvl_debug,"enter");
 #ifdef SAILFISH_OS
     struct graphics_priv* gr;
@@ -711,8 +688,7 @@ graphics_qt5_disable_suspend(struct window* w) {
 #endif
 }
 
-static void*
-get_data(struct graphics_priv* this_priv, char const* type) {
+static void* get_data(struct graphics_priv* this_priv, char const* type) {
     //        dbg(lvl_debug,"enter: %s", type);
     if (strcmp(type, "window") == 0) {
         struct window* win;
@@ -749,8 +725,7 @@ static void image_free(struct graphics_priv* gr, struct graphics_image_priv* pri
  *
  * Calculates the bounding box around the given text.
  */
-static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy,
-                          struct point* ret, int estimate) {
+static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* font, char* text, int dx, int dy, struct point* ret, int estimate) {
     int i;
     struct point pt;
     QString tmp = QString::fromUtf8(text);
@@ -833,8 +808,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 /* create new graphics context on given context */
-static struct graphics_priv*
-overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound) {
+static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct point* p, int w, int h, int wraparound) {
     struct graphics_priv* graphics_priv = NULL;
     graphics_priv = g_new0(struct graphics_priv, 1);
     *meth = graphics_methods;
@@ -878,8 +852,7 @@ overlay_new(struct graphics_priv* gr, struct graphics_methods* meth, struct poin
 }
 
 /* create application and initial graphics context */
-static struct graphics_priv*
-graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr** attrs, struct callback_list* cbl) {
+static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics_methods* meth, struct attr** attrs, struct callback_list* cbl) {
     struct graphics_priv* graphics_priv = NULL;
     struct attr* event_loop_system = NULL;
     struct attr* platform = NULL;

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 apt-get update && apt-get install -y mingw32 mingw32-binutils mingw32-runtime default-jdk nsis libsaxonb-java
 

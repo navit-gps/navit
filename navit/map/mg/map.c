@@ -169,8 +169,7 @@ struct item_range poly_ranges[]= {
 };
 
 
-static int
-file_next(struct map_rect_priv *mr) {
+static int file_next(struct map_rect_priv *mr) {
     int debug=0;
 
     for (;;) {
@@ -207,8 +206,7 @@ file_next(struct map_rect_priv *mr) {
     }
 }
 
-static void
-map_destroy_mg(struct map_priv *m) {
+static void map_destroy_mg(struct map_priv *m) {
     int i;
 
     printf("mg_map_destroy\n");
@@ -242,8 +240,7 @@ map_rect_new_mg(struct map_priv *map, struct map_selection *sel) {
 }
 
 
-static struct item *
-map_rect_get_item_mg(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_mg(struct map_rect_priv *mr) {
     for (;;) {
         switch (mr->current_file) {
         case file_town_twn:
@@ -315,8 +312,7 @@ map_rect_get_item_byid_mg(struct map_rect_priv *mr, int id_hi, int id_lo) {
 }
 
 
-void
-map_rect_destroy_mg(struct map_rect_priv *mr) {
+void map_rect_destroy_mg(struct map_rect_priv *mr) {
     int i;
     for (i=0 ; i < file_end ; i++)
         if (mr->block_hash[i])
@@ -324,8 +320,7 @@ map_rect_destroy_mg(struct map_rect_priv *mr) {
     g_free(mr);
 }
 
-static char *
-map_search_mg_convert_special(char *str) {
+static char *map_search_mg_convert_special(char *str) {
     char *ret,*c=g_malloc(strlen(str)*2+1);
 
     ret=c;
@@ -364,8 +359,7 @@ map_search_mg_convert_special(char *str) {
     }
 }
 
-static int
-map_search_setup(struct map_rect_priv *mr) {
+static int map_search_setup(struct map_rect_priv *mr) {
     char *prefix;
     dbg(lvl_debug,"%s", attr_to_name(mr->search_type));
     switch (mr->search_type) {
@@ -456,8 +450,8 @@ static void map_search_cleanup(struct map_rect_priv *mr);
 
 static struct item * map_search_get_item_mg(struct map_search_priv *ms);
 
-static struct map_search_priv *
-map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, int partial) {
+static struct map_search_priv *map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search,
+        int partial) {
     struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
     dbg(lvl_debug,"searching for %s '%s'", attr_to_name(search->type), search->u.str);
     dbg(lvl_debug,"id_lo=0x%x", item->id_lo);
@@ -481,8 +475,7 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
     return (struct map_search_priv *)mr;
 }
 
-static void
-map_search_cleanup(struct map_rect_priv *mr) {
+static void map_search_cleanup(struct map_rect_priv *mr) {
     g_free(mr->search_str);
     mr->search_str=NULL;
     tree_search_free(&mr->ts);
@@ -493,8 +486,7 @@ map_search_cleanup(struct map_rect_priv *mr) {
     mr->search_block=0;
 }
 
-static void
-map_search_destroy_mg(struct map_search_priv *ms) {
+static void map_search_destroy_mg(struct map_search_priv *ms) {
     struct map_rect_priv *mr=(struct map_rect_priv *)ms;
 
     dbg(lvl_debug,"mr=%p", mr);
@@ -507,8 +499,7 @@ map_search_destroy_mg(struct map_search_priv *ms) {
     g_free(mr);
 }
 
-static struct item *
-map_search_get_item_mg(struct map_search_priv *ms) {
+static struct item *map_search_get_item_mg(struct map_search_priv *ms) {
     struct map_rect_priv *mr=(struct map_rect_priv *)ms;
     struct item *ret=NULL;
 
@@ -594,7 +585,6 @@ map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_map("mg", map_new_mg);
 }

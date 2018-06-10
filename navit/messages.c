@@ -33,8 +33,7 @@ struct messagelist {
     struct event_timeout *msg_cleanup_to;		/**< Idle event to clean up the messages */
 };
 
-int
-message_new(struct messagelist *this_, const char *message) {
+int message_new(struct messagelist *this_, const char *message) {
     struct message *msg;
 
     msg = g_new0(struct message, 1);
@@ -48,8 +47,7 @@ message_new(struct messagelist *this_, const char *message) {
     return msg->id;
 }
 
-int
-message_delete(struct messagelist *this_, int mid) {
+int message_delete(struct messagelist *this_, int mid) {
     struct message *msg,*last;;
 
     msg = this_->messages;
@@ -80,8 +78,7 @@ message_delete(struct messagelist *this_, int mid) {
     }
 }
 
-static void
-message_cleanup(struct messagelist *this_) {
+static void message_cleanup(struct messagelist *this_) {
     struct message *msg,*next,*prev=NULL;
     int i;
     time_t now;
@@ -137,8 +134,7 @@ struct messagelist
     return this;
 }
 
-void
-messagelist_init(struct messagelist *this_) {
+void messagelist_init(struct messagelist *this_) {
     if (!event_system())
         return;
     this_->msg_cleanup_cb = callback_new_1(callback_cast(message_cleanup), this_);

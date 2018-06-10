@@ -64,8 +64,7 @@ struct map_search_priv {
     struct map_rect_priv *mr;
 };
 
-static enum item_type
-filter_type(struct map_priv *m, struct item *item) {
+static enum item_type filter_type(struct map_priv *m, struct item *item) {
     GList *filters=m->filters;
     struct filter_entry *entry;
     while (filters) {
@@ -125,14 +124,12 @@ filter_type(struct map_priv *m, struct item *item) {
     return item->type;
 }
 
-static void
-free_filter_entry(struct filter_entry *filter) {
+static void free_filter_entry(struct filter_entry *filter) {
     g_free(filter->cond_str);
     g_free(filter);
 }
 
-static void
-free_filter(struct filter *filter) {
+static void free_filter(struct filter *filter) {
     g_list_foreach(filter->old, (GFunc)free_filter_entry, NULL);
     g_list_free(filter->old);
     filter->old=NULL;
@@ -141,15 +138,13 @@ free_filter(struct filter *filter) {
     filter->new=NULL;
 }
 
-static void
-free_filters(struct map_priv *m) {
+static void free_filters(struct map_priv *m) {
     g_list_foreach(m->filters, (GFunc)free_filter, NULL);
     g_list_free(m->filters);
     m->filters=NULL;
 }
 
-static GList *
-parse_filter(char *filter) {
+static GList *parse_filter(char *filter) {
     GList *ret=NULL;
     for (;;) {
         char *condition,*range,*next=strchr(filter,',');
@@ -197,8 +192,7 @@ parse_filter(char *filter) {
     return ret;
 }
 
-static void
-parse_filters(struct map_priv *m, char *filter) {
+static void parse_filters(struct map_priv *m, char *filter) {
     char *filter_copy=g_strdup(filter);
     char *str=filter_copy;
 
@@ -239,26 +233,22 @@ parse_filters(struct map_priv *m, char *filter) {
     g_free(filter_copy);
 }
 
-static void
-map_filter_coord_rewind(void *priv_data) {
+static void map_filter_coord_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     item_coord_rewind(mr->parent_item);
 }
 
-static int
-map_filter_coord_get(void *priv_data, struct coord *c, int count) {
+static int map_filter_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     return item_coord_get(mr->parent_item, c, count);
 }
 
-static void
-map_filter_attr_rewind(void *priv_data) {
+static void map_filter_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     item_attr_rewind(mr->parent_item);
 }
 
-static int
-map_filter_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int map_filter_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     return item_attr_get(mr->parent_item, attr_type, attr);
 }
@@ -270,8 +260,7 @@ static struct item_methods methods_filter = {
     map_filter_attr_get,
 };
 
-static struct map_rect_priv *
-map_filter_rect_new(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_filter_rect_new(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr=NULL;
     struct map_rect *parent;
     parent=map_rect_new(map->parent, sel);
@@ -286,14 +275,12 @@ map_filter_rect_new(struct map_priv *map, struct map_selection *sel) {
     return mr;
 }
 
-static void
-map_filter_rect_destroy(struct map_rect_priv *mr) {
+static void map_filter_rect_destroy(struct map_rect_priv *mr) {
     map_rect_destroy(mr->parent);
     g_free(mr);
 }
 
-static struct item *
-map_filter_rect_get_item(struct map_rect_priv *mr) {
+static struct item *map_filter_rect_get_item(struct map_rect_priv *mr) {
     mr->parent_item=map_rect_get_item(mr->parent);
     if (!mr->parent_item)
         return NULL;
@@ -303,8 +290,7 @@ map_filter_rect_get_item(struct map_rect_priv *mr) {
     return &mr->item;
 }
 
-static struct item *
-map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
     dbg(lvl_debug,"enter");
     mr->parent_item=map_rect_get_item_byid(mr->parent, id_hi, id_lo);
     if (!mr->parent_item)
@@ -315,31 +301,27 @@ map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
     return &mr->item;
 }
 
-static struct map_search_priv *
-map_filter_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial) {
+static struct map_search_priv *map_filter_search_new(struct map_priv *map, struct item *item, struct attr *search,
+        int partial) {
     dbg(lvl_debug,"enter");
     return NULL;
 }
 
-static struct item *
-map_filter_search_get_item(struct map_search_priv *map_search) {
+static struct item *map_filter_search_get_item(struct map_search_priv *map_search) {
     dbg(lvl_debug,"enter");
     return NULL;
 }
 
-static void
-map_filter_search_destroy(struct map_search_priv *ms) {
+static void map_filter_search_destroy(struct map_search_priv *ms) {
     dbg(lvl_debug,"enter");
 }
 
-static void
-map_filter_destroy(struct map_priv *m) {
+static void map_filter_destroy(struct map_priv *m) {
     map_destroy(m->parent);
     g_free(m);
 }
 
-static int
-map_filter_set_attr(struct map_priv *m, struct attr *attr) {
+static int map_filter_set_attr(struct map_priv *m, struct attr *attr) {
     switch (attr->type) {
     case attr_filter:
         parse_filters(m,attr->u.str);
@@ -368,8 +350,7 @@ static struct map_methods map_methods_filter = {
 
 
 
-static struct map_priv *
-map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m=NULL;
     struct attr **parent_attrs,type,*subtype=attr_search(attrs, NULL, attr_subtype),*filter=attr_search(attrs, NULL,
             attr_filter);
@@ -407,8 +388,7 @@ map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_li
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"filter: plugin_init");
     plugin_register_category_map("filter", map_filter_new);
 }

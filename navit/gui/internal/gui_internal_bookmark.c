@@ -16,8 +16,7 @@
 #include "gui_internal_keyboard.h"
 #include "gui_internal_bookmark.h"
 
-static void
-gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget) {
+static void gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget) {
     GList *l;
     struct attr attr;
     dbg(lvl_debug,"text='%s'", widget->text);
@@ -31,8 +30,7 @@ gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget) {
     gui_internal_prune_menu(this, l->data);
 }
 
-static void
-gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *widget) {
+static void gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *widget) {
     GList *l;
     struct attr attr;
     dbg(lvl_debug,"text='%s'", widget->text);
@@ -46,18 +44,15 @@ gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *wi
     gui_internal_prune_menu(this, l->data);
 }
 
-static void
-gui_internal_cmd_add_bookmark_clicked(struct gui_priv *this, struct widget *widget, void *data) {
+static void gui_internal_cmd_add_bookmark_clicked(struct gui_priv *this, struct widget *widget, void *data) {
     gui_internal_cmd_add_bookmark_do(this, widget->data);
 }
 
-static void
-gui_internal_cmd_add_bookmark_folder_clicked(struct gui_priv *this, struct widget *widget, void *data) {
+static void gui_internal_cmd_add_bookmark_folder_clicked(struct gui_priv *this, struct widget *widget, void *data) {
     gui_internal_cmd_add_bookmark_folder_do(this, widget->data);
 }
 
-static void
-gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *widget,void *data) {
+static void gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *widget,void *data) {
     struct widget *w=(struct widget*)widget->data;
     GList *l;
     struct attr attr;
@@ -74,8 +69,7 @@ gui_internal_cmd_rename_bookmark_clicked(struct gui_priv *this, struct widget *w
     gui_internal_prune_menu(this, l->data);
 }
 
-void
-gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb,*wk,*wl,*we,*wnext;
     char *name=data;
     wb=gui_internal_menu(this,_("Add Bookmark"));
@@ -105,8 +99,7 @@ gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *d
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb,*wk,*wl,*we,*wnext;
     char *name=data;
     wb=gui_internal_menu(this,_("Add Bookmark folder"));
@@ -136,8 +129,7 @@ gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, 
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_cmd_rename_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_rename_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb,*wk,*wl,*we,*wnext;
     char *name=wm->text;
     wb=gui_internal_menu(this,_("Rename"));
@@ -168,8 +160,7 @@ gui_internal_cmd_rename_bookmark(struct gui_priv *this, struct widget *wm, void 
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_cmd_cut_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_cut_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
     GList *l;
     navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
@@ -178,8 +169,7 @@ gui_internal_cmd_cut_bookmark(struct gui_priv *this, struct widget *wm, void *da
     gui_internal_prune_menu(this, l->data);
 }
 
-void
-gui_internal_cmd_copy_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_copy_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
     GList *l;
     navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
@@ -188,8 +178,7 @@ gui_internal_cmd_copy_bookmark(struct gui_priv *this, struct widget *wm, void *d
     gui_internal_prune_menu(this, l->data);
 }
 
-void
-gui_internal_cmd_paste_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_paste_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
     GList *l;
     navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
@@ -199,8 +188,7 @@ gui_internal_cmd_paste_bookmark(struct gui_priv *this, struct widget *wm, void *
         gui_internal_prune_menu(this, l->data);
 }
 
-void
-gui_internal_cmd_delete_bookmark_folder(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_delete_bookmark_folder(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
     GList *l;
     navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
@@ -210,8 +198,7 @@ gui_internal_cmd_delete_bookmark_folder(struct gui_priv *this, struct widget *wm
     gui_internal_prune_menu(this, l->data);
 }
 
-void
-gui_internal_cmd_load_bookmarks_as_waypoints(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_load_bookmarks_as_waypoints(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
 
     if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
@@ -259,8 +246,7 @@ gui_internal_cmd_load_bookmarks_as_waypoints(struct gui_priv *this, struct widge
     gui_internal_prune_menu(this, NULL);
 }
 
-void
-gui_internal_cmd_replace_bookmarks_from_waypoints(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_replace_bookmarks_from_waypoints(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
 
     if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {

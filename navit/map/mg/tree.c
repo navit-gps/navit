@@ -109,8 +109,7 @@ static inline int tree_leaf_v_get_value(struct tree_leaf_v * tree) {
     return get_u32_unal(&p);
 }
 
-static int
-tree_search_h(struct file *file, unsigned int search) {
+static int tree_search_h(struct file *file, unsigned int search) {
     unsigned char *p=file->begin,*end;
     int last,i=0,value,lower;
     struct tree_hdr_h *thdr;
@@ -147,8 +146,7 @@ tree_search_h(struct file *file, unsigned int search) {
     return 0;
 }
 
-static int
-tree_search_v(struct file *file, int offset, int search) {
+static int tree_search_v(struct file *file, int offset, int search) {
     unsigned char *p=file->begin+offset;
     int i=0,count,next;
     struct tree_hdr_v *thdr;
@@ -173,8 +171,7 @@ tree_search_v(struct file *file, int offset, int search) {
     return 0;
 }
 
-int
-tree_search_hv(char *dirname, char *filename, unsigned int search_h, unsigned int search_v, int *result) {
+int tree_search_hv(char *dirname, char *filename, unsigned int search_h, unsigned int search_v, int *result) {
     struct file *f_idx_h, *f_idx_v;
     char buffer[4096];
     int h,v;
@@ -208,8 +205,7 @@ tree_search_hv(char *dirname, char *filename, unsigned int search_h, unsigned in
     return 0;
 }
 
-static struct tree_search_node *
-tree_search_enter(struct tree_search *ts, int offset) {
+static struct tree_search_node *tree_search_enter(struct tree_search *ts, int offset) {
     struct tree_search_node *tsn=&ts->nodes[++ts->curr_node];
     unsigned char *p;
     p=ts->f->begin+offset;
@@ -294,8 +290,7 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p) {
     return 0;
 }
 
-void
-tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offset) {
+void tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offset) {
     char buffer[4096];
     sprintf(buffer, "%s/%s", dirname, filename);
     ts->f=file_create_caseinsensitive(buffer, 0);
@@ -306,8 +301,7 @@ tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offs
     }
 }
 
-void
-tree_search_free(struct tree_search *ts) {
+void tree_search_free(struct tree_search *ts) {
     if (ts->f)
         file_destroy(ts->f);
 }

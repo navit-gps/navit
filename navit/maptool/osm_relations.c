@@ -40,14 +40,12 @@ struct relations_member {
     struct relations_func *func;
 };
 
-static guint
-relations_member_hash(gconstpointer key) {
+static guint relations_member_hash(gconstpointer key) {
     const struct relations_member *memb=key;
     return (memb->memberid >> 32)^(memb->memberid & 0xffffffff);
 }
 
-static gboolean
-relations_member_equal(gconstpointer a, gconstpointer b) {
+static gboolean relations_member_equal(gconstpointer a, gconstpointer b) {
     const struct relations_member *memba=a;
     const struct relations_member *membb=b;
     return (memba->memberid == membb->memberid);
@@ -72,8 +70,8 @@ relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct ite
     return relations_func;
 }
 
-static struct relations_member *
-relations_member_new(struct relations_func *func, void *relation_priv, void *member_priv, osmid id) {
+static struct relations_member *relations_member_new(struct relations_func *func, void *relation_priv,
+        void *member_priv, osmid id) {
     struct relations_member *memb=g_new(struct relations_member, 1);
     memb->memberid=id;
     memb->relation_priv=relation_priv;
@@ -92,9 +90,8 @@ relations_member_new(struct relations_func *func, void *relation_priv, void *mem
  * @param in type Type of this member (node, way etc.).
  * @param in id OSM ID of relation member.
  */
-void
-relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void
-                                    *relation_priv, void *member_priv, enum relation_member_type type, osmid id) {
+void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void
+        *relation_priv, void *member_priv, enum relation_member_type type, osmid id) {
     struct relations_member *memb=relations_member_new(func, relation_priv, member_priv, id);
     GHashTable *member_hash=rel->member_hash[type-1];
     // The real key is the OSM ID, but we recycle "memb" as key to avoid a second allocating for the key.
@@ -109,8 +106,7 @@ relations_add_relation_member_entry(struct relations *rel, struct relations_func
  * @param in rel relations collection to add the new member to
  * @param in func structure defining function to call when this member is read
  */
-void
-relations_add_relation_default_entry(struct relations *rel, struct relations_func *func) {
+void relations_add_relation_default_entry(struct relations *rel, struct relations_func *func) {
     struct relations_member *memb=relations_member_new(func, NULL, NULL, 0);
     rel->default_members=g_list_append(rel->default_members, memb);
 }
@@ -124,8 +120,7 @@ relations_add_relation_default_entry(struct relations *rel, struct relations_fun
  * @param in nodes file containing nodes in "coords.tmp" format
  * @param in ways file containing items in item_bin format. This file may contain both nodes, ways, and relations in that format.
  */
-void
-relations_process(struct relations *rel, FILE *nodes, FILE *ways) {
+void relations_process(struct relations *rel, FILE *nodes, FILE *ways) {
     char buffer[128];
     struct item_bin *ib=(struct item_bin *)buffer;
     osmid *id;
@@ -169,8 +164,7 @@ relations_process(struct relations *rel, FILE *nodes, FILE *ways) {
     }
 }
 
-static void
-relations_destroy_func(void *key, GList *l, void *data) {
+static void relations_destroy_func(void *key, GList *l, void *data) {
     GList *ll=l;
     while (ll) {
         g_free(ll->data);
@@ -179,8 +173,7 @@ relations_destroy_func(void *key, GList *l, void *data) {
     g_list_free(l);
 }
 
-void
-relations_destroy(struct relations *relations) {
+void relations_destroy(struct relations *relations) {
     int i;
 
     for (i = 0 ; i < 3 ; i++) {

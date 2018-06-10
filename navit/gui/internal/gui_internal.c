@@ -127,8 +127,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
  *
  * @return image_struct Ptr to scaled image struct or NULL if not scaled or found
  */
-static struct graphics_image *
-image_new_scaled(struct gui_priv *this, const char *name, int w, int h) {
+static struct graphics_image *image_new_scaled(struct gui_priv *this, const char *name, int w, int h) {
     struct graphics_image *ret=NULL;
     char *full_path=NULL;
     full_path=graphics_icon_path(name);
@@ -145,8 +144,7 @@ image_new_scaled(struct gui_priv *this, const char *name, int w, int h) {
 }
 
 #if 0
-static struct graphics_image *
-image_new_o(struct gui_priv *this, char *name) {
+static struct graphics_image *image_new_o(struct gui_priv *this, char *name) {
     return image_new_scaled(this, name, -1, -1);
 }
 #endif
@@ -193,8 +191,7 @@ image_new_l(struct gui_priv *this, const char *name) {
 
 
 
-static int
-gui_internal_button_attr_update(struct gui_priv *this, struct widget *w) {
+static int gui_internal_button_attr_update(struct gui_priv *this, struct widget *w) {
     struct widget *wi;
     int is_on=0;
     struct attr curr;
@@ -224,13 +221,11 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w) {
     return 0;
 }
 
-static void
-gui_internal_button_attr_callback(struct gui_priv *this, struct widget *w) {
+static void gui_internal_button_attr_callback(struct gui_priv *this, struct widget *w) {
     if (gui_internal_button_attr_update(this, w))
         gui_internal_widget_render(this, w);
 }
-static void
-gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *data) {
+static void gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *data) {
     if (w->is_on)
         w->set_attr(w->instance, &w->off);
     else
@@ -240,8 +235,7 @@ gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *
 }
 
 struct widget *
-gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on,
-                                   struct attr *off) {
+gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on, struct attr *off) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     if (!on && !off)
@@ -263,8 +257,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum
 }
 
 struct widget *
-gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map,
-                                 struct attr *on, struct attr *off, int deflt) {
+gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     image=image_new_xs(this, "gui_inactive");
@@ -402,8 +395,7 @@ static void gui_internal_call_highlighted(struct gui_priv *this) {
     this->highlighted->func(this, this->highlighted, this->highlighted->data);
 }
 
-void
-gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark) {
+void gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark) {
     char *text=w->speech;
     if (! this->speech)
         return;
@@ -422,20 +414,17 @@ gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark) {
 
 
 
-void
-gui_internal_back(struct gui_priv *this, struct widget *w, void *data) {
+void gui_internal_back(struct gui_priv *this, struct widget *w, void *data) {
     gui_internal_prune_menu_count(this, 1, 1);
 }
 
-void
-gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_prune_menu(this, wm->data);
 }
 
 
 
-void
-gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w=this->root.children->data;
     if (w && w->menu_data && w->menu_data->href && !strcmp(w->menu_data->href,"#Main Menu"))
         gui_internal_prune_menu(this, w);
@@ -491,8 +480,7 @@ gui_internal_time_help(struct gui_priv *this) {
  *
  * @author Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
  */
-void
-gui_internal_apply_config(struct gui_priv *this) {
+void gui_internal_apply_config(struct gui_priv *this) {
     struct gui_config_settings *  current_config=0;
 
     dbg(lvl_debug,"w=%d h=%d", this->root.w, this->root.h);
@@ -555,8 +543,7 @@ gui_internal_apply_config(struct gui_priv *this) {
 
 
 
-static void
-gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data) {
     char *name=data;
     dbg(lvl_info,"c=%d:0x%x,0x%x", wm->c.pro, wm->c.x, wm->c.y);
     navit_set_destination(this->nav, &wm->c, name, 1);
@@ -571,8 +558,7 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
     gui_internal_prune_menu(this, NULL);
 }
 
-static void
-gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm, void *data) {
     char *name=data;
     int dstcount=navit_get_destination_count(this->nav)+1;
     int pos,i;
@@ -609,9 +595,8 @@ gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm,
  * @param cmd Callback function which will be called on item selection
  * @param data data argument to be passed to the callback function
  */
-void
-gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_,
-                             void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data) {
+void gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_,
+                                  void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data) {
     struct widget *wb,*w,*wtable,*row,*wc;
     struct map *map;
     struct map_rect *mr;
@@ -667,16 +652,14 @@ gui_internal_select_waypoint(struct gui_priv *this, const char *title, const cha
     gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_insert_destination(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_insert_destination(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_select_waypoint(this, data, _("Select waypoint to insert the new one before"), wm,
                                  gui_internal_cmd_insert_destination_do, data);
 }
 
 
 
-static void
-gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr v;
     if(data) {
         v.type=attr_vehicle;
@@ -696,8 +679,7 @@ gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *da
  * @brief Generic notification function for Editable widgets to call Another widget notification function when Enter is pressed in editable field.
  * The Editable widget should have data member pointing to the Another widget.
  */
-void
-gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data) {
     if (wm->reason==gui_internal_reason_keypress_finish && data) {
         struct widget *w=data;
         if(w->func)
@@ -711,8 +693,7 @@ struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
 struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang);
 
 
-static void
-gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr mattr;
     GList *l;
     navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL);
@@ -727,15 +708,13 @@ gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widget *wm, void 
 /**
  *  Get a utf-8 string, return the same prepared for case insensitive search. Result should be g_free()d after use.
  */
-char *
-removecase(char *s) {
+char *removecase(char *s) {
     char *r;
     r=linguistics_casefold(s);
     return r;
 }
 
-static void
-gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data) {
     if (wm->item.type != type_none) {
         enum item_type type;
         if (wm->item.type < type_line)
@@ -752,8 +731,7 @@ gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *dat
 }
 
 
-static void
-gui_internal_cmd_view_attribute_details(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_view_attribute_details(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb;
     struct map_rect *mr;
     struct item *item;
@@ -798,8 +776,7 @@ gui_internal_cmd_view_attribute_details(struct gui_priv *this, struct widget *wm
     gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb;
     struct map_rect *mr;
     struct item *item;
@@ -846,8 +823,7 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
     gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data) {
     struct map_rect *mr;
     struct item *item;
     struct attr attr;
@@ -886,8 +862,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
  * @param wm called widget.
  * @param data event data (pointer to the table widget containing results, or NULL to clean the result map without adding any new data).
  */
-static void
-gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w;
     struct mapset *ms;
     struct map *map;
@@ -1009,15 +984,13 @@ gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *
  * @param wm called widget.
  * @param data event data
  */
-static void
-gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_cmd_results_to_map(this,wm,NULL);
     gui_internal_prune_menu(this, NULL);
     navit_draw(this->nav);
 }
 
-static void
-gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void *data) {
     int dstcount=navit_get_destination_count(this->nav);
     int i;
     struct map_rect *mr;
@@ -1074,9 +1047,7 @@ gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widget *wm, void 
  * 2048: "Show search results on the map"
  * TODO define constants for these values
  */
-void
-gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm,
-                             const char *name, int flags) {
+void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, const char *name, int flags) {
     struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
     struct coord_geo g;
     struct pcoord pc;
@@ -1378,8 +1349,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		9 Item from the POI list
 */
 
-void
-gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data) {
     int flags;
 
     if(!data)
@@ -1441,8 +1411,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data) 
   * The "Bookmarks" section of the OSD
   *
   */
-void
-gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr attr,mattr;
     struct item *item;
     char *label_full,*prefix=0;
@@ -1592,20 +1561,15 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 
 
 
-static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary);
+static void gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary);
 
-static int
-gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result);
+static int gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result);
 
-static int
-gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result);
+static int gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result);
 
-static struct widget*
-gui_internal_keynav_find_next_sensitive_child(struct widget *wi);
+static struct widget* gui_internal_keynav_find_next_sensitive_child(struct widget *wi);
 
-void
-gui_internal_keypress_do(struct gui_priv *this, char *key) {
+void gui_internal_keypress_do(struct gui_priv *this, char *key) {
     struct widget *wi,*menu,*search_list;
     int len=0;
     char *text=NULL;
@@ -1665,8 +1629,7 @@ gui_internal_keypress_do(struct gui_priv *this, char *key) {
 
 
 
-char *
-gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
+char *gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
     char p,*ret=g_strdup(pattern),*r=ret,*a;
     int len;
     while ((p=*pattern++)) {
@@ -1693,8 +1656,7 @@ gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
     return ret;
 }
 
-static int
-gui_internal_match(const char *pattern, const char *string) {
+static int gui_internal_match(const char *pattern, const char *string) {
     char p,s;
     while ((p=*pattern++)) {
         switch (p) {
@@ -1715,8 +1677,7 @@ gui_internal_match(const char *pattern, const char *string) {
     return 1;
 }
 
-int
-gui_internal_set(char *remove, char *add) {
+int gui_internal_set(char *remove, char *add) {
     char *gui_file=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/gui_internal.txt", NULL);
     char *gui_file_new=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/gui_internal_new.txt", NULL);
     FILE *fo=fopen(gui_file_new,"w");
@@ -1750,14 +1711,12 @@ gui_internal_set(char *remove, char *add) {
 
 
 
-static void
-gui_internal_window_closed(struct gui_priv *this) {
+static void gui_internal_window_closed(struct gui_priv *this) {
     gui_internal_cmd2_quit(this, NULL, NULL, NULL, NULL);
 }
 
 
-static void
-gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data) {
     char *text=g_strdup_printf(_("Download %s"),wm->name);
     struct widget *w, *wb;
     struct map *map=data;
@@ -1795,8 +1754,7 @@ gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void 
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr on, off, download_enabled, download_disabled;
     struct widget *w,*wb,*wma;
     struct map *map=data;
@@ -1882,14 +1840,12 @@ gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *da
     gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_set_active_vehicle(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_set_active_vehicle(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr vehicle = {attr_vehicle,{wm->data}};
     navit_set_attr(this->nav, &vehicle);
 }
 
-static void
-gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb,*row;
     struct attr attr,sat_attr;
     struct vehicle *v=wm->data;
@@ -1925,8 +1881,7 @@ gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm,
     gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w,*wb;
     struct attr attr;
     struct vehicle *v=wm->data;
@@ -1954,9 +1909,8 @@ struct vehicle_and_profilename {
  *
  * @return true if the vehicle is active, false otherwise.
  */
-static int
-gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
-                               *vehicle) {
+static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
+        *vehicle) {
     struct attr active_vehicle;
 
     if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
@@ -1965,8 +1919,7 @@ gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
     return active_vehicle.u.vehicle == vehicle;
 }
 
-static void
-save_vehicle_xml(struct vehicle *v) {
+static void save_vehicle_xml(struct vehicle *v) {
     struct attr attr;
     struct attr_iter *iter=vehicle_attr_iter_new();
     int childs=0;
@@ -1994,9 +1947,8 @@ save_vehicle_xml(struct vehicle *v) {
  *
  * @see gui_internal_add_vehicle_profile
  */
-static void
-gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
-                                    widget *wm, void *data) {
+static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
+        widget *wm, void *data) {
     struct vehicle_and_profilename *vapn = data;
     struct vehicle *v = vapn->vehicle;
     char *profilename = vapn->profilename;
@@ -2009,8 +1961,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
     vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
     vehicle_name = vehicle_name_attr.u.str;
 
-    dbg(lvl_debug, "Changing vehicle %s to profile %s", vehicle_name,
-        profilename);
+    dbg(lvl_debug, "Changing vehicle %s to profile %s", vehicle_name, profilename);
 
     // Change the profile name
     profilename_attr.type = attr_profilename;
@@ -2044,9 +1995,8 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
  * Adds the vehicle profile to the GUI, allowing the user to pick a
  * profile for the currently selected vehicle.
  */
-static void
-gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
-                                 *parent, struct vehicle *v, struct vehicleprofile *profile) {
+static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
+        *parent, struct vehicle *v, struct vehicleprofile *profile) {
     // Just here to show up in the translation file, nice and close to
     // where the translations are actually used.
     struct attr profile_attr;
@@ -2074,8 +2024,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
         active_profile = profile_attr.u.str;
     active = active_profile != NULL && !strcmp(name, active_profile);
 
-    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name,
-        active_profile, active);
+    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
 
     // Build a translatable label.
     if(active) {
@@ -2100,8 +2049,7 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
     free(label);
 }
 
-void
-gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name) {
+void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name) {
     struct widget *w,*wb,*row;
     struct attr attr;
     struct vehicleprofile *profile = NULL;
@@ -2153,8 +2101,7 @@ gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, cha
     gui_internal_menu_render(this);
 }
 
-void
-gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data) {
+void gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_menu_vehicle_settings(this, wm->data, wm->text);
 }
 
@@ -2182,15 +2129,13 @@ static void gui_internal_motion(void *data, struct point *p) {
         this->motion_timeout_event=event_add_timeout(30,0, this->motion_timeout_callback);
 }
 
-void
-gui_internal_evaluate(struct gui_priv *this, const char *command) {
+void gui_internal_evaluate(struct gui_priv *this, const char *command) {
     if (command)
         command_evaluate(&this->self, command);
 }
 
 
-void
-gui_internal_enter(struct gui_priv *this, int ignore) {
+void gui_internal_enter(struct gui_priv *this, int ignore) {
     struct graphics *gra=this->gra;
     if (ignore != -1)
         this->ignore_button=ignore;
@@ -2202,13 +2147,11 @@ gui_internal_enter(struct gui_priv *this, int ignore) {
     this->root.background=this->background;
 }
 
-void
-gui_internal_leave(struct gui_priv *this) {
+void gui_internal_leave(struct gui_priv *this) {
     graphics_draw_mode(this->gra, draw_mode_end);
 }
 
-void
-gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
+void gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     struct coord c;
     struct coord_geo g;
     struct attr attr;
@@ -2229,8 +2172,7 @@ gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     }
 }
 
-static void
-gui_internal_set_position_coord(struct gui_priv *this) {
+static void gui_internal_set_position_coord(struct gui_priv *this) {
     struct transformation *trans;
     struct attr attr,attrp;
     struct coord c;
@@ -2248,14 +2190,12 @@ gui_internal_set_position_coord(struct gui_priv *this) {
     }
 }
 
-void
-gui_internal_enter_setup(struct gui_priv *this) {
+void gui_internal_enter_setup(struct gui_priv *this) {
     if (!this->mouse_button_clicked_on_map)
         gui_internal_set_position_coord(this);
 }
 
-void
-gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href) {
+void gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href) {
     dbg(lvl_debug,"enter");
     gui_internal_enter(this, ignore);
     gui_internal_enter_setup(this);
@@ -2268,8 +2208,7 @@ gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href) {
 
 
 
-static void
-gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget) {
+static void gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget) {
     if (widget->text && strlen(widget->text)) {
         if (this->position_coord_geo)
             navit_textfile_debug_log_at(this->nav, &this->vehiclep, "type=log_entry label=\"%s\"",widget->text);
@@ -2282,14 +2221,12 @@ gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget) {
     gui_internal_check_exit(this);
 }
 
-void
-gui_internal_cmd_log_clicked(struct gui_priv *this, struct widget *widget, void *data) {
+void gui_internal_cmd_log_clicked(struct gui_priv *this, struct widget *widget, void *data) {
     gui_internal_cmd_log_do(this, widget->data);
 }
 
 
-void
-gui_internal_check_exit(struct gui_priv *this) {
+void gui_internal_check_exit(struct gui_priv *this) {
     struct graphics *gra=this->gra;
     if (! this->root.children) {
         gui_internal_search_idle_end(this);
@@ -2304,8 +2241,7 @@ gui_internal_check_exit(struct gui_priv *this) {
     }
 }
 
-static int
-gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr) {
+static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_active:
         attr->u.num=this->root.children != NULL;
@@ -2339,8 +2275,7 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
     return 1;
 }
 
-static int
-gui_internal_add_attr(struct gui_priv *this, struct attr *attr) {
+static int gui_internal_add_attr(struct gui_priv *this, struct attr *attr) {
     switch (attr->type) {
     case attr_xml_text:
         g_free(this->html_text);
@@ -2351,8 +2286,7 @@ gui_internal_add_attr(struct gui_priv *this, struct attr *attr) {
     }
 }
 
-static int
-gui_internal_set_attr(struct gui_priv *this, struct attr *attr) {
+static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr) {
     switch (attr->type) {
     case attr_fullscreen:
         if ((this->fullscreen > 0) != (attr->u.num > 0)) {
@@ -2407,8 +2341,7 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p) {
  *
  * @author Martin Bruns (05/2012), mdankov
  */
-static int
-gui_internal_coordinate_parse(char *s, char plus, char minus, double *x) {
+static int gui_internal_coordinate_parse(char *s, char plus, char minus, double *x) {
     int sign=0;
     char *degree, *minute, *second;
     double tmp;
@@ -2462,8 +2395,7 @@ gui_internal_coordinate_parse(char *s, char plus, char minus, double *x) {
 //# Comment:
 //# Authors: Martin Bruns (05/2012)
 //##############################################################################################################
-static void
-gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget) {
+static void gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget) {
     char *lat, *lng;
     char *widgettext;
     double latitude, longitude;
@@ -2498,8 +2430,7 @@ gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget *widget) {
 //# Comment:
 //# Authors: Martin Bruns (05/2012)
 //##############################################################################################################
-void
-gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widget, void *data) {
+void gui_internal_cmd_enter_coord_clicked(struct gui_priv *this, struct widget *widget, void *data) {
     dbg(lvl_debug,"entered");
     gui_internal_cmd_enter_coord_do(this, widget->data);
 }
@@ -2572,8 +2503,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
     }
 }
 
-static void
-gui_internal_setup(struct gui_priv *this) {
+static void gui_internal_setup(struct gui_priv *this) {
     struct color cbh= {0x9fff,0x9fff,0x9fff,0xffff};
     struct color cf= {0xbfff,0xbfff,0xbfff,0xffff};
     struct graphics *gra=this->gra;
@@ -2640,8 +2570,7 @@ static void gui_internal_resize(void *data, int w, int h) {
     }
 }
 
-static void
-gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p) {
+static void gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p) {
     p->x=w->p.x+w->w/2;
     p->y=w->p.y+w->h/2;
     if (dx < 0)
@@ -2654,8 +2583,7 @@ gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p) {
         p->y=w->p.y+w->h;
 }
 
-static struct widget*
-gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
+static struct widget* gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
     GList *l=wi->children;
     if (wi->state & STATE_OFFSCREEN)
         return NULL;
@@ -2670,8 +2598,7 @@ gui_internal_keynav_find_next_sensitive_child(struct widget *wi) {
     return NULL;
 }
 
-static int
-gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result) {
+static int gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highlight, struct widget **result) {
     GList *l=wi->children;
     if (wi == current_highlight)
         return 1;
@@ -2698,8 +2625,7 @@ gui_internal_keynav_find_next(struct widget *wi, struct widget *current_highligh
 #define RESULT_FOUND 1
 #define NO_RESULT_YET 0
 
-static int
-gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result) {
+static int gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highlight, struct widget **result) {
     if (wi == current_highlight && *result) {
         // Reached current widget; last widget found is the result.
         return RESULT_FOUND;
@@ -2722,9 +2648,7 @@ gui_internal_keynav_find_prev(struct widget *wi, struct widget *current_highligh
     return NO_RESULT_YET;
 }
 
-static void
-gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance,
-                                 struct widget **result) {
+static void gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result) {
     GList *l=wi->children;
     // Skip hidden elements
     if (wi->p.x==0 && wi->p.y==0 && wi->w==0 && wi->h==0)
@@ -2777,8 +2701,7 @@ gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int
  * @param rotary (0/1) input from rotary encoder - dx indicates forwards/backwards movement
  *        through all widgets
  */
-static void
-gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary) {
+static void gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy, int rotary) {
     struct widget *result,*menu=g_list_last(this->root.children)->data;
     struct widget *current_highlight = NULL;
     struct point p;
@@ -2981,13 +2904,11 @@ struct gui_methods gui_internal_methods = {
 };
 
 
-static void
-gui_internal_add_callback(struct gui_priv *priv, struct callback *cb) {
+static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb) {
     callback_list_add(priv->cbl, cb);
 }
 
-static void
-gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb) {
+static void gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb) {
     callback_list_remove(priv->cbl, cb);
 }
 
@@ -3001,38 +2922,32 @@ static struct gui_internal_methods gui_internal_methods_ext = {
 };
 
 
-static enum flags
-gui_internal_get_flags(struct widget *widget) {
+static enum flags gui_internal_get_flags(struct widget *widget) {
     return widget->flags;
 }
 
-static void
-gui_internal_set_flags(struct widget *widget, enum flags flags) {
+static void gui_internal_set_flags(struct widget *widget, enum flags flags) {
     widget->flags=flags;
 }
 
-static int
-gui_internal_get_state(struct widget *widget) {
+static int gui_internal_get_state(struct widget *widget) {
     return widget->state;
 }
 
-static void
-gui_internal_set_state(struct widget *widget, int state) {
+static void gui_internal_set_state(struct widget *widget, int state) {
     widget->state=state;
 }
 
-static void
-gui_internal_set_func(struct widget *widget, void (*func)(struct gui_priv *priv, struct widget *widget, void *data)) {
+static void gui_internal_set_func(struct widget *widget, void (*func)(struct gui_priv *priv, struct widget *widget,
+                                  void *data)) {
     widget->func=func;
 }
 
-static void
-gui_internal_set_data(struct widget *widget, void *data) {
+static void gui_internal_set_data(struct widget *widget, void *data) {
     widget->data=data;
 }
 
-static void
-gui_internal_set_default_background(struct gui_priv *this, struct widget *widget) {
+static void gui_internal_set_default_background(struct gui_priv *this, struct widget *widget) {
     widget->background=this->background;
 }
 
@@ -3062,8 +2977,7 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
  * @param coord res, will become the coords of the intersection if found
  * @return : TRUE if intersection found, otherwise FALSE
  */
-int
-line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
+int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
     int n, a, b;
     int adx=a2->x-a1->x;
     int ady=a2->y-a1->y;
@@ -3122,8 +3036,7 @@ item_get_heightline(struct item *item) {
 /**
  * @brief Called when the route is updated.
  */
-void
-gui_internal_route_update(struct gui_priv * this, struct navit * navit, struct vehicle *v) {
+void gui_internal_route_update(struct gui_priv * this, struct navit * navit, struct vehicle *v) {
 
     if(this->route_data.route_showing) {
         gui_internal_populate_route_table(this,navit);
@@ -3142,8 +3055,7 @@ gui_internal_route_update(struct gui_priv * this, struct navit * navit, struct v
  * The main purpose of this function is to remove the widgets from
  * references route_data because those widgets are about to be freed.
  */
-void
-gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w) {
+void gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w) {
     if(this_) {
         this_->route_data.route_showing=0;
         this_->route_data.route_table=NULL;
@@ -3158,8 +3070,7 @@ gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w) {
  * @param this The gui context
  * @param navit The navit object
  */
-void
-gui_internal_populate_route_table(struct gui_priv * this, struct navit * navit) {
+void gui_internal_populate_route_table(struct gui_priv * this, struct navit * navit) {
     struct map * map=NULL;
     struct map_rect * mr=NULL;
     struct navigation * nav = NULL;
@@ -3244,8 +3155,7 @@ gui_internal_populate_route_table(struct gui_priv * this, struct navit * navit) 
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs,
-        struct gui *gui) {
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) {
     struct color color_white= {0xffff,0xffff,0xffff,0xffff};
     struct color color_black= {0x0,0x0,0x0,0xffff};
     struct color back2_color= {0x4141,0x4141,0x4141,0xffff};

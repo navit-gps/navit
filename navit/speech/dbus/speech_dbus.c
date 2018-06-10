@@ -31,8 +31,7 @@ struct speech_priv {
     struct navit *nav;
 };
 
-static int
-speech_dbus_say(struct speech_priv *this, const char *text) {
+static int speech_dbus_say(struct speech_priv *this, const char *text) {
     struct attr attr1,attr2,cb,*attr_list[3];
     int valid=0;
     attr1.type=attr_type;
@@ -47,8 +46,7 @@ speech_dbus_say(struct speech_priv *this, const char *text) {
     return 0;
 }
 
-static void
-speech_dbus_destroy(struct speech_priv *this) {
+static void speech_dbus_destroy(struct speech_priv *this) {
     g_free(this);
 }
 
@@ -57,8 +55,7 @@ static struct speech_methods speech_dbus_meth = {
     speech_dbus_say,
 };
 
-static struct speech_priv *
-speech_dbus_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+static struct speech_priv *speech_dbus_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this;
     if (!parent || parent->type != attr_navit)
         return NULL;
@@ -69,7 +66,6 @@ speech_dbus_new(struct speech_methods *meth, struct attr **attrs, struct attr *p
 }
 
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_speech("dbus", speech_dbus_new);
 }

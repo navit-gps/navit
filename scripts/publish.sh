@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ -z $CI ];then
     echo "This Script needs to be run by CI"

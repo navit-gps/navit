@@ -589,8 +589,7 @@ static int fullscreen(struct window *win, int on) {
 }
 
 extern void WINAPI SystemIdleTimerReset(void);
-static struct event_timeout *
-event_win32_add_timeout(int timeout, int multi, struct callback *cb);
+static struct event_timeout *event_win32_add_timeout(int timeout, int multi, struct callback *cb);
 
 static void disable_suspend(struct window *win) {
 #ifdef HAVE_API_WIN32_CE
@@ -1036,8 +1035,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 
 #include "png.h"
 
-static int
-pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img) {
+static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img) {
     png_struct    *png_ptr = NULL;
     png_info      *info_ptr = NULL;
     png_byte      buf[8];
@@ -1045,7 +1043,6 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     int           bit_depth;
     int           color_type;
-    int           alpha_present;
     int           ret;
     int           i;
     FILE *png_file;
@@ -1145,7 +1142,6 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     png_read_update_info (png_ptr, info_ptr);
 
     img->channels = 4;
-    alpha_present = 1;
 
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
@@ -1197,10 +1193,8 @@ static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, 
     HBITMAP origBmp;
     BITMAPINFO pnginfo;
     HDC dc1, dc2;
-    png_byte *origPixels;
 
     origBmp=img->hBitmap;
-    origPixels=img->png_pixels;
 
     memset(&pnginfo, 0, sizeof(pnginfo));
     pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -1233,8 +1227,7 @@ static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, 
 }
 
 
-static void
-pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0) {
+static void pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0) {
     if (gr->AlphaBlend && img->hBitmap) {
         HDC hdc;
         HBITMAP oldBitmap;
@@ -1295,8 +1288,7 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int
     }
 }
 
-static int
-xpmdecode(char *name, struct graphics_image_priv *img) {
+static int xpmdecode(char *name, struct graphics_image_priv *img) {
     img->pxpm = Xpm2bmp_new();
     if (Xpm2bmp_load( img->pxpm, name ) != 0) {
         g_free(img->pxpm);
@@ -1371,8 +1363,7 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
         pngrender(img, gr, p->x, p->y);
 }
 
-static struct graphics_priv *
-graphics_win32_new_helper(struct graphics_methods *meth);
+static struct graphics_priv *graphics_win32_new_helper(struct graphics_methods *meth);
 
 static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound) {
     dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d", gr, p->x, p->y, w, h, wraparound);
@@ -1388,8 +1379,8 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
 }
 
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound) {
     struct graphics_priv *this=graphics_win32_new_helper(meth);
     dbg(lvl_debug, "overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d", this, p->x, p->y, w, h, wraparound);
     this->width  = w;
@@ -1476,8 +1467,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 
-static struct graphics_priv *
-graphics_win32_new_helper(struct graphics_methods *meth) {
+static struct graphics_priv *graphics_win32_new_helper(struct graphics_methods *meth) {
     struct graphics_priv *this_=g_new0(struct graphics_priv,1);
     *meth=graphics_methods;
     this_->mode = -1;
@@ -1517,12 +1507,11 @@ static void bind_late(struct graphics_priv* gra_priv) {
 
 
 
-static struct graphics_priv*
-graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv* graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct attr *attr;
 
     struct graphics_priv* this_;
-    HMODULE user32;
     if (!event_request_system("win32","graphics_win32"))
         return NULL;
     this_=graphics_win32_new_helper(meth);
@@ -1554,8 +1543,7 @@ graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct att
 }
 
 
-static void
-event_win32_main_loop_run(void) {
+static void event_win32_main_loop_run(void) {
     MSG msg;
 
     dbg(lvl_debug,"enter");
@@ -1585,14 +1573,12 @@ static void event_win32_main_loop_quit(void) {
     DestroyWindow(g_hwnd);
 }
 
-static struct event_watch *
-event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
+static struct event_watch *event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug,"enter");
     return NULL;
 }
 
-static void
-event_win32_remove_watch(struct event_watch *ev) {
+static void event_win32_remove_watch(struct event_watch *ev) {
     dbg(lvl_debug,"enter");
 }
 
@@ -1632,8 +1618,7 @@ static VOID CALLBACK win32_timer_cb(HWND hwnd, UINT uMsg,
     run_timer(idEvent);
 }
 
-static struct event_timeout *
-event_win32_add_timeout(int timeout, int multi, struct callback *cb) {
+static struct event_timeout *event_win32_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout *t;
     t = g_new0(struct event_timeout, 1);
     if (!t)
@@ -1646,8 +1631,7 @@ event_win32_add_timeout(int timeout, int multi, struct callback *cb) {
     return t;
 }
 
-static void
-event_win32_remove_timeout(struct event_timeout *to) {
+static void event_win32_remove_timeout(struct event_timeout *to) {
     if (to) {
         GList *l;
         struct event_timeout *t=NULL;
@@ -1669,18 +1653,15 @@ event_win32_remove_timeout(struct event_timeout *to) {
     }
 }
 
-static struct event_idle *
-event_win32_add_idle(int priority, struct callback *cb) {
+static struct event_idle *event_win32_add_idle(int priority, struct callback *cb) {
     return (struct event_idle *)event_win32_add_timeout(1, 1, cb);
 }
 
-static void
-event_win32_remove_idle(struct event_idle *ev) {
+static void event_win32_remove_idle(struct event_idle *ev) {
     event_win32_remove_timeout((struct event_timeout *)ev);
 }
 
-static void
-event_win32_call_callback(struct callback_list *cb) {
+static void event_win32_call_callback(struct callback_list *cb) {
     PostMessage(g_hwnd, WM_USER+2, (WPARAM)cb, (LPARAM)0);
 }
 
@@ -1696,14 +1677,12 @@ static struct event_methods event_win32_methods = {
     event_win32_call_callback,
 };
 
-static struct event_priv *
-event_win32_new(struct event_methods *meth) {
+static struct event_priv *event_win32_new(struct event_methods *meth) {
     *meth=event_win32_methods;
     return NULL;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     plugin_register_category_graphics("win32", graphics_win32_new);
     plugin_register_category_event("win32", event_win32_new);
 }

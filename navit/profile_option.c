@@ -26,8 +26,7 @@ struct profile_option {
     NAVIT_OBJECT
 };
 
-static struct profile_option *
-profile_option_new(struct attr *parent, struct attr **attrs) {
+static struct profile_option *profile_option_new(struct attr *parent, struct attr **attrs) {
     struct profile_option *po=g_new0(struct profile_option, 1);
     po->func=&profile_option_func;
     navit_object_ref((struct navit_object *)po);
@@ -36,8 +35,7 @@ profile_option_new(struct attr *parent, struct attr **attrs) {
     return po;
 }
 
-static void
-profile_option_destroy(struct profile_option *po) {
+static void profile_option_destroy(struct profile_option *po) {
     attr_list_free(po->attrs);
     g_free(po);
 }

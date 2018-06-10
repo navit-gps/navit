@@ -109,8 +109,7 @@ struct graphics_image_priv {
 #endif
 };
 
-static void
-graphics_destroy(struct graphics_priv *gr) {
+static void graphics_destroy(struct graphics_priv *gr) {
     dbg(lvl_debug,"enter parent %p",gr->parent);
     gr->freetype_methods.destroy();
     if (!gr->parent) {
@@ -125,18 +124,15 @@ graphics_destroy(struct graphics_priv *gr) {
     g_free(gr);
 }
 
-static void
-gc_destroy(struct graphics_gc_priv *gc) {
+static void gc_destroy(struct graphics_gc_priv *gc) {
     g_free(gc);
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     gc->linewidth = w;
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
+static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
     int i;
     g_free(gc->dashes);
     gc->ndashes=n;
@@ -151,13 +147,11 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
     }
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->c=*c;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -187,9 +181,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot,
-          int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
     GdkPixbuf *pixbuf;
     struct graphics_image_priv *ret;
     const char *option;
@@ -263,27 +255,23 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     return ret;
 }
 
-static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
     g_object_unref(priv->pixbuf);
     g_free(priv);
 }
 
-static void
-set_drawing_color(cairo_t *cairo, struct color c) {
+static void set_drawing_color(cairo_t *cairo, struct color c) {
     double col_max = 1<<COLOR_BITDEPTH;
     cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
 }
 
-static void
-set_stroke_params_from_gc(cairo_t *cairo, struct graphics_gc_priv *gc) {
+static void set_stroke_params_from_gc(cairo_t *cairo, struct graphics_gc_priv *gc) {
     set_drawing_color(cairo, gc->c);
     cairo_set_dash(cairo, gc->dashes, gc->ndashes, gc->offset);
     cairo_set_line_width(cairo, gc->linewidth);
 }
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
     if (!count)
         return;
@@ -295,8 +283,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     cairo_stroke(gr->cairo);
 }
 
-static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
     set_drawing_color(gr->cairo, gc->c);
     cairo_move_to(gr->cairo, p[0].x, p[0].y);
@@ -306,8 +293,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
     cairo_fill(gr->cairo);
 }
 
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     cairo_save(gr->cairo);
     // Use OPERATOR_SOURCE to overwrite old contents even when drawing with transparency.
     // Necessary for OSD drawing.
@@ -318,16 +304,13 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
     cairo_restore(gr->cairo);
 }
 
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
+static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
     cairo_arc (gr->cairo,  p->x, p->y, r/2, 0.0, 2*M_PI);
     set_stroke_params_from_gc(gr->cairo, gc);
     cairo_stroke(gr->cairo);
 }
 
-static void
-draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y, int stride,
-                      unsigned char *buffer) {
+static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y, int stride, unsigned char *buffer) {
     cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
                                           buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
     cairo_set_source_surface(cairo, buffer_surface, draw_pos_x, draw_pos_y);
@@ -335,9 +318,7 @@ draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int d
     cairo_surface_destroy(buffer_surface);
 }
 
-static void
-display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
-                  struct graphics_gc_priv *bg, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p) {
     int i,x,y,stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent= {0x0,0x0,0x0,0x0};
@@ -378,9 +359,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
     }
 }
 
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
-          struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     struct font_freetype_text *t;
 
     if (! font) {
@@ -405,16 +384,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
     gr->freetype_methods.text_destroy(t);
 }
 
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
     gdk_cairo_set_source_pixbuf(gr->cairo, img->pixbuf, p->x, p->y);
     cairo_paint(gr->cairo);
 }
 
 #ifdef HAVE_IMLIB2
-static unsigned char*
-create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel,
-                                      size_t output_stride) {
+static unsigned char* create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h, size_t bytes_per_pixel, size_t output_stride) {
     int line;
     size_t input_offset, output_offset;
     unsigned char *out_buf;
@@ -432,9 +408,7 @@ create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h,
     return out_buf;
 }
 
-static void
-draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count,
-                struct graphics_image_priv *img) {
+static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img) {
     int w,h;
     DATA32 *intermediate_buffer;
     unsigned char* intermediate_buffer_aligned;
@@ -512,8 +486,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 }
 #endif
 
-static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r) {
+static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r) {
     r->x=overlay->p.x;
     r->y=overlay->p.y;
     r->width=overlay->width;
@@ -530,8 +503,7 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
         r->height += parent->height;
 }
 
-static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo) {
+static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, cairo_t *cairo) {
     GdkRectangle or, ir;
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
@@ -545,8 +517,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
     cairo_paint(cairo);
 }
 
-static void
-draw_drag(struct graphics_priv *gr, struct point *p) {
+static void draw_drag(struct graphics_priv *gr, struct point *p) {
     if (p)
         gr->p=*p;
     else {
@@ -556,13 +527,11 @@ draw_drag(struct graphics_priv *gr, struct point *p) {
 }
 
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     gr->background_gc=gc;
 }
 
-static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end) {
         // Just invalidate the whole window. We could only the invalidate the area of
         // graphics_priv, but that is probably not significantly faster.
@@ -572,8 +541,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
 
 /* Events */
 
-static gint
-configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data) {
+static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data) {
     struct graphics_priv *gra=user_data;
     if (! gra->visible)
         return TRUE;
@@ -592,8 +560,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data) {
     return TRUE;
 }
 
-static gint
-expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data) {
+static gint expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data) {
     struct graphics_priv *gra=user_data;
     struct graphics_gc_priv *background_gc=gra->background_gc;
     struct graphics_priv *overlay;
@@ -620,15 +587,13 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data) {
     return FALSE;
 }
 
-static int
-tv_delta(struct timeval *old, struct timeval *new) {
+static int tv_delta(struct timeval *old, struct timeval *new) {
     if (new->tv_sec-old->tv_sec >= INT_MAX/1000)
         return INT_MAX;
     return (new->tv_sec-old->tv_sec)*1000+(new->tv_usec-old->tv_usec)/1000;
 }
 
-static gint
-button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
+static gint button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     struct point p;
     struct timeval tv;
@@ -649,8 +614,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
     return FALSE;
 }
 
-static gint
-button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
+static gint button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     struct point p;
     struct timeval tv;
@@ -673,8 +637,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
 
 
 
-static gint
-scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data) {
+static gint scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     struct point p;
     int button;
@@ -699,8 +662,7 @@ scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data) {
     return FALSE;
 }
 
-static gint
-motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data) {
+static gint motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     struct point p;
 
@@ -717,8 +679,7 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data) {
  * * @param user_data Pointer to private data structure
  * * @returns TRUE
  * */
-static gint
-delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+static gint delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     dbg(lvl_debug,"enter this->win=%p",this->win);
     if (this->delay & 2) {
@@ -730,8 +691,7 @@ delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
     return TRUE;
 }
 
-static gint
-keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+static gint keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
     struct graphics_priv *this=user_data;
     int len,ucode;
     char key[8];
@@ -810,8 +770,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
 
 static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth);
 
-static void
-overlay_disable(struct graphics_priv *gr, int disabled) {
+static void overlay_disable(struct graphics_priv *gr, int disabled) {
     if (!gr->overlay_disabled != !disabled) {
         gr->overlay_disabled=disabled;
         if (gr->parent) {
@@ -822,8 +781,7 @@ overlay_disable(struct graphics_priv *gr, int disabled) {
     }
 }
 
-static void
-overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound) {
+static void overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound) {
     //do not dereference parent for non overlay osds
     if(!this->parent) {
         return;
@@ -873,8 +831,7 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wr
     }
 }
 
-static void
-get_data_window(struct graphics_priv *this, unsigned int xid) {
+static void get_data_window(struct graphics_priv *this, unsigned int xid) {
     if (!xid)
         this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     else
@@ -898,8 +855,7 @@ get_data_window(struct graphics_priv *this, unsigned int xid) {
     g_signal_connect(G_OBJECT(this->win), "delete_event", G_CALLBACK(delete), this);
 }
 
-static int
-set_attr(struct graphics_priv *gr, struct attr *attr) {
+static int set_attr(struct graphics_priv *gr, struct attr *attr) {
     dbg(lvl_debug,"enter");
     switch (attr->type) {
     case attr_windowid:
@@ -910,8 +866,7 @@ set_attr(struct graphics_priv *gr, struct attr *attr) {
     }
 }
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
     int w2,h2;
     struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
     this->widget=gr->widget;
@@ -954,8 +909,7 @@ static int gtk_argc;
 static char **gtk_argv= {NULL};
 
 
-static int
-graphics_gtk_drawing_area_fullscreen(struct window *w, int on) {
+static int graphics_gtk_drawing_area_fullscreen(struct window *w, int on) {
     struct graphics_priv *gr=w->priv;
     if (on)
         gtk_window_fullscreen(GTK_WINDOW(gr->win));
@@ -964,8 +918,7 @@ graphics_gtk_drawing_area_fullscreen(struct window *w, int on) {
     return 1;
 }
 
-static void
-graphics_gtk_drawing_area_disable_suspend(struct window *w) {
+static void graphics_gtk_drawing_area_disable_suspend(struct window *w) {
     struct graphics_priv *gr=w->priv;
 
 #ifndef _WIN32
@@ -977,8 +930,7 @@ graphics_gtk_drawing_area_disable_suspend(struct window *w) {
 }
 
 
-static void *
-get_data(struct graphics_priv *this, char const *type) {
+static void *get_data(struct graphics_priv *this, char const *type) {
     FILE *f;
     if (!strcmp(type,"gtk_widget"))
         return this->widget;
@@ -1043,8 +995,7 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *
-graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth) {
+static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth) {
     struct font_priv * (*font_freetype_new)(void *meth);
     font_freetype_new=plugin_get_category_font("freetype");
     if (!font_freetype_new)
@@ -1059,9 +1010,7 @@ graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth) {
     return this;
 }
 
-static struct graphics_priv *
-graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-                              struct callback_list *cbl) {
+static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     int i;
     GtkWidget *draw;
     struct attr *attr;
@@ -1109,8 +1058,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
     return this;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
     gtk_set_locale();
 #ifdef HAVE_API_WIN32

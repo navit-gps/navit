@@ -38,15 +38,13 @@
 
 static int map_id;
 
-static void
-remove_comment_line(char* line) {
+static void remove_comment_line(char* line) {
     if (line[0]==TEXTFILE_COMMENT_CHAR) {
         line='\0';
     }
 }
 
-static void
-get_line(struct map_rect_priv *mr) {
+static void get_line(struct map_rect_priv *mr) {
     if(mr->f) {
         if (!mr->m->is_pipe)
             mr->pos=ftell(mr->f);
@@ -61,8 +59,7 @@ get_line(struct map_rect_priv *mr) {
     }
 }
 
-static void
-map_destroy_textfile(struct map_priv *m) {
+static void map_destroy_textfile(struct map_priv *m) {
     g_free(m->filename);
     if(m->charset) {
         g_free(m->charset);
@@ -70,12 +67,10 @@ map_destroy_textfile(struct map_priv *m) {
     g_free(m);
 }
 
-static void
-textfile_coord_rewind(void *priv_data) {
+static void textfile_coord_rewind(void *priv_data) {
 }
 
-static int
-parse_line(struct map_rect_priv *mr, int attr) {
+static int parse_line(struct map_rect_priv *mr, int attr) {
     int pos;
 
     pos=coord_parse(mr->line, projection_mg, &mr->c);
@@ -85,8 +80,7 @@ parse_line(struct map_rect_priv *mr, int attr) {
     return pos;
 }
 
-static int
-textfile_coord_get(void *priv_data, struct coord *c, int count) {
+static int textfile_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     int ret=0;
     dbg(lvl_warning,"enter, count: %d",count);
@@ -109,23 +103,20 @@ textfile_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static void
-textfile_attr_rewind(void *priv_data) {
+static void textfile_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     mr->attr_pos=0;
     mr->attr_last=attr_none;
 }
 
-static void
-textfile_encode_attr(char *attr_val, enum attr_type attr_type, struct attr *attr) {
+static void textfile_encode_attr(char *attr_val, enum attr_type attr_type, struct attr *attr) {
     if (attr_type >= attr_type_int_begin && attr_type <= attr_type_int_end)
         attr->u.num=atoi(attr_val);
     else
         attr->u.str=attr_val;
 }
 
-static int
-textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     char *str=NULL;
     dbg(lvl_debug,"mr=%p attrs='%s' ", mr, mr->attrs);
@@ -163,8 +154,7 @@ static struct item_methods methods_textfile = {
     textfile_attr_get,
 };
 
-static struct map_rect_priv *
-map_rect_new_textfile(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_rect_new_textfile(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr;
 
     dbg(lvl_debug,"enter");
@@ -217,8 +207,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel) {
 }
 
 
-static void
-map_rect_destroy_textfile(struct map_rect_priv *mr) {
+static void map_rect_destroy_textfile(struct map_rect_priv *mr) {
     if (mr->f) {
         if (mr->m->is_pipe) {
 #ifdef HAVE_POPEN
@@ -231,8 +220,7 @@ map_rect_destroy_textfile(struct map_rect_priv *mr) {
     g_free(mr);
 }
 
-static struct item *
-map_rect_get_item_textfile(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_textfile(struct map_rect_priv *mr) {
     char *p,type[TEXTFILE_LINE_SIZE];
     dbg(lvl_debug,"map_rect_get_item_textfile id_hi=%d line=%s", mr->item.id_hi, mr->line);
     if (!mr->f) {
@@ -310,8 +298,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr) {
     }
 }
 
-static struct item *
-map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo) {
     if (mr->m->is_pipe) {
 #ifndef _MSC_VER
         pclose(mr->f);
@@ -336,8 +323,7 @@ static struct map_methods map_methods_textfile = {
     map_rect_get_item_byid_textfile,
 };
 
-static struct map_priv *
-map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
     struct attr *data=attr_search(attrs, NULL, attr_data);
     struct attr *charset=attr_search(attrs, NULL, attr_charset);
@@ -377,8 +363,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"textfile: plugin_init");
     plugin_register_category_map("textfile", map_new_textfile);
 }

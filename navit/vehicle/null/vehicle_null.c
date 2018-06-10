@@ -64,8 +64,7 @@ struct vehicle_priv {
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_null_destroy(struct vehicle_priv *priv) {
+static void vehicle_null_destroy(struct vehicle_priv *priv) {
     dbg(lvl_debug,"enter");
     g_free(priv);
 }
@@ -78,9 +77,8 @@ vehicle_null_destroy(struct vehicle_priv *priv) {
  * @param attr
  * @returns true/false
  */
-static int
-vehicle_null_position_attr_get(struct vehicle_priv *priv,
-                               enum attr_type type, struct attr *attr) {
+static int vehicle_null_position_attr_get(struct vehicle_priv *priv,
+        enum attr_type type, struct attr *attr) {
     dbg(lvl_debug,"enter %s",attr_to_name(type));
     switch (type) {
     case attr_position_height:
@@ -111,8 +109,7 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
     return 1;
 }
 
-static int
-vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr) {
+static int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     switch (attr->type) {
     case attr_position_speed:
         priv->speed=*attr->u.numd;
@@ -146,10 +143,9 @@ struct vehicle_methods vehicle_null_methods = {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv *
-vehicle_null_new_null(struct vehicle_methods *meth,
-                      struct callback_list *cbl,
-                      struct attr **attrs) {
+static struct vehicle_priv *vehicle_null_new_null(struct vehicle_methods *meth,
+        struct callback_list *cbl,
+        struct attr **attrs) {
     struct vehicle_priv *ret;
 
     dbg(lvl_debug, "enter");
@@ -165,8 +161,7 @@ vehicle_null_new_null(struct vehicle_methods *meth,
  *
  * @returns nothing
  */
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("null", vehicle_null_new_null);
 }

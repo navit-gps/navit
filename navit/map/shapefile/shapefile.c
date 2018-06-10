@@ -73,21 +73,18 @@ struct map_rect_priv {
     struct attr *attr;
 };
 
-static void
-map_destroy_shapefile(struct map_priv *m) {
+static void map_destroy_shapefile(struct map_priv *m) {
     dbg(lvl_debug,"map_destroy_shapefile");
     g_free(m);
 }
 
-static void
-shapefile_coord_rewind(void *priv_data) {
+static void shapefile_coord_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     mr->cidx=mr->cidx_rewind;
     mr->part=mr->part_rewind;
 }
 
-static void
-shapefile_coord(struct map_rect_priv *mr, int idx, struct coord *c) {
+static void shapefile_coord(struct map_rect_priv *mr, int idx, struct coord *c) {
     SHPObject *psShape=mr->psShape;
     struct coord cs;
     struct coord_geo g;
@@ -103,8 +100,7 @@ shapefile_coord(struct map_rect_priv *mr, int idx, struct coord *c) {
     }
 }
 
-static int
-shapefile_coord_get(void *priv_data, struct coord *c, int count) {
+static int shapefile_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *mr=priv_data;
     int ret=0;
     int idx;
@@ -134,8 +130,7 @@ shapefile_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static void
-shapefile_attr_rewind(void *priv_data) {
+static void shapefile_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr=priv_data;
     mr->aidx=0;
     mr->attr_pos=0;
@@ -165,8 +160,7 @@ struct longest_match {
     int longest_match_list_count;
 };
 
-static void
-longest_match_add_match(struct longest_match *lm, struct longest_match_list_item *lmi, char *match) {
+static void longest_match_add_match(struct longest_match *lm, struct longest_match_list_item *lmi, char *match) {
     int idx;
     if (!(idx=(int)(long)g_hash_table_lookup(lm->match_hash, match))) {
         idx=lm->match_present_count++;
@@ -177,8 +171,7 @@ longest_match_add_match(struct longest_match *lm, struct longest_match_list_item
     lmi->match_idx[lmi->match_idx_count++]=idx;
 }
 
-static void
-longest_match_item_destroy(struct longest_match_list_item *lmi, long flags) {
+static void longest_match_item_destroy(struct longest_match_list_item *lmi, long flags) {
     if (!lmi)
         return;
     if (flags & 2) {
@@ -188,8 +181,7 @@ longest_match_item_destroy(struct longest_match_list_item *lmi, long flags) {
     g_free(lmi);
 }
 
-static struct longest_match_list_item *
-longest_match_item_new(struct longest_match_list *lml, void *data) {
+static struct longest_match_list_item *longest_match_item_new(struct longest_match_list *lml, void *data) {
     struct longest_match_list_item *ret=g_new0(struct longest_match_list_item,1);
     lml->longest_match_list_items=g_list_append(lml->longest_match_list_items, ret);
     ret->data=data;
@@ -197,15 +189,13 @@ longest_match_item_new(struct longest_match_list *lml, void *data) {
     return ret;
 }
 
-static struct longest_match_list *
-longest_match_list_new(struct longest_match *lm) {
+static struct longest_match_list *longest_match_list_new(struct longest_match *lm) {
     struct longest_match_list *ret=g_new0(struct longest_match_list,1);
     lm->longest_match_lists=g_list_append(lm->longest_match_lists, ret);
     return ret;
 }
 
-static void
-longest_match_list_destroy(struct longest_match_list *lml, long flags) {
+static void longest_match_list_destroy(struct longest_match_list *lml, long flags) {
     if (!lml)
         return;
     if (flags & 1) {
@@ -215,8 +205,7 @@ longest_match_list_destroy(struct longest_match_list *lml, long flags) {
     g_free(lml);
 }
 
-static struct longest_match_list *
-longest_match_get_list(struct longest_match *lm, int list) {
+static struct longest_match_list *longest_match_get_list(struct longest_match *lm, int list) {
     GList *l=lm->longest_match_lists;
     while (l && list > 0) {
         l=g_list_next(l);
@@ -227,16 +216,14 @@ longest_match_get_list(struct longest_match *lm, int list) {
     return NULL;
 }
 
-static struct longest_match *
-longest_match_new(void) {
+static struct longest_match *longest_match_new(void) {
     struct longest_match *ret=g_new0(struct longest_match,1);
     ret->match_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     ret->match_present_count=1;
     return ret;
 }
 
-static void
-longest_match_destroy(struct longest_match *lm, long flags) {
+static void longest_match_destroy(struct longest_match *lm, long flags) {
     if (!lm)
         return;
     if (flags & 1) {
@@ -248,14 +235,12 @@ longest_match_destroy(struct longest_match *lm, long flags) {
     g_free(lm);
 }
 
-static void
-longest_match_clear(struct longest_match *lm) {
+static void longest_match_clear(struct longest_match *lm) {
     if (lm->match_present)
         memset(lm->match_present, 0, lm->match_present_count);
 }
 
-static void
-longest_match_add_key_value(struct longest_match *lm, char *k, char *v) {
+static void longest_match_add_key_value(struct longest_match *lm, char *k, char *v) {
     char* buffer=g_alloca(strlen(k)+strlen(v)+2);
     int idx;
 
@@ -276,8 +261,8 @@ longest_match_add_key_value(struct longest_match *lm, char *k, char *v) {
         lm->match_present[idx]=4;
 }
 
-static int
-longest_match_list_find(struct longest_match *lm, struct longest_match_list *lml, void **list, int max_list_len) {
+static int longest_match_list_find(struct longest_match *lm, struct longest_match_list *lml, void **list,
+                                   int max_list_len) {
     int j,longest=0,ret=0,sum,val;
     struct longest_match_list_item *curr;
     GList *l=lml->longest_match_list_items;
@@ -307,8 +292,7 @@ longest_match_list_find(struct longest_match *lm, struct longest_match_list *lml
 }
 
 
-static void
-build_match(struct longest_match *lm, struct longest_match_list *lml, char *line) {
+static void build_match(struct longest_match *lm, struct longest_match_list *lml, char *line) {
     struct longest_match_list_item *lmli;
     char *kvl=NULL,*i=NULL,*p,*kv;
     dbg(lvl_debug,"line=%s",line);
@@ -326,8 +310,7 @@ build_match(struct longest_match *lm, struct longest_match_list *lml, char *line
     }
 }
 
-static void
-build_matches(struct map_priv *m,char *matches) {
+static void build_matches(struct map_priv *m,char *matches) {
     char *matches2=g_strdup(matches);
     char *l=matches2,*p;
     struct longest_match_list *lml;
@@ -345,8 +328,7 @@ build_matches(struct map_priv *m,char *matches) {
     g_free(matches2);
 }
 
-static void
-process_fields(struct map_priv *m, int id) {
+static void process_fields(struct map_priv *m, int id) {
     int i;
     char szTitle[12],*str;
     int nWidth, nDecimals;
@@ -373,8 +355,7 @@ process_fields(struct map_priv *m, int id) {
     }
 }
 
-static int
-attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *attr) {
+static int attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *attr) {
     char name[1024];
     char value[1024];
     char szTitle[12];
@@ -416,8 +397,7 @@ attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *at
     return 0;
 }
 
-static int
-shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *mr=priv_data;
     struct map_priv *m=mr->m;
     char szTitle[12],*pszTypeName, *str;
@@ -479,8 +459,7 @@ static struct item_methods methods_shapefile = {
     shapefile_attr_get,
 };
 
-static struct map_rect_priv *
-map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel) {
+static struct map_rect_priv *map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel) {
     struct map_rect_priv *mr;
     char *dbfmapfile=g_strdup_printf("%s.dbfmap", map->filename);
     void *data;
@@ -530,8 +509,7 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel) {
 }
 
 
-static void
-map_rect_destroy_shapefile(struct map_rect_priv *mr) {
+static void map_rect_destroy_shapefile(struct map_rect_priv *mr) {
     if (mr->psShape)
         SHPDestroyObject(mr->psShape);
     attr_free(mr->attr);
@@ -539,8 +517,7 @@ map_rect_destroy_shapefile(struct map_rect_priv *mr) {
     g_free(mr);
 }
 
-static struct item *
-map_rect_get_item_shapefile(struct map_rect_priv *mr) {
+static struct item *map_rect_get_item_shapefile(struct map_rect_priv *mr) {
     struct map_priv *m=mr->m;
     void *lines[5];
     struct longest_match_list *lml;
@@ -590,8 +567,7 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr) {
     return &mr->item;
 }
 
-static struct item *
-map_rect_get_item_byid_shapefile(struct map_rect_priv *mr, int id_hi, int id_lo) {
+static struct item *map_rect_get_item_byid_shapefile(struct map_rect_priv *mr, int id_hi, int id_lo) {
     mr->idx=id_hi;
     while (id_lo--) {
         if (!map_rect_get_item_shapefile(mr))
@@ -610,8 +586,7 @@ static struct map_methods map_methods_shapefile = {
     map_rect_get_item_byid_shapefile,
 };
 
-static struct map_priv *
-map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
     struct attr *data=attr_search(attrs, NULL, attr_data);
     struct attr *charset=attr_search(attrs, NULL, attr_charset);
@@ -652,8 +627,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback
     return m;
 }
 
-void
-plugin_init(void) {
+void plugin_init(void) {
     dbg(lvl_debug,"shapefile: plugin_init");
     plugin_register_category_map("shapefile", map_new_shapefile);
 }

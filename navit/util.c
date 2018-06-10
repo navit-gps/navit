@@ -38,22 +38,19 @@ typedef int ssize_t ;
 #include "debug.h"
 #include "config.h"
 
-void
-strtoupper(char *dest, const char *src) {
+void strtoupper(char *dest, const char *src) {
     while (*src)
         *dest++=toupper(*src++);
     *dest='\0';
 }
 
-void
-strtolower(char *dest, const char *src) {
+void strtolower(char *dest, const char *src) {
     while (*src)
         *dest++=tolower(*src++);
     *dest='\0';
 }
 
-int
-navit_utf8_strcasecmp(const char *s1, const char *s2) {
+int navit_utf8_strcasecmp(const char *s1, const char *s2) {
     char *s1_folded,*s2_folded;
     int cmpres;
     s1_folded=g_utf8_casefold(s1,-1);
@@ -258,36 +255,31 @@ int compare_name_systematic(const char *s1, const char *s2) {
     return ret;
 }
 
-static void
-hash_callback(gpointer key, gpointer value, gpointer user_data) {
+static void hash_callback(gpointer key, gpointer value, gpointer user_data) {
     GList **l=user_data;
     *l=g_list_prepend(*l, value);
 }
 
-GList *
-g_hash_to_list(GHashTable *h) {
+GList *g_hash_to_list(GHashTable *h) {
     GList *ret=NULL;
     g_hash_table_foreach(h, hash_callback, &ret);
 
     return ret;
 }
 
-static void
-hash_callback_key(gpointer key, gpointer value, gpointer user_data) {
+static void hash_callback_key(gpointer key, gpointer value, gpointer user_data) {
     GList **l=user_data;
     *l=g_list_prepend(*l, key);
 }
 
-GList *
-g_hash_to_list_keys(GHashTable *h) {
+GList *g_hash_to_list_keys(GHashTable *h) {
     GList *ret=NULL;
     g_hash_table_foreach(h, hash_callback_key, &ret);
 
     return ret;
 }
 
-gchar *
-g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
+gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
     gchar *str,*ret;
     va_list ap;
 
@@ -304,8 +296,7 @@ g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
 
 #ifndef HAVE_GLIB
 int g_utf8_strlen_force_link(gchar *buffer, int max);
-int
-g_utf8_strlen_force_link(gchar *buffer, int max) {
+int g_utf8_strlen_force_link(gchar *buffer, int max) {
     return g_utf8_strlen(buffer, max);
 }
 #endif
@@ -375,8 +366,7 @@ char *stristr(const char *String, const char *Pattern) {
  *
  * @return Number of characters read (not including the null terminator), or -1 on error or EOF.
 */
-ssize_t
-getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
+ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
     int result;
     size_t cur_len = 0;
 
@@ -443,8 +433,7 @@ unlock_return:
 #endif
 
 #ifndef HAVE_GETLINE
-ssize_t
-getline (char **lineptr, size_t *n, FILE *stream) {
+ssize_t getline (char **lineptr, size_t *n, FILE *stream) {
     return getdelim (lineptr, n, '\n', stream);
 }
 #endif
@@ -484,8 +473,7 @@ int gettimeofday(struct timeval *time, void *local) {
  *
  * @return The number of seconds elapsed since January 1, 1970, 00:00:00 UTC.
  */
-unsigned int
-iso8601_to_secs(char *iso8601) {
+unsigned int iso8601_to_secs(char *iso8601) {
     int a,b,d,val[6],i=0;
     char *start=iso8601,*pos=iso8601;
     while (*pos && i < 6) {
@@ -644,8 +632,7 @@ char * time_to_iso8601(time_t time) {
  *
  * @return Time in ISO 8601 format
  */
-char *
-current_to_iso8601(void) {
+char *current_to_iso8601(void) {
 #ifdef HAVE_API_WIN32_BASE
     char *timep=NULL;
     SYSTEMTIME ST;
@@ -676,8 +663,7 @@ struct spawn_process_info {
  * @param in arg string to escape
  * @returns escaped string
  */
-char *
-shell_escape(char *arg) {
+char *shell_escape(char *arg) {
     char *r;
     int arglen=strlen(arg);
     int i,j,rlen;
@@ -749,8 +735,7 @@ shell_escape(char *arg) {
 }
 
 #ifndef _POSIX_C_SOURCE
-static char*
-spawn_process_compose_cmdline(char **argv) {
+static char* spawn_process_compose_cmdline(char **argv) {
     int i,j;
     char *cmdline=shell_escape(argv[0]);
     for(i=1,j=strlen(cmdline); argv[i]; i++) {
@@ -1007,8 +992,7 @@ void spawn_process_init() {
  * @param angle The angle to convert
  * @param mode The conversion mode, see description
  */
-void
-get_compass_direction(char *buffer, int angle, int mode) {
+void get_compass_direction(char *buffer, int angle, int mode) {
     angle=angle%360;
     switch (mode) {
     case 0:

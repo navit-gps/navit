@@ -121,8 +121,7 @@ struct tracking {
 
 
 
-static void
-tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
+static void tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
     cdf->extrapolating = 0;
     cdf->available = 0;
     cdf->poscount = 0;
@@ -145,9 +144,8 @@ tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
 #define CDF_MINDIST 49 // 7 meters, I guess this value has to be changed for pedestrians.
 
 #if 0
-static void
-tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *pout, int dirin, int *dirout,
-                     int cur_speed, time_t fixtime) {
+static void tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *pout, int dirin, int *dirout,
+                                 int cur_speed, time_t fixtime) {
     struct cdf_speed *speed,*sc,*sl;
     double speed_avg;
     int speed_num,i;
@@ -298,8 +296,7 @@ tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *po
 }
 #endif
 
-int
-tracking_get_angle(struct tracking *tr) {
+int tracking_get_angle(struct tracking *tr) {
     return tr->curr_angle;
 }
 
@@ -308,13 +305,11 @@ tracking_get_pos(struct tracking *tr) {
     return &tr->curr_out;
 }
 
-int
-tracking_get_street_direction(struct tracking *tr) {
+int tracking_get_street_direction(struct tracking *tr) {
     return tr->street_direction;
 }
 
-int
-tracking_get_segment_pos(struct tracking *tr) {
+int tracking_get_segment_pos(struct tracking *tr) {
     return tr->pos;
 }
 
@@ -325,8 +320,7 @@ tracking_get_street_data(struct tracking *tr) {
     return NULL;
 }
 
-int
-tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr, struct attr_iter *attr_iter) {
+int tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr, struct attr_iter *attr_iter) {
     struct item *item;
     struct map_rect *mr;
     struct tracking_line *tl;
@@ -400,23 +394,20 @@ tracking_get_current_item(struct tracking *_this) {
     return &_this->curr_line->street->item;
 }
 
-int *
-tracking_get_current_flags(struct tracking *_this) {
+int *tracking_get_current_flags(struct tracking *_this) {
     if (! _this->curr_line || ! _this->curr_line->street)
         return NULL;
     return &_this->curr_line->street->flags;
 }
 
-static void
-tracking_get_angles(struct tracking_line *tl) {
+static void tracking_get_angles(struct tracking_line *tl) {
     int i;
     struct street_data *sd=tl->street;
     for (i = 0 ; i < sd->count-1 ; i++)
         tl->angle[i]=transform_get_angle_delta(&sd->c[i], &sd->c[i+1], 0);
 }
 
-static int
-street_data_within_selection(struct street_data *sd, struct map_selection *sel) {
+static int street_data_within_selection(struct street_data *sd, struct map_selection *sel) {
     struct coord_rect r;
     struct map_selection *curr;
     int i;
@@ -447,8 +438,7 @@ street_data_within_selection(struct street_data *sd, struct map_selection *sel) 
 }
 
 
-static void
-tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection pro) {
+static void tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection pro) {
     int max_dist=1000;
     struct map_selection *sel;
     struct mapset_handle *h;
@@ -494,8 +484,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection p
 }
 
 
-void
-tracking_flush(struct tracking *tr) {
+void tracking_flush(struct tracking *tr) {
     struct tracking_line *tl=tr->lines,*next;
     dbg(lvl_debug,"enter(tr=%p)", tr);
 
@@ -509,8 +498,7 @@ tracking_flush(struct tracking *tr) {
     tr->curr_line = NULL;
 }
 
-static int
-tracking_angle_diff(int a1, int a2, int full) {
+static int tracking_angle_diff(int a1, int a2, int full) {
     int ret=(a1-a2)%full;
     if (ret > full/2)
         ret-=full;
@@ -519,16 +507,14 @@ tracking_angle_diff(int a1, int a2, int full) {
     return ret;
 }
 
-static int
-tracking_angle_abs_diff(int a1, int a2, int full) {
+static int tracking_angle_abs_diff(int a1, int a2, int full) {
     int ret=tracking_angle_diff(a1, a2, full);
     if (ret < 0)
         ret=-ret;
     return ret;
 }
 
-static int
-tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, int flags) {
+static int tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, int flags) {
     int full=180,ret=360,fwd=0,rev=0;
     struct vehicleprofile *profile=tr->vehicleprofile;
 
@@ -547,8 +533,7 @@ tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, i
     return ret*ret;
 }
 
-static int
-tracking_is_connected(struct tracking *tr, struct coord *c1, struct coord *c2) {
+static int tracking_is_connected(struct tracking *tr, struct coord *c1, struct coord *c2) {
     if (c1[0].x == c2[0].x && c1[0].y == c2[0].y)
         return 0;
     if (c1[0].x == c2[1].x && c1[0].y == c2[1].y)
@@ -560,15 +545,13 @@ tracking_is_connected(struct tracking *tr, struct coord *c1, struct coord *c2) {
     return tr->connected_pref;
 }
 
-static int
-tracking_is_no_stop(struct tracking *tr, struct coord *c1, struct coord *c2) {
+static int tracking_is_no_stop(struct tracking *tr, struct coord *c1, struct coord *c2) {
     if (c1->x == c2->x && c1->y == c2->y)
         return tr->nostop_pref;
     return 0;
 }
 
-static int
-tracking_is_on_route(struct tracking *tr, struct route *rt, struct item *item) {
+static int tracking_is_on_route(struct tracking *tr, struct route *rt, struct item *item) {
 #ifdef USE_ROUTING
     if (! rt)
         return 0;
@@ -580,8 +563,8 @@ tracking_is_on_route(struct tracking *tr, struct route *rt, struct item *item) {
 #endif
 }
 
-static int
-tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct coord *lpnt, int min, int flags) {
+static int tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct coord *lpnt, int min,
+                          int flags) {
     int value=0;
     struct street_data *sd=t->street;
     dbg(lvl_info, "%d: (0x%x,0x%x)-(0x%x,0x%x)", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x,
@@ -629,8 +612,8 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
  * @param vehicleprofile The vehicle profile to use
  * @param pro The projection to use for transformations
  */
-void
-tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro) {
+void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile,
+                     enum projection pro) {
     struct tracking_line *t;
     int i,value,min,time;
     struct coord lpnt;
@@ -784,8 +767,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
     callback_list_call_attr_0(tr->callback_list, attr_position_coord_geo);
 }
 
-static int
-tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial) {
+static int tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial) {
     switch (attr->type) {
     case attr_angle_pref:
         tr->angle_pref=attr->u.num;
@@ -816,13 +798,11 @@ tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial) {
     }
 }
 
-int
-tracking_set_attr(struct tracking *tr, struct attr *attr) {
+int tracking_set_attr(struct tracking *tr, struct attr *attr) {
     return tracking_set_attr_do(tr, attr, 0);
 }
 
-int
-tracking_add_attr(struct tracking *this_, struct attr *attr) {
+int tracking_add_attr(struct tracking *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_callback:
         callback_list_add(this_->callback_list, attr->u.callback);
@@ -832,8 +812,7 @@ tracking_add_attr(struct tracking *this_, struct attr *attr) {
     }
 }
 
-int
-tracking_remove_attr(struct tracking *this_, struct attr *attr) {
+int tracking_remove_attr(struct tracking *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_callback:
         callback_list_remove(this_->callback_list, attr->u.callback);
@@ -887,18 +866,15 @@ tracking_new(struct attr *parent, struct attr **attrs) {
     return this;
 }
 
-void
-tracking_set_mapset(struct tracking *this, struct mapset *ms) {
+void tracking_set_mapset(struct tracking *this, struct mapset *ms) {
     this->ms=ms;
 }
 
-void
-tracking_set_route(struct tracking *this, struct route *rt) {
+void tracking_set_route(struct tracking *this, struct route *rt) {
     this->rt=rt;
 }
 
-void
-tracking_destroy(struct tracking *tr) {
+void tracking_destroy(struct tracking *tr) {
     if (tr->attr)
         attr_free(tr->attr);
     tracking_flush(tr);
@@ -945,14 +921,12 @@ struct map_rect_priv {
     char *str;
 };
 
-static void
-tracking_map_item_coord_rewind(void *priv_data) {
+static void tracking_map_item_coord_rewind(void *priv_data) {
     struct map_rect_priv *this=priv_data;
     this->ccount=0;
 }
 
-static int
-tracking_map_item_coord_get(void *priv_data, struct coord *c, int count) {
+static int tracking_map_item_coord_get(void *priv_data, struct coord *c, int count) {
     struct map_rect_priv *this=priv_data;
     enum projection pro;
     int ret=0;
@@ -974,15 +948,13 @@ tracking_map_item_coord_get(void *priv_data, struct coord *c, int count) {
     return ret;
 }
 
-static void
-tracking_map_item_attr_rewind(void *priv_data) {
+static void tracking_map_item_attr_rewind(void *priv_data) {
     struct map_rect_priv *this_=priv_data;
     this_->debug_idx=0;
     this_->attr_next=attr_debug;
 }
 
-static int
-tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
+static int tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct map_rect_priv *this_=priv_data;
     struct coord lpnt,*c;
     struct tracking *tr=this_->tracking;
@@ -1070,13 +1042,11 @@ static struct item_methods tracking_map_item_methods = {
 };
 
 
-static void
-tracking_map_destroy(struct map_priv *priv) {
+static void tracking_map_destroy(struct map_priv *priv) {
     g_free(priv);
 }
 
-static void
-tracking_map_rect_init(struct map_rect_priv *priv) {
+static void tracking_map_rect_init(struct map_rect_priv *priv) {
     priv->next=priv->tracking->lines;
     priv->curr=NULL;
     priv->coord=0;
@@ -1084,8 +1054,7 @@ tracking_map_rect_init(struct map_rect_priv *priv) {
     priv->item.id_hi=0;
 }
 
-static struct map_rect_priv *
-tracking_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
+static struct map_rect_priv *tracking_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct tracking *tracking=priv->tracking;
     struct map_rect_priv *ret=g_new0(struct map_rect_priv, 1);
     ret->tracking=tracking;
@@ -1096,13 +1065,11 @@ tracking_map_rect_new(struct map_priv *priv, struct map_selection *sel) {
     return ret;
 }
 
-static void
-tracking_map_rect_destroy(struct map_rect_priv *priv) {
+static void tracking_map_rect_destroy(struct map_rect_priv *priv) {
     g_free(priv);
 }
 
-static struct item *
-tracking_map_get_item(struct map_rect_priv *priv) {
+static struct item *tracking_map_get_item(struct map_rect_priv *priv) {
     struct item *ret=&priv->item;
     int value;
     struct coord lpnt;
@@ -1148,8 +1115,7 @@ tracking_map_get_item(struct map_rect_priv *priv) {
     return ret;
 }
 
-static struct item *
-tracking_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo) {
+static struct item *tracking_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo) {
     struct item *ret;
     tracking_map_rect_init(priv);
     while ((ret=tracking_map_get_item(priv))) {
@@ -1172,8 +1138,7 @@ static struct map_methods tracking_map_meth = {
     NULL,
 };
 
-static struct map_priv *
-tracking_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct map_priv *tracking_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret;
     struct attr *tracking_attr;
 
@@ -1188,7 +1153,6 @@ tracking_map_new(struct map_methods *meth, struct attr **attrs, struct callback_
 }
 
 
-void
-tracking_init(void) {
+void tracking_init(void) {
     plugin_register_category_map("tracking", tracking_map_new);
 }

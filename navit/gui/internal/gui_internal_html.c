@@ -40,8 +40,7 @@ struct html_tag_map {
 };
 
 
-static const char *
-find_attr(const char **names, const char **values, const char *name) {
+static const char *find_attr(const char **names, const char **values, const char *name) {
     while (*names) {
         if (!g_ascii_strcasecmp(*names, name))
             return *values;
@@ -51,24 +50,20 @@ find_attr(const char **names, const char **values, const char *name) {
     return NULL;
 }
 
-static char *
-find_attr_dup(const char **names, const char **values, const char *name) {
+static char *find_attr_dup(const char **names, const char **values, const char *name) {
     return g_strdup(find_attr(names, values, name));
 }
 
-void
-gui_internal_html_main_menu(struct gui_priv *this) {
+void gui_internal_html_main_menu(struct gui_priv *this) {
     gui_internal_prune_menu(this, NULL);
     gui_internal_html_load_href(this, "#Main Menu", 0);
 }
 
-static void
-gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data) {
+static void gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data) {
     gui_internal_evaluate(this,w->command);
 }
 
-static void
-gui_internal_html_submit_set(struct gui_priv *this, struct widget *w, struct form *form) {
+static void gui_internal_html_submit_set(struct gui_priv *this, struct widget *w, struct form *form) {
     GList *l;
     if (w->form == form && w->name) {
         struct attr *attr=attr_new_from_text(w->name, w->text?w->text:"");
@@ -85,8 +80,7 @@ gui_internal_html_submit_set(struct gui_priv *this, struct widget *w, struct for
 
 }
 
-static void
-gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data) {
+static void gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data) {
     struct widget *menu;
     GList *l;
 
@@ -101,8 +95,7 @@ gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data) {
     gui_internal_evaluate(this,w->form->onsubmit);
 }
 
-void
-gui_internal_html_load_href(struct gui_priv *this, char *href, int replace) {
+void gui_internal_html_load_href(struct gui_priv *this, char *href, int replace) {
     if (replace)
         gui_internal_prune_menu_count(this, 1, 0);
     if (href && href[0] == '#') {
@@ -113,8 +106,7 @@ gui_internal_html_load_href(struct gui_priv *this, char *href, int replace) {
     }
 }
 
-void
-gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data) {
+void gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data) {
     gui_internal_html_load_href(this, w->command, 0);
 }
 
@@ -146,8 +138,7 @@ struct div_flags_map {
     {"orientation","horizontal_vertical",orientation_horizontal_vertical},
 };
 
-static enum flags
-div_flag(const char **names, const char **values, char *name) {
+static enum flags div_flag(const char **names, const char **values, char *name) {
     int i;
     enum flags ret=0;
     const char *value=find_attr(names, values, name);
@@ -160,8 +151,7 @@ div_flag(const char **names, const char **values, char *name) {
     return ret;
 }
 
-static enum flags
-div_flags(const char **names, const char **values) {
+static enum flags div_flags(const char **names, const char **values) {
     enum flags flags;
     flags = div_flag(names, values, "gravity");
     flags |= div_flag(names, values, "orientation");
@@ -170,8 +160,7 @@ div_flags(const char **names, const char **values) {
     return flags;
 }
 
-static struct widget *
-html_image(struct gui_priv *this, const char **names, const char **values) {
+static struct widget *html_image(struct gui_priv *this, const char **names, const char **values) {
     const char *src, *size;
     struct graphics_image *img=NULL;
 
@@ -197,9 +186,9 @@ html_image(struct gui_priv *this, const char **names, const char **values) {
     return gui_internal_image_new(this, img);
 }
 
-static void
-gui_internal_html_start(xml_context *dummy, const char *tag_name, const char **names, const char **values, void *data,
-                        GError **error) {
+static void gui_internal_html_start(xml_context *dummy, const char *tag_name, const char **names, const char **values,
+                                    void *data,
+                                    GError **error) {
     struct gui_priv *this=data;
     int i;
     enum html_tag tag=html_tag_none;
@@ -298,8 +287,7 @@ gui_internal_html_start(xml_context *dummy, const char *tag_name, const char **n
     this->html_depth++;
 }
 
-static void
-gui_internal_html_end(xml_context *dummy, const char *tag_name, void *data, GError **error) {
+static void gui_internal_html_end(xml_context *dummy, const char *tag_name, void *data, GError **error) {
     struct gui_priv *this=data;
     struct html *html;
     struct html *parent=NULL;
@@ -351,8 +339,7 @@ gui_internal_html_end(xml_context *dummy, const char *tag_name, void *data, GErr
     g_free(html->refresh_cond);
 }
 
-static void
-gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *menu_data) {
+static void gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *menu_data) {
     if (gui_internal_menu_data(this) == menu_data) {
         char *href=g_strdup(menu_data->href);
         gui_internal_html_load_href(this, href, 1);
@@ -360,8 +347,7 @@ gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *me
     }
 }
 
-static void
-gui_internal_set_refresh_callback(struct gui_priv *this, char *cond) {
+static void gui_internal_set_refresh_callback(struct gui_priv *this, char *cond) {
     dbg(lvl_info,"cond=%s",cond);
     if (cond) {
         enum attr_type type;
@@ -387,8 +373,7 @@ gui_internal_set_refresh_callback(struct gui_priv *this, char *cond) {
     }
 }
 
-static void
-gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *data, GError **error) {
+static void gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *data, GError **error) {
     struct gui_priv *this=data;
     struct widget *w;
     int depth=this->html_depth-1;
@@ -459,8 +444,7 @@ gui_internal_html_text(xml_context *dummy, const char *text, gsize len, void *da
     g_free(text_stripped);
 }
 
-void
-gui_internal_html_parse_text(struct gui_priv *this, char *doc) {
+void gui_internal_html_parse_text(struct gui_priv *this, char *doc) {
     int res;
 
     res = xml_parse_text(doc, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
@@ -471,8 +455,7 @@ gui_internal_html_parse_text(struct gui_priv *this, char *doc) {
     }
 }
 
-void
-gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor) {
+void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor) {
     char *doc=g_strdup(document);
     graphics_draw_mode(this->gra, draw_mode_begin);
     this->html_container=NULL;

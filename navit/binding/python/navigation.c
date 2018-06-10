@@ -25,8 +25,7 @@ typedef struct {
     struct navigation *navigation;
 } navigationObject;
 
-static PyObject *
-navigation_get_map_py(navigationObject *self, PyObject *args) {
+static PyObject *navigation_get_map_py(navigationObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     return map_py_ref(navigation_get_map(self->navigation));
@@ -40,13 +39,11 @@ static PyMethodDef navigation_methods[] = {
 };
 
 
-static PyObject *
-navigation_getattr_py(PyObject *self, char *name) {
+static PyObject *navigation_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(navigation_methods, self, name);
 }
 
-static void
-navigation_destroy_py(navigationObject *self) {
+static void navigation_destroy_py(navigationObject *self) {
 }
 
 PyTypeObject navigation_Type = {
@@ -57,16 +54,14 @@ PyTypeObject navigation_Type = {
     .tp_getattr=navigation_getattr_py,
 };
 
-PyObject *
-navigation_py(PyObject *self, PyObject *args) {
+PyObject *navigation_py(PyObject *self, PyObject *args) {
     navigationObject *ret;
 
     ret=PyObject_NEW(navigationObject, &navigation_Type);
     return (PyObject *)ret;
 }
 
-PyObject *
-navigation_py_ref(struct navigation *navigation) {
+PyObject *navigation_py_ref(struct navigation *navigation) {
     navigationObject *ret;
 
     ret=PyObject_NEW(navigationObject, &navigation_Type);

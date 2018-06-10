@@ -48,21 +48,18 @@ struct attr_iter {
     void *iter;
 };
 
-void
-config_destroy(struct config *this_) {
+void config_destroy(struct config *this_) {
     attr_list_free(this_->attrs);
     g_free(config);
     exit(0);
 }
 
-static void
-config_terminate(int sig) {
+static void config_terminate(int sig) {
     dbg(lvl_debug,"terminating");
     config_destroy(config);
 }
 
-static void
-config_new_int(void) {
+static void config_new_int(void) {
     config=g_new0(struct config, 1);
 #ifndef HAVE_API_WIN32_CE
     signal(SIGTERM, config_terminate);
@@ -76,13 +73,11 @@ config_new_int(void) {
 #endif
 }
 
-int
-config_get_attr(struct config *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int config_get_attr(struct config *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
-static int
-config_set_attr_int(struct config *this_, struct attr *attr) {
+static int config_set_attr_int(struct config *this_, struct attr *attr) {
     switch (attr->type) {
     case attr_language:
         setenv("LANG",attr->u.str,1);
@@ -94,16 +89,14 @@ config_set_attr_int(struct config *this_, struct attr *attr) {
     }
 }
 
-int
-config_set_attr(struct config *this_, struct attr *attr) {
+int config_set_attr(struct config *this_, struct attr *attr) {
     if (config_set_attr_int(this_, attr))
         return navit_object_set_attr((struct navit_object *)this_, attr);
     else
         return 0;
 }
 
-int
-config_add_attr(struct config *this_, struct attr *attr) {
+int config_add_attr(struct config *this_, struct attr *attr) {
     if (!config) {
         config_new_int();
         this_=config;
@@ -111,8 +104,7 @@ config_add_attr(struct config *this_, struct attr *attr) {
     return navit_object_add_attr((struct navit_object *)this_, attr);
 }
 
-int
-config_remove_attr(struct config *this_, struct attr *attr) {
+int config_remove_attr(struct config *this_, struct attr *attr) {
     return navit_object_remove_attr((struct navit_object *)this_, attr);
 }
 
@@ -121,8 +113,7 @@ config_attr_iter_new() {
     return navit_object_attr_iter_new();
 }
 
-void
-config_attr_iter_destroy(struct attr_iter *iter) {
+void config_attr_iter_destroy(struct attr_iter *iter) {
     navit_object_attr_iter_destroy(iter);
 }
 

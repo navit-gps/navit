@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 sudo apt-get install xdotool
 # Use xinput test 4 when running x11vnc on the circleci server to find mouse coordinates
@@ -11,7 +11,7 @@ LOGS_DIR=$CIRCLE_ARTIFACTS/logs_${1}
 event=0
 
 send_event (){
-    file=`printf "%05d\n" $event`
+    file=$(printf "%05d\n" $event)
 
     import -window root $FRAME_DIR/tmp.png
     if [[ "$1" == "mousemove" ]]; then
@@ -82,7 +82,7 @@ send_event key KP_Enter # Validate
 # Send 'Berk'
 
 # capture 5 seconds of usage
-for i in `seq 99994 99999`; do
+for i in $(seq 99994 99999); do
 	import -window root $FRAME_DIR/${i}.png
 	sleep 1
 done

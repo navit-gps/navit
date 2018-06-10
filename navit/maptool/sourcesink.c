@@ -38,25 +38,21 @@ item_bin_sink_func_new(int (*func)(struct item_bin_sink_func *func, struct item_
     return ret;
 }
 
-void
-item_bin_sink_func_destroy(struct item_bin_sink_func *func) {
+void item_bin_sink_func_destroy(struct item_bin_sink_func *func) {
     g_free(func);
 }
 
-void
-item_bin_sink_add_func(struct item_bin_sink *sink, struct item_bin_sink_func *func) {
+void item_bin_sink_add_func(struct item_bin_sink *sink, struct item_bin_sink_func *func) {
     sink->sink_funcs=g_list_append(sink->sink_funcs, func);
 }
 
-void
-item_bin_sink_destroy(struct item_bin_sink *sink) {
+void item_bin_sink_destroy(struct item_bin_sink *sink) {
     /* g_list_foreach(sink->sink_funcs, (GFunc)g_free, NULL); */
     g_list_free(sink->sink_funcs);
     g_free(sink);
 }
 
-int
-item_bin_write_to_sink(struct item_bin *ib, struct item_bin_sink *sink, struct tile_data *tile_data) {
+int item_bin_write_to_sink(struct item_bin *ib, struct item_bin_sink *sink, struct tile_data *tile_data) {
     GList *list=sink->sink_funcs;
     int ret=0;
     while (list) {
@@ -82,8 +78,7 @@ file_reader_new(FILE *in, int limit, int offset) {
     return ret;
 }
 
-int
-file_reader_finish(struct item_bin_sink *sink) {
+int file_reader_finish(struct item_bin_sink *sink) {
     struct item_bin *ib;
     int ret =0;
     FILE *in=sink->priv_data[0];
@@ -104,8 +99,7 @@ file_reader_finish(struct item_bin_sink *sink) {
     return 0;
 }
 
-int
-file_writer_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data) {
+int file_writer_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data) {
     FILE *out=func->priv_data[0];
     item_bin_write(ib, out);
     return 0;
@@ -121,15 +115,14 @@ file_writer_new(FILE *out) {
     return file_writer;
 }
 
-int
-file_writer_finish(struct item_bin_sink_func *file_writer) {
+int file_writer_finish(struct item_bin_sink_func *file_writer) {
     item_bin_sink_func_destroy(file_writer);
     return 0;
 }
 
 
-int
-tile_collector_process(struct item_bin_sink_func *tile_collector, struct item_bin *ib, struct tile_data *tile_data) {
+int tile_collector_process(struct item_bin_sink_func *tile_collector, struct item_bin *ib,
+                           struct tile_data *tile_data) {
     int *buffer,*buffer2;
     int len=ib->len+1;
     GHashTable *hash=tile_collector->priv_data[0];

@@ -67,8 +67,7 @@ coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
 }
 
 
-void
-coord_destroy(struct coord *c) {
+void coord_destroy(struct coord *c) {
     g_free(c);
 }
 
@@ -86,13 +85,11 @@ coord_rect_new(struct coord *lu, struct coord *rl) {
 
 }
 
-void
-coord_rect_destroy(struct coord_rect *r) {
+void coord_rect_destroy(struct coord_rect *r) {
     g_free(r);
 }
 
-int
-coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2) {
+int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2) {
     dbg_assert(r1->lu.x <= r1->rl.x);
     dbg_assert(r1->lu.y >= r1->rl.y);
     dbg_assert(r2->lu.x <= r2->rl.x);
@@ -110,8 +107,7 @@ coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2) {
     return 1;
 }
 
-int
-coord_rect_contains(struct coord_rect *r, struct coord *c) {
+int coord_rect_contains(struct coord_rect *r, struct coord *c) {
     dbg_assert(r->lu.x <= r->rl.x);
     dbg_assert(r->lu.y >= r->rl.y);
     if (c->x < r->lu.x)
@@ -125,8 +121,7 @@ coord_rect_contains(struct coord_rect *r, struct coord *c) {
     return 1;
 }
 
-void
-coord_rect_extend(struct coord_rect *r, struct coord *c) {
+void coord_rect_extend(struct coord_rect *r, struct coord *c) {
     if (c->x < r->lu.x)
         r->lu.x=c->x;
     if (c->x > r->rl.x)
@@ -153,8 +148,7 @@ coord_rect_extend(struct coord_rect *r, struct coord *c) {
  * @returns The lenght of the parsed string
  */
 
-int
-coord_parse(const char *coord_input, enum projection output_projection, struct coord *result) {
+int coord_parse(const char *coord_input, enum projection output_projection, struct coord *result) {
     char *proj=NULL,*s,*co;
     const char *str=coord_input;
     int args,ret = 0;
@@ -265,8 +259,7 @@ out:
  * For parameters see coord_parse.
  */
 
-int
-pcoord_parse(const char *c_str, enum projection pro, struct pcoord *pc_ret) {
+int pcoord_parse(const char *c_str, enum projection pro, struct pcoord *pc_ret) {
     struct coord c;
     int ret;
     ret = coord_parse(c_str, pro, &c);
@@ -276,8 +269,7 @@ pcoord_parse(const char *c_str, enum projection pro, struct pcoord *pc_ret) {
     return ret;
 }
 
-void
-coord_print(enum projection pro, struct coord *c, FILE *out) {
+void coord_print(enum projection pro, struct coord *c, FILE *out) {
     unsigned int x;
     unsigned int y;
     char *sign_x = "";
@@ -372,14 +364,12 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
 
 }
 
-unsigned int
-coord_hash(const void *key) {
+unsigned int coord_hash(const void *key) {
     const struct coord *c=key;
     return c->x^c->y;
 }
 
-int
-coord_equal(const void *a, const void *b) {
+int coord_equal(const void *a, const void *b) {
     const struct coord *c_a=a;
     const struct coord *c_b=b;
     if (c_a->x == c_b->x && c_a->y == c_b->y)

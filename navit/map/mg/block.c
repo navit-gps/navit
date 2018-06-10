@@ -62,16 +62,14 @@ static inline struct block_index_item * block_index_get_list(struct block_index 
     return (struct block_index_item *)(blk->p+12);
 }
 
-static struct block *
-block_get(unsigned char **p) {
+static struct block *block_get(unsigned char **p) {
     struct block *ret=(struct block *)(*p);
     *p += sizeof(*ret);
     return ret;
 }
 
 
-static struct block *
-block_get_byid(struct file *file, int id, unsigned char **p_ret) {
+static struct block *block_get_byid(struct file *file, int id, unsigned char **p_ret) {
     struct block_index *blk_idx;
     int blk_num,max;
 
@@ -89,8 +87,7 @@ block_get_byid(struct file *file, int id, unsigned char **p_ret) {
     return block_get(p_ret);
 }
 
-int
-block_get_byindex(struct file *file, int idx, struct block_priv *blk) {
+int block_get_byindex(struct file *file, int idx, struct block_priv *blk) {
     dbg(lvl_debug,"idx=%d", idx);
     blk->b=block_get_byid(file, idx, &blk->p);
     blk->block_start=(unsigned char *)(blk->b);
@@ -100,8 +97,7 @@ block_get_byindex(struct file *file, int idx, struct block_priv *blk) {
     return 1;
 }
 
-static void
-block_setup_tags(struct map_rect_priv *mr) {
+static void block_setup_tags(struct map_rect_priv *mr) {
     int len;
     unsigned char *p,*t;
     char *str;
@@ -143,22 +139,19 @@ block_setup_tags(struct map_rect_priv *mr) {
 }
 
 #if 0
-static void
-block_rect_print(struct coord_rect *r) {
+static void block_rect_print(struct coord_rect *r) {
     printf ("0x%x,0x%x-0x%x,0x%x (0x%x,0x%x)", r->lu.x, r->lu.y, r->rl.x, r->rl.y, r->lu.x/2+r->rl.x/2,r->lu.y/2+r->rl.y/2);
 }
 #endif
 
-static void
-block_rect_same(struct coord_rect *r1, struct coord_rect *r2) {
+static void block_rect_same(struct coord_rect *r1, struct coord_rect *r2) {
     dbg_assert(r1->lu.x==r2->lu.x);
     dbg_assert(r1->lu.y==r2->lu.y);
     dbg_assert(r1->rl.x==r2->rl.x);
     dbg_assert(r1->rl.y==r2->rl.y);
 }
 
-int
-block_init(struct map_rect_priv *mr) {
+int block_init(struct map_rect_priv *mr) {
     mr->b.block_num=-1;
     mr->b.bt.b=NULL;
     mr->b.bt.next=0;
@@ -174,8 +167,7 @@ block_init(struct map_rect_priv *mr) {
 }
 
 
-int
-block_next_lin(struct map_rect_priv *mr) {
+int block_next_lin(struct map_rect_priv *mr) {
     struct coord_rect r;
     for (;;) {
         block_lin_count++;
@@ -208,8 +200,7 @@ block_next_lin(struct map_rect_priv *mr) {
     }
 }
 
-int
-block_next(struct map_rect_priv *mr) {
+int block_next(struct map_rect_priv *mr) {
     int blk_num,coord,r_h,r_w;
     struct block_bt_priv *bt=&mr->b.bt;
     struct coord_rect r;
