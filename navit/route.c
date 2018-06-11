@@ -1910,6 +1910,7 @@ static int route_through_traffic_allowed(struct vehicleprofile *profile, struct 
  * checks are done on `from->seg` (the next segment to follow after `over`):
  * \li If `from->seg` equals `over` (indicating that, after traversing `over` in direction `dir`, we would immediately
  * traverse it again in the opposite direction), `INT_MAX` is returned.
+ * \li If `over` loops back to itself (i.e. its `start` and `end` members are equal), `INT_MAX` is returned.
  * \li Otherwise, if `over` does not allow through traffic but `from->seg` does, the through traffic penalty of the
  * vehicle profile (`profile`) is applied.
  *
@@ -1932,6 +1933,8 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
         dbg(lvl_warning, "dir is zero, assuming positive");
         dir = 1;
     }
+    if (from && (over->start == over->end))
+        return INT_MAX;
     if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
         return INT_MAX;
     if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
@@ -2095,12 +2098,12 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
 
         /* in any case, update rhs of predecessors (nodes from which we can reach p_min via a single segment) */
         for (s = p_min->start; s; s = s->start_next)
-            if ((s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
+            if ((s->start == s->end) || (s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
             else if (route_value_seg(profile, NULL, s, -2) != INT_MAX)
                 route_graph_point_update(profile, s->end, heap);
         for (s = p_min->end; s; s = s->end_next)
-            if ((s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
+            if ((s->start == s->end) || (s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
             else if (route_value_seg(profile, NULL, s, 2) != INT_MAX)
                 route_graph_point_update(profile, s->start, heap);
