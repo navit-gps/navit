@@ -2333,6 +2333,7 @@ static void route_graph_add_turn_restriction(struct route_graph *this, struct it
     int i,count;
     struct route_graph_segment_data data;
 
+    item_coord_rewind(item);
     count=item_coord_get(item, c, 5);
     if (count != 3 && count != 4) {
         dbg(lvl_debug,"wrong count %d",count);
@@ -2392,6 +2393,7 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
         return;
     }
 
+    item_coord_rewind(item);
     if (item_coord_get(item, &l, 1)) {
         int default_flags_value=AF_ALL;
         int *default_flags=item_get_default_flags(item->type);

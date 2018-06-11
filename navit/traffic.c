@@ -1473,6 +1473,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                 continue;
             if (item_get_default_flags(item->type)) {
 
+                item_coord_rewind(item);
                 if (item_coord_get(item, &l, 1)) {
                     data.score = traffic_location_match_attributes(this_, item);
                     data.flags=0;
