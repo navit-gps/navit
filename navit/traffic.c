@@ -157,6 +157,7 @@ struct item_priv {
     struct attr **next_attr;    /**< The next attribute of `item` to be returned by the `item_attr_get` method */
     unsigned int
     next_coord;    /**< The index of the next coordinate of `item` to be returned by the `item_coord_get` method */
+    struct route *rt;           /**< The route to which the item has been added */
 };
 
 /**
@@ -482,6 +483,9 @@ static struct item * tm_item_ref(struct item * item) {
  * been referenced since its creation) is equivalent to dropping the last reference, i.e. it will destroy
  * the item.
  *
+ * When the last reference is removed (or an item with a zero reference count is unreferenced) and the item’s `rt`
+ * member is set (indicating the route to which the item was added), the item is removed from that route.
+ *
  * If the unreference operation is successful, this function returns `NULL`. This allows one-line
  * operations such as:
  *
@@ -493,14 +497,18 @@ static struct item * tm_item_ref(struct item * item) {
  * `priv_data` member is `NULL`.
  */
 static struct item * tm_item_unref(struct item * item) {
+    struct item_priv * priv_data;
     struct map_rect * mr;
     struct item * mapitem;
     if (!item)
         return item;
     if (!item->priv_data)
         return item;
-    ((struct item_priv *) item->priv_data)->refcount--;
-    if (((struct item_priv *) item->priv_data)->refcount <= 0) {
+    priv_data = (struct item_priv *) item->priv_data;
+    priv_data->refcount--;
+    if (priv_data->refcount <= 0) {
+        if (priv_data->rt)
+            route_remove_traffic_distortion(priv_data->rt, item);
         mr = map_rect_new(item->map, NULL);
         do {
             mapitem = map_rect_get_item(mr);
@@ -601,7 +609,9 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
 
     if (has_changes) {
         // TODO add (rather than change) if we’re creating a new item
-        route_change_traffic_distortion(route, item);
+        if (!priv_data->rt)
+            priv_data->rt = route;
+        route_change_traffic_distortion(priv_data->rt, item);
     }
 }
 
