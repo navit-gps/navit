@@ -359,7 +359,7 @@ msgstr "Make a U-turn %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "follow"
 
@@ -1682,8 +1682,8 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Shopping"
 
-msgid "Distance from screen center (km)"
-msgstr "Distance from screen centre (km)"
+msgid "Select a search radius from screen center"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
@@ -1708,7 +1708,7 @@ msgid "Select a category"
 msgstr "Select a category"
 
 msgid "Select a distance to look for (km)"
-msgstr "Select a distance to look for (km)"
+msgstr "Select a search radius from screen center"
 
 msgid "Select a POI"
 msgstr "Select a POI"
@@ -1722,8 +1722,9 @@ msgstr "Category"
 msgid "Direction"
 msgstr "Direction"
 
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
 msgid "Distance(m)"
-msgstr "Distance(m)"
+msgstr "Distance"
 
 msgid "Name"
 msgstr "Name"
@@ -1941,10 +1942,10 @@ msgstr "Waypoints"
 msgid "Enter Coordinates"
 msgstr "Enter Coordinates"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

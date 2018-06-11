@@ -12,7 +12,7 @@ FIND_PATH(DBusGLib_INCLUDE_DIR dbus/dbus-glib.h
 )
 
 FIND_LIBRARY(DBusGLib_LIBRARY
-   NAMES 
+   NAMES
       dbus-glib-1
    PATHS
       ${DBUS_GLIB_PKGCONFIG_LIBRARY_DIRS}

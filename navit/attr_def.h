@@ -19,7 +19,7 @@
 
 /** @file attr_def.h
  * @brief Attribute definitions.
- * 
+ *
  * Any attribute used by a Navit object must be defined in this file.
  *
  * @author Navit Team
@@ -433,6 +433,8 @@ ATTR(text_color)
 ATTR(idle_color)
 ATTR(background_color2)
 ATTR(text_background)
+ATTR(destination_dir_color)
+ATTR(north_color)
 ATTR2(0x0007ffff,type_color_end)
 ATTR2(0x00080000,type_object_begin)
 ATTR(navit)

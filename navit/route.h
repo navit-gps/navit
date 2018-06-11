@@ -18,7 +18,7 @@
  */
 
 /** @file
- * 
+ *
  * @brief Contains exported code for route.c
  *
  * This file contains code that works together with route.c and that is exported to

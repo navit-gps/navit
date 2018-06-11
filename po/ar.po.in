@@ -1,9 +1,10 @@
 # Arabic translations for navit
-# Copyright (C) 2006-2016 The Navit Team
+# Copyright (C) 2006-2018 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
 # Magd Addin M. Almuntaser https://launchpad.net/~ttmtt-team
+# abed alkareem alnatsheh https://launchpad.net/~abedalkareem
 # dargirov https://launchpad.net/~dargirov
 # drsaudi https://launchpad.net/~mon7b6
 # metehyi https://launchpad.net/~metehyi
@@ -12,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:57+0000\n"
-"Last-Translator: dargirov <dargirov@mail.ru>\n"
+"PO-Revision-Date: 2018-02-05 13:00+0000\n"
+"Last-Translator: abed alkareem alnatsheh <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +94,7 @@ msgstr "بعد %d.%d أميال"
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] "مايل واحد"
+msgstr[0] "ميل واحد"
 msgstr[1] "%d أميال"
 msgstr[2] "%d أميال"
 msgstr[3] "%d أميال"
@@ -103,7 +104,7 @@ msgstr[5] "%d أميال"
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] "بعد مايل واحد"
+msgstr[0] "بعد ميل واحد"
 msgstr[1] "بعد %d أميال"
 msgstr[2] "بعد %d أميال"
 msgstr[3] "بعد %d أميال"
@@ -129,12 +130,12 @@ msgstr "بعد %d%d كلم"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "كلم واحد"
-msgstr[1] "%d كلم"
-msgstr[2] "%d كلم"
-msgstr[3] "%d كلم"
-msgstr[4] "%d كلم"
-msgstr[5] "%d كلم"
+msgstr[0] "كيلومتر واحد"
+msgstr[1] "%d كيلومتر"
+msgstr[2] "%d كيلومتر"
+msgstr[3] "%d كيلومتر"
+msgstr[4] "%d كيلومتر"
+msgstr[5] "%d كيلومتر"
 
 #, c-format
 msgid "in one kilometer"
@@ -173,7 +174,7 @@ msgstr ""
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "على الطريق السريع المنحدر"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -201,12 +202,12 @@ msgid "%sinto the %s"
 msgstr "%s إلى داخل %s"
 
 msgid "When possible, please turn around"
-msgstr "حيث ممكن الرجاء اللف"
+msgstr "عند الإمكانية , انعطف رجاء"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
 msgid "towards %s"
-msgstr "تجاه %s"
+msgstr "إتجاه %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -218,10 +219,10 @@ msgstr "قريباً الدخول إلى المستديرة"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
+msgstr "ادخل الدائرة بعد  %s"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "بعدها ادخل الدائرة"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -235,12 +236,12 @@ msgid "now"
 msgstr "الآن"
 
 msgid "then"
-msgstr ""
+msgstr "ثم"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "ثم اندمج %1$s|يمينا"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -258,10 +259,10 @@ msgid "Merge %1$s%2$s|left"
 msgstr ""
 
 msgid "on your left"
-msgstr ""
+msgstr "على يسارك"
 
 msgid "on your right"
-msgstr ""
+msgstr "على يمينك"
 
 #. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
 #, c-format
@@ -275,10 +276,10 @@ msgstr ""
 
 #. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
-msgstr ""
+msgstr "عند التبادل"
 
 msgid "at exit"
-msgstr ""
+msgstr "عند المخرج"
 
 #. TRANSLATORS: the arg. is where to do the maneuver
 #, c-format
@@ -345,7 +346,7 @@ msgstr "حوّل %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "ثم انعطف يوترن يسارا"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
@@ -354,7 +355,7 @@ msgstr ""
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "ثم انعطف يوترن يمينا"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
@@ -372,9 +373,9 @@ msgstr ""
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
-msgstr ""
+msgstr "اتبع"
 
 msgid "then you have reached your destination."
 msgstr "و بعدها تكون قد وصلت إلى هدفك"
@@ -401,8 +402,14 @@ msgstr "الأمر"
 msgid "Length"
 msgstr "الطول"
 
+msgid "mi"
+msgstr "ميل"
+
 msgid "km"
 msgstr "كلم"
+
+msgid "feet"
+msgstr "قدم"
 
 msgid "m"
 msgstr "م."
@@ -1616,6 +1623,9 @@ msgstr ""
 msgid "_Lock on Road"
 msgstr "إقفال على الطريق"
 
+msgid "_Follow Vehicle"
+msgstr ""
+
 msgid "_Keep orientation to the North"
 msgstr "_حافظ على الإتجاه شمالا"
 
@@ -1685,7 +1695,7 @@ msgstr ""
 msgid "Shopping"
 msgstr ""
 
-msgid "Distance from screen center (km)"
+msgid "Select a search radius from screen center"
 msgstr ""
 
 #, c-format
@@ -1772,8 +1782,8 @@ msgid "OT"
 msgstr "OT"
 
 #, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Route %4.0fكلم    %02d:%02d ETA"
+msgid "Route %4.1f%s    %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "الطريك 0000كلم  0+00:00 ETA"
@@ -1944,10 +1954,10 @@ msgstr "نقاط المراحل"
 msgid "Enter Coordinates"
 msgstr "أدخل الإحداثيات"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
@@ -1995,6 +2005,9 @@ msgstr "وصف الطريق"
 msgid "Show Locale"
 msgstr "أعرض المحليات"
 
+msgid "Network info"
+msgstr ""
+
 msgid "Former Destinations"
 msgstr "الأهداف السابقة"
 
@@ -2033,442 +2046,8 @@ msgstr "إنتبه ! آلة تصوير"
 msgid "Please decrease your speed"
 msgstr "ألرجاء خفض سرعتك"
 
-msgid "partial match"
-msgstr "تطابق جزئي"
-
-#. Android resource: @strings/address_search_button
-msgid "Search"
-msgstr "إبحث"
-
-#. Android resource: @strings/address_search_towns
-msgid "Towns"
-msgstr "البلدات"
-
-msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
-
-msgid ""
-"Current map location %s is not available\n"
-"Please restart Navit after you attach an SD card or select a different map "
-"location."
-msgstr ""
-
-msgid "Downloaded maps"
-msgstr "الخرائط المنزلة"
-
-msgid ""
-"Sorry, we currently do not support maps above 3.8G on Android, please select "
-"a smaller one."
-msgstr ""
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "الطريق إلى هنا"
-
-msgid "Cancel"
-msgstr "إلغاء"
-
 msgid "filenamePath"
 msgstr ""
-
-msgid ""
-"New location set to %s\n"
-"Restart Navit to apply the changes."
-msgstr ""
-
-msgid "Whole Planet"
-msgstr "كامل القرة الأرضية"
-
-msgid "Africa"
-msgstr "إفريقيا"
-
-msgid "Canary Islands"
-msgstr "جزر الكناري"
-
-msgid "Asia"
-msgstr "آسيا"
-
-msgid "Korea"
-msgstr "كوريا"
-
-msgid "Taiwan"
-msgstr "تايوان"
-
-msgid "UAE+Other"
-msgstr "الإمارت العرية المتحدة و أخرى"
-
-msgid "Oceania"
-msgstr "أوقيانيا"
-
-msgid "Tasmania"
-msgstr "تسمانيا"
-
-msgid "Victoria"
-msgstr "فيكتوريا"
-
-msgid "New South Wales"
-msgstr "نيو ساوث ويلز"
-
-msgid "Europe"
-msgstr "أوروبا"
-
-msgid "Western Europe"
-msgstr "أوروبا الغربية"
-
-msgid "Azores"
-msgstr "جزر الأزور"
-
-msgid "BeNeLux"
-msgstr "بلجيكا هولاندة اللكسمبرغ"
-
-msgid "Alsace"
-msgstr "الألزاس"
-
-msgid "Aquitaine"
-msgstr ""
-
-msgid "Auvergne"
-msgstr ""
-
-msgid "Basse-Normandie"
-msgstr ""
-
-msgid "Bourgogne"
-msgstr ""
-
-msgid "Bretagne"
-msgstr ""
-
-msgid "Centre"
-msgstr "الوسط"
-
-msgid "Champagne-Ardenne"
-msgstr ""
-
-msgid "Corse"
-msgstr "كورسيكا"
-
-msgid "Franche-Comte"
-msgstr ""
-
-msgid "Haute-Normandie"
-msgstr ""
-
-msgid "Ile-de-France"
-msgstr "عاصمة فرنسا و ضواحيها"
-
-msgid "Languedoc-Roussillon"
-msgstr ""
-
-msgid "Limousin"
-msgstr ""
-
-msgid "Lorraine"
-msgstr ""
-
-msgid "Midi-Pyrenees"
-msgstr ""
-
-msgid "Nord-pas-de-Calais"
-msgstr ""
-
-msgid "Pays-de-la-Loire"
-msgstr ""
-
-msgid "Picardie"
-msgstr "بيكاردي"
-
-msgid "Poitou-Charentes"
-msgstr "بواتو شارانت"
-
-msgid "Provence-Alpes-Cote-d-Azur"
-msgstr ""
-
-msgid "Rhone-Alpes"
-msgstr "رون-جبال الألب"
-
-msgid "Baden-Wuerttemberg"
-msgstr "بادن فورتمبيرغ"
-
-msgid "Bayern"
-msgstr "بافاريا"
-
-msgid "Mittelfranken"
-msgstr "فرانكن الوسطى"
-
-msgid "Niederbayern"
-msgstr "بافاريا السفلى"
-
-msgid "Oberbayern"
-msgstr "بافاريا العليا"
-
-msgid "Oberfranken"
-msgstr "فرانكن العليا"
-
-msgid "Oberpfalz"
-msgstr "بفالز العليا"
-
-msgid "Schwaben"
-msgstr "شفابن"
-
-msgid "Unterfranken"
-msgstr "فرانكن السفلى"
-
-msgid "Berlin"
-msgstr "برلين"
-
-msgid "Brandenburg"
-msgstr "براندنبورغ"
-
-msgid "Bremen"
-msgstr "بريمن"
-
-msgid "Hamburg"
-msgstr "هامبرغ"
-
-msgid "Hessen"
-msgstr "هسن"
-
-msgid "Mecklenburg-Vorpommern"
-msgstr "مكليمبورغ-فوربومرن"
-
-msgid "Niedersachsen"
-msgstr "نيدرزاكسن"
-
-msgid "Nordrhein-westfalen"
-msgstr "نوردراين-فيستفالن"
-
-msgid "Rheinland-Pfalz"
-msgstr "راينلاند-بفالز"
-
-msgid "Saarland"
-msgstr "زارلاند"
-
-msgid "Sachsen-Anhalt"
-msgstr "زاكسن-أنهلت"
-
-msgid "Sachsen"
-msgstr "ساكسونيا"
-
-msgid "Schleswig-Holstein"
-msgstr "شليسفيغ - هولشتاين"
-
-msgid "Thueringen"
-msgstr "تورينغن"
-
-msgid "Mallorca"
-msgstr "مايوركا"
-
-msgid "Galicia"
-msgstr "غاليسيا"
-
-msgid "Scandinavia"
-msgstr "سكندينافيا"
-
-msgid "England"
-msgstr "بريطانيا"
-
-msgid "Buckinghamshire"
-msgstr "باكينجهامشير"
-
-msgid "Cambridgeshire"
-msgstr "كامبريدجشاير"
-
-msgid "Cumbria"
-msgstr "كمبريا"
-
-msgid "East yorkshire with hull"
-msgstr ""
-
-msgid "Essex"
-msgstr ""
-
-msgid "Herefordshire"
-msgstr "هيريفوردشاير"
-
-msgid "Kent"
-msgstr "كنت"
-
-msgid "Lancashire"
-msgstr "لانكشاير"
-
-msgid "Leicestershire"
-msgstr "لايسسترشاير"
-
-msgid "Norfolk"
-msgstr "نورفولك"
-
-msgid "Nottinghamshire"
-msgstr "نوتينغمشاير"
-
-msgid "Oxfordshire"
-msgstr "أوكسفوردشاير"
-
-msgid "Shropshire"
-msgstr "شروبشاير"
-
-msgid "Somerset"
-msgstr "سومرست"
-
-msgid "South yorkshire"
-msgstr "يوركشاير الجنوبية"
-
-msgid "Suffolk"
-msgstr "سوفولك"
-
-msgid "Surrey"
-msgstr "سورّي"
-
-msgid "Wiltshire"
-msgstr "ويلتشايرر"
-
-msgid "Scotland"
-msgstr "أسكتلندا"
-
-msgid "Wales"
-msgstr "ويلز"
-
-msgid "Crete"
-msgstr "كريتا"
-
-msgid "North America"
-msgstr "أمريكا الشمالية"
-
-msgid "Alaska"
-msgstr "ألاسكا"
-
-msgid "Hawaii"
-msgstr "هاواي"
-
-msgid "USA"
-msgstr "الوﻻيات المتحدة الامريكية"
-
-msgid " (except Alaska and Hawaii)"
-msgstr " (بدون ألاسكا و هاواي)"
-
-msgid "Midwest"
-msgstr "وسط الغرب"
-
-msgid "Michigan"
-msgstr "ميشيغان"
-
-msgid "Ohio"
-msgstr "أوهايو"
-
-msgid "Northeast"
-msgstr "الشمال الشرقي"
-
-msgid "Massachusetts"
-msgstr "ماساتشوستس"
-
-msgid "Vermont"
-msgstr "فيرمونت"
-
-msgid "Pacific"
-msgstr "المحيط الهادئ"
-
-msgid "South"
-msgstr "الجنوب"
-
-msgid "Arkansas"
-msgstr "أركنساس"
-
-msgid "District of Columbia"
-msgstr "مقاطعة كولومبيا"
-
-msgid "Florida"
-msgstr "فلوريدا"
-
-msgid "Louisiana"
-msgstr "لويزيانا"
-
-msgid "Maryland"
-msgstr "ميريلاند"
-
-msgid "Mississippi"
-msgstr "ميسيسيبي"
-
-msgid "Oklahoma"
-msgstr "أوكلاهوما"
-
-msgid "Texas"
-msgstr "تكساس"
-
-msgid "Virginia"
-msgstr "فرجينيا"
-
-msgid "West Virginia"
-msgstr "غرب فيرجينيا"
-
-msgid "West"
-msgstr "الغرب"
-
-msgid "Arizona"
-msgstr "أريزونا"
-
-msgid "California"
-msgstr "كاليفورنيا"
-
-msgid "Colorado"
-msgstr "كولورادو"
-
-msgid "Idaho"
-msgstr "إداهو"
-
-msgid "Montana"
-msgstr "مونتانا"
-
-msgid "New Mexico"
-msgstr "نيو مكسيكو"
-
-msgid "Nevada"
-msgstr "نيفادا"
-
-msgid "Oregon"
-msgstr "أوريغون"
-
-msgid "Utah"
-msgstr "يوتاه"
-
-msgid "Washington State"
-msgstr "ولاية واشنطن"
-
-msgid "South+Middle America"
-msgstr "جنوب و وسط امريكا"
-
-msgid "Guyane Francaise"
-msgstr "غويانا الفرنسية"
-
-msgid "downloading"
-msgstr "يُنزّل"
-
-#. Android resource: @strings/map_download_ready
-msgid "ready"
-msgstr "جاهز"
-
-msgid "Media selected for map storage is not available"
-msgstr ""
-
-#. Android resource: @strings/map_download_not_enough_free_space
-msgid "Not enough free space"
-msgstr "لا يوجد مجال فارغ كافي"
-
-msgid "Error downloading map!"
-msgstr "خطأ أثناء تنزيل الخريطة!"
-
-msgid "Error writing map!"
-msgstr "خطأ عند كتابة الخريطة!"
-
-msgid "Map download aborted!"
-msgstr "تم إجهاض عملية التنزيل للخريطة !"
-
-#. Android resource: @strings/map_download_eta
-msgid "ETA"
-msgstr "زمن الوصول المتوقع"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "تنزيل الخريطة"
 
 msgid "Vehicle Position"
 msgstr "موقع وسيلة التنقل"
@@ -2525,7 +2104,16 @@ msgstr "ملء الشاشة"
 msgid "Window Mode"
 msgstr "نمط النافذة"
 
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
 msgid "Layers"
+msgstr ""
+
+msgid "Zoom to route"
 msgstr ""
 
 msgid "Description"
@@ -2627,13 +2215,29 @@ msgstr "النسخ الاحتياطي والاستعادة"
 msgid "Set map location"
 msgstr ""
 
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "الطريق إلى هنا"
+
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "حذف هذه الخريطة ؟"
 
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "تنزيل الخريطة"
+
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
 msgstr "جاري التنزيل:"
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "زمن الوصول المتوقع"
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "جاهز"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2642,6 +2246,10 @@ msgstr "خطأ عند تنزيل الخريطة."
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
 msgstr "تم إجهاض عملية تنزيل الخريطة"
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "لا يوجد مجال فارغ كافي"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
@@ -2662,6 +2270,10 @@ msgstr "أدخل الهدف"
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
 msgstr ""
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "إبحث"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
@@ -2690,6 +2302,10 @@ msgstr "لم يتم إدخال أي نص"
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
 msgstr "جاري تعيين الإتجاه إلى:"
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "البلدات"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
@@ -2763,6 +2379,353 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
+msgstr ""
+
+#, c-format
+#~ msgid "Route %4.0fkm    %02d:%02d ETA"
+#~ msgstr "Route %4.0fكلم    %02d:%02d ETA"
+
+#~ msgid "Downloaded maps"
+#~ msgstr "الخرائط المنزلة"
+
+#~ msgid "partial match"
+#~ msgstr "تطابق جزئي"
+
+#~ msgid "Taiwan"
+#~ msgstr "تايوان"
+
+#~ msgid "Asia"
+#~ msgstr "آسيا"
+
+#~ msgid "Canary Islands"
+#~ msgstr "جزر الكناري"
+
+#~ msgid "Africa"
+#~ msgstr "إفريقيا"
+
+#~ msgid "Korea"
+#~ msgstr "كوريا"
+
+#~ msgid "BeNeLux"
+#~ msgstr "بلجيكا هولاندة اللكسمبرغ"
+
+#~ msgid "Alsace"
+#~ msgstr "الألزاس"
+
+#~ msgid "Tasmania"
+#~ msgstr "تسمانيا"
+
+#~ msgid "Victoria"
+#~ msgstr "فيكتوريا"
+
+#~ msgid "UAE+Other"
+#~ msgstr "الإمارت العرية المتحدة و أخرى"
+
+#~ msgid "Oceania"
+#~ msgstr "أوقيانيا"
+
+#~ msgid "Western Europe"
+#~ msgstr "أوروبا الغربية"
+
+#~ msgid "New South Wales"
+#~ msgstr "نيو ساوث ويلز"
+
+#~ msgid "Europe"
+#~ msgstr "أوروبا"
+
+#~ msgid "Corse"
+#~ msgstr "كورسيكا"
+
+#~ msgid "Ile-de-France"
+#~ msgstr "عاصمة فرنسا و ضواحيها"
+
+#~ msgid "Bayern"
+#~ msgstr "بافاريا"
+
+#~ msgid "Oberbayern"
+#~ msgstr "بافاريا العليا"
+
+#~ msgid "Niederbayern"
+#~ msgstr "بافاريا السفلى"
+
+#~ msgid "Bremen"
+#~ msgstr "بريمن"
+
+#~ msgid "Hamburg"
+#~ msgstr "هامبرغ"
+
+#~ msgid "Berlin"
+#~ msgstr "برلين"
+
+#~ msgid "Sachsen"
+#~ msgstr "ساكسونيا"
+
+#~ msgid "England"
+#~ msgstr "بريطانيا"
+
+#~ msgid "Scandinavia"
+#~ msgstr "سكندينافيا"
+
+#~ msgid "Oxfordshire"
+#~ msgstr "أوكسفوردشاير"
+
+#~ msgid "Norfolk"
+#~ msgstr "نورفولك"
+
+#~ msgid "Crete"
+#~ msgstr "كريتا"
+
+#~ msgid "North America"
+#~ msgstr "أمريكا الشمالية"
+
+#~ msgid "South yorkshire"
+#~ msgstr "يوركشاير الجنوبية"
+
+#~ msgid "Suffolk"
+#~ msgstr "سوفولك"
+
+#~ msgid "Shropshire"
+#~ msgstr "شروبشاير"
+
+#~ msgid "Somerset"
+#~ msgstr "سومرست"
+
+#~ msgid "Ohio"
+#~ msgstr "أوهايو"
+
+#~ msgid " (except Alaska and Hawaii)"
+#~ msgstr " (بدون ألاسكا و هاواي)"
+
+#~ msgid "USA"
+#~ msgstr "الوﻻيات المتحدة الامريكية"
+
+#~ msgid "Hawaii"
+#~ msgstr "هاواي"
+
+#~ msgid "Alaska"
+#~ msgstr "ألاسكا"
+
+#~ msgid "Northeast"
+#~ msgstr "الشمال الشرقي"
+
+#~ msgid "Michigan"
+#~ msgstr "ميشيغان"
+
+#~ msgid "Midwest"
+#~ msgstr "وسط الغرب"
+
+#~ msgid "Vermont"
+#~ msgstr "فيرمونت"
+
+#~ msgid "Massachusetts"
+#~ msgstr "ماساتشوستس"
+
+#~ msgid "Pacific"
+#~ msgstr "المحيط الهادئ"
+
+#~ msgid "South"
+#~ msgstr "الجنوب"
+
+#~ msgid "Arkansas"
+#~ msgstr "أركنساس"
+
+#~ msgid "District of Columbia"
+#~ msgstr "مقاطعة كولومبيا"
+
+#~ msgid "Florida"
+#~ msgstr "فلوريدا"
+
+#~ msgid "Maryland"
+#~ msgstr "ميريلاند"
+
+#~ msgid "Oklahoma"
+#~ msgstr "أوكلاهوما"
+
+#~ msgid "Louisiana"
+#~ msgstr "لويزيانا"
+
+#~ msgid "Mississippi"
+#~ msgstr "ميسيسيبي"
+
+#~ msgid "Texas"
+#~ msgstr "تكساس"
+
+#~ msgid "Nevada"
+#~ msgstr "نيفادا"
+
+#~ msgid "New Mexico"
+#~ msgstr "نيو مكسيكو"
+
+#~ msgid "West Virginia"
+#~ msgstr "غرب فيرجينيا"
+
+#~ msgid "Virginia"
+#~ msgstr "فرجينيا"
+
+#~ msgid "Arizona"
+#~ msgstr "أريزونا"
+
+#~ msgid "West"
+#~ msgstr "الغرب"
+
+#~ msgid "California"
+#~ msgstr "كاليفورنيا"
+
+#~ msgid "Montana"
+#~ msgstr "مونتانا"
+
+#~ msgid "Idaho"
+#~ msgstr "إداهو"
+
+#~ msgid "Colorado"
+#~ msgstr "كولورادو"
+
+#~ msgid "Error downloading map!"
+#~ msgstr "خطأ أثناء تنزيل الخريطة!"
+
+#~ msgid "downloading"
+#~ msgstr "يُنزّل"
+
+#~ msgid "Washington State"
+#~ msgstr "ولاية واشنطن"
+
+#~ msgid "South+Middle America"
+#~ msgstr "جنوب و وسط امريكا"
+
+#~ msgid "Oregon"
+#~ msgstr "أوريغون"
+
+#~ msgid "Utah"
+#~ msgstr "يوتاه"
+
+#~ msgid "Error writing map!"
+#~ msgstr "خطأ عند كتابة الخريطة!"
+
+#~ msgid "Map download aborted!"
+#~ msgstr "تم إجهاض عملية التنزيل للخريطة !"
+
+#~ msgid "Whole Planet"
+#~ msgstr "كامل القرة الأرضية"
+
+#~ msgid "Azores"
+#~ msgstr "جزر الأزور"
+
+#~ msgid "Cancel"
+#~ msgstr "إلغاء"
+
+#~ msgid "Centre"
+#~ msgstr "الوسط"
+
+#~ msgid "Mittelfranken"
+#~ msgstr "فرانكن الوسطى"
+
+#~ msgid "Baden-Wuerttemberg"
+#~ msgstr "بادن فورتمبيرغ"
+
+#~ msgid "Rhone-Alpes"
+#~ msgstr "رون-جبال الألب"
+
+#~ msgid "Oberpfalz"
+#~ msgstr "بفالز العليا"
+
+#~ msgid "Oberfranken"
+#~ msgstr "فرانكن العليا"
+
+#~ msgid "Picardie"
+#~ msgstr "بيكاردي"
+
+#~ msgid "Poitou-Charentes"
+#~ msgstr "بواتو شارانت"
+
+#~ msgid "Unterfranken"
+#~ msgstr "فرانكن السفلى"
+
+#~ msgid "Schwaben"
+#~ msgstr "شفابن"
+
+#~ msgid "Niedersachsen"
+#~ msgstr "نيدرزاكسن"
+
+#~ msgid "Nordrhein-westfalen"
+#~ msgstr "نوردراين-فيستفالن"
+
+#~ msgid "Hessen"
+#~ msgstr "هسن"
+
+#~ msgid "Mecklenburg-Vorpommern"
+#~ msgstr "مكليمبورغ-فوربومرن"
+
+#~ msgid "Brandenburg"
+#~ msgstr "براندنبورغ"
+
+#~ msgid "Rheinland-Pfalz"
+#~ msgstr "راينلاند-بفالز"
+
+#~ msgid "Saarland"
+#~ msgstr "زارلاند"
+
+#~ msgid "Sachsen-Anhalt"
+#~ msgstr "زاكسن-أنهلت"
+
+#~ msgid "Cumbria"
+#~ msgstr "كمبريا"
+
+#~ msgid "Herefordshire"
+#~ msgstr "هيريفوردشاير"
+
+#~ msgid "Thueringen"
+#~ msgstr "تورينغن"
+
+#~ msgid "Schleswig-Holstein"
+#~ msgstr "شليسفيغ - هولشتاين"
+
+#~ msgid "Galicia"
+#~ msgstr "غاليسيا"
+
+#~ msgid "Mallorca"
+#~ msgstr "مايوركا"
+
+#~ msgid "Cambridgeshire"
+#~ msgstr "كامبريدجشاير"
+
+#~ msgid "Buckinghamshire"
+#~ msgstr "باكينجهامشير"
+
+#~ msgid "Guyane Francaise"
+#~ msgstr "غويانا الفرنسية"
+
+#~ msgid "Nottinghamshire"
+#~ msgstr "نوتينغمشاير"
+
+#~ msgid "Lancashire"
+#~ msgstr "لانكشاير"
+
+#~ msgid "Kent"
+#~ msgstr "كنت"
+
+#~ msgid "Leicestershire"
+#~ msgstr "لايسسترشاير"
+
+#~ msgid "Scotland"
+#~ msgstr "أسكتلندا"
+
+#~ msgid "Wales"
+#~ msgstr "ويلز"
+
+#~ msgid "Surrey"
+#~ msgstr "سورّي"
+
+#~ msgid "Wiltshire"
+#~ msgstr "ويلتشايرر"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"

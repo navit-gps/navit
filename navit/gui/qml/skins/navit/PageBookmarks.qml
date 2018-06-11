@@ -11,7 +11,7 @@ Rectangle {
     function bookmarkReload() {
 	    listModel.xml=bookmarks.getBookmarks();
 	    listModel.query="/bookmarks/bookmark";
-	    listModel.reload();        
+	    listModel.reload();
     }
 
     function bookmarkClick(itemName,itemType,itemCoord) {
@@ -31,9 +31,9 @@ Rectangle {
     function pageOpen() {
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -41,7 +41,7 @@ Rectangle {
     ButtonIcon { id: folderBtn; text: "New folder"; icon: "gui_active.svg"; onClicked: folderDialog.opacity=1
 		      anchors.top: parent.top; anchors.topMargin: page.height/16; anchors.left: parent.left; anchors.leftMargin: page.width/16
     }
-    ButtonIcon { id: pasteBtn; text: "Paste"; icon: "gui_active.svg"; onClicked: { bookmarks.Paste(); bookmarkReload(); } 
+    ButtonIcon { id: pasteBtn; text: "Paste"; icon: "gui_active.svg"; onClicked: { bookmarks.Paste(); bookmarkReload(); }
 		      anchors.top: parent.top; anchors.topMargin: page.height/16; anchors.left: folderBtn.right; anchors.leftMargin: page.width/16
     }
 
@@ -109,7 +109,7 @@ Rectangle {
         }
     }
 
-    ListSelector { 
+    ListSelector {
 	id:layoutList; text: ""
 	anchors.top: pasteBtn.bottom;
 	anchors.left: parent.left;

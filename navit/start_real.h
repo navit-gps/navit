@@ -17,8 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#ifndef NAVIT_MAIN_REAL_H 
-#define NAVIT_MAIN_REAL_H 
+#ifndef NAVIT_MAIN_REAL_H
+#define NAVIT_MAIN_REAL_H
 
 int main_real(int argc, char * const* argv);
 

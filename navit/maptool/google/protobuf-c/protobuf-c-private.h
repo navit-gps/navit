@@ -1,7 +1,7 @@
 /* --- protobuf-c-private.h: private structures and functions --- */
 /*
  * Copyright 2008, Dave Benson.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with
  * the License. You may obtain a copy of the License
@@ -64,7 +64,7 @@ protobuf_c_service_generated_init (ProtobufCService *service,
                                    const ProtobufCServiceDescriptor *descriptor,
                                    ProtobufCServiceDestroy destroy);
 
-void 
+void
 protobuf_c_service_invoke_internal(ProtobufCService *service,
                                   unsigned          method_index,
                                   const ProtobufCMessage *input,

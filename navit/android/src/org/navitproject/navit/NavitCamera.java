@@ -15,47 +15,46 @@
  */
 package org.navitproject.navit;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.IOException;
+
 
 
 
 public class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
-	 SurfaceHolder mHolder;
-	Camera mCamera;
+    SurfaceHolder mHolder;
+    Camera mCamera;
 
 
 
-	NavitCamera(Context context) 
-	{
-		super(context);
-		  mHolder = getHolder();
+    NavitCamera(Context context) {
+        super(context);
+        mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-	    Log.e("NavitCamera","Creator");
+        Log.e("NavitCamera","Creator");
 
-		
-	}
+
+    }
 
 
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, acquire the camera and tell it where
         // to draw.
         try {
-	   mCamera = Camera.open();
-           mCamera.setPreviewDisplay(holder);
+            mCamera = Camera.open();
+            mCamera.setPreviewDisplay(holder);
         } catch (IOException exception) {
             mCamera.release();
             mCamera = null;
             // TODO: add more exception handling logic here
         }
-	    Log.e("NavitCamera","surfaceCreated");
+        Log.e("NavitCamera","surfaceCreated");
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -64,13 +63,13 @@ public class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
         // important to release it when the activity is paused.
         mCamera.stopPreview();
         mCamera = null;
-	    Log.e("NavitCamera","surfaceDestroyed");
+        Log.e("NavitCamera","surfaceDestroyed");
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         // Now that the size is known, set up the camera parameters and begin
         // the preview.
-	Log.e("NavitCamera","surfaceChanged "+w+"x"+h);
+        Log.e("NavitCamera","surfaceChanged "+w+"x"+h);
         mCamera.stopPreview();
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setPreviewSize(w, h);

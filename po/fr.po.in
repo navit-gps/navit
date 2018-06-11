@@ -1,5 +1,5 @@
 # French (fr) translations for navit
-# Copyright (C) 2006-2017 The Navit Team
+# Copyright (C) 2006-2018 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Arnaud https://launchpad.net/~arnaud-lemeur
@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2017-10-08 23:54+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"PO-Revision-Date: 2018-04-13 17:26+0000\n"
+"Last-Translator: Francois.Mocq <francois.mocq@gmail.com>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -378,7 +378,7 @@ msgstr "Faites demi-tour %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "suivre"
 
@@ -407,8 +407,14 @@ msgstr "Commande"
 msgid "Length"
 msgstr "Distance"
 
+msgid "mi"
+msgstr ""
+
 msgid "km"
 msgstr "km"
+
+msgid "feet"
+msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -1634,6 +1640,9 @@ msgstr "Montrer la position _curseur"
 msgid "_Lock on Road"
 msgstr "Coller à la route"
 
+msgid "_Follow Vehicle"
+msgstr ""
+
 msgid "_Keep orientation to the North"
 msgstr "Garder l'orientation au Nord"
 
@@ -1703,8 +1712,8 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Achats"
 
-msgid "Distance from screen center (km)"
-msgstr "Distance du centre de l'écran (km)"
+msgid "Select a search radius from screen center"
+msgstr "Distance du centre de l'écran"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1790,8 +1799,8 @@ msgid "OT"
 msgstr "Autre"
 
 #, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
+msgid "Route %4.1f%s    %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trajet 0000 km  temps estimé 0+00:00"
@@ -1962,10 +1971,10 @@ msgstr "Étapes"
 msgid "Enter Coordinates"
 msgstr "Saisissez les coordonnées"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
@@ -2055,448 +2064,8 @@ msgstr "Attention ! Contrôle radar !"
 msgid "Please decrease your speed"
 msgstr "Veuillez ralentir"
 
-msgid "partial match"
-msgstr "correspondance partielle"
-
-#. Android resource: @strings/address_search_button
-msgid "Search"
-msgstr "Chercher"
-
-#. Android resource: @strings/address_search_towns
-msgid "Towns"
-msgstr "Villes"
-
-msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
-
-msgid ""
-"Current map location %s is not available\n"
-"Please restart Navit after you attach an SD card or select a different map "
-"location."
-msgstr ""
-"L'emplacement de carte %s n'est pas disponible\n"
-"Veuillez redémarrer Navit après avoir branché une carte SD ou selectionné en "
-"emplacement de carte différent."
-
-msgid "Downloaded maps"
-msgstr "Cartes téléchargées"
-
-msgid ""
-"Sorry, we currently do not support maps above 3.8G on Android, please select "
-"a smaller one."
-msgstr ""
-"Désolé, nous ne supportons pas les cartes de plus de 3.8GB sur Android, "
-"merci de sélectionner une carte plus petite."
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Conduire ici"
-
-msgid "Cancel"
-msgstr "Annuler"
-
 msgid "filenamePath"
 msgstr "emplacementFichier"
-
-msgid ""
-"New location set to %s\n"
-"Restart Navit to apply the changes."
-msgstr "redémarrer Navit pour appliquer les modifications"
-
-msgid "Whole Planet"
-msgstr "Terre entière"
-
-msgid "Africa"
-msgstr "Afrique"
-
-msgid "Canary Islands"
-msgstr "Îles Canaries"
-
-msgid "Asia"
-msgstr "Asie"
-
-msgid "Korea"
-msgstr "Corée"
-
-msgid "Taiwan"
-msgstr "Taïwan"
-
-msgid "UAE+Other"
-msgstr "EAU+Autres"
-
-msgid "Oceania"
-msgstr "Océanie"
-
-msgid "Tasmania"
-msgstr "Tasmanie"
-
-msgid "Victoria"
-msgstr "Victoria"
-
-msgid "New South Wales"
-msgstr "Nouvelle-Galles du Sud"
-
-msgid "Europe"
-msgstr "Europe"
-
-msgid "Western Europe"
-msgstr "Europe de l'Ouest"
-
-msgid "Azores"
-msgstr "Açores"
-
-msgid "BeNeLux"
-msgstr "BeNeLux"
-
-msgid "Alsace"
-msgstr "Alsace"
-
-msgid "Aquitaine"
-msgstr "Aquitaine"
-
-msgid "Auvergne"
-msgstr "Auvergne"
-
-msgid "Basse-Normandie"
-msgstr "Basse-Normandie"
-
-msgid "Bourgogne"
-msgstr "Bourgogne"
-
-msgid "Bretagne"
-msgstr "Bretagne"
-
-msgid "Centre"
-msgstr "Centre"
-
-msgid "Champagne-Ardenne"
-msgstr "Champagne-Ardenne"
-
-msgid "Corse"
-msgstr "Corse"
-
-msgid "Franche-Comte"
-msgstr "Franche-Comté"
-
-msgid "Haute-Normandie"
-msgstr "Haute-Normandie"
-
-msgid "Ile-de-France"
-msgstr "Île-de-France"
-
-msgid "Languedoc-Roussillon"
-msgstr "Languedoc-Roussillon"
-
-msgid "Limousin"
-msgstr "Limousin"
-
-msgid "Lorraine"
-msgstr "Lorraine"
-
-msgid "Midi-Pyrenees"
-msgstr "Midi-Pyrénées"
-
-msgid "Nord-pas-de-Calais"
-msgstr "Nord-Pas-de-Calais"
-
-msgid "Pays-de-la-Loire"
-msgstr "Pays-de-la-Loire"
-
-msgid "Picardie"
-msgstr "Picardie"
-
-msgid "Poitou-Charentes"
-msgstr "Poitou-Charentes"
-
-msgid "Provence-Alpes-Cote-d-Azur"
-msgstr "Provence-Alpes-Côte d'Azur"
-
-msgid "Rhone-Alpes"
-msgstr "Rhône-Alpes"
-
-msgid "Baden-Wuerttemberg"
-msgstr "Bade-Wurtemberg"
-
-msgid "Bayern"
-msgstr "Bavière"
-
-msgid "Mittelfranken"
-msgstr "Moyenne-Franconie"
-
-msgid "Niederbayern"
-msgstr "Basse-Bavière"
-
-msgid "Oberbayern"
-msgstr "Basse-Bavière"
-
-msgid "Oberfranken"
-msgstr "Haute-Franconie"
-
-msgid "Oberpfalz"
-msgstr "Haut-Palatinat"
-
-msgid "Schwaben"
-msgstr "Souabe"
-
-msgid "Unterfranken"
-msgstr "Basse-Franconie"
-
-msgid "Berlin"
-msgstr "Berlin"
-
-msgid "Brandenburg"
-msgstr "Brandebourg"
-
-msgid "Bremen"
-msgstr "Brême"
-
-msgid "Hamburg"
-msgstr "Hambourg"
-
-msgid "Hessen"
-msgstr "Hesse"
-
-msgid "Mecklenburg-Vorpommern"
-msgstr "Mecklembourg-Poméranie occidentale"
-
-msgid "Niedersachsen"
-msgstr "Basse-Saxe"
-
-msgid "Nordrhein-westfalen"
-msgstr "Rhénanie-du-Nord - Westphalie"
-
-msgid "Rheinland-Pfalz"
-msgstr "Rhénanie-Palatinat"
-
-msgid "Saarland"
-msgstr "Sarre"
-
-msgid "Sachsen-Anhalt"
-msgstr "Saxe-Anhalt"
-
-msgid "Sachsen"
-msgstr "Saxe"
-
-msgid "Schleswig-Holstein"
-msgstr "Schleswig-Holstein"
-
-msgid "Thueringen"
-msgstr "Thuringe"
-
-msgid "Mallorca"
-msgstr "Majorque"
-
-msgid "Galicia"
-msgstr "Galice"
-
-msgid "Scandinavia"
-msgstr "Scandinavie"
-
-msgid "England"
-msgstr "Angleterre"
-
-msgid "Buckinghamshire"
-msgstr "Buckinghamshire"
-
-msgid "Cambridgeshire"
-msgstr "Cambridgeshire"
-
-msgid "Cumbria"
-msgstr "Cumbrie"
-
-msgid "East yorkshire with hull"
-msgstr "Hull & Yorkshire de l'Est"
-
-msgid "Essex"
-msgstr "Essex"
-
-msgid "Herefordshire"
-msgstr "Herefordshire"
-
-msgid "Kent"
-msgstr "Kent"
-
-msgid "Lancashire"
-msgstr "Lancashire"
-
-msgid "Leicestershire"
-msgstr "Leicestershire"
-
-msgid "Norfolk"
-msgstr "Norfolk"
-
-msgid "Nottinghamshire"
-msgstr "Nottinghamshire"
-
-msgid "Oxfordshire"
-msgstr "Oxfordshire"
-
-msgid "Shropshire"
-msgstr "Shropshire"
-
-msgid "Somerset"
-msgstr "Somerset"
-
-msgid "South yorkshire"
-msgstr "Yorkshire de l'Ouest"
-
-msgid "Suffolk"
-msgstr "Suffolk"
-
-msgid "Surrey"
-msgstr "Surrey"
-
-msgid "Wiltshire"
-msgstr "Wiltshire"
-
-msgid "Scotland"
-msgstr "Écosse"
-
-msgid "Wales"
-msgstr "Pays de Galles"
-
-msgid "Crete"
-msgstr "Crète"
-
-msgid "North America"
-msgstr "Amérique du Nord"
-
-msgid "Alaska"
-msgstr "Alaska"
-
-msgid "Hawaii"
-msgstr "Hawaï"
-
-msgid "USA"
-msgstr "États-Unis"
-
-msgid " (except Alaska and Hawaii)"
-msgstr " (sans Alaska et Hawaï)"
-
-msgid "Midwest"
-msgstr "Midwest"
-
-msgid "Michigan"
-msgstr "Michigan"
-
-msgid "Ohio"
-msgstr "Ohio"
-
-msgid "Northeast"
-msgstr "Nord-Est"
-
-msgid "Massachusetts"
-msgstr "Massachusetts"
-
-msgid "Vermont"
-msgstr "Vermont"
-
-msgid "Pacific"
-msgstr "Pacifique"
-
-msgid "South"
-msgstr "Sud"
-
-msgid "Arkansas"
-msgstr "Arkansas"
-
-msgid "District of Columbia"
-msgstr "District de Columbia"
-
-msgid "Florida"
-msgstr "Floride"
-
-msgid "Louisiana"
-msgstr "Louisiane"
-
-msgid "Maryland"
-msgstr "Maryland"
-
-msgid "Mississippi"
-msgstr "Mississippi"
-
-msgid "Oklahoma"
-msgstr "Oklahoma"
-
-msgid "Texas"
-msgstr "Texas"
-
-msgid "Virginia"
-msgstr "Virginie"
-
-msgid "West Virginia"
-msgstr "Virginie-Occidentale"
-
-msgid "West"
-msgstr "Ouest"
-
-msgid "Arizona"
-msgstr "Arizona"
-
-msgid "California"
-msgstr "Californie"
-
-msgid "Colorado"
-msgstr "Colorado"
-
-msgid "Idaho"
-msgstr "Idaho"
-
-msgid "Montana"
-msgstr "Montana"
-
-msgid "New Mexico"
-msgstr "Nouveau-Mexique"
-
-msgid "Nevada"
-msgstr "Nevada"
-
-msgid "Oregon"
-msgstr "Oregon"
-
-msgid "Utah"
-msgstr "Utah"
-
-msgid "Washington State"
-msgstr "État de Washington"
-
-msgid "South+Middle America"
-msgstr "Amérique (Centrale et Sud)"
-
-msgid "Guyane Francaise"
-msgstr "Guyane Française"
-
-msgid "downloading"
-msgstr "transfert en cours"
-
-#. Android resource: @strings/map_download_ready
-msgid "ready"
-msgstr "prêt"
-
-msgid "Media selected for map storage is not available"
-msgstr ""
-"Le support sélectionné pour le stockage de la carte n'est pas disponible"
-
-#. Android resource: @strings/map_download_not_enough_free_space
-msgid "Not enough free space"
-msgstr "Pas assez d'espace libre"
-
-msgid "Error downloading map!"
-msgstr "Erreur de téléchargement de carte !"
-
-msgid "Error writing map!"
-msgstr "Erreur d'écriture de carte !"
-
-msgid "Map download aborted!"
-msgstr "Téléchargement de la carte abandonné!"
-
-#. Android resource: @strings/map_download_eta
-msgid "ETA"
-msgstr "Temps restant"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "Télécharger la carte"
 
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
@@ -2679,13 +2248,29 @@ msgstr "Sauvegarde / Restauration"
 msgid "Set map location"
 msgstr "sélectionner le chemin de la carte"
 
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Conduire ici"
+
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "Supprimer cette carte?"
 
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Télécharger la carte"
+
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
 msgstr "Télécharger:"
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "Temps restant"
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "prêt"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2694,6 +2279,10 @@ msgstr "Erreur de téléchargement carte"
 #. Android resource: @strings/map_download_download_aborted
 msgid "Map download aborted"
 msgstr "Téléchargement de la carte abandonné"
+
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "Pas assez d'espace libre"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
@@ -2714,6 +2303,10 @@ msgstr "Entrez votre destination"
 #. Android resource: @strings/address_partial_match
 msgid "Match partial address"
 msgstr "Correspondance partielle"
+
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "Chercher"
 
 #. Android resource: @strings/address_search_searching
 msgid "Searching..."
@@ -2742,6 +2335,10 @@ msgstr "Aucun texte entré"
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
 msgstr "Destination fixée à:"
+
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "Villes"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
@@ -2827,14 +2424,409 @@ msgid ""
 "Navit needs permission to access GPS and read the map.\n"
 "If you change your mind please restart Navit and grant the permissions"
 msgstr ""
+"Navit doit être autorisé à accéder au GPS et à lire la carte.\n"
+"Si vous changez d'avis, redémarrez Navit et accordez les autorisations"
 
 #. Android resource: @strings/permissions_info_box_title
 msgid "One or more ungranted permissions"
-msgstr ""
+msgstr "Une ou plusieurs autorisations manquantes"
+
+#, c-format
+#~ msgid "Route %4.0fkm    %02d:%02d ETA"
+#~ msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
+
+#~ msgid "Downloaded maps"
+#~ msgstr "Cartes téléchargées"
+
+#~ msgid "Taiwan"
+#~ msgstr "Taïwan"
+
+#~ msgid "Asia"
+#~ msgstr "Asie"
+
+#~ msgid "Canary Islands"
+#~ msgstr "Îles Canaries"
+
+#~ msgid "Africa"
+#~ msgstr "Afrique"
+
+#~ msgid "Korea"
+#~ msgstr "Corée"
+
+#~ msgid "Tasmania"
+#~ msgstr "Tasmanie"
+
+#~ msgid "partial match"
+#~ msgstr "correspondance partielle"
+
+#~ msgid "downloading"
+#~ msgstr "transfert en cours"
+
+#~ msgid "Whole Planet"
+#~ msgstr "Terre entière"
+
+#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
+#~ msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "Alsace"
+#~ msgstr "Alsace"
+
+#~ msgid "BeNeLux"
+#~ msgstr "BeNeLux"
+
+#~ msgid "Oceania"
+#~ msgstr "Océanie"
+
+#~ msgid "Western Europe"
+#~ msgstr "Europe de l'Ouest"
+
+#~ msgid "Azores"
+#~ msgstr "Açores"
+
+#~ msgid "New South Wales"
+#~ msgstr "Nouvelle-Galles du Sud"
+
+#~ msgid "Europe"
+#~ msgstr "Europe"
+
+#~ msgid "Haute-Normandie"
+#~ msgstr "Haute-Normandie"
+
+#~ msgid "Franche-Comte"
+#~ msgstr "Franche-Comté"
+
+#~ msgid "Centre"
+#~ msgstr "Centre"
+
+#~ msgid "Bretagne"
+#~ msgstr "Bretagne"
+
+#~ msgid "Corse"
+#~ msgstr "Corse"
+
+#~ msgid "Champagne-Ardenne"
+#~ msgstr "Champagne-Ardenne"
+
+#~ msgid "Auvergne"
+#~ msgstr "Auvergne"
+
+#~ msgid "Aquitaine"
+#~ msgstr "Aquitaine"
+
+#~ msgid "Bourgogne"
+#~ msgstr "Bourgogne"
+
+#~ msgid "Basse-Normandie"
+#~ msgstr "Basse-Normandie"
+
+#~ msgid "Ile-de-France"
+#~ msgstr "Île-de-France"
+
+#~ msgid "Languedoc-Roussillon"
+#~ msgstr "Languedoc-Roussillon"
+
+#~ msgid "Limousin"
+#~ msgstr "Limousin"
+
+#~ msgid "Lorraine"
+#~ msgstr "Lorraine"
+
+#~ msgid "Midi-Pyrenees"
+#~ msgstr "Midi-Pyrénées"
+
+#~ msgid "Nord-pas-de-Calais"
+#~ msgstr "Nord-Pas-de-Calais"
+
+#~ msgid "Pays-de-la-Loire"
+#~ msgstr "Pays-de-la-Loire"
+
+#~ msgid "Picardie"
+#~ msgstr "Picardie"
+
+#~ msgid "Poitou-Charentes"
+#~ msgstr "Poitou-Charentes"
+
+#~ msgid "Provence-Alpes-Cote-d-Azur"
+#~ msgstr "Provence-Alpes-Côte d'Azur"
+
+#~ msgid "Mittelfranken"
+#~ msgstr "Moyenne-Franconie"
+
+#~ msgid "Bayern"
+#~ msgstr "Bavière"
+
+#~ msgid "Baden-Wuerttemberg"
+#~ msgstr "Bade-Wurtemberg"
+
+#~ msgid "Rhone-Alpes"
+#~ msgstr "Rhône-Alpes"
+
+#~ msgid "Oberpfalz"
+#~ msgstr "Haut-Palatinat"
+
+#~ msgid "Oberfranken"
+#~ msgstr "Haute-Franconie"
+
+#~ msgid "Oberbayern"
+#~ msgstr "Basse-Bavière"
+
+#~ msgid "Unterfranken"
+#~ msgstr "Basse-Franconie"
+
+#~ msgid "Schwaben"
+#~ msgstr "Souabe"
+
+#~ msgid "Niederbayern"
+#~ msgstr "Basse-Bavière"
+
+#~ msgid "Rheinland-Pfalz"
+#~ msgstr "Rhénanie-Palatinat"
+
+#~ msgid "Niedersachsen"
+#~ msgstr "Basse-Saxe"
+
+#~ msgid "Nordrhein-westfalen"
+#~ msgstr "Rhénanie-du-Nord - Westphalie"
+
+#~ msgid "Hessen"
+#~ msgstr "Hesse"
+
+#~ msgid "Mecklenburg-Vorpommern"
+#~ msgstr "Mecklembourg-Poméranie occidentale"
+
+#~ msgid "Bremen"
+#~ msgstr "Brême"
+
+#~ msgid "Hamburg"
+#~ msgstr "Hambourg"
+
+#~ msgid "Berlin"
+#~ msgstr "Berlin"
+
+#~ msgid "Brandenburg"
+#~ msgstr "Brandebourg"
+
+#~ msgid "Saarland"
+#~ msgstr "Sarre"
+
+#~ msgid "Galicia"
+#~ msgstr "Galice"
+
+#~ msgid "Cambridgeshire"
+#~ msgstr "Cambridgeshire"
+
+#~ msgid "Sachsen"
+#~ msgstr "Saxe"
+
+#~ msgid "Sachsen-Anhalt"
+#~ msgstr "Saxe-Anhalt"
+
+#~ msgid "Thueringen"
+#~ msgstr "Thuringe"
+
+#~ msgid "Schleswig-Holstein"
+#~ msgstr "Schleswig-Holstein"
+
+#~ msgid "Mallorca"
+#~ msgstr "Majorque"
+
+#~ msgid "England"
+#~ msgstr "Angleterre"
+
+#~ msgid "Scandinavia"
+#~ msgstr "Scandinavie"
+
+#~ msgid "Buckinghamshire"
+#~ msgstr "Buckinghamshire"
+
+#~ msgid "Cumbria"
+#~ msgstr "Cumbrie"
+
+#~ msgid "Oregon"
+#~ msgstr "Oregon"
+
+#~ msgid "Nevada"
+#~ msgstr "Nevada"
+
+#~ msgid "New Mexico"
+#~ msgstr "Nouveau-Mexique"
+
+#~ msgid "Arizona"
+#~ msgstr "Arizona"
+
+#~ msgid "West"
+#~ msgstr "Ouest"
+
+#~ msgid "Colorado"
+#~ msgstr "Colorado"
+
+#~ msgid "California"
+#~ msgstr "Californie"
+
+#~ msgid "Montana"
+#~ msgstr "Montana"
+
+#~ msgid "Florida"
+#~ msgstr "Floride"
+
+#~ msgid "Louisiana"
+#~ msgstr "Louisiane"
+
+#~ msgid "Maryland"
+#~ msgstr "Maryland"
+
+#~ msgid "Oklahoma"
+#~ msgstr "Oklahoma"
+
+#~ msgid "Texas"
+#~ msgstr "Texas"
+
+#~ msgid "Mississippi"
+#~ msgstr "Mississippi"
+
+#~ msgid "West Virginia"
+#~ msgstr "Virginie-Occidentale"
+
+#~ msgid "Virginia"
+#~ msgstr "Virginie"
+
+#~ msgid "Idaho"
+#~ msgstr "Idaho"
+
+#~ msgid "Error downloading map!"
+#~ msgstr "Erreur de téléchargement de carte !"
+
+#~ msgid "Guyane Francaise"
+#~ msgstr "Guyane Française"
+
+#~ msgid "Washington State"
+#~ msgstr "État de Washington"
+
+#~ msgid "Utah"
+#~ msgstr "Utah"
+
+#~ msgid "South"
+#~ msgstr "Sud"
+
+#~ msgid "Arkansas"
+#~ msgstr "Arkansas"
+
+#~ msgid "District of Columbia"
+#~ msgstr "District de Columbia"
+
+#~ msgid "Error writing map!"
+#~ msgstr "Erreur d'écriture de carte !"
+
+#~ msgid "Victoria"
+#~ msgstr "Victoria"
+
+#~ msgid "Oxfordshire"
+#~ msgstr "Oxfordshire"
+
+#~ msgid "Nottinghamshire"
+#~ msgstr "Nottinghamshire"
+
+#~ msgid "Lancashire"
+#~ msgstr "Lancashire"
+
+#~ msgid "Kent"
+#~ msgstr "Kent"
+
+#~ msgid "Norfolk"
+#~ msgstr "Norfolk"
+
+#~ msgid "Leicestershire"
+#~ msgstr "Leicestershire"
+
+#~ msgid "Herefordshire"
+#~ msgstr "Herefordshire"
+
+#~ msgid "Essex"
+#~ msgstr "Essex"
+
+#~ msgid "Shropshire"
+#~ msgstr "Shropshire"
+
+#~ msgid "North America"
+#~ msgstr "Amérique du Nord"
+
+#~ msgid "Alaska"
+#~ msgstr "Alaska"
+
+#~ msgid "Crete"
+#~ msgstr "Crète"
+
+#~ msgid "Somerset"
+#~ msgstr "Somerset"
+
+#~ msgid "Scotland"
+#~ msgstr "Écosse"
+
+#~ msgid "Wales"
+#~ msgstr "Pays de Galles"
+
+#~ msgid " (except Alaska and Hawaii)"
+#~ msgstr " (sans Alaska et Hawaï)"
+
+#~ msgid "USA"
+#~ msgstr "États-Unis"
+
+#~ msgid "Hawaii"
+#~ msgstr "Hawaï"
+
+#~ msgid "Ohio"
+#~ msgstr "Ohio"
+
+#~ msgid "Michigan"
+#~ msgstr "Michigan"
+
+#~ msgid "Vermont"
+#~ msgstr "Vermont"
+
+#~ msgid "UAE+Other"
+#~ msgstr "EAU+Autres"
+
+#~ msgid "East yorkshire with hull"
+#~ msgstr "Hull & Yorkshire de l'Est"
+
+#~ msgid "South yorkshire"
+#~ msgstr "Yorkshire de l'Ouest"
+
+#~ msgid "Pacific"
+#~ msgstr "Pacifique"
+
+#~ msgid "South+Middle America"
+#~ msgstr "Amérique (Centrale et Sud)"
+
+#~ msgid "Northeast"
+#~ msgstr "Nord-Est"
+
+#~ msgid "Midwest"
+#~ msgstr "Midwest"
+
+#~ msgid "Massachusetts"
+#~ msgstr "Massachusetts"
+
+#~ msgid "Suffolk"
+#~ msgstr "Suffolk"
+
+#~ msgid "Surrey"
+#~ msgstr "Surrey"
+
+#~ msgid "Wiltshire"
+#~ msgstr "Wiltshire"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"
 #~ msgstr "puis sortez du rond-point à la %1$s %2$s"
+
+#~ msgid ""
+#~ "New location set to %s\n"
+#~ "Restart Navit to apply the changes."
+#~ msgstr "redémarrer Navit pour appliquer les modifications"
 
 #, c-format
 #~ msgid "in %d m"
@@ -2843,3 +2835,26 @@ msgstr ""
 #, c-format
 #~ msgid "%d m"
 #~ msgstr "%d m"
+
+#~ msgid "Media selected for map storage is not available"
+#~ msgstr ""
+#~ "Le support sélectionné pour le stockage de la carte n'est pas disponible"
+
+#~ msgid ""
+#~ "Current map location %s is not available\n"
+#~ "Please restart Navit after you attach an SD card or select a different map "
+#~ "location."
+#~ msgstr ""
+#~ "L'emplacement de carte %s n'est pas disponible\n"
+#~ "Veuillez redémarrer Navit après avoir branché une carte SD ou selectionné en "
+#~ "emplacement de carte différent."
+
+#~ msgid ""
+#~ "Sorry, we currently do not support maps above 3.8G on Android, please select "
+#~ "a smaller one."
+#~ msgstr ""
+#~ "Désolé, nous ne supportons pas les cartes de plus de 3.8GB sur Android, "
+#~ "merci de sélectionner une carte plus petite."
+
+#~ msgid "Map download aborted!"
+#~ msgstr "Téléchargement de la carte abandonné!"

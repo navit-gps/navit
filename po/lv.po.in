@@ -359,7 +359,7 @@ msgstr "Apgriezieties %1$s"
 #. *
 #. *  UNTESTED !
 #. *
-#. 
+#.
 msgid "follow"
 msgstr "turpiniet"
 
@@ -1674,8 +1674,8 @@ msgstr "Taksometrs"
 msgid "Shopping"
 msgstr "Iepirkšanās"
 
-msgid "Distance from screen center (km)"
-msgstr "Attālums no ekrāna centra (km)"
+msgid "Select a search radius from screen center"
+msgstr "Attālums no ekrāna centra"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1933,10 +1933,10 @@ msgstr "Pieturpunkti"
 msgid "Enter Coordinates"
 msgstr "Ievadiet Koordinātes"
 
-#. 
+#.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
 #. gui_internal_widget_append(wb, w)
-#. 
+#.
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"

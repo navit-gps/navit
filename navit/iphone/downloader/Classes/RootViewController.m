@@ -20,14 +20,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
+
 	// Sets the title of the Navigation bar.
 	self.title= @"Navit Map Downloader";
-	
+
 	// Loads in the array for locations and their associated bounding boxes
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"LocationsArray" ofType:@"plist"];
-	locations_ = [[NSMutableArray alloc] initWithContentsOfFile:path];    
-	
+	locations_ = [[NSMutableArray alloc] initWithContentsOfFile:path];
+
 	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -80,21 +80,21 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     static NSString *CellIdentifier = @"Cell";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    
+
 	// Configure the cell.
-	
+
 	// Gets the location name from LocationsArray.plist
 	cell.textLabel.text = [[self.locations objectAtIndex:indexPath.row] objectForKey:NAME_KEY];
-	
+
 	//Makes the fancy arrows to the left of the region being downloaded (e.g. "Ireland  > " )
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;	
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 
@@ -111,14 +111,14 @@
 /*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source.
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
+    }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
+    }
 }
 */
 
@@ -143,18 +143,18 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
 	 DownloaderDetailViewController *detailViewController = [[DownloaderDetailViewController alloc] initWithNibName:@"DownloaderDetailViewController" bundle:nil];
 
-	// Sets the "Back" button in the next ViewController (DownloaderDetailViewController). 
+	// Sets the "Back" button in the next ViewController (DownloaderDetailViewController).
 	// Which, be default, pulls the name from the previous ViewController
 	// Here, we manually call it the text label "Back"
 	self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
-	
+
 	// Pass the selected object to the new view controller.
 	detailViewController.locationName = [self.locations objectAtIndex:indexPath.row];
-	[self.navigationController pushViewController:detailViewController animated:YES];		
-	
+	[self.navigationController pushViewController:detailViewController animated:YES];
+
 	[DownloaderDetailViewController release];
 }
 
@@ -165,7 +165,7 @@
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
+
     // Relinquish ownership any cached data, images, etc that aren't in use.
 }
 
