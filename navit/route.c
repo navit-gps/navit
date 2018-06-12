@@ -2207,8 +2207,7 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
         struct item *item) {
     struct route_graph_point *s_pnt = NULL, *e_pnt = NULL;
     struct coord c, l;
-    struct route_graph_segment *found = NULL, *prev, *curr;
-    int size;
+    struct route_graph_segment *curr;
 
     item_coord_rewind(item);
     if (item_coord_get(item, &l, 1)) {
@@ -2220,7 +2219,6 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
     if (s_pnt && e_pnt) {
 #if 1
         curr = s_pnt->start;
-        prev = NULL;
         s_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
         for (curr = s_pnt->start; curr; curr = curr->start_next) {
             if ((curr->end == e_pnt) && item_is_equal(curr->data.item, *item))
@@ -2235,6 +2233,7 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
             if (curr->data.item.type == type_traffic_distortion)
                 e_pnt->flags |= RP_TRAFFIC_DISTORTION;
 #else
+        struct route_graph_segment *found = NULL, *prev;
         /* this frees up memory but is slower */
         /* remove from global list */
         curr = this->route_segments;

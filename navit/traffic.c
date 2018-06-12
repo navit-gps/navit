@@ -577,7 +577,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
             attr->u.num = speed;
         }
     } else {
-        while (attr = attr_search(priv_data->attrs, NULL, attr_maxspeed))
+        while ((attr = attr_search(priv_data->attrs, NULL, attr_maxspeed)))
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
     }
 
@@ -1174,17 +1174,17 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
             case type_street_2_land:
                 if (item->type == type_street_2_city)
                     score += 3;
-                else if ((item->type == type_street_3_land))
+                else if (item->type == type_street_3_land)
                     score += 2;
-                else if ((item->type == type_street_3_city))
+                else if (item->type == type_street_3_city)
                     score += 1;
                 break;
             case type_street_2_city:
                 if (item->type == type_street_2_land)
                     score += 3;
-                else if ((item->type == type_street_3_city))
+                else if (item->type == type_street_3_city)
                     score += 2;
-                else if ((item->type == type_street_3_land))
+                else if (item->type == type_street_3_land)
                     score += 1;
                 break;
             default:
@@ -3246,9 +3246,6 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     /* Temporary store for swapping locations and items */
     struct traffic_location * swap_location;
     struct item ** swap_items;
-
-    /* Current route status */
-    struct attr route_status_attr;
 
     for (i = 0; messages && messages[i]; i++)
         if (messages[i]->expiration_time >= time(NULL)) {
