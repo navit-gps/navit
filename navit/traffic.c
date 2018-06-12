@@ -3221,7 +3221,6 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
  * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
  */
 /* TODO what if the update for a still-valid message expires in the past? */
-/* FIXME when segments are removed, remove them from route as well */
 static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags) {
     int ret = 0;
     int i = 0;
