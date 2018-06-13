@@ -169,20 +169,24 @@ public class Navit extends Activity {
         return getLocalizedString(getString(Rid));
     }
 
-    private boolean extractRes(String resname, String result) {
-        boolean needs_update = false;
-        Log.e(TAG, "Res Name " + resname + ", result " + result);
-        int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
-        Log.e(TAG, "Res ID " + id);
-        if (id == 0)
-            return false;
+    /**
+     * @brief Check if a specific file needs to be extracted from the apk archive
+     *
+     * This is based on whether the file already exist, and if so, whether it is older than the archive or not
+     *
+     * @param filename The full path to the file
+     * @return true if file does not exist, but it can be created at the specified location, we will also return true if the file exist but the apk archive is more recent (probably package was upgraded)
+     */
+    private boolean resourceFileNeedsUpdate(String filename) {
+        File resultfile = new File(filename);
 
-        File resultfile = new File(result);
         if (!resultfile.exists()) {
-            needs_update = true;
             File path = resultfile.getParentFile();
-            if ( !path.exists() && !resultfile.getParentFile().mkdirs())
+            if ( !path.exists() && !resultfile.getParentFile().mkdirs()) {
+                Log.e(TAG, "Could not create directory path for " + filename);
                 return false;
+            }
+            return true;
         } else {
             PackageManager pm = getPackageManager();
             ApplicationInfo appInfo;
@@ -195,15 +199,31 @@ public class Navit extends Activity {
                 e.printStackTrace();
             }
             if (apkUpdateTime > resultfile.lastModified())
-                needs_update = true;
+                return true;
         }
+        return false;
+    }
 
-        if (needs_update) {
-            Log.e(TAG, "Extracting resource");
+    /**
+     * @brief Extract a ressource from the apk archive (res/raw) and save it to a local file
+     *
+     * @param result The full path to the local file
+     * @param resname The name of the ressource file in the archive
+     * @return true if the local file is extracted in @p result
+     */
+    private boolean extractRes(String resname, String result) {
+        Log.d(TAG, "Res Name " + resname + ", result " + result);
+        int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
+        Log.d(TAG, "Res ID " + id);
+        if (id == 0)
+            return false;
+
+        if (resourceFileNeedsUpdate(result)) {
+            Log.d(TAG, "Extracting resource");
 
             try {
                 InputStream resourcestream = NavitResources.openRawResource(id);
-                FileOutputStream resultfilestream = new FileOutputStream(resultfile);
+                FileOutputStream resultfilestream = new FileOutputStream(new File(result));
                 byte[] buf = new byte[1024];
                 int i;
                 while ((i = resourcestream.read(buf)) != -1) {
@@ -218,49 +238,35 @@ public class Navit extends Activity {
         return true;
     }
 
-    private boolean extractAsset(String assetFileName, String result) {
-        boolean needs_update = false;
+    /**
+     * @brief Extract an asset from the apk archive (assets) and save it to a local file
+     *
+     * @param output The full path to the output local file
+     * @param assetFileName The full path of the asset file within the archive
+     * @return true if the local file is extracted in @p output
+     */
+    private boolean extractAsset(String assetFileName, String output) {
         AssetManager assetMgr = NavitResources.getAssets();
         InputStream assetstream;
-        Log.d(TAG, "Asset Name " + assetFileName + ", result " + result);
+        Log.d(TAG, "Asset Name " + assetFileName + ", output " + output);
         try {
             assetstream = assetMgr.open(assetFileName);
         } catch (IOException e) {
             Log.e(TAG, "Failed opening asset '" + assetFileName + "'");
             return false;
         }
-        File resultfile = new File(result);
-        if (!resultfile.exists()) {
-            needs_update = true;
-            File path = resultfile.getParentFile();
-            if ( !path.exists() && !resultfile.getParentFile().mkdirs())
-                return false;
-        } else {
-            PackageManager pm = getPackageManager();
-            ApplicationInfo appInfo;
-            long apkUpdateTime = 0;
-            try {
-                appInfo = pm.getApplicationInfo(NAVIT_PACKAGE_NAME, 0);
-                apkUpdateTime = new File(appInfo.sourceDir).lastModified();
-            } catch (NameNotFoundException e) {
-                Log.e(TAG, "Could not read package infos");
-                e.printStackTrace();
-            }
-            if (apkUpdateTime > resultfile.lastModified())
-                needs_update = true;
-        }
 
-        if (needs_update) {
+        if (resourceFileNeedsUpdate(output)) {
             Log.d(TAG, "Extracting asset '" + assetFileName + "'");
 
             try {
-                FileOutputStream resultfilestream = new FileOutputStream(resultfile);
+                FileOutputStream outputFilestream = new FileOutputStream(new File(output));
                 byte[] buf = new byte[1024];
                 int i = 0;
                 while ((i = assetstream.read(buf)) != -1) {
-                    resultfilestream.write(buf, 0, i);
+                    outputFilestream.write(buf, 0, i);
                 }
-                resultfilestream.close();
+                outputFilestream.close();
             } catch (Exception e) {
                 Log.e(TAG, "Exception " + e.getMessage());
                 return false;
