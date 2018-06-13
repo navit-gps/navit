@@ -160,24 +160,24 @@ public class Navit extends Activity {
     }
 
     /**
-    * Translates a string from its id
-    * in R.strings
-    *
-    * @param Rid resource identifier
-    * @return translated string
-    */
+     * Translates a string from its id
+     * in R.strings
+     *
+     * @param Rid resource identifier
+     * @return translated string
+     */
     String getTstring(int Rid) {
         return getLocalizedString(getString(Rid));
     }
 
     /**
-    * Check if a specific file needs to be extracted from the apk archive
-    * This is based on whether the file already exist, and if so, whether it is older than the archive or not
-    *
-    * @param filename The full path to the file
-    * @return true if file does not exist, but it can be created at the specified location, we will also return
-    * true if the file exist but the apk archive is more recent (probably package was upgraded)
-    */
+     * Check if a specific file needs to be extracted from the apk archive
+     * This is based on whether the file already exist, and if so, whether it is older than the archive or not
+     *
+     * @param filename The full path to the file
+     * @return true if file does not exist, but it can be created at the specified location, we will also return
+     *         true if the file exist but the apk archive is more recent (probably package was upgraded)
+     */
     private boolean resourceFileNeedsUpdate(String filename) {
         File resultfile = new File(filename);
 
@@ -206,12 +206,12 @@ public class Navit extends Activity {
     }
 
     /**
-    * Extract a ressource from the apk archive (res/raw) and save it to a local file
-    *
-    * @param result The full path to the local file
-    * @param resname The name of the ressource file in the archive
-    * @return true if the local file is extracted in @p result
-    */
+     * Extract a ressource from the apk archive (res/raw) and save it to a local file
+     *
+     * @param result The full path to the local file
+     * @param resname The name of the ressource file in the archive
+     * @return true if the local file is extracted in @p result
+     */
     private boolean extractRes(String resname, String result) {
         Log.d(TAG, "Res Name " + resname + ", result " + result);
         int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
@@ -240,12 +240,12 @@ public class Navit extends Activity {
     }
 
     /**
-    * Extract an asset from the apk archive (assets) and save it to a local file
-    *
-    * @param output The full path to the output local file
-    * @param assetFileName The full path of the asset file within the archive
-    * @return true if the local file is extracted in @p output
-    */
+     * Extract an asset from the apk archive (assets) and save it to a local file
+     *
+     * @param output The full path to the output local file
+     * @param assetFileName The full path of the asset file within the archive
+     * @return true if the local file is extracted in @p output
+     */
     private boolean extractAsset(String assetFileName, String output) {
         AssetManager assetMgr = NavitResources.getAssets();
         InputStream assetstream;
@@ -718,7 +718,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Shows the Options menu.
+     * Shows the Options menu.
      *
      * Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
      * the overflow button in the Action bar.
@@ -729,7 +729,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Shows the native keyboard or other input method.
+     * Shows the native keyboard or other input method.
      */
     public int showNativeKeyboard() {
         /*
@@ -768,7 +768,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Hides the native keyboard or other input method.
+     * Hides the native keyboard or other input method.
      */
     public void hideNativeKeyboard() {
         mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
