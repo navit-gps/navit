@@ -1100,7 +1100,7 @@ int xml_parse_text(const char *document, void *data,
     char *str=g_strdup(document);
     ezxml_t root = ezxml_parse_str(str, strlen(str));
     if (!root)
-        return;
+        return 0;
     parse_node_text(root, data, start, end, text);
     ezxml_free(root);
     g_free(str);
