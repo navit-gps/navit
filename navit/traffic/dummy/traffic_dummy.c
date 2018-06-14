@@ -170,7 +170,7 @@ static struct traffic_priv * traffic_dummy_new(struct navit *nav, struct traffic
         struct attr **attrs, struct callback_list *cbl) {
     struct traffic_priv *ret;
 
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
 
     ret = g_new0(struct traffic_priv, 1);
     *meth = traffic_dummy_meth;
@@ -184,7 +184,7 @@ static struct traffic_priv * traffic_dummy_new(struct navit *nav, struct traffic
  * This function is called once on startup.
  */
 void plugin_init(void) {
-    dbg(lvl_debug, "enter\n");
+    dbg(lvl_debug, "enter");
 
     plugin_register_category_traffic("dummy", traffic_dummy_new);
 }
