@@ -21,6 +21,7 @@
 #define NAVIT_types_H
 
 #include <ctype.h>
+#include <time.h>
 #include "config.h"
 
 void strtoupper(char *dest, const char *src);
