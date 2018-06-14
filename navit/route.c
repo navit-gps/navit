@@ -2187,9 +2187,10 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
         if (update) {
-            /* TODO figure out if we need to update both points */
-            route_graph_point_update(profile, s_pnt, this->heap);
-            route_graph_point_update(profile, e_pnt, this->heap);
+            if (!(data.flags & AF_ONEWAYREV))
+                route_graph_point_update(profile, s_pnt, this->heap);
+            if (!(data.flags & AF_ONEWAY))
+                route_graph_point_update(profile, e_pnt, this->heap);
         }
     }
 }
