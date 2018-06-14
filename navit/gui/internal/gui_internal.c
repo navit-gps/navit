@@ -707,12 +707,12 @@ static void gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widge
 
 
 /**
- *  @brief Remove the case in a string
+ * @brief Remove the case in a string
  *
- *  @warning Result should be g_free()d after use.
+ * @warning Result should be g_free()d after use.
  *
- *  @param s The input utf-8 string
- *  @return An equivalent string prepared for case insensitive search
+ * @param s The input utf-8 string
+ * @return An equivalent string prepared for case insensitive search
  */
 char *removecase(char *s) {
     char *r;
@@ -750,10 +750,10 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
         gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));    /* In this table, add one row */
         gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,""));  /* That row contains a widget of type widget_box */
         if (wm->item.priv_data)
-            wi->name = wm->item.priv_data;
+            wi->name = wm->item.priv_data;	/* Use the label of the point to view on map */
         else
             wi->name = g_strdup("");
-        wi->c.x=wm->c.x;
+        wi->c.x=wm->c.x;	/* Use the coordinates of the point to place it on the map */
         wi->c.y=wm->c.y;
         gui_internal_cmd_results_to_map(this,wm,w);
         g_free(wi->name);
@@ -1245,7 +1245,7 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
         }
         else {
             wbc->item.type=type_none;
-            wbc->item.priv_data = g_strdup(name);
+            wbc->item.priv_data = g_strdup(name); /* Will be freed up by gui_internal_cmd_view_on_map() */
         }
     }
     if(flags & 256 && this->results_map_population) {
