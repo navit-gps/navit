@@ -112,6 +112,7 @@ static struct gui_config_settings config_profiles[]= {
 };
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
+static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
@@ -706,7 +707,12 @@ static void gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widge
 
 
 /**
- *  Get a utf-8 string, return the same prepared for case insensitive search. Result should be g_free()d after use.
+ *  @brief Remove the case in a string
+ *
+ *  @warning Result should be g_free()d after use.
+ *
+ *  @param s The input utf-8 string
+ *  @return An equivalent string prepared for case insensitive search
  */
 char *removecase(char *s) {
     char *r;
@@ -714,7 +720,20 @@ char *removecase(char *s) {
     return r;
 }
 
+/**
+ * @brief Apply the command "View on Map", centers the map on the selected point and highlight this point using
+ * type_found_item style
+ *
+ * @param this The GUI object that called us
+ * @param wm The widget that points to this function as a callback
+ * @param data Private data provided during callback (unused)
+ */
 static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data) {
+
+    struct widget *w;
+    struct widget *wr;
+    struct widget *wi;
+
     if (wm->item.type != type_none) {
         enum item_type type;
         if (wm->item.type < type_line)
@@ -725,6 +744,20 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
             type=type_selected_area;
         graphics_clear_selection(this->gra, NULL);
         graphics_add_selection(this->gra, &wm->item, type, NULL);
+    }
+    else {
+        w = gui_internal_widget_table_new(this, 0, 0); /* Create a basic table */
+        gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));    /* In this table, add one row */
+        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,""));  /* That row contains a widget of type widget_box */
+        if (wm->item.priv_data)
+            wi->name = wm->item.priv_data;
+        else
+            wi->name = g_strdup("");
+        wi->c.x=wm->c.x;
+        wi->c.y=wm->c.y;
+        gui_internal_cmd_results_to_map(this,wm,w);
+        g_free(wi->name);
+        /* FIXME: deallocate all widgets here? They won't be displayed, they were just used to create the input for gui_internal_cmd_results_to_map() */
     }
     navit_set_center(this->nav, &wm->c, 1);
     gui_internal_prune_menu(this, NULL);
@@ -855,12 +888,14 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 }
 
 
-/*
- * @brief Transfers search results to a map.
+/**
+ * @brief Apply the command "Show results on the map", highlighting one of multiple points using
+ *        type_found_item style (with their respective name placed aside)
  *
- * @param this The graphics context.
- * @param wm called widget.
- * @param data event data (pointer to the table widget containing results, or NULL to clean the result map without adding any new data).
+ * @param this The GUI context
+ * @param wm The widget that points to this function as a callback
+ * @param data Private data provided during callback (should be a pointer to the table widget containing results,
+ *             or NULL to remove all previous results from the map).
  */
 static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *w;
@@ -972,17 +1007,18 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
     a.type=attr_orientation;
     a.u.num=0;
     navit_set_attr(this->nav,&a);
-    navit_zoom_to_rect(this->nav,&r);
-    gui_internal_prune_menu(this, NULL);
+    //navit_zoom_to_rect(this->nav,&r);
+    //gui_internal_prune_menu(this, NULL);
     this->results_map_population=count;
 }
 
 /*
- * @brief Removes search results from a map.
+ * @brief Removes all existing search results from a map.
  *
- * @param this The graphics context.
- * @param wm called widget.
- * @param data event data
+ * @param this The GUI context
+ * @param wm The widget that points to this function as a callback
+ * @param data Private data provided during callback (should be a pointer to the table widget containing results,
+ *             or NULL to remove all previous results from the map).
  */
 static void gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_cmd_results_to_map(this,wm,NULL);
@@ -1025,10 +1061,10 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * argument or in WGS84 coordinates (i.e. latitude and longitude in degrees) via the {@code g_in}
  * argument. One of these must be supplied, the other should be {@code NULL}.
  *
- * @param this The internal GUI instance
+ * @param this The GUI context
  * @param pc_in Projected coordinates of the position
  * @param g_in WGS84 coordinates of the position
- * @param wm
+ * @param wm The widget that points to this function as a callback
  * @param name The display name for the position
  * @param flags Flags specifying the operations available from the GUI
  */
@@ -1204,10 +1240,13 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
                                            image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
                                            gui_internal_cmd_view_on_map, NULL));
         wbc->c=pc;
-        if ((flags & 4) && wm)
+        if ((flags & 4) && wm) {
             wbc->item=wm->item;
-        else
+        }
+        else {
             wbc->item.type=type_none;
+            wbc->item.priv_data = g_strdup(name);
+        }
     }
     if(flags & 256 && this->results_map_population) {
         gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,
