@@ -746,9 +746,9 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
         graphics_add_selection(this->gra, &wm->item, type, NULL);
     }
     else {
-        w = gui_internal_widget_table_new(this, 0, 0); /* Create a basic table */
-        gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));    /* In this table, add one row */
-        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,""));  /* That row contains a widget of type widget_box */
+        w = gui_internal_widget_table_new(this, 0, 0);	/* Create a basic table */
+        gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));	/* In this table, add one row */
+        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,""));	/* That row contains a widget of type widget_box */
         if (wm->item.priv_data)
             wi->name = wm->item.priv_data;	/* Use the label of the point to view on map */
         else
@@ -894,10 +894,10 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
  *
  * @param this The GUI context
  * @param wm The widget that points to this function as a callback
- * @param data Private data provided during callback (should be a pointer to the table widget containing results,
- *             or NULL to remove all previous results from the map).
+ * @param table Private data provided during callback (should be a pointer to the table widget containing results,
+ *              or NULL to remove all previous results from the map).
  */
-static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
+static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *table) {
     struct widget *w;
     struct mapset *ms;
     struct map *map;
@@ -966,8 +966,8 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
 
     this->results_map_population=0;
 
-    /* Find the table to pupulate the map */
-    for(w=data; w && w->type!=widget_table; w=w->parent);
+    /* Find the table to populate the map */
+    for(w=table; w && w->type!=widget_table; w=w->parent);
 
     if(!w) {
         map_rect_destroy(mr);
@@ -1006,9 +1006,9 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
         return;
     a.type=attr_orientation;
     a.u.num=0;
-    navit_set_attr(this->nav,&a);
-    //navit_zoom_to_rect(this->nav,&r);
-    //gui_internal_prune_menu(this, NULL);
+    navit_set_attr(this->nav,&a);	/* Set orientation to North */
+    navit_zoom_to_rect(this->nav,&r);
+    gui_internal_prune_menu(this, NULL);
     this->results_map_population=count;
 }
 
