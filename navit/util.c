@@ -71,7 +71,7 @@ int navit_utf8_strcasecmp(const char *s1, const char *s2) {
  *
  * @param s The string to trim
  */
-void strtrim(char *s) {
+static void strtrim(char *s) {
     char *tmp = g_strdup(s);
     char *in = tmp;
     while (strlen(in) && (in[0] <= 0x20))
