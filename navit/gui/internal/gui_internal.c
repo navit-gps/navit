@@ -724,7 +724,7 @@ char *removecase(char *s) {
  * @brief Apply the command "View on Map", centers the map on the selected point and highlight this point using
  * type_found_item style
  *
- * @param this The GUI object that called us
+ * @param this The GUI context
  * @param wm The widget that points to this function as a callback
  * @param data Private data provided during callback (unused)
  */
@@ -757,7 +757,8 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
         wi->c.y=wm->c.y;
         gui_internal_prepare_search_results_map(this, w, NULL);
         g_free(wi->name);
-        /* FIXME: deallocate all widgets here? They won't be displayed, they were just used to create the input for gui_internal_cmd_results_to_map() */
+        wi->name = NULL;
+        //gui_internal_widget_destroy(this, w); // FIXME: This will cause a segfault at next draw
     }
     navit_set_center(this->nav, &wm->c, 1);
     gui_internal_prune_menu(this, NULL);
@@ -887,7 +888,13 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
 }
 
-
+/**
+ * @brief Get the search result map (and create it if it does not exist)
+ *
+ * @param this The GUI context
+ *
+ * @return A pointer to the map named "search_results" or NULL if there wasa failure
+ */
 static struct map *get_search_results_map(struct gui_priv *this) {
 
     struct mapset *ms;
