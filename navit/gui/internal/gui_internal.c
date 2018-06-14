@@ -947,7 +947,6 @@ static struct map *get_search_results_map(struct gui_priv *this) {
  */
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
     struct widget *w;
-    struct mapset *ms;
     struct map *map;
     struct map_rect *mr;
     struct item *item;
