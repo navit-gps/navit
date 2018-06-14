@@ -608,10 +608,11 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
     }
 
     if (has_changes) {
-        // TODO add (rather than change) if we’re creating a new item
-        if (!priv_data->rt)
+        if (!priv_data->rt) {
             priv_data->rt = route;
-        route_change_traffic_distortion(priv_data->rt, item);
+            route_add_traffic_distortion(priv_data->rt, item);
+        } else
+            route_change_traffic_distortion(priv_data->rt, item);
     }
 }
 
