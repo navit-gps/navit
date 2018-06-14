@@ -888,29 +888,15 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 }
 
 
-/**
- * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
- *        the style type_found_item (name for each point will also be displayed aside)
- *
- * @param this The GUI context
- * @param table A table widget or any of its descendants. The table contain results to place on the map.
- *              Providing NULL here will remove all previous results from the map.
- * @param[out] r The minimum rect focused to contain all results placed  on the map (or unchanged if r==NULL)
- */
-static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
-    struct widget *w;
+static struct map *get_search_results_map(struct gui_priv *this) {
+
     struct mapset *ms;
     struct map *map;
-    struct map_rect *mr;
-    struct item *item;
-    GList *l;
-    struct attr a;
-    int count;
 
     ms=navit_get_mapset(this->nav);
 
     if(!ms)
-        return;
+        return NULL;
 
     map=mapset_get_map_by_name(ms, "search_results");
     if(!map) {
@@ -946,9 +932,30 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
 
         for(i=0; attrs[i]; i++)
             g_free(attrs[i]);
-
     }
+    return map;
+}
 
+/**
+ * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
+ *        the style type_found_item (name for each point will also be displayed aside)
+ *
+ * @param this The GUI context
+ * @param table A table widget or any of its descendants. The table contain results to place on the map.
+ *              Providing NULL here will remove all previous results from the map.
+ * @param[out] r The minimum rect focused to contain all results placed  on the map (or unchanged if r==NULL)
+ */
+static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
+    struct widget *w;
+    struct mapset *ms;
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    GList *l;
+    struct attr a;
+    int count;
+
+    map = get_search_results_map(this);
     if(!map)
         return;
 
@@ -1034,9 +1041,8 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
  * @brief Removes all existing search results from a map.
  *
  * @param this The GUI context
- * @param wm The widget that points to this function as a callback
- * @param data Private data provided during callback (should be a pointer to the table widget containing results,
- *             or NULL to remove all previous results from the map).
+ * @param wm The widget that called us
+ * @param data Private data (unused).
  */
 static void gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_cmd_results_to_map(this,wm,NULL);
