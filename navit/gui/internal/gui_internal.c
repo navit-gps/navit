@@ -112,7 +112,7 @@ static struct gui_config_settings config_profiles[]= {
 };
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
-static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data);
+static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
@@ -755,7 +755,7 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
             wi->name = g_strdup("");
         wi->c.x=wm->c.x;	/* Use the coordinates of the point to place it on the map */
         wi->c.y=wm->c.y;
-        gui_internal_cmd_results_to_map(this,wm,w);
+        gui_internal_prepare_search_results_map(this, w, NULL);
         g_free(wi->name);
         /* FIXME: deallocate all widgets here? They won't be displayed, they were just used to create the input for gui_internal_cmd_results_to_map() */
     }
@@ -889,22 +889,21 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 
 
 /**
- * @brief Apply the command "Show results on the map", highlighting one of multiple points using
- *        type_found_item style (with their respective name placed aside)
+ * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
+ *        the style type_found_item (name for each point will also be displayed aside)
  *
  * @param this The GUI context
- * @param wm The widget that points to this function as a callback
- * @param table Private data provided during callback (should be a pointer to the table widget containing results,
- *              or NULL to remove all previous results from the map).
+ * @param table A table widget or any of its descendants. The table contain results to place on the map.
+ *              Providing NULL here will remove all previous results from the map.
+ * @param[out] r The minimum rect focused to contain all results placed  on the map (or unchanged if r==NULL)
  */
-static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *table) {
+static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
     struct widget *w;
     struct mapset *ms;
     struct map *map;
     struct map_rect *mr;
     struct item *item;
     GList *l;
-    struct coord_rect r;
     struct attr a;
     int count;
 
@@ -994,10 +993,12 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
                 a.type=attr_label;
                 a.u.str=wi->name;
                 item_attr_set(it, &a, change_mode_modify);
-                if(!count++)
-                    r.lu=r.rl=c;
-                else
-                    coord_rect_extend(&r,&c);
+                if (r) {
+                    if(!count++)
+                        r->lu=r->rl=c;
+                    else
+                        coord_rect_extend(r,&c);
+                }
             }
         }
     }
@@ -1007,9 +1008,26 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
     a.type=attr_orientation;
     a.u.num=0;
     navit_set_attr(this->nav,&a);	/* Set orientation to North */
-    navit_zoom_to_rect(this->nav,&r);
-    gui_internal_prune_menu(this, NULL);
+    if (r) {
+        navit_zoom_to_rect(this->nav,r);
+        gui_internal_prune_menu(this, NULL);
+    }
     this->results_map_population=count;
+}
+
+/**
+ * @brief Apply the command "Show results on the map", highlighting one of multiple points using
+ *        type_found_item style (with their respective name placed aside)
+ *
+ * @param this The GUI context
+ * @param wm The widget that called us
+ * @param data Private data provided during callback (should be a pointer to the table widget containing results,
+ *             or NULL to remove all previous results from the map).
+ */
+static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
+    struct coord_rect r;
+
+    gui_internal_prepare_search_results_map(this, (struct widget *)data, &r);
 }
 
 /*
