@@ -733,6 +733,7 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
     struct widget *w;
     struct widget *wr;
     struct widget *wi;
+    char *label;
 
     if (wm->item.type != type_none) {
         enum item_type type;
@@ -746,19 +747,20 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
         graphics_add_selection(this->gra, &wm->item, type, NULL);
     }
     else {
+        if (wm->item.priv_data)
+            label = wm->item.priv_data;	/* Use the label of the point to view on map */
+        else
+            label = g_strdup("");
         w = gui_internal_widget_table_new(this, 0, 0);	/* Create a basic table */
         gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));	/* In this table, add one row */
-        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,""));	/* That row contains a widget of type widget_box */
-        if (wm->item.priv_data)
-            wi->name = wm->item.priv_data;	/* Use the label of the point to view on map */
-        else
-            wi->name = g_strdup("");
+        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,label));	/* That row contains a widget of type widget_box */
+        wi->name = label;	/* Use the label of the point to view on map */
         wi->c.x=wm->c.x;	/* Use the coordinates of the point to place it on the map */
         wi->c.y=wm->c.y;
         gui_internal_prepare_search_results_map(this, w, NULL);
-        g_free(wi->name);
+        g_free(label);
         wi->name = NULL;
-        //gui_internal_widget_destroy(this, w); // FIXME: This will cause a segfault at next draw
+        gui_internal_widget_destroy(this, w);
     }
     navit_set_center(this->nav, &wm->c, 1);
     gui_internal_prune_menu(this, NULL);
