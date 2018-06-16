@@ -232,10 +232,10 @@ file_create_url(char *url) {
 #endif
 
 /**
- * \brief Check if a given path corresponds to a directory
+ * @brief Check if a given path corresponds to a directory
  *
- * \param name The path to the filesystem element
- * \return !=0 (true) if \p name is a directory
+ * @param name The path to the filesystem element
+ * @return !=0 (true) if @p name is a directory
  */
 int file_is_dir(const char *name) {
     struct stat buf;
@@ -247,10 +247,10 @@ int file_is_dir(const char *name) {
 }
 
 /**
- * \brief Check if a given path corresponds to a regular file
+ * @brief Check if a given path corresponds to a regular file
  *
- * \param name The path to the filesystem element
- * \return !=0 (true) if \p name is a regular file
+ * @param name The path to the filesystem element
+ * @return !=0 (true) if @p name is a regular file
  */
 int file_is_reg(const char *name) {
     struct stat buf;
