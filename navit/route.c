@@ -4053,7 +4053,8 @@ static struct map *route_get_map_helper(struct route *this_, struct map **map, c
  * @param item The item to add, must be of {@code type_traffic_distortion}
  */
 void route_add_traffic_distortion(struct route *this_, struct item *item) {
-    route_graph_add_traffic_distortion(this_->graph, this_->vehicleprofile, item, 1);
+    if (route_has_graph(this_))
+        route_graph_add_traffic_distortion(this_->graph, this_->vehicleprofile, item, 1);
 }
 
 /**
