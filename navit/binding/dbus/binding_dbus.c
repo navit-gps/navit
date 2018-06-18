@@ -1345,6 +1345,12 @@ static DBusHandlerResult request_navit_route_export_gpx(DBusConnection *connecti
 
     FILE *fp;
     fp = fopen(filename,"w");
+    if (!fp) {
+        map_rect_destroy(mr);
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                              "could not open file for writing");
+    }
+
     fprintf(fp, "%s", header);
 
     while((item = map_rect_get_item(mr))) {
@@ -1424,6 +1430,11 @@ static DBusHandlerResult request_navit_route_export_geojson(DBusConnection *conn
 
     FILE *fp;
     fp = fopen(filename,"w");
+    if (!fp) {
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                              "could not open file for writing");
+    }
+
     fprintf(fp, "%s", header);
     int is_first=1;
     char * instructions;
