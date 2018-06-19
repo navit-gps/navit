@@ -1355,13 +1355,13 @@ struct circle {
 };
 
 /**
- * @brief Create a set of points on a circle or an arc
+ * @brief Create a set of points on a circle or on a circular arc
  *
  * @param pnt Center point of the circle
  * @param diameter Diameter of the circle
  * @param scale Unused
  * @param start Position of the first point on the circle (in 1/1024th of the circle), -1 being the bottom of the circle, 511 being the top of the circle
- * @param len End of the arc on the circle, relative to start (in 1/1024th of the circle), 514 is half a circle, 1028 is a full circle (or 1027 if first and last points are connected with a line)
+ * @param len Length of the arc on the circle, relative to start (in 1/1024th of the circle), 514 is half a circle, 1028 is a full circle (or 1027 if first and last points are connected with a line)
  * @param[out] res Returned an array of points that will form the resulting circle
  * @param[out] pos Index of the last point filled inside array @p res
  * @param dir Direction of the circle (valid values are 1 (counter-clockwise) or -1 (clockwise), other values may lead to unknown result)
