@@ -1,5 +1,5 @@
 all:
-	gcc -l m -o latlon2bookmark latlon2bookmark.c
+	gcc -l m -Wall -o latlon2bookmark latlon2bookmark.c -lm
 
 clean:
 	rm -f latlon2bookmark
