@@ -745,15 +745,15 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
             type=type_selected_area;
         graphics_clear_selection(this->gra, NULL);
         graphics_add_selection(this->gra, &wm->item, type, NULL);
-    }
-    else {
+    } else {
         if (wm->item.priv_data)
             label = wm->item.priv_data;	/* Use the label of the point to view on map */
         else
             label = g_strdup("");
         w = gui_internal_widget_table_new(this, 0, 0);	/* Create a basic table */
         gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));	/* In this table, add one row */
-        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,label));	/* That row contains a widget of type widget_box */
+        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,
+                                         label));	/* That row contains a widget of type widget_box */
         wi->name = label;	/* Use the label of the point to view on map */
         wi->c.x=wm->c.x;	/* Use the coordinates of the point to place it on the map */
         wi->c.y=wm->c.y;
@@ -951,58 +951,60 @@ static struct map *get_search_results_map(struct gui_priv *this) {
  * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
  */
 static void square_shape_str(char *s) {
-	char *c;
-	char *last_break;
-	unsigned int max_cols = 0;
-	unsigned int cur_cols = 0;
-	unsigned int max_rows = 0;
-	unsigned int surface;
-	unsigned int target_cols;
-	
-	if (!s)
-		return;
-	for (c=s; *c!='\0'; c++) {
-		if (*c==' ') {
-			if (max_cols < cur_cols)
-				max_cols = cur_cols;
-			cur_cols = 0;
-			max_rows++;
-		}
-		else
-			cur_cols++;
-	}
-	if (max_cols < cur_cols)
-		max_cols = cur_cols;
-	if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
-		max_rows++;
-	surface = max_rows * 2 * max_cols;
-	target_cols = sqrt(surface);
-	
-	if (target_cols < max_cols)
-		target_cols = max_cols;
+    char *c;
+    char *last_break;
+    unsigned int max_cols = 0;
+    unsigned int cur_cols = 0;
+    unsigned int max_rows = 0;
+    unsigned int surface;
+    unsigned int target_cols;
 
-	target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
-	dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u", s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+    if (!s)
+        return;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (max_cols < cur_cols)
+                max_cols = cur_cols;
+            cur_cols = 0;
+            max_rows++;
+        } else
+            cur_cols++;
+    }
+    if (max_cols < cur_cols)
+        max_cols = cur_cols;
+    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+        max_rows++;
+    surface = max_rows * 2 * max_cols;
+    target_cols = sqrt(surface);
 
-	cur_cols = 0;
-	last_break = NULL;
-	for (c=s; *c!='\0'; c++) {
-		if (*c==' ') {
-			if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
-				if (last_break) {
-					*last_break = '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-					cur_cols = c-last_break;
-				}
-			}
-			last_break = c;	/* Record this position as a candidate to insert a line break */
-		}
-		cur_cols++;
-	}
-	if (cur_cols>=target_cols && last_break) {
-		*last_break = '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-	}
+    if (target_cols < max_cols)
+        target_cols = max_cols;
 
-	dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
+    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
+    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
+        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+
+    cur_cols = 0;
+    last_break = NULL;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+                if (last_break) {
+                    *last_break =
+                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+                    cur_cols = c-last_break;
+                }
+            }
+            last_break = c;	/* Record this position as a candidate to insert a line break */
+        }
+        cur_cols++;
+    }
+    if (cur_cols>=target_cols && last_break) {
+        *last_break =
+            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+    }
+
+    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
 }
 
 /**
@@ -1337,8 +1339,7 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
         wbc->c=pc;
         if ((flags & 4) && wm) {
             wbc->item=wm->item;
-        }
-        else {
+        } else {
             wbc->item.type=type_none;
             wbc->item.priv_data = g_strdup(name); /* Will be freed up by gui_internal_cmd_view_on_map() */
         }
