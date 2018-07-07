@@ -135,7 +135,7 @@ struct displaylist_icon_cache {
 
 };
 
-static void circle_to_points(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
 
@@ -1357,7 +1357,7 @@ struct circle {
 /**
  * @brief Create a set of points on a circle or on a circular arc
  *
- * @param pnt Center point of the circle
+ * @param center Center point of the circle
  * @param diameter Diameter of the circle
  * @param scale Unused
  * @param start Position of the first point on the circle (in 1/1024th of the circle), -1 being the bottom of the circle, 511 being the top of the circle
@@ -1366,7 +1366,7 @@ struct circle {
  * @param[out] pos Index of the last point filled inside array @p res
  * @param dir Direction of the circle (valid values are 1 (counter-clockwise) or -1 (clockwise), other values may lead to unknown result)
  */
-static void circle_to_points(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
     struct circle *c;
     int count=64;
     int end=start+len;
@@ -1393,8 +1393,8 @@ static void circle_to_points(struct point *pnt, int diameter, int scale, int sta
                 i+=step;
             while (i < count && c[i].fowler < end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i+=step;
@@ -1413,8 +1413,8 @@ static void circle_to_points(struct point *pnt, int diameter, int scale, int sta
                 i-=step;
             while (i >= 0 && c[i].fowler > end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i-=step;
