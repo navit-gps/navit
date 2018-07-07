@@ -946,6 +946,66 @@ static struct map *get_search_results_map(struct gui_priv *this) {
 }
 
 /**
+ * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
+ *
+ * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
+ */
+static void square_shape_str(char *s) {
+	char *c;
+	char *last_break;
+	unsigned int max_cols = 0;
+	unsigned int cur_cols = 0;
+	unsigned int max_rows = 0;
+	unsigned int surface;
+	unsigned int target_cols;
+	
+	if (!s)
+		return;
+	for (c=s; *c!='\0'; c++) {
+		if (*c==' ') {
+			if (max_cols < cur_cols)
+				max_cols = cur_cols;
+			cur_cols = 0;
+			max_rows++;
+		}
+		else
+			cur_cols++;
+	}
+	if (max_cols < cur_cols)
+		max_cols = cur_cols;
+	if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+		max_rows++;
+	surface = max_rows * 2 * max_cols;
+	target_cols = sqrt(surface);
+	
+	if (target_cols < max_cols)
+		target_cols = max_cols;
+
+	target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
+	dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u", s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+
+	cur_cols = 0;
+	last_break = NULL;
+	for (c=s; *c!='\0'; c++) {
+		if (*c==' ') {
+			if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+				if (last_break) {
+					*last_break = '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+					cur_cols = c-last_break;
+				}
+			}
+			last_break = c;	/* Record this position as a candidate to insert a line break */
+		}
+		cur_cols++;
+	}
+	if (cur_cols>=target_cols && last_break) {
+		*last_break = '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+	}
+
+	dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
+}
+
+/**
  * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
  *        the style type_found_item (name for each point will also be displayed aside)
  *
@@ -962,6 +1022,7 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     GList *l;
     struct attr a;
     int count;
+    char *name_label;
 
     map = get_search_results_map(this);
     if(!map)
@@ -1006,7 +1067,9 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
                 c.y=wi->c.y;
                 item_coord_set(it, &c, 1, change_mode_modify);
                 a.type=attr_label;
-                a.u.str=wi->name;
+                name_label = g_strdup(wi->name);
+                square_shape_str(name_label);
+                a.u.str=name_label;
                 item_attr_set(it, &a, change_mode_modify);
                 if (r) {
                     if(!count++)
