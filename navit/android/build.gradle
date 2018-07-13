@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply from: "$project.rootDir/gradle/scripts/git-scm-version.gradle"
+
 
 android {
     compileSdkVersion 27
@@ -7,8 +9,8 @@ android {
         applicationId "org.navitproject.navit"
         minSdkVersion 9
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode gitVersionCodeTime
+        versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk { // because mips was a problem with ndk 14
               // and no need for, 'x86_64' and , 'armeabi' and , 'arm64-v8a'
