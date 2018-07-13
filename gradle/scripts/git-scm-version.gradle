@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.ajoberstar:grgit:1.5.0'
+        classpath 'org.ajoberstar:grgit-core:3.0.0'
     }
 }
 
@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter
 ext {
     git = Grgit.open(currentDir: projectDir)
     gitVersionName = git.describe()
-    gitVersionCode = DateTimeFormatter.ofPattern("yyMMddhhmm").format(git.head().time)
+    gitVersionCode = DateTimeFormatter.ofPattern("yyMMddhhmm").format(git.head().dateTime)
 }
 
 task printVersion() {
