@@ -1,4 +1,4 @@
-# THX to https://proandroiddev.com/configuring-android-project-version-name-code-b168952f3323
+//THX to https://proandroiddev.com/configuring-android-project-version-name-code-b168952f3323
 
 buildscript {
     repositories {
