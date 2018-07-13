@@ -9,7 +9,7 @@ android {
         applicationId "org.navitproject.navit"
         minSdkVersion 9
         targetSdkVersion 27
-        versionCode gitVersionCodeTime
+        versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk { // because mips was a problem with ndk 14
