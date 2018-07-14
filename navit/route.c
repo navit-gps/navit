@@ -2016,24 +2016,31 @@ static int route_through_traffic_allowed(struct vehicleprofile *profile, struct 
 }
 
 /**
- * @brief Returns the "cost" of driving from point {@code from} along segment {@code over} in direction {@code dir}
+ * @brief Returns the "cost" of traveling along segment `over` in direction `dir`
  *
  * Cost is relative to time, indicated in tenths of seconds.
  *
- * This function considers traffic distortions as well as penalties. If the segment is impassable
- * due to traffic distortions or restrictions, {@code INT_MAX} is returned in order to prevent use
- * of this segment for routing.
+ * This function considers traffic distortions as well as penalties. If the segment is impassable due to traffic
+ * distortions or restrictions, `INT_MAX` is returned in order to prevent use of this segment for routing.
+ *
+ * If `from` is specified, it must be the point at which we leave the segment (`over->end` if `dir` is positive,
+ * `over->start` if `dir` is negative); anything else will produce invalid results. If `from` is non-NULL, additional
+ * checks are done on `from->seg` (the next segment to follow after `over`):
+ * \li If `from->seg` equals `over` (indicating that, after traversing `over` in direction `dir`, we would immediately
+ * traverse it again in the opposite direction), `INT_MAX` is returned.
+ * \li Otherwise, if `over` does not allow through traffic but `from->seg` does, the through traffic penalty of the
+ * vehicle profile (`profile`) is applied.
  *
  * @param profile The routing preferences
- * @param from The point where we are starting
+ * @param from The point currently being visited (or NULL), see description
  * @param over The segment we are using
- * @param dir The direction of segment which we are driving. Positive values indicate we are
- * traveling in the direction of the segment, negative values indicate we are traveling against
- * that direction. Values of +2 or -2 cause the function to ignore traffic distortions.
+ * @param dir The direction of segment which we are traveling. Positive values indicate we are traveling in the
+ * direction of the segment (from `over->start` to `over->end`), negative values indicate we are traveling in the
+ * opposite direction. Values of +2 or -2 cause the function to ignore traffic distortions.
  *
  * @return The "cost" needed to travel along the segment
  */
-
+/* FIXME `from` as a name is highly misleading, find a better one */
 static int route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from,
                            struct route_graph_segment *over,
                            int dir) {
