@@ -1977,24 +1977,24 @@ static int limit_count(struct coord *c, int count) {
 }
 
 /**
- * @brief Draw a multi-line text close to a specified point
+ * @brief Draw a multi-line text next to a specified point @p pref
  *
  * @param gra The graphics instance on which to draw
- * @param gc The graphics color to use to draw the text
- * @param gc The graphics background color to use to draw the text
+ * @param fg The graphics color to use to draw the text
+ * @param bg The graphics background color to use to draw the text
  * @param font The font to use to draw the text
  * @param pref The position to draw the text (draw at the right and vertically aligned relatively to this point)
- * @param input_labl The text to draw (may contain '\n' for multiline text, if so lines will be stacked vertically)
+ * @param label The text to draw (may contain '\n' for multiline text, if so lines will be stacked vertically)
  * @param line_spacing The delta between each line (set its value at to least the font text size, to be readable)
  */
-static void multiline_label_draw(struct graphics *gra, struct graphics_gc *gc, struct graphics_gc *gc_background,
-                                 struct graphics_font *font, struct point pref, const char *input_label, int line_spacing) {
+static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg,
+                                 struct graphics_font *font, struct point pref, const char *label, int line_spacing) {
 
-    char *label=g_strdup(input_label);
+    char *input_label=g_strdup(label);
     char *label_lines[10];	/* Max 10 lines of text */
     int label_nblines=0;
     int label_linepos=0;
-    char *startline=label;
+    char *startline=input_label;
     char *endline=startline;
     while (endline && *endline!='\0') {
         while (*endline!='\0' && *endline!='\n') { /* Search for new line */
@@ -2012,7 +2012,7 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *gc, s
     }
     if (label_nblines>(sizeof(label_lines)/sizeof(char
                        *))) {	/* Does label_nblines overflows the number of entries in array label_lines? */
-        dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, input_label,
+        dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, label,
             sizeof(label_lines)/sizeof(char *));
         label_nblines=sizeof(label_lines)/sizeof(char *);
     }
@@ -2023,11 +2023,11 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *gc, s
 
     /* Parse all stored lines, and display them */
     for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
-        gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, label_lines[label_linepos],
+        gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label_lines[label_linepos],
                             &pref, 0x10000, 0);
         pref.y+=line_spacing;
     }
-    g_free(label);
+    g_free(input_label);
 }
 
 
