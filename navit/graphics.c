@@ -2033,11 +2033,42 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                         graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
                         dc->gc_background=gc_background;
                     }
-                    p.x=pa[0].x+3;
-                    p.y=pa[0].y+10;
-                    if (font)
-                        gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, di->label, &p, 0x10000, 0);
-                    else
+                    if (font) {
+                        char *label=g_strdup(di->label);
+                        char *label_lines[10];	/* Max 10 lines of text */
+                        int label_nblines=0;
+                        int label_linepos=0;
+                        char *startline=label;
+                        char *endline=startline;
+                        while (endline && *endline!='\0') {
+                            while (*endline!='\0' && *endline!='\n') { /* Search for new line */
+                                endline=g_utf8_next_char(endline);
+                            }
+                            if (*endline=='\0')
+                                endline=NULL;	/* This means we reached the end of string */
+                            if (endline) /* Test if we got a new line character ('\n') */
+                                *endline='\0';	/* Terminate string at line ('\n') and print this line */
+                            label_lines[label_nblines++]=startline;
+                            if (endline==NULL)	/* endline is NULL, this was the last line of the multi-line string */
+                                break;
+                            endline++;	/* No need for g_utf8_next_char() here, as we know '\n' is a single byte UTF-8 char */
+                            startline=endline;	/* Start processing next line, by setting startline to its first character */
+                        }
+                        if (label_nblines>sizeof(label_lines)/sizeof(char *)) {
+                            dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, di->label,
+                                sizeof(label_lines)/sizeof(char *));
+                            label_nblines=10;
+                        }
+                        p.x=pa[0].x+(e->u.circle.radius/2)+1;
+                        p.y=pa[0].y+(e->u.circle.radius/2)-(label_nblines*(e->text_size
+                                                            +1))/2;	/* Vertically center text with respect to circle */
+                        for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
+                            gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, label_lines[label_linepos],
+                                                &p, 0x10000, 0);
+                            p.y+=e->text_size+1;
+                        }
+                        g_free(label);
+                    } else
                         dbg(lvl_error,"Failed to get font with size %d",e->text_size);
                 }
             }

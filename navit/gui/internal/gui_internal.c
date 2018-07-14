@@ -974,6 +974,8 @@ static void square_shape_str(char *s) {
         max_cols = cur_cols;
     if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
         max_rows++;
+    /* Give twice more room for rows (hence the factor 2 below)
+     * This will render as a rectangular shape, taking more horizontal space than vertical */
     surface = max_rows * 2 * max_cols;
     target_cols = sqrt(surface);
 
