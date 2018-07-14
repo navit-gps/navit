@@ -977,7 +977,7 @@ static void square_shape_str(char *s) {
     /* Give twice more room for rows (hence the factor 2 below)
      * This will render as a rectangular shape, taking more horizontal space than vertical */
     surface = max_rows * 2 * max_cols;
-    target_cols = sqrt(surface);
+    target_cols = uint_sqrt(surface);
 
     if (target_cols < max_cols)
         target_cols = max_cols;

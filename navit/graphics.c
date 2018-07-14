@@ -1444,30 +1444,6 @@ static int fowler(int dy, int dx) {
     }
     return 0;
 }
-static int int_sqrt(unsigned int n) {
-    unsigned int h, p= 0, q= 1, r= n;
-
-    /* avoid q rollover */
-    if(n >= (1<<(sizeof(n)*8-2))) {
-        q = 1<<(sizeof(n)*8-2);
-    } else {
-        while ( q <= n ) {
-            q <<= 2;
-        }
-        q >>= 2;
-    }
-
-    while ( q != 0 ) {
-        h = p + q;
-        p >>= 1;
-        if ( r >= h ) {
-            p += q;
-            r -= h;
-        }
-        q >>= 2;
-    }
-    return p;
-}
 
 struct draw_polyline_shape {
     int wi;
@@ -1515,9 +1491,9 @@ static void draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int
     dys=shape->dy*shape->dy;
     lscales=lscale*lscale;
     if (dxs + dys > lscales)
-        l = int_sqrt(dxs+dys)*lscale;
+        l = uint_sqrt(dxs+dys)*lscale;
     else
-        l = int_sqrt((dxs+dys)*lscales);
+        l = uint_sqrt((dxs+dys)*lscales);
 
     shape->fow=fowler(-shape->dy, shape->dx);
     dbg(lvl_debug,"fow=%d",shape->fow);
