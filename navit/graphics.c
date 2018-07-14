@@ -2054,14 +2054,17 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                             endline++;	/* No need for g_utf8_next_char() here, as we know '\n' is a single byte UTF-8 char */
                             startline=endline;	/* Start processing next line, by setting startline to its first character */
                         }
-                        if (label_nblines>sizeof(label_lines)/sizeof(char *)) {
+                        if (label_nblines>(sizeof(label_lines)/sizeof(char *))) {	/* Does label_nblines overflows the number of entries in array label_lines? */
                             dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, di->label,
                                 sizeof(label_lines)/sizeof(char *));
-                            label_nblines=10;
+                            label_nblines=sizeof(label_lines)/sizeof(char *);
                         }
+                        /* Horizontally, we position the label next to the circle (on the right handside) */
                         p.x=pa[0].x+(e->u.circle.radius/2)+1;
-                        p.y=pa[0].y+(e->u.circle.radius/2)-(label_nblines*(e->text_size
-                                                            +1))/2;	/* Vertically center text with respect to circle */
+                        /* Vertically, we center the text with respect to circle */
+                        p.y=pa[0].y+(e->u.circle.radius/2)-(label_nblines*(e->text_size+1))/2;
+
+                        /* Parse all stored lines, and display them */
                         for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
                             gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, label_lines[label_linepos],
                                                 &p, 0x10000, 0);
