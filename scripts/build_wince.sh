@@ -9,6 +9,7 @@ test -d output && rm -rf output
 mkdir output
 cp navit/navit.exe output/
 cp navit/navit.xml output/
+cp navit/navit_layout*.xml output/
 cp -r locale/ output/
 cp -r navit/icons/ output/
 cp -r ../navit/support/espeak/espeak-data/ output/
