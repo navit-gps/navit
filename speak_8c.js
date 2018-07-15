@@ -23,7 +23,7 @@ var speak_8c =
     [ "free_list", "speak_8c.html#a41c0f82577a3216c7a361f90009f91ed", null ],
     [ "GetFileLength", "speak_8c.html#ab8742df0460ed0aa3d81a2d2a67fb18d", null ],
     [ "initialise", "speak_8c.html#a411329d64e823a1ff7cdaa575b3a0db0", null ],
-    [ "MarkerEvent", "speak_8c.html#a960129a97d6754a9819e71dfc85bea91", null ],
+    [ "MarkerEvent", "speak_8c.html#aab0e2da9c2aa351404008259dcc3ab46", null ],
     [ "plugin_init", "speak_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "speech_message_dispatcher", "speak_8c.html#a68d60fb90ee12aaf5a71626e693618ea", null ],
     [ "speech_message_handler", "speak_8c.html#a8d4d7ec5574142a3a8555f3337ea0055", null ],
