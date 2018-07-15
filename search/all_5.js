@@ -202,6 +202,7 @@ var searchData=
   ['circle',['circle',['../structcircle.html',1,'circle'],['../structattr.html#aba688a22aaadfc246060f580f9ad44a7',1,'attr::circle()'],['../structelement.html#a318135011ba4c007d1f046b8f65a952a',1,'element::circle()']]],
   ['circle64',['circle64',['../graphics_8c.html#aa63b2ede92fc6c4e6d169e0b3aae44b8',1,'graphics.c']]],
   ['circle_5fnew',['circle_new',['../layout_8c.html#a634fe4cfcb350abaf0f43b6375b94773',1,'circle_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#a634fe4cfcb350abaf0f43b6375b94773',1,'circle_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
+  ['circle_5fto_5fpoints',['circle_to_points',['../graphics_8c.html#a6b326df6072308e9d264a89bae58b177',1,'graphics.c']]],
   ['city',['city',['../structlabel__header.html#a793c1af4995b7e7e103644c52d7b5121',1,'label_header::city()'],['../garmin__img_8c.html#ab840e4291cac2007b3daba2c44f1ee19',1,'city():&#160;garmin_img.c']]],
   ['civil_5ftwilight',['civil_twilight',['../sunriset_8h.html#abb292c3b427fd0df1fe008d2b5224e09',1,'sunriset.h']]],
   ['cjson',['cJSON',['../structcJSON.html',1,'cJSON'],['../cJSON_8h.html#a417c667b0692c463cf3c6c435f1d5978',1,'cJSON():&#160;cJSON.h']]],

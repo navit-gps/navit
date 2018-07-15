@@ -191,8 +191,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a23aad70b9003180e604a001dc14c4885"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle</a> (struct <a class="el" href="structpoint.html">point</a> *pnt, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> diameter, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> scale, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> start, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> len, struct <a class="el" href="structpoint.html">point</a> *res, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *pos, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dir)</td></tr>
-<tr class="separator:a23aad70b9003180e604a001dc14c4885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b326df6072308e9d264a89bae58b177"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points</a> (const struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="garmin__img_8c.html#a3bce700a88a243b80b791686799ae5f7">center</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> diameter, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> scale, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> start, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> len, struct <a class="el" href="structpoint.html">point</a> *res, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *pos, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> dir)</td></tr>
+<tr class="memdesc:a6b326df6072308e9d264a89bae58b177"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a set of points on a circle or on a circular arc.  <a href="#a6b326df6072308e9d264a89bae58b177">More...</a><br/></td></tr>
+<tr class="separator:a6b326df6072308e9d264a89bae58b177"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ceeb9ccf62feba8c7afa747113d2838"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a0ceeb9ccf62feba8c7afa747113d2838">graphics_process_selection</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structdisplaylist.html">displaylist</a> *dl)</td></tr>
 <tr class="separator:a0ceeb9ccf62feba8c7afa747113d2838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43b981dfeeb3bf755d07de2a0b85ff68"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a43b981dfeeb3bf755d07de2a0b85ff68">graphics_gc_init</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_)</td></tr>
@@ -272,6 +273,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a5d8dc987416508625cf3d46571abdbcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count)</td></tr>
 <tr class="separator:a5d8dc987416508625cf3d46571abdbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> r)</td></tr>
+<tr class="memdesc:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a circle.  <a href="#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">More...</a><br/></td></tr>
 <tr class="separator:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1060bbcc5b480bd3f5c3f01c0c6f8000"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a1060bbcc5b480bd3f5c3f01c0c6f8000">graphics_draw_rectangle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> w, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> h)</td></tr>
 <tr class="separator:a1060bbcc5b480bd3f5c3f01c0c6f8000"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -497,6 +499,95 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a6b326df6072308e9d264a89bae58b177"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void circle_to_points </td>
+          <td>(</td>
+          <td class="paramtype">const struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>scale</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
+          <td class="paramname"><em>dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a set of points on a circle or on a circular arc. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">center</td><td>Center point of the circle </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">diameter</td><td>Diameter of the circle </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">scale</td><td>Unused </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">start</td><td>Position of the first point on the circle (in 1/1024th of the circle), -1 being the bottom of the circle, 511 being the top of the circle </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">len</td><td>Length of the arc on the circle, relative to start (in 1/1024th of the circle), 514 is half a circle, 1028 is a full circle (or 1027 if first and last points are connected with a line) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">res</td><td>Returned an array of points that will form the resulting circle </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">pos</td><td>Index of the last point filled inside array <code>res</code> </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">dir</td><td>Direction of the circle (valid values are 1 (counter-clockwise) or -1 (clockwise), other values may lead to unknown result) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="graphics_8c.html#aa63b2ede92fc6c4e6d169e0b3aae44b8">circle64</a>, <a class="el" href="graphics_8c.html#a324b733e46f8b60cf352267177370c7b">fowler()</a>, <a class="el" href="namespacestartup.html#a9ca06758194d7e10c9019377dbc522df">startup::pos</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcircle.html#a456f83f0a90cae69912e96e092d7b8c3">circle::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, and <a class="el" href="structcircle.html#a800b8a4734fd9d613ac4d1833d7cb3b6">circle::y</a>.</p>
+
+<p>Referenced by <a class="el" href="graphics_8h.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, and <a class="el" href="graphics_8h.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="acf9e3cf500904ae15017d76a889bac0d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1156,80 +1247,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a23aad70b9003180e604a001dc14c4885"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void draw_circle </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
-          <td class="paramname"><em>pnt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>diameter</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>scale</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>len</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
-          <td class="paramname"><em>res</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> *&#160;</td>
-          <td class="paramname"><em>pos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a>&#160;</td>
-          <td class="paramname"><em>dir</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="graphics_8c.html#aa63b2ede92fc6c4e6d169e0b3aae44b8">circle64</a>, <a class="el" href="graphics_8c.html#a324b733e46f8b60cf352267177370c7b">fowler()</a>, <a class="el" href="namespacestartup.html#a9ca06758194d7e10c9019377dbc522df">startup::pos</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcircle.html#a456f83f0a90cae69912e96e092d7b8c3">circle::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, and <a class="el" href="structcircle.html#a800b8a4734fd9d613ac4d1833d7cb3b6">circle::y</a>.</p>
-
-<p>Referenced by <a class="el" href="graphics_8h.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, and <a class="el" href="graphics_8h.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="ad190076be49130955764dd0b8d8077f4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1498,7 +1515,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, and <a class="el" href="graphics_8c.html#afa449a08000b6541bd6deb8663cc503f">draw_shape()</a>.</p>
+<p>Referenced by <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, and <a class="el" href="graphics_8c.html#afa449a08000b6541bd6deb8663cc503f">draw_shape()</a>.</p>
 
 </div>
 </div>
@@ -2258,17 +2275,20 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>FIXME </p>
+
+<p>Draw a circle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">&lt;&gt;</td><td></td></tr>
+    <tr><td class="paramname">this_</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramname">gc</td><td>The graphics context </td></tr>
+    <tr><td class="paramname">p</td><td>The coordinates of the center of the circle </td></tr>
+    <tr><td class="paramname">r</td><td>The radius of the circle</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>&lt;&gt; </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Martin Schaller (04/2008) </dd></dl>
 
-<p>References <a class="el" href="structgraphics__methods.html#a9781a0ab7ecffba21ac37927e0f03347">graphics_methods::draw_circle</a>, <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
+<p>References <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, <a class="el" href="structgraphics__methods.html#a9781a0ab7ecffba21ac37927e0f03347">graphics_methods::draw_circle</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
 
 <p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="osd__core_8c.html#ab13875a27a976a250b1ddb86d58e51fd">osd_auxmap_draw()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, and <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>.</p>
 
@@ -2529,7 +2549,7 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The graphics context </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
   </table>
@@ -2657,7 +2677,7 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The graphics context </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>An array of width matching the line starting from the corresponding <code>pa</code> (if all equal, all lines will have the same width) </td></tr>
@@ -2783,7 +2803,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+<p>References <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
 </div>
 </div>
@@ -5340,7 +5360,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="graphics_8c.html#a7305201a9e9ab2cdb81d6f9c715f3756">draw_begin()</a>, <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, and <a class="el" href="graphics_8c.html#ad190076be49130955764dd0b8d8077f4">draw_end()</a>.</p>
+<p>Referenced by <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, <a class="el" href="graphics_8c.html#a7305201a9e9ab2cdb81d6f9c715f3756">draw_begin()</a>, and <a class="el" href="graphics_8c.html#ad190076be49130955764dd0b8d8077f4">draw_end()</a>.</p>
 
 </div>
 </div>

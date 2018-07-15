@@ -218,6 +218,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a5d8dc987416508625cf3d46571abdbcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> count)</td></tr>
 <tr class="separator:a5d8dc987416508625cf3d46571abdbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> r)</td></tr>
+<tr class="memdesc:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a circle.  <a href="#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">More...</a><br/></td></tr>
 <tr class="separator:ace0cc4cc1efad6bdf903dc5d8dc0c8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1060bbcc5b480bd3f5c3f01c0c6f8000"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8h.html#a1060bbcc5b480bd3f5c3f01c0c6f8000">graphics_draw_rectangle</a> (struct <a class="el" href="structgraphics.html">graphics</a> *this_, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> w, <a class="el" href="graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646">int</a> h)</td></tr>
 <tr class="separator:a1060bbcc5b480bd3f5c3f01c0c6f8000"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1050,17 +1051,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>FIXME </p>
+
+<p>Draw a circle. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">&lt;&gt;</td><td></td></tr>
+    <tr><td class="paramname">this_</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramname">gc</td><td>The graphics context </td></tr>
+    <tr><td class="paramname">p</td><td>The coordinates of the center of the circle </td></tr>
+    <tr><td class="paramname">r</td><td>The radius of the circle</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>&lt;&gt; </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Martin Schaller (04/2008) </dd></dl>
 
-<p>References <a class="el" href="structgraphics__methods.html#a9781a0ab7ecffba21ac37927e0f03347">graphics_methods::draw_circle</a>, <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
+<p>References <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, <a class="el" href="structgraphics__methods.html#a9781a0ab7ecffba21ac37927e0f03347">graphics_methods::draw_circle</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
 
 <p>Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="osd__core_8c.html#ab13875a27a976a250b1ddb86d58e51fd">osd_auxmap_draw()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, and <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>.</p>
 
@@ -1321,7 +1325,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The graphics context </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
   </table>
@@ -1387,7 +1391,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The color to use for the drawing </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The graphics context </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>An array of width matching the line starting from the corresponding <code>pa</code> (if all equal, all lines will have the same width) </td></tr>
@@ -1513,7 +1517,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>References <a class="el" href="graphics_8c.html#a23aad70b9003180e604a001dc14c4885">draw_circle()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+<p>References <a class="el" href="graphics_8c.html#a6b326df6072308e9d264a89bae58b177">circle_to_points()</a>, <a class="el" href="structgraphics__methods.html#a8d3f5ce61cc8d5d57a795ce150ceab7b">graphics_methods::draw_lines</a>, <a class="el" href="structgraphics__methods.html#aecdeaccd95b4e5c4f40104b269a23fb4">graphics_methods::draw_polygon</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
 </div>
 </div>

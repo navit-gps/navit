@@ -25,6 +25,7 @@ var graphics_8c =
       [ "ABOVE", "graphics_8c.html#a712fea8541b1f0f7f90cf56c81c39f16aaad01162f441b9162610e81352541694", null ],
       [ "BELOW", "graphics_8c.html#a712fea8541b1f0f7f90cf56c81c39f16a249f61b14032b08617e4b2446bace97e", null ]
     ] ],
+    [ "circle_to_points", "graphics_8c.html#a6b326df6072308e9d264a89bae58b177", null ],
     [ "clear_hash", "graphics_8c.html#acf9e3cf500904ae15017d76a889bac0d", null ],
     [ "clip_line", "graphics_8c.html#ae84c82ded6d1d2463545327dfbb6a1c8", null ],
     [ "clip_line_endoint_to_rect_edge", "graphics_8c.html#a99abc87c83238629af3d18a2a5a996a7", null ],
@@ -40,7 +41,6 @@ var graphics_8c =
     [ "displaylist_update_layers", "graphics_8c.html#a22d42000a5f34e27c9d474c416699dc8", null ],
     [ "do_draw", "graphics_8c.html#aaf0787db32faf380b8853fcd3b635252", null ],
     [ "draw_begin", "graphics_8c.html#a7305201a9e9ab2cdb81d6f9c715f3756", null ],
-    [ "draw_circle", "graphics_8c.html#a23aad70b9003180e604a001dc14c4885", null ],
     [ "draw_end", "graphics_8c.html#ad190076be49130955764dd0b8d8077f4", null ],
     [ "draw_init_ctx", "graphics_8c.html#ae06a28c911e0dfecdac6713e9e178c80", null ],
     [ "draw_middle", "graphics_8c.html#a714b143d10082ff494e8408998c717f3", null ],
