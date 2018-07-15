@@ -1,18 +1,17 @@
 language variant
-gender male 35
-name male5
+name male7
+gender male
 
-formant 0 120 150 220
+pitch  75 125
 
-formant 1 100 100 100
-formant 2 100 100 100
-formant 3 100 100 100
+formant 0 100 125 100
+formant 1 100 90 80
+formant 2 100 70 90
+formant 3 100 60 90
+formant 4 100 60 90
+formant 5  75 50 90
+formant 6  90 50 100
+formant 7 100 50 100
+formant 8 100 50 100
+voicing 155
 
-formant 4 100 80 100
-formant 5 100 100 100
-
-formant 6 80 200 80
-formant 7 80 200 100
-
-pitch 80 118
-tone 600 150 255 50  100 100

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 to 2007 by Jonathan Duddington                     *
+ *   Copyright (C) 2005 to 2013 by Jonathan Duddington                     *
  *   email: jonsd@users.sourceforge.net                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,6 +17,8 @@
  *               <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
+
+
 #include "StdAfx.h"
 
 #include <stdio.h>
@@ -33,17 +35,16 @@
 #include "translate.h"
 #include "voice.h"
 
-extern int Read4Bytes(FILE *f);
-extern void SetPitch2(voice_t *voice, int pitch1, int pitch2, int *pitch_base, int *pitch_range);
+int option_mbrola_phonemes;
 
-#ifdef USE_MBROLA_LIB
+#ifdef INCLUDE_MBROLA
 
+#include "wavegen.h"
 extern unsigned char *outbuf;
 
 #ifndef PLATFORM_WINDOWS
 
-#include "mbrolib.h"
-void * mb_handle;
+#include "mbrowrap.h"
 
 #else
 #include <windows.h>
@@ -64,7 +65,7 @@ PROCVV		reset_MBR;
 PROCIV		lastError_MBR;
 PROCVCI		lastErrorStr_MBR;
 PROCVI		setNoError_MBR;
-PROCVI		setFreq_MBR;
+PROCIV		getFreq_MBR;
 PROCVF		setVolumeRatio_MBR;
 
 
@@ -75,9 +76,9 @@ HINSTANCE	hinstDllMBR = NULL;
 BOOL load_MBR()
 {
 	if(hinstDllMBR != NULL)
-		return TRUE;   // already loaded 
+		return TRUE;   // already loaded
 
-	if (!(hinstDllMBR=LoadLibraryA("mbrola.dll")))
+	if ((hinstDllMBR=LoadLibraryA("mbrola.dll")) == 0)
 		return FALSE;
 	init_MBR			=(PROCIC) GetProcAddress(hinstDllMBR,"init_MBR");
 	write_MBR			=(PROCIC) GetProcAddress(hinstDllMBR,"write_MBR");
@@ -103,14 +104,11 @@ void unload_MBR()
 }
 
 #endif   // windows
-#endif   // USE_MBROLA_LIB
 
 
 static MBROLA_TAB *mbrola_tab = NULL;
 static int mbrola_control = 0;
-
-
-
+static int mbr_name_prefix = 0;
 
 espeak_ERROR LoadMbrolaTable(const char *mbrola_voice, const char *phtrans, int srate)
 {//===================================================================================
@@ -124,6 +122,7 @@ espeak_ERROR LoadMbrolaTable(const char *mbrola_voice, const char *phtrans, int 
 
 	mbrola_name[0] = 0;
 	mbrola_delay = 0;
+	mbr_name_prefix = 0;
 
 	if(mbrola_voice == NULL)
 	{
@@ -133,37 +132,50 @@ espeak_ERROR LoadMbrolaTable(const char *mbrola_voice, const char *phtrans, int 
 	}
 
 	sprintf(path,"%s/mbrola/%s",path_home,mbrola_voice);
-#ifdef USE_MBROLA_LIB
+#ifdef PLATFORM_POSIX
+	// if not found, then also look in
+	//   usr/share/mbrola/xx, /usr/share/mbrola/xx/xx, /usr/share/mbrola/voices/xx
+	if(GetFileLength(path) <= 0)
+	{
+     sprintf(path,"/usr/share/mbrola/%s",mbrola_voice);
+
+		if(GetFileLength(path) <= 0)
+		{
+			sprintf(path,"/usr/share/mbrola/%s/%s",mbrola_voice,mbrola_voice);
+
+			if(GetFileLength(path) <= 0)
+			{
+				sprintf(path,"/usr/share/mbrola/voices/%s",mbrola_voice);
+			}
+		}
+	}
+	close_MBR();
+#endif
 #ifdef PLATFORM_WINDOWS
 	if(load_MBR() == FALSE)     // load mbrola.dll
-		return(EE_INTERNAL_ERROR); 
+	{
+		fprintf(stderr, "Can't load mbrola.dll\n");
+		return(EE_INTERNAL_ERROR);
+	}
+#endif
 
 	if(init_MBR(path) != 0)      // initialise the required mbrola voice
 		return(EE_NOT_FOUND);
 
 	setNoError_MBR(1);     // don't stop on phoneme errors
-#else
-	mb_handle = mbrolib_init(srate);
-	mbrolib_parameter m_parameters;
-
-	if(mb_handle == NULL)
-		return(EE_INTERNAL_ERROR);
-
-  MBROLIB_ERROR a_status = mbrolib_set_voice(mb_handle, mbrola_voice);
-  if(a_status != MBROLIB_OK)
-		return(EE_NOT_FOUND);
-#endif   // not windows
-#endif   // USE_MBROLA_LIB
 
 	// read eSpeak's mbrola phoneme translation data, eg. en1_phtrans
 	sprintf(path,"%s/mbrola_ph/%s",path_home,phtrans);
 	size = GetFileLength(path);
-	if((f_in = fopen(path,"r")) == NULL)
+	if((f_in = fopen(path,"rb")) == NULL) {
+		close_MBR();
 		return(EE_NOT_FOUND);
+	}
 
 	if((mbrola_tab = (MBROLA_TAB *)realloc(mbrola_tab,size)) == NULL)
 	{
 		fclose(f_in);
+		close_MBR();
 		return(EE_INTERNAL_ERROR);
 	}
 
@@ -173,29 +185,19 @@ espeak_ERROR LoadMbrolaTable(const char *mbrola_voice, const char *phtrans, int 
 	{
 		*pw++ = Read4Bytes(f_in);
 	}
-	fread(mbrola_tab,size,1,f_in);
+	size = fread(mbrola_tab,1,size,f_in);
 	fclose(f_in);
 
-
-#ifdef USE_MBROLA_LIB
-#ifdef PLATFORM_WINDOWS
 	setVolumeRatio_MBR((float)(mbrola_control & 0xff) /16.0f);
-#else
-	mbrolib_get_parameter(mb_handle,&m_parameters);
-	m_parameters.ignore_error = 1;
-	m_parameters.volume_ratio = (float)(mbrola_control & 0xff) /16.0;
-	mbrolib_set_parameter(mb_handle,&m_parameters);
-#endif    // not windows
-#endif    // USE_MBROLA_LIB
-
-	option_quiet = 1;
+//	srate = getFreq_MBR();
 	samplerate = srate;
 	if(srate == 22050)
 		SetParameter(espeakVOICETYPE,0,0);
 	else
 		SetParameter(espeakVOICETYPE,1,0);
 	strcpy(mbrola_name,mbrola_voice);
-	mbrola_delay = 3800;  // improve synchronization of events
+//	mbrola_delay = 3800;  // improve synchronization of events
+	mbrola_delay = 1000;  // improve synchronization of events
 	return(EE_OK);
 }  // end of LoadMbrolaTable
 
@@ -204,16 +206,24 @@ static int GetMbrName(PHONEME_LIST *plist, PHONEME_TAB *ph, PHONEME_TAB *ph_prev
 {//==========================================================================================================================================
 // Look up a phoneme in the mbrola phoneme name translation table
 // It may give none, 1, or 2 mbrola phonemes
-	int mnem = ph->mnemonic;
 	MBROLA_TAB *pr;
 	PHONEME_TAB *other_ph;
 	int found = 0;
+	static int mnem;
 
 	// control
 	// bit 0  skip the next phoneme
 	// bit 1  match this and Previous phoneme
 	// bit 2  only at the start of a word
 	// bit 3  don't match two phonemes across a word boundary
+	// bit 4  add this phoneme name as a prefix to the next phoneme name (used for de4 phoneme prefix '?')
+	// bit 5  only in stressed syllable
+	// bit 6  only at the end of a word
+
+	*name2=0;
+	*split=0;
+	*control=0;
+	mnem = ph->mnemonic;
 
 	pr = mbrola_tab;
 	while(pr->name != 0)
@@ -248,20 +258,36 @@ static int GetMbrName(PHONEME_LIST *plist, PHONEME_TAB *ph, PHONEME_TAB *ph_prev
 			if((pr->control & 4) && (plist->newword == 0))  // only at start of word
 				found = 0;
 
+			if((pr->control & 0x40) && (plist[1].newword == 0))  // only at the end of a word
+				found = 0;
+
+			if((pr->control & 0x20) && (plist->stresslevel < plist->wordstress))
+				found = 0;   // only in stressed syllables
+
 			if(found)
 			{
 				*name2 = pr->mbr_name2;
 				*split = pr->percent;
 				*control = pr->control;
-				return(pr->mbr_name);
+
+				if(pr->control & 0x10)
+				{
+					mbr_name_prefix = pr->mbr_name;
+					return(0);
+				}
+				mnem = pr->mbr_name;
+				break;
 			}
 		}
 
 		pr++;
 	}
-	*name2=0;
-	*split=0;
-	*control=0;
+
+	if(mbr_name_prefix != 0)
+	{
+		mnem = (mnem << 8) | (mbr_name_prefix & 0xff);
+	}
+	mbr_name_prefix = 0;
 	return(mnem);
 }
 
@@ -383,155 +409,10 @@ static char *WritePitch(int env, int pitch1, int pitch2, int split, int final)
 }  // end of WritePitch
 
 
-#ifdef USE_MBROLA_LIB
-
-static void MbrolaMarker(int type, int char_posn, int length, int value)
-{//=====================================================================
-
-	MarkerEvent(type,(char_posn & 0xffffff) | (length << 24),value,outbuf);
-
-}
-
-
-static void MbrolaEmbedded(int &embix, int sourceix)
-{//=================================================
-	// There were embedded commands in the text at this point
-	unsigned int word;  // bit 7=last command for this word, bits 5,6 sign, bits 0-4 command
-	unsigned int value;
-	int command;
-	int sign=0;
-
-	do {
-		word = embedded_list[embix++];
-		value = word >> 8;
-		command = word & 0x1f;
-
-		if((word & 0x60) == 0x60)
-			sign = -1;
-		else
-		if((word & 0x60) == 0x40)
-			sign = 1;
-
-		if(command < N_EMBEDDED_VALUES)
-		{
-			if(sign == 0)
-				embedded_value[command] = value;
-			else
-				embedded_value[command] += (value * sign);
-		}
-
-		switch(command & 0x1f)
-		{
-		case EMBED_M:   // named marker
-			MbrolaMarker(espeakEVENT_MARK, (sourceix & 0x7ff) + clause_start_char, 0, value);
-			break;
-		}
-	} while ((word & 0x80) == 0);
-}
-
-
-#ifdef PLATFORM_WINDOWS
-static int MbrolaSynth(char *p_mbrola)
-{//===================================
-// p_mbrola is a string of mbrola pho lines - Windows
-	int len;
-	int finished;
-	int result=0;
-
-	if(synth_callback == NULL)
-		return(1);
-
-	if(p_mbrola == NULL)
-		flush_MBR();
-	else
-		result = write_MBR(p_mbrola);
-
-
-	finished = 0;
-	while(!finished && ((len = read_MBR((short *)outbuf, outbuf_size/2)) > 0))
-	{
-		out_ptr = outbuf + len*2;
-
-		if(event_list)
-		{
-			event_list[event_list_ix].type = espeakEVENT_LIST_TERMINATED; // indicates end of event list
-			event_list[event_list_ix].user_data = 0;
-		}
-		count_samples += len;
-		finished = synth_callback((short *)outbuf, len, event_list);
-		event_list_ix=0;
-	}
-
-	if(finished)
-	{
-		// cancelled by user, discard any unused mbrola speech
-		flush_MBR();
-		while((len = read_MBR((short *)outbuf, outbuf_size/2)) > 0);
-	}
-	return(finished);
-}  // end of SynthMbrola
-#else
-
-static int MbrolaSynth(char *p_mbrola)
-{//===================================
-// p_mbrola is a string of mbrola pho lines - Linux
-
-// This is wrong
-// It must be called from WavegenFill()
-
-	int len;
-	int finished;
-	int result=0;
-
-	if(synth_callback == NULL)
-		return(1);
-
-	if(p_mbrola == NULL)
-		mbrolib_flush(mb_handle);
-	else
-		result = mbrolib_write(mb_handle,p_mbrola,strlen(p_mbrola));
-
-
-	finished = 0;
-	while(!finished && (mbrolib_read(mb_handle, (short *)out_ptr, (out_end - out_ptr)/2, &len) == MBROLIB_OK))
-	{
-		if(len == 0)
-			break;
-
-		out_ptr += (len*2);
-
-		if(event_list)
-		{
-			event_list[event_list_ix].type = espeakEVENT_LIST_TERMINATED; // indicates end of event list
-			event_list[event_list_ix].user_data = 0;
-		}
-		count_samples += len;
-		finished = synth_callback((short *)outbuf, len, event_list);
-		event_list_ix=0;
-	}
-
-	if(finished)
-	{
-		// cancelled by user, discard any unused mbrola speech
-		mbrolib_flush(mb_handle);
-		while(mbrolib_read(mb_handle, (short *)outbuf, outbuf_size/2, &len) == MBROLIB_OK)
-		{
-			if(len == 0)
-				break;
-		}
-	}
-	return(finished);
-}  // end of SynthMbrola
-#endif  // not windows
-#endif  // USE_MBROLA_LIB
-
-
-
-void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
-{//======================================================================
+int MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, int resume, FILE *f_mbrola)
+{//=================================================================================
 // Generate a mbrola pho file
 	unsigned int name;
-	int phix;
 	int len;
 	int len1;
 	PHONEME_TAB *ph;
@@ -539,7 +420,8 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 	PHONEME_TAB *ph_prev;
 	PHONEME_LIST *p;
 	PHONEME_LIST *next;
-	PHONEME_LIST *prev;
+	PHONEME_DATA phdata;
+	FMT_PARAMS fmtp;
 	int pause = 0;
 	int released;
 	int name2;
@@ -547,75 +429,76 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 	int done;
 	int len_percent;
 	const char *final_pitch;
-	char buf[80];
+	char *ptr;
 	char mbr_buf[120];
 
-#ifdef USE_MBROLA_LIB
-	int embedded_ix=0;
-	int word_count=0;
+	static int phix;
+	static int embedded_ix;
+	static int word_count;
 
-	event_list_ix = 0;
-	out_ptr = outbuf;
-#ifdef PLATFORM_WINDOWS
-	setNoError_MBR(1);     // don't stop on phoneme errors
-#endif
-#else
-//	fprintf(f_mbrola,";; v=%.2f\n",(float)(mbrola_control & 0xff)/16.0);   //  ;; v=  has no effect on mbrola
-#endif
+	if (!resume) {
+		phix = 1;
+		embedded_ix = 0;
+		word_count = 0;
+	}
 
-	for(phix=1; phix < n_phonemes; phix++)
+	while (phix < n_phonemes)
 	{
-		mbr_buf[0] = 0;
+		if (WcmdqFree() < MIN_WCMDQ)
+			return 1;
+
+		ptr = mbr_buf;
 
 		p = &plist[phix];
 		next = &plist[phix+1];
-		prev = &plist[phix-1];
 		ph = p->ph;
 		ph_prev = plist[phix-1].ph;
 		ph_next = plist[phix+1].ph;
 
-#ifdef USE_MBROLA_LIB
 		if(p->synthflags & SFLAG_EMBEDDED)
 		{
-			MbrolaEmbedded(embedded_ix, p->sourceix);
+			DoEmbedded(&embedded_ix, p->sourceix);
 		}
-		if(p->newword & 4)
-			MbrolaMarker(espeakEVENT_SENTENCE, (p->sourceix & 0x7ff) + clause_start_char, 0, count_sentences);
 
+		if(p->newword & 4)
+			DoMarker(espeakEVENT_SENTENCE, (p->sourceix & 0x7ff) + clause_start_char, 0, count_sentences);
 		if(p->newword & 1)
-			MbrolaMarker(espeakEVENT_WORD, (p->sourceix & 0x7ff) + clause_start_char, p->sourceix >> 11, clause_start_word + word_count++);
-#endif
+			DoMarker(espeakEVENT_WORD, (p->sourceix & 0x7ff) + clause_start_char, p->sourceix >> 11, clause_start_word + word_count++);
 
 		name = GetMbrName(p,ph,ph_prev,ph_next,&name2,&len_percent,&control);
 		if(control & 1)
 			phix++;
 
-		if(name == 0)
+		if(name == 0) {
+			phix++;
 			continue;   // ignore this phoneme
+		}
 
 		if((ph->type == phPAUSE) && (name == ph->mnemonic))
 		{
 			// a pause phoneme, which has not been changed by the translation
 			name = '_';
-			len = (p->length * speed.speed_factor1)/256;
+			len = (p->length * speed.pause_factor)/256;
 //			if(len == 0) continue;
 			if(len == 0)
 				len = 1;
 		}
 		else
-			len = (80 * speed.speed_factor2)/256;
+			len = (80 * speed.wav_factor)/256;
 
-#ifdef USE_MBROLA_LIB
-		MbrolaMarker(espeakEVENT_PHONEME, (p->sourceix & 0x7ff) + clause_start_char, 0, ph->mnemonic); 
-#endif
+		if(ph->code != phonEND_WORD)
+		{
+			char phoneme_name[16];
+			WritePhMnemonic(phoneme_name, p->ph, p, option_phoneme_events & espeakINITIALIZE_PHONEME_IPA, NULL);
+			DoPhonemeMarker(espeakEVENT_PHONEME, (p->sourceix & 0x7ff) + clause_start_char, 0, phoneme_name);
+		}
 
-		sprintf(buf,"%s\t",WordToString(name));
-		strcat(mbr_buf,buf);
+		ptr += sprintf(ptr,"%s\t",WordToString(name));
 
 		if(name2 == '_')
 		{
 			// add a pause after this phoneme
-			pause = PauseLength(len_percent,0);
+			pause = len_percent;
 			name2 = 0;
 		}
 
@@ -635,17 +518,19 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 
 			if(name2 == 0)
 			{
-				sprintf(buf,"%d\t%s", len, WritePitch(p->env,p->pitch1,p->pitch2,0,0));
-				strcat(mbr_buf,buf);
+				char *pitch = WritePitch(p->env,p->pitch1,p->pitch2,0,0);
+				ptr += sprintf(ptr,"%d\t%s", len, pitch);
 			}
 			else
 			{
-				len1 = (len * len_percent)/100;
-				sprintf(buf,"%d\t%s", len1, WritePitch(p->env,p->pitch1,p->pitch2,len_percent,0));
-				strcat(mbr_buf,buf);
+				char *pitch;
 
-				sprintf(buf,"%s\t%d\t%s", WordToString(name2), len-len1, WritePitch(p->env,p->pitch1,p->pitch2,-len_percent,0));
-				strcat(mbr_buf,buf);
+				pitch = WritePitch(p->env,p->pitch1,p->pitch2,len_percent,0);
+				len1 = (len * len_percent)/100;
+				ptr += sprintf(ptr,"%d\t%s", len1, pitch);
+
+				pitch = WritePitch(p->env,p->pitch1,p->pitch2,-len_percent,0);
+				ptr += sprintf(ptr,"%s\t%d\t%s", WordToString(name2), len-len1, pitch);
 			}
 			done = 1;
 			break;
@@ -655,23 +540,25 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 			if(next->type==phVOWEL) released = 1;
 			if(next->type==phLIQUID && !next->newword) released = 1;
 
-			if(released)
-				len = DoSample(p->ph,next->ph,2,0,-1);
-			else
-				len = DoSample(p->ph,phoneme_tab[phonPAUSE],2,0,-1);
+			if(released == 0)
+				p->synthflags |= SFLAG_NEXT_PAUSE;
+			InterpretPhoneme(NULL, 0, p, &phdata, NULL);
+			len = DoSample3(&phdata, 0, -1);
+
 			len = (len * 1000)/samplerate;  // convert to mS
 			len += PauseLength(p->prepause,1);
 			break;
 
 		case phVSTOP:
-			len = (80 * speed.speed_factor2)/256;
+			len = (80 * speed.wav_factor)/256;
 			break;
 
 		case phFRICATIVE:
 			len = 0;
+			InterpretPhoneme(NULL, 0, p, &phdata, NULL);
 			if(p->synthflags & SFLAG_LENGTHEN)
-				len = DoSample(ph,ph_next,2,p->length,-1);  // play it twice for [s:] etc.
-			len += DoSample(ph,ph_next,2,p->length,-1);
+				len = DoSample3(&phdata, p->length, -1);  // play it twice for [s:] etc.
+			len += DoSample3(&phdata, p->length, -1);
 
 			len = (len * 1000)/samplerate;  // convert to mS
 			break;
@@ -679,7 +566,11 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 		case phNASAL:
 			if(next->type != phVOWEL)
 			{
-				len = DoSpect(p->ph,prev->ph,phoneme_tab[phonPAUSE],2,p,-1);
+				memset(&fmtp, 0, sizeof(fmtp));
+				InterpretPhoneme(NULL, 0, p, &phdata, NULL);
+				fmtp.fmt_addr = phdata.sound_addr[pd_FMT];
+				len = DoSpect2(p->ph, 0, &fmtp,  p, -1);
+//				len = DoSpect(p->ph,prev->ph,phoneme_tab[phonPAUSE],2,p,-1);
 				len = (len * 1000)/samplerate;
 				if(next->type == phPAUSE)
 					len += 50;
@@ -701,60 +592,139 @@ void MbrolaTranslate(PHONEME_LIST *plist, int n_phonemes, FILE *f_mbrola)
 			if(name2 != 0)
 			{
 				len1 = (len * len_percent)/100;
-				sprintf(buf,"%d\n%s\t",len1,WordToString(name2));
-				strcat(mbr_buf,buf);
+				ptr += sprintf(ptr,"%d\n%s\t",len1,WordToString(name2));
 				len -= len1;
 			}
-			sprintf(buf,"%d%s\n",len,final_pitch);
-			strcat(mbr_buf,buf);
+			ptr += sprintf(ptr,"%d%s\n",len,final_pitch);
 		}
 
 		if(pause)
 		{
-			sprintf(buf,"_ \t%d\n",PauseLength(pause,0));
-			strcat(mbr_buf,buf);
+			len += PauseLength(pause,0);
+			ptr += sprintf(ptr,"_ \t%d\n",PauseLength(pause,0));
 			pause = 0;
 		}
 
 		if(f_mbrola)
 		{
-			fwrite(mbr_buf,1,strlen(mbr_buf),f_mbrola);  // write .pho to a file
+			fwrite(mbr_buf,1,(ptr-mbr_buf),f_mbrola);  // write .pho to a file
 		}
 		else
 		{
-#ifdef USE_MBROLA_LIB
-			if(MbrolaSynth(mbr_buf) != 0)
-				return;
-#endif
+			int res = write_MBR(mbr_buf);
+			if (res < 0)
+				return 0;  /* don't get stuck on error */
+			if (res == 0)
+				return 1;
+			wcmdq[wcmdq_tail][0] = WCMD_MBROLA_DATA;
+			wcmdq[wcmdq_tail][1] = len;
+			WcmdqInc();
 		}
+
+		phix++;
 	}
 
-#ifdef USE_MBROLA_LIB
-	MbrolaSynth(NULL);
-#endif
+	if(!f_mbrola)
+	{
+		flush_MBR();
+
+		// flush the mbrola output buffer
+		wcmdq[wcmdq_tail][0] = WCMD_MBROLA_DATA;
+		wcmdq[wcmdq_tail][1] = 500;
+		WcmdqInc();
+	}
+
+	return 0;
 }  // end of MbrolaTranslate
 
 
-#ifdef TEST_MBROLA
+int MbrolaGenerate(PHONEME_LIST *phoneme_list, int *n_ph, int resume)
+{//==================================================================
+	FILE *f_mbrola = NULL;
 
-static PHONEME_LIST mbrola_phlist;
-static int mbrola_n_ph;
-static int mbrola_phix;
+	if(*n_ph == 0)
+		return(0);
+
+	if(option_mbrola_phonemes)
+	{
+		// send mbrola data to a file, not to the mbrola library
+		f_mbrola = f_trans;
+	}
+
+	int again = MbrolaTranslate(phoneme_list, *n_ph, resume, f_mbrola);
+	if (!again)
+		*n_ph = 0;
+	return again;
+}
 
 
-int MbrolaFill(int fill_zeros)
-{//===========================
+int MbrolaFill(int length, int resume, int amplitude)
+{//==================================================
+// Read audio data from Mbrola (length is in millisecs)
+
+	static int n_samples;
+	int req_samples, result;
+	int ix;
+	short value16;
+	int value;
+
+	if (!resume)
+		n_samples = samplerate * length / 1000;
+
+	req_samples = (out_end - out_ptr)/2;
+	if (req_samples > n_samples)
+		req_samples = n_samples;
+	result = read_MBR((short *)out_ptr, req_samples);
+	if (result <= 0)
+		return 0;
+
+	for(ix=0; ix < result; ix++)
+	{
+		value16 = out_ptr[0] + (out_ptr[1] << 8);
+		value = value16 * amplitude;
+		value = value / 40;   // adjust this constant to give a suitable amplitude for mbrola voices
+		if(value > 0x7fff)
+			value = 0x7fff;
+		if(value < -0x8000)
+			value = 0x8000;
+		out_ptr[0] = value;
+		out_ptr[1] = value >> 8;
+		out_ptr += 2;
+	}
+	n_samples -= result;
+	return n_samples ? 1 : 0;
+}
+
+
+void MbrolaReset(void)
+{//===================
+// Reset the Mbrola engine and flush the pending audio
+
+	reset_MBR();
+}
+
+#else   // INCLUDE_MBROLA
+
+// mbrola interface is not compiled, provide dummy functions.
+
+espeak_ERROR LoadMbrolaTable(const char *mbrola_voice, const char *phtrans, int srate)
+{
+	return(EE_INTERNAL_ERROR);
 }
 
 int MbrolaGenerate(PHONEME_LIST *phoneme_list, int *n_ph, int resume)
-{//==================================================================
-	if(resume == 0)
-	{
-		mbrola_phlist = phoneme_list;
-		mbrola_n_ph = n_ph;
-		mbrola_phix = 0;
-	}
-
-	resume(0);  // finished phoneme list
+{
+	return(0);
 }
-#endif
+
+int MbrolaFill(int length, int resume, int amplitude)
+{
+	return(0);
+}
+
+void MbrolaReset(void)
+{
+}
+
+
+#endif  // INCLUDE_MBROLA
