@@ -182,23 +182,18 @@ struct graphics_image_priv {
 };
 
 
-static void
-graphics_destroy(struct graphics_priv *gr)
-{
+static void graphics_destroy(struct graphics_priv *gr) {
     dbg(lvl_debug, "graphics_destroy %p %u", gr, gr->overlay_mode);
 
-    if(gr->overlay_mode)
-    {
+    if(gr->overlay_mode) {
         SDL_FreeSurface(gr->screen);
         gr->overlay_parent->overlay_array[gr->overlay_idx] = NULL;
-    }
-    else
-    {
-	g_free (ft_buffer);
-	gr->freetype_methods.destroy();
+    } else {
+        g_free (ft_buffer);
+        gr->freetype_methods.destroy();
 
 #ifdef USE_WEBOS_ACCELEROMETER
-	SDL_JoystickClose(gr->accelerometer);
+        SDL_JoystickClose(gr->accelerometer);
 #endif
 #ifdef USE_WEBOS
         PDL_Quit();
@@ -211,28 +206,20 @@ graphics_destroy(struct graphics_priv *gr)
 
 /* graphics_gc */
 
-static void
-gc_destroy(struct graphics_gc_priv *gc)
-{
+static void gc_destroy(struct graphics_gc_priv *gc) {
     g_free(gc);
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w)
-{
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     dbg(lvl_debug, "gc_set_linewidth %p %d", gc, w);
     gc->linewidth = w;
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
-{
+static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
     /* TODO */
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
-{
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     dbg(lvl_debug, "gc_set_foreground: %p %d %d %d %d", gc, c->a, c->r, c->g, c->b);
     gc->fore_r = c->r/256;
     gc->fore_g = c->g/256;
@@ -240,9 +227,7 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
     gc->fore_a = c->a/256;
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c)
-{
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
     dbg(lvl_debug, "gc_set_background: %p %d %d %d %d", gc, c->a, c->r, c->g, c->b);
     gc->back_r = c->r/256;
     gc->back_g = c->g/256;
@@ -258,8 +243,7 @@ static struct graphics_gc_methods gc_methods = {
     gc_set_background
 };
 
-static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
-{
+static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
     struct graphics_gc_priv *gc=g_new0(struct graphics_gc_priv, 1);
     *meth=gc_methods;
     gc->gr=gr;
@@ -268,18 +252,14 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h,
-        struct point *hot, int rotation)
-{
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
 
     gi = g_new0(struct graphics_image_priv, 1);
     gi->img = IMG_Load(name);
-    if(gi->img)
-    {
+    if(gi->img) {
         /* TBD: improves blit performance? */
 #if !SDL_VERSION_ATLEAST(1,3,0)
         SDL_SetColorKey(gi->img, SDL_RLEACCEL, gi->img->format->colorkey);
@@ -288,9 +268,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
         *h=gi->img->h;
         hot->x=*w/2;
         hot->y=*h/2;
-    }
-    else
-    {
+    } else {
         /* TODO: debug "colour parse errors" on xpm */
         dbg(lvl_error,"image_new on '%s' failed: %s", name, IMG_GetError());
         g_free(gi);
@@ -300,19 +278,15 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     return gi;
 }
 
-static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv * gi)
-{
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv * gi) {
     SDL_FreeSurface(gi->img);
     g_free(gi);
 }
 
-static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
-{
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
-    {
-      	return;
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
     }
 
     Sint16 *vx, *vy;
@@ -322,8 +296,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
     vx = alloca(count * sizeof(Sint16));
     vy = alloca(count * sizeof(Sint16));
 
-    for(i = 0; i < count; i++)
-    {
+    for(i = 0; i < count; i++) {
         x = (Sint16)p[i].x;
         y = (Sint16)p[i].y;
         vx[i] = x;
@@ -332,96 +305,81 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
         dbg(lvl_debug, "draw_polygon: %p %i %d,%d", gc, i, p[i].x, p[i].y);
     }
 
-    if(gr->aa)
-    {
+    if(gr->aa) {
         raster_aapolygon(gr->screen, count, vx, vy,
-                SDL_MapRGBA(gr->screen->format,
-                    gc->fore_r,
-                    gc->fore_g,
-                    gc->fore_b,
-                    gc->fore_a));
-    }
-    else
-    {
+                         SDL_MapRGBA(gr->screen->format,
+                                     gc->fore_r,
+                                     gc->fore_g,
+                                     gc->fore_b,
+                                     gc->fore_a));
+    } else {
         raster_polygon(gr->screen, count, vx, vy,
-                SDL_MapRGBA(gr->screen->format,
-                    gc->fore_r,
-                    gc->fore_g,
-                    gc->fore_b,
-                    gc->fore_a));
+                       SDL_MapRGBA(gr->screen->format,
+                                   gc->fore_r,
+                                   gc->fore_g,
+                                   gc->fore_b,
+                                   gc->fore_a));
     }
 }
 
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
-{
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
-    {
-      	return;
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
     }
 
     dbg(lvl_debug, "draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d", p->x, p->y, w, h,
-            gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
-    if(w > gr->screen->w)
-    {
+        gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
+    if(w > gr->screen->w) {
         w = gr->screen->w;
     }
-    if(h > gr->screen->h)
-    {
+    if(h > gr->screen->h) {
         h = gr->screen->h;
     }
 
     raster_rect(gr->screen, p->x, p->y, w, h,
-            SDL_MapRGBA(gr->screen->format,
-                gc->fore_r,
-                gc->fore_g,
-                gc->fore_b,
-                gc->fore_a));
+                SDL_MapRGBA(gr->screen->format,
+                            gc->fore_r,
+                            gc->fore_g,
+                            gc->fore_b,
+                            gc->fore_a));
 }
 
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
-{
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
-    {
-      	return;
+static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
     }
 
     /* FIXME: does not quite match gtk */
 
     /* hack for osd compass.. why is this needed!? */
-    if(gr->overlay_mode)
-    {
+    if(gr->overlay_mode) {
         r = r / 2;
     }
 
-    if(gr->aa)
-    {
+    if(gr->aa) {
         raster_aacircle(gr->screen, p->x, p->y, r,
-                SDL_MapRGBA(gr->screen->format,
-                    gc->fore_r,
-                    gc->fore_g,
-                    gc->fore_b,
-                    gc->fore_a));
-    }
-    else
-    {
+                        SDL_MapRGBA(gr->screen->format,
+                                    gc->fore_r,
+                                    gc->fore_g,
+                                    gc->fore_b,
+                                    gc->fore_a));
+    } else {
         raster_circle(gr->screen, p->x, p->y, r,
-                SDL_MapRGBA(gr->screen->format,
-                    gc->fore_r,
-                    gc->fore_g,
-                    gc->fore_b,
-                    gc->fore_a));
+                      SDL_MapRGBA(gr->screen->format,
+                                  gc->fore_r,
+                                  gc->fore_g,
+                                  gc->fore_b,
+                                  gc->fore_a));
     }
 }
 
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
-{
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
-    {
-      	return;
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
     }
 
     /* you might expect lines to be simpler than the other shapes.
@@ -439,60 +397,47 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     //int lw = 1;
     int i;
 
-    for(i = 0; i < count-1; i++)
-    {
-	float dx=p[i+1].x-p[i].x;
-	float dy=p[i+1].y-p[i].y;
+    for(i = 0; i < count-1; i++) {
+        float dx=p[i+1].x-p[i].x;
+        float dy=p[i+1].y-p[i].y;
         float angle;
 
         int x_lw_adj, y_lw_adj;
 
-        if(lw == 1)
-        {
-            if(gr->aa)
-            {
+        if(lw == 1) {
+            if(gr->aa) {
                 raster_aaline(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                        SDL_MapRGBA(gr->screen->format,
-                            gc->fore_r,
-                            gc->fore_g,
-                            gc->fore_b,
-                            gc->fore_a));
-            }
-            else
-            {
+                              SDL_MapRGBA(gr->screen->format,
+                                          gc->fore_r,
+                                          gc->fore_g,
+                                          gc->fore_b,
+                                          gc->fore_a));
+            } else {
                 raster_line(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                        SDL_MapRGBA(gr->screen->format,
-                            gc->fore_r,
-                            gc->fore_g,
-                            gc->fore_b,
-                            gc->fore_a));
+                            SDL_MapRGBA(gr->screen->format,
+                                        gc->fore_r,
+                                        gc->fore_g,
+                                        gc->fore_b,
+                                        gc->fore_a));
             }
-        }
-        else
-        {
+        } else {
             /* there is probably a much simpler way but this works ok */
 
             /* FIXME: float + double mixture */
             /* FIXME: lrint(round())? */
-            if(dy == 0.0)
-            {
+            if(dy == 0.0) {
                 angle = 0.0;
                 x_lw_adj = 0;
                 y_lw_adj = round((float)lw/2.0);
-            }
-            else if(dx == 0.0)
-            {
+            } else if(dx == 0.0) {
                 angle = 0.0;
                 x_lw_adj = round((float)lw/2.0);
                 y_lw_adj = 0;
-            }
-            else
-            {
+            } else {
                 angle = (M_PI/2.0) - atan(abs(dx)/abs(dy));
                 x_lw_adj = round(sin(angle)*(float)lw/2.0);
                 y_lw_adj = round(cos(angle)*(float)lw/2.0);
-                if((x_lw_adj < 0) || (y_lw_adj < 0))
-                {
+                if((x_lw_adj < 0) || (y_lw_adj < 0)) {
                     dbg(lvl_debug, "i=%d", i);
                     dbg(lvl_debug, "   %d,%d->%d,%d", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
                     dbg(lvl_debug, "   lw=%d angle=%f", lw, 180.0 * angle / M_PI);
@@ -500,12 +445,10 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                 }
             }
 
-            if(p[i+1].x > p[i].x)
-            {
+            if(p[i+1].x > p[i].x) {
                 x_lw_adj = -x_lw_adj;
             }
-            if(p[i+1].y > p[i].y)
-            {
+            if(p[i+1].y > p[i].y) {
                 y_lw_adj = -y_lw_adj;
             }
 
@@ -530,10 +473,8 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
             /* FIXME: should just draw a half circle */
 
             /* now some circular endcaps, if the width is over 2 */
-            if(lw > 2)
-            {
-                if(i == 0)
-                {
+            if(lw > 2) {
+                if(i == 0) {
                     draw_circle(gr, gc, &p[i], lw/2);
                 }
                 /* we truncate on the divide on purpose, so we don't go outside the line */
@@ -544,11 +485,9 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 }
 
 
-static void
-set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2)
-{
+static void set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint8 a2) {
     if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
-	return;
+        return;
     }
 
     void *target_pixel = ((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
@@ -556,85 +495,78 @@ set_pixel(SDL_Surface *surface, int x, int y, Uint8 r2, Uint8 g2, Uint8 b2, Uint
     Uint8 r1,g1,b1,a1;
 
     switch(surface->format->BytesPerPixel) {
-	case 2:
-	    {
-    		SDL_GetRGBA(*(Uint16 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
-		*(Uint16 *)target_pixel = SDL_MapRGBA(surface->format,
-			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
-			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
-			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
-			a2 + a1*(0xff-a2)/0xff );
-		break;
-	    }
-	case 4:
-	    {
-    		SDL_GetRGBA(*(Uint32 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
-		*(Uint32 *)target_pixel = SDL_MapRGBA(surface->format,
-			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
-			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
-			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
-			a2 + a1*(0xff-a2)/0xff );
-		break;
-	    }
+    case 2: {
+        SDL_GetRGBA(*(Uint16 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
+        *(Uint16 *)target_pixel = SDL_MapRGBA(surface->format,
+                                              (r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+                                              (g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+                                              (b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+                                              a2 + a1*(0xff-a2)/0xff );
+        break;
+    }
+    case 4: {
+        SDL_GetRGBA(*(Uint32 *)target_pixel, surface->format, &r1, &g1, &b1, &a1);
+        *(Uint32 *)target_pixel = SDL_MapRGBA(surface->format,
+                                              (r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+                                              (g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+                                              (b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+                                              a2 + a1*(0xff-a2)/0xff );
+        break;
+    }
     }
 }
 
 
-static void
-resize_ft_buffer (unsigned int new_size)
-{
+static void resize_ft_buffer (unsigned int new_size) {
     if (new_size > ft_buffer_size) {
-	g_free (ft_buffer);
-	ft_buffer = g_malloc (new_size);
-	dbg(lvl_debug, "old_size(%u) new_size(%u) ft_buffer(%p)", ft_buffer_size, new_size, ft_buffer);
-	ft_buffer_size = new_size;
+        g_free (ft_buffer);
+        ft_buffer = g_malloc (new_size);
+        dbg(lvl_debug, "old_size(%u) new_size(%u) ft_buffer(%p)", ft_buffer_size, new_size, ft_buffer);
+        ft_buffer_size = new_size;
     }
 }
 
-static void
-display_text_draw(struct font_freetype_text *text,
-		  struct graphics_priv *gr, struct graphics_gc_priv *fg,
-		  struct graphics_gc_priv *bg, int color, struct point *p)
-{
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
     struct color black = { fg->fore_r * 255, fg->fore_g * 255,
-	fg->fore_b * 255, fg->fore_a * 255 };
+               fg->fore_b * 255, fg->fore_a * 255
+    };
     struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
 
     if (bg) {
-	if (COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
-	    black.r = 65535;
-	    black.g = 65535;
-	    black.b = 65535;
-	    black.a = 65535;
+        if (COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
+            black.r = 65535;
+            black.g = 65535;
+            black.b = 65535;
+            black.a = 65535;
 
-	    white.r = 0;
-	    white.g = 0;
-	    white.b = 0;
-	    white.a = 65535;
-	} else if (COLOR_IS_BLACK(black) && COLOR_IS_WHITE(white)) {
-	    white.r = 65535;
-	    white.g = 65535;
-	    white.b = 65535;
-	    white.a = 65535;
+            white.r = 0;
+            white.g = 0;
+            white.b = 0;
+            white.a = 65535;
+        } else if (COLOR_IS_BLACK(black) && COLOR_IS_WHITE(white)) {
+            white.r = 65535;
+            white.g = 65535;
+            white.b = 65535;
+            white.a = 65535;
 
-	    black.r = 0;
-	    black.g = 0;
-	    black.b = 0;
-	    black.a = 65535;
-	} else {
-	    white.r = bg->fore_r * 255;
-	    white.g = bg->fore_g * 255;
-	    white.b = bg->fore_b * 255;
-	    white.a = bg->fore_a * 255;
-	}
+            black.r = 0;
+            black.g = 0;
+            black.b = 0;
+            black.a = 65535;
+        } else {
+            white.r = bg->fore_r * 255;
+            white.g = bg->fore_g * 255;
+            white.b = bg->fore_b * 255;
+            white.a = bg->fore_a * 255;
+        }
     } else {
-	white.r = 0;
-	white.g = 0;
-	white.b = 0;
-	white.a = 0;
+        white.r = 0;
+        white.g = 0;
+        white.b = 0;
+        white.a = 0;
     }
 
 
@@ -643,32 +575,32 @@ display_text_draw(struct font_freetype_text *text,
     x = p->x << 6;
     y = p->y << 6;
     while (i-- > 0) {
-	g = *gp++;
-	if (g->w && g->h && bg) {
-	    stride = (g->w + 2) * 4;
-	    if (color) {
-		resize_ft_buffer(stride * (g->h + 2));
-		gr->freetype_methods.get_shadow(g, ft_buffer, stride, &white, &transparent);
+        g = *gp++;
+        if (g->w && g->h && bg) {
+            stride = (g->w + 2) * 4;
+            if (color) {
+                resize_ft_buffer(stride * (g->h + 2));
+                gr->freetype_methods.get_shadow(g, ft_buffer, stride, &white, &transparent);
 
-		SDL_Surface *glyph_surface =
-		    SDL_CreateRGBSurfaceFrom(ft_buffer, g->w + 2, g->h + 2,
-			    32,
-			    stride,
-			    0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-		if (glyph_surface) {
-		    SDL_Rect r;
-		    r.x = (x + g->x) >> 6;
-		    r.y = (y + g->y) >> 6;
-		    r.w = g->w + 2;
-		    r.h = g->h + 2;
+                SDL_Surface *glyph_surface =
+                    SDL_CreateRGBSurfaceFrom(ft_buffer, g->w + 2, g->h + 2,
+                                             32,
+                                             stride,
+                                             0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+                if (glyph_surface) {
+                    SDL_Rect r;
+                    r.x = (x + g->x) >> 6;
+                    r.y = (y + g->y) >> 6;
+                    r.w = g->w + 2;
+                    r.h = g->h + 2;
 
-		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
-		    SDL_FreeSurface(glyph_surface);
-		}
-	    }
-	}
-	x += g->dx;
-	y += g->dy;
+                    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
+                    SDL_FreeSurface(glyph_surface);
+                }
+            }
+        }
+        x += g->dx;
+        y += g->dy;
     }
 
     gp = text->glyph;
@@ -676,80 +608,74 @@ display_text_draw(struct font_freetype_text *text,
     x = p->x << 6;
     y = p->y << 6;
     while (i-- > 0) {
-	g = *gp++;
-	if (g->w && g->h) {
-	    if (color) {
-		stride = g->w;
-		if (bg) {
-		    resize_ft_buffer(stride * g->h * 4);
-		    gr->freetype_methods.get_glyph(g, ft_buffer,
-			    stride * 4, &black,
-			    &white, &transparent);
-		    SDL_Surface *glyph_surface =
-			SDL_CreateRGBSurfaceFrom(ft_buffer, g->w, g->h, 32,
-				stride * 4,
-				0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
-		    if (glyph_surface) {
-			SDL_Rect r;
-			r.x = (x + g->x) >> 6;
-			r.y = (y + g->y) >> 6;
-			r.w = g->w;
-			r.h = g->h;
+        g = *gp++;
+        if (g->w && g->h) {
+            if (color) {
+                stride = g->w;
+                if (bg) {
+                    resize_ft_buffer(stride * g->h * 4);
+                    gr->freetype_methods.get_glyph(g, ft_buffer,
+                                                   stride * 4, &black,
+                                                   &white, &transparent);
+                    SDL_Surface *glyph_surface =
+                        SDL_CreateRGBSurfaceFrom(ft_buffer, g->w, g->h, 32,
+                                                 stride * 4,
+                                                 0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
+                    if (glyph_surface) {
+                        SDL_Rect r;
+                        r.x = (x + g->x) >> 6;
+                        r.y = (y + g->y) >> 6;
+                        r.w = g->w;
+                        r.h = g->h;
 
-			SDL_BlitSurface(glyph_surface, NULL, gr->screen,&r);
-		        SDL_FreeSurface(glyph_surface);
-		    }
-		}
-		stride *= 4;
-		resize_ft_buffer(stride * g->h);
-		gr->freetype_methods.get_glyph(g, ft_buffer, stride,
-			&black, &white,
-			&transparent);
-		int ii, jj;
-		unsigned char* pGlyph = ft_buffer;
-		for (jj = 0; jj < g->h; ++jj) {
-		    for (ii = 0; ii < g->w; ++ii) {
-			if(*(pGlyph+3) > 0) {
+                        SDL_BlitSurface(glyph_surface, NULL, gr->screen,&r);
+                        SDL_FreeSurface(glyph_surface);
+                    }
+                }
+                stride *= 4;
+                resize_ft_buffer(stride * g->h);
+                gr->freetype_methods.get_glyph(g, ft_buffer, stride,
+                                               &black, &white,
+                                               &transparent);
+                int ii, jj;
+                unsigned char* pGlyph = ft_buffer;
+                for (jj = 0; jj < g->h; ++jj) {
+                    for (ii = 0; ii < g->w; ++ii) {
+                        if(*(pGlyph+3) > 0) {
                             set_pixel(gr->screen,
-				    ii+((x + g->x) >> 6),
-				    jj+((y + g->y) >> 6),
-                                    *(pGlyph+2),			// Pixels are in BGRA format
-                                    *(pGlyph+1),
-                                    *(pGlyph+0),
-                                    *(pGlyph+3)
-                                    );
+                                      ii+((x + g->x) >> 6),
+                                      jj+((y + g->y) >> 6),
+                                      *(pGlyph+2),			// Pixels are in BGRA format
+                                      *(pGlyph+1),
+                                      *(pGlyph+0),
+                                      *(pGlyph+3)
+                                     );
                         }
                         pGlyph += 4;
-		    }
-		}
-	    }
-	}
-	x += g->dx;
-	y += g->dy;
+                    }
+                }
+            }
+        }
+        x += g->dx;
+        y += g->dy;
     }
 }
 
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
-	  struct graphics_gc_priv *bg, struct graphics_font_priv *font,
-	  char *text, struct point *p, int dx, int dy)
-{
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable)
-	    || (gr->overlay_parent && gr->overlay_parent->overlay_enable
-	    	&& !gr->overlay_enable)) {
-	return;
+            || (gr->overlay_parent && gr->overlay_parent->overlay_enable
+                && !gr->overlay_enable)) {
+        return;
     }
 
     struct font_freetype_text *t;
     int color = 1;
 
     if (!font) {
-	dbg(lvl_error, "no font, returning");
-	return;
+        dbg(lvl_error, "no font, returning");
+        return;
     }
-    t = gr->freetype_methods.text_new(text,
-	    (struct font_freetype_font *) font,
-	    dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -759,12 +685,10 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
     gr->freetype_methods.text_destroy(t);
 }
 
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
-{
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
-    {
-      	return;
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
     }
 
     SDL_Rect r;
@@ -777,45 +701,33 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
     SDL_BlitSurface(img->img, NULL, gr->screen, &r);
 }
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
-{
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     dbg(lvl_debug, "background_gc");
 }
 
 
-static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
-{
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     struct graphics_priv *ov;
     SDL_Rect rect;
     int i;
 
-    if(gr->overlay_mode)
-    {
+    if(gr->overlay_mode) {
         /* will be drawn below */
-    }
-    else
-    {
+    } else {
         dbg(lvl_debug, "draw_mode: %d", mode);
 
-        if(mode == draw_mode_end)
-        {
-            if((gr->draw_mode == draw_mode_begin) && gr->overlay_enable)
-            {
-                for(i = 0; i < OVERLAY_MAX; i++)
-                {
+        if(mode == draw_mode_end) {
+            if((gr->draw_mode == draw_mode_begin) && gr->overlay_enable) {
+                for(i = 0; i < OVERLAY_MAX; i++) {
                     ov = gr->overlay_array[i];
-                    if(ov && ov->overlay_enable)
-                    {
+                    if(ov && ov->overlay_enable) {
                         rect.x = ov->overlay_x;
                         if(rect.x<0) rect.x += gr->screen->w;
                         rect.y = ov->overlay_y;
                         if(rect.y<0) rect.y += gr->screen->h;
                         rect.w = ov->screen->w;
                         rect.h = ov->screen->h;
-                        SDL_BlitSurface(ov->screen, NULL,
-                                        gr->screen, &rect);
+                        SDL_BlitSurface(ov->screen, NULL, gr->screen, &rect);
                     }
                 }
             }
@@ -827,61 +739,55 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     }
 }
 
-static void overlay_disable(struct graphics_priv *gr, int disable)
-{
+static void overlay_disable(struct graphics_priv *gr, int disable) {
     gr->overlay_enable = !disable;
     struct graphics_priv *curr_gr = gr;
     if(gr->overlay_parent) {
-      	curr_gr = gr->overlay_parent;
+        curr_gr = gr->overlay_parent;
     }
     draw_mode(curr_gr,draw_mode_end);
 }
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound);
 
-static int window_fullscreen(struct window *win, int on)
-{
+static int window_fullscreen(struct window *win, int on) {
     struct graphics_priv *gr=(struct graphics_priv *)win->priv;
 
     /* Update video flags */
     if(on) {
-	gr->video_flags |= SDL_FULLSCREEN;
+        gr->video_flags |= SDL_FULLSCREEN;
     } else {
-	gr->video_flags &= ~SDL_FULLSCREEN;
+        gr->video_flags &= ~SDL_FULLSCREEN;
     }
 
     /* Update video mode */
     gr->screen = SDL_SetVideoMode(gr->screen->w, gr->screen->h, gr->video_bpp, gr->video_flags);
     if(gr->screen == NULL) {
-	navit_destroy(gr->nav);
-    }
-    else {
-	callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
+        navit_destroy(gr->nav);
+    } else {
+        callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
     }
     return 1;
 }
 
-static void *
-get_data(struct graphics_priv *this, char const *type)
-{
+static void *get_data(struct graphics_priv *this, char const *type) {
     if(strcmp(type, "window") == 0) {
-	struct window *win;
-	win=g_new(struct window, 1);
-	win->priv=this;
-	win->fullscreen=window_fullscreen;
-	win->disable_suspend=NULL;
-	return win;
+        struct window *win;
+        win=g_new(struct window, 1);
+        win->priv=this;
+        win->fullscreen=window_fullscreen;
+        win->disable_suspend=NULL;
+        return win;
     } else {
-	return NULL;
+        return NULL;
     }
 }
 
-static void draw_drag(struct graphics_priv *gr, struct point *p)
-{
+static void draw_drag(struct graphics_priv *gr, struct point *p) {
     if(p) {
-	gr->overlay_x = p->x;
-	gr->overlay_y = p->y;
+        gr->overlay_x = p->x;
+        gr->overlay_y = p->y;
     }
 }
 
@@ -907,74 +813,69 @@ static struct graphics_methods graphics_methods = {
     overlay_disable,
     NULL, /* overlay_resize */
     NULL, /* set_attr */
-	NULL, /* show_native_keyboard */
-	NULL, /* hide_native_keyboard */
+    NULL, /* show_native_keyboard */
+    NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound)
-{
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
     struct graphics_priv *ov;
     Uint32 rmask, gmask, bmask, amask;
     int i;
 
-    for(i = 0; i < OVERLAY_MAX; i++)
-    {
-	if(gr->overlay_array[i] == NULL)
-	{
-	    break;
-	}
+    for(i = 0; i < OVERLAY_MAX; i++) {
+        if(gr->overlay_array[i] == NULL) {
+            break;
+        }
     }
-    if(i == OVERLAY_MAX)
-    {
-	dbg(lvl_error, "too many overlays! increase OVERLAY_MAX");
-	return NULL;
+    if(i == OVERLAY_MAX) {
+        dbg(lvl_error, "too many overlays! increase OVERLAY_MAX");
+        return NULL;
     }
 
     dbg(lvl_debug, "overlay_new %d %d %d %u %u (%x, %x, %x ,%x, %d)", i,
-	    p->x,
-	    p->y,
-	    w,
-	    h,
-	    gr->screen->format->Rmask,
-	    gr->screen->format->Gmask,
-	    gr->screen->format->Bmask,
-	    gr->screen->format->Amask,
-	    gr->screen->format->BitsPerPixel
+        p->x,
+        p->y,
+        w,
+        h,
+        gr->screen->format->Rmask,
+        gr->screen->format->Gmask,
+        gr->screen->format->Bmask,
+        gr->screen->format->Amask,
+        gr->screen->format->BitsPerPixel
        );
 
     ov = g_new0(struct graphics_priv, 1);
 
     switch(gr->screen->format->BitsPerPixel) {
-	case 8:
-	    rmask = 0xc0;
-	    gmask = 0x30;
-	    bmask = 0x0c;
-	    amask = 0x03;
-	    break;
-	case 16:
-	    rmask = 0xf000;
-	    gmask = 0x0f00;
-	    bmask = 0x00f0;
-	    amask = 0x000f;
-	    break;
-	case 32:
-	    rmask = 0xff000000;
-	    gmask = 0x00ff0000;
-	    bmask = 0x0000ff00;
-	    amask = 0x000000ff;
-	    break;
-	default:
-	    rmask = gr->screen->format->Rmask;
-	    gmask = gr->screen->format->Gmask;
-	    bmask = gr->screen->format->Bmask;
-	    amask = gr->screen->format->Amask;
+    case 8:
+        rmask = 0xc0;
+        gmask = 0x30;
+        bmask = 0x0c;
+        amask = 0x03;
+        break;
+    case 16:
+        rmask = 0xf000;
+        gmask = 0x0f00;
+        bmask = 0x00f0;
+        amask = 0x000f;
+        break;
+    case 32:
+        rmask = 0xff000000;
+        gmask = 0x00ff0000;
+        bmask = 0x0000ff00;
+        amask = 0x000000ff;
+        break;
+    default:
+        rmask = gr->screen->format->Rmask;
+        gmask = gr->screen->format->Gmask;
+        bmask = gr->screen->format->Bmask;
+        amask = gr->screen->format->Amask;
     }
 
     ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE,
-	    w, h,
-	    gr->screen->format->BitsPerPixel,
-	    rmask, gmask, bmask, amask);
+                                      w, h,
+                                      gr->screen->format->BitsPerPixel,
+                                      rmask, gmask, bmask, amask);
 
     ov->overlay_mode = 1;
     ov->overlay_enable = 1;
@@ -988,9 +889,8 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     struct font_priv *(*font_freetype_new) (void *meth);
     font_freetype_new = plugin_get_category_font ("freetype");
 
-    if (!font_freetype_new)
-    {
-      	return NULL;
+    if (!font_freetype_new) {
+        return NULL;
     }
 
 
@@ -999,9 +899,9 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     *meth=graphics_methods;
 
     meth->font_new =
-    	(struct graphics_font_priv *
-     	 (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
-	     int)) ov->freetype_methods.font_new;
+        (struct graphics_font_priv *
+         (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+             int)) ov->freetype_methods.font_new;
     meth->get_text_bbox = (void *)ov->freetype_methods.get_text_bbox;
 
 
@@ -1010,8 +910,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
     return ov;
 }
 
-static gboolean graphics_sdl_idle(void *data)
-{
+static gboolean graphics_sdl_idle(void *data) {
     struct graphics_priv *gr = (struct graphics_priv *)data;
     struct point p;
     SDL_Event ev;
@@ -1021,13 +920,12 @@ static gboolean graphics_sdl_idle(void *data)
 
 #ifdef USE_WEBOS
     if(data==NULL) {
-	if(the_graphics!=NULL) {
-	    gr = the_graphics;
-	}
-	else {
-	    dbg(lvl_error,"graphics_idle: graphics not set!");
-	    return FALSE;
-	}
+        if(the_graphics!=NULL) {
+            gr = the_graphics;
+        } else {
+            dbg(lvl_error,"graphics_idle: graphics not set!");
+            return FALSE;
+        }
     }
 #endif
 
@@ -1037,9 +935,8 @@ static gboolean graphics_sdl_idle(void *data)
        graphics_gtk does it during Configure, but SDL does not have
        an equivalent event, so we use our own flag
        */
-    if(gr->resize_callback_initial != 0)
-    {
-	callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
+    if(gr->resize_callback_initial != 0) {
+        callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
         gr->resize_callback_initial = 0;
     }
 
@@ -1047,8 +944,8 @@ static gboolean graphics_sdl_idle(void *data)
     struct callback* accel_cb = NULL;
     struct event_timeout* accel_to = NULL;
     if (PDL_GetPDKVersion() > 100) {
-	accel_cb = callback_new_1(callback_cast(sdl_accelerometer_handler), gr);
-	accel_to = event_add_timeout(200, 1, accel_cb);
+        accel_cb = callback_new_1(callback_cast(sdl_accelerometer_handler), gr);
+        accel_to = event_add_timeout(200, 1, accel_cb);
     }
 #endif
 #ifdef USE_WEBOS
@@ -1062,321 +959,305 @@ static gboolean graphics_sdl_idle(void *data)
 #endif
     {
 #ifdef USE_WEBOS
-	ret = 0;
-	if(idle_tasks->len > 0)
-	{
-	    while (!(ret = SDL_PollEvent(&ev)) && idle_tasks->len > 0)
-	    {
-		if (idle_tasks_idx >= idle_tasks->len)
-		    idle_tasks_idx = 0;
+        ret = 0;
+        if(idle_tasks->len > 0) {
+            while (!(ret = SDL_PollEvent(&ev)) && idle_tasks->len > 0) {
+                if (idle_tasks_idx >= idle_tasks->len)
+                    idle_tasks_idx = 0;
 
-		dbg(lvl_debug,"idle_tasks_idx(%d)",idle_tasks_idx);
-		task = (struct idle_task *)g_ptr_array_index(idle_tasks,idle_tasks_idx);
+                dbg(lvl_debug,"idle_tasks_idx(%d)",idle_tasks_idx);
+                task = (struct idle_task *)g_ptr_array_index(idle_tasks,idle_tasks_idx);
 
-		if (idle_tasks_idx == 0)	// only execute tasks with lowest priority value
-		    idle_tasks_cur_priority = task->priority;
-		if (task->priority > idle_tasks_cur_priority)
-		    idle_tasks_idx = 0;
-		else
-		{
-		    callback_call_0(task->cb);
-		    idle_tasks_idx++;
-		}
-	    }
-	}
-	if (!ret)	// If we get here there are no idle_tasks and we have no events pending
-	    ret = SDL_WaitEvent(&ev);
+                if (idle_tasks_idx == 0)	// only execute tasks with lowest priority value
+                    idle_tasks_cur_priority = task->priority;
+                if (task->priority > idle_tasks_cur_priority)
+                    idle_tasks_idx = 0;
+                else {
+                    callback_call_0(task->cb);
+                    idle_tasks_idx++;
+                }
+            }
+        }
+        if (!ret)	// If we get here there are no idle_tasks and we have no events pending
+            ret = SDL_WaitEvent(&ev);
 #else
-	ret = SDL_PollEvent(&ev);
+        ret = SDL_PollEvent(&ev);
 #endif
-	if(ret == 0)
-	{
-	    break;
-	}
+        if(ret == 0) {
+            break;
+        }
 
 #ifdef USE_WEBOS
-	dbg(lvl_debug,"SDL_Event %d", ev.type);
+        dbg(lvl_debug,"SDL_Event %d", ev.type);
 #endif
-	switch(ev.type)
-	{
-	    case SDL_MOUSEMOTION:
-		{
-		    p.x = ev.motion.x;
-		    p.y = ev.motion.y;
-		    callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
-		    break;
-		}
+        switch(ev.type) {
+        case SDL_MOUSEMOTION: {
+            p.x = ev.motion.x;
+            p.y = ev.motion.y;
+            callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
+            break;
+        }
 
-	    case SDL_KEYDOWN:
-		{
-		    memset(keybuf, 0, sizeof(keybuf));
-		    switch(ev.key.keysym.sym)
-		    {
-			case SDLK_LEFT:
-			    {
-				keybuf[0] = NAVIT_KEY_LEFT;
-				break;
-			    }
-			case SDLK_RIGHT:
-			    {
-				keybuf[0] = NAVIT_KEY_RIGHT;
-				break;
-			    }
-			case SDLK_BACKSPACE:
-			    {
-				keybuf[0] = NAVIT_KEY_BACKSPACE;
-				break;
-			    }
-			case SDLK_RETURN:
-			    {
-				keybuf[0] = NAVIT_KEY_RETURN;
-				break;
-			    }
-			case SDLK_DOWN:
-			    {
-				keybuf[0] = NAVIT_KEY_DOWN;
-				break;
-			    }
-			case SDLK_PAGEUP:
-			    {
-				keybuf[0] = NAVIT_KEY_ZOOM_OUT;
-				break;
-			    }
-			case SDLK_UP:
-			    {
-				keybuf[0] = NAVIT_KEY_UP;
-				break;
-			    }
-			case SDLK_PAGEDOWN:
-			    {
-				keybuf[0] = NAVIT_KEY_ZOOM_IN;
-				break;
-			    }
+        case SDL_KEYDOWN: {
+            memset(keybuf, 0, sizeof(keybuf));
+            switch(ev.key.keysym.sym) {
+            case SDLK_LEFT: {
+                keybuf[0] = NAVIT_KEY_LEFT;
+                break;
+            }
+            case SDLK_RIGHT: {
+                keybuf[0] = NAVIT_KEY_RIGHT;
+                break;
+            }
+            case SDLK_BACKSPACE: {
+                keybuf[0] = NAVIT_KEY_BACKSPACE;
+                break;
+            }
+            case SDLK_RETURN: {
+                keybuf[0] = NAVIT_KEY_RETURN;
+                break;
+            }
+            case SDLK_DOWN: {
+                keybuf[0] = NAVIT_KEY_DOWN;
+                break;
+            }
+            case SDLK_PAGEUP: {
+                keybuf[0] = NAVIT_KEY_ZOOM_OUT;
+                break;
+            }
+            case SDLK_UP: {
+                keybuf[0] = NAVIT_KEY_UP;
+                break;
+            }
+            case SDLK_PAGEDOWN: {
+                keybuf[0] = NAVIT_KEY_ZOOM_IN;
+                break;
+            }
 #ifdef USE_WEBOS
-			case WEBOS_KEY_SHIFT:
-			    {
-				if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) == WEBOS_KEY_MOD_SHIFT_STICKY)
-				    key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
-				else if ((key_mod & WEBOS_KEY_MOD_SHIFT) == WEBOS_KEY_MOD_SHIFT)
-				    key_mod |= WEBOS_KEY_MOD_SHIFT_STICKY;
-				else
-				    key_mod |= WEBOS_KEY_MOD_SHIFT;
-				break;
-			    }
-			case WEBOS_KEY_ORANGE:
-			    {
-				if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) == WEBOS_KEY_MOD_ORANGE_STICKY)
-				    key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
-				else if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE)
-				    key_mod |= WEBOS_KEY_MOD_ORANGE_STICKY;
-				else
-				    key_mod |= WEBOS_KEY_MOD_ORANGE;
-				break;
-			    }
-			case WEBOS_KEY_SYM:
-			    {
-				/* Toggle the on-screen keyboard */
-				//callback_list_call_attr_1(gr->cbl, attr_keyboard_toggle);	// Not implemented yet
-				break;
-			    }
-			case PDLK_GESTURE_BACK:
-			    {
-				keybuf[0] = NAVIT_KEY_BACK;
-				break;
-			    }
-			case PDLK_GESTURE_FORWARD:
-			case PDLK_GESTURE_AREA:
-			    {
-				break;
-			    }
+            case WEBOS_KEY_SHIFT: {
+                if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) == WEBOS_KEY_MOD_SHIFT_STICKY)
+                    key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
+                else if ((key_mod & WEBOS_KEY_MOD_SHIFT) == WEBOS_KEY_MOD_SHIFT)
+                    key_mod |= WEBOS_KEY_MOD_SHIFT_STICKY;
+                else
+                    key_mod |= WEBOS_KEY_MOD_SHIFT;
+                break;
+            }
+            case WEBOS_KEY_ORANGE: {
+                if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) == WEBOS_KEY_MOD_ORANGE_STICKY)
+                    key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
+                else if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE)
+                    key_mod |= WEBOS_KEY_MOD_ORANGE_STICKY;
+                else
+                    key_mod |= WEBOS_KEY_MOD_ORANGE;
+                break;
+            }
+            case WEBOS_KEY_SYM: {
+                /* Toggle the on-screen keyboard */
+                //callback_list_call_attr_1(gr->cbl, attr_keyboard_toggle);	// Not implemented yet
+                break;
+            }
+            case PDLK_GESTURE_BACK: {
+                keybuf[0] = NAVIT_KEY_BACK;
+                break;
+            }
+            case PDLK_GESTURE_FORWARD:
+            case PDLK_GESTURE_AREA: {
+                break;
+            }
 #endif
-			default:
-			    {
+            default: {
 #ifdef USE_WEBOS
-				if (ev.key.keysym.unicode < 0x80 && ev.key.keysym.unicode > 0) {
-				    keybuf[0] = (char)ev.key.keysym.unicode;
-				    if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE) {
-					switch(keybuf[0]) {
-					    case 'e': keybuf[0] = '1'; break;
-					    case 'r': keybuf[0] = '2'; break;
-					    case 't': keybuf[0] = '3'; break;
-					    case 'd': keybuf[0] = '4'; break;
-					    case 'f': keybuf[0] = '5'; break;
-					    case 'g': keybuf[0] = '6'; break;
-					    case 'x': keybuf[0] = '7'; break;
-					    case 'c': keybuf[0] = '8'; break;
-					    case 'v': keybuf[0] = '9'; break;
-					    case '@': keybuf[0] = '0'; break;
-					    case ',': keybuf[0] = '-'; break;
-					    case 'u': strncpy(keybuf, "ü", sizeof(keybuf)); break;
-					    case 'a': strncpy(keybuf, "ä", sizeof(keybuf)); break;
-					    case 'o': strncpy(keybuf, "ö", sizeof(keybuf)); break;
-					    case 's': strncpy(keybuf, "ß", sizeof(keybuf)); break;
-					}
-}
-				    if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) != WEBOS_KEY_MOD_SHIFT_STICKY)
-					key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
-				    if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) != WEBOS_KEY_MOD_ORANGE_STICKY)
-					key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
-				}
-				else {
-				    dbg(lvl_error,"Unknown key sym: %x", ev.key.keysym.sym);
-				}
+                if (ev.key.keysym.unicode < 0x80 && ev.key.keysym.unicode > 0) {
+                    keybuf[0] = (char)ev.key.keysym.unicode;
+                    if ((key_mod & WEBOS_KEY_MOD_ORANGE) == WEBOS_KEY_MOD_ORANGE) {
+                        switch(keybuf[0]) {
+                        case 'e':
+                            keybuf[0] = '1';
+                            break;
+                        case 'r':
+                            keybuf[0] = '2';
+                            break;
+                        case 't':
+                            keybuf[0] = '3';
+                            break;
+                        case 'd':
+                            keybuf[0] = '4';
+                            break;
+                        case 'f':
+                            keybuf[0] = '5';
+                            break;
+                        case 'g':
+                            keybuf[0] = '6';
+                            break;
+                        case 'x':
+                            keybuf[0] = '7';
+                            break;
+                        case 'c':
+                            keybuf[0] = '8';
+                            break;
+                        case 'v':
+                            keybuf[0] = '9';
+                            break;
+                        case '@':
+                            keybuf[0] = '0';
+                            break;
+                        case ',':
+                            keybuf[0] = '-';
+                            break;
+                        case 'u':
+                            strncpy(keybuf, "ü", sizeof(keybuf));
+                            break;
+                        case 'a':
+                            strncpy(keybuf, "ä", sizeof(keybuf));
+                            break;
+                        case 'o':
+                            strncpy(keybuf, "ö", sizeof(keybuf));
+                            break;
+                        case 's':
+                            strncpy(keybuf, "ß", sizeof(keybuf));
+                            break;
+                        }
+                    }
+                    if ((key_mod & WEBOS_KEY_MOD_SHIFT_STICKY) != WEBOS_KEY_MOD_SHIFT_STICKY)
+                        key_mod &= ~(WEBOS_KEY_MOD_SHIFT_STICKY);
+                    if ((key_mod & WEBOS_KEY_MOD_ORANGE_STICKY) != WEBOS_KEY_MOD_ORANGE_STICKY)
+                        key_mod &= ~(WEBOS_KEY_MOD_ORANGE_STICKY);
+                } else {
+                    dbg(lvl_error,"Unknown key sym: %x", ev.key.keysym.sym);
+                }
 #else
-				/* return unicode chars when they can be converted to ascii */
-				keybuf[0] = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
+                /* return unicode chars when they can be converted to ascii */
+                keybuf[0] = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
 #endif
-				break;
-			    }
-		    }
+                break;
+            }
+            }
 
-		    dbg(lvl_info,"key mod: 0x%x", key_mod);
+            dbg(lvl_info,"key mod: 0x%x", key_mod);
 
-		    if (keybuf[0]) {
-			callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
-		    }
-		    break;
-		}
+            if (keybuf[0]) {
+                callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
+            }
+            break;
+        }
 
-	    case SDL_KEYUP:
-		{
-		    break;
-		}
+        case SDL_KEYUP: {
+            break;
+        }
 
-	    case SDL_MOUSEBUTTONDOWN:
-		{
-		    dbg(lvl_debug, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d",
-			    ev.button.which,
-			    ev.button.button,
-			    ev.button.state,
-			    ev.button.x,
-			    ev.button.y);
+        case SDL_MOUSEBUTTONDOWN: {
+            dbg(lvl_debug, "SDL_MOUSEBUTTONDOWN %d %d %d %d %d",
+                ev.button.which,
+                ev.button.button,
+                ev.button.state,
+                ev.button.x,
+                ev.button.y);
 
-		    p.x = ev.button.x;
-		    p.y = ev.button.y;
-		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
-		    break;
-		}
+            p.x = ev.button.x;
+            p.y = ev.button.y;
+            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
+            break;
+        }
 
-	    case SDL_MOUSEBUTTONUP:
-		{
-		    dbg(lvl_debug, "SDL_MOUSEBUTTONUP %d %d %d %d %d",
-			    ev.button.which,
-			    ev.button.button,
-			    ev.button.state,
-			    ev.button.x,
-			    ev.button.y);
+        case SDL_MOUSEBUTTONUP: {
+            dbg(lvl_debug, "SDL_MOUSEBUTTONUP %d %d %d %d %d",
+                ev.button.which,
+                ev.button.button,
+                ev.button.state,
+                ev.button.x,
+                ev.button.y);
 
-		    p.x = ev.button.x;
-		    p.y = ev.button.y;
-		    callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
-		    break;
-		}
+            p.x = ev.button.x;
+            p.y = ev.button.y;
+            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
+            break;
+        }
 
-	    case SDL_QUIT:
-		{
+        case SDL_QUIT: {
 #ifdef USE_WEBOS
-		    quit_event_loop = 1;
-		    navit_destroy(gr->nav);
+            quit_event_loop = 1;
+            navit_destroy(gr->nav);
 #endif
-		    break;
-		}
+            break;
+        }
 
-	    case SDL_VIDEORESIZE:
-		{
+        case SDL_VIDEORESIZE: {
 
-		    gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, gr->video_bpp, gr->video_flags);
-		    if(gr->screen == NULL)
-		    {
-			navit_destroy(gr->nav);
-		    }
-		    else
-		    {
-			callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
-		    }
+            gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, gr->video_bpp, gr->video_flags);
+            if(gr->screen == NULL) {
+                navit_destroy(gr->nav);
+            } else {
+                callback_list_call_attr_2(gr->cbl, attr_resize, GINT_TO_POINTER(gr->screen->w), GINT_TO_POINTER(gr->screen->h));
+            }
 
-		    break;
-		}
+            break;
+        }
 
 #ifdef USE_WEBOS
-	    case SDL_USEREVENT:
-		{
-		    SDL_UserEvent userevent = ev.user;
-		    dbg(lvl_info,"received SDL_USEREVENT type(%x) code(%x)",userevent.type,userevent.code);
-		    if (userevent.type != SDL_USEREVENT)
-			break;
+        case SDL_USEREVENT: {
+            SDL_UserEvent userevent = ev.user;
+            dbg(lvl_info,"received SDL_USEREVENT type(%x) code(%x)",userevent.type,userevent.code);
+            if (userevent.type != SDL_USEREVENT)
+                break;
 
-		    if (userevent.code == PDL_GPS_UPDATE)
-		    {
-			struct attr vehicle_attr;
-			struct vehicle *v;
-			navit_get_attr(gr->nav, attr_vehicle,  &vehicle_attr, NULL);
-			v = vehicle_attr.u.vehicle;
-			if (v) {
-			    struct attr attr;
-			    attr.type = attr_pdl_gps_update;
-			    attr.u.data = userevent.data1;
-			    vehicle_set_attr(v, &attr);
-			}
-		    }
-		    else if(userevent.code == SDL_USEREVENT_CODE_TIMER)
-		    {
-			struct callback *cb = (struct callback *)userevent.data1;
-			dbg(lvl_debug, "SDL_USEREVENT timer received cb(%p)", cb);
-			callback_call_0(cb);
-		    }
-		    else if(userevent.code == SDL_USEREVENT_CODE_WATCH)
-		    {
-			struct callback *cb = (struct callback *)userevent.data1;
-			dbg(lvl_debug, "SDL_USEREVENT watch received cb(%p)", cb);
-			callback_call_0(cb);
-		    }
-		    else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK)
-		    {
-			struct callback_list *cbl = (struct callback_list *)userevent.data1;
-			dbg(lvl_debug, "SDL_USEREVENT call_callback received cbl(%p)", cbl);
-			callback_list_call_0(cbl);
-		    }
-		    else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
-			dbg(lvl_debug, "SDL_USEREVENT idle_event received");
-		    }
+            if (userevent.code == PDL_GPS_UPDATE) {
+                struct attr vehicle_attr;
+                struct vehicle *v;
+                navit_get_attr(gr->nav, attr_vehicle,  &vehicle_attr, NULL);
+                v = vehicle_attr.u.vehicle;
+                if (v) {
+                    struct attr attr;
+                    attr.type = attr_pdl_gps_update;
+                    attr.u.data = userevent.data1;
+                    vehicle_set_attr(v, &attr);
+                }
+            } else if(userevent.code == SDL_USEREVENT_CODE_TIMER) {
+                struct callback *cb = (struct callback *)userevent.data1;
+                dbg(lvl_debug, "SDL_USEREVENT timer received cb(%p)", cb);
+                callback_call_0(cb);
+            } else if(userevent.code == SDL_USEREVENT_CODE_WATCH) {
+                struct callback *cb = (struct callback *)userevent.data1;
+                dbg(lvl_debug, "SDL_USEREVENT watch received cb(%p)", cb);
+                callback_call_0(cb);
+            } else if(userevent.code == SDL_USEREVENT_CODE_CALL_CALLBACK) {
+                struct callback_list *cbl = (struct callback_list *)userevent.data1;
+                dbg(lvl_debug, "SDL_USEREVENT call_callback received cbl(%p)", cbl);
+                callback_list_call_0(cbl);
+            } else if(userevent.code == SDL_USEREVENT_CODE_IDLE_EVENT) {
+                dbg(lvl_debug, "SDL_USEREVENT idle_event received");
+            }
 #ifdef USE_WEBOS_ACCELEROMETER
-		    else if(userevent.code == SDL_USEREVENT_CODE_ROTATE)
-		    {
-			dbg(lvl_debug, "SDL_USEREVENT rotate received");
-			switch(gr->orientation)
-			{
-			    case WEBOS_ORIENTATION_PORTRAIT:
-				gr->screen = SDL_SetVideoMode(gr->real_w, gr->real_h, gr->video_bpp, gr->video_flags);
-				PDL_SetOrientation(PDL_ORIENTATION_0);
-				break;
-			    case WEBOS_ORIENTATION_LANDSCAPE:
-				gr->screen = SDL_SetVideoMode(gr->real_h, gr->real_w, gr->video_bpp, gr->video_flags);
-				PDL_SetOrientation(PDL_ORIENTATION_270);
-				break;
-			}
-			if(gr->screen == NULL)
-			{
-			    navit_destroy(gr->nav);
-			}
-			else
-			{
-			    callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
-			}
-		    }
+            else if(userevent.code == SDL_USEREVENT_CODE_ROTATE) {
+                dbg(lvl_debug, "SDL_USEREVENT rotate received");
+                switch(gr->orientation) {
+                case WEBOS_ORIENTATION_PORTRAIT:
+                    gr->screen = SDL_SetVideoMode(gr->real_w, gr->real_h, gr->video_bpp, gr->video_flags);
+                    PDL_SetOrientation(PDL_ORIENTATION_0);
+                    break;
+                case WEBOS_ORIENTATION_LANDSCAPE:
+                    gr->screen = SDL_SetVideoMode(gr->real_h, gr->real_w, gr->video_bpp, gr->video_flags);
+                    PDL_SetOrientation(PDL_ORIENTATION_270);
+                    break;
+                }
+                if(gr->screen == NULL) {
+                    navit_destroy(gr->nav);
+                } else {
+                    callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+                }
+            }
 #endif
-		    else
-			dbg(lvl_warning, "unknown SDL_USEREVENT");
+            else
+                dbg(lvl_warning, "unknown SDL_USEREVENT");
 
-		    break;
-		}
+            break;
+        }
 #endif
-	    default:
-		{
-		    dbg(lvl_debug, "SDL_Event %d", ev.type);
-		    break;
-		}
-	}
+        default: {
+            dbg(lvl_debug, "SDL_Event %d", ev.type);
+            break;
+        }
+        }
     }
 
 #ifdef USE_WEBOS
@@ -1385,8 +1266,8 @@ static gboolean graphics_sdl_idle(void *data)
 
 #ifdef USE_WEBOS_ACCELEROMETER
     if (PDL_GetPDKVersion() > 100) {
-	event_remove_timeout(accel_to);
-	callback_destroy(accel_cb);
+        event_remove_timeout(accel_to);
+        callback_destroy(accel_cb);
     }
 #endif
 
@@ -1394,9 +1275,7 @@ static gboolean graphics_sdl_idle(void *data)
 }
 
 
-static struct graphics_priv *
-graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
-{
+static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct font_priv *(*font_freetype_new) (void *meth);
     struct attr *attr;
@@ -1409,19 +1288,19 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     /* initialize fonts */
     font_freetype_new = plugin_get_category_font("freetype");
 
-	if (!font_freetype_new) {
-			g_free(this);
-			return NULL;
-	}
+    if (!font_freetype_new) {
+        g_free(this);
+        return NULL;
+    }
 
-	font_freetype_new(&this->freetype_methods);
+    font_freetype_new(&this->freetype_methods);
 
-	*meth = graphics_methods;
+    *meth = graphics_methods;
 
-	meth->font_new = (struct graphics_font_priv *
-	(*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
-			int)) this->freetype_methods.font_new;
-	meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
+    meth->font_new = (struct graphics_font_priv *
+                      (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+                          int)) this->freetype_methods.font_new;
+    meth->get_text_bbox = (void*) this->freetype_methods.get_text_bbox;
 
     dbg(lvl_debug,"Calling SDL_Init");
 #ifdef USE_WEBOS
@@ -1433,10 +1312,9 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #else
     ret = SDL_Init(SDL_INIT_VIDEO);
 #endif
-    if(ret < 0)
-    {
-	dbg(lvl_error,"SDL_Init failed %d", ret);
-		this->freetype_methods.destroy();
+    if(ret < 0) {
+        dbg(lvl_error,"SDL_Init failed %d", ret);
+        this->freetype_methods.destroy();
         g_free(this);
         return NULL;
     }
@@ -1444,10 +1322,9 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #ifdef USE_WEBOS
     dbg(lvl_debug,"Calling PDL_Init(0)");
     ret = PDL_Init(0);
-    if(ret < 0)
-    {
-    	dbg(lvl_error,"PDL_Init failed %d", ret);
-		this->freetype_methods.destroy();
+    if(ret < 0) {
+        dbg(lvl_error,"PDL_Init failed %d", ret);
+        this->freetype_methods.destroy();
         g_free(this);
         return NULL;
     }
@@ -1456,9 +1333,9 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #else
     if (! event_request_system("glib","graphics_sdl_new")) {
 #endif
-    	dbg(lvl_error,"event_request_system failed");
-		this->freetype_methods.destroy();
-		g_free(this);
+        dbg(lvl_error,"event_request_system failed");
+        this->freetype_methods.destroy();
+        g_free(this);
         return NULL;
     }
 
@@ -1477,8 +1354,8 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     if ((attr=attr_search(attrs, NULL, attr_bpp)))
         this->video_bpp=attr->u.num;
     if ((attr=attr_search(attrs, NULL, attr_flags))) {
-	if (attr->u.num & 1)
-	    this->video_flags = SDL_SWSURFACE;
+        if (attr->u.num & 1)
+            this->video_flags = SDL_SWSURFACE;
     }
     if ((attr=attr_search(attrs, NULL, attr_frame))) {
         if(!attr->u.num)
@@ -1487,10 +1364,9 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     this->screen = SDL_SetVideoMode(w, h, this->video_bpp, this->video_flags);
 
-    if(this->screen == NULL)
-    {
-    	dbg(lvl_error,"SDL_SetVideoMode failed");
-		this->freetype_methods.destroy();
+    if(this->screen == NULL) {
+        dbg(lvl_error,"SDL_SetVideoMode failed");
+        this->freetype_methods.destroy();
         g_free(this);
 #ifdef USE_WEBOS
         PDL_Quit();
@@ -1504,18 +1380,17 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     h = this->screen->h;
 
     dbg(lvl_debug, "using screen %ix%i@%i",
-	    this->screen->w, this->screen->h,
-	    this->screen->format->BytesPerPixel * 8);
+        this->screen->w, this->screen->h,
+        this->screen->format->BytesPerPixel * 8);
 #ifdef USE_WEBOS_ACCELEROMETER
     if ( w > h ) {
-	this->orientation = WEBOS_ORIENTATION_LANDSCAPE;
-	this->real_w = h;
-	this->real_h = w;
-    }
-    else {
-	this->orientation = WEBOS_ORIENTATION_PORTRAIT;
-	this->real_w = w;
-	this->real_h = h;
+        this->orientation = WEBOS_ORIENTATION_LANDSCAPE;
+        this->real_w = h;
+        this->real_h = w;
+    } else {
+        this->orientation = WEBOS_ORIENTATION_PORTRAIT;
+        this->real_w = w;
+        this->real_h = h;
     }
     this->accelerometer = SDL_JoystickOpen(0);
 #endif
@@ -1530,7 +1405,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
 #ifdef USE_WEBOS
     if(the_graphics!=NULL) {
-	dbg(lvl_debug,"graphics_sdl_new: graphics struct already set: %d!", the_graphics_count);
+        dbg(lvl_debug,"graphics_sdl_new: graphics struct already set: %d!", the_graphics_count);
     }
     the_graphics = this;
     the_graphics_count++;
@@ -1551,9 +1426,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #ifdef USE_WEBOS
 /* ---------- SDL Eventhandling ---------- */
 
-static Uint32
-sdl_timer_callback(Uint32 interval, void* param)
-{
+static Uint32 sdl_timer_callback(Uint32 interval, void* param) {
     struct event_timeout *timeout=(struct event_timeout*)param;
 
     dbg(lvl_debug,"timer(%p) multi(%d) interval(%d) fired", param, timeout->multi, interval);
@@ -1572,63 +1445,57 @@ sdl_timer_callback(Uint32 interval, void* param)
     SDL_PushEvent (&event);
 
     if (timeout->multi == 0) {
-	timeout->id = 0;
-	return 0; // cancel timer
+        timeout->id = 0;
+        return 0; // cancel timer
     }
     return interval; // reactivate timer
 }
 
 /* SDL Mainloop */
 
-static void
-event_sdl_main_loop_run(void)
-{
+static void event_sdl_main_loop_run(void) {
     PDL_ScreenTimeoutEnable(PDL_FALSE);
     graphics_sdl_idle(NULL);
     PDL_ScreenTimeoutEnable(PDL_TRUE);
 }
 
-static void
-event_sdl_main_loop_quit(void)
-{
+static void event_sdl_main_loop_quit(void) {
     quit_event_loop = 1;
 }
 
 /* Watch */
 
-static void
-event_sdl_watch_thread (GPtrArray *watch_list)
-{
+static void event_sdl_watch_thread (GPtrArray *watch_list) {
     struct pollfd *pfds = g_new0 (struct pollfd, watch_list->len);
     struct event_watch *ew;
     int ret;
     int idx;
 
     for (idx = 0; idx < watch_list->len; idx++ ) {
-	ew = g_ptr_array_index (watch_list, idx);
-	g_memmove (&pfds[idx], ew->pfd, sizeof(struct pollfd));
+        ew = g_ptr_array_index (watch_list, idx);
+        g_memmove (&pfds[idx], ew->pfd, sizeof(struct pollfd));
     }
 
     while ((ret = ppoll(pfds, watch_list->len, NULL, NULL)) > 0) {
-	for (idx = 0; idx < watch_list->len; idx++ ) {
-	    if (pfds[idx].revents == pfds[idx].events) {	/* The requested event happened, notify mainloop! */
-		ew = g_ptr_array_index (watch_list, idx);
-		dbg(lvl_debug,"watch(%p) event(%d) encountered", ew, pfds[idx].revents);
+        for (idx = 0; idx < watch_list->len; idx++ ) {
+            if (pfds[idx].revents == pfds[idx].events) {	/* The requested event happened, notify mainloop! */
+                ew = g_ptr_array_index (watch_list, idx);
+                dbg(lvl_debug,"watch(%p) event(%d) encountered", ew, pfds[idx].revents);
 
-		SDL_Event event;
-		SDL_UserEvent userevent;
+                SDL_Event event;
+                SDL_UserEvent userevent;
 
-		userevent.type = SDL_USEREVENT;
-		userevent.code = SDL_USEREVENT_CODE_WATCH;
-		userevent.data1 = ew->cb;
-		userevent.data2 = NULL;
+                userevent.type = SDL_USEREVENT;
+                userevent.code = SDL_USEREVENT_CODE_WATCH;
+                userevent.data1 = ew->cb;
+                userevent.data2 = NULL;
 
-		event.type = SDL_USEREVENT;
-		event.user = userevent;
+                event.type = SDL_USEREVENT;
+                event.user = userevent;
 
-		SDL_PushEvent (&event);
-	    }
-	}
+                SDL_PushEvent (&event);
+            }
+        }
     }
 
     g_free(pfds);
@@ -1636,12 +1503,10 @@ event_sdl_watch_thread (GPtrArray *watch_list)
     pthread_exit(0);
 }
 
-static void
-event_sdl_watch_startthread(GPtrArray *watch_list)
-{
+static void event_sdl_watch_startthread(GPtrArray *watch_list) {
     dbg(lvl_debug,"enter");
     if (sdl_watch_thread)
-	event_sdl_watch_stopthread();
+        event_sdl_watch_stopthread();
 
     int ret;
     ret = pthread_create (&sdl_watch_thread, NULL, (void *)event_sdl_watch_thread, (void *)watch_list);
@@ -1649,27 +1514,23 @@ event_sdl_watch_startthread(GPtrArray *watch_list)
     dbg_assert (ret == 0);
 }
 
-static void
-event_sdl_watch_stopthread()
-{
+static void event_sdl_watch_stopthread() {
     dbg(lvl_debug,"enter");
     if (sdl_watch_thread) {
-	/* Notify the watch thread that the list of FDs will change */
-	pthread_kill(sdl_watch_thread, SIGUSR1);
-	pthread_join(sdl_watch_thread, NULL);
-	sdl_watch_thread = 0;
+        /* Notify the watch thread that the list of FDs will change */
+        pthread_kill(sdl_watch_thread, SIGUSR1);
+        pthread_join(sdl_watch_thread, NULL);
+        sdl_watch_thread = 0;
     }
 }
 
-static struct event_watch *
-event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
-{
+static struct event_watch *event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug,"fd(%d) cond(%x) cb(%x)", fd, cond, cb);
 
     event_sdl_watch_stopthread();
 
     if (!sdl_watch_list)
-	sdl_watch_list = g_ptr_array_new();
+        sdl_watch_list = g_ptr_array_new();
 
     struct event_watch *new_ew = g_new0 (struct event_watch, 1);
     struct pollfd *pfd = g_new0 (struct pollfd, 1);
@@ -1678,15 +1539,15 @@ event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
 
     /* Modify watchlist here */
     switch (cond) {
-	case event_watch_cond_read:
-	    pfd->events = POLLIN;
-	    break;
-	case event_watch_cond_write:
-	    pfd->events = POLLOUT;
-	    break;
-	case event_watch_cond_except:
-	    pfd->events = POLLERR|POLLHUP;
-	    break;
+    case event_watch_cond_read:
+        pfd->events = POLLIN;
+        break;
+    case event_watch_cond_write:
+        pfd->events = POLLOUT;
+        break;
+    case event_watch_cond_except:
+        pfd->events = POLLERR|POLLHUP;
+        break;
     }
 
     new_ew->pfd = (struct pollfd*) pfd;
@@ -1699,9 +1560,7 @@ event_sdl_add_watch(int fd, enum event_watch_cond cond, struct callback *cb)
     return new_ew;
 }
 
-static void
-event_sdl_remove_watch(struct event_watch *ew)
-{
+static void event_sdl_remove_watch(struct event_watch *ew) {
     dbg(lvl_debug,"enter %p",ew);
 
     event_sdl_watch_stopthread();
@@ -1711,18 +1570,16 @@ event_sdl_remove_watch(struct event_watch *ew)
     g_free (ew);
 
     if (sdl_watch_list->len > 0)
-	event_sdl_watch_startthread(sdl_watch_list);
+        event_sdl_watch_startthread(sdl_watch_list);
 }
 
 /* Timeout */
 
-static struct event_timeout *
-event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
-{
+static struct event_timeout *event_sdl_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout * ret =  g_new0(struct event_timeout, 1);
     if(!ret) {
-	dbg(lvl_error,"g_new0 failed");
-	return ret;
+        dbg(lvl_error,"g_new0 failed");
+        return ret;
     }
     dbg(lvl_debug,"timer(%p) multi(%d) interval(%d) cb(%p) added",ret, multi, timeout, cb);
     ret->multi = multi;
@@ -1732,41 +1589,34 @@ event_sdl_add_timeout(int timeout, int multi, struct callback *cb)
     return ret;
 }
 
-static void
-event_sdl_remove_timeout(struct event_timeout *to)
-{
+static void event_sdl_remove_timeout(struct event_timeout *to) {
     dbg(lvl_info,"enter %p", to);
-    if(to)
-    {
-	/* do not SDL_RemoveTimer if oneshot timer has already fired */
-	int ret = to->id == 0 ? SDL_TRUE : SDL_RemoveTimer(to->id);
+    if(to) {
+        /* do not SDL_RemoveTimer if oneshot timer has already fired */
+        int ret = to->id == 0 ? SDL_TRUE : SDL_RemoveTimer(to->id);
 
         if (ret == SDL_FALSE)
-	    dbg(lvl_error,"SDL_RemoveTimer (%p) failed", to->id);
+            dbg(lvl_error,"SDL_RemoveTimer (%p) failed", to->id);
 
-	g_free(to);
-	dbg(lvl_debug,"timer(%p) removed", to);
+        g_free(to);
+        dbg(lvl_debug,"timer(%p) removed", to);
     }
 }
 
 /* Idle */
 
 /* sort ptr_array by priority, increasing order */
-static gint
-sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb)
-{
+static gint sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb) {
     struct idle_task *a = (struct idle_task *)parama;
     struct idle_task *b = (struct idle_task *)paramb;
     if (a->priority < b->priority)
-	return -1;
+        return -1;
     if (a->priority > b->priority)
-	return 1;
+        return 1;
     return 0;
 }
 
-static struct event_idle *
-event_sdl_add_idle(int priority, struct callback *cb)
-{
+static struct event_idle *event_sdl_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug,"add idle priority(%d) cb(%p)", priority, cb);
 
     struct idle_task *task = g_new0(struct idle_task, 1);
@@ -1775,41 +1625,35 @@ event_sdl_add_idle(int priority, struct callback *cb)
 
     g_ptr_array_add(idle_tasks, (gpointer)task);
 
-    if (idle_tasks->len < 2)
-    {
-	SDL_Event event;
-	SDL_UserEvent userevent;
+    if (idle_tasks->len < 2) {
+        SDL_Event event;
+        SDL_UserEvent userevent;
 
-	dbg(lvl_debug,"poking eventloop because of new idle_events");
+        dbg(lvl_debug,"poking eventloop because of new idle_events");
 
-	userevent.type = SDL_USEREVENT;
-	userevent.code = SDL_USEREVENT_CODE_IDLE_EVENT;
-	userevent.data1 = NULL;
-	userevent.data2 = NULL;
+        userevent.type = SDL_USEREVENT;
+        userevent.code = SDL_USEREVENT_CODE_IDLE_EVENT;
+        userevent.data1 = NULL;
+        userevent.data2 = NULL;
 
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
+        event.type = SDL_USEREVENT;
+        event.user = userevent;
 
-	SDL_PushEvent (&event);
-    }
-    else	// more than one entry => sort the list
-	g_ptr_array_sort(idle_tasks, sdl_sort_idle_tasks);
+        SDL_PushEvent (&event);
+    } else	// more than one entry => sort the list
+        g_ptr_array_sort(idle_tasks, sdl_sort_idle_tasks);
 
     return (struct event_idle *)task;
 }
 
-static void
-event_sdl_remove_idle(struct event_idle *task)
-{
+static void event_sdl_remove_idle(struct event_idle *task) {
     dbg(lvl_debug,"remove task(%p)", task);
     g_ptr_array_remove(idle_tasks, (gpointer)task);
 }
 
 /* callback */
 
-static void
-event_sdl_call_callback(struct callback_list *cbl)
-{
+static void event_sdl_call_callback(struct callback_list *cbl) {
     dbg(lvl_debug,"call_callback cbl(%p)",cbl);
     SDL_Event event;
     SDL_UserEvent userevent;
@@ -1837,9 +1681,7 @@ static struct event_methods event_sdl_methods = {
     event_sdl_call_callback,
 };
 
-static struct event_priv *
-event_sdl_new(struct event_methods* methods)
-{
+static struct event_priv *event_sdl_new(struct event_methods* methods) {
     idle_tasks = g_ptr_array_new();
     *methods = event_sdl_methods;
     return NULL;
@@ -1848,9 +1690,7 @@ event_sdl_new(struct event_methods* methods)
 /* ---------- SDL Eventhandling ---------- */
 #endif
 
-void
-plugin_init(void)
-{
+void plugin_init(void) {
 #ifdef USE_WEBOS
     plugin_register_category_event("sdl", event_sdl_new);
 #endif

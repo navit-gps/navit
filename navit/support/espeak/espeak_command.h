@@ -19,7 +19,7 @@ enum t_espeak_type
     ET_TERMINATED_MSG
   };
 
-typedef struct
+typedef struct 
 {
   unsigned int unique_identifier;
   void* text;
@@ -31,7 +31,7 @@ typedef struct
   void* user_data;
 } t_espeak_text;
 
-typedef struct
+typedef struct 
 {
   unsigned int unique_identifier;
   void* text;
@@ -42,53 +42,53 @@ typedef struct
   void* user_data;
 } t_espeak_mark;
 
-typedef struct
+typedef struct 
 {
 	unsigned int unique_identifier;
 	void* user_data;
-	wchar_t character;
+	wchar_t character; 
 } t_espeak_character;
 
-typedef struct
+typedef struct 
 {
 	unsigned int unique_identifier;
 	void* user_data;
-	const char* key_name;
+	const char* key_name; 
 } t_espeak_key;
 
 
-typedef struct
+typedef struct 
 {
   unsigned int unique_identifier;
   void* user_data;
 } t_espeak_terminated_msg;
 
 
-typedef struct
+typedef struct 
 {
-  espeak_PARAMETER parameter;
-  int value;
+  espeak_PARAMETER parameter; 
+  int value; 
   int relative;
 } t_espeak_parameter;
 
-enum t_command_state
+enum t_command_state 
 {
   CS_UNDEFINED, // The command has just been created
   CS_PENDING, // stored in the fifo
   CS_PROCESSED // processed
 };
 
-typedef struct
+typedef struct 
 {
   enum t_espeak_type type;
-  enum t_command_state state;
+  enum t_command_state state; 
 
   union command
   {
-    t_espeak_text my_text;
-    t_espeak_mark my_mark;
-    t_espeak_key  my_key;
-    t_espeak_character my_char;
+    t_espeak_text my_text; 
+    t_espeak_mark my_mark; 
+    t_espeak_key  my_key; 
+    t_espeak_character my_char; 
     t_espeak_parameter my_param;
     const wchar_t* my_punctuation_list;
     const char *my_voice_name;
@@ -123,11 +123,11 @@ int delete_espeak_command( t_espeak_command* the_command);
 void display_espeak_command(t_espeak_command* the_command);
 
 
-espeak_ERROR sync_espeak_Synth(unsigned int unique_identifier, const void *text, size_t size,
-		      unsigned int position, espeak_POSITION_TYPE position_type,
+espeak_ERROR sync_espeak_Synth(unsigned int unique_identifier, const void *text, size_t size, 
+		      unsigned int position, espeak_POSITION_TYPE position_type, 
 		      unsigned int end_position, unsigned int flags, void* user_data);
-espeak_ERROR sync_espeak_Synth_Mark(unsigned int unique_identifier, const void *text, size_t size,
-			   const char *index_mark, unsigned int end_position,
+espeak_ERROR sync_espeak_Synth_Mark(unsigned int unique_identifier, const void *text, size_t size, 
+			   const char *index_mark, unsigned int end_position, 
 			   unsigned int flags, void* user_data);
 void sync_espeak_Key(const char *key);
 void sync_espeak_Char(wchar_t character);

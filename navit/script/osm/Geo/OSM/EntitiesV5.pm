@@ -67,9 +67,9 @@ sub tag_xml
 {
   my ($self,$writer) = @_;
   my @a = @{$self->{tags}};
-  
+
   my $str = "";
-  
+
   while( my($k,$v) = splice @a, 0, 2 )
   {
     $writer->emptyTag( "tag", 'k' => $k, 'v' => $v );
@@ -83,9 +83,9 @@ sub set_id
   my($self,$id) = @_;
 
   if( not defined $id )
-  { $id = $_ID-- }  
+  { $id = $_ID-- }
   $self->{id} = $id;
-}  
+}
 
 sub id
 {
@@ -121,14 +121,14 @@ use Carp;
 sub new
 {
   my($class, $attr, $tags, $nodes) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_nodes($nodes);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
-  
+
   return $obj;
 }
 
@@ -175,11 +175,11 @@ sub map
   my $incomplete = 0;
   my ($new_id) = $mapper->map('way',$self->id);   # Determine mapped ID
   # It is ok for the new_id to be incomplete; it may be a create request
-  
+
   my @new_nodes = map { [ $mapper->map('node',$_) ] } @{$self->nodes};
   map { $incomplete |= $_->[1] } @new_nodes;
   # incomplete tracks if any of the segs are incomplete
-  
+
   my $new_ent = new Geo::OSM::Way( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_nodes] );
   return($new_ent,$incomplete);
 }
@@ -204,7 +204,7 @@ sub new
     { $arg = { type => $arg->[0], ref => $arg->[1], role => $arg->[2] } }
   }
   if( ref($arg) eq "HASH" )
-  { 
+  {
     if( ref $arg->{ref} )
     { $arg = [ $arg->{ref}->type, $arg->{ref}->id, $arg->{role} ] }
     else
@@ -217,7 +217,7 @@ sub new
   croak "Bad member id '$arg->[1]'"
     unless $arg->[1] =~ /^-?\d+$/;
   $arg->[2] ||= "";
-    
+
   return bless $arg, $class;
 }
 
@@ -249,14 +249,14 @@ our @ISA = qw(Geo::OSM::Entity);
 sub new
 {
   my($class, $attr, $tags, $members) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_members($members);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
-  
+
   return $obj;
 }
 
@@ -298,7 +298,7 @@ sub map
 {
   my($self,$mapper) = @_;
   my $incomplete = 0;
-  
+
   my ($new_id) = $mapper->map('relation',$self->id);
   my @new_members = map { [ $_->map($mapper) ] } @{$self->members};
   map { $incomplete |= $_->[1] } @new_members;
@@ -314,9 +314,9 @@ our @ISA = qw(Geo::OSM::Entity);
 sub new
 {
   my($class, $attr, $tags) = @_;
-  
+
   my $obj = bless $class->SUPER::_new(), $class;
-  
+
   $obj->set_tags($tags);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
@@ -327,7 +327,7 @@ sub new
   }
   $obj->{lon} = $attr->{lon};
   $obj->{lat} = $attr->{lat};
-  
+
   return $obj;
 }
 
@@ -354,7 +354,7 @@ sub xml
   my $self = shift;
   my $str = "";
   my $writer = $self->_get_writer(\$str);
-  
+
   $writer->startTag( "node", id => $self->id, lat => $self->lat, lon => $self->lon, timestamp => $self->timestamp );
   $self->tag_xml( $writer );
   $writer->endTag( "node" );

@@ -34,7 +34,7 @@
 		For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
 		-->
 	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0">
-		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
+		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl.
 		     On windows systems, use win32 -->
 		<graphics type="gtk_drawing_area"/>
 		<!-- The following line let you select which graphical user interface you'd like to use.
@@ -99,9 +99,9 @@ Navigation</text></img>
 				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
 				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
-				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last
 Waypoint</text></img>
-				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next 
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
 Waypoint</text></img>
 			</a>
 			<a name='Map Point'><text>Map Point</text>
@@ -170,7 +170,7 @@ Waypoint</text></img>
 		You can find a list of all the available OSDs items here:
 		http://wiki.navit-project.org/index.php/OSD -->
 		<osd enabled="no" type="compass"/>
-		<osd enabled="no" type="navigation_next_turn"/> 
+		<osd enabled="no" type="navigation_next_turn"/>
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
 			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
@@ -178,12 +178,12 @@ Waypoint</text></img>
 		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.png"/>
 		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu(1)" src="menu.png"/>
 		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.png"/>
-		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/> 
+		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/>
 
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
 		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->
-		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1" 
+		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1"
 				source="serial:COM4 baudrate=4800 parity=N data=8 stop=1" > -->
 
 			<!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
@@ -285,7 +285,7 @@ Waypoint</text></img>
 			<roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7" />
 			<!-- Those types do not appear in maptool.c and therefore are not used ATM -->
 			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7" />
-			<!--roundabout does not apply to OSMaps -->	
+			<!--roundabout does not apply to OSMaps -->
 			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
@@ -3612,7 +3612,7 @@ Waypoint</text></img>
 					<icon src="gui_sound_32_32.png"/>
 					<circle color="#FF089C" radius="10" background_color="#000000" text_size="7"/>
 				</itemgra>
-				
+
 				<itemgra item_types="waypoint,route_end" order="2">
 					<circle color="#00a0a0" radius="4" width="2" background_color="#000000" text_size="24"/>
 				</itemgra>
@@ -4951,7 +4951,7 @@ Waypoint</text></img>
         <itemgra item_types="route_end" order="0-">
           <icon src="nav_destination_bk.png" w="32" h="32" x="4" y="30"/>
         </itemgra>
-        
+
         <itemgra item_types="waypoint,route_end" order="2">
 			<circle color="#000000" radius="4" width="2" text_size="24"/>
 		</itemgra>
@@ -4991,7 +4991,7 @@ Waypoint</text></img>
 		<itemgra item_types="waypoint,route_end" order="18">
 			<circle color="#000000" radius="530" width="8" text_size="48"/>
 		</itemgra>
-        
+
         <itemgra item_types="nav_none" order="0-">
           <icon src="unknown.png" />
         </itemgra>
@@ -5619,7 +5619,7 @@ Waypoint</text></img>
 				<itemgra item_types="street_route" >
 					<polyline width="11" color="#516170" />
 				</itemgra>
-				
+
 				<itemgra item_types="street_1_city,street_1_land" order="12-">
 					<polyline width="3" color="#a4bac8" />
 				</itemgra>
@@ -5656,7 +5656,7 @@ Waypoint</text></img>
 				<itemgra item_types="street_route" >
 					<polyline width="9" color="#ffffff" />
 				</itemgra>
-				
+
 				<itemgra item_types="waypoint,route_end" >
 					<circle color="#000000" radius="8" width="2" text_size="24"/>
 				</itemgra>
@@ -6627,7 +6627,7 @@ Waypoint</text></img>
 				<itemgra item_types="route_end" order="0-">
 					<icon src="nav_destination_bk.svg" w="32" h="32" x="4" y="30"/>
 				</itemgra>
-				
+
 				<itemgra item_types="waypoint,route_end" order="2">
 					<circle color="#000000" radius="4" width="2" text_size="24"/>
 				</itemgra>
@@ -6667,7 +6667,7 @@ Waypoint</text></img>
 				<itemgra item_types="waypoint,route_end" order="18">
 					<circle color="#000000" radius="530" width="8" text_size="48"/>
 				</itemgra>
-				
+
 				<itemgra item_types="nav_none" order="0-">
 					<icon src="unknown.svg"/>
 				</itemgra>
@@ -6675,7 +6675,7 @@ Waypoint</text></img>
 					<icon src="gui_sound_32_32.png"/>
 					<circle color="#FF089C" radius="10" text_size="7"/>
 				</itemgra>
-			</layer>			
+			</layer>
 			<layer name="Street Labels">
 				<itemgra item_types="highway_exit_label" order="10-">
 					<circle color="#000000" radius="3" text_size="12"/>
@@ -6703,7 +6703,7 @@ Waypoint</text></img>
 				<!-- This entry shows all unknown linear elements as blue lines -->
 				<!--
 				<itemgra item_types="street_unkn" order="0-">
-					<polyline color="#8080ff" width="3"/> 
+					<polyline color="#8080ff" width="3"/>
 				</itemgra>
 				-->
 			</layer>
@@ -6756,7 +6756,7 @@ Waypoint</text></img>
 				<itemgra item_types="poi_bicycle_parking,poi_bicycle_rental" order="14-">
 					<circle color="#606060" radius="0" width="0" text_size="10"/>
 				</itemgra>
-			</layer>					
+			</layer>
 			<layer name="Found items" ref="Found items"/>
 		</layout>
 
@@ -6788,10 +6788,10 @@ Waypoint</text></img>
 				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#72bf81"/>
 				</itemgra>
-				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-"> 
-					<polygon color="#a0a0a0"/> 
-					<text text_size="5"/> 
-				</itemgra> 
+				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
+					<polygon color="#a0a0a0"/>
+					<text text_size="5"/>
+				</itemgra>
 				<!-- landuse=residential -->
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#f2f2f2"/>
@@ -7223,7 +7223,7 @@ Waypoint</text></img>
 				<itemgra item_types="rg_point" order="0-">
 					<circle color="#FF089C" radius="10"/>
 				</itemgra>
-				
+
 				<itemgra item_types="waypoint,route_end" order="2">
 					<circle color="#008080" radius="4" width="2" text_size="24"/>
 				</itemgra>
@@ -7263,7 +7263,7 @@ Waypoint</text></img>
 				<itemgra item_types="waypoint,route_end" order="18">
 					<circle color="#008080" radius="530" width="8" text_size="48"/>
 				</itemgra>
-				
+
 				<!-- !!!!...POIs...!!!! -->
 				<!-- amenity=bank -->
 				<itemgra item_types="poi_bank" order="14-">

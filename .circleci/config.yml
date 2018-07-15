@@ -2,8 +2,17 @@ version: 2
 defaults: &defaults
   docker:
     - image: ubuntu:14.04
-
 jobs:
+  sanity_check:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Setup requirements
+          command: bash scripts/setup_common_requirements.sh
+      - run:
+          name: run sanity check script
+          command: bash scripts/ci_sanity_checks.sh
   build_linux:
     <<: *defaults
     steps:
@@ -14,17 +23,17 @@ jobs:
       - run:
           name: Setup requirements
           command: |
-            bash ci/setup_common_requirements.sh
+            bash scripts/setup_common_requirements.sh
             apt-get install -y libpng12-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
       - run:
           name: Build for Linux
-          command: bash ci/build_linux.sh
+          command: bash scripts/build_linux.sh
       - store_artifacts:
           path: linux/_CPack_Packages
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   run_doxygen:
     <<: *defaults
     steps:
@@ -37,7 +46,7 @@ jobs:
           command: cd navit && doxygen
       - run:
           name: Update results to Github
-          command: bash ci/update_doxygen.sh
+          command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
   build_android:
@@ -61,8 +70,7 @@ jobs:
           name: Process icons
           command: |
             cd navit/icons
-            make  
-            sudo ls -la
+            make
             mkdir ../android/res/drawable-nodpi
             rename 'y/A-Z/a-z/' *
             cp *.png ../android/res/drawable-nodpi
@@ -70,15 +78,14 @@ jobs:
       - run:
           name: Process translations
           command: |
-            cd po  
+            cd po
             make
-            sudo ls -la
             mkdir ../navit/android/res/raw
             rename 'y/A-Z/a-z/' *
             cp *.mo ../navit/android/res/raw
             cd ../
       - run:
-          name: Move xml's
+          name: Process xml's
           command: |
             cd navit
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48
@@ -87,7 +94,6 @@ jobs:
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192
             saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256
-            sudo ls -la
             mv *dpi.xml android/res/raw
             cd ../
       - run:
@@ -104,16 +110,39 @@ jobs:
           name: Build
           command: ./gradlew assembleDebug
       - run:
-          name: Run Tests
-          command: ./gradlew tasks --all
+          name: Run Lint Test
+          command: |
+            ln -s navit/navit.dtd navit.dtd
+            mkdir /home/circleci/code/test-results
+            ./gradlew lint test
+      - run:
+          name: Run CheckStyle Test
+          command: ./gradlew checkstyleMain
+      - run:
+          name: Run Javadoc
+          command: ./gradlew generateDebugJavadoc
       - store_artifacts:
+          name: Store APK
           path: navit/android/build/outputs/apk
           destination: apk
       - store_artifacts:
+          name: Store logs
           path: navit/android/build/outputs/logs
           destination: logs
+      - store_artifacts:
+          name: Store Javadoc
+          path: navit/android/build/outputs/docs/javadoc
+          destination: doc
+      - store_artifacts:
+          name: Store Lint reports
+          path: navit/android/build/reports
+          destination: reports
+      - store_artifacts:
+          name: Store checkstyle report
+          path: /home/circleci/code/navit/android/checkstyle
+          destination: reports
       - store_test_results:
-          path: navit/android/build/test-results  
+          path: test-results
   build_win32:
     <<: *defaults
     steps:
@@ -121,14 +150,14 @@ jobs:
       - run:
           name: Build for Windows
           command: |
-            bash ci/setup_common_requirements.sh
-            bash ci/build_win32.sh
+            bash scripts/setup_common_requirements.sh
+            bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   build_wince:
     docker:
       - image: navit/dockerfiles:wince
@@ -137,16 +166,16 @@ jobs:
       - run:
           name: Prepare the WinCE build environment
           command: |
-            bash ci/setup_wince.sh
+            bash scripts/setup_wince.sh
       - run:
           name: Build for Windows CE
-          command: bash ci/build_wince.sh
+          command: bash scripts/build_wince.sh
       - store_artifacts:
           path: wince/output
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   build_tomtom_minimal:
     <<: *defaults
     docker:
@@ -156,17 +185,17 @@ jobs:
       - run:
           name: Setup common requirements
           command: |
-            bash ci/setup_common_requirements.sh
+            bash scripts/setup_common_requirements.sh
       - run:
           name: Build for Tomtom (minimal)
           command: |
-            bash ci/build_tomtom_minimal.sh
+            bash scripts/build_tomtom_minimal.sh
       - store_artifacts:
           path: /output
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   build_tomtom_plugin:
     <<: *defaults
     docker:
@@ -176,17 +205,17 @@ jobs:
       - run:
           name: Setup common requirements
           command: |
-            bash ci/setup_common_requirements.sh
+            bash scripts/setup_common_requirements.sh
       - run:
           name: Build for Tomtom (plugin)
           command: |
-            bash ci/build_tomtom_plugin.sh
+            bash scripts/build_tomtom_plugin.sh
       - store_artifacts:
           path: /output
       - run:
           name: Update Navit-Download-Center
           command: |
-            bash ci/update_download_center.sh
+            bash scripts/update_download_center.sh
   merge_trunk_in_master:
     <<: *defaults
     steps:
@@ -207,12 +236,25 @@ workflows:
   version: 2
   build_all:
     jobs:
-      - build_linux
-      - build_android
-      - build_win32
-      - build_wince
-      - build_tomtom_minimal
-      - build_tomtom_plugin
+      - sanity_check
+      - build_linux:
+          requires:
+            - sanity_check
+      - build_android:
+          requires:
+            - sanity_check
+      - build_win32:
+          requires:
+            - sanity_check
+      - build_wince:
+          requires:
+            - sanity_check
+      - build_tomtom_minimal:
+          requires:
+            - sanity_check
+      - build_tomtom_plugin:
+          requires:
+            - sanity_check
       - run_doxygen:
           requires:
             - build_linux

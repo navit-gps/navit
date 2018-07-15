@@ -17,27 +17,39 @@
  *               <http://www.gnu.org/licenses/>.                           *
  ***************************************************************************/
 
+#ifndef SPEECH_H
+#define SPEECH_H
 
 #include <sys/types.h>
 
 // conditional compilation options
 #define INCLUDE_KLATT
+//#define INCLUDE_MBROLA
+#define INCLUDE_SONIC
 
 #if defined(BYTE_ORDER) && BYTE_ORDER == BIG_ENDIAN
 #define ARCH_BIG
 #endif
 
-/* #define PLATFORM_POSIX */
+#ifdef __QNX__
+#define NEED_GETOPT
+#define NO_VARIADIC_MACROS
+#endif
+
+
+#define PLATFORM_POSIX
 #define PATHSEP  '/'
 // USE_PORTAUDIO or USE_PULSEAUDIO are now defined in the makefile
 //#define USE_PORTAUDIO
 //#define USE_PULSEAUDIO
 #define USE_NANOSLEEP
+#ifndef __cdecl
+#define __cdecl
+#endif
 //#define ESPEAK_API  extern "C"
 
 #ifdef LIBRARY
 #define USE_ASYNC
-//#define USE_MBROLA_LIB
 #endif
 
 #ifdef _ESPEAKEDIT
@@ -54,7 +66,7 @@
 typedef unsigned short USHORT;
 typedef unsigned char  UCHAR;
 typedef double DOUBLEX;
-
+typedef unsigned long long64;   // use this for conversion between pointers and integers
 
 
 
@@ -62,19 +74,13 @@ typedef struct {
    const char *mnem;
    int  value;
 } MNEM_TAB;
-int LookupMnem(MNEM_TAB *table, char *string);
+int LookupMnem(MNEM_TAB *table, const char *string);
 
 
 #ifdef PLATFORM_WINDOWS
-#define N_PATH_HOME  220
-#define ESPEAK_API
+#define N_PATH_HOME  230
 #else
-#define N_PATH_HOME  150
-#ifdef __cplusplus
-#define ESPEAK_API  extern "C"
-#else
-#define ESPEAK_API
-#endif
+#define N_PATH_HOME  160
 #endif
 
 extern char path_home[N_PATH_HOME];    // this is the espeak-data directory
@@ -84,3 +90,4 @@ int  GetFileLength(const char *filename);
 char *Alloc(int size);
 void Free(void *ptr);
 
+#endif // SPEECH_H

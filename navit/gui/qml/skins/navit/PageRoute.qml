@@ -20,9 +20,9 @@ Rectangle {
 	}
 	route.getDestinations();
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }

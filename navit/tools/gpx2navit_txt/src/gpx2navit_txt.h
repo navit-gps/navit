@@ -150,7 +150,7 @@ typedef struct g2sattr {
 } g2sattr;
 
 /**
- * statistics structure 
+ * statistics structure
  */
 typedef struct g2sstats {
 	int trkpoints;	/** track point total count */
@@ -161,12 +161,12 @@ typedef struct g2sstats {
     double rtelength;	/** route total length */
     int wptpoints;	/** way point total count */
     int trkunconverted;	/** unconverted track path count */
-    int rteunconverted;	/** unconverted route path count */ 
+    int rteunconverted;	/** unconverted route path count */
 } g2sstats;
 
 /**
  * cluster of all dbfhandles
- */ 
+ */
 //typedef struct dbfhandles {
 //    DBFHandle trk;	/** for track */
 //    DBFHandle wpt;	/** for waypoint */
@@ -224,7 +224,7 @@ typedef struct g2sprop {
 } g2sprop;
 
 /**
- * userdata structure between expat methods 
+ * userdata structure between expat methods
  */
 typedef struct parsedata {
     int depth;		/** xml path depth */

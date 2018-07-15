@@ -136,7 +136,7 @@ struct gui_priv {
 		struct widget *container;
 	} html[10];
 
-/* gestures */	
+/* gestures */
 
 	struct gesture_elem {
 		long long msec;

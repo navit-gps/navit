@@ -34,9 +34,9 @@ Rectangle {
 	}
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -60,9 +60,9 @@ Rectangle {
          }
      }
 
-    CommonHighlight { id: listHighlight} 
+    CommonHighlight { id: listHighlight}
 
-    ListSelector { 
+    ListSelector {
 	id:layoutList; text: "Current layout"; itemId: navit.getAttrList("layout"); onChanged: navit.setObjectByName("layout",layoutList.value)
 	anchors.top: parent.top;
 	anchors.left: parent.left;

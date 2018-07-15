@@ -1,15 +1,15 @@
 #! /bin/bash
 function send_data
 {
-	trap send_data SIGPIPE 
+	trap send_data SIGPIPE
 	while read line
 	do
 		case $line in
 		\$GPVTG*)
 			echo "$line"
-			sleep 1	
+			sleep 1
 			;;
-		*)	
+		*)
 			echo "$line"
 			;;
 		esac

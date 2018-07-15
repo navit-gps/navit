@@ -22,7 +22,7 @@ use Utils::Math;
 # ------------------------------------------------------------------
 sub tags2osm($){
     my $obj = shift;
-    
+
     my $erg = "";
     for my $k ( keys %{$obj->{tag}} ) {
 	my $v = $obj->{tag}{$k};
@@ -73,10 +73,10 @@ sub write_osm_file($$) { # Write an osm File
     print $fh "<osm version=\'0.5\' generator=\'".$osm->{tool}."\'>\n";
     if ( defined ( $osm->{bounds} ) ) {
 	my $bounds = $osm->{bounds};
-	my $bounds_sting = "$bounds->{lat_min},$bounds->{lon_min},$bounds->{lat_max},$bounds->{lon_max}"; 
+	my $bounds_sting = "$bounds->{lat_min},$bounds->{lon_min},$bounds->{lat_max},$bounds->{lon_max}";
 	# -90,-180,90,180
 	print $fh "   <bound box=\"$bounds_sting\" origin=\"OSM-perl-writer\" />\n";
-	
+
     }
 
     # --- Nodes
@@ -90,9 +90,9 @@ sub write_osm_file($$) { # Write an osm File
 	    next;
 	}
 	print $fh "  <node id=\'$node_id\' ";
-	print $fh " timestamp=\'".$node->{timestamp}."\' " 
+	print $fh " timestamp=\'".$node->{timestamp}."\' "
 	    if defined $node->{timestamp};
-	print $fh " changeset=\'".$node->{changeset}."\' " 
+	print $fh " changeset=\'".$node->{changeset}."\' "
 	    if defined $node->{changeset};
 	print $fh " lat=\'$lat\' ";
 	print $fh " lon=\'$lon\' ";
@@ -109,10 +109,10 @@ sub write_osm_file($$) { # Write an osm File
 	next unless scalar( @{$way->{nd}} )>1;
 
 	print $fh "  <way id=\'$way_id\'";
-	print $fh " timestamp=\'".$way->{timestamp}."\'" 
+	print $fh " timestamp=\'".$way->{timestamp}."\'"
 	    if defined $way->{timestamp};
 	print $fh ">";
-	
+
 	for my $way_nd ( @{$way->{nd}} ) {
 	    next unless $way_nd;
 	    print $fh "    <nd ref=\'$way_nd\' />\n";
@@ -120,7 +120,7 @@ sub write_osm_file($$) { # Write an osm File
 	print $fh tags2osm($way);
 	print $fh "  </way>\n";
 	$count_ways++;
-	
+
     }
 
     print $fh "</osm>\n";

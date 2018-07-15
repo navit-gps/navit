@@ -29,10 +29,10 @@
 #if defined(_WIN32_WCE) && _WIN32_WCE < 0x500 && !defined(__MINGW32CE__)
 
 typedef struct {
-		int BlendOp;
-		int BlendFlags;
-		int SourceConstantAlpha;
-		int AlphaFormat;
+    int BlendOp;
+    int BlendFlags;
+    int SourceConstantAlpha;
+    int AlphaFormat;
 } BLENDFUNCTION;
 
 #define AC_SRC_OVER 1
@@ -58,8 +58,7 @@ typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
 
 typedef int (WINAPI *FP_SetStretchBltMode) (HDC dc,int mode);
 
-struct graphics_priv
-{
+struct graphics_priv {
     struct navit *nav;
     struct window window;
     struct point p;
@@ -95,8 +94,7 @@ struct graphics_priv
     GHashTable *image_cache_hash;
 };
 
-struct window_priv
-{
+struct window_priv {
     HANDLE hBackLight;
 };
 
@@ -121,8 +119,7 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
 #define EZ_ATTR_STRIKEOUT     8
 
 HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
-                    int iDeciPtWidth, int iAttributes, BOOL fLogRes)
-{
+                    int iDeciPtWidth, int iAttributes, BOOL fLogRes) {
     FLOAT      cxDpi, cyDpi ;
     HFONT      hFont ;
     LOGFONT    lf ;
@@ -140,13 +137,10 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
     SetWindowOrgEx   (hdc, 0, 0, NULL) ;
 #endif
 
-    if (fLogRes)
-    {
+    if (fLogRes) {
         cxDpi = (FLOAT) GetDeviceCaps (hdc, LOGPIXELSX) ;
         cyDpi = (FLOAT) GetDeviceCaps (hdc, LOGPIXELSY) ;
-    }
-    else
-    {
+    } else {
         cxDpi = (FLOAT) (25.4 * GetDeviceCaps (hdc, HORZRES) /
                          GetDeviceCaps (hdc, HORZSIZE)) ;
 
@@ -178,8 +172,7 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
 
     hFont = CreateFontIndirect (&lf) ;
 
-    if (iDeciPtWidth != 0)
-    {
+    if (iDeciPtWidth != 0) {
         hFont = (HFONT) SelectObject (hdc, hFont) ;
 
         GetTextMetrics (hdc, &tm) ;
@@ -196,21 +189,19 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
     return hFont ;
 }
 
-struct graphics_image_priv
-{
+struct graphics_image_priv {
     PXPM2BMP pxpm;
-	int width,height,row_bytes,channels;
+    int width,height,row_bytes,channels;
     unsigned char *png_pixels;
     HBITMAP hBitmap;
     struct point hot;
 };
 
 
-static void ErrorExit(LPTSTR lpszFunction)
-{
+static void ErrorExit(LPTSTR lpszFunction) {
     // Retrieve the system error message for the last-error code
 
-	LPVOID lpMsgBuf;
+    LPVOID lpMsgBuf;
     LPVOID lpDisplayBuf;
     DWORD dw = GetLastError();
 
@@ -238,8 +229,7 @@ static void ErrorExit(LPTSTR lpszFunction)
 
 
 
-struct graphics_gc_priv
-{
+struct graphics_gc_priv {
     HWND        hwnd;
     int         line_width;
     COLORREF    fg_color;
@@ -253,13 +243,11 @@ struct graphics_gc_priv
 };
 
 
-static void create_memory_dc(struct graphics_priv *gr)
-{
+static void create_memory_dc(struct graphics_priv *gr) {
     HDC hdc;
     BITMAPINFO bOverlayInfo;
 
-    if (gr->hMemDC)
-    {
+    if (gr->hMemDC) {
         (void)SelectBitmap(gr->hMemDC, gr->hOldBitmap);
         DeleteBitmap(gr->hBitmap);
         DeleteDC(gr->hMemDC);
@@ -287,80 +275,72 @@ static void create_memory_dc(struct graphics_priv *gr)
     bOverlayInfo.bmiHeader.biCompression = BI_RGB;
     bOverlayInfo.bmiHeader.biPlanes = 1;
     gr->hPrebuildDC = CreateCompatibleDC(NULL);
-    gr->hPrebuildBitmap = CreateDIBSection(gr->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&gr->pPixelData, NULL, 0);
+    gr->hPrebuildBitmap = CreateDIBSection(gr->hMemDC, &bOverlayInfo, DIB_RGB_COLORS, (void **)&gr->pPixelData, NULL, 0);
     gr->hOldPrebuildBitmap = SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
 
 #endif
     gr->hBitmap = CreateCompatibleBitmap(hdc, gr->width, gr->height );
 
-    if ( gr->hBitmap )
-    {
+    if ( gr->hBitmap ) {
         gr->hOldBitmap = SelectBitmap( gr->hMemDC, gr->hBitmap);
     }
     ReleaseDC( gr->wnd_handle, hdc );
 }
 
-static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int button, long lParam )
-{
+static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int button, long lParam ) {
     struct point pt = { LOWORD(lParam), HIWORD(lParam) };
     callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
-static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
-{
+static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam) {
     TCHAR key = (TCHAR) wParam;
     char *s=NULL;
-    char k[]={0,0};
+    char k[]= {0,0};
     dbg(lvl_debug,"HandleKey %d",key);
-	switch (key) {
+    switch (key) {
     default:
-		k[0]=key;
-		s=k;
+        k[0]=key;
+        s=k;
         break;
     }
-    if (s) 
+    if (s)
         callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
 }
 
-static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
-{
+static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam) {
     int key = (int) wParam;
-    char up[]={NAVIT_KEY_UP,0};
-    char down[]={NAVIT_KEY_DOWN,0};
-    char left[]={NAVIT_KEY_LEFT,0};
-    char right[]={NAVIT_KEY_RIGHT,0};
+    char up[]= {NAVIT_KEY_UP,0};
+    char down[]= {NAVIT_KEY_DOWN,0};
+    char left[]= {NAVIT_KEY_LEFT,0};
+    char right[]= {NAVIT_KEY_RIGHT,0};
     char *s=NULL;
     dbg(lvl_debug,"HandleKey %d",key);
-	switch (key) {
+    switch (key) {
     case 37:
-		s=left;
+        s=left;
         break;
     case 38:
-		s=up;
+        s=up;
         break;
     case 39:
-		s=right;
+        s=right;
         break;
     case 40:
-		s=down;
+        s=down;
         break;
     }
-    if (s) 
+    if (s)
         callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
 }
 
 
-static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
-{
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 
-    struct graphics_priv* gra_priv = (struct graphics_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
+    struct graphics_priv* gra_priv = (struct graphics_priv*)GetWindowLongPtr( hwnd, DWLP_USER );
 
-    switch (Message)
-    {
-    case WM_CREATE:
-    {
-        if ( gra_priv )
-        {
+    switch (Message) {
+    case WM_CREATE: {
+        if ( gra_priv ) {
             RECT rc ;
 
             GetClientRect( hwnd, &rc );
@@ -371,8 +351,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     }
     break;
     case WM_COMMAND:
-        switch (LOWORD(wParam))
-        {
+        switch (LOWORD(wParam)) {
         case WM_USER + 1:
             break;
         }
@@ -381,8 +360,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         DestroyWindow(hwnd);
         break;
     case WM_USER+1:
-        if ( gra_priv )
-        {
+        if ( gra_priv ) {
             RECT rc ;
 
             GetClientRect( hwnd, &rc );
@@ -393,8 +371,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             callback_list_call_attr_2(gra_priv->cbl, attr_resize, (void *)gra_priv->width, (void *)gra_priv->height);
         }
         break;
-    case WM_USER+2:
-    {
+    case WM_USER+2: {
         struct callback_list *cbl = (struct callback_list*)wParam;
 #ifdef HAVE_API_WIN32_CE
         /* FIXME: Reset the idle timer  need a better place */
@@ -405,8 +382,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     break;
 
     case WM_SIZE:
-        if ( gra_priv )
-        {
+        if ( gra_priv ) {
             gra_priv->width = LOWORD( lParam );
             gra_priv->height  = HIWORD( lParam );
             create_memory_dc(gra_priv);
@@ -416,11 +392,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         break;
     case WM_DESTROY:
 #ifdef HAVE_API_WIN32_CE
-        if ( gra_priv && gra_priv->window.priv )
-        {
+        if ( gra_priv && gra_priv->window.priv ) {
             struct window_priv *win_priv = gra_priv->window.priv;
-            if (win_priv->hBackLight)
-            {
+            if (win_priv->hBackLight) {
                 ReleasePowerRequirement(win_priv->hBackLight);
             }
         }
@@ -428,9 +402,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         PostQuitMessage(0);
         break;
     case WM_PAINT:
-        if ( gra_priv && gra_priv->hMemDC)
-        {
-    	    struct graphics_priv* overlay;
+        if ( gra_priv && gra_priv->hMemDC) {
+            struct graphics_priv* overlay;
             PAINTSTRUCT ps = { 0 };
             HDC hdc;
             profile(0, NULL);
@@ -438,84 +411,79 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
-			BitBlt( gra_priv->hPrebuildDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
+            BitBlt( gra_priv->hPrebuildDC, 0, 0, gra_priv->width, gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
 #endif
-			while ( !gra_priv->disabled && overlay)
-			{
-				if ( !overlay->disabled && overlay->p.x >= 0 &&
-					 overlay->p.y >= 0 &&
-					 overlay->p.x < gra_priv->width &&
-					 overlay->p.y < gra_priv->height )
-				{
-					int x,y;
-					int destPixel, srcPixel;
+            while ( !gra_priv->disabled && overlay) {
+                if ( !overlay->disabled && overlay->p.x >= 0 &&
+                        overlay->p.y >= 0 &&
+                        overlay->p.x < gra_priv->width &&
+                        overlay->p.y < gra_priv->height ) {
+                    int x,y;
+                    int destPixel, srcPixel;
                     int h,w;
 #ifdef FAST_TRANSPARENCY
-					if ( !overlay->hPrebuildDC )
-					{
-						overlay->hPrebuildBitmap = CreateBitmap(overlay->width,overlay->height,1,1,NULL);
-						overlay->hPrebuildDC = CreateCompatibleDC(NULL);
-						overlay->hOldPrebuildBitmap = SelectBitmap( overlay->hPrebuildDC, overlay->hPrebuildBitmap);
-						SetBkColor(overlay->hMemDC,RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8));
-						BitBlt(overlay->hPrebuildDC,0,0,overlay->width,overlay->height,overlay->hMemDC,0,0,SRCCOPY);
-						BitBlt(overlay->hMemDC,0,0,overlay->width,overlay->height,overlay->hPrebuildDC,0,0,SRCINVERT);
-					}
+                    if ( !overlay->hPrebuildDC ) {
+                        overlay->hPrebuildBitmap = CreateBitmap(overlay->width,overlay->height,1,1,NULL);
+                        overlay->hPrebuildDC = CreateCompatibleDC(NULL);
+                        overlay->hOldPrebuildBitmap = SelectBitmap( overlay->hPrebuildDC, overlay->hPrebuildBitmap);
+                        SetBkColor(overlay->hMemDC,RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,
+                                                       overlay->transparent_color.b >> 8));
+                        BitBlt(overlay->hPrebuildDC,0,0,overlay->width,overlay->height,overlay->hMemDC,0,0,SRCCOPY);
+                        BitBlt(overlay->hMemDC,0,0,overlay->width,overlay->height,overlay->hPrebuildDC,0,0,SRCINVERT);
+                    }
 
 #else
-					const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8);
+                    const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,
+                                                           overlay->transparent_color.b >> 8);
 
-					BitBlt( overlay->hPrebuildDC, 0, 0, overlay->width , overlay->height, overlay->hMemDC, 0, 0, SRCCOPY);
+                    BitBlt( overlay->hPrebuildDC, 0, 0, overlay->width, overlay->height, overlay->hMemDC, 0, 0, SRCCOPY);
 
-					h=overlay->height;
-					w=overlay->width;
-					if (w > gra_priv->width-overlay->p.x)
-						w=gra_priv->width-overlay->p.x;
-					if (h > gra_priv->height-overlay->p.y)
-						h=gra_priv->height-overlay->p.y;
-					for ( y = 0; y < h ;y++ )
-					{
-						for ( x = 0; x < w; x++ )
-						{
-							srcPixel = y*overlay->width+x;
-							destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
-							if ( overlay->pPixelData[srcPixel] == transparent_color )
-							{
-								destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
+                    h=overlay->height;
+                    w=overlay->width;
+                    if (w > gra_priv->width-overlay->p.x)
+                        w=gra_priv->width-overlay->p.x;
+                    if (h > gra_priv->height-overlay->p.y)
+                        h=gra_priv->height-overlay->p.y;
+                    for ( y = 0; y < h ; y++ ) {
+                        for ( x = 0; x < w; x++ ) {
+                            srcPixel = y*overlay->width+x;
+                            destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
+                            if ( overlay->pPixelData[srcPixel] == transparent_color ) {
+                                destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
 
-								gra_priv->pPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(overlay->pPixelData[srcPixel])) / 65535,
-																((65535 - overlay->transparent_color.a) * GetGValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetGValue(overlay->pPixelData[srcPixel])) / 65535,
-																((65535 - overlay->transparent_color.a) * GetBValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetBValue(overlay->pPixelData[srcPixel])) / 65535);
+                                gra_priv->pPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(
+                                        gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(overlay->pPixelData[srcPixel])) / 65535,
+                                                                        ((65535 - overlay->transparent_color.a) * GetGValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a *
+                                                                                GetGValue(overlay->pPixelData[srcPixel])) / 65535,
+                                                                        ((65535 - overlay->transparent_color.a) * GetBValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a *
+                                                                                GetBValue(overlay->pPixelData[srcPixel])) / 65535);
 
-							}
-							else
-							{
-								gra_priv->pPixelData[destPixel] = overlay->pPixelData[srcPixel];
-							}
-						}
+                            } else {
+                                gra_priv->pPixelData[destPixel] = overlay->pPixelData[srcPixel];
+                            }
+                        }
 
-					}
+                    }
 #endif
-				}
-				overlay = overlay->next;
-			}
+                }
+                overlay = overlay->next;
+            }
 
 
 #ifndef FAST_TRANSPARENCY
             hdc = BeginPaint(hwnd, &ps);
-            BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hPrebuildDC, 0, 0, SRCCOPY );
+            BitBlt( hdc, 0, 0, gra_priv->width, gra_priv->height, gra_priv->hPrebuildDC, 0, 0, SRCCOPY );
 #else
             HDC hdc = BeginPaint(hwnd, &ps);
 
-            BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY );
+            BitBlt( hdc, 0, 0, gra_priv->width, gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY );
 
             overlay = gra_priv->overlays;
-            while ( !gra_priv->disabled && overlay && !overlay->disabled )
-            {
+            while ( !gra_priv->disabled && overlay && !overlay->disabled ) {
                 if ( overlay->p.x > 0 &&
                         overlay->p.y > 0 &&
                         overlay->p.x + overlay->width < gra_priv->width &&
-                        overlay->p.y + overlay->height < gra_priv->height )
-                {
+                        overlay->p.y + overlay->height < gra_priv->height ) {
                     BitBlt(hdc,overlay->p.x,overlay->p.y,overlay->width,overlay->height,overlay->hPrebuildDC,0,0,SRCAND);
                     BitBlt(hdc,overlay->p.x,overlay->p.y,overlay->width,overlay->height,overlay->hMemDC,0,0,SRCPAINT);
                 }
@@ -526,21 +494,18 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
             profile(0, "WM_PAINT\n");
         }
         break;
-    case WM_MOUSEMOVE:
-    {
+    case WM_MOUSEMOVE: {
         struct point pt = { LOWORD(lParam), HIWORD(lParam) };
         callback_list_call_attr_1(gra_priv->cbl, attr_motion, (void *)&pt);
     }
     break;
 
-    case WM_LBUTTONDOWN:
-    {
+    case WM_LBUTTONDOWN: {
         dbg(lvl_debug, "LBUTTONDOWN");
         HandleButtonClick( gra_priv, 1, 1, lParam);
     }
     break;
-    case WM_LBUTTONUP:
-    {
+    case WM_LBUTTONUP: {
         dbg(lvl_debug, "LBUTTONUP");
         HandleButtonClick( gra_priv, 0, 1, lParam);
     }
@@ -561,23 +526,23 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     case WM_KEYDOWN:
         HandleKeyDown( gra_priv, wParam);
         break;
-   case WM_COPYDATA:
-   	dbg(lvl_debug,"got WM_COPYDATA");
+    case WM_COPYDATA:
+        dbg(lvl_debug,"got WM_COPYDATA");
         callback_list_call_attr_2(gra_priv->cbl, attr_wm_copydata, (void *)wParam, (void*)lParam);
         break;
 #ifdef HAVE_API_WIN32_CE
     case WM_SETFOCUS:
         if (fullscr) {
-           HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
-           // deactivate the SIP button
-           ShowWindow(hwndSip, SW_HIDE);
+            HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+            // deactivate the SIP button
+            ShowWindow(hwndSip, SW_HIDE);
         }
         break;
-   case WM_KILLFOCUS:
+    case WM_KILLFOCUS:
         if (fullscr != 1) {
-           HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
-           // active the SIP button
-           ShowWindow(hwndSip, SW_SHOW);
+            HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+            // active the SIP button
+            ShowWindow(hwndSip, SW_SHOW);
         }
         break;
 #endif
@@ -587,34 +552,34 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     return 0;
 }
 
-static int fullscreen(struct window *win, int on)
-{
+static int fullscreen(struct window *win, int on) {
 
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
     HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
     RECT taskbar_rect;
     fullscr = on;
-	if (on) {
+    if (on) {
         ShowWindow(hwndTaskbar, SW_HIDE);
         MoveWindow(g_hwnd, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), FALSE);
-	
-	// deactivate the SIP button
-	ShowWindow(hwndSip, SW_HIDE);
-	
-	} else {
+
+        // deactivate the SIP button
+        ShowWindow(hwndSip, SW_HIDE);
+
+    } else {
         ShowWindow(hwndTaskbar, SW_SHOW);
         GetWindowRect(  hwndTaskbar, &taskbar_rect);
-        MoveWindow(g_hwnd, 0, taskbar_rect.bottom, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) - taskbar_rect.bottom, FALSE);
-    
-	// activate the SIP button
-	ShowWindow(hwndSip, SW_SHOW);
+        MoveWindow(g_hwnd, 0, taskbar_rect.bottom, GetSystemMetrics(SM_CXSCREEN),
+                   GetSystemMetrics(SM_CYSCREEN) - taskbar_rect.bottom, FALSE);
+
+        // activate the SIP button
+        ShowWindow(hwndSip, SW_SHOW);
     }
 
 #else
-	if (on) {
+    if (on) {
         ShowWindow(g_hwnd, SW_MAXIMIZE);
-	} else {
+    } else {
         ShowWindow(g_hwnd, SW_RESTORE);
     }
 
@@ -624,15 +589,12 @@ static int fullscreen(struct window *win, int on)
 }
 
 extern void WINAPI SystemIdleTimerReset(void);
-static struct event_timeout *
-            event_win32_add_timeout(int timeout, int multi, struct callback *cb);
+static struct event_timeout *event_win32_add_timeout(int timeout, int multi, struct callback *cb);
 
-static void disable_suspend(struct window *win)
-{
+static void disable_suspend(struct window *win) {
 #ifdef HAVE_API_WIN32_CE
     struct window_priv *win_priv = win->priv;
-    if ( win_priv && !win_priv->hBackLight )
-    {
+    if ( win_priv && !win_priv->hBackLight ) {
         win_priv->hBackLight = SetPowerRequirement(TEXT("BKL1:"), 0, 0x01, NULL, 0);
         event_win32_add_timeout(29000, 1, callback_new(SystemIdleTimerReset, 0, NULL));
     }
@@ -643,8 +605,7 @@ static void disable_suspend(struct window *win)
 
 static const TCHAR g_szClassName[] = {'N','A','V','G','R','A','\0'};
 
-static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
-{
+static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu ) {
     int wStyle = WS_VISIBLE;
     HWND hwnd;
 #ifdef HAVE_API_WIN32_CE
@@ -693,16 +654,14 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
         return NULL;
     }
 
-    if(gr->frame)
-    {
-        if ( hMenu )
-        {
+    if(gr->frame) {
+        if ( hMenu ) {
             wStyle = WS_CHILD;
         } else {
             wStyle = WS_OVERLAPPED|WS_VISIBLE;
         }
     } else {
-            wStyle = WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+        wStyle = WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
     }
 
 #ifdef HAVE_API_WIN32_CE
@@ -730,8 +689,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
                                  GetModuleHandle(NULL),
                                  NULL);
 #endif
-    if (hwnd == NULL)
-    {
+    if (hwnd == NULL) {
         dbg(lvl_error, "Window creation failed: %d",  GetLastError());
         return NULL;
     }
@@ -739,16 +697,16 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
       not avail for earlier Win and not present in my mingw :(. ChangeWindowMessageFilter may not be present in later Win versions. Welcome late binding!
     */
     if(gr->ChangeWindowMessageFilter)
-    	gr->ChangeWindowMessageFilter(WM_COPYDATA,1 /*MSGFLT_ADD*/);
-    else if(gr->ChangeWindowMessageFilterEx) 
-    	gr->ChangeWindowMessageFilterEx(hwnd,WM_COPYDATA,1 /*MSGFLT_ALLOW*/,NULL);
+        gr->ChangeWindowMessageFilter(WM_COPYDATA,1 /*MSGFLT_ADD*/);
+    else if(gr->ChangeWindowMessageFilterEx)
+        gr->ChangeWindowMessageFilterEx(hwnd,WM_COPYDATA,1 /*MSGFLT_ALLOW*/,NULL);
 
     gr->wnd_handle = hwnd;
 
     callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
     create_memory_dc(gr);
 
-    SetWindowLongPtr( hwnd , DWLP_USER, (LONG_PTR)gr );
+    SetWindowLongPtr( hwnd, DWLP_USER, (LONG_PTR)gr );
 
     ShowWindow( hwnd, SW_SHOW );
     UpdateWindow( hwnd );
@@ -760,38 +718,33 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 
 
 
-static void graphics_destroy(struct graphics_priv *gr)
-{
+static void graphics_destroy(struct graphics_priv *gr) {
     g_free( gr );
 }
 
 
-static void gc_destroy(struct graphics_gc_priv *gc)
-{
+static void gc_destroy(struct graphics_gc_priv *gc) {
     DeleteObject( gc->hpen );
     DeleteObject( gc->hbrush );
     g_free( gc );
 }
 
-static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
-{
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
     DeleteObject (gc->hpen);
     gc->line_width = w;
     gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
 }
 
-static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n)
-{
-	gc->dashed=n>0;
-	DeleteObject (gc->hpen);
-	gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
+static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n) {
+    gc->dashed=n>0;
+    DeleteObject (gc->hpen);
+    gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
 //	gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
 //	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 }
 
 
-static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
-{
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->fg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
     gc->fg_alpha = c->a;
 
@@ -799,15 +752,13 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
     DeleteObject (gc->hbrush);
     gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
-	if ( gc->gr && c->a < 0xFFFF )
-    {
-            gc->gr->transparent_color = *c;
+    if ( gc->gr && c->a < 0xFFFF ) {
+        gc->gr->transparent_color = *c;
     }
 
 }
 
-static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)
-{
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
     gc->bg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
     gc->bg_alpha = c->a;
     if ( gc->gr && gc->gr->hMemDC )
@@ -815,8 +766,7 @@ static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 
 }
 
-static struct graphics_gc_methods gc_methods =
-{
+static struct graphics_gc_methods gc_methods = {
     gc_destroy,
     gc_set_linewidth,
     gc_set_dashes,
@@ -824,8 +774,7 @@ static struct graphics_gc_methods gc_methods =
     gc_set_background,
 };
 
-static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
-{
+static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
     struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
     *meth=gc_methods;
     gc->hwnd = gr->wnd_handle;
@@ -842,23 +791,18 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
-{
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
 
     HPEN hpenold = SelectObject( gr->hMemDC, gc->hpen );
     int oldbkmode=SetBkMode( gr->hMemDC, TRANSPARENT);
 
     int first = 1;
-    for ( i = 0; i< count; i++ )
-    {
-        if ( first )
-        {
+    for ( i = 0; i< count; i++ ) {
+        if ( first ) {
             first = 0;
             MoveToEx( gr->hMemDC, p[0].x, p[0].y, NULL );
-        }
-        else
-        {
+        } else {
             LineTo( gr->hMemDC, p[i].x, p[i].y );
         }
     }
@@ -866,28 +810,25 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
     SelectObject( gr->hMemDC, hpenold);
 }
 
-static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
-{
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
     HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
     if (sizeof(POINT) != sizeof(struct point)) {
-	    int i;
-	    POINT* points=g_alloca(sizeof(POINT)*count);
-	    for ( i=0;i< count; i++ )
-	    {
-		points[i].x = p[i].x;
-		points[i].y = p[i].y;
-	    }
-            Polygon( gr->hMemDC, points,count );
+        int i;
+        POINT* points=g_alloca(sizeof(POINT)*count);
+        for ( i=0; i< count; i++ ) {
+            points[i].x = p[i].x;
+            points[i].y = p[i].y;
+        }
+        Polygon( gr->hMemDC, points,count );
     } else
-	    Polygon( gr->hMemDC, (POINT *)p, count);
+        Polygon( gr->hMemDC, (POINT *)p, count);
     SelectObject( gr->hMemDC, holdbrush);
     SelectObject( gr->hMemDC, holdpen);
 }
 
 
-static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
-{
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
     HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
 
@@ -897,8 +838,7 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
     SelectObject( gr->hMemDC, holdpen);
 }
 
-static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
-{
+static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
     HBRUSH holdbrush = SelectObject( gr->hMemDC, GetStockObject(NULL_BRUSH));
 
@@ -911,43 +851,32 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 }
 
 
-static void draw_drag(struct graphics_priv *gr, struct point *p)
-{
-    if ( p )
-    {
+static void draw_drag(struct graphics_priv *gr, struct point *p) {
+    if ( p ) {
         gr->p.x    = p->x;
         gr->p.y    = p->y;
 
         if ( p->x < 0 || p->y < 0 ||
-                ( gr->parent && ((p->x + gr->width > gr->parent->width) || (p->y + gr->height > gr->parent->height) )))
-        {
+                ( gr->parent && ((p->x + gr->width > gr->parent->width) || (p->y + gr->height > gr->parent->height) ))) {
             gr->disabled = TRUE;
-        }
-        else
-        {
+        } else {
             gr->disabled = FALSE;
         }
     }
 }
 
-static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
-{
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     dbg(lvl_debug, "set draw_mode to %x, %d", gr, (int)mode );
 
-    if ( mode == draw_mode_begin )
-    {
-        if ( gr->wnd_handle == NULL )
-        {
+    if ( mode == draw_mode_begin ) {
+        if ( gr->wnd_handle == NULL ) {
             CreateGraphicsWindows( gr, (HMENU)ID_CHILD_GFX );
         }
-        if ( gr->mode != draw_mode_begin )
-        {
-            if ( gr->hMemDC )
-            {
+        if ( gr->mode != draw_mode_begin ) {
+            if ( gr->hMemDC ) {
                 dbg(lvl_debug, "Erase dc: %x, w: %d, h: %d, bg_color: %x", gr, gr->width, gr->height, gr->bg_color);
 #ifdef  FAST_TRANSPARENCY
-                if ( gr->hPrebuildDC )
-                {
+                if ( gr->hPrebuildDC ) {
                     (void)SelectBitmap(gr->hPrebuildDC, gr->hOldPrebuildBitmap );
                     DeleteBitmap(gr->hPrebuildBitmap);
                     DeleteDC(gr->hPrebuildDC);
@@ -957,8 +886,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
             }
         }
 #ifdef  FAST_TRANSPARENCY
-        else if ( gr->hPrebuildDC )
-        {
+        else if ( gr->hPrebuildDC ) {
             (void)SelectBitmap(gr->hPrebuildDC, gr->hOldPrebuildBitmap );
             DeleteBitmap(gr->hPrebuildBitmap);
             DeleteDC(gr->hPrebuildDC);
@@ -968,8 +896,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     }
 
     // force paint
-    if (mode == draw_mode_end && gr->mode == draw_mode_begin)
-    {
+    if (mode == draw_mode_end && gr->mode == draw_mode_begin) {
         InvalidateRect( gr->wnd_handle, NULL, FALSE );
     }
 
@@ -977,20 +904,16 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 }
 
-static void * get_data(struct graphics_priv *this_, const char *type)
-{
-    if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 )
-    {
+static void * get_data(struct graphics_priv *this_, const char *type) {
+    if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 ) {
         return &( this_->wnd_parent_handle );
     }
-    if ( strcmp( "START_CLIENT", type ) == 0 )
-    {
+    if ( strcmp( "START_CLIENT", type ) == 0 ) {
         CreateGraphicsWindows( this_, (HMENU)ID_CHILD_GFX );
         return NULL;
     }
-    if (!strcmp(type, "window"))
-    {
-        CreateGraphicsWindows( this_ , NULL);
+    if (!strcmp(type, "window")) {
+        CreateGraphicsWindows( this_, NULL);
 
         this_->window.fullscreen = fullscreen;
         this_->window.disable_suspend = disable_suspend;
@@ -1003,8 +926,7 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 }
 
 
-static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
-{
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     RECT rcClient = { 0, 0, gr->width, gr->height };
     HBRUSH bgBrush;
 
@@ -1015,15 +937,14 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
     DeleteObject( bgBrush );
 }
 
-struct graphics_font_priv
-{
+struct graphics_font_priv {
     LOGFONT lf;
     HFONT hfont;
     int size;
 };
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
-{
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     RECT rcClient;
     int prevBkMode;
     HFONT hOldFont;
@@ -1033,8 +954,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
     prevBkMode = SetBkMode( gr->hMemDC, TRANSPARENT );
 
-    if ( NULL == font->hfont )
-    {
+    if ( NULL == font->hfont ) {
 #ifdef WIN_USE_SYSFONT
         font->hfont = (HFONT) GetStockObject (SYSTEM_FONT);
         GetObject (font->hfont, sizeof (LOGFONT), &font->lf);
@@ -1064,22 +984,21 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
         SetBkMode (gr->hMemDC, TRANSPARENT);
         if (ConvertUTF8toUTF16(&utf8, utf8+strlen(text),
                                &utf16p, utf16p+sizeof(utf16),
-                               lenientConversion) == conversionOK)
-        {
-	    if(bg && bg->fg_alpha) {
-	    	SetTextColor(gr->hMemDC, bg->fg_color);
-	        ExtTextOutW(gr->hMemDC, -1, -1, 0, NULL,
-        	            utf16, (wchar_t*) utf16p - utf16, NULL);
-            	ExtTextOutW(gr->hMemDC, 1, 1, 0, NULL,
-                	    utf16, (wchar_t*) utf16p - utf16, NULL);
-	        ExtTextOutW(gr->hMemDC, -1, 1, 0, NULL,
-        	            utf16, (wchar_t*) utf16p - utf16, NULL);
-            	ExtTextOutW(gr->hMemDC, 1, -1, 0, NULL,
-                	    utf16, (wchar_t*) utf16p - utf16, NULL);
+                               lenientConversion) == conversionOK) {
+            if(bg && bg->fg_alpha) {
+                SetTextColor(gr->hMemDC, bg->fg_color);
+                ExtTextOutW(gr->hMemDC, -1, -1, 0, NULL,
+                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                ExtTextOutW(gr->hMemDC, 1, 1, 0, NULL,
+                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                ExtTextOutW(gr->hMemDC, -1, 1, 0, NULL,
+                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                ExtTextOutW(gr->hMemDC, 1, -1, 0, NULL,
+                            utf16, (wchar_t*) utf16p - utf16, NULL);
             }
-    	    SetTextColor(gr->hMemDC, fg->fg_color);
+            SetTextColor(gr->hMemDC, fg->fg_color);
             ExtTextOutW(gr->hMemDC, 0, 0, 0, NULL,
-                	    utf16, (wchar_t*) utf16p - utf16, NULL);
+                        utf16, (wchar_t*) utf16p - utf16, NULL);
         }
     }
 
@@ -1092,22 +1011,19 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     SetViewportOrgEx (gr->hMemDC, 0, 0, NULL) ;
 }
 
-static void font_destroy(struct graphics_font_priv *font)
-{
-    if ( font->hfont )
-    {
+static void font_destroy(struct graphics_font_priv *font) {
+    if ( font->hfont ) {
         DeleteObject(font->hfont);
     }
     g_free(font);
 }
 
-static struct graphics_font_methods font_methods =
-{
+static struct graphics_font_methods font_methods = {
     font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *name, int size, int flags)
-{
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *name,
+        int size, int flags) {
     struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
     *meth = font_methods;
 
@@ -1119,9 +1035,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 
 #include "png.h"
 
-static int
-pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
-{
+static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img) {
     png_struct    *png_ptr = NULL;
     png_info      *info_ptr = NULL;
     png_byte      buf[8];
@@ -1129,7 +1043,6 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     int           bit_depth;
     int           color_type;
-    int           alpha_present;
     int           ret;
     int           i;
     FILE *png_file;
@@ -1138,8 +1051,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     dbg(lvl_debug,"enter %s",name);
     png_file=fopen(name, "rb");
-    if (!png_file)
-    {
+    if (!png_file) {
         dbg(lvl_warning,"failed to open %s",name);
         return FALSE;
     }
@@ -1147,15 +1059,13 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     /* read and check signature in PNG file */
     ret = fread (buf, 1, 8, png_file);
-    if (ret != 8)
-    {
+    if (ret != 8) {
         fclose(png_file);
         return FALSE;
     }
 
     ret = png_check_sig (buf, 8);
-    if (!ret)
-    {
+    if (!ret) {
         fclose(png_file);
         return FALSE;
     }
@@ -1164,22 +1074,19 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
     png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING,
                                       NULL, NULL, NULL);
-    if (!png_ptr)
-    {
+    if (!png_ptr) {
         fclose(png_file);
         return FALSE;   /* out of memory */
     }
 
     info_ptr = png_create_info_struct (png_ptr);
-    if (!info_ptr)
-    {
+    if (!info_ptr) {
         fclose(png_file);
         png_destroy_read_struct (&png_ptr, NULL, NULL);
         return FALSE;   /* out of memory */
     }
 
-    if (setjmp (png_jmpbuf(png_ptr)))
-    {
+    if (setjmp (png_jmpbuf(png_ptr))) {
         fclose(png_file);
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
         return FALSE;
@@ -1204,20 +1111,20 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
         png_set_palette_to_rgb(png_ptr);
 
     /* expand images to bit-depth 8 (only applicable for grayscale images) */
-    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8) 
-   	png_set_gray_1_2_4_to_8(png_ptr);
+    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8)
+        png_set_gray_1_2_4_to_8(png_ptr);
 
     /* Expand grayscale to rgb */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-          png_set_gray_to_rgb(png_ptr);
+        png_set_gray_to_rgb(png_ptr);
 
     /* expand colored images to bit-depth 8 */
     if (color_type == PNG_COLOR_TYPE_RGB && bit_depth < 8)
         png_set_packing(png_ptr);
 
     /* transform transparency maps into full alpha-channel */
-    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) 
-    	png_set_tRNS_to_alpha(png_ptr);
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+        png_set_tRNS_to_alpha(png_ptr);
 
     /* Add opaque alpha channel if no alpha channel exist */
     if (color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_PALETTE)
@@ -1235,8 +1142,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     png_read_update_info (png_ptr, info_ptr);
 
     img->channels = 4;
-    alpha_present = 1;
-    
+
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
 
@@ -1248,11 +1154,10 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     pnginfo.bmiHeader.biCompression = BI_RGB;
     pnginfo.bmiHeader.biPlanes = 1;
     dc = CreateCompatibleDC(NULL);
-    img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS , (void **)&img->png_pixels, NULL, 0);
+    img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS, (void **)&img->png_pixels, NULL, 0);
     DeleteDC(dc);
 
-    if ((row_pointers = (png_byte **) g_malloc (img->height * sizeof (png_bytep))) == NULL)
-    {
+    if ((row_pointers = (png_byte **) g_malloc (img->height * sizeof (png_bytep))) == NULL) {
         fclose(png_file);
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
         g_free (img->png_pixels);
@@ -1284,122 +1189,108 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 
 } /* end of source */
 
-static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, int width, int height)
-{
-	HBITMAP origBmp;
+static void pngscale(struct graphics_image_priv *img, struct graphics_priv *gr, int width, int height) {
+    HBITMAP origBmp;
+    BITMAPINFO pnginfo;
+    HDC dc1, dc2;
+
+    origBmp=img->hBitmap;
+
+    memset(&pnginfo, 0, sizeof(pnginfo));
+    pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    pnginfo.bmiHeader.biWidth = width;
+    pnginfo.bmiHeader.biHeight = -height;
+    pnginfo.bmiHeader.biBitCount = 32;
+    pnginfo.bmiHeader.biCompression = BI_RGB;
+    pnginfo.bmiHeader.biPlanes = 1;
+    dc1 = CreateCompatibleDC(NULL);
+    dc2 = CreateCompatibleDC(NULL);
+    img->hBitmap = CreateDIBSection(dc1, &pnginfo, DIB_RGB_COLORS, (void **)&(img->png_pixels), NULL, 0);
+
+    if(gr->SetStretchBltMode) {
+        gr->SetStretchBltMode(dc1,STRETCH_HALFTONE);
+        SetBrushOrgEx(dc1,0,0,NULL);
+    }
+
+    SelectBitmap(dc1,img->hBitmap);
+    SelectBitmap(dc2,origBmp);
+
+    StretchBlt(dc1,0,0,width, height, dc2, 0,0, img->width, img->height,SRCCOPY);
+    img->width=width;
+    img->height=height;
+    img->hot.x=width/2-1;
+    img->hot.y=height/2-1;
+
+    DeleteDC(dc1);
+    DeleteDC(dc2);
+    DeleteObject(origBmp);
+}
+
+
+static void pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0) {
+    if (gr->AlphaBlend && img->hBitmap) {
+        HDC hdc;
+        HBITMAP oldBitmap;
+        BLENDFUNCTION blendFunction ;
+        blendFunction.BlendOp = AC_SRC_OVER;
+        blendFunction.BlendFlags = 0;
+        blendFunction.SourceConstantAlpha = 255;
+        blendFunction.AlphaFormat = AC_SRC_ALPHA;
+        hdc = CreateCompatibleDC(NULL);
+        oldBitmap = SelectBitmap(hdc, img->hBitmap);
+        gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
+        (void)SelectBitmap(hdc, oldBitmap);
+        DeleteDC(hdc);
+    } else {
+        int x, y;
+        HDC hdc=gr->hMemDC;
+        png_byte *pix_ptr = img->png_pixels;
+        COLORREF *pixeldata;
+        HDC dc;
+        HBITMAP bitmap;
+        HBITMAP oldBitmap;
+
         BITMAPINFO pnginfo;
-	HDC dc1, dc2;
-	png_byte *origPixels;
-	
-	origBmp=img->hBitmap;
-	origPixels=img->png_pixels;
 
         memset(&pnginfo, 0, sizeof(pnginfo));
         pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        pnginfo.bmiHeader.biWidth = width;
-        pnginfo.bmiHeader.biHeight = -height;
+        pnginfo.bmiHeader.biWidth = img->width;
+        pnginfo.bmiHeader.biHeight = -img->height;
         pnginfo.bmiHeader.biBitCount = 32;
         pnginfo.bmiHeader.biCompression = BI_RGB;
         pnginfo.bmiHeader.biPlanes = 1;
-        dc1 = CreateCompatibleDC(NULL);
-        dc2 = CreateCompatibleDC(NULL);
-        img->hBitmap = CreateDIBSection(dc1, &pnginfo, DIB_RGB_COLORS , (void **)&(img->png_pixels), NULL, 0);
+        dc = CreateCompatibleDC(NULL);
+        bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS, (void **)&pixeldata, NULL, 0);
+        oldBitmap = SelectBitmap(dc, bitmap);
+        BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
+        for (y=0 ; y < img->width ; y++) {
+            for (x=0 ; x < img->height ; x++) {
+                int b = pix_ptr[0];
+                int g = pix_ptr[1];
+                int r = pix_ptr[2];
+                int a = pix_ptr[3];
+                if (a != 0xff) {
+                    int p = *pixeldata;
+                    int ai = 0xff - a;
+                    r = (r * a + ((p >> 16) & 0xff) * ai) / 255;
+                    g = (g * a + ((p >>  8) & 0xff) * ai) / 255;
+                    b = (b * a + ((p >>  0) & 0xff) * ai) / 255;
+                }
+                *pixeldata++ = (r << 16) | (g << 8) | b;
+                pix_ptr+=img->channels;
+            }
+        }
 
-	if(gr->SetStretchBltMode) {
-		gr->SetStretchBltMode(dc1,STRETCH_HALFTONE);
-		SetBrushOrgEx(dc1,0,0,NULL);
-	}
-
-	SelectBitmap(dc1,img->hBitmap);
-	SelectBitmap(dc2,origBmp);
-
-        StretchBlt(dc1,0,0,width, height, dc2, 0,0, img->width, img->height,SRCCOPY);
-        img->width=width;
-        img->height=height;
-        img->hot.x=width/2-1;
-        img->hot.y=height/2-1;
-        
-	DeleteDC(dc1);
-	DeleteDC(dc2);
-	DeleteObject(origBmp);
+        BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
+        (void)SelectBitmap(dc, oldBitmap);
+        DeleteBitmap(bitmap);
+        DeleteDC(dc);
+    }
 }
 
-
-static void
-pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0)
-{
-	if (gr->AlphaBlend && img->hBitmap)
-	{
-		HDC hdc;
-		HBITMAP oldBitmap;
-		BLENDFUNCTION blendFunction ;
-		blendFunction.BlendOp = AC_SRC_OVER;
-		blendFunction.BlendFlags = 0;
-		blendFunction.SourceConstantAlpha = 255;
-		blendFunction.AlphaFormat = AC_SRC_ALPHA;
-		hdc = CreateCompatibleDC(NULL);
-		oldBitmap = SelectBitmap(hdc, img->hBitmap);
-		gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
-		(void)SelectBitmap(hdc, oldBitmap);
-		DeleteDC(hdc);
-	}
-	else
-	{
-		int x, y;
-		HDC hdc=gr->hMemDC;
-		png_byte *pix_ptr = img->png_pixels;
-		COLORREF *pixeldata;
-		HDC dc;
-		HBITMAP bitmap;
-		HBITMAP oldBitmap;
-
-		BITMAPINFO pnginfo;
-
-		memset(&pnginfo, 0, sizeof(pnginfo));
-		pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		pnginfo.bmiHeader.biWidth = img->width;
-		pnginfo.bmiHeader.biHeight = -img->height;
-		pnginfo.bmiHeader.biBitCount = 32;
-		pnginfo.bmiHeader.biCompression = BI_RGB;
-		pnginfo.bmiHeader.biPlanes = 1;
-		dc = CreateCompatibleDC(NULL);
-		bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS, (void **)&pixeldata, NULL, 0);
-		oldBitmap = SelectBitmap(dc, bitmap);
-		BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
-		for (y=0 ; y < img->width ; y++)
-		{
-			for (x=0 ; x < img->height ; x++)
-			{
-				int b = pix_ptr[0];
-				int g = pix_ptr[1];
-				int r = pix_ptr[2];
-				int a = pix_ptr[3];
-				if (a != 0xff)
-				{
-					int p = *pixeldata;
-					int ai = 0xff - a;
-					r = (r * a + ((p >> 16) & 0xff) * ai) / 255;
-					g = (g * a + ((p >>  8) & 0xff) * ai) / 255;
-					b = (b * a + ((p >>  0) & 0xff) * ai) / 255;
-				}
-				*pixeldata++ = (r << 16) | (g << 8) | b;
-				pix_ptr+=img->channels;
-			}
-		}
-
-		BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
-		(void)SelectBitmap(dc, oldBitmap);
-		DeleteBitmap(bitmap);
-		DeleteDC(dc);
-	}
-}
-
-static int
-xpmdecode(char *name, struct graphics_image_priv *img)
-{
+static int xpmdecode(char *name, struct graphics_image_priv *img) {
     img->pxpm = Xpm2bmp_new();
-    if (Xpm2bmp_load( img->pxpm, name ) != 0)
-    {
+    if (Xpm2bmp_load( img->pxpm, name ) != 0) {
         g_free(img->pxpm);
         return FALSE;
     }
@@ -1412,19 +1303,17 @@ xpmdecode(char *name, struct graphics_image_priv *img)
 
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
-{
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
+        int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv* ret;
-    
+
     char* hash_key = g_strdup_printf("%s_%d_%d_%d",name,*w,*h,rotation);
-    
-    if ( !g_hash_table_lookup_extended( gr->image_cache_hash, hash_key, NULL, (gpointer)&ret) )
-    {
+
+    if ( !g_hash_table_lookup_extended( gr->image_cache_hash, hash_key, NULL, (gpointer)&ret) ) {
         int len=strlen(name);
         int rc=0;
 
-        if (len >= 4)
-        {
+        if (len >= 4) {
             char *ext;
             dbg(lvl_info, "loading image '%s'", name );
             ret = g_new0( struct graphics_image_priv, 1 );
@@ -1453,11 +1342,11 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
                 if(ret->png_pixels && ret->hBitmap)
                     pngscale(ret, gr, *w, *h);
             }
-       }
+        }
     }
     if (ret) {
-	*w=ret->width;
-	*h=ret->height;
+        *w=ret->width;
+        *h=ret->height;
         if (hot)
             *hot=ret->hot;
     }
@@ -1466,23 +1355,20 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 }
 
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
-{
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
     if (img->pxpm)
-        Xpm2bmp_paint( img->pxpm , gr->hMemDC, p->x, p->y );
+        Xpm2bmp_paint( img->pxpm, gr->hMemDC, p->x, p->y );
     if (img->png_pixels)
         pngrender(img, gr, p->x, p->y);
 }
 
-static struct graphics_priv *
-            graphics_win32_new_helper(struct graphics_methods *meth);
+static struct graphics_priv *graphics_win32_new_helper(struct graphics_methods *meth);
 
-static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)
-{
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound) {
     dbg(lvl_debug, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d", gr, p->x, p->y, w, h, wraparound);
 
-    if ( gr->width != w || gr->height != h )
-    {
+    if ( gr->width != w || gr->height != h ) {
         gr->width  = w;
         gr->height = h;
         create_memory_dc(gr);
@@ -1493,9 +1379,8 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
 }
 
 
-static struct graphics_priv *
-            overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)
-{
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound) {
     struct graphics_priv *this=graphics_win32_new_helper(meth);
     dbg(lvl_debug, "overlay: %x, x: %d, y: %d, w: %d, h: %d, wraparound: %d", this, p->x, p->y, w, h, wraparound);
     this->width  = w;
@@ -1507,20 +1392,17 @@ static struct graphics_priv *
     this->hPrebuildDC = 0;
     this->AlphaBlend = gr->AlphaBlend;
     this->image_cache_hash = gr->image_cache_hash;
-    
+
     this->next = gr->overlays;
     gr->overlays = this;
     this->wnd_handle = gr->wnd_handle;
 
-    if (wraparound)
-    {
-        if ( p->x < 0 )
-        {
+    if (wraparound) {
+        if ( p->x < 0 ) {
             this->p.x += gr->width;
         }
 
-        if ( p->y < 0 )
-        {
+        if ( p->y < 0 ) {
             this->p.y += gr->height;
         }
     }
@@ -1529,14 +1411,13 @@ static struct graphics_priv *
     return this;
 }
 
-static void overlay_disable(struct graphics_priv *gr, int disable)
-{
+static void overlay_disable(struct graphics_priv *gr, int disable) {
     dbg(lvl_debug, "overlay: %x, disable: %d", gr, disable);
     gr->disabled = disable;
 }
 
-static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
-{
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
+                          struct point *ret, int estimate) {
     int len = g_utf8_strlen(text, -1);
     int xMin = 0;
     int yMin = 0;
@@ -1556,8 +1437,7 @@ static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *f
 }
 
 
-static struct graphics_methods graphics_methods =
-{
+static struct graphics_methods graphics_methods = {
     graphics_destroy,
     draw_mode,
     draw_lines,
@@ -1582,22 +1462,19 @@ static struct graphics_methods graphics_methods =
     get_text_bbox,
     overlay_disable,
     overlay_resize,
-	NULL, /* show_native_keyboard */
-	NULL, /* hide_native_keyboard */
+    NULL, /* show_native_keyboard */
+    NULL, /* hide_native_keyboard */
 };
 
 
-static struct graphics_priv *
-            graphics_win32_new_helper(struct graphics_methods *meth)
-{
+static struct graphics_priv *graphics_win32_new_helper(struct graphics_methods *meth) {
     struct graphics_priv *this_=g_new0(struct graphics_priv,1);
     *meth=graphics_methods;
     this_->mode = -1;
     return this_;
 }
 
-static void bind_late(struct graphics_priv* gra_priv)
-{
+static void bind_late(struct graphics_priv* gra_priv) {
 #if HAVE_API_WIN32_CE
     gra_priv->hCoreDll = LoadLibrary(TEXT("coredll.dll"));
 #else
@@ -1605,11 +1482,9 @@ static void bind_late(struct graphics_priv* gra_priv)
     gra_priv->hGdi32Dll = LoadLibrary(TEXT("gdi32.dll"));
     gra_priv->hUser32Dll = GetModuleHandle("user32.dll");
 #endif
-    if ( gra_priv->hCoreDll )
-    {
+    if ( gra_priv->hCoreDll ) {
         gra_priv->AlphaBlend  = (FP_AlphaBlend)GetProcAddress(gra_priv->hCoreDll, TEXT("AlphaBlend") );
-        if (!gra_priv->AlphaBlend)
-        {
+        if (!gra_priv->AlphaBlend) {
             dbg(lvl_warning, "AlphaBlend not supported");
         }
 #if HAVE_API_WIN32_CE
@@ -1617,31 +1492,26 @@ static void bind_late(struct graphics_priv* gra_priv)
 #else
         gra_priv->SetStretchBltMode= (FP_SetStretchBltMode)GetProcAddress(gra_priv->hGdi32Dll, TEXT("SetStretchBltMode") );
 #endif
-        if (!gra_priv->SetStretchBltMode)
-        {
+        if (!gra_priv->SetStretchBltMode) {
             dbg(lvl_warning, "SetStretchBltMode not supported");
         }
-    }
-    else
-    {
+    } else {
         dbg(lvl_error, "Error loading coredll");
     }
-    
+
     if(gra_priv->hUser32Dll) {
-    	gra_priv->ChangeWindowMessageFilterEx=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilterEx");
-    	gra_priv->ChangeWindowMessageFilter=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilter");
+        gra_priv->ChangeWindowMessageFilterEx=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilterEx");
+        gra_priv->ChangeWindowMessageFilter=GetProcAddress(gra_priv->hUser32Dll,"ChangeWindowMessageFilter");
     }
 }
 
 
 
-static struct graphics_priv*
-            graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
-{
+static struct graphics_priv* graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct attr *attr;
 
     struct graphics_priv* this_;
-    HMODULE user32;
     if (!event_request_system("win32","graphics_win32"))
         return NULL;
     this_=graphics_win32_new_helper(meth);
@@ -1673,22 +1543,18 @@ static struct graphics_priv*
 }
 
 
-static void
-event_win32_main_loop_run(void)
-{
+static void event_win32_main_loop_run(void) {
     MSG msg;
 
     dbg(lvl_debug,"enter");
-    while (GetMessage(&msg, 0, 0, 0))
-    {
+    while (GetMessage(&msg, 0, 0, 0)) {
         TranslateMessage(&msg);       /*  Keyboard input.      */
         DispatchMessage(&msg);
     }
 
 }
 
-static void event_win32_main_loop_quit(void)
-{
+static void event_win32_main_loop_quit(void) {
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar;
     HWND hwndSip;
@@ -1707,42 +1573,33 @@ static void event_win32_main_loop_quit(void)
     DestroyWindow(g_hwnd);
 }
 
-static struct event_watch *
-            event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb)
-{
+static struct event_watch *event_win32_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     dbg(lvl_debug,"enter");
     return NULL;
 }
 
-static void
-event_win32_remove_watch(struct event_watch *ev)
-{
+static void event_win32_remove_watch(struct event_watch *ev) {
     dbg(lvl_debug,"enter");
 }
 
 static GList *timers;
-struct event_timeout
-{
+struct event_timeout {
     UINT_PTR timer_id;
     int multi;
     struct callback *cb;
     struct event_timeout *next;
 };
 
-static void run_timer(UINT_PTR idEvent)
-{
+static void run_timer(UINT_PTR idEvent) {
     GList *l;
     struct event_timeout *t;
     l = timers;
-    while (l)
-    {
+    while (l) {
         t = l->data;
-        if (t->timer_id == idEvent)
-        {
+        if (t->timer_id == idEvent) {
             struct callback *cb = t->cb;
             dbg(lvl_info, "Timer %d (multi: %d)", t->timer_id, t->multi);
-            if (!t->multi)
-            {
+            if (!t->multi) {
                 KillTimer(NULL, t->timer_id);
                 timers = g_list_remove(timers, t);
                 g_free(t);
@@ -1757,14 +1614,11 @@ static void run_timer(UINT_PTR idEvent)
 
 static VOID CALLBACK win32_timer_cb(HWND hwnd, UINT uMsg,
                                     UINT_PTR idEvent,
-                                    DWORD dwTime)
-{
+                                    DWORD dwTime) {
     run_timer(idEvent);
 }
 
-static struct event_timeout *
-            event_win32_add_timeout(int timeout, int multi, struct callback *cb)
-{
+static struct event_timeout *event_win32_add_timeout(int timeout, int multi, struct callback *cb) {
     struct event_timeout *t;
     t = g_new0(struct event_timeout, 1);
     if (!t)
@@ -1777,21 +1631,16 @@ static struct event_timeout *
     return t;
 }
 
-static void
-event_win32_remove_timeout(struct event_timeout *to)
-{
-    if (to)
-    {
+static void event_win32_remove_timeout(struct event_timeout *to) {
+    if (to) {
         GList *l;
         struct event_timeout *t=NULL;
         dbg(lvl_debug, "Try stopping timer %d", to->timer_id);
         l = timers;
-        while (l)
-        {
+        while (l) {
             t = l->data;
             /* Use the pointer not the ID, IDs are reused */
-            if (t == to)
-            {
+            if (t == to) {
                 KillTimer(NULL, t->timer_id);
                 timers = g_list_remove(timers, t);
                 g_free(t);
@@ -1804,26 +1653,19 @@ event_win32_remove_timeout(struct event_timeout *to)
     }
 }
 
-static struct event_idle *
-            event_win32_add_idle(int priority, struct callback *cb)
-{
-	return (struct event_idle *)event_win32_add_timeout(1, 1, cb);
+static struct event_idle *event_win32_add_idle(int priority, struct callback *cb) {
+    return (struct event_idle *)event_win32_add_timeout(1, 1, cb);
 }
 
-static void
-event_win32_remove_idle(struct event_idle *ev)
-{
+static void event_win32_remove_idle(struct event_idle *ev) {
     event_win32_remove_timeout((struct event_timeout *)ev);
 }
 
-static void
-event_win32_call_callback(struct callback_list *cb)
-{
-    PostMessage(g_hwnd, WM_USER+2, (WPARAM)cb , (LPARAM)0);
+static void event_win32_call_callback(struct callback_list *cb) {
+    PostMessage(g_hwnd, WM_USER+2, (WPARAM)cb, (LPARAM)0);
 }
 
-static struct event_methods event_win32_methods =
-{
+static struct event_methods event_win32_methods = {
     event_win32_main_loop_run,
     event_win32_main_loop_quit,
     event_win32_add_watch,
@@ -1835,16 +1677,12 @@ static struct event_methods event_win32_methods =
     event_win32_call_callback,
 };
 
-static struct event_priv *
-            event_win32_new(struct event_methods *meth)
-{
+static struct event_priv *event_win32_new(struct event_methods *meth) {
     *meth=event_win32_methods;
     return NULL;
 }
 
-void
-plugin_init(void)
-{
+void plugin_init(void) {
     plugin_register_category_graphics("win32", graphics_win32_new);
     plugin_register_category_event("win32", event_win32_new);
 }

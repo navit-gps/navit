@@ -34,7 +34,7 @@
 #define ERR_ISNOTGPX 		31
 #define ERR_PARSEERROR 		32
 /* unit */
-#define ERR_ELLPSUNIT		41 
+#define ERR_ELLPSUNIT		41
 #define ERR_LENGTHUNIT		42
 #define ERR_TIMEUNIT		43
 

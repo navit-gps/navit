@@ -51,7 +51,7 @@ public slots:
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			QString label;
 			QString path;
-			
+
 			if (item->type != type_bookmark && item->type != type_bookmark_folder) continue;
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label=QString::fromLocal8Bit(attr.u.str);
