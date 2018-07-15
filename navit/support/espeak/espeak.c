@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 to 2007 by Jonathan Duddington                     *
+ *   Copyright (C) 2006 to 2013 by Jonathan Duddington                     *
  *   email: jonsd@users.sourceforge.net                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,10 +20,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#ifndef NEED_GETOPT
 #include <getopt.h>
+#include <stdbool.h> //for "true"
+#endif
 #include <time.h>
 #include <sys/stat.h>
 
+#include "speech.h"
 #include "speak_lib.h"
 
 // This version of the command-line speak program uses the
@@ -32,51 +37,55 @@
 
 
 static const char *help_text =
-"\nspeak [options] [\"<words>\"]\n\n"
+"\nespeak [options] [\"<words>\"]\n\n"
 "-f <text file>   Text file to speak\n"
 "--stdin    Read text input from stdin instead of a file\n\n"
-"If neither -f nor --stdin, <words> are spoken, or if none then text is\n"
-"spoken from stdin, each line separately.\n\n"
+"If neither -f nor --stdin, then <words> are spoken, or if none then text\n"
+"is spoken from stdin, each line separately.\n\n"
 "-a <integer>\n"
 "\t   Amplitude, 0 to 200, default is 100\n"
 "-g <integer>\n"
 "\t   Word gap. Pause between words, units of 10mS at the default speed\n"
+"-k <integer>\n"
+"\t   Indicate capital letters with: 1=sound, 2=the word \"capitals\",\n"
+"\t   higher values indicate a pitch increase (try -k20).\n"
 "-l <integer>\n"
 "\t   Line length. If not zero (which is the default), consider\n"
 "\t   lines less than this length as end-of-clause\n"
 "-p <integer>\n"
 "\t   Pitch adjustment, 0 to 99, default is 50\n"
 "-s <integer>\n"
-"\t   Speed in words per minute, 80 to 390, default is 170\n"
+"\t   Speed in words per minute, 80 to 450, default is 175\n"
 "-v <voice name>\n"
 "\t   Use voice file of this name from espeak-data/voices\n"
 "-w <wave file name>\n"
-"\t   Write output to this WAV file, rather than speaking it directly\n"
+"\t   Write speech to this WAV file, rather than speaking it directly\n"
 "-b\t   Input text encoding, 1=UTF8, 2=8 bit, 4=16 bit \n"
 "-m\t   Interpret SSML markup, and ignore other < > tags\n"
 "-q\t   Quiet, don't produce any speech (may be useful with -x)\n"
 "-x\t   Write phoneme mnemonics to stdout\n"
 "-X\t   Write phonemes mnemonics and translation trace to stdout\n"
 "-z\t   No final sentence pause at the end of the text\n"
-"--stdout   Write speech output to stdout\n"
 "--compile=<voice name>\n"
-"\t   Compile the pronunciation rules and dictionary in the current\n"
-"\t   directory. =<voice name> is optional and specifies which language\n"
+"\t   Compile pronunciation rules and dictionary from the current\n"
+"\t   directory. <voice name> specifies the language\n"
+"--ipa      Write phonemes to stdout using International Phonetic Alphabet\n"
+"\t         --ipa=1 Use ties, --ipa=2 Use ZWJ, --ipa=3 Separate with _\n" 
 "--path=\"<path>\"\n"
 "\t   Specifies the directory containing the espeak-data directory\n"
+"--pho      Write mbrola phoneme data (.pho) to stdout or to the file in --phonout\n"
 "--phonout=\"<filename>\"\n"
-"\t   Write output from -x -X commands and mbrola phoneme data to this file\n"
+"\t   Write phoneme output from -x -X --ipa and --pho to this file\n"
 "--punct=\"<characters>\"\n"
 "\t   Speak the names of punctuation characters during speaking.  If\n"
 "\t   =<characters> is omitted, all punctuation is spoken.\n"
 "--split=\"<minutes>\"\n"
 "\t   Starts a new WAV file every <minutes>.  Used with -w\n"
+"--stdout   Write speech output to stdout\n"
+"--version  Shows version number and date, and location of espeak-data\n"
 "--voices=<language>\n"
 "\t   List the available voices for the specified language.\n"
-"\t   If <language> is omitted, then list all voices.\n"
-"-k <integer>\n"
-"\t   Indicate capital letters with: 1=sound, 2=the word \"capitals\",\n"
-"\t   higher values = a pitch increase (try -k20).\n";
+"\t   If <language> is omitted, then list all voices.\n";
 
 
 
@@ -85,6 +94,7 @@ int samplerate;
 int quiet = 0;
 unsigned int samples_total = 0;
 unsigned int samples_split = 0;
+unsigned int samples_split_seconds = 0;
 unsigned int wavefile_count = 0;
 
 FILE *f_wavfile = NULL;
@@ -116,20 +126,22 @@ void strncpy0(char *dest, const char *source, int size)
 }
 
 
-void DisplayVoices(FILE *f_out, char *language)
+static void DisplayVoices(FILE *f_out, char *language)
 {//============================================
 	int ix;
 	const char *p;
 	int len;
 	int count;
-	int scores = 0;
+	int c;
+	int j;
 	const espeak_VOICE *v;
 	const char *lang_name;
 	char age_buf[12];
+	char buf[80];
 	const espeak_VOICE **voices;
 	espeak_VOICE voice_select;
 
-	static char genders[4] = {' ','M','F',' '};
+	static char genders[4] = {'-','M','F','-'};
 
 	if((language != NULL) && (language[0] != 0))
 	{
@@ -139,14 +151,13 @@ void DisplayVoices(FILE *f_out, char *language)
 		voice_select.gender = 0;
 		voice_select.name = NULL;
 		voices = espeak_ListVoices(&voice_select);
-		scores = 1;
 	}
 	else
 	{
 		voices = espeak_ListVoices(NULL);
 	}
 
-	fprintf(f_out,"Pty Language Age/Gender VoiceName       File        Other Langs\n");
+	fprintf(f_out,"Pty Language Age/Gender VoiceName          File          Other Languages\n");
 
 	for(ix=0; (v = voices[ix]) != NULL; ix++)
 	{
@@ -164,8 +175,16 @@ void DisplayVoices(FILE *f_out, char *language)
 
 			if(count==0)
 			{
-				fprintf(f_out,"%2d  %-12s%s%c  %-17s %-11s ",
-               p[0],lang_name,age_buf,genders[v->gender],v->name,v->identifier);
+				for(j=0; j < sizeof(buf); j++)
+				{
+					// replace spaces in the name
+					if((c = v->name[j]) == ' ')
+						c = '_';
+					if((buf[j] = c) == 0)
+						break;
+				}
+				fprintf(f_out,"%2d  %-12s%s%c  %-20s %-13s ",
+               p[0],lang_name,age_buf,genders[v->gender],buf,v->identifier);
 			}
 			else
 			{
@@ -174,8 +193,6 @@ void DisplayVoices(FILE *f_out, char *language)
 			count++;
 			p += len+2;
 		}
-//		if(scores)
-//			fprintf(f_out,"%3d  ",v->score);
 		fputc('\n',f_out);
 	}
 }   //  end of DisplayVoices
@@ -197,7 +214,7 @@ static void Write4Bytes(FILE *f, int value)
 
 
 
-int OpenWavFile(char *path, int rate)
+static int OpenWavFile(char *path, int rate)
 //===================================
 {
 	static unsigned char wave_hdr[44] = {
@@ -208,28 +225,34 @@ int OpenWavFile(char *path, int rate)
 	if(path == NULL)
 		return(2);
 
-	if(path[0] == 0)
-		return(0);
+	while(isspace(*path)) path++;
 
-	if(strcmp(path,"stdout")==0)
-		f_wavfile = stdout;
-	else
-		f_wavfile = fopen(path,"wb");
-
-	if(f_wavfile != NULL)
+	f_wavfile = NULL;
+	if(path[0] != 0)
 	{
-		fwrite(wave_hdr,1,24,f_wavfile);
-		Write4Bytes(f_wavfile,rate);
-		Write4Bytes(f_wavfile,rate * 2);
-		fwrite(&wave_hdr[32],1,12,f_wavfile);
-		return(0);
+		if(strcmp(path,"stdout")==0)
+			f_wavfile = stdout;
+		else
+			f_wavfile = fopen(path,"wb");
 	}
-	return(1);
+	
+	if(f_wavfile == NULL)
+	{
+		fprintf(stderr,"Can't write to: '%s'\n",path);
+		return(1);
+	}
+
+
+	fwrite(wave_hdr,1,24,f_wavfile);
+	Write4Bytes(f_wavfile,rate);
+	Write4Bytes(f_wavfile,rate * 2);
+	fwrite(&wave_hdr[32],1,12,f_wavfile);
+	return(0);
 }   //  end of OpenWavFile
 
 
 
-static void CloseWavFile()
+static void CloseWavFile(void)
 //========================
 {
 	unsigned int pos;
@@ -264,25 +287,40 @@ static int SynthCallback(short *wav, int numsamples, espeak_EVENT *events)
 		return(0);
 	}
 
-	if(samples_split > 0)
+	while(events->type != 0)
 	{
-		// start a new WAV file when this limit is reached, at the next sentence boundary
-		while(events->type != 0)
+		if(events->type == espeakEVENT_SAMPLERATE)
 		{
-			if((events->type == espeakEVENT_SENTENCE) && (samples_total > samples_split))
+			samplerate = events->id.number;
+			samples_split = samples_split_seconds * samplerate;
+		}
+		else
+		if(events->type == espeakEVENT_SENTENCE)
+		{
+			// start a new WAV file when the limit is reached, at this sentence boundary
+			if((samples_split > 0) && (samples_total > samples_split))
 			{
 				CloseWavFile();
 				samples_total = 0;
+				wavefile_count++;
 			}
-			events++;
 		}
+		events++;
 	}
 
 	if(f_wavfile == NULL)
 	{
-		sprintf(fname,"%s_%.2d%s",wavefile,++wavefile_count,filetype);
-		if(OpenWavFile(fname, samplerate) != 0)
-			return(1);
+		if(samples_split > 0)
+		{
+			sprintf(fname,"%s_%.2d%s",wavefile,wavefile_count+1,filetype);
+			if(OpenWavFile(fname, samplerate) != 0)
+				return(1);
+		}
+		else
+		{
+			if(OpenWavFile(wavefile, samplerate) != 0)
+				return(1);
+		}
 	}
 
 	if(numsamples > 0)
@@ -294,6 +332,32 @@ static int SynthCallback(short *wav, int numsamples, espeak_EVENT *events)
 }
 
 
+static void PrintVersion(void)
+{//=======================
+	const char *version;
+	const char *path_data;
+	espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS, 0, NULL, espeakINITIALIZE_DONT_EXIT);
+	version = espeak_Info(&path_data);
+	printf("eSpeak text-to-speech: %s  Data at: %s\n", version, path_data);
+}
+
+
+
+#ifdef NEED_GETOPT
+	struct option {
+		char *name;
+		int has_arg;
+		int *flag;
+		int val;
+	};
+	int optind;
+	static int optional_argument;
+	static const char *arg_opts = "abfgklpsvw";  // which options have arguments
+	static char *opt_string="";
+#define no_argument 0
+#define required_argument 1
+#define optional_argument 2
+#endif
 
 int main (int argc, char **argv)
 //==============================
@@ -315,7 +379,10 @@ int main (int argc, char **argv)
 		{"stdout",  no_argument,       0, 0x105},
 		{"split",   optional_argument, 0, 0x106},
 		{"path",    required_argument, 0, 0x107},
-		{"phonout", required_argument, 0, 0x108}, 
+		{"phonout", required_argument, 0, 0x108},
+		{"pho",     no_argument,       0, 0x109},
+		{"ipa",     optional_argument, 0, 0x10a},
+		{"version", no_argument,       0, 0x10b},
 		{0, 0, 0, 0}
 		};
 
@@ -330,6 +397,7 @@ int main (int argc, char **argv)
 	int option_index = 0;
 	int c;
 	int ix;
+	char *optarg2;
 	int value;
 	int flag_stdin = 0;
 	int flag_compile = 0;
@@ -342,25 +410,78 @@ int main (int argc, char **argv)
 	int wordgap = -1;
 	int option_capitals = -1;
 	int option_punctuation = -1;
-	int option_phonemes = -1;
+	int option_phonemes = 0;
+	int option_mbrola_phonemes = 0;
 	int option_linelength = 0;
 	int option_waveout = 0;
 
 	espeak_VOICE voice_select;
 	char filename[200];
 	char voicename[40];
-	char voice_mbrola[20];
-	char dictname[40];
 #define N_PUNCTLIST  100
 	wchar_t option_punctlist[N_PUNCTLIST];
 
 	voicename[0] = 0;
-	voice_mbrola[0] = 0;
-	dictname[0] = 0;
 	wavefile[0] = 0;
 	filename[0] = 0;
 	option_punctlist[0] = 0;
 
+#ifdef NEED_GETOPT
+	optind = 1;
+	opt_string = "";
+	while(optind < argc)
+	{
+		int len;
+		char *p;
+
+		if((c = *opt_string) == 0)
+		{
+			opt_string = argv[optind];
+			if(opt_string[0] != '-')
+				break;
+
+			optind++;
+			opt_string++;
+			c = *opt_string;
+		}
+		opt_string++;
+		p = optarg2 = opt_string;
+
+		if(c == '-')
+		{
+			if(p[0] == 0)
+				break;   // -- means don't interpret further - as commands
+
+			opt_string="";
+			for(ix=0; ;ix++)
+			{
+				if(long_options[ix].name == 0)
+					break;
+				len = strlen(long_options[ix].name);
+				if(memcmp(long_options[ix].name,p,len)==0)
+				{
+					c = long_options[ix].val;
+					optarg2 = NULL;
+
+					if((long_options[ix].has_arg != 0) && (p[len]=='='))
+					{
+						optarg2 = &p[len+1];
+					}
+					break;
+				}
+			}
+		}
+		else
+		if(strchr(arg_opts,c) != NULL)
+		{
+			opt_string="";
+			if(optarg2[0]==0)
+			{
+				// the option's value is in the next argument
+				optarg2 = argv[optind++];
+			}
+		}
+#else
 	while(true)
 	{
 		c = getopt_long (argc, argv, "a:b:f:g:hk:l:mp:qs:v:w:xXz",
@@ -369,12 +490,14 @@ int main (int argc, char **argv)
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
+		optarg2 = optarg;
+#endif
 
 		switch (c)
 		{
 		case 'b':
 			// input character encoding, 8bit, 16bit, UTF8
-			if((sscanf(optarg,"%d",&value) == 1) && (value <= 4))
+			if((sscanf(optarg2,"%d",&value) == 1) && (value <= 4))
 				synth_flags |= value;
 			else
 				synth_flags |= espeakCHARS_8BIT;
@@ -382,12 +505,13 @@ int main (int argc, char **argv)
 
 		case 'h':
 			printf("\n");
-			printf("eSpeak text-to-speech: %s\n%s",espeak_Info(),help_text);
+			PrintVersion();
+			printf("%s", help_text);
 			exit(0);
 			break;
 
 		case 'k':
-			option_capitals = atoi(optarg);
+			option_capitals = atoi(optarg2);
 			break;
 
 		case 'x':
@@ -403,7 +527,7 @@ int main (int argc, char **argv)
 			break;
 
 		case 'p':
-			pitch = atoi(optarg);
+			pitch = atoi(optarg2);
 			break;
 
 		case 'q':
@@ -411,32 +535,32 @@ int main (int argc, char **argv)
 			break;
 
 		case 'f':
-			strncpy0(filename,optarg,sizeof(filename));
+			strncpy0(filename,optarg2,sizeof(filename));
 			break;
 
 		case 'l':
-			option_linelength = atoi(optarg);
+			option_linelength = atoi(optarg2);
 			break;
 
 		case 'a':
-			volume = atoi(optarg);
+			volume = atoi(optarg2);
 			break;
 
 		case 's':
-			speed = atoi(optarg);
+			speed = atoi(optarg2);
 			break;
 
 		case 'g':
-			wordgap = atoi(optarg);
+			wordgap = atoi(optarg2);
 			break;
 
 		case 'v':
-			strncpy0(voicename,optarg,sizeof(voicename));
+			strncpy0(voicename,optarg2,sizeof(voicename));
 			break;
 
 		case 'w':
 			option_waveout = 1;
-			strncpy0(wavefile,optarg,sizeof(filename));
+			strncpy0(wavefile,optarg2,sizeof(filename));
 			break;
 
 		case 'z':  // remove pause from the end of a sentence
@@ -454,17 +578,17 @@ int main (int argc, char **argv)
 
 		case 0x101:    // --compile-debug
 		case 0x102:		// --compile
-			strncpy0(voicename,optarg,sizeof(voicename));
+			strncpy0(voicename,optarg2,sizeof(voicename));
 			flag_compile = c;
 			quiet = 1;
 			break;
 
 		case 0x103:		// --punct
 			option_punctuation = 1;
-			if(optarg != NULL)
+			if(optarg2 != NULL)
 			{
 				ix = 0;
-				while((ix < N_PUNCTLIST) && ((option_punctlist[ix] = optarg[ix]) != 0)) ix++;
+				while((ix < N_PUNCTLIST) && ((option_punctlist[ix] = optarg2[ix]) != 0)) ix++;
 				option_punctlist[N_PUNCTLIST-1] = 0;
 				option_punctuation = 2;
 			}
@@ -472,26 +596,49 @@ int main (int argc, char **argv)
 
 		case 0x104:   // --voices
 			espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS,0,data_path,0);
-			DisplayVoices(stdout,optarg);
+			DisplayVoices(stdout,optarg2);
 			exit(0);
 
 		case 0x106:   // -- split
-			if(optarg == NULL)
-				samples_split = 30;  // default 30 minutes
+			if(optarg2 == NULL)
+				samples_split_seconds = 30 * 60;  // default 30 minutes
 			else
-				samples_split = atoi(optarg);
+				samples_split_seconds = atoi(optarg2) * 60;
 			break;
 
 		case 0x107:  // --path
-			data_path = optarg;
+			data_path = optarg2;
 			break;
 
 		case 0x108:  // --phonout
-			if((f_phonemes_out = fopen(optarg,"w")) == NULL)
+			if((f_phonemes_out = fopen(optarg2,"w")) == NULL)
 			{
-				fprintf(stderr,"Can't write to: %s\n",optarg);
+				fprintf(stderr,"Can't write to: %s\n",optarg2);
 			}
 			break;
+
+		case 0x109:  // --pho
+			option_mbrola_phonemes = 16;
+			break;
+
+		case 0x10a:  // --ipa
+			option_phonemes = 3;
+			if(optarg2 != NULL)
+			{
+				value = -1;
+				sscanf(optarg2,"%d",&value);
+				if((value<0) || (value>3))
+				{
+					fprintf(stderr,"Bad value for -ipa=\n");
+					value = 0;
+				}
+				option_phonemes += value;
+			}
+			break;
+
+		case 0x10b:  // -version
+			PrintVersion();
+			exit(0);
 
 		default:
 			exit(0);
@@ -503,7 +650,7 @@ int main (int argc, char **argv)
 	{
 		// writing to a file (or no output), we can use synchronous mode
 		samplerate = espeak_Initialize(AUDIO_OUTPUT_SYNCHRONOUS,0,data_path,0);
-		samples_split = (samplerate * samples_split) * 60;
+		samples_split = samplerate * samples_split_seconds;
 
 		espeak_SetSynthCallback(SynthCallback);
 		if(samples_split)
@@ -515,12 +662,6 @@ int main (int argc, char **argv)
 				strcpy(filetype,extn);
 				*extn = 0;
 			}
-		}
-		else
-		if(option_waveout)
-		{
-			if(OpenWavFile(wavefile,samplerate) != 0)
-				exit(4);
 		}
 	}
 	else
@@ -568,7 +709,7 @@ int main (int argc, char **argv)
 		espeak_SetParameter(espeakLINELENGTH,option_linelength,0);
 	if(option_punctuation == 2)
 		espeak_SetPunctuationList(option_punctlist);
-	espeak_SetPhonemeTrace(option_phonemes,f_phonemes_out);
+	espeak_SetPhonemeTrace(option_phonemes | option_mbrola_phonemes,f_phonemes_out);
 
 	if(filename[0]==0)
 	{
@@ -651,13 +792,18 @@ int main (int argc, char **argv)
 			exit(3);
 		}
 
-		fread(p_text,1,filesize,f_text);
+		if(fread(p_text,1,filesize,f_text) <= 0)
+			fprintf(stderr, "unable to read from file\n");
 		p_text[filesize]=0;
 		espeak_Synth(p_text,filesize+1,0,POS_CHARACTER,0,synth_flags,NULL,NULL);
 		fclose(f_text);
 	}
 
-	espeak_Synchronize();
+	if(espeak_Synchronize() != EE_OK)
+	{
+		fprintf(stderr, "espeak_Synchronize() failed, maybe error when opening output device\n");
+		exit(4);
+	}
 
 	if(f_phonemes_out != stdout)
 		fclose(f_phonemes_out);  // needed for WinCE

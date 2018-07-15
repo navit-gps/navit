@@ -21,15 +21,17 @@
 
 typedef struct {
 	char v_name[40];
+	char language_name[20];
 
 	int phoneme_tab_ix;  // phoneme table number
 	int pitch_base;    // Hz<<12
 	int pitch_range;   // standard = 0x1000
-	
+
 	int speedf1;
 	int speedf2;
 	int speedf3;
 
+	int speed_percent;      // adjust the WPM speed by this percentage
 	int flutter;
 	int roughness;
 	int echo_delay;
@@ -40,6 +42,7 @@ typedef struct {
 	int formant_factor;      // adjust nominal formant frequencies by this  because of the voice's pitch (256ths)
 	int consonant_amp;     // amplitude of unvoiced consonants
 	int consonant_ampv;    // amplitude of the noise component of voiced consonants
+	int samplerate;
 	int klattv[8];
 
 	// parameters used by Wavegen
@@ -67,6 +70,7 @@ typedef struct {
 // percentages shown to user, ix=N_PEAKS means ALL peaks
 extern USHORT voice_pcnt[N_PEAKS+1][3];
 
+extern espeak_VOICE current_voice_selected;
 
 extern voice_t *voice;
 extern int tone_points[12];
@@ -76,6 +80,8 @@ espeak_VOICE *SelectVoiceByName(espeak_VOICE **voices, const char *name);
 voice_t *LoadVoice(const char *voice_name, int control);
 voice_t *LoadVoiceVariant(const char *voice_name, int variant);
 void DoVoiceChange(voice_t *v);
+void WVoiceChanged(voice_t *wvoice);
 void WavegenSetVoice(voice_t *v);
 void ReadTonePoints(char *string, int *tone_pts);
+void VoiceReset(int control);
 
