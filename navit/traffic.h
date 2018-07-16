@@ -904,7 +904,7 @@ void traffic_init(void);
  * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
  * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
  */
-struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, char * filename);
+struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * this_, char * filename);
 
 /**
  * @brief Returns the map for the traffic plugin.

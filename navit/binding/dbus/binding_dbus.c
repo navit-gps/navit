@@ -1238,7 +1238,7 @@ request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message) {
 
     dbg(lvl_debug, "Processing traffic feed from file %s", filename);
 
-    messages = traffic_get_messages_from_xml(traffic, filename);
+    messages = traffic_get_messages_from_xml_file(traffic, filename);
     if (messages) {
         dbg(lvl_debug, "got messages from file %s, processing", filename);
         traffic_process_messages(traffic, messages);

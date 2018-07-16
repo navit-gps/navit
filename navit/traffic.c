@@ -4534,7 +4534,7 @@ struct map * traffic_get_map(struct traffic *this_) {
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
-        messages = traffic_get_messages_from_xml(this_, filename);
+        messages = traffic_get_messages_from_xml_file(this_, filename);
         g_free(filename);
 
         if (messages) {
@@ -4546,7 +4546,7 @@ struct map * traffic_get_map(struct traffic *this_) {
     return this_->map;
 }
 
-struct traffic_message ** traffic_get_messages_from_xml(struct traffic * this_, char * filename) {
+struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * this_, char * filename) {
     struct traffic_message ** ret = NULL;
 
     struct xml_state state;
