@@ -722,6 +722,7 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
         g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include recursion too deep");
         return;
     }
+    dbg(lvl_debug, "At level %d, processing xinclude in document href=\"%s\"", doc_old->level, doc_old->href);
     memset(&doc_new, 0, sizeof(doc_new));
     i=0;
     while (attribute_names[i]) {
@@ -751,8 +752,8 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
     }
     doc_new.level=doc_old->level+1;
     doc_new.user_data=doc_old->user_data;
-    if (! href) {
-        dbg(lvl_debug,"no href, using '%s'", doc_old->href);
+    if (!href) {
+        dbg(lvl_debug,"no href%s, using own ref '%s'", doc_new.xpointer?" (but xpointer provided)":"", doc_old->href);
         doc_new.href=doc_old->href;
         if (file_exists(doc_new.href)) {
             parse_file(&doc_new, error);
@@ -768,7 +769,7 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
         for (i = 0 ; i < count ; i++) {
             included_filename = g_strdup(we_files[i]);
             if (*included_filename != '\0') { /* Non empty href */
-                if (*included_filename != '/') {	/* The filename's path is relative */
+                if (!g_path_is_absolute(included_filename)) {	/* The filename's path is relative */
                     doc_base = file_get_dirname(doc_old->href);	/* Get our own absolute path */
                     if (*doc_base && file_is_dir(doc_base)) {
                         tmp = included_filename;
