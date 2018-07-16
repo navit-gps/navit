@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
+#include <glib/gutils.h>
 #include <string.h>
 #include <ctype.h>
 #include "debug.h"
