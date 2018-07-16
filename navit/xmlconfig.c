@@ -770,10 +770,10 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
             included_filename = g_strdup(we_files[i]);
             if (*included_filename != '\0') { /* Non empty href */
                 if (!g_path_is_absolute(included_filename)) {	/* The filename's path is relative */
-                    doc_base = file_get_dirname(doc_old->href);	/* Get our own absolute path */
+                    doc_base = g_path_get_dirname(doc_old->href);	/* Get our own absolute path */
                     if (*doc_base && file_is_dir(doc_base)) {
                         tmp = included_filename;
-                        included_filename = g_strconcat(doc_base, "/", tmp, NULL);
+                        included_filename = g_strconcat(doc_base, G_DIR_SEPARATOR_S, tmp, NULL);
                         g_free(tmp); /* Free initial included_filename buffer (saved in tmp) */
                     }
                     g_free(doc_base);
@@ -790,10 +790,9 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
             g_free(included_filename);
         }
         file_wordexp_destroy(we);
-
     }
-
 }
+
 static int strncmp_len(const char *s1, int s1len, const char *s2) {
     int ret;
     ret=strncmp(s1, s2, s1len);

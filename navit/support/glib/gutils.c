@@ -851,6 +851,7 @@ g_path_skip_root (const gchar *file_name)
 
   return NULL;
 }
+#endif
 
 /**
  * g_path_get_dirname:
@@ -952,6 +953,7 @@ g_path_get_dirname (const gchar	   *file_name)
   return base;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_get_current_dir:
  *
