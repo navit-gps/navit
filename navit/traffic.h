@@ -907,6 +907,17 @@ void traffic_init(void);
 struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * this_, char * filename);
 
 /**
+ * @brief Reads traffic messages from an XML string.
+ *
+ * @param this_ The traffic instance
+ * @param filename The XML document to parse, as a string
+ *
+ * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
+ * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
+ */
+struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * this_, char * xml);
+
+/**
  * @brief Returns the map for the traffic plugin.
  *
  * The map is created by the first traffic plugin loaded. If multiple traffic plugin instances are

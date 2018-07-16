@@ -4574,6 +4574,34 @@ struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * th
     return ret;
 }
 
+struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * this_, char * xml) {
+    struct traffic_message ** ret = NULL;
+
+    struct xml_state state;
+    int i, count;
+    GList * msg_iter;
+    int read_success = 0;
+
+    if (xml) {
+        memset(&state, 0, sizeof(struct xml_state));
+        read_success = xml_parse_text(xml, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
+        if (read_success) {
+            count = g_list_length(state.messages);
+            if (count)
+                ret = g_new0(struct traffic_message *, count + 1);
+            msg_iter = state.messages;
+            for (i = 0; i < count; i++) {
+                ret[i] = (struct traffic_message *) msg_iter->data;
+                msg_iter = g_list_next(msg_iter);
+            }
+            g_list_free(state.messages);
+        } else {
+            dbg(lvl_error,"no data supplied");
+        }
+    } /* if (xml) */
+    return ret;
+}
+
 int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
     return traffic_process_messages_int(this_, messages, 0);
 }
