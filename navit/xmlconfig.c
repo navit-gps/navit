@@ -722,7 +722,7 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
         g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include recursion too deep");
         return;
     }
-    dbg(lvl_debug, "At level %d, processing xinclude in document href=\"%s\"", doc_old->level, doc_old->href);
+    dbg(lvl_debug, "At level %d, processing xi:include in document href=\"%s\"", doc_old->level, doc_old->href);
     memset(&doc_new, 0, sizeof(doc_new));
     i=0;
     while (attribute_names[i]) {

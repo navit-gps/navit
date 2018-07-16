@@ -618,7 +618,6 @@ void file_closedir(void *hnd) {
 }
 #endif /* _MSC_VER */
 
-
 struct file *
 file_create_caseinsensitive(char *name, struct attr **options) {
     char *dirname=g_alloca(sizeof(char)*(strlen(name)+1));
