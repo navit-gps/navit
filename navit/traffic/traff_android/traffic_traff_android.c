@@ -33,9 +33,11 @@
 #endif
 #include "glib_slice.h"
 #include "config.h"
-#include "coord.h"
 #include "item.h"
+#include "attr.h"
+#include "coord.h"
 #include "xmlconfig.h"
+#include "android.h"
 #include "traffic.h"
 #include "plugin.h"
 #include "debug.h"
@@ -45,6 +47,9 @@
  */
 struct traffic_priv {
     struct navit * nav;         /**< The navit instance */
+    struct callback * cbid;     /**< The callback function for TraFF feeds **/
+    jclass NavitTraffClass;     /**< The `NavitTraff` class */
+    jobject NavitTraff;         /**< An instance of `NavitTraff` */
 };
 
 struct traffic_message ** traffic_traff_android_get_messages(struct traffic_priv * this_);
@@ -65,6 +70,69 @@ static struct traffic_methods traffic_traff_android_meth = {
     traffic_traff_android_get_messages,
 };
 
+
+/**
+ * @brief Called when a new TraFF feed is received.
+ *
+ * @param this_ Private data for the module instance
+ * @param feed Feed data in string form
+ */
+static void traffic_traff_android_on_feed_received(struct traffic_priv * this_, char * feed) {
+    struct attr * attr;
+    struct attr_iter * a_iter;
+    struct traffic * traffic = NULL;
+    struct traffic_message ** messages;
+
+    dbg(lvl_debug, "enter");
+    attr = g_new0(struct attr, 1);
+    a_iter = navit_attr_iter_new();
+    if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
+        traffic = (struct traffic *) attr->u.navit_object;
+    navit_attr_iter_destroy(a_iter);
+    g_free(attr);
+
+    if (!traffic) {
+        dbg(lvl_error, "failed to obtain traffic instance");
+        return;
+    }
+
+    dbg(lvl_debug, "processing traffic feed");
+    messages = traffic_get_messages_from_xml_string(traffic, feed);
+    if (messages) {
+        dbg(lvl_debug, "got messages from feed, processing");
+        traffic_process_messages(traffic, messages);
+        g_free(messages);
+    }
+}
+
+
+/**
+ * @brief Initializes a traff_android plugin
+ *
+ * @return True on success, false on failure
+ */
+static int traffic_traff_android_init(struct traffic_priv * this_) {
+    jmethodID cid;
+
+    if (!android_find_class_global("org/navitproject/navit/NavitTraff", &this_->NavitTraffClass))
+        return 0;
+    cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "<init>", "(Landroid/content/Context;I)V");
+    if (cid == NULL) {
+        dbg(lvl_error,"no method found");
+        return 0; /* exception thrown */
+    }
+    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_activity,
+                                           (int) this_->cbid);
+    dbg(lvl_debug,"result=%p", this_->NavitTraff);
+    if (!this_->NavitTraff)
+        return 0;
+    if (this_->NavitTraff)
+        this_->NavitTraff = (*jnienv)->NewGlobalRef(jnienv, this_->NavitTraff);
+
+    return 1;
+}
+
+
 /**
  * @brief Registers a new traff_android traffic plugin
  *
@@ -82,7 +150,12 @@ static struct traffic_priv * traffic_traff_android_new(struct navit *nav, struct
     dbg(lvl_debug, "enter");
 
     ret = g_new0(struct traffic_priv, 1);
+    ret->nav = nav;
+    ret->cbid = callback_new_1(callback_cast(traffic_traff_android_on_feed_received), ret);
+    /* TODO populate members, if any */
     *meth = traffic_traff_android_meth;
+
+    traffic_traff_android_init(ret);
 
     return ret;
 }

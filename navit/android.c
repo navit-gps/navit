@@ -172,6 +172,17 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_SensorCallback( 
     callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNIEnv * env, jobject thiz, int id,
+        jstring feed) {
+    const char *s;
+    s = (*env)->GetStringUTFChars(env, feed, NULL);
+    if (id)
+        callback_call_1((struct callback *) id, s);
+    (*env)->ReleaseStringUTFChars(env, feed, s);
+}
+
+
+
 // type: 0=town, 1=street, 2=House#
 void android_return_search_result(struct jni_object *jni_o, int type, struct pcoord *location, const char *address) {
     struct coord_geo geo_location;
