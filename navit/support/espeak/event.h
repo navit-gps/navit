@@ -34,7 +34,7 @@ void event_set_callback(t_espeak_callback* cb);
 //
 // Return: EE_OK: operation achieved 
 //         EE_INTERNAL_ERROR.
-espeak_ERROR event_clear_all ();
+espeak_ERROR event_clear_all (void);
 
 // Declare a future event
 //
@@ -46,6 +46,6 @@ espeak_ERROR event_declare (espeak_EVENT* event);
 
 // Terminate the event component.
 // Last function to be called.
-void event_terminate();
+void event_terminate(void);
 
 #endif

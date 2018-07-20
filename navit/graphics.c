@@ -135,7 +135,7 @@ struct displaylist_icon_cache {
 
 };
 
-static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
 
@@ -897,9 +897,12 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * @brief Draw a circle
+ * @param this_ The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param p The coordinates of the center of the circle
+ * @param r The radius of the circle
+ *
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r) {
@@ -909,7 +912,7 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
     if(this_->meth.draw_circle)
         this_->meth.draw_circle(this_->priv, gc->priv, p, r);
     else {
-        draw_circle(p, r, 0, -1, 1026, pnt, &i, 1);
+        circle_to_points(p, r, 0, -1, 1026, pnt, &i, 1);
         pnt[i] = pnt[0];
         i++;
         this_->meth.draw_lines(this_->priv, gc->priv, pnt, i);
@@ -934,10 +937,10 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
     struct point pi3= {plu->x+r,plu->y+h-r};
     int i=0;
 
-    draw_circle(&pi2, r*2, 0, -1, 258, p, &i, 1);
-    draw_circle(&pi1, r*2, 0, 255, 258, p, &i, 1);
-    draw_circle(&pi0, r*2, 0, 511, 258, p, &i, 1);
-    draw_circle(&pi3, r*2, 0, 767, 258, p, &i, 1);
+    circle_to_points(&pi2, r*2, 0, -1, 258, p, &i, 1);
+    circle_to_points(&pi1, r*2, 0, 255, 258, p, &i, 1);
+    circle_to_points(&pi0, r*2, 0, 511, 258, p, &i, 1);
+    circle_to_points(&pi3, r*2, 0, 767, 258, p, &i, 1);
     p[i]=p[0];
     i++;
     if (fill)
@@ -1351,7 +1354,19 @@ struct circle {
     {-13,127,1011},
 };
 
-static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
+/**
+ * @brief Create a set of points on a circle or on a circular arc
+ *
+ * @param center Center point of the circle
+ * @param diameter Diameter of the circle
+ * @param scale Unused
+ * @param start Position of the first point on the circle (in 1/1024th of the circle), -1 being the bottom of the circle, 511 being the top of the circle
+ * @param len Length of the arc on the circle, relative to start (in 1/1024th of the circle), 514 is half a circle, 1028 is a full circle (or 1027 if first and last points are connected with a line)
+ * @param[out] res Returned an array of points that will form the resulting circle
+ * @param[out] pos Index of the last point filled inside array @p res
+ * @param dir Direction of the circle (valid values are 1 (counter-clockwise) or -1 (clockwise), other values may lead to unknown result)
+ */
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
     struct circle *c;
     int count=64;
     int end=start+len;
@@ -1361,9 +1376,9 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
         step=1;
     else if (diameter > 64)
         step=2;
-    else if (diameter > 24)
+    else if (diameter > 16)
         step=4;
-    else if (diameter > 8)
+    else if (diameter > 4)
         step=8;
     else
         step=16;
@@ -1378,8 +1393,8 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
                 i+=step;
             while (i < count && c[i].fowler < end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i+=step;
@@ -1398,8 +1413,8 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
                 i-=step;
             while (i >= 0 && c[i].fowler > end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i-=step;
@@ -1728,7 +1743,7 @@ static int clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *cl
  * Polylines are a serie of lines connected to each other.
  *
  * @param gra The graphics instance on which to draw
- * @param gc The color to use for the drawing
+ * @param gc The graphics context
  * @param[in] pin An array of points forming the polygon
  * @param count_in The number of elements inside @p pin
  * @param[in] width An array of width matching the line starting from the corresponding @p pa (if all equal, all lines will have the same width)
@@ -1837,7 +1852,7 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  * @brief Draw a plain polygon on the display
  *
  * @param gra The graphics instance on which to draw
- * @param gc The color to use for the drawing
+ * @param gc The graphics context
  * @param[in] pin An array of points forming the polygon
  * @param count_in The number of elements inside @p pin
  */
