@@ -52,7 +52,7 @@ public class NavitTraff extends BroadcastReceiver {
 
 	/**
 	 * @brief Called when a TraFF feed is received.
-	 * 
+	 *
 	 * @param id The identifier for the native callback implementation
 	 * @param feed The TraFF feed
 	 */
@@ -60,7 +60,7 @@ public class NavitTraff extends BroadcastReceiver {
 
 	/**
 	 * @brief Creates a new {@code NavitTraff} instance.
-	 * 
+	 *
 	 * @param context The context
 	 * @param cbid The callback identifier for the native method to call upon receiving a feed
 	 */
