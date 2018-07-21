@@ -2023,7 +2023,7 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
 
 
 /**
- * @brief Draw a dispayitem element
+ * @brief Draw a displayitem element
  *
  * This function will invoke the appropriate draw primitive depending on the type of the element to draw
  *
