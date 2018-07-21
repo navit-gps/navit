@@ -40,6 +40,7 @@
 #include "android.h"
 #include "traffic.h"
 #include "plugin.h"
+#include "callback.h"
 #include "debug.h"
 
 /**
