@@ -19,8 +19,6 @@
 
 package org.navitproject.navit;
 
-import java.util.List;
-
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -30,6 +28,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
+
+import java.util.List;
 
 /**
  * @brief The TraFF receiver implementation
