@@ -532,12 +532,12 @@ time_t mkgmtime(struct tm * pt) {
     pgt = g_memdup(gmtime(&ret), sizeof(struct tm));
     plt = g_memdup(localtime(&ret), sizeof(struct tm));
 
-    pti->tm_year -= pgt->tm_year - plt->tm_year;
-    pti->tm_mon -= pgt->tm_mon - plt->tm_mon;
-    pti->tm_mday -= pgt->tm_mday - plt->tm_mday;
-    pti->tm_hour -= pgt->tm_hour - plt->tm_hour;
-    pti->tm_min -= pgt->tm_min - plt->tm_min;
-    pti->tm_sec -= pgt->tm_sec - plt->tm_sec;
+    pti->tm_year = pt->tm_year - pgt->tm_year + plt->tm_year;
+    pti->tm_mon = pt->tm_mon - pgt->tm_mon + plt->tm_mon;
+    pti->tm_mday = pt->tm_mday - pgt->tm_mday + plt->tm_mday;
+    pti->tm_hour = pt->tm_hour - pgt->tm_hour + plt->tm_hour;
+    pti->tm_min = pt->tm_min - pgt->tm_min + plt->tm_min;
+    pti->tm_sec = pt->tm_sec - pgt->tm_sec + plt->tm_sec;
 
     ret = mktime(pti);
 
