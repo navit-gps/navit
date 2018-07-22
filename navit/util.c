@@ -571,6 +571,8 @@ time_t iso8601_to_time(char * iso8601) {
     while (*pos && i < 6) {
         if (*pos < '0' || *pos > '9') {
             val[i++] = atoi(start);
+            if (i == 6)
+                break;
             pos++;
             start = pos;
         }
@@ -595,9 +597,9 @@ time_t iso8601_to_time(char * iso8601) {
     tm.tm_year = val[0] - 1900;
     tm.tm_mon = val[1] - 1;
     tm.tm_mday = val[2];
-    tm.tm_hour = val[3];
-    tm.tm_min = val[4] - val[6];
-    tm.tm_sec = val[5] - val[7];
+    tm.tm_hour = val[3] - val[6];
+    tm.tm_min = val[4] - val[7];
+    tm.tm_sec = val[5];
 
     dbg(lvl_debug, "time %s (%02d-%02d-%02d %02d:%02d:%02d)\n", iso8601, tm.tm_year, tm.tm_mon, tm.tm_mday,
         tm.tm_hour, tm.tm_min, tm.tm_sec);
