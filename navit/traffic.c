@@ -220,6 +220,9 @@ struct xml_state {
 
 /**
  * @brief Data for an XML element
+ *
+ * `names` and `values` are always two separate arrays for this struct, regardless of what is indicated by
+ * `XML_ATTR_DISTANCE`.
  */
 struct xml_element {
     char * tag_name;             /**< The tag name */
@@ -3445,9 +3448,19 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
 /**
  * @brief Creates a new XML element structure.
  *
+ * Note that the structure of `names` and `values` may differ between XML libraries. Behavior is indicated by the
+ * `XML_ATTR_DISTANCE` constant.
+ *
+ * If `XML_ATTR_DISTANCE == 1`, `names` and `values` are two separate arrays, and `values[n]` is the value that
+ * corresponds to `names[n]`.
+ *
+ * If `XML_ATTR_DISTANCE == 2`, attribute names and values are kept in a single array in which names and values
+ * alternate, names first. In this case, `names` points to the array while `values` points to its second element, i.e.
+ * the first value. In this case, `value` is invalid for an empty array, and dereferencing it may segfault.
+ *
  * @param tag_name The tag name
  * @param names Attribute names
- * @param values Attribute values (indices correspond to `names`)
+ * @param values Attribute values
  */
 static struct xml_element * traffic_xml_element_new(const char *tag_name, const char **names,
         const char **values) {
@@ -3457,18 +3470,30 @@ static struct xml_element * traffic_xml_element_new(const char *tag_name, const 
 
     ret->tag_name = g_strdup(tag_name);
     if (names) {
-        ret->names = g_new0(char *, g_strv_length((gchar **) names) + 1);
+        ret->names = g_new0(char *, g_strv_length((gchar **) names) / XML_ATTR_DISTANCE + 1);
         in = names;
         out = ret->names;
-        while (*in)
-            *out++ = g_strdup(*in++);
+        while (*in) {
+            *out++ = g_strdup(*in);
+            in += XML_ATTR_DISTANCE;
+        }
     }
-    if (values) {
+    /* extra check for mixed name-value array */
+    if (names && *names && values) {
+#if XML_ATTR_DISTANCE == 1
         ret->values = g_new0(char *, g_strv_length((gchar **) values) + 1);
+#else
+        ret->values = g_new0(char *, g_strv_length((gchar **) values) / XML_ATTR_DISTANCE + 2);
+#endif
         in = values;
         out = ret->values;
-        while (*in)
+        while (*in) {
             *out++ = g_strdup(*in++);
+#if XML_ATTR_DISTANCE > 1
+            if (*in)
+                in++;
+#endif
+        }
     }
     return ret;
 }
@@ -3487,7 +3512,7 @@ static void traffic_xml_element_destroy(struct xml_element * this_) {
             g_free(*iter);
         g_free(this_->names);
     }
-    if (this_->names) {
+    if (this_->values) {
         for (iter = (void **) this_->values; *iter; iter++)
             g_free(*iter);
         g_free(this_->values);
