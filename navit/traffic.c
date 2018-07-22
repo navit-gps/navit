@@ -4464,7 +4464,8 @@ void traffic_message_destroy(struct traffic_message * this_) {
             g_free(this_->replaces[i]);
         g_free(this_->replaces);
     }
-    traffic_location_destroy(this_->location);
+    if (this_->location)
+        traffic_location_destroy(this_->location);
     for (i = 0; i < this_->event_count; i++)
         traffic_event_destroy(this_->events[i]);
     g_free(this_->events);
