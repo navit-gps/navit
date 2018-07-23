@@ -4365,7 +4365,7 @@ void traffic_event_destroy(struct traffic_event * this_) {
 
     if (this_->quantifier)
         g_free(this_->quantifier);
-    if (this_->si) {
+    if (this_->si && this_->si_count) {
         for (i = 0; i < this_->si_count; i++)
             traffic_suppl_info_destroy(this_->si[i]);
         g_free(this_->si);
@@ -4420,8 +4420,10 @@ struct traffic_message * traffic_message_new(char * id, time_t receive_time, tim
         ret->replaces = NULL;
     }
     ret->location = location;
-    ret->event_count = event_count;
-    ret->events = g_memdup(events, sizeof(struct traffic_event *) * event_count);
+    if (event_count && events) {
+        ret->event_count = event_count;
+        ret->events = g_memdup(events, sizeof(struct traffic_event *) * event_count);
+    }
     ret->priv = g_new0(struct traffic_message_priv, 1);
     ret->priv->items = NULL;
     return ret;
@@ -4466,9 +4468,11 @@ void traffic_message_destroy(struct traffic_message * this_) {
     }
     if (this_->location)
         traffic_location_destroy(this_->location);
-    for (i = 0; i < this_->event_count; i++)
-        traffic_event_destroy(this_->events[i]);
-    g_free(this_->events);
+    if (this_->events && this_->event_count) {
+        for (i = 0; i < this_->event_count; i++)
+            traffic_event_destroy(this_->events[i]);
+        g_free(this_->events);
+    }
     if (this_->priv->items) {
         for (items = this_->priv->items; *items; items++)
             *items = tm_item_unref(*items);
