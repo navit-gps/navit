@@ -3252,7 +3252,10 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     struct item ** swap_items;
 
     for (i = 0; messages && messages[i]; i++)
-        if (messages[i]->expiration_time >= time(NULL)) {
+        if (messages[i]->expiration_time < time(NULL)) {
+            dbg(lvl_debug, "message is no longer valid, ignoring");
+            traffic_message_destroy(messages[i]);
+        } else {
             ret |= MESSAGE_UPDATE_MESSAGES;
 
             for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
@@ -3317,9 +3320,6 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 
             if (messages[i]->is_cancellation)
                 traffic_message_destroy(messages[i]);
-        } else {
-            dbg(lvl_debug, "message is no longer valid, ignoring");
-            traffic_message_destroy(messages[i]);
         }
 
     if (i)
