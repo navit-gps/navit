@@ -97,7 +97,7 @@ static void traffic_traff_android_on_feed_received(struct traffic_priv * this_, 
         return;
     }
 
-    dbg(lvl_debug, "processing traffic feed");
+    dbg(lvl_debug, "processing traffic feed:\n%s", feed);
     messages = traffic_get_messages_from_xml_string(traffic, feed);
     if (messages) {
         dbg(lvl_debug, "got messages from feed, processing");
