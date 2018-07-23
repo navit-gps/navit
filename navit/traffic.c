@@ -52,6 +52,8 @@
 #include "vehicleprofile.h"
 #include "debug.h"
 
+#undef TRAFFIC_DEBUG
+
 /** The penalty applied to an off-road link */
 #define PENALTY_OFFROAD 4
 
@@ -698,6 +700,7 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
     return ret;
 }
 
+#ifdef TRAFFIC_DEBUG
 /**
  * @brief Dumps an item to a textfile map.
  *
@@ -764,6 +767,7 @@ static void tm_dump_to_textfile(struct map * map) {
         tm_dump_item_to_textfile(item);
     map_rect_destroy(mr);
 }
+#endif
 
 /**
  * @brief Adds an item to the map.
@@ -3350,8 +3354,10 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     }
 
     if (ret && !(flags & PROCESS_MESSAGES_NO_DUMP_STORE)) {
+#ifdef TRAFFIC_DEBUG
         /* dump map if messages have been added, deleted or expired */
         tm_dump_to_textfile(this_->map);
+#endif
 
         /* dump message store if new messages have been received */
         traffic_dump_messages_to_xml(this_);
