@@ -2792,6 +2792,7 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
  */
 static int traffic_message_is_valid(struct traffic_message * this_) {
     int i;
+    int has_valid_events = 0;
 
     if (!this_->id || !this_->id[0])
         return 0;
@@ -2807,8 +2808,12 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
         if (!this_->event_count || !this_->events)
             return 0;
         for (i = 0; i < this_->event_count; i++)
-            if (!this_->events[i] || !traffic_event_is_valid(this_->events[i]))
-                return 0;
+            if (this_->events[i])
+                has_valid_events |= traffic_event_is_valid(this_->events[i]);
+        if (!has_valid_events) {
+            dbg(lvl_debug, "not a cancellation, but all events (%d in total) are invalid", this_->event_count);
+            return 0;
+        }
     }
     return 1;
 }
@@ -3671,6 +3676,9 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     char * length;
     char * speed;
 
+    /* New traffic event */
+    struct traffic_event * event = NULL;
+
     float lat, lon;
 
     if (state->is_valid) {
@@ -3742,18 +3750,23 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             }
             length = traffic_xml_get_attr("length", el->names, el->values);
             speed = traffic_xml_get_attr("speed", el->names, el->values);
-            state->events = g_list_append(state->events,
-                                          traffic_event_new(event_class_new(traffic_xml_get_attr("class", el->names, el->values)),
+            event = traffic_event_new(event_class_new(traffic_xml_get_attr("class", el->names, el->values)),
                                                   event_type_new(traffic_xml_get_attr("type", el->names, el->values)),
                                                   length ? atoi(length) : -1,
                                                   speed ? atoi(speed) : INT_MAX,
                                                   /* TODO quantifier */
                                                   NULL,
                                                   count,
-                                                  (struct traffic_suppl_info **) children));
+                                                  (struct traffic_suppl_info **) children);
             g_free(children);
             g_list_free(state->si);
             state->si = NULL;
+            /* TODO preserve unknown (and thus invalid) events if they have maxspeed set */
+            if (!traffic_event_is_valid(event)) {
+                dbg(lvl_debug, "invalid or unknown event detected, skipping");
+                traffic_event_destroy(event);
+            } else
+                state->events = g_list_append(state->events, event);
         } else if (!g_ascii_strcasecmp((char *) tag_name, "from")) {
             point = &state->from;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "to")) {
