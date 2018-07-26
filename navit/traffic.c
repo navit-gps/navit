@@ -332,12 +332,17 @@ static time_t time_new(char * string) {
 /**
  * @brief Whether two `struct seg_data` contain the same data.
  *
- * @return true if `l` and `r` are equal, false if not
+ * @return true if `l` and `r` are equal, false if not. Two NULL values are considered equal; a NULL value and a
+ * non-NULL value are not.
  */
 static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
     struct attr ** attrs;
     struct attr * attr;
 
+    if (!l && !r)
+        return 0;
+    else if (!l || !r)
+        return 1;
     if (l->type != r->type)
         return 0;
     if (l->speed != r->speed)
