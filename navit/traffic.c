@@ -1066,28 +1066,39 @@ static struct map_methods traffic_map_meth = {
  * @return true if the event is valid, false if it is malformed
  */
 static int traffic_event_is_valid(struct traffic_event * this_) {
-    if (!this_->event_class || !this_->type)
+    if (!this_->event_class || !this_->type) {
+        dbg(lvl_debug, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
         return 0;
+    }
     switch (this_->event_class) {
     case event_class_congestion:
-        if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance))
+        if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance)) {
+            dbg(lvl_debug, "illegal type (%d) for event_class_congestion", this_->type);
             return 0;
+        }
         break;
     case event_class_delay:
         if ((this_->type < event_delay_clearance)
-                || (this_->type >= event_restriction_access_restrictions_lifted))
+                || (this_->type >= event_restriction_access_restrictions_lifted)) {
+            dbg(lvl_debug, "illegal type (%d) for event_class_delay", this_->type);
             return 0;
+        }
         break;
     case event_class_restriction:
         if ((this_->type < event_restriction_access_restrictions_lifted)
-                || (this_->type > event_restriction_speed_limit_lifted))
+                || (this_->type > event_restriction_speed_limit_lifted)) {
+            dbg(lvl_debug, "illegal type (%d) for event_class_restriction", this_->type);
             return 0;
+        }
         break;
     default:
+        dbg(lvl_debug, "unknown event class %d", this_->event_class);
         return 0;
     }
-    if (this_->si_count && !this_->si)
+    if (this_->si_count && !this_->si) {
+        dbg(lvl_debug, "si_count=%d but no supplementary information", this_->si_count);
         return 0;
+    }
     /* TODO check SI */
     return 1;
 }
@@ -2794,19 +2805,31 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
     int i;
     int has_valid_events = 0;
 
-    if (!this_->id || !this_->id[0])
+    if (!this_->id || !this_->id[0]) {
+        dbg(lvl_debug, "ID is NULL or empty");
         return 0;
-    if (!this_->receive_time || !this_->update_time)
+    }
+    if (!this_->receive_time || !this_->update_time) {
+        dbg(lvl_debug, "receive_time or update_time not supplied");
         return 0;
+    }
     if (!this_->is_cancellation) {
-        if (!this_->expiration_time && !this_->end_time)
+        if (!this_->expiration_time && !this_->end_time) {
+            dbg(lvl_debug, "not a cancellation, but neither expiration_time nor end_time supplied");
             return 0;
-        if (!this_->location)
+        }
+        if (!this_->location) {
+            dbg(lvl_debug, "not a cancellation, but no location supplied");
             return 0;
-        if (!traffic_location_is_valid(this_->location))
+        }
+        if (!traffic_location_is_valid(this_->location)) {
+            dbg(lvl_debug, "not a cancellation, but location is invalid");
             return 0;
-        if (!this_->event_count || !this_->events)
+        }
+        if (!this_->event_count || !this_->events) {
+            dbg(lvl_debug, "not a cancellation, but no events supplied");
             return 0;
+        }
         for (i = 0; i < this_->event_count; i++)
             if (this_->events[i])
                 has_valid_events |= traffic_event_is_valid(this_->events[i]);
