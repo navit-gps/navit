@@ -525,7 +525,8 @@ void gui_internal_apply_config(struct gui_priv *this) {
     if(this->config.spacing == -1 ) {
         this->spacing = current_config->spacing;
     } else {
-        this->spacing = current_config->spacing;
+        this->spacing = this->config.spacing;
+        dbg(lvl_info, "Overriding default spacing %d with value %d provided in config file", current_config->spacing, this->config.spacing);
     }
     if (!this->fonts[0]) {
         int i,sizes[]= {100,66,50};
