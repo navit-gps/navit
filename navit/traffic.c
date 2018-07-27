@@ -1882,6 +1882,10 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
     int id_match;
     int is_ambiguous;
 
+    if (!end) {
+        dbg(lvl_error, "end point cannot be NULL");
+        return NULL;
+    }
     if (end->seg) {
         dbg(lvl_error, "end point cannot have a next segment");
         return NULL;
@@ -2354,6 +2358,18 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
             else
                 points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
+            if (!p_start) {
+                dbg(lvl_error, "end point not found on map");
+                for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
+                    g_free(points_iter->data);
+                g_list_free(points);
+                route_graph_free_points(rg);
+                route_graph_free_segments(rg);
+                g_free(rg);
+                for (i = 0; i < 3; i++)
+                    g_free(pcoords[i]);
+                return 0;
+            }
             s = p_start ? p_start->seg : NULL;
             p_iter = p_start;
 
