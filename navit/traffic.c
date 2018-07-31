@@ -2290,6 +2290,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Whether we are at a junction of 3 or more segments */
     int is_junction;
 
+    dbg(lvl_debug, "*****checkpoint ADD-1");
     if (!data) {
         dbg(lvl_error, "no data for segments, aborting");
         return 0;
@@ -2301,6 +2302,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
     /* Main carriageway */
 
+    dbg(lvl_debug, "*****checkpoint ADD-2");
     /* get point triple and enclosing rectangle */
     endpoints = traffic_location_get_point_triple(this_->location, &coords[0]);
     if (!endpoints) {
@@ -2319,6 +2321,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         /* TODO Point location with no auxiliary points, not supported yet */
         return 0;
 
+    dbg(lvl_debug, "*****checkpoint ADD-3");
     rg = traffic_location_get_route_graph(this_->location, ms);
 
     /* transform coordinates */
@@ -2326,7 +2329,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     c_to = (endpoints & 1) ? pcoords[2] : pcoords[1];
 
     /* determine segments */
+    dbg(lvl_debug, "*****checkpoint ADD-4 (loop start)");
     while (1) { /* once for each direction (loop logic at the end) */
+        dbg(lvl_debug, "*****checkpoint ADD-4.1");
         if (point_pairs == 1) {
             if (dir > 0)
                 p_start = traffic_route_flood_graph(rg,
@@ -2336,6 +2341,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 p_start = traffic_route_flood_graph(rg,
                                                     pcoords[2] ? pcoords[2] : pcoords[1],
                                                     pcoords[0] ? pcoords[0] : pcoords[1], NULL);
+            dbg(lvl_debug, "*****checkpoint ADD-4.1.1");
         } else if (point_pairs == 2) {
             /* TODO handle cases in which the route goes through the "third" point
              * (this should not happen; if it does, we need to detect and fix it) */
@@ -2346,11 +2352,14 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
                 traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
             }
+            dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
 
+        dbg(lvl_debug, "*****checkpoint ADD-4.2");
         /* tweak ends (find the point where the ramp touches the main road) */
         if ((this_->location->fuzziness == location_fuzziness_low_res)
                 || this_->location->at || this_->location->not_via) {
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.1");
             /* tweak end point */
             if (this_->location->at)
                 points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
@@ -2373,6 +2382,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             s = p_start ? p_start->seg : NULL;
             p_iter = p_start;
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.2");
             /* extend end to next junction */
             for (s = p_start ? p_start->seg : NULL; s; s = p_iter->seg) {
                 s_last = s;
@@ -2390,6 +2400,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             minval = INT_MAX;
             p_to = NULL;
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.3");
             while (p_iter) {
                 /* detect junctions */
                 is_junction = (s && s_prev) ? 0 : -1;
@@ -2434,10 +2445,12 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 }
             }
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.4");
             for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
                 g_free(points_iter->data);
             g_list_free(points);
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.5");
             /* tweak start point */
             if (this_->location->at)
                 points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
@@ -2449,6 +2462,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             minval = INT_MAX;
             p_from = NULL;
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.6");
             /* extend start to next junction */
             start_new = traffic_route_prepend(rg, p_start);
             if (start_new)
@@ -2456,6 +2470,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
             s = p_start ? p_start->seg : NULL;
             p_iter = p_start;
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.7");
             while (p_iter) {
                 /* detect junctions */
                 is_junction = (s && s_prev) ? 0 : -1;
@@ -2500,6 +2515,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 }
             }
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.8");
             for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
                 g_free(points_iter->data);
             g_list_free(points);
@@ -2507,9 +2523,12 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             if (!p_from)
                 p_from = p_start;
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.9");
             /* ensure we have at least one segment */
             if ((p_from == p_to) || !p_from->seg) {
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.9.1");
                 p_iter = p_start;
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2");
                 while (1) {
                     if (p_iter == p_iter->seg->start) {
                         /* compare to the last point: because p_to may be NULL here, we're comparing to
@@ -2525,6 +2544,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     }
                 }
                 if (p_from->seg) {
+                    dbg(lvl_debug, "*****checkpoint ADD-4.2.9.3, p_from->seg is non-NULL");
                     /* decide between predecessor and successor of the point, based on proximity */
                     p_to = (p_from == p_from->seg->end) ? p_from->seg->start : p_from->seg->end;
                     if (transform_distance(projection_mg, &p_to->c, pcoords[1] ? pcoords[1] : pcoords[2])
@@ -2533,12 +2553,14 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                         p_from = p_iter;
                     }
                 } else {
+                    dbg(lvl_debug, "*****checkpoint ADD-4.2.9.3, p_from->seg is NULL");
                     /* p_from has no successor, the segment goes from its predecessor to p_from */
                     p_to = p_from;
                     p_from = p_iter;
                 }
             }
 
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.10");
             /* if we have identified a last point, drop everything after it from the path */
             if (p_to)
                 p_to->seg = NULL;
@@ -2550,6 +2572,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             p_start = p_from;
         }
 
+        dbg(lvl_debug, "*****checkpoint ADD-4.3");
         /* calculate route */
         s = p_start ? p_start->seg : NULL;
         p_iter = p_start;
@@ -2560,6 +2583,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         /* count segments and calculate length */
         count = 0;
         len = 0;
+        dbg(lvl_debug, "*****checkpoint ADD-4.4");
         while (s) {
             count++;
             len += s->data.len;
@@ -2569,6 +2593,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 p_iter = s->start;
             s = p_iter->seg;
         }
+        dbg(lvl_debug, "*****checkpoint ADD-4.5");
 
         /* add segments */
 
@@ -2582,6 +2607,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         this_->priv->items = g_new0(struct item *, count + 1);
         next_item = this_->priv->items;
 
+        dbg(lvl_debug, "*****checkpoint ADD-4.6 (loop start)");
         while (s) {
             ccnt = item_coord_get_within_range(&s->data.item, ca, 2047, &s->start->c, &s->end->c);
             c = ca;
@@ -2693,12 +2719,14 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             s = p_iter->seg;
         }
 
+        dbg(lvl_debug, "*****checkpoint ADD-4.7");
         if ((this_->location->directionality == location_dir_one) || (dir < 0))
             break;
 
         dir = -1;
     }
 
+    dbg(lvl_debug, "*****checkpoint ADD-5");
     route_graph_free_points(rg);
     route_graph_free_segments(rg);
     g_free(rg);
@@ -2706,6 +2734,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     for (i = 0; i < 3; i++)
         g_free(pcoords[i]);
 
+    dbg(lvl_debug, "*****checkpoint ADD-6");
     return 1;
 }
 
@@ -3309,6 +3338,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
             dbg(lvl_debug, "message is no longer valid, ignoring");
             traffic_message_destroy(messages[i]);
         } else {
+            dbg(lvl_debug, "*****checkpoint PROCESS-1");
             ret |= MESSAGE_UPDATE_MESSAGES;
 
             for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
@@ -3322,10 +3352,12 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
             }
 
             if (!messages[i]->is_cancellation) {
+                dbg(lvl_debug, "*****checkpoint PROCESS-2");
                 /* if the message is not just a cancellation, store it and match it to the map */
                 data = traffic_message_parse_events(messages[i]);
                 swap_candidate = NULL;
 
+                dbg(lvl_debug, "*****checkpoint PROCESS-3");
                 /* check if any of the replaced messages has the same location and segment data */
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
                     stored_msg = (struct traffic_message *) msg_iter->data;
@@ -3335,6 +3367,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                 }
 
                 if (swap_candidate) {
+                    dbg(lvl_debug, "*****checkpoint PROCESS-4, swap candidate found");
                     /* reuse location and segments if we are replacing a matching message */
                     swap_location = messages[i]->location;
                     swap_items = messages[i]->priv->items;
@@ -3343,6 +3376,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                     swap_candidate->location = swap_location;
                     swap_candidate->priv->items = swap_items;
                 } else {
+                    dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
                     /* else find matching segments from scratch */
                     traffic_message_add_segments(messages[i], this_->ms, data, this_->map, this_->rt);
                     ret |= MESSAGE_UPDATE_SEGMENTS;
@@ -3352,10 +3386,12 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 
                 /* store message */
                 this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+                dbg(lvl_debug, "*****checkpoint PROCESS-5");
             }
 
             /* delete replaced messages */
             if (msgs_to_remove) {
+                dbg(lvl_debug, "*****checkpoint PROCESS (messages to remove, start)");
                 for (msg_iter = msgs_to_remove; msg_iter; msg_iter = g_list_next(msg_iter)) {
                     stored_msg = (struct traffic_message *) msg_iter->data;
                     if (stored_msg->priv->items)
@@ -3367,12 +3403,15 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
 
                 g_list_free(msgs_to_remove);
                 msgs_to_remove = NULL;
+                dbg(lvl_debug, "*****checkpoint PROCESS (messages to remove, end)");
             }
 
             traffic_message_dump_to_stderr(messages[i]);
 
             if (messages[i]->is_cancellation)
                 traffic_message_destroy(messages[i]);
+
+            dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
 
     if (i)
