@@ -3338,7 +3338,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
             dbg(lvl_debug, "message is no longer valid, ignoring");
             traffic_message_destroy(messages[i]);
         } else {
-            dbg(lvl_debug, "*****checkpoint PROCESS-1");
+            dbg(lvl_debug, "*****checkpoint PROCESS-1, id='%s'", messages[i]->id);
             ret |= MESSAGE_UPDATE_MESSAGES;
 
             for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
