@@ -2529,7 +2529,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.9.1");
                 p_iter = p_start;
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2");
-                while (1) {
+                while (p_iter->seg) {
                     if (p_iter == p_iter->seg->start) {
                         /* compare to the last point: because p_to may be NULL here, we're comparing to
                          * p_from instead, which at this point is guaranteed to be non-NULL and either
