@@ -166,7 +166,8 @@ model_poi (struct gtk_poi_search *search)
                                          * If the user has selected imperial, translate idist from meters to
                                          * feet. We convert to feet only, and not miles, because the code
                                          * sorts on the numeric value of the distance, so it doesn't like two
-                                         * different units. Possible future enhancement?
+                                         * different units. Currently, the distance is an int. Can it be made
+                                         * a float? Possible future enhancement?
                                          */
 					if (imperial != FALSE) {
 						idist = idist * (FEET_PER_METER); /* convert meters to feet. */
