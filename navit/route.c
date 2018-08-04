@@ -74,10 +74,6 @@ struct map_priv {
 
 int debug_route=0;
 
-#define RP_TRAFFIC_DISTORTION 1
-#define RP_TURN_RESTRICTION 2
-#define RP_TURN_RESTRICTION_RESOLVED 4
-
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
 #define RSD_SIZE_WEIGHT(x) *((struct size_weight_limit *)route_segment_data_field_pos((x), attr_vehicle_width))
@@ -2324,7 +2320,7 @@ static void route_graph_change_traffic_distortion(struct route_graph *this, stru
  * @param this The route graph to add to
  * @param item The item to add
  */
-static void route_graph_add_turn_restriction(struct route_graph *this, struct item *item) {
+void route_graph_add_turn_restriction(struct route_graph *this, struct item *item) {
     struct route_graph_point *pnt[4];
     struct coord c[5];
     int i,count;
@@ -2345,6 +2341,7 @@ static void route_graph_add_turn_restriction(struct route_graph *this, struct it
     data.item=item;
     data.flags=0;
     data.len=0;
+    data.score = 0;
     route_graph_add_segment(this, pnt[0], pnt[1], &data);
     route_graph_add_segment(this, pnt[1], pnt[2], &data);
 #if 1
@@ -2971,6 +2968,7 @@ static void route_graph_clone_segment(struct route_graph *this, struct route_gra
     data.len=s->data.len+1;
     data.maxspeed=-1;
     data.dangerous_goods=0;
+    data.score = s->data.score;
     if (s->data.flags & AF_SPEED_LIMIT)
         data.maxspeed=RSD_MAXSPEED(&s->data);
     if (s->data.flags & AF_SEGMENTED)
@@ -3091,7 +3089,8 @@ void route_graph_build_done(struct route_graph *rg, int cancel) {
     rg->sel=NULL;
     if (! cancel) {
         route_graph_process_restrictions(rg);
-        callback_call_0(rg->done_cb);
+        if (rg->done_cb)
+            callback_call_0(rg->done_cb);
     }
     rg->busy=0;
 }

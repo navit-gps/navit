@@ -35,6 +35,10 @@ extern "C" {
 #endif
 
 
+#define RP_TRAFFIC_DISTORTION 1
+#define RP_TURN_RESTRICTION 2
+#define RP_TURN_RESTRICTION_RESOLVED 4
+
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
 
 /**
@@ -157,6 +161,7 @@ void route_add_traffic_distortion(struct route *this_, struct item *item);
 void route_remove_traffic_distortion(struct route *this_, struct item *item);
 void route_change_traffic_distortion(struct route *this_, struct item *item);
 struct route_graph_point * route_graph_add_point(struct route_graph *this, struct coord *f);
+void route_graph_add_turn_restriction(struct route_graph *this, struct item *item);
 void route_graph_free_points(struct route_graph *this);
 struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,

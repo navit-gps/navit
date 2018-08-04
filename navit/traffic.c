@@ -1315,6 +1315,12 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
 static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir) {
     if (over->data.flags & (dir >= 0 ? AF_ONEWAYREV : AF_ONEWAY))
         return INT_MAX;
+    if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
+        return INT_MAX;
+    if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION))
+        return INT_MAX;
+    if ((over->data.item.type < route_item_first) || (over->data.item.type > route_item_last))
+        return INT_MAX;
 
     return over->data.len * (100 - over->data.score) * (PENALTY_OFFROAD - 1) / 100 + over->data.len;
 }
@@ -1502,8 +1508,9 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
             continue;
         }
         while ((item = map_rect_get_item(rg->mr))) {
-            /* TODO we might need turn restrictions as well */
-            if ((item->type < route_item_first) || (item->type > route_item_last))
+            if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
+                route_graph_add_turn_restriction(rg, item);
+            else if ((item->type < route_item_first) || (item->type > route_item_last))
                 continue;
             if (item_get_default_flags(item->type)) {
 
@@ -1583,7 +1590,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
         map_rect_destroy(rg->mr);
         rg->mr = NULL;
     }
-    route_graph_build_done(rg, 1);
+    route_graph_build_done(rg, 0);
 }
 
 /**
@@ -1774,8 +1781,14 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         p = rg->hash[i];
         while (p) {
             if (!g_list_find(existing, p)) {
-                p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
-                p->el = fh_insertkey(heap, p->value, p);
+                if (!(p->flags & RP_TURN_RESTRICTION)) {
+                    p->value = PENALTY_OFFROAD * transform_distance(projection_mg, &p->c, c_dst);
+                    p->el = fh_insertkey(heap, p->value, p);
+                } else {
+                    /* ignore points which are part of turn restrictions */
+                    p->value = INT_MAX;
+                    p->el = NULL;
+                }
                 p->seg = NULL;
             }
             p = p->hash_next;
@@ -1907,6 +1920,8 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
                 continue;
             if (s_cmp->data.flags & AF_ONEWAYREV)
                 continue;
+            if (s_cmp->end->flags & RP_TURN_RESTRICTION)
+                continue;
             if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
                     && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
                 s_next = s_cmp;
@@ -1924,6 +1939,8 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
             if (s_cmp == s)
                 continue;
             if (s_cmp->data.flags & AF_ONEWAY)
+                continue;
+            if (s_cmp->end->flags & RP_TURN_RESTRICTION)
                 continue;
             if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
                     && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
@@ -2153,6 +2170,10 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 
             /* exclude items not in the route graph */
             if (!(p = route_graph_get_point(rg, &c)))
+                continue;
+
+            /* exclude points where turn restrictions apply */
+            if (p->flags & RP_TURN_RESTRICTION)
                 continue;
 
             /* exclude items with a zero score */
