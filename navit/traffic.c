@@ -2003,6 +2003,8 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
                 continue;
             if (s_cmp->data.flags & AF_ONEWAY)
                 continue;
+            if (s_cmp->end->seg != s_cmp)
+                continue;
             if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
                     && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
                 s_prev = s_cmp;
@@ -2020,6 +2022,8 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
             if (s_cmp == s)
                 continue;
             if (s_cmp->data.flags & AF_ONEWAYREV)
+                continue;
+            if (s_cmp->start->seg != s_cmp)
                 continue;
             if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
                     && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
