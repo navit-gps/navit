@@ -2161,7 +2161,7 @@ static void route_process_traffic_distortion(struct route_graph *this, struct it
  * @brief Adds a turn restriction item to the route graph
  *
  * @param this The route graph to add to
- * @param item The item to add
+ * @param item The item to add, must be of `type_street_turn_restriction_no` or `type_street_turn_restriction_only`
  */
 static void route_process_turn_restriction(struct route_graph *this, struct item *item) {
     struct route_graph_point *pnt[4];
