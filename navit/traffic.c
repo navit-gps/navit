@@ -2007,6 +2007,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
     int id_match;
     int is_ambiguous;
 
+    dbg(lvl_debug, "At %p (%d), start", start, start ? start->value : -1);
     if (!start)
         return NULL;
 
@@ -2064,9 +2065,11 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
         if (s) {
             if (ret == s->start) {
                 ret = s->end;
+                dbg(lvl_debug, "At %p (%d -> %d)", ret, ret->value, s->start->value + s->data.len);
                 ret->value = s->start->value + s->data.len;
             } else {
                 ret = s->start;
+                dbg(lvl_debug, "At %p (%d -> %d)", ret, ret->value, s->end->value + s->data.len);
                 ret->value = s->end->value + s->data.len;
             }
             ret->seg = s;
@@ -2410,6 +2413,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             dbg(lvl_debug, "*****checkpoint ADD-4.2.2");
             /* extend end to next junction */
             for (s = p_start ? p_start->seg : NULL; s; s = p_iter->seg) {
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.2.1, s=%p, p_iter=%p (%d)", s, p_iter, p_iter ? p_iter->value : INT_MAX);
                 s_last = s;
                 if (s->start == p_iter)
                     p_iter = s->end;
@@ -2497,6 +2501,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             p_iter = p_start;
             dbg(lvl_debug, "*****checkpoint ADD-4.2.7");
             while (p_iter) {
+                struct coord_geo wgs;
+                transform_to_geo(projection_mg, &(p_iter->c), &wgs);
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.7, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
+                        p_iter, p_iter->value, wgs.lat, wgs.lng);
                 /* detect junctions */
                 is_junction = (s && s_prev) ? 0 : -1;
                 for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
@@ -2555,17 +2563,24 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 p_iter = p_start;
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2");
                 while (p_iter->seg) {
+                    dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.1, p_iter=%p, p_iter->seg=%p", p_iter, p_iter ? p_iter->seg : NULL);
                     if (p_iter == p_iter->seg->start) {
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.2 (p_iter == p_iter->seg->start)");
                         /* compare to the last point: because p_to may be NULL here, we're comparing to
                          * p_from instead, which at this point is guaranteed to be non-NULL and either
                          * equal to p_to or without a successor, making it the designated end point. */
                         if (p_iter->seg->end == p_from)
                             break;
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.3");
                         p_iter = p_iter->seg->end;
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.4");
                     } else {
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.2 (p_iter != p_iter->seg->start)");
                         if (p_iter->seg->start == p_from)
                             break;
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.3");
                         p_iter = p_iter->seg->start;
+                        dbg(lvl_debug, "*****checkpoint ADD-4.2.9.2.4");
                     }
                 }
                 if (p_from->seg) {
@@ -2610,6 +2625,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         len = 0;
         dbg(lvl_debug, "*****checkpoint ADD-4.4");
         while (s) {
+            dbg(lvl_debug, "*****checkpoint ADD-4.4.1 (#%d, p_iter=%p, s=%p, next %p)",
+                    count, p_iter, s, (s->start == p_iter) ? s->end : s->start);
             count++;
             len += s->data.len;
             if (s->start == p_iter)
