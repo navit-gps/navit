@@ -57,6 +57,7 @@
 extern "C" {
 #endif
 
+/* FIXME these flags are currently not exposed anywhere */
 /** Flag to indicate new messages have been received */
 #define MESSAGE_UPDATE_MESSAGES 1 << 0
 
@@ -940,11 +941,8 @@ struct map * traffic_get_map(struct traffic *this_);
  *
  * @param this_ The traffic instance
  * @param messages The new messages
- *
- * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
- * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
  */
-int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages);
+void traffic_process_messages(struct traffic * this_, struct traffic_message ** messages);
 
 /**
  * @brief Sets the mapset for the traffic plugin.

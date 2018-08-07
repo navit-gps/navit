@@ -4788,7 +4788,7 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
     return ret;
 }
 
-int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
+void traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
     for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
         this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
     return traffic_process_messages_int(this_, 0);
