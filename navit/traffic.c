@@ -80,6 +80,7 @@
  */
 struct traffic_shared_priv {
     GList * messages;           /**< Currently active messages */
+    GList * message_queue;      /**< Queued messages, waiting to be processed */
     // TODO messages by ID?                 In a later phase…
 };
 
@@ -257,7 +258,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
 static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
-static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags);
+static int traffic_process_messages_int(struct traffic * this_, int flags);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
@@ -3340,16 +3341,19 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
  * `PROCESS_MESSAGES_NO_DUMP_STORE` prevents saving of the message store to disk, intended to be used
  * when reading stored message data on startup.
  *
+ * Traffic messages are always read from `this->shared->message_queue`. It can be empty, which makes sense e.g. when
+ * the `PROCESS_MESSAGES_PURGE_EXPIRED` flag is used, to just purge expired messages.
+ *
  * @param this_ The traffic instance
- * @param messages The new messages (can be NULL, e.g. in conjunction with the
- * `PROCESS_MESSAGES_PURGE_EXPIRED` flag to just purge expired messages)
  * @param flags Flags, see description
  *
  * @return A combination of flags, `MESSAGE_UPDATE_MESSAGES` indicating that new messages were processed
  * and `MESSAGE_UPDATE_SEGMENTS` that segments were changed
  */
 /* TODO what if the update for a still-valid message expires in the past? */
-static int traffic_process_messages_int(struct traffic * this_, struct traffic_message ** messages, int flags) {
+static int traffic_process_messages_int(struct traffic * this_, int flags) {
+    struct traffic_message * message;
+
     int ret = 0;
     int i = 0;
 
@@ -3375,28 +3379,31 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
-    for (i = 0; messages && messages[i]; i++)
-        if (messages[i]->expiration_time < time(NULL)) {
+    for (; this_->shared->message_queue;
+            this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message)) {
+        message = (struct traffic_message *) this_->shared->message_queue->data;
+        i++;
+        if (message->expiration_time < time(NULL)) {
             dbg(lvl_debug, "message is no longer valid, ignoring");
-            traffic_message_destroy(messages[i]);
+            traffic_message_destroy(message);
         } else {
-            dbg(lvl_debug, "*****checkpoint PROCESS-1, id='%s'", messages[i]->id);
+            dbg(lvl_debug, "*****checkpoint PROCESS-1, id='%s'", message->id);
             ret |= MESSAGE_UPDATE_MESSAGES;
 
             for (msg_iter = this_->shared->messages; msg_iter; msg_iter = g_list_next(msg_iter)) {
                 stored_msg = (struct traffic_message *) msg_iter->data;
-                if (!strcmp(stored_msg->id, messages[i]->id))
+                if (!strcmp(stored_msg->id, message->id))
                     msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
                 else
-                    for (replaces = messages[i]->replaces; replaces; replaces++)
-                        if (!strcmp(stored_msg->id, *replaces) && !g_list_find(msgs_to_remove, messages[i]))
+                    for (replaces = ((struct traffic_message *) this_->shared->message_queue->data)->replaces; replaces; replaces++)
+                        if (!strcmp(stored_msg->id, *replaces) && !g_list_find(msgs_to_remove, message))
                             msgs_to_remove = g_list_append(msgs_to_remove, stored_msg);
             }
 
-            if (!messages[i]->is_cancellation) {
+            if (!message->is_cancellation) {
                 dbg(lvl_debug, "*****checkpoint PROCESS-2");
                 /* if the message is not just a cancellation, store it and match it to the map */
-                data = traffic_message_parse_events(messages[i]);
+                data = traffic_message_parse_events(message);
                 swap_candidate = NULL;
 
                 dbg(lvl_debug, "*****checkpoint PROCESS-3");
@@ -3404,30 +3411,30 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
                     stored_msg = (struct traffic_message *) msg_iter->data;
                     if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
-                            && traffic_location_equals(messages[i]->location, stored_msg->location))
+                            && traffic_location_equals(message->location, stored_msg->location))
                         swap_candidate = stored_msg;
                 }
 
                 if (swap_candidate) {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, swap candidate found");
                     /* reuse location and segments if we are replacing a matching message */
-                    swap_location = messages[i]->location;
-                    swap_items = messages[i]->priv->items;
-                    messages[i]->location = swap_candidate->location;
-                    messages[i]->priv->items = swap_candidate->priv->items;
+                    swap_location = message->location;
+                    swap_items = message->priv->items;
+                    message->location = swap_candidate->location;
+                    message->priv->items = swap_candidate->priv->items;
                     swap_candidate->location = swap_location;
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
                     /* else find matching segments from scratch */
-                    traffic_message_add_segments(messages[i], this_->ms, data, this_->map, this_->rt);
+                    traffic_message_add_segments(message, this_->ms, data, this_->map, this_->rt);
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
                 g_free(data);
 
                 /* store message */
-                this_->shared->messages = g_list_append(this_->shared->messages, messages[i]);
+                this_->shared->messages = g_list_append(this_->shared->messages, message);
                 dbg(lvl_debug, "*****checkpoint PROCESS-5");
             }
 
@@ -3439,7 +3446,7 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                    traffic_message_remove_item_data(stored_msg, messages[i], this_->rt);
+                    traffic_message_remove_item_data(stored_msg, message, this_->rt);
                     traffic_message_destroy(stored_msg);
                 }
 
@@ -3448,16 +3455,17 @@ static int traffic_process_messages_int(struct traffic * this_, struct traffic_m
                 dbg(lvl_debug, "*****checkpoint PROCESS (messages to remove, end)");
             }
 
-            traffic_message_dump_to_stderr(messages[i]);
+            traffic_message_dump_to_stderr(message);
 
-            if (messages[i]->is_cancellation)
-                traffic_message_destroy(messages[i]);
+            if (message->is_cancellation)
+                traffic_message_destroy(message);
 
             dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
+    }
 
     if (i)
-        dbg(lvl_debug, "processed %d message(s)", i);
+        dbg(lvl_debug, "processed %d message(s), %d still in queue", i, g_list_length(this_->shared->message_queue));
 
     if (flags & PROCESS_MESSAGES_PURGE_EXPIRED) {
         /* find and remove expired messages */
@@ -3516,9 +3524,11 @@ static void traffic_loop(struct traffic * this_) {
     struct traffic_message ** messages;
 
     messages = this_->meth.get_messages(this_->priv);
-    traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_PURGE_EXPIRED);
-
+    for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
+        this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
     g_free(messages);
+
+    traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
 }
 
 /**
@@ -4712,8 +4722,10 @@ struct map * traffic_get_map(struct traffic *this_) {
         g_free(filename);
 
         if (messages) {
-            traffic_process_messages_int(this_, messages, PROCESS_MESSAGES_NO_DUMP_STORE);
+            for (struct traffic_message ** cur_msg = messages; *cur_msg; cur_msg++)
+                this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
             g_free(messages);
+            traffic_process_messages_int(this_, PROCESS_MESSAGES_NO_DUMP_STORE);
         }
     }
 
@@ -4777,7 +4789,9 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
 }
 
 int traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
-    return traffic_process_messages_int(this_, messages, 0);
+    for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
+        this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
+    return traffic_process_messages_int(this_, 0);
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
