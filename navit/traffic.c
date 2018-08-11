@@ -243,7 +243,9 @@ struct xml_element {
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
                                  int flags, struct attr **attrs, struct coord *c, int count, char * id);
+#ifdef TRAFFIC_DEBUG
 static void tm_dump_item_to_textfile(struct item * item);
+#endif
 static void tm_destroy(struct map_priv *priv);
 static void tm_coord_rewind(void *priv_data);
 static void tm_item_destroy(struct item * item);
