@@ -3558,9 +3558,10 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
  */
 static void traffic_loop(struct traffic * this_) {
     struct traffic_message ** messages;
+    struct traffic_message ** cur_msg;
 
     messages = this_->meth.get_messages(this_->priv);
-    for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
+    for (cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
         this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
     g_free(messages);
 
@@ -4729,6 +4730,7 @@ struct map * traffic_get_map(struct traffic *this_) {
     struct traffic * traffic;
     char * filename;
     struct traffic_message ** messages;
+    struct traffic_message ** cur_msg;
 
     if (!this_->map) {
         /* see if any of the other instances has already created a map */
@@ -4768,7 +4770,7 @@ struct map * traffic_get_map(struct traffic *this_) {
         g_free(filename);
 
         if (messages) {
-            for (struct traffic_message ** cur_msg = messages; *cur_msg; cur_msg++)
+            for (cur_msg = messages; *cur_msg; cur_msg++)
                 this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
             g_free(messages);
             if (this_->shared->message_queue) {
@@ -4841,7 +4843,9 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
 }
 
 void traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
-    for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
+    struct traffic_message ** cur_msg;
+
+    for (cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
         this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
     if (this_->shared->message_queue) {
         if (this_->idle_ev)
