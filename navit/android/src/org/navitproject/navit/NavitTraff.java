@@ -36,9 +36,9 @@ import java.util.List;
  */
 public class NavitTraff extends BroadcastReceiver {
 	/* TODO change names to their final values (officially registered non-personal FQDN) */
-	public static String ACTION_TRAFF_FEED = "com.vonglasow.michael.traff.FEED";
+	public static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
 
-	public static String ACTION_TRAFF_POLL = "com.vonglasow.michael.traff.POLL";
+	public static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
 
 	public static String EXTRA_FEED = "feed";
 
