@@ -2667,6 +2667,10 @@ void route_recalculate_partial(struct route *this_) {
     if (!route_has_graph(this_))
         return;
 
+    /* if the route graph is still being built, it will be calculated from scratch after that, nothing to do here */
+    if (this_->graph->busy)
+        return;
+
     /* do nothing if the heap is empty */
     /* TODO add exit criterion shared with route_graph_compute_shortest_path() */
     if (!fh_min(this_->graph->heap))

@@ -32,6 +32,7 @@
 #ifdef _POSIX_C_SOURCE
 #include <sys/types.h>
 #endif
+#include <sys/time.h>
 #include "glib_slice.h"
 #include "config.h"
 #include "navit.h"
@@ -75,6 +76,9 @@
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
 #define ROUTE_RECT_DIST_REL 0
 
+/** Time slice for idle loops, in milliseconds */
+#define TIME_SLICE 40
+
 /**
  * @brief Private data shared between all traffic instances.
  */
@@ -97,6 +101,8 @@ struct traffic {
     struct traffic_methods meth; /**< Methods implemented by the plugin */
     struct callback * callback;  /**< The callback function for the idle loop */
     struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
+    struct callback *idle_cb;    /**< Idle callback to process new messages */
+    struct event_idle *idle_ev;  /**< The pointer to the idle event */
     struct mapset *ms;           /**< The mapset used for routing */
     struct route *rt;            /**< The route to notify of traffic changes */
     struct map *map;             /**< The traffic map, in which traffic distortions are stored */
@@ -3352,9 +3358,16 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
  */
 /* TODO what if the update for a still-valid message expires in the past? */
 static int traffic_process_messages_int(struct traffic * this_, int flags) {
+    /* Start and current time */
+    struct timeval start, now;
+
+    /* Current message */
     struct traffic_message * message;
 
+    /* Return value */
     int ret = 0;
+
+    /* Number of messages processed so far */
     int i = 0;
 
     /* Iterator over messages */
@@ -3379,7 +3392,14 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
-    for (; this_->shared->message_queue;
+    /* Time elapsed since start */
+    double msec = 0;
+
+    if (this_->shared->message_queue)
+        dbg(lvl_debug, "*****enter, %d messages in queue", g_list_length(this_->shared->message_queue));
+
+    gettimeofday(&start, NULL);
+    for (; this_->shared->message_queue && (msec < TIME_SLICE);
             this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message)) {
         message = (struct traffic_message *) this_->shared->message_queue->data;
         i++;
@@ -3462,10 +3482,27 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
 
             dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
+        gettimeofday(&now, NULL);
+        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
     }
 
     if (i)
         dbg(lvl_debug, "processed %d message(s), %d still in queue", i, g_list_length(this_->shared->message_queue));
+
+    if (this_->shared->message_queue) {
+        /* if we're in the middle of the queue, trigger a redraw (if needed) and exit */
+        if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
+            navit_draw_async(this_->navit, 1);
+        return ret;
+    } else {
+        /* last pass, remove our idle event and callback */
+        if (this_->idle_ev)
+            event_remove_idle(this_->idle_ev);
+        if (this_->idle_cb)
+            callback_destroy(this_->idle_cb);
+        this_->idle_ev = NULL;
+        this_->idle_cb = NULL;
+    }
 
     if (flags & PROCESS_MESSAGES_PURGE_EXPIRED) {
         /* find and remove expired messages */
@@ -3501,15 +3538,14 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
         traffic_dump_messages_to_xml(this_);
     }
 
-    if (ret & MESSAGE_UPDATE_SEGMENTS) {
-        /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
-         * happen concurrently, changes introduced by the messages may not be considered */
-        route_recalculate_partial(this_->rt);
+    /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
+     * happen concurrently, changes introduced by the messages may not be considered.
+     * Idle loops are not an issue as route_recalculate_partial() will abort if the route graph is busy. */
+    route_recalculate_partial(this_->rt);
 
-        /* trigger redraw if segments have changed */
-        if (navit_get_ready(this_->navit) == 3)
-            navit_draw_async(this_->navit, 1);
-    }
+    /* trigger redraw if segments have changed */
+    if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
+        navit_draw_async(this_->navit, 1);
 
     return ret;
 }
@@ -3528,7 +3564,17 @@ static void traffic_loop(struct traffic * this_) {
         this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
     g_free(messages);
 
-    traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
+    /* make sure traffic_process_messages_int runs at least once to ensure purging of expired messages */
+    if (this_->shared->message_queue) {
+        if (this_->idle_ev)
+            event_remove_idle(this_->idle_ev);
+        if (this_->idle_cb)
+            callback_destroy(this_->idle_cb);
+        this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int),
+                this_, PROCESS_MESSAGES_PURGE_EXPIRED);
+        this_->idle_ev = event_add_idle(50, this_->idle_cb);
+    } else
+        traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
 }
 
 /**
@@ -4725,7 +4771,13 @@ struct map * traffic_get_map(struct traffic *this_) {
             for (struct traffic_message ** cur_msg = messages; *cur_msg; cur_msg++)
                 this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
             g_free(messages);
-            traffic_process_messages_int(this_, PROCESS_MESSAGES_NO_DUMP_STORE);
+            if (this_->shared->message_queue) {
+                if (!this_->idle_cb)
+                    this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int),
+                            this_, PROCESS_MESSAGES_NO_DUMP_STORE);
+                if (!this_->idle_ev)
+                    this_->idle_ev = event_add_idle(50, this_->idle_cb);
+            }
         }
     }
 
@@ -4791,7 +4843,14 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
 void traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
     for (struct traffic_message ** cur_msg = messages; cur_msg && *cur_msg; cur_msg++)
         this_->shared->message_queue = g_list_append(this_->shared->message_queue, *cur_msg);
-    return traffic_process_messages_int(this_, 0);
+    if (this_->shared->message_queue) {
+        if (this_->idle_ev)
+            event_remove_idle(this_->idle_ev);
+        if (this_->idle_cb)
+            callback_destroy(this_->idle_cb);
+        this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_, 0);
+        this_->idle_ev = event_add_idle(50, this_->idle_cb);
+    }
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
