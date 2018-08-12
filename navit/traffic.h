@@ -57,13 +57,6 @@
 extern "C" {
 #endif
 
-/* FIXME these flags are currently not exposed anywhere */
-/** Flag to indicate new messages have been received */
-#define MESSAGE_UPDATE_MESSAGES 1 << 0
-
-/** Flag to indicate segments have changed */
-#define MESSAGE_UPDATE_SEGMENTS 1 << 1
-
 /**
  * @brief Classes for events.
  */
