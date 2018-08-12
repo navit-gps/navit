@@ -2239,7 +2239,6 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
-/* TODO process data->flags and data->dir */
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
                                         struct map *map, struct route * route) {
     int i;
@@ -3053,7 +3052,6 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
         }
 
         for (j = 0; j < this_->events[i]->si_count; j++) {
-            /* TODO derive flags (modes of transportation) from message */
             switch (this_->events[i]->si[j]->type) {
             case si_vehicle_all:
                 /* For all vehicles */
@@ -3540,9 +3538,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
         traffic_dump_messages_to_xml(this_);
     }
 
-    /* FIXME this is probably not thread-safe: if route calculation and traffic message processing
-     * happen concurrently, changes introduced by the messages may not be considered.
-     * Idle loops are not an issue as route_recalculate_partial() will abort if the route graph is busy. */
+    /* TODO see comment on route_recalculate_partial about thread-safety */
     route_recalculate_partial(this_->rt);
 
     /* trigger redraw if segments have changed */
