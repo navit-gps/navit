@@ -2687,7 +2687,9 @@ static int route_graph_is_path_computed(struct route_graph *this_) {
  *
  * @param this_ The route
  */
-// FIXME this is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood()
+/* TODO This is absolutely not thread-safe and will wreak havoc if run concurrently with route_graph_flood(). This is
+ * not an issue as long as the two never overlap: Currently both this function and route_graph_flood() run without
+ * interruption until they finish, and are both on the main thread. If that changes, we need to revisit this. */
 void route_recalculate_partial(struct route *this_) {
     struct attr route_status;
 
@@ -3502,7 +3504,7 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
             return 0;
         return 1;
     case attr_time:
-        /* FIXME This ignores access flags on traffic distortions, but the attribute does not seem
+        /* TODO This ignores access flags on traffic distortions, but the attribute does not seem
          * to be used anywhere */
         mr->attr_next=attr_speed;
         if (seg)
@@ -3511,7 +3513,7 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
             return 0;
         return 1;
     case attr_speed:
-        /* FIXME This ignores access flags on traffic distortions, but the attribute does not seem
+        /* TODO This ignores access flags on traffic distortions, but the attribute does not seem
          * to be used anywhere */
         mr->attr_next=attr_label;
         if (seg)
