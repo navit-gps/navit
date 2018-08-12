@@ -1,0 +1,24 @@
+//THX to https://proandroiddev.com/configuring-android-project-version-name-code-b168952f3323
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.ajoberstar:grgit:2.3.0'
+    }
+}
+
+import org.ajoberstar.grgit.Grgit
+import java.time.format.DateTimeFormatter
+
+ext {
+    git = Grgit.open(currentDir: projectDir)
+    gitVersionName = git.describe(match: ["v[0-9.rc]*"])
+    gitVersionCode = Integer.parseInt(DateTimeFormatter.ofPattern("yyMMddhhmm").format(git.head().dateTime))
+}
+
+task printVersion() {
+    println("Version Name: $gitVersionName")
+    println("Version Code: $gitVersionCode")
+}
