@@ -3471,7 +3471,7 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         return 0;
     case attr_maxspeed:
         mr->attr_next = attr_street_item;
-        if (seg && seg->data->flags & AF_SPEED_LIMIT) {
+        if (seg && (seg->data->flags & AF_SPEED_LIMIT)) {
             attr->u.num=RSD_MAXSPEED(seg->data);
 
         } else {
@@ -3707,9 +3707,11 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
                                     &seg->data, NULL), seg->start, seg->end);
             attr->u.str = mr->str;
             return 1;
+            break;
         default:
             return 0;
         }
+        break;
     default:
         mr->attr_next=attr_none;
         attr->type=attr_none;
@@ -3943,11 +3945,13 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
             id=route->pos;
             break;
         }
+        /* FALLTHRU */
 
     case type_route_start:
     case type_route_start_reverse:
         mr->seg=NULL;
         mr->dest=mr->mpriv->route->destinations;
+        /* FALLTHRU */
     default:
         if (mr->item.type == type_waypoint)
             mr->dest=g_list_next(mr->dest);
@@ -3984,6 +3988,7 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
         id=&(mr->mpriv->route->destinations);
         if (mr->mpriv->route->destinations)
             break;
+        /* FALLTHRU */
     case type_route_end:
         return NULL;
     }
