@@ -212,6 +212,7 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
                           struct route_traffic_distortion *dist);
 static void route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile,
                               struct callback *cb);
+static int route_graph_is_path_computed(struct route_graph *this_);
 static void route_graph_reset(struct route_graph *this);
 
 
@@ -2060,22 +2061,22 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
 }
 
 /**
- * @brief Expands (i.e. calculates the costs for) the points on the heap.
+ * @brief Expands (i.e. calculates the costs for) the points on the route graph’s heap.
  *
- * This calculates the cost for every point on the heap, as well as any neighbors affected by the cost change, and sets
- * the next segment.
+ * This calculates the cost for every point on the route graph’s heap, as well as any neighbors affected by the cost
+ * change, and sets the next segment.
  *
  * This is part of a modified LPA* implementation.
  *
  * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
  * are calculated.
- * @param heap The Fibonacci heap which stores the locally inconsistent points
+ * @param graph The route graph
  */
-static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct fibheap * heap) {
+static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct route_graph * graph) {
     struct route_graph_point *p_min;
     struct route_graph_segment *s = NULL;
 
-    while ((p_min = fh_extractmin(heap))) {
+    while (!route_graph_is_path_computed(graph) && (p_min = fh_extractmin(graph->heap))) {
         p_min->el = NULL;
         if (p_min->value > p_min->rhs)
             /* cost has decreased, update point value */
@@ -2083,7 +2084,7 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
         else {
             /* cost has increased, re-evaluate */
             p_min->value = INT_MAX;
-            route_graph_point_update(profile, p_min, heap);
+            route_graph_point_update(profile, p_min, graph->heap);
         }
 
         /* in any case, update rhs of predecessors (nodes from which we can reach p_min via a single segment) */
@@ -2091,12 +2092,12 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
             if ((s->start == s->end) || (s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
             else if (route_value_seg(profile, NULL, s, -2) != INT_MAX)
-                route_graph_point_update(profile, s->end, heap);
+                route_graph_point_update(profile, s->end, graph->heap);
         for (s = p_min->end; s; s = s->end_next)
             if ((s->start == s->end) || (s->data.item.type < route_item_first) || (s->data.item.type > route_item_last))
                 continue;
             else if (route_value_seg(profile, NULL, s, 2) != INT_MAX)
-                route_graph_point_update(profile, s->start, heap);
+                route_graph_point_update(profile, s->start, graph->heap);
 	}
 }
 
@@ -2635,6 +2636,33 @@ static void route_graph_flood(struct route_graph *this, struct route_info *dst, 
 }
 
 /**
+ * @brief Whether cost (re)calculation of route graph points has reached the start point
+ *
+ * This method serves as the exit criterion for cost calculation in our LPA* implementation. When it returns true, it
+ * means that calculation of node cost has proceeded far enough to determine the cost of, and cheapest path from, the
+ * start point.
+ *
+ * The current implementation returns true only when the heap is empty, i.e. all points have been calculated. This is
+ * not optimal in terms of efficiency, as the cost of the start point and the cheapest path from there no longer
+ * change during the last few cycles. Future versions may report true before the heap is completely empty, as soon as
+ * the cost of the start point and the cheapest path are final. However, this needs to be considered for recalculations
+ * which happen when the vehicle leaves the cheapest path: right now, any point in the route graph has its final cost
+ * and cheapest path, thus no recalculation is needed if the vehicle leaves the cheapest path. In the future, however,
+ * a (partial) recalculation may be needed if the vehicle deviates from the cheapest path.
+ *
+ * @param this_ The route graph
+ *
+ * @return true if calculation is complete, false if not
+ */
+static int route_graph_is_path_computed(struct route_graph *this_) {
+    /* TODO refine exit criterion */
+    if (!fh_min(this_->heap))
+        return 1;
+    else
+        return 0;
+}
+
+/**
  * @brief Triggers partial recalculation of the route, based on the existing route graph.
  *
  * This is currently used when traffic distortions have been added, changed or removed. Future versions may also use
@@ -2671,9 +2699,8 @@ void route_recalculate_partial(struct route *this_) {
     if (this_->graph->busy)
         return;
 
-    /* do nothing if the heap is empty */
-    /* TODO add exit criterion shared with route_graph_compute_shortest_path() */
-    if (!fh_min(this_->graph->heap))
+    /* exit if there is no need to recalculate */
+    if (route_graph_is_path_computed(this_->graph))
         return;
 
     route_status.type = attr_route_status;
@@ -2683,7 +2710,7 @@ void route_recalculate_partial(struct route *this_) {
 
     printf("Expanding points which have changed\n");
 
-    route_graph_compute_shortest_path(this_->vehicleprofile, this_->graph->heap);
+    route_graph_compute_shortest_path(this_->vehicleprofile, this_->graph);
 
     printf("Point expansion complete, recalculating route path\n");
 
