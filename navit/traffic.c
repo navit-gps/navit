@@ -4846,6 +4846,20 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
     return ret;
 }
 
+struct traffic_message ** traffic_get_stored_messages(struct traffic *this_) {
+    struct traffic_message ** ret = g_new0(struct traffic_message *, g_list_length(this_->shared->messages) + 1);
+    struct traffic_message ** out = ret;
+    GList * in = this_->shared->messages;
+
+    while (in) {
+        *out = (struct traffic_message *) in->data;
+        in = g_list_next(in);
+        out++;
+    }
+
+    return ret;
+}
+
 void traffic_process_messages(struct traffic * this_, struct traffic_message ** messages) {
     struct traffic_message ** cur_msg;
 

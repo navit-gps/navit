@@ -924,6 +924,20 @@ struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * 
 struct map * traffic_get_map(struct traffic *this_);
 
 /**
+ * @brief Returns currently active traffic messages.
+ *
+ * If multiple plugin instances are active, this will give the same result for any plugin, as traffic messages are
+ * shared between instances.
+ *
+ * @param this_ The traffic plugin instance
+ *
+ * @return A null-terminated array of traffic messages. The caller is responsible for freeing the array (not its
+ * elements) when it is no longer needed. This method will always return a valid pointer—if the message store is empty,
+ * an empty array (with just one single NULL element) will be returned.
+ */
+struct traffic_message ** traffic_get_stored_messages(struct traffic *this_);
+
+/**
  * @brief Processes new traffic messages.
  *
  * Calling this method delivers new messages in a “push” manner (as opposed to the “pull” fashion of
