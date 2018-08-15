@@ -4705,6 +4705,22 @@ struct traffic_event * traffic_message_get_event(struct traffic_message * this_,
         return NULL;
 }
 
+struct item ** traffic_message_get_items(struct traffic_message * this_) {
+    struct item ** ret;
+    struct item ** in;
+    int i;
+    if (!this_->priv->items) {
+        ret = g_new0(struct item *, 1);
+        return ret;
+    }
+    in = this_->priv->items;
+    for (i = 1; *in; i++)
+        in++;
+    ret = g_new0(struct item *, i);
+    memcpy(ret, this_->priv->items, sizeof(struct item *) * i);
+    return ret;
+}
+
 /**
  * @brief Registers a new traffic map plugin
  *

@@ -883,6 +883,20 @@ void traffic_message_add_event(struct traffic_message * this_, struct traffic_ev
 struct traffic_event * traffic_message_get_event(struct traffic_message * this_, int index);
 
 /**
+ * @brief Returns the items associated with a message.
+ *
+ * Note that no map rectangle is required to obtain traffic items. This behavior is particular to traffic items, which
+ * do not rely on a map rectangle. Items obtained from other maps may behave differently.
+ *
+ * @param this_ The message
+ *
+ * @return Items as a NULL-terminated array. The caller is responsible for freeing the array (not its elements) when it
+ * is no longer needed. This method will always return a valid pointer—if no items are associated with the message, an
+ * empty array (with just one single NULL element) will be returned. No particular order is guaranteed for the items.
+ */
+struct item ** traffic_message_get_items(struct traffic_message * this_);
+
+/**
  * @brief Initializes the traffic plugin.
  *
  * This function is called once on startup.
