@@ -1202,6 +1202,92 @@ static DBusHandlerResult request_navit_quit(DBusConnection *connection, DBusMess
 }
 
 /**
+ * @brief Exports currently active traffic distortions as a GPX file.
+ *
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the `filename` parameter
+ * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
+ */
+static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connection, DBusMessage *message) {
+    char * filename;
+    struct navit * navit;
+    DBusMessageIter iter;
+    struct attr * attr;
+    struct attr_iter * a_iter;
+    struct traffic * traffic = NULL;
+    FILE *fp;
+    struct traffic_message ** messages;
+    struct traffic_message ** curr_msg;
+    char * wpt_types[] = {"from", "at", "via", "not_via", "to"};
+    struct traffic_point * wpts[5];
+    int i;
+
+    char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
+            "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
+            "     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
+            "     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
+            "     xmlns='http://www.topografix.com/GPX/1/1'\n"
+            "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n";
+    char *trailer = "</gpx>\n";
+
+    navit = object_get_from_message(message, "navit");
+    if (! navit)
+        return dbus_error_invalid_object_path(connection, message);
+
+    dbus_message_iter_init(message, &iter);
+
+    dbus_message_iter_get_basic(&iter, &filename);
+
+    attr = g_new0(struct attr, 1);
+    a_iter = navit_attr_iter_new();
+    if (navit_get_attr(navit, attr_traffic, attr, a_iter))
+        traffic = (struct traffic *) attr->u.navit_object;
+    navit_attr_iter_destroy(a_iter);
+    g_free(attr);
+
+    if (!traffic)
+        return dbus_error_traffic_not_configured(connection, message);
+
+    dbg(lvl_debug,"Dumping traffic distortions from dbus to %s", filename);
+
+    fp = fopen(filename, "w");
+    if (!fp) {
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                "could not open file for writing");
+    }
+
+    fprintf(fp, "%s", header);
+
+    messages = traffic_get_stored_messages(traffic);
+
+    for (curr_msg = messages; *curr_msg; curr_msg++) {
+        if (!(*curr_msg)->location)
+            continue;
+        wpts[0] = (*curr_msg)->location->from;
+        wpts[1] = (*curr_msg)->location->at;
+        wpts[2] = (*curr_msg)->location->via;
+        wpts[3] = (*curr_msg)->location->not_via;
+        wpts[4] = (*curr_msg)->location->to;
+        for (i = 0; i <= 4; i++) {
+            if (!wpts[i])
+                continue;
+            fprintf(fp, "<wpt lon='%4.16f' lat='%4.16f'><type>%s</type><name>%s</name></wpt>\n",
+                    wpts[i]->coord.lng, wpts[i]->coord.lat, wpt_types[i], (*curr_msg)->id);
+        }
+    }
+
+    /* TODO <rte/> segments (or coherent sequences thereof) */
+
+    fprintf(fp,"%s",trailer);
+
+    fclose(fp);
+
+    g_free(messages);
+
+    return empty_reply(connection, message);
+}
+
+/**
  * @brief Injects a traffic feed.
  *
  * @param connection The DBusConnection object through which a message arrived
@@ -1862,6 +1948,7 @@ struct dbus_method {
     {".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
     {".navit",  "set_center_screen",   "(ii)",    "(pixel_x,pixel_y)",                       "",   "",      request_navit_set_center_screen},
     {".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
+    {".navit",  "traffic_export",      "s",       "filename",                                "",   "",      request_navit_traffic_export_gpx},
     {".navit",  "traffic_inject",      "s",       "filename",                                "",   "",      request_navit_traffic_inject},
     {".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
     {".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
