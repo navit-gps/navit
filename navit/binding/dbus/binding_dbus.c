@@ -1221,6 +1221,10 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
     char * wpt_types[] = {"from", "at", "via", "not_via", "to"};
     struct traffic_point * wpts[5];
     int i;
+    struct item ** items;
+    struct item ** curr_itm;
+    struct coord c, c_last;
+    struct coord_geo g;
 
     char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
             "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
@@ -1276,7 +1280,40 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
         }
     }
 
-    /* TODO <rte/> segments (or coherent sequences thereof) */
+    for (curr_msg = messages; *curr_msg; curr_msg++) {
+        items = traffic_message_get_items(*curr_msg);
+        for (curr_itm = items; *curr_itm; curr_itm++) {
+            /*
+             * Don’t blindly copy this code unless you know what you are doing.
+             * It is based on various assumptions which hold true for traffic map items, but not necessarily for items
+             * obtained from other maps.
+             */
+            /* TODO output direction as type */
+            item_coord_rewind(*curr_itm);
+            item_coord_get(*curr_itm, &c, 1);
+            if ((curr_itm == items) || (c.x != c_last.x) || (c.y != c_last.y)) {
+                /*
+                 * Start a new route for the first item, or if the last point of the previous item does not coincide
+                 * with the first point of the current one. This includes closing the previous route (if any) and
+                 * adding the first point.
+                 */
+                if (curr_itm != items)
+                    fprintf(fp, "</rte>\n");
+                fprintf(fp, "<rte><name>%s</name>\n", (*curr_msg)->id);
+                transform_to_geo(projection_mg, &c, &g);
+                fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'></rtept>\n", g.lng, g.lat);
+            }
+            while (item_coord_get(*curr_itm, &c, 1)) {
+                transform_to_geo(projection_mg, &c, &g);
+                fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'></rtept>\n", g.lng, g.lat);
+            }
+            c_last.x = c.x;
+            c_last.y = c.y;
+        }
+        if (curr_itm != items)
+            fprintf(fp, "</rte>\n");
+        g_free(items);
+    }
 
     fprintf(fp,"%s",trailer);
 
