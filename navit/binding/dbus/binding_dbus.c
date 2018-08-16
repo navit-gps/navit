@@ -1212,7 +1212,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
     char * filename;
     struct navit * navit;
     DBusMessageIter iter;
-    struct attr * attr;
+    struct attr attr;
     struct attr_iter * a_iter;
     struct traffic * traffic = NULL;
     FILE *fp;
@@ -1242,12 +1242,10 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
 
     dbus_message_iter_get_basic(&iter, &filename);
 
-    attr = g_new0(struct attr, 1);
     a_iter = navit_attr_iter_new();
-    if (navit_get_attr(navit, attr_traffic, attr, a_iter))
-        traffic = (struct traffic *) attr->u.navit_object;
+    if (navit_get_attr(navit, attr_traffic, &attr, a_iter))
+        traffic = (struct traffic *) attr.u.navit_object;
     navit_attr_iter_destroy(a_iter);
-    g_free(attr);
 
     if (!traffic)
         return dbus_error_traffic_not_configured(connection, message);
