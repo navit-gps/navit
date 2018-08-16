@@ -1223,6 +1223,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
     int i;
     struct item ** items;
     struct item ** curr_itm;
+    int dir, lastdir = 0;
     struct coord c, c_last;
     struct coord_geo g;
 
@@ -1286,10 +1287,19 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
              * It is based on various assumptions which hold true for traffic map items, but not necessarily for items
              * obtained from other maps.
              */
-            /* TODO output direction as type */
             item_coord_rewind(*curr_itm);
             item_coord_get(*curr_itm, &c, 1);
-            if ((curr_itm == items) || (c.x != c_last.x) || (c.y != c_last.y)) {
+            item_attr_rewind(*curr_itm);
+            if (item_attr_get(*curr_itm, attr_flags, &attr)) {
+                if (attr.u.num & AF_ONEWAY)
+                    dir = 1;
+                else if (attr.u.num & AF_ONEWAYREV)
+                    dir = -1;
+                else
+                    dir = 0;
+            } else
+                dir = 0;
+            if ((curr_itm == items) || (c.x != c_last.x) || (c.y != c_last.y) || lastdir != dir) {
                 /*
                  * Start a new route for the first item, or if the last point of the previous item does not coincide
                  * with the first point of the current one. This includes closing the previous route (if any) and
@@ -1297,7 +1307,8 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
                  */
                 if (curr_itm != items)
                     fprintf(fp, "</rte>\n");
-                fprintf(fp, "<rte><name>%s</name>\n", (*curr_msg)->id);
+                fprintf(fp, "<rte><type>%s</type><name>%s</name>\n",
+                        dir ? (dir > 0 ? "forward" : "backward") : "bidirectional", (*curr_msg)->id);
                 transform_to_geo(projection_mg, &c, &g);
                 fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'></rtept>\n", g.lng, g.lat);
             }
@@ -1307,6 +1318,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
             }
             c_last.x = c.x;
             c_last.y = c.y;
+            lastdir = dir;
         }
         if (curr_itm != items)
             fprintf(fp, "</rte>\n");
