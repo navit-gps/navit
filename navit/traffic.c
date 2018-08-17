@@ -2810,11 +2810,14 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
         return;
     }
 
-    points[0] = this_->location->from;
-    points[1] = this_->location->at;
-    points[2] = this_->location->via;
-    points[3] = this_->location->not_via;
-    points[4] = this_->location->to;
+    if (this_->location) {
+        points[0] = this_->location->from;
+        points[1] = this_->location->at;
+        points[2] = this_->location->via;
+        points[3] = this_->location->not_via;
+        points[4] = this_->location->to;
+    } else
+        memset(&points, 0, sizeof(struct traffic_point *) * 5);
 
     dbg(lvl_debug, "id='%s', is_cancellation=%d, is_forecast=%d",
         this_->id, this_->is_cancellation, this_->is_forecast);
@@ -2852,25 +2855,29 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
     }
 
     /* dump location */
-    dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'",
-        item_to_name(this_->location->road_type), this_->location->road_ref,
-        this_->location->road_name);
-    dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'",
-        this_->location->directionality, this_->location->destination, this_->location->direction);
-    dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d",
-        location_fuzziness_to_string(this_->location->fuzziness),
-        location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
-        this_->location->tmc_direction);
-    for (i = 0; i < 5; i++) {
-        if (points[i]) {
-            dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f",
-                point_names[i], points[i]->coord.lat, points[i]->coord.lng);
-            dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'",
-                points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
-        } else {
-            dbg(lvl_debug, "    %s: (null)",
-                point_names[i]);
+    if (this_->location) {
+        dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'",
+                item_to_name(this_->location->road_type), this_->location->road_ref,
+                this_->location->road_name);
+        dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'",
+                this_->location->directionality, this_->location->destination, this_->location->direction);
+        dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d",
+                location_fuzziness_to_string(this_->location->fuzziness),
+                location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
+                this_->location->tmc_direction);
+        for (i = 0; i < 5; i++) {
+            if (points[i]) {
+                dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f",
+                        point_names[i], points[i]->coord.lat, points[i]->coord.lng);
+                dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'",
+                        points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
+            } else {
+                dbg(lvl_debug, "    %s: (null)",
+                        point_names[i]);
+            }
         }
+    } else {
+        dbg(lvl_debug, "  Location: null");
     }
 
     /* dump events */
