@@ -1240,11 +1240,11 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
     /* road_name */
     if (this_->road_name) {
-        maxscore += 400;
+        maxscore += 200;
         if (item_attr_get(item, attr_street_name, &attr)) {
             // TODO crude comparison in need of refinement
             if (!strcmp(this_->road_name, attr.u.str))
-                score += 400;
+                score += 200;
         }
     }
 
