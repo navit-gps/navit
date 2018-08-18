@@ -204,15 +204,21 @@ static char * parse_for_systematic_comparison(const char *s) {
  * \li Numeric parts are compared as integers, hence `'042'` equals `'42'`.
  * \li Comparison of string parts is case-insensitive.
  *
+ * Partial matches are currently determined by determining each part of one string with each part of the other. Each
+ * part of one string that is matched by at least one part of the other increases the score. Order is currently not
+ * taken into account, i.e. `'42A'` and `'A-42A'` are both considered full (not partial) matches for `'A42'`. Future
+ * versions may change this.
+ *
  * @param s1 The first string
  * @param s2 The second string
  *
- * @return 0 if both strings match, nonzero if they do not. Currently `MAX_MISMATCH` is returned for any mismatch;
- * future versions may express the quality of partial matches (lower values indicating better matches).
+ * @return 0 if both strings match, nonzero if they do not. `MAX_MISMATCH` indicates a complete mismatch; values in
+ * between indicate partial matches (lower values correspond to better matches).
  */
 int compare_name_systematic(const char *s1, const char *s2) {
     int ret = MAX_MISMATCH;
     int tmp;
+    int elements = 0, matches = 0;
     char *l = NULL, *r = NULL, *l0, *r0;
 
     if (!s1 || !s1[0]) {
@@ -249,38 +255,48 @@ int compare_name_systematic(const char *s1, const char *s2) {
     }
 
     /* s1 and s2 are single strings (no semicolons) */
-    ret = 0;
-
     l0 = parse_for_systematic_comparison(s1);
     r0 = parse_for_systematic_comparison(s2);
 
-    l = l0;
-    r = r0;
-
-    while (!ret && l[0] && r[0]) {
-        if (atoi(l) || (l[0] == '0')) {
-            if (atoi(r) || (r[0] == '0'))
-                ret = (atoi(l) == atoi(r)) ? 0 : MAX_MISMATCH;
-            else
-                ret = MAX_MISMATCH;
-        } else {
-            if (atoi(r) || (r[0] == '0'))
-                ret = MAX_MISMATCH;
-            else
-                ret = strcasecmp(l, r) ? MAX_MISMATCH : 0;
+    /* count left-hand elements and all left-hand elements matched by a right-hand element */
+    for (l = l0; l[0]; l += strlen(l) + 1) {
+        elements++;
+        for (r = r0; r[0]; r += strlen(r) + 1) {
+            if (atoi(l) || (l[0] == '0')) {
+                if ((atoi(r) || (r[0] == '0')) && (atoi(l) == atoi(r))) {
+                    matches++;
+                    break;
+                }
+            } else if (!strcasecmp(l, r)) {
+                matches++;
+                break;
+            }
         }
-
-        l += strlen(l) + 1;
-        r += strlen(r) + 1;
     }
 
-    if (!ret)
-        ret = (l[0] == r[0]) ? 0 : MAX_MISMATCH;
-
-    dbg(lvl_debug, "'%s' %s '%s'\n", s1, ret?"does NOT match":"matches", s2);
+    /* same in the opposite direction */
+    for (r = r0; r[0]; r += strlen(r) + 1) {
+        elements++;
+        for (l = l0; l[0]; l += strlen(l) + 1) {
+            if (atoi(l) || (l[0] == '0')) {
+                if ((atoi(r) || (r[0] == '0')) && (atoi(l) == atoi(r))) {
+                    matches++;
+                    break;
+                }
+            } else if (!strcasecmp(l, r)) {
+                matches++;
+                break;
+            }
+        }
+    }
 
     g_free(l0);
     g_free(r0);
+
+    ret = ((elements - matches) * MAX_MISMATCH) / elements;
+
+    dbg(lvl_debug, "'%s' %s '%s', ret=%d",
+            s1, ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
 
     return ret;
 }
