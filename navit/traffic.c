@@ -2748,11 +2748,13 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             if (s->start == p_iter) {
                 /* forward direction */
                 p_iter = s->end;
-                flags = data->flags | (data->dir == location_dir_one ? AF_ONEWAY : 0);
+                flags = data->flags | (s->data.flags & AF_ONEWAYMASK)
+                        | (data->dir == location_dir_one ? AF_ONEWAY : 0);
             } else {
                 /* backward direction */
                 p_iter = s->start;
-                flags = data->flags | (data->dir == location_dir_one ? AF_ONEWAYREV : 0);
+                flags = data->flags | (s->data.flags & AF_ONEWAYMASK)
+                        | (data->dir == location_dir_one ? AF_ONEWAYREV : 0);
             }
 
 
