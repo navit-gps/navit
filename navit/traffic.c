@@ -1144,87 +1144,87 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
     /* road type */
     if ((this_->road_type != type_line_unspecified)) {
-        maxscore += 4;
+        maxscore += 400;
         if (item->type == this_->road_type)
-            score += 4;
+            score += 400;
         else
             switch (this_->road_type) {
             /* motorway */
             case type_highway_land:
                 if (item->type == type_highway_city)
-                    score += 3;
+                    score += 300;
                 else if (item->type == type_street_n_lanes)
-                    score += 2;
+                    score += 200;
                 break;
             case type_highway_city:
                 if (item->type == type_highway_land)
-                    score += 3;
+                    score += 300;
                 else if (item->type == type_street_n_lanes)
-                    score += 2;
+                    score += 200;
                 break;
             /* trunk */
             case type_street_n_lanes:
                 if ((item->type == type_highway_land) || (item->type == type_highway_city)
                         || (item->type == type_street_4_land)
                         || (item->type == type_street_4_city))
-                    score += 2;
+                    score += 200;
                 break;
             /* primary */
             case type_street_4_land:
                 if (item->type == type_street_4_city)
-                    score += 3;
+                    score += 300;
                 else if ((item->type == type_street_n_lanes)
                          || (item->type == type_street_3_land))
-                    score += 2;
+                    score += 200;
                 else if (item->type == type_street_3_city)
-                    score += 1;
+                    score += 100;
                 break;
             case type_street_4_city:
                 if (item->type == type_street_4_land)
-                    score += 3;
+                    score += 300;
                 else if ((item->type == type_street_n_lanes)
                          || (item->type == type_street_3_city))
-                    score += 2;
+                    score += 200;
                 else if (item->type == type_street_3_land)
-                    score += 1;
+                    score += 100;
                 break;
             /* secondary */
             case type_street_3_land:
                 if (item->type == type_street_3_city)
-                    score += 3;
+                    score += 300;
                 else if ((item->type == type_street_4_land)
                          || (item->type == type_street_2_land))
-                    score += 2;
+                    score += 200;
                 else if ((item->type == type_street_4_city)
                          || (item->type == type_street_2_city))
-                    score += 1;
+                    score += 100;
                 break;
             case type_street_3_city:
                 if (item->type == type_street_3_land)
-                    score += 3;
+                    score += 300;
                 else if ((item->type == type_street_4_city)
                          || (item->type == type_street_2_city))
-                    score += 2;
+                    score += 200;
                 else if ((item->type == type_street_4_land)
                          || (item->type == type_street_2_land))
-                    score += 1;
+                    score += 100;
                 break;
             /* tertiary */
             case type_street_2_land:
                 if (item->type == type_street_2_city)
-                    score += 3;
+                    score += 300;
                 else if (item->type == type_street_3_land)
-                    score += 2;
+                    score += 200;
                 else if (item->type == type_street_3_city)
-                    score += 1;
+                    score += 100;
                 break;
             case type_street_2_city:
                 if (item->type == type_street_2_land)
-                    score += 3;
+                    score += 300;
                 else if (item->type == type_street_3_city)
-                    score += 2;
+                    score += 200;
                 else if (item->type == type_street_3_land)
-                    score += 1;
+                    score += 100;
                 break;
             default:
                 break;
@@ -1233,18 +1233,18 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
 
     /* road_ref */
     if (this_->road_ref) {
-        maxscore += 4;
+        maxscore += 400;
         if (item_attr_get(item, attr_street_name_systematic, &attr))
-            score += (4 * (MAX_MISMATCH - compare_name_systematic(this_->road_ref, attr.u.str))) / MAX_MISMATCH;
+            score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->road_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* road_name */
     if (this_->road_name) {
-        maxscore += 4;
+        maxscore += 400;
         if (item_attr_get(item, attr_street_name, &attr)) {
             // TODO crude comparison in need of refinement
             if (!strcmp(this_->road_name, attr.u.str))
-                score += 4;
+                score += 400;
         }
     }
 
@@ -1284,18 +1284,18 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
 
     /* junction_ref */
     if (this_->junction_ref) {
-        maxscore += 4;
+        maxscore += 400;
         if (item_attr_get(item, attr_ref, &attr))
-            score += (4 * (MAX_MISMATCH - compare_name_systematic(this_->junction_ref, attr.u.str))) / MAX_MISMATCH;
+            score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->junction_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* junction_name */
     if (this_->junction_name) {
         if (item_attr_get(item, attr_label, &attr)) {
-            maxscore += 4;
+            maxscore += 400;
             // TODO crude comparison in need of refinement
             if (!strcmp(this_->junction_name, attr.u.str))
-                score += 4;
+                score += 400;
         }
     }
 
