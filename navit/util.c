@@ -194,6 +194,7 @@ static char * parse_for_systematic_comparison(const char *s) {
  * function performs a fuzzy comparison: Each string is broken down into numeric and non-numeric parts.
  * Then both strings are compared part by part. The following rules apply:
  *
+ * \li Semicolons denote sequences of strings, which will match if any string in `s1` matches any string in `s2`.
  * \li Whitespace bordering on a number is discarded.
  * \li Whitespace surrounded by string characters is treated as one string with the surrounding characters.
  * \li If one string has more parts than the other, the shorter string is padded with null parts.
@@ -206,12 +207,12 @@ static char * parse_for_systematic_comparison(const char *s) {
  * @param s1 The first string
  * @param s2 The second string
  *
- * @return 0 if both strings match, a negative value if `s1<s2`, a positive value if `s1>s2`.
+ * @return 0 if both strings match, nonzero if they do not. Nonzero results are not guaranteed to carry any further
+ * information (such as sort order), and callers should not rely on that.
  */
-/* TODO break up strings at semicolons and parse each separately, return 0 if any two match */
 int compare_name_systematic(const char *s1, const char *s2) {
     int ret = 0;
-    char *l, *r, *l0, *r0;
+    char *l = NULL, *r = NULL, *l0, *r0;
 
     if (!s1 || !s1[0]) {
         if (!s2 || !s2[0])
@@ -221,6 +222,28 @@ int compare_name_systematic(const char *s1, const char *s2) {
     } else if (!s2 || !s2[0])
         return -1;
 
+    /* break up strings at semicolons and parse each separately, return 0 if any two match */
+    if (strchr(s1, ';')) {
+        l = g_strdup(s1);
+        for (l0 = strtok(l, ";"); l0; l0 = strtok(NULL, ";")) {
+            ret = compare_name_systematic(l0, s2);
+            if (!ret)
+                break;
+        }
+        g_free(l);
+        return ret;
+    } else if (strchr(s2, ';')) {
+        r = g_strdup(s2);
+        for (r0 = strtok(r, ";"); r0; r0 = strtok(NULL, ";")) {
+            ret = compare_name_systematic(s1, r0);
+            if (!ret)
+                break;
+        }
+        g_free(r);
+        return ret;
+    }
+
+    /* s1 and s2 are single strings (no semicolons) */
     l0 = parse_for_systematic_comparison(s1);
     r0 = parse_for_systematic_comparison(s2);
 
