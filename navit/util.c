@@ -194,39 +194,42 @@ static char * parse_for_systematic_comparison(const char *s) {
  * function performs a fuzzy comparison: Each string is broken down into numeric and non-numeric parts.
  * Then both strings are compared part by part. The following rules apply:
  *
- * \li Semicolons denote sequences of strings, which will match if any string in `s1` matches any string in `s2`.
+ * \li Semicolons denote sequences of strings, and the best match between any pair of strings from `s1` and `s2` is
+ * returned.
  * \li Whitespace bordering on a number is discarded.
  * \li Whitespace surrounded by string characters is treated as one string with the surrounding characters.
  * \li If one string has more parts than the other, the shorter string is padded with null parts.
- * \li null is less than non-null.
  * \li null equals null.
- * \li A numeric part is less than a string part.
- * \li Numeric parts are compared as integers.
- * \li String parts are compared as strings. Comparison is case-insensitive.
+ * \li null does not equal non-null.
+ * \li Numeric parts are compared as integers, hence `'042'` equals `'42'`.
+ * \li Comparison of string parts is case-insensitive.
  *
  * @param s1 The first string
  * @param s2 The second string
  *
- * @return 0 if both strings match, nonzero if they do not. Nonzero results are not guaranteed to carry any further
- * information (such as sort order), and callers should not rely on that.
+ * @return 0 if both strings match, nonzero if they do not. Currently `MAX_MISMATCH` is returned for any mismatch;
+ * future versions may express the quality of partial matches (lower values indicating better matches).
  */
 int compare_name_systematic(const char *s1, const char *s2) {
-    int ret = 0;
+    int ret = MAX_MISMATCH;
+    int tmp;
     char *l = NULL, *r = NULL, *l0, *r0;
 
     if (!s1 || !s1[0]) {
         if (!s2 || !s2[0])
             return 0;
         else
-            return 1;
+            return MAX_MISMATCH;
     } else if (!s2 || !s2[0])
-        return -1;
+        return MAX_MISMATCH;
 
     /* break up strings at semicolons and parse each separately, return 0 if any two match */
     if (strchr(s1, ';')) {
         l = g_strdup(s1);
         for (l0 = strtok(l, ";"); l0; l0 = strtok(NULL, ";")) {
-            ret = compare_name_systematic(l0, s2);
+            tmp = compare_name_systematic(l0, s2);
+            if (tmp < ret)
+                ret = tmp;
             if (!ret)
                 break;
         }
@@ -235,7 +238,9 @@ int compare_name_systematic(const char *s1, const char *s2) {
     } else if (strchr(s2, ';')) {
         r = g_strdup(s2);
         for (r0 = strtok(r, ";"); r0; r0 = strtok(NULL, ";")) {
-            ret = compare_name_systematic(s1, r0);
+            tmp = compare_name_systematic(s1, r0);
+            if (tmp < ret)
+                ret = tmp;
             if (!ret)
                 break;
         }
@@ -244,6 +249,8 @@ int compare_name_systematic(const char *s1, const char *s2) {
     }
 
     /* s1 and s2 are single strings (no semicolons) */
+    ret = 0;
+
     l0 = parse_for_systematic_comparison(s1);
     r0 = parse_for_systematic_comparison(s2);
 
@@ -253,14 +260,14 @@ int compare_name_systematic(const char *s1, const char *s2) {
     while (!ret && l[0] && r[0]) {
         if (atoi(l) || (l[0] == '0')) {
             if (atoi(r) || (r[0] == '0'))
-                ret = atoi(l) - atoi(r);
+                ret = (atoi(l) == atoi(r)) ? 0 : MAX_MISMATCH;
             else
-                ret = -1;
+                ret = MAX_MISMATCH;
         } else {
             if (atoi(r) || (r[0] == '0'))
-                ret = 1;
+                ret = MAX_MISMATCH;
             else
-                ret = strcasecmp(l, r);
+                ret = strcasecmp(l, r) ? MAX_MISMATCH : 0;
         }
 
         l += strlen(l) + 1;
@@ -268,7 +275,7 @@ int compare_name_systematic(const char *s1, const char *s2) {
     }
 
     if (!ret)
-        ret = l[0] - r[0];
+        ret = (l[0] == r[0]) ? 0 : MAX_MISMATCH;
 
     dbg(lvl_debug, "'%s' %s '%s'\n", s1, ret?"does NOT match":"matches", s2);
 

@@ -1234,11 +1234,8 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
     /* road_ref */
     if (this_->road_ref) {
         maxscore += 4;
-        if (item_attr_get(item, attr_street_name_systematic, &attr)) {
-            // TODO give partial score for partial matches
-            if (!compare_name_systematic(this_->road_ref, attr.u.str))
-                score += 4;
-        }
+        if (item_attr_get(item, attr_street_name_systematic, &attr))
+            score += (4 * (MAX_MISMATCH - compare_name_systematic(this_->road_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* road_name */
@@ -1288,11 +1285,8 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
     /* junction_ref */
     if (this_->junction_ref) {
         maxscore += 4;
-        if (item_attr_get(item, attr_ref, &attr)) {
-            // TODO give partial score for partial matches
-            if (!compare_name_systematic(this_->junction_ref, attr.u.str))
-                score += 4;
-        }
+        if (item_attr_get(item, attr_ref, &attr))
+            score += (4 * (MAX_MISMATCH - compare_name_systematic(this_->junction_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* junction_name */

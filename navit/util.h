@@ -24,6 +24,8 @@
 #include <time.h>
 #include "config.h"
 
+#define MAX_MISMATCH 100
+
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
 int navit_utf8_strcasecmp(const char *s1, const char *s2);
