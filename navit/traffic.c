@@ -3049,8 +3049,7 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
             case event_restriction_closed_ahead:
                 if (!ret)
                     ret = seg_data_new();
-                if (ret->speed > 0)
-                    ret->speed = 0;
+                ret->speed = 0;
                 break;
             case event_restriction_intermittent_closures:
             case event_restriction_batch_service:
@@ -3122,10 +3121,11 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
     if (!has_flags)
         flags = AF_ALL;
 
+    if (!ret)
+        ret = seg_data_new();
+
     /* use implicit values if no explicit ones are given */
     if ((speed != INT_MAX) || speed_penalty || (speed_factor != 100) || delay) {
-        if (!ret)
-            ret = seg_data_new();
         if (ret->speed == INT_MAX) {
             ret->speed = speed;
             ret->speed_penalty = speed_penalty;
@@ -3133,9 +3133,10 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
         }
         if (!ret->delay)
             ret->delay = delay;
-        ret->dir = this_->location->directionality;
-        ret->flags = flags;
     }
+
+    ret->dir = this_->location->directionality;
+    ret->flags = flags;
 
     return ret;
 }
