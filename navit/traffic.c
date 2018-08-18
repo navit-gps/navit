@@ -2284,11 +2284,14 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Delay for the current segment */
     int delay;
 
-    /* Number of segments */
-    int count;
+    /* Number of new segments and existing segments */
+    int count = 0, prev_count;
 
     /* Length of location */
     int len;
+
+    /* The message's previous list of items */
+    struct item ** prev_items;
 
     /* The next item in the message's list of items */
     struct item ** next_item;
@@ -2629,6 +2632,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             dbg(lvl_error, "no segments");
 
         /* count segments and calculate length */
+        prev_count = count;
         count = 0;
         len = 0;
         dbg(lvl_debug, "*****checkpoint ADD-4.4");
@@ -2651,11 +2655,15 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         p_iter = p_start;
 
         if (this_->priv->items) {
-            dbg(lvl_error, "internal error: message should not yet have any linked items at this point");
+            prev_items = this_->priv->items;
+            this_->priv->items = g_new0(struct item *, count + prev_count + 1);
+            memcpy(this_->priv->items, prev_items, sizeof(struct item *) * prev_count);
+            next_item = this_->priv->items + prev_count;
+            g_free(prev_items);
+        } else {
+            this_->priv->items = g_new0(struct item *, count + 1);
+            next_item = this_->priv->items;
         }
-
-        this_->priv->items = g_new0(struct item *, count + 1);
-        next_item = this_->priv->items;
 
         dbg(lvl_debug, "*****checkpoint ADD-4.6 (loop start)");
         while (s) {
