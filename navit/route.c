@@ -3267,6 +3267,8 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         if(mr->item.type==type_waypoint || mr->item.type == type_route_end) {
             if(mr->str)
                 g_free(mr->str);
+            /* Build the text displayed close to the destination cursor.
+             * It will contain the sequence number of the waypoint (1, 2...) */
             mr->str=g_strdup_printf("%d",route->reached_destinations_count+g_list_position(route->destinations,mr->dest)+1);
             attr->u.str=mr->str;
             return 1;
