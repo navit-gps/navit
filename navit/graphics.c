@@ -1459,30 +1459,6 @@ static int fowler(int dy, int dx) {
     }
     return 0;
 }
-static int int_sqrt(unsigned int n) {
-    unsigned int h, p= 0, q= 1, r= n;
-
-    /* avoid q rollover */
-    if(n >= (1<<(sizeof(n)*8-2))) {
-        q = 1<<(sizeof(n)*8-2);
-    } else {
-        while ( q <= n ) {
-            q <<= 2;
-        }
-        q >>= 2;
-    }
-
-    while ( q != 0 ) {
-        h = p + q;
-        p >>= 1;
-        if ( r >= h ) {
-            p += q;
-            r -= h;
-        }
-        q >>= 2;
-    }
-    return p;
-}
 
 struct draw_polyline_shape {
     int wi;
@@ -1530,9 +1506,9 @@ static void draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int
     dys=shape->dy*shape->dy;
     lscales=lscale*lscale;
     if (dxs + dys > lscales)
-        l = int_sqrt(dxs+dys)*lscale;
+        l = uint_sqrt(dxs+dys)*lscale;
     else
-        l = int_sqrt((dxs+dys)*lscales);
+        l = uint_sqrt((dxs+dys)*lscales);
 
     shape->fow=fowler(-shape->dy, shape->dx);
     dbg(lvl_debug,"fow=%d",shape->fow);
@@ -1991,7 +1967,70 @@ static int limit_count(struct coord *c, int count) {
     return count;
 }
 
+/**
+ * @brief Draw a multi-line text next to a specified point @p pref
+ *
+ * @param gra The graphics instance on which to draw
+ * @param fg The graphics color to use to draw the text
+ * @param bg The graphics background color to use to draw the text
+ * @param font The font to use to draw the text
+ * @param pref The position to draw the text (draw at the right and vertically aligned relatively to this point)
+ * @param label The text to draw (may contain '\n' for multiline text, if so lines will be stacked vertically)
+ * @param line_spacing The delta between each line (set its value at to least the font text size, to be readable)
+ */
+static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg,
+                                 struct graphics_font *font, struct point pref, const char *label, int line_spacing) {
 
+    char *input_label=g_strdup(label);
+    char *label_lines[10];	/* Max 10 lines of text */
+    int label_nblines=0;
+    int label_linepos=0;
+    char *startline=input_label;
+    char *endline=startline;
+    while (endline && *endline!='\0') {
+        while (*endline!='\0' && *endline!='\n') { /* Search for new line */
+            endline=g_utf8_next_char(endline);
+        }
+        if (*endline=='\0')
+            endline=NULL;	/* This means we reached the end of string */
+        if (endline) /* Test if we got a new line character ('\n') */
+            *endline='\0';	/* Terminate string at line ('\n') and print this line */
+        label_lines[label_nblines++]=startline;
+        if (endline==NULL)	/* endline is NULL, this was the last line of the multi-line string */
+            break;
+        endline++;	/* No need for g_utf8_next_char() here, as we know '\n' is a single byte UTF-8 char */
+        startline=endline;	/* Start processing next line, by setting startline to its first character */
+    }
+    if (label_nblines>(sizeof(label_lines)/sizeof(char
+                       *))) {	/* Does label_nblines overflows the number of entries in array label_lines? */
+        dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, label,
+            sizeof(label_lines)/sizeof(char *));
+        label_nblines=sizeof(label_lines)/sizeof(char *);
+    }
+    /* Horizontally, we position the label next to the specified point (on the right handside) */
+    pref.x+=1;
+    /* Vertically, we center the text with respect to specified point */
+    pref.y-=(label_nblines*line_spacing)/2;
+
+    /* Parse all stored lines, and display them */
+    for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
+        gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label_lines[label_linepos],
+                            &pref, 0x10000, 0);
+        pref.y+=line_spacing;
+    }
+    g_free(input_label);
+}
+
+
+/**
+ * @brief Draw a displayitem element
+ *
+ * This function will invoke the appropriate draw primitive depending on the type of the element to draw
+ *
+ * @brief di The displayitem to draw
+ * @brief dummy Unused
+ * @brief dc The display_context to use to draw items
+ */
 static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
@@ -2048,11 +2087,12 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                         graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
                         dc->gc_background=gc_background;
                     }
-                    p.x=pa[0].x+3;
-                    p.y=pa[0].y+10;
-                    if (font)
-                        gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, di->label, &p, 0x10000, 0);
-                    else
+                    if (font) {
+                        /* Set p to the center of the circle */
+                        p.x=pa[0].x+(e->u.circle.radius/2);
+                        p.y=pa[0].y+(e->u.circle.radius/2);
+                        multiline_label_draw(gra, gc, gc_background, font, p, di->label, e->text_size+1);
+                    } else
                         dbg(lvl_error,"Failed to get font with size %d",e->text_size);
                 }
             }
