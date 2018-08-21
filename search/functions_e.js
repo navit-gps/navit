@@ -229,5 +229,6 @@ var searchData=
   ['movedown',['moveDown',['../classNGQProxyBookmarks.html#af1b2c3e9c666c359b4930099d23359f5',1,'NGQProxyBookmarks']]],
   ['moveroot',['moveRoot',['../classNGQProxyBookmarks.html#a48a2d5ee3f3339868ad2fe228a327312',1,'NGQProxyBookmarks']]],
   ['moveup',['moveUp',['../classNGQProxyBookmarks.html#aed51afedad23cf45e15fb1cacd51802c',1,'NGQProxyBookmarks']]],
+  ['multiline_5flabel_5fdraw',['multiline_label_draw',['../graphics_8c.html#a8e14dd9fac7ba4e103d6bdd584dab218',1,'graphics.c']]],
   ['mymallocrep',['myMallocRep',['../gpx2navit__txt_8h.html#a0b177babb78d9e5beb924166666d62bd',1,'myMallocRep(size_t size, const char *fileName, int line):&#160;gpx2navit_txt.h'],['../utils_8c.html#a0b177babb78d9e5beb924166666d62bd',1,'myMallocRep(size_t size, const char *fileName, int line):&#160;utils.c']]]
 ];

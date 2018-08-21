@@ -1,5 +1,8 @@
 var NAVTREEINDEX49 =
 {
+"structselector.html#a4bdf1304bb49671f0a0cbf3c9fe0df9c":[2,0,380,0],
+"structselector.html#a77af962296c39cde7ff44a978b595d42":[2,0,380,2],
+"structshmem__header.html":[2,0,381],
 "structshmem__header.html#a064ec679701b8b49eac4df68ee278483":[2,0,381,3],
 "structshmem__header.html#a30b518231a39f91af772531694d19314":[2,0,381,1],
 "structshmem__header.html#a7d3b0b69a6c98cae0e14947f6da0d2e1":[2,0,381,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX49 =
 "structtown__priv.html#a6117d145fc4ad7ec15967e42fd2deec9":[2,0,416,1],
 "structtown__priv.html#a6d6b86f9cbd2d8a337d58b8cec99887c":[2,0,416,11],
 "structtown__priv.html#a787e094e56cefffe19d60981cdbd9969":[2,0,416,9],
-"structtown__priv.html#a80870a2ceb8f306d3fceee9555b72ba3":[2,0,416,10],
-"structtown__priv.html#aa4959a35f9b7da757a97e1ec91f91cbb":[2,0,416,15],
-"structtown__priv.html#ab68c6f9c8ab0e7f1e8b418a3ed5df74d":[2,0,416,12],
-"structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa":[2,0,416,5]
+"structtown__priv.html#a80870a2ceb8f306d3fceee9555b72ba3":[2,0,416,10]
 };

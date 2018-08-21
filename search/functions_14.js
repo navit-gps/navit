@@ -217,6 +217,7 @@ var searchData=
   ['speechd_5fnew',['speechd_new',['../speech__cmdline_8c.html#ae8c56e729bcac10d56e3bab174d92a48',1,'speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent):&#160;speech_cmdline.c'],['../speech__speech__dispatcher_8c.html#a365e377d9436ecb11cddff9fccaaebdd',1,'speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *attr):&#160;speech_speech_dispatcher.c']]],
   ['speechd_5fsay',['speechd_say',['../speech__cmdline_8c.html#acadb913071de141f28a44182becc618e',1,'speechd_say(struct speech_priv *this, const char *text):&#160;speech_cmdline.c'],['../speech__speech__dispatcher_8c.html#acadb913071de141f28a44182becc618e',1,'speechd_say(struct speech_priv *this, const char *text):&#160;speech_speech_dispatcher.c']]],
   ['split_5fstring_5fto_5flist',['split_string_to_list',['../navigation_8c.html#a75a6d42036f0613b53842bf8b0b21ea1',1,'navigation.c']]],
+  ['square_5fshape_5fstr',['square_shape_str',['../gui__internal_8c.html#a1baa6efad094d9689341ec67a0edbaac',1,'gui_internal.c']]],
   ['start_5felement',['start_element',['../xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807',1,'xmlconfig.c']]],
   ['start_5fphase',['start_phase',['../maptool_8c.html#a9e2c41811fe79b5ea707817872d41c52',1,'maptool.c']]],
   ['start_5fsearch',['start_search',['../android_8c.html#a14854973c5a9c6e3b606deb26035cf73',1,'android.c']]],

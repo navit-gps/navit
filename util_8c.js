@@ -18,5 +18,6 @@ var util_8c =
     [ "spawn_process_info_free", "util_8c.html#af2843263548b7303487ac8ae403b56ae", null ],
     [ "spawn_process_init", "util_8c.html#a1d3db22e64d6081b5674305557538115", null ],
     [ "strtolower", "util_8c.html#ac6b7377df3a4fcbff23b8f8ecde6d221", null ],
-    [ "strtoupper", "util_8c.html#a2596fc665ff7a1fd98a965bd349be472", null ]
+    [ "strtoupper", "util_8c.html#a2596fc665ff7a1fd98a965bd349be472", null ],
+    [ "uint_sqrt", "util_8c.html#a70805df95eef35ea1fc94143a32e6fdc", null ]
 ];

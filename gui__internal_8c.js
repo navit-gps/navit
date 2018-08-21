@@ -1,6 +1,7 @@
 var gui__internal_8c =
 [
     [ "vehicle_and_profilename", "structvehicle__and__profilename.html", "structvehicle__and__profilename" ],
+    [ "get_search_results_map", "gui__internal_8c.html#a733f76eeb35c9fca6f32227ed43e9a9c", null ],
     [ "gui_internal_add_attr", "gui__internal_8c.html#a79b45619a5131141e564306cb1404e77", null ],
     [ "gui_internal_add_callback", "gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033", null ],
     [ "gui_internal_add_vehicle_profile", "gui__internal_8c.html#a3fec6cfe0d7369a966d68104d7fe0b9e", null ],
@@ -72,6 +73,7 @@ var gui__internal_8c =
     [ "gui_internal_motion_cb", "gui__internal_8c.html#a2469723fa124da974054196d9c4bfbb1", null ],
     [ "gui_internal_new", "gui__internal_8c.html#a17946220aad4f37e599da2431c9aa783", null ],
     [ "gui_internal_populate_route_table", "gui__internal_8c.html#a256ca02bb66cea534b532813ec454cf8", null ],
+    [ "gui_internal_prepare_search_results_map", "gui__internal_8c.html#aae575f81dd560b1ad110926a359d883a", null ],
     [ "gui_internal_remove_callback", "gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605", null ],
     [ "gui_internal_resize", "gui__internal_8c.html#a1b78739da5e4b38d0b9bc01f1cdb6c0d", null ],
     [ "gui_internal_route_screen_free", "gui__internal_8c.html#abb5f0a10a24be81f8b7c2c6209ff00bb", null ],
@@ -100,6 +102,7 @@ var gui__internal_8c =
     [ "plugin_init", "gui__internal_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "removecase", "gui__internal_8c.html#ab8f7dc9491f800c64894dfb06417b8a8", null ],
     [ "save_vehicle_xml", "gui__internal_8c.html#aa532cc06603a8d87299e917f577e59c1", null ],
+    [ "square_shape_str", "gui__internal_8c.html#a1baa6efad094d9689341ec67a0edbaac", null ],
     [ "config_profiles", "gui__internal_8c.html#a66964d0c3bf3da7cc54ec6fed3d3a17c", null ],
     [ "gui_internal_methods", "gui__internal_8c.html#ac9d00d26da542d6f2f096f8f49e28e91", null ],
     [ "gui_internal_methods_ext", "gui__internal_8c.html#af17219d956a10dad10b77c3db823a289", null ],

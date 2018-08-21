@@ -127,7 +127,6 @@ var searchData=
   ['int32_5fsize',['int32_size',['../protobuf-c_8c.html#a71e25f14110e7e7e804e45752f9b7a16',1,'protobuf-c.c']]],
   ['int_5fbits',['INT_BITS',['../fib_8c.html#aa5622509f213f84fa22674f8f6aed801',1,'fib.c']]],
   ['int_5frange_5flookup',['int_range_lookup',['../protobuf-c_8c.html#a1cf8ad07df46b4a5c9cf396df7d41551',1,'protobuf-c.c']]],
-  ['int_5fsqrt',['int_sqrt',['../graphics_8c.html#ad5d8af76b64a5924be14ffc628dc3c67',1,'graphics.c']]],
   ['intent_5faction_5fselect_5fdir',['INTENT_ACTION_SELECT_DIR',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#aff514417e319f8742f9d851c1521d89b',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['intent_5faction_5fselect_5ffile',['INTENT_ACTION_SELECT_FILE',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#af18870269cecfd7439f0fa603317df8d',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['inter',['inter',['../structsearch__list.html#abd2e8a8831705f196b51d1c8913be675',1,'search_list']]],

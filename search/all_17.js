@@ -16,6 +16,7 @@ var searchData=
   ['uint32_5fsize',['uint32_size',['../protobuf-c_8c.html#a6346a7bfcb22a5f81b5d583657c3de2e',1,'protobuf-c.c']]],
   ['uint64_5fpack',['uint64_pack',['../protobuf-c_8c.html#a393f860a9ca976eeceb41219d85a1e30',1,'protobuf-c.c']]],
   ['uint64_5fsize',['uint64_size',['../protobuf-c_8c.html#a672099d0899c674e5b1a6b92e08b96b0',1,'protobuf-c.c']]],
+  ['uint_5fsqrt',['uint_sqrt',['../util_8c.html#a70805df95eef35ea1fc94143a32e6fdc',1,'uint_sqrt(unsigned int n):&#160;util.c'],['../util_8h.html#a70805df95eef35ea1fc94143a32e6fdc',1,'uint_sqrt(unsigned int n):&#160;util.c']]],
   ['uiscreen',['UIScreen',['../graphics__cocoa_8m.html#a6bacc71b285dd9d34e30986d23925085',1,'graphics_cocoa.m']]],
   ['uiview',['UIView',['../graphics__cocoa_8m.html#a893ac0d47f2074149eb382977f573856',1,'graphics_cocoa.m']]],
   ['uiviewcontroller',['UIViewController',['../graphics__cocoa_8m.html#a2b1c0432d24c903b716d952b11646dbc',1,'graphics_cocoa.m']]],
