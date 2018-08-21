@@ -123,7 +123,7 @@ int main( int argc, char **argv ) {
 
     /* print the bookmark */
     fprintf(stderr,"\n");
-    fprintf(stdout,"mg:%s%x %s%x type=bookmark label=\"%s\"\n",lngsign,intlng,latsign,intlat,description);
+    fprintf(stdout,"mg:%s%ld %s%ld type=bookmark label=\"%s\"\n",lngsign,intlng,latsign,intlat,description);
     fprintf(stderr,"\n");
 
     return 0;

@@ -112,6 +112,7 @@ static struct gui_config_settings config_profiles[]= {
 };
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
+static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
@@ -706,7 +707,12 @@ static void gui_internal_cmd_delete_bookmark(struct gui_priv *this, struct widge
 
 
 /**
- *  Get a utf-8 string, return the same prepared for case insensitive search. Result should be g_free()d after use.
+ * @brief Remove the case in a string
+ *
+ * @warning Result should be g_free()d after use.
+ *
+ * @param s The input utf-8 string
+ * @return An equivalent string prepared for case insensitive search
  */
 char *removecase(char *s) {
     char *r;
@@ -714,7 +720,21 @@ char *removecase(char *s) {
     return r;
 }
 
+/**
+ * @brief Apply the command "View on Map", centers the map on the selected point and highlight this point using
+ * type_found_item style
+ *
+ * @param this The GUI context
+ * @param wm The widget that points to this function as a callback
+ * @param data Private data provided during callback (unused)
+ */
 static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data) {
+
+    struct widget *w;
+    struct widget *wr;
+    struct widget *wi;
+    char *label;
+
     if (wm->item.type != type_none) {
         enum item_type type;
         if (wm->item.type < type_line)
@@ -725,6 +745,22 @@ static void gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *w
             type=type_selected_area;
         graphics_clear_selection(this->gra, NULL);
         graphics_add_selection(this->gra, &wm->item, type, NULL);
+    } else {
+        if (wm->item.priv_data)
+            label = wm->item.priv_data;	/* Use the label of the point to view on map */
+        else
+            label = g_strdup("");
+        w = gui_internal_widget_table_new(this, 0, 0);	/* Create a basic table */
+        gui_internal_widget_append(w,wr=gui_internal_widget_table_row_new(this,0));	/* In this table, add one row */
+        gui_internal_widget_append(wr,wi=gui_internal_box_new_with_label(this,0,
+                                         label));	/* That row contains a widget of type widget_box */
+        wi->name = label;	/* Use the label of the point to view on map */
+        wi->c.x=wm->c.x;	/* Use the coordinates of the point to place it on the map */
+        wi->c.y=wm->c.y;
+        gui_internal_prepare_search_results_map(this, w, NULL);
+        g_free(label);
+        wi->name = NULL;
+        gui_internal_widget_destroy(this, w);
     }
     navit_set_center(this->nav, &wm->c, 1);
     gui_internal_prune_menu(this, NULL);
@@ -854,29 +890,22 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
 }
 
-
-/*
- * @brief Transfers search results to a map.
+/**
+ * @brief Get the search result map (and create it if it does not exist)
  *
- * @param this The graphics context.
- * @param wm called widget.
- * @param data event data (pointer to the table widget containing results, or NULL to clean the result map without adding any new data).
+ * @param this The GUI context
+ *
+ * @return A pointer to the map named "search_results" or NULL if there wasa failure
  */
-static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
-    struct widget *w;
+static struct map *get_search_results_map(struct gui_priv *this) {
+
     struct mapset *ms;
     struct map *map;
-    struct map_rect *mr;
-    struct item *item;
-    GList *l;
-    struct coord_rect r;
-    struct attr a;
-    int count;
 
     ms=navit_get_mapset(this->nav);
 
     if(!ms)
-        return;
+        return NULL;
 
     map=mapset_get_map_by_name(ms, "search_results");
     if(!map) {
@@ -912,9 +941,94 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
 
         for(i=0; attrs[i]; i++)
             g_free(attrs[i]);
+    }
+    return map;
+}
 
+/**
+ * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
+ *
+ * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
+ */
+static void square_shape_str(char *s) {
+    char *c;
+    char *last_break;
+    unsigned int max_cols = 0;
+    unsigned int cur_cols = 0;
+    unsigned int max_rows = 0;
+    unsigned int surface;
+    unsigned int target_cols;
+
+    if (!s)
+        return;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (max_cols < cur_cols)
+                max_cols = cur_cols;
+            cur_cols = 0;
+            max_rows++;
+        } else
+            cur_cols++;
+    }
+    if (max_cols < cur_cols)
+        max_cols = cur_cols;
+    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+        max_rows++;
+    /* Give twice more room for rows (hence the factor 2 below)
+     * This will render as a rectangular shape, taking more horizontal space than vertical */
+    surface = max_rows * 2 * max_cols;
+    target_cols = uint_sqrt(surface);
+
+    if (target_cols < max_cols)
+        target_cols = max_cols;
+
+    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
+    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
+        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+
+    cur_cols = 0;
+    last_break = NULL;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+                if (last_break) {
+                    *last_break =
+                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+                    cur_cols = c-last_break;
+                }
+            }
+            last_break = c;	/* Record this position as a candidate to insert a line break */
+        }
+        cur_cols++;
+    }
+    if (cur_cols>=target_cols && last_break) {
+        *last_break =
+            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
     }
 
+    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
+}
+
+/**
+ * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
+ *        the style type_found_item (name for each point will also be displayed aside)
+ *
+ * @param this The GUI context
+ * @param table A table widget or any of its descendants. The table contain results to place on the map.
+ *              Providing NULL here will remove all previous results from the map.
+ * @param[out] r The minimum rect focused to contain all results placed  on the map (or unchanged if r==NULL)
+ */
+static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
+    struct widget *w;
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    GList *l;
+    struct attr a;
+    int count;
+    char *name_label;
+
+    map = get_search_results_map(this);
     if(!map)
         return;
 
@@ -931,8 +1045,8 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
 
     this->results_map_population=0;
 
-    /* Find the table to pupulate the map */
-    for(w=data; w && w->type!=widget_table; w=w->parent);
+    /* Find the table to populate the map */
+    for(w=table; w && w->type!=widget_table; w=w->parent);
 
     if(!w) {
         map_rect_destroy(mr);
@@ -957,12 +1071,16 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
                 c.y=wi->c.y;
                 item_coord_set(it, &c, 1, change_mode_modify);
                 a.type=attr_label;
-                a.u.str=wi->name;
+                name_label = g_strdup(wi->name);
+                square_shape_str(name_label);
+                a.u.str=name_label;
                 item_attr_set(it, &a, change_mode_modify);
-                if(!count++)
-                    r.lu=r.rl=c;
-                else
-                    coord_rect_extend(&r,&c);
+                if (r) {
+                    if(!count++)
+                        r->lu=r->rl=c;
+                    else
+                        coord_rect_extend(r,&c);
+                }
             }
         }
     }
@@ -971,18 +1089,35 @@ static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget
         return;
     a.type=attr_orientation;
     a.u.num=0;
-    navit_set_attr(this->nav,&a);
-    navit_zoom_to_rect(this->nav,&r);
-    gui_internal_prune_menu(this, NULL);
+    navit_set_attr(this->nav,&a);	/* Set orientation to North */
+    if (r) {
+        navit_zoom_to_rect(this->nav,r);
+        gui_internal_prune_menu(this, NULL);
+    }
     this->results_map_population=count;
 }
 
-/*
- * @brief Removes search results from a map.
+/**
+ * @brief Apply the command "Show results on the map", highlighting one of multiple points using
+ *        type_found_item style (with their respective name placed aside)
  *
- * @param this The graphics context.
- * @param wm called widget.
- * @param data event data
+ * @param this The GUI context
+ * @param wm The widget that called us
+ * @param data Private data provided during callback (should be a pointer to the table widget containing results,
+ *             or NULL to remove all previous results from the map).
+ */
+static void gui_internal_cmd_results_to_map(struct gui_priv *this, struct widget *wm, void *data) {
+    struct coord_rect r;
+
+    gui_internal_prepare_search_results_map(this, (struct widget *)data, &r);
+}
+
+/*
+ * @brief Removes all existing search results from a map.
+ *
+ * @param this The GUI context
+ * @param wm The widget that called us
+ * @param data Private data (unused).
  */
 static void gui_internal_cmd_results_map_clean(struct gui_priv *this, struct widget *wm, void *data) {
     gui_internal_cmd_results_to_map(this,wm,NULL);
@@ -1025,10 +1160,10 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * argument or in WGS84 coordinates (i.e. latitude and longitude in degrees) via the {@code g_in}
  * argument. One of these must be supplied, the other should be {@code NULL}.
  *
- * @param this The internal GUI instance
+ * @param this The GUI context
  * @param pc_in Projected coordinates of the position
  * @param g_in WGS84 coordinates of the position
- * @param wm
+ * @param wm The widget that points to this function as a callback
  * @param name The display name for the position
  * @param flags Flags specifying the operations available from the GUI
  */
@@ -1204,10 +1339,12 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
                                            image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
                                            gui_internal_cmd_view_on_map, NULL));
         wbc->c=pc;
-        if ((flags & 4) && wm)
+        if ((flags & 4) && wm) {
             wbc->item=wm->item;
-        else
+        } else {
             wbc->item.type=type_none;
+            wbc->item.priv_data = g_strdup(name); /* Will be freed up by gui_internal_cmd_view_on_map() */
+        }
     }
     if(flags & 256 && this->results_map_population) {
         gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,

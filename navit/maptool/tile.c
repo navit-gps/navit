@@ -246,7 +246,7 @@ static int merge_tile(char *base, char *sub) {
 }
 
 static gint get_tiles_list_cmp(gconstpointer s1, gconstpointer s2) {
-    return strcmp((char *)s1, (char *)s2);
+    return g_strcmp0((char *)s1, (char *)s2);
 }
 
 static void get_tiles_list_func(char *key, struct tile_head *th, GList **list) {
@@ -348,7 +348,7 @@ int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size
     l=aux_tile_list;
     while (l) {
         at=l->data;
-        if (!strcmp(at->name, name)) {
+        if (!g_strcmp0(at->name, name)) {
             return -1;
         }
         l=g_list_next(l);
@@ -455,7 +455,7 @@ void load_tilesdir(FILE *in) {
     last=&tile_head_root;
     while (fscanf(in,"%[^:]:%d",tile,&size) == 2) {
         struct tile_head *th=g_malloc(sizeof(struct tile_head));
-        if (!strcmp(tile,"index"))
+        if (!g_strcmp0(tile,"index"))
             tile[0]='\0';
         th->num_subtiles=0;
         th->total_size=size;
@@ -549,7 +549,7 @@ void merge_tiles(struct tile_info *info) {
     do {
         tiles_list_sorted=get_tiles_list();
         fprintf(stderr,"PROGRESS: sorting %d tiles\n", g_list_length(tiles_list_sorted));
-        tiles_list_sorted=g_list_sort(tiles_list_sorted, (GCompareFunc)strcmp);
+        tiles_list_sorted=g_list_sort(tiles_list_sorted, (GCompareFunc)g_strcmp0);
         fprintf(stderr,"PROGRESS: sorting %d tiles done\n", g_list_length(tiles_list_sorted));
         last=g_list_last(tiles_list_sorted);
         zip_size=0;

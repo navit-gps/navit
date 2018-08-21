@@ -28,6 +28,7 @@
 
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
+unsigned int uint_sqrt(unsigned int n);
 int navit_utf8_strcasecmp(const char *s1, const char *s2);
 int compare_name_systematic(const char *s1, const char *s2);
 GList * g_hash_to_list(GHashTable *h);
