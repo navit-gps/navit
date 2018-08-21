@@ -267,9 +267,9 @@ int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm) {
     while ((header=read_header(in))) {
         blob=read_blob(header, in, buffer);
         data=uncompress_blob(blob);
-        if (!strcmp(header->type,"OSMHeader")) {
+        if (!g_strcmp0(header->type,"OSMHeader")) {
             process_osmheader(blob, data);
-        } else if (!strcmp(header->type,"OSMData")) {
+        } else if (!g_strcmp0(header->type,"OSMData")) {
             process_osmdata(blob, data, osm);
         } else {
             printf("skipping fileblock of unknown type '%s'\n", header->type);
