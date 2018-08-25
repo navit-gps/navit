@@ -2502,7 +2502,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             minval = INT_MAX;
             p_from = NULL;
 
-            dbg(lvl_debug, "*****checkpoint ADD-4.2.6");
+            struct coord_geo wgs;
+            transform_to_geo(projection_mg, &(p_start->c), &wgs);
+            dbg(lvl_debug, "*****checkpoint ADD-4.2.6, p_start=%p\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
+                    p_start, wgs.lat, wgs.lng);
             /* extend start to next junction */
             start_new = traffic_route_prepend(rg, p_start);
             if (start_new)
@@ -2512,7 +2515,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             p_iter = p_start;
             dbg(lvl_debug, "*****checkpoint ADD-4.2.7");
             while (p_iter) {
-                struct coord_geo wgs;
                 transform_to_geo(projection_mg, &(p_iter->c), &wgs);
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.7, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                         p_iter, p_iter->value, wgs.lat, wgs.lng);
