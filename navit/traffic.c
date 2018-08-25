@@ -1762,13 +1762,13 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         return NULL;
 
     /* store points of existing route */
-    /* TODO
-     * Is it correct to exclude the last point (seg==NULL) from the heap?
-     * Doing so has worked for the cases tested, is this always true? */
     if (start_existing) {
         p = start_existing;
         while (p) {
-            existing = g_list_prepend(existing, p);
+            /* Do not exclude the last point (seg==NULL) from the heap as that may result in the existing route not
+             * being joined properly to the new one */
+            if (p->seg)
+                existing = g_list_prepend(existing, p);
             if (!p->seg)
                 p = NULL;
             else if (p == p->seg->start)
