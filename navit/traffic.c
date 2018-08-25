@@ -2382,15 +2382,34 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                                                     pcoords[0] ? pcoords[0] : pcoords[1], NULL);
             dbg(lvl_debug, "*****checkpoint ADD-4.1.1");
         } else if (point_pairs == 2) {
+            /*
+             * If we have more than two points, create the route in two stages (from the first to the second point,
+             * then from the second to the third point) and concatenate them. This could easily be extended to any
+             * number of points, provided they are spaced sufficiently far apart to calculate a route between each pair
+             * of subsequent points.
+             * This will create a kind of “Frankenstein route” in which the cost of points does not decrease
+             * continuously but has an upward leap as we pass the middle point. This is not an issue as long as we do
+             * not do any further processing based on point cost (which we currently don’t).
+             * If the route needs to be extended beyond the start point, this has to be done after the first stage,
+             * as doing so relies on the route graph for that stage.
+             */
             /* TODO handle cases in which the route goes through the "third" point
              * (this should not happen; if it does, we need to detect and fix it) */
-            if (dir > 0) {
+            if (dir > 0)
                 p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
-            } else {
+            else
                 p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+            if ((this_->location->fuzziness == location_fuzziness_low_res)
+                            || this_->location->at || this_->location->not_via) {
+                /* extend start to next junction */
+                start_new = traffic_route_prepend(rg, p_start);
+                if (start_new)
+                    p_start = start_new;
             }
+            if (dir > 0)
+                traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
+            else
+                traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
             dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
 
@@ -2506,10 +2525,12 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             transform_to_geo(projection_mg, &(p_start->c), &wgs);
             dbg(lvl_debug, "*****checkpoint ADD-4.2.6, p_start=%p\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                     p_start, wgs.lat, wgs.lng);
-            /* extend start to next junction */
-            start_new = traffic_route_prepend(rg, p_start);
-            if (start_new)
-                p_start = start_new;
+            if (point_pairs == 1) {
+                /* extend start to next junction (if we have more than two points, this has already been done) */
+                start_new = traffic_route_prepend(rg, p_start);
+                if (start_new)
+                    p_start = start_new;
+            }
 
             s = p_start ? p_start->seg : NULL;
             p_iter = p_start;
