@@ -2326,6 +2326,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     struct route_graph_point * p_from;
     struct route_graph_point * p_to;
 
+    /* Whether the current point is a candidate for low-res endpoint matching */
+    int is_candidate;
+
     /* Whether we are at a junction of 3 or more segments */
     int is_junction;
 
@@ -2461,18 +2464,27 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
             dbg(lvl_debug, "*****checkpoint ADD-4.2.3");
             while (p_iter) {
-                /* detect junctions */
-                is_junction = (s && s_prev) ? 0 : -1;
-                for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
-                    if ((s_cmp != s) && (s_cmp != s_prev))
-                        is_junction += 1;
-                }
-                for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
-                    if ((s_cmp != s) && (s_cmp != s_prev))
-                        is_junction += 1;
+                if (!s_prev || !p_iter->seg)
+                    /* the first and last points are always candidates */
+                    is_candidate = 1;
+                else
+                    /* detect tunnel portals */
+                    is_candidate = ((s->data.flags & AF_UNDERGROUND) != (s_prev->data.flags & AF_UNDERGROUND));
+                if (!is_candidate) {
+                    /* detect junctions */
+                    is_junction = (s && s_prev) ? 0 : -1;
+                    for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
+                        if ((s_cmp != s) && (s_cmp != s_prev))
+                            is_junction += 1;
+                    }
+                    for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
+                        if ((s_cmp != s) && (s_cmp != s_prev))
+                            is_junction += 1;
+                    }
+                    is_candidate = (is_junction > 0);
                 }
 
-                if (is_junction > 0) {
+                if (is_candidate) {
                     pd = NULL;
                     for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
                         pd = (struct point_data *) points_iter->data;
@@ -2539,18 +2551,27 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 transform_to_geo(projection_mg, &(p_iter->c), &wgs);
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.7, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                         p_iter, p_iter->value, wgs.lat, wgs.lng);
-                /* detect junctions */
-                is_junction = (s && s_prev) ? 0 : -1;
-                for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
-                    if ((s_cmp != s) && (s_cmp != s_prev))
-                        is_junction += 1;
-                }
-                for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
-                    if ((s_cmp != s) && (s_cmp != s_prev))
-                        is_junction += 1;
+                if (!s_prev || !p_iter->seg)
+                    /* the first and last points are always candidates */
+                    is_candidate = 1;
+                else
+                    /* detect tunnel portals */
+                    is_candidate = ((s->data.flags & AF_UNDERGROUND) != (s_prev->data.flags & AF_UNDERGROUND));
+                if (!is_candidate) {
+                    /* detect junctions */
+                    is_junction = (s && s_prev) ? 0 : -1;
+                    for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
+                        if ((s_cmp != s) && (s_cmp != s_prev))
+                            is_junction += 1;
+                    }
+                    for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
+                        if ((s_cmp != s) && (s_cmp != s_prev))
+                            is_junction += 1;
+                    }
+                    is_candidate = (is_junction > 0);
                 }
 
-                if (is_junction > 0) {
+                if (is_candidate) {
                     pd = NULL;
                     for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
                         pd = (struct point_data *) points_iter->data;
