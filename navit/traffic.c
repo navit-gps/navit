@@ -1307,6 +1307,146 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
 }
 
 /**
+ * @brief Determines the degree to which the attributes of a point match those of the segments connecting to it.
+ *
+ * The result of this method is used to match a location to a map item. Its result is a score—the higher the score, the
+ * better the match.
+ *
+ * To calculate the score, this method iterates over all segments which begin or end at `p`. The `junction_name`
+ * member of the location is compared against the name of the segment, and the highest score for any segment is
+ * returned. Currently the name must match completely, resulting in a score of 100, while everything else is considered
+ * a mismatch (with a score of 0). Future versions may introduce support for partial matches, with the score indicating
+ * the quality of the match.
+ *
+ * Segments which are part of the route are treated in a different manner, as the direction in which the segment is
+ * traversed (not the direction of the segment itself) is taken into account: When evaluating the start point of the
+ * route, only the first point (whose `seg` member points to the segment) will match; the opposite is true when the end
+ * point of the route is evaluated. This ensures the matched segment ends up being part of the route.
+ *
+ * If no points can be attained (because no attributes which must match are supplied), the score is 0 for any point.
+ *
+ * @param this_ The traffic point
+ * @param p The point shared by all segments to examine
+ * @param start The first point of the path
+ * @param match_start True to evaluate for the start point of a route, false for the end point
+ *
+ * @return The score, as a percentage value
+ */
+static int traffic_point_match_segment_attributes(struct traffic_point * this_, struct route_graph_point *p,
+        struct route_graph_point * start, int match_start) {
+
+    /* Iterator for route graph points */
+    struct route_graph_point *p_iter = start;
+
+    /* The predecessor pf `p`in the route graph */
+    struct route_graph_point *p_prev = NULL;
+
+    /* Whether we have a match for the start of a route segment, the end of a route segment or an off-route segment */
+    int has_start_match = 0, has_end_match = 0, has_offroute_match = 0;
+
+    /* The route segment being examined */
+    struct route_graph_segment *s;
+
+    /* Map rect for retrieving item data */
+    struct map_rect *mr;
+
+    /* The item being examined */
+    struct item * item;
+
+    /* The attribute being examined */
+    struct attr attr;
+
+    if (!this_->junction_name)
+        /* nothing to compare, score is 0 */
+        return 0;
+
+    /* find predecessor of p, if any */
+    while (p_iter && (p_iter != p)) {
+        if (!p_iter->seg) {
+            p_prev = NULL;
+            break;
+        }
+        p_prev = p_iter;
+        if (p_iter == p_iter->seg->start)
+            p_iter = p_iter->seg->end;
+        else
+            p_iter = p_iter->seg->start;
+    }
+
+    if (!p_prev && (p != start)) {
+        /* not a point on the route */
+        return 0;
+    }
+    /* check if we have a match for the start of a route segment */
+    if (p->seg) {
+        mr = map_rect_new(p->seg->data.item.map, NULL);
+        if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))
+                && item_attr_get(item, attr_street_name, &attr)
+                // TODO crude comparison in need of refinement
+                && !strcmp(this_->junction_name, attr.u.str))
+            has_start_match = 1;
+        map_rect_destroy(mr);
+    }
+
+    /* check if we have a match for the end of a route segment */
+    if (p_prev && p_prev->seg) {
+        mr = map_rect_new(p_prev->seg->data.item.map, NULL);
+        if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))
+                && item_attr_get(item, attr_street_name, &attr)
+                // TODO crude comparison in need of refinement
+                && !strcmp(this_->junction_name, attr.u.str))
+            has_end_match = 1;
+        map_rect_destroy(mr);
+    }
+
+    /* we cannot have multiple matches in different categories */
+    if (has_start_match && has_end_match) {
+        return 0;
+    }
+
+    /* check if we have a match for an off-route segment */
+    for (s = p->start; s && !has_offroute_match; s = s->start_next) {
+        if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
+            /* segments is on the route, skip */
+            continue;
+        mr = map_rect_new(s->data.item.map, NULL);
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
+                && item_attr_get(item, attr_street_name, &attr)
+                // TODO crude comparison in need of refinement
+                && !strcmp(this_->junction_name, attr.u.str))
+            has_offroute_match = 1;
+        map_rect_destroy(mr);
+    }
+
+    for (s = p->end; s && !has_offroute_match; s = s->end_next) {
+        if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
+            /* segments is on the route, skip */
+            continue;
+        mr = map_rect_new(s->data.item.map, NULL);
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
+                && item_attr_get(item, attr_street_name, &attr)
+                // TODO crude comparison in need of refinement
+                && !strcmp(this_->junction_name, attr.u.str))
+            has_offroute_match = 1;
+        map_rect_destroy(mr);
+    }
+
+    if (has_offroute_match) {
+        if (has_start_match || has_end_match) {
+            /* we cannot have multiple matches in different categories */
+            return 0;
+        }
+    } else {
+        if ((match_start && !has_start_match) || (!match_start && !has_end_match)) {
+            /* no match in requested category */
+            return 0;
+        }
+    }
+
+    return 100;
+}
+
+/**
  * @brief Returns the cost of the segment in the given direction.
  *
  * The cost is calculated based on the length of the segment and a penalty which depends on the score.
@@ -2101,12 +2241,13 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
  * @param point The point of the traffic location to use for matching (0 = from, 1 = at, 2 = to, 16 = start, 17 = end)
  * @param rg The route graph
  * @param start The first point of the path
+ * @param match_start True to evaluate for the start point of a route, false for the end point
  * @param ms The mapset to read the items from
  *
  * @return The matched points as a `GList`. The `data` member of each item points to a `struct point_data` for the point.
  */
 static GList * traffic_location_get_matching_points(struct traffic_location * this_, int point,
-        struct route_graph * rg, struct route_graph_point * start, struct mapset * ms) {
+        struct route_graph * rg, struct route_graph_point * start, int match_start, struct mapset * ms) {
     GList * ret = NULL;
 
     /* The point from the location to match */
@@ -2125,7 +2266,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     struct route_graph_point * p;
 
     /* The attribute matching score for the current item */
-    int score;
+    int score, new_score;
 
     /* Data for the current point */
     struct point_data * data;
@@ -2171,6 +2312,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
             rg->sel = NULL;
             continue;
         }
+        /* FIXME:
+         * - Some route graph points do not have a corresponding point-type item on the map
+         * - We are currently only interested in points on the route; examining the whole route graph is inefficient */
         while ((item = map_rect_get_item(rg->mr))) {
             /* exclude non-point items */
             if ((item->type < type_town_label) || (item->type >= type_line))
@@ -2188,8 +2332,16 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
             if (p->flags & RP_TURN_RESTRICTION)
                 continue;
 
+            /* determine score */
+            score = traffic_point_match_attributes(trpoint, item);
+            if (score < 100) {
+                new_score = traffic_point_match_segment_attributes(trpoint, p, start, match_start);
+                if (new_score > score)
+                    score = new_score;
+            }
+
             /* exclude items with a zero score */
-            if (!(score = traffic_point_match_attributes(trpoint, item)))
+            if (!score)
                 continue;
 
             dbg(lvl_debug, "adding item, score: %d", score);
@@ -2423,11 +2575,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             dbg(lvl_debug, "*****checkpoint ADD-4.2.1");
             /* tweak end point */
             if (this_->location->at)
-                points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, 0, ms);
             else if (dir > 0)
-                points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, 0, ms);
             else
-                points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, 0, ms);
             if (!p_start) {
                 dbg(lvl_error, "end point not found on map");
                 for (points_iter = points; points_iter; points_iter = g_list_next(points_iter))
@@ -2496,7 +2648,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     if (val < minval) {
                         minval = val;
                         p_to = p_iter;
-                        dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d", p_iter, points_iter ? pd : NULL, val);
+                        dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d (score %d)",
+                                p_iter, points_iter ? pd : NULL, val, points_iter ? pd->score : 0);
                     }
                 }
 
@@ -2524,11 +2677,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             dbg(lvl_debug, "*****checkpoint ADD-4.2.5");
             /* tweak start point */
             if (this_->location->at)
-                points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 1, rg, p_start, 1, ms);
             else if (dir > 0)
-                points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 0, rg, p_start, 1, ms);
             else
-                points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, ms);
+                points = traffic_location_get_matching_points(this_->location, 2, rg, p_start, 1, ms);
             s_prev = NULL;
             minval = INT_MAX;
             p_from = NULL;
@@ -2584,7 +2737,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     if (val < minval) {
                         minval = val;
                         p_from = p_iter;
-                        dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d", p_iter, points_iter ? pd : NULL, val);
+                        dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d (score %d)",
+                                p_iter, points_iter ? pd : NULL, val, points_iter ? pd->score : 0);
                     }
                 }
 
