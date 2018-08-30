@@ -27,7 +27,7 @@ import java.lang.Thread;
 
 public class NavitWatch implements Runnable {
     private Thread thread;
-    private static Handler handler =new Handler() {
+    private static Handler handler = new Handler() {
         public void handleMessage(Message m) {
             Log.e("NavitWatch","Handler received message");
         }
@@ -44,11 +44,11 @@ public class NavitWatch implements Runnable {
 
     NavitWatch(int func, int fd, int cond, int callbackid) {
         // Log.e("NavitWatch","Creating new thread for "+fd+" "+cond+" from current thread " + java.lang.Thread.currentThread().getName());
-        watch_func=func;
-        watch_fd=fd;
-        watch_cond=cond;
-        watch_callbackid=callbackid;
-        final NavitWatch navitwatch=this;
+        watch_func = func;
+        watch_fd = fd;
+        watch_cond = cond;
+        watch_callbackid = callbackid;
+        final NavitWatch navitwatch = this;
         callback_runnable = new Runnable() {
             public void run() {
                 navitwatch.callback();
@@ -64,7 +64,7 @@ public class NavitWatch implements Runnable {
             // Log.e("NavitWatch","poll returned");
             if (removed)
                 break;
-            callback_pending=true;
+            callback_pending = true;
             handler.post(callback_runnable);
             try {
                 // Log.e("NavitWatch","wait");
@@ -85,13 +85,13 @@ public class NavitWatch implements Runnable {
         if (!removed)
             WatchCallback(watch_callbackid);
         synchronized(this) {
-            callback_pending=false;
+            callback_pending = false;
             // Log.e("NavitWatch","Waking up");
             this.notify();
         }
     }
     public void remove() {
-        removed=true;
+        removed = true;
         thread.interrupt();
     }
 }

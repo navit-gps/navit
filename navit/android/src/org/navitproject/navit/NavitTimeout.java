@@ -26,7 +26,7 @@ import android.util.Log;
 
 
 public class NavitTimeout implements Runnable {
-    private static Handler handler =new Handler() {
+    private static Handler handler = new Handler() {
         public void handleMessage(Message m) {
             Log.e("Navit","Handler received message");
         }
@@ -37,9 +37,9 @@ public class NavitTimeout implements Runnable {
     public native void TimeoutCallback(int id);
 
     NavitTimeout(int timeout, boolean multi, int callbackid) {
-        event_timeout=timeout;
-        event_multi=multi;
-        event_callbackid=callbackid;
+        event_timeout = timeout;
+        event_multi = multi;
+        event_callbackid = callbackid;
         handler.postDelayed(this, event_timeout);
     }
     public void run() {
