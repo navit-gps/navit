@@ -27,6 +27,7 @@ import android.hardware.SensorManager;
 public class NavitSensors implements SensorEventListener {
     private SensorManager mSensorManager;
     private int callbackid;
+
     public native void SensorCallback(int id, int sensor, float x, float y, float z);
 
 

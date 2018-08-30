@@ -56,11 +56,14 @@ public class NavitVehicle {
     private static NavitLocationListener fastLocationListener = null;
 
     public native void VehicleCallback(int id, Location location);
+
     public native void VehicleCallback(int id, int satsInView, int satsUsed);
+
     public native void VehicleCallback(int id, int enabled);
 
     private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
         public boolean precise = false;
+
         public void onLocationChanged(Location location) {
             lastLocation = location;
             // Disable the fast provider if still active
@@ -72,8 +75,11 @@ public class NavitVehicle {
             VehicleCallback(vehicle_pcbid, location);
             VehicleCallback(vehicle_fcbid, 1);
         }
+
         public void onProviderDisabled(String provider) {}
+
         public void onProviderEnabled(String provider) {}
+
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
         /**

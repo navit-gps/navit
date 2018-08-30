@@ -62,7 +62,8 @@ public class NavitGraphics {
     private int                            pos_wraparound;
     private int                            overlay_disabled;
     private int                            bgcolor;
-    private float                          trackball_x, trackball_y;
+    private float                          trackball_x;
+    private float                          trackball_y;
     private View                           view;
     private SystemBarTintView              navigationTintView;
     private SystemBarTintView              statusTintView;
@@ -649,16 +650,28 @@ public class NavitGraphics {
     };
 
     public native void SizeChangedCallback(int id, int x, int y);
+
     public native void PaddingChangedCallback(int id, int left, int right, int top, int bottom);
+
     public native void KeypressCallback(int id, String s);
+
     public native int CallbackMessageChannel(int i, String s);
+
     public native void ButtonCallback(int id, int pressed, int button, int x, int y);
+
     public native void MotionCallback(int id, int x, int y);
+
     public native String GetDefaultCountry(int id, String s);
+
     public static native String[][] GetAllCountries();
+
     private Canvas  draw_canvas;
     private Bitmap  draw_bitmap;
-    private int     SizeChangedCallbackID, PaddingChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
+    private int SizeChangedCallbackID;
+    private int PaddingChangedCallbackID;
+    private int ButtonCallbackID;
+    private int MotionCallbackID;
+    private int KeypressCallbackID;
 
     /**
      * @brief Adjust views used to tint navigation and status bars.
@@ -796,12 +809,15 @@ public class NavitGraphics {
     public void setSizeChangedCallback(int id) {
         SizeChangedCallbackID = id;
     }
+
     public void setPaddingChangedCallback(int id) {
         PaddingChangedCallbackID = id;
     }
+
     public void setButtonCallback(int id) {
         ButtonCallbackID = id;
     }
+
     public void setMotionCallback(int id) {
         MotionCallbackID = id;
         if(activity != null) {
@@ -912,6 +928,7 @@ public class NavitGraphics {
         }
         paint.clearShadowLayer();
     }
+
     protected void draw_image(Paint paint, int x, int y, Bitmap bitmap) {
         draw_canvas.drawBitmap(bitmap, x, y, null);
     }
@@ -974,10 +991,12 @@ public class NavitGraphics {
         }
 
     }
+
     protected void draw_drag(int x, int y) {
         pos_x = x;
         pos_y = y;
     }
+
     protected void overlay_disable(int disable) {
         Log.d(TAG,"overlay_disable: " + disable + "Parent: " + (parent_graphics != null));
         // assume we are NOT in map view mode!

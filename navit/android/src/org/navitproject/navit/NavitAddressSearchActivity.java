@@ -345,6 +345,7 @@ public class NavitAddressSearchActivity extends Activity {
     }
 
     public native long CallbackStartAddressSearch(int partial_match, String country, String s);
+
     public native void CallbackCancelAddressSearch(long handle);
 
     @Override

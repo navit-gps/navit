@@ -39,7 +39,9 @@ public class NavitWatch implements Runnable {
     private int watch_callbackid;
     private boolean callback_pending;
     private Runnable callback_runnable;
+
     public native void poll(int func, int fd, int cond);
+
     public native void WatchCallback(int id);
 
     NavitWatch(int func, int fd, int cond, int callbackid) {
@@ -57,6 +59,7 @@ public class NavitWatch implements Runnable {
         thread = new Thread(this, "poll thread");
         thread.start();
     }
+
     public void run() {
         for (;;) {
             // Log.e("NavitWatch","Polling "+watch_fd+" "+watch_cond + " from " + java.lang.Thread.currentThread().getName());
@@ -77,6 +80,7 @@ public class NavitWatch implements Runnable {
             if (removed) { break; }
         }
     }
+
     public void callback() {
         // Log.e("NavitWatch","Calling Callback");
         if (!removed) { WatchCallback(watch_callbackid); }
@@ -86,6 +90,7 @@ public class NavitWatch implements Runnable {
             this.notify();
         }
     }
+
     public void remove() {
         removed = true;
         thread.interrupt();

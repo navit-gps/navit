@@ -485,6 +485,7 @@ public class NavitMapDownloader extends Thread {
     private long uiLastUpdated = -1;
     private Boolean retryDownload = false; //Download failed, but
     private int retry_counter = 0;
+
     NavitMapDownloader(int map_id) {
         this.map_values = osm_maps[map_id];
         this.map_id = map_id;
@@ -498,6 +499,7 @@ public class NavitMapDownloader extends Thread {
                 return (filename.endsWith(".bin"));
             }
         }
+
         NavitMap maps[] = new NavitMap[0];
         File map_dir = new File(Navit.map_filename_path);
         String map_file_names[] = map_dir.list(new filterMaps());

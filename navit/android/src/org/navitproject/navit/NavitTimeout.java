@@ -34,6 +34,7 @@ public class NavitTimeout implements Runnable {
     private boolean event_multi;
     private int event_callbackid;
     private int event_timeout;
+
     public native void TimeoutCallback(int id);
 
     NavitTimeout(int timeout, boolean multi, int callbackid) {
@@ -42,6 +43,7 @@ public class NavitTimeout implements Runnable {
         event_callbackid = callbackid;
         handler.postDelayed(this, event_timeout);
     }
+
     public void run() {
         // Log.e("Navit","Handle Event");
         if (event_multi) {
@@ -49,6 +51,7 @@ public class NavitTimeout implements Runnable {
         }
         TimeoutCallback(event_callbackid);
     }
+
     public void remove() {
         handler.removeCallbacks(this);
     }

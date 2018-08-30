@@ -841,6 +841,7 @@ public class Navit extends Activity {
 
     public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path,
                                  String path2);
+
     public native void NavitDestroy();
 
 
