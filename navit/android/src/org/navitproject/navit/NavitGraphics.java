@@ -242,7 +242,9 @@ public class NavitGraphics {
 
             if (switch_value == MotionEvent.ACTION_DOWN) {
                 touch_mode = PRESSED;
-                if (!in_map) { ButtonCallback(ButtonCallbackID, 1, 1, x, y); } // down
+                if (!in_map) {
+                    ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                }
                 mPressedPosition = new PointF(x, y);
                 postDelayed(this, time_for_long_press);
             } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == _ACTION_POINTER_UP_)) {
@@ -272,7 +274,9 @@ public class NavitGraphics {
                     }
                     break;
                 case PRESSED:
-                    if (in_map) { ButtonCallback(ButtonCallbackID, 1, 1, x, y); } // down
+                    if (in_map) {
+                        ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                    }
                     ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
                     break;

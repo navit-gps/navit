@@ -110,7 +110,9 @@ public class NavitVehicle {
                 if (intent.getBooleanExtra("enabled", false)) {
                     VehicleCallback(vehicle_fcbid, 1);
                 } else {
-                    if (!intent.getBooleanExtra("enabled", true)) { VehicleCallback(vehicle_fcbid, 0); }
+                    if (!intent.getBooleanExtra("enabled", true)) {
+                        VehicleCallback(vehicle_fcbid, 0);
+                    }
                 }
             }
         }

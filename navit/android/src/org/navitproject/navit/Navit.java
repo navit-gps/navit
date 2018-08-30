@@ -123,7 +123,9 @@ public class Navit extends Activity {
     public void removeFileIfExists(String source) {
         File file = new File(source);
 
-        if (!file.exists()) { return; }
+        if (!file.exists()) {
+            return;
+        }
 
         file.delete();
     }
@@ -131,7 +133,9 @@ public class Navit extends Activity {
     public void copyFileIfExists(String source, String destination) throws IOException {
         File file = new File(source);
 
-        if (!file.exists()) { return; }
+        if (!file.exists()) {
+            return;
+        }
 
         FileInputStream is = null;
         FileOutputStream os = null;
@@ -148,9 +152,13 @@ public class Navit extends Activity {
             }
         } finally {
             /* Close the FileStreams to prevent Resource leaks */
-            if (is != null) { is.close(); }
+            if (is != null) {
+                is.close();
+            }
 
-            if (os != null) { os.close(); }
+            if (os != null) {
+                os.close();
+            }
         }
     }
 
@@ -169,7 +177,9 @@ public class Navit extends Activity {
         Log.e(TAG, "Res Name " + resname + ", result " + result);
         int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
         Log.e(TAG, "Res ID " + id);
-        if (id == 0) { return false; }
+        if (id == 0) {
+            return false;
+        }
 
         File resultfile = new File(result);
         if (!resultfile.exists()) {
@@ -488,7 +498,9 @@ public class Navit extends Activity {
         String geoString = params.get("ll");
         if (geoString != null) {
             String address = params.get("q");
-            if (address != null) { b.putString("q", address); }
+            if (address != null) {
+                b.putString("q", address);
+            }
         } else {
             geoString = params.get("q");
         }
@@ -757,7 +769,9 @@ public class Navit extends Activity {
                 prefs_editor.apply();
 
                 Toast.makeText(this, String.format(getTstring(R.string.map_location_changed),newDir),Toast.LENGTH_LONG).show();
-            } else { Log.w(TAG, "select path failed"); }
+            } else {
+                Log.w(TAG, "select path failed");
+            }
             break;
         default :
             ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
