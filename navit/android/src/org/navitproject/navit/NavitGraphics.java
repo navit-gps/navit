@@ -159,8 +159,8 @@ public class NavitGraphics {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
-                    Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal()
-                            , (int)mPressedPosition.x, (int)mPressedPosition.y);
+                    Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
+                            (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
                     break;
             }

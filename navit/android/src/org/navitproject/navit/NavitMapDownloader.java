@@ -553,9 +553,8 @@ public class NavitMapDownloader extends Thread {
         }
 
         if (success || stop_me) {
-            NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED
-                    , map_filename_path + map_values.map_name + ".bin", null, -1, success ? 1 : 0,
-                    map_id);
+            NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
+                    map_filename_path + map_values.map_name + ".bin", null, -1, success ? 1 : 0, map_id);
         }
     }
 
@@ -670,8 +669,8 @@ public class NavitMapDownloader extends Thread {
         return outputFile;
     }
 
-    private boolean downloadData(URLConnection c, long already_read, long real_size_bytes
-            , boolean resume, File outputFile) {
+    private boolean downloadData(URLConnection c, long already_read, long real_size_bytes , boolean resume,
+            File outputFile) {
         boolean success = false;
         BufferedOutputStream buf = getOutputStream(outputFile, resume);
         BufferedInputStream bif = getInputStream(c);
@@ -861,8 +860,8 @@ public class NavitMapDownloader extends Thread {
                 eta_string = eta_seconds + " s";
             }
             String info = String.format("%s: %s\n %dMb / %dMb\n %.1f kb/s %s: %s",
-                        Navit.getInstance().getTstring(R.string.map_downloading)
-                        , map_values.map_name, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
+                        Navit.getInstance().getTstring(R.string.map_downloading),
+                        map_values.map_name, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
                         per_second_overall / 1024f, Navit.getInstance().getTstring(R.string.map_download_eta),
                         eta_string);
 
@@ -878,8 +877,8 @@ public class NavitMapDownloader extends Thread {
 
     private void updateProgress(long positionBytes, long maximumBytes, String infoText) {
         NavitDialogs.sendDialogMessage(NavitDialogs.MSG_PROGRESS_BAR,
-                Navit.getInstance().getTstring(R.string.map_download_title), infoText
-                , NavitDialogs.DIALOG_MAPDOWNLOAD, (int) (maximumBytes / 1024),
+                Navit.getInstance().getTstring(R.string.map_download_title), infoText,
+                NavitDialogs.DIALOG_MAPDOWNLOAD, (int) (maximumBytes / 1024),
                 (int) (positionBytes / 1024));
     }
 

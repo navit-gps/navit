@@ -747,8 +747,8 @@ public class Navit extends Activity {
         switch (requestCode) {
             case Navit.NavitDownloaderSelectMap_id :
                 if (resultCode == Activity.RESULT_OK) {
-                    Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD
-                            , data.getIntExtra("map_index", -1), 0);
+                    Message msg = dialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD,
+                            data.getIntExtra("map_index", -1), 0);
                     msg.sendToTarget();
                 }
                 break;
