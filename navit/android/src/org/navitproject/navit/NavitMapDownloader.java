@@ -669,7 +669,7 @@ public class NavitMapDownloader extends Thread {
         return outputFile;
     }
 
-    private boolean downloadData(URLConnection c, long already_read, long real_size_bytes , boolean resume,
+    private boolean downloadData(URLConnection c, long already_read, long real_size_bytes, boolean resume,
             File outputFile) {
         boolean success = false;
         BufferedOutputStream buf = getOutputStream(outputFile, resume);
