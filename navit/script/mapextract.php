@@ -41,38 +41,38 @@ $files['output'] = 'myarea.bin';
 
 $formats = array();
 $formats['ziphpack'] = "lssssslLLSS";
-$formats['zipheader']  = "l" . "ziplocsig";	# Signature (is always the same)
-$formats['zipheader'] .= "/s" . "zipver";	# zip version needed
-$formats['zipheader'] .= "/s" . "zipgenfld";# type of os that generated the file
-$formats['zipheader'] .= "/s" . "zipmthd";	#
-$formats['zipheader'] .= "/s" . "ziptime";	# time
-$formats['zipheader'] .= "/s" . "zipdate";	# date
-$formats['zipheader'] .= "/l" . "zipcrc";	# crc checksum
-$formats['zipheader'] .= "/L" . "zipsize";	# data size
-$formats['zipheader'] .= "/L" . "zipuncmp";	# uncompressed size
-$formats['zipheader'] .= "/S" . "zipfnln";	# length of filename
-$formats['zipheader'] .= "/S" . "zipxtraln";# length of extra data (always 0)
+$formats['zipheader']  = "lziplocsig";	# Signature (is always the same)
+$formats['zipheader'] .= "/szipver";	# zip version needed
+$formats['zipheader'] .= "/szipgenfld";# type of os that generated the file
+$formats['zipheader'] .= "/szipmthd";	#
+$formats['zipheader'] .= "/sziptime";	# time
+$formats['zipheader'] .= "/szipdate";	# date
+$formats['zipheader'] .= "/lzipcrc";	# crc checksum
+$formats['zipheader'] .= "/Lzipsize";	# data size
+$formats['zipheader'] .= "/Lzipuncmp";	# uncompressed size
+$formats['zipheader'] .= "/Szipfnln";	# length of filename
+$formats['zipheader'] .= "/Szipxtraln";# length of extra data (always 0)
 
 $formats['zipcd'] = "".
-	"i" . "zipcensig/".
-	"c" . "zipcver/".
-	"c" . "zipcos/".
-	"c" . "zipcvxt/".
-	"c" . "zipcexos/".
-	"s" . "zipcflg/".
-	"s" . "zipcmthd/".
-	"s" . "ziptim/".
-	"s" . "zipdat/".
-	"i" . "zipccrc/".
-	"I" . "zipcsiz/".
-	"I" . "zipcunc/".
-	"S" . "zipcfnl/".
-	"S" . "zipcxtl/".
-	"S" . "zipccml/".
-	"S" . "zipdsk/".
-	"S" . "zipint/".
-	"I" . "zipext/".
-	"I" . "zipofst/".
+	"izipcensig/".
+	"czipcver/".
+	"czipcos/".
+	"czipcvxt/".
+	"czipcexos/".
+	"szipcflg/".
+	"szipcmthd/".
+	"sziptim/".
+	"szipdat/".
+	"izipccrc/".
+	"Izipcsiz/".
+	"Izipcunc/".
+	"Szipcfnl/".
+	"Szipcxtl/".
+	"Szipccml/".
+	"Szipdsk/".
+	"Szipint/".
+	"Izipext/".
+	"Izipofst/";
 $formats['zipcdpack'] = "iccccssssiIISSSSSII";
 
 $formats['zipcontent'] = "i5x/i5y/ii";
