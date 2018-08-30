@@ -248,6 +248,6 @@ var NAVTREEINDEX12 =
 "globals_type.html":[3,1,3],
 "globals_u.html":[3,1,0,22],
 "globals_v.html":[3,1,0,23],
-"globals_vars.html":[3,1,2,0],
-"globals_vars.html":[3,1,2]
+"globals_vars.html":[3,1,2],
+"globals_vars.html":[3,1,2,0]
 };

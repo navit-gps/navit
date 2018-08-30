@@ -10,6 +10,7 @@ var mapextract_8php =
     [ "$formats", "mapextract_8php.html#adf0821de242caa2a67bb0e42d6292b8c", null ],
     [ "$formats", "mapextract_8php.html#afb57e149ad9ebdd6844442630c220f21", null ],
     [ "$formats", "mapextract_8php.html#af506b1bdbd0048f53ca604b46a65c8e9", null ],
+    [ "$formats", "mapextract_8php.html#a9d6de23b55385b0d0a40e43c414e1612", null ],
     [ "$formats", "mapextract_8php.html#a56a08cffda7ecb33138021d9f7f802ce", null ],
     [ "$fp", "mapextract_8php.html#a1d2c1369c63343a169bc25d1a0475482", null ],
     [ "$offset", "mapextract_8php.html#aec4de82415d7f05cb9748d12d3a95a87", null ],
