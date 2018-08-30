@@ -105,7 +105,7 @@ public class NavitAddressSearchActivity extends Activity {
         // We have all images stored as drawable_nodpi resources which allows native code to manipulate them
         // without interference with android builtin choosing and scaling system. But that makes us to
         // reinvent the wheel here to show an image in android native interface.
-        int flag_icon_sizes[] = {24,32,48,64,96};
+        int[] flag_icon_sizes = {24,32,48,64,96};
         int exact_size, nearest_size;
         exact_size = (int)(Navit.metrics.density * 24.0 - .5);
         nearest_size = flag_icon_sizes[0];

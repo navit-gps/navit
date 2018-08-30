@@ -85,7 +85,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
-    private void updateMapsForLocation(NavitMapDownloader.osm_map_values osm_maps[]) {
+    private void updateMapsForLocation(NavitMapDownloader.osm_map_values[] osm_maps) {
         Location currentLocation = NavitVehicle.lastLocation;
         if (maps_current_position_childs.size() == 0 || (currentLocation != null
                 && !currentLocationKnown)) {
@@ -139,7 +139,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
     private SimpleExpandableListAdapter createAdapter() {
 
-        NavitMapDownloader.osm_map_values osm_maps[] = NavitMapDownloader.osm_maps;
+        NavitMapDownloader.osm_map_values[] osm_maps = NavitMapDownloader.osm_maps;
 
         ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
         ArrayList<ArrayList<HashMap<String, String>>> resultChilds =
