@@ -52,8 +52,8 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
             return mActivity.getTstring(R.string.backup_not_found);
         }
 
-        ObjectInputStream preferenceOIS = null;
-        try {
+        try(ObjectInputStream preferenceOis = new ObjectInputStream(
+                    new FileInputStream(backupDir.getPath() + "/preferences.bak"))) {
             /* Delete all old Files in Home */
             mActivity.removeFileIfExists(Navit.NAVIT_DATA_DIR + "/home/bookmark.txt");
             mActivity.removeFileIfExists(Navit.NAVIT_DATA_DIR + "/home/destination.txt");
@@ -69,9 +69,7 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
                     Navit.NAVIT_DATA_DIR + "/home/gui_internal.txt");
 
             /* Restore Shared Preferences */
-            preferenceOIS = new ObjectInputStream(
-                    new FileInputStream(backupDir.getPath() + "/preferences.bak"));
-            Map<String, ?> entries = (Map<String, ?>) preferenceOIS.readObject();
+            Map<String, ?> entries = (Map<String, ?>) preferenceOis.readObject();
 
             Editor prefEditor = mActivity.getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE).edit();
 
@@ -103,15 +101,6 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
             return mActivity.getTstring(R.string.failed_to_restore);
-        } finally {
-            try {
-                /* Close Stream to prevent Resource leak */
-                if (preferenceOIS != null) {
-                    preferenceOIS.close();
-                }
-            } catch (IOException e) {
-
-            }
         }
 
         return null;
