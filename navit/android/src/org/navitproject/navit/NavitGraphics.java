@@ -494,7 +494,7 @@ public class NavitGraphics {
         }
 
         @Override
-        public boolean onKeyMultiple (int keyCode, int count, KeyEvent event) {
+        public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
             String s;
             if (keyCode == KeyEvent.KEYCODE_UNKNOWN) {
                 s = event.getCharacters();
@@ -644,7 +644,7 @@ public class NavitGraphics {
                     CallbackMessageChannel(6, msg.getData().getString(("title")));
                     break;
                 case CLB_DELETE_MAP:
-                    File toDelete = new File( msg.getData().getString(("title")));
+                    File toDelete = new File(msg.getData().getString(("title")));
                     toDelete.delete();
                     //fallthrough
                 case CLB_UNLOAD_MAP:

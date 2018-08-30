@@ -185,7 +185,7 @@ public class Navit extends Activity {
         if (!resultfile.exists()) {
             needs_update = true;
             File path = resultfile.getParentFile();
-            if ( !path.exists() && !resultfile.getParentFile().mkdirs()) {
+            if (!path.exists() && !resultfile.getParentFile().mkdirs()) {
                 return false;
             }
         } else {
@@ -318,7 +318,7 @@ public class Navit extends Activity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                     || (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            Log.d (TAG,"ask for permission(s)");
+            Log.d(TAG,"ask for permission(s)");
             ActivityCompat.requestPermissions(this,
                     new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ALL);
@@ -358,7 +358,7 @@ public class Navit extends Activity {
         int height_ = display_.getHeight();
         metrics = new DisplayMetrics();
         display_.getMetrics(Navit.metrics);
-        int densityDpi = (int)(( Navit.metrics.density * 160) - .5f);
+        int densityDpi = (int)((Navit.metrics.density * 160) - .5f);
         Log.d(TAG, "Navit -> pixels x=" + width_ + " pixels y=" + height_);
         Log.d(TAG, "Navit -> dpi=" + densityDpi);
         Log.d(TAG, "Navit -> density=" + Navit.metrics.density);
@@ -425,7 +425,7 @@ public class Navit extends Activity {
                 Log.d(TAG, "**2**A " + startup_intent.getAction());
                 Log.d(TAG, "**2**D " + startup_intent.getDataString());
                 String navi_scheme = startup_intent.getScheme();
-                if ( navi_scheme != null && navi_scheme.equals("google.navigation")) {
+                if (navi_scheme != null && navi_scheme.equals("google.navigation")) {
                     parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
                 }
             } else {
@@ -510,7 +510,7 @@ public class Navit extends Activity {
             geoString = params.get("q");
         }
 
-        if ( geoString != null) {
+        if (geoString != null) {
             if (geoString.matches("^[+-]{0,1}\\d+(|\\.\\d*),[+-]{0,1}\\d+(|\\.\\d*)$")) {
                 String[] geo = geoString.split(",");
                 if (geo.length == 2) {
@@ -730,7 +730,7 @@ public class Navit extends Activity {
 
 
     void setDestination(float latitude, float longitude, String address) {
-        Toast.makeText( getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address,
+        Toast.makeText(getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address,
                 Toast.LENGTH_LONG).show(); //TRANS
 
         Message msg = Message.obtain(N_NavitGraphics.callback_handler,
@@ -755,7 +755,7 @@ public class Navit extends Activity {
             case NavitAddressSearch_id :
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle destination = data.getExtras();
-                    Toast.makeText( getApplicationContext(),
+                    Toast.makeText(getApplicationContext(),
                             getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")),
                             Toast.LENGTH_LONG).show(); //TRANS
 

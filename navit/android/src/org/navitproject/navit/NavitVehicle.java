@@ -85,7 +85,7 @@ public class NavitVehicle {
         /**
          * Called when the status of the GPS changes.
          */
-        public void onGpsStatusChanged (int event) {
+        public void onGpsStatusChanged(int event) {
             if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
@@ -127,7 +127,7 @@ public class NavitVehicle {
      * @param fcbid The address of the fix callback function called when a
      * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
      */
-    NavitVehicle (Context context, int pcbid, int scbid, int fcbid) {
+    NavitVehicle(Context context, int pcbid, int scbid, int fcbid) {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted

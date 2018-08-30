@@ -124,7 +124,7 @@ public class NavitAddressSearchActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         Bundle extras = getIntent().getExtras();
-        if ( extras != null ) {
+        if (extras != null) {
             String search_string = extras.getString(("search_string"));
             if (search_string != null) {
                 mPartialSearch = true;
@@ -308,7 +308,7 @@ public class NavitAddressSearchActivity extends Activity {
     public void finishAddressSearch() {
         if (Addresses_found.isEmpty()) {
             // TRANS
-            Toast.makeText( getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.address_search_not_found) + "\n" + mAddressString, Toast.LENGTH_LONG).show();
             setResult(Activity.RESULT_CANCELED);
             finish();
