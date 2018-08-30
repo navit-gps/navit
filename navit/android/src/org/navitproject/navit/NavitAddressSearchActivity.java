@@ -295,8 +295,8 @@ public class NavitAddressSearchActivity extends Activity {
                 break;
 
         }
-        search_results_wait.setMessage(Navit.getInstance().getTstring(R.string.address_search_towns) + ":" +
-                search_results_towns + " "
+        search_results_wait.setMessage(Navit.getInstance().getTstring(R.string.address_search_towns) + ":"
+                + search_results_towns + " "
                 + Navit.getInstance().getTstring(R.string.address_search_streets) + ":" + search_results_streets + "/"
                 + search_results_streets_hn);
 

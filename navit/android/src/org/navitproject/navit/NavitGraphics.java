@@ -717,8 +717,8 @@ public class NavitGraphics {
          * Logic is taken from AOSP RenderSessionImpl.findNavigationBar()
          * (platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java)
          */
-        final Boolean isLandscape = (navit.getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_LANDSCAPE);
+        final Boolean isLandscape = (navit.getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE);
         final Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
         Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
                     isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));

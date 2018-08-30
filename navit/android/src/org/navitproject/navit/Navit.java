@@ -313,8 +313,8 @@ public class Navit extends Activity {
                     status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape,
                     navigation_bar_width));
         if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
-                    (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             Log.d (TAG,"ask for permission(s)");
             ActivityCompat.requestPermissions(this,
