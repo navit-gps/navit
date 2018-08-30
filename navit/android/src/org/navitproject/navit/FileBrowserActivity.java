@@ -2,7 +2,7 @@ package org.navitproject.navit;
 
 //Heavily based on code from
 //https://github.com/mburman/Android-File-Explore
-//	Version of Aug 13, 2011
+// Version of Aug 13, 2011
 //Also contributed:
 //  Sugan Krishnan (https://github.com/rgksugan) - Jan 2013.
 //
@@ -237,9 +237,8 @@ public class FileBrowserActivity extends Activity {
                     } else { // if(sel.canRead()) {
                         showToast("Path does not exist or cannot be read");
                     } // } else {//if(sel.canRead()) {
-                } // if (sel.isDirectory()) {
-                // File picked or an empty directory message clicked
-                else { // if (sel.isDirectory()) {
+                } else { // if (sel.isDirectory()) {
+                    // File picked or an empty directory message clicked
                     Log.d(LOGTAG, "item clicked");
                     if (!directoryShownIsEmpty) {
                         Log.d(LOGTAG, "File selected:" + chosenFile);
@@ -300,9 +299,7 @@ public class FileBrowserActivity extends Activity {
             for (int i = 0; i < fList.length; i++) {
                 // Convert into file path
                 File sel = new File(path, fList[i]);
-                Log.d(LOGTAG,
-                      "File:" + fList[i] + " readable:"
-                      + (Boolean.valueOf(sel.canRead())).toString());
+                Log.d(LOGTAG, "File:" + fList[i] + " readable:" + (Boolean.valueOf(sel.canRead())).toString());
                 int drawableID = R.drawable.file_icon;
                 boolean canRead = sel.canRead();
                 // Set drawables

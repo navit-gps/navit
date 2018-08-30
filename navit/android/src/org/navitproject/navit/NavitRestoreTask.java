@@ -106,8 +106,8 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
         } finally {
             try {
                 /* Close Stream to prevent Resource leak */
-                if (preferenceOIS != null) {
-                    preferenceOIS.close();
+                if (preferenceOis != null) {
+                    preferenceOis.close();
                 }
             } catch (IOException e) {
                 // Catching but ignoring that exception when closing the stream
