@@ -10,14 +10,6 @@ package org.navitproject.navit;
 //Project type now is Android library:
 //  http://developer.android.com/guide/developing/projects/projects-eclipse.html#ReferencingLibraryProject
 
-//General Java imports
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Collections;
-
 //Android imports
 import android.app.Activity;
 import android.content.Intent;
@@ -27,10 +19,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.*;
 import android.widget.*;
+
+//General Java imports
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 //Import of resources file for file browser
 import org.navitproject.navit.R;

@@ -1,6 +1,5 @@
 package org.navitproject.navit;
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
