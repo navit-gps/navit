@@ -40,7 +40,7 @@ public class NavitAppConfig extends Application {
                                                addr_str));
                     }
 
-                    if (--index < 0) index = MAX_LAST_ADDRESSES - 1;
+                    if (--index < 0) { index = MAX_LAST_ADDRESSES - 1; }
 
                 } while (index != mLastAddressField);
             }
@@ -52,10 +52,10 @@ public class NavitAppConfig extends Application {
         getLastAddresses();
 
         mLastAddresses.add(newAddress);
-        if (mLastAddresses.size() > MAX_LAST_ADDRESSES) mLastAddresses.remove(0);
+        if (mLastAddresses.size() > MAX_LAST_ADDRESSES) { mLastAddresses.remove(0); }
 
         mLastAddressField++;
-        if (mLastAddressField >= MAX_LAST_ADDRESSES) mLastAddressField = 0;
+        if (mLastAddressField >= MAX_LAST_ADDRESSES) { mLastAddressField = 0; }
 
         SharedPreferences.Editor editSettings = mSettings.edit();
 

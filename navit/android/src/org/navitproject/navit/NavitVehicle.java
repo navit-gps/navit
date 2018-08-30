@@ -101,10 +101,11 @@ public class NavitVehicle {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GPS_FIX_CHANGE)) {
-                if (intent.getBooleanExtra("enabled", false))
+                if (intent.getBooleanExtra("enabled", false)) {
                     VehicleCallback(vehicle_fcbid, 1);
-                else if (!intent.getBooleanExtra("enabled", true))
-                    VehicleCallback(vehicle_fcbid, 0);
+                } else {
+                    if (!intent.getBooleanExtra("enabled", true)) { VehicleCallback(vehicle_fcbid, 0); }
+                }
             }
         }
     }
@@ -192,7 +193,7 @@ public class NavitVehicle {
                 sLocationManager.removeGpsStatusListener(preciseLocationListener);
                 context.unregisterReceiver(preciseLocationListener);
             }
-            if (fastLocationListener != null) sLocationManager.removeUpdates(fastLocationListener);
+            if (fastLocationListener != null){ sLocationManager.removeUpdates(fastLocationListener);}
         }
 
     }

@@ -79,10 +79,12 @@ public class NavitGraphics {
 
     public void setBackgroundColor(int bgcolor) {
         this.bgcolor = bgcolor;
-        if (navigationTintView != null)
+        if (navigationTintView != null) {
             navigationTintView.setBackgroundColor(bgcolor);
-        if (statusTintView != null)
+        }
+        if (statusTintView != null) {
             statusTintView.setBackgroundColor(bgcolor);
+        }
     }
 
     private void SetCamera(int use_camera) {
@@ -239,7 +241,7 @@ public class NavitGraphics {
 
             if (switch_value == MotionEvent.ACTION_DOWN) {
                 touch_mode = PRESSED;
-                if (!in_map) ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                if (!in_map) { ButtonCallback(ButtonCallbackID, 1, 1, x, y); } // down
                 mPressedPosition = new PointF(x, y);
                 postDelayed(this, time_for_long_press);
             } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == _ACTION_POINTER_UP_)) {
@@ -269,7 +271,7 @@ public class NavitGraphics {
                     }
                     break;
                 case PRESSED:
-                    if (in_map) ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                    if (in_map) { ButtonCallback(ButtonCallbackID, 1, 1, x, y); } // down
                     ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
                     break;
@@ -373,8 +375,9 @@ public class NavitGraphics {
                     }
                 case KeyEvent.KEYCODE_SEARCH:
                     /* Handle event in Main Activity if map is shown */
-                    if (in_map)
+                    if (in_map) {
                         return false;
+                    }
 
                     s = String.valueOf((char) 19);
                     break;
@@ -448,8 +451,9 @@ public class NavitGraphics {
                     return (!in_map);
                 case KeyEvent.KEYCODE_SEARCH:
                     /* Handle event in Main Activity if map is shown */
-                    if (in_map)
+                    if (in_map) {
                         return false;
+                    }
                     break;
                 case KeyEvent.KEYCODE_BACK:
                     if (Navit.show_soft_keyboard_now_showing) {
@@ -668,9 +672,9 @@ public class NavitGraphics {
     private void adjustSystemBarsTintingViews() {
 
         /* frameLayout is only created on platforms supporting navigation and status bar tinting */
-        if (frameLayout == null)
+        if (frameLayout == null) {
             return;
-
+        }
         if (activity == null) {
             Log.w(TAG, "Main Activity is not a Navit instance, cannot update padding");
             return;
@@ -749,9 +753,9 @@ public class NavitGraphics {
      *
      */
     public void handleResize(int w, int h) {
-        if (this.parent_graphics != null)
+        if (this.parent_graphics != null) {
             this.parent_graphics.handleResize(w, h);
-        else {
+        } else {
             Log.d(TAG, String.format("handleResize w=%d h=%d", w, h));
 
             adjustSystemBarsTintingViews();
@@ -778,12 +782,15 @@ public class NavitGraphics {
      * this method will still return `false`.
      */
     public boolean hasMenuButton() {
-        if (Build.VERSION.SDK_INT <= 10)
+        if (Build.VERSION.SDK_INT <= 10) {
             return true;
-        else if (Build.VERSION.SDK_INT <= 13)
-            return false;
-        else
-            return ViewConfiguration.get(activity.getApplication()).hasPermanentMenuKey();
+        } else {
+            if (Build.VERSION.SDK_INT <= 13) {
+                return false;
+            } else {
+                return ViewConfiguration.get(activity.getApplication()).hasPermanentMenuKey();
+            }
+        }
     }
 
     public void setSizeChangedCallback(int id) {
@@ -821,14 +828,17 @@ public class NavitGraphics {
         //paint.setStrokeWidth(0);
         ndashes=c[5];
         intervals=new float[ndashes+(ndashes%2)];
-        for (i = 0; i < ndashes; i++)
+        for (i = 0; i < ndashes; i++) {
             intervals[i]=c[6+i];
+        }
 
-        if((ndashes%2)==1)
+        if((ndashes%2)==1) {
             intervals[ndashes]=intervals[ndashes-1];
+        }
 
-        if(ndashes>0)
+        if(ndashes>0) {
             paint.setPathEffect(new android.graphics.DashPathEffect(intervals,0.0f));
+        }
 
         Path path = new Path();
         path.moveTo(c[6+ndashes], c[7+ndashes]);
@@ -971,8 +981,9 @@ public class NavitGraphics {
     protected void overlay_disable(int disable) {
         Log.d(TAG,"overlay_disable: " + disable + "Parent: " + (parent_graphics != null));
         // assume we are NOT in map view mode!
-        if (parent_graphics == null)
+        if (parent_graphics == null) {
             in_map = (disable==0);
+        }
         if (overlay_disabled != disable) {
             overlay_disabled = disable;
             if (parent_graphics != null) {

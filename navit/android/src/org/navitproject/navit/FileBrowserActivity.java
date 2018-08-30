@@ -115,17 +115,18 @@ public class FileBrowserActivity extends Activity {
 
         if (requestedStartDir != null && requestedStartDir.length() > 0) {// if(requestedStartDir!=null
             File tempFile = new File(requestedStartDir);
-            if (tempFile.isDirectory())
+            if (tempFile.isDirectory()) {
                 this.path = tempFile;
+            }
         }// if(requestedStartDir!=null
 
-        if (this.path == null) {// No or invalid directory supplied in intent
-            // parameter
+        if (this.path == null) {// No or invalid directory supplied in intent parameter
             if (Environment.getExternalStorageDirectory().isDirectory()
-                    && Environment.getExternalStorageDirectory().canRead())
+                    && Environment.getExternalStorageDirectory().canRead()) {
                 path = Environment.getExternalStorageDirectory();
-            else
+            } else {
                 path = new File("/");
+            }
         }// if(this.path==null) {//No or invalid directory supplied in intent
         // parameter
     }// private void setInitialDirectory() {
@@ -187,16 +188,18 @@ public class FileBrowserActivity extends Activity {
             ((Button) this.findViewById(R.id.upDirectoryButton))
             .setEnabled(false);
             curDirString = "/";
-        } else
+        } else {
             ((Button) this.findViewById(R.id.upDirectoryButton))
             .setEnabled(true);
+        }
         long freeSpace = getFreeSpace(curDirString);
         String formattedSpaceString = formatBytes(freeSpace);
         if (freeSpace == 0) {
             Log.d(LOGTAG, "NO FREE SPACE");
             File currentDir = new File(curDirString);
-            if(!currentDir.canWrite())
+            if(!currentDir.canWrite()) {
                 formattedSpaceString = "NON Writable";
+            }
         }
 
         ((Button) this.findViewById(R.id.selectCurrentDirectoryButton))
@@ -422,8 +425,9 @@ public class FileBrowserActivity extends Activity {
             long kbs = bytes / 1024;
             retStr += (new Long(kbs)).toString() + "KB";
             bytes = bytes - (kbs * 1024);
-        } else
+        } else {
             retStr += (new Long(bytes)).toString() + " bytes";
+        }
         return retStr;
     }// public static String formatBytes(long bytes){
 

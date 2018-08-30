@@ -123,8 +123,7 @@ public class Navit extends Activity {
     public void removeFileIfExists(String source) {
         File file = new File(source);
 
-        if (!file.exists())
-            return;
+        if (!file.exists()) { return; }
 
         file.delete();
     }
@@ -132,8 +131,7 @@ public class Navit extends Activity {
     public void copyFileIfExists(String source, String destination) throws IOException {
         File file = new File(source);
 
-        if (!file.exists())
-            return;
+        if (!file.exists()) { return; }
 
         FileInputStream is = null;
         FileOutputStream os = null;
@@ -150,11 +148,9 @@ public class Navit extends Activity {
             }
         } finally {
             /* Close the FileStreams to prevent Resource leaks */
-            if (is != null)
-                is.close();
+            if (is != null) { is.close(); }
 
-            if (os != null)
-                os.close();
+            if (os != null) { os.close(); }
         }
     }
 
@@ -173,15 +169,15 @@ public class Navit extends Activity {
         Log.e(TAG, "Res Name " + resname + ", result " + result);
         int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
         Log.e(TAG, "Res ID " + id);
-        if (id == 0)
-            return false;
+        if (id == 0) { return false; }
 
         File resultfile = new File(result);
         if (!resultfile.exists()) {
             needs_update = true;
             File path = resultfile.getParentFile();
-            if ( !path.exists() && !resultfile.getParentFile().mkdirs())
+            if ( !path.exists() && !resultfile.getParentFile().mkdirs()) {
                 return false;
+            }
         } else {
             PackageManager pm = getPackageManager();
             ApplicationInfo appInfo;
@@ -193,8 +189,9 @@ public class Navit extends Activity {
                 Log.e(TAG, "Could not read package infos");
                 e.printStackTrace();
             }
-            if (apkUpdateTime > resultfile.lastModified())
+            if (apkUpdateTime > resultfile.lastModified()) {
                 needs_update = true;
+            }
         }
 
         if (needs_update) {
@@ -254,10 +251,11 @@ public class Navit extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB)
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        else
+        } else {
             this.getActionBar().hide();
+        }
 
         navit = this;
         dialogs = new NavitDialogs(this);
@@ -424,10 +422,11 @@ public class Navit extends Activity {
         if (show_soft_keyboard_now_showing) {
             /* Calling showNativeKeyboard() directly won't work here, we need to use the message queue */
             View cf = getCurrentFocus();
-            if (cf == null)
+            if (cf == null) {
                 Log.e(TAG, "no view in focus, can't get a handler");
-            else
+            } else {
                 cf.getHandler().post(new SoftInputRestorer());
+            }
         }
     }
 
@@ -489,7 +488,7 @@ public class Navit extends Activity {
         String geoString = params.get("ll");
         if (geoString != null) {
             String address = params.get("q");
-            if (address != null) b.putString("q", address);
+            if (address != null) { b.putString("q", address); }
         } else {
             geoString = params.get("q");
         }
@@ -544,8 +543,9 @@ public class Navit extends Activity {
         menu.add(1, 99, 900, getTstring(R.string.optionsmenu_exit_navit)); //TRANS
 
         /* Only show the Backup to SD-Card Option if we really have one */
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             menu.add(1, 7, 700, getTstring(R.string.optionsmenu_backup_restore)); //TRANS
+        }
 
         return true;
     }
@@ -670,9 +670,10 @@ public class Navit extends Activity {
          */
         Configuration config = getResources().getConfiguration();
         if ((config.keyboard == Configuration.KEYBOARD_QWERTY)
-                && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO))
+                && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO)) {
             /* physical keyboard present, exit */
             return 0;
+        }
 
         /* Use SHOW_FORCED here, else keyboard won't show in landscape mode */
         mgr.showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_FORCED);
@@ -688,8 +689,9 @@ public class Navit extends Activity {
         int height_ = display_.getHeight();
         int maxHeight = height_ * 47 / 100;
         int inputHeight = width_ * 63 / 100;
-        if (inputHeight > (maxHeight))
+        if (inputHeight > (maxHeight)) {
             inputHeight = maxHeight;
+        }
 
         /* the receiver isn't going to fire before the UI thread becomes idle, well after this method returns */
         Log.d(TAG, "showNativeKeyboard:return (assuming true)");
@@ -744,17 +746,18 @@ public class Navit extends Activity {
             if(resultCode == RESULT_OK) {
                 String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter);
                 Log.d(TAG, "selected path= "+newDir);
-                if(!newDir.contains("/navit"))
+                if(!newDir.contains("/navit")) {
                     newDir = newDir+"/navit/";
-                else
+                } else {
                     newDir = newDir+"/";
+                }
                 SharedPreferences prefs = this.getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor  prefs_editor = prefs.edit();
                 prefs_editor.putString("filenamePath", newDir);
                 prefs_editor.apply();
 
                 Toast.makeText(this, String.format(getTstring(R.string.map_location_changed),newDir),Toast.LENGTH_LONG).show();
-            } else Log.w(TAG, "select path failed");
+            } else { Log.w(TAG, "select path failed"); }
             break;
         default :
             ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);

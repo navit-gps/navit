@@ -111,8 +111,7 @@ public class NavitAddressSearchActivity extends Activity {
         nearest_size=flag_icon_sizes[0];
         for(int size: flag_icon_sizes) {
             nearest_size=size;
-            if(exact_size<=size)
-                break;
+            if(exact_size<=size) { break; }
         }
         mCountryButton.setImageResource(getDrawableID("country_" + mCountry+"_"+nearest_size+"_"+nearest_size));
     }
