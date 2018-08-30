@@ -50,33 +50,31 @@ extern "C" {
  */
 
 QNavitGeoReceiver::QNavitGeoReceiver(QObject* parent, struct vehicle_priv* c)
-    : QObject(parent)
-{
+    : QObject(parent) {
     priv = c;
     if (priv->source != NULL) {
         connect(priv->source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)));
     }
     if (priv->satellites != NULL) {
-        connect(priv->satellites, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo>&)), this, SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo>&)));
-        connect(priv->satellites, SIGNAL(satellitesInViewUpdated(const QList<QGeoSatelliteInfo>&)), this, SLOT(satellitesInViewUpdated(const QList<QGeoSatelliteInfo>&)));
+        connect(priv->satellites, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo>&)), this,
+                SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo>&)));
+        connect(priv->satellites, SIGNAL(satellitesInViewUpdated(const QList<QGeoSatelliteInfo>&)), this,
+                SLOT(satellitesInViewUpdated(const QList<QGeoSatelliteInfo>&)));
     }
 }
-void QNavitGeoReceiver::satellitesInUseUpdated(const QList<QGeoSatelliteInfo>& sats)
-{
+void QNavitGeoReceiver::satellitesInUseUpdated(const QList<QGeoSatelliteInfo>& sats) {
     dbg(lvl_debug, "Sats in use: %d", sats.count());
     priv->sats_used = sats.count();
     callback_list_call_attr_0(priv->cbl, attr_position_sats_used);
 }
 
-void QNavitGeoReceiver::satellitesInViewUpdated(const QList<QGeoSatelliteInfo>& sats)
-{
+void QNavitGeoReceiver::satellitesInViewUpdated(const QList<QGeoSatelliteInfo>& sats) {
     dbg(lvl_debug, "Sats in view: %d", sats.count());
     priv->sats = sats.count();
     callback_list_call_attr_0(priv->cbl, attr_position_qual);
 }
 
-void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info)
-{
+void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info) {
 
     /* ignore stale view */
     if (info.coordinate().isValid()) {
@@ -135,13 +133,11 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info)
 
 /**
  * @brief Free the null_vehicle
- * 
+ *
  * @param priv
  * @returns nothing
  */
-static void
-vehicle_qt5_destroy(struct vehicle_priv* priv)
-{
+static void vehicle_qt5_destroy(struct vehicle_priv* priv) {
     dbg(lvl_debug, "enter");
     if (priv->receiver != NULL)
         delete priv->receiver;
@@ -152,16 +148,14 @@ vehicle_qt5_destroy(struct vehicle_priv* priv)
 
 /**
  * @brief Provide the outside with information
- * 
+ *
  * @param priv
  * @param type TODO: What can this be?
  * @param attr
  * @returns true/false
  */
-static int
-vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
-    enum attr_type type, struct attr* attr)
-{
+static int vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
+        enum attr_type type, struct attr* attr) {
     struct attr* active = NULL;
     dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
@@ -199,7 +193,7 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
             struct tm tm;
             if (gmtime_r(&priv->fix_time, &tm)) {
                 strftime(priv->fixiso8601, sizeof(priv->fixiso8601),
-                    "%Y-%m-%dT%TZ", &tm);
+                         "%Y-%m-%dT%TZ", &tm);
                 attr->u.str = priv->fixiso8601;
             } else {
                 priv->fix_time = 0;
@@ -229,9 +223,7 @@ vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
     return 1;
 }
 
-static int
-vehicle_qt5_set_attr(struct vehicle_priv* priv, struct attr* attr)
-{
+static int vehicle_qt5_set_attr(struct vehicle_priv* priv, struct attr* attr) {
     switch (attr->type) {
     case attr_position_speed:
         priv->speed = *attr->u.numd;
@@ -258,17 +250,15 @@ struct vehicle_methods vehicle_null_methods = {
 
 /**
  * @brief Create null_vehicle
- * 
+ *
  * @param meth
  * @param cbl
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv*
-vehicle_qt5_new_qt5(struct vehicle_methods* meth,
-    struct callback_list* cbl,
-    struct attr** attrs)
-{
+static struct vehicle_priv* vehicle_qt5_new_qt5(struct vehicle_methods* meth,
+        struct callback_list* cbl,
+        struct attr** attrs) {
     struct vehicle_priv* ret;
 
     dbg(lvl_debug, "enter");
@@ -294,11 +284,10 @@ vehicle_qt5_new_qt5(struct vehicle_methods* meth,
 
 /**
  * @brief register vehicle_null
- * 
+ *
  * @returns nothing
  */
-void plugin_init(void)
-{
+void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("qt5", vehicle_qt5_new_qt5);
 }

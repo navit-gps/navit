@@ -1,4 +1,5 @@
 package org.navitproject.navit;
+
 import android.content.Intent;
 
 public interface NavitActivityResult {

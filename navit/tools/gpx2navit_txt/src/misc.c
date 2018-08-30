@@ -37,70 +37,67 @@ void closeParsedata(parsedata * pdata);
 /**
  * message when fail to write attribute
  */
-void failToWriteAttrRep(int iShape, int col, char *file, int line)
-{
+void failToWriteAttrRep(int iShape, int col, char *file, int line) {
     printf("Fail to write a attribute at %s:%i. shapeid:%i col:%i\n", file,
-	   line, iShape, col);
+           line, iShape, col);
 }
 
 /**
  * shows short statistics
  */
-void showStats(g2sprop * prop)
-{
+void showStats(g2sprop * prop) {
     g2sstats *stats = prop->stats;
     double ratio;
     if (prop->needsStats) {
-	if (prop->parseTrk) {
-	    if (stats->trkunconverted != 0) {
-		ratio =
-		    (double) stats->trkunconverted / (stats->trkcount +
-						      stats->
-						      trkunconverted) *
-		    100;
-	    } else {
-		ratio = 0;
-	    }
-	    printf("Track Points:\n");
-	    printf("\ttrack count:\t%i\n", stats->trkcount);
-	    printf("\tpoint count:\t%i\n", stats->trkpoints);
-	    if (!prop->isFast) {
-		printf("\ttotal length:\t%f\n", stats->trklength);
-		printf("\tunconverted:\t%i(%5.2f%%)\n",
-		       stats->trkunconverted, ratio);
-	    }
-	}
-	if (prop->parseRte) {
-	    if (stats->rteunconverted != 0) {
-		ratio =
-		    (double) stats->rteunconverted / (stats->rtecount +
-						      stats->
-						      rteunconverted) *
-		    100;
-	    } else {
-		ratio = 0;
-	    }
-	    printf("Routes:\n");
-	    printf("\troute count:\t%i\n", stats->rtecount);
-	    printf("\tpoint count:\t%i\n", stats->rtepoints);
-	    if (!prop->isFast) {
-		printf("\ttotal length:\t%f\n", stats->rtelength);
-		printf("\tunconverted:\t%i(%5.2f%%)\n",
-		       stats->rteunconverted, ratio);
-	    }
-	}
-	if (prop->parseWpt) {
-	    printf("Waypoints:\n");
-	    printf("\tpoint count:\t%i\n", stats->wptpoints);
-	}
+        if (prop->parseTrk) {
+            if (stats->trkunconverted != 0) {
+                ratio =
+                    (double) stats->trkunconverted / (stats->trkcount +
+                                                      stats->
+                                                      trkunconverted) *
+                    100;
+            } else {
+                ratio = 0;
+            }
+            printf("Track Points:\n");
+            printf("\ttrack count:\t%i\n", stats->trkcount);
+            printf("\tpoint count:\t%i\n", stats->trkpoints);
+            if (!prop->isFast) {
+                printf("\ttotal length:\t%f\n", stats->trklength);
+                printf("\tunconverted:\t%i(%5.2f%%)\n",
+                       stats->trkunconverted, ratio);
+            }
+        }
+        if (prop->parseRte) {
+            if (stats->rteunconverted != 0) {
+                ratio =
+                    (double) stats->rteunconverted / (stats->rtecount +
+                                                      stats->
+                                                      rteunconverted) *
+                    100;
+            } else {
+                ratio = 0;
+            }
+            printf("Routes:\n");
+            printf("\troute count:\t%i\n", stats->rtecount);
+            printf("\tpoint count:\t%i\n", stats->rtepoints);
+            if (!prop->isFast) {
+                printf("\ttotal length:\t%f\n", stats->rtelength);
+                printf("\tunconverted:\t%i(%5.2f%%)\n",
+                       stats->rteunconverted, ratio);
+            }
+        }
+        if (prop->parseWpt) {
+            printf("Waypoints:\n");
+            printf("\tpoint count:\t%i\n", stats->wptpoints);
+        }
     }
 }
 
 /**
- * clears a path attribute structure 
+ * clears a path attribute structure
  */
-void wipePathAttr(pathattr * pattr)
-{
+void wipePathAttr(pathattr * pattr) {
     pattr->name[0] = '\0';
     pattr->cmt[0] = '\0';
     pattr->desc[0] = '\0';
@@ -116,10 +113,9 @@ void wipePathAttr(pathattr * pattr)
 }
 
 /**
- * creates a new path attribute 
+ * creates a new path attribute
  */
-pathattr *createPathAttr(void)
-{
+pathattr *createPathAttr(void) {
     pathattr *pattr;
     pattr = (pathattr *) malloc(sizeof(pathattr));
     wipePathAttr(pattr);
@@ -127,10 +123,9 @@ pathattr *createPathAttr(void)
 }
 
 /**
- * clears a element attribute structure 
+ * clears a element attribute structure
  */
-void wipeAttr(g2sattr * attr)
-{
+void wipeAttr(g2sattr * attr) {
     attr->lon = 0;
     attr->lat = 0;
     attr->minlon = 0;
@@ -170,8 +165,7 @@ void wipeAttr(g2sattr * attr)
 /**
  * sets default values to a column properties.
  */
-void setColsDefault(g2scolumns * cols)
-{
+void setColsDefault(g2scolumns * cols) {
     cols->name = 1;
     cols->cmt = 1;
     cols->desc = 1;
@@ -201,8 +195,7 @@ void setColsDefault(g2scolumns * cols)
 /**
  * creates a column structure
  */
-g2scolumns *createCols(void)
-{
+g2scolumns *createCols(void) {
     g2scolumns *cols;
     cols = (g2scolumns *) malloc(sizeof(g2scolumns));
     setColsDefault(cols);
@@ -212,8 +205,7 @@ g2scolumns *createCols(void)
 /**
  * creates a element attribute structure.
  */
-g2sattr *createAttr(void)
-{
+g2sattr *createAttr(void) {
     g2sattr *attr;
     attr = (g2sattr *) malloc(sizeof(g2sattr));
     wipeAttr(attr);
@@ -223,8 +215,7 @@ g2sattr *createAttr(void)
 /**
  * creates a properties structure for gpx2shp
  */
-g2sprop *createProp(void)
-{
+g2sprop *createProp(void) {
     g2sprop *prop;
     g2sstats *stats;
     g2scolumns *cols;
@@ -266,8 +257,7 @@ g2sprop *createProp(void)
 /**
  * close and free a propertires structure
  */
-void closeProp(g2sprop * prop)
-{
+void closeProp(g2sprop * prop) {
     free(prop->stats);
     free(prop->sourcefile);
     free(prop->ellipsoid);
@@ -317,8 +307,7 @@ void closeProp(g2sprop * prop)
 /**
  * creates a parse structure
  */
-parsedata *createParsedata(XML_Parser parser, g2sprop * prop)
-{
+parsedata *createParsedata(XML_Parser parser, g2sprop * prop) {
     parsedata *pdata = (parsedata *) malloc(sizeof(parsedata));
     pdata->fp = NULL;
     //shphandles *shps = createShps();
@@ -350,8 +339,7 @@ parsedata *createParsedata(XML_Parser parser, g2sprop * prop)
 /*
  * close and free resoures
  */
-void closeParsedata(parsedata * pdata)
-{
+void closeParsedata(parsedata * pdata) {
     //free(pdata->shps);
     //free(pdata->dbfs);
     free(pdata->parent);

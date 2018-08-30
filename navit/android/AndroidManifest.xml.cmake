@@ -28,9 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" /> 
-                <category android:name="android.intent.category.DEFAULT" /> 
-                <data android:scheme="google.navigation" /> 
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="google.navigation" />
             </intent-filter>
         </activity>
         <activity android:name=".NavitAddressSearchActivity"></activity>
@@ -38,4 +38,4 @@
         <activity android:name=".NavitAddressResultListActivity"></activity>
         <activity android:name=".FileBrowserActivity"></activity>
     </application>
-</manifest> 
+</manifest>

@@ -11,8 +11,7 @@
 static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp );
 
 // typedefs
-static XPMCOLORENTRY theRGBRecords[] =
-{
+static XPMCOLORENTRY theRGBRecords[] = {
     {"ALICEBLUE", 240, 248, 255},
     {"ANTIQUEWHITE", 250, 235, 215},
     {"AQUAMARINE", 50, 191, 193},
@@ -250,348 +249,321 @@ static XPMCOLORENTRY theRGBRecords[] =
 };
 
 
-PXPM2BMP Xpm2bmp_new(void)
-{
-	PXPM2BMP preturn = g_malloc0( sizeof(XPM2BMP) );
-	return preturn;
+PXPM2BMP Xpm2bmp_new(void) {
+    PXPM2BMP preturn = g_malloc0( sizeof(XPM2BMP) );
+    return preturn;
 }
 
 
-int Xpm2bmp_load( PXPM2BMP pXpm2bmp, const char* filename )
-{
-	return CreateBitmapFromXpm( filename, pXpm2bmp );
+int Xpm2bmp_load( PXPM2BMP pXpm2bmp, const char* filename ) {
+    return CreateBitmapFromXpm( filename, pXpm2bmp );
 }
 
-int Xpm2bmp_paint( PXPM2BMP pXpm2bmp, HDC hdc, int x1,int y1 )
-{
-	StretchDIBits(hdc,
-					x1, y1, pXpm2bmp->size_x, pXpm2bmp->size_y,
-					0, 0, pXpm2bmp->size_x, pXpm2bmp->size_y,
-					pXpm2bmp->wimage_data_trans,
-					(BITMAPINFO *)pXpm2bmp->bmih_trans,
-					DIB_RGB_COLORS,
-					SRCAND );
+int Xpm2bmp_paint( PXPM2BMP pXpm2bmp, HDC hdc, int x1,int y1 ) {
+    StretchDIBits(hdc,
+                  x1, y1, pXpm2bmp->size_x, pXpm2bmp->size_y,
+                  0, 0, pXpm2bmp->size_x, pXpm2bmp->size_y,
+                  pXpm2bmp->wimage_data_trans,
+                  (BITMAPINFO *)pXpm2bmp->bmih_trans,
+                  DIB_RGB_COLORS,
+                  SRCAND );
 
-	StretchDIBits(hdc,
-					x1, y1, pXpm2bmp->size_x, pXpm2bmp->size_y,
-					0, 0, pXpm2bmp->size_x, pXpm2bmp->size_y,
-					pXpm2bmp->wimage_data,
-					(BITMAPINFO *)pXpm2bmp->bmih,
-					DIB_RGB_COLORS,
-					SRCPAINT );
+    StretchDIBits(hdc,
+                  x1, y1, pXpm2bmp->size_x, pXpm2bmp->size_y,
+                  0, 0, pXpm2bmp->size_x, pXpm2bmp->size_y,
+                  pXpm2bmp->wimage_data,
+                  (BITMAPINFO *)pXpm2bmp->bmih,
+                  DIB_RGB_COLORS,
+                  SRCPAINT );
 
-	return 0;
+    return 0;
 }
 
-static int parse_line_values( const char* line, PXPM2BMP pXpm2bmp )
-{
-	int return_value = 0;
-	char* parse_line = (char*)line;
-	char* tok;
-	int value_pos = 0;
+static int parse_line_values( const char* line, PXPM2BMP pXpm2bmp ) {
+    int return_value = 0;
+    char* parse_line = (char*)line;
+    char* tok;
+    int value_pos = 0;
 
-	parse_line = strchr( parse_line, '"' );
-	parse_line++;
+    parse_line = strchr( parse_line, '"' );
+    parse_line++;
 
-	tok = strtok( parse_line, " \t\n" );
+    tok = strtok( parse_line, " \t\n" );
 
-	while ( tok != 0 )
-	{
-		int val = atoi( tok );
-		switch ( value_pos )
-		{
-			case 0: pXpm2bmp->size_x = val; break;
-			case 1: pXpm2bmp->size_y = val; break;
-			case 2: pXpm2bmp->colors = val; break;
-			case 3: pXpm2bmp->chars_per_pixel = val; break;
-			case 4: pXpm2bmp->hotspot_x = val; break;
-			case 5: pXpm2bmp->hotspot_y = val; break;
-		}
-		tok = strtok( NULL, " \t" );
-		value_pos ++;
+    while ( tok != 0 ) {
+        int val = atoi( tok );
+        switch ( value_pos ) {
+        case 0:
+            pXpm2bmp->size_x = val;
+            break;
+        case 1:
+            pXpm2bmp->size_y = val;
+            break;
+        case 2:
+            pXpm2bmp->colors = val;
+            break;
+        case 3:
+            pXpm2bmp->chars_per_pixel = val;
+            break;
+        case 4:
+            pXpm2bmp->hotspot_x = val;
+            break;
+        case 5:
+            pXpm2bmp->hotspot_y = val;
+            break;
+        }
+        tok = strtok( NULL, " \t" );
+        value_pos ++;
 
-	}
+    }
 
-	return return_value;
+    return return_value;
 }
 
-static int hex2int( char c )
-{
-	if ((c >= '0') && (c <='9' )) return c - '0';
-	if ((c >= 'A') && (c <= 'F')) return c - 'A' + 10;
-	if ((c >= 'a') && (c <= 'f')) return c - 'a' + 10;
-	return -1;
+static int hex2int( char c ) {
+    if ((c >= '0') && (c <='9' )) return c - '0';
+    if ((c >= 'A') && (c <= 'F')) return c - 'A' + 10;
+    if ((c >= 'a') && (c <= 'f')) return c - 'a' + 10;
+    return -1;
 }
 
-static DWORD string2hex16( const char* str )
-{
-	int i1 = hex2int( str[0] );
-	int i2 = hex2int( str[1] );
-	if ( ( i1 >= 0 ) && ( i2 >= 0 ) )
-		return i1*16+i2;
-	return -1;
+static DWORD string2hex16( const char* str ) {
+    int i1 = hex2int( str[0] );
+    int i2 = hex2int( str[1] );
+    if ( ( i1 >= 0 ) && ( i2 >= 0 ) )
+        return i1*16+i2;
+    return -1;
 }
 
-static int parse_color_values( const char* line, PXPM2BMP pXpm2bmp )
-{
-	int return_value = 0;
-	char* cq    = strchr( line, '"' );
-	char* cchar = strchr(  cq+pXpm2bmp->chars_per_pixel+1, 'c' );
-	char* chash = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '#' );
-	char* qe    = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '"' );
+static int parse_color_values( const char* line, PXPM2BMP pXpm2bmp ) {
+    int return_value = 0;
+    char* cq    = strchr( line, '"' );
+    char* cchar = strchr(  cq+pXpm2bmp->chars_per_pixel+1, 'c' );
+    char* chash = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '#' );
+    char* qe    = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '"' );
 
-	cq++;
+    cq++;
 
-	if ( cq )
-	{
-		memcpy( pXpm2bmp->color_entires[ pXpm2bmp-> color_entires_size].color_str, cq, pXpm2bmp->chars_per_pixel + 1 );
-		pXpm2bmp->color_entires[ pXpm2bmp-> color_entires_size].color_str[ pXpm2bmp->chars_per_pixel ] = '\0';
+    if ( cq ) {
+        memcpy( pXpm2bmp->color_entires[ pXpm2bmp-> color_entires_size].color_str, cq, pXpm2bmp->chars_per_pixel + 1 );
+        pXpm2bmp->color_entires[ pXpm2bmp-> color_entires_size].color_str[ pXpm2bmp->chars_per_pixel ] = '\0';
 
 
-		if ( cchar && chash && qe)
-		{
-			int len;
-			chash++;
-			*qe = 0;
-			len = strlen( chash );
+        if ( cchar && chash && qe) {
+            int len;
+            chash++;
+            *qe = 0;
+            len = strlen( chash );
 
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = string2hex16( &chash[0] );
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = string2hex16( &chash[len / 3] );
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = string2hex16( &chash[len * 2 / 3] );
+            pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = string2hex16( &chash[0] );
+            pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = string2hex16( &chash[len / 3] );
+            pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = string2hex16( &chash[len * 2 / 3] );
 #ifdef _DBG
-printf( "adding color %s => %d RGB %x %x %x to index %d\n",
-			line,
-			pXpm2bmp->color_entires_size,
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r,
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g,
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b,
-			pXpm2bmp->color_entires_size );
+            printf( "adding color %s => %d RGB %x %x %x to index %d\n",
+                    line,
+                    pXpm2bmp->color_entires_size,
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r,
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g,
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b,
+                    pXpm2bmp->color_entires_size );
 #endif
-		}
-		else
-		{
-			int q;
-			char *start = cchar + 1;
-			char *end = start;
+        } else {
+            int q;
+            char *start = cchar + 1;
+            char *end = start;
 
-			while ( *start != 0 )
-			{
-				if ( ( *start != '\t' ) &&  ( *start != ' ' ) )
-				{
-					break;
-				}
-				start++;
-			}
+            while ( *start != 0 ) {
+                if ( ( *start != '\t' ) &&  ( *start != ' ' ) ) {
+                    break;
+                }
+                start++;
+            }
 
-			end = start;
-			while ( *end != 0 )
-			{
-				if ( ( *end == '\t' ) ||  ( *end == ' ' ) ||  ( *end == '"' ))
-				{
-					*end = 0;
-				}
-				end++;
-			}
+            end = start;
+            while ( *end != 0 ) {
+                if ( ( *end == '\t' ) ||  ( *end == ' ' ) ||  ( *end == '"' )) {
+                    *end = 0;
+                }
+                end++;
+            }
 
-			start = _strupr( start );
+            start = _strupr( start );
 
-			for ( q=0; q < sizeof( theRGBRecords ) / sizeof( theRGBRecords[0] ); q++ )
-			{
+            for ( q=0; q < sizeof( theRGBRecords ) / sizeof( theRGBRecords[0] ); q++ ) {
 
-				if ( 0 == strcmp( start, theRGBRecords[q].color_str  ) )
-				{
-					pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = theRGBRecords[q].r;
-					pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = theRGBRecords[q].g;
-					pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = theRGBRecords[q].b;
-				}
-			}
-			if ( 0 == strcmp( start, "NONE" ) )
-			{
-				pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = 255;
-				pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = 0;
-				pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = 255;
-			}
-		}
-	}
-	pXpm2bmp->color_entires_size++;
+                if ( 0 == strcmp( start, theRGBRecords[q].color_str  ) ) {
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = theRGBRecords[q].r;
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = theRGBRecords[q].g;
+                    pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = theRGBRecords[q].b;
+                }
+            }
+            if ( 0 == strcmp( start, "NONE" ) ) {
+                pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = 255;
+                pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = 0;
+                pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = 255;
+            }
+        }
+    }
+    pXpm2bmp->color_entires_size++;
 
-	return return_value;
+    return return_value;
 }
 
 static int vv = 0;
 
-static int parse_pixel_line_values( const char* line, PXPM2BMP pXpm2bmp, unsigned char* pixel_data, unsigned char* pixel_data_trans )
-{
-	int return_value = 0;
-	int i,j;
+static int parse_pixel_line_values( const char* line, PXPM2BMP pXpm2bmp, unsigned char* pixel_data,
+                                    unsigned char* pixel_data_trans ) {
+    int return_value = 0;
+    int i,j;
 
 
-	char* cq    = strchr( line, '"' );
-	int pix_idx = 0;
-	int size_x = pXpm2bmp->size_x;
-	int len = strlen( cq );
+    char* cq    = strchr( line, '"' );
+    int pix_idx = 0;
+    int size_x = pXpm2bmp->size_x;
+    int len = strlen( cq );
 
-	cq++;
+    cq++;
 
-	if ( len > pXpm2bmp->chars_per_pixel * size_x )
-	{
-		for ( i=0; i< size_x; i++ )
-		{
-			int found = 0;
-			char* cmp = &cq[ i * pXpm2bmp->chars_per_pixel];
+    if ( len > pXpm2bmp->chars_per_pixel * size_x ) {
+        for ( i=0; i< size_x; i++ ) {
+            int found = 0;
+            char* cmp = &cq[ i * pXpm2bmp->chars_per_pixel];
 
-			for ( j=0; j< pXpm2bmp-> color_entires_size; j++ )
-			{
-				if ( strncmp( cmp, pXpm2bmp->color_entires[ j ].color_str, pXpm2bmp->chars_per_pixel ) == 0 )
-				{
-					int r = pXpm2bmp->color_entires[ j ].r;
-					int g = pXpm2bmp->color_entires[ j ].g;
-					int b = pXpm2bmp->color_entires[ j ].b;
+            for ( j=0; j< pXpm2bmp-> color_entires_size; j++ ) {
+                if ( strncmp( cmp, pXpm2bmp->color_entires[ j ].color_str, pXpm2bmp->chars_per_pixel ) == 0 ) {
+                    int r = pXpm2bmp->color_entires[ j ].r;
+                    int g = pXpm2bmp->color_entires[ j ].g;
+                    int b = pXpm2bmp->color_entires[ j ].b;
 
-					if ( ( r == 255 ) && ( g == 0 ) && ( r == 255 ) )
-					{
-						r=g=b=0;
-						pixel_data_trans[ pix_idx ] = 255;
-						pixel_data_trans[ pix_idx+1 ] = 255;
-						pixel_data_trans[ pix_idx+2 ] = 255;
-					}
-					else
-					{
-						pixel_data_trans[ pix_idx ] = 0;
-						pixel_data_trans[ pix_idx+1 ] = 0;
-						pixel_data_trans[ pix_idx+2 ] = 0;
-					}
+                    if ( ( r == 255 ) && ( g == 0 ) && ( r == 255 ) ) {
+                        r=g=b=0;
+                        pixel_data_trans[ pix_idx ] = 255;
+                        pixel_data_trans[ pix_idx+1 ] = 255;
+                        pixel_data_trans[ pix_idx+2 ] = 255;
+                    } else {
+                        pixel_data_trans[ pix_idx ] = 0;
+                        pixel_data_trans[ pix_idx+1 ] = 0;
+                        pixel_data_trans[ pix_idx+2 ] = 0;
+                    }
 
-					// pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].r;
-					// pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].g;
-					// pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].b;
-					pixel_data[ pix_idx++ ] = b;
-					pixel_data[ pix_idx++ ] = g;
-					pixel_data[ pix_idx++ ] = r;
-					found = 1;
-					vv++;
-					break;
-				}
-			}
-			if ( !found )
-			{
-				fprintf( stderr, "XPMLIB: error color not found\n" );
-			}
+                    // pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].r;
+                    // pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].g;
+                    // pixel_data[ pix_idx++ ] = pXpm2bmp->color_entires[ j ].b;
+                    pixel_data[ pix_idx++ ] = b;
+                    pixel_data[ pix_idx++ ] = g;
+                    pixel_data[ pix_idx++ ] = r;
+                    found = 1;
+                    vv++;
+                    break;
+                }
+            }
+            if ( !found ) {
+                fprintf( stderr, "XPMLIB: error color not found\n" );
+            }
 
-		}
-	}
-	else
-	{
-		return_value = -1;
-		fprintf( stderr, "XPMLIB: invalid line length\n" );
-	}
-	return return_value;
+        }
+    } else {
+        return_value = -1;
+        fprintf( stderr, "XPMLIB: invalid line length\n" );
+    }
+    return return_value;
 }
 
 
-static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
-{
-	int return_val = 0;
+static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp ) {
+    int return_val = 0;
     unsigned char i, row;
-	char line[ 1024   ];
-	int nbytes ;
-	int padding, rowsize = 0;
-	FILE* file_xpm = fopen( filename, "r" );
+    char line[ 1024   ];
+    int nbytes ;
+    int padding, rowsize = 0;
+    FILE* file_xpm = fopen( filename, "r" );
 
-	int phase = 0;
-	row = 0;
+    int phase = 0;
+    row = 0;
 
-	if ( file_xpm )
-	{
-		while ( fgets(line, sizeof( line ), file_xpm ) )
-		{
+    if ( file_xpm ) {
+        while ( fgets(line, sizeof( line ), file_xpm ) ) {
 #ifdef _DBG
-			printf( "PARSING: %s\n", line );
+            printf( "PARSING: %s\n", line );
 #endif
-			if ( line[ 0 ] != '"' )
-				continue;
+            if ( line[ 0 ] != '"' )
+                continue;
 
-			switch ( phase )
-			{
-				case 0:
-					parse_line_values( line, pXpm2bmp );
+            switch ( phase ) {
+            case 0:
+                parse_line_values( line, pXpm2bmp );
 #ifdef _DBG
-					printf( "size_x %d\n", pXpm2bmp->size_x );
-					printf( "size_y %d\n", pXpm2bmp->size_y );
+                printf( "size_x %d\n", pXpm2bmp->size_x );
+                printf( "size_y %d\n", pXpm2bmp->size_y );
 #endif
-					phase = 1;
+                phase = 1;
 
-					pXpm2bmp->color_entires_size = 0;
-					nbytes = ( pXpm2bmp->chars_per_pixel + 1 ) * pXpm2bmp->colors;
+                pXpm2bmp->color_entires_size = 0;
+                nbytes = ( pXpm2bmp->chars_per_pixel + 1 ) * pXpm2bmp->colors;
 
-					pXpm2bmp->color_entires = g_malloc0( sizeof(XPMCOLORENTRY) * (pXpm2bmp->colors + 100) );
-					pXpm2bmp->color_entires[0].color_str = g_malloc0( nbytes * pXpm2bmp->colors );
-					for ( i = 1; i< pXpm2bmp->colors; i++ )
-					{
-						pXpm2bmp->color_entires[i].color_str = pXpm2bmp->color_entires[0].color_str + ( pXpm2bmp->chars_per_pixel + 1 ) * i;
-					}
+                pXpm2bmp->color_entires = g_malloc0( sizeof(XPMCOLORENTRY) * (pXpm2bmp->colors + 100) );
+                pXpm2bmp->color_entires[0].color_str = g_malloc0( nbytes * pXpm2bmp->colors );
+                for ( i = 1; i< pXpm2bmp->colors; i++ ) {
+                    pXpm2bmp->color_entires[i].color_str = pXpm2bmp->color_entires[0].color_str + ( pXpm2bmp->chars_per_pixel + 1 ) * i;
+                }
 
-					rowsize=pXpm2bmp->size_x * 3;
-					padding=4-(rowsize%4);
-					if(padding<4)
-						rowsize+=padding;
-
-
-					if (!(pXpm2bmp->dib = (unsigned char *)g_malloc(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y )))
-					{
-						return 4;
-					}
-					if (!(pXpm2bmp->dib_trans = (unsigned char *)g_malloc0(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y )))
-					{
-						return 4;
-					}
-
-					memset(pXpm2bmp->dib, 0, sizeof(BITMAPINFOHEADER));
-					pXpm2bmp->bmih = (BITMAPINFOHEADER *)pXpm2bmp->dib;
-					pXpm2bmp->bmih->biSize = sizeof(BITMAPINFOHEADER);
-					pXpm2bmp->bmih->biWidth = pXpm2bmp->size_x;
-					pXpm2bmp->bmih->biHeight = -((long)pXpm2bmp->size_y);
-					pXpm2bmp->bmih->biPlanes = 1;
-					pXpm2bmp->bmih->biBitCount = 24;
-					pXpm2bmp->bmih->biCompression = 0;
-					pXpm2bmp->wimage_data = pXpm2bmp->dib + sizeof(BITMAPINFOHEADER);
+                rowsize=pXpm2bmp->size_x * 3;
+                padding=4-(rowsize%4);
+                if(padding<4)
+                    rowsize+=padding;
 
 
-					pXpm2bmp->bmih_trans = (BITMAPINFOHEADER *)pXpm2bmp->dib_trans;
-					pXpm2bmp->bmih_trans->biSize = sizeof(BITMAPINFOHEADER);
-					pXpm2bmp->bmih_trans->biWidth = pXpm2bmp->size_x;
-					pXpm2bmp->bmih_trans->biHeight = -((long)pXpm2bmp->size_y);
-					pXpm2bmp->bmih_trans->biPlanes = 1;
-					pXpm2bmp->bmih_trans->biBitCount = 24;
-					pXpm2bmp->bmih_trans->biCompression = 0;
-					pXpm2bmp->wimage_data_trans = pXpm2bmp->dib_trans + sizeof(BITMAPINFOHEADER);
+                if (!(pXpm2bmp->dib = (unsigned char *)g_malloc(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y ))) {
+                    return 4;
+                }
+                if (!(pXpm2bmp->dib_trans = (unsigned char *)g_malloc0(sizeof(BITMAPINFOHEADER) + rowsize * pXpm2bmp->size_y ))) {
+                    return 4;
+                }
+
+                memset(pXpm2bmp->dib, 0, sizeof(BITMAPINFOHEADER));
+                pXpm2bmp->bmih = (BITMAPINFOHEADER *)pXpm2bmp->dib;
+                pXpm2bmp->bmih->biSize = sizeof(BITMAPINFOHEADER);
+                pXpm2bmp->bmih->biWidth = pXpm2bmp->size_x;
+                pXpm2bmp->bmih->biHeight = -((long)pXpm2bmp->size_y);
+                pXpm2bmp->bmih->biPlanes = 1;
+                pXpm2bmp->bmih->biBitCount = 24;
+                pXpm2bmp->bmih->biCompression = 0;
+                pXpm2bmp->wimage_data = pXpm2bmp->dib + sizeof(BITMAPINFOHEADER);
+
+
+                pXpm2bmp->bmih_trans = (BITMAPINFOHEADER *)pXpm2bmp->dib_trans;
+                pXpm2bmp->bmih_trans->biSize = sizeof(BITMAPINFOHEADER);
+                pXpm2bmp->bmih_trans->biWidth = pXpm2bmp->size_x;
+                pXpm2bmp->bmih_trans->biHeight = -((long)pXpm2bmp->size_y);
+                pXpm2bmp->bmih_trans->biPlanes = 1;
+                pXpm2bmp->bmih_trans->biBitCount = 24;
+                pXpm2bmp->bmih_trans->biCompression = 0;
+                pXpm2bmp->wimage_data_trans = pXpm2bmp->dib_trans + sizeof(BITMAPINFOHEADER);
 //					memset( pXpm2bmp->wimage_data_trans, 255, 5* 22 * 3 );
 
-				break;
-				case 1:
-					parse_color_values( line, pXpm2bmp  );
-					if ( pXpm2bmp->color_entires_size >= pXpm2bmp->colors )
-					{
-						phase = 2;
-					}
+                break;
+            case 1:
+                parse_color_values( line, pXpm2bmp  );
+                if ( pXpm2bmp->color_entires_size >= pXpm2bmp->colors ) {
+                    phase = 2;
+                }
 
-				break;
-				case 2:
-					parse_pixel_line_values( line, pXpm2bmp,
-					pXpm2bmp->wimage_data + row * rowsize,
-					pXpm2bmp->wimage_data_trans + row * rowsize );
+                break;
+            case 2:
+                parse_pixel_line_values( line, pXpm2bmp,
+                                         pXpm2bmp->wimage_data + row * rowsize,
+                                         pXpm2bmp->wimage_data_trans + row * rowsize );
 
-					row++;
-					if ( row >= pXpm2bmp->size_y )
-					{
-						phase = 3;
-					}
-				break;
-			}
+                row++;
+                if ( row >= pXpm2bmp->size_y ) {
+                    phase = 3;
+                }
+                break;
+            }
 
-		}
+        }
 
-		fclose( file_xpm );
-	}
-	return return_val;
+        fclose( file_xpm );
+    }
+    return return_val;
 }

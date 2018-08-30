@@ -20,8 +20,6 @@
 #include "config.h"
 #include "plugin.h"
 
-void
-plugin_init(void)
-{
-	plugin_get_category_vehicle("file");
+void plugin_init(void) {
+    plugin_get_category_vehicle("file");
 }

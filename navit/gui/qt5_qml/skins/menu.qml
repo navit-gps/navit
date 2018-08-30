@@ -18,7 +18,7 @@ Rectangle {
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
-        
+
         Loader {
             id: menucontent
             width: parent.width

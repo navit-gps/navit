@@ -48,7 +48,7 @@ public:
 		//QDeclarativeExpression commandJS(this->object->guiWidget->rootContext(),QString(),qobject_cast<QObject*>(this->object->guiWidget->rootObject()));
 		//commandJS.setSourceLocation("command.js",0);
 		//this->function=function;
-		//commandJS.eval(qobject_cast<QObject*>(this->object->guiWidget->rootObject()));		
+		//commandJS.eval(qobject_cast<QObject*>(this->object->guiWidget->rootObject()));
 	}
 signals:
 	void widthSignal(int);
@@ -57,7 +57,7 @@ public slots:
 	void pushPage(QString page) {
 		returnPath.push_front(page);
 	}
-	QString popPage() {		
+	QString popPage() {
 		if (!returnPath.empty()) {
 			if (returnPath.length()>1) {
 				returnPath.pop_front();

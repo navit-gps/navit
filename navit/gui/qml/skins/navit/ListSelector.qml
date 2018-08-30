@@ -17,8 +17,8 @@ Rectangle {
 		listScroller.opacity=0.5;
 	}
     }
-    
-    Component.onCompleted: startup();    
+
+    Component.onCompleted: startup();
 
     Text {
 	id: labelTxt; text: listselector.text; color: "White"; font.pointSize: 22;
@@ -37,7 +37,7 @@ Rectangle {
 	     clip: true
 	     highlightFollowsCurrentItem: true
 	     keyNavigationWraps: true
-	     
+
 	     Component.onCompleted: { list.currentIndex=listselector.itemId; }
          }
 	 Rectangle {

@@ -23,8 +23,7 @@ extern "C" {
 #include "debug.h"
 }
 
-Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category)
-{
+Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category) {
     data = new QByteArray();
     buffer = new QBuffer(data);
     buffer->open(QIODevice::ReadWrite);
@@ -47,25 +46,24 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category)
 
     audio = new QAudioOutput(format, this);
     /* try to set a rather huge buffer size in order to avoid chopping due to
-   * event loop
-   * not getting idle. Drawing may take just too long time. This hopefully
-   * removes the
-   * need to do multi threading with all its problems. May be a problem on
-   * systems with
-   * really low memory.*/
+    * event loop
+    * not getting idle. Drawing may take just too long time. This hopefully
+    * removes the
+    * need to do multi threading with all its problems. May be a problem on
+    * systems with
+    * really low memory.*/
     audio->setBufferSize((samplerate * 1 /*ch*/ * 2 /*samplezize*/) * 5 /*seconds*/);
     dbg(lvl_debug, "Buffer size is: %d", audio->bufferSize());
     if (category != NULL)
         audio->setCategory(QString(category));
 
     connect(audio, SIGNAL(stateChanged(QAudio::State)), this,
-        SLOT(handleStateChanged(QAudio::State)));
+            SLOT(handleStateChanged(QAudio::State)));
     /* to cope with resume coming from other thread (of libespeak)*/
     connect(this, SIGNAL(call_resume(int)), this, SLOT(resume(int)));
 }
 
-Qt5EspeakAudioOut::~Qt5EspeakAudioOut()
-{
+Qt5EspeakAudioOut::~Qt5EspeakAudioOut() {
     delete (audio);
     audio = NULL;
     delete (buffer);
@@ -74,8 +72,7 @@ Qt5EspeakAudioOut::~Qt5EspeakAudioOut()
     data = NULL;
 }
 
-void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState)
-{
+void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState) {
     dbg(lvl_debug, "Enter %d", newState);
     switch (newState) {
     case QAudio::ActiveState:
@@ -93,15 +90,13 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState)
     }
 }
 
-void Qt5EspeakAudioOut::resume(int state)
-{
+void Qt5EspeakAudioOut::resume(int state) {
     dbg(lvl_debug, "Enter %d", state);
     if (audio->state() != QAudio::ActiveState)
         audio->start(buffer);
 }
 
-void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples)
-{
+void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples) {
     dbg(lvl_debug, "Enter (%d samples)", numsamples);
 
     /*remove all data that was already read (if any)*/

@@ -7,242 +7,224 @@
 
 #include "fileformat.pb-c.h"
 void   osmpbf__blob__init
-                     (OSMPBF__Blob         *message)
-{
-  static OSMPBF__Blob init_value = OSMPBF__BLOB__INIT;
-  *message = init_value;
+(OSMPBF__Blob         *message) {
+    static OSMPBF__Blob init_value = OSMPBF__BLOB__INIT;
+    *message = init_value;
 }
 size_t osmpbf__blob__get_packed_size
-                     (const OSMPBF__Blob *message)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
-  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+(const OSMPBF__Blob *message) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
+    return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
 size_t osmpbf__blob__pack
-                     (const OSMPBF__Blob *message,
-                      uint8_t       *out)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
-  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+(const OSMPBF__Blob *message,
+ uint8_t       *out) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
+    return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
 size_t osmpbf__blob__pack_to_buffer
-                     (const OSMPBF__Blob *message,
-                      ProtobufCBuffer *buffer)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
-  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+(const OSMPBF__Blob *message,
+ ProtobufCBuffer *buffer) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
+    return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
 OSMPBF__Blob *
-       osmpbf__blob__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data)
-{
-  return (OSMPBF__Blob *)
-     protobuf_c_message_unpack (&osmpbf__blob__descriptor,
-                                allocator, len, data);
+osmpbf__blob__unpack
+(ProtobufCAllocator  *allocator,
+ size_t               len,
+ const uint8_t       *data) {
+    return (OSMPBF__Blob *)
+           protobuf_c_message_unpack (&osmpbf__blob__descriptor,
+                                      allocator, len, data);
 }
 void   osmpbf__blob__free_unpacked
-                     (OSMPBF__Blob *message,
-                      ProtobufCAllocator *allocator)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
-  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+(OSMPBF__Blob *message,
+ ProtobufCAllocator *allocator) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob__descriptor);
+    protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   osmpbf__blob_header__init
-                     (OSMPBF__BlobHeader         *message)
-{
-  static OSMPBF__BlobHeader init_value = OSMPBF__BLOB_HEADER__INIT;
-  *message = init_value;
+(OSMPBF__BlobHeader         *message) {
+    static OSMPBF__BlobHeader init_value = OSMPBF__BLOB_HEADER__INIT;
+    *message = init_value;
 }
 size_t osmpbf__blob_header__get_packed_size
-                     (const OSMPBF__BlobHeader *message)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
-  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+(const OSMPBF__BlobHeader *message) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
+    return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
 size_t osmpbf__blob_header__pack
-                     (const OSMPBF__BlobHeader *message,
-                      uint8_t       *out)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
-  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+(const OSMPBF__BlobHeader *message,
+ uint8_t       *out) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
+    return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
 size_t osmpbf__blob_header__pack_to_buffer
-                     (const OSMPBF__BlobHeader *message,
-                      ProtobufCBuffer *buffer)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
-  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+(const OSMPBF__BlobHeader *message,
+ ProtobufCBuffer *buffer) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
+    return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
 OSMPBF__BlobHeader *
-       osmpbf__blob_header__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data)
-{
-  return (OSMPBF__BlobHeader *)
-     protobuf_c_message_unpack (&osmpbf__blob_header__descriptor,
-                                allocator, len, data);
+osmpbf__blob_header__unpack
+(ProtobufCAllocator  *allocator,
+ size_t               len,
+ const uint8_t       *data) {
+    return (OSMPBF__BlobHeader *)
+           protobuf_c_message_unpack (&osmpbf__blob_header__descriptor,
+                                      allocator, len, data);
 }
 void   osmpbf__blob_header__free_unpacked
-                     (OSMPBF__BlobHeader *message,
-                      ProtobufCAllocator *allocator)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
-  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+(OSMPBF__BlobHeader *message,
+ ProtobufCAllocator *allocator) {
+    PROTOBUF_C_ASSERT (message->base.descriptor == &osmpbf__blob_header__descriptor);
+    protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor osmpbf__blob__field_descriptors[5] =
-{
-  {
-    "raw",
-    1,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_raw),
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, raw),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "raw_size",
-    2,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_INT32,
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_raw_size),
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, raw_size),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "zlib_data",
-    3,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_zlib_data),
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, zlib_data),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "lzma_data",
-    4,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_lzma_data),
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, lzma_data),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "OBSOLETE_bzip2_data",
-    5,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_obsolete_bzip2_data),
-    PROTOBUF_C_OFFSETOF(OSMPBF__Blob, obsolete_bzip2_data),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
+static const ProtobufCFieldDescriptor osmpbf__blob__field_descriptors[5] = {
+    {
+        "raw",
+        1,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_BYTES,
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_raw),
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, raw),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "raw_size",
+        2,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_INT32,
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_raw_size),
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, raw_size),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "zlib_data",
+        3,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_BYTES,
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_zlib_data),
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, zlib_data),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "lzma_data",
+        4,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_BYTES,
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_lzma_data),
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, lzma_data),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "OBSOLETE_bzip2_data",
+        5,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_BYTES,
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, has_obsolete_bzip2_data),
+        PROTOBUF_C_OFFSETOF(OSMPBF__Blob, obsolete_bzip2_data),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
 };
 static const unsigned osmpbf__blob__field_indices_by_name[] = {
-  4,   /* field[4] = OBSOLETE_bzip2_data */
-  3,   /* field[3] = lzma_data */
-  0,   /* field[0] = raw */
-  1,   /* field[1] = raw_size */
-  2,   /* field[2] = zlib_data */
+    4,   /* field[4] = OBSOLETE_bzip2_data */
+    3,   /* field[3] = lzma_data */
+    0,   /* field[0] = raw */
+    1,   /* field[1] = raw_size */
+    2,   /* field[2] = zlib_data */
 };
-static const ProtobufCIntRange osmpbf__blob__number_ranges[1 + 1] =
-{
-  { 1, 0 },
-  { 0, 5 }
+static const ProtobufCIntRange osmpbf__blob__number_ranges[1 + 1] = {
+    { 1, 0 },
+    { 0, 5 }
 };
-const ProtobufCMessageDescriptor osmpbf__blob__descriptor =
-{
-  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
-  "OSMPBF.Blob",
-  "Blob",
-  "OSMPBF__Blob",
-  "OSMPBF",
-  sizeof(OSMPBF__Blob),
-  5,
-  osmpbf__blob__field_descriptors,
-  osmpbf__blob__field_indices_by_name,
-  1,  osmpbf__blob__number_ranges,
-  (ProtobufCMessageInit) osmpbf__blob__init,
-  NULL,NULL,NULL    /* reserved[123] */
+const ProtobufCMessageDescriptor osmpbf__blob__descriptor = {
+    PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+    "OSMPBF.Blob",
+    "Blob",
+    "OSMPBF__Blob",
+    "OSMPBF",
+    sizeof(OSMPBF__Blob),
+    5,
+    osmpbf__blob__field_descriptors,
+    osmpbf__blob__field_indices_by_name,
+    1,  osmpbf__blob__number_ranges,
+    (ProtobufCMessageInit) osmpbf__blob__init,
+    NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor osmpbf__blob_header__field_descriptors[3] =
-{
-  {
-    "type",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, type),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "indexdata",
-    2,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, has_indexdata),
-    PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, indexdata),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "datasize",
-    3,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, datasize),
-    NULL,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
+static const ProtobufCFieldDescriptor osmpbf__blob_header__field_descriptors[3] = {
+    {
+        "type",
+        1,
+        PROTOBUF_C_LABEL_REQUIRED,
+        PROTOBUF_C_TYPE_STRING,
+        0,   /* quantifier_offset */
+        PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, type),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "indexdata",
+        2,
+        PROTOBUF_C_LABEL_OPTIONAL,
+        PROTOBUF_C_TYPE_BYTES,
+        PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, has_indexdata),
+        PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, indexdata),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
+    {
+        "datasize",
+        3,
+        PROTOBUF_C_LABEL_REQUIRED,
+        PROTOBUF_C_TYPE_INT32,
+        0,   /* quantifier_offset */
+        PROTOBUF_C_OFFSETOF(OSMPBF__BlobHeader, datasize),
+        NULL,
+        NULL,
+        0,            /* packed */
+        0,NULL,NULL    /* reserved1,reserved2, etc */
+    },
 };
 static const unsigned osmpbf__blob_header__field_indices_by_name[] = {
-  2,   /* field[2] = datasize */
-  1,   /* field[1] = indexdata */
-  0,   /* field[0] = type */
+    2,   /* field[2] = datasize */
+    1,   /* field[1] = indexdata */
+    0,   /* field[0] = type */
 };
-static const ProtobufCIntRange osmpbf__blob_header__number_ranges[1 + 1] =
-{
-  { 1, 0 },
-  { 0, 3 }
+static const ProtobufCIntRange osmpbf__blob_header__number_ranges[1 + 1] = {
+    { 1, 0 },
+    { 0, 3 }
 };
-const ProtobufCMessageDescriptor osmpbf__blob_header__descriptor =
-{
-  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
-  "OSMPBF.BlobHeader",
-  "BlobHeader",
-  "OSMPBF__BlobHeader",
-  "OSMPBF",
-  sizeof(OSMPBF__BlobHeader),
-  3,
-  osmpbf__blob_header__field_descriptors,
-  osmpbf__blob_header__field_indices_by_name,
-  1,  osmpbf__blob_header__number_ranges,
-  (ProtobufCMessageInit) osmpbf__blob_header__init,
-  NULL,NULL,NULL    /* reserved[123] */
+const ProtobufCMessageDescriptor osmpbf__blob_header__descriptor = {
+    PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+    "OSMPBF.BlobHeader",
+    "BlobHeader",
+    "OSMPBF__BlobHeader",
+    "OSMPBF",
+    sizeof(OSMPBF__BlobHeader),
+    3,
+    osmpbf__blob_header__field_descriptors,
+    osmpbf__blob_header__field_indices_by_name,
+    1,  osmpbf__blob_header__number_ranges,
+    (ProtobufCMessageInit) osmpbf__blob_header__init,
+    NULL,NULL,NULL    /* reserved[123] */
 };

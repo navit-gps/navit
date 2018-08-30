@@ -25,7 +25,7 @@
 	<string name="optionsmenu_exit_navit">Exit Navit</string>
 	<string name="optionsmenu_backup_restore">Backup / Restore</string>
 	<string name="optionsmenu_set_map_location">Set map location</string>
-	
+
 	<!-- POSITION POP-UP -->
 	<string name="position_popup_title">Position</string>
 	<string name="position_popup_drive_here">Route to here</string>
@@ -65,7 +65,7 @@
 	<string name="address_search_set_destination">Setting destination to:</string>
 	<string name="address_search_towns">Towns</string>
 	<string name="address_search_streets">Streets</string>
-	
+
 	<!--  Backup Restore -->
 	<string name="choose_an_action">Choose an action</string>
 	<string name="please_insert_an_sd_card">Please insert an SD Card</string>
@@ -82,11 +82,11 @@
 	<string name="select_backup">Select backup</string>
 	<string name="backup">Backup</string>
 	<string name="restore">Restore</string>
-	
+
 	<!-- TTS -->
 	<string name="TTS_title_data_missing">System text to speech engine data is missing</string>
 	<string name="TTS_qery_install_data">Navit can use any text to speech engine installed on your device. The currently selected engine reports it is unable to speak in your language. Should we ask the system to show voice download dialog?</string>
-	
+
 	<!-- Permissions dialog-->
 	<string name="permissions_not_granted">Navit needs permission to access GPS and read the map.\nIf you change your mind please restart Navit and grant the permissions</string>
 	<string name="permissions_info_box_title">One or more ungranted permissions</string>

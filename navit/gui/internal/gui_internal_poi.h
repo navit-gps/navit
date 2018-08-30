@@ -13,28 +13,28 @@ struct poi_param {
 
 		/**
  		 * Index to struct selector selectors[], shows what type of POIs is defined.
-		 */		
+		 */
 		unsigned char selnb;
 		/**
  		 * Page number to display.
-		 */		
+		 */
 		unsigned char pagenb;
 		/**
  		 * Radius (number of 10-kilometer intervals) to search for POIs.
-		 */		
+		 */
 		unsigned char dist;
 		/**
  		 * Should filter phrase be compared to postal address of the POI.
  		 * =0 - name filter, =1 - address filter, =2 - address filter, including postal code
-		 */		
+		 */
 		unsigned char AddressFilterType;
 		/**
  		 * Filter string, casefold()ed and divided into substrings at the spaces, which are replaced by ASCII 0*.
-		 */		
-		char *filterstr; 
+		 */
+		char *filterstr;
 		/**
  		 * list of pointers to individual substrings of filterstr.
-		 */		
+		 */
 		GList *filter;
 		/**
 		 * Number of POIs in this list

@@ -1,7 +1,7 @@
 option java_package = "crosby.binary";
 package OSMPBF;
 
-/* OSM Binary file format 
+/* OSM Binary file format
 
 This is the master schema file of the OSM binary file format. This
 file is designed to support limited random-access and future
@@ -42,7 +42,7 @@ message HeaderBlock {
   repeated string required_features = 4;
   repeated string optional_features = 5;
 
-  optional string writingprogram = 16; 
+  optional string writingprogram = 16;
   optional string source = 17; // From the bbox field.
 }
 
@@ -68,13 +68,13 @@ message PrimitiveBlock {
   repeated PrimitiveGroup primitivegroup = 2;
 
   // Granularity, units of nanodegrees, used to store coordinates in this block
-  optional int32 granularity = 17 [default=100]; 
+  optional int32 granularity = 17 [default=100];
   // Offset value between the output coordinates coordinates and the granularity grid in unites of nanodegrees.
   optional int64 lat_offset = 19 [default=0];
-  optional int64 lon_offset = 20 [default=0]; 
+  optional int64 lon_offset = 20 [default=0];
 
 // Granularity of dates, normally represented in units of milliseconds since the 1970 epoch.
-  optional int32 date_granularity = 18 [default=1000]; 
+  optional int32 date_granularity = 18 [default=1000];
 
 
   // Proposed extension:
@@ -112,7 +112,7 @@ message Info {
 
 /** Optional metadata that may be included into each primitive. Special dense format used in DenseNodes. */
 message DenseInfo {
-   repeated int32 version = 1 [packed = true]; 
+   repeated int32 version = 1 [packed = true];
    repeated sint64 timestamp = 2 [packed = true]; // DELTA coded
    repeated sint64 changeset = 3 [packed = true]; // DELTA coded
    repeated sint32 uid = 4 [packed = true]; // DELTA coded
@@ -124,7 +124,7 @@ message DenseInfo {
 // TODO:    REMOVE THIS?
 message ChangeSet {
    required int64 id = 1;
-//   
+//
 //   // Parallel arrays.
 //   repeated uint32 keys = 2 [packed = true]; // String IDs.
 //   repeated uint32 vals = 3 [packed = true]; // String IDs.
@@ -153,7 +153,7 @@ message Node {
 /* Used to densly represent a sequence of nodes that do not have any tags.
 
 We represent these nodes columnwise as five columns: ID's, lats, and
-lons, all delta coded. When metadata is not omitted, 
+lons, all delta coded. When metadata is not omitted,
 
 We encode keys & vals for all nodes as a single array of integers
 containing key-stringid and val-stringid, using a stringid of 0 as a
@@ -172,7 +172,7 @@ message DenseNodes {
    repeated sint64 lon = 9 [packed = true]; // DELTA coded
 
    // Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
-   repeated int32 keys_vals = 10 [packed = true]; 
+   repeated int32 keys_vals = 10 [packed = true];
 }
 
 
@@ -192,7 +192,7 @@ message Relation {
     NODE = 0;
     WAY = 1;
     RELATION = 2;
-  } 
+  }
    required int64 id = 1;
 
    // Parallel arrays.

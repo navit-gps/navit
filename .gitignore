@@ -1,2 +1,10 @@
+/.gradle/
+/.settings/
+/build/
+/navit/android/.externalNativeBuild/
+/navit/android/build/
+/.cproject
 /.gitk-tmp.*
+/.project
 /CMakeLists.txt.user*
+/navit/android/cmake_plugin_settings.txt

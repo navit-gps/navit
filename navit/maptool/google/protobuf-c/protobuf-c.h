@@ -2,7 +2,7 @@
 
 /*
  * Copyright 2008, Dave Benson.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with
  * the License. You may obtain a copy of the License
@@ -126,7 +126,7 @@ extern ProtobufCAllocator protobuf_c_default_allocator; /* settable */
  */
 extern ProtobufCAllocator protobuf_c_system_allocator;  /* use malloc, free etc */
 
-/* This is the function that our default allocators call when they 
+/* This is the function that our default allocators call when they
    run out-of-memory.  The default behavior of this function is to
    terminate your program. */
 extern void (*protobuf_c_out_of_memory) (void);
@@ -284,7 +284,7 @@ struct _ProtobufCMessageDescriptor
  *
  * ProtobufCMessage is sort-of a lightweight
  * base-class for all messages.
- * 
+ *
  * In particular, ProtobufCMessage doesn't have
  * any allocation policy associated with it.
  * That's because it is common to create ProtobufCMessage's
@@ -311,7 +311,7 @@ struct _ProtobufCMessage
 
 /* To pack a message: you have two options:
    (1) you can compute the size of the message
-       using protobuf_c_message_get_packed_size() 
+       using protobuf_c_message_get_packed_size()
        then pass protobuf_c_message_pack() a buffer of
        that length.
    (2) Provide a virtual buffer (a ProtobufCBuffer) to
@@ -331,7 +331,7 @@ ProtobufCMessage *
 void      protobuf_c_message_free_unpacked  (ProtobufCMessage    *message,
                                              ProtobufCAllocator  *allocator);
 
-/* WARNING: 'message' must be a block of memory 
+/* WARNING: 'message' must be a block of memory
    of size descriptor->sizeof_message. */
 #define protobuf_c_message_init(descriptor, message) ((descriptor)->message_init((ProtobufCMessage*) (message)))
 
@@ -378,11 +378,11 @@ void protobuf_c_service_destroy (ProtobufCService *);
 
 /* --- querying the descriptors --- */
 const ProtobufCEnumValue *
-protobuf_c_enum_descriptor_get_value_by_name 
+protobuf_c_enum_descriptor_get_value_by_name
                          (const ProtobufCEnumDescriptor    *desc,
                           const char                       *name);
 const ProtobufCEnumValue *
-protobuf_c_enum_descriptor_get_value        
+protobuf_c_enum_descriptor_get_value
                          (const ProtobufCEnumDescriptor    *desc,
                           int                               value);
 const ProtobufCFieldDescriptor *
@@ -390,7 +390,7 @@ protobuf_c_message_descriptor_get_field_by_name
                          (const ProtobufCMessageDescriptor *desc,
                           const char                       *name);
 const ProtobufCFieldDescriptor *
-protobuf_c_message_descriptor_get_field        
+protobuf_c_message_descriptor_get_field
                          (const ProtobufCMessageDescriptor *desc,
                           unsigned                          value);
 const ProtobufCMethodDescriptor *

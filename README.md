@@ -1,4 +1,6 @@
 [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit)
+[![CodeFactor](https://www.codefactor.io/repository/github/navit-gps/navit/badge)](https://www.codefactor.io/repository/github/navit-gps/navit)
+
 
 Navit on Android tablet:
 
@@ -35,14 +37,14 @@ destination, but also generates directions and even speaks to you.
 
 Navit currently speaks over 70 languages!
 
-You can help translating via our web based translation page :
+You can help translating via our web based translation page:
  http://translations.launchpad.net/navit/trunk/+pots/navit
 
 
-For help or more information, please refer to the wiki :
+For help or more information, please refer to the wiki:
  http://wiki.navit-project.org
 
-If you don't know where to start, we recommend you to read the 
+If you don't know where to start, we recommend you to read the
 Interactive Help : http://wiki.navit-project.org/index.php/Interactive_help
 
 
@@ -52,20 +54,20 @@ Maps:
 The best navigation system is useless without maps. Those three maps
 are known to work:
 
-- OpenStreetMaps : display, routing, but street name search isn't complete
- (see http://wiki.navit-project.org/index.php/OpenStreetMaps )
+- OpenStreetMaps: display, routing, but street name search isn't complete
+ (see http://wiki.navit-project.org/index.php/OpenStreetMaps)
 
-- Grosser Reiseplaner and compliant maps : full support
- (see http://wiki.navit-project.org/index.php/European_maps )
+- Grosser Reiseplaner and compliant maps: full support
+ (see http://wiki.navit-project.org/index.php/European_maps)
 
-- Garmin maps : display, routing, search is being worked on
- (see http://wiki.navit-project.org/index.php/Garmin_maps )
+- Garmin maps: display, routing, search is being worked on
+ (see http://wiki.navit-project.org/index.php/Garmin_maps)
 
 
 GPS Support:
 ============
 
-Navit read the current vehicle position :
+Navit read the current vehicle position:
 - directly from a file
 - from gpsd (local or remote)
 - from udp server (friends tracking) (experimental)

@@ -11,7 +11,7 @@ It's not special. Just type below like others.
 
   ./configure
   make
-  su 
+  su
   make install
 
 gpx2navit_txt image will be at /usr/local/bin.

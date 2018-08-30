@@ -15,9 +15,9 @@ import Qt 4.7
      }
 
      function startup () {
-	 if (toggleswitch.stOn == "1" ) 
+	 if (toggleswitch.stOn == "1" )
        		toggleswitch.stOn = "true";
-	 else if (toggleswitch.stOn == "0" ) 
+	 else if (toggleswitch.stOn == "0" )
 		toggleswitch.stOn = "false";
          if (toggleswitch.stOn == "true")
              toggleswitch.state = "on";

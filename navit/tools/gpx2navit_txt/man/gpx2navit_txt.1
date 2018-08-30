@@ -1,103 +1,103 @@
-.\" 
+.\"
 .TH "gpx2navit_txt" "1" "0.1" "bodenseepingu" ""
 .SH "NAME"
 gpx2navit_txt \- Convert GPX files to navit txt files
 .SH "SYNOPSIS"
 gpx2navit_txt [options] [\-o output file] gpxfile
 .SH "DESCRIPTION"
-gpx2navit_txt is a converter from GPX file to navit txt file 
+gpx2navit_txt is a converter from GPX file to navit txt file
 The original gpx2shp was used for that program.
 This is a output of Metro Manila Transit Map Project by JOCV (Japan Overseas Cooperation Volunteers) program of JICA (Japan International Cooperation Agency) in 2004. It is provided you on GPL2.
 .SH "OPTIONS"
-.TP 
+.TP
 .B \-o, \-\-output
 Sets output basename. The default is (source file name) \- (extention name)
-.TP 
+.TP
 .B \-w, \-\-waypoints
 Converts only waypoints data from a gpx file.
-.TP 
+.TP
 .B \-t, \-\-trackpoints
 Converts only trackpoints data from a gpx file.
-.TP 
+.TP
 .B \-r, \-\-routes
 Converts only routes data from a gpx file.
-.TP 
+.TP
 .B \-a, \-\-all
 Converts all types of data from a gpx file.(default)
-.TP 
+.TP
 .B \-e, \-\-as\-edge
 Makes a separated output by each edges.
-.TP 
+.TP
 .B \-p, \-\-as\-point
 Makes a separated output by each points.
-.TP 
+.TP
 .B \-s, \-\-stats
 Shows simple statistics of the outputs.
-.TP 
+.TP
 .B \-b, \-\-basic\-columns
 Stores only basic data as attribures to reduce memory and storage usage. (ele, name, cmt, type, time, fix, sym and number).
-.TP 
+.TP
 .B \-L, \-\-no\-length
 Removes length column from a waypoint or trackpoint attribute table.
-.TP 
+.TP
 .B \-S, \-\-no\-speed
 Removes speed column from a waypoint or trackpoint attribute table.
-.TP 
+.TP
 .B \-T, \-\-no\-time
 Removes time column from an attribute table.
-.TP 
+.TP
 .B \-g, \-\-gpxline
 Adds line number of GPX file as attribures.
-.TP 
+.TP
 .B \-f, \-\-fast
 Make it faster without any checks.
-.TP 
+.TP
 .B \-3, \-\-3d
 Converts data using 3d format. (It's not compatible for Arcview 3.x.)
-.TP 
+.TP
 .B \-\-min\-points
 Sets path minimum points to convert for noise reduction. Default is 2.
-.TP 
+.TP
 .B \-\-min\-length
 Sets path minimum length to convert for noise reduction. Default is 0.
-.TP 
+.TP
 .B \-\-min\-time
 Sets path minimum time period to convert for noise reduction. Default is 0.
-.TP 
+.TP
 .B \-\-length\-unit
 Sets length unit from m,km,feet,mi and etc. The default is m. You can see the unit list from "geod \-lu" command.
-.TP 
+.TP
 .B \-\-time\-unit
 Sets time unit. The default is sec. You can set from day, hour, min and sec.
-.TP 
-.B \-\-speed\-length\-unit 
+.TP
+.B \-\-speed\-length\-unit
 Sets length unit for speed. The default is km. You can see the unit list from "geod \-lu" command.
-.TP 
+.TP
 .B \-\-speed\-time\-unit
 Sets time unit for speed calulation. Default is hour. You can set from day, hour, min and sec.
-.TP 
+.TP
 .B \-\-length\-ellipsoid
 Sets length ellipsoid like UGS84, clrk66. The default is UGS84. You can see the unit list from "geod \-le" command.
-.TP 
+.TP
 .B \-\-no\-speed-check
 Disables checking the track speed to be non-zero.
-.TP 
+.TP
 .B \-v,  \-\-verbose
 Gives many messages.
-.TP 
+.TP
 .B \-\-version
 Shows version.
-.TP 
+.TP
 .B \-h,  \-\-help
 Shows this list.
 .SH "AUTHORS"
 Toshihiro Hiraoka
-.br 
+.br
 Petter Reinholdtsen
 
 .SH "BUGS or OPINIONS"
 Please e\-mail your bugs or opinions to
-.br 
+.br
 washitoshi at yahoo.co.jp
 
 .SH "SEE ALSO"

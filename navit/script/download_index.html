@@ -34,45 +34,45 @@
         }
         #controls {
           float: left;
-          
+
         }
     </style>
     <script src="http://openlayers.org/dev/lib/OpenLayers.js"></script>
     <script type="text/javascript">
 	var map, polygonControl, polygonLayer, bbox_set;
-	
+
 	OpenLayers.Util.onImageLoadErrorColor = "transparent";
 	function init(){
 		map = new OpenLayers.Map('map');
-		
-		var wmsLayer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
-		"http://labs.metacarta.com/wms/vmap0?", {layers: 'basic'}); 
-		
+
+		var wmsLayer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+		"http://labs.metacarta.com/wms/vmap0?", {layers: 'basic'});
+
 		polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
-		
+
 		map.addLayers([wmsLayer, polygonLayer]);
 		map.addControl(new OpenLayers.Control.LayerSwitcher());
 		map.addControl(new OpenLayers.Control.MousePosition());
-		
+
 		polyOptions = {sides: 4, irregular: true};
 		polygonControl = new OpenLayers.Control.DrawFeature(polygonLayer,
 		OpenLayers.Handler.RegularPolygon,
 		{handlerOptions: polyOptions});
 		//alert(polygonControl);
-		
+
 		map.addControl(polygonControl);
-		
+
 		polygonControl.featureAdded=featureInsert;
-		
+
 		map.setCenter(new OpenLayers.LonLat(0, 0), 3);
-		
+
 		document.getElementById('noneToggle').checked = true;
 		//document.getElementById('irregularToggle').checked = false;
-		
+
 		//var polyOptions = {sides: 4, irregular: true};
 		//polygonControl.handler.setOptions(polyOptions);
 	}
-	
+
 	function featureInsert(feature){
 		var old=[];
 		for (var i = 0; i < polygonLayer.features.length; i++) {
@@ -81,9 +81,9 @@
 			}
 		}
 		polygonLayer.destroyFeatures(old);
-		
+
 		var bounds = feature.geometry.getBounds();
-		
+
 		document.form.bounds_top.value = bounds.top;
 		document.form.bounds_right.value = bounds.right;
 		document.form.bounds_btm.value = bounds.bottom;

@@ -28,7 +28,7 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	
+
 	// Sets the Navigation bar to have the location name
 	self.title = [self.locationName objectForKey:NAME_KEY];
 
@@ -47,7 +47,7 @@
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
+
     // Release any cached data, images, etc. that aren't in use.
 }
 
@@ -60,7 +60,7 @@
 -(void) viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 }
-	
+
 - (void)dealloc {
 	[locationName_ release];
     [super dealloc];

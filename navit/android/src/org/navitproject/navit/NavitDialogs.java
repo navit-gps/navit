@@ -44,7 +44,6 @@ public class NavitDialogs extends Handler {
                                          int value1, int value2) {
         Message msg = mHandler.obtainMessage(what);
         Bundle data = new Bundle();
-
         data.putString("title", title);
         data.putString("text", text);
         data.putInt("value1", value1);
@@ -103,7 +102,6 @@ public class NavitDialogs extends Handler {
             int download_map_id = msg.arg1;
             Log.d(TAG, "PRI id=" + download_map_id);
             // set map id to download
-
             // show the map download progressbar, and download the map
             if (download_map_id > -1) {
                 mapdownloader = new NavitMapDownloader(download_map_id);

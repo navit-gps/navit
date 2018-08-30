@@ -27,8 +27,8 @@ else
 fi
 [ "$2" != "" ] && SRCDIR="$2"
 [ "$3" != "" ] && BASEDIR="$3"
-if [ "$4" != "" ]; 
-then 
+if [ "$4" != "" ];
+then
 	NAVITXML="$4"
 else
 	NAVITXML=""
@@ -42,16 +42,16 @@ echo "PocketPc dir: $BASEDIR"
 
 echo -n > $CABLIST.$$
 
-for i in `ls $SRCDIR/locale/*/*/*.mo`
+for i in $SRCDIR/locale/*/*/*.mo
 do
-	bn="`basename "$i"`"
+  bn=$(basename "$i")
 	d=${i##$SRCDIR/}
 	echo "$i $BASEDIR/$d" >> $CABLIST.$$
 done
 
 for i in $SRCDIR/navit/icons/*.xpm
 do
-	bn="`basename "$i"`"
+  bn=$(basename "$i")
 	echo "$i $BASEDIR/icons/" >> $CABLIST.$$
 done
 
@@ -64,17 +64,17 @@ if [ "$MAPSDIR" != "" ]
 then
 for i in $MAPSDIR/*.bin
 do
-	bn="`basename "$i"`"
+    bn=$(basename "$i")
 	echo "$i $BASEDIR/maps/$bn" >> $CABLIST.$$
 done
 for i in $MAPSDIR/*.txt
 do
-	bn="`basename "$i"`"
+    bn=$(basename "$i")
 	echo "$i $BASEDIR/maps/$bn" >> $CABLIST.$$
 done
 for i in $MAPSDIR/*.img
 do
-	bn="`basename "$i"`"
+  bn=$(basename "$i")
 	echo "$i $BASEDIR/maps/$bn" >> $CABLIST.$$
 done
 fi
