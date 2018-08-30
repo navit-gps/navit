@@ -215,7 +215,7 @@ public class FileBrowserActivity extends Activity {
     private void initializeFileListView() {
         ListView lView = (ListView) this.findViewById(R.id.fileListView);
         LinearLayout.LayoutParams lParam = new LinearLayout.LayoutParams(
-            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         lParam.setMargins(15, 5, 15, 5);
         lView.setAdapter(this.adapter);
         lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
