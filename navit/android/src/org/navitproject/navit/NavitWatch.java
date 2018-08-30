@@ -89,7 +89,9 @@ public class NavitWatch implements Runnable {
 
     public void callback() {
         // Log.e("NavitWatch","Calling Callback");
-        if (!removed) { WatchCallback(watch_callbackid); }
+        if (!removed) {
+            WatchCallback(watch_callbackid);
+        }
         synchronized (this) {
             callback_pending = false;
             // Log.e("NavitWatch","Waking up");
