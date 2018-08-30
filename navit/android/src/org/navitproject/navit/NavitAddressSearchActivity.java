@@ -307,8 +307,9 @@ public class NavitAddressSearchActivity extends Activity {
 
     public void finishAddressSearch() {
         if (Addresses_found.isEmpty()) {
-            Toast.makeText( getApplicationContext(),getString(R.string.address_search_not_found) + "\n" + mAddressString,
-                    Toast.LENGTH_LONG).show(); //TRANS
+            // TRANS
+            Toast.makeText( getApplicationContext(),
+                    getString(R.string.address_search_not_found) + "\n" + mAddressString, Toast.LENGTH_LONG).show();
             setResult(Activity.RESULT_CANCELED);
             finish();
         }

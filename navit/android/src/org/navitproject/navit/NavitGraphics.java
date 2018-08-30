@@ -150,7 +150,8 @@ public class NavitGraphics {
             super.onCreateContextMenu(menu);
 
             menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + "..");
-            menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here)).setOnMenuItemClickListener(this);
+            menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
+                    .setOnMenuItemClickListener(this);
             menu.add(1, 2, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
@@ -597,8 +598,8 @@ public class NavitGraphics {
     }
 
     public enum msg_type {
-        CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION
-            , CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
+        CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION,
+        CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
     }
 
     static private final msg_type[] msg_values = msg_type.values();
@@ -634,7 +635,8 @@ public class NavitGraphics {
                     ButtonCallback(ButtonCallbackID, 0, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // up
                     break;
                 case CLB_BUTTON_DOWN:
-                    ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // down
+                    // down
+                    ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y"));
                     break;
                 case CLB_COUNTRY_CHOOSER:
                     break;
@@ -715,11 +717,12 @@ public class NavitGraphics {
         /*
          * Determine where the navigation bar would be displayed.
          * Logic is taken from AOSP RenderSessionImpl.findNavigationBar()
-         * (platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java)
+         * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java
          */
         final Boolean isLandscape = (navit.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE);
-        final Boolean isNavAtBottom = (!isLandscape) || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+        final Boolean isNavAtBottom = (!isLandscape)
+                || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
         Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
                     isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
 
@@ -727,7 +730,8 @@ public class NavitGraphics {
         int top = isStatusShowing ? Navit.status_bar_height : 0;
         int right = (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0;
         final int bottom = (!(isNavShowing
-                    && isNavAtBottom)) ? 0 : isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height;
+                    && isNavAtBottom)) ? 0 : (
+                    isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height);
 
         /* hide tint bars during update to prevent ugly effects */
         statusTintView.setVisibility(View.GONE);
@@ -741,7 +745,8 @@ public class NavitGraphics {
                         Navit.status_bar_height, Gravity.TOP);
 
                 /* Prevent tint views from overlapping when navigation is on the right */
-                statusLayoutParams.setMargins(0, 0, (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
+                statusLayoutParams.setMargins(0, 0,
+                        (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
                 statusTintView.setLayoutParams(statusLayoutParams);
                 Log.d(TAG, String.format("statusTintView: width=%d height=%d",
                             statusTintView.getWidth(), statusTintView.getHeight()));

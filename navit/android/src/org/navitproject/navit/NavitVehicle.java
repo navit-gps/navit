@@ -122,9 +122,9 @@ public class NavitVehicle {
      * @brief Creates a new {@code NavitVehicle}
      *
      * @param context
-     * @param pcbid The address of the position callback function which will be called when a location update is received
-     * @param scbid The address of the status callback function which will be called when a status update is received
-     * @param fcbid The address of the fix callback function which will be called when a
+     * @param pcbid The address of the position callback function called when a location update is received
+     * @param scbid The address of the status callback function called when a status update is received
+     * @param fcbid The address of the fix callback function called when a
      * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
      */
     NavitVehicle (Context context, int pcbid, int scbid, int fcbid) {

@@ -77,14 +77,16 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.madagascar), "42.25", "-26.63", "51.20",
                 "-11.31", 145210721L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.namibia) + "+" + Navit.getInstance().getTstring(R.string.botswana),
+                Navit.getInstance().getTstring(R.string.namibia) + "+"
+                + Navit.getInstance().getTstring(R.string.botswana),
                 "11.4", "-29.1", "29.5", "-16.9", 248970987L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.reunion), "55.2", "-21.4", "55.9", "-20.9",
                 126008774L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.rwanda), "28.8", "-2.9", "30.9", "-1.0",
                 128267595L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.south_africa) + "+" + Navit.getInstance().getTstring(R.string.lesotho),
+                Navit.getInstance().getTstring(R.string.south_africa) + "+"
+                + Navit.getInstance().getTstring(R.string.lesotho),
                 "15.93", "-36.36", "33.65", "-22.08", 307280006L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.tanzania), "29.19",
                 "-11.87", "40.74", "-0.88", 253621029L, 1),
@@ -99,7 +101,8 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.cyprus), "32.0", "34.5", "34.9", "35.8",
                 118472448L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.india) + "+" + Navit.getInstance().getTstring(R.string.nepal), "67.9",
+                Navit.getInstance().getTstring(R.string.india) + "+"
+                + Navit.getInstance().getTstring(R.string.nepal), "67.9",
                 "5.5", "89.6", "36.0", 601877877L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.indonesia), "93.7", "-17.3", "155.5", "7.6",
                 420741405L, 1),
@@ -110,14 +113,16 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.israel), "33.99", "29.8", "35.95", "33.4",
                 155685778L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.japan) + "+" + Navit.getInstance().getTstring(R.string.korea), "123.6",
+                Navit.getInstance().getTstring(R.string.japan) + "+"
+                + Navit.getInstance().getTstring(R.string.korea), "123.6",
                 "25.2", "151.3", "47.1", 1029080156L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.kazakhstan), "46.44", "40.89", "87.36",
                 "55.45", 407633007L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.kyrgyzsyan), "69.23", "39.13", "80.33",
                 "43.29", 147997835L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.malaysia) + "+" + Navit.getInstance().getTstring(R.string.singapore),
+                Navit.getInstance().getTstring(R.string.malaysia) + "+"
+                + Navit.getInstance().getTstring(R.string.singapore),
                 "94.3", "-5.9", "108.6", "6.8", 168816435L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.mongolia), "87.5", "41.4", "120.3", "52.7",
                 153534851L, 1),
@@ -138,7 +143,8 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.uae_other), "51.5", "22.6", "56.7", "26.5",
                 128934674L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.australia) + "+" + Navit.getInstance().getTstring(R.string.oceania),
+                Navit.getInstance().getTstring(R.string.australia) + "+"
+                + Navit.getInstance().getTstring(R.string.oceania),
                 "89.84", "-57.39", "179.79", "7.26", 782722650L, 0),
         new osm_map_values(Navit.getInstance().getTstring(R.string.australia), "110.5", "-44.2", "154.9",
                 "-9.2", 348652900L, 0),
@@ -271,7 +277,8 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.italy), "6.52", "36.38", "18.96", "47.19",
                 1610171395L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.spain) + "+" + Navit.getInstance().getTstring(R.string.portugal),
+                Navit.getInstance().getTstring(R.string.spain) + "+"
+                + Navit.getInstance().getTstring(R.string.portugal),
                 "-11.04", "34.87", "4.62", "44.41", 1039624918L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.mallorca), "2.2", "38.8", "4.7", "40.2",
                 137200636L, 2),
@@ -437,7 +444,8 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.argentina), "-73.9", "-57.3", "-51.6",
                 "-21.0", 376857648L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.argentina) + "+" + Navit.getInstance().getTstring(R.string.chile),
+                Navit.getInstance().getTstring(R.string.argentina) + "+"
+                + Navit.getInstance().getTstring(R.string.chile),
                 "-77.2", "-56.3", "-52.7", "-16.1", 420275812L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.bolivia), "-70.5", "-23.1", "-57.3", "-9.3",
                 175937824L, 1),
@@ -452,10 +460,13 @@ public class NavitMapDownloader extends Thread {
         new osm_map_values(Navit.getInstance().getTstring(R.string.ecuador), "-82.6", "-5.4", "-74.4", "2.3",
                 158857591L, 1),
         new osm_map_values(
-                Navit.getInstance().getTstring(R.string.guyana) + "+" + Navit.getInstance().getTstring(R.string.suriname) + "+"
+                Navit.getInstance().getTstring(R.string.guyana) + "+"
+                + Navit.getInstance().getTstring(R.string.suriname) + "+"
                 + Navit.getInstance().getTstring(R.string.guyane_francaise), "-62.0", "1.0", "-51.2",
                 "8.9", 123000072L, 1),
-        new osm_map_values(Navit.getInstance().getTstring(R.string.haiti) + "+" + Navit.getInstance().getTstring(R.string.dominican_republic), "-74.8", "17.3", "-68.2", "20.1", 149925689L, 1),
+        new osm_map_values(Navit.getInstance().getTstring(R.string.haiti) + "+"
+                + Navit.getInstance().getTstring(R.string.dominican_republic), "-74.8", "17.3", "-68.2", "20.1",
+                149925689L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.jamaica), "-78.6", "17.4", "-75.9", "18.9",
                 113961998L, 1),
         new osm_map_values(Navit.getInstance().getTstring(R.string.mexico), "-117.6", "14.1", "-86.4", "32.8",
@@ -852,7 +863,8 @@ public class NavitMapDownloader extends Thread {
             String info = String.format("%s: %s\n %dMb / %dMb\n %.1f kb/s %s: %s",
                         Navit.getInstance().getTstring(R.string.map_downloading)
                         , map_values.map_name, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
-                        per_second_overall / 1024f, Navit.getInstance().getTstring(R.string.map_download_eta), eta_string);
+                        per_second_overall / 1024f, Navit.getInstance().getTstring(R.string.map_download_eta),
+                        eta_string);
 
             if (retry_counter > 0) {
                 info += "\n Retry " + retry_counter + "/" + MAX_RETRIES;

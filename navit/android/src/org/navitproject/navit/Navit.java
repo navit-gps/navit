@@ -241,15 +241,16 @@ public class Navit extends Activity {
                 }
             });
 
-            infobox.setNeutralButton(getTstring(R.string.initial_info_box_more_info), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface arg0, int arg1) {
-                    Log.d(TAG, "user wants more info, show the website");
-                    String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
-                }
-            });
+            infobox.setNeutralButton(getTstring(R.string.initial_info_box_more_info),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Log.d(TAG, "user wants more info, show the website");
+                            String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        }
+                    });
             infobox.show();
             SharedPreferences.Editor edit_settings = settings.edit();
             edit_settings.putBoolean("firstStart", false);
@@ -308,17 +309,19 @@ public class Navit extends Activity {
         navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
         navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
         navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
-        Log.d(TAG,
-                String.format("status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, navigation_bar_height_landscape=%d, navigation_bar_width=%d",
-                    status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape,
-                    navigation_bar_width));
+        Log.d(TAG, String.format(
+                    "status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, "
+                    + "navigation_bar_height_landscape=%d, navigation_bar_width=%d",
+                    status_bar_height, action_bar_default_height, navigation_bar_height,
+                    navigation_bar_height_landscape, navigation_bar_width));
         if ((ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                     || (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             Log.d (TAG,"ask for permission(s)");
             ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_ALL);
+                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ALL);
         }
         // get the local language -------------
         Locale locale = java.util.Locale.getDefault();
@@ -339,7 +342,8 @@ public class Navit extends Activity {
         Log.d(TAG, "Language " + lang);
 
         SharedPreferences prefs = getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
-        map_filename_path  = prefs.getString("filenamePath", Environment.getExternalStorageDirectory().getPath() + "/navit/");
+        map_filename_path  = prefs.getString("filenamePath",
+                Environment.getExternalStorageDirectory().getPath() + "/navit/");
 
         // make sure the new path for the navitmap.bin file(s) exist!!
         File navit_maps_dir = new File(map_filename_path);
@@ -464,11 +468,12 @@ public class Navit extends Activity {
                 infobox.setCancelable(false);
                 infobox.setMessage(getTstring(R.string.permissions_not_granted));
                 // TRANS
-                infobox.setPositiveButton(getTstring(R.string.initial_info_box_OK), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        exit();
-                    }
-                });
+                infobox.setPositiveButton(getTstring(R.string.initial_info_box_OK),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                exit();
+                            }
+                        });
                 infobox.show();
             }
         }
@@ -514,7 +519,8 @@ public class Navit extends Activity {
                         lon = Float.valueOf(geo[1]);
                         b.putFloat("lat", lat);
                         b.putFloat("lon", lon);
-                        Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+                        Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                                NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 
                         msg.setData(b);
                         msg.sendToTarget();
@@ -601,13 +607,15 @@ public class Navit extends Activity {
         switch (id) {
             case 1 :
                 // zoom in
-                Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
+                Message.obtain(N_NavitGraphics.callback_handler,
+                        NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom in");
                 break;
             case 2 :
                 // zoom out
-                Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
+                Message.obtain(N_NavitGraphics.callback_handler,
+                        NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom out");
                 break;
@@ -618,7 +626,8 @@ public class Navit extends Activity {
                 break;
             case 5 :
                 // toggle the normal POI layers and labels (to avoid double POIs)
-                Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+                Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                        NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
                 Bundle b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Symbols\");");
                 msg.setData(b);
@@ -724,7 +733,8 @@ public class Navit extends Activity {
         Toast.makeText( getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address,
                 Toast.LENGTH_LONG).show(); //TRANS
 
-        Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+        Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
         Bundle b = new Bundle();
         b.putFloat("lat", latitude);
         b.putFloat("lon", longitude);
@@ -749,7 +759,8 @@ public class Navit extends Activity {
                             getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")),
                             Toast.LENGTH_LONG).show(); //TRANS
 
-                    Message msg = Message.obtain(N_NavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
+                    Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                            NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
                     msg.setData(destination);
                     msg.sendToTarget();
                 }
@@ -768,7 +779,8 @@ public class Navit extends Activity {
                     prefs_editor.putString("filenamePath", newDir);
                     prefs_editor.apply();
 
-                    Toast.makeText(this, String.format(getTstring(R.string.map_location_changed),newDir),Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, String.format(getTstring(R.string.map_location_changed),newDir),
+                            Toast.LENGTH_LONG).show();
                 } else {
                     Log.w(TAG, "select path failed");
                 }
