@@ -70,12 +70,12 @@ public class NavitWatch implements Runnable {
             handler.post(callback_runnable);
             try {
                 // Log.e("NavitWatch","wait");
-                synchronized(this) {
+                synchronized (this) {
                     if (callback_pending) { this.wait(); }
                 }
                 // Log.e("NavitWatch","wait returned");
             } catch (Exception e) {
-                Log.e("NavitWatch","Exception "+e.getMessage());
+                Log.e("NavitWatch","Exception " + e.getMessage());
             }
             if (removed) { break; }
         }
@@ -84,7 +84,7 @@ public class NavitWatch implements Runnable {
     public void callback() {
         // Log.e("NavitWatch","Calling Callback");
         if (!removed) { WatchCallback(watch_callbackid); }
-        synchronized(this) {
+        synchronized (this) {
             callback_pending = false;
             // Log.e("NavitWatch","Waking up");
             this.notify();

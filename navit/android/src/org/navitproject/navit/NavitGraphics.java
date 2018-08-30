@@ -98,25 +98,25 @@ public class NavitGraphics {
     }
 
     private Rect get_rect() {
-        Rect ret=new Rect();
-        ret.left=pos_x;
-        ret.top=pos_y;
+        Rect ret = new Rect();
+        ret.left = pos_x;
+        ret.top = pos_y;
         if (pos_wraparound != 0) {
             if (ret.left < 0) {
-                ret.left+=parent_graphics.bitmap_w;
+                ret.left += parent_graphics.bitmap_w;
             }
             if (ret.top < 0) {
-                ret.top+=parent_graphics.bitmap_h;
+                ret.top += parent_graphics.bitmap_h;
             }
         }
-        ret.right=ret.left+bitmap_w;
-        ret.bottom=ret.top+bitmap_h;
+        ret.right = ret.left + bitmap_w;
+        ret.bottom = ret.top + bitmap_h;
         if (pos_wraparound != 0) {
             if (bitmap_w < 0) {
-                ret.right=ret.left+bitmap_w+parent_graphics.bitmap_w;
+                ret.right = ret.left + bitmap_w + parent_graphics.bitmap_w;
             }
             if (bitmap_h < 0) {
-                ret.bottom=ret.top+bitmap_h+parent_graphics.bitmap_h;
+                ret.bottom = ret.top + bitmap_h + parent_graphics.bitmap_h;
             }
         }
         return ret;
@@ -149,14 +149,14 @@ public class NavitGraphics {
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
 
-            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title)+"..");
+            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + "..");
             menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here)).setOnMenuItemClickListener(this);
             menu.add(1, 2, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            switch(item.getItemId()) {
+            switch (item.getItemId()) {
             case 1:
                 Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal()
                                              , (int)mPressedPosition.x, (int)mPressedPosition.y);
@@ -176,7 +176,7 @@ public class NavitGraphics {
                 in_map = true;
                 for (NavitGraphics overlay : overlays) {
                     if (overlay.overlay_disabled == 0) {
-                        Rect r=overlay.get_rect();
+                        Rect r = overlay.get_rect();
                         canvas.drawBitmap(overlay.draw_bitmap, r.left, r.top, null);
                     }
                 }
@@ -479,7 +479,7 @@ public class NavitGraphics {
                     }
                     break;
                 }
-            } else if(i!=10) {
+            } else if (i != 10) {
                 s = java.lang.String.valueOf((char) i);
             }
 
@@ -492,8 +492,8 @@ public class NavitGraphics {
         @Override
         public boolean onKeyMultiple (int keyCode, int count, KeyEvent event) {
             String s;
-            if(keyCode == KeyEvent.KEYCODE_UNKNOWN) {
-                s=event.getCharacters();
+            if (keyCode == KeyEvent.KEYCODE_UNKNOWN) {
+                s = event.getCharacters();
                 KeypressCallback(KeypressCallbackID, s);
                 return true;
             }
@@ -567,7 +567,7 @@ public class NavitGraphics {
             relativelayout.addView(view);
 
             /* The navigational and status bar tinting code is meaningful only on API19+ */
-            if(Build.VERSION.SDK_INT >= 19) {
+            if (Build.VERSION.SDK_INT >= 19) {
                 frameLayout = new FrameLayout(activity);
                 frameLayout.addView(relativelayout);
                 navigationTintView = new SystemBarTintView(activity);
@@ -820,7 +820,7 @@ public class NavitGraphics {
 
     public void setMotionCallback(int id) {
         MotionCallbackID = id;
-        if(activity != null) {
+        if (activity != null) {
             activity.setMotionCallback(id, this);
         }
     }
@@ -828,7 +828,7 @@ public class NavitGraphics {
     public void setKeypressCallback(int id) {
         KeypressCallbackID = id;
         // set callback id also in main intent (for menus)
-        if(activity != null) {
+        if (activity != null) {
             activity.setKeypressCallback(id, this);
         }
     }
@@ -842,23 +842,23 @@ public class NavitGraphics {
         paint.setStyle(Paint.Style.STROKE);
         //paint.setAntiAlias(true);
         //paint.setStrokeWidth(0);
-        ndashes=c[5];
-        intervals=new float[ndashes+(ndashes%2)];
+        ndashes = c[5];
+        intervals = new float[ndashes + (ndashes % 2)];
         for (i = 0; i < ndashes; i++) {
-            intervals[i]=c[6+i];
+            intervals[i] = c[6 + i];
         }
 
-        if((ndashes%2)==1) {
-            intervals[ndashes]=intervals[ndashes-1];
+        if ((ndashes % 2) == 1) {
+            intervals[ndashes] = intervals[ndashes - 1];
         }
 
-        if(ndashes>0) {
+        if (ndashes > 0) {
             paint.setPathEffect(new android.graphics.DashPathEffect(intervals,0.0f));
         }
 
         Path path = new Path();
-        path.moveTo(c[6+ndashes], c[7+ndashes]);
-        for (i = 8+ndashes; i < c.length; i += 2) {
+        path.moveTo(c[6 + ndashes], c[7 + ndashes]);
+        for (i = 8 + ndashes; i < c.length; i += 2) {
             path.lineTo(c[i], c[i + 1]);
         }
         //global_path.close();
@@ -895,8 +895,8 @@ public class NavitGraphics {
     }
 
     protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy, int bgcolor) {
-        int oldcolor=paint.getColor();
-        Path path=null;
+        int oldcolor = paint.getColor();
+        Path path = null;
 
         paint.setTextSize(size / 15);
         paint.setStyle(Paint.Style.FILL);
@@ -908,11 +908,11 @@ public class NavitGraphics {
             paint.setTextAlign(android.graphics.Paint.Align.LEFT);
         }
 
-        if(bgcolor!=0) {
+        if (bgcolor != 0) {
             paint.setStrokeWidth(3);
             paint.setColor(bgcolor);
             paint.setStyle(Paint.Style.STROKE);
-            if(path==null) {
+            if (path == null) {
                 draw_canvas.drawText(text, x, y, paint);
             } else {
                 draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
@@ -921,7 +921,7 @@ public class NavitGraphics {
             paint.setColor(oldcolor);
         }
 
-        if(path==null) {
+        if (path == null) {
             draw_canvas.drawText(text, x, y, paint);
         } else {
             draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
@@ -1001,7 +1001,7 @@ public class NavitGraphics {
         Log.d(TAG,"overlay_disable: " + disable + "Parent: " + (parent_graphics != null));
         // assume we are NOT in map view mode!
         if (parent_graphics == null) {
-            in_map = (disable==0);
+            in_map = (disable == 0);
         }
         if (overlay_disabled != disable) {
             overlay_disabled = disable;

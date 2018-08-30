@@ -199,7 +199,9 @@ public class NavitVehicle {
                 sLocationManager.removeGpsStatusListener(preciseLocationListener);
                 context.unregisterReceiver(preciseLocationListener);
             }
-            if (fastLocationListener != null){ sLocationManager.removeUpdates(fastLocationListener);}
+            if (fastLocationListener != null) {
+                sLocationManager.removeUpdates(fastLocationListener);
+            }
         }
 
     }

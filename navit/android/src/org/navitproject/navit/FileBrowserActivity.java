@@ -113,23 +113,22 @@ public class FileBrowserActivity extends Activity {
         String requestedStartDir = thisInt
                                    .getStringExtra(startDirectoryParameter);
 
-        if (requestedStartDir != null && requestedStartDir.length() > 0) {// if(requestedStartDir!=null
+        if (requestedStartDir != null && requestedStartDir.length() > 0) { // if(requestedStartDir!=null
             File tempFile = new File(requestedStartDir);
             if (tempFile.isDirectory()) {
                 this.path = tempFile;
             }
-        }// if(requestedStartDir!=null
+        } // if(requestedStartDir!=null
 
-        if (this.path == null) {// No or invalid directory supplied in intent parameter
+        if (this.path == null) { // No or invalid directory supplied in intent parameter
             if (Environment.getExternalStorageDirectory().isDirectory()
                     && Environment.getExternalStorageDirectory().canRead()) {
                 path = Environment.getExternalStorageDirectory();
             } else {
                 path = new File("/");
             }
-        }// if(this.path==null) {//No or invalid directory supplied in intent
-        // parameter
-    }// private void setInitialDirectory() {
+        } // if(this.path==null) {//No or invalid directory supplied in intent parameter
+    } // private void setInitialDirectory() {
 
     private void parseDirectoryPath() {
         pathDirsList.clear();
@@ -163,10 +162,10 @@ public class FileBrowserActivity extends Activity {
                     returnDirectoryFinishActivity();
                 }
             });
-        } else {// if(currentAction == this.SELECT_DIRECTORY) {
+        } else { // if(currentAction == this.SELECT_DIRECTORY) {
             selectFolderButton.setVisibility(View.GONE);
-        }// } else {//if(currentAction == this.SELECT_DIRECTORY) {
-    }// private void initializeButtons() {
+        } // } else {//if(currentAction == this.SELECT_DIRECTORY) {
+    } // private void initializeButtons() {
 
     private void loadDirectoryUp() {
         // present directory removed from list
@@ -197,18 +196,17 @@ public class FileBrowserActivity extends Activity {
         if (freeSpace == 0) {
             Log.d(LOGTAG, "NO FREE SPACE");
             File currentDir = new File(curDirString);
-            if(!currentDir.canWrite()) {
+            if (!currentDir.canWrite()) {
                 formattedSpaceString = "NON Writable";
             }
         }
 
         ((Button) this.findViewById(R.id.selectCurrentDirectoryButton))
-        .setText("Select\n[" + formattedSpaceString
-                 + "]");
+        .setText("Select\n[" + formattedSpaceString + "]");
 
         ((TextView) this.findViewById(R.id.currentDirectoryTextView))
         .setText("Current directory: " + curDirString);
-    }// END private void updateCurrentDirectoryTextView() {
+    } // END private void updateCurrentDirectoryTextView() {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -236,35 +234,35 @@ public class FileBrowserActivity extends Activity {
                         adapter.notifyDataSetChanged();
                         updateCurrentDirectoryTextView();
                         Log.d(LOGTAG, path.getAbsolutePath());
-                    } else {// if(sel.canRead()) {
+                    } else { // if(sel.canRead()) {
                         showToast("Path does not exist or cannot be read");
-                    }// } else {//if(sel.canRead()) {
-                }// if (sel.isDirectory()) {
+                    } // } else {//if(sel.canRead()) {
+                } // if (sel.isDirectory()) {
                 // File picked or an empty directory message clicked
-                else {// if (sel.isDirectory()) {
+                else { // if (sel.isDirectory()) {
                     Log.d(LOGTAG, "item clicked");
                     if (!directoryShownIsEmpty) {
                         Log.d(LOGTAG, "File selected:" + chosenFile);
                         returnFileFinishActivity(sel.getAbsolutePath());
                     }
-                }// else {//if (sel.isDirectory()) {
-            }// public void onClick(DialogInterface dialog, int which) {
-        });// lView.setOnClickListener(
-    }// private void initializeFileListView() {
+                } // else {//if (sel.isDirectory()) {
+            } // public void onClick(DialogInterface dialog, int which) {
+        }); // lView.setOnClickListener(
+    } // private void initializeFileListView() {
 
     private void returnDirectoryFinishActivity() {
         Intent retIntent = new Intent();
         retIntent.putExtra(returnDirectoryParameter, path.getAbsolutePath());
         this.setResult(RESULT_OK, retIntent);
         this.finish();
-    }// END private void returnDirectoryFinishActivity() {
+    } // END private void returnDirectoryFinishActivity() {
 
     private void returnFileFinishActivity(String filePath) {
         Intent retIntent = new Intent();
         retIntent.putExtra(returnFileParameter, filePath);
         this.setResult(RESULT_OK, retIntent);
         this.finish();
-    }// END private void returnDirectoryFinishActivity() {
+    } // END private void returnDirectoryFinishActivity() {
 
     private void loadFileList() {
         try {
@@ -294,8 +292,8 @@ public class FileBrowserActivity extends Activity {
                         return (showReadableFile);
                     }
                     return true;
-                }// public boolean accept(File dir, String filename) {
-            };// FilenameFilter filter = new FilenameFilter() {
+                } // public boolean accept(File dir, String filename) {
+            }; // FilenameFilter filter = new FilenameFilter() {
 
             String[] fList = path.list(filter);
             this.directoryShownIsEmpty = false;
@@ -316,19 +314,19 @@ public class FileBrowserActivity extends Activity {
                     }
                 }
                 fileList.add(i, new Item(fList[i], drawableID, canRead));
-            }// for (int i = 0; i < fList.length; i++) {
+            } // for (int i = 0; i < fList.length; i++) {
             if (fileList.size() == 0) {
                 // Log.d(LOGTAG, "This directory is empty");
                 this.directoryShownIsEmpty = true;
                 fileList.add(0, new Item("Directory is empty", -1, true));
-            } else {// sort non empty list
+            } else { // sort non empty list
                 Collections.sort(fileList, new ItemFileNameComparator());
             }
         } else {
             Log.e(LOGTAG, "path does not exist or cannot be read");
         }
         // Log.d(TAG, "loadFileList finished");
-    }// private void loadFileList() {
+    } // private void loadFileList() {
 
     private void createFileListAdapter() {
         adapter = new ArrayAdapter<Item>(this,
@@ -360,9 +358,9 @@ public class FileBrowserActivity extends Activity {
                 // centered
                 textView.setCompoundDrawablePadding(dp3);
                 return view;
-            }// public View getView(int position, View convertView, ViewGroup
-        };// adapter = new ArrayAdapter<Item>(this,
-    }// private createFileListAdapter(){
+            } // public View getView(int position, View convertView, ViewGroup
+        }; // adapter = new ArrayAdapter<Item>(this,
+    } // private createFileListAdapter(){
 
     private class Item {
         public String file;
@@ -378,7 +376,7 @@ public class FileBrowserActivity extends Activity {
         public String toString() {
             return file;
         }
-    }// END private class Item {
+    } // END private class Item {
 
     private class ItemFileNameComparator implements Comparator<Item> {
         public int compare(Item lhs, Item rhs) {
@@ -397,26 +395,26 @@ public class FileBrowserActivity extends Activity {
         // in custom components
         // TODO: check with keyboard
         // if(newConfig.keyboard == Configuration.KEYBOARDHIDDEN_YES)
-    }// END public void onConfigurationChanged(Configuration newConfig) {
+    } // END public void onConfigurationChanged(Configuration newConfig) {
 
     public static long getFreeSpace(String path) {
         StatFs stat = new StatFs(path);
         long availSize = (long) stat.getAvailableBlocks()
                          * (long) stat.getBlockSize();
         return availSize;
-    }// END public static long getFreeSpace(String path) {
+    } // END public static long getFreeSpace(String path) {
 
     public static String formatBytes(long bytes) {
         // TODO: add flag to which part is needed (e.g. GB, MB, KB or bytes)
         String retStr = "";
         // One binary gigabyte equals 1,073,741,824 bytes.
-        if (bytes > 1073741824) {// Add GB
+        if (bytes > 1073741824) { // Add GB
             long gbs = bytes / 1073741824;
             retStr += (new Long(gbs)).toString() + "GB ";
             bytes = bytes - (gbs * 1073741824);
         }
         // One MB - 1048576 bytes
-        if (bytes > 1048576) {// Add GB
+        if (bytes > 1048576) { // Add GB
             long mbs = bytes / 1048576;
             retStr += (new Long(mbs)).toString() + "MB ";
             bytes = bytes - (mbs * 1048576);
@@ -429,6 +427,6 @@ public class FileBrowserActivity extends Activity {
             retStr += (new Long(bytes)).toString() + " bytes";
         }
         return retStr;
-    }// public static String formatBytes(long bytes){
+    } // public static String formatBytes(long bytes){
 
-}// END public class FileBrowserActivity extends Activity {
+} // END public class FileBrowserActivity extends Activity {

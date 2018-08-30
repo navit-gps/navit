@@ -303,7 +303,7 @@ public class Navit extends Activity {
                             status_bar_height, action_bar_default_height, navigation_bar_height, navigation_bar_height_landscape,
                             navigation_bar_width));
         if ((ContextCompat.checkSelfPermission(this,
-                                               Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
+                                               Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             Log.d (TAG,"ask for permission(s)");
@@ -344,7 +344,7 @@ public class Navit extends Activity {
         int height_ = display_.getHeight();
         metrics = new DisplayMetrics();
         display_.getMetrics(Navit.metrics);
-        int densityDpi = (int)(( Navit.metrics.density*160)-.5f);
+        int densityDpi = (int)(( Navit.metrics.density * 160) - .5f);
         Log.d(TAG, "Navit -> pixels x=" + width_ + " pixels y=" + height_);
         Log.d(TAG, "Navit -> dpi=" + densityDpi);
         Log.d(TAG, "Navit -> density=" + Navit.metrics.density);
@@ -372,7 +372,7 @@ public class Navit extends Activity {
         } else if (densityDpi < 640) {
             my_display_density = "xxxhdpi";
         } else {
-            Log.e(TAG, "found device of very high density ("+densityDpi+")");
+            Log.e(TAG, "found device of very high density (" + densityDpi + ")");
             Log.e(TAG, "using xxxhdpi values");
             my_display_density = "xxxhdpi";
         }
@@ -383,7 +383,7 @@ public class Navit extends Activity {
 
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
         NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
-                  NAVIT_DATA_DIR+"/bin/navit",map_filename_path);
+                  NAVIT_DATA_DIR + "/bin/navit", map_filename_path);
 
         showInfos();
 
@@ -465,10 +465,10 @@ public class Navit extends Activity {
     }
 
     private void parseNavigationURI(String schemeSpecificPart) {
-        String naviData[]= schemeSpecificPart.split("&");
+        String naviData[] = schemeSpecificPart.split("&");
         Pattern p = Pattern.compile("(.*)=(.*)");
         Map<String,String> params = new HashMap<String,String>();
-        for (int count=0; count < naviData.length; count++) {
+        for (int count = 0; count < naviData.length; count++) {
             Matcher m = p.matcher(naviData[count]);
 
             if (m.matches()) {
@@ -543,7 +543,7 @@ public class Navit extends Activity {
         menu.add(1, 99, 900, getTstring(R.string.optionsmenu_exit_navit)); //TRANS
 
         /* Only show the Backup to SD-Card Option if we really have one */
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             menu.add(1, 7, 700, getTstring(R.string.optionsmenu_backup_restore)); //TRANS
         }
 
@@ -743,13 +743,13 @@ public class Navit extends Activity {
             }
             break;
         case NavitSelectStorage_id :
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter);
-                Log.d(TAG, "selected path= "+newDir);
-                if(!newDir.contains("/navit")) {
-                    newDir = newDir+"/navit/";
+                Log.d(TAG, "selected path= " + newDir);
+                if (!newDir.contains("/navit")) {
+                    newDir = newDir + "/navit/";
                 } else {
-                    newDir = newDir+"/";
+                    newDir = newDir + "/";
                 }
                 SharedPreferences prefs = this.getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor  prefs_editor = prefs.edit();
