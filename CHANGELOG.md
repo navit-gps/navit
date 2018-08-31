@@ -31,6 +31,15 @@ https://github.com/navit-gps/navit/compare/v0.5.2...HEAD
 
 This changelog is generated from the list of commits on every releases.
 
+## [v0.5.3] - 2018-08-31
+
+Release 0.5.2 had issues with the version not properly updated in the `CMakeLists.txt`. This release fixes that issue.
+
+## Changed
+
+* Update Sailfish spec for release 0.5.3. [Joseph Herlant]
+* Update Patch version for release 0.5.3. [Joseph Herlant]
+
 ## [v0.5.2] - 2018-08-30
 
 ## Added
@@ -748,7 +757,8 @@ This release was done before the adoption of this changelog format. Click
 [here](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
 to view the corresponding changes.
 
-[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.3...HEAD
+[v0.5.3]: https://github.com/navit-gps/navit/compare/v0.5.2...v0.5.3
 [v0.5.2]: https://github.com/navit-gps/navit/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/navit-gps/navit/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0
