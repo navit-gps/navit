@@ -9,8 +9,8 @@
 Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
-Version: 0.5.1
-Release: 5
+Version: 0.5.2
+Release: 0
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -125,6 +125,19 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+*Fri Aug 31 2018 metalstrolch 0.5.2-0
+
+This release has seen a big work on code quality and homogeneity.
+
+If you want to know what has changed see the Changelog at: https://github.com/navit-gps/navit/blob/v0.5.2/CHANGELOG.md
+
+For the full list of commits, see: v0.5.1...v0.5.2
+
+Please report issues at http://trac.navit-project.org or https://github.com/navit-gps/navit/issues
+The documentation can be found at http://navit.readthedocs.io/
+
+To get the latest builds, see: http://download.navit-project.org/
+
 *Tue Oct 17 2017 metalstrolch 0.5.1-5
 - Update upstream
 
