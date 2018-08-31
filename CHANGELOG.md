@@ -23,12 +23,113 @@ Navit follows the semantic versioning:
     usually tends to occur along with larger changes which would warrant a new major
     version anyway
 
+
 ## [Unreleased]
 
 To get the list of all the unreleased commits, see:
-https://github.com/navit-gps/navit/compare/v0.5.1...HEAD
+https://github.com/navit-gps/navit/compare/v0.5.2...HEAD
 
 This changelog is generated from the list of commits on every releases.
+
+## [v0.5.2] - 2018-08-30
+
+## Added
+
+* Add:build:Make gradlew executable. [mvglasow]
+* Add:build:Ignore gradle artifacts. [mvglasow]
+* Add:doc:add codefactor.io (#599) [jkoan]
+* Add:desktop:Add keywords to application desktop file (#610) [Joseph Herlant]
+* Add:Android:checkstyle-javadoc (#595) [jandegr]
+* Add:build:Add cmake4eclipse artifacts to .gitignore (#594) [mvglasow]
+* Add Slovakia and Belgium to the maplist. [jandegr]
+
+## Changed
+
+* Update:doc:Update AUTHORS file. [Joseph Herlant]
+* Update in-tree espeak to espeak-1.48.04 (#624) [Stefan Wildemann]
+* Update:scripts:change the sanity script to exclude fib and support. [Joseph Herlant]
+* Update:scripts:simplify the variables concatenation (#620) [Joseph Herlant]
+* Change parenthesis substitutuin as per CodeFactor request. [Stefan Wildemann]
+* Update:scripts:change the scripts that use non-POSIX functionnalities to bash v2 (#618) [Joseph Herlant]
+* Update:scripts:avoid iterating over ls output by using glob (#614) [Joseph Herlant]
+* Update:scripts:change the scripts that use non-POSIX functionnalities to bash (#613) [Joseph Herlant]
+* Update:style:optimize the usage of cat in shell scripts (#612) [Joseph Herlant]
+* Change:gui:Add underscore to internal gui keyboard. (#607) [tengel]
+* Update:i18n:Updated Čeština translation from launchpad (#602) [Pierre GRANDIN]
+* Update:i18n:Updated Dutch translation from launchpad (#601) [Pierre GRANDIN]
+* Update:i18n:Updated Serbian translation from launchpad (#600) [Pierre GRANDIN]
+* Update:doc:Remove overused space characters from README.md (#591) [KAMiKAZOW]
+* Updated header. [Pierre Grandin]
+* Update:i18n:Updated German translation from launchpad (#567) [Pierre GRANDIN]
+* Update:i18n:Updated Spanish translation from launchpad (#566) [Pierre GRANDIN]
+* Update:gtk:use user-configured units in Points of Interest (POI) window. (#557) [Charles Curley]
+* Update:xmlconfig:Use g\_strndup instead of strncpy. [Joseph Herlant]
+* Update:xmlconfig:Make sure we use g\_malloc/g\_free instead of malloc/free. [Joseph Herlant]
+* Update:doc:Update the AUTHORS file. [Joseph Herlant]
+* Update:i18n:Updated French (fr) translation from launchpad (#453) [Pierre GRANDIN]
+* Curley distance poi (#638) [Charles Curley]
+* Refactor:gui/internal: Add pointer and label when using function "view on map" (#631) [lains]
+* Refactor:core:Minor documentation amendment. [mvglasow]
+* Refactoring:graphics Improving quality of circles on platforms without native circle method (#628) [lains]
+* Refactor:core:Improve documentation of route\_value\_seg() [mvglasow]
+* Update:release:Add more keywords for gitchangelog
+
+## Fixed
+
+* Fix Android apk VersionCode  (#633) [jkoan]
+* Fix latlon2bookmark (#627) [jkoan]
+* Build:Disable map/garmin on Android. [mvglasow]
+* Build:Disable vehicle/gpsd on Android. [mvglasow]
+* Scripts:WinCE build script (remove sample map, add espeak-data) (#632) [lains]
+* Scripts:replace \s with the supported use of the space class (#617) [Joseph Herlant]
+* Scripts:fix malformed shebang (#615) [Joseph Herlant]
+* Cmake:Fix the way we set the LIB\_DIR when LIBDIR is set for backward compatibility (#574) [Joseph Herlant]
+* Debug:Fix potential unterminated C--string and refactoring debug\_vprintf() (#564) [lains]
+* Maptool:coverity #262887 - leaked\_storage: Variable f going out of scope leaks the storage it points to. (#598) [Joseph Herlant]
+* Config:Fix dtd to allow real xmlint (#583) [jkoan]
+* Fixed typos. [Pierre Grandin]
+* Fixed debug statement. [Pierre Grandin]
+* Core:fix log replay. [Pierre Grandin]
+* Vehicle\_android:Doc update (#571) [jandegr]
+* Graphics:Remove missing endif from if else block. [jkoan]
+* Core:Fixing dbg() change introduced in 221f783ea1caaaab2f5ceadc6b0fb3e720aac3df (#560) [lains]
+* CI convert with librsvg2-bin xxsmal cleanup (#554) [jandegr]
+* Debug:Change line separators for dbg to work also on win\* platform (#546) [Joseph Herlant]
+* Android:Fix for the permissions dialog (#459) [jkoan]
+* Revert Fix because the docker image was fixed. [jkoan]
+* Icons:Remove links to unknown image from gui\_map.svg (#542) [Joseph Herlant]
+* Gui\_internal:use max/min instead of fmax/fmin as absent from wince. [Joseph Herlant]
+* Cleanup:android:Fix android checkstyle complains (#645) [Joseph Herlant]
+* Cleanup:scripts:Fix condefactor complaints (#646) [Joseph Herlant]
+* Cleanup:maptool: use g\_strcmp0 instead of strcmp (#434) [Joseph Herlant]
+* Cleanup:scripts:Use $(..) instead of legacy `..` to make codefactor happy (#623) [Joseph Herlant]
+* Cleanup:python:cleanup python scripts (#622) [Joseph Herlant]
+* Cleanup:global:force the re-attach the return type to the function declaration (#605) [Joseph Herlant]
+* Cleanup:android: re-attach return type to function declaration. [Joseph Herlant]
+* Cleanup:cmake:retab all CMakeLists.txt files. [Joseph Herlant]
+* Cleanup:global:Use astyle to reformat everything. [Joseph Herlant]
+* Android lint check (#586) [jandegr]
+* Android:Fix:graphics (#580) [jandegr]
+* Move the file name to the right spot. [Joseph Herlant]
+* Revert #612 for sailfish build script. [Stefan Wildemann]
+* Android translations (#589) [jandegr]
+* Refactor:Android (#572) [jandegr]
+* Rework:android:Move build system from ant to grandle (#553) [jandegr]
+* Refactor:Android (#563) [jandegr]
+* Refactoring:Android:cleanup (#458) [jandegr]
+
+## Removed
+
+* Cleanup:osd&support\_espeak:get rid of unused-variables compilation warnings (#619) [Joseph Herlant]
+* Cleanup:scripts:removes deprecated usage of egrep (#616) [Joseph Herlant]
+* Cleanup:win32:Remove unused variables (#611) [Joseph Herlant]
+* Cleanup:cmake:remove trailing spaces. [Joseph Herlant]
+* Cleanup:wince:remove unused header (#576) [Joseph Herlant]
+* Cleanup:general:Declaring war to control-M. [Joseph Herlant]
+* Cleanup:xmlconfig:Remove unreachable code. [Joseph Herlant]
+* Cleanup:global:Cleanup some unreachable code. [Joseph Herlant]
+* Android:Fix:remove unused dependency libpng (#592) [jandegr]
+
 
 ## [v0.5.1] - 2018-04-19
 
@@ -647,7 +748,8 @@ This release was done before the adoption of this changelog format. Click
 [here](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
 to view the corresponding changes.
 
-[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.2...HEAD
+[v0.5.2]: https://github.com/navit-gps/navit/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/navit-gps/navit/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0
 [v0.5.0-rc.2]: https://github.com/navit-gps/navit/compare/v0.5.0-rc.1...v0.5.0-rc.2
