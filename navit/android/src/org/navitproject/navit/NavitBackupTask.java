@@ -39,7 +39,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
         /* This is the Directory where all Subdirectories are stored by date */
         File mainBackupDir = new File(
-            Environment.getExternalStorageDirectory().getPath() + "/navit/backup/");
+                Environment.getExternalStorageDirectory().getPath() + "/navit/backup/");
 
         /* Create the Main Backup Directory if it doesn't exist */
         if (!mainBackupDir.isDirectory()) {
@@ -50,7 +50,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
         /* Create a Timestamp in the format YYYY-MM-DD-Index */
         String timestamp = now.year + "-" + String.format("%02d", now.month + 1) + "-" + String
-                           .format("%02d", now.monthDay);
+                .format("%02d", now.monthDay);
         /* Get the next free index */
         int index = 1;
         for (String s : mainBackupDir.list()) {
@@ -65,7 +65,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
         /* This is the Directory in which the Files are copied into */
         File backupDir = new File(
-            Environment.getExternalStorageDirectory().getPath() + "/navit/backup/" + timestamp);
+                Environment.getExternalStorageDirectory().getPath() + "/navit/backup/" + timestamp);
 
         /* Create the Backup Directory if it doesn't exist */
         if (!backupDir.isDirectory()) {
@@ -78,18 +78,18 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         try {
             /* Backup Files in home */
             mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/bookmark.txt",
-                                       backupDir.getPath() + "/bookmark.txt");
+                    backupDir.getPath() + "/bookmark.txt");
             mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/destination.txt",
-                                       backupDir.getPath() + "/destination.txt");
+                    backupDir.getPath() + "/destination.txt");
             mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/gui_internal.txt",
-                                       backupDir.getPath() + "/gui_internal.txt");
+                    backupDir.getPath() + "/gui_internal.txt");
 
             /* Backup Shared Preferences */
             preferencesOOs = new ObjectOutputStream(
-                new FileOutputStream(backupDir.getPath() + "/preferences.bak"));
+                    new FileOutputStream(backupDir.getPath() + "/preferences.bak"));
             preferencesOOs.writeObject(
-                mActivity.getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE)
-                .getAll());
+                    mActivity.getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE)
+                    .getAll());
         } catch (IOException e) {
             e.printStackTrace();
             return mActivity.getTstring(R.string.backup_failed);
@@ -122,14 +122,14 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         }
 
         Toast.makeText(mActivity, mActivity.getTstring(R.string.backup_successful),
-                       Toast.LENGTH_LONG).show();
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
         Toast.makeText(mActivity, mActivity.getTstring(R.string.backup_failed), Toast.LENGTH_LONG)
-        .show();
+            .show();
         mDialog.dismiss();
     }
 }
