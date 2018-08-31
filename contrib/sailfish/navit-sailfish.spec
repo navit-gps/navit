@@ -9,7 +9,7 @@
 Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
-Version: 0.5.2
+Version: 0.5.3
 Release: 0
 License: GPL
 Group: Applications/Productivity
@@ -125,6 +125,10 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+*Fri Aug 31 2018 metalstrolch 0.5.3-0
+
+Release 0.5.2 was missing the version number update in the CMakefile. This release fixes this.
+
 *Fri Aug 31 2018 metalstrolch 0.5.2-0
 
 This release has seen a big work on code quality and homogeneity.
