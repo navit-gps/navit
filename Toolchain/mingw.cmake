@@ -5,7 +5,8 @@ SET(PKG_CONFIG_EXECUTABLE ${TARGET_ARCH}-pkg-config)
 
 # unecessary according to https://cmake.org/cmake/help/v3.4/variable/WINCE.html
 # TODO: plateform wince change too much things for now, fix later.
-if (CMAKE_SYSTEM_NAME STREQUAL "WindowsCEtest")
+# WindowsCETest -> WindowsCE
+if (CMAKE_SYSTEM_NAME STREQUAL "WindowsCETest")
   SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
   SET(WINCE TRUE)
 endif()
