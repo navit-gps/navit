@@ -1,4 +1,4 @@
-This is the code used to build the image available at https://hub.docker.com/r/navit/tomtom-build-image/
+This is the code used to build the image available at https://hub.docker.com/r/navit/tomtom-ng/
 
 If you want to build and use that image locally, you can do the following:
 docker build . -t navit/tomtom-build-image
