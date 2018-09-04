@@ -39,8 +39,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install doxygen
-          command: apt-get update && apt-get -y install doxygen ca-certificates git
+          name: Install doxygen and other essentials 
+          command: apt-get update && apt-get -y install doxygen ca-certificates git rsync 
       - run:
           name: Run doxygen
           command: cd navit && doxygen
