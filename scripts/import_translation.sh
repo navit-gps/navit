@@ -8,8 +8,8 @@ if [[ $1 == "" ]]; then
 	exit
 fi
 
-id=`echo $1|cut -d'/' -f4`
-po=`echo $1|cut -d'/' -f5|cut -c 13-`
+id=$(echo $1|cut -d'/' -f4)
+po=$(echo $1|cut -d'/' -f5|cut -c 13-)
 
 rm -rf navit
 git clone git@github.com:navit-gps/navit.git
@@ -21,16 +21,16 @@ wget $1 -O po/import_queue/$po
 
 # Let's fix the headers of the .po files in the import queue
 for i in po/import_queue/*.po; do
-	b=`basename $i`;
-	po=${b#*-};
+	b=$(basename $i)
+	po=${b#*-}
 	code=${po%.*}
         git checkout -b i18n/$code || exit -1
-	lname=`head -n1 ${i} | sed 's/# \(.*\) translation.\{0,1\} for navit/\1/'`
+	lname=$(head -n1 ${i} | sed 's/# \(.*\) translation.\{0,1\} for navit/\1/')
         if [[ $lname == "" ]]; then
                 echo "Cannot find the language name in the header of $i"
                 exit 1
         fi
-	d=`date +"%Y"`
+	d=$(date +"%Y")
         echo "# ${lname} translations for navit" > po/${po}.header
         echo "# Copyright (C) 2006-${d} The Navit Team" >> po/${po}.header
         echo "# This file is distributed under the same license as the navit package." >> po/${po}.header
@@ -38,10 +38,10 @@ for i in po/import_queue/*.po; do
 	# Build a clean list of the contributors
 	IFS=$'\n'
 	echo "Downloading https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details"
-	contributors=`wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | egrep '^              <a href=".+?" class="sprite person">'`
+	contributors=$(wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | egrep '^              <a href=".+?" class="sprite person">')
         for user in $contributors; do
-                url=`echo $user|cut -d'"' -f2`
-                name=`echo $user|cut -d'>' -f2|cut -d'<' -f1`
+                url=$(echo $user|cut -d'"' -f2)
+                name=$(echo $user|cut -d'>' -f2|cut -d'<' -f1)
                 echo "# $name $url" >> po/${po}.header
         done
         echo ''  >> po/${po}.header
