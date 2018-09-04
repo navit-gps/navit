@@ -38,7 +38,7 @@ for i in po/import_queue/*.po; do
 	# Build a clean list of the contributors
 	IFS=$'\n'
 	echo "Downloading https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details"
-	contributors=$(wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | egrep '^              <a href=".+?" class="sprite person">')
+	contributors=$(wget -q https://translations.launchpad.net/navit/trunk/+pots/navit/${code}/+details -O - | grep -E '^              <a href=".+?" class="sprite person">')
         for user in $contributors; do
                 url=$(echo $user|cut -d'"' -f2)
                 name=$(echo $user|cut -d'>' -f2|cut -d'<' -f1)
@@ -61,6 +61,6 @@ for i in po/import_queue/*.po; do
 	git commit -m "Update:i18n:Updated ${lname} translation from launchpad" po/${po}.in
 	git diff trunk
 	echo "Going to push $id/$code in branch i18n/$code, press a key"
-	read
+	read -r
         git push --set-upstream origin i18n/${code}
 done
