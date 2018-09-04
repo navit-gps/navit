@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: ubuntu:14.04
+    - image: ubuntu:18.04
 jobs:
   sanity_check:
     <<: *defaults
@@ -19,12 +19,12 @@ jobs:
       - checkout
       - run:
           name: Id
-          command: sudo cat /etc/*release
+          command: cat /etc/*release
       - run:
           name: Setup requirements
           command: |
             bash scripts/setup_common_requirements.sh
-            apt-get install -y libpng12-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
       - run:
           name: Build for Linux
           command: bash scripts/build_linux.sh
@@ -60,11 +60,12 @@ jobs:
       - checkout
       - run:
           name: Id
-          command: sudo cat /etc/*release
+          command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config
           command: |
-            sudo apt-get install cmake gettext libsaxonb-java librsvg2-bin
+            sudo apt-get update
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config
             cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
       - run:
           name: Process icons
@@ -98,7 +99,7 @@ jobs:
             cd ../
       - run:
          name: Chmod permissions
-         command: sudo chmod +x ./gradlew
+         command: chmod +x ./gradlew
       - run:
           name: Download Dependencies
           command: ./gradlew -v
