@@ -183,7 +183,7 @@ jobs:
   build_tomtom_minimal:
     <<: *defaults
     docker:
-      - image: navit/tomtom-build-image
+      - image: navit/tomtom-ng
     steps:
       - checkout
       - run:
@@ -203,7 +203,7 @@ jobs:
   build_tomtom_plugin:
     <<: *defaults
     docker:
-      - image: navit/tomtom-build-image
+      - image: navit/tomtom-ng
     steps:
       - checkout
       - run:
