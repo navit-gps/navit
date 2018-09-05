@@ -1,6 +1,6 @@
 var structdbus__method =
 [
-    [ "func", "structdbus__method.html#ad4449461d863b1946eaec95a3ed7dff2", null ],
+    [ "func", "structdbus__method.html#a771cfd3ba523d4d6d0152ca1212f53d2", null ],
     [ "method", "structdbus__method.html#a1349d6955ce8939a8057daf6bff3c806", null ],
     [ "path", "structdbus__method.html#aaf5d9f7701702a3cd55e5db2517f9ead", null ],
     [ "response", "structdbus__method.html#aa5d5d4f09db9d34a937aa598c0c4b4b7", null ],

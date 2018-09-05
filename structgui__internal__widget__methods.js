@@ -1,18 +1,18 @@
 var structgui__internal__widget__methods =
 [
-    [ "append", "structgui__internal__widget__methods.html#ac26bb72521250c3dfe2bd58709cda1bf", null ],
-    [ "box_new", "structgui__internal__widget__methods.html#affcca41c0acd0e4ca08b6ecbacc188d3", null ],
-    [ "button_new", "structgui__internal__widget__methods.html#a1957eec688975a00eef0f12445113a61", null ],
-    [ "button_new_with_callback", "structgui__internal__widget__methods.html#aaa4d49d9bd62748b844770ae2951c3e3", null ],
-    [ "get_flags", "structgui__internal__widget__methods.html#a9c409ffb6f3d343a32051a153e1855b8", null ],
-    [ "get_state", "structgui__internal__widget__methods.html#a9df53fca4be3d15b6526cb81c78034dc", null ],
-    [ "image_new", "structgui__internal__widget__methods.html#af204493f59d58a51e754240b1823a1fb", null ],
-    [ "keyboard", "structgui__internal__widget__methods.html#ab389707aa05ee420393495d42e89d5e9", null ],
-    [ "label_new", "structgui__internal__widget__methods.html#a69b3be6813d8261d54cb2625c69d498a", null ],
-    [ "menu", "structgui__internal__widget__methods.html#a7fc905faf8c6fe47362d7bb875c43e64", null ],
-    [ "set_data", "structgui__internal__widget__methods.html#a3fef077f18bee56a60502a43582b9f4a", null ],
-    [ "set_default_background", "structgui__internal__widget__methods.html#accfcc8dd7745e0a9bde55b6810f35ac7", null ],
-    [ "set_flags", "structgui__internal__widget__methods.html#aff352153a2071bb9f79854f4684bedef", null ],
-    [ "set_func", "structgui__internal__widget__methods.html#abdb545ab45e3b64637cf4b31d2296fa7", null ],
-    [ "set_state", "structgui__internal__widget__methods.html#ad05e94c59998a2b658924828173dfc95", null ]
+    [ "append", "structgui__internal__widget__methods.html#aeb85a64547b56ca358ee0ad1e40a8ea9", null ],
+    [ "box_new", "structgui__internal__widget__methods.html#ace84168903865c24637dccefc75e8331", null ],
+    [ "button_new", "structgui__internal__widget__methods.html#adff070eb041aa91484577e475eb02e10", null ],
+    [ "button_new_with_callback", "structgui__internal__widget__methods.html#a789a27368a606530a81585e010e5d93e", null ],
+    [ "get_flags", "structgui__internal__widget__methods.html#aea703d92397a6ac3debabe703f92b2a1", null ],
+    [ "get_state", "structgui__internal__widget__methods.html#ac78bc3466ce832b300350f061fef41d1", null ],
+    [ "image_new", "structgui__internal__widget__methods.html#a86f54fbae1f196d1faeca10774135dc4", null ],
+    [ "keyboard", "structgui__internal__widget__methods.html#a30c6a0e3c1cfbe41b96b0fc8a6b6a5af", null ],
+    [ "label_new", "structgui__internal__widget__methods.html#a4c6012ad7108b4d368211b4ac257561d", null ],
+    [ "menu", "structgui__internal__widget__methods.html#ab6ad99a70f5104fe7fe84c4b8c118c10", null ],
+    [ "set_data", "structgui__internal__widget__methods.html#a5b84e6533d710dd16c5b428552f9ba13", null ],
+    [ "set_default_background", "structgui__internal__widget__methods.html#af1b0a8df90ada24144aa6ce28b210b92", null ],
+    [ "set_flags", "structgui__internal__widget__methods.html#a8264ef05e306438f830cddcda50663e8", null ],
+    [ "set_func", "structgui__internal__widget__methods.html#a53849c16d12adba89a95552f509addac", null ],
+    [ "set_state", "structgui__internal__widget__methods.html#ae71fc3fe34807f3d1fd58140d811bc6c", null ]
 ];

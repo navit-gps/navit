@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['cjson',['cJSON',['../cJSON_8h.html#a417c667b0692c463cf3c6c435f1d5978',1,'cJSON.h']]],
-  ['cjson_5fhooks',['cJSON_Hooks',['../cJSON_8h.html#a4c24043be07442b38adc0ef79fcfb3f8',1,'cJSON.h']]]
+  ['fp_5falphablend',['FP_AlphaBlend',['../graphics__win32_8c.html#adb387c1608e6dcecbd74d2e020bb1e1d',1,'graphics_win32.c']]],
+  ['fp_5fsetstretchbltmode',['FP_SetStretchBltMode',['../graphics__win32_8c.html#aa9796b5fbdf1945168f2d58890078c66',1,'graphics_win32.c']]],
+  ['ft_5flocation_5fcb',['FT_LOCATION_CB',['../corelocation_8h.html#a8160d9e08a876378b195be16aae4f486',1,'corelocation.h']]]
 ];

@@ -19,5 +19,5 @@ var ceglue_8c =
     ] ],
     [ "CeEnableBacklight", "ceglue_8c.html#aec0f328231b6366652227ac881d5e02a", null ],
     [ "InitCeGlue", "ceglue_8c.html#a7b18d94eeacc287bf5e976e7c4213b39", null ],
-    [ "SHFullScreenPtr", "ceglue_8c.html#a026ec614bf1f36cdfe03e8fd37b3b67e", null ]
+    [ "SHFullScreenPtr", "ceglue_8c.html#a53c94e139dc81f3a122181f74f1f555b", null ]
 ];

@@ -1,5 +1,5 @@
 var structspeech__methods =
 [
-    [ "destroy", "structspeech__methods.html#aac474fe923c8a53b36d46cafbc60a8ec", null ],
-    [ "say", "structspeech__methods.html#a9a2de116f1256d15120231bc59f5b7da", null ]
+    [ "destroy", "structspeech__methods.html#a65435fac4b321e9cdcfd9d8f4ca48e7b", null ],
+    [ "say", "structspeech__methods.html#ac5cac7d5982719025a1db7c50b617d29", null ]
 ];

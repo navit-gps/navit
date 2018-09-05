@@ -28,7 +28,7 @@ var protobuf_c_8h =
     [ "ProtobufCBinaryData", "protobuf-c_8h.html#a09ff58504259204be695791ef88a8c3c", null ],
     [ "ProtobufCBuffer", "protobuf-c_8h.html#ad05eedb0d00a4a5ff6c0c2dc77b6e20a", null ],
     [ "ProtobufCBufferSimple", "protobuf-c_8h.html#a268e7d0a2b883347b3b5b4d24a29bdd3", null ],
-    [ "ProtobufCClosure", "protobuf-c_8h.html#acf1115ec583b31c751f3b019a378ed4c", null ],
+    [ "ProtobufCClosure", "protobuf-c_8h.html#aab35f8df14eb459cc65cb4bcdd7a2089", null ],
     [ "ProtobufCEnumDescriptor", "protobuf-c_8h.html#a06615b608f1a7dfd5cf9bef52559bcc7", null ],
     [ "ProtobufCEnumValue", "protobuf-c_8h.html#ae363a8ab19713d9c4a46916ce6226707", null ],
     [ "ProtobufCEnumValueIndex", "protobuf-c_8h.html#a3754e72c0f4ab0828e6a902a96a466d5", null ],
@@ -36,7 +36,7 @@ var protobuf_c_8h =
     [ "ProtobufCIntRange", "protobuf-c_8h.html#a17ea01a73cfc22e3d73c0e879cd2406a", null ],
     [ "ProtobufCMessage", "protobuf-c_8h.html#aca1046c4d7d01a0a5b2e91a5d5a6f74f", null ],
     [ "ProtobufCMessageDescriptor", "protobuf-c_8h.html#ad45d29fa8a224d79290d614498e18e5e", null ],
-    [ "ProtobufCMessageInit", "protobuf-c_8h.html#a04786bd14a1f7de6f46b1f0a1bde907d", null ],
+    [ "ProtobufCMessageInit", "protobuf-c_8h.html#ab04aebb285c9c4bd8fa934235e2af64f", null ],
     [ "ProtobufCMessageUnknownField", "protobuf-c_8h.html#a543ac2396acfcc4f46d1e74c54ef2ac8", null ],
     [ "ProtobufCMethodDescriptor", "protobuf-c_8h.html#abd25f1f3af8908062a50f57dec51df94", null ],
     [ "ProtobufCService", "protobuf-c_8h.html#a0ffe98431bfeec584dec983e598c9d01", null ],
@@ -85,6 +85,6 @@ var protobuf_c_8h =
     [ "protobuf_c_service_descriptor_get_method_by_name", "protobuf-c_8h.html#a354b8c26e89bba54e106f242759efed1", null ],
     [ "protobuf_c_service_destroy", "protobuf-c_8h.html#a9df9841d948f6351f5a3762329165016", null ],
     [ "protobuf_c_default_allocator", "protobuf-c_8h.html#a91bfcbde32140b149550b6b7e2a0349f", null ],
-    [ "protobuf_c_out_of_memory", "protobuf-c_8h.html#a476a217584ce49e2cb9233cebc67ee19", null ],
+    [ "protobuf_c_out_of_memory", "protobuf-c_8h.html#a836ef1d54e198a2922405727106c9e2b", null ],
     [ "protobuf_c_system_allocator", "protobuf-c_8h.html#a30e73e85f3fa8883900ee80cd370ce90", null ]
 ];

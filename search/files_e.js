@@ -23,6 +23,5 @@ var searchData=
   ['protobuf_2dc_2ec',['protobuf-c.c',['../protobuf-c_8c.html',1,'']]],
   ['protobuf_2dc_2eh',['protobuf-c.h',['../protobuf-c_8h.html',1,'']]],
   ['proxy_2ec',['proxy.c',['../proxy_8c.html',1,'']]],
-  ['proxy_2eh',['proxy.h',['../qt5__qml_2proxy_8h.html',1,'']]],
-  ['proxy_2eh',['proxy.h',['../qml_2proxy_8h.html',1,'']]]
+  ['proxy_2eh',['proxy.h',['../qml_2proxy_8h.html',1,'(Global Namespace)'],['../qt5__qml_2proxy_8h.html',1,'(Global Namespace)']]]
 ];

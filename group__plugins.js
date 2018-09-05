@@ -3,7 +3,7 @@ var group__plugins =
     [ "vehicle plugins", "group__vehicle-plugins.html", "group__vehicle-plugins" ],
     [ "plugin", "structplugin.html", [
       [ "active", "group__plugins.html#ga3e3ea3a06ec41a8e40c88e6ad81f0fc0", null ],
-      [ "init", "group__plugins.html#ga1c9970a7340b69b93c423151782a6200", null ],
+      [ "init", "group__plugins.html#ga7239cfc6b8e8ef5454ba5ad3e9ef828a", null ],
       [ "lazy", "group__plugins.html#gaf16912490672f8cc192fe4a863a25392", null ],
       [ "name", "group__plugins.html#gabac25cf3bd4ef14df348ee89b83d08c2", null ],
       [ "ondemand", "group__plugins.html#ga9c225c021f1b4e18d40d75ff5f04572c", null ]
@@ -30,7 +30,7 @@ var group__plugins =
     [ "plugins_new", "group__plugins.html#ga71694854a00eccff1b8387f065789557", null ],
     [ "active", "group__plugins.html#ga3e3ea3a06ec41a8e40c88e6ad81f0fc0", null ],
     [ "hash", "group__plugins.html#ga89b4ff4f9ce31c76600199e88f580dfc", null ],
-    [ "init", "group__plugins.html#ga1c9970a7340b69b93c423151782a6200", null ],
+    [ "init", "group__plugins.html#ga7239cfc6b8e8ef5454ba5ad3e9ef828a", null ],
     [ "lazy", "group__plugins.html#gaf16912490672f8cc192fe4a863a25392", null ],
     [ "list", "group__plugins.html#ga7c9d3cced6b752b2c67c62601e9c06f3", null ],
     [ "name", "group__plugins.html#gabac25cf3bd4ef14df348ee89b83d08c2", null ],

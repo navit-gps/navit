@@ -1,12 +1,12 @@
 var structevent__methods =
 [
-    [ "add_idle", "structevent__methods.html#a8c9cd86856db427d4cbb92de2cbd7659", null ],
-    [ "add_timeout", "structevent__methods.html#ab9957b606a2f3b9e42917bcf41193b0d", null ],
-    [ "add_watch", "structevent__methods.html#a2f8bb418bbec2ad3dc182d358ad84ecd", null ],
-    [ "call_callback", "structevent__methods.html#a05a8c1544471df644e38a6461d4b2415", null ],
-    [ "main_loop_quit", "structevent__methods.html#ad5dfbc3536fba4b35965f06a996f684f", null ],
-    [ "main_loop_run", "structevent__methods.html#a1d3cf902e952fde31c08f74bbb9da3f2", null ],
-    [ "remove_idle", "structevent__methods.html#aeedb680039d30ef6fd49301aab54c5dd", null ],
-    [ "remove_timeout", "structevent__methods.html#aa8d98e33a172fd0a3b47d3317c9c6f33", null ],
-    [ "remove_watch", "structevent__methods.html#ab81feef7ea1f77fae4bda62084224bda", null ]
+    [ "add_idle", "structevent__methods.html#a3514f0f8367d8eb8b2ba945ed7e75fb5", null ],
+    [ "add_timeout", "structevent__methods.html#a78a56f5728c22e0f3cc34bf25d4a4607", null ],
+    [ "add_watch", "structevent__methods.html#a39bed4312c004908d4bf58a650a846ec", null ],
+    [ "call_callback", "structevent__methods.html#a426e8004150dd5e6a5fa86f543f5b851", null ],
+    [ "main_loop_quit", "structevent__methods.html#a852802e1db120719cb6866c15f78914c", null ],
+    [ "main_loop_run", "structevent__methods.html#ae6529f8dc1e8373de18faee61f749489", null ],
+    [ "remove_idle", "structevent__methods.html#a5c9b05a7178c083d11b6a5e5f85b2b06", null ],
+    [ "remove_timeout", "structevent__methods.html#a844d8593d9c8e985e377bca81209deff", null ],
+    [ "remove_watch", "structevent__methods.html#aaec52b1d241c95ec694688336929dd83", null ]
 ];

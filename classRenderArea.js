@@ -12,7 +12,7 @@ var classRenderArea =
     [ "paintEvent", "classRenderArea.html#a67b7d2e03cd4a27ae18c1e6a8b94f79b", null ],
     [ "processClose", "classRenderArea.html#a64c34347d338cbb97fa5ced307735f93", null ],
     [ "resizeEvent", "classRenderArea.html#ab5c59b9e375a84859d4c69ba4aa68cba", null ],
-    [ "sizeHint", "classRenderArea.html#a9a78bd532fa2da583c4831c942424008", null ],
+    [ "sizeHint", "classRenderArea.html#a83b8c1117a0efdba54e674875ce9d463", null ],
     [ "watchEvent", "classRenderArea.html#ac2921205b8d304009b3d7153f304c8b8", null ],
     [ "wheelEvent", "classRenderArea.html#af0c68780c125a6a4e2009f4c28451a58", null ],
     [ "cbl", "classRenderArea.html#a546193dbe523f89959fc0842f2b817b2", null ],

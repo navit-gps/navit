@@ -1,7 +1,7 @@
 var structquadtree__iter =
 [
     [ "item", "structquadtree__iter.html#a9054605e8b058a477eb2ff658ba9e02b", null ],
-    [ "item_free", "structquadtree__iter.html#aa4dae96c5f7b00ee10b9813ed8031dc6", null ],
+    [ "item_free", "structquadtree__iter.html#ad9541c12a0a090740992a98839dd2a76", null ],
     [ "item_free_context", "structquadtree__iter.html#a5a7a59448f4e2d10ad281145fd6b831c", null ],
     [ "iter_nodes", "structquadtree__iter.html#a437a1c77fe86fb5d365fc6b66ce9ffe1", null ],
     [ "xmax", "structquadtree__iter.html#a05f958ed28956f708761adbd96def94e", null ],

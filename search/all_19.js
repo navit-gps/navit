@@ -28,7 +28,7 @@ var searchData=
   ['ways_5fsplit',['ways_split',['../structmaptool__params.html#a02481e12e97befde43261257bf72ead0',1,'maptool_params']]],
   ['we',['we',['../structfile__wordexp.html#a97d9da187426577cdf3a49ab289c007a',1,'file_wordexp']]],
   ['weight',['weight',['../structch__edge.html#afbab763db5dc32011bd626f78e8e7879',1,'ch_edge::weight()'],['../structedge.html#ac6cf46f253ca5faf8f4e83b18013bf9c',1,'edge::weight()'],['../structsize__weight__limit.html#af786f43599bb9b1030d782cfa20af323',1,'size_weight_limit::weight()'],['../structvehicleprofile.html#aa8ee7c3e754ae0f529c1f25517fdd5bd',1,'vehicleprofile::weight()']]],
-  ['wfree',['wfree',['../structwidget.html#abf1f52809302cc5c9fb557889c78955d',1,'widget']]],
+  ['wfree',['wfree',['../structwidget.html#a445cc7ea9d75cee80db84f846fb38c2a',1,'widget']]],
   ['wheelevent',['wheelEvent',['../classQNavitQuick.html#a48423474f9eb99d28f133c1f3ab6f980',1,'QNavitQuick::wheelEvent()'],['../classQNavitWidget.html#ac35a00262f5851a32dc191606f8e3f64',1,'QNavitWidget::wheelEvent()'],['../classRenderArea.html#af0c68780c125a6a4e2009f4c28451a58',1,'RenderArea::wheelEvent()']]],
   ['where',['where',['../structcache__entry.html#add5e125db81b24374db7f1391d65def7',1,'cache_entry::where()'],['../structmalloc__head.html#a15e2f15b982ca632e0e0103bede944c6',1,'malloc_head::where()']]],
   ['white',['white',['../structj1850.html#aafd01c88a291e852af16f6a1774cced5',1,'j1850']]],

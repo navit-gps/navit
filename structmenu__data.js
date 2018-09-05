@@ -5,7 +5,7 @@ var structmenu__data =
     [ "keyboard", "structmenu__data.html#a4dcedbf71b1d197fb4ca3a74a9ad32e4", null ],
     [ "keyboard_mode", "structmenu__data.html#a911b2f02af6bd5f8f509ddaba009ea2b", null ],
     [ "menu", "structmenu__data.html#aa5b87cdbfdb9afb21fdd4616b68dbe9d", null ],
-    [ "redisplay", "structmenu__data.html#a21f8fbb36b84ec30212bb039dcd3e0f2", null ],
+    [ "redisplay", "structmenu__data.html#a026d34e4b8bc9307436fba6235bb25aa", null ],
     [ "redisplay_widget", "structmenu__data.html#aea18510a78ab44637539b7f3efa2093c", null ],
     [ "refresh_callback", "structmenu__data.html#a660cf2b35f94078885b4680e275de183", null ],
     [ "search_list", "structmenu__data.html#a088bd5eca2edcde883eac70d972d7c03", null ]

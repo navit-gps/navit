@@ -211,6 +211,6 @@ var searchData=
   ['triple',['triple',['../garmin__img_8c.html#ae6d783893c90bb0a605408cc8e4c0b88',1,'garmin_img.c']]],
   ['triple_5fu',['triple_u',['../garmin__img_8c.html#ac411e7ebd14b9f850c8d32aa15ff76d8',1,'garmin_img.c']]],
   ['tv_5fdelta',['tv_delta',['../graphics__gtk__drawing__area_8c.html#adb985aace81d0fe464148c72cad3347e',1,'graphics_gtk_drawing_area.c']]],
-  ['type',['type',['../classPoiObject.html#a59afe1bb5ac0ad97782cc833b09196a0',1,'PoiObject']]],
+  ['type',['type',['../classPoiObject.html#a903652efab856e583e9f567e6fb21d94',1,'PoiObject']]],
   ['typechanged',['typeChanged',['../classPoiObject.html#a691a475b6d276c971f7bece3bc382e8c',1,'PoiObject']]]
 ];

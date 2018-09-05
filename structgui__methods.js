@@ -1,13 +1,13 @@
 var structgui__methods =
 [
-    [ "add_attr", "structgui__methods.html#af995d9fd279289b937bc97f1bf4f4c22", null ],
-    [ "add_bookmark", "structgui__methods.html#ae4e55184e44cdcd779b4656df207a535", null ],
-    [ "datawindow_new", "structgui__methods.html#abb4423694e83a58d5e49ef6194ffa115", null ],
-    [ "disable_suspend", "structgui__methods.html#acf2a716caa2920a8b9bec0c16e23d7e7", null ],
-    [ "get_attr", "structgui__methods.html#aa5fa52696caddc39520b415dd695e055", null ],
-    [ "menubar_new", "structgui__methods.html#aa6c71a10410900375b2a3b55d1dc561e", null ],
-    [ "popup_new", "structgui__methods.html#a6bb8f091383b03d1c30ddb62edda001b", null ],
-    [ "run_main_loop", "structgui__methods.html#a7d3fa573d5d3a2c7ad4034fcb3f54102", null ],
-    [ "set_attr", "structgui__methods.html#a14adb5a998a14d9d8718f1b8de67e104", null ],
-    [ "set_graphics", "structgui__methods.html#a3de4c8424d017920770dabdcb74138bf", null ]
+    [ "add_attr", "structgui__methods.html#a24713081da205a9a9d835b9db5d3a53f", null ],
+    [ "add_bookmark", "structgui__methods.html#a8cd63422f5b2fe2ac806b61e273ad1b4", null ],
+    [ "datawindow_new", "structgui__methods.html#ad188faaad0fedf24263f62b54392c48b", null ],
+    [ "disable_suspend", "structgui__methods.html#a3cf8fab98124f6dc0202900de3ec2845", null ],
+    [ "get_attr", "structgui__methods.html#a0440569333d8d05fc7500de0fef5aa59", null ],
+    [ "menubar_new", "structgui__methods.html#a4e72c665836115f09d034aeaa5376e0f", null ],
+    [ "popup_new", "structgui__methods.html#a2c03d4c5c2a0a255c912a61d95c5a053", null ],
+    [ "run_main_loop", "structgui__methods.html#aa1d374384a546c5968fe3ea849dafd9c", null ],
+    [ "set_attr", "structgui__methods.html#a8e2adeba2c0ac3c7a3fef5fcb759be3a", null ],
+    [ "set_graphics", "structgui__methods.html#a405dbb54c703abb831c7d96bec25b012", null ]
 ];

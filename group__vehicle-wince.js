@@ -129,8 +129,8 @@ var group__vehicle_wince =
     [ "A2W", "group__vehicle-wince.html#ga7f743aef33e1a85946b61fe1e4e8d034", null ],
     [ "SwitchToThread", "group__vehicle-wince.html#gacde45a4c9e06317d1c84b3c1c6d31169", null ],
     [ "W2A", "group__vehicle-wince.html#ga1ee0cfdee055ae91e23ee4b82f9fb6cb", null ],
-    [ "PFN_BthGetMode", "group__vehicle-wince.html#ga3a8541865780fdddba701f4e08a05a62", null ],
-    [ "PFN_BthSetMode", "group__vehicle-wince.html#gaa152fd335682447b4a1d62f831dafeeb", null ],
+    [ "PFN_BthGetMode", "group__vehicle-wince.html#ga170eb041f9b180a25846384fb43f5326", null ],
+    [ "PFN_BthSetMode", "group__vehicle-wince.html#ga8f123bfe3dcef9770d8e3abce18593a9", null ],
     [ "file_type", "group__vehicle-wince.html#gaaf047b6ce458f7c55fd215920656d128", [
       [ "file_type_pipe", "group__vehicle-wince.html#ggaaf047b6ce458f7c55fd215920656d128a7eca5fdae0185cd46643b56a280acc85", null ],
       [ "file_type_device", "group__vehicle-wince.html#ggaaf047b6ce458f7c55fd215920656d128a7a6fd95a766672f6ba352e79c4b3ebdc", null ],

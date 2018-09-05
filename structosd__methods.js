@@ -1,7 +1,7 @@
 var structosd__methods =
 [
-    [ "destroy", "structosd__methods.html#a0abe7c75bdd5a4a5ab23baefe2ee4e88", null ],
-    [ "get_attr", "structosd__methods.html#aff429d03792ffa42f49f18adfd212e63", null ],
-    [ "osd_destroy", "structosd__methods.html#a207136f94792143c8b5c184239c02cd3", null ],
-    [ "set_attr", "structosd__methods.html#a07961c3ac1c3b0abae82001e82dfeb37", null ]
+    [ "destroy", "structosd__methods.html#aad5cbd1d28f3e2e37d74b56a300ed506", null ],
+    [ "get_attr", "structosd__methods.html#ac465c1fef8f6790f74621f39e00fdf1f", null ],
+    [ "osd_destroy", "structosd__methods.html#ae259e0327eb4db7a3a02833a9fbe5903", null ],
+    [ "set_attr", "structosd__methods.html#ad640c6b43f55024b2719a44ab7ed3ff0", null ]
 ];

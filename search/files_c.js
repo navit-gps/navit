@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['navigation_2ec',['navigation.c',['../binding_2python_2navigation_8c.html',1,'']]],
-  ['navigation_2ec',['navigation.c',['../navigation_8c.html',1,'']]],
+  ['navigation_2ec',['navigation.c',['../binding_2python_2navigation_8c.html',1,'(Global Namespace)'],['../navigation_8c.html',1,'(Global Namespace)']]],
   ['navigation_2eh',['navigation.h',['../navigation_8h.html',1,'']]],
-  ['navit_2ec',['navit.c',['../binding_2python_2navit_8c.html',1,'']]],
-  ['navit_2ec',['navit.c',['../navit_8c.html',1,'']]],
+  ['navit_2ec',['navit.c',['../binding_2python_2navit_8c.html',1,'(Global Namespace)'],['../navit_8c.html',1,'(Global Namespace)']]],
   ['navit_2eh',['navit.h',['../navit_8h.html',1,'']]],
   ['navit_2ejava',['Navit.java',['../Navit_8java.html',1,'']]],
   ['navit_5flfs_2eh',['navit_lfs.h',['../navit__lfs_8h.html',1,'']]],

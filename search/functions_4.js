@@ -211,7 +211,7 @@ var searchData=
   ['coord_5fslice_5ffree',['coord_slice_free',['../ch_8c.html#a2fa82718b51b2e0c665385f0107b303a',1,'ch.c']]],
   ['coord_5fto_5fstr',['coord_to_str',['../itembin_8c.html#a81c123920dc619f7afb0e6683d01ecb1',1,'itembin.c']]],
   ['coordinates_5fgeo',['coordinates_geo',['../gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc',1,'gui_internal_command.c']]],
-  ['coords',['coords',['../classBookmarkObject.html#af31a59578601801a0f66d12b14ce7344',1,'BookmarkObject::coords()'],['../classPoiObject.html#a4a1347fea47e887582c6911c6a6caf12',1,'PoiObject::coords()']]],
+  ['coords',['coords',['../classBookmarkObject.html#ad345436541a44fedc2bf521559ce8ed7',1,'BookmarkObject::coords()'],['../classPoiObject.html#aeed5431699365f918ddf1aaa45a240db',1,'PoiObject::coords()']]],
   ['coordstring',['coordString',['../classNGQPoint.html#a04b9e2d80fd1a2a85eb40eae63795691',1,'NGQPoint']]],
   ['copy',['Copy',['../classNGQProxyBookmarks.html#aa3319bdffc8c43c5f96770ff9ddd837b',1,'NGQProxyBookmarks']]],
   ['copy_5fto_5flittle_5fendian_5f32',['copy_to_little_endian_32',['../protobuf-c_8c.html#a03952e0355f3c91b3a932b056fa933b0',1,'protobuf-c.c']]],

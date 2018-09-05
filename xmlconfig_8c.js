@@ -35,6 +35,8 @@ var xmlconfig_8c =
     [ "navit_object_unref", "xmlconfig_8c.html#a6430bef5b4ff56f67fe80bfee71ef896", null ],
     [ "object_func_lookup", "xmlconfig_8c.html#aa0aedbfd467d2009ac65a983734fc556", null ],
     [ "parse_file", "xmlconfig_8c.html#a9de8347241db6908beeefca1c0c9c0b7", null ],
+    [ "parse_node", "xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630", null ],
+    [ "parse_node_text", "xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219", null ],
     [ "start_element", "xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807", null ],
     [ "strncmp_len", "xmlconfig_8c.html#a59ded78f7d1a930051c2671735b46066", null ],
     [ "xi_end_element", "xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803", null ],
@@ -54,6 +56,5 @@ var xmlconfig_8c =
     [ "attr_fixmes", "xmlconfig_8c.html#ab5fe670005ed1b0061c18f9048a6d035", null ],
     [ "element_fixmes", "xmlconfig_8c.html#a3869609c748d467db1f37897cd9d39e0", null ],
     [ "elements", "xmlconfig_8c.html#a598aed19b079979ffe010af33407dc6a", null ],
-    [ "object_funcs", "xmlconfig_8c.html#a7fe8a7409ee987b15c33ef23804625bf", null ],
-    [ "parser", "xmlconfig_8c.html#ac9e8bdc8d3025b89c700614535acefb7", null ]
+    [ "object_funcs", "xmlconfig_8c.html#a7fe8a7409ee987b15c33ef23804625bf", null ]
 ];

@@ -2,7 +2,7 @@ var searchData=
 [
   ['access_5fvalue',['access_value',['../osm_8c.html#a1c31997b4d6ff879d9d805e730182e0e',1,'osm.c']]],
   ['activate',['activate',['../gui__gtk__action_8c.html#a084777e870e31f8f85766d9ccf49fa7f',1,'gui_gtk_action.c']]],
-  ['active',['active',['../classMapObject.html#ac90d6d8954f6d2a25c6ea7e7eb9aa1e0',1,'MapObject::active()'],['../classVehicleObject.html#a8be40609919d6d0e9b98ebc224a624e2',1,'VehicleObject::active()']]],
+  ['active',['active',['../classMapObject.html#a3bd29a321fff6d36d7d3b316e871e24b',1,'MapObject::active()'],['../classVehicleObject.html#a1893630cac0324083fba8c59e2843546',1,'VehicleObject::active()']]],
   ['activechanged',['activeChanged',['../classMapObject.html#a9cb62dcfe6b9f4c6827d8fccc54c58d6',1,'MapObject::activeChanged()'],['../classVehicleObject.html#acd961866c99a279b7bb01e2f7445fe12',1,'VehicleObject::activeChanged()']]],
   ['activepoi',['activePoi',['../classBackend.html#af6166b6f8ddb49d9bd0f42d4aca75f8e',1,'Backend']]],
   ['activepoichanged',['activePoiChanged',['../classBackend.html#af9e5b1076b3b2a0dfa4f07d628c316ef',1,'Backend']]],

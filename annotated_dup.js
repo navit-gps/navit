@@ -1,9 +1,6 @@
-var annotated =
+var annotated_dup =
 [
-    [ "eval", "namespaceeval.html", null ],
     [ "org", "namespaceorg.html", "namespaceorg" ],
-    [ "startup", "namespacestartup.html", null ],
-    [ "test", "namespacetest.html", null ],
     [ "_OSMPBF__Blob", "struct__OSMPBF____Blob.html", "struct__OSMPBF____Blob" ],
     [ "_OSMPBF__BlobHeader", "struct__OSMPBF____BlobHeader.html", "struct__OSMPBF____BlobHeader" ],
     [ "_OSMPBF__ChangeSet", "struct__OSMPBF____ChangeSet.html", "struct__OSMPBF____ChangeSet" ],

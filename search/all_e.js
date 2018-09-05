@@ -8,7 +8,7 @@ var searchData=
   ['label_5fdistance',['label_distance',['../structgtk__poi__search.html#ace9a84684edcf0b6f8505a25a09904e6',1,'gtk_poi_search']]],
   ['label_5fheader',['label_header',['../structlabel__header.html',1,'']]],
   ['label_5fline',['label_line',['../graphics_8c.html#a324319a35ac5de50116e718419638e22',1,'graphics.c']]],
-  ['label_5fnew',['label_new',['../structgui__internal__widget__methods.html#a69b3be6813d8261d54cb2625c69d498a',1,'gui_internal_widget_methods']]],
+  ['label_5fnew',['label_new',['../structgui__internal__widget__methods.html#a4c6012ad7108b4d368211b4ac257561d',1,'gui_internal_widget_methods']]],
   ['label_5fstr',['label_str',['../structosd__speed__warner.html#a3571d90eab207720ff60b64829fa5ab7',1,'osd_speed_warner']]],
   ['lam1',['LAM1',['../structgeodesic.html#a116c42affa24d96c8d9d835ab2ca1883',1,'geodesic::LAM1()'],['../geodesic_8h.html#a51460d63effce8166af1c813dac3972b',1,'lam1():&#160;geodesic.h']]],
   ['lam2',['LAM2',['../structgeodesic.html#a516961d5f50173e47c9f62cabef536ba',1,'geodesic::LAM2()'],['../geodesic_8h.html#afc42839d6606df9eff52e2c3f1fe9e1d',1,'lam2():&#160;geodesic.h']]],

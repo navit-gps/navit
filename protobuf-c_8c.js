@@ -22,7 +22,7 @@ var protobuf_c_8c =
     [ "TRUE", "protobuf-c_8c.html#aa8cecfc5c5c054d2875c03e77b7be15d", null ],
     [ "UNALIGNED_ALLOC", "protobuf-c_8c.html#a3831e7fbddab1a51785b07bc241e1697", null ],
     [ "UNPACK_ERROR", "protobuf-c_8c.html#a0f65679b5e5d2f7acd0b2d800e64e386", null ],
-    [ "GenericHandler", "protobuf-c_8c.html#a3a2f605afaac0e9b958725689b9eeb4c", null ],
+    [ "GenericHandler", "protobuf-c_8c.html#a20cde6d882ccb766213d665262147de2", null ],
     [ "ScannedMember", "protobuf-c_8c.html#a3a6442d7e4991bb1b8aa293372ccd273", null ],
     [ "alloc_failed_warning", "protobuf-c_8c.html#a3d610832b16ff93918dda87801f1f8cd", null ],
     [ "binary_data_pack", "protobuf-c_8c.html#abd23e61d78180a3bb864c19178168142", null ],
@@ -101,6 +101,6 @@ var protobuf_c_8c =
     [ "zigzag32", "protobuf-c_8c.html#a4a8779da1e59e5765cd2b3fc8ff1831a", null ],
     [ "zigzag64", "protobuf-c_8c.html#ad7b72e9de70fc586646296e29d51d987", null ],
     [ "protobuf_c_default_allocator", "protobuf-c_8c.html#a91bfcbde32140b149550b6b7e2a0349f", null ],
-    [ "protobuf_c_out_of_memory", "protobuf-c_8c.html#a476a217584ce49e2cb9233cebc67ee19", null ],
+    [ "protobuf_c_out_of_memory", "protobuf-c_8c.html#a836ef1d54e198a2922405727106c9e2b", null ],
     [ "protobuf_c_system_allocator", "protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90", null ]
 ];

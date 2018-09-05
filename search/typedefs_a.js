@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['s16',['s16',['../types_8h.html#aa980e2c02ba2305e0f489d5650655425',1,'types.h']]],
-  ['s32',['s32',['../types_8h.html#ae9b1af5c037e57a98884758875d3a7c4',1,'types.h']]],
-  ['s8',['s8',['../types_8h.html#a9e382f207c65ca13ab4ae98363aeda80',1,'types.h']]],
-  ['scannedmember',['ScannedMember',['../protobuf-c_8c.html#a3a6442d7e4991bb1b8aa293372ccd273',1,'protobuf-c.c']]]
+  ['xml_5fcontext',['xml_context',['../xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16',1,'xmlconfig.h']]],
+  ['xmlerror',['xmlerror',['../xmlconfig_8h.html#ac0a340b94c7c1f4728ac4cf6848d2354',1,'xmlconfig.h']]],
+  ['xpm2bmp',['XPM2BMP',['../xpm2bmp_8h.html#af8edce3fccede4e4964decd288261e81',1,'xpm2bmp.h']]],
+  ['xpmcolorentry',['XPMCOLORENTRY',['../xpm2bmp_8h.html#a3f5d97eab2e8ec8fd083ce5695325c9a',1,'xpm2bmp.h']]]
 ];

@@ -4,7 +4,7 @@ var searchData=
   ['label',['label',['../structbookmark__item__priv.html#ada935678ea8d69bd34067b67201013dd',1,'bookmark_item_priv::label()'],['../structdisplayitem.html#a9eb57069cfb4c2666a067175ac5176c8',1,'displayitem::label()'],['../structitem__data.html#ae664c5300ff05ce9f3e148ea016d00f9',1,'item_data::label()'],['../structmap__rect__priv.html#a251872f095b9ebfac3f43d8a86b280a0',1,'map_rect_priv::label()'],['../structmap__rect__priv.html#ac442d947550598d521513d82f1695ced',1,'map_rect_priv::label()'],['../structgscale.html#a2dbdc3c18126dc6372be920551cbd4f4',1,'gscale::label()'],['../structlabel__header.html#a3f523e90da2c641eb77124a0e8b12eab',1,'label_header::label()'],['../struct__ProtobufCFieldDescriptor.html#a826c017499c2acdf9f17ccb740f37203',1,'_ProtobufCFieldDescriptor::label()'],['../garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c',1,'label():&#160;garmin_img.c']]],
   ['label_5fattr',['label_attr',['../structmap__rect__priv.html#ad57a1328c4a9038f24147b4961939111',1,'map_rect_priv']]],
   ['label_5fdistance',['label_distance',['../structgtk__poi__search.html#ace9a84684edcf0b6f8505a25a09904e6',1,'gtk_poi_search']]],
-  ['label_5fnew',['label_new',['../structgui__internal__widget__methods.html#a69b3be6813d8261d54cb2625c69d498a',1,'gui_internal_widget_methods']]],
+  ['label_5fnew',['label_new',['../structgui__internal__widget__methods.html#a4c6012ad7108b4d368211b4ac257561d',1,'gui_internal_widget_methods']]],
   ['label_5fstr',['label_str',['../structosd__speed__warner.html#a3571d90eab207720ff60b64829fa5ab7',1,'osd_speed_warner']]],
   ['lam1',['LAM1',['../structgeodesic.html#a116c42affa24d96c8d9d835ab2ca1883',1,'geodesic']]],
   ['lam2',['LAM2',['../structgeodesic.html#a516961d5f50173e47c9f62cabef536ba',1,'geodesic']]],

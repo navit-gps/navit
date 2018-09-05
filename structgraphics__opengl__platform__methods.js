@@ -1,5 +1,5 @@
 var structgraphics__opengl__platform__methods =
 [
-    [ "destroy", "structgraphics__opengl__platform__methods.html#affe5f4abcaee38e226d375ab33f64b82", null ],
-    [ "swap_buffers", "structgraphics__opengl__platform__methods.html#a494f651bf62b6c851a7355865f9bcf1e", null ]
+    [ "destroy", "structgraphics__opengl__platform__methods.html#a12625b1efcd723bdcb7129652aa154b0", null ],
+    [ "swap_buffers", "structgraphics__opengl__platform__methods.html#a96678d73696011d5142f35bda58869b2", null ]
 ];

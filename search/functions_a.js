@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['icon',['icon',['../classPoiObject.html#a16070d8e0dc44f2430f69a0e3b876a73',1,'PoiObject::icon()'],['../classSearchObject.html#a62d7966e9827adb60b9b938538a7cb88',1,'SearchObject::icon()']]],
+  ['icon',['icon',['../classPoiObject.html#a35bf0d20ebe9ff61cba5f62c7ebf3a7f',1,'PoiObject::icon()'],['../classSearchObject.html#a72b88728d47d32579c9b217245b0f65b',1,'SearchObject::icon()']]],
   ['icon_5fnew',['icon_new',['../layout_8c.html#ae2c70612fd0a1d106db684927921095a',1,'icon_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#ae2c70612fd0a1d106db684927921095a',1,'icon_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['iconchanged',['iconChanged',['../classPoiObject.html#ab7852700b43e7ea53c29fc18ed386943',1,'PoiObject::iconChanged()'],['../classSearchObject.html#abfb6051d45898ed695d98de4e5547a75',1,'SearchObject::iconChanged()']]],
   ['iconpath',['iconPath',['../classNGQProxyGui.html#a8cb7266000f520c4cfe88a163319363a',1,'NGQProxyGui']]],
@@ -32,7 +32,6 @@ var searchData=
   ['initpathattr',['initPathAttr',['../gpx2navit__txt_8h.html#af0340666eaebe35da5165ad74ac69293',1,'initPathAttr(pathattr *pattr, g2sattr *attr):&#160;setpath.c'],['../setpath_8c.html#af0340666eaebe35da5165ad74ac69293',1,'initPathAttr(pathattr *pattr, g2sattr *attr):&#160;setpath.c']]],
   ['initstatic',['initStatic',['../xmlconfig_8c.html#a66dbdbb29f19536c40bf402944bf07b4',1,'xmlconfig.c']]],
   ['inside_5ftriangle',['inside_triangle',['../graphics__egl_8c.html#a5e2773fe70c21369acdf84e2950d4ab6',1,'graphics_egl.c']]],
-  ['int',['int',['../graphics__win32_8c.html#a672f45ba1cea6792eb9f7018d62ee646',1,'graphics_win32.c']]],
   ['int32_5fpack',['int32_pack',['../protobuf-c_8c.html#ad9b7eb91b73427fb3f68b299664700d6',1,'protobuf-c.c']]],
   ['int32_5fsize',['int32_size',['../protobuf-c_8c.html#a71e25f14110e7e7e804e45752f9b7a16',1,'protobuf-c.c']]],
   ['int_5frange_5flookup',['int_range_lookup',['../protobuf-c_8c.html#a1cf8ad07df46b4a5c9cf396df7d41551',1,'protobuf-c.c']]],

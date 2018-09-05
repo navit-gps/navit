@@ -1,13 +1,11 @@
 var searchData=
 [
-  ['main_2ec',['main.c',['../main_8c.html',1,'']]],
-  ['main_2ec',['main.c',['../tools_2gpx2navit__txt_2src_2main_8c.html',1,'']]],
+  ['main_2ec',['main.c',['../main_8c.html',1,'(Global Namespace)'],['../tools_2gpx2navit__txt_2src_2main_8c.html',1,'(Global Namespace)']]],
   ['main_2ecpp',['main.cpp',['../main_8cpp.html',1,'']]],
   ['main_2eh',['main.h',['../main_8h.html',1,'']]],
   ['main_2em',['main.m',['../main_8m.html',1,'']]],
   ['map_2dshare_2eh',['map-share.h',['../map-share_8h.html',1,'']]],
-  ['map_2ec',['map.c',['../map_2mg_2map_8c.html',1,'']]],
-  ['map_2ec',['map.c',['../map_8c.html',1,'']]],
+  ['map_2ec',['map.c',['../map_2mg_2map_8c.html',1,'(Global Namespace)'],['../map_8c.html',1,'(Global Namespace)']]],
   ['map_2eh',['map.h',['../map_8h.html',1,'']]],
   ['map_5fdata_2eh',['map_data.h',['../map__data_8h.html',1,'']]],
   ['map_5findex_2ephp',['map_index.php',['../map__index_8php.html',1,'']]],
@@ -25,6 +23,5 @@ var searchData=
   ['messages_2ec',['messages.c',['../messages_8c.html',1,'']]],
   ['messages_2eh',['messages.h',['../messages_8h.html',1,'']]],
   ['mg_2eh',['mg.h',['../mg_8h.html',1,'']]],
-  ['misc_2ec',['misc.c',['../maptool_2misc_8c.html',1,'']]],
-  ['misc_2ec',['misc.c',['../tools_2gpx2navit__txt_2src_2misc_8c.html',1,'']]]
+  ['misc_2ec',['misc.c',['../maptool_2misc_8c.html',1,'(Global Namespace)'],['../tools_2gpx2navit__txt_2src_2misc_8c.html',1,'(Global Namespace)']]]
 ];

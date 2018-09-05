@@ -1,6 +1,6 @@
 var structdatawindow__methods =
 [
-    [ "add", "structdatawindow__methods.html#a03558c9f3c11cb64d2ad3dba2f007cea", null ],
-    [ "destroy", "structdatawindow__methods.html#a6a9ad03dd453e0fa2beb73a60fbbb8fc", null ],
-    [ "mode", "structdatawindow__methods.html#a83c489187e985842607a7474fc10caa9", null ]
+    [ "add", "structdatawindow__methods.html#ac9aef4b183c4233aaafc12c04ee4e238", null ],
+    [ "destroy", "structdatawindow__methods.html#aba01f242815d324f528d88ec77695390", null ],
+    [ "mode", "structdatawindow__methods.html#ad9ca8f02dee621dff2648e54d439f170", null ]
 ];

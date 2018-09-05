@@ -111,7 +111,7 @@ var searchData=
   ['getattrlist',['getAttrList',['../classNGQProxyNavit.html#a4c52eebaae5afd82671aff582e64c5e8',1,'NGQProxyNavit']]],
   ['getavailablemaps',['getAvailableMaps',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa6e5d43000eeefad5d17d6171aece28f',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['getbookmarks',['getBookmarks',['../classNGQProxyBookmarks.html#a5bbfd62a57fbea81b4f378eb99e0356e',1,'NGQProxyBookmarks::getBookmarks()'],['../classBackend.html#a9d8ea8bf726e12d6c701cd17a698d8f3',1,'Backend::getBookmarks()']]],
-  ['getcoords',['getCoords',['../classSearchObject.html#a7805f0ab19b432fb6c6fb6ee274118a7',1,'SearchObject']]],
+  ['getcoords',['getCoords',['../classSearchObject.html#a38ba4a6f415351c5ed36111d0c68c3b8',1,'SearchObject']]],
   ['getdefaultcountry',['GetDefaultCountry',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a54d43760423b78a6708e71050be4c022',1,'org::navitproject::navit::NavitGraphics']]],
   ['getdestination',['getDestination',['../classNGQProxyNavit.html#a5166dbc2a8b4719daeb736d6ed26696f',1,'NGQProxyNavit']]],
   ['getdestinationfile',['getDestinationFile',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a9308f7cdb963228bc0b18634dcf50e33',1,'org::navitproject::navit::NavitMapDownloader']]],

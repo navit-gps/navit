@@ -35,6 +35,6 @@ var speak_8c =
     [ "espeak_meth", "speak_8c.html#a1a0c3e69d3bcfabf08f77c945d567cb7", null ],
     [ "f_wave", "speak_8c.html#abf884347e9eec024f1cc7136d106ceb1", null ],
     [ "path_home", "speak_8c.html#a7fd80a33306a015428e9d039cc100e28", null ],
-    [ "phoneme_callback", "speak_8c.html#af7a137148815e89009780e7f55fed780", null ],
-    [ "uri_callback", "speak_8c.html#a80dbc14dbc6252e449a714828e84c6ec", null ]
+    [ "phoneme_callback", "speak_8c.html#a03dc471f956fa22c474842433cbb1866", null ],
+    [ "uri_callback", "speak_8c.html#a02491d8bd17eb1ec46f4b0f03bbda142", null ]
 ];

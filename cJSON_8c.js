@@ -48,8 +48,8 @@ var cJSON_8c =
     [ "print_value", "cJSON_8c.html#a402d2d8f268c8cc8e6654063adf1807d", null ],
     [ "skip", "cJSON_8c.html#ad1c991ebe6cb88144a8e06e6443c36c9", null ],
     [ "suffix_object", "cJSON_8c.html#a5d61bcc0045ace88c2ae04f0928eeace", null ],
-    [ "cJSON_free", "cJSON_8c.html#a5b14d3353d354b84d67889ddb4d8bc3c", null ],
-    [ "cJSON_malloc", "cJSON_8c.html#a6a44d5f7b45076951879e341ef363689", null ],
+    [ "cJSON_free", "cJSON_8c.html#a60d73e37e57395684b6bd3c3d1df6507", null ],
+    [ "cJSON_malloc", "cJSON_8c.html#aafce5d4da90e31af7177c6d0cb304702", null ],
     [ "ep", "cJSON_8c.html#a00793ba086b417bb3d75ab79af8c83fb", null ],
     [ "firstByteMark", "cJSON_8c.html#a4ec3316cc778a6d7233bffd55cea7047", null ]
 ];
