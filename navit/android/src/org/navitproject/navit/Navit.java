@@ -221,8 +221,9 @@ public class Navit extends Activity {
         Log.d(TAG, "Res Name " + resname + ", result " + result);
         int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
         Log.d(TAG, "Res ID " + id);
-        if (id == 0)
+        if (id == 0) {
             return false;
+        }
 
         if (resourceFileNeedsUpdate(result)) {
             Log.d(TAG, "Extracting resource");
