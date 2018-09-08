@@ -50,6 +50,37 @@ void strtolower(char *dest, const char *src) {
     *dest='\0';
 }
 
+/**
+ * @brief Fast compute of square root for unsigned ints
+ *
+ * @param n The input number
+ * @return sqrt(n)
+ */
+unsigned int uint_sqrt(unsigned int n) {
+    unsigned int h, p= 0, q= 1, r= n;
+
+    /* avoid q rollover */
+    if(n >= (1<<(sizeof(n)*8-2))) {
+        q = 1<<(sizeof(n)*8-2);
+    } else {
+        while ( q <= n ) {
+            q <<= 2;
+        }
+        q >>= 2;
+    }
+
+    while ( q != 0 ) {
+        h = p + q;
+        p >>= 1;
+        if ( r >= h ) {
+            p += q;
+            r -= h;
+        }
+        q >>= 2;
+    }
+    return p;
+}
+
 int navit_utf8_strcasecmp(const char *s1, const char *s2) {
     char *s1_folded,*s2_folded;
     int cmpres;
