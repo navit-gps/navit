@@ -39,15 +39,13 @@
  * @returns the coordinate
  */
 
-struct coord *
-coord_get(unsigned char **p) {
+struct coord * coord_get(unsigned char **p) {
     struct coord *ret=(struct coord *)(*p);
     *p += sizeof(*ret);
     return ret;
 }
 
-struct coord *
-coord_new(int x, int y) {
+struct coord * coord_new(int x, int y) {
     struct coord *c=g_new(struct coord, 1);
 
     c->x=x;
@@ -56,8 +54,7 @@ coord_new(int x, int y) {
     return c;
 }
 
-struct coord *
-coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
+struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
     struct attr *x,*y;
     x=attr_search(attrs, NULL, attr_x);
     y=attr_search(attrs, NULL, attr_y);
@@ -71,8 +68,7 @@ void coord_destroy(struct coord *c) {
     g_free(c);
 }
 
-struct coord_rect *
-coord_rect_new(struct coord *lu, struct coord *rl) {
+struct coord_rect * coord_rect_new(struct coord *lu, struct coord *rl) {
     struct coord_rect *r=g_new(struct coord_rect, 1);
 
     dbg_assert(lu->x <= rl->x);
