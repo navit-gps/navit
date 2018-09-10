@@ -160,7 +160,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     s=strchr(str,' ');
     co=strchr(str,':');
     if (co && co < s) {
-        proj=malloc(co-str+1);
+        proj=g_malloc(co-str+1);
         strncpy(proj, str, co-str);
         proj[co-str]='\0';
         dbg(lvl_debug,"projection=%s", proj);
@@ -250,7 +250,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     ret+=str-coord_input;
     dbg(lvl_info, "ret=%d delta=%d ret_str='%s'", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
 out:
-    free(proj);
+    g_free(proj);
     return ret;
 }
 
