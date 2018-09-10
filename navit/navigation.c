@@ -412,12 +412,12 @@ static int angle_opposite(int angle) {
  * @return True if both old and new are on the same street
  */
 static int is_same_street2(char *old_name, char *old_name_systematic, char *new_name, char *new_name_systematic) {
-    if (old_name && new_name && !strcmp(old_name, new_name)) {
+    if (old_name && new_name && !g_strcmp0(old_name, new_name)) {
         dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)", old_name_systematic, new_name_systematic, old_name,
             new_name);
         return 1;
     }
-    if (old_name_systematic && new_name_systematic && !strcmp(old_name_systematic, new_name_systematic)) {
+    if (old_name_systematic && new_name_systematic && !g_strcmp0(old_name_systematic, new_name_systematic)) {
         dbg(lvl_debug,"is_same_street: '%s' '%s' vs '%s' '%s' yes (2.)", old_name_systematic, new_name_systematic, old_name,
             new_name);
         return 1;
@@ -572,7 +572,7 @@ static int set_highrank(struct street_destination *street_destination, struct na
     }
 
     while (future_street_destination) {
-        if ((strcmp(destination_string,future_street_destination->destination)==0)) {
+        if (g_strcmp0(destination_string,future_street_destination->destination)==0) {
             future_street_destination->rank=99;
             success =1;
         } else
@@ -624,7 +624,7 @@ static char* select_announced_destinations(struct navigation_command *current_co
                         search_destination = search_command->itm->way.destination;
                         while (search_destination) {
                             /* Search this name in the destination list of the current command. */
-                            if (0 == strcmp(current_destination->destination, search_destination->destination)) {
+                            if (0 == g_strcmp0(current_destination->destination, search_destination->destination)) {
                                 /* enter the destination_name in the investigation list*/
                                 destination_count[destination_index]++;
                                 search_destination = NULL; /* break condition */
@@ -1950,8 +1950,8 @@ static int maneuver_required2 (struct navigation *nav, struct navigation_itm *ol
                                 || !old->way.name_systematic
                                 || !new->way.name_systematic
                                 || !w->name_systematic
-                                || strcmp(old->way.name_systematic, new->way.name_systematic)
-                                || strcmp(old->way.name_systematic, w->name_systematic))
+                                || g_strcmp0(old->way.name_systematic, new->way.name_systematic)
+                                || g_strcmp0(old->way.name_systematic, w->name_systematic))
                             m.num_new_motorways++;
                     } else if (!is_motorway_like(w, 1)) {
                         m.num_other_ways++;
