@@ -729,7 +729,7 @@ static void image_new_helper(struct graphics *gra, struct graphics_image *this_,
                 g_free(start);
             }
         } else {
-            if (strcmp(new_name,"buffer:"))
+            if (g_strcmp0(new_name,"buffer:"))
                 this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
         }
         if (this_->priv) {
