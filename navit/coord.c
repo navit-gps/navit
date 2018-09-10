@@ -157,8 +157,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     co=strchr(str,':');
     if (co && co < s) {
         proj=g_malloc(co-str+1);
-        strncpy(proj, str, co-str);
-        proj[co-str]='\0';
+        g_strlcpy(proj, str, 1+co-str);
         dbg(lvl_debug,"projection=%s", proj);
         str=co+1;
         s=strchr(str,' ');
