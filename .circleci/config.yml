@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install doxygen and other essentials 
+          name: Install doxygen and other essentials
           command: apt-get update && apt-get -y install doxygen ca-certificates git rsync
       - run:
           name: Run doxygen
