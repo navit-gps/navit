@@ -1,22 +1,13 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#ifdef _MSC_VER
-
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int32 uint64_t;
-
-#else
 #ifndef PLATFORM_DOS
 #include "stdint.h"
-#endif
 #endif
 
 extern int option_device_number;
 
-extern void wave_init();
+extern int wave_init(int samplerate);
 // TBD: the arg could be "alsa", "oss",...
 extern void* wave_open(const char* the_api);
 
@@ -24,7 +15,7 @@ extern size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t
 extern int wave_close(void* theHandler);
 extern void wave_flush(void* theHandler);
 extern int wave_is_busy(void* theHandler);
-extern void wave_terminate();
+extern void wave_terminate(void);
 extern uint32_t wave_get_read_position(void* theHandler);
 extern uint32_t wave_get_write_position(void* theHandler);
 
@@ -47,6 +38,6 @@ extern void clock_gettime2(struct timespec *ts);
 extern void add_time_in_ms(struct timespec *ts, int time_in_ms);
 
 // for tests
-extern void *wave_test_get_write_buffer();
+extern void *wave_test_get_write_buffer(void);
 
 #endif

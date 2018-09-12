@@ -458,7 +458,7 @@ static int item_bin_sort_compare(const void *p1, const void *p2) {
     if(attr1&&attr2) {
         s1=(char *)(attr1+1);
         s2=(char *)(attr2+1);
-        ret=strcmp(s1,s2);
+        ret=g_strcmp0(s1,s2);
         if(ret)
             return ret;
     }
@@ -475,7 +475,7 @@ static int item_bin_sort_compare(const void *p1, const void *p2) {
     s1=linguistics_casefold(s1);
     s2=linguistics_casefold(s2);
 
-    ret=strcmp(s1, s2);
+    ret=g_strcmp0(s1, s2);
     g_free(s1);
     g_free(s2);
 

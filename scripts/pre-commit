@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -eu
+
+# #############################################################################
+# This is a pre-commit hook that allows you to respect the code formatting
+# chosen by the Navit team.
+#
+# To install it, create a folder named "hooks" in the .git directory of this
+# project and just symlink this script inside it. Or run the following script
+# from the root directory of the project:
+#  mkdir .git/hooks
+#  ln -s ${PWD}/scripts/pre-commit ${PWD}/.git/hooks/
+#
+# This will not work on Windows platform unless you are using cygwin.
+# #############################################################################
+
+files=$(git diff --cached --name-only --diff-filter=ACM)
+git_dir=$(git rev-parse --show-toplevel)
+
+# check for common misspells if misspell is installed
+[[ -n "$(which misspell)" ]] && misspell
+if [[ -z "$(which astyle)" ]]; then
+  echo "Unable to find the astyle executable. Please install it to have automatic formatting of your files."
+fi
+
+# Only work on the files that are part of the commit
+for f in $files; do
+  if [[ -e "${git_dir}/${f}" ]]; then
+    if [[ "${f: -4}" != ".bat" ]]; then
+      # Makes sure to not commit ^M
+      [[ -n "$(which dos2unix)" ]] && dos2unix -s -S -q "${git_dir}/${f}"
+      # Removes trailing spaces
+      [[ "$(file -bi """${git_dir}/${f}""")" =~ ^text ]] && sed 's/\s*$//' -i "${git_dir}/${f}"
+      git add "${git_dir}/${f}"
+    fi
+    # Formats any *.c and *.cpp files
+    if [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
+      if [[ -n "$(which astyle)" ]]; then
+        astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${git_dir}/${f}"
+        git add "${git_dir}/${f}"
+      fi
+    fi
+  fi
+done

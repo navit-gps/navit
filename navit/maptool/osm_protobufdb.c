@@ -638,11 +638,11 @@ static int osm_protobufdb_parse_member(struct osm_protobufdb_context *ctx, char 
         return 0;
     if (!osm_xml_get_attribute(str, "role", role_buffer, BUFFER_SIZE))
         return 0;
-    if (!strcmp(type_buffer,"node"))
+    if (!g_strcmp0(type_buffer,"node"))
         type=0;
-    else if (!strcmp(type_buffer,"way"))
+    else if (!g_strcmp0(type_buffer,"way"))
         type=1;
-    else if (!strcmp(type_buffer,"relation"))
+    else if (!g_strcmp0(type_buffer,"relation"))
         type=2;
     if (ctx->in_relation) {
         r->roles_sid=g_realloc(r->roles_sid, (r->n_roles_sid+1)*sizeof(r->roles_sid[0]));

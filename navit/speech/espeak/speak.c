@@ -68,7 +68,7 @@ int GetFileLength(const char *filename) {
     return(statbuf.st_size);
 }
 
-void MarkerEvent(int type, unsigned int char_position, int value, unsigned char *out_ptr) {
+void MarkerEvent(int type, unsigned int char_position, int value, int value2, unsigned char *out_ptr){
 }
 
 char *Alloc(int size) {
@@ -151,7 +151,7 @@ static BOOL initialise(void) {
     int result;
 
     WavegenInit(22050,0);   // 22050
-    if((result = LoadPhData()) != 1) {
+    if((result = LoadPhData(NULL)) != 1) {
         if(result == -1) {
             dbg(lvl_error, "Failed to load espeak-data");
             return FALSE;
@@ -159,7 +159,7 @@ static BOOL initialise(void) {
             dbg(lvl_error, "Wrong version of espeak-data 0x%x (expects 0x%x) at %s",result,version_phdata,path_home);
     }
     LoadConfig();
-    SetVoiceStack(NULL);
+    SetVoiceStack(NULL, "");
     SynthesizeInit();
 
     for(param=0; param<N_SPEECH_PARAM; param++)

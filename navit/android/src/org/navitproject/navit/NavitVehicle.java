@@ -56,11 +56,14 @@ public class NavitVehicle {
     private static NavitLocationListener fastLocationListener = null;
 
     public native void VehicleCallback(int id, Location location);
+
     public native void VehicleCallback(int id, int satsInView, int satsUsed);
+
     public native void VehicleCallback(int id, int enabled);
 
     private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
         public boolean precise = false;
+
         public void onLocationChanged(Location location) {
             lastLocation = location;
             // Disable the fast provider if still active
@@ -72,14 +75,17 @@ public class NavitVehicle {
             VehicleCallback(vehicle_pcbid, location);
             VehicleCallback(vehicle_fcbid, 1);
         }
+
         public void onProviderDisabled(String provider) {}
+
         public void onProviderEnabled(String provider) {}
+
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
         /**
          * Called when the status of the GPS changes.
          */
-        public void onGpsStatusChanged (int event) {
+        public void onGpsStatusChanged(int event) {
             if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
@@ -101,10 +107,13 @@ public class NavitVehicle {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GPS_FIX_CHANGE)) {
-                if (intent.getBooleanExtra("enabled", false))
+                if (intent.getBooleanExtra("enabled", false)) {
                     VehicleCallback(vehicle_fcbid, 1);
-                else if (!intent.getBooleanExtra("enabled", true))
-                    VehicleCallback(vehicle_fcbid, 0);
+                } else {
+                    if (!intent.getBooleanExtra("enabled", true)) {
+                        VehicleCallback(vehicle_fcbid, 0);
+                    }
+                }
             }
         }
     }
@@ -113,12 +122,12 @@ public class NavitVehicle {
      * @brief Creates a new {@code NavitVehicle}
      *
      * @param context
-     * @param pcbid The address of the position callback function which will be called when a location update is received
-     * @param scbid The address of the status callback function which will be called when a status update is received
-     * @param fcbid The address of the fix callback function which will be called when a
+     * @param pcbid The address of the position callback function called when a location update is received
+     * @param scbid The address of the status callback function called when a status update is received
+     * @param fcbid The address of the fix callback function called when a
      * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
      */
-    NavitVehicle (Context context, int pcbid, int scbid, int fcbid) {
+    NavitVehicle(Context context, int pcbid, int scbid, int fcbid) {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -192,7 +201,9 @@ public class NavitVehicle {
                 sLocationManager.removeGpsStatusListener(preciseLocationListener);
                 context.unregisterReceiver(preciseLocationListener);
             }
-            if (fastLocationListener != null) sLocationManager.removeUpdates(fastLocationListener);
+            if (fastLocationListener != null) {
+                sLocationManager.removeUpdates(fastLocationListener);
+            }
         }
 
     }

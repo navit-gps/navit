@@ -135,7 +135,7 @@ struct displaylist_icon_cache {
 
 };
 
-static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
 
@@ -897,9 +897,12 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
+ * @brief Draw a circle
+ * @param this_ The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param p The coordinates of the center of the circle
+ * @param r The radius of the circle
+ *
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r) {
@@ -909,7 +912,7 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
     if(this_->meth.draw_circle)
         this_->meth.draw_circle(this_->priv, gc->priv, p, r);
     else {
-        draw_circle(p, r, 0, -1, 1026, pnt, &i, 1);
+        circle_to_points(p, r, 0, -1, 1026, pnt, &i, 1);
         pnt[i] = pnt[0];
         i++;
         this_->meth.draw_lines(this_->priv, gc->priv, pnt, i);
@@ -934,10 +937,10 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
     struct point pi3= {plu->x+r,plu->y+h-r};
     int i=0;
 
-    draw_circle(&pi2, r*2, 0, -1, 258, p, &i, 1);
-    draw_circle(&pi1, r*2, 0, 255, 258, p, &i, 1);
-    draw_circle(&pi0, r*2, 0, 511, 258, p, &i, 1);
-    draw_circle(&pi3, r*2, 0, 767, 258, p, &i, 1);
+    circle_to_points(&pi2, r*2, 0, -1, 258, p, &i, 1);
+    circle_to_points(&pi1, r*2, 0, 255, 258, p, &i, 1);
+    circle_to_points(&pi0, r*2, 0, 511, 258, p, &i, 1);
+    circle_to_points(&pi3, r*2, 0, 767, 258, p, &i, 1);
     p[i]=p[0];
     i++;
     if (fill)
@@ -1351,7 +1354,19 @@ struct circle {
     {-13,127,1011},
 };
 
-static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
+/**
+ * @brief Create a set of points on a circle or on a circular arc
+ *
+ * @param center Center point of the circle
+ * @param diameter Diameter of the circle
+ * @param scale Unused
+ * @param start Position of the first point on the circle (in 1/1024th of the circle), -1 being the bottom of the circle, 511 being the top of the circle
+ * @param len Length of the arc on the circle, relative to start (in 1/1024th of the circle), 514 is half a circle, 1028 is a full circle (or 1027 if first and last points are connected with a line)
+ * @param[out] res Returned an array of points that will form the resulting circle
+ * @param[out] pos Index of the last point filled inside array @p res
+ * @param dir Direction of the circle (valid values are 1 (counter-clockwise) or -1 (clockwise), other values may lead to unknown result)
+ */
+static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir) {
     struct circle *c;
     int count=64;
     int end=start+len;
@@ -1361,9 +1376,9 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
         step=1;
     else if (diameter > 64)
         step=2;
-    else if (diameter > 24)
+    else if (diameter > 16)
         step=4;
-    else if (diameter > 8)
+    else if (diameter > 4)
         step=8;
     else
         step=16;
@@ -1378,8 +1393,8 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
                 i+=step;
             while (i < count && c[i].fowler < end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i+=step;
@@ -1398,8 +1413,8 @@ static void draw_circle(struct point *pnt, int diameter, int scale, int start, i
                 i-=step;
             while (i >= 0 && c[i].fowler > end) {
                 if (1< *pos || 0<dir) {
-                    res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
-                    res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
+                    res[*pos].x=center->x+((c[i].x*diameter+128)>>8);
+                    res[*pos].y=center->y+((c[i].y*diameter+128)>>8);
                     (*pos)+=dir;
                 }
                 i-=step;
@@ -1443,30 +1458,6 @@ static int fowler(int dy, int dx) {
         return (1024 - (128*ady / adx));/* [315,360) */
     }
     return 0;
-}
-static int int_sqrt(unsigned int n) {
-    unsigned int h, p= 0, q= 1, r= n;
-
-    /* avoid q rollover */
-    if(n >= (1<<(sizeof(n)*8-2))) {
-        q = 1<<(sizeof(n)*8-2);
-    } else {
-        while ( q <= n ) {
-            q <<= 2;
-        }
-        q >>= 2;
-    }
-
-    while ( q != 0 ) {
-        h = p + q;
-        p >>= 1;
-        if ( r >= h ) {
-            p += q;
-            r -= h;
-        }
-        q >>= 2;
-    }
-    return p;
 }
 
 struct draw_polyline_shape {
@@ -1515,9 +1506,9 @@ static void draw_shape(struct draw_polyline_context *ctx, struct point *pnt, int
     dys=shape->dy*shape->dy;
     lscales=lscale*lscale;
     if (dxs + dys > lscales)
-        l = int_sqrt(dxs+dys)*lscale;
+        l = uint_sqrt(dxs+dys)*lscale;
     else
-        l = int_sqrt((dxs+dys)*lscales);
+        l = uint_sqrt((dxs+dys)*lscales);
 
     shape->fow=fowler(-shape->dy, shape->dx);
     dbg(lvl_debug,"fow=%d",shape->fow);
@@ -1728,7 +1719,7 @@ static int clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *cl
  * Polylines are a serie of lines connected to each other.
  *
  * @param gra The graphics instance on which to draw
- * @param gc The color to use for the drawing
+ * @param gc The graphics context
  * @param[in] pin An array of points forming the polygon
  * @param count_in The number of elements inside @p pin
  * @param[in] width An array of width matching the line starting from the corresponding @p pa (if all equal, all lines will have the same width)
@@ -1837,7 +1828,7 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  * @brief Draw a plain polygon on the display
  *
  * @param gra The graphics instance on which to draw
- * @param gc The color to use for the drawing
+ * @param gc The graphics context
  * @param[in] pin An array of points forming the polygon
  * @param count_in The number of elements inside @p pin
  */
@@ -1976,7 +1967,70 @@ static int limit_count(struct coord *c, int count) {
     return count;
 }
 
+/**
+ * @brief Draw a multi-line text next to a specified point @p pref
+ *
+ * @param gra The graphics instance on which to draw
+ * @param fg The graphics color to use to draw the text
+ * @param bg The graphics background color to use to draw the text
+ * @param font The font to use to draw the text
+ * @param pref The position to draw the text (draw at the right and vertically aligned relatively to this point)
+ * @param label The text to draw (may contain '\n' for multiline text, if so lines will be stacked vertically)
+ * @param line_spacing The delta between each line (set its value at to least the font text size, to be readable)
+ */
+static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg,
+                                 struct graphics_font *font, struct point pref, const char *label, int line_spacing) {
 
+    char *input_label=g_strdup(label);
+    char *label_lines[10];	/* Max 10 lines of text */
+    int label_nblines=0;
+    int label_linepos=0;
+    char *startline=input_label;
+    char *endline=startline;
+    while (endline && *endline!='\0') {
+        while (*endline!='\0' && *endline!='\n') { /* Search for new line */
+            endline=g_utf8_next_char(endline);
+        }
+        if (*endline=='\0')
+            endline=NULL;	/* This means we reached the end of string */
+        if (endline) /* Test if we got a new line character ('\n') */
+            *endline='\0';	/* Terminate string at line ('\n') and print this line */
+        label_lines[label_nblines++]=startline;
+        if (endline==NULL)	/* endline is NULL, this was the last line of the multi-line string */
+            break;
+        endline++;	/* No need for g_utf8_next_char() here, as we know '\n' is a single byte UTF-8 char */
+        startline=endline;	/* Start processing next line, by setting startline to its first character */
+    }
+    if (label_nblines>(sizeof(label_lines)/sizeof(char
+                       *))) {	/* Does label_nblines overflows the number of entries in array label_lines? */
+        dbg(lvl_warning,"Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, label,
+            sizeof(label_lines)/sizeof(char *));
+        label_nblines=sizeof(label_lines)/sizeof(char *);
+    }
+    /* Horizontally, we position the label next to the specified point (on the right handside) */
+    pref.x+=1;
+    /* Vertically, we center the text with respect to specified point */
+    pref.y-=(label_nblines*line_spacing)/2;
+
+    /* Parse all stored lines, and display them */
+    for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
+        gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label_lines[label_linepos],
+                            &pref, 0x10000, 0);
+        pref.y+=line_spacing;
+    }
+    g_free(input_label);
+}
+
+
+/**
+ * @brief Draw a displayitem element
+ *
+ * This function will invoke the appropriate draw primitive depending on the type of the element to draw
+ *
+ * @brief di The displayitem to draw
+ * @brief dummy Unused
+ * @brief dc The display_context to use to draw items
+ */
 static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
@@ -2033,11 +2087,12 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                         graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
                         dc->gc_background=gc_background;
                     }
-                    p.x=pa[0].x+3;
-                    p.y=pa[0].y+10;
-                    if (font)
-                        gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, di->label, &p, 0x10000, 0);
-                    else
+                    if (font) {
+                        /* Set p to the center of the circle */
+                        p.x=pa[0].x+(e->u.circle.radius/2);
+                        p.y=pa[0].y+(e->u.circle.radius/2);
+                        multiline_label_draw(gra, gc, gc_background, font, p, di->label, e->text_size+1);
+                    } else
                         dbg(lvl_error,"Failed to get font with size %d",e->text_size);
                 }
             }

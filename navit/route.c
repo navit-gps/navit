@@ -2161,7 +2161,7 @@ static void route_process_traffic_distortion(struct route_graph *this, struct it
  * @brief Adds a turn restriction item to the route graph
  *
  * @param this The route graph to add to
- * @param item The item to add
+ * @param item The item to add, must be of `type_street_turn_restriction_no` or `type_street_turn_restriction_only`
  */
 static void route_process_turn_restriction(struct route_graph *this, struct item *item) {
     struct route_graph_point *pnt[4];
@@ -3267,6 +3267,8 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         if(mr->item.type==type_waypoint || mr->item.type == type_route_end) {
             if(mr->str)
                 g_free(mr->str);
+            /* Build the text displayed close to the destination cursor.
+             * It will contain the sequence number of the waypoint (1, 2...) */
             mr->str=g_strdup_printf("%d",route->reached_destinations_count+g_list_position(route->destinations,mr->dest)+1);
             attr->u.str=mr->str;
             return 1;
