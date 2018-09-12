@@ -39,15 +39,13 @@
  * @returns the coordinate
  */
 
-struct coord *
-coord_get(unsigned char **p) {
+struct coord * coord_get(unsigned char **p) {
     struct coord *ret=(struct coord *)(*p);
     *p += sizeof(*ret);
     return ret;
 }
 
-struct coord *
-coord_new(int x, int y) {
+struct coord * coord_new(int x, int y) {
     struct coord *c=g_new(struct coord, 1);
 
     c->x=x;
@@ -56,8 +54,7 @@ coord_new(int x, int y) {
     return c;
 }
 
-struct coord *
-coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
+struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
     struct attr *x,*y;
     x=attr_search(attrs, NULL, attr_x);
     y=attr_search(attrs, NULL, attr_y);
@@ -71,8 +68,7 @@ void coord_destroy(struct coord *c) {
     g_free(c);
 }
 
-struct coord_rect *
-coord_rect_new(struct coord *lu, struct coord *rl) {
+struct coord_rect * coord_rect_new(struct coord *lu, struct coord *rl) {
     struct coord_rect *r=g_new(struct coord_rect, 1);
 
     dbg_assert(lu->x <= rl->x);
@@ -160,9 +156,8 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     s=strchr(str,' ');
     co=strchr(str,':');
     if (co && co < s) {
-        proj=malloc(co-str+1);
-        strncpy(proj, str, co-str);
-        proj[co-str]='\0';
+        proj=g_malloc(co-str+1);
+        g_strlcpy(proj, str, 1+co-str);
         dbg(lvl_debug,"projection=%s", proj);
         str=co+1;
         s=strchr(str,' ');
@@ -250,7 +245,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     ret+=str-coord_input;
     dbg(lvl_info, "ret=%d delta=%d ret_str='%s'", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
 out:
-    free(proj);
+    g_free(proj);
     return ret;
 }
 
