@@ -260,7 +260,20 @@ if (Glib_FOUND)
 	include_directories(${Glib_INCLUDE_DIRS})
 	list(APPEND NAVIT_LIBS ${Glib_LIBRARIES})
 else(Glib_FOUND)
-	set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
+	set(EXTERNAL_GLIB_VERSION 2.58)
+	ExternalProject_Add(project_glib
+		URL https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.tar.xz
+		PREFIX ${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_VERSION}
+		CONFIGURE_COMMAND "./configure"
+		BUILD_COMMAND make
+		INSTALL_COMMAND make install
+		PREFIX=${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_VERSION}
+		)
+	ExternalProject_Get_Property(project_glib install_dir)
+	add_library(glib STATIC IMPORTED)
+	set_property(TARGET glib PROPERTY IMPORTED_LOCATION ${install_dir}/lib/glib-${EXTERNAL_GLIB_VERSION}.a)
+	add_dependencies(glib project_glib)
+	set(HAVE_GLIB 1)
 endif(Glib_FOUND)
 if (Gmodule_FOUND)
 	set(HAVE_GMODULE 1)
