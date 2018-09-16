@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-apt-get update && apt-get install -y mingw32 mingw32-binutils mingw32-runtime default-jdk nsis libsaxonb-java
+apt-get update && apt-get install -y mingw32 mingw32-binutils mingw32-runtime default-jdk nsis libsaxonb-java coreutils xz-utils
 
 mkdir win32
 pushd win32
