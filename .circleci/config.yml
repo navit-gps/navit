@@ -170,10 +170,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Prepare the WinCE build environment
-          command: |
-            bash scripts/setup_wince.sh
-      - run:
           name: Build for Windows CE
           command: bash scripts/build_wince.sh
       - store_artifacts:
