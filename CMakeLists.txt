@@ -261,15 +261,22 @@ if (Glib_FOUND)
 	include_directories(${Glib_INCLUDE_DIRS})
 	list(APPEND NAVIT_LIBS ${Glib_LIBRARIES})
 else(Glib_FOUND)
-	set(EXTERNAL_GLIB_VERSION 2.58)
+	set(EXTERNAL_GLIB_SORT_VERSION 2.58)
+	set(EXTERNAL_GLIB_TAG 2.58.0)
 	ExternalProject_Add(project_glib
-		URL https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.tar.xz
-		URL_HASH ALGO=SHA256 https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.sha256sum
-		PREFIX ${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_VERSION}
+		URL http://download.gnome.org/sources/glib/${EXTERNAL_GLIB_SORT_VERSION}/glib-${EXTERNAL_GLIB_TAG}.tar.xz
+		URL_HASH SHA256=c0f4ce0730b4f95c47b711613b5406a887c2ee13ea6d25930d72a4fa7fdb77f6
+		# Pulling from the repo forces us to use autogen and autoreconf
+		# URL https://gitlab.gnome.org/GNOME/glib/-/archive/${EXTERNAL_GLIB_TAG}/glib-${EXTERNAL_GLIB_TAG}.tar.gz
+		# URL_HASH SHA256=e1b8e10da740da41260e5178346d57f4a5458d6bf300af91cdf4edee76d3437e
+		# git is to old on the wince image to be used here :(
+		# GIT_REPOSITORY https://gitlab.gnome.org/GNOME/glib.git
+		# GIT_TAG ${EXTERNAL_GLIB_TAG}
+		PREFIX ${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_TAG}
 		CONFIGURE_COMMAND "./configure"
 		BUILD_COMMAND make
 		INSTALL_COMMAND make install
-		PREFIX=${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_VERSION}
+		PREFIX=${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_TAG}
 		)
 	ExternalProject_Get_Property(project_glib install_dir)
 	add_library(glib STATIC IMPORTED)
