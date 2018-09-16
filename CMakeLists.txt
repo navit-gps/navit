@@ -264,7 +264,7 @@ else(Glib_FOUND)
 	set(EXTERNAL_GLIB_VERSION 2.58)
 	ExternalProject_Add(project_glib
 		URL https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.tar.xz
-		URL_HASH ALGO=sha256 https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.sha256sum
+		URL_HASH ALGO=SHA256 https://ftp.gnome.org/pub/gnome/sources/glib/${EXTERNAL_GLIB_VERSION}/glib-${EXTERNAL_GLIB_VERSION}.0.sha256sum
 		PREFIX ${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_VERSION}
 		CONFIGURE_COMMAND "./configure"
 		BUILD_COMMAND make
