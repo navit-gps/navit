@@ -2230,12 +2230,71 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 }
 
 /**
+ * @brief Compares a given point to the traffic location and returns a score.
+ *
+ * This method obtains all points at coordinates `c` from the map_rect used to build the route graph, compares their
+ * attributes to those supplied with the location, assigns a match score from 0 (no matching attributes) to 100 (all
+ * supplied attributes match) and returns the highest score obtained. If no matching point is found, 0 is returned.
+ *
+ * @param this_ The traffic location
+ * @param p The route graph point to examine for matches
+ * @param point The point of the traffic location to use for matching (0 = from, 1 = at, 2 = to, 16 = start, 17 = end)
+ * @param rg The route graph
+ * @param start The first point of the path
+ * @param match_start True to evaluate for the start point of a route, false for the end point
+ * @param ms The mapset to read the items from
+ *
+ * @return A score from 0 (worst) to 100 (best).
+ */
+static int traffic_location_get_point_match(struct traffic_location * this_, struct route_graph_point * p, int point,
+        struct route_graph * rg, struct route_graph_point * start, int match_start, struct mapset * ms) {
+    int ret = 0;
+
+    /* The point from the location to match */
+    struct traffic_point * trpoint = NULL;
+
+    /* The attribute matching score for the current item */
+    int score;
+
+    switch(point) {
+    case 0:
+        trpoint = this_->from;
+        break;
+    case 1:
+        trpoint = this_->at;
+        break;
+    case 2:
+        trpoint = this_->to;
+        break;
+    case 16:
+        trpoint = this_->from ? this_->from : this_->at;
+        break;
+    case 17:
+        trpoint = this_->to ? this_->to : this_->at;
+        break;
+    default:
+        break;
+    }
+
+    if (!trpoint)
+        return 0;
+
+    /* First examine route graph points and connected segments */
+    score = traffic_point_match_segment_attributes(trpoint, p, start, match_start);
+    if (ret < score)
+        ret = score;
+}
+
+/**
  * @brief Returns points from the route graph which match a traffic location.
  *
  * This method obtains point items from the map_rect from which the route graph was built and compares
  * their attributes to those supplied with the location. Each point is assigned a match score, from 0
  * (no matching attributes) to 100 (all supplied attributes match), and a list of all points with a
  * nonzero score is returned.
+ *
+ * Points which have no corresponding map item (i.e. points which have no additional attributes) are not included in
+ * the result and must be analyzed separately if needed.
  *
  * @param this_ The traffic location
  * @param point The point of the traffic location to use for matching (0 = from, 1 = at, 2 = to, 16 = start, 17 = end)
@@ -2266,7 +2325,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     struct route_graph_point * p;
 
     /* The attribute matching score for the current item */
-    int score, new_score;
+    int score;
 
     /* Data for the current point */
     struct point_data * data;
@@ -2312,9 +2371,6 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
             rg->sel = NULL;
             continue;
         }
-        /* FIXME:
-         * - Some route graph points do not have a corresponding point-type item on the map
-         * - We are currently only interested in points on the route; examining the whole route graph is inefficient */
         while ((item = map_rect_get_item(rg->mr))) {
             /* exclude non-point items */
             if ((item->type < type_town_label) || (item->type >= type_line))
@@ -2324,21 +2380,15 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
             if (!item_coord_get(item, &c, 1))
                 continue;
 
-            /* exclude items not in the route graph */
-            if (!(p = route_graph_get_point(rg, &c)))
-                continue;
-
-            /* exclude points where turn restrictions apply */
-            if (p->flags & RP_TURN_RESTRICTION)
+            /* exclude items not in the route graph (points with turn restrictions are ignored) */
+            p = route_graph_get_point(rg, &c);
+            while (p && (p->flags & RP_TURN_RESTRICTION))
+                p = route_graph_get_point_next(rg, &c, p);
+            if (!p)
                 continue;
 
             /* determine score */
             score = traffic_point_match_attributes(trpoint, item);
-            if (score < 100) {
-                new_score = traffic_point_match_segment_attributes(trpoint, p, start, match_start);
-                if (new_score > score)
-                    score = new_score;
-            }
 
             /* exclude items with a zero score */
             if (!score)
@@ -2346,11 +2396,15 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
 
             dbg(lvl_debug, "adding item, score: %d", score);
 
-            data = g_new0(struct point_data, 1);
-            data->score = score;
-            data->p = p;
+            do {
+                if (!(p->flags & RP_TURN_RESTRICTION)) {
+                    data = g_new0(struct point_data, 1);
+                    data->score = score;
+                    data->p = p;
 
-            ret = g_list_append(ret, data);
+                    ret = g_list_append(ret, data);
+                }
+            } while ((p = route_graph_get_point_next(rg, &c, p)));
         }
         map_selection_destroy(rg->sel);
         rg->sel = NULL;
@@ -2464,6 +2518,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
     /* The corresponding point data */
     struct point_data * pd;
+
+    /* The match score of the current point */
+    int score;
 
     /* Current and minimum cost to reference point */
     int val, minval;
@@ -2637,19 +2694,22 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 }
 
                 if (is_candidate) {
+                    score = traffic_location_get_point_match(this_->location, p_iter,
+                            this_->location->at ? 1 : (dir > 0) ? 2 : 0,
+                            rg, p_start, 0, ms);
                     pd = NULL;
-                    for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
+                    for (points_iter = points; points_iter && (score < 100); points_iter = g_list_next(points_iter)) {
                         pd = (struct point_data *) points_iter->data;
-                        if (pd->p == p_iter)
-                            break;
+                        if ((pd->p == p_iter) && (pd->score > score))
+                            score = pd->score;
                     }
                     val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? c_to : c_from);
-                    val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
+                    val += (val * (100 - score) * (PENALTY_POINT_MATCH) / 100);
                     if (val < minval) {
                         minval = val;
                         p_to = p_iter;
-                        dbg(lvl_debug, "candidate end point found, point %p, data %p, value %d (score %d)",
-                                p_iter, points_iter ? pd : NULL, val, points_iter ? pd->score : 0);
+                        dbg(lvl_debug, "candidate end point found, point %p, value %d (score %d)",
+                                p_iter, val, score);
                     }
                 }
 
@@ -2725,20 +2785,23 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 }
 
                 if (is_candidate) {
+                    score = traffic_location_get_point_match(this_->location, p_iter,
+                            this_->location->at ? 1 : (dir > 0) ? 0 : 2,
+                            rg, p_start, 1, ms);
                     pd = NULL;
-                    for (points_iter = points; points_iter; points_iter = g_list_next(points_iter)) {
+                    for (points_iter = points; points_iter && (score < 100); points_iter = g_list_next(points_iter)) {
                         pd = (struct point_data *) points_iter->data;
-                        if (pd->p == p_iter)
-                            break;
+                        if ((pd->p == p_iter) && (pd->score > score))
+                            score = pd->score;
                     }
                     val = transform_distance(projection_mg, &p_iter->c, (dir > 0) ? c_from : c_to);
                     /* TODO does attribute matching make sense for the start segment? */
-                    val += (val * (100 - (points_iter ? pd->score : 0)) * (PENALTY_POINT_MATCH) / 100);
+                    val += (val * (100 - score) * (PENALTY_POINT_MATCH) / 100);
                     if (val < minval) {
                         minval = val;
                         p_from = p_iter;
-                        dbg(lvl_debug, "candidate start point found, point %p, data %p, value %d (score %d)",
-                                p_iter, points_iter ? pd : NULL, val, points_iter ? pd->score : 0);
+                        dbg(lvl_debug, "candidate start point found, point %p, value %d (score %d)",
+                                p_iter, val, score);
                     }
                 }
 

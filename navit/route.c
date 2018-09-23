@@ -1225,7 +1225,7 @@ void route_remove_waypoint(struct route *this) {
  * or {@code NULL} to return the first point
  * @return The point at the specified coordinates or NULL if not found
  */
-static struct route_graph_point *route_graph_get_point_next(struct route_graph *this, struct coord *c,
+struct route_graph_point *route_graph_get_point_next(struct route_graph *this, struct coord *c,
         struct route_graph_point *last) {
     struct route_graph_point *p;
     int seen=0,hashval=HASHCOORD(c);

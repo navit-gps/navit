@@ -164,6 +164,8 @@ struct route_graph_point * route_graph_add_point(struct route_graph *this, struc
 void route_graph_add_turn_restriction(struct route_graph *this, struct item *item);
 void route_graph_free_points(struct route_graph *this);
 struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
+struct route_graph_point *route_graph_get_point_next(struct route_graph *this, struct coord *c,
+        struct route_graph_point *last);
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
 		struct route_graph_point *end, struct route_graph_segment_data *data);
 int route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data);
