@@ -213,6 +213,12 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
 static void route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile,
                               struct callback *cb);
 static int route_graph_is_path_computed(struct route_graph *this_);
+static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd,
+        struct route_graph_segment *last);
+static int route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from,
+                           struct route_graph_segment *over,
+                           int dir);
+static void route_graph_init(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile);
 static void route_graph_reset(struct route_graph *this);
 
 
@@ -699,6 +705,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
             this->link_path=1;
             this->current_dst=prev_dst;
             route_graph_reset(this->graph);
+            route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
             route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
             return;
         }
@@ -1212,6 +1219,7 @@ void route_remove_waypoint(struct route *this) {
         this->reached_destinations_count++;
         route_graph_reset(this->graph);
         this->current_dst = this->destinations->data;
+        route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
         route_graph_flood(this->graph, this->current_dst, this->vehicleprofile,	this->route_graph_flood_done_cb);
     }
 }
@@ -1340,12 +1348,58 @@ void route_graph_free_points(struct route_graph *this) {
 }
 
 /**
+ * @brief Initializes potential destination nodes.
+ *
+ * This method is normally called after building a fresh route graph, or resetting an existing one. It iterates over
+ * all potential destination nodes (i.e. all nodes which are part of the destination’s street) and initializes them:
+ * The `dst_val`, `val` and `rhs` values are set according to their cost to reach the destination.
+ *
+ * @param this The route graph to initialize
+ * @param dst The destination of the route
+ * @param profile The vehicle profile to use for routing. This determines which ways are passable
+ * and how their costs are calculated.
+ */
+static void route_graph_init(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile) {
+    struct route_graph_segment *s = NULL;
+    int val;
+
+    while ((s = route_graph_get_segment(this, dst->street, s))) {
+        val = route_value_seg(profile, NULL, s, -1);
+        if (val != INT_MAX) {
+            val = val*(100-dst->percent)/100;
+            s->end->seg = s;
+            s->end->value = val;
+            s->end->rhs = val;
+            s->end->dst_val = val;
+            s->end->el = fh_insertkey(this->heap, s->end->value, s->end);
+        }
+        val = route_value_seg(profile, NULL, s, 1);
+        if (val != INT_MAX) {
+            val = val*dst->percent/100;
+            s->start->seg = s;
+            s->start->value = val;
+            s->start->rhs = val;
+            s->start->dst_val = val;
+            s->start->el = fh_insertkey(this->heap, s->start->value, s->start);
+        }
+    }
+}
+
+/**
  * @brief Resets all nodes
  *
  * This iterates through all the points in the route graph, resetting them to their initial state.
  * The `value` (cost to reach the destination via `seg`) and `dst_val` (cost to destination if this point is the last
  * in the route) members of each point are reset to`INT_MAX`, the `seg` member (cheapest way to destination) is reset
  * to `NULL` and the `el` member (pointer to element in Fibonacci heap) is also reset to `NULL`.
+ *
+ * The Fibonacci heap is also cleared. Inconsistencies between `el` and Fibonacci heap membership are handled
+ * gracefully, i.e. `el` is reset even if it is invalid, and points are removed from the heap regardless of their `el`
+ * value.
+ *
+ * After this method returns, the caller should call
+ * {@link route_graph_init(struct route_graph *, struct route_info *, struct vehicleprofile *)} to initialize potential
+ * end points. After that a route can be calculated.
  *
  * References to elements of the route graph which were obtained prior to calling this function
  * remain valid after it returns.
@@ -1355,15 +1409,21 @@ void route_graph_free_points(struct route_graph *this) {
 static void route_graph_reset(struct route_graph *this) {
     struct route_graph_point *curr;
     int i;
+
     for (i = 0 ; i < HASH_SIZE ; i++) {
         curr=this->hash[i];
         while (curr) {
             curr->value=INT_MAX;
             curr->dst_val = INT_MAX;
+            curr->rhs = INT_MAX;
             curr->seg=NULL;
             curr->el=NULL;
             curr=curr->hash_next;
         }
+    }
+
+    while (fh_extractmin(this->heap)) {
+        // no operation, just remove all items (`el` has already been reset)
     }
 }
 
@@ -2532,29 +2592,9 @@ static void route_graph_flood(struct route_graph *this, struct route_info *dst, 
     /* TODO Using this->heap here (sharing it with LPA*) will only work as long as we ensure the heap is empty before
      * we return. The long-term solution would be to use LPA* for initial route calculation as well. */
     struct route_graph_point *p_min;
-    struct route_graph_segment *s=NULL;
+    struct route_graph_segment *s;
     int min,new,val;
 
-    while ((s=route_graph_get_segment(this, dst->street, s))) {
-        val=route_value_seg(profile, NULL, s, -1);
-        if (val != INT_MAX) {
-            val=val*(100-dst->percent)/100;
-            s->end->seg=s;
-            s->end->value=val;
-            s->end->rhs = val;
-            s->end->dst_val = val;
-            s->end->el=fh_insertkey(this->heap, s->end->value, s->end);
-        }
-        val=route_value_seg(profile, NULL, s, 1);
-        if (val != INT_MAX) {
-            val=val*dst->percent/100;
-            s->start->seg=s;
-            s->start->value=val;
-            s->start->rhs = val;
-            s->start->dst_val = val;
-            s->start->el=fh_insertkey(this->heap, s->start->value, s->start);
-        }
-    }
     for (;;) {
         p_min=fh_extractmin(this->heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
         if (! p_min) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
@@ -2887,6 +2927,7 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
             this->avoid_seg=s;
             route_graph_set_traffic_distortion(this, this->avoid_seg, profile->turn_around_penalty);
             route_graph_reset(this);
+            route_graph_init(this, dst, profile);
             route_graph_flood(this, dst, profile, NULL);
             return route_path_new(this, oldpath, pos, dst, profile);
         }
@@ -3194,6 +3235,7 @@ static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c,
 }
 
 static void route_graph_update_done(struct route *this, struct callback *cb) {
+    route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
     route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, cb);
 }
 
