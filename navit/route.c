@@ -31,12 +31,54 @@
  * It accomplishes this by first building a "route graph". This graph contains segments and
  * points.
  *
- * After building this graph in route_graph_build(), the function route_graph_flood() assigns every
- * point and segment a "value" which represents the "costs" of traveling from this point to the
- * destination. This is done by Dijkstra's algorithm.
+ * Routing now relies on the Lifelong Planning A* (LPA*) algorithm, which builds upon the A* algorithm but allows for
+ * partial updates after the cost of some segments has changed. (With A*, one would need to recalculate the entire
+ * route graph from scratch.) A*, in turn, is an extension of the Dijkstra algorithm, with the added improvement that
+ * A* introduces a heuristic (essentially, a lower boundary for the yet-to-be-calculated remainder of the route from a
+ * given point onwards) and chooses the next point to analyze based on the sum of its cost and its heuristic, where
+ * Dijkstra uses simply the cost of the node. This makes A* more efficient than Dijkstra in some scenarios. (Navit,
+ * however, is not one of them, as we currently analyze only a subset of the entire map, and calculating the heuristic
+ * for each node turned out to cost more than it saved in tests.)
  *
- * When the graph is built a "route path" is created, which is a path in this graph from a given
- * position to the destination determined at time of building the graph.
+ * Wikipedia has articles on all three algorithms; refer to these for an in-depth discussion of the algorithms.
+ *
+ * If the heuristic is assumed to be zero in all cases, A* behaves exactly as Dijkstra would. Similarly, LPA* behaves
+ * identically to A* if all segment costs are known prior to route calculation and do not change once route calculation
+ * has started.
+ *
+ * Earlier versions of Navit used Dijkstra for routing. This was upgraded to LPA* when the traffic module was
+ * introduced, as it became necessary to do fast partial recalculations of the route when the traffic situation
+ * changes. Navit’s LPA* implementation differs from the canonical implementation in two important ways:
+ *
+ * \li The heuristic is not used (or assumed to be zero), for the reasons discussed above. However, this is not set in
+ * stone and can be revisited if we find using a heuristic provides a true benefit.
+ * \li Since the destination point may be off-road, Navit may initialize the route graph with multiple candidates for
+ * the destination point, each of which will get a nonzero cost (which may still decrease if routing later determines
+ * that it is cheaper to route from that candidate point to a different candidate point).
+ *
+ * The cost of a node is always the cost to reach the destination, and route calculation is done “backwards”, i.e.
+ * starting at the destination and working its way to the current position (or previous waypoint). This is mandatory
+ * in LPA*, while A* and Dijkstra can also work from the start to the destination. The latter is found in most textbook
+ * descriptions of these algorithms. Navit has always calculated routes from destination to start, even with Dijkstra,
+ * as this made it easier to react to changes in the vehicle position (the start of the route).
+ *
+ * A route graph first needs to be built with `route_graph_build()`, which fetches the segments from the map. Next
+ * `route_graph_init()` is called to initialize the destination point candidates. Then
+ * `route_graph_compute_shortest_path()` is called to assign a `value` to each node, which represents the cost of
+ * traveling from this point to the destination. Each point is also assigned a “next segment” to take in order to reach
+ * the destination from this point. Eventually a “route path” is created, i.e. the sequence of segments from the
+ * current position to the destination are extracted from the route graph and turn instructions are added where
+ * necessary.
+ *
+ * When segment costs change, `route_graph_point_update()` is called for each end point which may have changed. Then
+ * `route_graph_compute_shortest_path()` is called to update parts of the route which may have changed, and finally the
+ * route path is recreated. This is used by the traffic module when traffic reports change the cost of individual
+ * segments.
+ *
+ * A completely new route can be created from an existing graph, which happens e.g. between sections of a route when
+ * waypoints are used. This is done by calling `route_graph_reset()`, which resets all nodes to their initial state.
+ * Then `route_graph_init()` is called, followed by `route_graph_compute_shortest_path()` and eventually creation of
+ * the route path.
  */
 
 #include <stdio.h>
@@ -210,8 +252,8 @@ static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
                           struct route_traffic_distortion *dist);
-static void route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile,
-                              struct callback *cb);
+static void route_graph_compute_shortest_path(struct route_graph * graph, struct vehicleprofile * profile,
+        struct callback *cb);
 static int route_graph_is_path_computed(struct route_graph *this_);
 static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd,
         struct route_graph_segment *last);
@@ -706,7 +748,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
             this->current_dst=prev_dst;
             route_graph_reset(this->graph);
             route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
-            route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
+            route_graph_compute_shortest_path(this->graph, this->vehicleprofile, this->route_graph_flood_done_cb);
             return;
         }
         if (!new_graph && this->path2->updated)
@@ -1220,7 +1262,7 @@ void route_remove_waypoint(struct route *this) {
         route_graph_reset(this->graph);
         this->current_dst = this->destinations->data;
         route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
-        route_graph_flood(this->graph, this->current_dst, this->vehicleprofile,	this->route_graph_flood_done_cb);
+        route_graph_compute_shortest_path(this->graph, this->vehicleprofile, this->route_graph_flood_done_cb);
     }
 }
 
@@ -1352,7 +1394,7 @@ void route_graph_free_points(struct route_graph *this) {
  *
  * This method is normally called after building a fresh route graph, or resetting an existing one. It iterates over
  * all potential destination nodes (i.e. all nodes which are part of the destination’s street) and initializes them:
- * The `dst_val`, `val` and `rhs` values are set according to their cost to reach the destination.
+ * The `dst_val` and `rhs` values are set according to their cost to reach the destination.
  *
  * @param this The route graph to initialize
  * @param dst The destination of the route
@@ -1368,7 +1410,6 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         if (val != INT_MAX) {
             val = val*(100-dst->percent)/100;
             s->end->seg = s;
-            s->end->value = val;
             s->end->rhs = val;
             s->end->dst_val = val;
             s->end->el = fh_insertkey(this->heap, s->end->value, s->end);
@@ -1377,7 +1418,6 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         if (val != INT_MAX) {
             val = val*dst->percent/100;
             s->start->seg = s;
-            s->start->value = val;
             s->start->rhs = val;
             s->start->dst_val = val;
             s->start->el = fh_insertkey(this->heap, s->start->value, s->start);
@@ -2128,11 +2168,13 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
  *
  * This is part of a modified LPA* implementation.
  *
+ * @param graph The route graph
  * @param profile The vehicle profile to use for routing. This determines which ways are passable and how their costs
  * are calculated.
- * @param graph The route graph
+ * @param cb The callback function to call when flooding is complete (can be NULL)
  */
-static void route_graph_compute_shortest_path(struct vehicleprofile * profile, struct route_graph * graph) {
+static void route_graph_compute_shortest_path(struct route_graph * graph, struct vehicleprofile * profile,
+        struct callback *cb) {
     struct route_graph_point *p_min;
     struct route_graph_segment *s = NULL;
 
@@ -2159,6 +2201,8 @@ static void route_graph_compute_shortest_path(struct vehicleprofile * profile, s
             else if (route_value_seg(profile, NULL, s, 2) != INT_MAX)
                 route_graph_point_update(profile, s->start, graph->heap);
 	}
+    if (cb)
+        callback_call_0(cb);
 }
 
 /**
@@ -2568,114 +2612,6 @@ static struct route_graph_segment *route_graph_get_segment(struct route_graph *g
 }
 
 /**
- * @brief Calculates the routing costs for each point
- *
- * This function is the heart of routing. It assigns each point in the route graph a
- * cost at which one can reach the destination from this point on. Additionally it assigns
- * each point a segment one should follow from this point on to reach the destination at the
- * stated costs.
- *
- * This function uses Dijkstra's algorithm to do the routing. To understand it you should have a look
- * at this algorithm.
- *
- * References to elements of the route graph which were obtained prior to calling this function
- * remain valid after it returns.
- *
- * @param this_ The route graph to flood
- * @param dst The destination of the route
- * @param profile The vehicle profile to use for routing. This determines which ways are passable
- * and how their costs are calculated.
- * @param cb The callback function to call when flooding is complete
- */
-static void route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile,
-                  struct callback *cb) {
-    /* TODO Using this->heap here (sharing it with LPA*) will only work as long as we ensure the heap is empty before
-     * we return. The long-term solution would be to use LPA* for initial route calculation as well. */
-    struct route_graph_point *p_min;
-    struct route_graph_segment *s;
-    int min,new,val;
-
-    for (;;) {
-        p_min=fh_extractmin(this->heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
-        if (! p_min) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
-            break;
-        min=p_min->value;
-        if (debug_route)
-            printf("extract p=%p free el=%p min=%d, 0x%x, 0x%x\n", p_min, p_min->el, min, p_min->c.x, p_min->c.y);
-        p_min->rhs = p_min->value;
-        p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
-        s=p_min->start;
-        while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-            val=route_value_seg(profile, p_min, s, -1);
-            if (val != INT_MAX && item_is_equal(s->data.item,p_min->seg->data.item)) {
-                if (profile->turn_around_penalty2)
-                    val+=profile->turn_around_penalty2;
-                else
-                    val=INT_MAX;
-            }
-            if (val != INT_MAX) {
-                new=min+val;
-                if (debug_route)
-                    printf("begin %d len %d vs %d (0x%x,0x%x)\n",new,val,s->end->value, s->end->c.x, s->end->c.y);
-                if (new < s->end->value) { /* We've found a less costly way to reach the end of s, update it */
-                    s->end->value=new;
-                    s->end->seg=s;
-                    if (! s->end->el) {
-                        if (debug_route)
-                            printf("insert_end p=%p el=%p val=%d ", s->end, s->end->el, s->end->value);
-                        s->end->el=fh_insertkey(this->heap, new, s->end);
-                        if (debug_route)
-                            printf("el new=%p\n", s->end->el);
-                    } else {
-                        if (debug_route)
-                            printf("replace_end p=%p el=%p val=%d\n", s->end, s->end->el, s->end->value);
-                        fh_replacekey(this->heap, s->end->el, new);
-                    }
-                }
-                if (debug_route)
-                    printf("\n");
-            }
-            s=s->start_next;
-        }
-        s=p_min->end;
-        while (s) { /* Doing the same as above with the segments leading towards our point */
-            val=route_value_seg(profile, p_min, s, 1);
-            if (val != INT_MAX && item_is_equal(s->data.item,p_min->seg->data.item)) {
-                if (profile->turn_around_penalty2)
-                    val+=profile->turn_around_penalty2;
-                else
-                    val=INT_MAX;
-            }
-            if (val != INT_MAX) {
-                new=min+val;
-                if (debug_route)
-                    printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
-                if (new < s->start->value) {
-                    s->start->value=new;
-                    s->start->seg=s;
-                    if (! s->start->el) {
-                        if (debug_route)
-                            printf("insert_start p=%p el=%p val=%d ", s->start, s->start->el, s->start->value);
-                        s->start->el=fh_insertkey(this->heap, new, s->start);
-                        if (debug_route)
-                            printf("el new=%p\n", s->start->el);
-                    } else {
-                        if (debug_route)
-                            printf("replace_start p=%p el=%p val=%d\n", s->start, s->start->el, s->start->value);
-                        fh_replacekey(this->heap, s->start->el, new);
-                    }
-                }
-                if (debug_route)
-                    printf("\n");
-            }
-            s=s->end_next;
-        }
-    }
-    callback_call_0(cb);
-    dbg(lvl_debug,"return");
-}
-
-/**
  * @brief Whether cost (re)calculation of route graph points has reached the start point
  *
  * This method serves as the exit criterion for cost calculation in our LPA* implementation. When it returns true, it
@@ -2752,7 +2688,7 @@ void route_recalculate_partial(struct route *this_) {
 
     printf("Expanding points which have changed\n");
 
-    route_graph_compute_shortest_path(this_->vehicleprofile, this_->graph);
+    route_graph_compute_shortest_path(this_->graph, this_->vehicleprofile, NULL);
 
     printf("Point expansion complete, recalculating route path\n");
 
@@ -2928,7 +2864,7 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
             route_graph_set_traffic_distortion(this, this->avoid_seg, profile->turn_around_penalty);
             route_graph_reset(this);
             route_graph_init(this, dst, profile);
-            route_graph_flood(this, dst, profile, NULL);
+            route_graph_compute_shortest_path(this, profile, NULL);
             return route_path_new(this, oldpath, pos, dst, profile);
         }
     }
@@ -3236,7 +3172,7 @@ static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c,
 
 static void route_graph_update_done(struct route *this, struct callback *cb) {
     route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
-    route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, cb);
+    route_graph_compute_shortest_path(this->graph, this->vehicleprofile, cb);
 }
 
 /**
