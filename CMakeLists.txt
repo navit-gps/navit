@@ -276,7 +276,6 @@ else(Glib_FOUND)
 		CONFIGURE_COMMAND "./configure"
 		BUILD_COMMAND make
 		INSTALL_COMMAND make install
-		PREFIX=${CMAKE_CURRENT_BINARY_DIR}/glib-${EXTERNAL_GLIB_TAG}
 		)
 	ExternalProject_Get_Property(project_glib install_dir)
 	add_library(glib STATIC IMPORTED)
