@@ -88,6 +88,12 @@ char *alloca ();
 __libc_lock_define_initialized (static, lock);
 #endif
 
+#ifdef _WIN32
+
+# define HAVE_MEMPCPY   1
+
+#endif
+
 #ifndef internal_function
 # define internal_function
 #endif

@@ -576,12 +576,8 @@ if(WIN32 OR WINCE)
 	add_plugin(support/win32 "Windows detected" TRUE)
 
 	SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -I ${CMAKE_CURRENT_SOURCE_DIR}/navit/gui/win32/resources <DEFINES> -i <SOURCE> -o <OBJECT>")
-	set_with_reason(support/ezxml "Windows detected" TRUE)
-	set_with_reason(speech/espeak "Windows detected" TRUE)
 	#speech/espeak does use windows threads, and therefore needs only parts of
 	#espeak lib. INTERNAL_ESPEAK_COMPLETE controls this.
-	set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
-	set_with_reason(support/espeak "Windows detected" TRUE)
 	set_with_reason(binding/win32 "Windows detected" TRUE)
 
 	# vehicle_file is broken for windows. use vehicle_wince instead
@@ -632,6 +628,12 @@ if(WIN32 OR WINCE)
 	enable_language(RC)
 
 	set(XSLTS "windows;${XSLTS}" CACHE STRING "define a semicolon seperated list of XSLTs to process")
+endif()
+if (WINCE AND NOT WIN32)
+	set_with_reason(support/ezxml "Windows detected" TRUE)
+	set_with_reason(speech/espeak "Windows detected" TRUE)
+	set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
+	set_with_reason(support/espeak "Windows detected" TRUE)
 endif()
 if (WIN32 AND NOT WINCE)
 	set(HAVE_API_WIN32 1)
