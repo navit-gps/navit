@@ -1412,7 +1412,7 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
             s->end->seg = s;
             s->end->rhs = val;
             s->end->dst_val = val;
-            s->end->el = fh_insertkey(this->heap, s->end->value, s->end);
+            s->end->el = fh_insertkey(this->heap, MIN(s->end->rhs, s->end->value), s->end);
         }
         val = route_value_seg(profile, NULL, s, 1);
         if (val != INT_MAX) {
@@ -1420,7 +1420,7 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
             s->start->seg = s;
             s->start->rhs = val;
             s->start->dst_val = val;
-            s->start->el = fh_insertkey(this->heap, s->start->value, s->start);
+            s->start->el = fh_insertkey(this->heap, MIN(s->start->rhs, s->start->value), s->start);
         }
     }
 }
