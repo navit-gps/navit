@@ -2283,6 +2283,7 @@ static int traffic_location_get_point_match(struct traffic_location * this_, str
     score = traffic_point_match_segment_attributes(trpoint, p, start, match_start);
     if (ret < score)
         ret = score;
+    return ret;
 }
 
 /**
