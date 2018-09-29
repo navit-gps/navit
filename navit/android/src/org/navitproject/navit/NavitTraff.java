@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * @brief The TraFF receiver implementation.
- * 
+ *
  * This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation, receives
  * TraFF feeds and forwards them to the traffic module for processing.
  */
@@ -54,7 +54,7 @@ public class NavitTraff extends BroadcastReceiver {
 
     /**
      * @brief Forwards a newly received TraFF feed to the traffic module for processing.
-     * 
+     *
      * This is called when a TraFF feed is received.
      *
      * @param id The identifier for the native callback implementation
@@ -64,7 +64,7 @@ public class NavitTraff extends BroadcastReceiver {
 
     /**
      * @brief Creates a new {@code NavitTraff} instance.
-     * 
+     *
      * Creating a new {@code NavitTraff} instance registers a broadcast receiver for TraFF broadcasts and polls all
      * registered sources once to ensure we have messages which were received by these sources before we started up.
      *

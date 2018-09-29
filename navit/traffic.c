@@ -2422,11 +2422,12 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
 
 /**
  * @brief Whether the current point is a candidate for low-res endpoint matching.
- * 
+ *
  * @param this_ The point to examine
  * @param s_prev The route segment leading to `this_` (NULL for the start point)
  */
-static int route_graph_point_is_endpoint_candidate(struct route_graph_point *this_, struct route_graph_segment *s_prev) {
+static int route_graph_point_is_endpoint_candidate(struct route_graph_point *this_,
+        struct route_graph_segment *s_prev) {
     int ret;
 
     /* Whether we are at a junction of 3 or more segments */
