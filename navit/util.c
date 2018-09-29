@@ -327,7 +327,7 @@ int compare_name_systematic(const char *s1, const char *s2) {
     ret = ((elements - matches) * MAX_MISMATCH) / elements;
 
     dbg(lvl_debug, "'%s' %s '%s', ret=%d",
-            s1, ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
+        s1, ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
 
     return ret;
 }

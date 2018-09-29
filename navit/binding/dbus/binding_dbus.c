@@ -1228,11 +1228,11 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
     struct coord_geo g;
 
     char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
-            "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
-            "     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
-            "     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
-            "     xmlns='http://www.topografix.com/GPX/1/1'\n"
-            "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n";
+                   "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
+                   "     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
+                   "     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
+                   "     xmlns='http://www.topografix.com/GPX/1/1'\n"
+                   "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n";
     char *trailer = "</gpx>\n";
 
     navit = object_get_from_message(message, "navit");
@@ -1256,7 +1256,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
     fp = fopen(filename, "w");
     if (!fp) {
         return dbus_error(connection, message, DBUS_ERROR_FAILED,
-                "could not open file for writing");
+                          "could not open file for writing");
     }
 
     fprintf(fp, "%s", header);
@@ -1341,8 +1341,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
  * @param message The DBusMessage including the `filename` parameter
  * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
  */
-static DBusHandlerResult
-request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message) {
+static DBusHandlerResult request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message) {
     char * filename;
     struct navit *navit;
     DBusMessageIter iter;
@@ -1481,7 +1480,7 @@ static DBusHandlerResult request_navit_route_export_gpx(DBusConnection *connecti
     if (!fp) {
         map_rect_destroy(mr);
         return dbus_error(connection, message, DBUS_ERROR_FAILED,
-                              "could not open file for writing");
+                          "could not open file for writing");
     }
 
     fprintf(fp, "%s", header);
@@ -1565,7 +1564,7 @@ static DBusHandlerResult request_navit_route_export_geojson(DBusConnection *conn
     fp = fopen(filename,"w");
     if (!fp) {
         return dbus_error(connection, message, DBUS_ERROR_FAILED,
-                              "could not open file for writing");
+                          "could not open file for writing");
     }
 
     fprintf(fp, "%s", header);

@@ -1300,7 +1300,7 @@ struct route_graph_point *route_graph_get_point_next(struct route_graph *this, s
  * @return The point at the specified coordinates or NULL if not found
  */
 struct route_graph_point * route_graph_get_point(struct route_graph *this, struct coord *c) {
-     return route_graph_get_point_next(this, c, NULL);
+    return route_graph_get_point_next(this, c, NULL);
 }
 
 /**
@@ -1538,7 +1538,7 @@ static int route_segment_data_size(int flags) {
  * @param data The data for the segment
  */
 int route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data) {
-     struct route_graph_segment *s;
+    struct route_graph_segment *s;
     s=start->start;
     while (s) {
         if (item_is_equal(*data->item, s->data.item)) {
@@ -1567,7 +1567,7 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
-                        struct route_graph_point *end, struct route_graph_segment_data *data) {
+                             struct route_graph_point *end, struct route_graph_segment_data *data) {
     struct route_graph_segment *s;
     int size;
 
@@ -1947,7 +1947,7 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
  * @return true if a traffic distortion was found, 0 if not
  */
 static int route_get_traffic_distortion(struct route_graph_segment *seg, int dir, struct vehicleprofile *profile,
-                             struct route_traffic_distortion *ret) {
+                                        struct route_traffic_distortion *ret) {
     struct route_graph_point *start=seg->start;
     struct route_graph_point *end=seg->end;
     struct route_graph_segment *tmp,*found=NULL;
@@ -2203,7 +2203,7 @@ static void route_graph_compute_shortest_path(struct route_graph * graph, struct
                 continue;
             else if (route_value_seg(profile, NULL, s, 2) != INT_MAX)
                 route_graph_point_update(profile, s->start, graph->heap);
-	}
+    }
     if (cb)
         callback_call_0(cb);
 }
@@ -2256,8 +2256,8 @@ static void route_graph_set_traffic_distortion(struct route_graph *this, struct 
  * @param item The item to add, must be of {@code type_traffic_distortion}
  * @param update Whether to update the point (true for LPA*, false for Dijkstra)
  */
-static void route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile, struct item *item,
-        int update) {
+static void route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
+        struct item *item, int update) {
     struct route_graph_point *s_pnt,*e_pnt;
     struct coord c,l;
     struct attr flags_attr, delay_attr, maxspeed_attr;
@@ -2328,9 +2328,8 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
         for (curr = s_pnt->start; curr; curr = curr->start_next) {
             if ((curr->end == e_pnt) && item_is_equal(curr->data.item, *item))
                 curr->data.item.type = type_none;
-            else
-                if (curr->data.item.type == type_traffic_distortion)
-                    s_pnt->flags |= RP_TRAFFIC_DISTORTION;
+            else if (curr->data.item.type == type_traffic_distortion)
+                s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         }
 
         e_pnt->flags &= ~RP_TRAFFIC_DISTORTION;
@@ -2396,7 +2395,7 @@ static void route_graph_remove_traffic_distortion(struct route_graph *this, stru
         }
 
         size = sizeof(struct route_graph_segment) - sizeof(struct route_segment_data)
-                    + route_segment_data_size(found->data.flags);
+               + route_segment_data_size(found->data.flags);
         g_slice_free1(size, found);
 #endif
 
@@ -3928,13 +3927,13 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
             id=route->pos;
             break;
         }
-        /* FALLTHRU */
+    /* FALLTHRU */
 
     case type_route_start:
     case type_route_start_reverse:
         mr->seg=NULL;
         mr->dest=mr->mpriv->route->destinations;
-        /* FALLTHRU */
+    /* FALLTHRU */
     default:
         if (mr->item.type == type_waypoint)
             mr->dest=g_list_next(mr->dest);
@@ -3971,7 +3970,7 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
         id=&(mr->mpriv->route->destinations);
         if (mr->mpriv->route->destinations)
             break;
-        /* FALLTHRU */
+    /* FALLTHRU */
     case type_route_end:
         return NULL;
     }

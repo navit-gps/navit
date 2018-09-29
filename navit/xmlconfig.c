@@ -1077,9 +1077,9 @@ int xml_parse_file(char *filename, void *data,
  * @return True on success, false on failure.
  */
 int xml_parse_text(const char *document, void *data,
-               void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
-               void (*end)(xml_context *, const char *, void *, GError **),
-               void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
     GMarkupParser parser = { start, end, text, NULL, NULL};
     xml_context *context;

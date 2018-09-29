@@ -266,7 +266,7 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
-        struct map *map, struct route * route);
+                                        struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
 static void traffic_dump_messages_to_xml(struct traffic * this_);
@@ -2612,7 +2612,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             else
                 p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
             if ((this_->location->fuzziness == location_fuzziness_low_res)
-                            || this_->location->at || this_->location->not_via) {
+                    || this_->location->at || this_->location->not_via) {
                 /* extend start to next junction */
                 start_new = traffic_route_prepend(rg, p_start);
                 if (start_new)
@@ -2709,7 +2709,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                         minval = val;
                         p_to = p_iter;
                         dbg(lvl_debug, "candidate end point found, point %p, value %d (score %d)",
-                                p_iter, val, score);
+                            p_iter, val, score);
                     }
                 }
 
@@ -2749,7 +2749,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             struct coord_geo wgs;
             transform_to_geo(projection_mg, &(p_start->c), &wgs);
             dbg(lvl_debug, "*****checkpoint ADD-4.2.6, p_start=%p\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
-                    p_start, wgs.lat, wgs.lng);
+                p_start, wgs.lat, wgs.lng);
             if (point_pairs == 1) {
                 /* extend start to next junction (if we have more than two points, this has already been done) */
                 start_new = traffic_route_prepend(rg, p_start);
@@ -2763,7 +2763,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             while (p_iter) {
                 transform_to_geo(projection_mg, &(p_iter->c), &wgs);
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.7, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
-                        p_iter, p_iter->value, wgs.lat, wgs.lng);
+                    p_iter, p_iter->value, wgs.lat, wgs.lng);
                 if (!s_prev || !p_iter->seg)
                     /* the first and last points are always candidates */
                     is_candidate = 1;
@@ -2801,7 +2801,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                         minval = val;
                         p_from = p_iter;
                         dbg(lvl_debug, "candidate start point found, point %p, value %d (score %d)",
-                                p_iter, val, score);
+                            p_iter, val, score);
                     }
                 }
 
@@ -2899,7 +2899,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         dbg(lvl_debug, "*****checkpoint ADD-4.4");
         while (s) {
             dbg(lvl_debug, "*****checkpoint ADD-4.4.1 (#%d, p_iter=%p, s=%p, next %p)",
-                    count, p_iter, s, (s->start == p_iter) ? s->end : s->start);
+                count, p_iter, s, (s->start == p_iter) ? s->end : s->start);
             count++;
             len += s->data.len;
             if (s->start == p_iter)
@@ -3122,23 +3122,23 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_) {
     /* dump location */
     if (this_->location) {
         dbg(lvl_debug, "  Location: road_type='%s', road_ref='%s', road_name='%s'",
-                item_to_name(this_->location->road_type), this_->location->road_ref,
-                this_->location->road_name);
+            item_to_name(this_->location->road_type), this_->location->road_ref,
+            this_->location->road_name);
         dbg(lvl_debug, "    directionality=%d, destination='%s', direction='%s'",
-                this_->location->directionality, this_->location->destination, this_->location->direction);
+            this_->location->directionality, this_->location->destination, this_->location->direction);
         dbg(lvl_debug, "    fuzziness=%s, ramps=%s, tmc_table='%s', tmc_direction=%+d",
-                location_fuzziness_to_string(this_->location->fuzziness),
-                location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
-                this_->location->tmc_direction);
+            location_fuzziness_to_string(this_->location->fuzziness),
+            location_ramps_to_string(this_->location->ramps), this_->location->tmc_table,
+            this_->location->tmc_direction);
         for (i = 0; i < 5; i++) {
             if (points[i]) {
                 dbg(lvl_debug, "    %s: lat=%.5f, lng=%.5f",
-                        point_names[i], points[i]->coord.lat, points[i]->coord.lng);
+                    point_names[i], points[i]->coord.lat, points[i]->coord.lng);
                 dbg(lvl_debug, "      junction_name='%s', junction_ref='%s', tmc_id='%s'",
-                        points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
+                    points[i]->junction_name, points[i]->junction_ref, points[i]->tmc_id);
             } else {
                 dbg(lvl_debug, "    %s: (null)",
-                        point_names[i]);
+                    point_names[i]);
             }
         }
     } else {
@@ -3849,7 +3849,7 @@ static void traffic_loop(struct traffic * this_) {
         if (this_->idle_cb)
             callback_destroy(this_->idle_cb);
         this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int),
-                this_, PROCESS_MESSAGES_PURGE_EXPIRED);
+                                        this_, PROCESS_MESSAGES_PURGE_EXPIRED);
         this_->idle_ev = event_add_idle(50, this_->idle_cb);
     } else
         traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
@@ -4205,13 +4205,13 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             length = traffic_xml_get_attr("length", el->names, el->values);
             speed = traffic_xml_get_attr("speed", el->names, el->values);
             event = traffic_event_new(event_class_new(traffic_xml_get_attr("class", el->names, el->values)),
-                                                  event_type_new(traffic_xml_get_attr("type", el->names, el->values)),
-                                                  length ? atoi(length) : -1,
-                                                  speed ? atoi(speed) : INT_MAX,
-                                                  /* TODO quantifier */
-                                                  NULL,
-                                                  count,
-                                                  (struct traffic_suppl_info **) children);
+                                      event_type_new(traffic_xml_get_attr("type", el->names, el->values)),
+                                      length ? atoi(length) : -1,
+                                      speed ? atoi(speed) : INT_MAX,
+                                      /* TODO quantifier */
+                                      NULL,
+                                      count,
+                                      (struct traffic_suppl_info **) children);
             g_free(children);
             g_list_free(state->si);
             state->si = NULL;
@@ -5069,7 +5069,7 @@ struct map * traffic_get_map(struct traffic *this_) {
             if (this_->shared->message_queue) {
                 if (!this_->idle_cb)
                     this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int),
-                            this_, PROCESS_MESSAGES_NO_DUMP_STORE);
+                                                    this_, PROCESS_MESSAGES_NO_DUMP_STORE);
                 if (!this_->idle_ev)
                     this_->idle_ev = event_add_idle(50, this_->idle_cb);
             }
