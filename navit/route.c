@@ -1410,6 +1410,7 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         if (val != INT_MAX) {
             val = val*(100-dst->percent)/100;
             s->end->seg = s;
+            s->end->dst_seg = s;
             s->end->rhs = val;
             s->end->dst_val = val;
             s->end->el = fh_insertkey(this->heap, MIN(s->end->rhs, s->end->value), s->end);
@@ -1418,6 +1419,7 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         if (val != INT_MAX) {
             val = val*dst->percent/100;
             s->start->seg = s;
+            s->start->dst_seg = s;
             s->start->rhs = val;
             s->start->dst_val = val;
             s->start->el = fh_insertkey(this->heap, MIN(s->start->rhs, s->start->value), s->start);
@@ -1457,6 +1459,7 @@ static void route_graph_reset(struct route_graph *this) {
             curr->dst_val = INT_MAX;
             curr->rhs = INT_MAX;
             curr->seg=NULL;
+            curr->dst_seg = NULL;
             curr->el=NULL;
             curr=curr->hash_next;
         }
@@ -2111,7 +2114,7 @@ static void route_graph_point_update(struct vehicleprofile *profile, struct rout
     int new, val;
 
     p->rhs = p->dst_val;
-    p->seg = NULL;
+    p->seg = p->dst_seg;
 
     for (s = p->start; s; s = s->start_next) { /* Iterate over all the segments leading away from our point */
         val = route_value_seg(profile, s->end, s, 1);

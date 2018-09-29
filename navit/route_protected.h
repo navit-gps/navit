@@ -64,6 +64,8 @@ struct route_graph_point {
 	                                      *   equal to `value` after the route graph has been flooded. */
 	int dst_val;                         /**< For points close to the destination, this is the cost of the point if it
 	                                      *   is the last in the graph; `INT_MAX` for all other points. */
+    struct route_graph_segment *dst_seg; /**< For points close to the destination, this is the segment over which the
+                                          * destination can be reached directly */
 	struct coord c;                      /**< Coordinates of this point */
 	int flags;                           /**< Flags for this point (e.g. traffic distortion) */
 };
