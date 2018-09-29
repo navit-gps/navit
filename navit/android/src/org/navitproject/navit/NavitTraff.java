@@ -53,9 +53,9 @@ public class NavitTraff extends BroadcastReceiver {
     private IntentFilter traffFilter = new IntentFilter();
 
     /**
-     * @brief Called when a TraFF feed is received.
+     * @brief Forwards a newly received TraFF feed to the traffic module for processing.
      * 
-     * This method forwards the newly received feed to the traffic module for processing.
+     * This is called when a TraFF feed is received.
      *
      * @param id The identifier for the native callback implementation
      * @param feed The TraFF feed

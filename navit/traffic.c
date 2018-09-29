@@ -1600,6 +1600,36 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
 }
 
 /**
+ * @brief Opens a map rectangle around the end points of the traffic location.
+ *
+ * Prior to calling this function, the caller must ensure `rg->m` points to the map to be used, and the enclosing
+ * rectangle for the traffic location has been set (e.g. by calling `traffic_location_set_enclosing_rect()`).
+ *
+ * @param this_ The traffic location
+ * @param rg The route graph
+ *
+ * @return NULL on failure, the map selection on success
+ */
+static struct map_rect * traffic_location_open_map_rect(struct traffic_location * this_, struct route_graph * rg) {
+    /* Corners of the enclosing rectangle, in Mercator coordinates */
+    struct coord c1, c2;
+
+    transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
+    transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
+
+    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
+
+    if (!rg->sel)
+        return NULL;
+    rg->mr = map_rect_new(rg->m, rg->sel);
+    if (!rg->mr) {
+        map_selection_destroy(rg->sel);
+        rg->sel = NULL;
+    }
+    return rg->mr;
+}
+
+/**
  * @brief Populates a route graph.
  *
  * This adds all routable segments in the enclosing rectangle of the location (plus a safety margin) to
@@ -1610,9 +1640,6 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
  */
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms) {
-    /* Corners of the enclosing rectangle, in Mercator coordinates */
-    struct coord c1, c2;
-
     /* The item being processed */
     struct item *item;
 
@@ -1632,6 +1659,12 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     /* Whether the current item is segmented */
     int segmented;
 
+    /* Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
+    int default_flags_value = AF_ALL;
+
+    /* Default flags assumed for the current item type */
+    int *default_flags;
+
     /* Holds an attribute retrieved from the current item */
     struct attr attr;
 
@@ -1643,19 +1676,8 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
-        transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
-        transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
-
-        rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
-
-        if (!rg->sel)
+        if (!traffic_location_open_map_rect(this_, rg))
             continue;
-        rg->mr = map_rect_new(rg->m, rg->sel);
-        if (!rg->mr) {
-            map_selection_destroy(rg->sel);
-            rg->sel = NULL;
-            continue;
-        }
         while ((item = map_rect_get_item(rg->mr))) {
             if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
                 route_graph_add_turn_restriction(rg, item);
@@ -1673,21 +1695,16 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                     len = 0;
                     segmented = 0;
 
-                    int default_flags_value = AF_ALL;
-                    int *default_flags = item_get_default_flags(item->type);
-                    if (!default_flags)
+                    if (!(default_flags = item_get_default_flags(item->type)))
                         default_flags = &default_flags_value;
                     if (item_attr_get(item, attr_flags, &attr)) {
                         data.flags = attr.u.num;
-                        if (data.flags & AF_SEGMENTED)
-                            segmented = 1;
+                        segmented = (data.flags & AF_SEGMENTED);
                     } else
                         data.flags = *default_flags;
 
-                    if (data.flags & AF_SPEED_LIMIT) {
-                        if (item_attr_get(item, attr_maxspeed, &attr))
-                            data.maxspeed = attr.u.num;
-                    }
+                    if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
+                        data.maxspeed = attr.u.num;
 
                     /* clear flags we're not copying here */
                     data.flags &= ~(AF_DANGEROUS_GOODS | AF_SIZE_OR_WEIGHT_LIMIT);
@@ -2065,14 +2082,9 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
         s_next = NULL;
         for (s_cmp = p->start; s_cmp; s_cmp = s_cmp->start_next) {
             num_seg++;
-            if (s_cmp == s)
+            if ((s_cmp == s) || (s_cmp->data.flags & AF_ONEWAYREV) || (s_cmp->end->flags & RP_TURN_RESTRICTION))
                 continue;
-            if (s_cmp->data.flags & AF_ONEWAYREV)
-                continue;
-            if (s_cmp->end->flags & RP_TURN_RESTRICTION)
-                continue;
-            if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
-                    && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+            if (item_is_equal_id(s_cmp->data.item, s->data.item)) {
                 s_next = s_cmp;
                 id_match = 1;
             } else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
@@ -2085,14 +2097,9 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
         }
         for (s_cmp = p->end; s_cmp; s_cmp = s_cmp->end_next) {
             num_seg++;
-            if (s_cmp == s)
+            if ((s_cmp == s) || (s_cmp->data.flags & AF_ONEWAY) || (s_cmp->end->flags & RP_TURN_RESTRICTION))
                 continue;
-            if (s_cmp->data.flags & AF_ONEWAY)
-                continue;
-            if (s_cmp->end->flags & RP_TURN_RESTRICTION)
-                continue;
-            if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
-                    && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+            if (item_is_equal_id(s_cmp->data.item, s->data.item)) {
                 s_next = s_cmp;
                 id_match = 1;
             } else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
@@ -2172,8 +2179,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
                 continue;
             if (s_cmp->end->seg != s_cmp)
                 continue;
-            if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
-                    && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+            if (item_is_equal_id(s_cmp->data.item, s->data.item)) {
                 s_prev = s_cmp;
                 id_match = 1;
             } else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
@@ -2192,8 +2198,7 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
                 continue;
             if (s_cmp->start->seg != s_cmp)
                 continue;
-            if ((s_cmp->data.item.id_hi == s->data.item.id_hi)
-                    && (s_cmp->data.item.id_lo == s->data.item.id_lo)) {
+            if (item_is_equal_id(s_cmp->data.item, s->data.item)) {
                 s_prev = s_cmp;
                 id_match = 1;
             } else if ((s_cmp->data.item.type == s->data.item.type) && !id_match && !is_ambiguous) {
@@ -2230,6 +2235,41 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
 }
 
 /**
+ * @brief Returns one of the traffic location’s points.
+ *
+ * @param this_ The traffic location
+ * @param point The point of the traffic location to retrieve (0 = from, 1 = at, 2 = to, 16 = start, 17 = end)
+ *
+ * @return The matched points, or NULL if the requested point does not exist
+ */
+static struct traffic_point * traffic_location_get_point(struct traffic_location * this_, int point) {
+    /* The point from the location to match */
+    struct traffic_point * trpoint = NULL;
+
+    switch(point) {
+    case 0:
+        trpoint = this_->from;
+        break;
+    case 1:
+        trpoint = this_->at;
+        break;
+    case 2:
+        trpoint = this_->to;
+        break;
+    case 16:
+        trpoint = this_->from ? this_->from : this_->at;
+        break;
+    case 17:
+        trpoint = this_->to ? this_->to : this_->at;
+        break;
+    default:
+        break;
+    }
+
+    return trpoint;
+}
+
+/**
  * @brief Compares a given point to the traffic location and returns a score.
  *
  * This method obtains all points at coordinates `c` from the map_rect used to build the route graph, compares their
@@ -2256,25 +2296,7 @@ static int traffic_location_get_point_match(struct traffic_location * this_, str
     /* The attribute matching score for the current item */
     int score;
 
-    switch(point) {
-    case 0:
-        trpoint = this_->from;
-        break;
-    case 1:
-        trpoint = this_->at;
-        break;
-    case 2:
-        trpoint = this_->to;
-        break;
-    case 16:
-        trpoint = this_->from ? this_->from : this_->at;
-        break;
-    case 17:
-        trpoint = this_->to ? this_->to : this_->at;
-        break;
-    default:
-        break;
-    }
+    trpoint = traffic_location_get_point(this_, point);
 
     if (!trpoint)
         return 0;
@@ -2313,9 +2335,6 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     /* The point from the location to match */
     struct traffic_point * trpoint = NULL;
 
-    /* Corners of the enclosing rectangle, in Mercator coordinates */
-    struct coord c1, c2;
-
     /* The item being processed */
     struct item *item;
 
@@ -2331,25 +2350,7 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     /* Data for the current point */
     struct point_data * data;
 
-    switch(point) {
-    case 0:
-        trpoint = this_->from;
-        break;
-    case 1:
-        trpoint = this_->at;
-        break;
-    case 2:
-        trpoint = this_->to;
-        break;
-    case 16:
-        trpoint = this_->from ? this_->from : this_->at;
-        break;
-    case 17:
-        trpoint = this_->to ? this_->to : this_->at;
-        break;
-    default:
-        break;
-    }
+    trpoint = traffic_location_get_point(this_, point);
 
     if (!trpoint)
         return NULL;
@@ -2359,19 +2360,8 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
-        transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
-        transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
-
-        rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
-
-        if (!rg->sel)
+        if (!traffic_location_open_map_rect(this_, rg))
             continue;
-        rg->mr = map_rect_new(rg->m, rg->sel);
-        if (!rg->mr) {
-            map_selection_destroy(rg->sel);
-            rg->sel = NULL;
-            continue;
-        }
         while ((item = map_rect_get_item(rg->mr))) {
             /* exclude non-point items */
             if ((item->type < type_town_label) || (item->type >= type_line))
@@ -2431,6 +2421,46 @@ static int traffic_location_is_valid(struct traffic_location * this_) {
 }
 
 /**
+ * @brief Whether the current point is a candidate for low-res endpoint matching.
+ * 
+ * @param this_ The point to examine
+ * @param s_prev The route segment leading to `this_` (NULL for the start point)
+ */
+static int route_graph_point_is_endpoint_candidate(struct route_graph_point *this_, struct route_graph_segment *s_prev) {
+    int ret;
+
+    /* Whether we are at a junction of 3 or more segments */
+    int is_junction;
+
+    /* Segment used for comparison */
+    struct route_graph_segment *s_cmp;
+
+    /* Current segment */
+    struct route_graph_segment *s = this_->seg;
+
+    if (!s_prev || !s)
+        /* the first and last points are always candidates */
+        ret = 1;
+    else
+        /* detect tunnel portals */
+        ret = ((s->data.flags & AF_UNDERGROUND) != (s_prev->data.flags & AF_UNDERGROUND));
+    if (!ret) {
+        /* detect junctions */
+        is_junction = (s && s_prev) ? 0 : -1;
+        for (s_cmp = this_->start; s_cmp; s_cmp = s_cmp->start_next) {
+            if ((s_cmp != s) && (s_cmp != s_prev))
+                is_junction += 1;
+        }
+        for (s_cmp = this_->end; s_cmp; s_cmp = s_cmp->end_next) {
+            if ((s_cmp != s) && (s_cmp != s_prev))
+                is_junction += 1;
+        }
+        ret = (is_junction > 0);
+    }
+    return ret;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
@@ -2465,10 +2495,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Start point for the route path */
     struct route_graph_point * p_start = NULL;
 
-    /* Current and previous segment and segment used for comparison */
+    /* Current and previous segment */
     struct route_graph_segment *s = NULL;
     struct route_graph_segment *s_prev;
-    struct route_graph_segment *s_cmp;
 
     /* Iterator for the route path */
     struct route_graph_point *p_iter;
@@ -2535,12 +2564,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Aligned points */
     struct route_graph_point * p_from;
     struct route_graph_point * p_to;
-
-    /* Whether the current point is a candidate for low-res endpoint matching */
-    int is_candidate;
-
-    /* Whether we are at a junction of 3 or more segments */
-    int is_junction;
 
     dbg(lvl_debug, "*****checkpoint ADD-1");
     if (!data) {
@@ -2674,27 +2697,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
             dbg(lvl_debug, "*****checkpoint ADD-4.2.3");
             while (p_iter) {
-                if (!s_prev || !p_iter->seg)
-                    /* the first and last points are always candidates */
-                    is_candidate = 1;
-                else
-                    /* detect tunnel portals */
-                    is_candidate = ((s->data.flags & AF_UNDERGROUND) != (s_prev->data.flags & AF_UNDERGROUND));
-                if (!is_candidate) {
-                    /* detect junctions */
-                    is_junction = (s && s_prev) ? 0 : -1;
-                    for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
-                        if ((s_cmp != s) && (s_cmp != s_prev))
-                            is_junction += 1;
-                    }
-                    for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
-                        if ((s_cmp != s) && (s_cmp != s_prev))
-                            is_junction += 1;
-                    }
-                    is_candidate = (is_junction > 0);
-                }
-
-                if (is_candidate) {
+                if (route_graph_point_is_endpoint_candidate(p_iter, s_prev)) {
                     score = traffic_location_get_point_match(this_->location, p_iter,
                             this_->location->at ? 1 : (dir > 0) ? 2 : 0,
                             rg, p_start, 0, ms);
@@ -2709,24 +2712,16 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                     if (val < minval) {
                         minval = val;
                         p_to = p_iter;
-                        dbg(lvl_debug, "candidate end point found, point %p, value %d (score %d)",
-                            p_iter, val, score);
+                        dbg(lvl_debug, "candidate end point found, point %p, value %d (score %d)", p_iter, val, score);
                     }
                 }
 
                 if (!s)
                     p_iter = NULL;
                 else  {
-                    if (s->start == p_iter)
-                        p_iter = s->end;
-                    else
-                        p_iter = s->start;
+                    p_iter = (s->start == p_iter) ? s->end : s->start;
                     s_prev = s;
-                    if (p_iter->seg)
-                        s = p_iter->seg;
-                    else {
-                        s = NULL;
-                    }
+                    s = p_iter->seg;
                 }
             }
 
@@ -2765,27 +2760,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 transform_to_geo(projection_mg, &(p_iter->c), &wgs);
                 dbg(lvl_debug, "*****checkpoint ADD-4.2.7, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                     p_iter, p_iter->value, wgs.lat, wgs.lng);
-                if (!s_prev || !p_iter->seg)
-                    /* the first and last points are always candidates */
-                    is_candidate = 1;
-                else
-                    /* detect tunnel portals */
-                    is_candidate = ((s->data.flags & AF_UNDERGROUND) != (s_prev->data.flags & AF_UNDERGROUND));
-                if (!is_candidate) {
-                    /* detect junctions */
-                    is_junction = (s && s_prev) ? 0 : -1;
-                    for (s_cmp = p_iter->start; s_cmp; s_cmp = s_cmp->start_next) {
-                        if ((s_cmp != s) && (s_cmp != s_prev))
-                            is_junction += 1;
-                    }
-                    for (s_cmp = p_iter->end; s_cmp; s_cmp = s_cmp->end_next) {
-                        if ((s_cmp != s) && (s_cmp != s_prev))
-                            is_junction += 1;
-                    }
-                    is_candidate = (is_junction > 0);
-                }
-
-                if (is_candidate) {
+                if (route_graph_point_is_endpoint_candidate(p_iter, s_prev)) {
                     score = traffic_location_get_point_match(this_->location, p_iter,
                             this_->location->at ? 1 : (dir > 0) ? 0 : 2,
                             rg, p_start, 1, ms);
@@ -2809,15 +2784,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 if (!s)
                     p_iter = NULL;
                 else {
-                    if (s->start == p_iter)
-                        p_iter = s->end;
-                    else
-                        p_iter = s->start;
+                    p_iter = (s->start == p_iter) ? s->end : s->start;
                     s_prev = s;
-                    if (p_iter->seg)
-                        s = p_iter->seg;
-                    else
-                        s = NULL;
+                    s = p_iter->seg;
                 }
             }
 
@@ -5080,27 +5049,41 @@ struct map * traffic_get_map(struct traffic *this_) {
     return this_->map;
 }
 
-struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * this_, char * filename) {
+/**
+ * @brief Reads previously stored traffic messages from parsed XML data.
+ *
+ * @param state The XML parser state after parsing the XML data
+ *
+ * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
+ * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
+ */
+static struct traffic_message ** traffic_get_messages_from_parsed_xml(struct xml_state * state) {
     struct traffic_message ** ret = NULL;
-
-    struct xml_state state;
     int i, count;
     GList * msg_iter;
+
+    count = g_list_length(state->messages);
+    if (count)
+        ret = g_new0(struct traffic_message *, count + 1);
+    msg_iter = state->messages;
+    for (i = 0; i < count; i++) {
+        ret[i] = (struct traffic_message *) msg_iter->data;
+        msg_iter = g_list_next(msg_iter);
+    }
+    g_list_free(state->messages);
+    return ret;
+}
+
+struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * this_, char * filename) {
+    struct traffic_message ** ret = NULL;
+    struct xml_state state;
     int read_success = 0;
 
     if (filename) {
         memset(&state, 0, sizeof(struct xml_state));
         read_success = xml_parse_file(filename, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
         if (read_success) {
-            count = g_list_length(state.messages);
-            if (count)
-                ret = g_new0(struct traffic_message *, count + 1);
-            msg_iter = state.messages;
-            for (i = 0; i < count; i++) {
-                ret[i] = (struct traffic_message *) msg_iter->data;
-                msg_iter = g_list_next(msg_iter);
-            }
-            g_list_free(state.messages);
+            ret = traffic_get_messages_from_parsed_xml(&state);
         } else {
             dbg(lvl_error,"could not retrieve stored traffic messages");
         }
@@ -5110,25 +5093,14 @@ struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * th
 
 struct traffic_message ** traffic_get_messages_from_xml_string(struct traffic * this_, char * xml) {
     struct traffic_message ** ret = NULL;
-
     struct xml_state state;
-    int i, count;
-    GList * msg_iter;
     int read_success = 0;
 
     if (xml) {
         memset(&state, 0, sizeof(struct xml_state));
         read_success = xml_parse_text(xml, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
         if (read_success) {
-            count = g_list_length(state.messages);
-            if (count)
-                ret = g_new0(struct traffic_message *, count + 1);
-            msg_iter = state.messages;
-            for (i = 0; i < count; i++) {
-                ret[i] = (struct traffic_message *) msg_iter->data;
-                msg_iter = g_list_next(msg_iter);
-            }
-            g_list_free(state.messages);
+            ret = traffic_get_messages_from_parsed_xml(&state);
         } else {
             dbg(lvl_error,"no data supplied");
         }

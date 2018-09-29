@@ -2479,6 +2479,8 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
 #endif
     int segmented = 0;
     struct roadprofile *roadp;
+    int default_flags_value = AF_ALL;
+    int *default_flags;
     struct route_graph_point *s_pnt,*e_pnt; /* Start and end point */
     struct coord c,l; /* Current and previous point */
     struct attr attr;
@@ -2496,22 +2498,16 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
 
     item_coord_rewind(item);
     if (item_coord_get(item, &l, 1)) {
-        int default_flags_value=AF_ALL;
-        int *default_flags=item_get_default_flags(item->type);
-        if (! default_flags)
-            default_flags=&default_flags_value;
+        if (!(default_flags = item_get_default_flags(item->type)))
+            default_flags = &default_flags_value;
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
-            if (data.flags & AF_SEGMENTED)
-                segmented = 1;
+            segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
 
-
-        if (data.flags & AF_SPEED_LIMIT) {
-            if (item_attr_get(item, attr_maxspeed, &attr))
-                data.maxspeed = attr.u.num;
-        }
+        if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
+            data.maxspeed = attr.u.num;
         if (data.flags & AF_DANGEROUS_GOODS) {
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
