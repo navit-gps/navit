@@ -96,6 +96,8 @@ section_regexps = [
         r'^[cC]hg\s*:\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
         r'^[cC]hanges*\s*:*\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
         r'^[Uu]pdates*\s*:*\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
+        r'^[Rr]ework\s*:*\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
+        r'^[Rr]factor\s*:*\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',
      ]),
     ('Fixed', [
         r'^[fF]ix\s*:*\s*((dev|use?r|pkg|test|doc)\s*:\s*)?([^\n]*)$',

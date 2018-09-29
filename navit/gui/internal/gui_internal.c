@@ -236,7 +236,8 @@ static void gui_internal_button_attr_pressed(struct gui_priv *this, struct widge
 }
 
 struct widget *
-gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on, struct attr *off) {
+gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct attr *on,
+                                   struct attr *off) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     if (!on && !off)
@@ -258,7 +259,8 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, const char *text, enum
 }
 
 struct widget *
-gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt) {
+gui_internal_button_map_attr_new(struct gui_priv *this, const char *text, enum flags flags, struct map *map,
+                                 struct attr *on, struct attr *off, int deflt) {
     struct graphics_image *image=NULL;
     struct widget *ret;
     image=image_new_xs(this, "gui_inactive");
@@ -526,7 +528,9 @@ void gui_internal_apply_config(struct gui_priv *this) {
     if(this->config.spacing == -1 ) {
         this->spacing = current_config->spacing;
     } else {
-        this->spacing = current_config->spacing;
+        this->spacing = this->config.spacing;
+        dbg(lvl_info, "Overriding default spacing %d with value %d provided in config file", current_config->spacing,
+            this->config.spacing);
     }
     if (!this->fonts[0]) {
         int i,sizes[]= {100,66,50};
@@ -1182,7 +1186,8 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * 2048: "Show search results on the map"
  * TODO define constants for these values
  */
-void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, const char *name, int flags) {
+void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in,
+                                  struct widget *wm, const char *name, int flags) {
     struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
     struct coord_geo g;
     struct pcoord pc;
@@ -2785,7 +2790,8 @@ static int gui_internal_keynav_find_prev(struct widget *wi, struct widget *curre
     return NO_RESULT_YET;
 }
 
-static void gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result) {
+static void gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance,
+        struct widget **result) {
     GList *l=wi->children;
     // Skip hidden elements
     if (wi->p.x==0 && wi->p.y==0 && wi->w==0 && wi->h==0)
@@ -3292,7 +3298,8 @@ void gui_internal_populate_route_table(struct gui_priv * this, struct navit * na
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) {
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs,
+        struct gui *gui) {
     struct color color_white= {0xffff,0xffff,0xffff,0xffff};
     struct color color_black= {0x0,0x0,0x0,0xffff};
     struct color back2_color= {0x4141,0x4141,0x4141,0xffff};

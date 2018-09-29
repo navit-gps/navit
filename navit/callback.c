@@ -37,15 +37,13 @@ struct callback_list {
     GList *list;
 };
 
-struct callback_list *
-callback_list_new(void) {
+struct callback_list * callback_list_new(void) {
     struct callback_list *ret=g_new0(struct callback_list, 1);
 
     return ret;
 }
 
-struct callback *
-callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p) {
+struct callback * callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p) {
     struct callback *ret;
     int i;
 
@@ -59,8 +57,7 @@ callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p)
     return ret;
 }
 
-struct callback *
-callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) {
+struct callback * callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -71,13 +68,11 @@ callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) 
     return callback_new_attr(func, type, count, p);
 }
 
-struct callback *
-callback_new(void (*func)(void), int pcount, void **p) {
+struct callback * callback_new(void (*func)(void), int pcount, void **p) {
     return callback_new_attr(func, attr_none, pcount, p);
 }
 
-struct callback *
-callback_new_args(void (*func)(void), int count, ...) {
+struct callback * callback_new_args(void (*func)(void), int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -103,8 +98,7 @@ void callback_list_add(struct callback_list *l, struct callback *cb) {
 }
 
 
-struct callback *
-callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p) {
+struct callback * callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p) {
     struct callback *ret;
 
     ret=callback_new(func, pcount, p);

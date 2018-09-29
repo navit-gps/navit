@@ -107,14 +107,15 @@ public class NavitAddressSearchActivity extends Activity {
         // reinvent the wheel here to show an image in android native interface.
         int[] flag_icon_sizes = {24,32,48,64,96};
         int exact_size, nearest_size;
-        exact_size = (int)(Navit.metrics.density*24.0 -.5);
+        exact_size = (int)(Navit.metrics.density * 24.0 - .5);
         nearest_size = flag_icon_sizes[0];
-        for(int size: flag_icon_sizes) {
+        for (int size: flag_icon_sizes) {
             nearest_size = size;
-            if(exact_size <= size)
+            if (exact_size <= size) {
                 break;
+            }
         }
-        mCountryButton.setImageResource(getDrawableID("country_" + mCountry+"_"+nearest_size+"_"+nearest_size));
+        mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_" + nearest_size + "_" + nearest_size));
     }
 
 
@@ -123,7 +124,7 @@ public class NavitAddressSearchActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         Bundle extras = getIntent().getExtras();
-        if ( extras != null ) {
+        if (extras != null) {
             String search_string = extras.getString(("search_string"));
             if (search_string != null) {
                 mPartialSearch = true;
@@ -206,7 +207,7 @@ public class NavitAddressSearchActivity extends Activity {
                 strAddresses[addrIndex] = addresses.get(addrIndex).addr;
             }
             ArrayAdapter<String> addressList =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strAddresses);
+                    new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strAddresses);
             lastAddresses.setAdapter(addressList);
             lastAddresses.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -271,7 +272,7 @@ public class NavitAddressSearchActivity extends Activity {
             }
         });
 
-        AlertDialog d=mapModeChooser.create();
+        AlertDialog d = mapModeChooser.create();
         d.getListView().setFastScrollEnabled(true);
         d.show();
     }
@@ -283,21 +284,21 @@ public class NavitAddressSearchActivity extends Activity {
         Log.e(TAG, "(" + String.valueOf(latitude) + ", " + String.valueOf(longitude) + ") " + address);
 
         switch (type) {
-        case 0:
-            search_results_towns++;
-            break;
-        case 1:
-            search_results_streets++;
-            break;
-        case 2:
-            search_results_streets_hn++;
-            break;
+            case 0:
+                search_results_towns++;
+                break;
+            case 1:
+                search_results_streets++;
+                break;
+            case 2:
+                search_results_streets_hn++;
+                break;
 
         }
-        search_results_wait.setMessage(Navit.getInstance().getTstring(R.string.address_search_towns) + ":" +
-                                       search_results_towns + " "
-                                       + Navit.getInstance().getTstring(R.string.address_search_streets) + ":" + search_results_streets + "/"
-                                       + search_results_streets_hn);
+        search_results_wait.setMessage(Navit.getInstance().getTstring(R.string.address_search_towns) + ":"
+                + search_results_towns + " "
+                + Navit.getInstance().getTstring(R.string.address_search_streets) + ":" + search_results_streets + "/"
+                + search_results_streets_hn);
 
         search_results_wait.setProgress(Addresses_found.size() % (ADDRESS_RESULT_PROGRESS_MAX + 1));
 
@@ -306,15 +307,16 @@ public class NavitAddressSearchActivity extends Activity {
 
     public void finishAddressSearch() {
         if (Addresses_found.isEmpty()) {
-            Toast.makeText( getApplicationContext(),getString(R.string.address_search_not_found) + "\n" + mAddressString,
-                            Toast.LENGTH_LONG).show(); //TRANS
+            // TRANS
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.address_search_not_found) + "\n" + mAddressString, Toast.LENGTH_LONG).show();
             setResult(Activity.RESULT_CANCELED);
             finish();
         }
         ListView addressesFound = new ListView(this);
         addressesFound.setFastScrollEnabled(true);
         ArrayAdapter<String> addressList =
-            new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         addresses_shown = new ArrayList<NavitAddress>();
 
@@ -346,6 +348,7 @@ public class NavitAddressSearchActivity extends Activity {
     }
 
     public native long CallbackStartAddressSearch(int partial_match, String country, String s);
+
     public native void CallbackCancelAddressSearch(long handle);
 
     @Override
