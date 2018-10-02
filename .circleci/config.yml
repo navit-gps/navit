@@ -225,7 +225,7 @@ jobs:
   build_sailfish:
     <<: *defaults
     docker:
-      - image: coderus/sailfishos-platform-sdk
+      - image: hoehnp/sailfishos-platform-sdk
     steps:
       - checkout
       - run:
@@ -237,7 +237,7 @@ jobs:
           command: |
             mkdir $HOME/rpmbuild
       - run:
-          name: Build for Tomtom (minimal)
+          name: Build for Sailfish_OS
           command: |
             export VERSION_ID=2.2.1.18 && bash contrib/sailfish/build_on_sailfish_sdk.sh
       - store_artifacts:
