@@ -281,6 +281,9 @@ workflows:
       - build_sailfish:
           requires:
             - sanity_check
+      - build_tomtom_plugin:
+          requires:
+            - sanity_check
       - run_doxygen:
           requires:
             - build_linux
@@ -300,8 +303,8 @@ workflows:
             - build_win32
             - build_wince
             - build_tomtom_minimal
-            - build_tomtom_plugin
             - build_sailfish
+            - build_tomtom_plugin
           filters:
             branches:
               only: /^trunk$/
