@@ -222,6 +222,26 @@ jobs:
           name: Update Navit-Download-Center
           command: |
             bash scripts/update_download_center.sh
+  build_sailfish:
+    <<: *defaults
+    docker:
+      - image: coderus/sailfishos-platform-sdk
+    steps:
+      - checkout
+      - run:
+          name: Correct path in build script
+          command: |
+            sed -i 's/src1/nemo/g' contrib/sailfish/build_on_sailfish_sdk.sh
+      - run:
+          name: Make build directory
+          command: |
+            mkdir $HOME/rpmbuild
+      - run:
+          name: Build for Tomtom (minimal)
+          command: |
+            export VERSION_ID=2.2.1.18 && bash contrib/sailfish/build_on_sailfish_sdk.sh
+      - store_artifacts:
+          path: /output
   merge_trunk_in_master:
     <<: *defaults
     steps:
@@ -258,7 +278,7 @@ workflows:
       - build_tomtom_minimal:
           requires:
             - sanity_check
-      - build_tomtom_plugin:
+      - build_sailfish:
           requires:
             - sanity_check
       - run_doxygen:
@@ -269,6 +289,7 @@ workflows:
             - build_wince
             - build_tomtom_minimal
             - build_tomtom_plugin
+            - build_sailfish
           filters:
             branches:
               only: /^trunk$/
@@ -280,6 +301,7 @@ workflows:
             - build_wince
             - build_tomtom_minimal
             - build_tomtom_plugin
+            - build_sailfish
           filters:
             branches:
               only: /^trunk$/
