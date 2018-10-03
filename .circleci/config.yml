@@ -267,21 +267,21 @@ workflows:
   build_all:
     jobs:
       - sanity_check
-#      - build_linux:
-#          requires:
-#            - sanity_check
-#      - build_android:
-#          requires:
-#            - sanity_check
-#      - build_win32:
-#          requires:
-#            - sanity_check
-#      - build_wince:
-#          requires:
-#            - sanity_check
-#      - build_tomtom_minimal:
-#          requires:
-#            - sanity_check
+      - build_linux:
+          requires:
+            - sanity_check
+      - build_android:
+          requires:
+            - sanity_check
+      - build_win32:
+          requires:
+            - sanity_check
+      - build_wince:
+          requires:
+            - sanity_check
+      - build_tomtom_minimal:
+          requires:
+            - sanity_check
       - build_sailfish:
           requires:
             - sanity_check
