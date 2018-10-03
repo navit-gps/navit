@@ -243,7 +243,7 @@ jobs:
       - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && bash contrib/sailfish/build_on_sailfish_sdk.sh
+            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh
       - store_artifacts:
           path: /output
   merge_trunk_in_master:
