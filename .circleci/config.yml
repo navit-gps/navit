@@ -237,9 +237,9 @@ jobs:
           command: |
             mkdir $HOME/rpmbuild
       - run:
-          name: check build script
+          name: Correct zypper command for use in docker container
           command: |
-            cat contrib/sailfish/build_on_sailfish_sdk.sh
+            sed '/zypper/ s/$/ --non-interactive/' filename
       - run:
           name: Build for Sailfish_OS
           command: |
