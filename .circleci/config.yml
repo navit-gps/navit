@@ -239,7 +239,7 @@ jobs:
       - run:
           name: Correct zypper command for use in docker container
           command: |
-            sed -i '/zypper/ s/$/ --non-interactive/' contrib/sailfish/build_on_sailfish_sdk.sh
+            sed -i 's/zypper in / zypper --non-interactive in /' contrib/sailfish/build_on_sailfish_sdk.sh
       - run:
           name: Build for Sailfish_OS
           command: |
