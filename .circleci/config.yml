@@ -236,7 +236,7 @@ jobs:
           name: Make build directory
           command: |
             mkdir $HOME/rpmbuild
-      -run:
+      - run:
           name: check build script
           command: |
             cat contrib/sailfish/build_on_sailfish_sdk.sh
