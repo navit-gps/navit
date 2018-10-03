@@ -88,7 +88,7 @@ char *alloca ();
 __libc_lock_define_initialized (static, lock);
 #endif
 
-#ifdef _WIN32
+#ifdef __MINGW32__
 
 # define HAVE_MEMPCPY   1
 
