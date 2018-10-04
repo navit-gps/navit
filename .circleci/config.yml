@@ -239,11 +239,11 @@ jobs:
       - run:
           name: Correct zypper command for use in docker container
           command: |
-            sed -i 's/zypper in / zypper --non-interactive in /' contrib/sailfish/build_on_sailfish_sdk.sh
+            sed -i 's/zypper in /zypper --non-interactive in /g' contrib/sailfish/build_on_sailfish_sdk.sh
       - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh && mv /home/nemo/rpmbuild/RPMS/armv
+            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh 
       - store_artifacts:
           path: ../rpmbuild/RPMS/armv7hl
       - store_artifacts:
