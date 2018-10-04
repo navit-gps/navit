@@ -133,6 +133,10 @@ extern int errno;
 # define offsetof(type,ident) ((size_t)&(((type*)0)->ident))
 #endif
 
+#ifdef __MINGW32__
+# define HAVE_MEMPCPY   1
+#endif
+
 /* @@ end of prolog @@ */
 
 #ifdef _LIBC

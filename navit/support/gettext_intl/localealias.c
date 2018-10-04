@@ -89,9 +89,7 @@ __libc_lock_define_initialized (static, lock);
 #endif
 
 #ifdef __MINGW32__
-
 # define HAVE_MEMPCPY   1
-
 #endif
 
 #ifndef internal_function
