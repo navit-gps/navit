@@ -235,7 +235,7 @@ jobs:
       - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && pwd && cd contrib/sailfish/ \
+            export VERSION_ID=2.2.1.18 && ls && echo ${VERSION_ID} && cd contrib/sailfish/ \
             && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
       - store_artifacts:
           path: /output
