@@ -235,9 +235,8 @@ jobs:
       - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ \
-            && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //") \
-            && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/nemo/rpmbuild" --define "navit_source $(pwd)/../.." -bb navit-sailfish.spec
+            export VERSION_ID=2.2.1.18 && pwd && cd contrib/sailfish/ \
+            && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
       - store_artifacts:
           path: /output
   merge_trunk_in_master:
