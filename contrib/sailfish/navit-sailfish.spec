@@ -130,12 +130,9 @@ fi
 
 
 %changelog
-<<<<<<< HEAD
-=======
 *Mon Oct 01 2018 metalstrolch 0.5.3-1
 - fix rpm updating from 0.5.1 by adding %pre section
 
->>>>>>> 6389ce56cb6681695734d02b7223ad35b69241e2
 *Fri Aug 31 2018 metalstrolch 0.5.3-0
 
 Release 0.5.2 was missing the version number update in the CMakefile. This release fixes this.
