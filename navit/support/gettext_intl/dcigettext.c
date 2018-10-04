@@ -137,6 +137,10 @@ extern int errno;
 # define HAVE_MEMPCPY   1
 #endif
 
+#if defined __CEGCC__
+# warning Patrick found the problem.
+#endif
+
 /* @@ end of prolog @@ */
 
 #ifdef _LIBC
