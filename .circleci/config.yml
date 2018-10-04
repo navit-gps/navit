@@ -243,9 +243,11 @@ jobs:
       - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh
+            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh && mv /home/nemo/rpmbuild/RPMS/armv
       - store_artifacts:
-          path: $HOME/rpmbuild/RPMS/armv7hl
+          path: ../rpmbuild/RPMS/armv7hl
+      - store_artifacts:
+          path: ../rpmbuild/RPMS/i586
   merge_trunk_in_master:
     <<: *defaults
     steps:
