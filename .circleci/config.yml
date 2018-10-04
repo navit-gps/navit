@@ -229,21 +229,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Correct path in build script
-          command: |
-            sed -i 's/src1/nemo/g' contrib/sailfish/build_on_sailfish_sdk.sh
-      - run:
           name: Make build directory
           command: |
             mkdir $HOME/rpmbuild
       - run:
-          name: Correct zypper command for use in docker container
-          command: |
-            sed -i 's/zypper in /zypper --non-interactive in /g' contrib/sailfish/build_on_sailfish_sdk.sh
-      - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh
+            export VERSION_ID=2.2.1.18 && cd scripts/ && bash build_sailfish.sh
       - store_artifacts:
           path: ../rpmbuild/RPMS/armv7hl
       - store_artifacts:
