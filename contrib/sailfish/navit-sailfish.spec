@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.3
-Release: 0
+Release: 1
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -101,6 +101,11 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 #       -DMAN_DIR:PATH=share/harbour-navit/man1
 
+%pre
+if [ -d %{_datadir}/harbour-navit/espeak-data ]; then
+    rm -rf %{_datadir}/harbour-navit/espeak-data
+fi
+
 %install
 %make_install
 #copy in sailfish config
@@ -125,6 +130,12 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+<<<<<<< HEAD
+=======
+*Mon Oct 01 2018 metalstrolch 0.5.3-1
+- fix rpm updating from 0.5.1 by adding %pre section
+
+>>>>>>> 6389ce56cb6681695734d02b7223ad35b69241e2
 *Fri Aug 31 2018 metalstrolch 0.5.3-0
 
 Release 0.5.2 was missing the version number update in the CMakefile. This release fixes this.
