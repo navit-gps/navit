@@ -133,7 +133,7 @@ extern int errno;
 # define offsetof(type,ident) ((size_t)&(((type*)0)->ident))
 #endif
 
-#if defined __MINGW32__ && !defined __CEGCC__
+#if defined __MINGW32__ 
 # define HAVE_MEMPCPY   1
 #endif
 
@@ -162,7 +162,7 @@ char *getcwd ();
 # ifndef HAVE_STPCPY
 static char *stpcpy (char *dest, const char *src);
 # endif
-# ifndef HAVE_MEMPCPY
+# if !defined(HAVE_MEMPCPY) || defined(__CEGCC__)
 static void *mempcpy (void *dest, const void *src, size_t n);
 # endif
 #endif
@@ -1179,7 +1179,7 @@ stpcpy (char *dest, const char *src)
 }
 #endif
 
-#if !_LIBC && !HAVE_MEMPCPY
+#if !_LIBC && (!HAVE_MEMPCPY || defined(__CEGCC__))
 static void *
 mempcpy (void *dest, const void *src, size_t n)
 {
