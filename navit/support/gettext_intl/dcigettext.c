@@ -133,7 +133,7 @@ extern int errno;
 # define offsetof(type,ident) ((size_t)&(((type*)0)->ident))
 #endif
 
-#ifdef __MINGW32__
+#if defined __MINGW32__ && !defined __CEGCC__
 # define HAVE_MEMPCPY   1
 #endif
 
