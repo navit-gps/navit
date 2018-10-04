@@ -88,7 +88,7 @@ char *alloca ();
 __libc_lock_define_initialized (static, lock);
 #endif
 
-#if defined __MINGW32__ && !defined __CEGCC__
+#if defined(__MINGW32__) && !defined(__MINGW32CE__)
 # define HAVE_MEMPCPY   1
 #endif
 

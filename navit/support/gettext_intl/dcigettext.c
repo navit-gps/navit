@@ -133,13 +133,10 @@ extern int errno;
 # define offsetof(type,ident) ((size_t)&(((type*)0)->ident))
 #endif
 
-#if defined __MINGW32__ 
+#if defined(__MINGW32__) && !defined(__MINGW32CE__)
 # define HAVE_MEMPCPY   1
 #endif
 
-#if defined __CEGCC__
-# warning Patrick found the problem.
-#endif
 
 /* @@ end of prolog @@ */
 
@@ -166,7 +163,7 @@ char *getcwd ();
 # ifndef HAVE_STPCPY
 static char *stpcpy (char *dest, const char *src);
 # endif
-# if !defined(HAVE_MEMPCPY) || defined(__CEGCC__)
+# if !defined(HAVE_MEMPCPY) 
 static void *mempcpy (void *dest, const void *src, size_t n);
 # endif
 #endif
@@ -1183,7 +1180,7 @@ stpcpy (char *dest, const char *src)
 }
 #endif
 
-#if !_LIBC && (!HAVE_MEMPCPY || defined(__CEGCC__))
+#if !_LIBC && !HAVE_MEMPCPY
 static void *
 mempcpy (void *dest, const void *src, size_t n)
 {
