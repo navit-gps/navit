@@ -229,21 +229,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Correct path in build script
-          command: |
-            sed -i 's/src1/nemo/g' contrib/sailfish/build_on_sailfish_sdk.sh
-      - run:
           name: Make build directory
           command: |
             mkdir $HOME/rpmbuild
       - run:
-          name: Correct zypper command for use in docker container
-          command: |
-            sed -i 's/zypper in / zypper --non-interactive in /' contrib/sailfish/build_on_sailfish_sdk.sh
-      - run:
           name: Build for Sailfish_OS
           command: |
-            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh
+            export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ \ 
+            && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //") \
+            && sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/nemo/rpmbuild" --define "navit_source $(pwd)/../.." -bb navit-sailfish.spec
       - store_artifacts:
           path: /output
   merge_trunk_in_master:
