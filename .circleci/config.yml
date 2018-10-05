@@ -234,6 +234,7 @@ jobs:
             mkdir $HOME/rpmbuild
       - run:
           name: Build for Sailfish_OS
+          shell: /bin/bash
           command: |
              cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash -x build_sailfish_ci.sh
       - store_artifacts:
