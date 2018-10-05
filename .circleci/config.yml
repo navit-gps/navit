@@ -237,7 +237,7 @@ jobs:
           shell: /bin/bash
           no_output_timeout: 2h
           command: |
-             evn && cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash -x build_sailfish_ci.sh
+             env && cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash -x build_sailfish_ci.sh
       - store_artifacts:
           path: /home/nemo/rpmbuild/RPMS/armv7hl/
       - store_artifacts:
