@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/sh
 #run on the Sailfish OS sdk docker container. Check that rpmbuild directory exists. Remember to export VERSION_ID
 # please don't mess around with those lines without testing,
 # even if some fancy tool tells you to do so to save some pipes.
