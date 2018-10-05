@@ -238,9 +238,9 @@ jobs:
           command: |
              cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash -x build_sailfish_ci.sh
       - store_artifacts:
-          path: ../../../rpmbuild/RPMS/armv7hl
+          path: /home/nemo/rpmbuild/RPMS/armv7hl/
       - store_artifacts:
-          path: ../../../rpmbuild/RPMS/i586
+          path: /home/nemo/rpmbuild/RPMS/i586/
   merge_trunk_in_master:
     <<: *defaults
     steps:
