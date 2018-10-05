@@ -240,6 +240,32 @@ jobs:
           path: ../../../rpmbuild/RPMS/armv7hl
       - store_artifacts:
           path: ../../../rpmbuild/RPMS/i586
+  build_sailfish_patched:
+    <<: *defaults
+    docker:
+      - image: hoehnp/sailfishos-platform-sdk:2.2.1.18
+    steps:
+      - checkout
+      - run:
+          name: Correct path in build script
+          command: |
+            sed -i 's/src1/nemo/g' contrib/sailfish/build_on_sailfish_sdk.sh
+      - run:
+          name: Make build directory
+          command: |
+            mkdir $HOME/rpmbuild
+      - run:
+          name: Correct zypper command for use in docker container
+          command: |
+            sed -i 's/zypper in /zypper --non-interactive in /g' contrib/sailfish/build_on_sailfish_sdk.sh
+      - run:
+          name: Build for Sailfish_OS
+          command: |
+             export VERSION_ID=2.2.1.18 && cd contrib/sailfish/ && bash build_on_sailfish_sdk.sh
+      - store_artifacts:
+          path: ../../../rpmbuild/RPMS/armv7hl
+      - store_artifacts:
+          path: ../../../rpmbuild/RPMS/i586
   merge_trunk_in_master:
     <<: *defaults
     steps:
