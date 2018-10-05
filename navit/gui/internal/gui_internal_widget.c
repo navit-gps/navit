@@ -12,6 +12,7 @@
 #include "gui_internal_menu.h"
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
+void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew);
 
 static void gui_internal_background_render(struct gui_priv *this, struct widget *w) {
     struct point pnt=w->p;
@@ -131,6 +132,15 @@ static void gui_internal_label_render(struct gui_priv *this, struct widget *w) {
             graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], text, &pnt, 0x10000, 0x0);
         }
     }
+}
+
+/**
+ * @brief Resize a label.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
+static void gui_internal_label_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
 }
 
 /**
@@ -324,7 +334,6 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
     if (w->scroll_buttons)
         gui_internal_widget_render(this, w->scroll_buttons->button_box);
 }
-
 
 /**
  * @brief Computes the size and location for the widget.
@@ -599,6 +608,21 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     }
 }
 
+static void gui_internal_box_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
+    GList *l;
+
+    gui_internal_widget_reset_pack(this, w);
+    w->w = wnew;
+    w->h = hnew;
+    if (w->on_resize)
+        w->on_resize(this, w, NULL, wnew, hnew);
+
+    gui_internal_box_pack(this, w);
+    if (w->on_resize)
+        w->on_resize(this, w, NULL, wnew, hnew);
+    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
+}
+
 void gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     GList *l;
@@ -733,6 +757,31 @@ void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
         break;
     case widget_table:
         gui_internal_table_render(this,w);
+        break;
+    default:
+        break;
+    }
+}
+
+void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
+    if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
+        return;
+
+    switch (w->type) {
+    case widget_box:
+        dbg(lvl_error, "Resizing box at %p to w=%d, h=%d", w, wnew, hnew);
+        gui_internal_box_resize(this, w, wnew, hnew);
+        break;
+    case widget_label:
+        dbg(lvl_error, "Resizing label at %p to w=%d, h=%d (text=\"%s\")", w, wnew, hnew, w->text);
+        gui_internal_label_resize(this, w, wnew, hnew);
+        break;
+    case widget_image:
+        dbg(lvl_error, "resize not yet implemented for widget_image");
+        break;
+    case widget_table:
+        dbg(lvl_error, "Not resizing table at %p to w=%d, h=%d", w, wnew, hnew);
+        //gui_internal_table_resize(this, w, wnew, hnew);
         break;
     default:
         break;
@@ -1306,6 +1355,22 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
      */
     g_list_foreach(column_desc,(GFunc)g_free,NULL);
     g_list_free(column_desc);
+}
+
+/**
+ * @brief Resize a table widget.
+ *
+ * @param this The graphics context
+ * @param w The table widget to render.
+ */
+void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew) {
+
+
+    w->w = wnew;
+    w->h = hnew;
+
+    gui_internal_widget_reset_pack(this, w);
+    gui_internal_table_pack(this, w);
 }
 
 /**

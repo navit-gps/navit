@@ -474,7 +474,7 @@ gui_internal_time_help(struct gui_priv *this) {
 /**
  * Applies the configuration values to this based on the settings
  * specified in the configuration file (this->config) and
- * the most approriate default profile based on screen resolution.
+ * the most appropriate default profile based on screen resolution.
  *
  * This function should be run after this->root is setup and could
  * be rerun after the window is resized.
@@ -2701,7 +2701,18 @@ static void gui_internal_resize(void *data, int w, int h) {
     navit_handle_resize(this->nav, w, h);
     if (this->root.children) {
         if (changed) {
-            gui_internal_html_main_menu(this);
+			char *href=g_strdup(this->href);
+			dbg(lvl_error,"href=%s",href);
+			/*if (*href != '\0') {
+			    gui_internal_prune_menu(this, NULL);
+			    gui_internal_html_load_href(this, href, 0);
+			}
+			else*/ {
+			    dbg(lvl_error, "Called resize with w=%d, h=%d", w, h)
+			    gui_internal_menu_resize(this, w, h); //Lionel!!!
+			    gui_internal_menu_render(this);
+			}
+			g_free(href);
         } else {
             gui_internal_menu_render(this);
         }

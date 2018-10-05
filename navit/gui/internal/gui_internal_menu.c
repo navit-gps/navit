@@ -83,6 +83,30 @@ void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
     }
 }
 
+void gui_internal_menu_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
+    w->w=neww;
+    w->h=newh;
+}
+
+void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
+    struct padding *padding = NULL;
+
+    if (this->gra) {
+        padding = graphics_get_data(this->gra, "padding");
+    } else
+        dbg(lvl_warning, "cannot get padding: this->gra is NULL");
+    if (padding) {
+        w->p.x = padding->left;
+        w->p.y = padding->top;
+        w->w = neww - padding->left - padding->right;
+        w->h = newh - padding->top - padding->bottom;
+    } else {
+        w->p.x = 0;
+        w->p.y = 0;
+        w->w = neww;
+        w->h = newh;
+    }
+}
 
 /**
  * @brief Initializes a GUI screen
@@ -110,22 +134,12 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
 
     gui_internal_search_idle_end(this);
     topbox=gui_internal_box_new_with_label(this, 0, label);
-    topbox->w=this->root.w;
-    topbox->h=this->root.h;
+    topbox->on_resize=gui_internal_menu_topbox_resize;
     gui_internal_widget_append(&this->root, topbox);
     menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
-
-    if (padding) {
-        menu->p.x = padding->left;
-        menu->p.y = padding->top;
-        menu->w = topbox->w - padding->left - padding->right;
-        menu->h = topbox->h - padding->top - padding->bottom;
-    } else {
-        menu->p.x = 0;
-        menu->p.y = 0;
-        menu->w = topbox->w;
-        menu->h = topbox->h;
-    }
+    menu->on_resize=gui_internal_menu_menu_resize;
+    topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
+    menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
     menu->background=this->background;
     gui_internal_apply_config(this);
     topbox->menu_data=g_new0(struct menu_data, 1);
@@ -156,17 +170,8 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
     }
     if (this->flags & 192) {
         menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
-        if (padding) {
-            menu->p.x = padding->left;
-            menu->p.y = padding->top;
-            menu->w = topbox->w - padding->left - padding->right;
-            menu->h = topbox->h - padding->top - padding->bottom;
-        } else {
-            menu->p.x = 0;
-            menu->p.y = 0;
-            menu->w = topbox->w;
-            menu->h = topbox->h;
-        }
+        menu->on_resize=gui_internal_menu_menu_resize;
+        menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
         w1=gui_internal_time_help(this);
         gui_internal_widget_append(menu, w1);
         w1=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
@@ -176,19 +181,10 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
     }
     gui_internal_widget_pack(this, topbox);
     gui_internal_widget_reset_pack(this, topbox);
-    topbox->w=this->root.w;
-    topbox->h=this->root.h;
-    if (padding) {
-        menu->p.x = padding->left;
-        menu->p.y = padding->top;
-        menu->w = topbox->w - padding->left - padding->right;
-        menu->h = topbox->h - padding->top - padding->bottom;
-    } else {
-        menu->p.x = 0;
-        menu->p.y = 0;
-        menu->w = topbox->w;
-        menu->h = topbox->h;
-    }
+    if (topbox->on_resize)
+        topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
+    if (menu->on_resize)
+        menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
     return w;
 }
 
@@ -211,6 +207,14 @@ void gui_internal_menu_reset_pack(struct gui_priv *this) {
     gui_internal_widget_reset_pack(this, top_box);
 }
 
+/**
+ * @brief Renders a menu GUI on the display
+ *
+ * @note The whole sequence of menus is kept in this->root.children (when going back one page, we just move to the previous child in the list)
+ * Thus, only the last child of this->root.children is actually displayed
+ *
+ * @param this The internal GUI context
+ */
 void gui_internal_menu_render(struct gui_priv *this) {
     GList *l;
     struct widget *menu;
@@ -220,6 +224,31 @@ void gui_internal_menu_render(struct gui_priv *this) {
     gui_internal_say(this, menu, 0);
     gui_internal_widget_pack(this, menu);
     gui_internal_widget_render(this, menu);
+}
+
+void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
+    GList *l;
+    struct widget *menu;
+    struct widget *topbox;
+    struct widget *wb;
+
+    gui_internal_apply_config(this);
+    l=g_list_last(this->root.children);
+    menu=l->data;
+    /* Search for the topbox widget */
+    l=g_list_first(menu->children);
+    topbox=l->data;
+    if (menu->on_resize)
+        menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
+    if (topbox->on_resize)
+        topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
+    l=topbox->children;
+    while (l) {
+        wb=l->data;
+        if (wb->on_resize)
+            wb->on_resize(this, wb, NULL, topbox->w, topbox->h);
+        l=g_list_next(l);
+    }
 }
 
 struct widget *

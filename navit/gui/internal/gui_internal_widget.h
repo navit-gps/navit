@@ -18,10 +18,15 @@ struct widget {
 	struct graphics_image *img;
 	 /**
 	  * A function to be invoked on actions.
-	  * @li widget The widget that is receiving the button press.
+	  * @param widget The widget that is receiving the button press.
 	  *
 	  */
 	void (*func)(struct gui_priv *priv, struct widget *widget, void *data);
+	/**
+	 * A function to be invoked on resize or move
+	 * @param widged The widget that is resized
+	 */
+	void (*on_resize)(struct gui_priv *priv, struct widget *widget, void *data, int neww, int newh);
 	enum gui_internal_reason reason;
 	int datai;
 	void *data;
@@ -174,6 +179,7 @@ void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *chi
 void gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
+void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew);
 void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 struct widget *gui_internal_button_label(struct gui_priv *this, const char *label, int mode);
 struct widget *gui_internal_widget_table_new(struct gui_priv *this, enum flags flags, int buttons);

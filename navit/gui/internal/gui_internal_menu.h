@@ -8,5 +8,6 @@ struct widget *gui_internal_menu(struct gui_priv *this, const char *label);
 struct menu_data *gui_internal_menu_data(struct gui_priv *this);
 void gui_internal_menu_reset_pack(struct gui_priv *this);
 void gui_internal_menu_render(struct gui_priv *this);
+void gui_internal_menu_resize(struct gui_priv *this, int w, int h);
 struct widget *gui_internal_top_bar(struct gui_priv *this);
 /* end of prototypes */
