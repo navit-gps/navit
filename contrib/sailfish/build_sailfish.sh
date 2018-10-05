@@ -1,4 +1,5 @@
 #! /bin/bash
+#run on the Sailfish OS sdk docker container. Check that rpmbuild directory exists. Remember to export VERSION_ID
 
 if [ -z ${VERSION_ID+x} ]; then echo "VERSION_ID not set. Forgot to export VERSION_ID?"; exit 1; fi
 

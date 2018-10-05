@@ -235,7 +235,7 @@ jobs:
       - run:
           name: Build for Sailfish_OS
           command: |
-             cd scripts/ && export VERSION_ID=2.2.1.18 && ./build_sailfish.sh
+             cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash build_sailfish.sh
       - store_artifacts:
           path: ../rpmbuild/RPMS/armv7hl
       - store_artifacts:
