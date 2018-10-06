@@ -4065,7 +4065,7 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
 
     if (!g_ascii_strcasecmp((char *) tag_name, "supplementary_info")) {
         state->si = g_list_append(state->si, traffic_suppl_info_new(
-                                      si_class_new(traffic_xml_get_attr("si_class", el->names, el->values)),
+                                      si_class_new(traffic_xml_get_attr("class", el->names, el->values)),
                                       si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
                                       /* TODO quantifier */
                                       NULL));
