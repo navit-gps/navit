@@ -3306,6 +3306,9 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
                 /* Contraflow: assume 80, unless explicitly specified */
                 speed = 80;
                 break;
+                /* restriction_speed_limit is not in the list: either it comes with a maxspeed attribute, which gets
+                 * evaluated regardless of the event it comes with, and if it doesn’t come with one, it carries no
+                 * useful information. */
             default:
                 break;
             }
