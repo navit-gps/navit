@@ -131,6 +131,7 @@ enum event_type {
 	                                                    *   otherwise indicated in supplementary information) */
 	event_restriction_carriageway_closed,              /*!< Carriageway closed (main carriageway, unless
 	                                                    *   otherwise indicated in supplementary information) */
+	event_restriction_contraflow,                      /*!< Contraflow */
 	event_restriction_closed,                          /*!< Closed until `q_time` (refers to the entire
 	                                                    *   road; separate codes exist for closures of
 	                                                    *   individual lanes or carriageways) */
@@ -141,10 +142,15 @@ enum event_type {
 	event_restriction_exit_blocked,                    /*!< `q_int` th exit slip road blocked */
 	event_restriction_exit_reopened,                   /*!< Exit reopened */
 	event_restriction_intermittent_closures,           /*!< Intermittent short term closures */
+	event_restriction_lane_blocked,                    /*!< `q:int` lanes blocked */
+	event_restriction_lane_closed,                     /*!< `q:int` lanes closed */
 	event_restriction_open,                            /*!< Open */
 	event_restriction_ramp_blocked,                    /*!< Ramps blocked */
 	event_restriction_ramp_closed,                     /*!< Ramps closed */
 	event_restriction_ramp_reopened,                   /*!< Ramps reopened */
+	event_restriction_reduced_lanes,                   /*!< Carriageway reduced from `q_ints[1]` lanes to `q_int[0]`
+                                                        *   lanes (quantifiers are currently not implemented for this
+                                                        *   event type) */
 	event_restriction_reopened,                        /*!< Reopened */
 	event_restriction_road_cleared,                    /*!< Road cleared */
 	event_restriction_single_alternate_line_traffic,   /*!< Single alternate line traffic (because the

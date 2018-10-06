@@ -3294,6 +3294,18 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
                 if (speed_factor > 30)
                     speed_factor = 30;
                 break;
+            case event_restriction_lane_blocked:
+            case event_restriction_lane_closed:
+            case event_restriction_reduced_lanes:
+                /* Assume speed is reduced proportionally to number of lanes, and never higher than 80 */
+                speed = 80;
+                /* TODO determine actual numbers of lanes */
+                speed_factor = 67;
+                break;
+            case event_restriction_contraflow:
+                /* Contraflow: assume 80, unless explicitly specified */
+                speed = 80;
+                break;
             default:
                 break;
             }
@@ -4353,6 +4365,8 @@ enum event_type event_type_new(char * string) {
             return event_restriction_carriageway_blocked;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_CARRIAGEWAY_CLOSED"))
             return event_restriction_carriageway_closed;
+        if (!g_ascii_strcasecmp(string, "RESTRICTION_CONTRAFLOW"))
+            return event_restriction_contraflow;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED"))
             return event_restriction_closed;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_CLOSED_AHEAD"))
@@ -4363,6 +4377,10 @@ enum event_type event_type_new(char * string) {
             return event_restriction_entry_reopened;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_INTERMITTENT_CLOSURES"))
             return event_restriction_intermittent_closures;
+        if (!g_ascii_strcasecmp(string, "RESTRICTION_LANE_BLOCKED"))
+            return event_restriction_lane_blocked;
+        if (!g_ascii_strcasecmp(string, "RESTRICTION_LANE_CLOSED"))
+            return event_restriction_lane_closed;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_OPEN"))
             return event_restriction_open;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_BLOCKED"))
@@ -4371,6 +4389,8 @@ enum event_type event_type_new(char * string) {
             return event_restriction_ramp_closed;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_RAMP_REOPENED"))
             return event_restriction_ramp_reopened;
+        if (!g_ascii_strcasecmp(string, "RESTRICTION_REDUCED_LANES"))
+            return event_restriction_reduced_lanes;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_REOPENED"))
             return event_restriction_reopened;
         if (!g_ascii_strcasecmp(string, "RESTRICTION_ROAD_CLEARED"))
@@ -4461,6 +4481,8 @@ const char * event_type_to_string(enum event_type this_) {
         return "RESTRICTION_CLOSED";
     case event_restriction_closed_ahead:
         return "RESTRICTION_CLOSED_AHEAD";
+    case event_restriction_contraflow:
+        return "RESTRICTION_CONTRAFLOW";
     case event_restriction_entry_blocked:
         return "RESTRICTION_ENTRY_BLOCKED";
     case event_restriction_entry_reopened:
@@ -4471,6 +4493,10 @@ const char * event_type_to_string(enum event_type this_) {
         return "RESTRICTION_EXIT_REOPENED";
     case event_restriction_intermittent_closures:
         return "RESTRICTION_INTERMITTENT_CLOSURES";
+    case event_restriction_lane_blocked:
+        return "RESTRICTION_LANE_BLOCKED";
+    case event_restriction_lane_closed:
+        return "RESTRICTION_LANE_CLOSED";
     case event_restriction_open:
         return "RESTRICTION_OPEN";
     case event_restriction_ramp_blocked:
@@ -4479,6 +4505,8 @@ const char * event_type_to_string(enum event_type this_) {
         return "RESTRICTION_RAMP_CLOSED";
     case event_restriction_ramp_reopened:
         return "RESTRICTION_RAMP_REOPENED";
+    case event_restriction_reduced_lanes:
+        return "RESTRICTION_REDUCED_LANES";
     case event_restriction_reopened:
         return "RESTRICTION_REOPENED";
     case event_restriction_road_cleared:
