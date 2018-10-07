@@ -2701,18 +2701,18 @@ static void gui_internal_resize(void *data, int w, int h) {
     navit_handle_resize(this->nav, w, h);
     if (this->root.children) {
         if (changed) {
-			char *href=g_strdup(this->href);
-			dbg(lvl_error,"href=%s",href);
-			/*if (*href != '\0') {
-			    gui_internal_prune_menu(this, NULL);
-			    gui_internal_html_load_href(this, href, 0);
-			}
-			else*/ {
-			    dbg(lvl_error, "Called resize with w=%d, h=%d", w, h)
-			    gui_internal_menu_resize(this, w, h); //Lionel!!!
-			    gui_internal_menu_render(this);
-			}
-			g_free(href);
+            char *href=g_strdup(this->href);
+            dbg(lvl_error,"href=%s",href);
+            /*if (*href != '\0') {
+                gui_internal_prune_menu(this, NULL);
+                gui_internal_html_load_href(this, href, 0);
+            }
+            else*/ {
+                dbg(lvl_error, "Called resize with w=%d, h=%d", w, h)
+                gui_internal_menu_resize(this, w, h); //Lionel!!!
+                gui_internal_menu_render(this);
+            }
+            g_free(href);
         } else {
             gui_internal_menu_render(this);
         }
