@@ -66,7 +66,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
+            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n
       - run:
           name: Process icons
           command: |
@@ -88,22 +88,7 @@ jobs:
       - run:
           name: Process xml's
           command: |
-            cd navit
-            export XMLCFG_ALL_FILE_PREFIXES="navit navit_layout_car navit_layout_car_dark navit_layout_car_android navit_layout_car_simple navit_layout_bike navit_layout_th"
-            mkdir -p config/ldpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/ldpi/${prefix}.xml" OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48; done
-            mkdir -p config/mdpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/mdpi/${prefix}.xml" OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64; done
-            mkdir -p config/hdpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/hdpi/${prefix}.xml" OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96; done
-            mkdir -p config/xhdpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/xhdpi/${prefix}.xml" OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128; done
-            mkdir -p config/xxhdpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/xxhdpi/${prefix}.xml" OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192; done
-            mkdir -p config/xxxhdpi
-            for prefix in $XMLCFG_ALL_FILE_PREFIXES; do saxonb-xslt -s:"${prefix}_shipped.xml" -xsl:xslt/android.xslt -o:"config/xxxhdpi/${prefix}.xml" OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256; done
-            mv config android/assets/
-            cd ../
+            make navit_config_xml
       - run:
          name: Chmod permissions
          command: chmod +x ./gradlew
