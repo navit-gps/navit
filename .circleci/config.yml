@@ -229,7 +229,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-          version: 18.06.0-ce
+          version: 18.05.0-ce
       - run:
           name: Make build directory
           command: |
