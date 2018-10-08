@@ -148,6 +148,10 @@ jobs:
           destination: reports
       - store_test_results:
           path: test-results
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
   build_win32:
     docker:
       - image: ubuntu:14.04
