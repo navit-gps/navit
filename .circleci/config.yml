@@ -228,7 +228,6 @@ jobs:
       - image: hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Make build directory
           command: |
