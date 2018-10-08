@@ -229,7 +229,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-          version: 17.03.0-ce
       - run:
           name: Make build directory
           command: |
