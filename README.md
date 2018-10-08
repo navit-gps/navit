@@ -77,17 +77,18 @@ Navit reads the current vehicle position:
 Routing algorithm
 =================
 
-Navit uses a Dijkstra algorithm for routing. The routing starts at the
-destination by assigning a value to each point directly connected to
-destination point. The value represents the estimated time needed to
-pass this distance.
+Navit uses LPA* (see https://en.wikipedia.org/wiki/Lifelong_Planning_A*), a derivative of the Dijkstra algorithm, for
+routing. Routing starts at the destination by assigning a value to each point directly connected to the destination
+point. The value represents the estimated time needed to reach the destination from that point.
 
-Now the point with the lowest value is chosen using the Fibonacci
-heap and a value is assigned to connected points whos are
-unevaluated or whos current value ist greater than the new one.
+Now the point with the lowest value is chosen using the Fibonacci heap, and a value is assigned to connected points
+which are unevaluated or whose current value is greater than the new one.
 
 The search is repeated until the origin is found.
 
-Once the origin is reached, all that needs to be done is to follow the
-points with the lowest values to the destination.
+Once the origin is reached, all that needs to be done is to follow the points with the lowest values to the
+destination.
 
+LPA* is slightly more complex, as it allows partial re-evaluation of the route graph as segment costs change. This is
+used by the (still experimental) traffic module, which can process traffic reports and tries to find a way around
+traffic problems. Refer to the Wikipedia page for a full description.
