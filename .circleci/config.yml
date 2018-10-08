@@ -226,6 +226,8 @@ jobs:
     <<: *defaults
     docker:
       - image: hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
+    enviroment:
+      DBUS_SESSION_BUS_ADDRESS: /dev/null
     steps:
       - checkout
       - run:
