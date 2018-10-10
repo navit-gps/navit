@@ -89,6 +89,10 @@ jobs:
           name: Process xml's
           command: |
             make navit_config_xml
+            cd navit
+            mkdir -p ./android/assets
+            cp -R config ./android/assets/
+            cd ../
       - run:
          name: Chmod permissions
          command: chmod +x ./gradlew
