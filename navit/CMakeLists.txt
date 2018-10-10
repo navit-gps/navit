@@ -125,21 +125,22 @@ add_custom_command(
 
 # additional parameter are passed to the stylesheet processor as parameter
 macro(process_xslt SRC_DIR SRC_XML DEST_DIR DEST_XML)
-	if(WIN32)
-		set(TMPDIR "$ENV{TEMP}")
-	else()
-		set(TMPDIR "/tmp")
-	endif()
 	set(TMPFOLDER "${DEST_DIR}/${DEST_XML}")
+	# Create a unique temporary name based on the PATH and filename of the target xml file
 	string(REPLACE "/" "_" TMPFOLDER ${TMPFOLDER})
-	set(TMPDIR "${TMPDIR}/${TMPFOLDER}")
+	string(REPLACE ":" "_" TMPFOLDER ${TMPFOLDER})
+	string(REPLACE "\\" "_" TMPFOLDER ${TMPFOLDER})
+	# Create this unique temporary directory inside ${CMAKE_CURRENT_BINARY_DIR}. This is where we will store our intermediate xml file (called ${SRC_XML}.temp after each xslt pass
+	set(TMPDIR "${CMAKE_CURRENT_BINARY_DIR}/${TMPFOLDER}")
 	set(XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory "${TMPDIR}")
-	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/navit/${SRC_XML}" "${TMPDIR}/${SRC_XML}.temp" )
+	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/navit/${SRC_XML}" "${TMPDIR}/${SRC_XML}.temp")
+	# Also copy the dtd file in the same directory as the xml file (required by the xslt processor)
 	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/navit/navit.dtd" "${TMPDIR}/" )
 	if(XSL_PROCESSING)
 		if(NOT XSLTS STREQUAL "")
 			string(REPLACE "," ";" XSLTS "${XSLTS}")
 			foreach(tmp ${XSLTS})
+				# We will run this loop below for each xslt file provided in the XSLTS variable
 				set(XSLT_FILE "${PROJECT_SOURCE_DIR}/navit/xslt/${tmp}.xslt")
 				list(APPEND XSLT_FILES "${XSLT_FILE}")
 				list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E echo  Applying ${tmp}.xslt)
@@ -149,8 +150,10 @@ macro(process_xslt SRC_DIR SRC_XML DEST_DIR DEST_XML)
 			endforeach()
 		endif()
 	endif(XSL_PROCESSING)
+	# Move the final resulting xml file to the target filename and directory (provided in arguments)
 	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_DIR})
 	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename "${TMPDIR}/${SRC_XML}.temp" "${DEST_DIR}/${DEST_XML}")
+	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E remove "${TMPDIR}/navit.dtd")
 	list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E remove_directory "${TMPDIR}")
 	# Depend on all XSLT files, because the main XSLT file may pull in other files.
 	# Ideally we'd parse the main XSLT file for includes, but that is tricky to do reliably.
@@ -233,6 +236,12 @@ install(TARGETS navit
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/navit.xml
 	DESTINATION ${SHARE_DIR}
 	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+
+foreach(XMLCFG_INSTALLED_PATH ${XMLCFG_INSTALLED_PATH_LIST})
+	install(FILES ${XMLCFG_INSTALLED_PATH}
+		DESTINATION ${SHARE_DIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+endforeach()
 
 get_directory_property(INCLUDE_DIRECTORIES INCLUDE_DIRECTORIES)
 WRITE_FILE("cmake_plugin_settings.txt"
