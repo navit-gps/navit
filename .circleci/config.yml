@@ -49,7 +49,7 @@ jobs:
           command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
-  build_android:
+  build_android_arm:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-27-alpha
