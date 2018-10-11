@@ -49,7 +49,7 @@ jobs:
           command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
-  build_android:
+  build_android_arm:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-27-alpha
@@ -144,6 +144,10 @@ jobs:
           destination: reports
       - store_test_results:
           path: test-results
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
   build_win32:
     docker:
       - image: ubuntu:14.04
@@ -242,7 +246,7 @@ workflows:
       - build_linux:
           requires:
             - sanity_check
-      - build_android:
+      - build_android_arm:
           requires:
             - sanity_check
       - build_win32:
@@ -260,7 +264,7 @@ workflows:
       - run_doxygen:
           requires:
             - build_linux
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal
@@ -271,7 +275,7 @@ workflows:
       - merge_trunk_in_master:
           requires:
             - build_linux
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal
