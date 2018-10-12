@@ -576,12 +576,6 @@ if(WIN32 OR WINCE)
 	add_plugin(support/win32 "Windows detected" TRUE)
 
 	SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -I ${CMAKE_CURRENT_SOURCE_DIR}/navit/gui/win32/resources <DEFINES> -i <SOURCE> -o <OBJECT>")
-	set_with_reason(support/ezxml "Windows detected" TRUE)
-	set_with_reason(speech/espeak "Windows detected" TRUE)
-	#speech/espeak does use windows threads, and therefore needs only parts of
-	#espeak lib. INTERNAL_ESPEAK_COMPLETE controls this.
-	set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
-	set_with_reason(support/espeak "Windows detected" TRUE)
 	set_with_reason(binding/win32 "Windows detected" TRUE)
 
 	# vehicle_file is broken for windows. use vehicle_wince instead
@@ -647,6 +641,12 @@ if(WINCE)
 	set(HAVE_PRAGMA_PACK 1)
 	set_with_reason(vehicle/file "wince: currently broken" FALSE)
 	set_with_reason(vehicle/wince "wince detected" TRUE)
+	set_with_reason(support/ezxml "Windows detected" TRUE)
+	set_with_reason(speech/espeak "Windows detected" TRUE)
+	#speech/espeak does use windows threads, and therefore needs only parts of
+	#espeak lib. INTERNAL_ESPEAK_COMPLETE controls this.
+	set_with_reason(INTERNAL_ESPEAK_COMPLETE "Windows detected" FALSE)
+	set_with_reason(support/espeak "Windows detected" TRUE)
 endif()
 if (APPLE OR USE_UIKIT)
 	set_with_reason(vehicle/iphone "apple detected" TRUE)
