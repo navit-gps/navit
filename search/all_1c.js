@@ -35,7 +35,6 @@ var searchData=
   ['zip64lsig',['zip64lsig',['../structzip64__eocl.html#ab633a8890d9926f43ed9f7225f5cad04',1,'zip64_eocl']]],
   ['zip74lnum',['zip74lnum',['../structzip64__eocl.html#ab103705509967c29a3312bcefc613f33',1,'zip64_eocl']]],
   ['zip_5fadd_5fmember',['zip_add_member',['../maptool_8h.html#ae38d5e380731f21475b8af67eb245a01',1,'zip_add_member(struct zip_info *info):&#160;zip.c'],['../zip_8c.html#ae38d5e380731f21475b8af67eb245a01',1,'zip_add_member(struct zip_info *info):&#160;zip.c']]],
-  ['zip_5falignment_5fcheck',['zip_alignment_check',['../structzip__alignment__check.html',1,'']]],
   ['zip_5fcd',['zip_cd',['../structzip__cd.html',1,'']]],
   ['zip_5fcd_5fext',['zip_cd_ext',['../structzip__cd__ext.html',1,'']]],
   ['zip_5fcd_5fsig',['zip_cd_sig',['../zipfile_8h.html#a6a7f0f81fdb6a231abb6cdccb0f36fa2',1,'zipfile.h']]],

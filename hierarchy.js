@@ -501,7 +501,6 @@ var hierarchy =
     [ "z_clip_result", "structz__clip__result.html", null ],
     [ "zip64_eoc", "structzip64__eoc.html", null ],
     [ "zip64_eocl", "structzip64__eocl.html", null ],
-    [ "zip_alignment_check", "structzip__alignment__check.html", null ],
     [ "zip_cd", "structzip__cd.html", null ],
     [ "zip_cd_ext", "structzip__cd__ext.html", null ],
     [ "zip_enc", "structzip__enc.html", null ],
