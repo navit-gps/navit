@@ -30,6 +30,7 @@ var searchData=
   ['get_5fdisplay',['get_display',['../structgraphics__opengl__window__system__methods.html#aa894c8067871f7b1bcc445f7f86e10bc',1,'graphics_opengl_window_system_methods']]],
   ['get_5fflags',['get_flags',['../structgui__internal__widget__methods.html#aea703d92397a6ac3debabe703f92b2a1',1,'gui_internal_widget_methods']]],
   ['get_5fglyph',['get_glyph',['../structfont__freetype__methods.html#aa397713a71e4ffaca206e5b3772ece53',1,'font_freetype_methods']]],
+  ['get_5fmessages',['get_messages',['../structtraffic__methods.html#a7b9471a0194d92b4737e80b06d43fd1a',1,'traffic_methods']]],
   ['get_5fshadow',['get_shadow',['../structfont__freetype__methods.html#abb2fa4ae9c8193264805bd693bbe7750',1,'font_freetype_methods']]],
   ['get_5fstate',['get_state',['../structgui__internal__widget__methods.html#ac78bc3466ce832b300350f061fef41d1',1,'gui_internal_widget_methods']]],
   ['get_5ftext_5fbbox',['get_text_bbox',['../structfont__freetype__methods.html#a2b24277cd19b9e09ced5a1d8d50fc700',1,'font_freetype_methods::get_text_bbox()'],['../structgraphics__methods.html#ad8d75edc14b2b7c639ba2bb790998200',1,'graphics_methods::get_text_bbox()']]],

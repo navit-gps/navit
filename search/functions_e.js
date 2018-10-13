@@ -213,6 +213,7 @@ var searchData=
   ['mg_5fcountry_5fpostal_5fprefix',['mg_country_postal_prefix',['../map_2mg_2map_8c.html#ad2722e43920fcfb84debd854d647f6ce',1,'map.c']]],
   ['mg_5fcountry_5fto_5fisonum',['mg_country_to_isonum',['../map_2mg_2map_8c.html#a46a8acb3bd263fe0d635eeb556a49a24',1,'mg_country_to_isonum(int country):&#160;map.c'],['../mg_8h.html#a46a8acb3bd263fe0d635eeb556a49a24',1,'mg_country_to_isonum(int country):&#160;map.c']]],
   ['min4',['min4',['../transform_8c.html#a40e6294521dd73742e045c8936f132e2',1,'transform.c']]],
+  ['mkgmtime',['mkgmtime',['../util_8c.html#a08549326088c6f58b936ed936e15bf4d',1,'mkgmtime(struct tm *pt):&#160;util.c'],['../util_8h.html#a08549326088c6f58b936ed936e15bf4d',1,'mkgmtime(struct tm *pt):&#160;util.c']]],
   ['mlpdl_5fservicecall',['mlPDL_ServiceCall',['../bluetooth_8c.html#adb87933331e761e27b4edc403a6ee713',1,'bluetooth.c']]],
   ['mlpdl_5fservicecall_5fcallback',['mlPDL_ServiceCall_callback',['../bluetooth_8c.html#a70dbbf9c4da46f74822666562756a775',1,'bluetooth.c']]],
   ['mlpdl_5fservicecallwithcallback',['mlPDL_ServiceCallWithCallback',['../bluetooth_8c.html#a82b7a861d583224c77e9da5ecfb46415',1,'bluetooth.c']]],

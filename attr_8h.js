@@ -11,6 +11,7 @@ var attr_8h =
     [ "AF_DG_EXPLOSIVE", "attr_8h.html#a2c50c5c96d6209e3b0c6684f95df31e7", null ],
     [ "AF_DG_FLAMMABLE", "attr_8h.html#afd4deb67d70d322e6f5d6ce718abc8f8", null ],
     [ "AF_DG_WATER_HARMFUL", "attr_8h.html#a775df93c5164fc77933439f25df7ed6c", null ],
+    [ "AF_DISTORTIONMASK", "attr_8h.html#a5f527578154d2d2ae730c2bb65078b0f", null ],
     [ "AF_EMERGENCY_VEHICLES", "attr_8h.html#a35ac9ad646d12aeee4aa48f4cce8cb9c", null ],
     [ "AF_FORD", "attr_8h.html#aca66fe863d417cc8b39b91dac6a33ffb", null ],
     [ "AF_HIGH_OCCUPANCY_CAR", "attr_8h.html#af2ce0a129647d2864d4e96da2a31710d", null ],

@@ -11,6 +11,7 @@ var item_8c =
     [ "item_cleanup", "item_8c.html#a9216bcfa83f45928556e745ace4d4c39", null ],
     [ "item_coord_get", "item_8c.html#ae4ca690f46c2e5d491491d9f706f04e8", null ],
     [ "item_coord_get_pro", "item_8c.html#a088682cd8951907090cbf68b4c9e0f83", null ],
+    [ "item_coord_get_within_range", "item_8c.html#a777e995bf289b1c407cbc0790b37d315", null ],
     [ "item_coord_get_within_selection", "item_8c.html#a29b6c55bda6614c901e4f341a70c79f1", null ],
     [ "item_coord_is_node", "item_8c.html#afba64e56910719c067affad47d2df767", null ],
     [ "item_coord_rewind", "item_8c.html#a85c6c9f9f373337b634bfec5b2a626cd", null ],

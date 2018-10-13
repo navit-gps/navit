@@ -38,6 +38,7 @@ var xmlconfig_8h =
     [ "navit_object_set_methods", "xmlconfig_8h.html#a3cf0bf4201896823b1f5992cc5a181dc", null ],
     [ "navit_object_unref", "xmlconfig_8h.html#a6430bef5b4ff56f67fe80bfee71ef896", null ],
     [ "object_func_lookup", "xmlconfig_8h.html#aa0aedbfd467d2009ac65a983734fc556", null ],
-    [ "xml_parse_text", "xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa", null ],
-    [ "route_func", "xmlconfig_8h.html#a1dbec1f5512a3ad7687a9f13d989466e", null ]
+    [ "xml_parse_file", "xmlconfig_8h.html#ae8b8c79f95f5c2a2c6584c5adb86b7b5", null ],
+    [ "xml_parse_text", "xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b", null ],
+    [ "traffic_func", "xmlconfig_8h.html#aa2727818209df92aed398cb13d43cf99", null ]
 ];

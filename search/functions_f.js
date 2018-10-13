@@ -221,6 +221,7 @@ var searchData=
   ['navitsensors',['NavitSensors',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#ad761b057bf51aa700ffc8ae4aaa72d27',1,'org::navitproject::navit::NavitSensors']]],
   ['navitspeech2',['NavitSpeech2',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a8d7c42e0d95fd58e177a90b3c8b15bb6',1,'org::navitproject::navit::NavitSpeech2']]],
   ['navittimeout',['NavitTimeout',['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html#abd235476e0a1e15926977565c8990582',1,'org::navitproject::navit::NavitTimeout']]],
+  ['navittraff',['NavitTraff',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30',1,'org::navitproject::navit::NavitTraff']]],
   ['navitvehicle',['NavitVehicle',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#ac4dc9d2eec58e27febb1b1618fdd8f34',1,'org::navitproject::navit::NavitVehicle']]],
   ['navitview',['NavitView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ace04d44950159ac4102942b74ae7946d',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['navitwatch',['NavitWatch',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a753c70e663593ea2b31459f4498375df',1,'org::navitproject::navit::NavitWatch']]],

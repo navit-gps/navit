@@ -24,6 +24,7 @@ var android_8c =
     [ "Java_org_navitproject_navit_NavitIdle_IdleCallback", "android_8c.html#a3a183df996836cadf9d96152fb5de6b0", null ],
     [ "Java_org_navitproject_navit_NavitSensors_SensorCallback", "android_8c.html#a00823fcfba569972681871812c2176af", null ],
     [ "Java_org_navitproject_navit_NavitTimeout_TimeoutCallback", "android_8c.html#a082c20f08b0fd01a3a3577d49fb73e12", null ],
+    [ "Java_org_navitproject_navit_NavitTraff_onFeedReceived", "android_8c.html#a9a80bad9aefd826cae1d040a992d8562", null ],
     [ "Java_org_navitproject_navit_NavitVehicle_VehicleCallback", "android_8c.html#a80cb60ad343cd2c2de88e0b6af251067", null ],
     [ "Java_org_navitproject_navit_NavitWatch_poll", "android_8c.html#a7a7ba5291fa569de5e33503c4963c744", null ],
     [ "Java_org_navitproject_navit_NavitWatch_WatchCallback", "android_8c.html#abb680605b7dacd7e4266562f54f940ad", null ],

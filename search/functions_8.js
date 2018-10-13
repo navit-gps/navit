@@ -69,7 +69,6 @@ var searchData=
   ['get_5ficon_5fpath',['get_icon_path',['../classBackend.html#acdc95f985c054fde5ea55a096d3b5400',1,'Backend']]],
   ['get_5fint',['get_int',['../command_8c.html#a43e7c7a85803704f57da4a9ea6e569da',1,'command.c']]],
   ['get_5fint_5fbool',['get_int_bool',['../command_8c.html#ab2acc21a7056ce292a974d0d6825dd94',1,'command.c']]],
-  ['get_5fitem_5fseg_5fcoords',['get_item_seg_coords',['../route_8c.html#ae6d15cb3878ceebace2fa923ea9257c3',1,'route.c']]],
   ['get_5fiter_5fname',['get_iter_name',['../binding__dbus_8c.html#add9625e24118e08da6b5e7d31f4e5442',1,'binding_dbus.c']]],
   ['get_5flabel_5foffset',['get_label_offset',['../garmin__img_8c.html#aad25ed56733a27382a93f91323d51f32',1,'garmin_img.c']]],
   ['get_5flevel',['get_level',['../garmin_8c.html#a9dba96fc3fa70e8d30d871580bde5a50',1,'garmin.c']]],

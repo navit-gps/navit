@@ -1,5 +1,11 @@
 var NAVTREEINDEX6 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a027928f690f2710b00b9f9f30d5c598e":[2,0,0,0,0,3,25],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a086aab815df8a0e7aad907f4511c6676":[2,0,0,0,0,3,8],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a0aaff54f98314c275f52daa53f02fe31":[2,0,0,0,0,3,3],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a13adfa50043ff7b380a5b8f533730872":[2,0,0,0,0,3,11],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a170fa4cf40faacb6e2ad578e545b96bb":[2,0,0,0,0,3,9],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a27a77a7bbd422e3da7af7d026e103921":[2,0,0,0,0,3,26],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a3774d5bc93a3a2b3bc22e1e9c824e42a":[2,0,0,0,0,3,17],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4938b8d2e020022acc5d39dcfcbafe81":[2,0,0,0,0,3,19],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6a17b64922a961d044f1c7ec37239617":[2,0,0,0,0,3,24],
@@ -243,11 +249,5 @@ var NAVTREEINDEX6 =
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8c81467cadfe2caa78c9fc4e4032841b":[2,0,0,0,0,12,2],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#aa2d067e10eb93c771cbd990305933ed4":[2,0,0,0,0,12,1],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ac937edcb63bc5c694f51807a468175d5":[2,0,0,0,0,12,5],
-"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ae58c05516229b205423ce38b9830c6c5":[2,0,0,0,0,12,0],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html":[2,0,0,0,0,13],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a38379def280f77f593fb2a3f94d9b4a7":[2,0,0,0,0,13,4],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a4821526e553f7ce0355678695be991d4":[2,0,0,0,0,13,1],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a5c32ad97daf4cec5b922d15caf12f3d7":[2,0,0,0,0,13,2],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a9d64ebca2cec3310bc3fdfa57cd1217b":[2,0,0,0,0,13,5],
-"classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#ad761b057bf51aa700ffc8ae4aaa72d27":[2,0,0,0,0,13,0]
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ae58c05516229b205423ce38b9830c6c5":[2,0,0,0,0,12,0]
 };

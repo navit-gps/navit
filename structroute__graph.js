@@ -5,6 +5,7 @@ var structroute__graph =
     [ "done_cb", "structroute__graph.html#a7ae5448f094980f1727484312d366619", null ],
     [ "h", "structroute__graph.html#aece3ed03ea64579a695890f8f9928d7c", null ],
     [ "hash", "structroute__graph.html#a71f996b6682827d379a25c77a4f4318b", null ],
+    [ "heap", "structroute__graph.html#a19f53f862983772319966caf78a2cba9", null ],
     [ "idle_cb", "structroute__graph.html#a624be91df267d7b100b86a0298e6f9e7", null ],
     [ "idle_ev", "structroute__graph.html#ad09c527a69149fe25000b6fd4eaa8f81", null ],
     [ "m", "structroute__graph.html#a839c690db1292afaf5d83992a7b4e323", null ],

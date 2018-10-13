@@ -12,6 +12,7 @@ var searchData=
   ['search_5flist_5ftown',['search_list_town',['../structsearch__list__town.html',1,'']]],
   ['search_5fparam',['search_param',['../structsearch__param.html',1,'']]],
   ['searchobject',['SearchObject',['../classSearchObject.html',1,'']]],
+  ['seg_5fdata',['seg_data',['../structseg__data.html',1,'']]],
   ['selector',['selector',['../structselector.html',1,'']]],
   ['shmem_5fheader',['shmem_header',['../structshmem__header.html',1,'']]],
   ['size_5fweight_5flimit',['size_weight_limit',['../structsize__weight__limit.html',1,'']]],

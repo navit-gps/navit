@@ -89,6 +89,8 @@ $(document).ready(function(){initNavTree('structroute__graph.html','');});
 
 <p>A complete route graph.  
  <a href="structroute__graph.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="route__protected_8h_source.html">route_protected.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -114,6 +116,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:aab2870efec1aa440237ba26ba2ce835c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c6fb1124f39dc3104207a652d489e3a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__segment.html">route_graph_segment</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a5c6fb1124f39dc3104207a652d489e3a">avoid_seg</a></td></tr>
 <tr class="separator:a5c6fb1124f39dc3104207a652d489e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19f53f862983772319966caf78a2cba9"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structfibheap.html">fibheap</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a19f53f862983772319966caf78a2cba9">heap</a></td></tr>
+<tr class="separator:a19f53f862983772319966caf78a2cba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71f996b6682827d379a25c77a4f4318b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute__graph__point.html">route_graph_point</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph.html#a71f996b6682827d379a25c77a4f4318b">hash</a> [<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a>]</td></tr>
 <tr class="separator:a71f996b6682827d379a25c77a4f4318b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -148,7 +152,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The graph is being built </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, <a class="el" href="route_8c.html#a0363347b95e450ae8cd40a6828ffd577">route_graph_update()</a>, <a class="el" href="route_8c.html#a69af61fe6ad8055967e2085afc187830">route_path_update_flags()</a>, <a class="el" href="route__protected_8h.html#a0d8ec5e0a187061a8391ef6d2151191c">route_recalculate_partial()</a>, and <a class="el" href="traffic_8c.html#aa87eb49ec6a004081cf0a534c59e4079">traffic_location_get_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -165,7 +169,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Callback when graph is done </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, and <a class="el" href="traffic_8c.html#aa87eb49ec6a004081cf0a534c59e4079">traffic_location_get_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -182,7 +186,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Handle to the mapset </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>, <a class="el" href="traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91">traffic_location_get_matching_points()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -199,7 +203,24 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>A hashtable containing all route_graph_points in this graph </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#aff13b4b1b182e3ef05620ce10704f81b">rp_get_item()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#aff13b4b1b182e3ef05620ce10704f81b">rp_get_item()</a>, and <a class="el" href="traffic_8c.html#a10c476eceb3646bb124281035b96ee28">traffic_route_flood_graph()</a>.</p>
+
+</div>
+</div>
+<a id="a19f53f862983772319966caf78a2cba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19f53f862983772319966caf78a2cba9">&#9670;&nbsp;</a></span>heap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structfibheap.html">fibheap</a>* route_graph::heap</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Priority queue for points to be expanded </p>
+
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#ae38e80939f9afe5b1e8b37aa7e2740ff">route_graph_compute_shortest_path()</a>, and <a class="el" href="route_8c.html#ad1af52ce98f45c9d385cc818348e23ce">route_graph_is_path_computed()</a>.</p>
 
 </div>
 </div>
@@ -216,7 +237,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Idle callback to process the graph </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>.</p>
 
 </div>
 </div>
@@ -233,7 +254,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The pointer to the idle event </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, and <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>.</p>
 
 </div>
 </div>
@@ -250,7 +271,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to the currently active map </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>, <a class="el" href="traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91">traffic_location_get_matching_points()</a>, <a class="el" href="traffic_8c.html#aec7ac3a4358a3fd3e8d97a88f5af2502">traffic_location_open_map_rect()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -267,7 +288,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Pointer to the currently active map rectangle </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, <a class="el" href="route_8c.html#af4ad986c4d197cffe6d7a0e1e3211463">route_graph_build_idle()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, <a class="el" href="route_8c.html#af4ad986c4d197cffe6d7a0e1e3211463">route_graph_build_idle()</a>, <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>, <a class="el" href="traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91">traffic_location_get_matching_points()</a>, <a class="el" href="traffic_8c.html#aec7ac3a4358a3fd3e8d97a88f5af2502">traffic_location_open_map_rect()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -301,7 +322,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The rectangle selection for the graph </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#ac3e38c75ba70e570de53835a1ec5dc05">route_graph_build_done()</a>, and <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, <a class="el" href="route_8c.html#ac370bd70c11c34ed559a99dc00e79260">route_graph_build_next_map()</a>, <a class="el" href="traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91">traffic_location_get_matching_points()</a>, <a class="el" href="traffic_8c.html#aec7ac3a4358a3fd3e8d97a88f5af2502">traffic_location_open_map_rect()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -321,7 +342,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="route_8c.html">route.c</a></li>
+<li><a class="el" href="route__protected_8h_source.html">route_protected.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

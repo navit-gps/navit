@@ -200,8 +200,12 @@ Functions</h2></td></tr>
 <tr class="separator:afcd5dc0aa3d812b43320084b8c0d99f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adea6ff320e569af1a06b71198191c219"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219">parse_node_text</a> (ezxml_t <a class="el" href="structnode.html">node</a>, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, void(*start)(void *, const char *, const char **, const char **, void *, void *), void(*end)(void *, const char *, void *, void *), void(*text)(void *, const char *, int, void *, void *))</td></tr>
 <tr class="separator:adea6ff320e569af1a06b71198191c219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d3a89074520203b358bbab7c96cdcfa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text</a> (const char *document, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, void(*start)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, const char **, const char **, void *, GError **), void(*end)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, void *, GError **), void(*text)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, gsize, void *, GError **))</td></tr>
-<tr class="separator:a5d3a89074520203b358bbab7c96cdcfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8b8c79f95f5c2a2c6584c5adb86b7b5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#ae8b8c79f95f5c2a2c6584c5adb86b7b5">xml_parse_file</a> (char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, void(*start)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, const char **, const char **, void *, GError **), void(*end)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, void *, GError **), void(*text)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, gsize, void *, GError **))</td></tr>
+<tr class="memdesc:ae8b8c79f95f5c2a2c6584c5adb86b7b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an XML file.  <a href="#ae8b8c79f95f5c2a2c6584c5adb86b7b5">More...</a><br /></td></tr>
+<tr class="separator:ae8b8c79f95f5c2a2c6584c5adb86b7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a689cc47cf7602cb6579cdfb8bd99783b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text</a> (const char *document, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, void(*start)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, const char **, const char **, void *, GError **), void(*end)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, void *, GError **), void(*text)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, gsize, void *, GError **))</td></tr>
+<tr class="memdesc:a689cc47cf7602cb6579cdfb8bd99783b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses XML text.  <a href="#a689cc47cf7602cb6579cdfb8bd99783b">More...</a><br /></td></tr>
+<tr class="separator:a689cc47cf7602cb6579cdfb8bd99783b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae378c00c35dd6b9bcdf690bc5385a630"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node</a> (struct <a class="el" href="structxmldocument.html">xmldocument</a> *document, ezxml_t <a class="el" href="structnode.html">node</a>)</td></tr>
 <tr class="separator:ae378c00c35dd6b9bcdf690bc5385a630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e5408bb438c0542810f2adc36db5fbb"><td class="memItemLeft" align="right" valign="top">gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmlconfig_8c.html#a1e5408bb438c0542810f2adc36db5fbb">config_load</a> (const char *<a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="xmlconfig_8h.html#ac0a340b94c7c1f4728ac4cf6848d2354">xmlerror</a> **<a class="el" href="command_8c.html#af10dacfa214e2575bb2e0ee407c242e0">error</a>)</td></tr>
@@ -852,7 +856,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="speech_8h.html#a8ed5390910ddee601d559763f65324ec">speech_destroy()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="speech_8h.html#a8ed5390910ddee601d559763f65324ec">speech_destroy()</a>, and <a class="el" href="traffic_8c.html#a4eb7a175f35f5b0651f9ef3f60a09c81">traffic_new()</a>.</p>
 
 </div>
 </div>
@@ -949,7 +953,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="attr_8c.html#a78c8acc94b747237631b2e68f123c7fa">attr_list_dup()</a>, and <a class="el" href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="navigation_8h.html#a1bd603240f52e2622daf7c2e33901f03">navigation_new()</a>, and <a class="el" href="speech_8h.html#a044b65a0ba601d83a25ebbfa12628bdd">speech_new()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="navigation_8h.html#a1bd603240f52e2622daf7c2e33901f03">navigation_new()</a>, <a class="el" href="speech_8h.html#a044b65a0ba601d83a25ebbfa12628bdd">speech_new()</a>, and <a class="el" href="traffic_8c.html#a4eb7a175f35f5b0651f9ef3f60a09c81">traffic_new()</a>.</p>
 
 </div>
 </div>
@@ -971,7 +975,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="config___8h.html#af51fce9eddd855cac83f5ebbc2a321ea">config_new()</a>, <a class="el" href="layout_8h.html#aa8c35b148dc92f2758181fcb94cc6695">layer_new()</a>, <a class="el" href="layout_8c.html#a4e95510d6a3ada749ad5e87e340e2973">layer_set_attr_do()</a>, <a class="el" href="layout_8h.html#a6ebe4a41a65c8e52fd0bac5cb45c8647">layout_new()</a>, <a class="el" href="log_8h.html#adc0038d2777d8572e77982fe4b746bba">log_new()</a>, <a class="el" href="map_8h.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8h.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new()</a>, <a class="el" href="group__navit.html#ga573bc5a9c51fc9167ff9bd75f8b3a7eb">navit_destroy()</a>, <a class="el" href="group__navit.html#gaa41f90609eaafc6e2d8eda1ee47b6881">navit_new()</a>, <a class="el" href="xmlconfig_8h.html#a320a24bc9f8d32d908713329edeb0516">navit_object_new()</a>, <a class="el" href="osd_8h.html#a2fe824b03a6b5cd14326fac42470beba">osd_new()</a>, <a class="el" href="profile__option_8c.html#afcb4663abd91dc9e70edc8b86aa14399">profile_option_new()</a>, <a class="el" href="roadprofile_8h.html#a3ce86ed260a9c8dc6c906e02ca865577">roadprofile_new()</a>, <a class="el" href="route_8h.html#acd539fe25796de904f57342b14dde071">route_dup()</a>, <a class="el" href="route_8c.html#a722a31bfef2b1f9d4eb77b708628d528">route_get_map_helper()</a>, <a class="el" href="route_8h.html#a15fb35208d5234b2f334d31f930b3c4c">route_new()</a>, <a class="el" href="script_8c.html#a7b203f6017ec424b5179df03489551cf">script_new()</a>, <a class="el" href="track_8h.html#ad710415db8efbc592d0827eb6b429604">tracking_new()</a>, <a class="el" href="track_8h.html#af3921e86db3dfe4dcf56185fae45dc06">tracking_remove_attr()</a>, <a class="el" href="vehicle_8c.html#a0ab50275418834c7c6a1b23e649564d1">vehicle_add_log()</a>, <a class="el" href="vehicle_8h.html#a95bedb061f63a2484c2e052280d0f5e7">vehicle_new()</a>, and <a class="el" href="vehicleprofile_8h.html#a3d6f385994dc02c76023222520c34ab9">vehicleprofile_new()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="config___8h.html#af51fce9eddd855cac83f5ebbc2a321ea">config_new()</a>, <a class="el" href="layout_8h.html#aa8c35b148dc92f2758181fcb94cc6695">layer_new()</a>, <a class="el" href="layout_8c.html#a4e95510d6a3ada749ad5e87e340e2973">layer_set_attr_do()</a>, <a class="el" href="layout_8h.html#a6ebe4a41a65c8e52fd0bac5cb45c8647">layout_new()</a>, <a class="el" href="log_8h.html#adc0038d2777d8572e77982fe4b746bba">log_new()</a>, <a class="el" href="map_8h.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8h.html#a174ded8e1926d9d3ea4089e9dd4f4325">mapset_new()</a>, <a class="el" href="group__navit.html#ga573bc5a9c51fc9167ff9bd75f8b3a7eb">navit_destroy()</a>, <a class="el" href="group__navit.html#gaa41f90609eaafc6e2d8eda1ee47b6881">navit_new()</a>, <a class="el" href="xmlconfig_8h.html#a320a24bc9f8d32d908713329edeb0516">navit_object_new()</a>, <a class="el" href="osd_8h.html#a2fe824b03a6b5cd14326fac42470beba">osd_new()</a>, <a class="el" href="profile__option_8c.html#afcb4663abd91dc9e70edc8b86aa14399">profile_option_new()</a>, <a class="el" href="roadprofile_8h.html#a3ce86ed260a9c8dc6c906e02ca865577">roadprofile_new()</a>, <a class="el" href="route_8h.html#acd539fe25796de904f57342b14dde071">route_dup()</a>, <a class="el" href="route_8c.html#a722a31bfef2b1f9d4eb77b708628d528">route_get_map_helper()</a>, <a class="el" href="route_8h.html#a15fb35208d5234b2f334d31f930b3c4c">route_new()</a>, <a class="el" href="script_8c.html#a7b203f6017ec424b5179df03489551cf">script_new()</a>, <a class="el" href="track_8h.html#ad710415db8efbc592d0827eb6b429604">tracking_new()</a>, <a class="el" href="track_8h.html#af3921e86db3dfe4dcf56185fae45dc06">tracking_remove_attr()</a>, <a class="el" href="traffic_8h.html#a132f0eee106bfc793e1a81a874a29d72">traffic_get_map()</a>, <a class="el" href="traffic_8c.html#a4eb7a175f35f5b0651f9ef3f60a09c81">traffic_new()</a>, <a class="el" href="vehicle_8c.html#a0ab50275418834c7c6a1b23e649564d1">vehicle_add_log()</a>, <a class="el" href="vehicle_8h.html#a95bedb061f63a2484c2e052280d0f5e7">vehicle_new()</a>, and <a class="el" href="vehicleprofile_8h.html#a3d6f385994dc02c76023222520c34ab9">vehicleprofile_new()</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1125,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="config___8c.html#a7c71af2cf8aebf208b36dc97e73680b7">config_func</a>, <a class="el" href="layout_8c.html#a985b6f89722a541b986509885b71ea13">layer_func</a>, <a class="el" href="layout_8c.html#af12a3d11ebf1e44ad330e5c8e3b7cbe5">layout_func</a>, <a class="el" href="log_8c.html#aaadaa036644f0f337fa4b67d7216f783">log_func</a>, <a class="el" href="map_8c.html#a72847bda2999f94a238bde22e8072d2d">map_func</a>, <a class="el" href="maps_8c.html#a3bb6406506557d2f73305750db442234">maps_func</a>, <a class="el" href="mapset_8c.html#a522a581eccd4148fe31e144e6e0e1bce">mapset_func</a>, <a class="el" href="navigation_8c.html#a67657ae1ed8eaea55d26b24c019d66bd">navigation_func</a>, <a class="el" href="group__navit.html#ga4d87fcc566606c0ffe8d3e19ad16e826">navit_func</a>, <a class="el" href="xmlconfig_8c.html#a7fe8a7409ee987b15c33ef23804625bf">object_funcs</a>, <a class="el" href="osd_8c.html#acd738591dfcd346aa569eb285aff46b4">osd_func</a>, <a class="el" href="profile__option_8c.html#a39059376b14589da5f97c9e60a8b2c3b">profile_option_func</a>, <a class="el" href="roadprofile_8c.html#a7783d573179858b73fbd109213374f54">roadprofile_func</a>, <a class="el" href="route_8c.html#a44e68e38b75a73288198f97c5971aa04">route_func</a>, <a class="el" href="script_8c.html#aae3c5cf98b6db3ef8766b55ac490bb78">script_func</a>, <a class="el" href="speech_8c.html#aa5b4a6300391ce4fa3def1f84bf80132">speech_func</a>, <a class="el" href="track_8c.html#adee02887f45fa0745c408f29f2d9880c">tracking_func</a>, <a class="el" href="vehicle_8c.html#a74992576db530f3756a0ae02b2b3583c">vehicle_func</a>, and <a class="el" href="vehicleprofile_8c.html#ad28b27d1b2cd1462fa59bf5265b2521e">vehicleprofile_func</a>.</p>
+<p class="reference">References <a class="el" href="config___8c.html#a7c71af2cf8aebf208b36dc97e73680b7">config_func</a>, <a class="el" href="layout_8c.html#a985b6f89722a541b986509885b71ea13">layer_func</a>, <a class="el" href="layout_8c.html#af12a3d11ebf1e44ad330e5c8e3b7cbe5">layout_func</a>, <a class="el" href="log_8c.html#aaadaa036644f0f337fa4b67d7216f783">log_func</a>, <a class="el" href="map_8c.html#a72847bda2999f94a238bde22e8072d2d">map_func</a>, <a class="el" href="maps_8c.html#a3bb6406506557d2f73305750db442234">maps_func</a>, <a class="el" href="mapset_8c.html#a522a581eccd4148fe31e144e6e0e1bce">mapset_func</a>, <a class="el" href="navigation_8c.html#a67657ae1ed8eaea55d26b24c019d66bd">navigation_func</a>, <a class="el" href="group__navit.html#ga4d87fcc566606c0ffe8d3e19ad16e826">navit_func</a>, <a class="el" href="xmlconfig_8c.html#a7fe8a7409ee987b15c33ef23804625bf">object_funcs</a>, <a class="el" href="osd_8c.html#acd738591dfcd346aa569eb285aff46b4">osd_func</a>, <a class="el" href="profile__option_8c.html#a39059376b14589da5f97c9e60a8b2c3b">profile_option_func</a>, <a class="el" href="roadprofile_8c.html#a7783d573179858b73fbd109213374f54">roadprofile_func</a>, <a class="el" href="route_8c.html#a44e68e38b75a73288198f97c5971aa04">route_func</a>, <a class="el" href="script_8c.html#aae3c5cf98b6db3ef8766b55ac490bb78">script_func</a>, <a class="el" href="speech_8c.html#aa5b4a6300391ce4fa3def1f84bf80132">speech_func</a>, <a class="el" href="track_8c.html#adee02887f45fa0745c408f29f2d9880c">tracking_func</a>, <a class="el" href="traffic_8c.html#ac74f6cabb89cd7e9d40db2c386d32259">traffic_func</a>, <a class="el" href="vehicle_8c.html#a74992576db530f3756a0ae02b2b3583c">vehicle_func</a>, and <a class="el" href="vehicleprofile_8c.html#ad28b27d1b2cd1462fa59bf5265b2521e">vehicleprofile_func</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="command_8c.html#a92bea054d37b06e01ea145c2cb5e152a">command_call_function()</a>, <a class="el" href="command_8c.html#a7f5c4370a8a9caf085040a01a77f62ee">command_evaluate_single()</a>, <a class="el" href="command_8c.html#ac5bc84a6e4a20108b6495ec0ff49ec0e">command_object_add_attr()</a>, <a class="el" href="command_8c.html#ab7a5f12a7331a1e53a4cf9c0badb0a55">command_object_get_attr()</a>, <a class="el" href="command_8c.html#a3e2d390f19ae5c06ade7548e59c571d6">command_object_remove_attr()</a>, <a class="el" href="command_8c.html#ad74e35474194efd8d81d847c26ea6573">command_register_callbacks()</a>, <a class="el" href="command_8c.html#abf194bbbb304b98c83c8512356623db9">command_saved_callbacks_changed()</a>, <a class="el" href="command_8c.html#a68a6b8f43887962ab9374cf8abc9b03a">command_set_attr()</a>, <a class="el" href="command_8c.html#a3a2559c11fb73b64ff63c27dcb1408fd">eval_postfix()</a>, <a class="el" href="gui__internal__menu_8c.html#a8a12f043e73fb935cf1798cc16ef2e7b">gui_internal_menu_destroy()</a>, <a class="el" href="gui__internal__html_8c.html#a18c18878d98b084ae858628c645dbfbf">gui_internal_set_refresh_callback()</a>, and <a class="el" href="xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807">start_element()</a>.</p>
 
@@ -1163,7 +1167,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="protobuf-c_8c.html#aa93f0eb578d23995850d61f7d61c55c1">FALSE</a>, <a class="el" href="structxmldocument.html#af01cd2793e3d1a3342fb37bba23dd09a">xmldocument::first</a>, <a class="el" href="structxmldocument.html#aeead274bfda8a64c0041eaa894f55ec8">xmldocument::href</a>, <a class="el" href="structxmldocument.html#a526aef72464901dd2ba92f901be97258">xmldocument::last</a>, <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, <a class="el" href="protobuf-c_8c.html#aa8cecfc5c5c054d2875c03e77b7be15d">TRUE</a>, and <a class="el" href="structxmldocument.html#a863e321b64e18ee33e8ca8634d9d9947">xmldocument::xpointer</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8h.html#a1e5408bb438c0542810f2adc36db5fbb">config_load()</a>, <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>, <a class="el" href="xmlconfig_8c.html#a8bc244d709c9ad54b3c5ee562340195e">xinclude()</a>, and <a class="el" href="xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="xmlconfig_8h.html#a1e5408bb438c0542810f2adc36db5fbb">config_load()</a>, <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>, <a class="el" href="xmlconfig_8c.html#a8bc244d709c9ad54b3c5ee562340195e">xinclude()</a>, and <a class="el" href="xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
 
 </div>
 </div>
@@ -1261,7 +1265,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="xmlconfig_8h.html#ae8b8c79f95f5c2a2c6584c5adb86b7b5">xml_parse_file()</a>, and <a class="el" href="xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
 
 </div>
 </div>
@@ -1503,7 +1507,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="structxistate.html#a7376784c64cd855578e5d4778da0cf7a">xistate::attribute_names</a>, <a class="el" href="structxistate.html#aca5e12e44e1129e32a1fb74f968c22f1">xistate::attribute_values</a>, <a class="el" href="structxistate.html#a7bcfae17652167399b2832200d38dcdc">xistate::child</a>, <a class="el" href="xmlconfig_8c.html#ac5415759e6e9fededa9eee0593bc46c3">end_element()</a>, <a class="el" href="structxmldocument.html#af01cd2793e3d1a3342fb37bba23dd09a">xmldocument::first</a>, <a class="el" href="structxmldocument.html#a526aef72464901dd2ba92f901be97258">xmldocument::last</a>, <a class="el" href="structxistate.html#a3d59ef6785d26220a3b7fe48345f844a">xistate::parent</a>, and <a class="el" href="structxmldocument.html#af7f73073761801c9ff64461a2bc5423e">xmldocument::user_data</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
 
 </div>
 </div>
@@ -1567,7 +1571,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="structxistate.html#a7376784c64cd855578e5d4778da0cf7a">xistate::attribute_names</a>, <a class="el" href="structxistate.html#aca5e12e44e1129e32a1fb74f968c22f1">xistate::attribute_values</a>, <a class="el" href="structxistate.html#a7bcfae17652167399b2832200d38dcdc">xistate::child</a>, <a class="el" href="structxistate.html#ae5fd94ddf54cb32b5c70543439518656">xistate::element</a>, <a class="el" href="structxmldocument.html#af01cd2793e3d1a3342fb37bba23dd09a">xmldocument::first</a>, <a class="el" href="structxmldocument.html#a526aef72464901dd2ba92f901be97258">xmldocument::last</a>, <a class="el" href="structxistate.html#a3d59ef6785d26220a3b7fe48345f844a">xistate::parent</a>, <a class="el" href="xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807">start_element()</a>, <a class="el" href="structxmldocument.html#af7f73073761801c9ff64461a2bc5423e">xmldocument::user_data</a>, <a class="el" href="xmlconfig_8c.html#a8bc244d709c9ad54b3c5ee562340195e">xinclude()</a>, <a class="el" href="xmlconfig_8h.html#afd8b7cd5f1269b7be091f7a7ad637356">XML_ATTR_DISTANCE</a>, <a class="el" href="structxmldocument.html#a863e321b64e18ee33e8ca8634d9d9947">xmldocument::xpointer</a>, and <a class="el" href="xmlconfig_8c.html#ac1bf377b22f964635218ecee0eaf9858">xpointer_match()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
 
 </div>
 </div>
@@ -1625,7 +1629,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structxmldocument.html#af7f73073761801c9ff64461a2bc5423e">xmldocument::user_data</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a5d3a89074520203b358bbab7c96cdcfa">xml_parse_text()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630">parse_node()</a>, and <a class="el" href="xmlconfig_8h.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
 
 </div>
 </div>
@@ -1687,14 +1691,77 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5d3a89074520203b358bbab7c96cdcfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d3a89074520203b358bbab7c96cdcfa">&#9670;&nbsp;</a></span>xml_parse_text()</h2>
+<a id="ae8b8c79f95f5c2a2c6584c5adb86b7b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8b8c79f95f5c2a2c6584c5adb86b7b5">&#9670;&nbsp;</a></span>xml_parse_file()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void xml_parse_text </td>
+          <td class="memname">int xml_parse_file </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, const char **, const char **, void *, GError **)&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, void *, GError **)&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)(<a class="el" href="xmlconfig_8h.html#a561885f2d77fa21cb8a11dab05fa4c16">xml_context</a> *, const char *, gsize, void *, GError **)&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses an XML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The XML file to parse </td></tr>
+    <tr><td class="paramname">data</td><td>Points to a user-defined data structure which will be passed to each of the callbacks passed in the following arguments </td></tr>
+    <tr><td class="paramname">start</td><td>Callback which will be called when an open tag is encountered </td></tr>
+    <tr><td class="paramname">end</td><td>Callback which will be called when a close tag is encountered </td></tr>
+    <tr><td class="paramname">text</td><td>Callback which will be called when character data is encountered</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false on failure. </dd></dl>
+
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219">parse_node_text()</a>, <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>, and <a class="el" href="xmlconfig_8c.html#a689cc47cf7602cb6579cdfb8bd99783b">xml_parse_text()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8h.html#a637d07da49a4a3dd084ef7652612adc7">traffic_get_messages_from_xml_file()</a>.</p>
+
+</div>
+</div>
+<a id="a689cc47cf7602cb6579cdfb8bd99783b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a689cc47cf7602cb6579cdfb8bd99783b">&#9670;&nbsp;</a></span>xml_parse_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xml_parse_text </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>document</em>, </td>
@@ -1731,9 +1798,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604">context</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="garmin__img_8c.html#a2ecc49066a3a7cc32866fdf53805dd1d">exit</a>, <a class="el" href="protobuf-c_8c.html#aa93f0eb578d23995850d61f7d61c55c1">FALSE</a>, <a class="el" href="structxmldocument.html#af01cd2793e3d1a3342fb37bba23dd09a">xmldocument::first</a>, <a class="el" href="structxmldocument.html#aeead274bfda8a64c0041eaa894f55ec8">xmldocument::href</a>, <a class="el" href="structxmldocument.html#a526aef72464901dd2ba92f901be97258">xmldocument::last</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="xmlconfig_8c.html#a9de8347241db6908beeefca1c0c9c0b7">parse_file()</a>, <a class="el" href="xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219">parse_node_text()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>, <a class="el" href="xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803">xi_end_element()</a>, <a class="el" href="xmlconfig_8c.html#a4914bc12d14fdb63169790652ac7f1b6">xi_start_element()</a>, <a class="el" href="xmlconfig_8c.html#afcd5dc0aa3d812b43320084b8c0d99f7">xi_text()</a>, and <a class="el" href="structxmldocument.html#a863e321b64e18ee33e8ca8634d9d9947">xmldocument::xpointer</a>.</p>
+<p>Parses XML text. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">document</td><td>The XML data to parse </td></tr>
+    <tr><td class="paramname">data</td><td>Points to a user-defined data structure which will be passed to each of the callbacks passed in the following arguments </td></tr>
+    <tr><td class="paramname">start</td><td>Callback which will be called when an open tag is encountered </td></tr>
+    <tr><td class="paramname">end</td><td>Callback which will be called when a close tag is encountered </td></tr>
+    <tr><td class="paramname">text</td><td>Callback which will be called when character data is encountered</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false on failure. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal__html_8h.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>.</p>
+<p class="reference">References <a class="el" href="structxmldocument.html#aafbaeb85573d419eff8945640725fb17">xmldocument::active</a>, <a class="el" href="osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604">context</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="protobuf-c_8c.html#aa93f0eb578d23995850d61f7d61c55c1">FALSE</a>, <a class="el" href="structxmldocument.html#af01cd2793e3d1a3342fb37bba23dd09a">xmldocument::first</a>, <a class="el" href="structxmldocument.html#aeead274bfda8a64c0041eaa894f55ec8">xmldocument::href</a>, <a class="el" href="structxmldocument.html#a526aef72464901dd2ba92f901be97258">xmldocument::last</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="xmlconfig_8c.html#a9de8347241db6908beeefca1c0c9c0b7">parse_file()</a>, <a class="el" href="xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219">parse_node_text()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>, <a class="el" href="xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803">xi_end_element()</a>, <a class="el" href="xmlconfig_8c.html#a4914bc12d14fdb63169790652ac7f1b6">xi_start_element()</a>, <a class="el" href="xmlconfig_8c.html#afcd5dc0aa3d812b43320084b8c0d99f7">xi_text()</a>, and <a class="el" href="structxmldocument.html#a863e321b64e18ee33e8ca8634d9d9947">xmldocument::xpointer</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal__html_8h.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>, <a class="el" href="traffic_8h.html#a02d60d4812860b1e0a0bf2833451719b">traffic_get_messages_from_xml_string()</a>, and <a class="el" href="xmlconfig_8h.html#ae8b8c79f95f5c2a2c6584c5adb86b7b5">xml_parse_file()</a>.</p>
 
 </div>
 </div>
@@ -2089,9 +2169,9 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;item&quot;</span>,<a class="code" href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a>},</div><div class="line">    {<span class="stringliteral">&quot;itemgra&quot;</span>,<a class="code" href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a>},</div><div class="line">    {<span class="stringliteral">&quot;text&quot;</span>,<a class="code" href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a>},</div><div class="line">    {<span class="stringliteral">&quot;label&quot;</span>,<a class="code" href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a>},</div><div class="line">    {<span class="stringliteral">&quot;circle&quot;</span>,<a class="code" href="xmlconfig_8c.html#a29f75b66f966a4771e62850f85ccfcf9">attr_fixme_circle</a>},</div><div class="line">    {NULL,NULL},</div><div class="line">}</div><div class="ttc" id="xmlconfig_8c_html_a29f75b66f966a4771e62850f85ccfcf9"><div class="ttname"><a href="xmlconfig_8c.html#a29f75b66f966a4771e62850f85ccfcf9">attr_fixme_circle</a></div><div class="ttdeci">static char * attr_fixme_circle[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:313</div></div>
-<div class="ttc" id="xmlconfig_8c_html_ad26ba63a88be0b6f5a09eafedaf48148"><div class="ttname"><a href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a></div><div class="ttdeci">static char * attr_fixme_text[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:308</div></div>
-<div class="ttc" id="xmlconfig_8c_html_a66d741a2e0ddf45b83eddc8968bcfcde"><div class="ttname"><a href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a></div><div class="ttdeci">static char * attr_fixme_itemgra[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:303</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;item&quot;</span>,<a class="code" href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a>},</div><div class="line">    {<span class="stringliteral">&quot;itemgra&quot;</span>,<a class="code" href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a>},</div><div class="line">    {<span class="stringliteral">&quot;text&quot;</span>,<a class="code" href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a>},</div><div class="line">    {<span class="stringliteral">&quot;label&quot;</span>,<a class="code" href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a>},</div><div class="line">    {<span class="stringliteral">&quot;circle&quot;</span>,<a class="code" href="xmlconfig_8c.html#a29f75b66f966a4771e62850f85ccfcf9">attr_fixme_circle</a>},</div><div class="line">    {NULL,NULL},</div><div class="line">}</div><div class="ttc" id="xmlconfig_8c_html_a29f75b66f966a4771e62850f85ccfcf9"><div class="ttname"><a href="xmlconfig_8c.html#a29f75b66f966a4771e62850f85ccfcf9">attr_fixme_circle</a></div><div class="ttdeci">static char * attr_fixme_circle[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:315</div></div>
+<div class="ttc" id="xmlconfig_8c_html_ad26ba63a88be0b6f5a09eafedaf48148"><div class="ttname"><a href="xmlconfig_8c.html#ad26ba63a88be0b6f5a09eafedaf48148">attr_fixme_text</a></div><div class="ttdeci">static char * attr_fixme_text[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:310</div></div>
+<div class="ttc" id="xmlconfig_8c_html_a66d741a2e0ddf45b83eddc8968bcfcde"><div class="ttname"><a href="xmlconfig_8c.html#a66d741a2e0ddf45b83eddc8968bcfcde">attr_fixme_itemgra</a></div><div class="ttdeci">static char * attr_fixme_itemgra[]</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:305</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807">start_element()</a>.</p>
 
@@ -2133,7 +2213,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807">start_element()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="util_8h.html#aa17c54818feed047d0a937e8d7085333">compare_name_systematic()</a>, and <a class="el" href="xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807">start_element()</a>.</p>
 
 </div>
 </div>

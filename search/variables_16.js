@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['u',['u',['../structattr.html#a682d33096ece5ad806426918c15c4b10',1,'attr::u()'],['../structelement.html#aa7fd252529b5f74a71ceaf7b4af92d66',1,'element::u()'],['../structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f',1,'map_selection::u()'],['../structattr__iter.html#a855540d9e6e11a61e310572de15b4d98',1,'attr_iter::u()'],['../structattr__iter.html#aeeaaac9338f3e4b523f8653167305040',1,'attr_iter::u()']]],
+  ['u',['u',['../structattr.html#a682d33096ece5ad806426918c15c4b10',1,'attr::u()'],['../structelement.html#aa7fd252529b5f74a71ceaf7b4af92d66',1,'element::u()'],['../structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f',1,'map_selection::u()'],['../structattr__iter.html#a855540d9e6e11a61e310572de15b4d98',1,'attr_iter::u()'],['../structattr__iter.html#aeeaaac9338f3e4b523f8653167305040',1,'attr_iter::u()'],['../structquantifier.html#a7e415478eb03cdae5018f766908a1a9c',1,'quantifier::u()']]],
   ['u_5fturn_5flimit',['u_turn_limit',['../navigation_8c.html#a81388baea902a53db5e41d24cdb892b2',1,'navigation.c']]],
   ['ui_5fmanager',['ui_manager',['../structgui__priv.html#a7a4f4c79a5a950ade1e2940a455e80ec',1,'gui_priv']]],
   ['uid',['uid',['../struct__OSMPBF____Info.html#a4b1ad9faa5dac12561b73be554f527f1',1,'_OSMPBF__Info::uid()'],['../struct__OSMPBF____DenseInfo.html#a69d4e833417d097eec3c3346f71e5ea7',1,'_OSMPBF__DenseInfo::uid()'],['../structo5m.html#a058a77711612a8f2bb14018aa0292db5',1,'o5m::uid()']]],
@@ -28,6 +28,7 @@ var searchData=
   ['update_5fperiod',['update_period',['../structroute__guard.html#a57d1552fbd69c5808e8b303873806f25',1,'route_guard::update_period()'],['../structcmd__interface.html#aaa034116bf9d2a579bffb68de89aa92f',1,'cmd_interface::update_period()']]],
   ['update_5fprogress_5ftime_5fns',['UPDATE_PROGRESS_TIME_NS',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ad3b4ab71a2ed3a1f911df923b36cedd6',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['update_5frequired',['update_required',['../structroute__path.html#a4426cab29e79036821cf0b8fed9dd45b',1,'route_path']]],
+  ['update_5ftime',['update_time',['../structtraffic__message.html#ac8e4c5c2fff825205df87887ee62d976',1,'traffic_message']]],
   ['update_5fyear',['update_year',['../structimg__header.html#ae06d865e058d851421a89770edfac5fc',1,'img_header::update_year()'],['../garmin__img_8c.html#af087d202670360acf46f90816e27040d',1,'update_year():&#160;garmin_img.c']]],
   ['updated',['updated',['../structroute__path.html#abd05c7f0557eaa5a1916546fcb69c665',1,'route_path']]],
   ['upperlower',['upperlower',['../linguistics_8c.html#a2c98d1146b283c79d0b6ef99a4d5aced',1,'linguistics.c']]],

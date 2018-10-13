@@ -148,6 +148,7 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 , <a class="el" href="structrelation__member.html#a59ba32ccc872fae1acb3e57b7e2a1914">relation_member</a>
 , <a class="el" href="structsearch__list__result.html#abe3d6f86893bab0f844f6d77fc7e9281">search_list_result</a>
 , <a class="el" href="structtown__priv.html#a2593d4d61589fb2ae28499b0e84baea6">town_priv</a>
+, <a class="el" href="structtraffic__message.html#a6133e0555cd1aae6445f66fe18a66ce6">traffic_message</a>
 </li>
 <li>id_hi
 : <a class="el" href="structitem.html#a193c3e2ec0076325a4f3139f9d33e06e">item</a>
@@ -172,6 +173,7 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 , <a class="el" href="structgui__priv.html#a3b237bc10e3ef41cc93f4ca37508c6b3">gui_priv</a>
 , <a class="el" href="structnavigation.html#a555cf05343bbf68e544af170133cd572">navigation</a>
 , <a class="el" href="structroute__graph.html#a624be91df267d7b100b86a0298e6f9e7">route_graph</a>
+, <a class="el" href="structtraffic.html#a38056316f84e09d1b4fd1b28459ecd6d">traffic</a>
 </li>
 <li>idle_clb
 : <a class="el" href="structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1">android_search_priv</a>
@@ -187,6 +189,7 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 , <a class="el" href="structdisplaylist.html#a5c37b04d86316fcda6be48eb9fe1379f">displaylist</a>
 , <a class="el" href="structnavigation.html#a207e270d9eced476bf17389657ce531c">navigation</a>
 , <a class="el" href="structroute__graph.html#ad09c527a69149fe25000b6fd4eaa8f81">route_graph</a>
+, <a class="el" href="structtraffic.html#a21b2e5ed354c50cde8b22e007bc1a437">traffic</a>
 </li>
 <li>idx
 : <a class="el" href="structmap__rect__priv.html#a9fd8e3456c41626fa45d0162ec55880f">map_rect_priv</a>
@@ -380,8 +383,14 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 <li>is_attr
 : <a class="el" href="structNavitObject.html#a436e63645d651987731027606f52ea41">NavitObject</a>
 </li>
+<li>is_cancellation
+: <a class="el" href="structtraffic__message.html#a61857175748e0a05f00e17a358b432c6">traffic_message</a>
+</li>
 <li>is_complex_t_junction
 : <a class="el" href="structnavigation__maneuver.html#af9aab10475c48ec899ecf3f53536ad62">navigation_maneuver</a>
+</li>
+<li>is_forecast
+: <a class="el" href="structtraffic__message.html#a8407ad12cda392036d21df9f057ab5e4">traffic_message</a>
 </li>
 <li>is_leaf
 : <a class="el" href="structquadtree__iter__node.html#a4ad6dbf9f9647f00eee2419ea7d62cef">quadtree_iter_node</a>
@@ -389,6 +398,9 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 </li>
 <li>is_on
 : <a class="el" href="structwidget.html#ad4fe06585ce4e9e4bc076ea7c99b1b6d">widget</a>
+</li>
+<li>is_opened
+: <a class="el" href="structxml__state.html#ac52a921148ce1379360e9865b0b2bbda">xml_state</a>
 </li>
 <li>is_overlay
 : <a class="el" href="classRenderArea.html#a618d7ed9dff336f3f21fc8d7fb229ab2">RenderArea</a>
@@ -404,6 +416,9 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 </li>
 <li>is_unambiguous
 : <a class="el" href="structnavigation__maneuver.html#a50641eef773577717d1ce188fa621318">navigation_maneuver</a>
+</li>
+<li>is_valid
+: <a class="el" href="structxml__state.html#abd98f943564aacad51ebabef2a5b03ac">xml_state</a>
 </li>
 <li>isEdge
 : <a class="el" href="structg2sprop.html#a3fc6e7de626012954aa1eea223690f17">g2sprop</a>
@@ -440,7 +455,7 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 , <a class="el" href="structitem__data.html#af41c20c1a05e8906d6ad98615e12744d">item_data</a>
 , <a class="el" href="structitem__name.html#ad6ece6cf332dc21e9f48a398efce9e19">item_name</a>
 , <a class="el" href="structitem__priv.html#a73e6d6cf1cf9a7d4fdfe089a913c1f5e">item_priv</a>
-, <a class="el" href="structmap__rect__priv.html#a3f9105f480f01d3b793acb2ded02ed59">map_rect_priv</a>
+, <a class="el" href="structmap__rect__priv.html#adddecdbbaf3bcdc91eae544640e9305a">map_rect_priv</a>
 , <a class="el" href="structmap__search__priv.html#a1c62b9bf82778267f46c164f80c7c248">map_search_priv</a>
 , <a class="el" href="structmapset__search.html#af73566fac55a7095d13ae24a5ca9b71d">mapset_search</a>
 , <a class="el" href="structnavigation__way.html#af579448cdf2ab9a80fec3c3b2c817062">navigation_way</a>
@@ -511,9 +526,11 @@ $(document).ready(function(){initNavTree('functions_vars_i.html','');});
 : <a class="el" href="structlayer.html#ae3318e3e33977dcec896b5f920ce96b2">layer</a>
 </li>
 <li>items
-: <a class="el" href="structosd__text.html#a2917d3b5e2886dc7d3597b2d6c4fce35">osd_text</a>
+: <a class="el" href="structmap__priv.html#ab3aaf7693ebea8d8569a42afcffc1a42">map_priv</a>
+, <a class="el" href="structosd__text.html#a2917d3b5e2886dc7d3597b2d6c4fce35">osd_text</a>
 , <a class="el" href="structquadtree__iter__node.html#a4e3057ecdbac397dbad4e3b0b3bdc547">quadtree_iter_node</a>
 , <a class="el" href="structquadtree__node.html#a5cff37140e23dfd986744b6ecbab1bd9">quadtree_node</a>
+, <a class="el" href="structtraffic__message__priv.html#a9ade8c61d662dbfd2d9d549d69cb9a0a">traffic_message_priv</a>
 </li>
 <li>itemt
 : <a class="el" href="structsearch__list__town.html#a275475dfc8ed4f54e5b1a852fef1b747">search_list_town</a>

@@ -6,5 +6,6 @@ var structroute__graph__segment__data =
     [ "len", "structroute__graph__segment__data.html#a2b5b2b8fb126f9c03d44665f336cd9e8", null ],
     [ "maxspeed", "structroute__graph__segment__data.html#a659f717332465fa0ed069553919c92dc", null ],
     [ "offset", "structroute__graph__segment__data.html#a96d04661f8616ffbd86fad15d479fb8d", null ],
+    [ "score", "structroute__graph__segment__data.html#a292cff40279ac478ebbc20b82d8341d8", null ],
     [ "size_weight", "structroute__graph__segment__data.html#a4b87c45d865547b72c68cffc88af24f0", null ]
 ];

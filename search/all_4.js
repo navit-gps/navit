@@ -181,6 +181,7 @@ var searchData=
   ['bookmarksproxy',['bookmarksProxy',['../structgui__priv.html#abcaf029d7ff52d54892129ffcfb10721',1,'gui_priv']]],
   ['bookmarksproxy_2eh',['bookmarksProxy.h',['../bookmarksProxy_8h.html',1,'']]],
   ['bool',['BOOL',['../structgraphics__priv.html#af8ece243b60fa4cfd0f5bb8246048dc7',1,'graphics_priv::BOOL(WINAPI *ChangeWindowMessageFilter)(UINT message'],['../structgraphics__priv.html#a02dd4dceb5393e8f37b7cbfa51010002',1,'graphics_priv::BOOL(WINAPI *ChangeWindowMessageFilterEx)(HWND hWnd']]],
+  ['boolean_5fnew',['boolean_new',['../traffic_8c.html#aa86d7ef2ccc3422c75fb69f11288fa8d',1,'traffic.c']]],
   ['boolean_5fpack',['boolean_pack',['../protobuf-c_8c.html#a647b7e008f3c082e8a2b01c91b2026e5',1,'protobuf-c.c']]],
   ['border',['border',['../structwidget.html#ac09753d4c0f3ebe9d6433f618df31bec',1,'widget::border()'],['../structnavit.html#ac280fb17123f0df666bf11ab4d343bc8',1,'navit::border()']]],
   ['bottom',['bottom',['../structpadding.html#af84433bc78ab8a258adea15d7f43019a',1,'padding::bottom()'],['../struct__OSMPBF____HeaderBBox.html#a0124e422ceb24c7800c20070b13a215a',1,'_OSMPBF__HeaderBBox::bottom()']]],

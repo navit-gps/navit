@@ -15,6 +15,7 @@ var searchData=
   ['dbus_5ferror_5finvalid_5fparameter',['dbus_error_invalid_parameter',['../binding__dbus_8c.html#ad1421264d22f18ddf66132a9fa6af290',1,'binding_dbus.c']]],
   ['dbus_5ferror_5fnavigation_5fnot_5fconfigured',['dbus_error_navigation_not_configured',['../binding__dbus_8c.html#aec6e875593b5d4b9e70ce30660a17166',1,'binding_dbus.c']]],
   ['dbus_5ferror_5fno_5fdata_5favailable',['dbus_error_no_data_available',['../binding__dbus_8c.html#ad5ba90943b624639f0b09d087cf8568a',1,'binding_dbus.c']]],
+  ['dbus_5ferror_5ftraffic_5fnot_5fconfigured',['dbus_error_traffic_not_configured',['../binding__dbus_8c.html#a97b154aebcacd3630288d722de81b9ae',1,'binding_dbus.c']]],
   ['dbus_5fmain_5fnavit',['dbus_main_navit',['../binding__dbus_8c.html#a0ece7c67fb5a339f5a03257dd91b13fe',1,'binding_dbus.c']]],
   ['debug_5fassert_5ffail',['debug_assert_fail',['../debug_8c.html#adf74b10840627ad7fda59d4ddb70abbd',1,'debug_assert_fail(const char *module, const int mlen, const char *function, const int flen, const char *file, int line, const char *expr):&#160;debug.c'],['../debug_8h.html#adf74b10840627ad7fda59d4ddb70abbd',1,'debug_assert_fail(const char *module, const int mlen, const char *function, const int flen, const char *file, int line, const char *expr):&#160;debug.c']]],
   ['debug_5fdestroy',['debug_destroy',['../debug_8c.html#ac5bad2858fb5f4c693b12ac6dabd244e',1,'debug_destroy(void):&#160;debug.c'],['../debug_8h.html#ac5bad2858fb5f4c693b12ac6dabd244e',1,'debug_destroy(void):&#160;debug.c']]],

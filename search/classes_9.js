@@ -11,6 +11,7 @@ var searchData=
   ['item_5fhash',['item_hash',['../structitem__hash.html',1,'']]],
   ['item_5fid',['item_id',['../structitem__id.html',1,'']]],
   ['item_5fmethods',['item_methods',['../structitem__methods.html',1,'']]],
+  ['item_5fmsg_5fpriv',['item_msg_priv',['../structitem__msg__priv.html',1,'']]],
   ['item_5fname',['item_name',['../structitem__name.html',1,'']]],
   ['item_5fpriv',['item_priv',['../structitem__priv.html',1,'']]],
   ['item_5frange',['item_range',['../structitem__range.html',1,'']]],

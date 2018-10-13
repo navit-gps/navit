@@ -23,6 +23,7 @@ var searchData=
   ['navitsensors_2ejava',['NavitSensors.java',['../NavitSensors_8java.html',1,'']]],
   ['navitspeech2_2ejava',['NavitSpeech2.java',['../NavitSpeech2_8java.html',1,'']]],
   ['navittimeout_2ejava',['NavitTimeout.java',['../NavitTimeout_8java.html',1,'']]],
+  ['navittraff_2ejava',['NavitTraff.java',['../NavitTraff_8java.html',1,'']]],
   ['navitvehicle_2ejava',['NavitVehicle.java',['../NavitVehicle_8java.html',1,'']]],
   ['navitwatch_2ejava',['NavitWatch.java',['../NavitWatch_8java.html',1,'']]],
   ['ngqpoint_2eh',['ngqpoint.h',['../ngqpoint_8h.html',1,'']]]

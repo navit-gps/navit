@@ -56,6 +56,9 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
     [ "NavitTimeout.java", "NavitTimeout_8java.html", [
       [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ]
     ] ],
+    [ "NavitTraff.java", "NavitTraff_8java.html", [
+      [ "NavitTraff", "classorg_1_1navitproject_1_1navit_1_1NavitTraff.html", "classorg_1_1navitproject_1_1navit_1_1NavitTraff" ]
+    ] ],
     [ "NavitVehicle.java", "NavitVehicle_8java.html", [
       [ "NavitVehicle", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle" ],
       [ "NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener" ]

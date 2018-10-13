@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['u',['u',['../structattr.html#a682d33096ece5ad806426918c15c4b10',1,'attr::u()'],['../structelement.html#aa7fd252529b5f74a71ceaf7b4af92d66',1,'element::u()'],['../structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f',1,'map_selection::u()'],['../structattr__iter.html#a855540d9e6e11a61e310572de15b4d98',1,'attr_iter::u()'],['../structattr__iter.html#aeeaaac9338f3e4b523f8653167305040',1,'attr_iter::u()']]],
+  ['u',['u',['../structattr.html#a682d33096ece5ad806426918c15c4b10',1,'attr::u()'],['../structelement.html#aa7fd252529b5f74a71ceaf7b4af92d66',1,'element::u()'],['../structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f',1,'map_selection::u()'],['../structattr__iter.html#a855540d9e6e11a61e310572de15b4d98',1,'attr_iter::u()'],['../structattr__iter.html#aeeaaac9338f3e4b523f8653167305040',1,'attr_iter::u()'],['../structquantifier.html#a7e415478eb03cdae5018f766908a1a9c',1,'quantifier::u()']]],
   ['u16',['u16',['../types_8h.html#ace9d960e74685e2cd84b36132dbbf8aa',1,'types.h']]],
   ['u32',['u32',['../types_8h.html#afaa62991928fb9fb18ff0db62a040aba',1,'types.h']]],
   ['u8',['u8',['../types_8h.html#a92c50087ca0e64fa93fc59402c55f8ca',1,'types.h']]],
@@ -56,6 +56,7 @@ var searchData=
   ['update_5fperiod',['update_period',['../structroute__guard.html#a57d1552fbd69c5808e8b303873806f25',1,'route_guard::update_period()'],['../structcmd__interface.html#aaa034116bf9d2a579bffb68de89aa92f',1,'cmd_interface::update_period()']]],
   ['update_5fprogress_5ftime_5fns',['UPDATE_PROGRESS_TIME_NS',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ad3b4ab71a2ed3a1f911df923b36cedd6',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['update_5frequired',['update_required',['../structroute__path.html#a4426cab29e79036821cf0b8fed9dd45b',1,'route_path']]],
+  ['update_5ftime',['update_time',['../structtraffic__message.html#ac8e4c5c2fff825205df87887ee62d976',1,'traffic_message']]],
   ['update_5ftransformation',['update_transformation',['../group__navit.html#gac57a7b314c5c0801ca62ee31342bc6e5',1,'navit.c']]],
   ['update_5fyear',['update_year',['../structimg__header.html#ae06d865e058d851421a89770edfac5fc',1,'img_header::update_year()'],['../garmin__img_8c.html#af087d202670360acf46f90816e27040d',1,'update_year():&#160;garmin_img.c']]],
   ['updatecurrentdirectorytextview',['updateCurrentDirectoryTextView',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a3e3dd27c18c550db77cd48a366a99648',1,'org::navitproject::navit::FileBrowserActivity']]],

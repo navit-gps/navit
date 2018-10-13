@@ -33,6 +33,7 @@ var structmap__priv =
     [ "index_offset", "structmap__priv.html#a969d6c61614594c229d8b2764c4ddab2", null ],
     [ "is_pipe", "structmap__priv.html#a2efdca525cc87f294eccde186790a504", null ],
     [ "item_type", "structmap__priv.html#a47efe795d600d0ee69c57fe79331dbce", null ],
+    [ "items", "structmap__priv.html#ab3aaf7693ebea8d8569a42afcffc1a42", null ],
     [ "last_searched_town_id_hi", "structmap__priv.html#aef1be3767b9648cd42b491bc025096d3", null ],
     [ "last_searched_town_id_lo", "structmap__priv.html#a17bbe644046658bf300b55174f6c54f1", null ],
     [ "lm", "structmap__priv.html#acd2c49c174d0ee4b8c51ae2d9f1b0eae", null ],

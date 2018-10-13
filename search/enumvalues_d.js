@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['parse_5fstate_5falpha',['parse_state_alpha',['../util_8c.html#a8daa300d570259681d375158ecd5233eab440dfb530e5d40f2336781a6a0baee4',1,'util.c']]],
+  ['parse_5fstate_5fnumeric',['parse_state_numeric',['../util_8c.html#a8daa300d570259681d375158ecd5233ea4da7f298c17a18dffbec9ee24b1b6c3e',1,'util.c']]],
+  ['parse_5fstate_5fwhitespace',['parse_state_whitespace',['../util_8c.html#a8daa300d570259681d375158ecd5233ea47c619250b60b0597fc22b5188cec8a9',1,'util.c']]],
   ['plugin_5fcategory_5fevent',['plugin_category_event',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a68f4b65161acd7b1dbc58ad005b61b6b',1,'plugin.h']]],
   ['plugin_5fcategory_5ffont',['plugin_category_font',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a3705add07c21ee50547080ec30645bfc',1,'plugin.h']]],
   ['plugin_5fcategory_5fgraphics',['plugin_category_graphics',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a61064c70f60e5c2e88d1f177020b6df6',1,'plugin.h']]],
@@ -8,6 +11,7 @@ var searchData=
   ['plugin_5fcategory_5fmap',['plugin_category_map',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532adc2da9839a5c145d30dfd5f638f79cbb',1,'plugin.h']]],
   ['plugin_5fcategory_5fosd',['plugin_category_osd',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a2bf6d493a2fcd966d5a2effb8a56cd35',1,'plugin.h']]],
   ['plugin_5fcategory_5fspeech',['plugin_category_speech',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a370d1a4d8618f8f20bcac91ac11f4e27',1,'plugin.h']]],
+  ['plugin_5fcategory_5ftraffic',['plugin_category_traffic',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a170df75692203b64071a8aee91920e58',1,'plugin.h']]],
   ['plugin_5fcategory_5fvehicle',['plugin_category_vehicle',['../plugin_8h.html#aaf2fec10fd7066df587b216658491532a417af489b0bc116cc2e9c8494f484b09',1,'plugin.h']]],
   ['pointofinterest',['PointOfInterest',['../ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4aa4ee8b7b703a13592dc2bb0b06cdfa02',1,'ngqpoint.h']]],
   ['position',['Position',['../ngqpoint_8h.html#ab85b18a34fce0dfc4f1c63142bc889a4a0ca2444163688098d8e674e31fb11397',1,'ngqpoint.h']]],

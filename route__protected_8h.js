@@ -1,0 +1,28 @@
+var route__protected_8h =
+[
+    [ "route_graph_point", "structroute__graph__point.html", "structroute__graph__point" ],
+    [ "route_segment_data", "structroute__segment__data.html", "structroute__segment__data" ],
+    [ "size_weight_limit", "structsize__weight__limit.html", "structsize__weight__limit" ],
+    [ "route_graph_segment_data", "structroute__graph__segment__data.html", "structroute__graph__segment__data" ],
+    [ "route_graph_segment", "structroute__graph__segment.html", "structroute__graph__segment" ],
+    [ "route_graph", "structroute__graph.html", "structroute__graph" ],
+    [ "RP_TRAFFIC_DISTORTION", "route__protected_8h.html#a155f7919b34af0a15191d0fac83bd7ef", null ],
+    [ "RP_TURN_RESTRICTION", "route__protected_8h.html#aa438cdb1fc7b3387237d2b26bb8018f9", null ],
+    [ "RP_TURN_RESTRICTION_RESOLVED", "route__protected_8h.html#ad25243fa153d0c1b79a8c95808e158fb", null ],
+    [ "RSD_MAXSPEED", "route__protected_8h.html#ae3ec9a2172bb385ab6deda0260d01f0c", null ],
+    [ "route_add_traffic_distortion", "route__protected_8h.html#aba6e9105109a8101259a8ee149b568c9", null ],
+    [ "route_change_traffic_distortion", "route__protected_8h.html#a1ea80e9a5f85a7c53f2d3ab6055bbc19", null ],
+    [ "route_get_graph", "route__protected_8h.html#ac1e48a7cca4fc2ef591fc3f20d7837c7", null ],
+    [ "route_graph_add_point", "route__protected_8h.html#a061079967bbc666657df78bd29aba6e5", null ],
+    [ "route_graph_add_segment", "route__protected_8h.html#a323d5a36e3dd17eeacd67761f9199c45", null ],
+    [ "route_graph_add_turn_restriction", "route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876", null ],
+    [ "route_graph_build_done", "route__protected_8h.html#afac418991fad3b6c2afababe04818b0a", null ],
+    [ "route_graph_free_points", "route__protected_8h.html#aff9fd5bebd85f09a446e67252c214ba1", null ],
+    [ "route_graph_free_segments", "route__protected_8h.html#a37b47f793cb4dc759b3b263051585781", null ],
+    [ "route_graph_get_point", "route__protected_8h.html#a28e04cb825b1c4b25884c6a55ced61d9", null ],
+    [ "route_graph_get_point_next", "route__protected_8h.html#a43027563f91a1b5262a957f32196893e", null ],
+    [ "route_graph_segment_is_duplicate", "route__protected_8h.html#a0533629c5051ffd35d84976d5e1bfed7", null ],
+    [ "route_recalculate_partial", "route__protected_8h.html#a0d8ec5e0a187061a8391ef6d2151191c", null ],
+    [ "route_remove_traffic_distortion", "route__protected_8h.html#a0e277efd70979983df760200a7dd745e", null ],
+    [ "route_segment_data_field_pos", "route__protected_8h.html#a3f7647cdbff7bc59905d9771ced0472c", null ]
+];

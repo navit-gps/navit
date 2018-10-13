@@ -16,6 +16,7 @@ var namespaceorg_1_1navitproject_1_1navit =
     [ "NavitSensors", "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html", "classorg_1_1navitproject_1_1navit_1_1NavitSensors" ],
     [ "NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2" ],
     [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ],
+    [ "NavitTraff", "classorg_1_1navitproject_1_1navit_1_1NavitTraff.html", "classorg_1_1navitproject_1_1navit_1_1NavitTraff" ],
     [ "NavitVehicle", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle" ],
     [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch" ]
 ];

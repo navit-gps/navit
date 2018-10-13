@@ -11,5 +11,6 @@ var searchData=
   ['rootviewcontroller_2em',['RootViewController.m',['../RootViewController_8m.html',1,'']]],
   ['route_2ec',['route.c',['../binding_2python_2route_8c.html',1,'(Global Namespace)'],['../route_8c.html',1,'(Global Namespace)']]],
   ['route_2eh',['route.h',['../route_8h.html',1,'']]],
+  ['route_5fprotected_2eh',['route_protected.h',['../route__protected_8h.html',1,'']]],
   ['routeproxy_2eh',['routeProxy.h',['../routeProxy_8h.html',1,'']]]
 ];

@@ -1,6 +1,8 @@
 var searchData=
 [
   ['path_5fmax',['PATH_MAX',['../file_8h.html#ae688d728e1acdfe5988c7db45d6f0166',1,'file.h']]],
+  ['penalty_5foffroad',['PENALTY_OFFROAD',['../traffic_8c.html#a174fc69c61a3f6b38f151d4da608f96c',1,'traffic.c']]],
+  ['penalty_5fpoint_5fmatch',['PENALTY_POINT_MATCH',['../traffic_8c.html#a38f9d6bc9d7344f35313c7fd572479da',1,'traffic.c']]],
   ['phase1_5fcoord_5fmax',['phase1_coord_max',['../maptool_2misc_8c.html#a7d9fa52024247b89b3a96a4cb6f1c4df',1,'misc.c']]],
   ['phi1',['phi1',['../geodesic_8h.html#a019bb01bc561dea51918b776e9fa4535',1,'geodesic.h']]],
   ['phi2',['phi2',['../geodesic_8h.html#a89061c1c874aa5624d8cb064b97e24c9',1,'geodesic.h']]],
@@ -23,6 +25,8 @@ var searchData=
   ['popup_5fprintf',['popup_printf',['../popup_8c.html#a5f0271a8fabf0861f4cea6d175947fd5',1,'popup.c']]],
   ['post_5fshift',['POST_SHIFT',['../transform_8c.html#a142f183c856d187544d5beb8db7b564f',1,'transform.c']]],
   ['print_5funpack_5ferrors',['PRINT_UNPACK_ERRORS',['../protobuf-c_8c.html#a9088a8dd8b2412a10c44652c679fad79',1,'protobuf-c.c']]],
+  ['process_5fmessages_5fno_5fdump_5fstore',['PROCESS_MESSAGES_NO_DUMP_STORE',['../traffic_8c.html#accb3eb8cd182e0c566dd2f68a88aeefe',1,'traffic.c']]],
+  ['process_5fmessages_5fpurge_5fexpired',['PROCESS_MESSAGES_PURGE_EXPIRED',['../traffic_8c.html#a63a03cf75eb29bd21e530b2905aa89c6',1,'traffic.c']]],
   ['profile',['profile',['../profile_8h.html#a7135a9f7aaa8602a6e2cc1d9ab3c1573',1,'profile.h']]],
   ['profile_5flevel_5fmax',['PROFILE_LEVEL_MAX',['../profile_8c.html#afa3d4c231a1b238d81d2966b340db5b3',1,'profile.c']]],
   ['profile_5fmodule',['profile_module',['../profile_8h.html#a51a854e236ea7856b8ffcf8b20a7d7cc',1,'profile.h']]],

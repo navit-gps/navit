@@ -87,6 +87,9 @@ $(document).ready(function(){initNavTree('structitem__priv.html','');});
 </div><!--header-->
 <div class="contents">
 
+<p>Implementation-specific item data for traffic map items.  
+ <a href="structitem__priv.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="mg_8h_source.html">mg.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -113,8 +116,28 @@ Data Fields</h2></td></tr>
 <tr class="separator:ae65ec1237a703a9d7efbe49bb5dc3549"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73e6d6cf1cf9a7d4fdfe089a913c1f5e"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem.html">item</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#a73e6d6cf1cf9a7d4fdfe089a913c1f5e">item</a></td></tr>
 <tr class="separator:a73e6d6cf1cf9a7d4fdfe089a913c1f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5afbe5cbfdbedb9e18bd781be03b85d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__rect__priv.html">map_rect_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#ad5afbe5cbfdbedb9e18bd781be03b85d">mr</a></td></tr>
+<tr class="separator:ad5afbe5cbfdbedb9e18bd781be03b85d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad373f4b92e9b709eca6deee6bdce9cbf"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#ad373f4b92e9b709eca6deee6bdce9cbf">attrs</a></td></tr>
+<tr class="separator:ad373f4b92e9b709eca6deee6bdce9cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5e0839dfd842faca59d5eab533ff50b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#ae5e0839dfd842faca59d5eab533ff50b">coords</a></td></tr>
+<tr class="separator:ae5e0839dfd842faca59d5eab533ff50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a478a06262e9a186650d001994f24816f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#a478a06262e9a186650d001994f24816f">coord_count</a></td></tr>
+<tr class="separator:a478a06262e9a186650d001994f24816f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af172cd6fcef29ebfb7212f89cff2cf9d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#af172cd6fcef29ebfb7212f89cff2cf9d">refcount</a></td></tr>
+<tr class="separator:af172cd6fcef29ebfb7212f89cff2cf9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33ce104252219af25eccad1b43b6e732"><td class="memItemLeft" align="right" valign="top"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#a33ce104252219af25eccad1b43b6e732">message_data</a></td></tr>
+<tr class="separator:a33ce104252219af25eccad1b43b6e732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4b9cf69aec46fc3fc6dc8f4d481e23e"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#ac4b9cf69aec46fc3fc6dc8f4d481e23e">next_attr</a></td></tr>
+<tr class="separator:ac4b9cf69aec46fc3fc6dc8f4d481e23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4d7f9bd9c2de06f4fb7c2de4ec406f4"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#ae4d7f9bd9c2de06f4fb7c2de4ec406f4">next_coord</a></td></tr>
+<tr class="separator:ae4d7f9bd9c2de06f4fb7c2de4ec406f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f3f341ad41640dc546268428981a29c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute.html">route</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structitem__priv.html#a8f3f341ad41640dc546268428981a29c">rt</a></td></tr>
+<tr class="separator:a8f3f341ad41640dc546268428981a29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implementation-specific item data for traffic map items. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="a5c1c74f836809f83caebf21f6738786c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5c1c74f836809f83caebf21f6738786c">&#9670;&nbsp;</a></span>aend</h2>
 
@@ -199,6 +222,23 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="ad373f4b92e9b709eca6deee6bdce9cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad373f4b92e9b709eca6deee6bdce9cbf">&#9670;&nbsp;</a></span>attrs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structattr.html">attr</a>** item_priv::attrs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The attributes for the item, <code>NULL</code>-terminated </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#a94d6473f75a2d0ddcaf150b916538cd1">tm_attr_rewind()</a>, <a class="el" href="traffic_8c.html#a253ffcfc6a776c71b9dbb6f12c9b1c17">tm_dump_item_to_textfile()</a>, <a class="el" href="traffic_8c.html#ac74435e049ef252b01623ab0aaff486d">tm_item_destroy()</a>, and <a class="el" href="traffic_8c.html#a30e9fbaee3040b1607281bd4d153af62">tm_item_update_attrs()</a>.</p>
+
+</div>
+</div>
 <a id="aa4272ee7a9e2db0caf0989e9e85e629d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4272ee7a9e2db0caf0989e9e85e629d">&#9670;&nbsp;</a></span>cend</h2>
 
@@ -224,6 +264,40 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a478a06262e9a186650d001994f24816f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a478a06262e9a186650d001994f24816f">&#9670;&nbsp;</a></span>coord_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int item_priv::coord_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of elements in <code>coords</code> </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#a9df5d085c7b0b4698be1e1845990520f">tm_coord_get()</a>, <a class="el" href="traffic_8c.html#a253ffcfc6a776c71b9dbb6f12c9b1c17">tm_dump_item_to_textfile()</a>, and <a class="el" href="traffic_8c.html#adc4bc2f0df9ba161f053e905e66dab4c">tm_find_item()</a>.</p>
+
+</div>
+</div>
+<a id="ae5e0839dfd842faca59d5eab533ff50b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5e0839dfd842faca59d5eab533ff50b">&#9670;&nbsp;</a></span>coords</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord.html">coord</a>* item_priv::coords</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The coordinates for the item </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#a9df5d085c7b0b4698be1e1845990520f">tm_coord_get()</a>, <a class="el" href="traffic_8c.html#a253ffcfc6a776c71b9dbb6f12c9b1c17">tm_dump_item_to_textfile()</a>, <a class="el" href="traffic_8c.html#adc4bc2f0df9ba161f053e905e66dab4c">tm_find_item()</a>, and <a class="el" href="traffic_8c.html#ac74435e049ef252b01623ab0aaff486d">tm_item_destroy()</a>.</p>
 
 </div>
 </div>
@@ -269,8 +343,111 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a id="a33ce104252219af25eccad1b43b6e732"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33ce104252219af25eccad1b43b6e732">&#9670;&nbsp;</a></span>message_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a>* item_priv::message_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Message-specific data, see <code>struct <a class="el" href="structitem__msg__priv.html" title="Message-specific map private data. ">item_msg_priv</a></code> </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a079983d849a1dccb3fee7a04794bd737">tm_item_add_message_data()</a>, <a class="el" href="traffic_8c.html#ac74435e049ef252b01623ab0aaff486d">tm_item_destroy()</a>, <a class="el" href="traffic_8c.html#a30e9fbaee3040b1607281bd4d153af62">tm_item_update_attrs()</a>, and <a class="el" href="traffic_8c.html#aa41b8b9b14eb3e028e6048c87d98a999">traffic_message_remove_item_data()</a>.</p>
+
+</div>
+</div>
+<a id="ad5afbe5cbfdbedb9e18bd781be03b85d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5afbe5cbfdbedb9e18bd781be03b85d">&#9670;&nbsp;</a></span>mr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmap__rect__priv.html">map_rect_priv</a>* item_priv::mr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The private data for the map rect from which the item was obtained </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ad6a4e3a0d523b3101de057a86f2d5e4e">tm_get_item()</a>, and <a class="el" href="traffic_8c.html#ad4c771198d369459ab4f3126042e7f63">tm_type_set()</a>.</p>
+
+</div>
+</div>
+<a id="ac4b9cf69aec46fc3fc6dc8f4d481e23e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4b9cf69aec46fc3fc6dc8f4d481e23e">&#9670;&nbsp;</a></span>next_attr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structattr.html">attr</a>** item_priv::next_attr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The next attribute of <code>item</code> to be returned by the <code>item_attr_get</code> method </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#aae27ab2eff31eba6cf17d58428648b22">tm_attr_get()</a>, and <a class="el" href="traffic_8c.html#a94d6473f75a2d0ddcaf150b916538cd1">tm_attr_rewind()</a>.</p>
+
+</div>
+</div>
+<a id="ae4d7f9bd9c2de06f4fb7c2de4ec406f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4d7f9bd9c2de06f4fb7c2de4ec406f4">&#9670;&nbsp;</a></span>next_coord</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int item_priv::next_coord</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The index of the next coordinate of <code>item</code> to be returned by the <code>item_coord_get</code> method </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#a9df5d085c7b0b4698be1e1845990520f">tm_coord_get()</a>, and <a class="el" href="traffic_8c.html#a2a135077f3f105707150c700f04ebba7">tm_coord_rewind()</a>.</p>
+
+</div>
+</div>
+<a id="af172cd6fcef29ebfb7212f89cff2cf9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af172cd6fcef29ebfb7212f89cff2cf9d">&#9670;&nbsp;</a></span>refcount</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int item_priv::refcount</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>How many references to this item exist </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#acff5aaeb1949e3a58e115c4898630ff2">tm_item_unref()</a>.</p>
+
+</div>
+</div>
+<a id="a8f3f341ad41640dc546268428981a29c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f3f341ad41640dc546268428981a29c">&#9670;&nbsp;</a></span>rt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structroute.html">route</a>* item_priv::rt</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The route to which the item has been added </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#acff5aaeb1949e3a58e115c4898630ff2">tm_item_unref()</a>, and <a class="el" href="traffic_8c.html#a30e9fbaee3040b1607281bd4d153af62">tm_item_update_attrs()</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
 <li>map/mg/<a class="el" href="mg_8h_source.html">mg.h</a></li>
+<li><a class="el" href="traffic_8c.html">traffic.c</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

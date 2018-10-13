@@ -9,5 +9,6 @@ var searchData=
   ['quadtree_5fitem',['quadtree_item',['../structquadtree__item.html',1,'']]],
   ['quadtree_5fiter',['quadtree_iter',['../structquadtree__iter.html',1,'']]],
   ['quadtree_5fiter_5fnode',['quadtree_iter_node',['../structquadtree__iter__node.html',1,'']]],
-  ['quadtree_5fnode',['quadtree_node',['../structquadtree__node.html',1,'']]]
+  ['quadtree_5fnode',['quadtree_node',['../structquadtree__node.html',1,'']]],
+  ['quantifier',['quantifier',['../structquantifier.html',1,'']]]
 ];

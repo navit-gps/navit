@@ -89,6 +89,8 @@ $(document).ready(function(){initNavTree('structroute__graph__segment__data.html
 
 <p>Data for a segment in the route graph.  
  <a href="structroute__graph__segment__data.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="route__protected_8h_source.html">route_protected.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -106,6 +108,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a4b87c45d865547b72c68cffc88af24f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72e1b12a8fe596cde1e491e2c8552321"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__segment__data.html#a72e1b12a8fe596cde1e491e2c8552321">dangerous_goods</a></td></tr>
 <tr class="separator:a72e1b12a8fe596cde1e491e2c8552321"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a292cff40279ac478ebbc20b82d8341d8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structroute__graph__segment__data.html#a292cff40279ac478ebbc20b82d8341d8">score</a></td></tr>
+<tr class="separator:a292cff40279ac478ebbc20b82d8341d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data for a segment in the route graph. </p>
@@ -122,7 +126,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, and <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, and <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>.</p>
 
 </div>
 </div>
@@ -139,7 +143,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Flags for this segment </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#aa7edb1faa0549d737b54a295442acc8e">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>, <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>, and <a class="el" href="route_8c.html#a8b5f2356f443bf05ff856dd37609f3b5">route_process_turn_restriction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, <a class="el" href="route_8c.html#ad973b8617cff24333518a58e30894606">route_graph_add_traffic_distortion()</a>, <a class="el" href="route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876">route_graph_add_turn_restriction()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route__protected_8h.html#a0533629c5051ffd35d84976d5e1bfed7">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -156,7 +160,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The item which this segment is part of </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#aa7edb1faa0549d737b54a295442acc8e">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>, <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>, and <a class="el" href="route_8c.html#a8b5f2356f443bf05ff856dd37609f3b5">route_process_turn_restriction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, <a class="el" href="route_8c.html#ad973b8617cff24333518a58e30894606">route_graph_add_traffic_distortion()</a>, <a class="el" href="route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876">route_graph_add_turn_restriction()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route__protected_8h.html#a0533629c5051ffd35d84976d5e1bfed7">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -173,7 +177,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The length of this segment </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>, <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>, and <a class="el" href="route_8c.html#a8b5f2356f443bf05ff856dd37609f3b5">route_process_turn_restriction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, <a class="el" href="route_8c.html#ad973b8617cff24333518a58e30894606">route_graph_add_traffic_distortion()</a>, <a class="el" href="route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876">route_graph_add_turn_restriction()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#a145431d5b9de61be10c51b54028aaaf6">route_graph_set_traffic_distortion()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -190,7 +194,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The maximum speed allowed on this segment in km/h, -1 if not known </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>, and <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, <a class="el" href="route_8c.html#ad973b8617cff24333518a58e30894606">route_graph_add_traffic_distortion()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -207,7 +211,24 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route_8c.html#aa7edb1faa0549d737b54a295442acc8e">route_graph_segment_is_duplicate()</a>, <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>, and <a class="el" href="route_8c.html#a051c5b04ce9d3bee4662af91bb87152d">route_process_traffic_distortion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>, <a class="el" href="route_8c.html#ad973b8617cff24333518a58e30894606">route_graph_add_traffic_distortion()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, <a class="el" href="route__protected_8h.html#a0533629c5051ffd35d84976d5e1bfed7">route_graph_segment_is_duplicate()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
+
+</div>
+</div>
+<a id="a292cff40279ac478ebbc20b82d8341d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a292cff40279ac478ebbc20b82d8341d8">&#9670;&nbsp;</a></span>score</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int route_graph_segment_data::score</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Used by the traffic module to give preference to some segments over others </p>
+
+<p class="reference">Referenced by <a class="el" href="route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876">route_graph_add_turn_restriction()</a>, <a class="el" href="route_8c.html#a135db885d4c9c698da991b37a1bfbc95">route_graph_clone_segment()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 
 </div>
 </div>
@@ -224,12 +245,12 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Size and weight limits for this segment </p>
 
-<p class="reference">Referenced by <a class="el" href="route_8c.html#a8b102be562307327d4727c8b57898bd5">route_process_street_graph()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="route_8c.html#afc9d40fc75c45d15061f51fcced0e26e">route_graph_add_street()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="route_8c.html">route.c</a></li>
+<li><a class="el" href="route__protected_8h_source.html">route_protected.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

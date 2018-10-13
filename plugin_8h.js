@@ -18,6 +18,7 @@ var plugin_8h =
       [ "plugin_category_vehicle", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a417af489b0bc116cc2e9c8494f484b09", null ],
       [ "plugin_category_event", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a68f4b65161acd7b1dbc58ad005b61b6b", null ],
       [ "plugin_category_font", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a3705add07c21ee50547080ec30645bfc", null ],
+      [ "plugin_category_traffic", "plugin_8h.html#aaf2fec10fd7066df587b216658491532a170df75692203b64071a8aee91920e58", null ],
       [ "plugin_category_last", "plugin_8h.html#aaf2fec10fd7066df587b216658491532abd2ef77b0ec920c3c4023771e5cfe176", null ]
     ] ],
     [ "plugin_call_init", "group__plugins.html#ga82f7feb9e3bb4cb8bf4de87e8113b28e", null ],
