@@ -2680,15 +2680,18 @@ static void gui_internal_setup(struct gui_priv *this) {
 //# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void gui_internal_resize(void *data, int w, int h) {
+static void gui_internal_resize(void *data, int wnew, int hnew) {
+    GList *l;
+    struct widget *w;
+
     struct gui_priv *this=data;
     int changed=0;
 
     gui_internal_setup(this);
 
-    if (this->root.w != w || this->root.h != h) {
-        this->root.w=w;
-        this->root.h=h;
+    if (this->root.w != wnew || this->root.h != hnew) {
+        this->root.w=wnew;
+        this->root.h=hnew;
         changed=1;
     }
     /*
@@ -2697,22 +2700,26 @@ static void gui_internal_resize(void *data, int w, int h) {
      */
     if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
         changed = 1;
-    dbg(lvl_debug,"w=%d h=%d children=%p", w, h, this->root.children);
-    navit_handle_resize(this->nav, w, h);
+    dbg(lvl_debug,"w=%d h=%d children=%p", wnew, hnew, this->root.children);
+    navit_handle_resize(this->nav, wnew, hnew);
     if (this->root.children) {
         if (changed) {
-            char *href=g_strdup(this->href);
-            dbg(lvl_error,"href=%s",href);
-            /*if (*href != '\0') {
-                gui_internal_prune_menu(this, NULL);
-                gui_internal_html_load_href(this, href, 0);
+            l = g_list_last(this->root.children);
+            if (l) {
+			    w=l->data;
+                void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
+                redisplay=w->menu_data->redisplay;
+                dbg(lvl_error, "redisplay%c=NULL", redisplay?'!':'=');
+                if (!gui_internal_widget_reload_href(this, w)) {
+                    dbg(lvl_error, "Current GUI displayed is not a menu");
+                    dbg(lvl_error, "Will call resize with w=%d, h=%d", wnew, hnew)
+                    gui_internal_menu_resize(this, wnew, hnew);
+                    gui_internal_menu_render(this);
+                }
             }
-            else*/ {
-                dbg(lvl_error, "Called resize with w=%d, h=%d", w, h)
-                gui_internal_menu_resize(this, w, h); //Lionel!!!
-                gui_internal_menu_render(this);
+            else {
+                dbg(lvl_error,"Current GUI displayed is a menu");
             }
-            g_free(href);
         } else {
             gui_internal_menu_render(this);
         }

@@ -17,7 +17,7 @@
 
 extern char *version;
 
-static void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
+void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     struct menu_data *menu_data=w->menu_data;
     if (menu_data) {
         if (menu_data->refresh_callback_obj.type) {
@@ -36,11 +36,53 @@ static void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     this->root.children=g_list_remove(this->root.children, w);
 }
 
+/**
+ * @brief Retrieve then html anchor (href) from a menu widger
+ *
+ * @param w A widget corresponding to a menu (this widget should be an html menu)
+ *
+ * @return the string for the href, or NULL if this menu has no href (or the widget is not a menu)
+ */
+static char *gui_internal_widget_get_href(struct widget *w) {
+	if (w && w->menu_data)
+		return w->menu_data->href;
+	else
+		return NULL;
+}
+
+/**
+ * @brief Reload a menu from its anchor (href)
+ *
+ * @param this The internal GUI context
+ * @param w A widget corresponding to the menu to redraw (this widget should be an html menu, thus it should have a href)
+ *
+ * @return 1 in case of success, 0 if no menu could be reloaded
+ * @note If the widget provided in @p w has no href, we will return 0
+ */
+int gui_internal_widget_reload_href(struct gui_priv *this, struct widget *w) {
+	char *ohref = gui_internal_widget_get_href(w);
+	if (ohref) {
+		char *href=g_strdup(ohref);
+		gui_internal_menu_destroy(this, w);
+		gui_internal_html_load_href(this, href, 0);
+		g_free(href);
+		return 1;
+	}
+	return 0;
+}
+
+/**
+ * @brief Destroy (discard) all menu screens that have been placed after widget @p w
+ *
+ * @param this The internal GUI context
+ * @param w A widget corresponding to the last menu to keep (all subsequent menus in the list will be destroyed). NULL if all menus should be destroyed.
+ * @param render whether we should render the menu indicated by widget w (render!=0) or not (render==0)
+ */
 static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render) {
     GList *l;
     struct widget *wr,*wd;
     gui_internal_search_idle_end(this);
-    while ((l = g_list_last(this->root.children))) {
+    while ((l = g_list_last(this->root.children))) { /* Destroy all menus, backwards, starting from the end until we reach widget w, and redraw widget w */
         wd=l->data;
         if (wd == w) {
             void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
@@ -49,7 +91,7 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
             gui_internal_say(this, w, 0);
             redisplay=w->menu_data->redisplay;
             wr=w->menu_data->redisplay_widget;
-            if (!w->menu_data->redisplay && !w->menu_data->href) {
+            if (!redisplay && !gui_internal_widget_get_href(w)) {
                 gui_internal_widget_render(this, w);
                 return;
             }
@@ -57,10 +99,7 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
                 gui_internal_menu_destroy(this, w);
                 redisplay(this, wr, wr->data);
             } else {
-                char *href=g_strdup(w->menu_data->href);
-                gui_internal_menu_destroy(this, w);
-                gui_internal_html_load_href(this, href, 0);
-                g_free(href);
+                gui_internal_widget_reload_href(this, w);
             }
             return;
         }
@@ -125,12 +164,6 @@ void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void
 struct widget *
 gui_internal_menu(struct gui_priv *this, const char *label) {
     struct widget *menu,*w,*w1,*topbox;
-    struct padding *padding = NULL;
-
-    if (this->gra) {
-        padding = graphics_get_data(this->gra, "padding");
-    } else
-        dbg(lvl_warning, "cannot get padding: this->gra is NULL");
 
     gui_internal_search_idle_end(this);
     topbox=gui_internal_box_new_with_label(this, 0, label);
