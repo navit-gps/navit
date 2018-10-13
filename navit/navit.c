@@ -44,6 +44,7 @@
 #include "coord.h"
 #include "point.h"
 #include "transform.h"
+#include "traffic.h"
 #include "param.h"
 #include "menu.h"
 #include "graphics.h"
@@ -1928,6 +1929,9 @@ void navit_init(struct navit *this_) {
     struct map *map;
     int callback;
     char *center_file;
+    struct attr_iter *iter;
+    struct attr *attr;
+    struct traffic * traffic;
 
     dbg(lvl_info,"enter gui %p graphics %p",this_->gui,this_->gra);
 
@@ -1995,6 +1999,26 @@ void navit_init(struct navit *this_) {
             if (this_->route)
                 tracking_set_route(this_->tracking, this_->route);
         }
+
+        attr = g_new0(struct attr, 1);
+        iter = navit_attr_iter_new();
+        map = NULL;
+        while (navit_get_attr(this_, attr_traffic, attr, iter)) {
+            traffic = (struct traffic *) attr->u.navit_object;
+            traffic_set_mapset(traffic, ms);
+            if (this_->route)
+                traffic_set_route(traffic, this_->route);
+            /* add the first map found */
+            if (!map && (map = traffic_get_map(traffic))) {
+                struct attr map_a;
+                map_a.type = attr_map;
+                map_a.u.map = map;
+                mapset_add_attr(ms, &map_a);
+            }
+        }
+        navit_attr_iter_destroy(iter);
+        g_free(attr);
+
         if (this_->navigation) {
             if ((map=navigation_get_map(this_->navigation))) {
                 struct attr map_a,active;
@@ -2843,6 +2867,7 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         break;
     case attr_layer:
     case attr_script:
+    case attr_traffic:
         break;
     default:
         return 0;
