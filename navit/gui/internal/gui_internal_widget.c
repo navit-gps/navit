@@ -609,7 +609,6 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
 }
 
 static void gui_internal_box_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
-    GList *l;
 
     gui_internal_widget_reset_pack(this, w);
     w->w = wnew;

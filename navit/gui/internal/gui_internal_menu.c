@@ -44,10 +44,10 @@ void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
  * @return the string for the href, or NULL if this menu has no href (or the widget is not a menu)
  */
 static char *gui_internal_widget_get_href(struct widget *w) {
-	if (w && w->menu_data)
-		return w->menu_data->href;
-	else
-		return NULL;
+    if (w && w->menu_data)
+        return w->menu_data->href;
+    else
+        return NULL;
 }
 
 /**
@@ -60,15 +60,15 @@ static char *gui_internal_widget_get_href(struct widget *w) {
  * @note If the widget provided in @p w has no href, we will return 0
  */
 int gui_internal_widget_reload_href(struct gui_priv *this, struct widget *w) {
-	char *ohref = gui_internal_widget_get_href(w);
-	if (ohref) {
-		char *href=g_strdup(ohref);
-		gui_internal_menu_destroy(this, w);
-		gui_internal_html_load_href(this, href, 0);
-		g_free(href);
-		return 1;
-	}
-	return 0;
+    char *ohref = gui_internal_widget_get_href(w);
+    if (ohref) {
+        char *href=g_strdup(ohref);
+        gui_internal_menu_destroy(this, w);
+        gui_internal_html_load_href(this, href, 0);
+        g_free(href);
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -82,7 +82,8 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
     GList *l;
     struct widget *wr,*wd;
     gui_internal_search_idle_end(this);
-    while ((l = g_list_last(this->root.children))) { /* Destroy all menus, backwards, starting from the end until we reach widget w, and redraw widget w */
+    /* Destroy all menus, backwards, starting from the end until we reach widget w, and redraw widget w */
+    while ((l = g_list_last(this->root.children))) {
         wd=l->data;
         if (wd == w) {
             void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);

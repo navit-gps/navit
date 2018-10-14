@@ -2710,7 +2710,7 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
         if (changed) {
             l = g_list_last(this->root.children);
             if (l) {
-			    w=l->data;
+                w=l->data;
                 void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
                 redisplay=w->menu_data->redisplay;
                 dbg(lvl_error, "redisplay%c=NULL", redisplay?'!':'=');
@@ -2720,8 +2720,7 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
                     gui_internal_menu_resize(this, wnew, hnew);
                     gui_internal_menu_render(this);
                 }
-            }
-            else {
+            } else {
                 dbg(lvl_error,"Current GUI displayed is a menu");
             }
         } else {
