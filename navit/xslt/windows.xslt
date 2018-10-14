@@ -3,7 +3,7 @@
         <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
         <xsl:include href="samplemap.xslt"/>
         <xsl:include href="osd_enable_zoom.xslt"/>
-        <xsl:include href="speech_espeak.xslt"/>
+        <xsl:include href="speech_win32.xslt"/>
         <xsl:template match="/config/navit/graphics">
                 <graphics type="win32" />
         </xsl:template>
