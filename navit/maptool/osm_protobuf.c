@@ -26,8 +26,8 @@
 #include "debug.h"
 #include "linguistics.h"
 #include "file.h"
-#include "generated-code/fileformat.pb-c.h"
-#include "generated-code/osmformat.pb-c.h"
+#include "fileformat.pb-c.h"
+#include "osmformat.pb-c.h"
 
 
 static double latlon_scale=10000000.0;
@@ -57,7 +57,7 @@ static OSMPBF__BlobHeader *read_header(FILE *f) {
     buffer=alloca(len);
     if (fread(buffer, len, 1, f) != 1)
         return NULL;
-    return osmpbf__blob_header__unpack(&protobuf_c_system_allocator, len, buffer);
+    return osmpbf__blob_header__unpack(NULL, len, buffer);
 }
 
 
@@ -66,7 +66,7 @@ static OSMPBF__Blob *read_blob(OSMPBF__BlobHeader *header, FILE *f, unsigned cha
     SANITY_CHECK_LENGTH(len, MAX_BLOB_LENGTH)
     if (fread(buffer, len, 1, f) != 1)
         return NULL;
-    return osmpbf__blob__unpack(&protobuf_c_system_allocator, len, buffer);
+    return osmpbf__blob__unpack(NULL, len, buffer);
 }
 
 static unsigned char *uncompress_blob(OSMPBF__Blob *blob) {
@@ -136,8 +136,8 @@ static int get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *pri
 
 static void process_osmheader(OSMPBF__Blob *blob, unsigned char *data) {
     OSMPBF__HeaderBlock *header_block;
-    header_block=osmpbf__header_block__unpack(&protobuf_c_system_allocator, blob->raw_size, data);
-    osmpbf__header_block__free_unpacked(header_block, &protobuf_c_system_allocator);
+    header_block=osmpbf__header_block__unpack(NULL, blob->raw_size, data);
+    osmpbf__header_block__free_unpacked(header_block, NULL);
 }
 
 #if 0
@@ -245,7 +245,7 @@ static void process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Re
 static void process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct maptool_osm *osm) {
     int i,j;
     OSMPBF__PrimitiveBlock *primitive_block;
-    primitive_block=osmpbf__primitive_block__unpack(&protobuf_c_system_allocator, blob->raw_size, data);
+    primitive_block=osmpbf__primitive_block__unpack(NULL, blob->raw_size, data);
     for (i = 0 ; i < primitive_block->n_primitivegroup ; i++) {
         OSMPBF__PrimitiveGroup *primitive_group=primitive_block->primitivegroup[i];
         process_dense(primitive_block, primitive_group->dense, osm);
@@ -254,7 +254,7 @@ static void process_osmdata(OSMPBF__Blob *blob, unsigned char *data, struct mapt
         for (j = 0 ; j < primitive_group->n_relations ; j++)
             process_relation(primitive_block, primitive_group->relations[j], osm);
     }
-    osmpbf__primitive_block__free_unpacked(primitive_block, &protobuf_c_system_allocator);
+    osmpbf__primitive_block__free_unpacked(primitive_block, NULL);
 }
 
 
@@ -277,8 +277,8 @@ int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm) {
             return 0;
         }
         g_free(data);
-        osmpbf__blob__free_unpacked(blob, &protobuf_c_system_allocator);
-        osmpbf__blob_header__free_unpacked(header, &protobuf_c_system_allocator);
+        osmpbf__blob__free_unpacked(blob, NULL);
+        osmpbf__blob_header__free_unpacked(header, NULL);
     }
     g_free(buffer);
     return 1;

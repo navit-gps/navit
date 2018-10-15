@@ -65,7 +65,7 @@ jobs:
           name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
             cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
       - run:
           name: Process icons
@@ -156,7 +156,7 @@ jobs:
       - run:
           name: Build for Windows
           command: |
-            bash scripts/setup_common_requirements.sh
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
             bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
