@@ -139,6 +139,8 @@ static void gui_internal_label_render(struct gui_priv *this, struct widget *w) {
  *
  * @param this The internal GUI instance
  * @param w The widget to render
+ * @param wnew The new width of the widget
+ * @param hnew THe new height of the widget
  */
 static void gui_internal_label_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
 }
@@ -608,6 +610,14 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     }
 }
 
+/**
+ * @brief Resize a box widget.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ * @param wnew The new width of the widget
+ * @param hnew THe new height of the widget
+ */
 static void gui_internal_box_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
 
     gui_internal_widget_reset_pack(this, w);
@@ -762,6 +772,14 @@ void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
     }
 }
 
+/**
+ * @brief Generic widget resize function (that will call the appropriate resize function depending on the widget type).
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ * @param wnew The new width of the widget
+ * @param hnew THe new height of the widget
+ */
 void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
     if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
         return;
@@ -775,12 +793,11 @@ void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wne
         dbg(lvl_error, "Resizing label at %p to w=%d, h=%d (text=\"%s\")", w, wnew, hnew, w->text);
         gui_internal_label_resize(this, w, wnew, hnew);
         break;
-    case widget_image:
-        dbg(lvl_error, "resize not yet implemented for widget_image");
+    case widget_image: /* No resize needed for images */
         break;
     case widget_table:
-        dbg(lvl_error, "Not resizing table at %p to w=%d, h=%d", w, wnew, hnew);
-        //gui_internal_table_resize(this, w, wnew, hnew);
+        dbg(lvl_error, "Resizing table at %p to w=%d, h=%d", w, wnew, hnew);
+        gui_internal_table_resize(this, w, wnew, hnew);
         break;
     default:
         break;
@@ -1359,17 +1376,18 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 /**
  * @brief Resize a table widget.
  *
- * @param this The graphics context
- * @param w The table widget to render.
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ * @param wnew The new width of the widget
+ * @param hnew THe new height of the widget
  */
 void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew) {
-
 
     w->w = wnew;
     w->h = hnew;
 
-    gui_internal_widget_reset_pack(this, w);
-    gui_internal_table_pack(this, w);
+//    gui_internal_widget_reset_pack(this, w);
+//    gui_internal_table_pack(this, w);
 }
 
 /**

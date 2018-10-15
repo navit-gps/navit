@@ -2679,11 +2679,16 @@ static void gui_internal_setup(struct gui_priv *this) {
     g_free(gui_file);
 }
 
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * @brief Callback function invoked when display area is resized
+ *
+ * @param data A generic argument structure pointer, here we use it to store the the internal GUI context (this)
+ * @param wnew The new width of the display area
+ * @param hnew The new height of the display area
+ *
+ * @author Martin Schaller
+ * @date 2008/04
+ */
 static void gui_internal_resize(void *data, int wnew, int hnew) {
     GList *l;
     struct widget *w;
@@ -2714,7 +2719,8 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
                 void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
                 redisplay=w->menu_data->redisplay;
                 dbg(lvl_error, "redisplay%c=NULL", redisplay?'!':'=');
-                if (!gui_internal_widget_reload_href(this, w)) {
+                if (!gui_internal_widget_reload_href(this, w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                    /* If not, resize the foremost widget */
                     dbg(lvl_error, "Current GUI displayed is not a menu");
                     dbg(lvl_error, "Will call resize with w=%d, h=%d", wnew, hnew)
                     gui_internal_menu_resize(this, wnew, hnew);

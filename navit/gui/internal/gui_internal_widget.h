@@ -24,7 +24,7 @@ struct widget {
     void (*func)(struct gui_priv *priv, struct widget *widget, void *data);
     /**
      * A function to be invoked on resize or move
-     * @param widged The widget that is resized
+     * @param widget The widget that is resized
      */
     void (*on_resize)(struct gui_priv *priv, struct widget *widget, void *data, int neww, int newh);
     enum gui_internal_reason reason;
