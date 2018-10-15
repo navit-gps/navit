@@ -129,8 +129,9 @@ struct suffix {
 
     /* FR */
     {"boulevard", NULL, masculine},
-    {"chemin", NULL, neuter},
+    {"chemin", NULL, masculine},
     {"rue", NULL, feminine},
+    {"allée", NULL, feminine},
 
     /* LT, as per http://wiki.openstreetmap.org/wiki/WikiProject_Lithuania */
     {"gatvė", "g.", feminine},

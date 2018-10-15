@@ -1680,6 +1680,7 @@ void gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *
                 wbm->c.x=c.x;
                 wbm->c.y=c.y;
                 wbm->c.pro=bookmarks_get_projection(mattr.u.bookmarks);
+                // Bookmark as a noun, this string is used to build a bookmark label with %s being the bookmark name
                 wbm->name=g_strdup_printf(_("Bookmark %s"),label_full);
                 wbm->text=g_strdup(label_full);
                 if (!hassub) {
