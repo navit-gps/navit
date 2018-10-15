@@ -8,7 +8,6 @@
 # Ivan Kološ https://launchpad.net/~ivan-kolos
 # Jakuje https://launchpad.net/~jakuje
 # Jiří Holubčík https://launchpad.net/~jery
-# KaZeR https://launchpad.net/~kazer
 # MMlosh https://launchpad.net/~mmlosh
 # Marc0 https://launchpad.net/~z-ubuntuone-y
 # Mike Crash https://launchpad.net/~mike-mikecrash
@@ -171,7 +170,6 @@ msgstr "%1$sna %2$s"
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$sna %2$s"
 
-#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
 msgstr "na přivadeč"
 
@@ -384,7 +382,6 @@ msgstr "pak budete v cíli."
 msgid "You have reached your destination %s"
 msgstr "%s dorazíte do cíle"
 
-#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr "Sjezd"
 
@@ -1796,8 +1793,13 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Nakupování"
 
-msgid "Select a search radius from screen center"
-msgstr "Vzdálenost od středu mapy"
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
@@ -1821,9 +1823,6 @@ msgstr "Vyhledávání POI"
 msgid "Select a category"
 msgstr "Vyberte kategorii"
 
-msgid "Select a distance to look for (km)"
-msgstr "Vyberte vzdálenost ve které hledat (km)"
-
 msgid "Select a POI"
 msgstr "Vyberte POI"
 
@@ -1836,8 +1835,8 @@ msgstr "Kategorie"
 msgid "Direction"
 msgstr "Směr"
 
-msgid "Distance(m)"
-msgstr "Vzdálenost (m)"
+msgid "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "Název"
@@ -2220,18 +2219,14 @@ msgid "Description"
 msgstr "Popis"
 
 msgid ""
-"Drop last \n"
+"Drop last\n"
 "Waypoint"
 msgstr ""
-"Zrušit minulý \n"
-"bod trasy"
 
 msgid ""
-"Drop next \n"
+"Drop next\n"
 "Waypoint"
 msgstr ""
-"Zrušit příští \n"
-" bod trasy"
 
 msgid "Satellite Status"
 msgstr "Stav satelitu"
@@ -3068,6 +3063,20 @@ msgstr "Francouzská Guyana"
 #~ msgid "Map download aborted!"
 #~ msgstr "Stahování mapy přerušeno!"
 
+#~ msgid ""
+#~ "Drop last \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Zrušit minulý \n"
+#~ "bod trasy"
+
+#~ msgid ""
+#~ "Drop next \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Zrušit příští \n"
+#~ " bod trasy"
+
 #, c-format
 #~ msgid "Error: No configuration found in config file '%s'\n"
 #~ msgstr "Chyba: Nenalezena žádná konfigurace v konfiguračním souboru '%s'\n"
@@ -3086,6 +3095,12 @@ msgstr "Francouzská Guyana"
 #, c-format
 #~ msgid "Set next visit to %ld, %ld \n"
 #~ msgstr "Nastav další zastavení na %ld, %ld \n"
+
+#~ msgid "Select a distance to look for (km)"
+#~ msgstr "Vyberte vzdálenost ve které hledat (km)"
+
+#~ msgid "Distance(m)"
+#~ msgstr "Vzdálenost (m)"
 
 #, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"
