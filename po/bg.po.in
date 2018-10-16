@@ -94,6 +94,7 @@ msgstr "след %d.%d мили"
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] "%d мили"
+msgstr[1] "%d miles"
 
 #, c-format
 msgid "in one mile"
