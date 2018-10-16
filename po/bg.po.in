@@ -100,6 +100,7 @@ msgstr[1] "%d miles"
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "след %d миля"
+msgstr[1] "in %d miles"
 
 #, c-format
 msgid "%d meters"
