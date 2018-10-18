@@ -1,23 +1,11 @@
 if(BUILD_MAPTOOL)
 
 	find_package(Protobuf-c REQUIRED)
-
-  # cmake_policy(SET CMP0026 OLD)
-	# ${PROTOBUFC_PROTOC_EXECUTABLE}
-	function (compile_protobuf_module name)
-	    add_custom_command (
-	        COMMAND           protoc-c
-					ARGS							--c_out=${CMAKE_CURRENT_BINARY_DIR} ${name}.proto
-	        DEPENDS           "${name}.proto"
-	        OUTPUT            "${name}.pb-c.c" "${name}.pb-c.h"
-	        VERBATIM
-	        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-	    )
-	endfunction ()
+	include_directories(${PROTOBUF-C_INCLUDE_DIR})
+	include_directories(${CMAKE_CURRENT_BINARY_DIR})
+	#PROTOBUF_C_GENERATE_C(PROTO_SRCS PROTO_HDRS zfs.proto)
 
 	add_definitions( -DMODULE=maptool ${NAVIT_COMPILE_FLAGS})
-	include_directories(${CMAKE_CURRENT_BINARY_DIR})
-	include_directories(${PROTOBUF-C_INCLUDE_DIR})
 
 	add_executable (maptool maptool.c)
 	add_library (maptool_core boundaries.c buffer.c ch.c coastline.c itembin.c
@@ -25,11 +13,11 @@ if(BUILD_MAPTOOL)
 	 	sourcesink.c tempfile.c tile.c zip.c osm_xml.c)
 
 	if(NOT MSVC)
-		compile_protobuf_module ("osmformat")
-		compile_protobuf_module ("fileformat")
+		PROTOBUF_C_GENERATE_C (PROTO_SRCS PROTO_HDRS osmformat.proto)
+		PROTOBUF_C_GENERATE_C (PROTO_SRCS PROTO_HDRS fileformat.proto)
 		target_sources(maptool_core PRIVATE osm_protobuf.c osm_protobufdb.c
 			fileformat.pb-c.c osmformat.pb-c.c)
-		target_link_libraries(maptool_core ${PROTOBUF-C_LIBRARIES})
+		target_link_libraries(maptool_core ${PROTOBUF_C_LIBRARY})
 	endif(NOT MSVC)
 
 	if(NOT MSVC)
