@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
 	<xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
 	<xsl:template match="/config/navit/vehicle[@enabled='yes']">
 		<xsl:copy>
@@ -9,5 +9,10 @@
 			<xsl:apply-templates/>
 		</xsl:copy>
 	</xsl:template>
+        <xsl:template match="/config/navit/layout[@name='Car-dark']" />
+        <xsl:template match="/config/navit/layout[@name='Bike']" />
+        <xsl:template match="/config/navit/layout[@name='Car-Android']" />
+        <xsl:template match="/config/navit/layout[@name='T@H']" />
+
 	<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 </xsl:transform>
