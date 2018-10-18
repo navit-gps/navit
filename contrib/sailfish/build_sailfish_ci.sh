@@ -11,6 +11,8 @@ if [ -z ${VERSION_ID+x} ]; then echo "VERSION_ID not set. Forgot to export VERSI
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH
 
+mkdir $HOME/rpmbuild
+
 #arm devices
 sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
 sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/nemo/rpmbuild" --define "navit_source $(pwd)/../.." -bb navit-sailfish.spec
