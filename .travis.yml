@@ -9,7 +9,7 @@ before_install:
 - docker pull hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
 - docker run -e VERSION_ID=2.2.1.18 -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
 
-before_script:
-script:
-after_success:
-after_script:
+before_script: skip
+script: skip
+after_success: skip
+after_script: skip
