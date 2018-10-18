@@ -222,28 +222,6 @@ jobs:
           name: Update Navit-Download-Center
           command: |
             bash scripts/update_download_center.sh
-  build_sailfish:
-    <<: *defaults
-    docker:
-      - image: hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
-    enviroment:
-      DBUS_SESSION_BUS_ADDRESS: /dev/null
-    steps:
-      - checkout
-      - run:
-          name: Make build directory
-          command: |
-            mkdir $HOME/rpmbuild
-      - run:
-          name: Build for Sailfish_OS
-          shell: /bin/bash
-          no_output_timeout: 2h
-          command: |
-             env && cd contrib/sailfish/ && export VERSION_ID=2.2.1.18 && bash -x build_sailfish_ci.sh
-      - store_artifacts:
-          path: /home/nemo/rpmbuild/RPMS/armv7hl/
-      - store_artifacts:
-          path: /home/nemo/rpmbuild/RPMS/i586/
   merge_trunk_in_master:
     <<: *defaults
     steps:
@@ -280,9 +258,6 @@ workflows:
       - build_tomtom_minimal:
           requires:
             - sanity_check
-      - build_sailfish:
-          requires:
-            - sanity_check
       - build_tomtom_plugin:
           requires:
             - sanity_check
@@ -294,7 +269,6 @@ workflows:
             - build_wince
             - build_tomtom_minimal
             - build_tomtom_plugin
-            - build_sailfish
           filters:
             branches:
               only: /^trunk$/
@@ -305,7 +279,6 @@ workflows:
             - build_win32
             - build_wince
             - build_tomtom_minimal
-            - build_sailfish
             - build_tomtom_plugin
           filters:
             branches:
