@@ -1,0 +1,9 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+- docker pull hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
+- docker run -e VERSION_ID=2.2.1.18 hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /navit/contrib/sailfish/build_sailfish_ci.sh
+
