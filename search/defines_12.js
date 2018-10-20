@@ -24,9 +24,6 @@ var searchData=
   ['state_5fselected',['STATE_SELECTED',['../gui__internal_8h.html#a04be6591ef29ae7689c2684ec069a4e3',1,'gui_internal.h']]],
   ['state_5fsensitive',['STATE_SENSITIVE',['../gui__internal_8h.html#a48767bfed9b842904dce255cdb3a0f01',1,'gui_internal.h']]],
   ['stretch_5fhalftone',['STRETCH_HALFTONE',['../graphics__win32_8c.html#a0e3ab7aee493bced84d9f9a402179876',1,'graphics_win32.c']]],
-  ['struct_5fmember',['STRUCT_MEMBER',['../protobuf-c_8c.html#ae05476f2662215f94925a822d3d9c727',1,'protobuf-c.c']]],
-  ['struct_5fmember_5fp',['STRUCT_MEMBER_P',['../protobuf-c_8c.html#a7c5bad1262770ff703a37f3c1f95543c',1,'protobuf-c.c']]],
-  ['struct_5fmember_5fptr',['STRUCT_MEMBER_PTR',['../protobuf-c_8c.html#a208c5dfeba882665d81d2509be55fb1d',1,'protobuf-c.c']]],
   ['sun_5frise_5fset',['sun_rise_set',['../sunriset_8h.html#a2636008bf742109698546b22b41b2de4',1,'sunriset.h']]],
   ['swap',['swap',['../fib_8c.html#aa717e330d8b73a45e2946a6b2f3b8216',1,'fib.c']]]
 ];

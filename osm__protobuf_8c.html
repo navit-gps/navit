@@ -98,8 +98,8 @@ $(document).ready(function(){initNavTree('osm__protobuf_8c.html','');});
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="fileformat_8pb-c_8h_source.html">generated-code/fileformat.pb-c.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="osmformat_8pb-c_8h_source.html">generated-code/osmformat.pb-c.h</a>&quot;</code><br />
+<code>#include &quot;fileformat.pb-c.h&quot;</code><br />
+<code>#include &quot;osmformat.pb-c.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -112,25 +112,25 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a526dfec606340f7d7254728c05c08b68"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="fileformat_8pb-c_8h.html#af8ad2db4b14e3042652e894e33bd5e04">OSMPBF__BlobHeader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68">read_header</a> (FILE *f)</td></tr>
+<tr class="memitem:a526dfec606340f7d7254728c05c08b68"><td class="memItemLeft" align="right" valign="top">static OSMPBF__BlobHeader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68">read_header</a> (FILE *f)</td></tr>
 <tr class="separator:a526dfec606340f7d7254728c05c08b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6808b1ef44624293817e99ebf1c926ee"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee">read_blob</a> (<a class="el" href="fileformat_8pb-c_8h.html#af8ad2db4b14e3042652e894e33bd5e04">OSMPBF__BlobHeader</a> *header, FILE *f, unsigned char *<a class="el" href="structbuffer.html">buffer</a>)</td></tr>
+<tr class="memitem:a6808b1ef44624293817e99ebf1c926ee"><td class="memItemLeft" align="right" valign="top">static OSMPBF__Blob *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee">read_blob</a> (OSMPBF__BlobHeader *header, FILE *f, unsigned char *<a class="el" href="structbuffer.html">buffer</a>)</td></tr>
 <tr class="separator:a6808b1ef44624293817e99ebf1c926ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accd10b96e092f1211bf68b28617b0e02"><td class="memItemLeft" align="right" valign="top">static unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02">uncompress_blob</a> (<a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *blob)</td></tr>
+<tr class="memitem:accd10b96e092f1211bf68b28617b0e02"><td class="memItemLeft" align="right" valign="top">static unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02">uncompress_blob</a> (OSMPBF__Blob *blob)</td></tr>
 <tr class="separator:accd10b96e092f1211bf68b28617b0e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9f348f643d2193e69fe166151549361"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string</a> (char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="group__vehicle-wince.html#gaf22ff4ab7a026e6c3b4b08eafb2df027">buffer_size</a>, <a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *primitive_block, int id, int escape)</td></tr>
+<tr class="memitem:ab9f348f643d2193e69fe166151549361"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string</a> (char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="group__vehicle-wince.html#gaf22ff4ab7a026e6c3b4b08eafb2df027">buffer_size</a>, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape)</td></tr>
 <tr class="separator:ab9f348f643d2193e69fe166151549361"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a646c06f8402032029b0f46b49769e494"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader</a> (<a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *blob, unsigned char *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
+<tr class="memitem:a646c06f8402032029b0f46b49769e494"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader</a> (OSMPBF__Blob *blob, unsigned char *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
 <tr class="separator:a646c06f8402032029b0f46b49769e494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd261421fb0139c2522c6adda9445a0d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag</a> (<a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *primitive_block, int <a class="el" href="tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33">key</a>, int val)</td></tr>
+<tr class="memitem:abd261421fb0139c2522c6adda9445a0d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag</a> (OSMPBF__PrimitiveBlock *primitive_block, int <a class="el" href="tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33">key</a>, int val)</td></tr>
 <tr class="separator:abd261421fb0139c2522c6adda9445a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b65c9efea2e62430b5864e518b1c302"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">process_dense</a> (<a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *primitive_block, <a class="el" href="osmformat_8pb-c_8h.html#a47d9ccaed45947b47af62e2fe86f49d7">OSMPBF__DenseNodes</a> *dense, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
+<tr class="memitem:a2b65c9efea2e62430b5864e518b1c302"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">process_dense</a> (OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
 <tr class="separator:a2b65c9efea2e62430b5864e518b1c302"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a908239a7edafe07a82215dad3d5849d6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6">process_way</a> (<a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *primitive_block, <a class="el" href="osmformat_8pb-c_8h.html#a6fdfb026fa8cd488b6aeb4e20a5d513a">OSMPBF__Way</a> *way, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
+<tr class="memitem:a908239a7edafe07a82215dad3d5849d6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6">process_way</a> (OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
 <tr class="separator:a908239a7edafe07a82215dad3d5849d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48c6e0de74a8a25d89bb0e35901f7445"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445">process_relation</a> (<a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *primitive_block, <a class="el" href="osmformat_8pb-c_8h.html#a6e30dab79289b10d4ed3816014a40868">OSMPBF__Relation</a> *relation, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
+<tr class="memitem:a48c6e0de74a8a25d89bb0e35901f7445"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445">process_relation</a> (OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
 <tr class="separator:a48c6e0de74a8a25d89bb0e35901f7445"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c91141f3fa09ea725ff8d234289a3f9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata</a> (<a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *blob, unsigned char *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
+<tr class="memitem:a9c91141f3fa09ea725ff8d234289a3f9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata</a> (OSMPBF__Blob *blob, unsigned char *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
 <tr class="separator:a9c91141f3fa09ea725ff8d234289a3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1957c96440394c9c67feadbdbeb4270e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf</a> (FILE *in, struct <a class="el" href="structmaptool__osm.html">maptool_osm</a> *osm)</td></tr>
 <tr class="separator:a1957c96440394c9c67feadbdbeb4270e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +229,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveBlock *&#160;</td>
           <td class="paramname"><em>primitive_block</em>, </td>
         </tr>
         <tr>
@@ -257,7 +257,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structo5m.html#ad0e9410c06fac385bac3f3ef7528ccf0">o5m::buffer</a>, <a class="el" href="struct__ProtobufCBinaryData.html#aef99fded0f52fedc309f61115df94ace">_ProtobufCBinaryData::data</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="structo5m.html#a9f8275dca3f572372d71b50d1e0f2c74">o5m::id</a>, <a class="el" href="struct__ProtobufCBinaryData.html#ab5f4c392d5ca0a6f3db71be62bd56d1b">_ProtobufCBinaryData::len</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="struct__OSMPBF____StringTable.html#af21de70589680bd4dc03222fa3d2949a">_OSMPBF__StringTable::s</a>, and <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#aa080371802281cad077299fc08fe5eaf">_OSMPBF__PrimitiveBlock::stringtable</a>.</p>
+<p class="reference">References <a class="el" href="structo5m.html#ad0e9410c06fac385bac3f3ef7528ccf0">o5m::buffer</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="structo5m.html#a9f8275dca3f572372d71b50d1e0f2c74">o5m::id</a>, and <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader()</a>, <a class="el" href="osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445">process_relation()</a>, and <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>.</p>
 
@@ -289,7 +289,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="osm__protobuf_8c.html#a03247952f47c0526922e0c1b322cb6bc">MAX_BLOB_LENGTH</a>, <a class="el" href="fileformat_8pb-c_8c.html#a08b05ce973c11d37111591eb339df76a">osmpbf__blob__free_unpacked()</a>, <a class="el" href="fileformat_8pb-c_8c.html#a0950c1d42ce8dd110edd169152498ae1">osmpbf__blob_header__free_unpacked()</a>, <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>, <a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader()</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, <a class="el" href="osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee">read_blob()</a>, <a class="el" href="osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68">read_header()</a>, <a class="el" href="struct__OSMPBF____BlobHeader.html#a8982babc9ce67c07ce6052271b80f070">_OSMPBF__BlobHeader::type</a>, and <a class="el" href="osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02">uncompress_blob()</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="osm__protobuf_8c.html#a03247952f47c0526922e0c1b322cb6bc">MAX_BLOB_LENGTH</a>, <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>, <a class="el" href="osm__protobuf_8c.html#a646c06f8402032029b0f46b49769e494">process_osmheader()</a>, <a class="el" href="osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee">read_blob()</a>, <a class="el" href="osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68">read_header()</a>, and <a class="el" href="osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02">uncompress_blob()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8c.html#a3646d2293954d57abc0e33c57494067a">osm_read_input_data()</a>.</p>
 
@@ -307,13 +307,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_dense </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveBlock *&#160;</td>
           <td class="paramname"><em>primitive_block</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a47d9ccaed45947b47af62e2fe86f49d7">OSMPBF__DenseNodes</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__DenseNodes *&#160;</td>
           <td class="paramname"><em>dense</em>, </td>
         </tr>
         <tr>
@@ -335,7 +335,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Info.html#a6cfab03215536749a8f9f39328b16a3d">_OSMPBF__Info::changeset</a>, <a class="el" href="struct__OSMPBF____DenseInfo.html#ac2a62eb691d250243a82c1187d21feb7">_OSMPBF__DenseInfo::changeset</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a87e6bb301bfa4855fedf2ecbdeb3a6dd">_OSMPBF__DenseNodes::denseinfo</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a1cbdebba09381bd89434fa21cdf62cd7">_OSMPBF__DenseNodes::id</a>, <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#ac8d5703e11ea6a0f9240e13629ad1ab2">_OSMPBF__DenseNodes::keys_vals</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a1b3cee463936c799c658be17bce3e876">_OSMPBF__DenseNodes::lat</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="osm__protobuf_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a28faf879946252b84778592a0b43e328">_OSMPBF__DenseNodes::lon</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a00af3b48a813ca546a9ee0eb57c10026">_OSMPBF__DenseNodes::n_id</a>, <a class="el" href="maptool_8h.html#ae71f3d48c70c87462aab963cab03823c">osm_add_node()</a>, <a class="el" href="maptool_8h.html#af9890c520ad82b151ce671543bca08e5">osm_end_node()</a>, <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>, <a class="el" href="struct__OSMPBF____Info.html#a46c0bba4a97827b1475ca55c49c0105f">_OSMPBF__Info::timestamp</a>, <a class="el" href="struct__OSMPBF____DenseInfo.html#aa2971070c788f59f4452667e809c9e17">_OSMPBF__DenseInfo::timestamp</a>, <a class="el" href="struct__OSMPBF____Info.html#a4b1ad9faa5dac12561b73be554f527f1">_OSMPBF__Info::uid</a>, <a class="el" href="struct__OSMPBF____DenseInfo.html#a69d4e833417d097eec3c3346f71e5ea7">_OSMPBF__DenseInfo::uid</a>, <a class="el" href="struct__OSMPBF____Info.html#a48469bf2c89fffba88df7a3a728142d0">_OSMPBF__Info::user_sid</a>, <a class="el" href="struct__OSMPBF____DenseInfo.html#aa26db319743c7b7cdbe763110338cd82">_OSMPBF__DenseInfo::user_sid</a>, and <a class="el" href="struct__OSMPBF____Info.html#ab74fc261dfa9c14387f7cc4c37f9b2d3">_OSMPBF__Info::version</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="osm__protobuf_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a>, <a class="el" href="maptool_8h.html#ae71f3d48c70c87462aab963cab03823c">osm_add_node()</a>, <a class="el" href="maptool_8h.html#af9890c520ad82b151ce671543bca08e5">osm_end_node()</a>, and <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>.</p>
 
@@ -353,7 +353,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_osmdata </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Blob *&#160;</td>
           <td class="paramname"><em>blob</em>, </td>
         </tr>
         <tr>
@@ -381,7 +381,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a2108b4bb2af9d9561c0f45e9a23bc6bc">_OSMPBF__PrimitiveGroup::dense</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#afb4a3080c4e296d10aaa29484d64aafb">_OSMPBF__PrimitiveBlock::n_primitivegroup</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6c40482343957b242be42eb32ccc8dcc">_OSMPBF__PrimitiveGroup::n_relations</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a58fa50902a332112f3b0ea8f9405f815">_OSMPBF__PrimitiveGroup::n_ways</a>, <a class="el" href="osmformat_8pb-c_8c.html#a1094c231e42172b2e39b00b84fe5fe4a">osmpbf__primitive_block__free_unpacked()</a>, <a class="el" href="osmformat_8pb-c_8c.html#af85acf6d8a9586354f2e9e2d1dc006c8">osmpbf__primitive_block__unpack()</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#a0552e650eba371c43161207575a1f59c">_OSMPBF__PrimitiveBlock::primitivegroup</a>, <a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">process_dense()</a>, <a class="el" href="osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445">process_relation()</a>, <a class="el" href="osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6">process_way()</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6e1214ea0160930c2c840df8b7cfd326">_OSMPBF__PrimitiveGroup::relations</a>, and <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a5dc79ded212b220cd7d00467eb9631c6">_OSMPBF__PrimitiveGroup::ways</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">process_dense()</a>, <a class="el" href="osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445">process_relation()</a>, and <a class="el" href="osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6">process_way()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf()</a>.</p>
 
@@ -399,7 +399,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_osmheader </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Blob *&#160;</td>
           <td class="paramname"><em>blob</em>, </td>
         </tr>
         <tr>
@@ -421,7 +421,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string()</a>, <a class="el" href="osmformat_8pb-c_8c.html#adf81883fcc1ea809575c02f86085d44f">osmpbf__header_block__free_unpacked()</a>, <a class="el" href="osmformat_8pb-c_8c.html#ae7f3f7d672cfefefb01104066017d5e9">osmpbf__header_block__unpack()</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, <a class="el" href="fib_8c.html#aa717e330d8b73a45e2946a6b2f3b8216">swap</a>, <a class="el" href="garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2">ts</a>, and <a class="el" href="structo5m.html#a058a77711612a8f2bb14018aa0292db5">o5m::uid</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string()</a>, <a class="el" href="fib_8c.html#aa717e330d8b73a45e2946a6b2f3b8216">swap</a>, <a class="el" href="garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2">ts</a>, and <a class="el" href="structo5m.html#a058a77711612a8f2bb14018aa0292db5">o5m::uid</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf()</a>.</p>
 
@@ -439,13 +439,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_relation </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveBlock *&#160;</td>
           <td class="paramname"><em>primitive_block</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a6e30dab79289b10d4ed3816014a40868">OSMPBF__Relation</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Relation *&#160;</td>
           <td class="paramname"><em>relation</em>, </td>
         </tr>
         <tr>
@@ -467,7 +467,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string()</a>, <a class="el" href="struct__OSMPBF____Relation.html#a5a0dc4e9bfd6ac68510ade5c438c7b31">_OSMPBF__Relation::id</a>, <a class="el" href="struct__OSMPBF____Relation.html#aebc9fd4dab3de15c7b92137ece220880">_OSMPBF__Relation::keys</a>, <a class="el" href="struct__OSMPBF____Relation.html#a2e49f55d24057829bfe3ec0036d57f55">_OSMPBF__Relation::memids</a>, <a class="el" href="struct__OSMPBF____Relation.html#ab821d1aa434ece846d5b7cf39bda7bdd">_OSMPBF__Relation::n_keys</a>, <a class="el" href="struct__OSMPBF____Relation.html#a0ce518a78e8e67d8d6427eb6f76b15b8">_OSMPBF__Relation::n_roles_sid</a>, <a class="el" href="maptool_8h.html#a4a31d18c3a1965674d41a1324b76d681">osm_add_member()</a>, <a class="el" href="maptool_8h.html#a93ce9e5a0e1e137acc70d3eefa21561e">osm_add_relation()</a>, <a class="el" href="maptool_8h.html#a61f383198dffeaf864c0531244f05c3e">osm_end_relation()</a>, <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>, <a class="el" href="struct__OSMPBF____Relation.html#a927445f175ea52e9b5a8c6a4e8e8128f">_OSMPBF__Relation::roles_sid</a>, <a class="el" href="struct__OSMPBF____Relation.html#ab665860d1425da74436e1424446f8c8d">_OSMPBF__Relation::types</a>, and <a class="el" href="struct__OSMPBF____Relation.html#a46bd00cc244da70426db3cffe8c448cc">_OSMPBF__Relation::vals</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361">get_string()</a>, <a class="el" href="maptool_8h.html#a4a31d18c3a1965674d41a1324b76d681">osm_add_member()</a>, <a class="el" href="maptool_8h.html#a93ce9e5a0e1e137acc70d3eefa21561e">osm_add_relation()</a>, <a class="el" href="maptool_8h.html#a61f383198dffeaf864c0531244f05c3e">osm_end_relation()</a>, and <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>.</p>
 
@@ -485,7 +485,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_tag </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveBlock *&#160;</td>
           <td class="paramname"><em>primitive_block</em>, </td>
         </tr>
         <tr>
@@ -531,13 +531,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void process_way </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a266a8b0755ca6500e7a8ac20c4dfe00e">OSMPBF__PrimitiveBlock</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveBlock *&#160;</td>
           <td class="paramname"><em>primitive_block</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a6fdfb026fa8cd488b6aeb4e20a5d513a">OSMPBF__Way</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Way *&#160;</td>
           <td class="paramname"><em>way</em>, </td>
         </tr>
         <tr>
@@ -559,7 +559,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Way.html#a90e7070a4a280552ac3afb9939808615">_OSMPBF__Way::id</a>, <a class="el" href="struct__OSMPBF____Way.html#af07cd8773cbaf94c0269912cd3e30536">_OSMPBF__Way::keys</a>, <a class="el" href="struct__OSMPBF____Way.html#a28aa1f5b29dfd5cdc0c9eca7d4bb00fd">_OSMPBF__Way::n_keys</a>, <a class="el" href="struct__OSMPBF____Way.html#a480e111537f26037a878530290ccbfb1">_OSMPBF__Way::n_refs</a>, <a class="el" href="maptool_8h.html#a05350256b7eab030e5e8fa0ecea474b8">osm_add_nd()</a>, <a class="el" href="maptool_8h.html#a85a9827ff7a954ff558761c1e5d5e970">osm_add_way()</a>, <a class="el" href="maptool_8h.html#a0bed289058f53c984abdc01b4693795f">osm_end_way()</a>, <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>, <a class="el" href="struct__OSMPBF____Way.html#ac132f2d07e419c380d9cca42ab3efccc">_OSMPBF__Way::refs</a>, and <a class="el" href="struct__OSMPBF____Way.html#a7cd89ec73c25ab986d4925b0f3a93347">_OSMPBF__Way::vals</a>.</p>
+<p class="reference">References <a class="el" href="maptool_8h.html#a05350256b7eab030e5e8fa0ecea474b8">osm_add_nd()</a>, <a class="el" href="maptool_8h.html#a85a9827ff7a954ff558761c1e5d5e970">osm_add_way()</a>, <a class="el" href="maptool_8h.html#a0bed289058f53c984abdc01b4693795f">osm_end_way()</a>, and <a class="el" href="osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d">process_tag()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9">process_osmdata()</a>.</p>
 
@@ -575,9 +575,9 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a>* read_blob </td>
+          <td class="memname">static OSMPBF__Blob* read_blob </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="fileformat_8pb-c_8h.html#af8ad2db4b14e3042652e894e33bd5e04">OSMPBF__BlobHeader</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__BlobHeader *&#160;</td>
           <td class="paramname"><em>header</em>, </td>
         </tr>
         <tr>
@@ -605,7 +605,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____BlobHeader.html#a0f1ee6a08b5973c7532f9cef00696ac3">_OSMPBF__BlobHeader::datasize</a>, <a class="el" href="osm__protobuf_8c.html#a03247952f47c0526922e0c1b322cb6bc">MAX_BLOB_LENGTH</a>, <a class="el" href="fileformat_8pb-c_8c.html#abf3079d7e45375c6d4123c11a3bb23c9">osmpbf__blob__unpack()</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, and <a class="el" href="osm__protobuf_8c.html#ae1023220557cc6a72a5e71b759d293a9">SANITY_CHECK_LENGTH</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobuf_8c.html#a03247952f47c0526922e0c1b322cb6bc">MAX_BLOB_LENGTH</a>, and <a class="el" href="osm__protobuf_8c.html#ae1023220557cc6a72a5e71b759d293a9">SANITY_CHECK_LENGTH</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf()</a>.</p>
 
@@ -621,7 +621,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="fileformat_8pb-c_8h.html#af8ad2db4b14e3042652e894e33bd5e04">OSMPBF__BlobHeader</a>* read_header </td>
+          <td class="memname">static OSMPBF__BlobHeader* read_header </td>
           <td>(</td>
           <td class="paramtype">FILE *&#160;</td>
           <td class="paramname"><em>f</em></td><td>)</td>
@@ -635,7 +635,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structo5m.html#ad0e9410c06fac385bac3f3ef7528ccf0">o5m::buffer</a>, <a class="el" href="osm__protobuf_8c.html#af199a39319b90015d86f3c3ccccf42bc">MAX_HEADER_LENGTH</a>, <a class="el" href="fileformat_8pb-c_8c.html#ac8cfef2ace61b220a96209d1c9027d1e">osmpbf__blob_header__unpack()</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, and <a class="el" href="osm__protobuf_8c.html#ae1023220557cc6a72a5e71b759d293a9">SANITY_CHECK_LENGTH</a>.</p>
+<p class="reference">References <a class="el" href="structo5m.html#ad0e9410c06fac385bac3f3ef7528ccf0">o5m::buffer</a>, <a class="el" href="osm__protobuf_8c.html#af199a39319b90015d86f3c3ccccf42bc">MAX_HEADER_LENGTH</a>, and <a class="el" href="osm__protobuf_8c.html#ae1023220557cc6a72a5e71b759d293a9">SANITY_CHECK_LENGTH</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobuf_8c.html#a1957c96440394c9c67feadbdbeb4270e">map_collect_data_osm_protobuf()</a>.</p>
 
@@ -653,7 +653,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static unsigned char* uncompress_blob </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Blob *&#160;</td>
           <td class="paramname"><em>blob</em></td><td>)</td>
           <td></td>
         </tr>

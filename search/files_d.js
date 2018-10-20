@@ -10,7 +10,5 @@ var searchData=
   ['osm_5fpsql_2ec',['osm_psql.c',['../osm__psql_8c.html',1,'']]],
   ['osm_5frelations_2ec',['osm_relations.c',['../osm__relations_8c.html',1,'']]],
   ['osm_5fxml_2ec',['osm_xml.c',['../osm__xml_8c.html',1,'']]],
-  ['osmformat_2epb_2dc_2ec',['osmformat.pb-c.c',['../osmformat_8pb-c_8c.html',1,'']]],
-  ['osmformat_2epb_2dc_2eh',['osmformat.pb-c.h',['../osmformat_8pb-c_8h.html',1,'']]],
   ['osso_2ec',['osso.c',['../osso_8c.html',1,'']]]
 ];

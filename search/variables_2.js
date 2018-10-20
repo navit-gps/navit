@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a',['A',['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A()'],['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a()'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a()'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a()']]],
+  ['a',['a',['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a()'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a()'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a()'],['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A()']]],
   ['aa',['aa',['../structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05',1,'graphics_priv::aa()'],['../structquadtree__node.html#a035b4a5aa2c54fcad185239f96ea77dd',1,'quadtree_node::aa()']]],
   ['ab',['ab',['../structquadtree__node.html#a38ac2ccd8c4939bbbd48726d83e7257b',1,'quadtree_node']]],
   ['abbrev',['abbrev',['../structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111',1,'suffix']]],
@@ -41,11 +41,8 @@ var searchData=
   ['ageofdgpsdata',['ageofdgpsdata',['../structg2scolumns.html#a3d3306ce289ef66f5835290aa0dfffc9',1,'g2scolumns::ageofdgpsdata()'],['../structg2sattr.html#a2f1ed3990a527a5045f6c0aab119106b',1,'g2sattr::ageofdgpsdata()']]],
   ['aidx',['aidx',['../structitem__priv.html#aa8126cc41b9245057b71c671dce75a38',1,'item_priv::aidx()'],['../structtown__priv.html#a1b4d095beadc7dc9cafc414c41701f0c',1,'town_priv::aidx()'],['../structpoly__priv.html#a112347dc3129ebcbc8edfdab3e0915e5',1,'poly_priv::aidx()'],['../structmap__rect__priv.html#a6dc874d5fb777c01713819e99f0fd145',1,'map_rect_priv::aidx()']]],
   ['align',['align',['../structodometer.html#ac055ecfa93276bc3231d044f4afcf702',1,'odometer::align()'],['../structosd__text.html#ae710da7d85a3dd062af700bba658bc53',1,'osd_text::align()']]],
-  ['alloc',['alloc',['../struct__ProtobufCAllocator.html#a1b049febabcca81986efbe3731afc128',1,'_ProtobufCAllocator']]],
   ['allocated',['allocated',['../structresult.html#a6777d099c9b2e32c56566766bfa4d562',1,'result']]],
   ['allocations',['allocations',['../structprocess__relation__member__func__priv.html#aa1840f7e5334b1a190dfb3bacc31c467',1,'process_relation_member_func_priv']]],
-  ['allocator_5fdata',['allocator_data',['../struct__ProtobufCAllocator.html#a85728fbe87547c5c789979c7e27eeb83',1,'_ProtobufCAllocator']]],
-  ['alloced',['alloced',['../struct__ProtobufCBufferSimple.html#aa3afef41423f182a563d1fea7003982f',1,'_ProtobufCBufferSimple']]],
   ['alpha12',['ALPHA12',['../structgeodesic.html#ab85597f33a03e8aee70df3ae83e6ddc4',1,'geodesic']]],
   ['alpha21',['ALPHA21',['../structgeodesic.html#ae4cfa70411abfee7a0990280320942a4',1,'geodesic']]],
   ['alphablend',['AlphaBlend',['../structgraphics__priv.html#a95f2fed5f214456275a08fc79a7616c7',1,'graphics_priv']]],
@@ -67,7 +64,7 @@ var searchData=
   ['announce_5fstate',['announce_state',['../structosd__speed__cam.html#a1d8e135c73757827caae920e9dc8091c',1,'osd_speed_cam::announce_state()'],['../structosd__speed__warner.html#abd0b26718acca19cb95e9666e9f76354',1,'osd_speed_warner::announce_state()']]],
   ['ap',['ap',['../structitem__priv.html#ad05d076677799f47601749803bc615b3',1,'item_priv']]],
   ['app',['app',['../structgraphics__priv.html#a001b8553be523521c62a5ba7321ef790',1,'graphics_priv::app()'],['../structgui__priv.html#aa33ffa5f66990bc1c0a97c4439adcea1',1,'gui_priv::app()']]],
-  ['append',['append',['../structgui__internal__widget__methods.html#aeb85a64547b56ca358ee0ad1e40a8ea9',1,'gui_internal_widget_methods::append()'],['../struct__ProtobufCBuffer.html#a3d06670a1e9fe6fbafaea7b30323cc96',1,'_ProtobufCBuffer::append()']]],
+  ['append',['append',['../structgui__internal__widget__methods.html#aeb85a64547b56ca358ee0ad1e40a8ea9',1,'gui_internal_widget_methods']]],
   ['argc',['argc',['../structgraphics__priv.html#a4c43c68a050285018727fa29a325ad1d',1,'graphics_priv::argc()'],['../graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;gui_qml.cpp']]],
   ['args',['args',['../structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d',1,'map_rect_priv']]],
   ['argv',['argv',['../structgraphics__priv.html#a251fef08be352963a5fdd073609592da',1,'graphics_priv::argv()'],['../graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;gui_qml.cpp']]],

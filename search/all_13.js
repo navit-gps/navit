@@ -70,7 +70,6 @@ var searchData=
   ['quadtree_5fquery_5ffree',['quadtree_query_free',['../quadtree_8c.html#ab99829ad4f998171b0fd939a2c7d9320',1,'quadtree_query_free(struct quadtree_iter *iter):&#160;quadtree.c'],['../quadtree_8h.html#ab99829ad4f998171b0fd939a2c7d9320',1,'quadtree_query_free(struct quadtree_iter *iter):&#160;quadtree.c']]],
   ['quadtree_5fsplit',['quadtree_split',['../quadtree_8c.html#a75c7f0e391a7879cc561f87ca7097849',1,'quadtree_split(struct quadtree_node *this_):&#160;quadtree.c'],['../quadtree_8h.html#a75c7f0e391a7879cc561f87ca7097849',1,'quadtree_split(struct quadtree_node *this_):&#160;quadtree.c']]],
   ['quantifier',['quantifier',['../structquantifier.html',1,'quantifier'],['../structtraffic__suppl__info.html#a9dfd7980c4ee9abf7d99e5035c0b13eb',1,'traffic_suppl_info::quantifier()'],['../structtraffic__event.html#ae2c185ddb0c5a4c985651227900222bd',1,'traffic_event::quantifier()']]],
-  ['quantifier_5foffset',['quantifier_offset',['../struct__ProtobufCFieldDescriptor.html#af0319a910a3a7b8da97ff1c7e7a09889',1,'_ProtobufCFieldDescriptor']]],
   ['queryescsupport',['QUERYESCSUPPORT',['../ceglue_8c.html#addb6f8e5522e4dfdfda528ffa78e70df',1,'ceglue.c']]],
   ['quit',['quit',['../classNGQProxyNavit.html#a587ed867190d2f528e897946218dcf88',1,'NGQProxyNavit']]],
   ['quit_5faction',['quit_action',['../gui__gtk__action_8c.html#acd9deea3873f3659c192687f9cba7861',1,'gui_gtk_action.c']]],

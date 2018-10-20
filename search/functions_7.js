@@ -101,8 +101,6 @@ var searchData=
   ['find_5fstatic_5fmethod',['find_static_method',['../graphics__android_8c.html#aaa914f1f0a26e5f448e3fd4e731761a9',1,'graphics_android.c']]],
   ['finish',['finish',['../osm__protobufdb_8c.html#ac36dbec917251f24fb626e4e09e1b056',1,'osm_protobufdb.c']]],
   ['finishaddresssearch',['finishAddressSearch',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a9029437ebca3276f70d79b847da2e0fd',1,'org::navitproject::navit::NavitAddressSearchActivity']]],
-  ['fixed32_5fpack',['fixed32_pack',['../protobuf-c_8c.html#a3fe90e5f7a784a7750e73927a80ac102',1,'protobuf-c.c']]],
-  ['fixed64_5fpack',['fixed64_pack',['../protobuf-c_8c.html#a99a71ae1a20cbd5bc024dd18aba27757',1,'protobuf-c.c']]],
   ['flags_5fto_5ftext',['flags_to_text',['../attr_8c.html#ad9afa49b06be31bd75a138623f7ff68d',1,'attr.c']]],
   ['flush_5fnodes',['flush_nodes',['../maptool_8h.html#a9e537c7d63876ec943f9cd48300c3a4d',1,'flush_nodes(int final):&#160;osm.c'],['../osm_8c.html#a9e537c7d63876ec943f9cd48300c3a4d',1,'flush_nodes(int final):&#160;osm.c']]],
   ['follow_5fvehicle_5faction',['follow_vehicle_action',['../gui__gtk__action_8c.html#a5cfcf16fd5f2e398f164b16bff07da3b',1,'gui_gtk_action.c']]],

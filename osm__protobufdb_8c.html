@@ -99,8 +99,8 @@ $(document).ready(function(){initNavTree('osm__protobufdb_8c.html','');});
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="fileformat_8pb-c_8h_source.html">generated-code/fileformat.pb-c.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="osmformat_8pb-c_8h_source.html">generated-code/osmformat.pb-c.h</a>&quot;</code><br />
+<code>#include &quot;fileformat.pb-c.h&quot;</code><br />
+<code>#include &quot;osmformat.pb-c.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -116,7 +116,7 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acea55a97ea24208c5f89dd5285ddc32a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#acea55a97ea24208c5f89dd5285ddc32a">osm_protobufdb_write_blob</a> (<a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *blob, FILE *out)</td></tr>
+<tr class="memitem:acea55a97ea24208c5f89dd5285ddc32a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#acea55a97ea24208c5f89dd5285ddc32a">osm_protobufdb_write_blob</a> (OSMPBF__Blob *blob, FILE *out)</td></tr>
 <tr class="separator:acea55a97ea24208c5f89dd5285ddc32a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b3d99a5918f45872c6f0090d0a7e8fc"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc">osm_protobufdb_finish_block</a> (struct <a class="el" href="structosm__protobufdb__context.html">osm_protobufdb_context</a> *ctx)</td></tr>
 <tr class="separator:a5b3d99a5918f45872c6f0090d0a7e8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,17 +124,17 @@ Functions</h2></td></tr>
 <tr class="separator:a48ec5096cf79c31dbf84d49c90b40c5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31a2163fa4dc8db730a54c2c685e3262"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group</a> (struct <a class="el" href="structosm__protobufdb__context.html">osm_protobufdb_context</a> *ctx, int groupnum)</td></tr>
 <tr class="separator:a31a2163fa4dc8db730a54c2c685e3262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1c1349a7f3e81ec54499fa2628ca544"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#ae1c1349a7f3e81ec54499fa2628ca544">osm_protobufdb_insert_node</a> (long long id, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:ae1c1349a7f3e81ec54499fa2628ca544"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#ae1c1349a7f3e81ec54499fa2628ca544">osm_protobufdb_insert_node</a> (long long id, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:ae1c1349a7f3e81ec54499fa2628ca544"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a153191f65c77e5480de41f52d2ad2a28"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28">osm_protobufdb_modify_node</a> (<a class="el" href="osmformat_8pb-c_8h.html#a7b982bb0e6551c52f7e0115ad0d2ee2d">OSMPBF__Node</a> *<a class="el" href="structnode.html">node</a>, <a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:a153191f65c77e5480de41f52d2ad2a28"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28">osm_protobufdb_modify_node</a> (OSMPBF__Node *<a class="el" href="structnode.html">node</a>, OSMPBF__Info *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:a153191f65c77e5480de41f52d2ad2a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87ffc6f97642be98b718b45aa975fd68"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a87ffc6f97642be98b718b45aa975fd68">osm_protobufdb_insert_way</a> (long long id, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:a87ffc6f97642be98b718b45aa975fd68"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a87ffc6f97642be98b718b45aa975fd68">osm_protobufdb_insert_way</a> (long long id, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:a87ffc6f97642be98b718b45aa975fd68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7594fedd426f2bd8a3e216f555b55506"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a7594fedd426f2bd8a3e216f555b55506">osm_protobufdb_modify_way</a> (<a class="el" href="osmformat_8pb-c_8h.html#a6fdfb026fa8cd488b6aeb4e20a5d513a">OSMPBF__Way</a> *way, <a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:a7594fedd426f2bd8a3e216f555b55506"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a7594fedd426f2bd8a3e216f555b55506">osm_protobufdb_modify_way</a> (OSMPBF__Way *way, OSMPBF__Info *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:a7594fedd426f2bd8a3e216f555b55506"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ede8f4b3b56cac1fb5d5ef22bab56ab"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab">osm_protobufdb_insert_relation</a> (long long id, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:a1ede8f4b3b56cac1fb5d5ef22bab56ab"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab">osm_protobufdb_insert_relation</a> (long long id, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:a1ede8f4b3b56cac1fb5d5ef22bab56ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a833337735c381caa19116073d7b7d577"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a833337735c381caa19116073d7b7d577">osm_protobufdb_modify_relation</a> (<a class="el" href="osmformat_8pb-c_8h.html#a6e30dab79289b10d4ed3816014a40868">OSMPBF__Relation</a> *relation, <a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, <a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *pg)</td></tr>
+<tr class="memitem:a833337735c381caa19116073d7b7d577"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a833337735c381caa19116073d7b7d577">osm_protobufdb_modify_relation</a> (OSMPBF__Relation *relation, OSMPBF__Info *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, int pos, OSMPBF__PrimitiveGroup *pg)</td></tr>
 <tr class="separator:a833337735c381caa19116073d7b7d577"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9837d820a5012581d25c92e26b1aa70"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string</a> (struct <a class="el" href="structosm__protobufdb__context.html">osm_protobufdb_context</a> *ctx, char *str)</td></tr>
 <tr class="separator:ad9837d820a5012581d25c92e26b1aa70"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,7 +273,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="struct__OSMPBF____Node.html#a23e1a7db58736fbb6450e354562add44">_OSMPBF__Node::id</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="osm__protobufdb_8c.html#ae1c1349a7f3e81ec54499fa2628ca544">osm_protobufdb_insert_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28">osm_protobufdb_modify_node()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, and <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="osm__protobufdb_8c.html#ae1c1349a7f3e81ec54499fa2628ca544">osm_protobufdb_insert_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28">osm_protobufdb_modify_node()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, and <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -303,7 +303,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="struct__OSMPBF____Relation.html#a5a0dc4e9bfd6ac68510ade5c438c7b31">_OSMPBF__Relation::id</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab">osm_protobufdb_insert_relation()</a>, <a class="el" href="osm__protobufdb_8c.html#a833337735c381caa19116073d7b7d577">osm_protobufdb_modify_relation()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, and <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab">osm_protobufdb_insert_relation()</a>, <a class="el" href="osm__protobufdb_8c.html#a833337735c381caa19116073d7b7d577">osm_protobufdb_modify_relation()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, and <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -333,7 +333,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="struct__OSMPBF____Way.html#a90e7070a4a280552ac3afb9939808615">_OSMPBF__Way::id</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="osm__protobufdb_8c.html#a87ffc6f97642be98b718b45aa975fd68">osm_protobufdb_insert_way()</a>, <a class="el" href="osm__protobufdb_8c.html#a7594fedd426f2bd8a3e216f555b55506">osm_protobufdb_modify_way()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="osm__protobufdb_8c.html#a87ffc6f97642be98b718b45aa975fd68">osm_protobufdb_insert_way()</a>, <a class="el" href="osm__protobufdb_8c.html#a7594fedd426f2bd8a3e216f555b55506">osm_protobufdb_modify_way()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -363,7 +363,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a5285e72fd13c451e6bb792a71f9d3a20">osm_protobufdb_context::active_block</a>, <a class="el" href="structosm__protobufdb__context.html#a47b1cff8336bfa5b893f922d452143ea">osm_protobufdb_context::current_block</a>, <a class="el" href="structosm__protobufdb__context.html#a5d0b898ec22bfa02c134357d5df63521">osm_protobufdb_context::f</a>, <a class="el" href="osm__protobufdb_8c.html#acea55a97ea24208c5f89dd5285ddc32a">osm_protobufdb_write_blob()</a>, <a class="el" href="fileformat_8pb-c_8c.html#a08b05ce973c11d37111591eb339df76a">osmpbf__blob__free_unpacked()</a>, <a class="el" href="fileformat_8pb-c_8h.html#a56ab1a0df2d02ee9d61b84569c7bfd8f">OSMPBF__BLOB__INIT</a>, <a class="el" href="osmformat_8pb-c_8c.html#a1094c231e42172b2e39b00b84fe5fe4a">osmpbf__primitive_block__free_unpacked()</a>, <a class="el" href="osmformat_8pb-c_8c.html#afb1a5993e2ec48e1add5084a09f11a2d">osmpbf__primitive_block__get_packed_size()</a>, <a class="el" href="osmformat_8pb-c_8c.html#a972a0c20b75203546f524b90b0aa9d06">osmpbf__primitive_block__pack()</a>, <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>, and <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a5285e72fd13c451e6bb792a71f9d3a20">osm_protobufdb_context::active_block</a>, <a class="el" href="structosm__protobufdb__context.html#a47b1cff8336bfa5b893f922d452143ea">osm_protobufdb_context::current_block</a>, <a class="el" href="structosm__protobufdb__context.html#a5d0b898ec22bfa02c134357d5df63521">osm_protobufdb_context::f</a>, <a class="el" href="osm__protobufdb_8c.html#acea55a97ea24208c5f89dd5285ddc32a">osm_protobufdb_write_blob()</a>, and <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a2abb2eca5228a2424e6fb5ec43154d28">osm_protobufdb_finish_file()</a>, and <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>.</p>
 
@@ -417,7 +417,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -433,7 +433,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#afca177d19b54727f15cb2e3135d67d0f">_OSMPBF__PrimitiveGroup::n_nodes</a>, <a class="el" href="ch_8c.html#ad6e36b59291450124379549a8fd33378">nodes</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a68c6a8813ebbfab634223181f8034b7e">_OSMPBF__PrimitiveGroup::nodes</a>, <a class="el" href="osmformat_8pb-c_8h.html#a24fc8c76c28e25f4379c9a6fe1acfdda">OSMPBF__NODE__INIT</a>, and <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, <a class="el" href="ch_8c.html#ad6e36b59291450124379549a8fd33378">nodes</a>, and <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#ac423edf1442d441b4c191465bcde2130">osm_protobufdb_end_node()</a>.</p>
 
@@ -457,7 +457,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -473,7 +473,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6c40482343957b242be42eb32ccc8dcc">_OSMPBF__PrimitiveGroup::n_relations</a>, <a class="el" href="osmformat_8pb-c_8h.html#a0a41b51da4d7f71a1c8472fe60c9aacf">OSMPBF__RELATION__INIT</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, and <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6e1214ea0160930c2c840df8b7cfd326">_OSMPBF__PrimitiveGroup::relations</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, and <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a7f49a31a738a6f490aa49e910009cb0f">osm_protobufdb_end_relation()</a>.</p>
 
@@ -497,7 +497,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -513,7 +513,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a58fa50902a332112f3b0ea8f9405f815">_OSMPBF__PrimitiveGroup::n_ways</a>, <a class="el" href="osmformat_8pb-c_8h.html#acd7860974afe5dcc589ca4a4590d80b8">OSMPBF__WAY__INIT</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, and <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a5dc79ded212b220cd7d00467eb9631c6">_OSMPBF__PrimitiveGroup::ways</a>.</p>
+<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a7bc456430cf7f54553e83faba6074781">insert</a>, and <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#aeaf5f4b61ac365f292151e911bc696ea">osm_protobufdb_end_way()</a>.</p>
 
@@ -563,13 +563,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void osm_protobufdb_modify_node </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a7b982bb0e6551c52f7e0115ad0d2ee2d">OSMPBF__Node</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Node *&#160;</td>
           <td class="paramname"><em>node</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Info *&#160;</td>
           <td class="paramname"><em>info</em>, </td>
         </tr>
         <tr>
@@ -581,7 +581,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -597,7 +597,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Node.html#a11ebd9cc2518c0537e9393182a456284">_OSMPBF__Node::info</a>, <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, <a class="el" href="struct__OSMPBF____Node.html#add241ecdae975be364ee51b2cccb5d3c">_OSMPBF__Node::keys</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a68c6a8813ebbfab634223181f8034b7e">_OSMPBF__PrimitiveGroup::nodes</a>, <a class="el" href="osmformat_8pb-c_8c.html#ac5774d56294413c2e18b936abd9e89c0">osmpbf__info__free_unpacked()</a>, <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, and <a class="el" href="struct__OSMPBF____Node.html#af1603ebf558d012d8f1fd71e4ee98dbc">_OSMPBF__Node::vals</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, and <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#ac423edf1442d441b4c191465bcde2130">osm_protobufdb_end_node()</a>.</p>
 
@@ -615,13 +615,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void osm_protobufdb_modify_relation </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a6e30dab79289b10d4ed3816014a40868">OSMPBF__Relation</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Relation *&#160;</td>
           <td class="paramname"><em>relation</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Info *&#160;</td>
           <td class="paramname"><em>info</em>, </td>
         </tr>
         <tr>
@@ -633,7 +633,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -649,7 +649,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Relation.html#abc3c64a21f34160bc7810576b3d44aff">_OSMPBF__Relation::info</a>, <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, <a class="el" href="struct__OSMPBF____Relation.html#aebc9fd4dab3de15c7b92137ece220880">_OSMPBF__Relation::keys</a>, <a class="el" href="struct__OSMPBF____Relation.html#a2e49f55d24057829bfe3ec0036d57f55">_OSMPBF__Relation::memids</a>, <a class="el" href="struct__OSMPBF____Relation.html#a9d1edc4fa5dd90ef00cc71c272a98131">_OSMPBF__Relation::n_memids</a>, <a class="el" href="osmformat_8pb-c_8c.html#ac5774d56294413c2e18b936abd9e89c0">osmpbf__info__free_unpacked()</a>, <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6e1214ea0160930c2c840df8b7cfd326">_OSMPBF__PrimitiveGroup::relations</a>, <a class="el" href="struct__OSMPBF____Relation.html#a927445f175ea52e9b5a8c6a4e8e8128f">_OSMPBF__Relation::roles_sid</a>, <a class="el" href="struct__OSMPBF____Relation.html#ab665860d1425da74436e1424446f8c8d">_OSMPBF__Relation::types</a>, and <a class="el" href="struct__OSMPBF____Relation.html#a46bd00cc244da70426db3cffe8c448cc">_OSMPBF__Relation::vals</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, and <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a7f49a31a738a6f490aa49e910009cb0f">osm_protobufdb_end_relation()</a>.</p>
 
@@ -667,13 +667,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void osm_protobufdb_modify_way </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a6fdfb026fa8cd488b6aeb4e20a5d513a">OSMPBF__Way</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Way *&#160;</td>
           <td class="paramname"><em>way</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#ae467db6a3668e68e37b0ea49bb7b462d">OSMPBF__Info</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Info *&#160;</td>
           <td class="paramname"><em>info</em>, </td>
         </tr>
         <tr>
@@ -685,7 +685,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="osmformat_8pb-c_8h.html#a144782b144440d9e08334b9dcaa11fbb">OSMPBF__PrimitiveGroup</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__PrimitiveGroup *&#160;</td>
           <td class="paramname"><em>pg</em>&#160;</td>
         </tr>
         <tr>
@@ -701,7 +701,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Way.html#a881073f03808199d46a8c2256cd50ee0">_OSMPBF__Way::info</a>, <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, <a class="el" href="struct__OSMPBF____Way.html#af07cd8773cbaf94c0269912cd3e30536">_OSMPBF__Way::keys</a>, <a class="el" href="struct__OSMPBF____Way.html#a480e111537f26037a878530290ccbfb1">_OSMPBF__Way::n_refs</a>, <a class="el" href="osmformat_8pb-c_8c.html#ac5774d56294413c2e18b936abd9e89c0">osmpbf__info__free_unpacked()</a>, <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>, <a class="el" href="protobuf-c_8c.html#a30e73e85f3fa8883900ee80cd370ce90">protobuf_c_system_allocator</a>, <a class="el" href="struct__OSMPBF____Way.html#ac132f2d07e419c380d9cca42ab3efccc">_OSMPBF__Way::refs</a>, <a class="el" href="struct__OSMPBF____Way.html#a7cd89ec73c25ab986d4925b0f3a93347">_OSMPBF__Way::vals</a>, and <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a5dc79ded212b220cd7d00467eb9631c6">_OSMPBF__PrimitiveGroup::ways</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, and <a class="el" href="namespacestartup.html#a1e9cd55f4c54905a6806f443061819f7">startup::pos</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#aeaf5f4b61ac365f292151e911bc696ea">osm_protobufdb_end_way()</a>.</p>
 
@@ -741,7 +741,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Info.html#a6cfab03215536749a8f9f39328b16a3d">_OSMPBF__Info::changeset</a>, <a class="el" href="struct__OSMPBF____Info.html#a4fe61c4ac03f27073835ef58c120d048">_OSMPBF__Info::has_changeset</a>, <a class="el" href="struct__OSMPBF____Info.html#aff9821ae63587d91acf1d6111e4b313f">_OSMPBF__Info::has_timestamp</a>, <a class="el" href="struct__OSMPBF____Info.html#ae95819057c990dde88449eb52c255e06">_OSMPBF__Info::has_uid</a>, <a class="el" href="struct__OSMPBF____Info.html#a8a07079bf8dc2758b56eea2ab18c21f7">_OSMPBF__Info::has_user_sid</a>, <a class="el" href="struct__OSMPBF____Info.html#a7f207cd86beba8c2de28b07817339af2">_OSMPBF__Info::has_version</a>, <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="osm__protobufdb_8c.html#af83889628bf7b53b0bf163669448b776">osm_protobufdb_timestamp()</a>, <a class="el" href="maptool_8h.html#a07d131f75fb22fe13804acab6cf2a63e">osm_xml_decode_entities()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="osmformat_8pb-c_8h.html#aa04b5683d74fbbd993962cf0c4e14f89">OSMPBF__INFO__INIT</a>, <a class="el" href="struct__OSMPBF____Info.html#a46c0bba4a97827b1475ca55c49c0105f">_OSMPBF__Info::timestamp</a>, <a class="el" href="struct__OSMPBF____Info.html#a4b1ad9faa5dac12561b73be554f527f1">_OSMPBF__Info::uid</a>, <a class="el" href="struct__OSMPBF____Info.html#a48469bf2c89fffba88df7a3a728142d0">_OSMPBF__Info::user_sid</a>, <a class="el" href="osso_8c.html#a0205f8f54719e41e19f524f26370bd42">version</a>, and <a class="el" href="struct__OSMPBF____Info.html#ab74fc261dfa9c14387f7cc4c37f9b2d3">_OSMPBF__Info::version</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7">osm_protobufdb_context::i</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="osm__protobufdb_8c.html#af83889628bf7b53b0bf163669448b776">osm_protobufdb_timestamp()</a>, <a class="el" href="maptool_8h.html#a07d131f75fb22fe13804acab6cf2a63e">osm_xml_decode_entities()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, and <a class="el" href="osso_8c.html#a0205f8f54719e41e19f524f26370bd42">version</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#ae51c3fdcef93d353c01efe149a342cbb">osm_protobufdb_parse_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a62608ec5c89fa3632c6f6a3363f1d835">osm_protobufdb_parse_relation()</a>, and <a class="el" href="osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9">osm_protobufdb_parse_way()</a>.</p>
 
@@ -781,7 +781,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="struct__OSMPBF____Relation.html#a2e49f55d24057829bfe3ec0036d57f55">_OSMPBF__Relation::memids</a>, <a class="el" href="struct__OSMPBF____Relation.html#a9d1edc4fa5dd90ef00cc71c272a98131">_OSMPBF__Relation::n_memids</a>, <a class="el" href="struct__OSMPBF____Relation.html#a0ce518a78e8e67d8d6427eb6f76b15b8">_OSMPBF__Relation::n_roles_sid</a>, <a class="el" href="struct__OSMPBF____Relation.html#ac6bcd1fa8cd5c72aa00da4be7c6c75b6">_OSMPBF__Relation::n_types</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, <a class="el" href="struct__OSMPBF____Relation.html#a927445f175ea52e9b5a8c6a4e8e8128f">_OSMPBF__Relation::roles_sid</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, and <a class="el" href="struct__OSMPBF____Relation.html#ab665860d1425da74436e1424446f8c8d">_OSMPBF__Relation::types</a>.</p>
+<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -821,7 +821,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="struct__OSMPBF____Way.html#a480e111537f26037a878530290ccbfb1">_OSMPBF__Way::n_refs</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="struct__OSMPBF____Way.html#ac132f2d07e419c380d9cca42ab3efccc">_OSMPBF__Way::refs</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
+<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -861,7 +861,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Node.html#a23e1a7db58736fbb6450e354562add44">_OSMPBF__Node::id</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="struct__OSMPBF____Node.html#a1be3d109f3dcc1341dfa583e9350c215">_OSMPBF__Node::lat</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="osm__protobufdb_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a>, <a class="el" href="struct__OSMPBF____Node.html#a691fb9ca03d2ccd66c944f3b6e130c37">_OSMPBF__Node::lon</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="structdb__config.html#aada860ef70da493b1adbe7f4ed83cd14">db_config::node_ids_per_blob</a>, <a class="el" href="structdb__config.html#aa324d30e0565b7d1e67d8dc5a704475b">db_config::node_ids_per_file</a>, <a class="el" href="structdb__config.html#abf325c0186f49db97e9806726d5ad005">db_config::node_ids_per_group</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, and <a class="el" href="osmformat_8pb-c_8h.html#a24fc8c76c28e25f4379c9a6fe1acfdda">OSMPBF__NODE__INIT</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="osm__protobufdb_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="structdb__config.html#aada860ef70da493b1adbe7f4ed83cd14">db_config::node_ids_per_blob</a>, <a class="el" href="structdb__config.html#aa324d30e0565b7d1e67d8dc5a704475b">db_config::node_ids_per_file</a>, <a class="el" href="structdb__config.html#abf325c0186f49db97e9806726d5ad005">db_config::node_ids_per_group</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, and <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -901,7 +901,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Relation.html#a5a0dc4e9bfd6ac68510ade5c438c7b31">_OSMPBF__Relation::id</a>, <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="osmformat_8pb-c_8h.html#a0a41b51da4d7f71a1c8472fe60c9aacf">OSMPBF__RELATION__INIT</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, <a class="el" href="structdb__config.html#a4e9a0fd28aa083da2fdd7623e77a8181">db_config::relation_ids_per_blob</a>, <a class="el" href="structdb__config.html#ace360860164ce538a77e6ceaa1286e0b">db_config::relation_ids_per_file</a>, and <a class="el" href="structdb__config.html#a3082a5dbd4e10cd817bfb7517560df30">db_config::relation_ids_per_group</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, <a class="el" href="structdb__config.html#a4e9a0fd28aa083da2fdd7623e77a8181">db_config::relation_ids_per_blob</a>, <a class="el" href="structdb__config.html#ace360860164ce538a77e6ceaa1286e0b">db_config::relation_ids_per_file</a>, and <a class="el" href="structdb__config.html#a3082a5dbd4e10cd817bfb7517560df30">db_config::relation_ids_per_group</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -941,7 +941,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="struct__OSMPBF____Node.html#add241ecdae975be364ee51b2cccb5d3c">_OSMPBF__Node::keys</a>, <a class="el" href="struct__OSMPBF____Way.html#af07cd8773cbaf94c0269912cd3e30536">_OSMPBF__Way::keys</a>, <a class="el" href="struct__OSMPBF____Relation.html#aebc9fd4dab3de15c7b92137ece220880">_OSMPBF__Relation::keys</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="struct__OSMPBF____Node.html#a0f52fb1ce3e4c33c6cfa0fbf89120355">_OSMPBF__Node::n_keys</a>, <a class="el" href="struct__OSMPBF____Way.html#a28aa1f5b29dfd5cdc0c9eca7d4bb00fd">_OSMPBF__Way::n_keys</a>, <a class="el" href="struct__OSMPBF____Relation.html#ab821d1aa434ece846d5b7cf39bda7bdd">_OSMPBF__Relation::n_keys</a>, <a class="el" href="struct__OSMPBF____Node.html#a3ef6683f4018e5e71657439c8a4edb19">_OSMPBF__Node::n_vals</a>, <a class="el" href="struct__OSMPBF____Way.html#a1f0378876c026ce3510ba74e1b2af779">_OSMPBF__Way::n_vals</a>, <a class="el" href="struct__OSMPBF____Relation.html#a17adad6262d8690f8ffef32c4a00d636">_OSMPBF__Relation::n_vals</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="maptool_8h.html#a07d131f75fb22fe13804acab6cf2a63e">osm_xml_decode_entities()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, <a class="el" href="struct__OSMPBF____Node.html#af1603ebf558d012d8f1fd71e4ee98dbc">_OSMPBF__Node::vals</a>, <a class="el" href="struct__OSMPBF____Way.html#a7cd89ec73c25ab986d4925b0f3a93347">_OSMPBF__Way::vals</a>, <a class="el" href="struct__OSMPBF____Relation.html#a46bd00cc244da70426db3cffe8c448cc">_OSMPBF__Relation::vals</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
+<p class="reference">References <a class="el" href="maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>, <a class="el" href="structosm__protobufdb__context.html#ab4ed3903563d4bb47a6401a94cb234da">osm_protobufdb_context::in_node</a>, <a class="el" href="structosm__protobufdb__context.html#a3a22a2555f03024f9a9f4b8bcf71f12e">osm_protobufdb_context::in_relation</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="structosm__protobufdb__context.html#a3429736b427bc0a2d0437b86991deab3">osm_protobufdb_context::n</a>, <a class="el" href="osm__protobufdb_8c.html#ad9837d820a5012581d25c92e26b1aa70">osm_protobufdb_string()</a>, <a class="el" href="maptool_8h.html#a07d131f75fb22fe13804acab6cf2a63e">osm_xml_decode_entities()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#ad1f40a0e7cd56ed40776a1b0e13c3629">osm_protobufdb_context::r</a>, and <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -981,7 +981,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____Way.html#a90e7070a4a280552ac3afb9939808615">_OSMPBF__Way::id</a>, <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="osmformat_8pb-c_8h.html#acd7860974afe5dcc589ca4a4590d80b8">OSMPBF__WAY__INIT</a>, <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>, <a class="el" href="structdb__config.html#a5f7747c37d115ef1b1504e588b78c938">db_config::way_ids_per_blob</a>, <a class="el" href="structdb__config.html#a438a3c1a5f80254a0602037e546d7c9e">db_config::way_ids_per_file</a>, and <a class="el" href="structdb__config.html#a7e45a5eeccca88498ad273eb317dc02f">db_config::way_ids_per_group</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#abb5a7cc7d40f43ae28c70f155de5b117">osm_protobufdb_context::in_way</a>, <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a48ec5096cf79c31dbf84d49c90b40c5e">osm_protobufdb_start_block()</a>, <a class="el" href="osm__protobufdb_8c.html#ac3d5040e3d2f76ef6fe6c83a52d35683">osm_protobufdb_start_file()</a>, <a class="el" href="osm__protobufdb_8c.html#a31a2163fa4dc8db730a54c2c685e3262">osm_protobufdb_start_group()</a>, <a class="el" href="maptool_8h.html#a4f8d278af8501644df192593d2c52ba1">osm_xml_get_attribute()</a>, <a class="el" href="structosm__protobufdb__context.html#af006c42c8dd142be7c7e87afb913abf2">osm_protobufdb_context::w</a>, <a class="el" href="structdb__config.html#a5f7747c37d115ef1b1504e588b78c938">db_config::way_ids_per_blob</a>, <a class="el" href="structdb__config.html#a438a3c1a5f80254a0602037e546d7c9e">db_config::way_ids_per_file</a>, and <a class="el" href="structdb__config.html#a7e45a5eeccca88498ad273eb317dc02f">db_config::way_ids_per_group</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5ce25b2aa503a492e79ba264cb821c66">osm_protobufdb_load()</a>.</p>
 
@@ -1021,7 +1021,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a5285e72fd13c451e6bb792a71f9d3a20">osm_protobufdb_context::active_block</a>, <a class="el" href="osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc">osm_protobufdb_finish_block()</a>, <a class="el" href="osmformat_8pb-c_8h.html#acb6986ea4aad331ee5815591544e7944">OSMPBF__PRIMITIVE_BLOCK__INIT</a>, <a class="el" href="osmformat_8pb-c_8h.html#a14d341712d20b04708da675dad9404b7">OSMPBF__STRING_TABLE__INIT</a>, <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>, <a class="el" href="osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac">st</a>, <a class="el" href="structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5">osm_protobufdb_context::st</a>, and <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#aa080371802281cad077299fc08fe5eaf">_OSMPBF__PrimitiveBlock::stringtable</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a5285e72fd13c451e6bb792a71f9d3a20">osm_protobufdb_context::active_block</a>, <a class="el" href="osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc">osm_protobufdb_finish_block()</a>, <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>, <a class="el" href="osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac">st</a>, and <a class="el" href="structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5">osm_protobufdb_context::st</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#ae51c3fdcef93d353c01efe149a342cbb">osm_protobufdb_parse_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a62608ec5c89fa3632c6f6a3363f1d835">osm_protobufdb_parse_relation()</a>, and <a class="el" href="osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9">osm_protobufdb_parse_way()</a>.</p>
 
@@ -1107,7 +1107,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a2108b4bb2af9d9561c0f45e9a23bc6bc">_OSMPBF__PrimitiveGroup::dense</a>, <a class="el" href="struct__OSMPBF____DenseNodes.html#a87e6bb301bfa4855fedf2ecbdeb3a6dd">_OSMPBF__DenseNodes::denseinfo</a>, <a class="el" href="structosm__protobufdb__context.html#a396601a23f2878da9c90e7ea673243af">osm_protobufdb_context::di</a>, <a class="el" href="structosm__protobufdb__context.html#a0517562b6171593f69655ea969a8fcb6">osm_protobufdb_context::dn</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#afb4a3080c4e296d10aaa29484d64aafb">_OSMPBF__PrimitiveBlock::n_primitivegroup</a>, <a class="el" href="osmformat_8pb-c_8h.html#ac0db39eb7850378228ee12e7dbf8e62b">OSMPBF__DENSE_INFO__INIT</a>, <a class="el" href="osmformat_8pb-c_8h.html#a134c7a82077b932b911625bb91145514">OSMPBF__DENSE_NODES__INIT</a>, <a class="el" href="osmformat_8pb-c_8h.html#a5356252bbf0ba1eaa7c688bd18586b78">OSMPBF__PRIMITIVE_GROUP__INIT</a>, <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#a0552e650eba371c43161207575a1f59c">_OSMPBF__PrimitiveBlock::primitivegroup</a>, and <a class="el" href="structosm__protobufdb__context.html#aff66f484eec1127e9c5bd49ba46bb37c">osm_protobufdb_context::string_hash</a>.</p>
+<p class="reference">References <a class="el" href="structosm__protobufdb__context.html#a396601a23f2878da9c90e7ea673243af">osm_protobufdb_context::di</a>, <a class="el" href="structosm__protobufdb__context.html#a0517562b6171593f69655ea969a8fcb6">osm_protobufdb_context::dn</a>, <a class="el" href="structosm__protobufdb__context.html#a65610f7b2e8c43336eb97b638cce7c36">osm_protobufdb_context::pb</a>, <a class="el" href="structosm__protobufdb__context.html#a82d38e2a55a7d2d26c5b5f09b5eed0f9">osm_protobufdb_context::pg</a>, and <a class="el" href="structosm__protobufdb__context.html#aff66f484eec1127e9c5bd49ba46bb37c">osm_protobufdb_context::string_hash</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#ae51c3fdcef93d353c01efe149a342cbb">osm_protobufdb_parse_node()</a>, <a class="el" href="osm__protobufdb_8c.html#a62608ec5c89fa3632c6f6a3363f1d835">osm_protobufdb_parse_relation()</a>, and <a class="el" href="osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9">osm_protobufdb_parse_way()</a>.</p>
 
@@ -1147,7 +1147,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="struct__ProtobufCBinaryData.html#aef99fded0f52fedc309f61115df94ace">_ProtobufCBinaryData::data</a>, <a class="el" href="struct__ProtobufCBinaryData.html#ab5f4c392d5ca0a6f3db71be62bd56d1b">_ProtobufCBinaryData::len</a>, <a class="el" href="struct__OSMPBF____StringTable.html#aa544db05e9cee460840267f98dcc19af">_OSMPBF__StringTable::n_s</a>, <a class="el" href="struct__OSMPBF____StringTable.html#af21de70589680bd4dc03222fa3d2949a">_OSMPBF__StringTable::s</a>, <a class="el" href="osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac">st</a>, <a class="el" href="structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5">osm_protobufdb_context::st</a>, <a class="el" href="structosm__protobufdb__context.html#aff66f484eec1127e9c5bd49ba46bb37c">osm_protobufdb_context::string_hash</a>, and <a class="el" href="datawindow_8c.html#ab10bc3dfea7bd427cb6cbf318eb80c1e">value</a>.</p>
+<p class="reference">References <a class="el" href="osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac">st</a>, <a class="el" href="structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5">osm_protobufdb_context::st</a>, <a class="el" href="structosm__protobufdb__context.html#aff66f484eec1127e9c5bd49ba46bb37c">osm_protobufdb_context::string_hash</a>, and <a class="el" href="datawindow_8c.html#ab10bc3dfea7bd427cb6cbf318eb80c1e">value</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a85616d3999cdd1feafcd433ff6c7ec4b">osm_protobufdb_parse_info()</a>, <a class="el" href="osm__protobufdb_8c.html#a13fdec16484ee8a4223016c2acdb91d7">osm_protobufdb_parse_member()</a>, and <a class="el" href="osm__protobufdb_8c.html#aa974e43e81bac0fa71645a12f602558d">osm_protobufdb_parse_tag()</a>.</p>
 
@@ -1193,7 +1193,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static int osm_protobufdb_write_blob </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="fileformat_8pb-c_8h.html#a227efec894456507cb6ce570b458afb9">OSMPBF__Blob</a> *&#160;</td>
+          <td class="paramtype">OSMPBF__Blob *&#160;</td>
           <td class="paramname"><em>blob</em>, </td>
         </tr>
         <tr>
@@ -1214,8 +1214,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="struct__OSMPBF____BlobHeader.html#a0f1ee6a08b5973c7532f9cef00696ac3">_OSMPBF__BlobHeader::datasize</a>, <a class="el" href="struct__OSMPBF____Relation.html#abc3c64a21f34160bc7810576b3d44aff">_OSMPBF__Relation::info</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#afb4a3080c4e296d10aaa29484d64aafb">_OSMPBF__PrimitiveBlock::n_primitivegroup</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6c40482343957b242be42eb32ccc8dcc">_OSMPBF__PrimitiveGroup::n_relations</a>, <a class="el" href="fileformat_8pb-c_8c.html#a1bf858d70786d863ed25951aeee84723">osmpbf__blob__get_packed_size()</a>, <a class="el" href="fileformat_8pb-c_8c.html#abde7af26afed2050c5a5e974776b443a">osmpbf__blob__pack()</a>, <a class="el" href="fileformat_8pb-c_8c.html#ae3a277988ca8d4ac7e92242032b08918">osmpbf__blob_header__get_packed_size()</a>, <a class="el" href="fileformat_8pb-c_8h.html#ac90421b5c85c36d771d531b90264c64b">OSMPBF__BLOB_HEADER__INIT</a>, <a class="el" href="fileformat_8pb-c_8c.html#ab8099b0342cb1b372eb5fa4895284096">osmpbf__blob_header__pack()</a>, <a class="el" href="struct__OSMPBF____PrimitiveBlock.html#a0552e650eba371c43161207575a1f59c">_OSMPBF__PrimitiveBlock::primitivegroup</a>, <a class="el" href="struct__OSMPBF____PrimitiveGroup.html#a6e1214ea0160930c2c840df8b7cfd326">_OSMPBF__PrimitiveGroup::relations</a>, <a class="el" href="struct__OSMPBF____BlobHeader.html#a8982babc9ce67c07ce6052271b80f070">_OSMPBF__BlobHeader::type</a>, and <a class="el" href="struct__OSMPBF____Info.html#ab74fc261dfa9c14387f7cc4c37f9b2d3">_OSMPBF__Info::version</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm__protobufdb_8c.html#a5b3d99a5918f45872c6f0090d0a7e8fc">osm_protobufdb_finish_block()</a>.</p>
 

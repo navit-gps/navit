@@ -16,7 +16,7 @@ var searchData=
   ['way_5fids_5fper_5fgroup',['way_ids_per_group',['../structdb__config.html#a7e45a5eeccca88498ad273eb317dc02f',1,'db_config']]],
   ['wayid',['wayid',['../structcoastline__tile.html#a523008f882e29f2af22af4a0d917718f',1,'coastline_tile::wayid()'],['../structhouse__number__interpolation.html#a92a46d3ca012fa53969d78eae10e7768',1,'house_number_interpolation::wayid()'],['../osm_8c.html#a6aab18b17ba0b29f9024a55e05fde192',1,'wayid():&#160;osm.c']]],
   ['waypoints_5fflag',['waypoints_flag',['../structnavit.html#a60283b31e7b6645f23e3fd9057633573',1,'navit']]],
-  ['ways',['ways',['../struct__OSMPBF____PrimitiveGroup.html#a5dc79ded212b220cd7d00467eb9631c6',1,'_OSMPBF__PrimitiveGroup::ways()'],['../structmaptool__osm.html#afd5fd046c47a13b5f55602f02fe188fe',1,'maptool_osm::ways()'],['../structmap__rect__priv.html#a4c405eaeaee3d6750dd976ce36a94ef2',1,'map_rect_priv::ways()']]],
+  ['ways',['ways',['../structmaptool__osm.html#afd5fd046c47a13b5f55602f02fe188fe',1,'maptool_osm::ways()'],['../structmap__rect__priv.html#a4c405eaeaee3d6750dd976ce36a94ef2',1,'map_rect_priv::ways()']]],
   ['ways_5fin',['ways_in',['../structfiles__relation__processing.html#ab4b0be563bf087e14c31313bea68f7f4',1,'files_relation_processing']]],
   ['ways_5fout',['ways_out',['../structfiles__relation__processing.html#a97aff29fd14eaed3cdabf19c5aea850c',1,'files_relation_processing']]],
   ['ways_5fsplit',['ways_split',['../structmaptool__params.html#a02481e12e97befde43261257bf72ead0',1,'maptool_params']]],
@@ -43,7 +43,6 @@ var searchData=
   ['window_5fsystem_5fmethods',['window_system_methods',['../structgraphics__priv.html#a1abf515640872d71cc7a65375be89237',1,'graphics_priv']]],
   ['window_5ftitle',['window_title',['../structgraphics__priv.html#a044e53bbf81910beb227e2548ca6a0b7',1,'graphics_priv']]],
   ['windows_5fitems',['windows_items',['../structnavit.html#a1e3e1de1df5def584027afce593e7805',1,'navit']]],
-  ['wire_5ftype',['wire_type',['../struct__ScannedMember.html#a6efc8fa58f5ca914b03d120168b9250e',1,'_ScannedMember::wire_type()'],['../struct__ProtobufCMessageUnknownField.html#aa1d9ab7d2e44e3157851f8d7c13c68c7',1,'_ProtobufCMessageUnknownField::wire_type()']]],
   ['wl',['wl',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a95079a39faa3663d353bcc2a5a8c22f5',1,'org::navitproject::navit::Navit']]],
   ['wmin',['wmin',['../structwidget.html#ac51a2c391479677ca863a48d51a28655',1,'widget']]],
   ['wnd_5fhandle',['wnd_handle',['../structgraphics__priv.html#aaaf14346d355ba942d72008b93ba46b8',1,'graphics_priv::wnd_handle()'],['../structmenu__priv.html#a1c3b537c2028475ad09991d134085c38',1,'menu_priv::wnd_handle()']]],
@@ -55,7 +54,6 @@ var searchData=
   ['wptpoints',['wptpoints',['../structg2sstats.html#af9aea0976de9c0936de2bd6eccf2d5aa',1,'g2sstats']]],
   ['wraparound',['wraparound',['../structgraphics__priv.html#aff28a2c98d6aa99dcd8954a8cdead79c',1,'graphics_priv']]],
   ['write',['write',['../structtile__info.html#ab2000008d247b649b2ee6f502d82b521',1,'tile_info']]],
-  ['writingprogram',['writingprogram',['../struct__OSMPBF____HeaderBlock.html#a244907a97e3fc6589c231349853bcfd6',1,'_OSMPBF__HeaderBlock']]],
   ['wscale',['wscale',['../structtransformation.html#a900cb0667ddcb87b3c4e6436297047e0',1,'transformation']]],
   ['wscale3d',['wscale3d',['../structtransformation.html#a49ebf2670072e4aab8c0b18f5412c0d1',1,'transformation']]]
 ];

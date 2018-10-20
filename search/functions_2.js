@@ -22,7 +22,6 @@ var searchData=
   ['adjust_5fdelta',['adjust_delta',['../navigation_8c.html#acdfcdeda5377b51bce768a5e345fbde3',1,'navigation.c']]],
   ['adjustsystembarstintingviews',['adjustSystemBarsTintingViews',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5ecc6e86e20219b67248a6ab75565e13',1,'org::navitproject::navit::NavitGraphics']]],
   ['alloc',['Alloc',['../speak_8c.html#aa279b4ebb6707b7d3224cae69f2cc072',1,'speak.c']]],
-  ['alloc_5ffailed_5fwarning',['alloc_failed_warning',['../protobuf-c_8c.html#a3d610832b16ff93918dda87801f1f8cd',1,'protobuf-c.c']]],
   ['allocate',['allocate',['../browserplugin_8c.html#a4699bb4a398d8a9e43bdfc3614a18f16',1,'browserplugin.c']]],
   ['allocate_5fnode_5fitem_5fin_5fbuffer',['allocate_node_item_in_buffer',['../osm_8c.html#a08beb6f898ae370f6a45f52b3d381f09',1,'osm.c']]],
   ['android_5ffind_5fclass_5fglobal',['android_find_class_global',['../android_8c.html#a7e27fbc0cc2695097a90448bec80d140',1,'android_find_class_global(char *name, jclass *ret):&#160;android.c'],['../android_8h.html#a7e27fbc0cc2695097a90448bec80d140',1,'android_find_class_global(char *name, jclass *ret):&#160;android.c']]],

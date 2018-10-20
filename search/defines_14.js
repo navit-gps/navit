@@ -9,8 +9,6 @@ var searchData=
   ['uiviewcontroller',['UIViewController',['../graphics__cocoa_8m.html#a2b1c0432d24c903b716d952b11646dbc',1,'graphics_cocoa.m']]],
   ['uiwindow',['UIWindow',['../graphics__cocoa_8m.html#ac182eff4a7eacb47b4025da8f299aa01',1,'graphics_cocoa.m']]],
   ['ulonglong_5ffmt',['ULONGLONG_FMT',['../types_8h.html#aeabbf8446e083d91ba74eb25fe9ec873',1,'types.h']]],
-  ['unaligned_5falloc',['UNALIGNED_ALLOC',['../protobuf-c_8c.html#a3831e7fbddab1a51785b07bc241e1697',1,'protobuf-c.c']]],
-  ['unpack_5ferror',['UNPACK_ERROR',['../protobuf-c_8c.html#a0f65679b5e5d2f7acd0b2d800e64e386',1,'protobuf-c.c']]],
   ['use_5fcaching',['USE_CACHING',['../font__freetype_8c.html#ad5a350ba30d102b3669f0fee6fb8fc4d',1,'font_freetype.c']]],
   ['use_5fezxml',['USE_EZXML',['../xmlconfig_8h.html#a022e1f948522313038c8345339f2b5f6',1,'xmlconfig.h']]],
   ['use_5ffloat',['USE_FLOAT',['../graphics__opengl_8c.html#a5a03415e5a2d7bdc6ce680c47ddc156a',1,'USE_FLOAT():&#160;graphics_opengl.c'],['../graphics__opengl_8c.html#a5a03415e5a2d7bdc6ce680c47ddc156a',1,'USE_FLOAT():&#160;graphics_opengl.c']]],

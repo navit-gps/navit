@@ -21,9 +21,7 @@ var searchData=
   ['keypresscallbackid',['KeypressCallbackID',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a81fc5a32063325617b773ca3c42d3b63',1,'org::navitproject::navit::NavitGraphics']]],
   ['keypressevent',['keyPressEvent',['../classQNavitQuick.html#a5312d7ffec66f54b208b9a424994a207',1,'QNavitQuick::keyPressEvent()'],['../classQNavitWidget.html#a87ff39fc76d75ff4f882df9d0b433b2f',1,'QNavitWidget::keyPressEvent()'],['../classRenderArea.html#a535e9d0dec1c79c1bab010ad9d338afb',1,'RenderArea::keyPressEvent()']]],
   ['keyreleaseevent',['keyReleaseEvent',['../classQNavitQuick.html#a518190a989ca469bc55e1b4533de35b0',1,'QNavitQuick']]],
-  ['keys',['keys',['../struct__OSMPBF____Node.html#add241ecdae975be364ee51b2cccb5d3c',1,'_OSMPBF__Node::keys()'],['../struct__OSMPBF____Way.html#af07cd8773cbaf94c0269912cd3e30536',1,'_OSMPBF__Way::keys()'],['../struct__OSMPBF____Relation.html#aebc9fd4dab3de15c7b92137ece220880',1,'_OSMPBF__Relation::keys()']]],
   ['keys_2eh',['keys.h',['../keys_8h.html',1,'']]],
-  ['keys_5fvals',['keys_vals',['../struct__OSMPBF____DenseNodes.html#ac8d5703e11ea6a0f9240e13629ad1ab2',1,'_OSMPBF__DenseNodes']]],
   ['keywords',['keywords',['../structg2sattr.html#ab1bc583e540789c10cede5017095201d',1,'g2sattr']]],
   ['kilometers_5fto_5fmiles',['KILOMETERS_TO_MILES',['../navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6',1,'navigation.h']]]
 ];

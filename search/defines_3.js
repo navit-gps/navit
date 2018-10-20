@@ -44,7 +44,6 @@ var searchData=
   ['cjson_5fobject',['cJSON_Object',['../cJSON_8h.html#a22c6e13481c090629afbd77b7cebd24c',1,'cJSON.h']]],
   ['cjson_5fstring',['cJSON_String',['../cJSON_8h.html#aa2cb4765308e2bbdf01988b2acdf92d9',1,'cJSON.h']]],
   ['cjson_5ftrue',['cJSON_True',['../cJSON_8h.html#aad4e442b8095939decddfb67d87d9324',1,'cJSON.h']]],
-  ['clear_5fremaining_5fn_5fptrs',['CLEAR_REMAINING_N_PTRS',['../protobuf-c_8c.html#a834fd2a4f672879deac8aaa222ef5def',1,'protobuf-c.c']]],
   ['clip_5faccept',['CLIP_ACCEPT',['../raster_8c.html#a004c35133422cb574c41bb114d4592c6',1,'raster.c']]],
   ['clip_5fbottom_5fedge',['CLIP_BOTTOM_EDGE',['../raster_8c.html#ae4fa529c5f9a39310b98769cdb007c2d',1,'raster.c']]],
   ['clip_5finside',['CLIP_INSIDE',['../raster_8c.html#a3f497d83ed5f593a5bc56c2ba7e13f5b',1,'raster.c']]],

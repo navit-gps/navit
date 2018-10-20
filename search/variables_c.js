@@ -10,7 +10,5 @@ var searchData=
   ['keypress',['keypress',['../structgraphics__opengl__window__system.html#a7f753d4c1c48850465f4bb1f04c1ca72',1,'graphics_opengl_window_system']]],
   ['keypress_5fcb',['keypress_cb',['../structgui__priv.html#a85aae7ab7a9538c828bd985e69d6d673',1,'gui_priv::keypress_cb()'],['../structosd__item.html#a15130092885815c0a40d2f14a4e9af5f',1,'osd_item::keypress_cb()']]],
   ['keypresscallbackid',['KeypressCallbackID',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a81fc5a32063325617b773ca3c42d3b63',1,'org::navitproject::navit::NavitGraphics']]],
-  ['keys',['keys',['../struct__OSMPBF____Node.html#add241ecdae975be364ee51b2cccb5d3c',1,'_OSMPBF__Node::keys()'],['../struct__OSMPBF____Way.html#af07cd8773cbaf94c0269912cd3e30536',1,'_OSMPBF__Way::keys()'],['../struct__OSMPBF____Relation.html#aebc9fd4dab3de15c7b92137ece220880',1,'_OSMPBF__Relation::keys()']]],
-  ['keys_5fvals',['keys_vals',['../struct__OSMPBF____DenseNodes.html#ac8d5703e11ea6a0f9240e13629ad1ab2',1,'_OSMPBF__DenseNodes']]],
   ['keywords',['keywords',['../structg2sattr.html#ab1bc583e540789c10cede5017095201d',1,'g2sattr']]]
 ];

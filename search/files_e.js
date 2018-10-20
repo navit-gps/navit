@@ -19,9 +19,6 @@ var searchData=
   ['profile_5foption_2ec',['profile_option.c',['../profile__option_8c.html',1,'']]],
   ['projection_2ec',['projection.c',['../projection_8c.html',1,'']]],
   ['projection_2eh',['projection.h',['../projection_8h.html',1,'']]],
-  ['protobuf_2dc_2dprivate_2eh',['protobuf-c-private.h',['../protobuf-c-private_8h.html',1,'']]],
-  ['protobuf_2dc_2ec',['protobuf-c.c',['../protobuf-c_8c.html',1,'']]],
-  ['protobuf_2dc_2eh',['protobuf-c.h',['../protobuf-c_8h.html',1,'']]],
   ['proxy_2ec',['proxy.c',['../proxy_8c.html',1,'']]],
   ['proxy_2eh',['proxy.h',['../qml_2proxy_8h.html',1,'(Global Namespace)'],['../qt5__qml_2proxy_8h.html',1,'(Global Namespace)']]]
 ];

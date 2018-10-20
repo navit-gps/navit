@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['zigzag32',['zigzag32',['../protobuf-c_8c.html#a4a8779da1e59e5765cd2b3fc8ff1831a',1,'protobuf-c.c']]],
-  ['zigzag64',['zigzag64',['../protobuf-c_8c.html#ad7b72e9de70fc586646296e29d51d987',1,'protobuf-c.c']]],
   ['zip_5fadd_5fmember',['zip_add_member',['../maptool_8h.html#ae38d5e380731f21475b8af67eb245a01',1,'zip_add_member(struct zip_info *info):&#160;zip.c'],['../zip_8c.html#ae38d5e380731f21475b8af67eb245a01',1,'zip_add_member(struct zip_info *info):&#160;zip.c']]],
   ['zip_5fclose',['zip_close',['../maptool_8h.html#a321d2fec07fe13b3c206b13880a17fbd',1,'zip_close(struct zip_info *info):&#160;zip.c'],['../zip_8c.html#a321d2fec07fe13b3c206b13880a17fbd',1,'zip_close(struct zip_info *info):&#160;zip.c']]],
   ['zip_5fdestroy',['zip_destroy',['../maptool_8h.html#ad8e2611f953556c55ce11ed005d0ffe4',1,'zip_destroy(struct zip_info *info):&#160;zip.c'],['../zip_8c.html#ad8e2611f953556c55ce11ed005d0ffe4',1,'zip_destroy(struct zip_info *info):&#160;zip.c']]],

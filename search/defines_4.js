@@ -29,7 +29,5 @@ var searchData=
   ['display_5fh',['DISPLAY_H',['../graphics__sdl_8c.html#a895152e89a26d775212c88dafb8c50ca',1,'graphics_sdl.c']]],
   ['display_5fw',['DISPLAY_W',['../graphics__sdl_8c.html#a78f89e91b5365676ca7a0d937946b854',1,'graphics_sdl.c']]],
   ['dlog',['dlog',['../garmin_8h.html#a3e0f0fa3888a7188799ecb01b02cf519',1,'dlog():&#160;garmin.h'],['../gentypes_8c.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog():&#160;gentypes.c']]],
-  ['do_5falloc',['DO_ALLOC',['../protobuf-c_8c.html#a8ec7aa7e37331a245c2362d691a7e748',1,'protobuf-c.c']]],
-  ['do_5funaligned_5falloc',['DO_UNALIGNED_ALLOC',['../protobuf-c_8c.html#a9c4e9d02623152035e0eeeef876a98d7',1,'protobuf-c.c']]],
   ['dtol',['DTOL',['../geod__inv_8c.html#a64861cabb9a7f45c303406c97c30afc5',1,'geod_inv.c']]]
 ];

@@ -56,7 +56,6 @@ var searchData=
   ['gr',['gr',['../structgraphics__gc__priv.html#a1d89810acc6f9660d89b4a67410f7794',1,'graphics_gc_priv::gr()'],['../structosd__item.html#ac5ef7d8953962a62a3bda46d04ac1548',1,'osd_item::gr()']]],
   ['gra',['gra',['../structgraphics__gc__priv.html#ae736ac13db47ce16e5036d808b986f36',1,'graphics_gc_priv::gra()'],['../classRenderArea.html#aadec0a564edba538900233161d6dc2fd',1,'RenderArea::gra()'],['../structdisplay__context.html#a9bd75b9ad4bee5fb1df5b3bf8ef673b6',1,'display_context::gra()'],['../structgraphics__gc.html#a41967312f6e87d64baa2b2f7a870c358',1,'graphics_gc::gra()'],['../structgui__priv.html#a49842d709b7d8c429cee1cfb4831b542',1,'gui_priv::gra()'],['../structnavit.html#ad6ce85d9764b4725ea9574489b93eaad',1,'navit::gra()'],['../structrocket.html#a39626d942747b0ec3cdc42787910d854',1,'rocket::gra()'],['../structvehicle.html#a1de09e800837c7545950fb4d01371467',1,'vehicle::gra()']]],
   ['gra_5fpriv',['gra_priv',['../structgraphics__keyboard.html#aba4f7bb02d42a19532b58fba9c91401c',1,'graphics_keyboard']]],
-  ['granularity',['granularity',['../struct__OSMPBF____PrimitiveBlock.html#a7c64c367b387c7197f81390a1f8a1a61',1,'_OSMPBF__PrimitiveBlock']]],
   ['graph',['graph',['../structroute.html#a87641aa05073f2c20434369aa6c42e4c',1,'route']]],
   ['graph_5fmap',['graph_map',['../structroute.html#a8227252962feb3782d426da1d36b9573',1,'route']]],
   ['graphic_5fbg',['graphic_bg',['../structosd__item.html#a6c90e4edede51f26c50734deceea1061',1,'osd_item']]],

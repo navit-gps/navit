@@ -8,9 +8,7 @@ var searchData=
   ['time_5fslice',['TIME_SLICE',['../traffic_8c.html#ae17b0e0d44770e679be7612a45ca831a',1,'traffic.c']]],
   ['timelength',['TIMELENGTH',['../gpx2navit__txt_8h.html#a6641cf57cb83ec05e83ed1bc9f2c45d4',1,'gpx2navit_txt.h']]],
   ['tmod',['TMOD',['../sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1',1,'sunriset.h']]],
-  ['tmpalloc',['TMPALLOC',['../protobuf-c_8c.html#ae33e6e7accc12e0cb5f1ef01a9f7b364',1,'protobuf-c.c']]],
   ['transparent_5fbg',['TRANSPARENT_BG',['../osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36',1,'osd.h']]],
-  ['true',['TRUE',['../protobuf-c_8c.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'protobuf-c.c']]],
   ['twopi',['TWOPI',['../transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a',1,'transform.c']]],
   ['typelength',['TYPELENGTH',['../gpx2navit__txt_8h.html#ae7fa5b0dbc9038dce1ce8a342a6c0618',1,'gpx2navit_txt.h']]]
 ];
