@@ -15,7 +15,7 @@ if(SAMPLE_MAP)
 		add_custom_command (
 			OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
 			COMMAND ${CMAKE_COMMAND}
-			-D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.bin
+			-D URL=http://www1.navit-project.org/maps/${SAMPLE_MAP_NAME}.bin
 			-D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
 			-P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
 			VERBATIM
@@ -31,7 +31,7 @@ if(SAMPLE_MAP)
 		add_custom_command (
 			OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2
 			COMMAND ${CMAKE_COMMAND}
-			-D URL=http://www.navit-project.org/maps/${SAMPLE_MAP_NAME}.osm.bz2
+			-D URL=http://www1.navit-project.org/maps/${SAMPLE_MAP_NAME}.osm.bz2
 			-D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.osm.bz2
 			-P ${PROJECT_SOURCE_DIR}/cmake/navit_download.cmake
 			VERBATIM

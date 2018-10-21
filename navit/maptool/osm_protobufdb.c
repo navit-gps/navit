@@ -26,8 +26,8 @@
 #include "debug.h"
 #include "linguistics.h"
 #include "file.h"
-#include "generated-code/fileformat.pb-c.h"
-#include "generated-code/osmformat.pb-c.h"
+#include "fileformat.pb-c.h"
+#include "osmformat.pb-c.h"
 
 static double latlon_scale=10000000.0;
 
@@ -125,8 +125,8 @@ static int osm_protobufdb_finish_block(struct osm_protobufdb_context *ctx) {
     blob->raw.len=len;
     blob->raw_size=len;
     osm_protobufdb_write_blob(blob, ctx->f);
-    osmpbf__blob__free_unpacked(blob, &protobuf_c_system_allocator);
-    osmpbf__primitive_block__free_unpacked(ctx->pb, &protobuf_c_system_allocator);
+    osmpbf__blob__free_unpacked(blob, NULL);
+    osmpbf__primitive_block__free_unpacked(ctx->pb, NULL);
     ctx->pb=NULL;
     ctx->current_block++;
     return 1;
@@ -285,7 +285,7 @@ static void osm_protobufdb_modify_node(OSMPBF__Node *node, OSMPBF__Info *info, i
     *n=*node;
     if (!info) {
         if (old_info)
-            osmpbf__info__free_unpacked(old_info, &protobuf_c_system_allocator);
+            osmpbf__info__free_unpacked(old_info, NULL);
         n->info=NULL;
     } else {
         if (old_info)
@@ -325,7 +325,7 @@ static void osm_protobufdb_modify_way(OSMPBF__Way *way, OSMPBF__Info *info, int 
     }
     if (!info) {
         if (old_info)
-            osmpbf__info__free_unpacked(old_info, &protobuf_c_system_allocator);
+            osmpbf__info__free_unpacked(old_info, NULL);
         w->info=NULL;
     } else {
         if (old_info)
@@ -368,7 +368,7 @@ static void osm_protobufdb_modify_relation(OSMPBF__Relation *relation, OSMPBF__I
     }
     if (!info) {
         if (old_info)
-            osmpbf__info__free_unpacked(old_info, &protobuf_c_system_allocator);
+            osmpbf__info__free_unpacked(old_info, NULL);
         r->info=NULL;
     } else {
         if (old_info)

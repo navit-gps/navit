@@ -156,7 +156,7 @@ jobs:
       - run:
           name: Build for Windows
           command: |
-            bash scripts/setup_common_requirements.sh
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
             bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe

@@ -52,6 +52,7 @@
 #include "util.h"
 #include "transform.h"
 #include "event.h"
+#include "traffic.h"
 
 static DBusConnection *connection;
 static dbus_uint32_t dbus_serial;
@@ -334,6 +335,11 @@ static DBusHandlerResult dbus_error_invalid_object_path_parameter(DBusConnection
 static DBusHandlerResult dbus_error_navigation_not_configured(DBusConnection *connection, DBusMessage *message) {
     return dbus_error(connection, message, DBUS_ERROR_FAILED,
                       "navigation is not configured (no <navigation> element in config file?)");
+}
+
+static DBusHandlerResult dbus_error_traffic_not_configured(DBusConnection *connection, DBusMessage *message) {
+    return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                      "traffic is not configured (no <traffic> element in config file?)");
 }
 
 static DBusHandlerResult dbus_error_no_data_available(DBusConnection *connection, DBusMessage *message) {
@@ -1195,6 +1201,185 @@ static DBusHandlerResult request_navit_quit(DBusConnection *connection, DBusMess
     return empty_reply(connection, message);
 }
 
+/**
+ * @brief Exports currently active traffic distortions as a GPX file.
+ *
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the `filename` parameter
+ * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
+ */
+static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connection, DBusMessage *message) {
+    char * filename;
+    struct navit * navit;
+    DBusMessageIter iter;
+    struct attr attr;
+    struct attr_iter * a_iter;
+    struct traffic * traffic = NULL;
+    FILE *fp;
+    struct traffic_message ** messages;
+    struct traffic_message ** curr_msg;
+    char * wpt_types[] = {"from", "at", "via", "not_via", "to"};
+    struct traffic_point * wpts[5];
+    int i;
+    struct item ** items;
+    struct item ** curr_itm;
+    int dir, lastdir = 0;
+    struct coord c, c_last;
+    struct coord_geo g;
+
+    char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
+                   "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
+                   "     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
+                   "     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
+                   "     xmlns='http://www.topografix.com/GPX/1/1'\n"
+                   "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n";
+    char *trailer = "</gpx>\n";
+
+    navit = object_get_from_message(message, "navit");
+    if (! navit)
+        return dbus_error_invalid_object_path(connection, message);
+
+    dbus_message_iter_init(message, &iter);
+
+    dbus_message_iter_get_basic(&iter, &filename);
+
+    a_iter = navit_attr_iter_new();
+    if (navit_get_attr(navit, attr_traffic, &attr, a_iter))
+        traffic = (struct traffic *) attr.u.navit_object;
+    navit_attr_iter_destroy(a_iter);
+
+    if (!traffic)
+        return dbus_error_traffic_not_configured(connection, message);
+
+    dbg(lvl_debug,"Dumping traffic distortions from dbus to %s", filename);
+
+    fp = fopen(filename, "w");
+    if (!fp) {
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                          "could not open file for writing");
+    }
+
+    fprintf(fp, "%s", header);
+
+    messages = traffic_get_stored_messages(traffic);
+
+    for (curr_msg = messages; *curr_msg; curr_msg++) {
+        if (!(*curr_msg)->location)
+            continue;
+        wpts[0] = (*curr_msg)->location->from;
+        wpts[1] = (*curr_msg)->location->at;
+        wpts[2] = (*curr_msg)->location->via;
+        wpts[3] = (*curr_msg)->location->not_via;
+        wpts[4] = (*curr_msg)->location->to;
+        for (i = 0; i <= 4; i++) {
+            if (!wpts[i])
+                continue;
+            fprintf(fp, "<wpt lon='%4.16f' lat='%4.16f'><type>%s</type><name>%s</name></wpt>\n",
+                    wpts[i]->coord.lng, wpts[i]->coord.lat, wpt_types[i], (*curr_msg)->id);
+        }
+    }
+
+    for (curr_msg = messages; *curr_msg; curr_msg++) {
+        items = traffic_message_get_items(*curr_msg);
+        for (curr_itm = items; *curr_itm; curr_itm++) {
+            /*
+             * Don’t blindly copy this code unless you know what you are doing.
+             * It is based on various assumptions which hold true for traffic map items, but not necessarily for items
+             * obtained from other maps.
+             */
+            item_coord_rewind(*curr_itm);
+            item_coord_get(*curr_itm, &c, 1);
+            item_attr_rewind(*curr_itm);
+            if (item_attr_get(*curr_itm, attr_flags, &attr)) {
+                if (attr.u.num & AF_ONEWAY)
+                    dir = 1;
+                else if (attr.u.num & AF_ONEWAYREV)
+                    dir = -1;
+                else
+                    dir = 0;
+            } else
+                dir = 0;
+            if ((curr_itm == items) || (c.x != c_last.x) || (c.y != c_last.y) || lastdir != dir) {
+                /*
+                 * Start a new route for the first item, or if the last point of the previous item does not coincide
+                 * with the first point of the current one. This includes closing the previous route (if any) and
+                 * adding the first point.
+                 */
+                if (curr_itm != items)
+                    fprintf(fp, "</rte>\n");
+                fprintf(fp, "<rte><type>%s</type><name>%s</name>\n",
+                        dir ? (dir > 0 ? "forward" : "backward") : "bidirectional", (*curr_msg)->id);
+                transform_to_geo(projection_mg, &c, &g);
+                fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'></rtept>\n", g.lng, g.lat);
+            }
+            while (item_coord_get(*curr_itm, &c, 1)) {
+                transform_to_geo(projection_mg, &c, &g);
+                fprintf(fp,"<rtept lon='%4.16f' lat='%4.16f'></rtept>\n", g.lng, g.lat);
+            }
+            c_last.x = c.x;
+            c_last.y = c.y;
+            lastdir = dir;
+        }
+        if (curr_itm != items)
+            fprintf(fp, "</rte>\n");
+        g_free(items);
+    }
+
+    fprintf(fp,"%s",trailer);
+
+    fclose(fp);
+
+    g_free(messages);
+
+    return empty_reply(connection, message);
+}
+
+/**
+ * @brief Injects a traffic feed.
+ *
+ * @param connection The DBusConnection object through which a message arrived
+ * @param message The DBusMessage including the `filename` parameter
+ * @returns An empty reply if everything went right, otherwise `DBUS_HANDLER_RESULT_NOT_YET_HANDLED`
+ */
+static DBusHandlerResult request_navit_traffic_inject(DBusConnection *connection, DBusMessage *message) {
+    char * filename;
+    struct navit *navit;
+    DBusMessageIter iter;
+    struct attr * attr;
+    struct attr_iter * a_iter;
+    struct traffic * traffic = NULL;
+    struct traffic_message ** messages;
+
+    navit = object_get_from_message(message, "navit");
+    if (! navit)
+        return dbus_error_invalid_object_path(connection, message);
+
+    dbus_message_iter_init(message, &iter);
+
+    dbus_message_iter_get_basic(&iter, &filename);
+
+    attr = g_new0(struct attr, 1);
+    a_iter = navit_attr_iter_new();
+    if (navit_get_attr(navit, attr_traffic, attr, a_iter))
+        traffic = (struct traffic *) attr->u.navit_object;
+    navit_attr_iter_destroy(a_iter);
+    g_free(attr);
+
+    if (!traffic)
+        return dbus_error_traffic_not_configured(connection, message);
+
+    dbg(lvl_debug, "Processing traffic feed from file %s", filename);
+
+    messages = traffic_get_messages_from_xml_file(traffic, filename);
+    if (messages) {
+        dbg(lvl_debug, "got messages from file %s, processing", filename);
+        traffic_process_messages(traffic, messages);
+        g_free(messages);
+    }
+
+    return empty_reply(connection, message);
+}
+
 static DBusHandlerResult request_navit_zoom(DBusConnection *connection, DBusMessage *message) {
     int factor;
     struct point p, *pp=NULL;
@@ -1292,6 +1477,12 @@ static DBusHandlerResult request_navit_route_export_gpx(DBusConnection *connecti
 
     FILE *fp;
     fp = fopen(filename,"w");
+    if (!fp) {
+        map_rect_destroy(mr);
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                          "could not open file for writing");
+    }
+
     fprintf(fp, "%s", header);
 
     while((item = map_rect_get_item(mr))) {
@@ -1305,6 +1496,8 @@ static DBusHandlerResult request_navit_route_export_gpx(DBusConnection *connecti
     fprintf(fp,"%s",trailer);
 
     fclose(fp);
+
+    map_rect_destroy(mr);
 
     return empty_reply(connection, message);
 }
@@ -1369,6 +1562,11 @@ static DBusHandlerResult request_navit_route_export_geojson(DBusConnection *conn
 
     FILE *fp;
     fp = fopen(filename,"w");
+    if (!fp) {
+        return dbus_error(connection, message, DBUS_ERROR_FAILED,
+                          "could not open file for writing");
+    }
+
     fprintf(fp, "%s", header);
     int is_first=1;
     char * instructions;
@@ -1796,6 +1994,8 @@ struct dbus_method {
     {".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
     {".navit",  "set_center_screen",   "(ii)",    "(pixel_x,pixel_y)",                       "",   "",      request_navit_set_center_screen},
     {".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
+    {".navit",  "traffic_export",      "s",       "filename",                                "",   "",      request_navit_traffic_export_gpx},
+    {".navit",  "traffic_inject",      "s",       "filename",                                "",   "",      request_navit_traffic_inject},
     {".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
     {".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
     {".navit",  "zoom_to_route",       "",        "",                                        "",   "",      request_navit_zoom_to_route},

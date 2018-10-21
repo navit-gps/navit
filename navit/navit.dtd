@@ -17,7 +17,7 @@
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
 <!ATTLIST log attr_types CDATA #IMPLIED>
-<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,xi:include*,layout+) >
+<!ELEMENT navit (graphics,gui+,log*,osd*,traffic*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,layout+) >
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
@@ -65,6 +65,8 @@
 <!ELEMENT cursor (itemgra+)>
 <!ATTLIST cursor w CDATA #REQUIRED>
 <!ATTLIST cursor h CDATA #REQUIRED>
+<!ELEMENT traffic EMPTY>
+<!ATTLIST traffic type CDATA #REQUIRED>
 <!ELEMENT tracking ANY>
 <!ATTLIST tracking cdf_histsize CDATA #IMPLIED>
 <!ELEMENT route EMPTY>

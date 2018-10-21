@@ -69,7 +69,7 @@ cd $UUID/_data/$JOB_NAME
 #############################################
 
 echo "Download metadata of this build"
-wget --no-check-certificate $URL_BUILD_ARTIFACTS -O ${BUILD_NUM}.json
+wget --no-check-certificate $URL_BUILD_ARTIFACTS -O $(printf "%010d" ${BUILD_NUM}).json
 RC=$?
 if [ $RC -ne 0 ]; then
     echo "wget artifacts download failed"
@@ -82,7 +82,7 @@ echo "Push update to ${NAVIT_DOWNLOAD_CENTER_REPO}"
 git config --global push.default simple
 git config user.name "Circle CI"
 git config user.email "circleci@navit-project.org"
-git add ${BUILD_NUM}.json
+git add $(printf "%010d" ${BUILD_NUM}).json
 git commit -m "add:artifacts:Add artifacts for build #${BUILD_NUM} with SHA1:${CIRCLE_SHA1}"
 git push
 RC=$?
