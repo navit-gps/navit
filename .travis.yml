@@ -14,7 +14,7 @@ before_script: skip
 script: skip
 after_success: skip
 after_script: skip
-deploy: 
+deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
