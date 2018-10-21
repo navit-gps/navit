@@ -20,4 +20,3 @@ deploy:
   github-token: $GITHUB_TOKEN
   keep-history: true
   local-history: `pwd`/../rpmbuild/RPMS/armv7hl/
-  local-history: `pwd`/../rpmbuild/RPMS/586/
