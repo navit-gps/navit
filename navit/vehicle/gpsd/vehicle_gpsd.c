@@ -325,7 +325,11 @@ static void vehicle_gpsd_io(struct vehicle_priv *priv) {
         int read_result;
         /* Read until EOF, in case we are lagging behind.
          * No point in processing old GPS reports. */
+#if GPSD_API_MAJOR_VERSION >= 7 /* API change. gpsd verion 3.18 and subsequent. */
+        while((read_result=gps_read(priv->gps,NULL,0))>0);
+#else  /* GPSD_API_MAJOR_VERSION >= 7 */
         while((read_result=gps_read(priv->gps))>0);
+#endif  /* GPSD_API_MAJOR_VERSION >= 7 */
         if(read_result==-1) {
             dbg(lvl_error,"gps_poll failed");
             vehicle_gpsd_close(priv);
@@ -335,13 +339,13 @@ static void vehicle_gpsd_io(struct vehicle_priv *priv) {
             buf = gps_data(priv->gps);
             vehicle_gpsd_callback(priv->gps,buf,strlen(buf));
         }
-#else
+#else  /* GPSD_API_MAJOR_VERSION >= 5 */
         if (gps_poll(priv->gps)) {
             dbg(lvl_error,"gps_poll failed");
             vehicle_gpsd_close(priv);
             vehicle_gpsd_open(priv);
         }
-#endif
+#endif  /* GPSD_API_MAJOR_VERSION >= 5 */
     }
 }
 
