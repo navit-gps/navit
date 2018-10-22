@@ -163,7 +163,6 @@ jobs:
             apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
             apt-get install -y software-properties-common
             add-apt-repository -y ppa:george-edison55/cmake-3.x
-            #apt-get upgrade
             apt-get remove -y cmake
             apt-get install -y cmake3
             bash scripts/build_win32.sh
