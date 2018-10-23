@@ -2,7 +2,7 @@
 #ifndef __EVENT_SDL_H
 #define __EVENT_SDL_H
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 #include "config.h"
 #include "callback.h"
 #include "event.h"

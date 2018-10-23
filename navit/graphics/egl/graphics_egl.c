@@ -38,7 +38,7 @@
 #include "window.h"
 #include "navit/font/freetype/font_freetype.h"
 
-#include <SDL2/SDL_image.h>
+#include "SDL_image.h"
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
@@ -88,7 +88,8 @@ struct graphics_priv {
     struct graphics_gc_priv *background_gc;
     enum draw_mode_num mode;
     GLuint program;
-    GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location, texture_location;
+    GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location,
+          texture_location;
     struct callback_list *cbl;
     struct font_freetype_methods freetype_methods;
     struct navit *nav;
@@ -430,7 +431,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 static struct graphics_image_priv image_error;
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
+        int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
@@ -640,7 +642,8 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
     graphics_priv_root->dirty = 1;
 }
 
-static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                              struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
@@ -745,7 +748,8 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -772,7 +776,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 }
 
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
     draw_image_es(gr, p, img->img->w, img->img->h, img->img->pixels);
 }
 
@@ -908,7 +913,8 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         glClearColor ( 0, 0, 0, 1);
         glClear ( GL_COLOR_BUFFER_BIT );
 
-        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER(this->width), GINT_TO_POINTER(this->height));
+        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER(this->width),
+                                  GINT_TO_POINTER(this->height));
 
         this->program  = glCreateProgram();
         vertexShader   = load_shader(vertex_src, GL_VERTEX_SHADER);
@@ -1073,7 +1079,8 @@ static void create_framebuffer_texture(struct graphics_priv *gr) {
     }
 }
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound) {
     struct graphics_priv *this = graphics_opengl_new_helper(meth);
 
     this->p.x = p->x;
@@ -1228,7 +1235,8 @@ static gboolean graphics_sdl_idle(void *data) {
 }
 
 
-static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct attr *attr;
     if (!event_request_system("glib", "graphics_opengl_new"))
         return NULL;
@@ -1319,4 +1327,3 @@ error:
 void plugin_init(void) {
     plugin_register_category_graphics("egl", graphics_opengl_new);
 }
-

@@ -9,7 +9,7 @@
 #define __RASTER_H
 
 #include <stdint.h>
-#include <SDL/SDL.h>
+#include "SDL.h"
 
 void raster_rect(SDL_Surface *s, int16_t x, int16_t y, int16_t w, int16_t h, uint32_t col);
 
@@ -22,4 +22,3 @@ void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t c
 void raster_aapolygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col);
 
 #endif /* __RASTER_H */
-
