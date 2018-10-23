@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 export nixpaste="curl -F 'text=<-' http://nixpaste.lbr.uno"
+
 apt-get update && apt-get install -y mingw-w64 mingw-w64-tools  \
   default-jdk nsis libsaxonb-java curl
 
