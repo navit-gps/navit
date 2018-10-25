@@ -19,7 +19,7 @@
 
 #include <glib.h>
 #include <poll.h>
-#include <SDL/SDL.h>
+#include "SDL.h"
 #include <pthread.h>
 #include <signal.h>
 #include "config.h"
