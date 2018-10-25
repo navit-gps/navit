@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <PDL.h>
-#include <SDL.h>
+#include "SDL.h"
 #include "debug.h"
 #include "callback.h"
 #include "event.h"
@@ -583,4 +583,3 @@ void vehicle_webos_bt_close(struct vehicle_priv *priv) {
     //		g_free(priv->nmea_data_buf);
     //		priv->nmea_data_buf = NULL;
 }
-
