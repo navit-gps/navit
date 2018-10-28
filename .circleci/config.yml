@@ -62,7 +62,7 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
           command: |
             sudo apt-get update
             sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config
