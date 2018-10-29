@@ -126,6 +126,8 @@ void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 void gui_internal_menu_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
     w->w=neww;
     w->h=newh;
+    gui_internal_box_resize(this, w, data, w->w, w->h);
+    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
 }
 
 void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
@@ -146,6 +148,8 @@ void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void
         w->w = neww;
         w->h = newh;
     }
+    gui_internal_box_resize(this, w, data, w->w, w->h);
+    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
 }
 
 /**
@@ -262,26 +266,14 @@ void gui_internal_menu_render(struct gui_priv *this) {
 
 void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
     GList *l;
-    struct widget *menu;
-    struct widget *topbox;
-    struct widget *wb;
+    struct widget *menu_topwidget;
 
     gui_internal_apply_config(this);
     l=g_list_last(this->root.children);
-    menu=l->data;
-    /* Search for the topbox widget */
-    l=g_list_first(menu->children);
-    topbox=l->data;
-    if (menu->on_resize)
-        menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
-    if (topbox->on_resize)
-        topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
-    l=topbox->children;
-    while (l) {
-        wb=l->data;
-        if (wb->on_resize)
-            wb->on_resize(this, wb, NULL, topbox->w, topbox->h);
-        l=g_list_next(l);
+    menu_topwidget=l->data;
+    if (menu_topwidget->on_resize) {
+        dbg(lvl_error, "Invoking resize handler for menu_topwidget at %p", menu_topwidget);
+        menu_topwidget->on_resize(this, menu_topwidget, NULL, this->root.w, this->root.h);
     }
 }
 
