@@ -49,6 +49,21 @@ jobs:
           command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
+  build_sailfish:
+    machine: true
+    steps:
+      - run:
+          name: install docker
+          command: circleci-install docker
+      - run:
+          name: make build dir and clone git repository
+          command:  mkdir ../rpmbuild && git clone https://github.com/navit-gps/navit .
+      - run:
+          name: run build
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+      - store_artifacts:
+          name: Store rpm
+          path: ../rpmbuild/RPMS/
   build_android_arm:
     working_directory: ~/code
     docker:
@@ -251,6 +266,9 @@ workflows:
           requires:
             - sanity_check
       - build_android_arm:
+          requires:
+            - sanity_check
+      - build_sailfish:
           requires:
             - sanity_check
       - build_win32:
