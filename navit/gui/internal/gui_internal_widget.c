@@ -13,6 +13,7 @@
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
 void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew);
+void gui_internal_box_pack(struct gui_priv *this, struct widget *w);
 
 static void gui_internal_background_render(struct gui_priv *this, struct widget *w) {
     struct point pnt=w->p;
@@ -132,17 +133,6 @@ static void gui_internal_label_render(struct gui_priv *this, struct widget *w) {
             graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], text, &pnt, 0x10000, 0x0);
         }
     }
-}
-
-/**
- * @brief Resize a label.
- *
- * @param this The internal GUI instance
- * @param w The widget to render
- * @param wnew The new width of the widget
- * @param hnew THe new height of the widget
- */
-static void gui_internal_label_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
 }
 
 /**
@@ -298,6 +288,7 @@ gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const c
         widget->text=g_strdup(label);
     widget->type=widget_box;
     widget->flags=flags;
+    widget->on_resize=gui_internal_box_resize;
     return widget;
 }
 
@@ -343,7 +334,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
  * @param this The internal GUI instance
  * @param w The widget to render
  */
-static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
+void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,expandd=1,count=0,rows=0,cols=w->cols ? w->cols : 0;
     int hb=w->scroll_buttons?w->scroll_buttons->button_box->h:0;
@@ -618,17 +609,35 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
  * @param wnew The new width of the widget
  * @param hnew THe new height of the widget
  */
-static void gui_internal_box_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
+void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data, int wnew, int hnew) {
+    GList *l;
+    struct widget *wb;
 
-    gui_internal_widget_reset_pack(this, w);
     w->w = wnew;
     w->h = hnew;
-    if (w->on_resize)
-        w->on_resize(this, w, NULL, wnew, hnew);
 
-    gui_internal_box_pack(this, w);
-    if (w->on_resize)
-        w->on_resize(this, w, NULL, wnew, hnew);
+    l=w->children;
+    while (l) {
+        wb=l->data;
+        dbg(lvl_error, "Checking if widget at %p has resize handler", wb);
+        if (wb->on_resize) {
+            dbg(lvl_error, "Widget at %p has resize handler", wb);
+            int orientation=w->flags & 0xffff0000;
+            switch(orientation) {
+            case orientation_horizontal:
+            case orientation_vertical:
+            case orientation_horizontal_vertical:
+                break;
+            default:
+                dbg(lvl_error, "Box has no specific orientation, should be expanded to parent size");
+                wb->w = w->w;
+                wb->h = w->h;
+            }
+            wb->on_resize(this, wb, NULL, wb->w, wb->h);
+        }
+        l=g_list_next(l);
+    }
+
     /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
 }
 
@@ -766,38 +775,6 @@ void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
         break;
     case widget_table:
         gui_internal_table_render(this,w);
-        break;
-    default:
-        break;
-    }
-}
-
-/**
- * @brief Generic widget resize function (that will call the appropriate resize function depending on the widget type).
- *
- * @param this The internal GUI instance
- * @param w The widget to render
- * @param wnew The new width of the widget
- * @param hnew THe new height of the widget
- */
-void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew) {
-    if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
-        return;
-
-    switch (w->type) {
-    case widget_box:
-        dbg(lvl_error, "Resizing box at %p to w=%d, h=%d", w, wnew, hnew);
-        gui_internal_box_resize(this, w, wnew, hnew);
-        break;
-    case widget_label:
-        dbg(lvl_error, "Resizing label at %p to w=%d, h=%d (text=\"%s\")", w, wnew, hnew, w->text);
-        gui_internal_label_resize(this, w, wnew, hnew);
-        break;
-    case widget_image: /* No resize needed for images */
-        break;
-    case widget_table:
-        dbg(lvl_error, "Resizing table at %p to w=%d, h=%d", w, wnew, hnew);
-        gui_internal_table_resize(this, w, wnew, hnew);
         break;
     default:
         break;
