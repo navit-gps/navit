@@ -134,7 +134,8 @@ struct gui_internal_keyb_mode {
 #define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
 #define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
 
-static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
+static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data,
+        int neww, int newh) {
     struct menu_data *md=gui_internal_menu_data(this);
     struct widget *old_wkbdb = md->keyboard;
 

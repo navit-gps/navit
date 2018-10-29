@@ -2719,7 +2719,8 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
                 void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
                 redisplay=w->menu_data->redisplay;
                 dbg(lvl_error, "redisplay%c=NULL", redisplay?'!':'=');
-                if (!gui_internal_widget_reload_href(this, w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                if (!gui_internal_widget_reload_href(this,
+                                                     w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
                     /* If not, resize the foremost widget */
                     dbg(lvl_error, "Current GUI displayed is not a menu");
                     dbg(lvl_error, "Will call resize with w=%d, h=%d", wnew, hnew)
