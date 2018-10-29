@@ -175,6 +175,7 @@ void gui_internal_highlight_do(struct gui_priv *this, struct widget *found);
 void gui_internal_highlight(struct gui_priv *this);
 struct widget *gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const char *label);
 struct widget *gui_internal_box_new(struct gui_priv *this, enum flags flags);
+void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data, int wnew, int hnew);
 void gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_append(struct widget *parent, struct widget *child);
 void gui_internal_widget_prepend(struct widget *parent, struct widget *child);
