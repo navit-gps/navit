@@ -225,6 +225,57 @@ int item_coord_get_within_selection(struct item *it, struct coord *c, int count,
 }
 
 /**
+ * @brief Gets all the coordinates of an item within a specified range
+ *
+ * This will get all the coordinates of the item `i`, starting with `start` and ending with `end`, and
+ * return them in `c`, up to `max` coordinates.
+ *
+ * If `i` does not contain the coordinates in `start`, no coordinates are retrieved and zero is returned.
+ *
+ * If `i` contains the coordinates in `start` but not those in `end`, all coordinates beginning with
+ * `start` are retrieved, ending with the last coordinate of `i` or after `max` coordinates have been
+ * retrieved, whichever occurs first.
+ *
+ * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
+ * with some map implementations.
+ *
+ * @important Make sure that `c` points to a buffer large enough to hold `max` coordinates!
+ *
+ * @param i The item to get the coordinates of
+ * @param c Pointer to memory allocated for holding the coordinates
+ * @param max Maximum number of coordinates to return
+ * @param start First coordinate to get
+ * @param end Last coordinate to get
+ *
+ * @return The number of coordinates stored in `c`
+ */
+int item_coord_get_within_range(struct item *i, struct coord *c, int max,
+                                struct coord *start, struct coord *end) {
+    struct map_rect *mr;
+    struct item *item;
+    int rc = 0, p = 0;
+    struct coord c1;
+    mr=map_rect_new(i->map, NULL);
+    if (!mr)
+        return 0;
+    item = map_rect_get_item_byid(mr, i->id_hi, i->id_lo);
+    if (item) {
+        rc = item_coord_get(item, &c1, 1);
+        while (rc && (c1.x != start->x || c1.y != start->y)) {
+            rc = item_coord_get(item, &c1, 1);
+        }
+        while (rc && p < max) {
+            c[p++] = c1;
+            if (c1.x == end->x && c1.y == end->y)
+                break;
+            rc = item_coord_get(item, &c1, 1);
+        }
+    }
+    map_rect_destroy(mr);
+    return p;
+}
+
+/**
  * @brief Gets the next coordinates from an item and reprojects them
  *
  * This function returns a list of coordinates from an item and advances the "coordinate pointer"

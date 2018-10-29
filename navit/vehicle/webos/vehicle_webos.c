@@ -26,7 +26,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <PDL.h>
-#include <SDL.h>
+#include "SDL.h"
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
@@ -366,4 +366,3 @@ void plugin_init(void) {
     dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("webos", vehicle_webos_new);
 }
-

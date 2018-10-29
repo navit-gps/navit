@@ -279,6 +279,8 @@ object_func_lookup(enum attr_type type) {
         return &tracking_func;
     case attr_speech:
         return &speech_func;
+    case attr_traffic:
+        return &traffic_func;
     case attr_vehicle:
         return &vehicle_func;
     case attr_vehicleprofile:
@@ -332,7 +334,7 @@ static char *element_fixmes[]= {
 };
 
 static void initStatic(void) {
-    elements=g_new0(struct element_func,44); //43 is a number of elements + ending NULL element
+    elements=g_new0(struct element_func, 45); //44 is a number of elements + ending NULL element
 
     elements[0].name="config";
     elements[0].parent=NULL;
@@ -547,6 +549,11 @@ static void initStatic(void) {
     elements[42].parent="navit";
     elements[42].func=NULL;
     elements[42].type=attr_script;
+
+    elements[43].name="traffic";
+    elements[43].parent="navit";
+    elements[43].func=NULL;
+    elements[43].type=attr_traffic;
 }
 
 /**
@@ -1009,35 +1016,96 @@ static void parse_node_text(ezxml_t node, void *data, void (*start)(void *, cons
 }
 #endif
 
-void xml_parse_text(const char *document, void *data,
-                    void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
-                    void (*end)(xml_context *, const char *, void *, GError **),
-                    void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+/**
+ * @brief Parses an XML file.
+ *
+ * @param filename The XML file to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int xml_parse_file(char *filename, void *data,
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+    int ret = 0;
+#if !USE_EZXML
+    gchar *contents;
+    gsize len;
+
+    if (g_file_get_contents(filename, &contents, &len, NULL)) {
+        dbg(lvl_debug, "XML data:\n%s\n", contents);
+        ret = xml_parse_text(contents, data, start, end, text);
+        g_free(contents);
+    } else {
+        dbg(lvl_error,"could not open XML file");
+    }
+#else
+    FILE *f;
+    ezxml_t root;
+
+    f = fopen(filename,"rb");
+    if (f) {
+        root = ezxml_parse_fp(f);
+        fclose(f);
+        if (root) {
+            parse_node_text(root, data, start, end, text);
+            ezxml_free(root);
+            ret = 1;
+        }
+    } else {
+        dbg(lvl_error,"could not open XML file");
+    }
+#endif
+    return ret;
+}
+
+/**
+ * @brief Parses XML text.
+ *
+ * @param document The XML data to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int xml_parse_text(const char *document, void *data,
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
     GMarkupParser parser = { start, end, text, NULL, NULL};
     xml_context *context;
     gboolean result;
 
-    context = g_markup_parse_context_new (&parser, 0, data, NULL);
     if (!document) {
-        dbg(lvl_error, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).");
-        exit(1);
+        dbg(lvl_error, "FATAL: No XML data supplied.");
+        return 0;
     }
+    context = g_markup_parse_context_new (&parser, 0, data, NULL);
     result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
+    g_markup_parse_context_free (context);
     if (!result) {
         dbg(lvl_error, "FATAL: Cannot parse data as XML: '%s'", document);
-        exit(1);
+        return 0;
     }
-    g_markup_parse_context_free (context);
 #else
     char *str=g_strdup(document);
     ezxml_t root = ezxml_parse_str(str, strlen(str));
     if (!root)
-        return;
+        return 0;
     parse_node_text(root, data, start, end, text);
     ezxml_free(root);
     g_free(str);
 #endif
+    return 1;
 }
 
 
