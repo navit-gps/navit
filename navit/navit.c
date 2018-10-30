@@ -115,8 +115,8 @@ struct navit {
     GList *mapsets;
     GList *layouts;
     struct gui *gui;
-    char *default_layout_name;	/*<! The default layout indicated by the config file (if any) */
-    struct layout *layout_current;	/*<! The current layout theme used to display the map */
+    char *default_layout_name;	/*!< The default layout indicated by the config file (if any) */
+    struct layout *layout_current;	/*!< The current layout theme used to display the map */
     struct graphics *gra;
     struct action *action;
     struct transformation *trans, *trans_cursor;
