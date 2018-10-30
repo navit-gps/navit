@@ -2841,11 +2841,11 @@ void navit_update_current_layout(struct navit *this_, struct layout *layout) {
         if (this_->default_layout_name) {	/* If a default layout name was provided */
             default_layout=navit_get_layout_by_name(this_, this_->default_layout_name);
             if (default_layout) {
-                dbg(lvl_error, "Found the config-specified default layout '%s'", this_->default_layout_name);
+                dbg(lvl_debug, "Found the config-specified default layout '%s'", this_->default_layout_name);
                 this_->layout_current=default_layout;
                 return;
             } else {
-                dbg(lvl_error, "No definition exists in config for specified default layout '%s'", this_->default_layout_name);
+                dbg(lvl_warning, "No definition exists in config for specified default layout '%s'", this_->default_layout_name);
             }
         }
     }
