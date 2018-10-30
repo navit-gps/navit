@@ -114,8 +114,8 @@ fi
 %files
 %defattr(644, root, root, 755)
 %{_datadir}/harbour-navit/navit.xml
-%{_datadir}/harbour-navit/navit_layout_car.xml
 %{_datadir}/harbour-navit/navit_layout_bike.xml
+%{_datadir}/harbour-navit/navit_layout_car.xml
 %{_datadir}/harbour-navit/navit_layout_car_android.xml
 %{_datadir}/harbour-navit/navit_layout_car_dark.xml
 %{_datadir}/harbour-navit/navit_layout_car_simple.xml
