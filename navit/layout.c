@@ -40,21 +40,11 @@ layout_new(struct attr *parent, struct attr **attrs) {
     struct navit *navit;
     struct color def_color = {COLOR_BACKGROUND_};
     struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
-    struct attr_iter *iter;
-    struct attr layout_attr;
-    int duplicate_layout_name = 0;
 
     if (! (name_attr=attr_search(attrs, NULL, attr_name)))
         return NULL;
     navit = parent->u.navit;
-    iter=navit_attr_iter_new();
-    while (navit_get_attr(navit, attr_layout, &layout_attr, iter)) {
-        if (strcmp(layout_attr.u.layout->name, name_attr->u.str) == 0) {
-            duplicate_layout_name++;
-        }
-    }
-    navit_attr_iter_destroy(iter);
-    if (duplicate_layout_name) {
+    if (navit_get_layout_by_name(navit, name_attr->u.str)) {
         dbg(lvl_warning, "Another layout with name '%s' has already been parsed. Discarding subsequent duplicate.",
             name_attr->u.str);
         return NULL;

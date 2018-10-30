@@ -2807,7 +2807,7 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
  *
  * @return The first layout match (if any), or NULL if there was no match
  */
-static struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name) {
+struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name) {
     struct attr_iter *iter;
     struct attr layout_attr;
     struct layout *result = NULL;
