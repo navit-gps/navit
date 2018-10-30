@@ -115,7 +115,8 @@ struct navit {
     GList *mapsets;
     GList *layouts;
     struct gui *gui;
-    struct layout *layout_current;
+    char *default_layout;	/*<! The default layout indicated by the config file (if any) */
+    struct layout *layout_current;	/*<! The current layout theme used to display the map */
     struct graphics *gra;
     struct action *action;
     struct transformation *trans, *trans_cursor;
@@ -1343,6 +1344,7 @@ navit_new(struct attr *parent, struct attr **attrs) {
     this_->tracking_flag=1;
     this_->recentdest_count=10;
     this_->osd_configuration=-1;
+    this_->default_layout=NULL;
 
     this_->center_timeout = 10;
     this_->use_mousewheel = 1;
@@ -2406,6 +2408,14 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         attr_updated=(this_->vehicle->follow_curr != attr->u.num);
         this_->vehicle->follow_curr = attr->u.num;
         break;
+    case attr_default_layout:
+        if(!attr->u.str)
+            return 0;
+        if(this_->default_layout)	/* There is already a default layout, ignore this new value */
+            return 0;
+        this_->default_layout=g_strdup(attr->u.str);
+        attr_updated=1;
+        break;
     case attr_layout:
         if(!attr->u.layout)
             return 0;
@@ -2787,6 +2797,35 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
     }
     attr->type=type;
     return ret;
+}
+
+/**
+ * @brief Make the default layout match the one in the config file
+ *
+ * @note If the default layout name in the config file does not exist or if none is provided, the default layout is unchanged
+ *
+ * @param this_ The navit instance
+ */
+void navit_update_default_layout(struct navit *this_) {
+    struct attr_iter *iter;
+    struct attr layout_attr;
+    int default_layout_found=0;
+
+    if (this_->default_layout) {	/* If a default layout name was provided */
+        iter=navit_attr_iter_new();
+        while (navit_get_attr(this_, attr_layout, &layout_attr, iter)) {
+            if (strcmp(layout_attr.u.layout->name, this_->default_layout) == 0) {
+                dbg(lvl_debug, "Found the config-specified default layout '%s'", this_->default_layout);
+                this_->layout_current=layout_attr.u.layout;
+                default_layout_found=1;
+                break;
+            }
+        }
+        navit_attr_iter_destroy(iter);
+        if (!default_layout_found) {
+            dbg(lvl_warning, "No definition exists in config for specified default layout '%s'", this_->default_layout);
+        }
+    }
 }
 
 static int navit_add_log(struct navit *this_, struct log *log) {

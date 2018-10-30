@@ -103,6 +103,7 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
 void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+void navit_update_default_layout(struct navit *this_);
 int navit_add_attr(struct navit *this_, struct attr *attr);
 int navit_remove_attr(struct navit *this_, struct attr *attr);
 struct attr_iter *navit_attr_iter_new(void);

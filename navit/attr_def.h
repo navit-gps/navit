@@ -344,7 +344,7 @@ ATTR(daylayout)
 ATTR(nightlayout)
 ATTR(xml_text)
 ATTR(layout_name)
-ATTR_UNUSED
+ATTR(default_layout)
 ATTR_UNUSED
 ATTR(status_text)
 ATTR(log_gpx_desc)
