@@ -799,7 +799,8 @@ CHECK_FUNCTION_EXISTS (posix_memalign HAVE_POSIX_MEMALIGN)
 CHECK_FUNCTION_EXISTS (popen HAVE_POPEN)
 CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+			   "${CMAKE_CURRENT_BINARY_DIR}/config.h" )
 
 # Compile with -Wall -Wextra. We need all the help we can get from the compiler :-).
 # Disabled warnings:

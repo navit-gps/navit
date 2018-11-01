@@ -44,8 +44,6 @@
 #include <netdb.h>
 #endif
 
-extern char *version;
-
 #ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
@@ -98,7 +96,8 @@ static int file_socket_connect(char *host, char *service) {
 }
 
 static void file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent) {
-    char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,version,
+    char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,
+                                  NAVIT_VERSION,
                                   host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
     write(file->fd, request, strlen(request));
     dbg(lvl_debug,"%s",request);
