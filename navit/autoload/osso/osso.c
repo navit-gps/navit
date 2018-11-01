@@ -12,8 +12,6 @@
 static osso_context_t *osso_context;
 static struct attr callback = { attr_callback };
 
-extern char *version;
-
 struct cb_hw_state_trail {
     struct navit* nav;
     osso_hw_state_t *state;
@@ -62,7 +60,7 @@ static void osso_cb_hw_state(osso_hw_state_t * state, gpointer data) {
 
 static void osso_navit(struct navit *nav, int add) {
     dbg(lvl_debug, "Installing osso context for org.navit_project.navit");
-    osso_context = osso_initialize("org.navit_project.navit", version, TRUE, NULL);
+    osso_context = osso_initialize("org.navit_project.navit", NAVIT_VERSION, TRUE, NULL);
     if (osso_context == NULL) {
         dbg(lvl_error, "error initiating osso context");
     }
