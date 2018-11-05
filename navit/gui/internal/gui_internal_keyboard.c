@@ -178,6 +178,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         else
             render=1;
         gui_internal_widget_children_destroy(this, wkbdb);
+        gui_internal_widget_reset_pack(this, wkbdb);
+        gui_internal_widget_pack(this, wkbdb);
     } else
         wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
     md->keyboard=wkbdb;
