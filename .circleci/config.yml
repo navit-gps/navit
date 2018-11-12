@@ -52,12 +52,13 @@ jobs:
   build_sailfish:
     machine: true
     steps:
+      - checkout
       - run:
           name: install docker
           command: circleci-install docker
       - run:
-          name: make build dir and clone git repository
-          command:  mkdir ../rpmbuild && git clone https://github.com/navit-gps/navit .
+          name: make build dir
+          command:  mkdir ../rpmbuild
       - run:
           name: run build
           command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
