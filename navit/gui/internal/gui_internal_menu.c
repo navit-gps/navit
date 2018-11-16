@@ -95,7 +95,7 @@ int gui_internal_widget_reload_href(struct gui_priv *this, struct widget *w) {
 /**
  * @brief Destroy (discard) all menu screens that have been placed after widget @p w
  *
- * @param this The internal GUI context
+ * @param this The internal GUI instance
  * @param w A widget corresponding to the last menu to keep (all subsequent menus in the list will be destroyed). NULL if all menus should be destroyed.
  * @param render whether we should render the menu indicated by widget w (render!=0) or not (render==0)
  */
@@ -112,16 +112,21 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
                 return;
             gui_internal_say(this, w, 0);
             redisplay=w->menu_data->redisplay;
-            wr=w->menu_data->redisplay_widget;
-            if (!redisplay && !gui_internal_widget_get_href(w)) {
-                gui_internal_widget_render(this, w);
-                return;
-            }
             if (redisplay) {
+                wr=w->menu_data->redisplay_widget;
                 gui_internal_menu_destroy(this, w);
                 redisplay(this, wr, wr->data);
-            } else {
-                gui_internal_widget_reload_href(this, w);
+            }
+            else {
+                if (gui_internal_menu_needs_resizing(this, w, this->root.w, this->root.h))	/* Make sure the new menu we are going to display spawns the whole display (in case there was a resize while a submenu was being displayed) */
+                    if (!gui_internal_widget_reload_href(this,
+                                                         w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                    /* If not, resize the foremost widget */
+                    dbg(lvl_error, "Current GUI displayed is not a menu");
+                    dbg(lvl_error, "Will call resize with w=%d, h=%d", this->root.w, this->root.h)
+                    gui_internal_menu_resize(this, this->root.w, this->root.h);
+                    gui_internal_menu_render(this);
+                }
             }
             return;
         }

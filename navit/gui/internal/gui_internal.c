@@ -2723,9 +2723,9 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
                     dbg(lvl_error, "Will call resize with w=%d, h=%d", wnew, hnew)
                     gui_internal_menu_resize(this, wnew, hnew);
                     gui_internal_menu_render(this);
+                } else {
+                    dbg(lvl_error,"Current GUI displayed is a menu");
                 }
-            } else {
-                dbg(lvl_error,"Current GUI displayed is a menu");
             }
         } else {
             gui_internal_menu_render(this);
