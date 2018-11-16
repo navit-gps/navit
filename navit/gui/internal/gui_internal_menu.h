@@ -2,6 +2,7 @@
 struct gui_priv;
 struct menu_data;
 struct widget;
+int gui_internal_menu_needs_resizing(struct gui_priv *this, struct widget *w, int wdisp, int hdisp);
 void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w);
 int gui_internal_widget_reload_href(struct gui_priv *this, struct widget *w);
 void gui_internal_prune_menu(struct gui_priv *this, struct widget *w);

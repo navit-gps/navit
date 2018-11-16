@@ -62,18 +62,18 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
           command: |
             sudo apt-get update
             sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
+            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android,lionel -DANDROID=y -DSAMPLE_MAP=n
       - run:
           name: Process icons
           command: |
             cd navit/icons
             make
             mkdir ../android/res/drawable-nodpi
-            rename 'y/A-Z/a-z/' *
+            rename 'y/A-Z/a-z/' *.png
             cp *.png ../android/res/drawable-nodpi
             cd ../../
       - run:

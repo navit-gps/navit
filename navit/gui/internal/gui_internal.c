@@ -2698,11 +2698,8 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
 
     gui_internal_setup(this);
 
-    if (this->root.w != wnew || this->root.h != hnew) {
-        this->root.w=wnew;
-        this->root.h=hnew;
-        changed=1;
-    }
+    changed=gui_internal_menu_needs_resizing(this, &(this->root), wnew, hnew);
+
     /*
      * If we're drawing behind system bars on Android, watching for actual size changes will not catch
      * fullscreen toggle events. As a workaround, always assume a size change if padding is supplied.

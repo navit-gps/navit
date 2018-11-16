@@ -17,6 +17,27 @@
 
 extern char *version;
 
+/**
+ * @brief Utility function to check if a menu widget is adapted to the display size or needs resizing (if so, the widget dimensions will be set to match those of the display
+ *
+ * @param this The GUI instance
+ * @param w The menu widget (top widget that should spawn over the entire display)
+ * @param wdisp The width of the display to check the widget against
+ * @param hdisp The width of the display to check the widget against
+ *
+ * @return true if widget w has the same size as the provided display dimensions
+ */
+
+int gui_internal_menu_needs_resizing(struct gui_priv *this, struct widget *w, int wdisp, int hdisp) {
+    if (w->w != wdisp || w->h != hdisp) {
+        w->w=wdisp;
+        w->h=hdisp;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     struct menu_data *menu_data=w->menu_data;
     if (menu_data) {
@@ -85,7 +106,7 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
     /* Destroy all menus, backwards, starting from the end until we reach widget w, and redraw widget w */
     while ((l = g_list_last(this->root.children))) {
         wd=l->data;
-        if (wd == w) {
+        if (wd == w) {	/* This is the widget we want to bring back to display (all subsequent widgets will be destroyed in the loop) */
             void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
             if (!render)
                 return;
