@@ -116,16 +116,16 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
                 wr=w->menu_data->redisplay_widget;
                 gui_internal_menu_destroy(this, w);
                 redisplay(this, wr, wr->data);
-            }
-            else {
-                if (gui_internal_menu_needs_resizing(this, w, this->root.w, this->root.h))	/* Make sure the new menu we are going to display spawns the whole display (in case there was a resize while a submenu was being displayed) */
-                    if (!gui_internal_widget_reload_href(this,
-                                                         w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
-                    /* If not, resize the foremost widget */
-                    dbg(lvl_error, "Current GUI displayed is not a menu");
-                    dbg(lvl_error, "Will call resize with w=%d, h=%d", this->root.w, this->root.h)
-                    gui_internal_menu_resize(this, this->root.w, this->root.h);
-                    gui_internal_menu_render(this);
+            } else {
+                /* Make sure the new menu we are going to display spawns the whole display (in case there was a resize while a submenu was being displayed) */
+                if (gui_internal_menu_needs_resizing(this, w, this->root.w, this->root.h)) {
+                    if (!gui_internal_widget_reload_href(this,w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                        /* If not, resize the foremost widget */
+                        dbg(lvl_error, "Current GUI displayed is not a menu");
+                        dbg(lvl_error, "Will call resize with w=%d, h=%d", this->root.w, this->root.h)
+                        gui_internal_menu_resize(this, this->root.w, this->root.h);
+                        gui_internal_menu_render(this);
+                    }
                 }
             }
             return;
