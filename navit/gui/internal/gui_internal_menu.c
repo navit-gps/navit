@@ -125,8 +125,8 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
                         dbg(lvl_error, "Current GUI displayed is not a menu");
                         dbg(lvl_error, "Will call resize with w=%d, h=%d", this->root.w, this->root.h)
                         gui_internal_menu_resize(this, this->root.w, this->root.h);
-                        gui_internal_menu_render(this);
                     }
+                    gui_internal_menu_render(this);
                 }
             }
             return;
