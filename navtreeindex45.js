@@ -1,5 +1,16 @@
 var NAVTREEINDEX45 =
 {
+"structosd__methods.html#ac465c1fef8f6790f74621f39e00fdf1f":[2,0,266,1],
+"structosd__methods.html#ad640c6b43f55024b2719a44ab7ed3ff0":[2,0,266,3],
+"structosd__methods.html#ae259e0327eb4db7a3a02833a9fbe5903":[2,0,266,2],
+"structosd__priv__common.html":[2,0,267],
+"structosd__priv__common.html#a43b3e90bcb588f26ac6315667d7a121f":[2,0,267,0],
+"structosd__priv__common.html#a682e1061dee6819cc6c0817d2153f0dd":[2,0,267,1],
+"structosd__priv__common.html#af7381185b232a3c632f12a60091eafe1":[2,0,267,2],
+"structosd__scale.html":[2,0,268],
+"structosd__scale.html#a48ff43641869c37970af3e0487d3241b":[2,0,268,2],
+"structosd__scale.html#aa5eb89038e38c080a457ebe62814f264":[2,0,268,0],
+"structosd__scale.html#aac746179281b289ff37077d02628810e":[2,0,268,1],
 "structosd__scale.html#ae14342b31a97a06d2b3c069aa2de449f":[2,0,268,3],
 "structosd__speed__cam.html":[2,0,269],
 "structosd__speed__cam.html#a1d8e135c73757827caae920e9dc8091c":[2,0,269,1],
@@ -238,16 +249,5 @@ var NAVTREEINDEX45 =
 "structrelations__member.html":[2,0,313],
 "structrelations__member.html#a3269d25a9604a41a3e9a719c79049662":[2,0,313,1],
 "structrelations__member.html#aab814e18dca963842afdc3dd68b70206":[2,0,313,0],
-"structrelations__member.html#ace472126e7de95feaa409712577d657d":[2,0,313,3],
-"structrelations__member.html#ade0c83a63a770c68e07405b5270e8670":[2,0,313,2],
-"structresult.html":[2,0,315],
-"structresult.html#a513275ea2a4b0aeb477f9a90652c79f4":[2,0,315,6],
-"structresult.html#a5b5ff772d6af6b688f0965c4482d88b7":[2,0,315,1],
-"structresult.html#a5bb197dd0eb1b9d0cbba328ce71fbedd":[2,0,315,3],
-"structresult.html#a6777d099c9b2e32c56566766bfa4d562":[2,0,315,0],
-"structresult.html#a9d7cd84d9629a28384b91f188209c572":[2,0,315,2],
-"structresult.html#ac460c26e1c42c97646716e229a167841":[2,0,315,4],
-"structresult.html#aed7e18a096ec1cc99923858a9f68c436":[2,0,315,5],
-"structresult__list.html":[2,0,316],
-"structresult__list.html#a108bd5e0c4b611dcc68b4d2282fda203":[2,0,316,0]
+"structrelations__member.html#ace472126e7de95feaa409712577d657d":[2,0,313,3]
 };

@@ -53,6 +53,7 @@ var searchData=
   ['main_5fremove_5fattr',['main_remove_attr',['../main_8h.html#ab0a0ede0eb6b96e6e8ba0bb845d1f38b',1,'main.h']]],
   ['main_5fremove_5fnavit',['main_remove_navit',['../main_8h.html#a5a5241616774ff37b0fc01c867c61bb6',1,'main.h']]],
   ['main_5fsetup_5fenvironment',['main_setup_environment',['../main_8c.html#a0ed6d205ee99db89fafd7d2b99c1313e',1,'main.c']]],
+  ['main_5fupdate_5fdefault_5flayout',['main_update_default_layout',['../main_8c.html#a454cba07d0aab8d431caacd105d78c36',1,'main_update_default_layout(struct navit *navit):&#160;main.c'],['../main_8h.html#a454cba07d0aab8d431caacd105d78c36',1,'main_update_default_layout(struct navit *navit):&#160;main.c']]],
   ['mainwindow',['mainWindow',['../structgui__priv.html#a2d29951e8f8144658263d6a6101f97cd',1,'gui_priv']]],
   ['make_5fmaneuvers',['make_maneuvers',['../navigation_8c.html#afe3ea4cb03f14f02904acb694f8b8673',1,'navigation.c']]],
   ['malloc_5ffn',['malloc_fn',['../structcJSON__Hooks.html#a7f7cfcc2ea2d783405e6f4f6eab99ec7',1,'cJSON_Hooks']]],

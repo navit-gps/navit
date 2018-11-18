@@ -155,6 +155,7 @@ var searchData=
   ['expand_5ffilenames',['expand_filenames',['../log_8c.html#afb187f31d9f5fc96ced5b711afbb29c6',1,'log.c']]],
   ['expose',['expose',['../graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6',1,'graphics_gtk_drawing_area.c']]],
   ['extend_5fbuffer',['extend_buffer',['../osm_8c.html#a468f57b8b2867be64a65def3e5e471d0',1,'osm.c']]],
+  ['extractasset',['extractAsset',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a1a83ea2f9750647b8667dca44d608049',1,'org::navitproject::navit::Navit']]],
   ['extractres',['extractRes',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#aa2dad49dc0cb1fa820c948aef2f3568c',1,'org::navitproject::navit::Navit']]],
   ['ezcreatefont',['EzCreateFont',['../graphics__win32_8c.html#a628355fd161ec0ef53e7bd4ea5668166',1,'graphics_win32.c']]]
 ];

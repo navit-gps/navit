@@ -142,6 +142,7 @@ var searchData=
   ['resolve',['resolve',['../command_8c.html#a4a2775a09bc229e46295a1294dd33192',1,'command.c']]],
   ['resolve_5fobject',['resolve_object',['../binding__dbus_8c.html#a7819e40256a61cf5d8b54afc9c4f8261',1,'resolve_object(const char *opath, char *type):&#160;binding_dbus.c'],['../command_8c.html#a97ab8f6fac817bf52c10783a9347eca5',1,'resolve_object(struct context *ctx, struct result *res):&#160;command.c']]],
   ['resolve_5fways',['resolve_ways',['../maptool_8h.html#a033642d7ca1d6718a03f595d926a81d9',1,'resolve_ways(FILE *in, FILE *out):&#160;osm.c'],['../osm_8c.html#a033642d7ca1d6718a03f595d926a81d9',1,'resolve_ways(FILE *in, FILE *out):&#160;osm.c']]],
+  ['resourcefileneedsupdate',['resourceFileNeedsUpdate',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#af147e7a00cabe440bff600972d090f65',1,'org::navitproject::navit::Navit']]],
   ['result_5ffree',['result_free',['../command_8c.html#aec0100f8ba6450d28380f2f2c922733b',1,'command.c']]],
   ['result_5fop',['result_op',['../command_8c.html#afd71b440583152ef21c4370e22dfbc17',1,'command.c']]],
   ['result_5fset',['result_set',['../command_8c.html#a95e151c2e1bfea5e0a4873005143f094',1,'command.c']]],

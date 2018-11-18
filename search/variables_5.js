@@ -45,6 +45,7 @@ var searchData=
   ['default_5fflags2',['default_flags2',['../item_8c.html#a29771a333ada868ecbafdb3afbfdce61',1,'item.c']]],
   ['default_5fflags_5fhash',['default_flags_hash',['../item_8c.html#a39dd77c0699c9039db824d771ff4d670',1,'item.c']]],
   ['default_5ffont',['default_font',['../structgraphics.html#aa06c67491ee7e4102f50db1d06edbb79',1,'graphics']]],
+  ['default_5flayout_5fname',['default_layout_name',['../structnavit.html#a7c9134933e633a163cab550da8ca2e03',1,'navit']]],
   ['default_5fmembers',['default_members',['../structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1',1,'relations']]],
   ['deflt',['deflt',['../structwidget.html#a8f620cc554bd9cf2c9ade2d716084df3',1,'widget']]],
   ['del_5falpha',['del_alpha',['../geodesic_8h.html#a7a719c2b2b8cc7693defeda7cb7cff9d',1,'geodesic.h']]],

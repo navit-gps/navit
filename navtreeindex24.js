@@ -1,5 +1,13 @@
 var NAVTREEINDEX24 =
 {
+"gui__internal__command_8c.html#a5554cfbff1062fe0abe6e66011d6fa43":[3,0,6,1,4,22],
+"gui__internal__command_8c.html#a56abfaab87c46691c1ef3ad0df23e864":[3,0,6,1,4,39],
+"gui__internal__command_8c.html#a57641a03211640d94a4096f787b7d4aa":[3,0,6,1,4,31],
+"gui__internal__command_8c.html#a58d26586f67497c51ca61aa874d56678":[3,0,6,1,4,18],
+"gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad":[3,0,6,1,4,16],
+"gui__internal__command_8c.html#a63f3c8ad13a024619363d489ab4eab19":[3,0,6,1,4,27],
+"gui__internal__command_8c.html#a65c9d02191d401f3877f51d1aea9f257":[3,0,6,1,4,7],
+"gui__internal__command_8c.html#a6af9e07b2b00f0d6c7fdae278e10dc13":[3,0,6,1,4,28],
 "gui__internal__command_8c.html#a72447644ae26fe91d89f847218c60121":[3,0,6,1,4,25],
 "gui__internal__command_8c.html#a73cff640d762b6383abd5af437342f7e":[3,0,6,1,4,19],
 "gui__internal__command_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988":[3,0,6,1,4,38],
@@ -241,13 +249,5 @@ var NAVTREEINDEX24 =
 "gui__internal__widget_8c.html#a0b7d20533a877b49c33b0bfe6895e2f5":[3,0,6,1,19,41],
 "gui__internal__widget_8c.html#a1139ae84a015e3e388526a733dadff94":[3,0,6,1,19,0],
 "gui__internal__widget_8c.html#a11c5ef4898bf9c8d411f4734d6aa7c8f":[3,0,6,1,19,15],
-"gui__internal__widget_8c.html#a165d692793757461ffecc5f05ea00ab6":[3,0,6,1,19,39],
-"gui__internal__widget_8c.html#a2d93c89044855dcddd9cf429b9fc72e9":[3,0,6,1,19,37],
-"gui__internal__widget_8c.html#a2dc75cf25dfb547cd1a3ab7da1b42fe7":[3,0,6,1,19,43],
-"gui__internal__widget_8c.html#a3349a0f291e67d19e74f8b1837cd57cd":[3,0,6,1,19,11],
-"gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297":[3,0,6,1,19,4],
-"gui__internal__widget_8c.html#a33b72fd159d0f59037531e507843e0f8":[3,0,6,1,19,6],
-"gui__internal__widget_8c.html#a398189895cceaa99bcb2ae418f96bcba":[3,0,6,1,19,21],
-"gui__internal__widget_8c.html#a3f5de439e83d0799ad9c22167964bfb0":[3,0,6,1,19,34],
-"gui__internal__widget_8c.html#a408db50b9897eff4c8500540c506071d":[3,0,6,1,19,31]
+"gui__internal__widget_8c.html#a165d692793757461ffecc5f05ea00ab6":[3,0,6,1,19,39]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"graphics__android_8c.html#a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2":[3,0,5,0,0,70],
+"graphics__android_8c.html#a363219636622f009489ec6fa937a18aa":[3,0,5,0,0,16],
 "graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969":[3,0,5,0,0,15],
 "graphics__android_8c.html#a39a9370218d113900d51e9991542219e":[3,0,5,0,0,73],
 "graphics__android_8c.html#a3be6dbb722ab944e0b0b2cca01d4f10b":[3,0,5,0,0,78],
@@ -247,7 +249,5 @@ var NAVTREEINDEX14 =
 "graphics__gtk__drawing__area_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c":[3,0,5,4,0,15],
 "graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51":[3,0,5,4,0,26],
 "graphics__gtk__drawing__area_8c.html#a9da4fc8b6b504a2c765503aad790a62d":[3,0,5,4,0,45],
-"graphics__gtk__drawing__area_8c.html#a9deff224ce3850c76ba8377ae7a73681":[3,0,5,4,0,51],
-"graphics__gtk__drawing__area_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0":[3,0,5,4,0,24],
-"graphics__gtk__drawing__area_8c.html#aa2b087a5548bdc52701888041337ff15":[3,0,5,4,0,5]
+"graphics__gtk__drawing__area_8c.html#a9deff224ce3850c76ba8377ae7a73681":[3,0,5,4,0,51]
 };

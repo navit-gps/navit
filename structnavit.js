@@ -18,6 +18,7 @@ var structnavit =
     [ "center_timeout", "structnavit.html#aae71af449614afe63fff336214a9b291", null ],
     [ "compass", "structnavit.html#ae5088936f94b0a104e18e482c2d0a8d2", null ],
     [ "current", "structnavit.html#a8b10e0230d405de025c670efc82cebc6", null ],
+    [ "default_layout_name", "structnavit.html#a7c9134933e633a163cab550da8ca2e03", null ],
     [ "destination", "structnavit.html#a5cbee5b552e44f9f8fdd19ce6756aaf0", null ],
     [ "destination_valid", "structnavit.html#a711283c37c70835299be334cce344006", null ],
     [ "displaylist", "structnavit.html#a083b0066e6ef77cf11e63de3a2644d7c", null ],

@@ -355,6 +355,7 @@ var searchData=
   ['expr',['expr',['../structcontext.html#ab66b5433dda6a542658b29a42f10a8a6',1,'context']]],
   ['extend_5fbuffer',['extend_buffer',['../osm_8c.html#a468f57b8b2867be64a65def3e5e471d0',1,'osm.c']]],
   ['extra_5ffeed',['EXTRA_FEED',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a58f19e5ad58419445d0d175f8a217a28',1,'org::navitproject::navit::NavitTraff']]],
+  ['extractasset',['extractAsset',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a1a83ea2f9750647b8667dca44d608049',1,'org::navitproject::navit::Navit']]],
   ['extractres',['extractRes',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#aa2dad49dc0cb1fa820c948aef2f3568c',1,'org::navitproject::navit::Navit']]],
   ['extrapolating',['extrapolating',['../structcdf__data.html#aff6ef40cf8d524028fd490870761e36c',1,'cdf_data']]],
   ['ez_5fattr_5fbold',['EZ_ATTR_BOLD',['../graphics__win32_8c.html#a8627d1b795a46679ee56f4b1edba943f',1,'graphics_win32.c']]],

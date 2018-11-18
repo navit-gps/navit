@@ -1,5 +1,15 @@
 var NAVTREEINDEX42 =
 {
+"structlog.html#ab810954021ebc30c37e7abe1cce5b3af":[2,0,187,3],
+"structlog.html#abefdcc6f04f33c724ca5b29bd3a7089a":[2,0,187,0],
+"structlog__data.html":[2,0,188],
+"structlog__data.html#a34583b05bdd9fff8c02923e6ca1f3ba9":[2,0,188,0],
+"structlog__data.html#a5816047735f83de8801c6e10d5b00a15":[2,0,188,2],
+"structlog__data.html#adb08886b2bf3e9b3c42027a2902e1fa2":[2,0,188,1],
+"structlongest__match.html":[2,0,189],
+"structlongest__match.html#a0a227d2fa7d4bffa9de285865f4902fd":[2,0,189,2],
+"structlongest__match.html#a20355b0ef037fb4c40b388e18855b8c2":[2,0,189,4],
+"structlongest__match.html#a2a3c4752b3de2aeefa3ffd461fc9b726":[2,0,189,3],
 "structlongest__match.html#a9f7a7d594d697104d1834849d01a08ec":[2,0,189,1],
 "structlongest__match.html#ab9862063987b2f3db9fc3acc8184bf9e":[2,0,189,0],
 "structlongest__match__list.html":[2,0,190],
@@ -239,15 +249,5 @@ var NAVTREEINDEX42 =
 "structmap__rect__priv.html#a957731d7af1bb781e703fa34a679bc95":[2,0,200,125],
 "structmap__rect__priv.html#a95d4e6c5c1fd0336fbd9ae47b1c58d82":[2,0,200,151],
 "structmap__rect__priv.html#a9878dcdb196794a41ed6ce2fe4130890":[2,0,200,144],
-"structmap__rect__priv.html#a9fd34ee4a2b69879555d1eef08015647":[2,0,200,109],
-"structmap__rect__priv.html#a9fd8e3456c41626fa45d0162ec55880f":[2,0,200,47],
-"structmap__rect__priv.html#aa02ae3cb2937a6e6035dbb8e0991040d":[2,0,200,117],
-"structmap__rect__priv.html#aa1c0003027279dbc88286145d186edc4":[2,0,200,59],
-"structmap__rect__priv.html#aa2b70f20a47de760273a7d8f35b99c5d":[2,0,200,14],
-"structmap__rect__priv.html#aa2bfd9c6728b9f8de5a98f94d4720830":[2,0,200,72],
-"structmap__rect__priv.html#aa390c3a2b086c953b1ccf74a797a6987":[2,0,200,48],
-"structmap__rect__priv.html#aa7f851145eab8a664e3c505321d733fb":[2,0,200,75],
-"structmap__rect__priv.html#aa81f6677698ad8c5fa7f65c15b934060":[2,0,200,121],
-"structmap__rect__priv.html#aa970fac2b163261bc0fe8ead8c6c20e2":[2,0,200,145],
-"structmap__rect__priv.html#aa98a3dbc60ffcdcf9e829377d981d912":[2,0,200,85]
+"structmap__rect__priv.html#a9fd34ee4a2b69879555d1eef08015647":[2,0,200,109]
 };

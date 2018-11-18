@@ -1,5 +1,15 @@
 var NAVTREEINDEX41 =
 {
+"structgui__priv_1_1gesture__elem.html":[2,0,156,0],
+"structgui__priv_1_1gesture__elem.html#a874ae66296303e46b674a7fa48d7f8d7":[2,0,156,0,0],
+"structgui__priv_1_1gesture__elem.html#ac48d517f22d4237554353eea93062b74":[2,0,156,0,1],
+"structgui__priv_1_1html.html":[2,0,156,1],
+"structgui__priv_1_1html.html#a225eaea7608f0091e4c4e4c36dbf12ab":[2,0,156,1,6],
+"structgui__priv_1_1html.html#a25d6393af8e57b161f17ed5f96721a8b":[2,0,156,1,10],
+"structgui__priv_1_1html.html#a274a3a640dea36999748c427fcfb0702":[2,0,156,1,4],
+"structgui__priv_1_1html.html#a2a10339b80e876cb4514e56f4f8a88a1":[2,0,156,1,2],
+"structgui__priv_1_1html.html#a74a4313eeffeab4840899820ce9491a0":[2,0,156,1,7],
+"structgui__priv_1_1html.html#a7fe2f191cb4b172abbfd591102e90f8b":[2,0,156,1,9],
 "structgui__priv_1_1html.html#a8d6301730092c3c7c3a27e5edb882a95":[2,0,156,1,5],
 "structgui__priv_1_1html.html#a998478c605c0c52615b5aac3dbce1ef8":[2,0,156,1,3],
 "structgui__priv_1_1html.html#ab1e5077e323d23aac90768326426c05b":[2,0,156,1,1],
@@ -239,15 +249,5 @@ var NAVTREEINDEX41 =
 "structlog.html#a76d749e2a8cbf4a0e93328e228276edc":[2,0,187,13],
 "structlog.html#a98faf9794b2dae8798e27647ff59284c":[2,0,187,1],
 "structlog.html#a9fbecbc7c8806ab49056576451612f33":[2,0,187,14],
-"structlog.html#ab3fb37718692ee09bd2a7386b1991bb7":[2,0,187,5],
-"structlog.html#ab810954021ebc30c37e7abe1cce5b3af":[2,0,187,3],
-"structlog.html#abefdcc6f04f33c724ca5b29bd3a7089a":[2,0,187,0],
-"structlog__data.html":[2,0,188],
-"structlog__data.html#a34583b05bdd9fff8c02923e6ca1f3ba9":[2,0,188,0],
-"structlog__data.html#a5816047735f83de8801c6e10d5b00a15":[2,0,188,2],
-"structlog__data.html#adb08886b2bf3e9b3c42027a2902e1fa2":[2,0,188,1],
-"structlongest__match.html":[2,0,189],
-"structlongest__match.html#a0a227d2fa7d4bffa9de285865f4902fd":[2,0,189,2],
-"structlongest__match.html#a20355b0ef037fb4c40b388e18855b8c2":[2,0,189,4],
-"structlongest__match.html#a2a3c4752b3de2aeefa3ffd461fc9b726":[2,0,189,3]
+"structlog.html#ab3fb37718692ee09bd2a7386b1991bb7":[2,0,187,5]
 };

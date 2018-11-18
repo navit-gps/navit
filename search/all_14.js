@@ -226,6 +226,7 @@ var searchData=
   ['resolve_5fobject',['resolve_object',['../binding__dbus_8c.html#a7819e40256a61cf5d8b54afc9c4f8261',1,'resolve_object(const char *opath, char *type):&#160;binding_dbus.c'],['../command_8c.html#a97ab8f6fac817bf52c10783a9347eca5',1,'resolve_object(struct context *ctx, struct result *res):&#160;command.c']]],
   ['resolve_5fways',['resolve_ways',['../maptool_8h.html#a033642d7ca1d6718a03f595d926a81d9',1,'resolve_ways(FILE *in, FILE *out):&#160;osm.c'],['../osm_8c.html#a033642d7ca1d6718a03f595d926a81d9',1,'resolve_ways(FILE *in, FILE *out):&#160;osm.c']]],
   ['resource_2eh',['resource.h',['../graphics_2win32_2resources_2resource_8h.html',1,'(Global Namespace)'],['../gui_2win32_2resources_2resource_8h.html',1,'(Global Namespace)']]],
+  ['resourcefileneedsupdate',['resourceFileNeedsUpdate',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#af147e7a00cabe440bff600972d090f65',1,'org::navitproject::navit::Navit']]],
   ['resources',['Resources',['../structgraphics__priv.html#ab1550a41a47bb92d2dc29b451cb9ca28',1,'graphics_priv']]],
   ['resources_5fgetidentifier',['Resources_getIdentifier',['../structgraphics__priv.html#a254d151a6c7d5127b4fa5af531221ab7',1,'graphics_priv']]],
   ['resourcesclass',['ResourcesClass',['../structgraphics__priv.html#ae2b599949c74e6fd8bfe70eae9c14548',1,'graphics_priv']]],

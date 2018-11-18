@@ -121,6 +121,7 @@ var searchData=
   ['default_5fflags2',['default_flags2',['../item_8c.html#a29771a333ada868ecbafdb3afbfdce61',1,'item.c']]],
   ['default_5fflags_5fhash',['default_flags_hash',['../item_8c.html#a39dd77c0699c9039db824d771ff4d670',1,'item.c']]],
   ['default_5ffont',['default_font',['../structgraphics.html#aa06c67491ee7e4102f50db1d06edbb79',1,'graphics']]],
+  ['default_5flayout_5fname',['default_layout_name',['../structnavit.html#a7c9134933e633a163cab550da8ca2e03',1,'navit']]],
   ['default_5fmembers',['default_members',['../structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1',1,'relations']]],
   ['default_5fretry_5finterval',['DEFAULT_RETRY_INTERVAL',['../group__vehicle-gpsd.html#gaf2126f2e32b98f667bbaa13cef032686',1,'DEFAULT_RETRY_INTERVAL():&#160;vehicle_gpsd.c'],['../group__vehicle-gypsy.html#gaf2126f2e32b98f667bbaa13cef032686',1,'DEFAULT_RETRY_INTERVAL():&#160;vehicle_gypsy.c']]],
   ['deflt',['deflt',['../structwidget.html#a8f620cc554bd9cf2c9ade2d716084df3',1,'widget']]],

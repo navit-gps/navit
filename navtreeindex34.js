@@ -1,5 +1,15 @@
 var NAVTREEINDEX34 =
 {
+"route__protected_8h.html#a323d5a36e3dd17eeacd67761f9199c45":[3,0,119,14],
+"route__protected_8h.html#a37b47f793cb4dc759b3b263051585781":[3,0,119,18],
+"route__protected_8h.html#a3f7647cdbff7bc59905d9771ced0472c":[3,0,119,24],
+"route__protected_8h.html#a43027563f91a1b5262a957f32196893e":[3,0,119,20],
+"route__protected_8h.html#a87a76891cf41ea87a488c8cb19b08876":[3,0,119,15],
+"route__protected_8h.html#aa438cdb1fc7b3387237d2b26bb8018f9":[3,0,119,7],
+"route__protected_8h.html#aba6e9105109a8101259a8ee149b568c9":[3,0,119,10],
+"route__protected_8h.html#ac1e48a7cca4fc2ef591fc3f20d7837c7":[3,0,119,12],
+"route__protected_8h.html#ad25243fa153d0c1b79a8c95808e158fb":[3,0,119,8],
+"route__protected_8h.html#ae3ec9a2172bb385ab6deda0260d01f0c":[3,0,119,9],
 "route__protected_8h.html#afac418991fad3b6c2afababe04818b0a":[3,0,119,16],
 "route__protected_8h.html#aff9fd5bebd85f09a446e67252c214ba1":[3,0,119,17],
 "route__protected_8h_source.html":[3,0,119],
@@ -239,15 +249,5 @@ var NAVTREEINDEX34 =
 "speech__iphone_8m.html#aeba9f79ec7013c122a8da0d6dce8f541":[3,0,13,4,0,5],
 "speech__speech__dispatcher_8c.html":[3,0,13,6,0],
 "speech__speech__dispatcher_8c.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,13,6,0,1],
-"speech__speech__dispatcher_8c.html#a365e377d9436ecb11cddff9fccaaebdd":[3,0,13,6,0,3],
-"speech__speech__dispatcher_8c.html#a441734a22f54d415aec84777d5a701b6":[3,0,13,6,0,5],
-"speech__speech__dispatcher_8c.html#a9f88333aae55a3e4c9c2f36511b2061a":[3,0,13,6,0,2],
-"speech__speech__dispatcher_8c.html#acadb913071de141f28a44182becc618e":[3,0,13,6,0,4],
-"start_8c.html":[3,0,127],
-"start_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,127,0],
-"start__apple_8m.html":[3,0,128],
-"start__apple_8m.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,128,0],
-"start__real_8c.html":[3,0,129],
-"start__real_8c.html#a0edd37fe65f6a8b1e530370f6e6402f3":[3,0,129,2],
-"start__real_8c.html#a1be1e9aae80bd71fe954364ac98bd7df":[3,0,129,3]
+"speech__speech__dispatcher_8c.html#a365e377d9436ecb11cddff9fccaaebdd":[3,0,13,6,0,3]
 };
