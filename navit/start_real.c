@@ -191,7 +191,7 @@ int main_real(int argc, char * const* argv) {
         li = g_list_next(li);
     }
 
-    dbg(lvl_debug,"Loading %s",config_file);
+    dbg(lvl_debug,"Loading config from '%s'",config_file);
     if (!config_load(config_file, &error)) {
         dbg(lvl_error, _("Error parsing config file '%s': %s"), config_file, error ? error->message : "");
     } else {
@@ -209,6 +209,7 @@ int main_real(int argc, char * const* argv) {
         dbg(lvl_error, "%s", _("Internal initialization failed, exiting. Check previous error messages."));
         exit(5);
     }
+    main_update_default_layout(navit.u.navit);
     conf.type=attr_config;
     conf.u.config=config;
     if (startup_file) {
