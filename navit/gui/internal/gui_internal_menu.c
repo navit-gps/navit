@@ -38,6 +38,12 @@ int gui_internal_menu_needs_resizing(struct gui_priv *this, struct widget *w, in
     }
 }
 
+/**
+ * @brief destroy a menu widget and perform the associated cleanup in the menu & submenu list
+ *
+ * @param this The GUI instance
+ * @param w The menu widget to destroy
+ */
 void gui_internal_menu_destroy(struct gui_priv *this, struct widget *w) {
     struct menu_data *menu_data=w->menu_data;
     if (menu_data) {
@@ -122,23 +128,34 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
                     /* If the foremost widget is a HTML menu, reload & redraw it from its href using gui_internal_widget_reload_href() */
                     if (!gui_internal_widget_reload_href(this,w)) {
                         /* If not, resize the foremost widget */
-                        dbg(lvl_error, "Current GUI displayed is not a menu");
-                        dbg(lvl_error, "Will call resize with w=%d, h=%d", this->root.w, this->root.h)
                         gui_internal_menu_resize(this, this->root.w, this->root.h);
                     }
                     gui_internal_menu_render(this);
                 }
             }
             return;
-        }
-        gui_internal_menu_destroy(this, wd);
+        } else
+            gui_internal_menu_destroy(this, wd);
     }
 }
 
+/**
+ * @brief Destroy (discard) all menu screens that have been placed after widget @p w and redraw the display, showing widget @w
+ *
+ * @param this The internal GUI instance
+ * @param w A widget corresponding to the last menu to keep, and to draw (all subsequent menus in the list will be destroyed). NULL if all menus should be destroyed.
+ */
 void gui_internal_prune_menu(struct gui_priv *this, struct widget *w) {
     gui_internal_prune_menu_do(this, w, 1);
 }
 
+/**
+ * @brief Destroy (discard) the last @p count menu screens
+ *
+ * @param this The internal GUI instance
+ * @param count The number of menus to destroy at the tail of the menu/submenu stack (if <=0, no menu will be destroyed)
+ * @param render whether we should render the new last menu in the stack (render!=0) or not (render==0)
+ */
 void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render) {
     GList *l=g_list_last(this->root.children);
     struct widget *w=NULL;
@@ -150,16 +167,49 @@ void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
     }
 }
 
+/**
+ * @brief Resize the main box widget (and its children) corresponding to a menu, effectively resizing the whole menu display size
+ *
+ * Note: once this function has been run, widget @p w and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller
+ *
+ * @param this The internal GUI instance
+ * @param w A box widget corresponding to the menu
+ * @param data Some data to pass to the box resize handler
+ * @param neww The new width of the display
+ * @param newh The new height of the display
+ */
 void gui_internal_menu_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
+
+    if (w->type != widget_box) {
+        dbg(lvl_warning, "Called on a non-box widget, ignoring");
+        return;
+    }
     w->w=neww;
     w->h=newh;
     gui_internal_box_resize(this, w, data, w->w, w->h);
-    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
 }
 
+/**
+ * @brief Resize the box widget (and its children) corresponding to a menu
+ *
+ * Menus are stored in a main box (topbox) that spawn the entire screen, thus, once the topbox has been resized, it will in turn resize its children,
+ * effectively resizing the whole menu display size
+ *
+ * Note: once this function has been run, widget @p w and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller
+ *
+ * @param this The internal GUI instance
+ * @param w A box widget corresponding to the menu widget
+ * @param data Some data to pass to the box resize handler
+ * @param neww The new width of the display
+ * @param newh The new height of the display
+ */
 void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
     struct padding *padding = NULL;
 
+    if (w->type != widget_box) {
+        dbg(lvl_warning, "Called on a non-box widget, ignoring");
+        return;
+    }
     if (this->gra) {
         padding = graphics_get_data(this->gra, "padding");
     } else
@@ -176,11 +226,10 @@ void gui_internal_menu_menu_resize(struct gui_priv *this, struct widget *w, void
         w->h = newh;
     }
     gui_internal_box_resize(this, w, data, w->w, w->h);
-    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
 }
 
 /**
- * @brief Initializes a GUI screen
+ * @brief Initializes a GUI menu screen
  *
  * This method initializes the internal GUI's screen on which all other elements (such as HTML menus,
  * dialogs or others) are displayed.

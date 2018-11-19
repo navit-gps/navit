@@ -2706,25 +2706,21 @@ static void gui_internal_resize(void *data, int wnew, int hnew) {
      */
     if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
         changed = 1;
-    dbg(lvl_debug,"w=%d h=%d children=%p", wnew, hnew, this->root.children);
     navit_handle_resize(this->nav, wnew, hnew);
     if (this->root.children) {
         if (changed) {
             l = g_list_last(this->root.children);
             if (l) {
                 w=l->data;
-                void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
-                redisplay=w->menu_data->redisplay;
-                dbg(lvl_error, "redisplay%c=NULL", redisplay?'!':'=');
                 if (!gui_internal_widget_reload_href(this,
                                                      w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
                     /* If not, resize the foremost widget */
-                    dbg(lvl_error, "Current GUI displayed is not a menu");
-                    dbg(lvl_error, "Will call resize with w=%d, h=%d", wnew, hnew)
+                    dbg(lvl_debug, "Current GUI displayed is not a menu");
+                    dbg(lvl_debug, "Will call resize with w=%d, h=%d", wnew, hnew)
                     gui_internal_menu_resize(this, wnew, hnew);
                     gui_internal_menu_render(this);
                 } else {
-                    dbg(lvl_error,"Current GUI displayed is a menu");
+                    dbg(lvl_debug,"Current GUI displayed is a menu");
                 }
             }
         } else {

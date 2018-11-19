@@ -619,14 +619,17 @@ void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data
     l=w->children;
     while (l) {
         wb=l->data;
-        dbg(lvl_error, "Checking if widget at %p has resize handler", wb);
         if (wb->on_resize) {
-            dbg(lvl_error, "Widget at %p has resize handler", wb);
             int orientation=w->flags & 0xffff0000;
             switch(orientation) {
             case orientation_horizontal:
+                dbg(lvl_error, "Box has hrz orientation");
+                break;
             case orientation_vertical:
+                dbg(lvl_error, "Box has vrt orientation");
+                break;
             case orientation_horizontal_vertical:
+                dbg(lvl_error, "Box has hrz+vrt orientation");
                 break;
             default:
                 dbg(lvl_error, "Box has no specific orientation, should be expanded to parent size");
