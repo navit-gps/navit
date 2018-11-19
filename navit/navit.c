@@ -115,7 +115,8 @@ struct navit {
     GList *mapsets;
     GList *layouts;
     struct gui *gui;
-    struct layout *layout_current;
+    char *default_layout_name;	/*!< The default layout indicated by the config file (if any) */
+    struct layout *layout_current;	/*!< The current layout theme used to display the map */
     struct graphics *gra;
     struct action *action;
     struct transformation *trans, *trans_cursor;
@@ -1343,6 +1344,7 @@ navit_new(struct attr *parent, struct attr **attrs) {
     this_->tracking_flag=1;
     this_->recentdest_count=10;
     this_->osd_configuration=-1;
+    this_->default_layout_name=NULL;
 
     this_->center_timeout = 10;
     this_->use_mousewheel = 1;
@@ -2406,11 +2408,19 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         attr_updated=(this_->vehicle->follow_curr != attr->u.num);
         this_->vehicle->follow_curr = attr->u.num;
         break;
+    case attr_default_layout:
+        if(!attr->u.str)
+            return 0;
+        if(this_->default_layout_name)	/* There is already a default layout, ignore this new value */
+            g_free(this_->default_layout_name);	/* Drop the previous layout name, use the this one instead */
+        this_->default_layout_name=g_strdup(attr->u.str);
+        attr_updated=1;
+        break;
     case attr_layout:
         if(!attr->u.layout)
             return 0;
         if(this_->layout_current!=attr->u.layout) {
-            this_->layout_current=attr->u.layout;
+            navit_update_current_layout(this_, attr->u.layout);
             graphics_font_destroy_all(this_->gra);
             navit_set_cursors(this_);
             if (this_->ready == 3)
@@ -2787,6 +2797,58 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
     }
     attr->type=type;
     return ret;
+}
+
+/**
+ * @brief Select the default layout by name
+ *
+ * @param this_ The navit instance
+ * @param name The new default layout's name
+ *
+ * @return The first layout match (if any), or NULL if there was no match
+ */
+struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name) {
+    struct attr_iter *iter;
+    struct attr layout_attr;
+    struct layout *result = NULL;
+
+    if (!layout_name)
+        return NULL;
+    iter=navit_attr_iter_new();
+    while (navit_get_attr(this_, attr_layout, &layout_attr, iter)) {
+        if (strcmp(layout_attr.u.layout->name, layout_name) == 0) {
+            result = layout_attr.u.layout;
+        }
+    }
+    navit_attr_iter_destroy(iter);
+    return result;
+}
+
+/**
+ * @brief Set the current layout
+ *
+ * @param this_ The navit instance
+ * @param layout The layout to set as default (if NULL, we will set the current layout according to the default name stored in this_->default_layout_name
+ *
+ * @note If argument @p layout is NULL and the default layout name in the config file does not exist or has not been provided in the config file, the default layout is unchanged
+ */
+void navit_update_current_layout(struct navit *this_, struct layout *layout) {
+    struct layout *default_layout = NULL;
+
+    if (layout) {
+        this_->layout_current=layout;
+    } else {
+        if (this_->default_layout_name) {	/* If a default layout name was provided */
+            default_layout=navit_get_layout_by_name(this_, this_->default_layout_name);
+            if (default_layout) {
+                dbg(lvl_debug, "Found the config-specified default layout '%s'", this_->default_layout_name);
+                this_->layout_current=default_layout;
+                return;
+            } else {
+                dbg(lvl_warning, "No definition exists in config for specified default layout '%s'", this_->default_layout_name);
+            }
+        }
+    }
 }
 
 static int navit_add_log(struct navit *this_, struct log *log) {

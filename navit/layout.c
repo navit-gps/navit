@@ -25,15 +25,31 @@
 #include "layout.h"
 #include "coord.h"
 #include "debug.h"
+#include "navit.h"
 
-
-struct layout * layout_new(struct attr *parent, struct attr **attrs) {
+/**
+ * @brief Create a new layout object and attach it to a navit parent
+ *
+ * @param parent The parent for this layout (a navit attr)
+ * @param attrs An array of attributes that for this layout
+ * @return The newly created layout object
+ */
+struct layout *
+layout_new(struct attr *parent, struct attr **attrs) {
     struct layout *l;
+    struct navit *navit;
     struct color def_color = {COLOR_BACKGROUND_};
     struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
 
     if (! (name_attr=attr_search(attrs, NULL, attr_name)))
         return NULL;
+    navit = parent->u.navit;
+    if (navit_get_layout_by_name(navit, name_attr->u.str)) {
+        dbg(lvl_warning, "Another layout with name '%s' has already been parsed. Discarding subsequent duplicate.",
+            name_attr->u.str);
+        return NULL;
+    }
+
     l = g_new0(struct layout, 1);
     l->func=&layout_func;
     navit_object_ref((struct navit_object *)l);
@@ -55,7 +71,7 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs) {
         l->order_delta=order_delta_attr->u.num;
     if ((active_attr=attr_search(attrs, NULL, attr_active)))
         l->active = active_attr->u.num;
-    l->navit=parent->u.navit;
+    l->navit=navit;
     return l;
 }
 
