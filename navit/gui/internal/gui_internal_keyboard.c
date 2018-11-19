@@ -134,13 +134,13 @@ struct gui_internal_keyb_mode {
 #define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
 #define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
 
+
 static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data,
         int neww, int newh) {
     struct menu_data *md=gui_internal_menu_data(this);
     struct widget *old_wkbdb = md->keyboard;
 
-    dbg(lvl_error, "gui_internal_keyboard_topbox_resize called on %p with w=%d, h=%d", w, neww, newh);
-    dbg(lvl_error, "old keyboard widget was at %p", old_wkbdb);
+    dbg(lvl_debug, "resize called for keyboard widget %p with w=%d, h=%d", w, neww, newh);
     gui_internal_keyboard_do(this, old_wkbdb, md->keyboard_mode);
 }
 

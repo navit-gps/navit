@@ -348,7 +348,7 @@ void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
     l=g_list_last(this->root.children);
     menu_topwidget=l->data;
     if (menu_topwidget->on_resize) {
-        dbg(lvl_error, "Invoking resize handler for menu_topwidget at %p", menu_topwidget);
+        dbg(lvl_debug, "Invoking resize handler for menu_topwidget at %p", menu_topwidget);
         menu_topwidget->on_resize(this, menu_topwidget, NULL, this->root.w, this->root.h);
     }
 }
