@@ -119,19 +119,19 @@ static void gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, 
             gui_internal_say(this, w, 0);
             redisplay=w->menu_data->redisplay;
             if (redisplay) {
-                wr=w->menu_data->redisplay_widget;
                 gui_internal_menu_destroy(this, w);
+                wr=w->menu_data->redisplay_widget;
                 redisplay(this, wr, wr->data);
             } else {
                 /* Make sure the new menu we are going to display spawns the whole display (in case there was a resize while a submenu was being displayed) */
-                if (gui_internal_menu_needs_resizing(this, w, this->root.w, this->root.h)) {
-                    /* If the foremost widget is a HTML menu, reload & redraw it from its href using gui_internal_widget_reload_href() */
-                    if (!gui_internal_widget_reload_href(this,w)) {
-                        /* If not, resize the foremost widget */
-                        gui_internal_menu_resize(this, this->root.w, this->root.h);
-                    }
-                    gui_internal_menu_render(this);
+                w->w=this->root.w;
+                w->h=this->root.h;
+                /* If the foremost widget is a HTML menu, reload & redraw it from its href using gui_internal_widget_reload_href() */
+                if (!gui_internal_widget_reload_href(this,w)) {
+                    /* If not, resize the foremost widget */
+                    gui_internal_menu_resize(this, this->root.w, this->root.h);
                 }
+                gui_internal_menu_render(this);
             }
             return;
         } else
