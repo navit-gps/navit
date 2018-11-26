@@ -168,28 +168,6 @@ void gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 }
 
 /**
- * @brief Resize the main box widget (and its children) corresponding to a menu, effectively resizing the whole menu display size
- *
- * Note: once this function has been run, widget @p w and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller
- *
- * @param this The internal GUI instance
- * @param w A box widget corresponding to the menu
- * @param data Some data to pass to the box resize handler
- * @param neww The new width of the display
- * @param newh The new height of the display
- */
-void gui_internal_menu_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
-
-    if (w->type != widget_box) {
-        dbg(lvl_warning, "Called on a non-box widget, ignoring");
-        return;
-    }
-    w->w=neww;
-    w->h=newh;
-    gui_internal_box_resize(this, w, data, w->w, w->h);
-}
-
-/**
  * @brief Resize the box widget (and its children) corresponding to a menu
  *
  * Menus are stored in a main box (topbox) that spawn the entire screen, thus, once the topbox has been resized, it will in turn resize its children,
@@ -248,12 +226,11 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
 
     gui_internal_search_idle_end(this);
     topbox=gui_internal_box_new_with_label(this, 0, label);
-    topbox->on_resize=gui_internal_menu_topbox_resize;
     gui_internal_widget_append(&this->root, topbox);
     menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
     menu->on_resize=gui_internal_menu_menu_resize;
     topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
-    menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
+    menu->on_resize(this, menu, NULL, topbox->w, topbox->h); /* We also have to invoke onresize() handler on menu because it is not (yet) set as a child of topbox */
     menu->background=this->background;
     gui_internal_apply_config(this);
     topbox->menu_data=g_new0(struct menu_data, 1);
@@ -297,8 +274,6 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
     gui_internal_widget_reset_pack(this, topbox);
     if (topbox->on_resize)
         topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
-    if (menu->on_resize)
-        menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
     return w;
 }
 
@@ -327,7 +302,7 @@ void gui_internal_menu_reset_pack(struct gui_priv *this) {
  * @note The whole sequence of menus is kept in this->root.children (when going back one page, we just move to the previous child in the list)
  * Thus, only the last child of this->root.children is actually displayed
  *
- * @param this The internal GUI context
+ * @param this The internal GUI instance
  */
 void gui_internal_menu_render(struct gui_priv *this) {
     GList *l;
@@ -340,6 +315,13 @@ void gui_internal_menu_render(struct gui_priv *this) {
     gui_internal_widget_render(this, menu);
 }
 
+/**
+ * @brief Resize the currently displayed menu
+ *
+ * @param this The internal GUI instance
+ * @param w The new width of the display
+ * @param h the new height of the display
+ */
 void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
     GList *l;
     struct widget *menu_topwidget;
@@ -353,6 +335,85 @@ void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
     }
 }
 
+/**
+ * @brief Transfer the content of one widget into another one (and optionally vice-versa)
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] first The first widget
+ * @param[in,out] second The second widget
+ * @param move_only If non nul, transfer only the second widget into the first widget. The second widget is then deallocated and should be be used anymore (this is a move operation)
+ */
+static void gui_internal_widget_transfer_content(struct gui_priv *this, struct widget *first, struct widget *second, int move_only) {
+    struct widget *temp;
+
+    if (!first) {
+        dbg(lvl_error, "Refusing copy: first argument is NULL");
+        return;
+    }
+    if (!second) {
+        dbg(lvl_error, "Refusing copy: second argument is NULL");
+        return;
+    }
+    temp=g_new0(struct widget, 1);
+    memcpy(temp, first, sizeof(struct widget));
+    memcpy(first, second, sizeof(struct widget));
+    if (move_only) {
+        gui_internal_widget_destroy(this, temp); /* This will do a g_free(temp), but will also deallocate all children widgets */
+        g_free(second);	/* We also free the struct widget pointed to by second, so variable second should not be used anymore from this point */
+    } else {
+        memcpy(second, temp, sizeof(struct widget));
+        g_free(temp);
+    }
+}
+
+/**
+ * @brief Swap two widgets
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] first The first widget
+ * @param[in,out] second The second widget
+ */
+static inline void gui_internal_widget_swap(struct gui_priv *this, struct widget *first, struct widget *second) {
+    gui_internal_widget_transfer_content(this, first, second, 0);
+}
+
+/**
+ * @brief Move the content of one widget into another one (the @p src widget is then deallocated and should be be used anymore)
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] dst The destination widget
+ * @param[in,out] src The source widget
+ */
+static inline void gui_internal_widget_move(struct gui_priv *this, struct widget *dst, struct widget *src) {
+    gui_internal_widget_transfer_content(this, dst, src, 1);
+}
+
+/**
+ * @brief Resize a top bar created using gui_internal_top_bar()
+ *
+ * @param this The internal GUI instance
+ * @param data Some data to pass to the box resize handler
+ * @param neww The new width of the display
+ * @param newh The new height of the display
+ */
+static void gui_internal_top_bar_resize(struct gui_priv *this, struct widget *w, void *data, int neww, int newh) {
+    struct widget *new_top_bar;
+
+    if (w->type != widget_box) {
+        dbg(lvl_warning, "Called on a non-box widget, ignoring");
+        return;
+    }
+    new_top_bar=gui_internal_top_bar(this);
+    gui_internal_widget_move(this, w, new_top_bar);
+}
+
+/**
+ * @brief Create an GUI top bar (containing the history of GUI menus and submenus)
+ *
+ * @param this The internal GUI instance
+ *
+ * @return The newly created top bar widget
+ */
 struct widget *
 gui_internal_top_bar(struct gui_priv *this) {
     struct widget *w,*wm,*wh,*wc,*wcn;
@@ -387,6 +448,7 @@ gui_internal_top_bar(struct gui_priv *this) {
         w->bt=6;
         w->bb=6;
     }
+    w->on_resize=gui_internal_top_bar_resize;
     width=this->root.w-w->bl;
     if (! (this->flags & 2)) {
         wm=gui_internal_button_new_with_callback(this, NULL,

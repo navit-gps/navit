@@ -12,7 +12,6 @@
 #include "gui_internal_menu.h"
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
-void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew);
 void gui_internal_box_pack(struct gui_priv *this, struct widget *w);
 
 static void gui_internal_background_render(struct gui_priv *this, struct widget *w) {
@@ -90,6 +89,12 @@ gui_internal_image_new(struct gui_priv *this, struct graphics_image *image) {
     return widget;
 }
 
+/**
+ * @brief Renders an image or icon, preparing it for drawing on the display
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
 static void gui_internal_image_render(struct gui_priv *this, struct widget *w) {
     struct point pnt;
 
@@ -103,7 +108,7 @@ static void gui_internal_image_render(struct gui_priv *this, struct widget *w) {
 }
 
 /**
- * @brief Renders a label.
+ * @brief Renders a label, preparing it for drawing on the display
  *
  * @param this The internal GUI instance
  * @param w The widget to render
@@ -329,10 +334,10 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
 }
 
 /**
- * @brief Computes the size and location for the widget.
+ * @brief Computes the size and location for a box widget
  *
  * @param this The internal GUI instance
- * @param w The widget to render
+ * @param w The widget to pack
  */
 void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
@@ -605,7 +610,7 @@ void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
  * @brief Resize a box widget.
  *
  * @param this The internal GUI instance
- * @param w The widget to render
+ * @param w The widget to resize
  * @param wnew The new width of the widget
  * @param hnew THe new height of the widget
  */
@@ -623,16 +628,13 @@ void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data
             int orientation=w->flags & 0xffff0000;
             switch(orientation) {
             case orientation_horizontal:
-                dbg(lvl_error, "Box has hrz orientation");
-                break;
             case orientation_vertical:
-                dbg(lvl_error, "Box has vrt orientation");
-                break;
             case orientation_horizontal_vertical:
-                dbg(lvl_error, "Box has hrz+vrt orientation");
+                wb->h = 0;
+                wb->w = 0;
+                gui_internal_widget_pack(this, wb);
                 break;
             default:
-                dbg(lvl_error, "Box has no specific orientation, should be expanded to parent size");
                 wb->w = w->w;
                 wb->h = w->h;
             }
@@ -762,6 +764,14 @@ void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w) {
 }
 
 
+/**
+ * @brief Renders widgets, preparing it for drawing on the display
+ *
+ * The appropriate render function will be called, depending on the type of widget
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
 void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
     if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
         return;
@@ -1354,23 +1364,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 }
 
 /**
- * @brief Resize a table widget.
- *
- * @param this The internal GUI instance
- * @param w The widget to render
- * @param wnew The new width of the widget
- * @param hnew THe new height of the widget
- */
-void gui_internal_table_resize(struct gui_priv * this, struct widget * w, int wnew, int hnew) {
-
-    w->w = wnew;
-    w->h = hnew;
-
-//    gui_internal_widget_reset_pack(this, w);
-//    gui_internal_table_pack(this, w);
-}
-
-/**
  * @brief Handles the 'next page' table event.
  *
  * A callback function that is invoked when the 'next page' button is pressed
@@ -1405,8 +1398,6 @@ void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, 
 
     gui_internal_menu_render(this);
 }
-
-
 
 /**
  * @brief Handles the 'previous page' table event.
