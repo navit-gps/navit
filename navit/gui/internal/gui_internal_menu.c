@@ -336,59 +336,6 @@ void gui_internal_menu_resize(struct gui_priv *this, int w, int h) {
 }
 
 /**
- * @brief Transfer the content of one widget into another one (and optionally vice-versa)
- *
- * @param this The internal GUI instance
- * @param[in,out] first The first widget
- * @param[in,out] second The second widget
- * @param move_only If non nul, transfer only the second widget into the first widget. The second widget is then deallocated and should be be used anymore (this is a move operation)
- */
-static void gui_internal_widget_transfer_content(struct gui_priv *this, struct widget *first, struct widget *second, int move_only) {
-    struct widget *temp;
-
-    if (!first) {
-        dbg(lvl_error, "Refusing copy: first argument is NULL");
-        return;
-    }
-    if (!second) {
-        dbg(lvl_error, "Refusing copy: second argument is NULL");
-        return;
-    }
-    temp=g_new0(struct widget, 1);
-    memcpy(temp, first, sizeof(struct widget));
-    memcpy(first, second, sizeof(struct widget));
-    if (move_only) {
-        gui_internal_widget_destroy(this, temp); /* This will do a g_free(temp), but will also deallocate all children widgets */
-        g_free(second);	/* We also free the struct widget pointed to by second, so variable second should not be used anymore from this point */
-    } else {
-        memcpy(second, temp, sizeof(struct widget));
-        g_free(temp);
-    }
-}
-
-/**
- * @brief Swap two widgets
- *
- * @param this The internal GUI instance
- * @param[in,out] first The first widget
- * @param[in,out] second The second widget
- */
-static inline void gui_internal_widget_swap(struct gui_priv *this, struct widget *first, struct widget *second) {
-    gui_internal_widget_transfer_content(this, first, second, 0);
-}
-
-/**
- * @brief Move the content of one widget into another one (the @p src widget is then deallocated and should be be used anymore)
- *
- * @param this The internal GUI instance
- * @param[in,out] dst The destination widget
- * @param[in,out] src The source widget
- */
-static inline void gui_internal_widget_move(struct gui_priv *this, struct widget *dst, struct widget *src) {
-    gui_internal_widget_transfer_content(this, dst, src, 1);
-}
-
-/**
  * @brief Resize a top bar created using gui_internal_top_bar()
  *
  * @param this The internal GUI instance

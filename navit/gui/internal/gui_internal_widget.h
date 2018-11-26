@@ -156,6 +156,8 @@ struct gui_priv;
 struct point;
 struct table_data;
 struct widget;
+void gui_internal_widget_swap(struct gui_priv *this, struct widget *first, struct widget *second);
+void gui_internal_widget_move(struct gui_priv *this, struct widget *dst, struct widget *src);
 struct widget *gui_internal_label_font_new(struct gui_priv *this, const char *text, int font);
 struct widget *gui_internal_label_new(struct gui_priv *this, const char *text);
 struct widget *gui_internal_label_new_abbrev(struct gui_priv *this, const char *text, int maxwidth);
