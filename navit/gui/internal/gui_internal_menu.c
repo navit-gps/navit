@@ -230,7 +230,8 @@ gui_internal_menu(struct gui_priv *this, const char *label) {
     menu=gui_internal_box_new(this, gravity_left_center|orientation_vertical);
     menu->on_resize=gui_internal_menu_menu_resize;
     topbox->on_resize(this, topbox, NULL, this->root.w, this->root.h);
-    menu->on_resize(this, menu, NULL, topbox->w, topbox->h); /* We also have to invoke onresize() handler on menu because it is not (yet) set as a child of topbox */
+    /* We also have to invoke onresize() handler on menu because it is not (yet) set as a child of topbox */
+    menu->on_resize(this, menu, NULL, topbox->w, topbox->h);
     menu->background=this->background;
     gui_internal_apply_config(this);
     topbox->menu_data=g_new0(struct menu_data, 1);

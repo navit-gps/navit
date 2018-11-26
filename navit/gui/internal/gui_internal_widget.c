@@ -22,7 +22,8 @@ void gui_internal_box_pack(struct gui_priv *this, struct widget *w);
  * @param[in,out] second The second widget
  * @param move_only If non nul, transfer only the second widget into the first widget. The second widget is then deallocated and should be be used anymore (this is a move operation)
  */
-static void gui_internal_widget_transfer_content(struct gui_priv *this, struct widget *first, struct widget *second, int move_only) {
+static void gui_internal_widget_transfer_content(struct gui_priv *this, struct widget *first, struct widget *second,
+        int move_only) {
     struct widget *temp;
 
     if (!first) {
@@ -37,8 +38,10 @@ static void gui_internal_widget_transfer_content(struct gui_priv *this, struct w
     memcpy(temp, first, sizeof(struct widget));
     memcpy(first, second, sizeof(struct widget));
     if (move_only) {
-        gui_internal_widget_destroy(this, temp); /* This will do a g_free(temp), but will also deallocate all children widgets */
-        g_free(second);	/* We also free the struct widget pointed to by second, so variable second should not be used anymore from this point */
+        gui_internal_widget_destroy(this, temp);
+        /* gui_internal_widget_destroy() will do a g_free(temp), but will also deallocate all children widgets */
+        /* Now, we also free the struct widget pointed to by second, so variable second should not be used anymore from this point */
+        g_free(second);
     } else {
         memcpy(second, temp, sizeof(struct widget));
         g_free(temp);
