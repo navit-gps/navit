@@ -294,13 +294,39 @@ gui_internal_box_new(struct gui_priv *this, enum flags flags) {
     return gui_internal_box_new_with_label(this, flags, NULL);
 }
 
+#define GUI_INTERNAL_VISUAL_DBG 1	//FIXME: debugging forced
 
+/**
+ * @brief Renders a box widget, preparing it for drawing on the display
+ *
+ * @param this The internal GUI instance
+ * @param w The box widget to render
+ */
 static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     GList *l;
 
+    int visual_debug = 0;
+
+#ifdef GUI_INTERNAL_VISUAL_DBG
+    static struct graphics_gc *debug_gc=NULL;
+    static struct color gui_box_debug_color={0xffff,0x0400,0x0400,0xffff}; /* Red */
+    visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
+#endif
+
+    if (visual_debug)
+        dbg(lvl_debug, "Internal layout visual debugging is enabled");
+
+#ifdef GUI_INTERNAL_VISUAL_DBG
+    if (visual_debug && !debug_gc) {
+        debug_gc = graphics_gc_new(this->gra);
+        graphics_gc_set_foreground(debug_gc, &gui_box_debug_color);
+        graphics_gc_set_linewidth(debug_gc, 1);
+    }
+#endif
+
     gui_internal_background_render(this, w);
-    if (w->foreground && w->border) {
+    if ((w->foreground && w->border) || visual_debug) {
         struct point pnt[5];
         pnt[0]=w->p;
         pnt[1].x=pnt[0].x+w->w;
@@ -310,9 +336,15 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
         pnt[3].x=pnt[0].x;
         pnt[3].y=pnt[0].y+w->h;
         pnt[4]=pnt[0];
-        graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
-        graphics_draw_lines(this->gra, w->foreground, pnt, 5);
-        graphics_gc_set_linewidth(w->foreground, 1);
+        if (!visual_debug) {
+            graphics_gc_set_linewidth(w->foreground, w->border ? w->border : 1);
+            graphics_draw_lines(this->gra, w->foreground, pnt, 5);
+            graphics_gc_set_linewidth(w->foreground, 1);
+        }
+#ifdef GUI_INTERNAL_VISUAL_DBG
+        else
+            graphics_draw_lines(this->gra, debug_gc, pnt, 5);	/* Force highlighting box borders in debug more */
+#endif
     }
 
     l=w->children;
@@ -1136,10 +1168,10 @@ void gui_internal_table_hide_rows(struct table_data * table_data) {
 
 
 /**
- * @brief Renders a table widget.
+ * @brief Renders a table widget, preparing it for drawing on the display
  *
- * @param this The graphics context
- * @param w The table widget to render.
+ * @param this The internal GUI instance
+ * @param w The widget to render
  */
 void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 
@@ -1152,6 +1184,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
     int drawing_space_left=1;
     int is_first_page;
     struct table_column_desc * dim=NULL;
+    int visual_debug = 0;
 
     dbg_assert(table_data);
     column_desc = gui_internal_compute_table_dimensions(this,w);
@@ -1236,8 +1269,40 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
                 } else {
                     cur_widget->state &= ~STATE_OFFSCREEN;
                 }
+
+#if GUI_INTERNAL_VISUAL_DBG
+
+                static struct graphics_gc *debug_gc=NULL;
+                static struct color gui_table_debug_color={0x0000,0xffff,0x0400,0xffff}; /* Green */
+                visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
+
+                if (visual_debug)
+                    dbg(lvl_debug, "Internal layout visual debugging is enabled");
+
+                if (visual_debug && !debug_gc) {
+                    debug_gc = graphics_gc_new(this->gra);
+                    graphics_gc_set_foreground(debug_gc, &gui_table_debug_color);
+                    graphics_gc_set_linewidth(debug_gc, 1);
+                }
+#endif
+
                 gui_internal_widget_pack(this,cur_widget);
                 gui_internal_widget_render(this,cur_widget);
+
+#if GUI_INTERNAL_VISUAL_DBG
+                if (visual_debug) {
+                    struct point pnt[5];
+                    pnt[0]=cur_widget->p;
+                    pnt[1].x=pnt[0].x+cur_widget->w;
+                    pnt[1].y=pnt[0].y;
+                    pnt[2].x=pnt[0].x+cur_widget->w;
+                    pnt[2].y=pnt[0].y+cur_widget->h;
+                    pnt[3].x=pnt[0].x;
+                    pnt[3].y=pnt[0].y+cur_widget->h;
+                    pnt[4]=pnt[0];
+                    graphics_draw_lines(this->gra, debug_gc, pnt, 5);	/* Force highlighting table borders in debug more */
+                }
+#endif
 
                 if(dim->height > max_height) {
                     max_height = dim->height;
