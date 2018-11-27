@@ -89,7 +89,7 @@ jobs:
             cd navit/icons
             make
             mkdir ../android/res/drawable-nodpi
-            rename 'y/A-Z/a-z/' *
+            rename 'y/A-Z/a-z/' *.png
             cp *.png ../android/res/drawable-nodpi
             cd ../../
       - run:
@@ -98,7 +98,7 @@ jobs:
             cd po
             make
             mkdir ../navit/android/res/raw
-            rename 'y/A-Z/a-z/' *
+            rename 'y/A-Z/a-z/' *.mo
             cp *.mo ../navit/android/res/raw
             cd ../
       - run:
