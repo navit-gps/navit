@@ -310,7 +310,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
 
 #ifdef GUI_INTERNAL_VISUAL_DBG
     static struct graphics_gc *debug_gc=NULL;
-    static struct color gui_box_debug_color={0xffff,0x0400,0x0400,0xffff}; /* Red */
+    static struct color gui_box_debug_color= {0xffff,0x0400,0x0400,0xffff}; /* Red */
     visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
 #endif
 
@@ -1273,7 +1273,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 #if GUI_INTERNAL_VISUAL_DBG
 
                 static struct graphics_gc *debug_gc=NULL;
-                static struct color gui_table_debug_color={0x0000,0xffff,0x0400,0xffff}; /* Green */
+                static struct color gui_table_debug_color= {0x0000,0xffff,0x0400,0xffff}; /* Green */
                 visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
 
                 if (visual_debug)
