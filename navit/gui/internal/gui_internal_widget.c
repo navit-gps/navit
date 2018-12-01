@@ -308,7 +308,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
 
     int visual_debug = 0;
 
-#ifdef GUI_INTERNAL_VISUAL_DBG
+#if defined(GUI_INTERNAL_VISUAL_DBG)
     static struct graphics_gc *debug_gc=NULL;
     static struct color gui_box_debug_color= {0xffff,0x0400,0x0400,0xffff}; /* Red */
     visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
@@ -317,7 +317,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
     if (visual_debug)
         dbg(lvl_debug, "Internal layout visual debugging is enabled");
 
-#ifdef GUI_INTERNAL_VISUAL_DBG
+#if defined(GUI_INTERNAL_VISUAL_DBG)
     if (visual_debug && !debug_gc) {
         debug_gc = graphics_gc_new(this->gra);
         graphics_gc_set_foreground(debug_gc, &gui_box_debug_color);
@@ -341,7 +341,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
             graphics_draw_lines(this->gra, w->foreground, pnt, 5);
             graphics_gc_set_linewidth(w->foreground, 1);
         }
-#ifdef GUI_INTERNAL_VISUAL_DBG
+#if defined(GUI_INTERNAL_VISUAL_DBG)
         else
             graphics_draw_lines(this->gra, debug_gc, pnt, 5);	/* Force highlighting box borders in debug more */
 #endif
@@ -1270,7 +1270,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
                     cur_widget->state &= ~STATE_OFFSCREEN;
                 }
 
-#if GUI_INTERNAL_VISUAL_DBG
+#if defined(GUI_INTERNAL_VISUAL_DBG)
 
                 static struct graphics_gc *debug_gc=NULL;
                 static struct color gui_table_debug_color= {0x0000,0xffff,0x0400,0xffff}; /* Green */
@@ -1289,7 +1289,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
                 gui_internal_widget_pack(this,cur_widget);
                 gui_internal_widget_render(this,cur_widget);
 
-#if GUI_INTERNAL_VISUAL_DBG
+#if defined(GUI_INTERNAL_VISUAL_DBG)
                 if (visual_debug) {
                     struct point pnt[5];
                     pnt[0]=cur_widget->p;
