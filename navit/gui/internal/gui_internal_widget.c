@@ -294,8 +294,6 @@ gui_internal_box_new(struct gui_priv *this, enum flags flags) {
     return gui_internal_box_new_with_label(this, flags, NULL);
 }
 
-#define GUI_INTERNAL_VISUAL_DBG 1	//FIXME: debugging forced
-
 /**
  * @brief Renders a box widget, preparing it for drawing on the display
  *
@@ -1184,7 +1182,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
     int drawing_space_left=1;
     int is_first_page;
     struct table_column_desc * dim=NULL;
-    int visual_debug = 0;
 
     dbg_assert(table_data);
     column_desc = gui_internal_compute_table_dimensions(this,w);
@@ -1274,7 +1271,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
 
                 static struct graphics_gc *debug_gc=NULL;
                 static struct color gui_table_debug_color= {0x0000,0xffff,0x0400,0xffff}; /* Green */
-                visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
+                int visual_debug = (debug_level_get("gui_internal_visual_layout") >= lvl_debug);
 
                 if (visual_debug)
                     dbg(lvl_debug, "Internal layout visual debugging is enabled");
