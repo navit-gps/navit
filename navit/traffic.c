@@ -2158,7 +2158,7 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
 static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
         struct route_graph_point * start) {
     struct route_graph_point * ret = start;
-    struct route_graph_segment * s = start->seg, * s_cmp, * s_prev = NULL;
+    struct route_graph_segment * s, * s_cmp, * s_prev = NULL;
     int num_seg;
     int id_match;
     int is_ambiguous;
@@ -2166,6 +2166,8 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
     dbg(lvl_debug, "At %p (%d), start", start, start ? start->value : -1);
     if (!start)
         return NULL;
+
+    s = start->seg;
 
     while (s) {
         num_seg = 0;
@@ -2643,10 +2645,21 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 if (start_new)
                     p_start = start_new;
             }
-            if (dir > 0)
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
-            else
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+            if (dir > 0) {
+                if (!p_start) {
+                    /* fallback if calculating the first piece of the route failed */
+                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[2], NULL);
+                    start_new = traffic_route_prepend(rg, p_start);
+                } else
+                    traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
+            } else {
+                if (!p_start) {
+                    /* fallback if calculating the first piece of the route failed */
+                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[0], NULL);
+                    start_new = traffic_route_prepend(rg, p_start);
+                } else
+                    traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+            }
             dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
 
