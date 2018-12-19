@@ -2158,7 +2158,7 @@ static struct route_graph_segment * traffic_route_append(struct route_graph *rg,
 static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
         struct route_graph_point * start) {
     struct route_graph_point * ret = start;
-    struct route_graph_segment * s = start->seg, * s_cmp, * s_prev = NULL;
+    struct route_graph_segment * s, * s_cmp, * s_prev = NULL;
     int num_seg;
     int id_match;
     int is_ambiguous;
@@ -2166,6 +2166,8 @@ static struct route_graph_point * traffic_route_prepend(struct route_graph * rg,
     dbg(lvl_debug, "At %p (%d), start", start, start ? start->value : -1);
     if (!start)
         return NULL;
+
+    s = start->seg;
 
     while (s) {
         num_seg = 0;
