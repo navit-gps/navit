@@ -2645,10 +2645,21 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                 if (start_new)
                     p_start = start_new;
             }
-            if (dir > 0)
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
-            else
-                traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+            if (dir > 0) {
+                if (!p_start) {
+                    /* fallback if calculating the first piece of the route failed */
+                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[2], NULL);
+                    start_new = traffic_route_prepend(rg, p_start);
+                } else
+                    traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
+            } else {
+                if (!p_start) {
+                    /* fallback if calculating the first piece of the route failed */
+                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[0], NULL);
+                    start_new = traffic_route_prepend(rg, p_start);
+                } else
+                    traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+            }
             dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
 
