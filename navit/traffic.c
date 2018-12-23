@@ -64,6 +64,9 @@
 /** The penalty applied to an off-road link */
 #define PENALTY_OFFROAD 4
 
+/** The penalty applied to segments with non-matching attributes */
+#define PENALTY_SEGMENT_MATCH 4
+
 /** The maximum penalty applied to points with non-matching attributes */
 #define PENALTY_POINT_MATCH 16
 
@@ -1451,8 +1454,8 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
  *
  * The cost is calculated based on the length of the segment and a penalty which depends on the score.
  * A segment with the maximum score of 100 is not penalized, i.e. its cost is equal to its length. A
- * segment with a zero score is penalized with a factor of `PENALTY_OFFROAD`. For scores in between, a
- * penalty factor between 1 and `PENALTY_OFFROAD` is applied.
+ * segment with a zero score is penalized with a factor of `PENALTY_SEGMENT_MATCH`. For scores in between, a
+ * penalty factor between 1 and `PENALTY_SEGMENT_MATCH` is applied.
  *
  * If the segment is impassable in the given direction, the cost is always `INT_MAX`.
  *
@@ -1471,7 +1474,7 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
     if ((over->data.item.type < route_item_first) || (over->data.item.type > route_item_last))
         return INT_MAX;
 
-    return over->data.len * (100 - over->data.score) * (PENALTY_OFFROAD - 1) / 100 + over->data.len;
+    return over->data.len * (100 - over->data.score) * (PENALTY_SEGMENT_MATCH - 1) / 100 + over->data.len;
 }
 
 /**
