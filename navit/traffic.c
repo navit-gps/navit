@@ -3385,8 +3385,12 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
     }
 
     /* if no vehicle type is specified in supplementary information, assume all */
-    if (!has_flags)
-        flags = AF_ALL;
+    if (!has_flags) {
+        if (this_->location->road_type == type_line_unspecified)
+            flags = AF_ALL;
+        else
+            flags = AF_MOTORIZED_FAST | AF_MOPED;
+    }
 
     if (!ret)
         ret = seg_data_new();
