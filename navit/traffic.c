@@ -3548,7 +3548,7 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
                 if (message->location->ramps)
                     fprintf(f, " ramps=\"%s\"", location_ramps_to_string(message->location->ramps));
                 if (message->location->road_type != type_line_unspecified)
-                    fprintf(f, " road_type=\"%s\"", item_to_name(message->location->road_type));
+                    fprintf(f, " road_class=\"%s\"", item_to_name(message->location->road_type));
                 if (message->location->road_ref)
                     fprintf(f, " road_ref=\"%s\"", message->location->road_ref);
                 if (message->location->road_name)
@@ -4182,7 +4182,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                                    location_dir_new(traffic_xml_get_attr("directionality", el->names, el->values)),
                                                    location_fuzziness_new(traffic_xml_get_attr("fuzziness", el->names, el->values)),
                                                    location_ramps_new(traffic_xml_get_attr("ramps", el->names, el->values)),
-                                                   item_type_from_road_type(traffic_xml_get_attr("road_type", el->names, el->values),
+                                                   item_type_from_road_type(traffic_xml_get_attr("road_class", el->names, el->values),
                                                            /* TODO revisit default for road_is_urban */
                                                            boolean_new(traffic_xml_get_attr("road_is_urban", el->names, el->values), 0)),
                                                    traffic_xml_get_attr("road_name", el->names, el->values),
