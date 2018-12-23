@@ -278,7 +278,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static int traffic_process_messages_int(struct traffic * this_, int flags);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
-static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing);
 
 static struct item_methods methods_traffic_item = {
@@ -1460,11 +1460,12 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
  * If the segment is impassable in the given direction, the cost is always `INT_MAX`.
  *
  * @param over The segment
+ * @param data Data for the segments added to the map
  * @param dir The direction (positive numbers indicate positive direction)
  *
  * @return The cost of the segment
  */
-static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir) {
+static int traffic_route_get_seg_cost(struct route_graph_segment *over, struct seg_data * data, int dir) {
     if (over->data.flags & (dir >= 0 ? AF_ONEWAYREV : AF_ONEWAY))
         return INT_MAX;
     if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
@@ -1472,6 +1473,9 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
     if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION))
         return INT_MAX;
     if ((over->data.item.type < route_item_first) || (over->data.item.type > route_item_last))
+        return INT_MAX;
+    /* at least a partial match is required for access flags */
+    if (!(over->data.flags & data->flags & AF_ALL))
         return INT_MAX;
 
     return over->data.len * (100 - over->data.score) * (PENALTY_SEGMENT_MATCH - 1) / 100 + over->data.len;
@@ -1889,13 +1893,14 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
  * longer needed.
  *
  * @param rg The route graph
+ * @param data Data for the segments added to the map
  * @param c_start Start coordinates
  * @param c_dst Destination coordinates
  * @param start_existing Start point of an existing route (whose points will not be used)
  *
  * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
-static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing) {
     struct route_graph_point * ret;
 
@@ -1976,7 +1981,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
         s = p->start;
         while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-            val = traffic_route_get_seg_cost(s, -1);
+            val = traffic_route_get_seg_cost(s, data, -1);
 
             dbg(lvl_debug, "  negative segment, val=%d", val);
 
@@ -2001,7 +2006,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         }
         s = p->end;
         while (s) { /* Doing the same as above with the segments leading towards our point */
-            val = traffic_route_get_seg_cost(s, 1);
+            val = traffic_route_get_seg_cost(s, data, 1);
 
             dbg(lvl_debug, "  positive segment, val=%d", val);
 
@@ -2615,11 +2620,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         dbg(lvl_debug, "*****checkpoint ADD-4.1");
         if (point_pairs == 1) {
             if (dir > 0)
-                p_start = traffic_route_flood_graph(rg,
+                p_start = traffic_route_flood_graph(rg, data,
                                                     pcoords[0] ? pcoords[0] : pcoords[1],
                                                     pcoords[2] ? pcoords[2] : pcoords[1], NULL);
             else
-                p_start = traffic_route_flood_graph(rg,
+                p_start = traffic_route_flood_graph(rg, data,
                                                     pcoords[2] ? pcoords[2] : pcoords[1],
                                                     pcoords[0] ? pcoords[0] : pcoords[1], NULL);
             dbg(lvl_debug, "*****checkpoint ADD-4.1.1");
@@ -2638,9 +2643,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             /* TODO handle cases in which the route goes through the "third" point
              * (this should not happen; if it does, we need to detect and fix it) */
             if (dir > 0)
-                p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
+                p_start = traffic_route_flood_graph(rg, data, pcoords[0], pcoords[1], NULL);
             else
-                p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
+                p_start = traffic_route_flood_graph(rg, data, pcoords[2], pcoords[1], NULL);
             if ((this_->location->fuzziness == location_fuzziness_low_res)
                     || this_->location->at || this_->location->not_via) {
                 /* extend start to next junction */
@@ -2651,17 +2656,17 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             if (dir > 0) {
                 if (!p_start) {
                     /* fallback if calculating the first piece of the route failed */
-                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[2], NULL);
+                    p_start = traffic_route_flood_graph(rg, data, pcoords[1], pcoords[2], NULL);
                     start_new = traffic_route_prepend(rg, p_start);
                 } else
-                    traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
+                    traffic_route_flood_graph(rg, data, pcoords[1], pcoords[2], p_start);
             } else {
                 if (!p_start) {
                     /* fallback if calculating the first piece of the route failed */
-                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[0], NULL);
+                    p_start = traffic_route_flood_graph(rg, data, pcoords[1], pcoords[0], NULL);
                     start_new = traffic_route_prepend(rg, p_start);
                 } else
-                    traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+                    traffic_route_flood_graph(rg, data, pcoords[1], pcoords[0], p_start);
             }
             dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
