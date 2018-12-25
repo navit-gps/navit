@@ -62,7 +62,7 @@
 #define MESSAGE_UPDATE_SEGMENTS 1 << 1
 
 /** The penalty applied to an off-road link */
-#define PENALTY_OFFROAD 4
+#define PENALTY_OFFROAD 8
 
 /** The penalty applied to segments with non-matching attributes */
 #define PENALTY_SEGMENT_MATCH 4
