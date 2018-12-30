@@ -56,10 +56,13 @@ static struct gtk_poi_search {
 GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
-    icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
+    char *filename = graphics_icon_path(name);
+    icon=gdk_pixbuf_new_from_file(filename,&error);
     if (error) {
         dbg(lvl_error, "failed to load icon '%s': %s", name, error->message);
+        icon=NULL;
     }
+    g_free(filename);
     return icon;
 }
 
