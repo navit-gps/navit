@@ -56,7 +56,7 @@
 		<gui type="internal" enabled="yes"><![CDATA[
 			<html>
 				<a name='Main Menu'><text>Main menu</text>
-					<a href='#Actions'><img src='gui_actions'>Actions</img></a>
+					<a href='#Actions'><img src='navit'>Actions</img></a>
 					<img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show
 Map</text></img>
 					<a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a>
