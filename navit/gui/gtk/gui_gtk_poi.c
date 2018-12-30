@@ -37,6 +37,8 @@
 
 #include "navigation.h"         /* for FEET_PER_METER and other conversion factors. */
 
+GdkPixbuf *geticon(const char *name);
+
 static struct gtk_poi_search {
     GtkWidget *entry_distance;
     GtkWidget *label_distance;
@@ -51,7 +53,7 @@ static struct gtk_poi_search {
     struct navit *nav;
 } gtk_poi_search;
 
-static GdkPixbuf *geticon(const char *name) {
+GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
     icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
