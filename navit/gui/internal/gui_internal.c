@@ -895,61 +895,6 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 }
 
 /**
- * @brief Get the search result map (and create it if it does not exist)
- *
- * @param this The GUI context
- *
- * @return A pointer to the map named "search_results" or NULL if there wasa failure
- */
-static struct map *get_search_results_map(struct gui_priv *this) {
-
-    struct mapset *ms;
-    struct map *map;
-
-    ms=navit_get_mapset(this->nav);
-
-    if(!ms)
-        return NULL;
-
-    map=mapset_get_map_by_name(ms, "search_results");
-    if(!map) {
-        struct attr *attrs[10], attrmap;
-        enum attr_type types[]= {attr_position_longitude,attr_position_latitude,attr_label,attr_none};
-        int i;
-
-        attrs[0]=g_new0(struct attr,1);
-        attrs[0]->type=attr_type;
-        attrs[0]->u.str="csv";
-
-        attrs[1]=g_new0(struct attr,1);
-        attrs[1]->type=attr_name;
-        attrs[1]->u.str="search_results";
-
-        attrs[2]=g_new0(struct attr,1);
-        attrs[2]->type=attr_charset;
-        attrs[2]->u.str="utf-8";
-
-        attrs[3]=g_new0(struct attr,1);
-        attrs[3]->type=attr_item_type;
-        attrs[3]->u.num=type_found_item;
-
-        attrs[4]=g_new0(struct attr,1);
-        attrs[4]->type=attr_attr_types;
-        attrs[4]->u.attr_types=types;
-        attrs[5]=NULL;
-
-        attrmap.type=attr_map;
-        map=attrmap.u.map=map_new(NULL,attrs);
-        if(map)
-            mapset_add_attr(ms,&attrmap);
-
-        for(i=0; attrs[i]; i++)
-            g_free(attrs[i]);
-    }
-    return map;
-}
-
-/**
  * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
  *
  * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
@@ -1032,7 +977,7 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     int count;
     char *name_label;
 
-    map = get_search_results_map(this);
+    map = navit_get_search_results_map(this->nav);
     if(!map)
         return;
 
