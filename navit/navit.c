@@ -278,10 +278,84 @@ struct map *navit_get_search_results_map(struct navit *this_) {
     return map;
 }
 
+void navit_populate_search_results_map(struct navit *navit, GList *search_results, struct coord_rect *r) {
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    GList *curr_result = search_results;
+    struct attr a;
+    int count;
+    char *name_label;
+
+    map = navit_get_search_results_map(navit);
+    if(!map)
+        return;
+
+
+    mr = map_rect_new(map, NULL);
+
+    if(!mr)
+        return;
+
+    /* Clean the map */
+    while((item = map_rect_get_item(mr))!=NULL) {
+        item_type_set(item,type_none);
+    }
+
+    //this->results_map_population=0; //FIXME
+
+    /* Find the table to populate the map */
+    //for(w=table; w && w->type!=widget_table; w=w->parent);
+
+    if(!search_results) {
+        map_rect_destroy(mr);
+        dbg(lvl_warning,"NULL result table - only map clean up is done.");
+        return;
+    }
+
+    /* Populate the map with search results*/
+    for(curr_result = search_results, count=0; curr_result; curr_result=g_list_next(curr_result)) {
+		struct lcoord *point = curr_result->data;
+		struct item* it;
+		if(point->label==NULL)
+			continue;
+		dbg(lvl_info,"%s",point->label);
+		it=map_rect_create_item(mr,type_found_item);
+		if(it) {
+			struct attr a;
+			item_coord_set(it, &(point->c), 1, change_mode_modify);
+			a.type=attr_label;
+			name_label = g_strdup(point->label);
+			square_shape_str(name_label);
+			a.u.str=name_label;
+			item_attr_set(it, &a, change_mode_modify);
+			if (r) {
+				if(!count++)
+					r->lu=r->rl=point->c;
+				else
+					coord_rect_extend(r,&(point->c));
+			}
+		}
+    }
+    map_rect_destroy(mr);
+    if(!count)
+        return;
+    a.type=attr_orientation;
+    a.u.num=0;
+    navit_set_attr(navit,&a);	/* Set orientation to North */
+    if (r) {
+        navit_zoom_to_rect(navit,r);
+        //gui_internal_prune_menu(this, NULL); //FIXME
+    }
+    /*this->results_map_population=count;*/ //FIXME
+}
+
 struct tracking *
 navit_get_tracking(struct navit *this_) {
     return this_->tracking;
 }
+
+
 
 /**
  * @brief	Get the user data directory.

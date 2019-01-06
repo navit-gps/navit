@@ -55,6 +55,7 @@ struct item;
 void navit_add_mapset(struct navit *this_, struct mapset *ms);
 struct mapset *navit_get_mapset(struct navit *this_);
 struct map *navit_get_search_results_map(struct navit *this_);
+void navit_populate_search_results_map(struct navit *navit, GList *search_results, struct coord_rect *r);
 struct tracking *navit_get_tracking(struct navit *this_);
 char *navit_get_user_data_directory(int create);
 void navit_draw_async(struct navit *this_, int async);
