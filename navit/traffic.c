@@ -62,10 +62,13 @@
 #define MESSAGE_UPDATE_SEGMENTS 1 << 1
 
 /** The penalty applied to an off-road link */
-#define PENALTY_OFFROAD 4
+#define PENALTY_OFFROAD 8
+
+/** The penalty applied to segments with non-matching attributes */
+#define PENALTY_SEGMENT_MATCH 4
 
 /** The maximum penalty applied to points with non-matching attributes */
-#define PENALTY_POINT_MATCH 16
+#define PENALTY_POINT_MATCH 24
 
 /** Flag to indicate expired messages should be purged */
 #define PROCESS_MESSAGES_PURGE_EXPIRED 1 << 0
@@ -275,7 +278,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static int traffic_process_messages_int(struct traffic * this_, int flags);
 static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
-static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing);
 
 static struct item_methods methods_traffic_item = {
@@ -1319,9 +1322,19 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
  * the quality of the match.
  *
  * Segments which are part of the route are treated in a different manner, as the direction in which the segment is
- * traversed (not the direction of the segment itself) is taken into account: When evaluating the start point of the
- * route, only the first point (whose `seg` member points to the segment) will match; the opposite is true when the end
- * point of the route is evaluated. This ensures the matched segment ends up being part of the route.
+ * traversed (not the direction of the segment itself) is taken into account, which is needed to govern whether the
+ * matched segment ends up being part of the route or not.
+ *
+ * In some cases, `this_` refers to a point which is actually a segment (such as a bridge or tunnel), which we want to
+ * include in the route. In other cases, `this_` refers to an intersection with another road, and the junction name is
+ * the name of the other road; these segments need to be excluded from the route.
+ *
+ * This is controlled by the `match_start` argument: if true, we are evaluating the start point of a route, else we are
+ * evaluating its end point. To include the matched segment in the route, only the first point (whose `seg` member
+ * points to the segment) will match for the start point, the opposite is true for the end point. To exclude the
+ * matched segment, this logic is reversed.
+ *
+ * A heuristic is in place to distinguish whether or not we want the matched segment included.
  *
  * If no points can be attained (because no attributes which must match are supplied), the score is 0 for any point.
  *
@@ -1335,13 +1348,22 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
 static int traffic_point_match_segment_attributes(struct traffic_point * this_, struct route_graph_point *p,
         struct route_graph_point * start, int match_start) {
 
+    /*
+     * Whether we want a match for the route segment starting at p (leading away from it) or the route segment ending
+     * at p (leading towards it).
+     */
+    int want_start_match = match_start;
+
     /* Iterator for route graph points */
     struct route_graph_point *p_iter = start;
 
     /* The predecessor pf `p`in the route graph */
     struct route_graph_point *p_prev = NULL;
 
-    /* Whether we have a match for the start of a route segment, the end of a route segment or an off-route segment */
+    /*
+     * Whether this_ matches the route segment starting at p (leading away from it), the route segment ending at p
+     * (leading towards it), or an off-route segment connected to p, respectively
+     */
     int has_start_match = 0, has_end_match = 0, has_offroute_match = 0;
 
     /* The route segment being examined */
@@ -1356,9 +1378,17 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
     /* The attribute being examined */
     struct attr attr;
 
-    if (!this_->junction_name)
+    /* Name and systematic name for route segments starting and ending at p */
+    char *start_name = NULL, *start_ref = NULL, *end_name = NULL, *end_ref = NULL;
+
+    /* Whether or not the route follows the road (if both are true or both are false, the case is not clear) */
+    int route_follows_road = 0, route_leaves_road = 0;
+
+    if (!this_->junction_name) {
         /* nothing to compare, score is 0 */
+        dbg(lvl_debug, "p=%p: no junction name, score 0", p);
         return 0;
+    }
 
     /* find predecessor of p, if any */
     while (p_iter && (p_iter != p)) {
@@ -1375,74 +1405,147 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
 
     if (!p_prev && (p != start)) {
         /* not a point on the route */
+        dbg(lvl_debug, "p=%p: not on the route, score 0", p);
         return 0;
     }
     /* check if we have a match for the start of a route segment */
     if (p->seg) {
         mr = map_rect_new(p->seg->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
+                start_name = g_strdup(attr.u.str);
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_start_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_start_match = 1;
+            }
+            if (item_attr_get(item, attr_street_name_systematic, &attr))
+                start_ref = g_strdup(attr.u.str);
+        }
         map_rect_destroy(mr);
     }
 
     /* check if we have a match for the end of a route segment */
     if (p_prev && p_prev->seg) {
         mr = map_rect_new(p_prev->seg->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
+                end_name = g_strdup(attr.u.str);
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_end_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_end_match = 1;
+            }
+            if (item_attr_get(item, attr_street_name_systematic, &attr))
+                end_ref = g_strdup(attr.u.str);
+        }
         map_rect_destroy(mr);
     }
 
-    /* we cannot have multiple matches in different categories */
+    /*
+     * If we have both a start match and an end match, the point is in the middle of a stretch of road which matches
+     * the junction name. Regardless of whether we want that stretch included in the route or not, a middle point
+     * cannot be an end point.
+     */
     if (has_start_match && has_end_match) {
+        dbg(lvl_debug, "p=%p: both start and end match, score 0", p);
+        g_free(start_name);
+        g_free(start_ref);
+        g_free(end_name);
+        g_free(end_ref);
         return 0;
     }
 
+    if (start_name && end_name)
+        // TODO crude comparison in need of refinement
+        route_follows_road |= !strcmp(start_name, end_name);
+
+    if (start_ref && end_ref)
+        // TODO crude comparison in need of refinement
+        route_follows_road |= !strcmp(start_ref, end_ref);
+
     /* check if we have a match for an off-route segment */
-    for (s = p->start; s && !has_offroute_match; s = s->start_next) {
+    /* TODO consolidate these two loops, which differ only in their loop statement while the body is identical */
+    for (s = p->start; s && !(has_offroute_match && route_leaves_road); s = s->start_next) {
         if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
             /* segments is on the route, skip */
             continue;
         mr = map_rect_new(s->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_offroute_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_offroute_match = 1;
+                if (start_name)
+                    route_leaves_road |= !strcmp(start_name, attr.u.str);
+                if (end_name)
+                    route_leaves_road |= !strcmp(end_name, attr.u.str);
+            }
+            if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
+                // TODO crude comparison in need of refinement
+                if (start_ref)
+                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                if (end_ref)
+                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
+            }
+        }
         map_rect_destroy(mr);
     }
 
-    for (s = p->end; s && !has_offroute_match; s = s->end_next) {
+    for (s = p->end; s && !(has_offroute_match && route_leaves_road); s = s->end_next) {
         if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
             /* segments is on the route, skip */
             continue;
         mr = map_rect_new(s->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_offroute_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_offroute_match = 1;
+                if (start_name)
+                    route_leaves_road |= !strcmp(start_name, attr.u.str);
+                if (end_name)
+                    route_leaves_road |= !strcmp(end_name, attr.u.str);
+            }
+            if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
+                // TODO crude comparison in need of refinement
+                if (start_ref)
+                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                if (end_ref)
+                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
+            }
+        }
         map_rect_destroy(mr);
     }
+
+    dbg(lvl_debug,
+        "p=%p: %s %s → %s %s\nhas_offroute_match=%d, has_start_match=%d, has_end_match=%d, route_follows_road=%d, route_leaves_road=%d",
+        p, end_ref, end_name, start_ref, start_name,
+        has_offroute_match, has_start_match, has_end_match, route_follows_road, route_leaves_road);
+
+    g_free(start_name);
+    g_free(start_ref);
+    g_free(end_name);
+    g_free(end_ref);
+
+    if (route_leaves_road && !route_follows_road)
+        want_start_match = !match_start;
+    /* TODO decide how to handle ambiguous situations (both true or both false), currently we include the segment */
 
     if (has_offroute_match) {
         if (has_start_match || has_end_match) {
             /* we cannot have multiple matches in different categories */
+            /* TODO maybe we can: e.g. one segment of the crossing road got added to the route, the other did not */
+            dbg(lvl_debug, "p=%p: both off-route and start/end match, score 0", p);
             return 0;
         }
     } else {
-        if ((match_start && !has_start_match) || (!match_start && !has_end_match)) {
+        if ((want_start_match && !has_start_match) || (!want_start_match && !has_end_match)) {
             /* no match in requested category */
+            dbg(lvl_debug, "p=%p: no match in requested category, score 0", p);
             return 0;
         }
     }
 
+    dbg(lvl_debug, "p=%p: score 100 (full score)", p);
     return 100;
 }
 
@@ -1451,17 +1554,18 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
  *
  * The cost is calculated based on the length of the segment and a penalty which depends on the score.
  * A segment with the maximum score of 100 is not penalized, i.e. its cost is equal to its length. A
- * segment with a zero score is penalized with a factor of `PENALTY_OFFROAD`. For scores in between, a
- * penalty factor between 1 and `PENALTY_OFFROAD` is applied.
+ * segment with a zero score is penalized with a factor of `PENALTY_SEGMENT_MATCH`. For scores in between, a
+ * penalty factor between 1 and `PENALTY_SEGMENT_MATCH` is applied.
  *
  * If the segment is impassable in the given direction, the cost is always `INT_MAX`.
  *
  * @param over The segment
+ * @param data Data for the segments added to the map
  * @param dir The direction (positive numbers indicate positive direction)
  *
  * @return The cost of the segment
  */
-static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir) {
+static int traffic_route_get_seg_cost(struct route_graph_segment *over, struct seg_data * data, int dir) {
     if (over->data.flags & (dir >= 0 ? AF_ONEWAYREV : AF_ONEWAY))
         return INT_MAX;
     if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
@@ -1470,8 +1574,11 @@ static int traffic_route_get_seg_cost(struct route_graph_segment *over, int dir)
         return INT_MAX;
     if ((over->data.item.type < route_item_first) || (over->data.item.type > route_item_last))
         return INT_MAX;
+    /* at least a partial match is required for access flags */
+    if (!(over->data.flags & data->flags & AF_ALL))
+        return INT_MAX;
 
-    return over->data.len * (100 - over->data.score) * (PENALTY_OFFROAD - 1) / 100 + over->data.len;
+    return over->data.len * (100 - over->data.score) * (PENALTY_SEGMENT_MATCH - 1) / 100 + over->data.len;
 }
 
 /**
@@ -1886,13 +1993,14 @@ static int traffic_location_equals(struct traffic_location * l, struct traffic_l
  * longer needed.
  *
  * @param rg The route graph
+ * @param data Data for the segments added to the map
  * @param c_start Start coordinates
  * @param c_dst Destination coordinates
  * @param start_existing Start point of an existing route (whose points will not be used)
  *
  * @return The point in the route graph at which the path begins, or `NULL` if no path was found.
  */
-static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg,
+static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing) {
     struct route_graph_point * ret;
 
@@ -1973,7 +2081,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         p->el = NULL; /* This point is permanently calculated now, we've taken it out of the heap */
         s = p->start;
         while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-            val = traffic_route_get_seg_cost(s, -1);
+            val = traffic_route_get_seg_cost(s, data, -1);
 
             dbg(lvl_debug, "  negative segment, val=%d", val);
 
@@ -1998,7 +2106,7 @@ static struct route_graph_point * traffic_route_flood_graph(struct route_graph *
         }
         s = p->end;
         while (s) { /* Doing the same as above with the segments leading towards our point */
-            val = traffic_route_get_seg_cost(s, 1);
+            val = traffic_route_get_seg_cost(s, data, 1);
 
             dbg(lvl_debug, "  positive segment, val=%d", val);
 
@@ -2612,11 +2720,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
         dbg(lvl_debug, "*****checkpoint ADD-4.1");
         if (point_pairs == 1) {
             if (dir > 0)
-                p_start = traffic_route_flood_graph(rg,
+                p_start = traffic_route_flood_graph(rg, data,
                                                     pcoords[0] ? pcoords[0] : pcoords[1],
                                                     pcoords[2] ? pcoords[2] : pcoords[1], NULL);
             else
-                p_start = traffic_route_flood_graph(rg,
+                p_start = traffic_route_flood_graph(rg, data,
                                                     pcoords[2] ? pcoords[2] : pcoords[1],
                                                     pcoords[0] ? pcoords[0] : pcoords[1], NULL);
             dbg(lvl_debug, "*****checkpoint ADD-4.1.1");
@@ -2635,9 +2743,9 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             /* TODO handle cases in which the route goes through the "third" point
              * (this should not happen; if it does, we need to detect and fix it) */
             if (dir > 0)
-                p_start = traffic_route_flood_graph(rg, pcoords[0], pcoords[1], NULL);
+                p_start = traffic_route_flood_graph(rg, data, pcoords[0], pcoords[1], NULL);
             else
-                p_start = traffic_route_flood_graph(rg, pcoords[2], pcoords[1], NULL);
+                p_start = traffic_route_flood_graph(rg, data, pcoords[2], pcoords[1], NULL);
             if ((this_->location->fuzziness == location_fuzziness_low_res)
                     || this_->location->at || this_->location->not_via) {
                 /* extend start to next junction */
@@ -2648,17 +2756,17 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             if (dir > 0) {
                 if (!p_start) {
                     /* fallback if calculating the first piece of the route failed */
-                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[2], NULL);
+                    p_start = traffic_route_flood_graph(rg, data, pcoords[1], pcoords[2], NULL);
                     start_new = traffic_route_prepend(rg, p_start);
                 } else
-                    traffic_route_flood_graph(rg, pcoords[1], pcoords[2], p_start);
+                    traffic_route_flood_graph(rg, data, pcoords[1], pcoords[2], p_start);
             } else {
                 if (!p_start) {
                     /* fallback if calculating the first piece of the route failed */
-                    p_start = traffic_route_flood_graph(rg, pcoords[1], pcoords[0], NULL);
+                    p_start = traffic_route_flood_graph(rg, data, pcoords[1], pcoords[0], NULL);
                     start_new = traffic_route_prepend(rg, p_start);
                 } else
-                    traffic_route_flood_graph(rg, pcoords[1], pcoords[0], p_start);
+                    traffic_route_flood_graph(rg, data, pcoords[1], pcoords[0], p_start);
             }
             dbg(lvl_debug, "*****checkpoint ADD-4.1.2");
         }
@@ -2710,7 +2818,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             p_to = NULL;
 
             dbg(lvl_debug, "*****checkpoint ADD-4.2.3");
+            struct coord_geo wgs;
             while (p_iter) {
+                transform_to_geo(projection_mg, &(p_iter->c), &wgs);
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.3, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
+                    p_iter, p_iter->value, wgs.lat, wgs.lng);
                 if (route_graph_point_is_endpoint_candidate(p_iter, s_prev)) {
                     score = traffic_location_get_point_match(this_->location, p_iter,
                             this_->location->at ? 1 : (dir > 0) ? 2 : 0,
@@ -2756,7 +2868,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             minval = INT_MAX;
             p_from = NULL;
 
-            struct coord_geo wgs;
             transform_to_geo(projection_mg, &(p_start->c), &wgs);
             dbg(lvl_debug, "*****checkpoint ADD-4.2.6, p_start=%p\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                 p_start, wgs.lat, wgs.lng);
@@ -3382,8 +3493,12 @@ static struct seg_data * traffic_message_parse_events(struct traffic_message * t
     }
 
     /* if no vehicle type is specified in supplementary information, assume all */
-    if (!has_flags)
-        flags = AF_ALL;
+    if (!has_flags) {
+        if (this_->location->road_type == type_line_unspecified)
+            flags = AF_ALL;
+        else
+            flags = AF_MOTORIZED_FAST | AF_MOPED;
+    }
 
     if (!ret)
         ret = seg_data_new();
@@ -3545,7 +3660,7 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
                 if (message->location->ramps)
                     fprintf(f, " ramps=\"%s\"", location_ramps_to_string(message->location->ramps));
                 if (message->location->road_type != type_line_unspecified)
-                    fprintf(f, " road_type=\"%s\"", item_to_name(message->location->road_type));
+                    fprintf(f, " road_class=\"%s\"", item_to_name(message->location->road_type));
                 if (message->location->road_ref)
                     fprintf(f, " road_ref=\"%s\"", message->location->road_ref);
                 if (message->location->road_name)
@@ -4179,7 +4294,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                                    location_dir_new(traffic_xml_get_attr("directionality", el->names, el->values)),
                                                    location_fuzziness_new(traffic_xml_get_attr("fuzziness", el->names, el->values)),
                                                    location_ramps_new(traffic_xml_get_attr("ramps", el->names, el->values)),
-                                                   item_type_from_road_type(traffic_xml_get_attr("road_type", el->names, el->values),
+                                                   item_type_from_road_type(traffic_xml_get_attr("road_class", el->names, el->values),
                                                            /* TODO revisit default for road_is_urban */
                                                            boolean_new(traffic_xml_get_attr("road_is_urban", el->names, el->values), 0)),
                                                    traffic_xml_get_attr("road_name", el->names, el->values),
