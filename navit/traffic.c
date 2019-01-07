@@ -1322,13 +1322,19 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
  * the quality of the match.
  *
  * Segments which are part of the route are treated in a different manner, as the direction in which the segment is
- * traversed (not the direction of the segment itself) is taken into account: When evaluating the start point of the
- * route, only the first point (whose `seg` member points to the segment) will match; the opposite is true when the end
- * point of the route is evaluated. This ensures the matched segment ends up being part of the route.
+ * traversed (not the direction of the segment itself) is taken into account, which is needed to govern whether the
+ * matched segment ends up being part of the route or not.
  *
- * FIXME this behavior works well if `this_` refers to a point which is actually a segment (such as a bridge or tunnel,
- * which we want included in the route), but not if it refers to the crossing road at an intersection (which we want to
- * exclude from the route). We need a clear distinction for both cases.
+ * In some cases, `this_` refers to a point which is actually a segment (such as a bridge or tunnel), which we want to
+ * include in the route. In other cases, `this_` refers to an intersection with another road, and the junction name is
+ * the name of the other road; these segments need to be excluded from the route.
+ *
+ * This is controlled by the `match_start` argument: if true, we are evaluating the start point of a route, else we are
+ * evaluating its end point. To include the matched segment in the route, only the first point (whose `seg` member
+ * points to the segment) will match for the start point, the opposite is true for the end point. To exclude the
+ * matched segment, this logic is reversed.
+ *
+ * A heuristic is in place to distinguish whether or not we want the matched segment included.
  *
  * If no points can be attained (because no attributes which must match are supplied), the score is 0 for any point.
  *
@@ -1372,6 +1378,12 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
     /* The attribute being examined */
     struct attr attr;
 
+    /* Name and systematic name for route segments starting and ending at p */
+    char *start_name = NULL, *start_ref = NULL, *end_name = NULL, *end_ref = NULL;
+
+    /* Whether or not the route follows the road (if both are true or both are false, the case is not clear) */
+    int route_follows_road = 0, route_leaves_road = 0;
+
     if (!this_->junction_name) {
         /* nothing to compare, score is 0 */
         dbg(lvl_debug, "p=%p: no junction name, score 0", p);
@@ -1401,10 +1413,13 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
         mr = map_rect_new(p->seg->data.item.map, NULL);
         if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))) {
             if (item_attr_get(item, attr_street_name, &attr)) {
+                start_name = g_strdup(attr.u.str);
                 // TODO crude comparison in need of refinement
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_start_match = 1;
             }
+            if (item_attr_get(item, attr_street_name_systematic, &attr))
+                start_ref = g_strdup(attr.u.str);
         }
         map_rect_destroy(mr);
     }
@@ -1414,22 +1429,42 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
         mr = map_rect_new(p_prev->seg->data.item.map, NULL);
         if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))) {
             if (item_attr_get(item, attr_street_name, &attr)) {
+                end_name = g_strdup(attr.u.str);
                 // TODO crude comparison in need of refinement
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_end_match = 1;
             }
+            if (item_attr_get(item, attr_street_name_systematic, &attr))
+                end_ref = g_strdup(attr.u.str);
         }
         map_rect_destroy(mr);
     }
 
-    /* we cannot have multiple matches in different categories */
+    /*
+     * If we have both a start match and an end match, the point is in the middle of a stretch of road which matches
+     * the junction name. Regardless of whether we want that stretch included in the route or not, a middle point
+     * cannot be an end point.
+     */
     if (has_start_match && has_end_match) {
         dbg(lvl_debug, "p=%p: both start and end match, score 0", p);
+        g_free(start_name);
+        g_free(start_ref);
+        g_free(end_name);
+        g_free(end_ref);
         return 0;
     }
 
+    if (start_name && end_name)
+        // TODO crude comparison in need of refinement
+        route_follows_road |= !strcmp(start_name, end_name);
+
+    if (start_ref && end_ref)
+        // TODO crude comparison in need of refinement
+        route_follows_road |= !strcmp(start_ref, end_ref);
+
     /* check if we have a match for an off-route segment */
-    for (s = p->start; s && !has_offroute_match; s = s->start_next) {
+    /* TODO consolidate these two loops, which differ only in their loop statement while the body is identical */
+    for (s = p->start; s && !(has_offroute_match && route_leaves_road); s = s->start_next) {
         if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
             /* segments is on the route, skip */
             continue;
@@ -1439,12 +1474,23 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 // TODO crude comparison in need of refinement
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_offroute_match = 1;
+                if (start_name)
+                    route_leaves_road |= !strcmp(start_name, attr.u.str);
+                if (end_name)
+                    route_leaves_road |= !strcmp(end_name, attr.u.str);
+            }
+            if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
+                // TODO crude comparison in need of refinement
+                if (start_ref)
+                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                if (end_ref)
+                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
             }
         }
         map_rect_destroy(mr);
     }
 
-    for (s = p->end; s && !has_offroute_match; s = s->end_next) {
+    for (s = p->end; s && !(has_offroute_match && route_leaves_road); s = s->end_next) {
         if ((p->seg == s) || (p_prev && (p_prev->seg == s)))
             /* segments is on the route, skip */
             continue;
@@ -1454,17 +1500,38 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 // TODO crude comparison in need of refinement
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_offroute_match = 1;
+                if (start_name)
+                    route_leaves_road |= !strcmp(start_name, attr.u.str);
+                if (end_name)
+                    route_leaves_road |= !strcmp(end_name, attr.u.str);
+            }
+            if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
+                // TODO crude comparison in need of refinement
+                if (start_ref)
+                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                if (end_ref)
+                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
             }
         }
         map_rect_destroy(mr);
     }
 
-    dbg(lvl_debug, "p=%p: has_offroute_match=%d, has_start_match=%d, has_end_match=%d",
-            p, has_offroute_match, has_start_match, has_end_match);
+    dbg(lvl_debug, "p=%p: has_offroute_match=%d, has_start_match=%d, has_end_match=%d, route_follows_road=%d, route_leaves_road=%d",
+            p, has_offroute_match, has_start_match, has_end_match, route_follows_road, route_leaves_road);
+
+    g_free(start_name);
+    g_free(start_ref);
+    g_free(end_name);
+    g_free(end_ref);
+
+    if (route_leaves_road && !route_follows_road)
+        want_start_match = !match_start;
+    /* TODO decide how to handle ambiguous situations (both true or both false), currently we include the segment */
 
     if (has_offroute_match) {
         if (has_start_match || has_end_match) {
             /* we cannot have multiple matches in different categories */
+            /* TODO maybe we can: e.g. one segment of the crossing road got added to the route, the other did not */
             dbg(lvl_debug, "p=%p: both off-route and start/end match, score 0", p);
             return 0;
         }
