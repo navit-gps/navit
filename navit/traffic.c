@@ -1326,6 +1326,10 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
  * route, only the first point (whose `seg` member points to the segment) will match; the opposite is true when the end
  * point of the route is evaluated. This ensures the matched segment ends up being part of the route.
  *
+ * FIXME this behavior works well if `this_` refers to a point which is actually a segment (such as a bridge or tunnel,
+ * which we want included in the route), but not if it refers to the crossing road at an intersection (which we want to
+ * exclude from the route). We need a clear distinction for both cases.
+ *
  * If no points can be attained (because no attributes which must match are supplied), the score is 0 for any point.
  *
  * @param this_ The traffic point
@@ -1344,7 +1348,10 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
     /* The predecessor pf `p`in the route graph */
     struct route_graph_point *p_prev = NULL;
 
-    /* Whether we have a match for the start of a route segment, the end of a route segment or an off-route segment */
+    /*
+     * Whether this_ matches the route segment starting at p (leading away from it), the route segment ending at p
+     * (leading towards it), or an off-route segment connected to p, respectively
+     */
     int has_start_match = 0, has_end_match = 0, has_offroute_match = 0;
 
     /* The route segment being examined */
