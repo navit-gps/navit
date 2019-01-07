@@ -1359,9 +1359,11 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
     /* The attribute being examined */
     struct attr attr;
 
-    if (!this_->junction_name)
+    if (!this_->junction_name) {
         /* nothing to compare, score is 0 */
+        dbg(lvl_debug, "p=%p: no junction name, score 0", p);
         return 0;
+    }
 
     /* find predecessor of p, if any */
     while (p_iter && (p_iter != p)) {
@@ -1378,6 +1380,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
 
     if (!p_prev && (p != start)) {
         /* not a point on the route */
+        dbg(lvl_debug, "p=%p: not on the route, score 0", p);
         return 0;
     }
     /* check if we have a match for the start of a route segment */
@@ -1404,6 +1407,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
 
     /* we cannot have multiple matches in different categories */
     if (has_start_match && has_end_match) {
+        dbg(lvl_debug, "p=%p: both start and end match, score 0", p);
         return 0;
     }
 
@@ -1434,18 +1438,24 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
         map_rect_destroy(mr);
     }
 
+    dbg(lvl_debug, "p=%p: has_offroute_match=%d, has_start_match=%d, has_end_match=%d",
+            p, has_offroute_match, has_start_match, has_end_match);
+
     if (has_offroute_match) {
         if (has_start_match || has_end_match) {
             /* we cannot have multiple matches in different categories */
+            dbg(lvl_debug, "p=%p: both off-route and start/end match, score 0", p);
             return 0;
         }
     } else {
         if ((match_start && !has_start_match) || (!match_start && !has_end_match)) {
             /* no match in requested category */
+            dbg(lvl_debug, "p=%p: no match in requested category, score 0", p);
             return 0;
         }
     }
 
+    dbg(lvl_debug, "p=%p: score 100 (full score)", p);
     return 100;
 }
 
@@ -2718,7 +2728,11 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             p_to = NULL;
 
             dbg(lvl_debug, "*****checkpoint ADD-4.2.3");
+            struct coord_geo wgs;
             while (p_iter) {
+                transform_to_geo(projection_mg, &(p_iter->c), &wgs);
+                dbg(lvl_debug, "*****checkpoint ADD-4.2.3, p_iter=%p (value=%d)\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
+                    p_iter, p_iter->value, wgs.lat, wgs.lng);
                 if (route_graph_point_is_endpoint_candidate(p_iter, s_prev)) {
                     score = traffic_location_get_point_match(this_->location, p_iter,
                             this_->location->at ? 1 : (dir > 0) ? 2 : 0,
@@ -2764,7 +2778,6 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             minval = INT_MAX;
             p_from = NULL;
 
-            struct coord_geo wgs;
             transform_to_geo(projection_mg, &(p_start->c), &wgs);
             dbg(lvl_debug, "*****checkpoint ADD-4.2.6, p_start=%p\nhttps://www.openstreetmap.org?mlat=%f&mlon=%f/#map=13",
                 p_start, wgs.lat, wgs.lng);
