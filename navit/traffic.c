@@ -1399,22 +1399,26 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
     /* check if we have a match for the start of a route segment */
     if (p->seg) {
         mr = map_rect_new(p->seg->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, p->seg->data.item.id_hi, p->seg->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_start_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_start_match = 1;
+            }
+        }
         map_rect_destroy(mr);
     }
 
     /* check if we have a match for the end of a route segment */
     if (p_prev && p_prev->seg) {
         mr = map_rect_new(p_prev->seg->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, p_prev->seg->data.item.id_hi, p_prev->seg->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_end_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_end_match = 1;
+            }
+        }
         map_rect_destroy(mr);
     }
 
@@ -1430,11 +1434,13 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
             /* segments is on the route, skip */
             continue;
         mr = map_rect_new(s->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_offroute_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_offroute_match = 1;
+            }
+        }
         map_rect_destroy(mr);
     }
 
@@ -1443,11 +1449,13 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
             /* segments is on the route, skip */
             continue;
         mr = map_rect_new(s->data.item.map, NULL);
-        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))
-                && item_attr_get(item, attr_street_name, &attr)
+        if ((item = map_rect_get_item_byid(mr, s->data.item.id_hi, s->data.item.id_lo))) {
+            if (item_attr_get(item, attr_street_name, &attr)) {
                 // TODO crude comparison in need of refinement
-                && !strcmp(this_->junction_name, attr.u.str))
-            has_offroute_match = 1;
+                if (!strcmp(this_->junction_name, attr.u.str))
+                    has_offroute_match = 1;
+            }
+        }
         map_rect_destroy(mr);
     }
 
