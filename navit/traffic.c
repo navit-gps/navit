@@ -68,7 +68,7 @@
 #define PENALTY_SEGMENT_MATCH 4
 
 /** The maximum penalty applied to points with non-matching attributes */
-#define PENALTY_POINT_MATCH 16
+#define PENALTY_POINT_MATCH 24
 
 /** Flag to indicate expired messages should be purged */
 #define PROCESS_MESSAGES_PURGE_EXPIRED 1 << 0
