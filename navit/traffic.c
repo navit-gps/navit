@@ -1516,9 +1516,10 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
         map_rect_destroy(mr);
     }
 
-    dbg(lvl_debug, "p=%p: %s %s → %s %s\nhas_offroute_match=%d, has_start_match=%d, has_end_match=%d, route_follows_road=%d, route_leaves_road=%d",
-            p, end_ref, end_name, start_ref, start_name,
-            has_offroute_match, has_start_match, has_end_match, route_follows_road, route_leaves_road);
+    dbg(lvl_debug,
+        "p=%p: %s %s → %s %s\nhas_offroute_match=%d, has_start_match=%d, has_end_match=%d, route_follows_road=%d, route_leaves_road=%d",
+        p, end_ref, end_name, start_ref, start_name,
+        has_offroute_match, has_start_match, has_end_match, route_follows_road, route_leaves_road);
 
     g_free(start_name);
     g_free(start_ref);
