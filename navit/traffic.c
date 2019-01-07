@@ -1342,6 +1342,12 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
 static int traffic_point_match_segment_attributes(struct traffic_point * this_, struct route_graph_point *p,
         struct route_graph_point * start, int match_start) {
 
+    /*
+     * Whether we want a match for the route segment starting at p (leading away from it) or the route segment ending
+     * at p (leading towards it).
+     */
+    int want_start_match = match_start;
+
     /* Iterator for route graph points */
     struct route_graph_point *p_iter = start;
 
@@ -1455,7 +1461,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
             return 0;
         }
     } else {
-        if ((match_start && !has_start_match) || (!match_start && !has_end_match)) {
+        if ((want_start_match && !has_start_match) || (!want_start_match && !has_end_match)) {
             /* no match in requested category */
             dbg(lvl_debug, "p=%p: no match in requested category, score 0", p);
             return 0;
