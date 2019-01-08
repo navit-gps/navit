@@ -49,7 +49,23 @@ jobs:
           command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
-  build_android:
+  build_sailfish:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: install docker
+          command: circleci-install docker
+      - run:
+          name: make build dir
+          command:  mkdir ../rpmbuild
+      - run:
+          name: run build
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+      - store_artifacts:
+          name: Store rpm
+          path: ../rpmbuild/RPMS/
+  build_android_arm:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-27-alpha
@@ -62,18 +78,18 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n
       - run:
           name: Process icons
           command: |
             cd navit/icons
             make
             mkdir ../android/res/drawable-nodpi
-            rename 'y/A-Z/a-z/' *
+            rename 'y/A-Z/a-z/' *.png
             cp *.png ../android/res/drawable-nodpi
             cd ../../
       - run:
@@ -82,20 +98,16 @@ jobs:
             cd po
             make
             mkdir ../navit/android/res/raw
-            rename 'y/A-Z/a-z/' *
+            rename 'y/A-Z/a-z/' *.mo
             cp *.mo ../navit/android/res/raw
             cd ../
       - run:
           name: Process xml's
           command: |
+            make navit_config_xml
             cd navit
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitmdpi.xml OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navithdpi.xml OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256
-            mv *dpi.xml android/res/raw
+            mkdir -p ./android/assets
+            cp -R config ./android/assets/
             cd ../
       - run:
          name: Chmod permissions
@@ -148,6 +160,10 @@ jobs:
           destination: reports
       - store_test_results:
           path: test-results
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
   build_win32:
     docker:
       - image: ubuntu:14.04
@@ -156,7 +172,11 @@ jobs:
       - run:
           name: Build for Windows
           command: |
-            bash scripts/setup_common_requirements.sh
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
+            apt-get install -y software-properties-common
+            add-apt-repository -y ppa:george-edison55/cmake-3.x
+            apt-get remove -y cmake
+            apt-get install -y cmake3
             bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
@@ -246,7 +266,10 @@ workflows:
       - build_linux:
           requires:
             - sanity_check
-      - build_android:
+      - build_android_arm:
+          requires:
+            - sanity_check
+      - build_sailfish:
           requires:
             - sanity_check
       - build_win32:
@@ -264,7 +287,7 @@ workflows:
       - run_doxygen:
           requires:
             - build_linux
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal
@@ -275,7 +298,7 @@ workflows:
       - merge_trunk_in_master:
           requires:
             - build_linux
-            - build_android
+            - build_android_arm
             - build_win32
             - build_wince
             - build_tomtom_minimal

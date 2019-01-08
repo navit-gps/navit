@@ -56,6 +56,9 @@ for i in po/import_queue/*.po; do
         mv po/${po}.header po/${po}.in
         sed '1,/msgid ""/ d' ${i} >> po/${po}.in
 
+        # We remove extra whitespaces to make the sanity checks happy
+        sed -i -e 's/ *$//' po/${po}.in
+
 	git status
 	git add po/${po}.in && rm $i
 	git commit -m "Update:i18n:Updated ${lname} translation from launchpad" po/${po}.in

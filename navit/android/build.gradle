@@ -17,7 +17,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n'
+                arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DXSLTS=android', '-DANDROID=y', '-DSAMPLE_MAP=n'
             }
         }
     }
@@ -38,6 +38,7 @@ android {
             resources.srcDirs = ["src"]
             renderscript.srcDirs = ["src"]
             res.srcDirs = ["res"]
+            assets.srcDirs = ["assets"]
             }
     }
     externalNativeBuild {

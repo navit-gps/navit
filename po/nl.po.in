@@ -170,7 +170,6 @@ msgstr "%1$s de %2$s op"
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$s de %2$s op"
 
-#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
 msgstr "naar de oprit"
 
@@ -380,7 +379,6 @@ msgstr "daarna heeft u uw bestemming bereikt."
 msgid "You have reached your destination %s"
 msgstr "Bestemming %s bereikt"
 
-#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr "Knooppunt"
 
@@ -1796,8 +1794,13 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Winkelen"
 
-msgid "Select a search radius from screen center"
-msgstr "Afstand vanaf schem midden"
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
@@ -1821,9 +1824,6 @@ msgstr "POI zoeken"
 msgid "Select a category"
 msgstr "Kies een categorie"
 
-msgid "Select a distance to look for (km)"
-msgstr "Zoekafstand kiezen (km)"
-
 msgid "Select a POI"
 msgstr "POI selecteren"
 
@@ -1836,8 +1836,8 @@ msgstr "Categorie"
 msgid "Direction"
 msgstr "Richting"
 
-msgid "Distance(m)"
-msgstr "Afstand(m)"
+msgid "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "Naam"
@@ -2220,18 +2220,14 @@ msgid "Description"
 msgstr "Beschrijving"
 
 msgid ""
-"Drop last \n"
+"Drop last\n"
 "Waypoint"
 msgstr ""
-"Laatste routepunt \n"
-"verwijderen"
 
 msgid ""
-"Drop next \n"
+"Drop next\n"
 "Waypoint"
 msgstr ""
-"Volgende routepunt \n"
-"verwijderen"
 
 msgid "Satellite Status"
 msgstr "GPS-status"
@@ -3073,9 +3069,26 @@ msgstr "Frans Guyana"
 #~ msgid "Map download aborted!"
 #~ msgstr "Kaart-download afgebroken!"
 
+#~ msgid ""
+#~ "Drop last \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Laatste routepunt \n"
+#~ "verwijderen"
+
+#~ msgid ""
+#~ "Drop next \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Volgende routepunt \n"
+#~ "verwijderen"
+
 #, c-format
 #~ msgid "Error: No configuration found in config file '%s'\n"
 #~ msgstr "Fout: Geen configuratie gevonden in configuratiebestand '%s'\n"
+
+#~ msgid "Distance(m)"
+#~ msgstr "Afstand(m)"
 
 #~ msgid ""
 #~ "Current map location %s is not available\n"
@@ -3092,6 +3105,9 @@ msgstr "Frans Guyana"
 #~ msgstr ""
 #~ "%s is als nieuwe locatie ingesteld.\n"
 #~ "Herstart a.u.b. Navit om de wijzigingen door te voeren."
+
+#~ msgid "Select a distance to look for (km)"
+#~ msgstr "Zoekafstand kiezen (km)"
 
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Afstand vanaf schem midden (km)"

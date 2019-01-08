@@ -33,6 +33,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -162,32 +163,35 @@ public class Navit extends Activity {
         }
     }
 
-    /* Translates a string from its id
+    /**
+     * Translates a string from its id
      * in R.strings
      *
      * @param Rid resource identifier
-     * @retrun translated string
+     * @return translated string
      */
     String getTstring(int Rid) {
         return getLocalizedString(getString(Rid));
     }
 
-    private boolean extractRes(String resname, String result) {
-        boolean needs_update = false;
-        Log.e(TAG, "Res Name " + resname + ", result " + result);
-        int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
-        Log.e(TAG, "Res ID " + id);
-        if (id == 0) {
-            return false;
-        }
+    /**
+     * Check if a specific file needs to be extracted from the apk archive
+     * This is based on whether the file already exist, and if so, whether it is older than the archive or not
+     *
+     * @param filename The full path to the file
+     * @return true if file does not exist, but it can be created at the specified location, we will also return
+     *         true if the file exist but the apk archive is more recent (probably package was upgraded)
+     */
+    private boolean resourceFileNeedsUpdate(String filename) {
+        File resultfile = new File(filename);
 
-        File resultfile = new File(result);
         if (!resultfile.exists()) {
-            needs_update = true;
             File path = resultfile.getParentFile();
             if (!path.exists() && !resultfile.getParentFile().mkdirs()) {
+                Log.e(TAG, "Could not create directory path for " + filename);
                 return false;
             }
+            return true;
         } else {
             PackageManager pm = getPackageManager();
             ApplicationInfo appInfo;
@@ -200,16 +204,33 @@ public class Navit extends Activity {
                 e.printStackTrace();
             }
             if (apkUpdateTime > resultfile.lastModified()) {
-                needs_update = true;
+                return true;
             }
         }
+        return false;
+    }
 
-        if (needs_update) {
-            Log.e(TAG, "Extracting resource");
+    /**
+     * Extract a ressource from the apk archive (res/raw) and save it to a local file
+     *
+     * @param result The full path to the local file
+     * @param resname The name of the ressource file in the archive
+     * @return true if the local file is extracted in @p result
+     */
+    private boolean extractRes(String resname, String result) {
+        Log.d(TAG, "Res Name " + resname + ", result " + result);
+        int id = NavitResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
+        Log.d(TAG, "Res ID " + id);
+        if (id == 0) {
+            return false;
+        }
+
+        if (resourceFileNeedsUpdate(result)) {
+            Log.d(TAG, "Extracting resource");
 
             try {
                 InputStream resourcestream = NavitResources.openRawResource(id);
-                FileOutputStream resultfilestream = new FileOutputStream(resultfile);
+                FileOutputStream resultfilestream = new FileOutputStream(new File(result));
                 byte[] buf = new byte[1024];
                 int i;
                 while ((i = resourcestream.read(buf)) != -1) {
@@ -221,6 +242,44 @@ public class Navit extends Activity {
                 return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * Extract an asset from the apk archive (assets) and save it to a local file
+     *
+     * @param output The full path to the output local file
+     * @param assetFileName The full path of the asset file within the archive
+     * @return true if the local file is extracted in @p output
+     */
+    private boolean extractAsset(String assetFileName, String output) {
+        AssetManager assetMgr = NavitResources.getAssets();
+        InputStream assetstream;
+        Log.d(TAG, "Asset Name " + assetFileName + ", output " + output);
+        try {
+            assetstream = assetMgr.open(assetFileName);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed opening asset '" + assetFileName + "'");
+            return false;
+        }
+
+        if (resourceFileNeedsUpdate(output)) {
+            Log.d(TAG, "Extracting asset '" + assetFileName + "'");
+
+            try {
+                FileOutputStream outputFilestream = new FileOutputStream(new File(output));
+                byte[] buf = new byte[1024];
+                int i = 0;
+                while ((i = assetstream.read(buf)) != -1) {
+                    outputFilestream.write(buf, 0, i);
+                }
+                outputFilestream.close();
+            } catch (Exception e) {
+                Log.e(TAG, "Exception " + e.getMessage());
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -386,13 +445,23 @@ public class Navit extends Activity {
         } else if (densityDpi < 640) {
             my_display_density = "xxxhdpi";
         } else {
-            Log.e(TAG, "found device of very high density (" + densityDpi + ")");
-            Log.e(TAG, "using xxxhdpi values");
+            Log.w(TAG, "found device of very high density (" + densityDpi + ")");
+            Log.w(TAG, "using xxxhdpi values");
             my_display_density = "xxxhdpi";
         }
+        Log.i(TAG, "Device density detected: " + my_display_density);
 
-        if (!extractRes("navit" + my_display_density, NAVIT_DATA_DIR + "/share/navit.xml")) {
-            Log.e(TAG, "Failed to extract navit.xml for " + my_display_density);
+        try {
+            AssetManager assetMgr = NavitResources.getAssets();
+            String[] children = assetMgr.list("config/" + my_display_density);
+            for (String child : children) {
+                Log.d(TAG, "Processing config file '" + child + "' from assets");
+                if (!extractAsset("config/" + my_display_density + "/" + child, NAVIT_DATA_DIR + "/share/" + child)) {
+                    Log.e(TAG, "Failed to extract asset config/" + my_display_density + "/" + child);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to access assets using AssetManager");
         }
 
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
@@ -669,7 +738,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Shows the Options menu.
+     * Shows the Options menu.
      *
      * Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
      * the overflow button in the Action bar.
@@ -680,7 +749,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Shows the native keyboard or other input method.
+     * Shows the native keyboard or other input method.
      */
     public int showNativeKeyboard() {
         /*
@@ -721,7 +790,7 @@ public class Navit extends Activity {
 
 
     /**
-     * @brief Hides the native keyboard or other input method.
+     * Hides the native keyboard or other input method.
      */
     public void hideNativeKeyboard() {
         mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);

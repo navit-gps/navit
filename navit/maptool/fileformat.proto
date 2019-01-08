@@ -1,3 +1,4 @@
+syntax = "proto2";
 option java_package = "crosby.binary";
 package OSMPBF;
 
@@ -32,5 +33,3 @@ message BlobHeader {
   optional bytes indexdata = 2;
   required int32 datasize = 3;
 }
-
-
