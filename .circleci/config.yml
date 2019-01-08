@@ -82,46 +82,12 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n
       - run:
-          name: Process icons
-          command: |
-            cd navit/icons
-            make
-            mkdir ../android/res/drawable-nodpi
-            rename 'y/A-Z/a-z/' *.png
-            cp *.png ../android/res/drawable-nodpi
-            cd ../../
+          name: Install Android SDK components
+          command: sdkmanager ndk-bundle "cmake;3.6.4111459"
       - run:
-          name: Process translations
-          command: |
-            cd po
-            make
-            mkdir ../navit/android/res/raw
-            rename 'y/A-Z/a-z/' *.mo
-            cp *.mo ../navit/android/res/raw
-            cd ../
-      - run:
-          name: Process xml's
-          command: |
-            make navit_config_xml
-            cd navit
-            mkdir -p ./android/assets
-            cp -R config ./android/assets/
-            cd ../
-      - run:
-         name: Chmod permissions
-         command: chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew -v
-#          command: ./gradlew androidDependencies
-      - run:
-         name: Install ndk
-         command: sdkmanager ndk-bundle
-      - run:
-          name: Build
-          command: ./gradlew assembleDebug
+          name: Build for Android (ARM)
+          command: bash scripts/build_android_arm.sh
       - run:
           name: Run Lint Test
           command: |
