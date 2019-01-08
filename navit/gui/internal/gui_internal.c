@@ -894,6 +894,12 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
 }
 
+static void gui_internal_lcoord_free_func(gpointer data) {
+
+	if (((struct lcoord *)data)->label)
+		g_free(((struct lcoord *)data)->label);
+}
+
 /**
  * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
  *        the style type_found_item (name for each point will also be displayed aside)
@@ -905,72 +911,39 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
  */
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
     struct widget *w;
-    struct map *map;
-    struct map_rect *mr;
-    struct item *item;
-    GList *l;
+    GList *l;	/* Cursor in the list of widgets */
+    GList* list = NULL;	/* List we will create to store the points to add to the result map */
     struct attr a;
-    int count;
-    char *name_label;
 
-    map = navit_get_search_results_map(this->nav);
-    if(!map)
-        return;
-
-
-    mr = map_rect_new(map, NULL);
-
-    if(!mr)
-        return;
-
-    /* Clean the map */
-    while((item = map_rect_get_item(mr))!=NULL) {
-        item_type_set(item,type_none);
-    }
-
+    /* FIXME: this does not work anymore for multiple results... we have to find out why... */
     this->results_map_population=0;
 
     /* Find the table to populate the map */
     for(w=table; w && w->type!=widget_table; w=w->parent);
 
     if(!w) {
-        map_rect_destroy(mr);
         dbg(lvl_warning,"Can't find the results table - only map clean up is done.");
-        return;
-    }
-
-    /* Populate the map with search results*/
-    for(l=w->children, count=0; l; l=g_list_next(l)) {
-        struct widget *wr=l->data;
-        if(wr->type==widget_table_row) {
-            struct widget *wi=wr->children->data;
-            struct item* it;
-            if(wi->name==NULL)
-                continue;
-            dbg(lvl_info,"%s",wi->name);
-            it=map_rect_create_item(mr,type_found_item);
-            if(it) {
-                struct coord c;
-                struct attr a;
-                c.x=wi->c.x;
-                c.y=wi->c.y;
-                item_coord_set(it, &c, 1, change_mode_modify);
-                a.type=attr_label;
-                name_label = g_strdup(wi->name);
-                square_shape_str(name_label);
-                a.u.str=name_label;
-                item_attr_set(it, &a, change_mode_modify);
-                if (r) {
-                    if(!count++)
-                        r->lu=r->rl=c;
-                    else
-                        coord_rect_extend(r,&c);
-                }
+    } else {
+        /* Create a GList containing all search results */
+        for(l=w->children; l; l=g_list_next(l)) {
+            struct widget *wr=l->data;
+            if(wr->type==widget_table_row) {
+                struct widget *wi=wr->children->data;
+                if(wi->name==NULL)
+                    continue;
+                struct lcoord *result = g_new0(struct lcoord, 1);
+                result->c.x=wi->c.x;
+                result->c.y=wi->c.y;
+                result->label=g_strdup(wi->name);
+                list = g_list_prepend(list, result);
             }
         }
     }
-    map_rect_destroy(mr);
-    if(!count)
+    this->results_map_population=navit_populate_search_results_map(this->nav, list, r);
+    if (list)
+        g_list_free_full(list, gui_internal_lcoord_free_func);
+
+    if(!this->results_map_population)
         return;
     a.type=attr_orientation;
     a.u.num=0;
@@ -979,7 +952,6 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
         navit_zoom_to_rect(this->nav,r);
         gui_internal_prune_menu(this, NULL);
     }
-    this->results_map_population=count;
 }
 
 /**
