@@ -37,6 +37,9 @@
 
 #include "navigation.h"         /* for FEET_PER_METER and other conversion factors. */
 
+/**
+ * @brief Context passed around POI search function
+ */
 static struct gtk_poi_search {
     GtkWidget *entry_distance;
     GtkWidget *label_distance;
@@ -51,6 +54,12 @@ static struct gtk_poi_search {
     struct navit *nav;
 } gtk_poi_search;
 
+/**
+ * @brief Get a pixbuf representing an icon for the catalog
+ *
+ * @param name The name of the icon to use (eg: "pharmacy.png"
+ * @return A pixbuf containing this icon of NULL if the icon could not be loaded
+ */
 static GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
@@ -217,7 +226,14 @@ static void treeview_poi_reload(GtkWidget *widget, struct gtk_poi_search *search
     gtk_tree_view_set_model(GTK_TREE_VIEW (search->treeview_poi), model_poi(search));
 }
 
-/** Set the selected POI as destination. */
+/**
+ * @brief Callback invoked when 'Destination' is clicked in a POI contextual window
+ *
+ * Set the selected POI as destination
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -250,13 +266,27 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
     dbg(lvl_debug,_("Set destination to %ld, %ld "),lat,lon);
 }
 
+/**
+ * @brief Free the payload (strings) contained inside a lcoord GList
+ *
+ * This function is intended to be used as the cleanup handler provided to glib's g_list_free_full()
+ *
+ * @param data A pointer to the lcoord payload
+ */
 static void lcoord_free_func(gpointer data) {
 
 	if (((struct lcoord *)data)->label)
 		g_free(((struct lcoord *)data)->label);
 }
 
-/* Show the POI's position in the map. */
+/**
+ * @brief Callback invoked when 'Map' is clicked in a POI contextual window
+ *
+ * Show the POI's position in the map
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -287,7 +317,14 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }
 
-/** Set POI as the first "visit before". */
+/**
+ * @brief Callback invoked when 'Visit before' is clicked in a POI contextual window
+ *
+ * Set POI as a waypoint to visit before an existing destination
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -308,7 +345,11 @@ static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *searc
     popup_set_visitbefore(search->nav,&dest,0);
 }
 
-/** Create UI and connect objects to functions. */
+/**
+ * @brief Create the POI search UI window and connect objects to functions
+ *
+ * @param nav The navit instance
+ */
 void gtk_gui_poi(struct navit *nav) {
     GtkWidget *window2,*vbox, *keyboard, *table;
     GtkWidget *label_category, *label_poi;
