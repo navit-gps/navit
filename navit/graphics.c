@@ -1584,7 +1584,8 @@ static int draw_middle(struct draw_polyline_context *ctx, struct point *p) {
         draw_point(&ctx->prev_shape, p, &nego, 0);
         if (delta <= -256)
             return 0;
-        if (intersection(&neg, ctx->shape.dx, ctx->shape.dy, &nego, ctx->prev_shape.dx, ctx->prev_shape.dy, &ctx->res[ctx->npos])) {
+        if (intersection(&neg, ctx->shape.dx, ctx->shape.dy, &nego, ctx->prev_shape.dx, ctx->prev_shape.dy,
+                         &ctx->res[ctx->npos])) {
             ctx->npos--;
             draw_point(&ctx->prev_shape, p, &ctx->res[ctx->ppos++], 1);
             draw_point(&ctx->shape, p, &ctx->res[ctx->ppos++], 1);
@@ -2826,7 +2827,8 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist) {
+int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p,
+                                     int dist) {
     struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
     int count;
 
