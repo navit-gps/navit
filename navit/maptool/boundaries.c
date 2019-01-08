@@ -131,7 +131,8 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
                 relations_add_relation_member_entry(relations, relations_func, boundary, (gpointer)role, rel_member_way, osm_id);
             }
             if(member_type==rel_member_relation) {
-                if (!g_strcmp0(rolestr,"outer") || !g_strcmp0(rolestr,"exclave") || !g_strcmp0(rolestr,"inner") || !g_strcmp0(rolestr,"enclave"))
+                if (!g_strcmp0(rolestr,"outer") || !g_strcmp0(rolestr,"exclave") || !g_strcmp0(rolestr,"inner")
+                        || !g_strcmp0(rolestr,"enclave"))
                     has_subrelations++;
             }
         }
