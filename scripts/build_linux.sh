@@ -11,14 +11,18 @@ pushd $BUILD_PATH
 
 if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trunk" ]]; then
 	# If we are building the official trunk code, push an update to coverity
+    echo "Pushing an update to coverity as we are building the official trunk code."
+    echo "Downloading coverity..."
 	curl \
 	    -X POST --data "token=${COVERITY_TOKEN}&project=${CIRCLE_PROJECT_USERNAME}" \
 	    -o /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz -s \
 	    https://scan.coverity.com/download/linux64
 
+    echo "Unpacking coverity..."
 	tar xfz /tmp/cov-analysis-linux64-${COVERITY_VERSION}.tar.gz --no-same-owner -C /usr/local/share/
 	export PATH=/usr/local/share/cov-analysis-linux64-${COVERITY_VERSION}/bin:$PATH
 
+    echo "Building with coverity..."
 	cmake ${cmake_opts} ../
 	cov-build --dir cov-int make -j $(nproc --all)
 	tar czvf navit.tgz cov-int
@@ -33,16 +37,19 @@ if [[ "${CIRCLE_PROJECT_USERNAME}" == "navit-gps" && "${CIRCLE_BRANCH}" == "trun
         make package
 
 	# Then update the translation template on launchpad
+	echo "Updating the translation template on launchpad..."
 	sed -i '/INTEGER/d' po/navit.pot
 	cp po/navit.pot $CIRCLE_ARTIFACTS/
 	curl "https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -H "$lp_cookie" -H "Referer: https://translations.launchpad.net/navit/${CIRCLE_BRANCH}/+translations-upload" -F file=@po/navit.pot | grep title
 
 else
+    echo "Not on the official trunk branch, building without coverity..."
 	cmake ${cmake_opts} ../
 	make -j $(nproc --all)
 	make package
 fi
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
+	echo "Copying icons to artifacts..."
 	cp -r navit/icons $CIRCLE_ARTIFACTS
 fi
