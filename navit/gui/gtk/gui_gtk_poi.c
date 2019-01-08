@@ -250,16 +250,24 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
     dbg(lvl_debug,_("Set destination to %ld, %ld "),lat,lon);
 }
 
+static void lcoord_free_func(gpointer data) {
+
+	if (((struct lcoord *)data)->label)
+		g_free(((struct lcoord *)data)->label);
+}
+
 /* Show the POI's position in the map. */
 static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
     long int lat,lon;
+    char *label;
 
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview_poi), &path, &focus_column);
     if(!path) return;
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(search->store_poi_sorted), &iter, path)) return;
+    gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 2, &label, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
 
@@ -267,6 +275,14 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     dest.x=lat;
     dest.y=lon;
     dest.pro=1;
+    GList* list = NULL;
+    struct lcoord *result = g_new0(struct lcoord, 1);
+    result->c.x=lat;
+    result->c.y=lon;
+    result->label=g_strdup(label);
+    list = g_list_prepend(list, result);
+    navit_populate_search_results_map(search->nav, list, NULL);
+    g_list_free_full(list, lcoord_free_func);
     navit_set_center(search->nav, &dest,1);
     dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }

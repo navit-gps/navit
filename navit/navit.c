@@ -278,39 +278,47 @@ struct map *navit_get_search_results_map(struct navit *this_) {
     return map;
 }
 
-void navit_populate_search_results_map(struct navit *navit, GList *search_results, struct coord_rect *r) {
+/**
+ * @brief Populate a map containing one or more search result points
+ *
+ * These search results will be displayed as an overlay on the top of the geographic map.
+ *
+ * @warning Each call to this function will replace currently displayed results, it will not add to them
+ *
+ * @param navit The navit instance
+ * @param search_results A GList storing {@code struct lcoord} elements to display on the result map
+ *                       If this argument in NULL, all existing results will be removed from the map
+ * @param[in,out] coord_rect An optional rectangular zone that will be extended to contain all result points
+ *                           or NULL if no zone needs to be computed
+ * @return THe number of results actually added to the map
+ */
+int navit_populate_search_results_map(struct navit *navit, GList *search_results, struct coord_rect *r) {
     struct map *map;
     struct map_rect *mr;
     struct item *item;
     GList *curr_result = search_results;
-    struct attr a;
     int count;
     char *name_label;
 
     map = navit_get_search_results_map(navit);
     if(!map)
-        return;
+        return 0;
 
 
     mr = map_rect_new(map, NULL);
 
     if(!mr)
-        return;
+        return 0;
 
     /* Clean the map */
     while((item = map_rect_get_item(mr))!=NULL) {
         item_type_set(item,type_none);
     }
 
-    //this->results_map_population=0; //FIXME
-
-    /* Find the table to populate the map */
-    //for(w=table; w && w->type!=widget_table; w=w->parent);
-
     if(!search_results) {
         map_rect_destroy(mr);
         dbg(lvl_warning,"NULL result table - only map clean up is done.");
-        return;
+        return 0;
     }
 
     /* Populate the map with search results*/
@@ -338,16 +346,7 @@ void navit_populate_search_results_map(struct navit *navit, GList *search_result
 		}
     }
     map_rect_destroy(mr);
-    if(!count)
-        return;
-    a.type=attr_orientation;
-    a.u.num=0;
-    navit_set_attr(navit,&a);	/* Set orientation to North */
-    if (r) {
-        navit_zoom_to_rect(navit,r);
-        //gui_internal_prune_menu(this, NULL); //FIXME
-    }
-    /*this->results_map_population=count;*/ //FIXME
+    return count;
 }
 
 struct tracking *
