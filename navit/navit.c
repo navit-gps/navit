@@ -354,8 +354,6 @@ navit_get_tracking(struct navit *this_) {
     return this_->tracking;
 }
 
-
-
 /**
  * @brief	Get the user data directory.
  * @param[in]	 create	- create the directory if it does not exist
