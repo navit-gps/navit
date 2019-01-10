@@ -275,8 +275,8 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
  */
 static void lcoord_free_func(gpointer data) {
 
-	if (((struct lcoord *)data)->label)
-		g_free(((struct lcoord *)data)->label);
+    if (((struct lcoord *)data)->label)
+        g_free(((struct lcoord *)data)->label);
 }
 
 /**

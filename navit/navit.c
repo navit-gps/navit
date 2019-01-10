@@ -323,27 +323,27 @@ int navit_populate_search_results_map(struct navit *navit, GList *search_results
 
     /* Populate the map with search results*/
     for(curr_result = search_results, count=0; curr_result; curr_result=g_list_next(curr_result)) {
-		struct lcoord *point = curr_result->data;
-		struct item* it;
-		if(point->label==NULL)
-			continue;
-		dbg(lvl_info,"%s",point->label);
-		it=map_rect_create_item(mr,type_found_item);
-		if(it) {
-			struct attr a;
-			item_coord_set(it, &(point->c), 1, change_mode_modify);
-			a.type=attr_label;
-			name_label = g_strdup(point->label);
-			square_shape_str(name_label);
-			a.u.str=name_label;
-			item_attr_set(it, &a, change_mode_modify);
-			if (r) {
-				if(!count++)
-					r->lu=r->rl=point->c;
-				else
-					coord_rect_extend(r,&(point->c));
-			}
-		}
+        struct lcoord *point = curr_result->data;
+        struct item* it;
+        if(point->label==NULL)
+            continue;
+        dbg(lvl_info,"%s",point->label);
+        it=map_rect_create_item(mr,type_found_item);
+        if(it) {
+            struct attr a;
+            item_coord_set(it, &(point->c), 1, change_mode_modify);
+            a.type=attr_label;
+            name_label = g_strdup(point->label);
+            square_shape_str(name_label);
+            a.u.str=name_label;
+            item_attr_set(it, &a, change_mode_modify);
+            if (r) {
+                if(!count++)
+                    r->lu=r->rl=point->c;
+                else
+                    coord_rect_extend(r,&(point->c));
+            }
+        }
     }
     map_rect_destroy(mr);
     return count;

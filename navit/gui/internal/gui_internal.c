@@ -896,8 +896,8 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 
 static void gui_internal_lcoord_free_func(gpointer data) {
 
-	if (((struct lcoord *)data)->label)
-		g_free(((struct lcoord *)data)->label);
+    if (((struct lcoord *)data)->label)
+        g_free(((struct lcoord *)data)->label);
 }
 
 /**
