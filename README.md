@@ -77,7 +77,7 @@ Navit reads the current vehicle position:
 Routing algorithm
 =================
 
-Navit uses LPA* (see https://en.wikipedia.org/wiki/Lifelong_Planning_A*), a derivative of the Dijkstra algorithm, for
+Navit uses LPA* (see [Lifelong_Planning_A*](https://en.wikipedia.org/wiki/Lifelong_Planning_A*)), a derivative of the Dijkstra algorithm, for
 routing. Routing starts at the destination by assigning a value to each point directly connected to the destination
 point. The value represents the estimated time needed to reach the destination from that point.
 
