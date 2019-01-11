@@ -993,6 +993,15 @@ int transform_int_scale(int y) {
 }
 #endif
 
+/**
+ * @brief Calculates the distance between two points.
+ *
+ * @param pro The projection used for `c1` and `c2`.
+ * @param c1 The first point.
+ * @param c2 The second point.
+ *
+ * @return The distance in meters.
+ */
 double transform_distance(enum projection pro, struct coord *c1, struct coord *c2) {
     if (pro == projection_mg) {
 #ifndef AVOID_FLOAT

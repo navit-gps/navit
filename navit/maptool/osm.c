@@ -1619,7 +1619,8 @@ void osm_end_relation(struct maptool_osm *osm) {
     } else
         type=type_none;
 
-    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary")) && (boundary || type!=type_none)) {
+    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
+            && (boundary || type!=type_none)) {
         item_bin_write(tmp_item_bin, osm->boundaries);
     }
 
