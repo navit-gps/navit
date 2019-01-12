@@ -1459,8 +1459,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
         route_follows_road |= !strcmp(start_name, end_name);
 
     if (start_ref && end_ref)
-        // TODO crude comparison in need of refinement
-        route_follows_road |= !strcmp(start_ref, end_ref);
+        route_follows_road |= !compare_name_systematic(start_ref, end_ref);
 
     /* check if we have a match for an off-route segment */
     /* TODO consolidate these two loops, which differ only in their loop statement while the body is identical */
@@ -1480,11 +1479,10 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
-                // TODO crude comparison in need of refinement
                 if (start_ref)
-                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                    route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
                 if (end_ref)
-                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
+                    route_leaves_road |= !compare_name_systematic(end_ref, attr.u.str);
             }
         }
         map_rect_destroy(mr);
@@ -1506,11 +1504,10 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
-                // TODO crude comparison in need of refinement
                 if (start_ref)
-                    route_leaves_road |= !strcmp(start_ref, attr.u.str);
+                    route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
                 if (end_ref)
-                    route_leaves_road |= !strcmp(end_ref, attr.u.str);
+                    route_leaves_road |= !compare_name_systematic(end_ref, attr.u.str);
             }
         }
         map_rect_destroy(mr);
