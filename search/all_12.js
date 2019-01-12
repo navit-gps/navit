@@ -124,6 +124,7 @@ var searchData=
   ['pen',['pen',['../structgraphics__gc__priv.html#aeba5d639a5c73b432ca90db389d07cc4',1,'graphics_gc_priv']]],
   ['penalty_5foffroad',['PENALTY_OFFROAD',['../traffic_8c.html#a174fc69c61a3f6b38f151d4da608f96c',1,'traffic.c']]],
   ['penalty_5fpoint_5fmatch',['PENALTY_POINT_MATCH',['../traffic_8c.html#a38f9d6bc9d7344f35313c7fd572479da',1,'traffic.c']]],
+  ['penalty_5fsegment_5fmatch',['PENALTY_SEGMENT_MATCH',['../traffic_8c.html#a7acd6f3dbe5fcce035ee5ae44f7a304d',1,'traffic.c']]],
   ['percent',['percent',['../structroute__info.html#a82ea161645c27b3903d2361ca88955ee',1,'route_info']]],
   ['pfd',['pfd',['../structevent__watch.html#af58a7990f92607a17c4f46da6044c509',1,'event_watch']]],
   ['pfn_5fbthgetmode',['PFN_BthGetMode',['../group__vehicle-wince.html#ga170eb041f9b180a25846384fb43f5326',1,'vehicle_wince.c']]],

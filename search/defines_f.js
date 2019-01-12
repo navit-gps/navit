@@ -3,6 +3,7 @@ var searchData=
   ['path_5fmax',['PATH_MAX',['../file_8h.html#ae688d728e1acdfe5988c7db45d6f0166',1,'file.h']]],
   ['penalty_5foffroad',['PENALTY_OFFROAD',['../traffic_8c.html#a174fc69c61a3f6b38f151d4da608f96c',1,'traffic.c']]],
   ['penalty_5fpoint_5fmatch',['PENALTY_POINT_MATCH',['../traffic_8c.html#a38f9d6bc9d7344f35313c7fd572479da',1,'traffic.c']]],
+  ['penalty_5fsegment_5fmatch',['PENALTY_SEGMENT_MATCH',['../traffic_8c.html#a7acd6f3dbe5fcce035ee5ae44f7a304d',1,'traffic.c']]],
   ['phase1_5fcoord_5fmax',['phase1_coord_max',['../maptool_2misc_8c.html#a7d9fa52024247b89b3a96a4cb6f1c4df',1,'misc.c']]],
   ['phi1',['phi1',['../geodesic_8h.html#a019bb01bc561dea51918b776e9fa4535',1,'geodesic.h']]],
   ['phi2',['phi2',['../geodesic_8h.html#a89061c1c874aa5624d8cb064b97e24c9',1,'geodesic.h']]],
