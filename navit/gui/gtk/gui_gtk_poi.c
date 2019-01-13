@@ -267,19 +267,6 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
 }
 
 /**
- * @brief Free the payload (strings) contained inside a lcoord GList
- *
- * This function is intended to be used as the cleanup handler provided to glib's g_list_free_full()
- *
- * @param data A pointer to the lcoord payload
- */
-static void lcoord_free_func(gpointer data) {
-
-    if (((struct lcoord *)data)->label)
-        g_free(((struct lcoord *)data)->label);
-}
-
-/**
  * @brief Callback invoked when 'Map' is clicked in a POI contextual window
  *
  * Show the POI's position in the map
@@ -312,7 +299,12 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     result->label=g_strdup(label);
     list = g_list_prepend(list, result);
     navit_populate_search_results_map(search->nav, list, NULL);
-    g_list_free_full(list, lcoord_free_func);
+    /* Parse the GList starting at list and free all payloads before freeing the list itself */
+    for(GList* p=list; p; p=g_list_next(p)) {
+        if (((struct lcoord *)(p->data))->label)
+            g_free(((struct lcoord *)(p->data))->label);
+    }
+    g_list_free(list);
     navit_set_center(search->nav, &dest,1);
     dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }

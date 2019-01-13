@@ -894,12 +894,6 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
 }
 
-static void gui_internal_lcoord_free_func(gpointer data) {
-
-    if (((struct lcoord *)data)->label)
-        g_free(((struct lcoord *)data)->label);
-}
-
 /**
  * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
  *        the style type_found_item (name for each point will also be displayed aside)
@@ -940,9 +934,14 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
         }
     }
     this->results_map_population=navit_populate_search_results_map(this->nav, list, r);
-    if (list)
-        g_list_free_full(list, gui_internal_lcoord_free_func);
-
+    /* Parse the GList starting at list and free all payloads before freeing the list itself */
+    if (list) {
+        for(GList* p=list; p; p=g_list_next(p)) {
+            if (((struct lcoord *)(p->data))->label)
+                g_free(((struct lcoord *)(p->data))->label);
+        }
+    }
+    g_list_free(list);
     if(!this->results_map_population)
         return;
     a.type=attr_orientation;
