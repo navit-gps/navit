@@ -280,6 +280,7 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     GtkTreeIter iter;
     long int lat,lon;
     char *label;
+    GList* p;
 
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview_poi), &path, &focus_column);
     if(!path) return;
@@ -300,7 +301,7 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     list = g_list_prepend(list, result);
     navit_populate_search_results_map(search->nav, list, NULL);
     /* Parse the GList starting at list and free all payloads before freeing the list itself */
-    for(GList* p=list; p; p=g_list_next(p)) {
+    for(p=list; p; p=g_list_next(p)) {
         if (((struct lcoord *)(p->data))->label)
             g_free(((struct lcoord *)(p->data))->label);
     }

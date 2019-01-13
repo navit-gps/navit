@@ -908,6 +908,7 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     GList *l;	/* Cursor in the list of widgets */
     GList* list = NULL;	/* List we will create to store the points to add to the result map */
     struct attr a;
+    GList* p;
 
     /* FIXME: this does not work anymore for multiple results... we have to find out why... */
     this->results_map_population=0;
@@ -936,7 +937,7 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     this->results_map_population=navit_populate_search_results_map(this->nav, list, r);
     /* Parse the GList starting at list and free all payloads before freeing the list itself */
     if (list) {
-        for(GList* p=list; p; p=g_list_next(p)) {
+        for(p=list; p; p=g_list_next(p)) {
             if (((struct lcoord *)(p->data))->label)
                 g_free(((struct lcoord *)(p->data))->label);
         }
