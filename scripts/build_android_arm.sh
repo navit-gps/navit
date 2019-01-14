@@ -46,6 +46,9 @@ mkdir -p ./android/assets
 cp -R config ./android/assets/
 cd ../
 
+echo Make sure gradle wrapper is present
+{ ls ./gradlew 2> /dev/null || gradle wrapper; }
+
 echo Chmod permissions
 chmod a+x ./gradlew
 
