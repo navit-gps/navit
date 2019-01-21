@@ -1,34 +1,63 @@
 #!/bin/bash
-set -e
+# Build Navit for Android.
+#
+# This script is to be run from the root of the Navit source tree. It is used by CircleCI as well as for local builds,
+# in order to keep build environments as uniform as possible and CI test results meaningful.
+#
+# It will build Navit for all processor architectures specified in navit/android/build.gradle.
+#
+# When running this script locally, ensure all build dependencies are in place:
+# - Packages required: cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+# - Android SDK installed
+# - Environment variable $ANDROID_HOME points to Android SDK install location
+# - Android NDK and CMake components installed via
+#     sdkmanager ndk-bundle "cmake;3.6.4111459"
+#   (later CMake versions from the SDK repository may also work)
+#
+# If any of the build steps fails, this script aborts with an error immediately.
 
-apt-get update && apt-get install -y wget
+echo Set up environment
+set - e
+export PATH=$PATH:$ANDROID_HOME/tools
+export JVM_OPTS="-Xmx3200m"
+export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
-export ARCH="arm"
-export START_PATH=~/
-export SOURCE_PATH="${START_PATH}/${CIRCLE_PROJECT_REPONAME}/"
-export CMAKE_FILE=$SOURCE_PATH"/Toolchain/arm-eabi.cmake"
-export ANDROID_NDK=~/android-ndk-r11c
-export ANDROID_NDK_BIN=$ANDROID_NDK"/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
-export ANDROID_SDK="/usr/local/android-sdk-linux/"
-export ANDROID_SDK_PLATFORM_TOOLS=$ANDROID_SDK"/platform-tools"
-export PATH=$ANDROID_NDK_BIN:$ANDROID_SDK_PLATFORM_TOOLS:$PATH
-export BUILD_PATH=android-${ARCH}
+echo Run CMake
+cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n || exit 1
 
-export ANDROID_SDK_HOME=/opt/android-sdk-linux
-export ANDROID_HOME=/opt/android-sdk-linux
-export PATH=${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/platform-tools:/opt/tools
+echo Process icons
+cd navit/icons
+make || exit 32
+mkdir ../android/res/drawable-nodpi
+rename 'y/A-Z/a-z/' ./*.png
+cp ./*.png ../android/res/drawable-nodpi
+cd ../../
 
-wget -nv -c http://dl.google.com/android/repository/android-ndk-r11c-linux-x86_64.zip
-[ -d ~/android-ndk-r11c ] || unzip -q -d ~ android-ndk-r11c-linux-x86_64.zip
+echo Process translations
+cd po
+make || exit 64
+mkdir ../navit/android/res/raw
+rename 'y/A-Z/a-z/' ./*.mo
+cp ./*.mo ../navit/android/res/raw
+cd ../
 
-[ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
-pushd $BUILD_PATH
+echo Process xml config files
+make navit_config_xml || exit 96
+cd navit
+mkdir -p ./android/assets
+cp -R config ./android/assets/
+cd ../
 
-android list targets
+echo Chmod permissions
+chmod a+x ./gradlew
 
-cmake -DCMAKE_TOOLCHAIN_FILE=../Toolchain/arm-eabi.cmake -DCACHE_SIZE='(20*1024*1024)' -DAVOID_FLOAT=1 -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n -DANDROID_API_VERSION=25 -DANDROID_NDK_API_VERSION=19 ../
+echo Download dependencies
+./gradlew -v
 
-make -j $(nproc --all)
+echo Build
+./gradlew assembleDebug || exit 128
 
-make -j $(nproc --all) apkg-release && mv navit/android/bin/Navit-release-unsigned.apk navit/android/bin/navit-$CIRCLE_SHA1-${ARCH}-release-unsigned.apk || exit 1
-make -j $(nproc --all) apkg && mv navit/android/bin/Navit-debug.apk navit/android/bin/navit-$CIRCLE_SHA1-${ARCH}-debug.apk || exit 1
+echo Build finished.
+echo APK should be in "navit/android/build/outputs/apk" and can be installed with
+echo ./gradlew installDebug
+

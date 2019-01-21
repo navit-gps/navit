@@ -86,8 +86,8 @@ jobs:
           name: Install Android SDK components
           command: sdkmanager ndk-bundle "cmake;3.6.4111459"
       - run:
-          name: Build for Android (ARM)
-          command: bash scripts/build_android_arm.sh
+          name: Build for Android
+          command: bash scripts/build_android.sh
       - run:
           name: Run Lint Test
           command: |
