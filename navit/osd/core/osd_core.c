@@ -2205,8 +2205,8 @@ static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct na
     int do_draw = opc->osd_item.do_draw;
     struct graphics_image *gr_image;
     char *path;
-    char *gui_sound_off = "gui_sound_off";
-    char *gui_sound_on = "gui_sound";
+    char *sound_off = "sound_off";
+    char *sound_on = "sound_on";
     struct attr attr, speechattr;
 
     if (!navit_get_attr(navit, attr_speech, &speechattr, NULL)) {
@@ -2229,9 +2229,9 @@ static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct na
         graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, opc->osd_item.w, opc->osd_item.h);
 
         if (this->active)
-            path = g_strdup_printf(this->icon_src, gui_sound_on);
+            path = g_strdup_printf(this->icon_src, sound_on);
         else
-            path = g_strdup_printf(this->icon_src, gui_sound_off);
+            path = g_strdup_printf(this->icon_src, sound_off);
 
         gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
         if (!gr_image) {
@@ -2280,6 +2280,7 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, 0);
+    opc->osd_item.color_bg.a = 0x0000;
 
     this->icon_w = -1;
     this->icon_h = -1;
