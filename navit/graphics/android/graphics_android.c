@@ -799,7 +799,7 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
             attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, ret->bgcolor);
     } else {
         /* default is the same as for OSD */
-        ret->bgcolor = 0x60000000;
+        ret->bgcolor = 0xa0000000;
     }
     if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
         use_camera=attr->u.num;
