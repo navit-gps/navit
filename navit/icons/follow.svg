@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="set_center_cursor.svg"
+   inkscape:export-filename="/home/michael/src/navit-artwork/set_center_cursor.png"
+   inkscape:export-xdpi="134.99994"
+   inkscape:export-ydpi="134.99994">
+  <defs
+     id="defs4">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath428">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path430" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath416">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path418" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath544">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path546" />
+    </clipPath>
+    <radialGradient
+       r="60"
+       fy="72"
+       fx="72"
+       cy="72"
+       cx="72"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient3969"
+       xlink:href="#linearGradient3785"
+       inkscape:collect="always" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3785"
+       id="radialGradient3926"
+       gradientUnits="userSpaceOnUse"
+       cx="72"
+       cy="72"
+       fx="72"
+       fy="72"
+       r="60" />
+    <linearGradient
+       id="linearGradient3785">
+      <stop
+         id="stop3787"
+         offset="0"
+         style="stop-color:#3e3e3e;stop-opacity:1;" />
+      <stop
+         id="stop3789"
+         offset="1"
+         style="stop-color:#000000;stop-opacity:1;" />
+    </linearGradient>
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       r="60"
+       fy="72"
+       fx="72"
+       cy="72"
+       cx="72"
+       id="radialGradient3791"
+       xlink:href="#linearGradient3785"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="15.8125"
+     inkscape:cx="15.209486"
+     inkscape:cy="26.529644"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="955"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       orientation="0,1"
+       position="0,40"
+       id="guide2985" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="0,8"
+       id="guide2987" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="8,0"
+       id="guide2989" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="40,0"
+       id="guide2991" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3763"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1004.3622)">
+    <rect
+       style="fill:#000000;fill-opacity:0.62745098;stroke:none"
+       id="rect2993"
+       width="48"
+       height="48.000019"
+       x="3.5527137e-15"
+       y="1004.3622"
+       rx="4" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       d="M 24 8 C 18.644507 8 14.3125 12.332 14.3125 17.6875 C 14.3125 19.5743 14.848966 21.35425 15.78125 22.84375 L 24 40 L 32.21875 22.84375 C 32.22095 22.84375 32.21655 22.8155 32.21875 22.8125 C 33.146822 21.3252 33.6875 19.5697 33.6875 17.6875 C 33.6875 12.332 29.355494 8 24 8 z M 24 14.3125 C 25.874423 14.3125 27.40625 15.813077 27.40625 17.6875 C 27.40625 19.561923 25.874423 21.09375 24 21.09375 C 22.125577 21.09375 20.59375 19.561923 20.59375 17.6875 C 20.59375 15.813077 22.125577 14.3125 24 14.3125 z "
+       transform="translate(0,1004.3622)"
+       id="path3831" />
+  </g>
+</svg>
