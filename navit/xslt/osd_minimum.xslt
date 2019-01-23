@@ -21,7 +21,6 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{tracking.item.street_name_systematic}}${{tracking.item.street_name}}" x="0" y="{round(-14*number($OSD_SIZE))}" w="100%" h="{round(14*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <!-- TODO does this need an icon_src attribute? -->
       <osd type="toggle_announcer" icon_src="%s_{number($ICON_BIG)}_{number($ICON_BIG)}.png" x="{round(8*number($OSD_SIZE))}" y="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-14*number($OSD_SIZE))}" w="{round(number($ICON_BIG))}" h="{round(number($ICON_BIG))}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <!-- TODO implement
