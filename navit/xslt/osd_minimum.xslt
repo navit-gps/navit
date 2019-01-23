@@ -22,7 +22,7 @@
       <osd type="text" label="${{tracking.item.street_name_systematic}}${{tracking.item.street_name}}" x="0" y="{round(-14*number($OSD_SIZE))}" w="100%" h="{round(14*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
       <xsl:text>&#x0A;        </xsl:text>
       <!-- TODO does this need an icon_src attribute? -->
-      <osd type="toggle_announcer" icon_src="%s_{number($ICON_BIG)}_{number($ICON_BIG)}.png" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE)))}" y="{round(62*number($OSD_SIZE))}"/>
+      <osd type="toggle_announcer" icon_src="%s_{number($ICON_BIG)}_{number($ICON_BIG)}.png" x="{round(8*number($OSD_SIZE))}" y="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-14*number($OSD_SIZE))}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <!-- TODO implement
       <osd type="button" src="gui_zoom_manual_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="autozoom_active=0" x="0" y="0" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active!=0"/>
@@ -34,7 +34,7 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="follow_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(8*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" enable_expression="follow>1" use_overlay="{$OSD_USE_OVERLAY}"/>
+      <osd type="button" src="follow_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(8*number($OSD_SIZE))}" y="{round(-2*(number($ICON_BIG)+8*number($OSD_SIZE))-14*number($OSD_SIZE))}" enable_expression="follow>1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="cmd_interface" update_period="1" command="pitch=autozoom_active==0?pitch:(follow>1?0:20);orientation=autozoom_active==0?orientation:(follow>1?0:-1)" x="-1" y="-1" w="1" h="1"/>
       <xsl:text>&#x0A;        </xsl:text>
