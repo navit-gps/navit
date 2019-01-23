@@ -2295,8 +2295,7 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
         this->icon_src = graphics_icon_path(array[0]);
         file_wordexp_destroy(we);
     } else
-        /* FIXME use big icon size rather than a fixed value */
-        this->icon_src = graphics_icon_path("%s_32_32.png");
+        this->icon_src = graphics_icon_path("%s_48_48.png");
 
     opc->osd_item.command = g_strdup(command);
 
