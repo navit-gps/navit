@@ -2292,7 +2292,7 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
         char **array;
         we = file_wordexp_new(attr->u.str);
         array = file_wordexp_get_array(we);
-        this->icon_src = g_strdup(array[0]);
+        this->icon_src = graphics_icon_path(array[0]);
         file_wordexp_destroy(we);
     } else
         this->icon_src = graphics_icon_path("%s_32.xpm");
