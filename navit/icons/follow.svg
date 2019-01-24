@@ -14,8 +14,8 @@
    height="48"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="set_center_cursor.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="follow.svg"
    inkscape:export-filename="/home/michael/src/navit-artwork/set_center_cursor.png"
    inkscape:export-xdpi="134.99994"
    inkscape:export-ydpi="134.99994">
@@ -95,34 +95,37 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.8125"
-     inkscape:cx="15.209486"
-     inkscape:cy="26.529644"
+     inkscape:cx="15.226152"
+     inkscape:cy="21.470355"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="955"
+     inkscape:window-width="1920"
+     inkscape:window-height="1000"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-others="false"
+     inkscape:object-nodes="false">
     <sodipodi:guide
        orientation="0,1"
        position="0,40"
-       id="guide2985" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="0,8"
-       id="guide2987" />
+       id="guide2985"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="8,0"
-       id="guide2989" />
+       id="guide2989"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="40,0"
-       id="guide2991" />
+       id="guide2991"
+       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3763"
@@ -157,9 +160,9 @@
        y="1004.3622"
        rx="4" />
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="M 24 8 C 18.644507 8 14.3125 12.332 14.3125 17.6875 C 14.3125 19.5743 14.848966 21.35425 15.78125 22.84375 L 24 40 L 32.21875 22.84375 C 32.22095 22.84375 32.21655 22.8155 32.21875 22.8125 C 33.146822 21.3252 33.6875 19.5697 33.6875 17.6875 C 33.6875 12.332 29.355494 8 24 8 z M 24 14.3125 C 25.874423 14.3125 27.40625 15.813077 27.40625 17.6875 C 27.40625 19.561923 25.874423 21.09375 24 21.09375 C 22.125577 21.09375 20.59375 19.561923 20.59375 17.6875 C 20.59375 15.813077 22.125577 14.3125 24 14.3125 z "
-       transform="translate(0,1004.3622)"
-       id="path3831" />
+       inkscape:connector-curvature="0"
+       d="m 24,1022.544 c -3.214546,0 -5.818182,2.6036 -5.818182,5.8182 0,3.2146 2.603636,5.8182 5.818182,5.8182 3.214546,0 5.818182,-2.6036 5.818182,-5.8182 0,-3.2146 -2.603636,-5.8182 -5.818182,-5.8182 z m 13.003637,4.3636 c -0.669091,-6.0654 -5.483637,-10.88 -11.549091,-11.5491 v -2.9963 h -2.909092 v 2.9963 c -6.065454,0.6691 -10.88,5.4837 -11.549091,11.5491 H 8 v 2.9092 h 2.996363 c 0.669091,6.0654 5.483637,10.88 11.549091,11.5491 v 2.9963 h 2.909092 v -2.9963 c 6.065454,-0.6691 10.88,-5.4837 11.549091,-11.5491 H 40 v -2.9092 z M 24,1038.544 c -5.621818,0 -10.181818,-4.56 -10.181818,-10.1818 0,-5.6218 4.56,-10.1818 10.181818,-10.1818 5.621818,0 10.181818,4.56 10.181818,10.1818 0,5.6218 -4.56,10.1818 -10.181818,10.1818 z"
+       id="path2"
+       style="stroke-width:0.72727275;fill:#ffffff" />
   </g>
 </svg>

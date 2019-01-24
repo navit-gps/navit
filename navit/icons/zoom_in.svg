@@ -13,8 +13,8 @@
    height="48"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="set_center_cursor.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="zoom_in.svg"
    inkscape:export-filename="/home/michael/src/navit-artwork/set_center_cursor.png"
    inkscape:export-xdpi="134.99994"
    inkscape:export-ydpi="134.99994">
@@ -53,34 +53,41 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.8125"
-     inkscape:cx="21.280633"
+     inkscape:cx="9.2964433"
      inkscape:cy="24"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="955"
+     inkscape:window-width="1920"
+     inkscape:window-height="1000"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true">
     <sodipodi:guide
        orientation="0,1"
        position="0,40"
-       id="guide2985" />
+       id="guide2985"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="0,1"
        position="0,8"
-       id="guide2987" />
+       id="guide2987"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="8,0"
-       id="guide2989" />
+       id="guide2989"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="40,0"
-       id="guide2991" />
+       id="guide2991"
+       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3763"
@@ -97,7 +104,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -114,25 +121,10 @@
        x="3.5527137e-15"
        y="1004.3622"
        rx="4" />
-    <g
-       transform="matrix(0.49591559,0,0,-0.49591559,0.00568833,1051.552)"
-       id="g4057"
-       style="fill:#ffffff;fill-opacity:1">
-      <g
-         transform="translate(40.916449,57.878561)"
-         id="g1386"
-         style="fill:#ffffff;fill-opacity:1">
-        <path
-           inkscape:connector-curvature="0"
-           id="path1388"
-           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           d="m 0,0 0,13.301 -4.16,0 0,-13.301 -13.103,0 0,-4.162 13.103,0 0,-13.296 4.16,0 0,13.296 13.105,0 0,4.162 L 0,0 z" />
-      </g>
-      <path
-         d="m 26.293557,43.115008 c -7.104,7.11 -7.104,18.632 0,25.736 7.109,7.109 18.622,7.103 25.735,0 7.103,-7.104 7.103,-18.622 0,-25.736 -7.113,-7.104 -18.631,-7.104 -25.735,0 m 53.584,-18.533 -12.164,12.168 c -1.07,1.068 -3.007,0.967 -4.95,-0.045 l -5.307,5.305 c 6.914,9.033 6.261,22.002 -2.003,30.268 -8.999,8.995 -23.587,8.995 -32.587,0 -8.995,-9 -8.995,-23.588 0,-32.588 8.268,-8.264 21.237,-8.917 30.269,-2.001 l 5.307,-5.303 c -1.012,-1.947 -1.115,-3.882 -0.047,-4.953 l 12.166,-12.168 c 1.537,-1.535 4.874,-0.691 7.441,1.883 2.571,2.568 3.415,5.899 1.875,7.434"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         id="path1540"
-         inkscape:connector-curvature="0" />
-    </g>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 30.870212,1032.488 h -1.445398 l -0.512293,-0.494 c 1.793025,-2.0858 2.872499,-4.7936 2.872499,-7.7393 0,-6.5683 -5.324185,-11.8925 -11.89251,-11.8925 -6.568325,0 -11.89251,5.3242 -11.89251,11.8925 0,6.5683 5.324185,11.8925 11.89251,11.8925 2.945683,0 5.653516,-1.0795 7.73928,-2.8725 l 0.493996,0.5123 v 1.4454 l 9.148085,9.1298 L 40,1041.6361 Z m -10.977702,0 c -4.555746,0 -8.233276,-3.6775 -8.233276,-8.2333 0,-4.5557 3.67753,-8.2333 8.233276,-8.2333 4.555746,0 8.233276,3.6776 8.233276,8.2333 0,4.5558 -3.67753,8.2333 -8.233276,8.2333 z m 4.574042,-7.3185 h -3.659234 v 3.6593 h -1.829616 v -3.6593 h -3.659234 v -1.8296 h 3.659234 v -3.6592 h 1.829616 v 3.6592 h 3.659234 z"
+       id="path2"
+       style="stroke-width:1.8296169;fill:#ffffff" />
   </g>
 </svg>

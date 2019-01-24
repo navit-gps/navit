@@ -13,8 +13,8 @@
    height="48"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="gui_menu.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="gui_android_menu.svg"
    inkscape:export-filename="/home/vonglasowm/src/navit-goodies/png/xxhdpi/gui_menu_xxhdpi.png"
    inkscape:export-xdpi="269.99988"
    inkscape:export-ydpi="269.99988">
@@ -45,7 +45,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.8125"
-     inkscape:cx="22.640317"
+     inkscape:cx="10.656127"
      inkscape:cy="24"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -53,26 +53,33 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
-     inkscape:window-height="1004"
+     inkscape:window-height="1000"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true">
     <sodipodi:guide
        orientation="0,1"
        position="0,40"
-       id="guide2985" />
+       id="guide2985"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="0,1"
        position="0,8"
-       id="guide2987" />
+       id="guide2987"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="8,0"
-       id="guide2989" />
+       id="guide2989"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="40,0"
-       id="guide2991" />
+       id="guide2991"
+       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3763"
@@ -109,7 +116,7 @@
     <path
        inkscape:connector-curvature="0"
        d="m 24,1020.3622 c 2.21,0 4,-1.79 4,-4 0,-2.21 -1.79,-4 -4,-4 -2.21,0 -4,1.79 -4,4 0,2.21 1.79,4 4,4 z m 0,4 c -2.21,0 -4,1.79 -4,4 0,2.21 1.79,4 4,4 2.21,0 4,-1.79 4,-4 0,-2.21 -1.79,-4 -4,-4 z m 0,12 c -2.21,0 -4,1.79 -4,4 0,2.21 1.79,4 4,4 2.21,0 4,-1.79 4,-4 0,-2.21 -1.79,-4 -4,-4 z"
-       id="path6"
+       id="path2"
        style="fill:#ffffff" />
   </g>
 </svg>

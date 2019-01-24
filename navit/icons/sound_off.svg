@@ -13,8 +13,8 @@
    height="48"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="gui_sound_off.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="sound_off.svg"
    inkscape:export-filename="/home/michael/src/navit-artwork/gui_sound_off.png"
    inkscape:export-xdpi="134.99994"
    inkscape:export-ydpi="134.99994">
@@ -37,34 +37,41 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.8125"
-     inkscape:cx="24.221344"
+     inkscape:cx="12.237154"
      inkscape:cy="24"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="955"
+     inkscape:window-width="1920"
+     inkscape:window-height="1000"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true">
     <sodipodi:guide
        orientation="0,1"
        position="0,40"
-       id="guide2985" />
+       id="guide2985"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="0,1"
        position="0,8"
-       id="guide2987" />
+       id="guide2987"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="8,0"
-       id="guide2989" />
+       id="guide2989"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
        position="40,0"
-       id="guide2991" />
+       id="guide2991"
+       inkscape:locked="false" />
     <inkscape:grid
        type="xygrid"
        id="grid3763"
@@ -81,7 +88,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -98,25 +105,10 @@
        x="3.5527137e-15"
        y="1004.3622"
        rx="4" />
-    <g
-       id="g424"
-       transform="matrix(0.45714286,0,0,-0.45714286,2.0572799,1050.3049)"
-       style="fill:#ffffff;fill-opacity:1">
-      <g
-         id="g426"
-         clip-path="url(#clipPath428)"
-         style="fill:#ffffff;fill-opacity:1">
-        <g
-           id="g432"
-           transform="translate(58.0527,46.4707)"
-           style="fill:#ffffff;fill-opacity:1">
-          <path
-             d="m 0,0 c -0.104,-15.984 -1.828,-28.715 -3.955,-28.715 -1.749,0 -4.147,8.621 -5.042,20.559 l -11.614,-10.487 c 4.938,-7.257 10.408,-14.828 11.783,-14.828 l 5.769,0 c 3.811,0 6.675,15.751 6.675,35.077 L 3.603,3.252 0,0 z m -32.653,-11.591 0.454,0 24.226,21.882 c -0.324,0.313 -0.673,0.584 -1.037,0.804 0.896,12.018 3.293,20.676 5.055,20.676 1.453,0 2.711,-5.925 3.41,-14.766 l 3.241,2.931 c -1.102,9.969 -3.124,16.593 -5.6,16.593 l -5.924,0 c -1.867,0 -10.254,-13.159 -15.619,-21.883 l -8.206,0 c -2.087,0 -3.786,-5.82 -3.786,-13.118 0,-7.298 1.699,-13.119 3.786,-13.119 m 51.889,42.026 -61.91,-55.96 3.33,-3.994 61.912,55.964 -3.332,3.99 z"
-             style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
-             id="path434"
-             inkscape:connector-curvature="0" />
-        </g>
-      </g>
-    </g>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 32,1028.3622 c 0,-3.1378 -1.813333,-5.8489 -4.444444,-7.1556 v 3.9289 L 31.92,1029.5 c 0.05333,-0.3734 0.08,-0.7556 0.08,-1.1378 z m 4.444444,0 c 0,1.6711 -0.364444,3.2444 -0.96,4.6933 l 2.693334,2.6934 C 39.333333,1033.5355 40,1031.0289 40,1028.3622 c 0,-7.6089 -5.324444,-13.9733 -12.444444,-15.5911 v 3.6711 c 5.137777,1.5289 8.888888,6.2844 8.888888,11.92 z m -26.177777,-16 L 8,1014.6289 l 8.4,8.4 H 8 v 10.6666 h 7.111111 L 24,1042.5844 v -11.9555 l 7.564444,7.5644 c -1.191111,0.9156 -2.533333,1.6533 -4.008888,2.0978 v 3.6711 c 2.444444,-0.56 4.675555,-1.68 6.551111,-3.2178 l 3.626666,3.6178 2.266667,-2.2667 -16,-16 z M 24,1014.14 20.284444,1017.8555 24,1021.5711 Z"
+       id="path2"
+       style="stroke-width:0.8888889;fill:#ffffff" />
   </g>
 </svg>
