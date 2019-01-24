@@ -23,15 +23,13 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="toggle_announcer" icon_src="%s_{number($ICON_BIG)}_{number($ICON_BIG)}.png" x="{round(8*number($OSD_SIZE))}" y="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-14*number($OSD_SIZE))}" w="{round(number($ICON_BIG))}" h="{round(number($ICON_BIG))}"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <!-- TODO implement
-      <osd type="button" src="gui_zoom_manual_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="autozoom_active=0" x="0" y="0" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active!=0"/>
+      <osd type="button" src="zoom_manual_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="autozoom_active=0" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active!=0"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="gui_zoom_auto_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="autozoom_active=1" x="0" y="0" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active==0"/>
-      -->
+      <osd type="button" src="zoom_auto_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="autozoom_active=1" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active==0"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="zoom_in_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_in()" x="{round(-2*(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
+      <osd type="button" src="zoom_in_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_in()" x="{round(-3*(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="button" src="zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
+      <osd type="button" src="zoom_out_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="zoom_out()" x="{round(-2*(number($ICON_BIG)+8*number($OSD_SIZE))-60*number($OSD_SIZE))}" y="{-round(number($ICON_BIG)+22*number($OSD_SIZE))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="follow_{number($ICON_BIG)}_{number($ICON_BIG)}.png" command="follow=0;set_center_cursor()" x="{round(8*number($OSD_SIZE))}" y="{round(-2*(number($ICON_BIG)+8*number($OSD_SIZE))-14*number($OSD_SIZE))}" enable_expression="follow>1" use_overlay="{$OSD_USE_OVERLAY}"/>
       <xsl:text>&#x0A;        </xsl:text>
