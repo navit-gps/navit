@@ -19,7 +19,7 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{navigation.item[1].length[unit]}}" x="0" y="{round(14*number($OSD_SIZE))+$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" w="{$NEXT_TURN_SIZE+$NEXT_TURN_TEXT_HIGHT}" h="{$NEXT_TURN_TEXT_HIGHT}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="navigation.nav_status>=3"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="text" label="${{tracking.item.street_name_systematic}}${{tracking.item.street_name}}" x="0" y="{round(-14*number($OSD_SIZE))}" w="100%" h="{round(14*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
+      <osd type="text" label="${{tracking.item.street_name}} ${{tracking.item.street_name_systematic}}" x="0" y="{round(-14*number($OSD_SIZE))}" w="100%" h="{round(14*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="toggle_announcer" icon_src="%s_{number($ICON_BIG)}_{number($ICON_BIG)}.png" x="{round(-(number($ICON_BIG)+8*number($OSD_SIZE)))}" y="{round(-(number($ICON_BIG)+8*number($OSD_SIZE))-94*number($OSD_SIZE))}" w="{round(number($ICON_BIG))}" h="{round(number($ICON_BIG))}"/>
       <xsl:text>&#x0A;        </xsl:text>
