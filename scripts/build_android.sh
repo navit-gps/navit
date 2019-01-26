@@ -29,16 +29,20 @@ echo Process icons
 pushd navit/icons
 make || exit 32
 mkdir ../android/res/drawable-nodpi
-rename 'y/A-Z/a-z/' ./*.png
 cp ./*.png ../android/res/drawable-nodpi
+pushd ../android/res/drawable-nodpi
+rename 'y/A-Z/a-z/' ./*.png
+popd
 popd
 
 echo Process translations
 pushd po
 make || exit 64
 mkdir ../navit/android/res/raw
-rename 'y/A-Z/a-z/' ./*.mo
 cp ./*.mo ../navit/android/res/raw
+pushd ../navit/android/res/raw
+rename 'y/A-Z/a-z/' ./*.mo
+popd
 popd
 
 echo Process xml config files
