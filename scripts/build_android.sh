@@ -26,27 +26,27 @@ echo Run CMake
 cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n || exit 1
 
 echo Process icons
-cd navit/icons
+pushd navit/icons
 make || exit 32
 mkdir ../android/res/drawable-nodpi
 rename 'y/A-Z/a-z/' ./*.png
 cp ./*.png ../android/res/drawable-nodpi
-cd ../../
+popd
 
 echo Process translations
-cd po
+pushd po
 make || exit 64
 mkdir ../navit/android/res/raw
 rename 'y/A-Z/a-z/' ./*.mo
 cp ./*.mo ../navit/android/res/raw
-cd ../
+popd
 
 echo Process xml config files
 make navit_config_xml || exit 96
-cd navit
+pushd navit
 mkdir -p ./android/assets
 cp -R config ./android/assets/
-cd ../
+popd
 
 echo Chmod permissions
 chmod a+x ./gradlew
