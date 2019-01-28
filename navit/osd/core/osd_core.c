@@ -2195,7 +2195,7 @@ struct nav_toggle_announcer {
     /* FIXME this is actually the click callback, which is set once but never read. Do we need this? */
     struct callback *navit_init_cb;
     char *icon_src;
-    int icon_h, icon_w, active, last_state;
+    int active, last_state;
 };
 
 static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
@@ -2233,11 +2233,11 @@ static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct na
         else
             path = g_strdup_printf(this->icon_src, sound_off);
 
-        gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
+        gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, opc->osd_item.w, opc->osd_item.h);
         if (!gr_image) {
             g_free(path);
             path = graphics_icon_path("unknown.png");
-            gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, this->icon_w, this->icon_h);
+            gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, opc->osd_item.w, opc->osd_item.h);
         }
 
         dbg(lvl_debug, "gr_image=%p", gr_image);
@@ -2282,8 +2282,6 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
     osd_set_std_attr(attrs, &opc->osd_item, 0);
     opc->osd_item.color_bg.a = 0x0000;
 
-    this->icon_w = -1;
-    this->icon_h = -1;
     this->last_state = -1;
 
     attr = attr_search(attrs, NULL, attr_icon_src);
@@ -2295,7 +2293,7 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
         this->icon_src = graphics_icon_path(array[0]);
         file_wordexp_destroy(we);
     } else
-        this->icon_src = graphics_icon_path("%s_48_48.png");
+        this->icon_src = graphics_icon_path("%s");
 
     opc->osd_item.command = g_strdup(command);
 

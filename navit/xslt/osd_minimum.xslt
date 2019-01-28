@@ -21,7 +21,7 @@
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="text" label="${{tracking.item.street_name}} ${{tracking.item.street_name_systematic}}" x="0" y="{round(-14*number($OSD_SIZE))}" w="100%" h="{round(14*number($OSD_SIZE))}" font_size="{round(200*number($OSD_SIZE))}" enable_expression="vehicle.position_valid"/>
       <xsl:text>&#x0A;        </xsl:text>
-      <osd type="toggle_announcer" icon_src="%s_{number($ICON_MEDIUM)}_{number($ICON_MEDIUM)}.png" x="{round(-(number($ICON_MEDIUM)+8*number($OSD_SIZE)))}" y="{round(-(number($ICON_MEDIUM)+8*number($OSD_SIZE))-94*number($OSD_SIZE))}" w="{round(number($ICON_MEDIUM))}" h="{round(number($ICON_MEDIUM))}"/>
+      <osd type="toggle_announcer" icon_src="%s" x="{round(-(number($ICON_MEDIUM)+8*number($OSD_SIZE)))}" y="{round(-(number($ICON_MEDIUM)+8*number($OSD_SIZE))-94*number($OSD_SIZE))}" w="{round(number($ICON_MEDIUM))}" h="{round(number($ICON_MEDIUM))}"/>
       <xsl:text>&#x0A;        </xsl:text>
       <osd type="button" src="zoom_manual" command="autozoom_active=0" x="{round(8*number($OSD_SIZE))}" y="{-round(number($ICON_MEDIUM)+22*number($OSD_SIZE))}" w="{round(number($ICON_MEDIUM))}" h="{round(number($ICON_MEDIUM))}" osd_configuration="1" use_overlay="{$OSD_USE_OVERLAY}" enable_expression="autozoom_active!=0"/>
       <xsl:text>&#x0A;        </xsl:text>
