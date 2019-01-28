@@ -304,7 +304,11 @@ static struct graphics_image_priv* image_new(struct graphics_priv* gr, struct gr
     }
     QString key(path);
     QString renderer_key(key);
-    QString extension = key.right(key.lastIndexOf("."));
+    int index = key.lastIndexOf(".");
+    QString extension;
+    if(index > 0) {
+        extension = key.right(index);
+    }
     QFile imagefile(key);
     if (!imagefile.exists()) {
         /* file doesn't exit. Either navit wants us to guess file name by
@@ -348,7 +352,7 @@ static struct graphics_image_priv* image_new(struct graphics_priv* gr, struct gr
     }
 
     /* check if we got image */
-    if (image_priv->pixmap->isNull()) {
+    if ((image_priv->pixmap == NULL) || (image_priv->pixmap->isNull())) {
         g_free(image_priv);
         return NULL;
     } else {
@@ -771,15 +775,18 @@ static void overlay_disable(struct graphics_priv* gr, int disable) {
 }
 
 static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound) {
-    //        dbg(lvl_debug,"enter");
+    //        dbg(lvl_debug,"enter %d %d %d %d %d", p->x, p->y, w, h, wraparound);
     gr->x = p->x;
     gr->y = p->y;
     if (gr->painter != NULL) {
         delete (gr->painter);
     }
-    delete (gr->pixmap);
-    gr->pixmap = new QPixmap(w, h);
-    gr->pixmap->fill(Qt::transparent);
+    /* replacing the pixmap clears the content. Only neccesary if size actually changes */
+    if((gr->pixmap->height() != h) || (gr->pixmap->width() != w)) {
+        delete (gr->pixmap);
+        gr->pixmap = new QPixmap(w, h);
+        gr->pixmap->fill(Qt::transparent);
+    }
     if (gr->painter != NULL)
         gr->painter = new QPainter(gr->pixmap);
 }
