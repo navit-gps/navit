@@ -171,11 +171,14 @@ void QNavitQuick::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
         return;
     }
     if (graphics_priv->pixmap != NULL) {
-        delete graphics_priv->pixmap;
-        graphics_priv->pixmap = NULL;
+        if((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
+            delete graphics_priv->pixmap;
+            graphics_priv->pixmap = NULL;
+        }
     }
-
-    graphics_priv->pixmap = new QPixmap(width(), height());
+    if (graphics_priv->pixmap == NULL) {
+        graphics_priv->pixmap = new QPixmap(width(), height());
+    }
     painter = new QPainter(graphics_priv->pixmap);
     if (painter != NULL) {
         QBrush brush;
