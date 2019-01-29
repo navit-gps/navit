@@ -770,6 +770,16 @@ static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* f
 static void overlay_disable(struct graphics_priv* gr, int disable) {
     //dbg(lvl_error,"enter gr=%p, %d", gr, disable);
     gr->disable = disable;
+#if USE_QWIDGET
+    /* call repaint on widget */
+    if (gr->widget != NULL)
+        gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
+#endif
+#if USE_QML
+    if (gr->GPriv != NULL)
+        gr->GPriv->emit_update();
+
+#endif
 }
 
 static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound) {
@@ -787,6 +797,16 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
     }
     if (gr->painter != NULL)
         gr->painter = new QPainter(gr->pixmap);
+#if USE_QWIDGET
+    /* call repaint on widget */
+    if (gr->widget != NULL)
+        gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
+#endif
+#if USE_QML
+    if (gr->GPriv != NULL)
+        gr->GPriv->emit_update();
+
+#endif
 }
 
 static struct graphics_methods graphics_methods = {
