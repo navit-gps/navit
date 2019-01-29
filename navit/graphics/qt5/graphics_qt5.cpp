@@ -768,15 +768,8 @@ static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* f
 }
 
 static void overlay_disable(struct graphics_priv* gr, int disable) {
-    GHashTableIter iter;
-    struct graphics_priv *key, *value;
-    //        dbg(lvl_debug,"enter gr=%p, %d", gr, disable);
-
-    g_hash_table_iter_init(&iter, gr->overlays);
-    while (g_hash_table_iter_next(&iter, (void**)&key, (void**)&value)) {
-        /* disable or enable all overlays of this pane */
-        value->disable = disable;
-    }
+    //dbg(lvl_error,"enter gr=%p, %d", gr, disable);
+    gr->disable = disable;
 }
 
 static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound) {

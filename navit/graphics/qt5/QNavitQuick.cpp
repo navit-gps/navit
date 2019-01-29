@@ -90,7 +90,10 @@ void QNavitQuick::paint(QPainter* painter) {
     painter->drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap,
                         boundingRect().x(), boundingRect().y(),
                         boundingRect().width(), boundingRect().height());
-    paintOverlays(painter, graphics_priv, &event);
+    /* disable on root pane disables ALL overlays (for drag of background) */
+    if(!(graphics_priv->disable)) {
+        paintOverlays(painter, graphics_priv, &event);
+    }
 }
 
 void QNavitQuick::keyPressEvent(QKeyEvent* event) {
