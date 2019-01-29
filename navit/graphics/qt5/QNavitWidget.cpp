@@ -16,7 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #include <glib.h>
 #ifdef HAVE_UNISTD_H
@@ -98,149 +97,149 @@ void QNavitWidget::resizeEvent(QResizeEvent* event) {
         if((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
             delete graphics_priv->pixmap;
             graphics_priv->pixmap = NULL;
+        }
+        if (graphics_priv->pixmap == NULL) {
+            graphics_priv->pixmap = new QPixmap(size());
+        }
+        painter = new QPainter(graphics_priv->pixmap);
+        if (painter != NULL) {
+            QBrush brush;
+            painter->fillRect(0, 0, width(), height(), brush);
+            delete painter;
+        }
+        dbg(lvl_debug, "size %dx%d", width(), height());
+        dbg(lvl_debug, "pixmap %p %dx%d", graphics_priv->pixmap, graphics_priv->pixmap->width(),
+            graphics_priv->pixmap->height());
+        /* if the root window got resized, tell navit about it */
+        if (graphics_priv->root)
+            resize_callback(graphics_priv, width(), height());
     }
-    if (graphics_priv->pixmap == NULL) {
-       graphics_priv->pixmap = new QPixmap(size());
-    }
-    painter = new QPainter(graphics_priv->pixmap);
-    if (painter != NULL) {
-        QBrush brush;
-        painter->fillRect(0, 0, width(), height(), brush);
-        delete painter;
-    }
-    dbg(lvl_debug, "size %dx%d", width(), height());
-    dbg(lvl_debug, "pixmap %p %dx%d", graphics_priv->pixmap, graphics_priv->pixmap->width(),
-        graphics_priv->pixmap->height());
-    /* if the root window got resized, tell navit about it */
-    if (graphics_priv->root)
-        resize_callback(graphics_priv, width(), height());
-}
 
-void QNavitWidget::mouseEvent(int pressed, QMouseEvent* event) {
-    struct point p;
-    //        dbg(lvl_debug,"enter");
-    p.x = event->x();
-    p.y = event->y();
-    switch (event->button()) {
-    case Qt::LeftButton:
-        callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(1),
-                                  GINT_TO_POINTER(&p));
-        break;
-    case Qt::MidButton:
-        callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(2),
-                                  GINT_TO_POINTER(&p));
-        break;
-    case Qt::RightButton:
-        callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(3),
-                                  GINT_TO_POINTER(&p));
-        break;
-    default:
-        break;
-    }
-}
-
-void QNavitWidget::keyPressEvent(QKeyEvent* event) {
-    dbg(lvl_debug, "enter");
-    char key[2];
-    int keycode;
-    char* text = NULL;
-
-    keycode = event->key();
-    key[0] = '\0';
-    key[1] = '\0';
-    switch (keycode) {
-    case Qt::Key_Up:
-        key[0] = NAVIT_KEY_UP;
-        break;
-    case Qt::Key_Down:
-        key[0] = NAVIT_KEY_DOWN;
-        break;
-    case Qt::Key_Left:
-        key[0] = NAVIT_KEY_LEFT;
-        break;
-    case Qt::Key_Right:
-        key[0] = NAVIT_KEY_RIGHT;
-        break;
-    case Qt::Key_Backspace:
-        key[0] = NAVIT_KEY_BACKSPACE;
-        break;
-    case Qt::Key_Tab:
-        key[0] = NAVIT_KEY_TAB;
-        break;
-    case Qt::Key_Delete:
-        key[0] = NAVIT_KEY_DELETE;
-        break;
-    case Qt::Key_Escape:
-        key[0] = NAVIT_KEY_BACK;
-        break;
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-        key[0] = NAVIT_KEY_RETURN;
-        break;
-    case Qt::Key_ZoomIn:
-        key[0] = NAVIT_KEY_ZOOM_IN;
-        break;
-    case Qt::Key_ZoomOut:
-        key[0] = NAVIT_KEY_ZOOM_OUT;
-        break;
-    case Qt::Key_PageUp:
-        key[0] = NAVIT_KEY_PAGE_UP;
-        break;
-    case Qt::Key_PageDown:
-        key[0] = NAVIT_KEY_PAGE_DOWN;
-        break;
-    default:
-        QString str = event->text();
-        if ((str != NULL) && (str.size() != 0)) {
-            text = str.toUtf8().data();
+    void QNavitWidget::mouseEvent(int pressed, QMouseEvent* event) {
+        struct point p;
+        //        dbg(lvl_debug,"enter");
+        p.x = event->x();
+        p.y = event->y();
+        switch (event->button()) {
+        case Qt::LeftButton:
+            callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(1),
+                                      GINT_TO_POINTER(&p));
+            break;
+        case Qt::MidButton:
+            callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(2),
+                                      GINT_TO_POINTER(&p));
+            break;
+        case Qt::RightButton:
+            callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(pressed), GINT_TO_POINTER(3),
+                                      GINT_TO_POINTER(&p));
+            break;
+        default:
+            break;
         }
     }
-    if (text != NULL)
-        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)text);
-    else if (key[0])
-        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)key);
-    else
-        dbg(lvl_debug, "keyval 0x%x", keycode);
-}
 
-void QNavitWidget::mousePressEvent(QMouseEvent* event) {
-    //        dbg(lvl_debug,"enter");
-    mouseEvent(1, event);
-}
+    void QNavitWidget::keyPressEvent(QKeyEvent* event) {
+        dbg(lvl_debug, "enter");
+        char key[2];
+        int keycode;
+        char* text = NULL;
 
-void QNavitWidget::mouseReleaseEvent(QMouseEvent* event) {
-    //        dbg(lvl_debug,"enter");
-    mouseEvent(0, event);
-}
-
-void QNavitWidget::mouseMoveEvent(QMouseEvent* event) {
-    struct point p;
-    //        dbg(lvl_debug,"enter");
-    p.x = event->x();
-    p.y = event->y();
-    callback_list_call_attr_1(graphics_priv->callbacks, attr_motion, (void*)&p);
-}
-
-void QNavitWidget::wheelEvent(QWheelEvent* event) {
-    struct point p;
-    int button;
-    dbg(lvl_debug, "enter");
-    p.x = event->x(); // xy-coordinates of the mouse pointer
-    p.y = event->y();
-
-    if (event->delta() > 0) // wheel movement away from the person
-        button = 4;
-    else if (event->delta() < 0) // wheel movement towards the person
-        button = 5;
-    else
-        button = -1;
-
-    if (button != -1) {
-        callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button),
-                                  GINT_TO_POINTER(&p));
-        callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button),
-                                  GINT_TO_POINTER(&p));
+        keycode = event->key();
+        key[0] = '\0';
+        key[1] = '\0';
+        switch (keycode) {
+        case Qt::Key_Up:
+            key[0] = NAVIT_KEY_UP;
+            break;
+        case Qt::Key_Down:
+            key[0] = NAVIT_KEY_DOWN;
+            break;
+        case Qt::Key_Left:
+            key[0] = NAVIT_KEY_LEFT;
+            break;
+        case Qt::Key_Right:
+            key[0] = NAVIT_KEY_RIGHT;
+            break;
+        case Qt::Key_Backspace:
+            key[0] = NAVIT_KEY_BACKSPACE;
+            break;
+        case Qt::Key_Tab:
+            key[0] = NAVIT_KEY_TAB;
+            break;
+        case Qt::Key_Delete:
+            key[0] = NAVIT_KEY_DELETE;
+            break;
+        case Qt::Key_Escape:
+            key[0] = NAVIT_KEY_BACK;
+            break;
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
+            key[0] = NAVIT_KEY_RETURN;
+            break;
+        case Qt::Key_ZoomIn:
+            key[0] = NAVIT_KEY_ZOOM_IN;
+            break;
+        case Qt::Key_ZoomOut:
+            key[0] = NAVIT_KEY_ZOOM_OUT;
+            break;
+        case Qt::Key_PageUp:
+            key[0] = NAVIT_KEY_PAGE_UP;
+            break;
+        case Qt::Key_PageDown:
+            key[0] = NAVIT_KEY_PAGE_DOWN;
+            break;
+        default:
+            QString str = event->text();
+            if ((str != NULL) && (str.size() != 0)) {
+                text = str.toUtf8().data();
+            }
+        }
+        if (text != NULL)
+            callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)text);
+        else if (key[0])
+            callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)key);
+        else
+            dbg(lvl_debug, "keyval 0x%x", keycode);
     }
 
-    event->accept();
-}
+    void QNavitWidget::mousePressEvent(QMouseEvent* event) {
+        //        dbg(lvl_debug,"enter");
+        mouseEvent(1, event);
+    }
+
+    void QNavitWidget::mouseReleaseEvent(QMouseEvent* event) {
+        //        dbg(lvl_debug,"enter");
+        mouseEvent(0, event);
+    }
+
+    void QNavitWidget::mouseMoveEvent(QMouseEvent* event) {
+        struct point p;
+        //        dbg(lvl_debug,"enter");
+        p.x = event->x();
+        p.y = event->y();
+        callback_list_call_attr_1(graphics_priv->callbacks, attr_motion, (void*)&p);
+    }
+
+    void QNavitWidget::wheelEvent(QWheelEvent* event) {
+        struct point p;
+        int button;
+        dbg(lvl_debug, "enter");
+        p.x = event->x(); // xy-coordinates of the mouse pointer
+        p.y = event->y();
+
+        if (event->delta() > 0) // wheel movement away from the person
+            button = 4;
+        else if (event->delta() < 0) // wheel movement towards the person
+            button = 5;
+        else
+            button = -1;
+
+        if (button != -1) {
+            callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button),
+                                      GINT_TO_POINTER(&p));
+            callback_list_call_attr_3(graphics_priv->callbacks, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button),
+                                      GINT_TO_POINTER(&p));
+        }
+
+        event->accept();
+    }

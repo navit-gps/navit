@@ -16,7 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #ifndef QNAVITQUICK_H
 #define QNAVITQUICK_H
@@ -28,8 +27,7 @@ class QNavitQuick;
 
 class QNavitQuick : public QQuickPaintedItem {
     Q_OBJECT
-public:
-    QNavitQuick(QQuickItem* parent = 0);
+public: QNavitQuick(QQuickItem* parent = 0);
 
     void paint(QPainter* painter);
 
