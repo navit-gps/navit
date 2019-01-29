@@ -10,6 +10,7 @@
 
 	<xsl:output method="xml" indent="yes" cdata-section-elements="gui" doctype-system="navit.dtd"/>
 	<xsl:include href="osd_minimum.xslt"/>
+	<xsl:include href="osd_enable_zoom.xslt"/>
 
    <!-- Default rule: copy all -->
    <xsl:template match="node()|@*">
