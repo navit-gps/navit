@@ -27,9 +27,10 @@ class QNavitQuick;
 
 class QNavitQuick : public QQuickPaintedItem {
     Q_OBJECT
-public: QNavitQuick(QQuickItem* parent = 0);
-
+public:
     void paint(QPainter* painter);
+    QNavitQuick(QQuickItem* parent = 0);
+
 
     Q_INVOKABLE void setGraphicContext(GraphicsPriv* gp);
 
