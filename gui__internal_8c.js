@@ -75,7 +75,7 @@ var gui__internal_8c =
     [ "gui_internal_populate_route_table", "gui__internal_8c.html#a256ca02bb66cea534b532813ec454cf8", null ],
     [ "gui_internal_prepare_search_results_map", "gui__internal_8c.html#aae575f81dd560b1ad110926a359d883a", null ],
     [ "gui_internal_remove_callback", "gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605", null ],
-    [ "gui_internal_resize", "gui__internal_8c.html#a1b78739da5e4b38d0b9bc01f1cdb6c0d", null ],
+    [ "gui_internal_resize", "gui__internal_8c.html#a12c566d0e48b80701f75877b657c9aaf", null ],
     [ "gui_internal_route_screen_free", "gui__internal_8c.html#abb5f0a10a24be81f8b7c2c6209ff00bb", null ],
     [ "gui_internal_route_update", "gui__internal_8c.html#ab42851ef64e8863d2d309cede2eba4d5", null ],
     [ "gui_internal_say", "gui__internal_8c.html#a056ea224a10186c169a90b5ec945471c", null ],

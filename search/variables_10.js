@@ -25,6 +25,7 @@ var searchData=
   ['on',['on',['../structwidget.html#a1737fbb24d803399a0e30eec0c24b384',1,'widget']]],
   ['on_5feof',['on_eof',['../group__vehicle-file.html#ga3bbc47ab9d3bb2459aa769491f17460b',1,'vehicle_priv']]],
   ['on_5fmap_5fclick',['on_map_click',['../structgui__priv.html#a89acad9e02972bef3e80ebe934d7d634',1,'gui_priv']]],
+  ['on_5fresize',['on_resize',['../structwidget.html#a3e0e211fabd74f49e0da154f7a19bd09',1,'widget']]],
   ['ondemand',['ondemand',['../group__plugins.html#ga9c225c021f1b4e18d40d75ff5f04572c',1,'plugin']]],
   ['onef',['ONEF',['../structgeodesic.html#ab39f00c50b63ab80922b4ec34b328d30',1,'geodesic']]],
   ['onsubmit',['onsubmit',['../structform.html#af1cb06b55551aedb8d4c4424008cdc91',1,'form']]],

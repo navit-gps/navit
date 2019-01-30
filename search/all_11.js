@@ -54,6 +54,7 @@ var searchData=
   ['on',['on',['../structwidget.html#a1737fbb24d803399a0e30eec0c24b384',1,'widget']]],
   ['on_5feof',['on_eof',['../group__vehicle-file.html#ga3bbc47ab9d3bb2459aa769491f17460b',1,'vehicle_priv']]],
   ['on_5fmap_5fclick',['on_map_click',['../structgui__priv.html#a89acad9e02972bef3e80ebe934d7d634',1,'gui_priv']]],
+  ['on_5fresize',['on_resize',['../structwidget.html#a3e0e211fabd74f49e0da154f7a19bd09',1,'widget']]],
   ['onaccuracychanged',['onAccuracyChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a4821526e553f7ce0355678695be991d4',1,'org::navitproject::navit::NavitSensors']]],
   ['onactivityresult',['onActivityResult',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a6cb530da592694ce0e2e6950e1737202',1,'org.navitproject.navit.Navit.onActivityResult()'],['../interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00',1,'org.navitproject.navit.NavitActivityResult.onActivityResult()'],['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a53375d1c4b645297b803d77b235a2f52',1,'org.navitproject.navit.NavitSpeech2.onActivityResult()']]],
   ['oncancelled',['onCancelled',['../classorg_1_1navitproject_1_1navit_1_1NavitBackupTask.html#aa30350e633892c0525f46e017d7613c5',1,'org.navitproject.navit.NavitBackupTask.onCancelled()'],['../classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8c81467cadfe2caa78c9fc4e4032841b',1,'org.navitproject.navit.NavitRestoreTask.onCancelled()']]],

@@ -33,6 +33,7 @@ var structwidget =
     [ "name", "structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe", null ],
     [ "off", "structwidget.html#a0dee33520c9e538f49e6207615580337", null ],
     [ "on", "structwidget.html#a1737fbb24d803399a0e30eec0c24b384", null ],
+    [ "on_resize", "structwidget.html#a3e0e211fabd74f49e0da154f7a19bd09", null ],
     [ "p", "structwidget.html#a2138b16a163c4f9137eee534947c565a", null ],
     [ "packed", "structwidget.html#aacc6d8f4e194abb1d67c3ce38eda2de4", null ],
     [ "parent", "structwidget.html#afd78daaa4f8b798b9891ef5f3cd80495", null ],

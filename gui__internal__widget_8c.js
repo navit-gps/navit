@@ -3,8 +3,9 @@ var gui__internal__widget_8c =
     [ "gui_internal_background_render", "gui__internal__widget_8c.html#a1139ae84a015e3e388526a733dadff94", null ],
     [ "gui_internal_box_new", "gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27", null ],
     [ "gui_internal_box_new_with_label", "gui__internal__widget_8c.html#a8bed9d31c472839bcdd3bbf9bfd689d3", null ],
-    [ "gui_internal_box_pack", "gui__internal__widget_8c.html#a7586837b0f556700196f185c08e248fa", null ],
+    [ "gui_internal_box_pack", "gui__internal__widget_8c.html#aca60bd67c360ca2b6abdc1a565b79570", null ],
     [ "gui_internal_box_render", "gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297", null ],
+    [ "gui_internal_box_resize", "gui__internal__widget_8c.html#ad505d2736aecb3ad58c0cd655b43d47b", null ],
     [ "gui_internal_button_font_new_with_callback", "gui__internal__widget_8c.html#ad5c818dce902c90fc4eedc00b669d558", null ],
     [ "gui_internal_button_label", "gui__internal__widget_8c.html#a33b72fd159d0f59037531e507843e0f8", null ],
     [ "gui_internal_button_new", "gui__internal__widget_8c.html#aade37df2755f91704b80f529bbb42772", null ],
@@ -32,10 +33,12 @@ var gui__internal__widget_8c =
     [ "gui_internal_widget_children_destroy", "gui__internal__widget_8c.html#ad5c3a0bced88e69eb87ad4c26765dd41", null ],
     [ "gui_internal_widget_destroy", "gui__internal__widget_8c.html#ad6803d7bd5b0371612a013cf62f06e04", null ],
     [ "gui_internal_widget_insert_sorted", "gui__internal__widget_8c.html#a408db50b9897eff4c8500540c506071d", null ],
+    [ "gui_internal_widget_move", "gui__internal__widget_8c.html#af9fbcec0d53585ccc01f615f092f9543", null ],
     [ "gui_internal_widget_pack", "gui__internal__widget_8c.html#a789f393578df1622b3df6c6a7c9bc780", null ],
     [ "gui_internal_widget_prepend", "gui__internal__widget_8c.html#a95b60de26c536821e2be5553c10ff329", null ],
     [ "gui_internal_widget_render", "gui__internal__widget_8c.html#a3f5de439e83d0799ad9c22167964bfb0", null ],
     [ "gui_internal_widget_reset_pack", "gui__internal__widget_8c.html#af814d01598d1edef442111a73b6377c2", null ],
+    [ "gui_internal_widget_swap", "gui__internal__widget_8c.html#a5000b541d8c2433d023481d0ee650aa7", null ],
     [ "gui_internal_widget_table_clear", "gui__internal__widget_8c.html#ad1402050a97dc3a962184dd0d5505959", null ],
     [ "gui_internal_widget_table_first_row", "gui__internal__widget_8c.html#a2d93c89044855dcddd9cf429b9fc72e9", null ],
     [ "gui_internal_widget_table_new", "gui__internal__widget_8c.html#a6cfb3036a2d28e45d7dfa196d0947924", null ],
@@ -43,5 +46,6 @@ var gui__internal__widget_8c =
     [ "gui_internal_widget_table_prev_row", "gui__internal__widget_8c.html#a8b6754d91f83f72b210e8e54ffd63532", null ],
     [ "gui_internal_widget_table_row_new", "gui__internal__widget_8c.html#a0b7d20533a877b49c33b0bfe6895e2f5", null ],
     [ "gui_internal_widget_table_set_top_row", "gui__internal__widget_8c.html#ae471d3fa8b365b66990e3ab1e8f6cc3c", null ],
-    [ "gui_internal_widget_table_top_row", "gui__internal__widget_8c.html#a2dc75cf25dfb547cd1a3ab7da1b42fe7", null ]
+    [ "gui_internal_widget_table_top_row", "gui__internal__widget_8c.html#a2dc75cf25dfb547cd1a3ab7da1b42fe7", null ],
+    [ "gui_internal_widget_transfer_content", "gui__internal__widget_8c.html#a803d540693ae5bbc524a5b45689861d2", null ]
 ];

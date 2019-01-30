@@ -12,5 +12,6 @@ var gui__internal__keyboard_8c =
     [ "gui_internal_keyboard_show_native", "gui__internal__keyboard_8c.html#a93c375702a2583e5f23b05e4f195995b", null ],
     [ "gui_internal_keyboard_to_lower_case", "gui__internal__keyboard_8c.html#a92502b1eecf81df256d2758d6fce26e6", null ],
     [ "gui_internal_keyboard_to_upper_case", "gui__internal__keyboard_8c.html#a2c2c1c8a502c402a4306b54713b0e4d7", null ],
+    [ "gui_internal_keyboard_topbox_resize", "gui__internal__keyboard_8c.html#a20458e4a146025cf21cdb9a3eeeaaf5c", null ],
     [ "gui_internal_keyb_modes", "gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2", null ]
 ];
