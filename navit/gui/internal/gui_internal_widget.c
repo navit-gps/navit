@@ -12,6 +12,63 @@
 #include "gui_internal_menu.h"
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
+void gui_internal_box_pack(struct gui_priv *this, struct widget *w);
+
+/**
+ * @brief Transfer the content of one widget into another one (and optionally vice-versa)
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] first The first widget
+ * @param[in,out] second The second widget
+ * @param move_only If non nul, transfer only the second widget into the first widget. The second widget is then deallocated and should be be used anymore (this is a move operation)
+ */
+static void gui_internal_widget_transfer_content(struct gui_priv *this, struct widget *first, struct widget *second,
+        int move_only) {
+    struct widget *temp;
+
+    if (!first) {
+        dbg(lvl_error, "Refusing copy: first argument is NULL");
+        return;
+    }
+    if (!second) {
+        dbg(lvl_error, "Refusing copy: second argument is NULL");
+        return;
+    }
+    temp=g_new0(struct widget, 1);
+    memcpy(temp, first, sizeof(struct widget));
+    memcpy(first, second, sizeof(struct widget));
+    if (move_only) {
+        gui_internal_widget_destroy(this, temp);
+        /* gui_internal_widget_destroy() will do a g_free(temp), but will also deallocate all children widgets */
+        /* Now, we also free the struct widget pointed to by second, so variable second should not be used anymore from this point */
+        g_free(second);
+    } else {
+        memcpy(second, temp, sizeof(struct widget));
+        g_free(temp);
+    }
+}
+
+/**
+ * @brief Swap two widgets
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] first The first widget
+ * @param[in,out] second The second widget
+ */
+void gui_internal_widget_swap(struct gui_priv *this, struct widget *first, struct widget *second) {
+    gui_internal_widget_transfer_content(this, first, second, 0);
+}
+
+/**
+ * @brief Move the content of one widget into another one (the @p src widget is then deallocated and should be be used anymore)
+ *
+ * @param this The internal GUI instance
+ * @param[in,out] dst The destination widget
+ * @param[in,out] src The source widget
+ */
+void gui_internal_widget_move(struct gui_priv *this, struct widget *dst, struct widget *src) {
+    gui_internal_widget_transfer_content(this, dst, src, 1);
+}
 
 static void gui_internal_background_render(struct gui_priv *this, struct widget *w) {
     struct point pnt=w->p;
@@ -88,6 +145,12 @@ gui_internal_image_new(struct gui_priv *this, struct graphics_image *image) {
     return widget;
 }
 
+/**
+ * @brief Renders an image or icon, preparing it for drawing on the display
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
 static void gui_internal_image_render(struct gui_priv *this, struct widget *w) {
     struct point pnt;
 
@@ -101,7 +164,7 @@ static void gui_internal_image_render(struct gui_priv *this, struct widget *w) {
 }
 
 /**
- * @brief Renders a label.
+ * @brief Renders a label, preparing it for drawing on the display
  *
  * @param this The internal GUI instance
  * @param w The widget to render
@@ -286,6 +349,7 @@ gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const c
         widget->text=g_strdup(label);
     widget->type=widget_box;
     widget->flags=flags;
+    widget->on_resize=gui_internal_box_resize;
     return widget;
 }
 
@@ -325,14 +389,13 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w) {
         gui_internal_widget_render(this, w->scroll_buttons->button_box);
 }
 
-
 /**
- * @brief Computes the size and location for the widget.
+ * @brief Computes the size and location for a box widget
  *
  * @param this The internal GUI instance
- * @param w The widget to render
+ * @param w The widget to pack
  */
-static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
+void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,expandd=1,count=0,rows=0,cols=w->cols ? w->cols : 0;
     int hb=w->scroll_buttons?w->scroll_buttons->button_box->h:0;
@@ -599,6 +662,46 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w) {
     }
 }
 
+/**
+ * @brief Resize a box widget.
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to resize
+ * @param wnew The new width of the widget
+ * @param hnew THe new height of the widget
+ */
+void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data, int wnew, int hnew) {
+    GList *l;
+    struct widget *wb;
+
+    w->w = wnew;
+    w->h = hnew;
+
+    l=w->children;
+    while (l) {
+        wb=l->data;
+        if (wb->on_resize) {
+            int orientation=w->flags & 0xffff0000;
+            switch(orientation) {
+            case orientation_horizontal:
+            case orientation_vertical:
+            case orientation_horizontal_vertical:
+                wb->h = 0;
+                wb->w = 0;
+                gui_internal_widget_pack(this, wb);
+                break;
+            default:
+                wb->w = w->w;
+                wb->h = w->h;
+            }
+            wb->on_resize(this, wb, NULL, wb->w, wb->h);
+        }
+        l=g_list_next(l);
+    }
+
+    /* Note: this widget and its children have been resized, a call to gui_internal_box_render() needs to be done by the caller */
+}
+
 void gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w) {
     struct widget *wc;
     GList *l;
@@ -717,6 +820,14 @@ void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w) {
 }
 
 
+/**
+ * @brief Renders widgets, preparing it for drawing on the display
+ *
+ * The appropriate render function will be called, depending on the type of widget
+ *
+ * @param this The internal GUI instance
+ * @param w The widget to render
+ */
 void gui_internal_widget_render(struct gui_priv *this, struct widget *w) {
     if(w->p.x > this->root.w || w->p.y > this->root.h || w->state & STATE_INVISIBLE)
         return;
@@ -1343,8 +1454,6 @@ void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, 
 
     gui_internal_menu_render(this);
 }
-
-
 
 /**
  * @brief Handles the 'previous page' table event.
