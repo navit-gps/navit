@@ -133,6 +133,17 @@ struct gui_internal_keyb_mode {
 			-> datai = (mode & VKBD_MASK_7) | ((x) & VKBD_LAYOUT_MASK)
 #define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
 #define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
+
+
+static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data,
+        int neww, int newh) {
+    struct menu_data *md=gui_internal_menu_data(this);
+    struct widget *old_wkbdb = md->keyboard;
+
+    dbg(lvl_debug, "resize called for keyboard widget %p with w=%d, h=%d", w, neww, newh);
+    gui_internal_keyboard_do(this, old_wkbdb, md->keyboard_mode);
+}
+
 /**
  * @brief Creates a new keyboard widget or switches the layout of an existing widget
  *
@@ -167,6 +178,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         else
             render=1;
         gui_internal_widget_children_destroy(this, wkbdb);
+        gui_internal_widget_reset_pack(this, wkbdb);
+        gui_internal_widget_pack(this, wkbdb);
     } else
         wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
     md->keyboard=wkbdb;
@@ -176,6 +189,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
     wkbd->cols=8;
     wkbd->spx=0;
     wkbd->spy=0;
+    wkbd->on_resize=gui_internal_keyboard_topbox_resize;
     max_w=max_w/8;
     max_h=max_h/8; // Allows 3 results in the list when searching for Towns
     wkbd->p.y=max_h*2;

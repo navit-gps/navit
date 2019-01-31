@@ -16,7 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #ifndef __graphics_qt_h
 #define __graphics_qt_h
@@ -62,8 +61,7 @@ struct graphics_priv;
 #if USE_QML
 class GraphicsPriv : public QObject {
     Q_OBJECT
-public:
-    GraphicsPriv(struct graphics_priv* gp);
+public: GraphicsPriv(struct graphics_priv* gp);
     ~GraphicsPriv();
     void emit_update();
 
