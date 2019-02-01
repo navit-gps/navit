@@ -213,6 +213,13 @@ void navit_add_mapset(struct navit *this_, struct mapset *ms) {
     this_->mapsets = g_list_append(this_->mapsets, ms);
 }
 
+/**
+ * @brief Get the current mapset
+ *
+ * @param this_ The navit instance
+ *
+ * @return A pointer to the current mapset
+ */
 struct mapset *
 navit_get_mapset(struct navit *this_) {
     if(this_->mapsets) {
@@ -226,7 +233,7 @@ navit_get_mapset(struct navit *this_) {
 /**
  * @brief Get the search result map (and create it if it does not exist)
  *
- * @param this The GUI context
+ * @param this_ The navit instance
  *
  * @return A pointer to the map named "search_results" or NULL if there wasa failure
  */
@@ -285,14 +292,14 @@ struct map *navit_get_search_results_map(struct navit *this_) {
  *
  * @warning Each call to this function will replace currently displayed results, it will not add to them
  *
- * @param navit The navit instance
+ * @param this_ The navit instance
  * @param search_results A GList storing {@code struct lcoord} elements to display on the result map
  *                       If this argument in NULL, all existing results will be removed from the map
  * @param[in,out] coord_rect An optional rectangular zone that will be extended to contain all result points
  *                           or NULL if no zone needs to be computed
  * @return THe number of results actually added to the map
  */
-int navit_populate_search_results_map(struct navit *navit, GList *search_results, struct coord_rect *r) {
+int navit_populate_search_results_map(struct navit *this_, GList *search_results, struct coord_rect *r) {
     struct map *map;
     struct map_rect *mr;
     struct item *item;
@@ -300,10 +307,9 @@ int navit_populate_search_results_map(struct navit *navit, GList *search_results
     int count;
     char *name_label;
 
-    map = navit_get_search_results_map(navit);
+    map = navit_get_search_results_map(this_);
     if(!map)
         return 0;
-
 
     mr = map_rect_new(map, NULL);
 
