@@ -18,10 +18,15 @@ struct widget {
     struct graphics_image *img;
     /**
      * A function to be invoked on actions.
-     * @li widget The widget that is receiving the button press.
+     * @param widget The widget that is receiving the button press.
      *
      */
     void (*func)(struct gui_priv *priv, struct widget *widget, void *data);
+    /**
+     * A function to be invoked on resize or move
+     * @param widget The widget that is resized
+     */
+    void (*on_resize)(struct gui_priv *priv, struct widget *widget, void *data, int neww, int newh);
     enum gui_internal_reason reason;
     int datai;
     void *data;
@@ -151,6 +156,8 @@ struct gui_priv;
 struct point;
 struct table_data;
 struct widget;
+void gui_internal_widget_swap(struct gui_priv *this, struct widget *first, struct widget *second);
+void gui_internal_widget_move(struct gui_priv *this, struct widget *dst, struct widget *src);
 struct widget *gui_internal_label_font_new(struct gui_priv *this, const char *text, int font);
 struct widget *gui_internal_label_new(struct gui_priv *this, const char *text);
 struct widget *gui_internal_label_new_abbrev(struct gui_priv *this, const char *text, int maxwidth);
@@ -170,6 +177,7 @@ void gui_internal_highlight_do(struct gui_priv *this, struct widget *found);
 void gui_internal_highlight(struct gui_priv *this);
 struct widget *gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const char *label);
 struct widget *gui_internal_box_new(struct gui_priv *this, enum flags flags);
+void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data, int wnew, int hnew);
 void gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_append(struct widget *parent, struct widget *child);
 void gui_internal_widget_prepend(struct widget *parent, struct widget *child);
@@ -177,6 +185,7 @@ void gui_internal_widget_insert_sorted(struct widget *parent, struct widget *chi
 void gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
+void gui_internal_widget_resize(struct gui_priv *this, struct widget *w, int wnew, int hnew);
 void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 struct widget *gui_internal_button_label(struct gui_priv *this, const char *label, int mode);
 struct widget *gui_internal_widget_table_new(struct gui_priv *this, enum flags flags, int buttons);

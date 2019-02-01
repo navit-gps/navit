@@ -476,7 +476,7 @@ gui_internal_time_help(struct gui_priv *this) {
 /**
  * Applies the configuration values to this based on the settings
  * specified in the configuration file (this->config) and
- * the most approriate default profile based on screen resolution.
+ * the most appropriate default profile based on screen resolution.
  *
  * This function should be run after this->root is setup and could
  * be rerun after the window is resized.
@@ -2532,33 +2532,50 @@ static void gui_internal_setup(struct gui_priv *this) {
     g_free(gui_file);
 }
 
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void gui_internal_resize(void *data, int w, int h) {
+/**
+ * @brief Callback function invoked when display area is resized
+ *
+ * @param data A generic argument structure pointer, here we use it to store the the internal GUI context (this)
+ * @param wnew The new width of the display area
+ * @param hnew The new height of the display area
+ *
+ * @author Martin Schaller
+ * @date 2008/04
+ */
+static void gui_internal_resize(void *data, int wnew, int hnew) {
+    GList *l;
+    struct widget *w;
+
     struct gui_priv *this=data;
     int changed=0;
 
     gui_internal_setup(this);
 
-    if (this->root.w != w || this->root.h != h) {
-        this->root.w=w;
-        this->root.h=h;
-        changed=1;
-    }
+    changed=gui_internal_menu_needs_resizing(this, &(this->root), wnew, hnew);
+
     /*
      * If we're drawing behind system bars on Android, watching for actual size changes will not catch
      * fullscreen toggle events. As a workaround, always assume a size change if padding is supplied.
      */
     if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
         changed = 1;
-    dbg(lvl_debug,"w=%d h=%d children=%p", w, h, this->root.children);
-    navit_handle_resize(this->nav, w, h);
+    navit_handle_resize(this->nav, wnew, hnew);
     if (this->root.children) {
         if (changed) {
-            gui_internal_html_main_menu(this);
+            l = g_list_last(this->root.children);
+            if (l) {
+                w=l->data;
+                if (!gui_internal_widget_reload_href(this,
+                                                     w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                    /* If not, resize the foremost widget */
+                    dbg(lvl_debug, "Current GUI displayed is not a menu");
+                    dbg(lvl_debug, "Will call resize with w=%d, h=%d", wnew, hnew)
+                    gui_internal_menu_resize(this, wnew, hnew);
+                    gui_internal_menu_render(this);
+                } else {
+                    dbg(lvl_debug,"Current GUI displayed is a menu");
+                }
+            }
         } else {
             gui_internal_menu_render(this);
         }
