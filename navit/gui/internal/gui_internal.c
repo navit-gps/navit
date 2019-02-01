@@ -910,7 +910,6 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     struct attr a;
     GList* p;
 
-    /* FIXME: this does not work anymore for multiple results... we have to find out why... */
     this->results_map_population=0;
 
     /* Find the table to populate the map */
