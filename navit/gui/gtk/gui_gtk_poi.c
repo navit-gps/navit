@@ -257,6 +257,7 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
     sprintf(buffer, _("POI %s. %s"), category, label);
+    navit_populate_search_results_map(search->nav, NULL, NULL); 	/* Remove any highlighted point on the map */
 
     struct pcoord dest;
     dest.x=lat;
@@ -289,10 +290,10 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
 
-    struct pcoord dest;
-    dest.x=lat;
-    dest.y=lon;
-    dest.pro=1;
+    struct pcoord point;	/* The geographical position of the selected POI point */
+    point.x=lat;
+    point.y=lon;
+    point.pro=1;
     GList* list = NULL;
     struct lcoord *result = g_new0(struct lcoord, 1);
     result->c.x=lat;
@@ -306,7 +307,7 @@ static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search)
             g_free(((struct lcoord *)(p->data))->label);
     }
     g_list_free(list);
-    navit_set_center(search->nav, &dest,1);
+    navit_set_center(search->nav, &point,1);
     dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }
 
@@ -330,6 +331,7 @@ static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *searc
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
     dbg(lvl_debug,_("Set next visit to %ld, %ld "),lat,lon);
+    navit_populate_search_results_map(search->nav, NULL, NULL);	/* Remove any highlighted point on the map */
 
     struct pcoord dest;
     dest.x=lat;
@@ -352,6 +354,7 @@ void gtk_gui_poi(struct navit *nav) {
     struct gtk_poi_search *search=&gtk_poi_search;
     search->nav=nav;
 
+    navit_populate_search_results_map(search->nav, NULL, NULL);	/* Remove any highlighted point on the map */
     window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window2),_("POI search"));
     gtk_window_set_wmclass (GTK_WINDOW (window2), "navit", "Navit");

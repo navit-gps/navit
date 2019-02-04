@@ -297,7 +297,7 @@ struct map *navit_get_search_results_map(struct navit *this_) {
  *                       If this argument in NULL, all existing results will be removed from the map
  * @param[in,out] coord_rect An optional rectangular zone that will be extended to contain all result points
  *                           or NULL if no zone needs to be computed
- * @return THe number of results actually added to the map
+ * @return The number of results actually added to the map
  */
 int navit_populate_search_results_map(struct navit *this_, GList *search_results, struct coord_rect *r) {
     struct map *map;
