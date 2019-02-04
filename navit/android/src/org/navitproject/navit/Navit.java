@@ -891,10 +891,6 @@ public class Navit extends Activity {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "OnDestroy");
-        // next call will kill our app the hard way. This should not be necessary, but ensures navit is
-        // properly restarted and no resources are wasted with navit in background. Remove this call after
-        // code review
-        NavitDestroy();
     }
 
     public void fullscreen(int fullscreen) {
