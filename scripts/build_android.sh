@@ -18,7 +18,7 @@
 
 echo Set up environment
 set - e
-export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin
 export JVM_OPTS="-Xmx3200m"
 export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
