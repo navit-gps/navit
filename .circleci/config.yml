@@ -65,7 +65,7 @@ jobs:
       - store_artifacts:
           name: Store rpm
           path: ../rpmbuild/RPMS/
-  build_android_arm:
+  build_android:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-ndk
@@ -232,7 +232,7 @@ workflows:
       - build_linux:
           requires:
             - sanity_check
-      - build_android_arm:
+      - build_android:
           requires:
             - sanity_check
       - build_sailfish:
@@ -253,7 +253,7 @@ workflows:
       - run_doxygen:
           requires:
             - build_linux
-            - build_android_arm
+            - build_android
             - build_win32
             - build_wince
             - build_tomtom_minimal
@@ -264,7 +264,7 @@ workflows:
       - merge_trunk_in_master:
           requires:
             - build_linux
-            - build_android_arm
+            - build_android
             - build_win32
             - build_wince
             - build_tomtom_minimal
