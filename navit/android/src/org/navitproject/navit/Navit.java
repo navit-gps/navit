@@ -20,6 +20,7 @@
 package org.navitproject.navit;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -75,11 +76,6 @@ public class Navit extends Activity {
     private NavitActivityResult[]      ActivityResults;
     public static InputMethodManager   mgr                             = null;
     public static DisplayMetrics       metrics                         = null;
-    public static int                  status_bar_height               = 0;
-    private static int                 action_bar_default_height       = 0;
-    public static int                  navigation_bar_height           = 0;
-    public static int                  navigation_bar_height_landscape = 0;
-    public static int                  navigation_bar_width            = 0;
     public static Boolean              show_soft_keyboard              = false;
     public static Boolean              show_soft_keyboard_now_showing  = false;
     public static long                 last_pressed_menu_key           = 0L;
@@ -354,25 +350,6 @@ public class Navit extends Activity {
         Notification NavitNotification = builder.build();
         nm.notify(R.string.app_name, NavitNotification);// Show the notification
 
-        // Status and navigation bar sizes
-        // These are platform defaults and do not change with rotation, but we have to figure out which ones apply
-        // (is the navigation bar visible? on the side or at the bottom?)
-        Resources resources = getResources();
-        int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
-        int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
-        int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        int nhlid = resources.getIdentifier("navigation_bar_height_landscape", "dimen", "android");
-        int nwid = resources.getIdentifier("navigation_bar_width", "dimen", "android");
-        status_bar_height = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
-        action_bar_default_height = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
-        navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
-        navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
-        navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
-        Log.d(TAG, String.format(
-                    "status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, "
-                    + "navigation_bar_height_landscape=%d, navigation_bar_width=%d",
-                    status_bar_height, action_bar_default_height, navigation_bar_height,
-                    navigation_bar_height_landscape, navigation_bar_width));
         if ((ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                     || (ContextCompat.checkSelfPermission(this,
@@ -502,6 +479,7 @@ public class Navit extends Activity {
             }
         }
         Log.d(TAG, "onResume");
+
         if (show_soft_keyboard_now_showing) {
             /* Calling showNativeKeyboard() directly won't work here, we need to use the message queue */
             View cf = getCurrentFocus();
