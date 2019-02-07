@@ -45,6 +45,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowInsets;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -157,6 +158,22 @@ public class NavitGraphics {
             } catch (Exception e) {
                 Log.e(TAG, "Multitouch zoom not supported");
             }
+        }
+
+        @Override
+        @TargetApi(20)
+        public WindowInsets onApplyWindowInsets (WindowInsets insets) {
+            /*
+             * We're skipping the top inset here because it appears to have a bug on most Android versions tested,
+             * causing it to report between 24 and 64 dip more than what is actually occupied by the system UI.
+             * The top inset is retrieved in handleResize(), with logic depending on the platform version.
+             */
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+                padding_left = insets.getSystemWindowInsetLeft();
+                padding_right = insets.getSystemWindowInsetRight();
+                padding_bottom = insets.getSystemWindowInsetBottom();
+            }
+            return super.onApplyWindowInsets(insets);
         }
 
         @Override
@@ -718,30 +735,22 @@ public class NavitGraphics {
                 FrameLayout.LayoutParams leftLayoutParams = new FrameLayout.LayoutParams(padding_left,
                         LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT);
                 leftTintView.setLayoutParams(leftLayoutParams);
-                Log.d(TAG, String.format("leftTintView: width=%d height=%d",
-                        leftTintView.getWidth(), leftTintView.getHeight()));
 
                 FrameLayout.LayoutParams rightLayoutParams = new FrameLayout.LayoutParams(padding_right,
                         LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.RIGHT);
                 rightTintView.setLayoutParams(rightLayoutParams);
-                Log.d(TAG, String.format("rightTintView: width=%d height=%d",
-                        rightTintView.getWidth(), rightTintView.getHeight()));
 
                 FrameLayout.LayoutParams topLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         padding_top, Gravity.TOP);
                 /* Prevent horizontal and vertical tint views from overlapping */
                 topLayoutParams.setMargins(padding_left, 0, padding_right, 0);
                 topTintView.setLayoutParams(topLayoutParams);
-                Log.d(TAG, String.format("topTintView: width=%d height=%d",
-                        topTintView.getWidth(), topTintView.getHeight()));
 
                 FrameLayout.LayoutParams bottomLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         padding_bottom, Gravity.BOTTOM);
                 /* Prevent horizontal and vertical tint views from overlapping */
                 bottomLayoutParams.setMargins(padding_left, 0, padding_right, 0);
                 bottomTintView.setLayoutParams(bottomLayoutParams);
-                Log.d(TAG, String.format("bottomTintView: width=%d height=%d",
-                        bottomTintView.getWidth(), bottomTintView.getHeight()));
 
                 /* show tint bars again */
                 leftTintView.setVisibility(View.VISIBLE);
@@ -768,42 +777,56 @@ public class NavitGraphics {
         } else {
             Log.d(TAG, String.format("handleResize w=%d h=%d", w, h));
 
-            /* Fallback if we can't determine padding: assume 0 all around */
-            padding_left = 0;
-            padding_right = 0;
-            padding_top = 0;
-            padding_bottom = 0;
-
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                /* On API 23+ we can query window insets to determine the area which is obscured by the system bars. */
+                /*
+                 * On API 23+ we can query window insets to determine the area which is obscured by the system bars.
+                 * This appears to have a bug, though, causing an inset to be reported for the navigation bar even
+                 * when it is not obstructing the window. Therefore, we are relying on the values previously obtained
+                 * by NavitView#onApplyWindowInsets(), though this is affected by a different bug. Luckily, the two
+                 * bugs appear to be complementary, allowing us to mix and match results.
+                 */
                 if (view == null) {
-                    Log.e(TAG, "view is null!");
+                    Log.w(TAG, "view is null, cannot update padding");
                 } else {
-                    Log.e(TAG, String.format("view w=%d h=%d x=%.0f y=%.0f",
+                    Log.d(TAG, String.format("view w=%d h=%d x=%.0f y=%.0f",
                             view.getWidth(), view.getHeight(), view.getX(), view.getY()));
                     if (view.getRootWindowInsets() == null)
-                        Log.e(TAG, "No root window insets");
+                        Log.w(TAG, "No root window insets, cannot update padding");
                     else {
-                        Log.e(TAG, String.format("RootWindowInsets left=%d right=%d top=%d bottom=%d",
+                        Log.d(TAG, String.format("RootWindowInsets left=%d right=%d top=%d bottom=%d",
                                 view.getRootWindowInsets().getSystemWindowInsetLeft(),
                                 view.getRootWindowInsets().getSystemWindowInsetRight(),
                                 view.getRootWindowInsets().getSystemWindowInsetTop(),
                                 view.getRootWindowInsets().getSystemWindowInsetBottom()));
-                        padding_left = view.getRootWindowInsets().getSystemWindowInsetLeft();
-                        padding_right = view.getRootWindowInsets().getSystemWindowInsetRight();
                         padding_top = view.getRootWindowInsets().getSystemWindowInsetTop();
-                        padding_bottom = view.getRootWindowInsets().getSystemWindowInsetBottom();
                     }
                 }
-            } else {
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
                 /*
-                 * Android 4.x does not support window insets at all, and Android 5.x does not support root window
-                 * insets, forcing us to make an educated guess:
+                 * API 20-22 do not support root window insets, forcing us to make an educated guess about the
+                 * navigation bar height:
                  *
-                 * Status and navigation bar sizes are platform defaults and do not change with rotation, but we have
+                 * The size is a platform default and does not change with rotation, but we have to figure out if it
+                 * applies, i.e. if the status bar is visible.
+                 *
+                 * The status bar is always visible unless we are in fullscreen mode. (Fortunately, none of the
+                 * versions affected by this support split screen mode, which would have further complicated things.)
+                 */
+                if (activity.isFullscreen)
+                    padding_top = 0;
+                else {
+                    Resources resources = view.getResources();
+                    int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
+                    padding_top = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+                }
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                /*
+                 * API 19 does not support window insets at all, forcing us to do even more guessing than on API 20-22:
+                 *
+                 * All system bar sizes are platform defaults and do not change with rotation, but we have
                  * to figure out which ones apply.
                  *
-                 * The status bar is always visible unless we are in fullscreen mode.
+                 * Status bar visibility is as on API 20-22.
                  *
                  * The navigation bar is shown on devices that report they have no physical menu button. This seems to
                  * work even on devices that allow disabling the physical buttons (and use the navigation bar, in which
@@ -853,6 +876,12 @@ public class NavitGraphics {
                     padding_bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : (
                             isLandscape ? navigation_bar_height_landscape : navigation_bar_height);
                 }
+            } else {
+                /* API 18 and below does not support drawing under the system bars, padding is 0 all around */
+                padding_left = 0;
+                padding_right = 0;
+                padding_top = 0;
+                padding_bottom = 0;
             }
 
             Log.d(TAG, String.format("Padding left=%d top=%d right=%d bottom=%d",
