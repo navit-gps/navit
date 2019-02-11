@@ -185,6 +185,9 @@ Waypoint</text></img>
 		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.png"/>
 		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/>
 
+		<!-- Traffic -->
+		<traffic type="null"/>
+
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
 		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->

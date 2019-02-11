@@ -44,6 +44,9 @@
 			&lt;img src=''gui_rules'' onclick=''navit.graphics.set_map_location();''>&lt;text>Set map location&lt;/text>&lt;/img>
 			&lt;img src=''gui_rules'' onclick=''navit.graphics.backup_restore_dialog();''>&lt;text>Backup / Restore&lt;/text>&lt;/img>')"/>
    </xsl:template>
+   <xsl:template match="/config/navit/traffic">
+      <traffic type="traff_android"/>
+   </xsl:template>
 
    <xsl:template match="/config/navit[1]">
       <xsl:copy>
