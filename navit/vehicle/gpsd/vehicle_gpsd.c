@@ -325,7 +325,11 @@ static void vehicle_gpsd_io(struct vehicle_priv *priv) {
         int read_result;
         /* Read until EOF, in case we are lagging behind.
          * No point in processing old GPS reports. */
+#if GPSD_API_MAJOR_VERSION >= 7
+        while((read_result=gps_read(priv->gps, NULL, 0))>0);
+#else
         while((read_result=gps_read(priv->gps))>0);
+#endif
         if(read_result==-1) {
             dbg(lvl_error,"gps_poll failed");
             vehicle_gpsd_close(priv);
