@@ -130,7 +130,8 @@ static struct graphics_font_methods font_methods = {
     font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font, int size, int flags) {
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
+        int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     *meth=font_methods;
 
@@ -195,7 +196,8 @@ static struct graphics_image_methods image_methods = {
 };
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path,
+        int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv* ret = NULL;
 
     ret=g_new0(struct graphics_image_priv, 1);
@@ -216,7 +218,8 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct g
         id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, gra->packageName);
         dbg(lvl_debug,"id=%d",id);
         if (id)
-            localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
+            localBitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource,
+                        gra->Resources, id);
         (*jnienv)->DeleteLocalRef(jnienv, a);
     } else {
         string = (*jnienv)->NewStringUTF(jnienv, path);
@@ -316,7 +319,8 @@ static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc,
 
 static void draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     initPaint(gra, gc);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->gra->Paint, p->x, p->y, w, h);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->gra->Paint, p->x, p->y, w,
+                              h);
 }
 
 static void draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r) {
@@ -325,25 +329,30 @@ static void draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, 
 }
 
 
-static void draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     int bgcolor=0;
     dbg(lvl_debug,"enter %s", text);
     initPaint(gra, fg);
     if(bg)
         bgcolor=(bg->a<<24)| (bg->r<<16) | (bg->g<<8) | bg->b;
     jstring string = (*jnienv)->NewStringUTF(jnienv, text);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string, font->size, dx, dy, bgcolor);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string,
+                              font->size, dx, dy, bgcolor);
     (*jnienv)->DeleteLocalRef(jnienv, string);
 }
 
-static void draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
     dbg(lvl_debug,"enter %p",img);
     initPaint(gra, fg);
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y, img->Bitmap);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y,
+                              img->Bitmap);
 
 }
 
-static void draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img) {
+static void draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count,
+                             struct graphics_image_priv *img) {
 
     /*
      *
@@ -354,7 +363,8 @@ static void draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *
 
     if (count==3) {
         initPaint(gr, fg);
-        (*jnienv)->CallVoidMethod(jnienv, gr->NavitGraphics, gr->NavitGraphics_draw_image_warp, fg->gra->Paint, count,  p[0].x, p[0].y,p[1].x, p[1].y, p[2].x, p[2].y, img->Bitmap);
+        (*jnienv)->CallVoidMethod(jnienv, gr->NavitGraphics, gr->NavitGraphics_draw_image_warp, fg->gra->Paint, count,
+                                  p[0].x, p[0].y,p[1].x, p[1].y, p[2].x, p[2].y, img->Bitmap);
     } else
         dbg(lvl_debug,"draw_image_warp is called with unsupported count parameter value %d", count);
 }
@@ -372,7 +382,8 @@ static void draw_mode(struct graphics_priv *gra, enum draw_mode_num mode) {
     (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_mode, (int)mode);
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound);
 
 static void *get_data(struct graphics_priv *this, const char *type) {
     if (!strcmp(type,"padding"))
@@ -385,7 +396,8 @@ static void *get_data(struct graphics_priv *this, const char *type) {
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
 }
 
-static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate) {
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
+                          struct point *ret, int estimate) {
     int len = g_utf8_strlen(text, -1);
     int xMin = 0;
     int yMin = 0;
@@ -407,7 +419,8 @@ static void overlay_disable(struct graphics_priv *gra, int disable) {
 }
 
 static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int wraparound) {
-    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0, pnt ? pnt->y:0, w, h, wraparound);
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0, pnt ? pnt->y:0,
+                              w, h, wraparound);
 }
 
 static int set_attr(struct graphics_priv *gra, struct attr *attr) {
@@ -533,7 +546,8 @@ static int set_activity(jobject graphics) {
  * @param wraparound (0 for the main view)
  * @param use_camera Whether to use the camera (0 for overlays)
  */
-static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int wraparound, int use_camera) {
+static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w,
+                                 int h, int wraparound, int use_camera) {
     struct callback *cb;
     jmethodID cid, Context_getPackageName;
 
@@ -691,7 +705,8 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu, Navit_showNativeKeyboard, Navit_hideNativeKeyboard;
+static jmethodID Navit_disableSuspend, Navit_exit, Navit_fullscreen, Navit_runOptionsItem, Navit_showMenu,
+       Navit_showNativeKeyboard, Navit_hideNativeKeyboard;
 
 static int graphics_android_fullscreen(struct window *win, int on) {
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_fullscreen, on);
@@ -714,7 +729,8 @@ static void graphics_android_disable_suspend(struct window *win) {
  * @param out Points to a buffer which will receive a pointer to the output of the command
  * @param valid
  */
-static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in,
+        struct attr ***out, int *valid) {
     int ncmd=0;
     dbg(0,"Running %s",function);
     if(!strcmp(function,"map_download_dialog")) {
@@ -738,7 +754,8 @@ static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *f
  * @param out Points to a buffer which will receive a pointer to the output of the command
  * @param valid
  */
-static void graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static void graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out,
+                                      int *valid) {
     dbg(lvl_debug, "enter");
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_showMenu);
 }
@@ -767,7 +784,8 @@ static struct command_table commands[] = {
  *
  * @return The new graphics instance
  */
-static struct graphics_priv *graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct graphics_priv *ret;
     struct attr *attr;
     int use_camera=0;
@@ -799,7 +817,7 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
             attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, ret->bgcolor);
     } else {
         /* default is the same as for OSD */
-        ret->bgcolor = 0x60000000;
+        ret->bgcolor = 0xa0000000;
     }
     if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
         use_camera=attr->u.num;
@@ -853,7 +871,8 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
  *
  * @return The graphics instance for the new overlay
  */
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound) {
     struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
     *meth=graphics_methods;
     if (graphics_android_init(ret, gr, p, w, h, wraparound, 0)) {

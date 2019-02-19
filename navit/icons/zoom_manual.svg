@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="zoom_out.svg"
-   inkscape:export-filename="/home/michael/src/navit-artwork/zoom_in.png"
+   sodipodi:docname="zoom_manual.svg"
+   inkscape:export-filename="/home/michael/src/navit-artwork/set_center_cursor.png"
    inkscape:export-xdpi="134.99994"
    inkscape:export-ydpi="134.99994">
   <defs
@@ -53,7 +53,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.8125"
-     inkscape:cx="9.2964433"
+     inkscape:cx="13.376125"
      inkscape:cy="24"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -121,10 +121,27 @@
        x="3.5527137e-15"
        y="1004.3622"
        rx="4" />
-    <path
-       inkscape:connector-curvature="0"
-       d="m 30.870212,1032.488 h -1.445398 l -0.512293,-0.494 c 1.793025,-2.0858 2.872499,-4.7936 2.872499,-7.7393 0,-6.5683 -5.324185,-11.8925 -11.89251,-11.8925 -6.568325,0 -11.89251,5.3242 -11.89251,11.8925 0,6.5683 5.324185,11.8925 11.89251,11.8925 2.945683,0 5.653516,-1.0795 7.73928,-2.8725 l 0.493996,0.5123 v 1.4454 l 9.148085,9.1298 L 40,1041.6361 Z m -10.977702,0 c -4.555746,0 -8.233276,-3.6775 -8.233276,-8.2333 0,-4.5557 3.67753,-8.2333 8.233276,-8.2333 4.555746,0 8.233276,3.6776 8.233276,8.2333 0,4.5558 -3.67753,8.2333 -8.233276,8.2333 z m -4.574042,-9.1481 h 9.148084 v 1.8296 h -9.148084 z"
-       id="path2"
-       style="stroke-width:1.8296169;fill:#ffffff" />
+    <g
+       id="g841"
+       transform="matrix(1.8296169,0,0,1.8296169,-21.273871,-852.68013)"
+       style="fill:#ffffff">
+      <path
+         sodipodi:nodetypes="cccssssccccccsssss"
+         inkscape:connector-curvature="0"
+         id="path2"
+         d="m 28.5,1030.3622 h -0.79 l -0.28,-0.27 c 0.98,-1.14 1.57,-2.62 1.57,-4.23 0,-3.59 -2.91,-6.5 -6.5,-6.5 -3.59,0 -6.5,2.91 -6.5,6.5 0,3.59 2.91,6.5 6.5,6.5 1.61,0 3.09,-0.59 4.23,-1.57 l 0.27,0.28 v 0.79 l 5,4.99 1.49,-1.49 z m -6,0 c -2.49,0 -4.5,-2.01 -4.5,-4.5 0,-2.49 2.01,-4.5 4.5,-4.5 2.49,0 4.5,2.01 4.5,4.5 0,2.49 -2.01,4.5 -4.5,4.5 z"
+         style="fill:#ffffff" />
+      <g
+         transform="translate(13.033456,1016.3816)"
+         id="text821"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         aria-label="M">
+        <path
+           inkscape:connector-curvature="0"
+           id="path847"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:6.66666651px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff"
+           d="M 8.2485857,7.1110504 9.4660335,10.54855 10.676971,7.1110504 h 1.282552 V 11.850634 H 10.979705 V 10.555061 L 11.077362,8.3187327 9.7980648,11.850634 H 9.1274919 L 7.8514503,8.3219879 7.9491065,10.555061 v 1.295573 H 6.972544 V 7.1110504 Z" />
+      </g>
+    </g>
   </g>
 </svg>
