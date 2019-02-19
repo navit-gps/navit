@@ -20,9 +20,11 @@
 package org.navitproject.navit;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -43,6 +45,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowInsets;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -64,9 +67,15 @@ public class NavitGraphics {
     private int                            bgcolor;
     private float                          trackball_x;
     private float                          trackball_y;
+    private int                            padding_left                    = 0;
+    private int                            padding_right                   = 0;
+    private int                            padding_top                     = 0;
+    private int                            padding_bottom                  = 0;
     private View                           view;
-    private SystemBarTintView              navigationTintView;
-    private SystemBarTintView              statusTintView;
+    private SystemBarTintView              leftTintView;
+    private SystemBarTintView              rightTintView;
+    private SystemBarTintView              topTintView;
+    private SystemBarTintView              bottomTintView;
     private FrameLayout                    frameLayout;
     private RelativeLayout                 relativelayout;
     private NavitCamera                    camera;
@@ -80,11 +89,17 @@ public class NavitGraphics {
 
     public void setBackgroundColor(int bgcolor) {
         this.bgcolor = bgcolor;
-        if (navigationTintView != null) {
-            navigationTintView.setBackgroundColor(bgcolor);
+        if (leftTintView != null) {
+            leftTintView.setBackgroundColor(bgcolor);
         }
-        if (statusTintView != null) {
-            statusTintView.setBackgroundColor(bgcolor);
+        if (rightTintView != null) {
+            rightTintView.setBackgroundColor(bgcolor);
+        }
+        if (topTintView != null) {
+            topTintView.setBackgroundColor(bgcolor);
+        }
+        if (bottomTintView != null) {
+            bottomTintView.setBackgroundColor(bgcolor);
         }
     }
 
@@ -143,6 +158,22 @@ public class NavitGraphics {
             } catch (Exception e) {
                 Log.e(TAG, "Multitouch zoom not supported");
             }
+        }
+
+        @Override
+        @TargetApi(20)
+        public WindowInsets onApplyWindowInsets (WindowInsets insets) {
+            /*
+             * We're skipping the top inset here because it appears to have a bug on most Android versions tested,
+             * causing it to report between 24 and 64 dip more than what is actually occupied by the system UI.
+             * The top inset is retrieved in handleResize(), with logic depending on the platform version.
+             */
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+                padding_left = insets.getSystemWindowInsetLeft();
+                padding_right = insets.getSystemWindowInsetRight();
+                padding_bottom = insets.getSystemWindowInsetBottom();
+            }
+            return super.onApplyWindowInsets(insets);
         }
 
         @Override
@@ -574,10 +605,14 @@ public class NavitGraphics {
             if (Build.VERSION.SDK_INT >= 19) {
                 frameLayout = new FrameLayout(activity);
                 frameLayout.addView(relativelayout);
-                navigationTintView = new SystemBarTintView(activity);
-                statusTintView = new SystemBarTintView(activity);
-                frameLayout.addView(navigationTintView);
-                frameLayout.addView(statusTintView);
+                leftTintView = new SystemBarTintView(activity);
+                rightTintView = new SystemBarTintView(activity);
+                topTintView = new SystemBarTintView(activity);
+                bottomTintView = new SystemBarTintView(activity);
+                frameLayout.addView(leftTintView);
+                frameLayout.addView(rightTintView);
+                frameLayout.addView(topTintView);
+                frameLayout.addView(bottomTintView);
                 activity.setContentView(frameLayout);
             } else {
                 activity.setContentView(relativelayout);
@@ -688,82 +723,44 @@ public class NavitGraphics {
      *
      */
     private void adjustSystemBarsTintingViews() {
-
-        /* frameLayout is only created on platforms supporting navigation and status bar tinting */
-        if (frameLayout == null) {
-            return;
-        }
-        if (activity == null) {
-            Log.w(TAG, "Main Activity is not a Navit instance, cannot update padding");
-            return;
-        }
-
-        Navit navit = activity;
-
-        /*
-         * Determine visibility of status bar.
-         * The status bar is always visible unless we are in fullscreen mode.
-         */
-        final Boolean isStatusShowing = !navit.isFullscreen;
-
-        /*
-         * Determine visibility of navigation bar.
-         * This logic is based on the presence of a hardware menu button and is known to work on
-         * devices which allow switching between hw and sw buttons (OnePlus One running CyanogenMod).
-         */
-        final Boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
-        Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
-
-        /*
-         * Determine where the navigation bar would be displayed.
-         * Logic is taken from AOSP RenderSessionImpl.findNavigationBar()
-         * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java
-         */
-        final Boolean isLandscape = (navit.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE);
-        final Boolean isNavAtBottom = (!isLandscape)
-                || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
-        Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
-                    isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
-
-        int left = 0;
-        int top = isStatusShowing ? Navit.status_bar_height : 0;
-        int right = (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0;
-        final int bottom = (!(isNavShowing
-                    && isNavAtBottom)) ? 0 : (
-                    isLandscape ? Navit.navigation_bar_height_landscape : Navit.navigation_bar_height);
-
         /* hide tint bars during update to prevent ugly effects */
-        statusTintView.setVisibility(View.GONE);
-        navigationTintView.setVisibility(View.GONE);
+        leftTintView.setVisibility(View.GONE);
+        rightTintView.setVisibility(View.GONE);
+        topTintView.setVisibility(View.GONE);
+        bottomTintView.setVisibility(View.GONE);
 
         frameLayout.post(new Runnable() {
             @Override
             public void run() {
-                statusTintView.setVisibility(isStatusShowing ? View.VISIBLE : View.GONE);
-                FrameLayout.LayoutParams statusLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        Navit.status_bar_height, Gravity.TOP);
+                FrameLayout.LayoutParams leftLayoutParams = new FrameLayout.LayoutParams(padding_left,
+                        LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT);
+                leftTintView.setLayoutParams(leftLayoutParams);
 
-                /* Prevent tint views from overlapping when navigation is on the right */
-                statusLayoutParams.setMargins(0, 0,
-                        (isNavShowing && !isNavAtBottom) ? Navit.navigation_bar_width : 0, 0);
-                statusTintView.setLayoutParams(statusLayoutParams);
-                Log.d(TAG, String.format("statusTintView: width=%d height=%d",
-                            statusTintView.getWidth(), statusTintView.getHeight()));
-                navigationTintView.setVisibility(isNavShowing ? View.VISIBLE : View.GONE);
-                LayoutParams navigationLayoutParams = new FrameLayout.LayoutParams(
-                        isNavAtBottom ? LayoutParams.MATCH_PARENT : Navit.navigation_bar_width,  // X
-                        isNavAtBottom ? bottom : LayoutParams.MATCH_PARENT, // Y
-                        Gravity.BOTTOM | Gravity.RIGHT);
-                navigationTintView.setLayoutParams(navigationLayoutParams);
-                Log.d(TAG, String.format("navigationTintView: width=%d height=%d",
-                            navigationTintView.getWidth(), navigationTintView.getHeight()));
+                FrameLayout.LayoutParams rightLayoutParams = new FrameLayout.LayoutParams(padding_right,
+                        LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.RIGHT);
+                rightTintView.setLayoutParams(rightLayoutParams);
+
+                FrameLayout.LayoutParams topLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                        padding_top, Gravity.TOP);
+                /* Prevent horizontal and vertical tint views from overlapping */
+                topLayoutParams.setMargins(padding_left, 0, padding_right, 0);
+                topTintView.setLayoutParams(topLayoutParams);
+
+                FrameLayout.LayoutParams bottomLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                        padding_bottom, Gravity.BOTTOM);
+                /* Prevent horizontal and vertical tint views from overlapping */
+                bottomLayoutParams.setMargins(padding_left, 0, padding_right, 0);
+                bottomTintView.setLayoutParams(bottomLayoutParams);
+
+                /* show tint bars again */
+                leftTintView.setVisibility(View.VISIBLE);
+                rightTintView.setVisibility(View.VISIBLE);
+                topTintView.setVisibility(View.VISIBLE);
+                bottomTintView.setVisibility(View.VISIBLE);
             }
         });
 
-        Log.d(TAG, String.format("Padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom));
-
-        PaddingChangedCallback(PaddingChangedCallbackID, left, top, right, bottom);
+        PaddingChangedCallback(PaddingChangedCallbackID, padding_left, padding_top, padding_right, padding_bottom);
     }
 
     /**
@@ -773,11 +770,122 @@ public class NavitGraphics {
      * {@code onSizeChanged()} event handler fires or when toggling Fullscreen mode.
      *
      */
+    @TargetApi(23)
     public void handleResize(int w, int h) {
         if (this.parent_graphics != null) {
             this.parent_graphics.handleResize(w, h);
         } else {
             Log.d(TAG, String.format("handleResize w=%d h=%d", w, h));
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                /*
+                 * On API 23+ we can query window insets to determine the area which is obscured by the system bars.
+                 * This appears to have a bug, though, causing an inset to be reported for the navigation bar even
+                 * when it is not obstructing the window. Therefore, we are relying on the values previously obtained
+                 * by NavitView#onApplyWindowInsets(), though this is affected by a different bug. Luckily, the two
+                 * bugs appear to be complementary, allowing us to mix and match results.
+                 */
+                if (view == null) {
+                    Log.w(TAG, "view is null, cannot update padding");
+                } else {
+                    Log.d(TAG, String.format("view w=%d h=%d x=%.0f y=%.0f",
+                            view.getWidth(), view.getHeight(), view.getX(), view.getY()));
+                    if (view.getRootWindowInsets() == null)
+                        Log.w(TAG, "No root window insets, cannot update padding");
+                    else {
+                        Log.d(TAG, String.format("RootWindowInsets left=%d right=%d top=%d bottom=%d",
+                                view.getRootWindowInsets().getSystemWindowInsetLeft(),
+                                view.getRootWindowInsets().getSystemWindowInsetRight(),
+                                view.getRootWindowInsets().getSystemWindowInsetTop(),
+                                view.getRootWindowInsets().getSystemWindowInsetBottom()));
+                        padding_top = view.getRootWindowInsets().getSystemWindowInsetTop();
+                    }
+                }
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+                /*
+                 * API 20-22 do not support root window insets, forcing us to make an educated guess about the
+                 * navigation bar height:
+                 *
+                 * The size is a platform default and does not change with rotation, but we have to figure out if it
+                 * applies, i.e. if the status bar is visible.
+                 *
+                 * The status bar is always visible unless we are in fullscreen mode. (Fortunately, none of the
+                 * versions affected by this support split screen mode, which would have further complicated things.)
+                 */
+                if (activity.isFullscreen)
+                    padding_top = 0;
+                else {
+                    Resources resources = view.getResources();
+                    int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
+                    padding_top = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+                }
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                /*
+                 * API 19 does not support window insets at all, forcing us to do even more guessing than on API 20-22:
+                 *
+                 * All system bar sizes are platform defaults and do not change with rotation, but we have
+                 * to figure out which ones apply.
+                 *
+                 * Status bar visibility is as on API 20-22.
+                 *
+                 * The navigation bar is shown on devices that report they have no physical menu button. This seems to
+                 * work even on devices that allow disabling the physical buttons (and use the navigation bar, in which
+                 * case they report no physical menu button is available; tested with a OnePlus One running CyanogenMod).
+                 *
+                 * If shown, the navigation bar may appear on the side or at the bottom. The logic to determine this is
+                 * taken from AOSP RenderSessionImpl.findNavigationBar()
+                 * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java
+                 */
+                Resources resources = view.getResources();
+                int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
+                int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
+                int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+                int nhlid = resources.getIdentifier("navigation_bar_height_landscape", "dimen", "android");
+                int nwid = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+                int status_bar_height = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+                int action_bar_default_height = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
+                int navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
+                int navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
+                int navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
+                Log.d(TAG, String.format(
+                        "status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, "
+                                + "navigation_bar_height_landscape=%d, navigation_bar_width=%d",
+                                status_bar_height, action_bar_default_height, navigation_bar_height,
+                                navigation_bar_height_landscape, navigation_bar_width));
+
+                if (activity == null) {
+                    Log.w(TAG, "Main Activity is not a Navit instance, cannot update padding");
+                } else if (frameLayout != null) {
+                    /* frameLayout is only created on platforms supporting navigation and status bar tinting */
+
+                    Navit navit = activity;
+                    boolean isStatusShowing = !navit.isFullscreen;
+                    boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
+                    Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
+
+                    boolean isLandscape = (navit.getResources().getConfiguration().orientation
+                            == Configuration.ORIENTATION_LANDSCAPE);
+                    boolean isNavAtBottom = (!isLandscape)
+                            || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
+                    Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
+                            isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
+
+                    padding_left = 0;
+                    padding_top = isStatusShowing ? status_bar_height : 0;
+                    padding_right = (isNavShowing && !isNavAtBottom) ? navigation_bar_width : 0;
+                    padding_bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : (
+                            isLandscape ? navigation_bar_height_landscape : navigation_bar_height);
+                }
+            } else {
+                /* API 18 and below does not support drawing under the system bars, padding is 0 all around */
+                padding_left = 0;
+                padding_right = 0;
+                padding_top = 0;
+                padding_bottom = 0;
+            }
+
+            Log.d(TAG, String.format("Padding left=%d top=%d right=%d bottom=%d",
+                    padding_left, padding_top, padding_right, padding_bottom));
 
             adjustSystemBarsTintingViews();
 
