@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8c81467cadfe2caa78c9fc4e4032841b":[2,0,0,0,0,12,2],
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#aa2d067e10eb93c771cbd990305933ed4":[2,0,0,0,0,12,1],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ac937edcb63bc5c694f51807a468175d5":[2,0,0,0,0,12,5],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ae58c05516229b205423ce38b9830c6c5":[2,0,0,0,0,12,0],
 "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html":[2,0,0,0,0,13],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "common_8h.html#ac58c22aba451e9a8285798c2cb5930f2":[3,0,2,1,2,14],
 "common_8h.html#ada64218817709de1747fbb0f83cf55fa":[3,0,2,1,2,1],
 "common_8h_source.html":[3,0,2,1,2],
-"config_8c.html":[3,0,2,1,3],
-"config_8c.html#a02bc98ba6e3af40d0754c670728592b3":[3,0,2,1,3,1],
-"config_8c.html#a1f951c13f4bc19e32c5b5417b2d2b53e":[3,0,2,1,3,3]
+"config_8c.html":[3,0,2,1,3]
 };

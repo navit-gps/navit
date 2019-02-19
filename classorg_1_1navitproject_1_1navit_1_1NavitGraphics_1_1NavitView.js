@@ -4,6 +4,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView =
     [ "do_longpress_action", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#aaa0fd56082384ceafc280cf02b6292f0", null ],
     [ "getActionField", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a7405e9d545b98b6042e0ea783c31402c", null ],
     [ "getFloatValue", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ae7f93ff4be582a0b9b82ad7b44d30216", null ],
+    [ "onApplyWindowInsets", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a6fe221d756efa9b48f922a519cad84b2", null ],
     [ "onCreateContextMenu", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440", null ],
     [ "onDraw", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96", null ],
     [ "onKeyDown", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ab8cbb1ca67564d84cfb4529d56a6d067", null ],

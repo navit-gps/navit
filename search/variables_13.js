@@ -90,6 +90,7 @@ var searchData=
   ['ri',['ri',['../structmap__rect__priv.html#a2cfd2ae2720880d5bb8c0d1caf6d84e8',1,'map_rect_priv']]],
   ['rid',['rid',['../structo5m.html#adeadb15b646f5ddca8030d99218f88c7',1,'o5m']]],
   ['right',['right',['../structpadding.html#a7a4b4df65f70598f0a255ceb0d0ca8fd',1,'padding::right()'],['../structnavigation__maneuver.html#a1f59dd7c6fe6b096987360367827c608',1,'navigation_maneuver::right()'],['../structbuilding.html#a82b110c0da3c93388a432cf30fe1e0ed',1,'building::right()']]],
+  ['righttintview',['rightTintView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0927592f6909170fe7eea5ad52208ca5',1,'org::navitproject::navit::NavitGraphics']]],
   ['rl',['rl',['../structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7',1,'coord_rect::rl()'],['../structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66',1,'point_rect::rl()']]],
   ['road_5fname',['road_name',['../structtraffic__location.html#a58e09a28f55eefcb1d0bc4560c02b92a',1,'traffic_location']]],
   ['road_5fref',['road_ref',['../structtraffic__location.html#ab7da8b821b080fe42f369e67811cf378',1,'traffic_location']]],

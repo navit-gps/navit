@@ -68,6 +68,7 @@ var searchData=
   ['border',['border',['../structwidget.html#ac09753d4c0f3ebe9d6433f618df31bec',1,'widget::border()'],['../structnavit.html#ac280fb17123f0df666bf11ab4d343bc8',1,'navit::border()']]],
   ['bottom',['bottom',['../structpadding.html#af84433bc78ab8a258adea15d7f43019a',1,'padding']]],
   ['bottom_5frow',['bottom_row',['../structtable__data.html#a58c680996f1ef63035f37f9fbfd47405',1,'table_data']]],
+  ['bottomtintview',['bottomTintView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#adc5ed1cf4481b3bed42cb1f68553f489',1,'org::navitproject::navit::NavitGraphics']]],
   ['boundaries',['boundaries',['../structmap__search__priv.html#a0f89d414fe999378dfae4bccc3db31d9',1,'map_search_priv::boundaries()'],['../structmaptool__osm.html#a08594d25986affb2648a804ecc988f83',1,'maptool_osm::boundaries()']]],
   ['boundary',['boundary',['../structtree__header.html#aa819cd3882fe35578dd07f1a0f852872',1,'tree_header::boundary()'],['../osm_8c.html#a44890011785a3e5286453b396bfa6d6f',1,'boundary():&#160;osm.c']]],
   ['box_5fnew',['box_new',['../structgui__internal__widget__methods.html#ace84168903865c24637dccefc75e8331',1,'gui_internal_widget_methods']]],

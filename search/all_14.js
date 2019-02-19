@@ -270,6 +270,7 @@ var searchData=
   ['rid',['rid',['../structo5m.html#adeadb15b646f5ddca8030d99218f88c7',1,'o5m']]],
   ['right',['right',['../structpadding.html#a7a4b4df65f70598f0a255ceb0d0ca8fd',1,'padding::right()'],['../structnavigation__maneuver.html#a1f59dd7c6fe6b096987360367827c608',1,'navigation_maneuver::right()'],['../structbuilding.html#a82b110c0da3c93388a432cf30fe1e0ed',1,'building::right()']]],
   ['right_5fof',['RIGHT_OF',['../graphics_8c.html#a712fea8541b1f0f7f90cf56c81c39f16a85ab6e0aee807af61ac35e929c72a7d6',1,'graphics.c']]],
+  ['righttintview',['rightTintView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0927592f6909170fe7eea5ad52208ca5',1,'org::navitproject::navit::NavitGraphics']]],
   ['rl',['rl',['../structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7',1,'coord_rect::rl()'],['../structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66',1,'point_rect::rl()']]],
   ['rm_5fattr_5fget',['rm_attr_get',['../route_8c.html#aee1c15a1967b729232323b77491787a1',1,'route.c']]],
   ['rm_5fattr_5frewind',['rm_attr_rewind',['../route_8c.html#a484f2e82e17e8b891a2270a61749d698',1,'route.c']]],

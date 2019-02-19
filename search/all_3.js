@@ -14,7 +14,6 @@ var searchData=
   ['accesskey',['accesskey',['../structosd__item.html#aa2aa130e997367683b71b96ec3492b2e',1,'osd_item']]],
   ['acosd',['acosd',['../sunriset_8h.html#ab6ba8c99d207e527579b6953498682a7',1,'sunriset.h']]],
   ['action',['action',['../structgraphics__priv.html#a2fd63a3262530cd774c3d1065d0c31b7',1,'graphics_priv::action()'],['../structmenu__priv.html#a18bd65653a11b48ca9a9c93655943467',1,'menu_priv::action()'],['../structgui__menu__info.html#a6818f74a9d303ac48af52d6aa0269ec4',1,'gui_menu_info::action()'],['../structnavit.html#a88624c592097452a54a027cffc2b505f',1,'navit::action()']]],
-  ['action_5fbar_5fdefault_5fheight',['action_bar_default_height',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a403bf39d01faa13ec62f09bcefb49a48',1,'org::navitproject::navit::Navit']]],
   ['action_5fcb_5fdata',['action_cb_data',['../structaction__cb__data.html',1,'']]],
   ['action_5ftraff_5ffeed',['ACTION_TRAFF_FEED',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a2324d7a1f251d80fdc89a32373603ad3',1,'org::navitproject::navit::NavitTraff']]],
   ['action_5ftraff_5fpoll',['ACTION_TRAFF_POLL',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a3284efe43518d4845d6121c3a87b552b',1,'org::navitproject::navit::NavitTraff']]],

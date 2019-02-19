@@ -1,5 +1,7 @@
 var NAVTREEINDEX55 =
 {
+"xpm2bmp_8c.html#a7f61fd98ef07746b9dd3de3b35d9ce5b":[3,0,5,10,3,3],
+"xpm2bmp_8c.html#a858f1915fb9017f5f83d5e0975bf4b39":[3,0,5,10,3,2],
 "xpm2bmp_8c.html#abb0346a685e85729d632fcbe219678e9":[3,0,5,10,3,10],
 "xpm2bmp_8c.html#abcaa65247952824272d6e0b91d66cf8b":[3,0,5,10,3,1],
 "xpm2bmp_8c.html#ac084a0705bb34706ea316e0585c638ee":[3,0,5,10,3,7],
