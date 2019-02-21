@@ -9,6 +9,8 @@ var gui__internal__keyboard_8h =
       [ "VKBD_CYRILLIC_UPPER", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186afdd99ee4ac06bd7e771f8e8499047890", null ],
       [ "VKBD_CYRILLIC_LOWER", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a65b37ee78f60cb83d41387dfd8f62822", null ],
       [ "VKBD_DEGREE", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adde945958ab7a98c9ee0d30a5f569cf7", null ],
+      [ "VKBD_GREEK_UPPER", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ae56edfb21d48639aa1e3c3826b8f3540", null ],
+      [ "VKBD_GREEK_LOWER", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a7e5ea656a141caa4768e81326a163acf", null ],
       [ "VKBD_FLAG_2", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd", null ],
       [ "VKBD_MASK_7", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042", null ],
       [ "VKBD_FLAG_1024", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ab477653b79aac5ff4f1ac1e013aa1cf9", null ],

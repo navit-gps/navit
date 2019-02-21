@@ -1,5 +1,7 @@
 var NAVTREEINDEX35 =
 {
+"speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b":[3,0,13,0,0,3],
+"speech__cmdline_8c.html":[3,0,13,1,0],
 "speech__cmdline_8c.html#a13dbc3f5b1832633e630f5dd61df655d":[3,0,13,1,0,2],
 "speech__cmdline_8c.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,13,1,0,1],
 "speech__cmdline_8c.html#a441734a22f54d415aec84777d5a701b6":[3,0,13,1,0,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX35 =
 "structblock.html":[2,0,17],
 "structblock.html#a9379915577ca627a21f844b3a31ade31":[2,0,17,0],
 "structblock__bt__priv.html":[2,0,18],
-"structblock__bt__priv.html#a016914e5b92077456bfcc9a48f095085":[2,0,18,5],
-"structblock__bt__priv.html#a2a5a15685d949792f8c8a243aa95e6e7":[2,0,18,3],
-"structblock__bt__priv.html#a3e0aea8da021731cac1888e5d2ae2c0a":[2,0,18,7]
+"structblock__bt__priv.html#a016914e5b92077456bfcc9a48f095085":[2,0,18,5]
 };

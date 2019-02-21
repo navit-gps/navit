@@ -251,6 +251,8 @@ var searchData=
   ['vkbd_5fdegree',['VKBD_DEGREE',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adde945958ab7a98c9ee0d30a5f569cf7',1,'gui_internal_keyboard.h']]],
   ['vkbd_5fflag_5f1024',['VKBD_FLAG_1024',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ab477653b79aac5ff4f1ac1e013aa1cf9',1,'gui_internal_keyboard.h']]],
   ['vkbd_5fflag_5f2',['VKBD_FLAG_2',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd',1,'gui_internal_keyboard.h']]],
+  ['vkbd_5fgreek_5flower',['VKBD_GREEK_LOWER',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a7e5ea656a141caa4768e81326a163acf',1,'gui_internal_keyboard.h']]],
+  ['vkbd_5fgreek_5fupper',['VKBD_GREEK_UPPER',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ae56edfb21d48639aa1e3c3826b8f3540',1,'gui_internal_keyboard.h']]],
   ['vkbd_5flatin_5flower',['VKBD_LATIN_LOWER',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45',1,'gui_internal_keyboard.h']]],
   ['vkbd_5flatin_5fupper',['VKBD_LATIN_UPPER',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22',1,'gui_internal_keyboard.h']]],
   ['vkbd_5flayout_5fmask',['VKBD_LAYOUT_MASK',['../gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347',1,'gui_internal_keyboard.h']]],

@@ -317,7 +317,7 @@ var searchData=
   ['navitbackuptask_2ejava',['NavitBackupTask.java',['../NavitBackupTask_8java.html',1,'']]],
   ['navitcamera',['NavitCamera',['../classorg_1_1navitproject_1_1navit_1_1NavitCamera.html',1,'org.navitproject.navit.NavitCamera'],['../classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#acc1fe13b1f0873840f9d597b007b54ed',1,'org.navitproject.navit.NavitCamera.NavitCamera()']]],
   ['navitcamera_2ejava',['NavitCamera.java',['../NavitCamera_8java.html',1,'']]],
-  ['navitclass',['navitclass',['../browserplugin_8c.html#a2bd318daa85e840ba491391183c8f0ad',1,'navitclass():&#160;browserplugin.c'],['../graphics__android_8c.html#a3be6dbb722ab944e0b0b2cca01d4f10b',1,'NavitClass():&#160;graphics_android.c']]],
+  ['navitclass',['NavitClass',['../graphics__android_8c.html#a3be6dbb722ab944e0b0b2cca01d4f10b',1,'NavitClass():&#160;graphics_android.c'],['../browserplugin_8c.html#a2bd318daa85e840ba491391183c8f0ad',1,'navitclass():&#160;browserplugin.c']]],
   ['navitclass2',['navitclass2',['../browserplugin_8c.html#abd08f93c8142a74d3f94512e706fd1a8',1,'browserplugin.c']]],
   ['navitdestroy',['NavitDestroy',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#acbaf0ee8ac4cedc9a40fbff42cc27ce2',1,'org::navitproject::navit::Navit']]],
   ['navitdialogs',['NavitDialogs',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html',1,'org.navitproject.navit.NavitDialogs'],['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#a761c6ed1f9cb5cdb43cdd4f4c2f5734c',1,'org.navitproject.navit.NavitDialogs.NavitDialogs()']]],
