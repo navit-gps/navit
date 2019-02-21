@@ -124,7 +124,7 @@ struct gui_internal_keyb_mode {
     /*48: VKBD_CYRILLIC_LOWER*/ {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER},
     /*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2},
     /*64: VKBD_GREEK_UPPER   */ {"ABΓ", 2, VKBD_GREEK_LOWER,    VKBD_LATIN_UPPER},
-	/*72: VKBD_GREEK_LOWER   */ {"abγ", 2, VKBD_GREEK_UPPER,    VKBD_LATIN_LOWER}
+    /*72: VKBD_GREEK_LOWER   */ {"abγ", 2, VKBD_GREEK_UPPER,    VKBD_LATIN_LOWER}
 };
 
 
@@ -281,10 +281,11 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
             SPACER();
             SPACER();
         } else {
-            if(mode==VKBD_GREEK_UPPER)
-				MODE(VKBD_GREEK_LOWER);
-			else
-				MODE(VKBD_GREEK_UPPER);
+            if(mode==VKBD_GREEK_UPPER) {
+                MODE(VKBD_GREEK_LOWER);
+			} else {
+                MODE(VKBD_GREEK_UPPER);
+            }
             MODE(VKBD_CYRILLIC_UPPER);
             MODE(VKBD_CYRILLIC_LOWER);
             wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
