@@ -632,6 +632,8 @@ public class NavitGraphics {
      * @param activity The main activity.
      */
     protected void setActivity(final Activity activity) {
+        if (Navit.graphics == null)
+            Navit.graphics = this;
         this.activity = (Navit) activity;
         view = new NavitView(activity);
         view.setClickable(false);
