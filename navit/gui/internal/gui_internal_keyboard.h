@@ -11,6 +11,8 @@ enum vkbd_mode {
     VKBD_CYRILLIC_UPPER = 40,	/*!< Cyrillic uppercase characters */
     VKBD_CYRILLIC_LOWER = 48,	/*!< Cyrillic lowercase characters */
     VKBD_DEGREE = 56,			/*!< Numeric keyboard with extra characters (NESW, degree, minute) for coordinate input */
+    VKBD_GREEK_UPPER = 64,      /*!< Greek uppercase letters */
+    VKBD_GREEK_LOWER = 72,      /*!< Greek lowercase letters */
 
     /* modifiers and masks */
     VKBD_FLAG_2 = 2,			/* FIXME seems to show alpha/num switch (VKBD_NUMERIC and VKBD_LATIN_* only) and switches to lowercase after first character */
