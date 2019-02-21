@@ -281,9 +281,9 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
             SPACER();
             SPACER();
         } else {
-            if (mode==VKBD_GREEK_UPPER)
+            if (mode == VKBD_GREEK_UPPER)
                 MODE(VKBD_GREEK_LOWER);
-			else
+            else
                 MODE(VKBD_GREEK_UPPER);
             MODE(VKBD_CYRILLIC_UPPER);
             MODE(VKBD_CYRILLIC_LOWER);
