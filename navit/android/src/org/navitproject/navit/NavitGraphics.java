@@ -78,7 +78,7 @@ public class NavitGraphics {
     private SystemBarTintView              bottomTintView;
     private FrameLayout                    frameLayout;
     private RelativeLayout                 relativelayout;
-    private NavitCamera                    camera;
+    private NavitCamera                    camera                          = null;
     private Navit                          activity;
     private static Boolean                 in_map = false;
     // for menu key
@@ -106,7 +106,28 @@ public class NavitGraphics {
     private void SetCamera(int use_camera) {
         if (use_camera != 0 && camera == null) {
             // activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            camera = new NavitCamera(activity);
+            addCamera();
+            addCameraView();
+        }
+    }
+
+    /**
+     * @brief Adds a camera.
+     *
+     * This method does not create the view for the camera. This must be done separately by calling
+     * {@link #addCameraView()}.
+     */
+    private void addCamera() {
+        camera = new NavitCamera(activity);
+    }
+
+    /**
+     * @brief Adds a view for the camera.
+     *
+     * If {@link #camera} is null, this method is a no-op.
+     */
+    private void addCameraView() {
+        if (camera != null) {
             relativelayout.addView(camera);
             relativelayout.bringChildToFront(view);
         }
@@ -588,37 +609,10 @@ public class NavitGraphics {
     public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
             int wraparound, int use_camera) {
         if (parent == null) {
-            this.activity = (Navit) activity;
-            view = new NavitView(activity);
-            //activity.registerForContextMenu(view);
-            view.setClickable(false);
-            view.setFocusable(true);
-            view.setFocusableInTouchMode(true);
-            view.setKeepScreenOn(true);
-            relativelayout = new RelativeLayout(activity);
             if (use_camera != 0) {
-                SetCamera(use_camera);
+                addCamera();
             }
-            relativelayout.addView(view);
-
-            /* The navigational and status bar tinting code is meaningful only on API19+ */
-            if (Build.VERSION.SDK_INT >= 19) {
-                frameLayout = new FrameLayout(activity);
-                frameLayout.addView(relativelayout);
-                leftTintView = new SystemBarTintView(activity);
-                rightTintView = new SystemBarTintView(activity);
-                topTintView = new SystemBarTintView(activity);
-                bottomTintView = new SystemBarTintView(activity);
-                frameLayout.addView(leftTintView);
-                frameLayout.addView(rightTintView);
-                frameLayout.addView(topTintView);
-                frameLayout.addView(bottomTintView);
-                activity.setContentView(frameLayout);
-            } else {
-                activity.setContentView(relativelayout);
-            }
-
-            view.requestFocus();
+            setActivity(activity);
         } else {
             draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             bitmap_w = w;
@@ -630,6 +624,42 @@ public class NavitGraphics {
             parent.overlays.add(this);
         }
         parent_graphics = parent;
+    }
+
+    /**
+     * @brief Sets up the main activity.
+     *
+     * @param activity The main activity.
+     */
+    protected void setActivity(final Activity activity) {
+        this.activity = (Navit) activity;
+        view = new NavitView(activity);
+        view.setClickable(false);
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.setKeepScreenOn(true);
+        relativelayout = new RelativeLayout(activity);
+        addCameraView();
+        relativelayout.addView(view);
+
+        /* The navigational and status bar tinting code is meaningful only on API19+ */
+        if (Build.VERSION.SDK_INT >= 19) {
+            frameLayout = new FrameLayout(activity);
+            frameLayout.addView(relativelayout);
+            leftTintView = new SystemBarTintView(activity);
+            rightTintView = new SystemBarTintView(activity);
+            topTintView = new SystemBarTintView(activity);
+            bottomTintView = new SystemBarTintView(activity);
+            frameLayout.addView(leftTintView);
+            frameLayout.addView(rightTintView);
+            frameLayout.addView(topTintView);
+            frameLayout.addView(bottomTintView);
+            activity.setContentView(frameLayout);
+        } else {
+            activity.setContentView(relativelayout);
+        }
+
+        view.requestFocus();
     }
 
     public enum msg_type {
