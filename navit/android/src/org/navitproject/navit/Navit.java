@@ -23,6 +23,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -71,6 +72,7 @@ import java.util.regex.Pattern;
 
 public class Navit extends Activity {
 
+    protected static NavitGraphics     graphics                        = null;
     private NavitDialogs               dialogs;
     private PowerManager.WakeLock      wl;
     private NavitActivityResult[]      ActivityResults;
@@ -97,7 +99,7 @@ public class Navit extends Activity {
     Boolean                            isFullscreen                    = false;
     private static final int           MY_PERMISSIONS_REQUEST_ALL      = 101;
     private static NotificationManager nm;
-    private static Navit               navit;
+    private static Navit               navit                           = null;
 
     public static Navit getInstance() {
         return navit;
@@ -316,6 +318,9 @@ public class Navit extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        /* Whether this is the first launch of Navit (as opposed to the activity being recreated) */
+        boolean isLaunch = (navit == null);
+
         super.onCreate(savedInstanceState);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -442,8 +447,10 @@ public class Navit extends Activity {
         }
 
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
-        NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
-                NAVIT_DATA_DIR + "/bin/navit", map_filename_path);
+        NavitMain(this, getApplication(), NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
+                NAVIT_DATA_DIR + "/bin/navit", map_filename_path, isLaunch);
+        if (graphics != null)
+            graphics.setActivity(this);
 
         showInfos();
 
@@ -833,7 +840,8 @@ public class Navit extends Activity {
                 }
                 break;
             default :
-                ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
+                if (ActivityResults[requestCode] != null)
+                    ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
@@ -908,8 +916,8 @@ public class Navit extends Activity {
         NavitDestroy();
     }
 
-    public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path,
-            String path2);
+    public native void NavitMain(Navit x, Application application, String lang, int version,
+            String display_density_string, String path, String path2, boolean isLaunch);
 
     public native void NavitDestroy();
 

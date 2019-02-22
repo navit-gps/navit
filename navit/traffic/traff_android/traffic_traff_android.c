@@ -122,7 +122,7 @@ static int traffic_traff_android_init(struct traffic_priv * this_) {
         dbg(lvl_error,"no method found");
         return 0; /* exception thrown */
     }
-    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_activity,
+    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_application,
                                            (int) this_->cbid);
     dbg(lvl_debug,"result=%p", this_->NavitTraff);
     if (!this_->NavitTraff)
