@@ -47,6 +47,7 @@ var searchData=
   ['alphablend',['AlphaBlend',['../structgraphics__priv.html#a95f2fed5f214456275a08fc79a7616c7',1,'graphics_priv']]],
   ['altitude',['altitude',['../group__vehicle-gpsd-dbus.html#ga27c3adf619ddf41e7b02ca5e642397c4',1,'vehicle_priv']]],
   ['android_5factivity',['android_activity',['../android_8c.html#ab835292cb19f80d70d6c9f242630de09',1,'android_activity():&#160;android.c'],['../android_8h.html#ab835292cb19f80d70d6c9f242630de09',1,'android_activity():&#160;android.c']]],
+  ['android_5fapplication',['android_application',['../android_8c.html#a173f4f2ef556542207918abf0eaaa9cc',1,'android_application():&#160;android.c'],['../android_8h.html#a173f4f2ef556542207918abf0eaaa9cc',1,'android_application():&#160;android.c']]],
   ['android_5fsearch_5flevel',['android_search_level',['../android_8c.html#ac66f9f78e5f2275c95a4416bdecc3a91',1,'android.c']]],
   ['android_5fversion',['android_version',['../android_8c.html#a41ae714478042dc7ebbc275c4a766eeb',1,'android_version():&#160;android.c'],['../android_8h.html#a41ae714478042dc7ebbc275c4a766eeb',1,'android_version():&#160;android.c']]],
   ['anext',['anext',['../structmap__rect__priv.html#a6263f7ebaa2af798333e70494f22030b',1,'map_rect_priv']]],

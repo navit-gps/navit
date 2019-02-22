@@ -9,7 +9,7 @@ var android_8c =
     [ "android_search_idle", "android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1", null ],
     [ "district_str", "android_8c.html#af19391ea1e0978a528a9fb52b5ebac29", null ],
     [ "Java_org_navitproject_navit_Navit_NavitDestroy", "android_8c.html#abfea42a53ef4ce93ece483352a4e78f1", null ],
-    [ "Java_org_navitproject_navit_Navit_NavitMain", "android_8c.html#afb0ccf84931b75b18a7efdad60619fa7", null ],
+    [ "Java_org_navitproject_navit_Navit_NavitMain", "android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3", null ],
     [ "Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch", "android_8c.html#ad6e97babcf2f3250705560296e1830d8", null ],
     [ "Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch", "android_8c.html#aa7e4919cc3d636aee702cec090bb7c8a", null ],
     [ "Java_org_navitproject_navit_NavitGraphics_ButtonCallback", "android_8c.html#a78219db69575c59dd875ce87524d92f6", null ],
@@ -33,6 +33,7 @@ var android_8c =
     [ "start_search", "android_8c.html#a14854973c5a9c6e3b606deb26035cf73", null ],
     [ "town_str", "android_8c.html#a9eb88ac729576c851c5622a3091e87ff", null ],
     [ "android_activity", "android_8c.html#ab835292cb19f80d70d6c9f242630de09", null ],
+    [ "android_application", "android_8c.html#a173f4f2ef556542207918abf0eaaa9cc", null ],
     [ "android_search_level", "android_8c.html#ac66f9f78e5f2275c95a4416bdecc3a91", null ],
     [ "android_version", "android_8c.html#a41ae714478042dc7ebbc275c4a766eeb", null ],
     [ "jnienv", "android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae", null ]

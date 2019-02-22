@@ -116,7 +116,7 @@ var searchData=
   ['zipver',['zipver',['../structzip__lfh.html#a94ad48c33d0938bd0b9a220c3ad97893',1,'zip_lfh']]],
   ['zipxtraln',['zipxtraln',['../structzip__lfh.html#a5a3213770f1a08116bba4766f01a6721',1,'zip_lfh']]],
   ['znear',['znear',['../structtransformation.html#a227f6d989101bcac74a0a0de922b34d1',1,'transformation']]],
-  ['zoom',['zoom',['../structlevel.html#a7e3f1d38899643f0cc5d6033c471b9b3',1,'level::zoom()'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a0ce6e3967c57e5ab1c38b601ceb3ba45',1,'org.navitproject.navit.NavitGraphics.NavitView.ZOOM()'],['../garmin__img_8c.html#a8f713cfa80d7d6b0de82a2c059ba7f73',1,'zoom():&#160;garmin_img.c']]],
+  ['zoom',['ZOOM',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a0ce6e3967c57e5ab1c38b601ceb3ba45',1,'org.navitproject.navit.NavitGraphics.NavitView.ZOOM()'],['../structlevel.html#a7e3f1d38899643f0cc5d6033c471b9b3',1,'level::zoom()'],['../garmin__img_8c.html#a8f713cfa80d7d6b0de82a2c059ba7f73',1,'zoom():&#160;garmin_img.c']]],
   ['zoom_5fin_5faction',['zoom_in_action',['../gui__gtk__action_8c.html#adfdadcb32b4c506027ef0c5ed7dd9547',1,'gui_gtk_action.c']]],
   ['zoom_5fmax',['zoom_max',['../structnavit.html#a60aaafe2e13f843da0c8df828533f872',1,'navit::zoom_max()'],['../csv_8c.html#adb9f17495047f76c30d848442314c6bd',1,'zoom_max():&#160;csv.c']]],
   ['zoom_5fmin',['zoom_min',['../structnavit.html#a6c6e0e1b9f166ab07b91d967138eb16d',1,'navit']]],

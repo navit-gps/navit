@@ -275,7 +275,7 @@ var searchData=
   ['graphic_5fbg',['graphic_bg',['../structosd__item.html#a6c90e4edede51f26c50734deceea1061',1,'osd_item']]],
   ['graphic_5ffg',['graphic_fg',['../structosd__item.html#a41caf500389648ee9f8ba928870bd474',1,'osd_item']]],
   ['graphic_5ffg_5ftext',['graphic_fg_text',['../structosd__item.html#aecbcec7078d04b769612ad54edf6ed1b',1,'osd_item']]],
-  ['graphics',['graphics',['../structgraphics.html',1,'graphics'],['../structattr.html#a93638535f1a792b0bd88180c6f2414e3',1,'attr::graphics()'],['../interfaceNavitView.html#afb3808899c8a706bd0b3719383d45231',1,'NavitView::graphics()']]],
+  ['graphics',['graphics',['../structgraphics.html',1,'graphics'],['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a1fba3ae4697afce44afef897723c8343',1,'org.navitproject.navit.Navit.graphics()'],['../structattr.html#a93638535f1a792b0bd88180c6f2414e3',1,'attr::graphics()'],['../interfaceNavitView.html#afb3808899c8a706bd0b3719383d45231',1,'NavitView::graphics()']]],
   ['graphics_2ec',['graphics.c',['../graphics_8c.html',1,'']]],
   ['graphics_2eh',['graphics.h',['../graphics_8h.html',1,'']]],
   ['graphics_5fadd_5fcallback',['graphics_add_callback',['../graphics_8c.html#a05f933e81f028b7b9d802f44403d8f25',1,'graphics_add_callback(struct graphics *this_, struct callback *cb):&#160;graphics.c'],['../graphics_8h.html#a05f933e81f028b7b9d802f44403d8f25',1,'graphics_add_callback(struct graphics *this_, struct callback *cb):&#160;graphics.c']]],

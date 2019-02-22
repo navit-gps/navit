@@ -1,5 +1,11 @@
 var NAVTREEINDEX45 =
 {
+"structosd__item.html#a38e52f71e1a6405eb10224f7bd9aa90b":[2,0,264,5],
+"structosd__item.html#a3ab0d63cf9e2cb4e4725edf33d64ce83":[2,0,264,22],
+"structosd__item.html#a41caf500389648ee9f8ba928870bd474":[2,0,264,13],
+"structosd__item.html#a4540dc24aa44663ff2a0e176cbe21377":[2,0,264,24],
+"structosd__item.html#a485cfc3c0f4a036984b4935ffa7da777":[2,0,264,26],
+"structosd__item.html#a4cef62d17d95163d4df7c60b7a785798":[2,0,264,9],
 "structosd__item.html#a57318924da99a40920bd552e4206aa06":[2,0,264,29],
 "structosd__item.html#a681dde1eac2736697a6a2718c72a1dae":[2,0,264,20],
 "structosd__item.html#a6c90e4edede51f26c50734deceea1061":[2,0,264,12],
@@ -243,11 +249,5 @@ var NAVTREEINDEX45 =
 "structquadtree__node.html#ad1054907f11bd5fc2a2178244df7612c":[2,0,305,8],
 "structquadtree__node.html#ae8effd2ecc43cecc63d6579215418d26":[2,0,305,3],
 "structquadtree__node.html#af679cd109d44364072ba14ad614b2ff9":[2,0,305,11],
-"structquadtree__node.html#afa04029875bac9d009779b3654970d73":[2,0,305,4],
-"structquantifier.html":[2,0,306],
-"structquantifier.html#a02aefb76b3935abcf2c78dfb30b0f52c":[2,0,306,3],
-"structquantifier.html#a0eb8823a099370db40616c4c9f966dd7":[2,0,306,0],
-"structquantifier.html#a7e415478eb03cdae5018f766908a1a9c":[2,0,306,4],
-"structquantifier.html#aa2ee92afafe60b1eb9a10cc9f5fd9a9c":[2,0,306,2],
-"structquantifier.html#abe54bb6c74e03d43258975ddb6765b85":[2,0,306,1]
+"structquadtree__node.html#afa04029875bac9d009779b3654970d73":[2,0,305,4]
 };

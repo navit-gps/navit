@@ -1,5 +1,11 @@
 var NAVTREEINDEX35 =
 {
+"speech__android_8c.html":[3,0,13,0,0],
+"speech__android_8c.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,13,0,0,1],
+"speech__android_8c.html#a78e5b0c2190be717c1d3dd422e75de1f":[3,0,13,0,0,5],
+"speech__android_8c.html#a8c092c585a8b14f9705239c946614440":[3,0,13,0,0,2],
+"speech__android_8c.html#acacc5ace9274b44a8593afc1f30a04ef":[3,0,13,0,0,6],
+"speech__android_8c.html#ade7ac55de364c50decfc75de0279cda9":[3,0,13,0,0,4],
 "speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b":[3,0,13,0,0,3],
 "speech__cmdline_8c.html":[3,0,13,1,0],
 "speech__cmdline_8c.html#a13dbc3f5b1832633e630f5dd61df655d":[3,0,13,1,0,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX35 =
 "structauxmap.html#a85c329f54cb7217837cb7e010c0110ce":[2,0,14,4],
 "structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,14,5],
 "structbinfile__hash__entry.html":[2,0,16],
-"structbinfile__hash__entry.html#a2631cf4f1bb3277a7fafc7a7b5a01e60":[2,0,16,0],
-"structbinfile__hash__entry.html#a91a355e3e27ef96d2f87a1e11a60f8c9":[2,0,16,2],
-"structbinfile__hash__entry.html#aa09060296247caa9c40e3761da698819":[2,0,16,1],
-"structblock.html":[2,0,17],
-"structblock.html#a9379915577ca627a21f844b3a31ade31":[2,0,17,0],
-"structblock__bt__priv.html":[2,0,18],
-"structblock__bt__priv.html#a016914e5b92077456bfcc9a48f095085":[2,0,18,5]
+"structbinfile__hash__entry.html#a2631cf4f1bb3277a7fafc7a7b5a01e60":[2,0,16,0]
 };

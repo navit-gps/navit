@@ -48,7 +48,7 @@ var searchData=
   ['navit_5ftype',['navit_Type',['../binding_2python_2navit_8c.html#a5a7023b2ede7fbccd60195fa52ee823a',1,'navit.c']]],
   ['navitaddresssearch_5fid',['NavitAddressSearch_id',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a026ba92188b43082acac93b863961630',1,'org::navitproject::navit::Navit']]],
   ['navitaddresssearchactivity_5flayout',['NavitAddressSearchActivity_layout',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#aabd2e767c430e03655df71f8738ff530',1,'org::navitproject::navit::NavitAddressSearchActivity']]],
-  ['navitclass',['NavitClass',['../graphics__android_8c.html#a3be6dbb722ab944e0b0b2cca01d4f10b',1,'NavitClass():&#160;graphics_android.c'],['../browserplugin_8c.html#a2bd318daa85e840ba491391183c8f0ad',1,'navitclass():&#160;browserplugin.c']]],
+  ['navitclass',['navitclass',['../browserplugin_8c.html#a2bd318daa85e840ba491391183c8f0ad',1,'navitclass():&#160;browserplugin.c'],['../graphics__android_8c.html#a3be6dbb722ab944e0b0b2cca01d4f10b',1,'NavitClass():&#160;graphics_android.c']]],
   ['navitclass2',['navitclass2',['../browserplugin_8c.html#abd08f93c8142a74d3f94512e706fd1a8',1,'browserplugin.c']]],
   ['navitdownloaderselectmap_5fid',['NavitDownloaderSelectMap_id',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a9d6a39fb68dcafd9255885a4fa37f61d',1,'org::navitproject::navit::Navit']]],
   ['navitgraphics',['NavitGraphics',['../structgraphics__priv.html#a027abf0e758a8e409528f902dcc0e316',1,'graphics_priv']]],

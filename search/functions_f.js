@@ -216,7 +216,7 @@ var searchData=
   ['navitdestroy',['NavitDestroy',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#acbaf0ee8ac4cedc9a40fbff42cc27ce2',1,'org::navitproject::navit::Navit']]],
   ['navitdialogs',['NavitDialogs',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#a761c6ed1f9cb5cdb43cdd4f4c2f5734c',1,'org::navitproject::navit::NavitDialogs']]],
   ['navitgraphics',['NavitGraphics',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a90874c15d9e782b3ff8bc18bfef75875',1,'org::navitproject::navit::NavitGraphics']]],
-  ['navitmain',['NavitMain',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a5b926fb269b1030e272c4c61c2f139af',1,'org::navitproject::navit::Navit']]],
+  ['navitmain',['NavitMain',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a99100d940d31e6c5cae2c041e5163d29',1,'org::navitproject::navit::Navit']]],
   ['navitmap',['NavitMap',['../classorg_1_1navitproject_1_1navit_1_1NavitMap.html#aee5d366cd157a8d9c9ed2996530a5907',1,'org.navitproject.navit.NavitMap.NavitMap(String path, String map_file_name)'],['../classorg_1_1navitproject_1_1navit_1_1NavitMap.html#a504a0098fe2a2d6ddbb4cbb5b6d7a025',1,'org.navitproject.navit.NavitMap.NavitMap(String map_location)']]],
   ['navitmapdownloader',['NavitMapDownloader',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a83ccbe82c078cecf702cc72f177509b4',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['navitrestoretask',['NavitRestoreTask',['../classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#ae58c05516229b205423ce38b9830c6c5',1,'org::navitproject::navit::NavitRestoreTask']]],

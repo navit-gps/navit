@@ -15,6 +15,8 @@ var searchData=
   ['add_5fplugin',['add_plugin',['../maptool_8c.html#a3d590868e4d633f28c728200a255b968',1,'maptool.c']]],
   ['add_5ftile_5fhash',['add_tile_hash',['../tile_8c.html#a52cb6505027bb0d6a6ddf5722a1aa0a6',1,'tile.c']]],
   ['addbookmark',['AddBookmark',['../classNGQProxyBookmarks.html#ae89e2ed52ab4fa233896207f5bacd0c1',1,'NGQProxyBookmarks']]],
+  ['addcamera',['addCamera',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a7f822135e30eb83a95fa5a4bc5800d2a',1,'org::navitproject::navit::NavitGraphics']]],
+  ['addcameraview',['addCameraView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a90b5face1a4aea35b7680d60324a726e',1,'org::navitproject::navit::NavitGraphics']]],
   ['adddestination',['addDestination',['../classNGQProxyRoute.html#abd5b0881ad82ee0319d93d003ee94c78',1,'NGQProxyRoute']]],
   ['addfolder',['AddFolder',['../classNGQProxyBookmarks.html#ad968825f3e52d01a5776b98952995d68',1,'NGQProxyBookmarks']]],
   ['addlastaddress',['addLastAddress',['../classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#a0f5e46a4ebdcd288ad571b422c6aca68',1,'org::navitproject::navit::NavitAppConfig']]],

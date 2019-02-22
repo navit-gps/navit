@@ -1,5 +1,11 @@
 var NAVTREEINDEX13 =
 {
+"gpx2navit__txt_8h.html#a5fde3b921060f52cd728415ac6cacd7f":[3,0,14,0,0,7,29],
+"gpx2navit__txt_8h.html#a60a12235056da679c8976cec1faa66e2":[3,0,14,0,0,7,14],
+"gpx2navit__txt_8h.html#a6525e88995be546da14436017c0cdd51":[3,0,14,0,0,7,38],
+"gpx2navit__txt_8h.html#a6641cf57cb83ec05e83ed1bc9f2c45d4":[3,0,14,0,0,7,15],
+"gpx2navit__txt_8h.html#a6d89c67ca1a3fe32763cf0de67d3edbe":[3,0,14,0,0,7,24],
+"gpx2navit__txt_8h.html#a705aaddab1ccc73f063282e9bacd3ff8":[3,0,14,0,0,7,13],
 "gpx2navit__txt_8h.html#a77fa53c9aa00643c25a7dea52ca3d67c":[3,0,14,0,0,7,19],
 "gpx2navit__txt_8h.html#a83d9f699bd7f8a4ce12f860d58ccedf0":[3,0,14,0,0,7,34],
 "gpx2navit__txt_8h.html#a84f776a0e9cb781280a358080149d1c1":[3,0,14,0,0,7,8],
@@ -243,11 +249,5 @@ var NAVTREEINDEX13 =
 "graphics__android_8c.html":[3,0,5,0,0],
 "graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4":[3,0,5,0,0,63],
 "graphics__android_8c.html#a086c94b1446e830f712abe99f3cb5d81":[3,0,5,0,0,81],
-"graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a":[3,0,5,0,0,43],
-"graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff":[3,0,5,0,0,56],
-"graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849":[3,0,5,0,0,48],
-"graphics__android_8c.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,5,0,0,59],
-"graphics__android_8c.html#a235a92d71d08f5e86f4084ea8fa46dd7":[3,0,5,0,0,21],
-"graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a":[3,0,5,0,0,61],
-"graphics__android_8c.html#a252278f1ae8006d0ec452aeccb696a7e":[3,0,5,0,0,83]
+"graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a":[3,0,5,0,0,43]
 };

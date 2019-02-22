@@ -3,7 +3,7 @@ var searchData=
   ['j1850_5fidle',['j1850_idle',['../j1850_8c.html#a8a7c317cd1d832c8acebc47612e95f92',1,'j1850.c']]],
   ['j1850_5finit_5fserial_5fport',['j1850_init_serial_port',['../j1850_8c.html#aa7bc0ad9e76f0dda863f97e6c9464296',1,'j1850.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavit_5fnavitdestroy',['Java_org_navitproject_navit_Navit_NavitDestroy',['../android_8c.html#abfea42a53ef4ce93ece483352a4e78f1',1,'android.c']]],
-  ['java_5forg_5fnavitproject_5fnavit_5fnavit_5fnavitmain',['Java_org_navitproject_navit_Navit_NavitMain',['../android_8c.html#afb0ccf84931b75b18a7efdad60619fa7',1,'android.c']]],
+  ['java_5forg_5fnavitproject_5fnavit_5fnavit_5fnavitmain',['Java_org_navitproject_navit_Navit_NavitMain',['../android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitaddresssearchactivity_5fcallbackcanceladdresssearch',['Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch',['../android_8c.html#ad6e97babcf2f3250705560296e1830d8',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitaddresssearchactivity_5fcallbackstartaddresssearch',['Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch',['../android_8c.html#aa7e4919cc3d636aee702cec090bb7c8a',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fbuttoncallback',['Java_org_navitproject_navit_NavitGraphics_ButtonCallback',['../android_8c.html#a78219db69575c59dd875ce87524d92f6',1,'android.c']]],
