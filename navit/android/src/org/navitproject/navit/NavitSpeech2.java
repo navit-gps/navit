@@ -44,7 +44,7 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
             navit.startActivityForResult(checkIntent, MY_DATA_CHECK_CODE);
         } else {
             Log.e(TAG, "ACTION_CHECK_TTS_DATA not available, assume tts is working");
-            mTts = new TextToSpeech(navit, this);
+            mTts = new TextToSpeech(navit.getApplication(), this);
         }
     }
 
@@ -57,7 +57,7 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
         if (requestCode == MY_DATA_CHECK_CODE) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 // success, create the TTS instance
-                mTts = new TextToSpeech(navit, this);
+                mTts = new TextToSpeech(navit.getApplication(), this);
             } else {
                 // missing data, ask to install it
                 AlertDialog.Builder builder = new AlertDialog.Builder(navit);

@@ -22,7 +22,8 @@
 #include "track.h"
 
 JNIEnv *jnienv;
-jobject *android_activity;
+jobject *android_activity = NULL;
+jobject *android_application = NULL;
 int android_version;
 
 struct android_search_priv {
@@ -67,14 +68,20 @@ int android_find_static_method(jclass class, char *name, char *args, jmethodID *
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity,
-        jobject lang, int version, jobject display_density_string, jobject path,  jobject map_path) {
+        jobject application, jobject lang, int version, jobject display_density_string, jobject path, jobject map_path,
+        jboolean isLaunch) {
     const char *langstr;
     const char *displaydensitystr;
     const char *map_file_path;
     android_version=version;
     __android_log_print(ANDROID_LOG_ERROR,"test","called");
     jnienv=env;
+    if (android_activity)
+        (*jnienv)->DeleteGlobalRef(jnienv, android_activity);
     android_activity = (*jnienv)->NewGlobalRef(jnienv, activity);
+    if (android_application)
+        (*jnienv)->DeleteGlobalRef(jnienv, android_application);
+    android_application = (*jnienv)->NewGlobalRef(jnienv, application);
     langstr=(*env)->GetStringUTFChars(env, lang, NULL);
     dbg(lvl_debug,"enter env=%p thiz=%p activity=%p lang=%s version=%d",env,thiz,android_activity,langstr,version);
     setenv("LANG",langstr,1);
@@ -89,9 +96,11 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env,
     setenv("NAVIT_USER_DATADIR",map_file_path,1);
     (*env)->ReleaseStringUTFChars(env, display_density_string, map_file_path);
 
-    const char *strings=(*env)->GetStringUTFChars(env, path, NULL);
-    main_real(1, &strings);
-    (*env)->ReleaseStringUTFChars(env, path, strings);
+    if (isLaunch) {
+        const char *strings=(*env)->GetStringUTFChars(env, path, NULL);
+        main_real(1, &strings);
+        (*env)->ReleaseStringUTFChars(env, path, strings);
+    }
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* env) {
