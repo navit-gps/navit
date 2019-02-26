@@ -369,6 +369,7 @@ public class Navit extends Activity {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
+        Notification NavitNotification;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder;
             builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
@@ -377,7 +378,7 @@ public class Navit extends Activity {
             builder.setContentTitle(getTstring(R.string.app_name));
             builder.setContentText(getTstring(R.string.notification_event_default));
             builder.setSmallIcon(R.drawable.ic_notify);
-            Notification NavitNotification = builder.build();
+            NavitNotification = builder.build();
         } else {
             NotificationCompat.Builder builder;
             builder = new NotificationCompat.Builder(getApplicationContext());
@@ -386,7 +387,7 @@ public class Navit extends Activity {
             builder.setContentTitle(getTstring(R.string.app_name));
             builder.setContentText(getTstring(R.string.notification_event_default));
             builder.setSmallIcon(R.drawable.ic_notify);
-            Notification NavitNotification = builder.build();
+            NavitNotification = builder.build();
         }
         nm.notify(R.string.app_name, NavitNotification);// Show the notification
 
