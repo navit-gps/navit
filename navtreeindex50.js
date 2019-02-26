@@ -1,5 +1,7 @@
 var NAVTREEINDEX50 =
 {
+"structvehicleprofile.html#a2498d5281842c517cfeee5e21e8e3d80":[2,0,417,7],
+"structvehicleprofile.html#a32eae4b2c82a0191070939635885bfdc":[2,0,417,19],
 "structvehicleprofile.html#a3758c671084fdca02410d41ebc38804c":[2,0,417,15],
 "structvehicleprofile.html#a3ff440b7f298ef8c549b666e7dbb1477":[2,0,417,8],
 "structvehicleprofile.html#a4bc0894f81482c643f94565fd16e7c65":[2,0,417,17],
@@ -247,7 +249,5 @@ var NAVTREEINDEX50 =
 "sunriset_8h.html#a1625c90afe10ff713ffaa43a64e137ad":[3,0,132,7],
 "sunriset_8h.html#a2130caa46c8fe4a4931dcee842e4adf1":[3,0,132,28],
 "sunriset_8h.html#a2636008bf742109698546b22b41b2de4":[3,0,132,21],
-"sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7":[3,0,132,2],
-"sunriset_8h.html#a2e4ead36c26419cfd929c335b2c2ac48":[3,0,132,25],
-"sunriset_8h.html#a393d656a96debefda2267531eab9f30a":[3,0,132,27]
+"sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7":[3,0,132,2]
 };

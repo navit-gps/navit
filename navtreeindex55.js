@@ -1,5 +1,7 @@
 var NAVTREEINDEX55 =
 {
+"xmlconfig_8h.html#af6b53f36e005661f4c9e9c54c4be272c":[3,0,148,7],
+"xmlconfig_8h.html#afd8b7cd5f1269b7be091f7a7ad637356":[3,0,148,9],
 "xmlconfig_8h_source.html":[3,0,148],
 "xpm2bmp_8c.html":[3,0,5,10,3],
 "xpm2bmp_8c.html#a081aa4052fe07a64897bc976778436a6":[3,0,5,10,3,8],

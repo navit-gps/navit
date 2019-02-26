@@ -1,5 +1,7 @@
 var NAVTREEINDEX35 =
 {
+"speech_8h.html#af0c0c727ad322e5bac255b4aa200c2b1":[3,0,126,5],
+"speech_8h_source.html":[3,0,126],
 "speech__android_8c.html":[3,0,13,0,0],
 "speech__android_8c.html#a1eaae939034896b436dffbf5e93c0da1":[3,0,13,0,0,1],
 "speech__android_8c.html#a78e5b0c2190be717c1d3dd422e75de1f":[3,0,13,0,0,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX35 =
 "structauxmap.html#a36e4cd4811137c49535913fe4bd9d0ad":[2,0,14,3],
 "structauxmap.html#a7594976c83af27766a1fc181d679dd4a":[2,0,14,2],
 "structauxmap.html#a85c329f54cb7217837cb7e010c0110ce":[2,0,14,4],
-"structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,14,5],
-"structbinfile__hash__entry.html":[2,0,16],
-"structbinfile__hash__entry.html#a2631cf4f1bb3277a7fafc7a7b5a01e60":[2,0,16,0]
+"structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,14,5]
 };

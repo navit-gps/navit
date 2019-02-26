@@ -248,6 +248,7 @@ var searchData=
   ['createdialog',['createDialog',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#af24598287745f73de391fdba51ee696d',1,'org::navitproject::navit::NavitDialogs']]],
   ['createfilelistadapter',['createFileListAdapter',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#ae42d54cfbcedf202c093d394a370b0ac',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['creategraphicswindows',['CreateGraphicsWindows',['../graphics__win32_8c.html#a36bd318a5e9edba158ac55d62b824fdc',1,'graphics_win32.c']]],
+  ['createnotificationchannel',['createNotificationChannel',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a8f687856757ee7fd4d023e2db393a0c6',1,'org::navitproject::navit::Navit']]],
   ['createparsedata',['createParsedata',['../gpx2navit__txt_8h.html#a8c2898fb0818c405c34ce7d7e4334314',1,'createParsedata(XML_Parser parser, g2sprop *prop):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a91f9a81c92f36cd4704c72c839c0131d',1,'createParsedata(XML_Parser parser, g2sprop *prop):&#160;misc.c']]],
   ['createpathattr',['createPathAttr',['../gpx2navit__txt_8h.html#abfb12e3a831598734d67fab9e64ab71b',1,'createPathAttr(void):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a6a1e3b38b0bee30564111ee81825321f',1,'createPathAttr(void):&#160;misc.c']]],
   ['createprop',['createProp',['../gpx2navit__txt_8h.html#a1da7b736a569cd465186b4fb11ae7986',1,'createProp(void):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a029d442bbce0c2894999e29cbb35d73f',1,'createProp(void):&#160;misc.c']]],

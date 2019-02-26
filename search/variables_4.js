@@ -51,6 +51,7 @@ var searchData=
   ['ch_5fsuffix',['ch_suffix',['../maptool_8c.html#a4bced267a3d076c21cfba540e3f4c97b',1,'maptool.c']]],
   ['changes',['changes',['../structmap__priv.html#a66e90c02f982e066f72cc36805a03562',1,'map_priv']]],
   ['changeset',['changeset',['../structo5m.html#a317de9cf1b525634b07f8885b8d8e444',1,'o5m']]],
+  ['channel_5fid',['CHANNEL_ID',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a0c5da86e76ab3a03e4543d83e47258ec',1,'org::navitproject::navit::Navit']]],
   ['channels',['channels',['../structgraphics__image__priv.html#a36118dcbe5bce6edbdf5696206ea873b',1,'graphics_image_priv']]],
   ['charmap_5fcache',['charmap_cache',['../font__freetype_8c.html#a03f9ff93fc9b3026f880535f78eeec3c',1,'font_freetype.c']]],
   ['charmap_5findex',['charmap_index',['../structfont__freetype__font.html#a63c3914c8246500769be5a93f712e21a',1,'font_freetype_font']]],

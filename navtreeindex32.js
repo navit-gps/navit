@@ -1,5 +1,7 @@
 var NAVTREEINDEX32 =
 {
+"osso_8c.html#a8a02dc8581cd4267536b00829347230d":[3,0,1,0,0,5],
+"osso_8c.html#a917f3e440dbd02e5afc246751fa85110":[3,0,1,0,0,3],
 "osso_8c.html#ad685fd1d2a84a71b33d1f43b01dea497":[3,0,1,0,0,4],
 "osso_8c.html#ad959ab626ea8c26fdae7506e07869e43":[3,0,1,0,0,8],
 "osso_8c.html#ga1eaae939034896b436dffbf5e93c0da1":[3,0,1,0,0,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX32 =
 "quadtree_8h.html#a70c3cfdd454c62fa4d1901faf0ff4610":[3,0,8,1,3,2],
 "quadtree_8h.html#a75c7f0e391a7879cc561f87ca7097849":[3,0,8,1,3,18],
 "quadtree_8h.html#a77d5eb3cc2537b033f643b7561bd2236":[3,0,8,1,3,5],
-"quadtree_8h.html#aadf7e2c06ae2a6d695fa91f24ccde64a":[3,0,8,1,3,3],
-"quadtree_8h.html#aae086106cfb7bde767419bd06bf96c39":[3,0,8,1,3,14],
-"quadtree_8h.html#ab99829ad4f998171b0fd939a2c7d9320":[3,0,8,1,3,17]
+"quadtree_8h.html#aadf7e2c06ae2a6d695fa91f24ccde64a":[3,0,8,1,3,3]
 };

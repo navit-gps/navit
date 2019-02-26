@@ -1,5 +1,7 @@
 var NAVTREEINDEX12 =
 {
+"gentypes_8c.html#a983e12ff365733e2dca1e1b3c02d7b53":[3,0,8,3,4,3],
+"gentypes_8c.html#aa395aec39056dfc23a214e854cc6847b":[3,0,8,3,4,0],
 "geod__for_8c.html":[3,0,14,0,0,3],
 "geod__for_8c.html#a05928f199e8d432895756ef257226998":[3,0,14,0,0,3,6],
 "geod__for_8c.html#a2871a1979bfda417aeb0da473e54ce00":[3,0,14,0,0,3,12],
@@ -109,8 +111,8 @@ var NAVTREEINDEX12 =
 "globals_b.html":[3,1,0,3],
 "globals_c.html":[3,1,0,4],
 "globals_d.html":[3,1,0,5],
-"globals_defs.html":[3,1,6],
 "globals_defs.html":[3,1,6,0],
+"globals_defs.html":[3,1,6],
 "globals_defs_a.html":[3,1,6,1],
 "globals_defs_b.html":[3,1,6,2],
 "globals_defs_c.html":[3,1,6,3],
@@ -201,8 +203,8 @@ var NAVTREEINDEX12 =
 "globals_type.html":[3,1,3],
 "globals_u.html":[3,1,0,22],
 "globals_v.html":[3,1,0,23],
-"globals_vars.html":[3,1,2,0],
 "globals_vars.html":[3,1,2],
+"globals_vars.html":[3,1,2,0],
 "globals_vars__.html":[3,1,2,1],
 "globals_vars_a.html":[3,1,2,2],
 "globals_vars_b.html":[3,1,2,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX12 =
 "gpx2navit__txt_8h.html#a344a7a7e72d816c8ec622403af548f9c":[3,0,14,0,0,7,50],
 "gpx2navit__txt_8h.html#a39912bfe2a55f30e269196f9141d845d":[3,0,14,0,0,7,7],
 "gpx2navit__txt_8h.html#a3c7d2000fbfe075b4d0ae7c98b32a840":[3,0,14,0,0,7,11],
-"gpx2navit__txt_8h.html#a3c889e4bf0f76ce1b79e7aaf574688ce":[3,0,14,0,0,7,30],
-"gpx2navit__txt_8h.html#a459416878c47e910ea36a77fb1bd7b76":[3,0,14,0,0,7,20],
-"gpx2navit__txt_8h.html#a5eae0a5c1f581074f38573a3e66508c2":[3,0,14,0,0,7,36]
+"gpx2navit__txt_8h.html#a3c889e4bf0f76ce1b79e7aaf574688ce":[3,0,14,0,0,7,30]
 };
