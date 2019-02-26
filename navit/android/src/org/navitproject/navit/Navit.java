@@ -369,17 +369,25 @@ public class Navit extends Activity {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
-        Notification.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder builder;
             builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
-        else
-            builder = new Notification.Builder(getApplicationContext());
-        builder.setContentIntent(appIntent);
-        builder.setAutoCancel(false).setOngoing(true);
-        builder.setContentTitle(getTstring(R.string.app_name));
-        builder.setContentText(getTstring(R.string.notification_event_default));
-        builder.setSmallIcon(R.drawable.ic_notify);
-        Notification NavitNotification = builder.build();
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            Notification NavitNotification = builder.build();
+        } else {
+            NotificationCompat.Builder builder;
+            builder = new NotificationCompat.Builder(getApplicationContext());
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            Notification NavitNotification = builder.build();
+        }
         nm.notify(R.string.app_name, NavitNotification);// Show the notification
 
         if ((ContextCompat.checkSelfPermission(this,
