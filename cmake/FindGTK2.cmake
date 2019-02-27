@@ -352,7 +352,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
 
     find_library(GTK2_CAIRO_LIBRARY
       NAMES
-        pangocairo-1.0
+        cairo
       PATHS
         ${_CAIROLinkDir}
         /usr/lib
