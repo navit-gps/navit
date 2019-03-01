@@ -86,7 +86,20 @@ void setenv(char *var, char *val, int overwrite) {
  * ':'  is replaced with NAVIT_PREFIX
  * '::' is replaced with NAVIT_PREFIX and LIBDIR
  * '~'  is replaced with HOME
+ * ';'  is replaced with USERPROFILE for Windows
 */
+
+#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+static char *environment_vars[][5]= {
+    {"NAVIT_LIBDIR",      ":",          ":/"LIB_DIR,     ":\\lib",      ":/lib"},
+    {"NAVIT_SHAREDIR",    ":",          ":/"SHARE_DIR,   ":",    		":/share"},
+    {"NAVIT_LOCALEDIR",   ":/../locale",":/"LOCALE_DIR,  ":\\locale",   ":/locale"},
+    {"NAVIT_USER_DATADIR",":",          "~/.navit",      ";\\navit",    ":/home"},
+    {"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL},
+    {"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL},
+    {NULL,                NULL,         NULL,            NULL,          NULL},
+};
+#else
 static char *environment_vars[][5]= {
     {"NAVIT_LIBDIR",      ":",          ":/"LIB_DIR,     ":\\lib",      ":/lib"},
     {"NAVIT_SHAREDIR",    ":",          ":/"SHARE_DIR,   ":",           ":/share"},
@@ -96,6 +109,8 @@ static char *environment_vars[][5]= {
     {"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL},
     {NULL,                NULL,         NULL,            NULL,          NULL},
 };
+#endif
+
 
 static void main_setup_environment(int mode) {
     int i=0;
@@ -116,6 +131,14 @@ static void main_setup_environment(int mode) {
                     homedir="./";
                 val=g_strdup_printf("%s%s", homedir, val+1);
                 break;
+			#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+				case ';':
+					homedir = getenv("USERPROFILE");
+					if (!homedir)
+						homedir = "./";
+					val = g_strdup_printf("%s%s", homedir, val + 1);
+					break;
+			#endif
             default:
                 val=g_strdup(val);
                 break;
@@ -125,6 +148,9 @@ static void main_setup_environment(int mode) {
         }
         i++;
     }
+#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+    navit_get_user_data_directory(1); /* Create the user data directory */
+#endif
 }
 
 #ifdef HAVE_API_WIN32_BASE
