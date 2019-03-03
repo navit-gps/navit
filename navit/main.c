@@ -135,9 +135,9 @@ static void main_setup_environment(int mode) {
             case ';'
                 homedir = getenv("USERPROFILE");
                 if (!homedir)
-	            homedir = "./";
+                    homedir = "./";
                 val = g_strdup_printf("%s%s", homedir, val + 1);
-             break;
+                break;
 #endif
             default:
                 val=g_strdup(val);
