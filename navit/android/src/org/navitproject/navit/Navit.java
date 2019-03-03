@@ -26,6 +26,7 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -90,6 +91,7 @@ public class Navit extends Activity {
     private static final int           NavitSelectStorage_id           = 43;
     private static String              NavitLanguage;
     private static Resources            NavitResources                  = null;
+    private static final String        CHANNEL_ID                      = "org.navitproject.navit";
     private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      map_filename_path               = null;
@@ -118,6 +120,25 @@ public class Navit extends Activity {
         }
     }
 
+    private void createNotificationChannel() {
+        /*
+         * Create the NotificationChannel, but only on API 26+ because
+         * the NotificationChannel class is new and not in the support library
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            //String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            //channel.setDescription(description);
+            /*
+             * Register the channel with the system; you can't change the importance
+             * or other notification behaviors after this
+             */
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     public void removeFileIfExists(String source) {
         File file = new File(source);
@@ -343,16 +364,31 @@ public class Navit extends Activity {
         // NOTIFICATION
         // Setup the status bar notification
         // This notification is removed in the exit() function
+        if (isLaunch)
+            createNotificationChannel();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(appIntent);
-        builder.setAutoCancel(false).setOngoing(true);
-        builder.setContentTitle(getTstring(R.string.app_name));
-        builder.setContentText(getTstring(R.string.notification_event_default));
-        builder.setSmallIcon(R.drawable.ic_notify);
-        Notification NavitNotification = builder.build();
+        Notification NavitNotification;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder builder;
+            builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            NavitNotification = builder.build();
+        } else {
+            NotificationCompat.Builder builder;
+            builder = new NotificationCompat.Builder(getApplicationContext());
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            NavitNotification = builder.build();
+        }
         nm.notify(R.string.app_name, NavitNotification);// Show the notification
 
         if ((ContextCompat.checkSelfPermission(this,
