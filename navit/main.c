@@ -131,14 +131,14 @@ static void main_setup_environment(int mode) {
                     homedir="./";
                 val=g_strdup_printf("%s%s", homedir, val+1);
                 break;
-            #ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
-                case ';'
-		    homedir = getenv("USERPROFILE");
-                    if (!homedir)
-			homedir = "./";
-                        val = g_strdup_printf("%s%s", homedir, val + 1);
-                break;
-            #endif
+#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+    case ';'
+        homedir = getenv("USERPROFILE");
+        if (!homedir)
+	    homedir = "./";
+            val = g_strdup_printf("%s%s", homedir, val + 1);
+         break;
+#endif
             default:
                 val=g_strdup(val);
                 break;
