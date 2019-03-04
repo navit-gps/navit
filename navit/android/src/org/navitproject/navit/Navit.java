@@ -20,10 +20,13 @@
 package org.navitproject.navit;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -70,16 +73,12 @@ import java.util.regex.Pattern;
 
 public class Navit extends Activity {
 
+    protected static NavitGraphics     graphics                        = null;
     private NavitDialogs               dialogs;
     private PowerManager.WakeLock      wl;
     private NavitActivityResult[]      ActivityResults;
     public static InputMethodManager   mgr                             = null;
     public static DisplayMetrics       metrics                         = null;
-    public static int                  status_bar_height               = 0;
-    private static int                 action_bar_default_height       = 0;
-    public static int                  navigation_bar_height           = 0;
-    public static int                  navigation_bar_height_landscape = 0;
-    public static int                  navigation_bar_width            = 0;
     public static Boolean              show_soft_keyboard              = false;
     public static Boolean              show_soft_keyboard_now_showing  = false;
     public static long                 last_pressed_menu_key           = 0L;
@@ -92,6 +91,7 @@ public class Navit extends Activity {
     private static final int           NavitSelectStorage_id           = 43;
     private static String              NavitLanguage;
     private static Resources            NavitResources                  = null;
+    private static final String        CHANNEL_ID                      = "org.navitproject.navit";
     private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      map_filename_path               = null;
@@ -101,7 +101,7 @@ public class Navit extends Activity {
     Boolean                            isFullscreen                    = false;
     private static final int           MY_PERMISSIONS_REQUEST_ALL      = 101;
     private static NotificationManager nm;
-    private static Navit               navit;
+    private static Navit               navit                           = null;
 
     public static Navit getInstance() {
         return navit;
@@ -120,6 +120,25 @@ public class Navit extends Activity {
         }
     }
 
+    private void createNotificationChannel() {
+        /*
+         * Create the NotificationChannel, but only on API 26+ because
+         * the NotificationChannel class is new and not in the support library
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            //String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            //channel.setDescription(description);
+            /*
+             * Register the channel with the system; you can't change the importance
+             * or other notification behaviors after this
+             */
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     public void removeFileIfExists(String source) {
         File file = new File(source);
@@ -320,6 +339,9 @@ public class Navit extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        /* Whether this is the first launch of Navit (as opposed to the activity being recreated) */
+        boolean isLaunch = (navit == null);
+
         super.onCreate(savedInstanceState);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -342,37 +364,33 @@ public class Navit extends Activity {
         // NOTIFICATION
         // Setup the status bar notification
         // This notification is removed in the exit() function
+        if (isLaunch)
+            createNotificationChannel();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(appIntent);
-        builder.setAutoCancel(false).setOngoing(true);
-        builder.setContentTitle(getTstring(R.string.app_name));
-        builder.setContentText(getTstring(R.string.notification_event_default));
-        builder.setSmallIcon(R.drawable.ic_notify);
-        Notification NavitNotification = builder.build();
+        Notification NavitNotification;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder builder;
+            builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            NavitNotification = builder.build();
+        } else {
+            NotificationCompat.Builder builder;
+            builder = new NotificationCompat.Builder(getApplicationContext());
+            builder.setContentIntent(appIntent);
+            builder.setAutoCancel(false).setOngoing(true);
+            builder.setContentTitle(getTstring(R.string.app_name));
+            builder.setContentText(getTstring(R.string.notification_event_default));
+            builder.setSmallIcon(R.drawable.ic_notify);
+            NavitNotification = builder.build();
+        }
         nm.notify(R.string.app_name, NavitNotification);// Show the notification
 
-        // Status and navigation bar sizes
-        // These are platform defaults and do not change with rotation, but we have to figure out which ones apply
-        // (is the navigation bar visible? on the side or at the bottom?)
-        Resources resources = getResources();
-        int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
-        int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
-        int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        int nhlid = resources.getIdentifier("navigation_bar_height_landscape", "dimen", "android");
-        int nwid = resources.getIdentifier("navigation_bar_width", "dimen", "android");
-        status_bar_height = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
-        action_bar_default_height = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
-        navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
-        navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
-        navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
-        Log.d(TAG, String.format(
-                    "status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, "
-                    + "navigation_bar_height_landscape=%d, navigation_bar_width=%d",
-                    status_bar_height, action_bar_default_height, navigation_bar_height,
-                    navigation_bar_height_landscape, navigation_bar_width));
         if ((ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                     || (ContextCompat.checkSelfPermission(this,
@@ -465,8 +483,10 @@ public class Navit extends Activity {
         }
 
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
-        NavitMain(this, NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
-                NAVIT_DATA_DIR + "/bin/navit", map_filename_path);
+        NavitMain(this, getApplication(), NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
+                NAVIT_DATA_DIR + "/bin/navit", map_filename_path, isLaunch);
+        if (graphics != null)
+            graphics.setActivity(this);
 
         showInfos();
 
@@ -502,6 +522,7 @@ public class Navit extends Activity {
             }
         }
         Log.d(TAG, "onResume");
+
         if (show_soft_keyboard_now_showing) {
             /* Calling showNativeKeyboard() directly won't work here, we need to use the message queue */
             View cf = getCurrentFocus();
@@ -855,7 +876,8 @@ public class Navit extends Activity {
                 }
                 break;
             default :
-                ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
+                if (ActivityResults[requestCode] != null)
+                    ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
@@ -891,10 +913,6 @@ public class Navit extends Activity {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "OnDestroy");
-        // next call will kill our app the hard way. This should not be necessary, but ensures navit is
-        // properly restarted and no resources are wasted with navit in background. Remove this call after
-        // code review
-        NavitDestroy();
     }
 
     public void fullscreen(int fullscreen) {
@@ -934,8 +952,8 @@ public class Navit extends Activity {
         NavitDestroy();
     }
 
-    public native void NavitMain(Navit x, String lang, int version, String display_density_string, String path,
-            String path2);
+    public native void NavitMain(Navit x, Application application, String lang, int version,
+            String display_density_string, String path, String path2, boolean isLaunch);
 
     public native void NavitDestroy();
 
