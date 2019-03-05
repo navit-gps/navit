@@ -1,5 +1,9 @@
 var NAVTREEINDEX30 =
 {
+"navigation_8c.html#aa565aae0c1fb0952c6ac477f449f7549":[3,0,26,100],
+"navigation_8c.html#aab7b3c6e0c401c126cf7fe0228efc696":[3,0,26,25],
+"navigation_8c.html#aafec98459688e4c23a1ad0418f617724":[3,0,26,12],
+"navigation_8c.html#ab61fd72ab5180f84206c1619b60c201d":[3,0,26,43],
 "navigation_8c.html#aba033513182cbb9186cec12356f8b8f1":[3,0,26,58],
 "navigation_8c.html#ababd897c8e965af2d2bbaa8bdc33331a":[3,0,26,97],
 "navigation_8c.html#ac3294e4de916bc186e053363ca31af76":[3,0,26,55],
@@ -67,11 +71,11 @@ var NAVTREEINDEX30 =
 "navit_8c.html#a525335710b53cb064ca56b936120431e":[3,0,27,0],
 "navit_8c.html#ab750d14bf18269dc3a12b34d0e0dd037":[3,0,27,1],
 "navit_8h.html":[3,0,95],
-"navit_8h.html#a04a6dfc7312b2a31353f11fc9b72e667":[3,0,95,67],
-"navit_8h.html#a7482620bebd65f301fcadfe3a41d21ed":[3,0,95,64],
+"navit_8h.html#a04a6dfc7312b2a31353f11fc9b72e667":[3,0,95,69],
+"navit_8h.html#a7482620bebd65f301fcadfe3a41d21ed":[3,0,95,66],
 "navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231":[3,0,95,0],
 "navit_8h.html#a9b29c0cf57a6acfe8fe0e9405523e93f":[3,0,95,18],
-"navit_8h.html#ad05eb12f54e05f43a1d336ea0d20991c":[3,0,95,46],
+"navit_8h.html#ad05eb12f54e05f43a1d336ea0d20991c":[3,0,95,48],
 "navit_8h_source.html":[3,0,95],
 "navit__lfs_8h.html":[3,0,96],
 "navit__lfs_8h.html#a0cdbd4d0545340d33dfe595811475ccd":[3,0,96,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX30 =
 "osd__core_8c.html#adda8a31b4d24cb52be0399e0c8e385e0":[3,0,10,0,0,51],
 "osd__core_8c.html#ae456377abc0f90e39d378eb702877e79":[3,0,10,0,0,44],
 "osd__core_8c.html#aeaa0fb8ccb06e2278bc0bf0a2ff7eb21":[3,0,10,0,0,50],
-"osd__core_8c.html#af2c0df538d3dc08a01194d6e2503f916":[3,0,10,0,0,95],
-"osd__core_8c.html#af38f3240c89a339eec782b87faa215d6":[3,0,10,0,0,97],
-"osd__core_8c.html#af3add24bf92c416e5ffec27533e03ea8":[3,0,10,0,0,94],
-"osd__core_8c.html#af8725b58572fcb153196e0a7878eb022":[3,0,10,0,0,67],
-"osd__core_8c.html#af92d6bb2a0afeecd17cf181159f04b4c":[3,0,10,0,0,19]
+"osd__core_8c.html#af2c0df538d3dc08a01194d6e2503f916":[3,0,10,0,0,95]
 };

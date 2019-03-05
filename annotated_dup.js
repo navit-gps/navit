@@ -186,6 +186,7 @@ var annotated_dup =
     [ "label_header", "structlabel__header.html", "structlabel__header" ],
     [ "layer", "structlayer.html", "structlayer" ],
     [ "layout", "structlayout.html", "structlayout" ],
+    [ "lcoord", "structlcoord.html", "structlcoord" ],
     [ "level", "structlevel.html", "structlevel" ],
     [ "log", "structlog.html", "structlog" ],
     [ "log_data", "structlog__data.html", "structlog__data" ],

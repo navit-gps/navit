@@ -187,6 +187,7 @@ var hierarchy =
     [ "label_header", "structlabel__header.html", null ],
     [ "layer", "structlayer.html", null ],
     [ "layout", "structlayout.html", null ],
+    [ "lcoord", "structlcoord.html", null ],
     [ "level", "structlevel.html", null ],
     [ "Listener", null, [
       [ "org.navitproject.navit.NavitVehicle.NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", null ]

@@ -1,6 +1,7 @@
 var coord_8h =
 [
     [ "coord", "structcoord.html", "structcoord" ],
+    [ "lcoord", "structlcoord.html", "structlcoord" ],
     [ "pcoord", "structpcoord.html", "structpcoord" ],
     [ "coord_rect", "structcoord__rect.html", "structcoord__rect" ],
     [ "coord_d", "structcoord__d.html", "structcoord__d" ],

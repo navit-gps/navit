@@ -481,7 +481,7 @@ var searchData=
   ['spx',['spx',['../structwidget.html#a8941c2ad75aef26525b74687df7d105a',1,'widget']]],
   ['spy',['spy',['../structwidget.html#a597d0608da85936ce9f44610c5dc5d52',1,'widget']]],
   ['sq',['sq',['../geom_8h.html#ae7616788b30810a219d9cdee95904ba4',1,'sq():&#160;geom.h'],['../maptool_8h.html#ae7616788b30810a219d9cdee95904ba4',1,'sq():&#160;maptool.h']]],
-  ['square_5fshape_5fstr',['square_shape_str',['../gui__internal_8c.html#a1baa6efad094d9689341ec67a0edbaac',1,'gui_internal.c']]],
+  ['square_5fshape_5fstr',['square_shape_str',['../util_8c.html#afbc75e37f04e28a94e51fc53134ba651',1,'square_shape_str(char *s):&#160;util.c'],['../util_8h.html#afbc75e37f04e28a94e51fc53134ba651',1,'square_shape_str(char *s):&#160;util.c']]],
   ['src',['src',['../structelement.html#a78c33116049f502a33c4e768398eb454',1,'element::src()'],['../structosd__button.html#a2a75003dd7a4e4fb72695364bdb30f3d',1,'osd_button::src()'],['../structg2scolumns.html#ab1af76664348fcae645473e62f84c4c0',1,'g2scolumns::src()'],['../structpathattr.html#a6bc9ca9f40362e744b47a20ea329e827',1,'pathattr::src()'],['../structg2sattr.html#a001c2b894f602c5e57cdbfcf44bb6a94',1,'g2sattr::src()']]],
   ['src_5fdir',['src_dir',['../structosd__button.html#ae0dfd8134d705b753d4b17933bca6864',1,'osd_button']]],
   ['st',['st',['../structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5',1,'osm_protobufdb_context::st()'],['../osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac',1,'st():&#160;osm_o5m.c']]],

@@ -5,6 +5,7 @@ var searchData=
   ['label_5fheader',['label_header',['../structlabel__header.html',1,'']]],
   ['layer',['layer',['../structlayer.html',1,'']]],
   ['layout',['layout',['../structlayout.html',1,'']]],
+  ['lcoord',['lcoord',['../structlcoord.html',1,'']]],
   ['level',['level',['../structlevel.html',1,'']]],
   ['log',['log',['../structlog.html',1,'']]],
   ['log_5fdata',['log_data',['../structlog__data.html',1,'']]],

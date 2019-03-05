@@ -118,6 +118,9 @@ Functions</h2></td></tr>
 <tr class="separator:a35df3792d7aa24483200c6ca6060744d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a593fb5941e287be932ddad0f71201262"><td class="memItemLeft" align="right" valign="top">gchar *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf</a> (gchar *<a class="el" href="structbuffer.html">buffer</a>, gchar *fmt,...)</td></tr>
 <tr class="separator:a593fb5941e287be932ddad0f71201262"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbc75e37f04e28a94e51fc53134ba651"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afbc75e37f04e28a94e51fc53134ba651">square_shape_str</a> (char *s)</td></tr>
+<tr class="memdesc:afbc75e37f04e28a94e51fc53134ba651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high.  <a href="#afbc75e37f04e28a94e51fc53134ba651">More...</a><br /></td></tr>
+<tr class="separator:afbc75e37f04e28a94e51fc53134ba651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a11b449553663eca76c4ca486e7ebd2"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a9a11b449553663eca76c4ca486e7ebd2">iso8601_to_secs</a> (char *iso8601)</td></tr>
 <tr class="memdesc:a9a11b449553663eca76c4ca486e7ebd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an ISO 8601-style time string into epoch time.  <a href="#a9a11b449553663eca76c4ca486e7ebd2">More...</a><br /></td></tr>
 <tr class="separator:a9a11b449553663eca76c4ca486e7ebd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -634,6 +637,36 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afbc75e37f04e28a94e51fc53134ba651"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbc75e37f04e28a94e51fc53134ba651">&#9670;&nbsp;</a></span>square_shape_str()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void square_shape_str </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">s</td><td>The string to proces (will be modified by this function, but length will be unchanged) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="util_8c.html#a70805df95eef35ea1fc94143a32e6fdc">uint_sqrt()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#ga4e48c7ee2f835c45c1fd9e22761f3fe0">navit_populate_search_results_map()</a>.</p>
+
+</div>
+</div>
 <a id="ac6b7377df3a4fcbff23b8f8ecde6d221"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6b7377df3a4fcbff23b8f8ecde6d221">&#9670;&nbsp;</a></span>strtolower()</h2>
 
@@ -753,7 +786,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#afa449a08000b6541bd6deb8663cc503f">draw_shape()</a>, and <a class="el" href="gui__internal_8c.html#a1baa6efad094d9689341ec67a0edbaac">square_shape_str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#afa449a08000b6541bd6deb8663cc503f">draw_shape()</a>, and <a class="el" href="util_8h.html#afbc75e37f04e28a94e51fc53134ba651">square_shape_str()</a>.</p>
 
 </div>
 </div>

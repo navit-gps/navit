@@ -79,7 +79,6 @@ var searchData=
   ['get_5foverlay_5fpos',['get_overlay_pos',['../graphics__egl_8c.html#aff7ef32437a723cf19edf8d9653cd094',1,'get_overlay_pos(struct graphics_priv *gr, struct point *point_out):&#160;graphics_egl.c'],['../graphics__opengl_8c.html#abc580b33b91530aa812614542ea1d95a',1,'get_overlay_pos(struct graphics_priv *gr, struct point *point_out):&#160;graphics_opengl.c']]],
   ['get_5fpois',['get_pois',['../classBackend.html#a139da3a81c132887ce12937faaf8d864',1,'Backend']]],
   ['get_5frect',['get_rect',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae09c7e46f036dbbb0df73b23c212dae9',1,'org::navitproject::navit::NavitGraphics']]],
-  ['get_5fsearch_5fresults_5fmap',['get_search_results_map',['../gui__internal_8c.html#a733f76eeb35c9fca6f32227ed43e9a9c',1,'gui_internal.c']]],
   ['get_5fstring',['get_string',['../command_8c.html#a820a7259bff13dbe64e206bd38c0e0e8',1,'get_string(struct context *ctx, struct result *res):&#160;command.c'],['../data_8h.html#acb81e1af5343340bdb35b6b749963000',1,'get_string(unsigned char **p):&#160;data.h'],['../osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361',1,'get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape):&#160;osm_protobuf.c']]],
   ['get_5fstring_5ffrom_5fattr_5flist',['get_string_from_attr_list',['../gui__internal__search_8c.html#ac35e52239545b1ac106e8575c065a13a',1,'gui_internal_search.c']]],
   ['get_5fstrings',['get_strings',['../osm__o5m_8c.html#a45b483f2eebe695db06b15295a54121b',1,'osm_o5m.c']]],

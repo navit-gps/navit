@@ -153,7 +153,6 @@ var searchData=
   ['get_5fpois',['get_pois',['../classBackend.html#a139da3a81c132887ce12937faaf8d864',1,'Backend']]],
   ['get_5frect',['get_rect',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae09c7e46f036dbbb0df73b23c212dae9',1,'org::navitproject::navit::NavitGraphics']]],
   ['get_5fref',['GET_REF',['../osm_8c.html#a06a84d471b5554386bc7bdaea86a9199',1,'osm.c']]],
-  ['get_5fsearch_5fresults_5fmap',['get_search_results_map',['../gui__internal_8c.html#a733f76eeb35c9fca6f32227ed43e9a9c',1,'gui_internal.c']]],
   ['get_5fshadow',['get_shadow',['../structfont__freetype__methods.html#abb2fa4ae9c8193264805bd693bbe7750',1,'font_freetype_methods']]],
   ['get_5fstate',['get_state',['../structgui__internal__widget__methods.html#ac78bc3466ce832b300350f061fef41d1',1,'gui_internal_widget_methods']]],
   ['get_5fstring',['get_string',['../command_8c.html#a820a7259bff13dbe64e206bd38c0e0e8',1,'get_string(struct context *ctx, struct result *res):&#160;command.c'],['../data_8h.html#acb81e1af5343340bdb35b6b749963000',1,'get_string(unsigned char **p):&#160;data.h'],['../osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361',1,'get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape):&#160;osm_protobuf.c']]],

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['l',['l',['../structdraw__polyline__shape.html#a476cd9663e86506db5a966e8f860f4bf',1,'draw_polyline_shape::l()'],['../structmapset__handle.html#a0f53ed52141511e70184790e2863a357',1,'mapset_handle::l()'],['../data_8h.html#a7577d49f3bfffb1cf048eef843177784',1,'L():&#160;data.h']]],
-  ['label',['label',['../structbookmark__item__priv.html#ada935678ea8d69bd34067b67201013dd',1,'bookmark_item_priv::label()'],['../structdisplayitem.html#a9eb57069cfb4c2666a067175ac5176c8',1,'displayitem::label()'],['../structitem__data.html#ae664c5300ff05ce9f3e148ea016d00f9',1,'item_data::label()'],['../structmap__rect__priv.html#a251872f095b9ebfac3f43d8a86b280a0',1,'map_rect_priv::label()'],['../structmap__rect__priv.html#ac442d947550598d521513d82f1695ced',1,'map_rect_priv::label()'],['../structgscale.html#a2dbdc3c18126dc6372be920551cbd4f4',1,'gscale::label()'],['../structlabel__header.html#a3f523e90da2c641eb77124a0e8b12eab',1,'label_header::label()'],['../garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c',1,'label():&#160;garmin_img.c']]],
+  ['label',['label',['../structbookmark__item__priv.html#ada935678ea8d69bd34067b67201013dd',1,'bookmark_item_priv::label()'],['../structlcoord.html#a4e57dfaa0af83dae0bc93cede040dd63',1,'lcoord::label()'],['../structdisplayitem.html#a9eb57069cfb4c2666a067175ac5176c8',1,'displayitem::label()'],['../structitem__data.html#ae664c5300ff05ce9f3e148ea016d00f9',1,'item_data::label()'],['../structmap__rect__priv.html#a251872f095b9ebfac3f43d8a86b280a0',1,'map_rect_priv::label()'],['../structmap__rect__priv.html#ac442d947550598d521513d82f1695ced',1,'map_rect_priv::label()'],['../structgscale.html#a2dbdc3c18126dc6372be920551cbd4f4',1,'gscale::label()'],['../structlabel__header.html#a3f523e90da2c641eb77124a0e8b12eab',1,'label_header::label()'],['../garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c',1,'label():&#160;garmin_img.c']]],
   ['label_5fattr',['label_attr',['../structmap__rect__priv.html#ad57a1328c4a9038f24147b4961939111',1,'map_rect_priv']]],
   ['label_5fdata',['label_data',['../structlabel__data.html',1,'']]],
   ['label_5fdata_5foffset',['label_data_offset',['../structlabel__data__offset.html',1,'']]],
@@ -97,6 +97,7 @@ var searchData=
   ['lbl14',['lbl14',['../structlabel__header.html#a01f77c37934e2d72a213333f19ceb86a',1,'label_header::lbl14()'],['../garmin__img_8c.html#a7b814147da47b6ac79415060e4748a52',1,'lbl14():&#160;garmin_img.c']]],
   ['lbl_5fhdr',['lbl_hdr',['../structmap__rect__priv.html#a0852e3d6f21b721c3bc6067da751417a',1,'map_rect_priv']]],
   ['lbl_5foffset',['lbl_offset',['../structrgn__point.html#aac23aa6fa9d9bfd5607c5e380ad6bbf7',1,'rgn_point::lbl_offset()'],['../structrgn__poly.html#a381b26b0df0430e249b39635e48d13cb',1,'rgn_poly::lbl_offset()'],['../garmin__img_8c.html#a7fa7074eb0c14a377f0986edc328b22e',1,'lbl_offset():&#160;garmin_img.c']]],
+  ['lcoord',['lcoord',['../structlcoord.html',1,'']]],
   ['le16_5fto_5fcpu',['le16_to_cpu',['../endianess_8h.html#a65e9510f535c1ee2f826d447471289fa',1,'endianess.h']]],
   ['le32_5fto_5fcpu',['le32_to_cpu',['../endianess_8h.html#a48f527b00bc1d5e46366d720280a1039',1,'endianess.h']]],
   ['le64_5fto_5fcpu',['le64_to_cpu',['../endianess_8h.html#a0987d88a4fac98f0b1d6355ef7aa77e2',1,'endianess.h']]],

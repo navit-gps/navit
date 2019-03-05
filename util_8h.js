@@ -16,6 +16,7 @@ var util_8h =
     [ "spawn_process_check_status", "util_8h.html#a18c71eb35c58196154530a2c34112018", null ],
     [ "spawn_process_info_free", "util_8h.html#af2843263548b7303487ac8ae403b56ae", null ],
     [ "spawn_process_init", "util_8h.html#a4a8412575e61913d24d36012212e1fd5", null ],
+    [ "square_shape_str", "util_8h.html#afbc75e37f04e28a94e51fc53134ba651", null ],
     [ "strtolower", "util_8h.html#ac6b7377df3a4fcbff23b8f8ecde6d221", null ],
     [ "strtoupper", "util_8h.html#a2596fc665ff7a1fd98a965bd349be472", null ],
     [ "time_to_iso8601", "util_8h.html#ab3ca16b02372aa7a2b38bfab5e7a9c0f", null ],

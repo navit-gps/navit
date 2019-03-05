@@ -34,7 +34,7 @@ var searchData=
   ['navittimer',['NavitTimer',['../interfaceNavitTimer.html',1,'']]],
   ['navittraff',['NavitTraff',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html',1,'org::navitproject::navit']]],
   ['navitvehicle',['NavitVehicle',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html',1,'org::navitproject::navit']]],
-  ['navitview',['NavitView',['../interfaceNavitView.html',1,'NavitView'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html',1,'org.navitproject.navit.NavitGraphics.NavitView']]],
+  ['navitview',['NavitView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html',1,'org.navitproject.navit.NavitGraphics.NavitView'],['../interfaceNavitView.html',1,'NavitView']]],
   ['navitviewcontroller',['NavitViewController',['../interfaceNavitViewController.html',1,'']]],
   ['navitwatch',['NavitWatch',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html',1,'org::navitproject::navit']]],
   ['newnode',['newnode',['../structnewnode.html',1,'']]],
