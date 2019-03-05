@@ -41,6 +41,9 @@ wchar_t* newSysString(const char *toconvert);
 char * newSysString(const char *toconvert);
 #endif
 #endif
+
+void square_shape_str(char *s);
+
 unsigned int iso8601_to_secs(char *iso8601);
 time_t mkgmtime(struct tm * pt);
 time_t iso8601_to_time(char * iso8601);
