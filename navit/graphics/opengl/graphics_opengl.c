@@ -193,6 +193,7 @@ static GHashTable *hImageData;
 
 #ifdef USE_OPENGLES
 #else
+#define APIENTRY
 /*  prototypes */
 void APIENTRY tessBeginCB(GLenum which);
 void APIENTRY tessEndCB(void);
