@@ -95,7 +95,12 @@ struct item_id {
 #define ITEM_ID_ARGS(x) (x).id_hi,(x).id_lo
 
 /**
- * Represents an object on a map, such as a POI, a building, a way or a boundary.
+ * @brief Represents an object on a map.
+ *
+ * An item holds the data for an individual item on a map, including its coordinates and various attributes. The item
+ * type specifies what the map item refers to, such as a POI, a building, a way or a boundary. There are also special
+ * item types used internally, such as the various kinds of turn instructions. Item types are internally represented as
+ * numbers.
  */
 struct item {
     enum item_type type; /**< Type of the item.*/

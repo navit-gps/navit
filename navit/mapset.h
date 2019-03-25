@@ -30,7 +30,17 @@ struct attr;
 struct attr_iter;
 struct item;
 struct map;
+
+/**
+ * @brief A mapset.
+ *
+ * A mapset is a collection of (one or more) maps. This allows you to combine data from multiple maps, e.g. one map
+ * with the road network and another with special POIs.
+ *
+ * Adding, removing or iterating over maps in a mapset is guaranteed to be thread-safe.
+ */
 struct mapset;
+
 struct mapset_handle;
 struct mapset_search;
 struct mapset *mapset_new(struct attr *parent, struct attr **attrs);
