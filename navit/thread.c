@@ -55,6 +55,87 @@ static void *thread_main_wrapper(void * data) {
     void * ret = (void *) (main_data->main(main_data->data));
     return ret;
 }
+
+char * thread_format_error(int error) {
+    switch(error) {
+    case EPERM:
+        return "EPERM (Operation not permitted)";
+    case ENOENT:
+        return "ENOENT (No such file or directory)";
+    case ESRCH:
+        return "ESRCH (No such process)";
+    case EINTR:
+        return "EINTR (Interrupted system call)";
+    case EIO:
+        return "EIO (I/O error)";
+    case ENXIO:
+        return "ENXIO (No such device or address)";
+    case E2BIG:
+        return "E2BIG (Argument list too long)";
+    case ENOEXEC:
+        return "ENOEXEC (Exec format error)";
+    case EBADF:
+        return "EBADF (Bad file number)";
+    case ECHILD:
+        return "ECHILD (No child processes)";
+    case EAGAIN:
+        return "EAGAIN (Try again)";
+    case ENOMEM:
+        return "ENOMEM (Out of memory)";
+    case EACCES:
+        return "EACCES (Permission denied)";
+    case EFAULT:
+        return "EFAULT (Bad address)";
+    case ENOTBLK:
+        return "ENOTBLK (Block device required)";
+    case EBUSY:
+        return "EBUSY (Device or resource busy)";
+    case EEXIST:
+        return "EEXIST (File exists)";
+    case EXDEV:
+        return "EXDEV (Cross-device link)";
+    case ENODEV:
+        return "ENODEV (No such device)";
+    case ENOTDIR:
+        return "ENOTDIR (Not a directory)";
+    case EISDIR:
+        return "EISDIR (Is a directory)";
+    case EINVAL:
+        return "EINVAL (Invalid argument)";
+    case ENFILE:
+        return "ENFILE (File table overflow)";
+    case EMFILE:
+        return "EMFILE (Too many open files)";
+    case ENOTTY:
+        return "ENOTTY (Not a typewriter)";
+    case ETXTBSY:
+        return "ETXTBSY (Text file busy)";
+    case EFBIG:
+        return "EFBIG (File too large)";
+    case ENOSPC:
+        return "ENOSPC (No space left on device)";
+    case ESPIPE:
+        return "ESPIPE (Illegal seek)";
+    case EROFS:
+        return "EROFS (Read-only file system)";
+    case EMLINK:
+        return "EMLINK (Too many links)";
+    case EPIPE:
+        return "EPIPE (Broken pipe)";
+    case EDOM:
+        return "EDOM (Math argument out of domain of func)";
+    case ERANGE:
+        return "ERANGE (Math result not representable)";
+    case EDEADLK:
+        return "EDEADLK (Resource deadlock would occur)";
+    case ENAMETOOLONG:
+        return "ENAMETOOLONG (File name too long)";
+    case ENOLCK:
+        return "ENOLCK (No record locks available)";
+    default:
+        return "unknown";
+    }
+}
 #endif
 
 #if HAVE_NAVIT_THREADS
@@ -68,7 +149,7 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
     main_data->data = data;
     err = pthread_create(ret, NULL, thread_main_wrapper, (void *) main_data);
     if (err) {
-        dbg(lvl_error, "error %d, thread=%p", err, ret);
+        dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), ret);
         g_free(ret);
         return NULL;
     }
@@ -76,7 +157,7 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
     if (name) {
         err = pthread_setname_np(*ret, name);
         if (err)
-            dbg(lvl_warning, "error %d, thread=%p", err, ret);
+            dbg(lvl_warning, "error %d %s, thread=%p", err, thread_format_error(err), ret);
     }
 #endif
     return ret;
@@ -118,7 +199,7 @@ int thread_join(thread * this_) {
     void * ret;
     int err = pthread_join(*this_, &ret);
     if (err) {
-        dbg(lvl_error, "error %d, thread=%p", err, this_);
+        dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), this_);
         return -1;
     }
     return (int) ret;
@@ -132,7 +213,7 @@ thread_lock *thread_lock_new(void) {
     thread_lock *ret = g_new0(thread_lock, 1);
     int err = pthread_rwlock_init(ret, NULL);
     if (err) {
-        dbg(lvl_error, "error %d, lock=%p", err, ret);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), ret);
         g_free(ret);
         return NULL;
     }
@@ -146,7 +227,7 @@ void thread_lock_destroy(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_destroy(this_);
     if (err)
-        dbg(lvl_error, "error %d, lock=%p", err, this_);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
     g_free(this_);
 #endif
 }
@@ -155,7 +236,7 @@ void thread_lock_acquire_read(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_rdlock(this_);
     if (err)
-        dbg(lvl_error, "error %d, lock=%p", err, this_);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
 #endif
 }
 
@@ -163,7 +244,7 @@ void thread_lock_release_read(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
     if (err)
-        dbg(lvl_error, "error %d, lock=%p", err, this_);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
 #endif
 }
 
@@ -171,7 +252,7 @@ void thread_lock_acquire_write(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_wrlock(this_);
     if (err)
-        dbg(lvl_error, "error %d, lock=%p", err, this_);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
 #endif
 }
 
@@ -179,6 +260,6 @@ void thread_lock_release_write(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
     if (err)
-        dbg(lvl_error, "error %d, lock=%p", err, this_);
+        dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
 #endif
 }
