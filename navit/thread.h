@@ -163,6 +163,18 @@ void thread_lock_destroy(thread_lock *this_);
 void thread_lock_acquire_read(thread_lock *this_);
 
 /**
+ * @brief Tries to acquire a read lock for the current thread.
+ *
+ * If the lock can be successfully acquired, this function returns TRUE and otherwise behaves identically to
+ * `thread_lock_acquire_read()`. If acquiring the lock fails for whatever reason, it never blocks but returns FALSE
+ * immediately. The caller must evaluate the return value. If the result was FALSE, indicating the lock was not
+ * obtained, it needs to recover from the situation and refrain from operations which the lock protects.
+ *
+ * If Navit was built without thread support, this is a no-op and the result will always be TRUE.
+ */
+int thread_lock_try_read(thread_lock *this_);
+
+/**
  * @brief Releases a read lock for the current thread.
  *
  * If Navit was built without thread support, this is a no-op.
@@ -178,6 +190,18 @@ void thread_lock_release_read(thread_lock *this_);
  * If Navit was built without thread support, this is a no-op.
  */
 void thread_lock_acquire_write(thread_lock *this_);
+
+/**
+ * @brief Tries to acquire a write lock for the current thread.
+ *
+ * If the lock can be successfully acquired, this function returns TRUE and otherwise behaves identically to
+ * `thread_lock_acquire_write()`. If acquiring the lock fails for whatever reason, it never blocks but returns FALSE
+ * immediately. The caller must evaluate the return value. If the result was FALSE, indicating the lock was not
+ * obtained, it needs to recover from the situation and refrain from operations which the lock protects.
+ *
+ * If Navit was built without thread support, this is a no-op and the result will always be TRUE.
+ */
+int thread_lock_try_write(thread_lock *this_);
 
 /**
  * @brief Releases a write lock for the current thread.
