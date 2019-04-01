@@ -235,8 +235,10 @@ void thread_lock_destroy(thread_lock *this_) {
 void thread_lock_acquire_read(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_rdlock(this_);
-    if (err)
+    if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        abort();
+    }
 #endif
 }
 
@@ -256,16 +258,20 @@ int thread_lock_try_read(thread_lock *this_) {
 void thread_lock_release_read(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
-    if (err)
+    if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        abort();
+    }
 #endif
 }
 
 void thread_lock_acquire_write(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_wrlock(this_);
-    if (err)
+    if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        abort();
+    }
 #endif
 }
 
@@ -285,7 +291,9 @@ int thread_lock_try_write(thread_lock *this_) {
 void thread_lock_release_write(thread_lock *this_) {
 #if HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
-    if (err)
+    if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        abort();
+    }
 #endif
 }
