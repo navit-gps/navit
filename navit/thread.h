@@ -158,6 +158,9 @@ void thread_lock_destroy(thread_lock *this_);
  * exactly one lock operation, i.e. if a read lock was acquired n times, it must be released n times before another
  * thread can acquire a write lock.
  *
+ * If another thread is currently holding the same lock for writing, the calling thread will block until the lock can
+ * be acquired. If lock acquisition fails for any reason (including a deadlock), the process will abort.
+ *
  * If Navit was built without thread support, this is a no-op.
  */
 void thread_lock_acquire_read(thread_lock *this_);
@@ -177,6 +180,8 @@ int thread_lock_try_read(thread_lock *this_);
 /**
  * @brief Releases a read lock for the current thread.
  *
+ * If the lock cannot be released for any reason, the process will abort.
+ *
  * If Navit was built without thread support, this is a no-op.
  */
 void thread_lock_release_read(thread_lock *this_);
@@ -186,6 +191,9 @@ void thread_lock_release_read(thread_lock *this_);
  *
  * Write locks, unlike read locks, are not recursive, i.e. even the same thread cannot acquire the same write lock more
  * than once.
+ *
+ * If another thread is currently holding the same lock, the calling thread will block until the lock can be acquired.
+ * If lock acquisition fails for any reason (including a deadlock), the process will abort.
  *
  * If Navit was built without thread support, this is a no-op.
  */
@@ -205,6 +213,8 @@ int thread_lock_try_write(thread_lock *this_);
 
 /**
  * @brief Releases a write lock for the current thread.
+ *
+ * If the lock cannot be released for any reason, the process will abort.
  *
  * If Navit was built without thread support, this is a no-op.
  */
