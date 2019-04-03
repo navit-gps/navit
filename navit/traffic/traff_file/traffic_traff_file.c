@@ -68,96 +68,97 @@ char *traffic_read_traff_file(char *filename) {
         data = g_malloc(end - start + 1);
 
         if ((sizeof(data) - 1) > 0) {
-            while (fread(data, 1, (long) (end - start), traff_file_ptr));
+            while (fread(data, 1, (long) (end - start), traff_file_ptr))
+                ;
             data[(end - start)] = '\0';
 
             xml_last_msg = end;
         }
     }
+
     return data;
 }
 
-    /**
-     * @brief Stores information about the plugin instance.
-     */
-    struct traffic_priv {
-        struct navit * nav; /*!< The navit instance */
-        int reports_requested; /*!< How many reports have been requested */
-    };
+/**
+ * @brief Stores information about the plugin instance.
+ */
+struct traffic_priv {
+    struct navit * nav; /*!< The navit instance */
+    int reports_requested; /*!< How many reports have been requested */
+};
 
-    struct traffic_message ** traffic_traff_file_get_messages(
-            struct traffic_priv * this_);
+struct traffic_message ** traffic_traff_file_get_messages(
+    struct traffic_priv * this_);
 
-    /**
-     * @brief Returns a traff_file traffic report.
-     *
-     * This method will report all messages from a traff file when called first.
-     * All other calls to this method will return only new messages or NULL if none are available.
-     *
-     * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
-     * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
-     */
-    struct traffic_message ** traffic_traff_file_get_messages(
-            struct traffic_priv * this_) {
-        struct traffic * traffic = NULL;
-        struct traffic_message ** messages;
+/**
+ * @brief Returns a traff_file traffic report.
+ *
+ * This method will report all messages from a traff file when called first.
+ * All other calls to this method will return only new messages or NULL if none are available.
+ *
+ * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
+ * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
+ */
+struct traffic_message ** traffic_traff_file_get_messages(
+    struct traffic_priv * this_) {
+    struct traffic * traffic = NULL;
+    struct traffic_message ** messages;
 
-        dbg(lvl_debug, "enter");
+    dbg(lvl_debug, "enter");
 
-        dbg(lvl_debug, "processing traffic from file: traff.xml");
+    dbg(lvl_debug, "processing traffic from file: traff.xml");
 
-        char *filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"),
-                "traff.xml");
+    char *filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"),
+            "traff.xml");
 
-        char * xml;
+    char * xml;
 
-        xml = traffic_read_traff_file(filename);
+    xml = traffic_read_traff_file(filename);
 
-        messages = traffic_get_messages_from_xml_string(traffic, xml);
+    messages = traffic_get_messages_from_xml_string(traffic, xml);
 
-        if (xml)
-            g_free(xml);
+    if (xml)
+        g_free(xml);
 
-        return messages;
-    }
+    return messages;
+}
 
-    /**
-     * @brief The methods implemented by this plugin
-     */
-    static struct traffic_methods traffic_traff_file_meth = {
-            traffic_traff_file_get_messages, };
+/**
+ * @brief The methods implemented by this plugin
+ */
+static struct traffic_methods traffic_traff_file_meth = {
+        traffic_traff_file_get_messages, };
 
-    /**
-     * @brief Registers a new traff_file traffic plugin
-     *
-     * @param nav The navit instance
-     * @param meth Receives the traffic methods
-     * @param attrs The attributes for the map
-     * @param cbl
-     *
-     * @return A pointer to a `traffic_priv` structure for the plugin instance
-     */
-    static struct traffic_priv * traffic_traff_file_new(struct navit *nav,
-            struct traffic_methods *meth, struct attr **attrs,
-            struct callback_list *cbl) {
-        struct traffic_priv *ret;
+/**
+ * @brief Registers a new traff_file traffic plugin
+ *
+ * @param nav The navit instance
+ * @param meth Receives the traffic methods
+ * @param attrs The attributes for the map
+ * @param cbl
+ *
+ * @return A pointer to a `traffic_priv` structure for the plugin instance
+ */
+static struct traffic_priv * traffic_traff_file_new(struct navit *nav,
+    struct traffic_methods *meth, struct attr **attrs,
+    struct callback_list *cbl) {
+    struct traffic_priv *ret;
 
-        dbg(lvl_debug, "enter");
+    dbg(lvl_debug, "enter");
 
-        ret = g_new0(struct traffic_priv, 1);
-        *meth = traffic_traff_file_meth;
+    ret = g_new0(struct traffic_priv, 1);
+    *meth = traffic_traff_file_meth;
 
-        return ret;
-    }
+    return ret;
+}
 
-    /**
-     * @brief Initializes the traffic plugin.
-     *
-     * This function is called once on startup.
-     */
-    void plugin_init(void) {
-        dbg(lvl_debug, "enter");
+/**
+ * @brief Initializes the traffic plugin.
+ *
+ * This function is called once on startup.
+ */
+void plugin_init(void) {
+    dbg(lvl_debug, "enter");
 
-        plugin_register_category_traffic("traff_file", traffic_traff_file_new);
-    }
-
+    plugin_register_category_traffic("traff_file", traffic_traff_file_new);
+}
