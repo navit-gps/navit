@@ -66,10 +66,9 @@ char *traffic_read_traff_file(char *filename) {
         fseek(traff_file_ptr, start, SEEK_SET);
 
         data = g_malloc(end - start + 1);
-//           char data[end - start + 1];
+
         if ((sizeof(data) - 1) > 0) {
-            while (fread(data, 1, (long) (end - start), traff_file_ptr))
-                ;
+            while (fread(data, 1, (long) (end - start), traff_file_ptr));
             data[(end - start)] = '\0';
 
             xml_last_msg = end;
@@ -92,21 +91,8 @@ char *traffic_read_traff_file(char *filename) {
     /**
      * @brief Returns a traff_file traffic report.
      *
-     * This method will report two messages when first called: The messages indicate queuing traffic on the
-     * A9 Munichâ€“Nuremberg between Neufahrn and Allershausen, and slow traffic on the A96 Lindauâ€“Munich
-     * between GrÃ¤felfing and MÃ¼nchen-Laim.
-     *
-     * The 10th call will report an update message for the A9 (with a recent timestamp but otherwise the same
-     * data) and a cancellation message for the A96.
-     *
-     * They mimic TMC messages in that coordinates are approximate, TMC identifiers are supplied for the
-     * locations and extra data fields which can be inferred from the TMC location table are filled. The
-     * timestamps indicate a message that has just been received for the first time, i.e. its â€œfirst
-     * receivedâ€� and â€œlast updatedâ€� timestamps match and are recent. Expiration is after 20 seconds for
-     * messages in the first feed and 10 seconds for messages in the first feed (far below the lowest
-     * expiration timespan permitted in TMC).
-     *
-     * All other calls to this method will return `NULL`, indicating that there are no messages to report.
+     * This method will report all messages from a traff file when called first.
+     * All other calls to this method will return only new messages or NULL if none are available.
      *
      * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
      * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
