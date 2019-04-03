@@ -37,9 +37,10 @@
 struct graphics_priv {
     jclass NavitGraphicsClass;
     jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle,
-        NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, NavitGraphics_draw_image_warp,
-        NavitGraphics_draw_mode, NavitGraphics_draw_drag, NavitGraphics_overlay_disable, NavitGraphics_overlay_resize,
-        NavitGraphics_SetCamera, NavitGraphics_setBackgroundColor;
+        NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image,
+        NavitGraphics_draw_image_warp, NavitGraphics_draw_mode, NavitGraphics_draw_drag,
+        NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera,
+        NavitGraphics_setBackgroundColor;
 
     jclass PaintClass;
     jmethodID Paint_init, Paint_setStrokeWidth, Paint_setARGB;
@@ -125,7 +126,9 @@ static void font_destroy(struct graphics_font_priv *font) {
     g_free(font);
 }
 
-static struct graphics_font_methods font_methods = { font_destroy };
+static struct graphics_font_methods font_methods = {
+    font_destroy
+};
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
     int size, int flags) {
@@ -166,8 +169,13 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
-static struct graphics_gc_methods gc_methods = { gc_destroy, gc_set_linewidth, gc_set_dashes, gc_set_foreground,
-    gc_set_background };
+static struct graphics_gc_methods gc_methods = {
+    gc_destroy,
+    gc_set_linewidth,
+    gc_set_dashes,
+    gc_set_foreground,
+    gc_set_background
+};
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
     struct graphics_gc_priv *ret = g_new0(struct graphics_gc_priv, 1);
@@ -183,7 +191,9 @@ static void image_destroy(struct graphics_image_priv *img) {
     // unused?
 }
 
-static struct graphics_image_methods image_methods = { image_destroy };
+static struct graphics_image_methods image_methods = {
+    image_destroy
+};
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path,
     int *w, int *h, struct point *hot, int rotation) {
@@ -222,7 +232,8 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct g
         if ((*w != IMAGE_W_H_UNSET && *w != ret->width) || (*h != IMAGE_W_H_UNSET && *w != ret->height)) {
             jclass scaledBitmap = (*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapClass,
                 gra->Bitmap_createScaledBitmap, localBitmap, (*w == IMAGE_W_H_UNSET) ? ret->width : *w,
-                (*h == IMAGE_W_H_UNSET) ? ret->height : *h, JNI_TRUE);
+                (*h == IMAGE_W_H_UNSET) ? ret->height : *h,
+                JNI_TRUE);
             if (!scaledBitmap) {
                 dbg(lvl_error, "Bitmap scaling to %dx%d failed for %s", *w, *h, path);
             } else {
@@ -418,10 +429,12 @@ static int set_attr(struct graphics_priv *gra, struct attr *attr) {
         (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_SetCamera, attr->u.num);
         return 1;
     case attr_background_color:
-        gra->bgcolor = (attr->u.color->a / 0x101) << 24 | (attr->u.color->r / 0x101) << 16
-            | (attr->u.color->g / 0x101) << 8 | (attr->u.color->b / 0x101);
-        dbg(lvl_debug, "set attr_background_color %04x %04x %04x %04x (%08x)", attr->u.color->r, attr->u.color->g,
-            attr->u.color->b, attr->u.color->a, gra->bgcolor)
+        gra->bgcolor = (attr->u.color->a / 0x101) << 24
+            | (attr->u.color->r / 0x101) << 16
+            | (attr->u.color->g / 0x101) << 8
+            | (attr->u.color->b / 0x101);
+        dbg(lvl_debug, "set attr_background_color %04x %04x %04x %04x (%08x)",
+            attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, gra->bgcolor)
         ;
         if (gra->NavitGraphics_setBackgroundColor != NULL)
             (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_setBackgroundColor, gra->bgcolor);
@@ -438,10 +451,31 @@ int show_native_keyboard(struct graphics_keyboard *kbd);
 
 void hide_native_keyboard(struct graphics_keyboard *kbd);
 
-static struct graphics_methods graphics_methods = { graphics_destroy, draw_mode, draw_lines, draw_polygon,
-    draw_rectangle, draw_circle, draw_text, draw_image, draw_image_warp, draw_drag, font_new, gc_new, background_gc,
-    overlay_new, image_new, get_data, image_free, get_text_bbox, overlay_disable, overlay_resize, set_attr,
-    show_native_keyboard, hide_native_keyboard, };
+static struct graphics_methods graphics_methods = {
+    graphics_destroy,
+    draw_mode,
+    draw_lines,
+    draw_polygon,
+    draw_rectangle,
+    draw_circle,
+    draw_text,
+    draw_image,
+    draw_image_warp,
+    draw_drag,
+    font_new,
+    gc_new,
+    background_gc,
+    overlay_new,
+    image_new,
+    get_data,
+    image_free,
+    get_text_bbox,
+    overlay_disable,
+    overlay_resize,
+    set_attr,
+    show_native_keyboard,
+    hide_native_keyboard,
+};
 
 static void resize_callback(struct graphics_priv *gra, int w, int h) {
     dbg(lvl_debug, "w=%d h=%d ok", w, h);
@@ -729,9 +763,12 @@ static void graphics_android_cmd_menu(struct graphics_priv *this, char *function
  * The command table. Each entry consists of an API function name and the callback function which implements
  * this command.
  */
-static struct command_table commands[] = { { "map_download_dialog", command_cast(graphics_android_cmd_runMenuItem) }, {
-    "set_map_location", command_cast(graphics_android_cmd_runMenuItem) }, { "backup_restore_dialog", command_cast(
-    graphics_android_cmd_runMenuItem) }, { "menu", command_cast(graphics_android_cmd_menu) }, };
+static struct command_table commands[] = {
+    { "map_download_dialog", command_cast(graphics_android_cmd_runMenuItem) },
+    { "set_map_location", command_cast(graphics_android_cmd_runMenuItem) },
+    { "backup_restore_dialog", command_cast(graphics_android_cmd_runMenuItem) },
+    { "menu", command_cast(graphics_android_cmd_menu) },
+};
 
 /**
  * @brief Creates a new Android graphics instance.
@@ -771,10 +808,12 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
     ret->padding->bottom = 0;
     /* attr_background_color is the background color for system bars (API 17+ only) */
     if ((attr = attr_search(attrs, NULL, attr_background_color))) {
-        ret->bgcolor = (attr->u.color->a / 0x101) << 24 | (attr->u.color->r / 0x101) << 16
-            | (attr->u.color->g / 0x101) << 8 | (attr->u.color->b / 0x101);
-        dbg(lvl_debug, "attr_background_color %04x %04x %04x %04x (%08x)", attr->u.color->r, attr->u.color->g,
-            attr->u.color->b, attr->u.color->a, ret->bgcolor);
+        ret->bgcolor = (attr->u.color->a / 0x101) << 24
+            | (attr->u.color->r / 0x101) << 16
+            | (attr->u.color->g / 0x101) << 8
+            | (attr->u.color->b / 0x101);
+        dbg(lvl_debug, "attr_background_color %04x %04x %04x %04x (%08x)",
+            attr->u.color->r, attr->u.color->g, attr->u.color->b, attr->u.color->a, ret->bgcolor);
     } else {
         /* default is the same as for OSD */
         ret->bgcolor = 0x60000000;
@@ -804,7 +843,8 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
             g_free(attr);
         }
         ret->NavitGraphics_setBackgroundColor = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass,
-            "setBackgroundColor", "(I)V");
+            "setBackgroundColor",
+            "(I)V");
         if (ret->NavitGraphics_setBackgroundColor != NULL) {
             (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, ret->NavitGraphics_setBackgroundColor, ret->bgcolor);
         }
@@ -965,9 +1005,17 @@ static void event_android_call_callback(struct callback_list *cb) {
     dbg(lvl_debug, "enter");
 }
 
-static struct event_methods event_android_methods = { event_android_main_loop_run, event_android_main_loop_quit,
-    event_android_add_watch, event_android_remove_watch, event_android_add_timeout, event_android_remove_timeout,
-    event_android_add_idle, event_android_remove_idle, event_android_call_callback, };
+static struct event_methods event_android_methods = {
+    event_android_main_loop_run,
+    event_android_main_loop_quit,
+    event_android_add_watch,
+    event_android_remove_watch,
+    event_android_add_timeout,
+    event_android_remove_timeout,
+    event_android_add_idle,
+    event_android_remove_idle,
+    event_android_call_callback,
+};
 
 static struct event_priv *event_android_new(struct event_methods *meth) {
     dbg(lvl_debug, "enter");
