@@ -141,7 +141,7 @@ static struct traffic_methods traffic_traff_file_meth = { traffic_traff_file_get
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
 static struct traffic_priv * traffic_traff_file_new(struct navit *nav, struct traffic_methods *meth,
-    struct attr **attrs, struct callback_list *cbl) {
+        struct attr **attrs, struct callback_list *cbl) {
     struct traffic_priv *ret;
 
     dbg(lvl_debug, "enter");
