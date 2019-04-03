@@ -66,7 +66,7 @@ char *traffic_read_traff_file(char *filename) {
 
         rewind(traff_file_ptr);
 
-        long start
+        long start;
         start = xml_last_msg;
 
         fseek(traff_file_ptr, start, SEEK_SET);
