@@ -68,10 +68,8 @@ char *traffic_read_traff_file(char *filename) {
         data = g_malloc(end - start + 1);
 
         if ((sizeof(data) - 1) > 0) {
-            while (fread(data, 1, (long) (end - start), traff_file_ptr))
-                ;
+            while (fread(data, 1, (long) (end - start), traff_file_ptr));
             data[(end - start)] = '\0';
-
             xml_last_msg = end;
         }
     }
@@ -87,8 +85,7 @@ struct traffic_priv {
     int reports_requested; /*!< How many reports have been requested */
 };
 
-struct traffic_message ** traffic_traff_file_get_messages(
-    struct traffic_priv * this_);
+struct traffic_message ** traffic_traff_file_get_messages(struct traffic_priv * this_);
 
 /**
  * @brief Returns a traff_file traffic report.
@@ -99,8 +96,7 @@ struct traffic_message ** traffic_traff_file_get_messages(
  * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
  * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
  */
-struct traffic_message ** traffic_traff_file_get_messages(
-    struct traffic_priv * this_) {
+struct traffic_message ** traffic_traff_file_get_messages(struct traffic_priv * this_) {
     struct traffic * traffic = NULL;
     struct traffic_message ** messages;
 
@@ -108,8 +104,7 @@ struct traffic_message ** traffic_traff_file_get_messages(
 
     dbg(lvl_debug, "processing traffic from file: traff.xml");
 
-    char *filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"),
-            "traff.xml");
+    char *filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"), "traff.xml");
 
     char * xml;
 
@@ -126,8 +121,7 @@ struct traffic_message ** traffic_traff_file_get_messages(
 /**
  * @brief The methods implemented by this plugin
  */
-static struct traffic_methods traffic_traff_file_meth = {
-        traffic_traff_file_get_messages, };
+static struct traffic_methods traffic_traff_file_meth = { traffic_traff_file_get_messages, };
 
 /**
  * @brief Registers a new traff_file traffic plugin
@@ -139,9 +133,8 @@ static struct traffic_methods traffic_traff_file_meth = {
  *
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
-static struct traffic_priv * traffic_traff_file_new(struct navit *nav,
-    struct traffic_methods *meth, struct attr **attrs,
-    struct callback_list *cbl) {
+static struct traffic_priv * traffic_traff_file_new(struct navit *nav, struct traffic_methods *meth,
+    struct attr **attrs, struct callback_list *cbl) {
     struct traffic_priv *ret;
 
     dbg(lvl_debug, "enter");
@@ -162,3 +155,4 @@ void plugin_init(void) {
 
     plugin_register_category_traffic("traff_file", traffic_traff_file_new);
 }
+
