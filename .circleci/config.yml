@@ -220,7 +220,7 @@ jobs:
           command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - add_ssh_keys:
           fingerprints:
-            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
+            - "58:42:73:90:cc:68:f7:34:7e:37:37:fa:b3:26:1f:a5"
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
