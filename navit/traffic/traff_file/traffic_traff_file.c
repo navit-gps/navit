@@ -48,7 +48,8 @@ char *traffic_read_traff_file(char *filename);
 
 char *traffic_read_traff_file(char *filename) {
 
-    char *data = 0;
+    char *data;
+    data = 0;
 
     if (traff_file_ptr == 0) {
         if (filename) {
@@ -59,16 +60,25 @@ char *traffic_read_traff_file(char *filename) {
     if (traff_file_ptr) {
 
         fseek(traff_file_ptr, 0, SEEK_END);
-        long end = ftell(traff_file_ptr);
+
+        long end;
+        end = ftell(traff_file_ptr);
+
         rewind(traff_file_ptr);
-        long start = xml_last_msg;
+
+        long start
+        start = xml_last_msg;
 
         fseek(traff_file_ptr, start, SEEK_SET);
 
         data = g_malloc(end - start + 1);
 
         if ((sizeof(data) - 1) > 0) {
-            while (fread(data, 1, (long) (end - start), traff_file_ptr));
+
+            while (fread(data, 1, (long) (end - start), traff_file_ptr)) {
+                ;
+            }
+
             data[(end - start)] = '\0';
             xml_last_msg = end;
         }
@@ -101,15 +111,12 @@ struct traffic_message ** traffic_traff_file_get_messages(struct traffic_priv * 
     struct traffic_message ** messages;
 
     dbg(lvl_debug, "enter");
-
     dbg(lvl_debug, "processing traffic from file: traff.xml");
 
     char *filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"), "traff.xml");
-
     char * xml;
 
     xml = traffic_read_traff_file(filename);
-
     messages = traffic_get_messages_from_xml_string(traffic, xml);
 
     if (xml)
