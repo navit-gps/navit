@@ -301,6 +301,13 @@ static void gui_internal_cmd2_town(struct gui_priv *this, char *function, struct
     gui_internal_search(this,_("Town"),"Town",1);
 }
 
+static void gui_internal_cmd2_postal_code(struct gui_priv *this, char *function, struct attr **in, struct attr ***out,
+                                   int *valid) {
+    if (this->sl)
+        search_list_select(this->sl, attr_country_all, 0, 0);
+    gui_internal_search(this,_("Postal"),"Postal code",1);
+}
+
 static void gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct attr **in,
         struct attr ***out,
         int *valid) {
@@ -1282,6 +1289,8 @@ static void gui_internal_cmd2(struct gui_priv *this, char *function, struct attr
         gui_internal_cmd2_waypoints(this, function, in, out, valid);
     else if(!strcmp(function, "about"))
         gui_internal_cmd2_about(this, function, in, out, valid);
+    else if(!strcmp(function, "postal_code"))
+            gui_internal_cmd2_postal_code(this, function, in, out, valid);
 
     if(entering)
         graphics_draw_mode(this->gra, draw_mode_end);
@@ -1317,6 +1326,7 @@ static struct command_table commands[] = {
     {"waypoints",command_cast(gui_internal_cmd2)},
     {"write",command_cast(gui_internal_cmd_write)},
     {"about",command_cast(gui_internal_cmd2)},
+    {"postal_code",command_cast(gui_internal_cmd2)},
 #if HAS_IFADDRS
     {"network_info",command_cast(gui_internal_cmd2)},
 #endif

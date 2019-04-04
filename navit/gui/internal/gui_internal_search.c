@@ -40,6 +40,11 @@ static void gui_internal_search_street(struct gui_priv *this, struct widget *wid
     gui_internal_search(this,_("Street"),"Street",0);
 }
 
+static void gui_internal_search_postal_code(struct gui_priv *this, struct widget *widget, void *data) {
+    search_list_select(this->sl, attr_town_postal, 0, 0);
+    gui_internal_search(this,_("Postal code"),"Postal code",0);
+}
+
 static void gui_internal_search_house_number(struct gui_priv *this, struct widget *widget, void *data) {
     search_list_select(this->sl, attr_street_name, 0, 0);
     gui_internal_search(this,_("House number"),"House number",0);
@@ -348,7 +353,12 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
         item_name=res->town->common.town_name;
         result_main_label=town_display_label(res, 1, 0);
         result_sublabel=town_display_label(res, 1, 2);
-    } else if (! strcmp(wm_name,"Street")) {
+    } else if (! strcmp(wm_name,"Postal code")) {
+        item=&res->town->common.item;
+        item_name=res->town->common.postal;
+        result_main_label=town_display_label(res, 1, 0);
+        result_sublabel=town_display_label(res, 1, 2);
+    }else if (! strcmp(wm_name,"Street")) {
         item_name=res->street->name;
         item=&res->street->common.item;
         result_main_label=g_strdup(res->street->name);
@@ -416,6 +426,8 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
         param=(void *)5;
     if (! strcmp(wm->name,"House number"))
         param=(void *)6;
+    if (! strcmp(wm->name,"Postal code"))
+           param=(void *)3;
     dbg(lvl_debug,"%s now '%s'", wm->name, wm->text);
 
     gui_internal_search_idle_end(this);
@@ -431,6 +443,8 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
             search_attr.type=attr_street_name;
         if (! strcmp(wm->name,"House number"))
             search_attr.type=attr_house_number;
+        if (! strcmp(wm->name,"Postal code"))
+                   search_attr.type=attr_town_postal;
         search_attr.u.str=wm->text;
         search_list_search(this->sl, &search_attr, 1);
         gui_internal_search_idle_start(this, wm->name, search_list, param);
@@ -544,6 +558,13 @@ void gui_internal_search(struct gui_priv *this, const char *what, const char *ty
         wb->state |= STATE_SENSITIVE;
         wb->func = gui_internal_back;
         keyboard_mode = VKBD_NUMERIC | VKBD_FLAG_2;
+    } else if (!strcmp(type,"Postal code")) {
+        gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_select_postal")));
+        wb->state |= STATE_SENSITIVE;
+        wb->func = gui_internal_back;
+        keyboard_mode = VKBD_NUMERIC | VKBD_FLAG_2;
+        wnext=gui_internal_image_new(this, image_new_xs(this, "gui_select_street"));
+        wnext->func=gui_internal_search_street;
     }
     gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
     if (wnext) {
@@ -590,5 +611,17 @@ void gui_internal_search_town_in_country(struct gui_priv *this, struct widget *w
         this->country_iso2=g_strdup(((struct search_list_country *)slc)->iso2);
     }
     gui_internal_search(this,widget->name,"Town",0);
+}
+
+void gui_internal_search_postalcode_in_country(struct gui_priv *this, struct widget *widget) {
+    struct search_list_common *slc;
+    dbg(lvl_info,"id %d", widget->selection_id);
+    search_list_select(this->sl, attr_country_all, 0, 0);
+    slc=search_list_select(this->sl, attr_country_all, widget->selection_id, 1);
+    if (slc) {
+        g_free(this->country_iso2);
+        this->country_iso2=g_strdup(((struct search_list_country *)slc)->iso2);
+    }
+    gui_internal_search(this,widget->name,"Postal code",0);
 }
 
