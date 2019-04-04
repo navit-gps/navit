@@ -125,6 +125,12 @@ extern struct item_range {
     enum item_type min,max;
 } item_range_all;
 
+/**
+ * @brief An item indicating that the map driver is busy fetching more items.
+ *
+ * This is a “magic” item which may be returned by one of the query methods of a map driver. Receiving this item means
+ * that the map driver is currently busy fetching more items, and they can be retrieved at a later point in time.
+ */
 extern struct item busy_item;
 
 /* prototypes */
