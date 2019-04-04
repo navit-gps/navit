@@ -18,6 +18,13 @@
  */
 
 /* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */
+#ifndef ITEM
+#define ITEM(x) extern ##x;
+#endif
+#ifndef ITEM2
+#define ITEM2(x,y) extern ##x;
+#endif
+
 ITEM2(0x00000000,none)
 ITEM2(0x00000001,point_unspecified)
 ITEM(town_streets)
