@@ -2300,10 +2300,13 @@ static void route_graph_set_traffic_distortion(struct route_graph *this, struct 
 /**
  * @brief Adds a traffic distortion item to the route graph
  *
+ * If `update` is true, the end points of the traffic distortion will have their cost recalculated. Set this to true
+ * for a partial recalculation of an existing route, false when initially building the route graph.
+ *
  * @param this The route graph to add to
  * @param profile The vehicle profile to use for cost calculations
  * @param item The item to add, must be of {@code type_traffic_distortion}
- * @param update Whether to update the point (true for LPA*, false for Dijkstra)
+ * @param update Whether to update the end points
  */
 static void route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
         struct item *item, int update) {
