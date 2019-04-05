@@ -36,7 +36,14 @@ struct speech_priv {
 static int speech_android_say(struct speech_priv *this, const char *text) {
     char *str=g_strdup(text);
     jstring string;
-    int i;
+    char *tok = str;
+
+    /* Replace hyphens with white spaces, or some Android speech SDK will pronounce "hyphen" */
+    while (*tok) {
+        if (*tok=='-')
+            *tok=' ';
+        tok++;
+    }
 
     string = (*jnienv)->NewStringUTF(jnienv, str);
     dbg(lvl_debug,"enter %s",str);
