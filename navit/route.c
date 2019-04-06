@@ -2703,10 +2703,8 @@ static int route_graph_is_path_computed(struct route_graph *this_) {
  * After recalculation, the route path is updated.
  *
  * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
- * the algorithm used for the initial routing:
- * \li The `value` of a node represents the cost to reach the destination and thus decreases along the route
- * (eliminating the need for recalculations as the vehicle moves within the route graph)
- * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, the basis of the main routing
+ * the old routing algorithm:
+ * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, formerly the basis of the routing
  * algorithm, and makes our keys one-dimensional)
  * \li Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this
  * may change in the future).
