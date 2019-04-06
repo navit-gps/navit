@@ -112,6 +112,8 @@ struct traffic_message ** traffic_traff_file_get_messages(struct traffic_priv * 
 
     dbg(lvl_debug, "enter");
     dbg(lvl_debug, "processing traffic from file: traff.xml");
+    
+    char *filename;
 
 #ifdef HAVE_API_WIN32_BASE
     filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"), "traff.xml");
