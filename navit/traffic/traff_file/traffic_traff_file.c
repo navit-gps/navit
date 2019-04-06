@@ -119,7 +119,7 @@ struct traffic_message ** traffic_traff_file_get_messages(struct traffic_priv * 
     filename = g_strdup_printf("%s\\%s", getenv("NAVIT_USER_DATADIR"), "traff.xml");
 #else
     filename = g_strdup_printf("%s/%s", getenv("NAVIT_USER_DATADIR"), "traff.xml");
-#endif /* HAVE_API_WIN32_BAS
+#endif /* HAVE_API_WIN32_BASE */
 
     char * xml;
 
