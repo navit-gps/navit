@@ -140,7 +140,9 @@ struct route_graph_segment {
  * each segment.
  */
 struct route_graph {
-	int busy;                                   /**< The graph is being built */
+	int busy;                                   /**< Route calculation is in progress: the graph is being built,
+	                                             *   flooded or the path is being built (a more detailed status can be
+	                                             *   obtained from the route’s status attribute) */
 	struct map_selection *sel;                  /**< The rectangle selection for the graph */
 	struct mapset_handle *h;                    /**< Handle to the mapset */
 	struct map *m;                              /**< Pointer to the currently active map */
