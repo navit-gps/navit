@@ -76,9 +76,11 @@ extern "C" {
 #if HAVE_POSIX_THREADS
 #define thread pthread_t
 #define thread_lock pthread_rwlock_t
+#define thread_id pthread_t
 #else
 #define thread int
 #define thread_lock int
+#define thread_id int
 #endif
 
 /**
@@ -133,6 +135,13 @@ void thread_exit(int result);
  * @return The thread’s exit value, -1 if an error was encountered.
  */
 int thread_join(thread * this_);
+
+/**
+ * @brief Returns the ID of the calling thread.
+ *
+ * If Navit was built without thread support, this function will return 0.
+ */
+thread_id thread_get_id(void);
 
 /**
  * @brief Creates a new lock.

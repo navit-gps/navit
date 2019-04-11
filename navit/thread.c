@@ -208,6 +208,14 @@ int thread_join(thread * this_) {
 #endif
 }
 
+thread_id thread_get_id(void) {
+#if HAVE_POSIX_THREADS
+    return pthread_self();
+#else
+    return 0;
+#endif
+}
+
 thread_lock *thread_lock_new(void) {
 #if HAVE_POSIX_THREADS
     thread_lock *ret = g_new0(thread_lock, 1);
