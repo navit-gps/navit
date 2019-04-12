@@ -104,7 +104,7 @@ if(NOT MSVC)
 	SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 endif(NOT MSVC)
 
-if(if __APPLE__)
+if(__APPLE__)
 target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} "-framework Foundation") 
 else(__APPLE__)
 target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS}) 
