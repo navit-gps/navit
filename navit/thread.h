@@ -155,6 +155,25 @@ thread_lock *thread_lock_new(void);
 /**
  * @brief Frees all resources associated with the lock.
  *
+ * Prior to calling this function, the caller must release the lock and ensure it is no longer reachable by any other
+ * thread. This can be achieved by holding a local reference to it or the structure containing it, and setting all
+ * other references to NULL, then calling this function with the local reference.
+ *
+ * The following would be incorrect, because another thread could still attempt to acquire the lock while it is being
+ * destroyed:
+ * {@code
+ * thread_lock_release_write(foo->lock); // The lock is now released and any other thread can take it
+ * thread_lock_destroy(foo->lock);
+ * foo->lock = NULL;
+ * }
+ * The correct approach would be:
+ * {@code
+ * thread_lock * lock = foo->lock;
+ * foo->lock = NULL;
+ * thread_lock_release_write(lock); // Safe if no other references to the lock exist
+ * thread_lock_destroy(lock);
+ * }
+ *
  * If Navit was built without thread support, this is a no-op. If `lock` is NULL on a platform with thread support,
  * the behavior is undefined.
  */
