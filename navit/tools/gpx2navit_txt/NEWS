@@ -5,7 +5,7 @@
  - Compile warning fixes
  by Toshihiro Hiraoka
  - Bug fix
- 
+
 0.68-1
 ======
  by Petter Reinholdtsen
@@ -14,7 +14,7 @@
  - RPM package for Vine 3.1
 
 0.68
-==== 
+====
  by Toshihiro Hiraoka
  - Change XML parser from libxml2 to expat for big file support
  - Remake almost all strucutes.
@@ -27,7 +27,7 @@
  - README
  - AUTHORS
  - Change comment style to javadoc style.
- - Structures flow 
+ - Structures flow
  - Error code
 
 0.65-1

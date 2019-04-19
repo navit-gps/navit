@@ -24,10 +24,10 @@ use Socket qw(inet_ntoa);
 sub new
 {
   my( $class, %attr ) = @_;
-  
+
   my $obj = bless {}, $class;
 
-  my $url = $attr{api};  
+  my $url = $attr{api};
   if( not defined $url )
   {
     croak "Did not specify api url";
@@ -36,13 +36,13 @@ sub new
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = URI->new($url);
   $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV6', timeout => 1200);
-  
+
   if( defined $attr{username} and defined $attr{password} )
   {
     my $encoded = MIME::Base64::encode_base64("$attr{username}:$attr{password}","");
     $obj->{client}->default_header( "Authorization", "Basic $encoded" );
   }
-  
+
   # We had the problem of the client doing a DNS lookup each request. To
   # solve this we do a gethostbyname now and store that in the URI.
   {
@@ -57,7 +57,7 @@ sub new
   }
   # Hack to avoid protocol lookups each time
   @LWP::Protocol::http::EXTRA_SOCK_OPTS = ( 'Proto' => 6 );
-      
+
   $obj->{reader} = init Geo::OSM::OsmReader( sub { _process($obj,@_) } );
   return $obj;
 }
@@ -75,7 +75,7 @@ sub _process
   if( ref $obj->{buffer} eq "CODE" )
   { $obj->{buffer}->($ent); return }
   die "Internal error: don't know what to do with buffer $obj->{buffer}";
-}  
+}
 
 # Utility function to handle the temporary blocking of signals in a way that
 # works with exception handling.
@@ -125,11 +125,11 @@ sub create_changeset
     $self->{changeset}=$res->content;
     return 1;
   }
-    
+
   $self->{last_error} = $res;
   $self->{changeset}=undef;
   return 0;
-  
+
 }
 
 sub close_changeset
@@ -144,7 +144,7 @@ sub close_changeset
     return 1;
   }
   return 0;
-  
+
 }
 
 sub create($)
@@ -156,18 +156,18 @@ sub create($)
   $ent->set_id($oldid);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/create";
   $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
 #  print $res->as_string;
 
   if( $res->code == 200 )
   {
     return $res->content
   }
-    
+
   $self->{last_error} = $res;
   return undef;
 }
@@ -179,11 +179,11 @@ sub modify($)
   my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
   return undef;
@@ -196,11 +196,11 @@ sub delete($)
   my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request DELETE => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
   return undef;
@@ -212,12 +212,12 @@ sub get($$)
   my $type = shift;
   my $id = shift;
   my $extra = shift;
-  
+
   $extra = "/".$extra if (defined $extra);
   $extra = "" if not defined $extra;
 
   my $req = new HTTP::Request GET => $self->{url}."/$type/$id$extra";
-  
+
   my $res = $self->_request($req);
 
   if( $res->code != 200 )
@@ -225,7 +225,7 @@ sub get($$)
     $self->{last_error} = $res;
     return undef;
   }
-  
+
   my @res;
   $self->{buffer} = \@res;
   $self->{reader}->parse($res->content);
@@ -252,7 +252,7 @@ sub resurrect($$)
   if (defined $ret || !defined $self->{last_error} || ($self->{last_error}->code != 410)) {
     return $ret;
   }
-  
+
   my @ents = $self->get($type, $id, 'history');
   # we want the last _visible_ one
   my $ent = $ents[-2];
@@ -307,9 +307,9 @@ sub get_subtype($$)
   my $type = shift;
   my $id = shift;
   my $subtype = shift;
-  
+
   my $req = new HTTP::Request GET => $self->{url}."/$type/$id/$subtype";
-  
+
   my $res = $self->_request($req);
 
   if( $res->code != 200 )
@@ -317,7 +317,7 @@ sub get_subtype($$)
     $self->{last_error} = $res;
     return undef;
   }
-  
+
   my @res;
   $self->{buffer} = \@res;
   $self->{reader}->parse($res->content);
@@ -326,7 +326,7 @@ sub get_subtype($$)
   {
     die "Unexpected response for get_subtype($type,$id,$subtype) [".$res->content()."]\n";
   }
-  
+
   return \@res;
 }
 
@@ -334,7 +334,7 @@ sub get_node_ways($)
 {
   my $self = shift;
   my $id = shift;
-  
+
   return $self->get_subtype("node",$id,"ways");
 }
 
@@ -342,9 +342,9 @@ sub map($$$$)
 {
   my $self = shift;
   my @bbox = @_;
- 
+
   my $req = new HTTP::Request GET => $self->{url}."/map?bbox=$bbox[0],$bbox[1],$bbox[2],$bbox[3]";
-  
+
   my $res = $self->_request($req);
 
   if( $res->code != 200 )
@@ -352,12 +352,12 @@ sub map($$$$)
     $self->{last_error} = $res;
     return undef;
   }
-  
+
   my @res;
   $self->{buffer} = \@res;
   $self->{reader}->parse($res->content);
   undef $self->{buffer};
-  
+
   return \@res;
 }
 

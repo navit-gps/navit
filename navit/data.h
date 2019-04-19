@@ -100,7 +100,7 @@ get_string(unsigned char **p)
         while (**p) (*p)++;
         (*p)++;
         return ret;
-}      
+}
 
 #define L(x) ({ unsigned char *t=(unsigned char *)&(x); t[0] | (t[1] << 8) | (t[2] << 16) | (t[3] << 24); })
 

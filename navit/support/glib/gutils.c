@@ -756,7 +756,6 @@ g_path_get_basename (const gchar   *file_name)
   return retval;
 }
 
-#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_path_is_absolute:
  * @file_name: a file name.
@@ -785,6 +784,7 @@ g_path_is_absolute (const gchar *file_name)
   return FALSE;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_path_skip_root:
  * @file_name: a file name.
@@ -851,6 +851,7 @@ g_path_skip_root (const gchar *file_name)
 
   return NULL;
 }
+#endif
 
 /**
  * g_path_get_dirname:
@@ -952,6 +953,7 @@ g_path_get_dirname (const gchar	   *file_name)
   return base;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_get_current_dir:
  *

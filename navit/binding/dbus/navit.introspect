@@ -6,7 +6,7 @@
       <arg direction="out" type="s" />
     </method>
   </interface>
-  
+
   <interface name="org.navit_project.navit">
     <method name="get_navit">
       <arg name="iter" type="o" direction="in"/>
@@ -19,7 +19,7 @@
       <arg name="iter" type="o" direction="in"/>
     </method>
   </interface>
-  
+
   <interface name="org.navit_project.navit.navit">
     <method name="zoom">
       <arg type="i" direction="in" />

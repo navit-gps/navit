@@ -1,0 +1,23 @@
+sudo: required
+
+language: c
+
+services:
+  - docker
+
+before_install:
+- mkdir ../rpmbuild
+- docker pull hoehnp/sailfishos-platform-sdk:2.2.1.18-r1
+- docker run -e VERSION_ID=2.2.1.18 -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+
+before_deploy:
+  - provider: pages
+  - skip-cleanup: true
+  - github-token: $GITHUB_TOKEN
+  - keep-history: true
+  - local-history: `pwd`/../rpmbuild/RPMS/armv7hl/
+  - local-history: `pwd`/../rpmbuild/RPMS/i586/
+before_script: skip
+script: skip
+after_success: skip
+after_script: skip

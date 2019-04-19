@@ -68,13 +68,13 @@ struct element {
 };
 
 
-struct itemgra { 
+struct itemgra {
 	struct range order,sequence_range,speed_range,angle_range;
 	GList *type;
 	GList *elements;
 };
 
-struct layer { 
+struct layer {
 	NAVIT_OBJECT
 	struct navit *navit;
 	char *name;

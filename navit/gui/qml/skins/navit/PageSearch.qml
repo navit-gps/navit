@@ -20,9 +20,9 @@ Rectangle {
        }
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -36,19 +36,19 @@ Rectangle {
 	    columns: 1;rows: 2;
 	    id: gridCountry;
             Text {
-                id: txtItemCountry; text: "Country"; 
+                id: txtItemCountry; text: "Country";
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
                 id: btnCountry; text: search.countryName; icon: "country_"+search.countryISO2+".svgz"; onClicked: { search.searchContext="country"; Navit.load("PageSearchSelector.qml"); }
-            }            
+            }
 	}
 	Grid {
 	    columns: 1; rows: 2;
 	    id: gridCity
 	    opacity: 0;
             Text {
-                id: txtItemCity; text: "Town"; 
+                id: txtItemCity; text: "Town";
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
@@ -67,7 +67,7 @@ Rectangle {
 	    id: gridStreet
 	    opacity: 0;
             Text {
-                id: txtItemStreet; text: "Street"; 
+                id: txtItemStreet; text: "Street";
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
@@ -79,7 +79,7 @@ Rectangle {
 	   id: gridAddress;
 	   opacity: 0;
             Text {
-                id: txtItemAddress; text: "Address"; 
+                id: txtItemAddress; text: "Address";
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {

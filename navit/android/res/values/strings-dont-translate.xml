@@ -6,13 +6,14 @@
 	<string name="map_data_copyright">© OpenStreetMap contributors</string>
 	<string name="url_wiki_android">http://wiki.navit-project.org/index.php/Navit_on_Android</string>
 	<string name="url_wiki_main">http://wiki.navit-project.org</string>
+  <string name="osm_copyright">Map data © OpenStreetMap contributors, ODBL</string>
 
 	<!-- NOTIFICATION -->
 	<string name="notification_name">@string/app_name</string>
 
 	<!-- OPTIONS MENU -->
 	<string name="optionsmenu_address_search">@string/address_search_title</string>
-	
+
 	<!--  Backup Restore -->
 	<string-array name="dialog_backup_restore_items">
 		<item >@string/backup</item>

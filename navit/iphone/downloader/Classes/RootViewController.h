@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RootViewController : UITableViewController 
+@interface RootViewController : UITableViewController
 {
 	NSMutableArray* locations_;
-	
+
 }
 
 @property (nonatomic, retain) NSMutableArray* locations;

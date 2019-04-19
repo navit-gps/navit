@@ -1,0 +1,2 @@
+wget unzip cmake build-essential gettext librsvg2-bin util-linux git ssh
+sed astyle libprotobuf-c0-dev protobuf-c-compiler bash

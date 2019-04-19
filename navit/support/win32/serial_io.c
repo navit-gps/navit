@@ -51,7 +51,7 @@ int serial_io_init( const char* port, const char* strsettings )
                         0,
                         NULL
                 );
-                dbg(lvl_warning, "return (fd) : '-1' : serial_io_init error : '%s'\n", lpMsgBuf);
+                dbg(lvl_warning, "return (fd) : '-1' : serial_io_init error : '%s'", lpMsgBuf);
 
                 LocalFree( lpMsgBuf );       // Free the buffer.
                 return -1;
@@ -72,7 +72,7 @@ int serial_io_init( const char* port, const char* strsettings )
 
         SetCommTimeouts(hCom, &sCT);
 
-        dbg(lvl_debug, "serial_io_init return (fd) : '%d'\n", (int)hCom);
+        dbg(lvl_debug, "serial_io_init return (fd) : '%d'", (int)hCom);
 
    return (int)hCom;
 }
@@ -94,12 +94,12 @@ int serial_io_init( const char* port, const char* strsettings )
 int serial_io_read( int fd, char * buffer, int buffer_size )
 {
         DWORD dwBytesIn = 0;
-        dbg(lvl_debug, "serial_io_read fd = %d buffer_size = %d\n", fd, buffer_size);
+        dbg(lvl_debug, "serial_io_read fd = %d buffer_size = %d", fd, buffer_size);
 
 
         if (fd <= 0)
         {
-               dbg(lvl_debug, "serial_io_read return (dwBytesIn) : '0'\n");
+               dbg(lvl_debug, "serial_io_read return (dwBytesIn) : '0'");
                *buffer = 0;
                 return 0;
         }
@@ -117,11 +117,11 @@ int serial_io_read( int fd, char * buffer, int buffer_size )
         }
         if (dwBytesIn > 0)
         {
-            dbg(lvl_debug,"GPS < %s\n",buffer );
+            dbg(lvl_debug,"GPS < %s",buffer );
         }
         buffer[buffer_size - 1] = 0;
 
-        dbg(lvl_info, "serial_io_read return (dwBytesIn) : '%d'\n", dwBytesIn);
+        dbg(lvl_info, "serial_io_read return (dwBytesIn) : '%d'", dwBytesIn);
         return dwBytesIn;
 }
 
@@ -139,7 +139,7 @@ int serial_io_read( int fd, char * buffer, int buffer_size )
 int serial_io_write(int fd, const char * buffer)
 {
         DWORD dwBytesOut = 0;
-        dbg(lvl_debug, "serial_io_write fd = %d buffer = '%s'\n",fd, buffer);
+        dbg(lvl_debug, "serial_io_write fd = %d buffer = '%s'",fd, buffer);
 
 
         WriteFile((HANDLE)fd, buffer, strlen(buffer), &dwBytesOut, NULL);
@@ -157,7 +157,7 @@ int serial_io_write(int fd, const char * buffer)
 **/
 void serial_io_shutdown(int fd )
 {
-       dbg(lvl_debug, "serial_io_shutdown fd = %d\n",fd);
+       dbg(lvl_debug, "serial_io_shutdown fd = %d",fd);
 
         if (fd > 0)
         {
