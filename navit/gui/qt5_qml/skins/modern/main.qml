@@ -1,5 +1,6 @@
 import com.navit.graphics_qt5 1.0
 import QtQuick 2.2
+import QtQuick.VirtualKeyboard 2.1
 
 Rectangle {
 	width: 800
@@ -77,4 +78,11 @@ Rectangle {
 			}
 		]
 	}
+        // currently requires export QT_IM_MODULE=qtvirtualkeyboard
+        InputPanel {
+            id: inputPanel
+            y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
 }
