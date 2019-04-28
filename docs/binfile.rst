@@ -3,17 +3,12 @@ Binfile
 
 Navit has its own map format, called '''binfile''' format. It's a binary format, optimized for use by Navit (rendering, search, routing on embedded devices).
 
-Short summary
-~~~~~~~~~~~~~
-* zip file
-* tiling using quadtiles indices
-* Google Mercator projection
-
 Dividing the world into tiles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The map coordinates of binfile are in meters, measured from equator and null meridian, with a merkator projection. The limit of this world is about 20000 km in earch direction from this null point. This doesn't cover polar regions, but it's ok for now.
 
 So, the world gives a 40000x40000km rectangle (tile). This rectangle is divided into 4 equally-sized sub-rectangles (tiles) called a,b,c and d counter clockwise ...
+
 * a is top right
 * b top left
 * c bottom right
@@ -42,6 +37,7 @@ A tile itself is a dynamic data structure.
 As declared in navit/map/binfile/binfile.c, a tile is represented in memory by a struct :
 
 .. code-block:: c
+
  struct tile {
    int *start;           /* Memory address of the whole data structure */
    int *end;             /* Memory address of first memory address not belonging to tile
@@ -91,20 +87,23 @@ Extract a specific area
 You can calculate the bounding box of the current tile.
 
 Then there are two possibilities:
+
 * The tile overlaps with the area you are interested in : Then simply copy the whole file data, including its header to the output, and add an entry to the directory which will be written later
 * The tile doesn't overlap : Then don't drop that file, but instead write a file with size 0 and the same name to the output (I will explain later why this is needed), and add an entry to the directory
 
 At some point you will have reached the end of the zip files, then you have to write the zip directory and the "end of directory" marker
 
 This will be very fast (you don't have to look into the zip files, which would mean decompressing and compressing it again) but has some disadvantages:
+
 * You will have many empty files in it which are not really necessary. This is needed because the reference to sub-tiles are by number, and not by name (would be slow), and so the position of a tile within the zip file is not allowed to change
 * You get some data you didn't want to have : this is because a tile which overlaps with your area of course doesn't contain only data from your wanted area, but from the area where it is located
 
 
-How An object Is placed in a tile
+ How An object Is placed in a tile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An object is placed inside of a tile using the following approach
+
 * If the object can fit into one of the 4 top most tiles it is placed in that tile
 ** The 4 sub-tiles are then checked to see if the object will fit inside of any of the four tiles that are contained inside of the sub-tile.  If so, it is moved down a tile.  This step is repeated until the object spans 2 or more tiles (or the lowest tile level is reached)
 * If the object can't fit inside of any of the 4 top sub-tiles it is placed inside of the top-most tile
