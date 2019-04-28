@@ -67,24 +67,22 @@ Content
 ~~~~~~~
 Inside the binfile, each tile file contains a list of items. Each item is stored like this (everything is 4 bytes wide and always aligned):
 
-.. highlight:: c
-
-.. code-block::
- {
-   int: Length of the item (not including this length field) in integers
-   int: Type of the item (from item_def.h)
-   int: Length of the coordinate data which follows in integers
+.. code-block:: c
    {
-     int: pairs of coordinates with consisting of 2 integers each
-   } 0..n
-   {
-     int: length of the attribute (not including this length field) in integers
-     int: Type of attribute (from attr_def.h)
+     int: Length of the item (not including this length field) in integers
+     int: Type of the item (from item_def.h)
+     int: Length of the coordinate data which follows in integers
      {
-       int: Attribute data, depending on attribute type
+       int: pairs of coordinates with consisting of 2 integers each
      } 0..n
-   } 0..n
- }
+     {
+       int: length of the attribute (not including this length field) in integers
+       int: Type of attribute (from attr_def.h)
+       {
+         int: Attribute data, depending on attribute type
+       } 0..n
+     } 0..n
+   }
 
 Extract a specific area
 ~~~~~~~~~~~~~~~~~~~~~~~
