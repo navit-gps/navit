@@ -11,6 +11,7 @@ the OpenSource vector based navigation software.
     :maxdepth: 2
 
     basic_configuration
+    maps
 
 
 .. Indices and tables
