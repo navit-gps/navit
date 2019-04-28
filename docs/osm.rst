@@ -85,7 +85,7 @@ From .bz2
 """""""""
 .. code-block:: bash
 
- bzcat my_OSM_map.osm.bz2 | maptool my_Navit_map.bin
+  bzcat my_OSM_map.osm.bz2 | maptool my_Navit_map.bin
 
 From .pbf
 """""""""
@@ -107,5 +107,7 @@ Tips
 ~~~~
 * To enable a map you have downloaded refer [[OpenStreetMap#Adding_an_OSM_map_to_your_mapset| adding OSM map to navit.xml]]
 * If you don't see any map data in Navit (assuming your map is properly specified in navit.xml) using the Internal GUI click anywhere on the screen to bring up the menu. Click on "Actions" and then "Town". Type in the name of a town that should be within your map data. Select your town from the list that appears. This will bring up a sub-menu where you can click "View On Map". Note that if you have a GPS receiver you can also just wait till you get a satellite lock.
-* To avoid changing navit.xml if you update your maps and the maps have different file names use the wildcard (*.bin) in your navit.xml file. For example:
+* To avoid changing navit.xml if you update your maps and the maps have different file names use the wildcard (\*.bin) in your navit.xml file. For example:
+.. code-block:: xml
+
  <map type="binfile" enabled="yes" data="/media/mmc2/maps/*.bin"/>
