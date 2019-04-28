@@ -87,6 +87,8 @@ From .bz2
 
 From .pbf
 """""""""
+.. code-block:: bash
+
  maptool --protobuf -i my_OSM_map.osm.pbf my_Navit_map.bin
 
 Processing the whole Planet
