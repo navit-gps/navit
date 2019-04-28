@@ -1,7 +1,7 @@
-OpenStreetMaps
---------------
+OpenStreetMap
+-------------
 
-[http://www.openstreetmap.org OpenStreetMap] is a free editable map of the whole world. It is made by people like you. OpenStreetMap allows you to view, edit and use geographical data in a collaborative way from anywhere on Earth. Maps from OpenStreetMap can be used in Navit.
+`OpenStreetMap <http://www.openstreetmap.org/>`_ is a free editable map of the whole world. It is made by people like you. OpenStreetMap allows you to view, edit and use geographical data in a collaborative way from anywhere on Earth. Maps from OpenStreetMap can be used in Navit.
 
 Quick Start
 ~~~~~~~~~~~
