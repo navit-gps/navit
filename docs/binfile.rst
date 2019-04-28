@@ -68,6 +68,7 @@ Content
 Inside the binfile, each tile file contains a list of items. Each item is stored like this (everything is 4 bytes wide and always aligned):
 
 .. code-block:: c
+
    {
      int: Length of the item (not including this length field) in integers
      int: Type of the item (from item_def.h)
