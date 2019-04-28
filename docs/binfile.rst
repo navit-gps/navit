@@ -41,7 +41,7 @@ A tile itself is a dynamic data structure.
 
 As declared in navit/map/binfile/binfile.c, a tile is represented in memory by a struct :
 
-.. sourcecode:: c
+.. code-block:: c
  struct tile {
    int *start;           /* Memory address of the whole data structure */
    int *end;             /* Memory address of first memory address not belonging to tile
@@ -67,7 +67,7 @@ Content
 ~~~~~~~
 Inside the binfile, each tile file contains a list of items. Each item is stored like this (everything is 4 bytes wide and always aligned):
 
-.. sourcecode:: c
+.. code-block:: c
  {
    int: Length of the item (not including this length field) in integers
    int: Type of the item (from item_def.h)
