@@ -99,7 +99,7 @@ This will be very fast (you don't have to look into the zip files, which would m
 * You get some data you didn't want to have : this is because a tile which overlaps with your area of course doesn't contain only data from your wanted area, but from the area where it is located
 
 
-How An object Is placed in a tile
+How an object is placed in a tile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An object is placed inside of a tile using the following approach
