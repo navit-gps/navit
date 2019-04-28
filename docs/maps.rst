@@ -15,4 +15,5 @@ Routeplaner Europa 2007        EU       > 4y
 Map + Route                    EU       > 4y
 ============================== ======== ===== ======= ====== == =============== ========
 
+.. include:: osm.rst
 .. include:: binfile.rst
