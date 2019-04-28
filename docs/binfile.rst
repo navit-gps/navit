@@ -1,16 +1,16 @@
 Binfile
-=======
+-------
 
 Navit has its own map format, called '''binfile''' format. It's a binary format, optimized for use by Navit (rendering, search, routing on embedded devices).
 
 Short summary
--------------
+~~~~~~~~~~~~~
 * zip file
 * tiling using quadtiles indices
 * Google Mercator projection
 
 Dividing the world into tiles
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The map coordinates of binfile are in meters, measured from equator and null meridian, with a merkator projection. The limit of this world is about 20000 km in earch direction from this null point. This doesn't cover polar regions, but it's ok for now.
 
 So, the world gives a 40000x40000km rectangle (tile). This rectangle is divided into 4 equally-sized sub-rectangles (tiles) called a,b,c and d counter clockwise ...
@@ -29,17 +29,18 @@ If you extract a small binfile using a zip tool, you will see member files
 adbdbbbbadcacd, adbdbbbbadcacd, ... . Each file contains the data for one tile.
 
 Projection
-----------
+~~~~~~~~~~
 
 The coordinates are projected using a modified "Google" (i.e. EPSG900913) projection.
 Navit assumes an earth radius of 6371000m rather than the WGS84 value of 6378137m. Thus, for navit, the circumference of the earth is (2 x 20015087m).
 
 Tile data format
-----------------
+~~~~~~~~~~~~~~~~
 
 A tile itself is a dynamic data structure.
 
 As declared in navit/map/binfile/binfile.c, a tile is represented in memory by a struct :
+
 .. sourcecode:: c
  struct tile {
    int *start;           /* Memory address of the whole data structure */
@@ -63,8 +64,9 @@ As declared in navit/map/binfile/binfile.c, a tile is represented in memory by a
 
 
 Content
--------
+~~~~~~~
 Inside the binfile, each tile file contains a list of items. Each item is stored like this (everything is 4 bytes wide and always aligned):
+
 .. sourcecode:: c
  {
    int: Length of the item (not including this length field) in integers
@@ -83,7 +85,7 @@ Inside the binfile, each tile file contains a list of items. Each item is stored
  }
 
 Extract a specific area
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 You can calculate the bounding box of the current tile.
 
@@ -99,7 +101,7 @@ This will be very fast (you don't have to look into the zip files, which would m
 
 
 How An object Is placed in a tile
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An object is placed inside of a tile using the following approach
 * If the object can fit into one of the 4 top most tiles it is placed in that tile
