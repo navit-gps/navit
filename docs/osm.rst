@@ -6,16 +6,16 @@ OpenStreetMaps
 Quick Start
 ~~~~~~~~~~~
 
-# Go to [http://maps.navit-project.org/ Navit Planet Extractor] (http://maps.navit-project.org/)
-# Zoom in and select the area that you are interested in. Use the 'Map Controls' on the right to switch between 'Navigation' and 'Select' modes. or use preselected areas:
-* [http://maps.navit-project.org/api/map/?bbox=5.185546875,46.845703125,15.46875,55.634765625 Germany]
-* [http://maps.navit-project.org/api/map/?bbox=-5.44921875,42.01171875,8.437500000000002,51.6796875 France]
-* [http://maps.navit-project.org/api/map/?bbox=2.08740234375,48.8671875,7.778320312500001,54.51416015625 BeNeLux]
-* [http://maps.navit-project.org/api/map/?bbox=-11.0302734375,34.87060546875,4.614257812500003,44.40673828125 Spain/Portugal]
-* [http://maps.navit-project.org/api/map/?bbox=6.52587890625,36.38671875,18.96240234375,47.197265625 Italy]
-* [http://maps.navit-project.org/planet.bin Entire planet] (curr. 10GB!)
-# Hit '''Get Map!'''
-# Move the downloaded map to the directory of your choice, and add it to the active the mapset (see [[Configuration]]) in navit.xml with a line similar to the following:
+* Go to [http://maps.navit-project.org/ Navit Planet Extractor] (http://maps.navit-project.org/)
+* Zoom in and select the area that you are interested in. Use the 'Map Controls' on the right to switch between 'Navigation' and 'Select' modes. or use preselected areas:
+ * [http://maps.navit-project.org/api/map/?bbox=5.185546875,46.845703125,15.46875,55.634765625 Germany]
+ * [http://maps.navit-project.org/api/map/?bbox=-5.44921875,42.01171875,8.437500000000002,51.6796875 France]
+ * [http://maps.navit-project.org/api/map/?bbox=2.08740234375,48.8671875,7.778320312500001,54.51416015625 BeNeLux]
+ * [http://maps.navit-project.org/api/map/?bbox=-11.0302734375,34.87060546875,4.614257812500003,44.40673828125 Spain/Portugal]
+ * [http://maps.navit-project.org/api/map/?bbox=6.52587890625,36.38671875,18.96240234375,47.197265625 Italy]
+ * [http://maps.navit-project.org/planet.bin Entire planet] (curr. 10GB!)
+* Hit '''Get Map!'''
+* Move the downloaded map to the directory of your choice, and add it to the active the mapset (see [[Configuration]]) in navit.xml with a line similar to the following:
 
 .. code-block:: xml
 
