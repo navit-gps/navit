@@ -81,6 +81,8 @@ Or for multiple OSM data files use the <tt>--dedupe-ways</tt> option to avoid du
 
 From .bz2
 """""""""
+.. code-block:: bash
+
  bzcat my_OSM_map.osm.bz2 | maptool my_Navit_map.bin
 
 From .pbf
