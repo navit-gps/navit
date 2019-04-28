@@ -12,6 +12,7 @@ the OpenSource vector based navigation software.
 
     basic_configuration
     maps
+    binfile
 
 
 .. Indices and tables
