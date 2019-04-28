@@ -77,6 +77,8 @@ Or
   maptool -i my_OSM_map.osm my_Navit_map.bin
 
 Or for multiple OSM data files use the <tt>--dedupe-ways</tt> option to avoid duplication of way data if a way occurs multiple times in the OSM maps.
+.. code-block:: bash
+
  cat my_OSM_map1.osm my_OSM_map2.osm my_OSM_map3.osm | maptool --dedupe-ways my_Navit_map.bin
 
 From .bz2
