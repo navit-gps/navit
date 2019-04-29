@@ -114,7 +114,7 @@ static void main_setup_environment(int mode) {
                     val=g_strdup_printf("%s%s", getenv("NAVIT_PREFIX"), val+1);
                 break;
             case '~':
-#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+#if defined(HAVE_API_WIN32) && !defined(HAVE_API_WIN32_CE) // For Windows only, excluding WinCE
                 homedir=getenv("USERPROFILE");
 #else
                 homedir=getenv("HOME");
@@ -132,7 +132,7 @@ static void main_setup_environment(int mode) {
         }
         i++;
     }
-#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+#if defined(HAVE_API_WIN32) && !defined(HAVE_API_WIN32_CE) // For Windows only, excluding WinCE
     navit_get_user_data_directory(1); /* Create the user data directory */
 #endif
 }
@@ -383,11 +383,11 @@ void main_init(const char *program) {
             } else
                 setenv("NAVIT_PREFIX", PREFIX, 0);
         }
-#ifdef HAVE_API_ANDROID
+# ifdef HAVE_API_ANDROID
         main_setup_environment(3);
-#else
+# else
         main_setup_environment(1);
-#endif
+# endif
     }
 
 #else		/* _WIN32 || _WIN32_WCE */
@@ -397,12 +397,12 @@ void main_init(const char *program) {
         int len;
 
         *filename = '\0';
-#ifdef _UNICODE		/* currently for wince */
+# ifdef _UNICODE		/* currently for wince */
         if (GetModuleFileNameW(NULL, wfilename, MAX_PATH)) {
             wcstombs(filename, wfilename, MAX_PATH);
-#else
+# else
         if (GetModuleFileName(NULL, filename, MAX_PATH)) {
-#endif
+# endif
             end = strrchr(filename, L'\\');	/* eliminate the file name which is on the right side */
             if(end)
                 *end = '\0';
@@ -415,12 +415,21 @@ void main_init(const char *program) {
     }
     if (!getenv("HOME"))
         setenv("HOME", getenv("NAVIT_PREFIX"), 0);
-#ifdef HAVE_API_WIN32_BASE && !HAVE_API_WIN32_CE
+# if defined(HAVE_API_WIN32) && !defined(HAVE_API_WIN32_CE)
     main_setup_environment(4);
-#endif
-#ifdef HAVE_API_WIN32_CE && !HAVE_API_WIN32_BASE
+# else /* not (defined(HAVE_API_WIN32) && !defined(HAVE_API_WIN32_CE)) */
+#  if defined(HAVE_API_WIN32_CE) && !defined(HAVE_API_WIN32)
     main_setup_environment(2);
-#endif
+#  else /* not (defined(HAVE_API_WIN32_CE) && !defined(HAVE_API_WIN32)) */
+#   if defined(HAVE_API_WIN32_CE)
+#    warning HAVE_API_WIN32_CE is defined
+#   endif
+#   if defined(HAVE_API_WIN32)
+#    warning HAVE_API_WIN32 is defined
+#   endif
+#   error Exactly only one directive amongst HAVE_API_WIN32_CE or HAVE_API_WIN32 should be defined when preprocessor reach this section of code
+#  endif
+# endif
 #endif	/* _WIN32 || _WIN32_WCE */
 
     s = getenv("NAVIT_WID");
