@@ -155,22 +155,31 @@ thread_lock *thread_lock_new(void);
 /**
  * @brief Frees all resources associated with the lock.
  *
- * Prior to calling this function, the caller must release the lock and ensure it is no longer reachable by any other
- * thread. This can be achieved by holding a local reference to it or the structure containing it, and setting all
- * other references to NULL, then calling this function with the local reference.
+ * Prior to calling this function, the caller must first ensure the lock is no longer reachable by any other thread,
+ * and then release it. A lock can be made unreachable by creating a local reference to it (or the structure containing
+ * it), and setting all other references to NULL.
+ *
+ * Unless pointers to the structure are initialized before they can be dereferenced by threads other than the main (UI)
+ * thread, and never changed afterwards, each pointer needs to be protected with a lock of its own. The lock must be
+ * acquired for reading in order to dereference the pointer, and acquired for writing in order to change the pointer.
+ * If multiple pointers to the same struct are allowed, each pointer must be protected in this manner. The struct must
+ * then keep a thread-safe reference count and free its memory when the last reference is released.
  *
  * The following would be incorrect, because another thread could still attempt to acquire the lock while it is being
  * destroyed:
  * {@code
- * thread_lock_release_write(foo->lock); // The lock is now released and any other thread can take it
- * thread_lock_destroy(foo->lock);
+ * thread_lock_release_write(foo->lock);    // The lock is now released and any other thread can take it
+ * thread_lock_destroy(foo->lock);          // By the time we get here, another thread might have acquired the lock
  * foo->lock = NULL;
  * }
+ *
  * The correct approach would be:
  * {@code
  * thread_lock * lock = foo->lock;
+ * thread_lock_acquire_write(lock_for_foo); // Acquire lock for the foo pointer
  * foo->lock = NULL;
- * thread_lock_release_write(lock); // Safe if no other references to the lock exist
+ * thread_lock_release_write(lock_for_foo);
+ * thread_lock_release_write(lock);         // Safe if no other references to the lock exist
  * thread_lock_destroy(lock);
  * }
  *
