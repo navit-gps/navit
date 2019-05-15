@@ -233,7 +233,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     struct attr attr;
     const char *s;
     jint ret = 0;
-    dbg(lvl_debug,"enter %d %p",channel,str);
+    dbg(lvl_error,"enter %d %p",channel,str);
 
     config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -308,13 +308,13 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         struct coord c;
         struct pcoord pc;
 
-        struct transformation *transform=navit_get_trans(attr.u.navit);
+        struct transformation *transform=navit_get_trans(attr.u.navit); /* Interesting code... to use in point to nearest town search? */
 
         s=(*env)->GetStringUTFChars(env, str, NULL);
         char parse_str[strlen(s) + 1];
         strcpy(parse_str, s);
         (*env)->ReleaseStringUTFChars(env, str, s);
-        dbg(lvl_debug,"*****string=%s",parse_str);
+        dbg(lvl_error,"*****string=%s",parse_str);
 
         // set destination to (pixel-x#pixel-y)
         // pixel-x
@@ -338,7 +338,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         dbg(lvl_debug,"22y=%d",pc.y);
 
         // start navigation asynchronous
-        navit_set_destination(attr.u.navit, &pc, parse_str, 1);
+        navit_set_destination(attr.u.navit, &pc, "Lionel#Lionel", 1);
     }
     break;
     case 3: {
