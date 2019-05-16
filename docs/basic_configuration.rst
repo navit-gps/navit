@@ -4,7 +4,7 @@ Preparations
 ============
 Get a supported map package
 ---------------------------
-Navit can use different :ref:`maps` formats, including free :ref:`OpenStreetMap` data. In order to use one of these maps, download a map of your desired area and store it into a local folder (as. navit/maps or /usr/share/navit/maps).
+Navit can use different :doc:`maps` formats, including free :ref:`OpenStreetMap` data. In order to use one of these maps, download a map of your desired area and store it into a local folder (as. navit/maps or /usr/share/navit/maps).
 
 Install TTS
 -----------
