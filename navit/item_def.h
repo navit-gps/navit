@@ -22,7 +22,7 @@
 #define ITEM(x) extern ##x;
 #endif
 #ifndef ITEM2
-#define ITEM2(x,y) extern ##x;
+#define ITEM2(x,y) extern ##y;
 #endif
 
 ITEM2(0x00000000,none)
