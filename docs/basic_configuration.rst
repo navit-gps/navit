@@ -63,4 +63,4 @@ Just change the map entry corresponding to your local folders
 
 .. code-block:: xml
 
-  <source lang="xml"> <map type="binfile" enabled="yes" data="/var/navit/maps/uk.bin" /></source>
+  <map type="binfile" enabled="yes" data="/var/navit/maps/uk.bin" />
