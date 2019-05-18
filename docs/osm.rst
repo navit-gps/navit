@@ -78,6 +78,7 @@ Or
   maptool -i my_OSM_map.osm my_Navit_map.bin
 
 Or for multiple OSM data files use the <tt>--dedupe-ways</tt> option to avoid duplication of way data if a way occurs multiple times in the OSM maps.
+
 .. code-block:: bash
 
  cat my_OSM_map1.osm my_OSM_map2.osm my_OSM_map3.osm | maptool --dedupe-ways my_Navit_map.bin
@@ -100,6 +101,8 @@ The OpenStreetMap wiki [http://wiki.openstreetmap.org/index.php/Planet.osm Plane
 
 In case you want the whole planet.osm (24GB in December 2012), it is even possible to process planet.osm. It will take about 7 hours , requires > 1GB of main memory and about 30 GB disk space for result and temp files - planet.bin is currently (as of December 2012) 9.6GB:
 
+.. code-block:: bash
+    
  bzcat planet.osm.bz2 | maptool -6 my_Navit_map.bin
 
 Please note -6 option (long name --64bit) used above. It should be used always if output bin file grows above 4GB, or generated file will not work at all. Using that option on smaller files slightly increases their size and makes them unreadable by some unzip versions.
