@@ -14,6 +14,5 @@ var gui__internal__menu_8c =
     [ "gui_internal_top_bar", "gui__internal__menu_8c.html#aeb101a3496c3d976ded94d8810a8c6ba", null ],
     [ "gui_internal_top_bar_resize", "gui__internal__menu_8c.html#a22624cccb53298669d635a7823ef994d", null ],
     [ "gui_internal_widget_get_href", "gui__internal__menu_8c.html#abbd409c7f639259710d35c093b12fa9d", null ],
-    [ "gui_internal_widget_reload_href", "gui__internal__menu_8c.html#af50a3c2773a45ab226e120e93850a46b", null ],
-    [ "version", "gui__internal__menu_8c.html#a56abfaab87c46691c1ef3ad0df23e864", null ]
+    [ "gui_internal_widget_reload_href", "gui__internal__menu_8c.html#af50a3c2773a45ab226e120e93850a46b", null ]
 ];

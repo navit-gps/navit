@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"gui__internal__bookmark_8h.html#a8b373eb57bec2a9ffed1de61594adb2d":[3,0,6,1,3,3],
 "gui__internal__bookmark_8h.html#a976fb2aa8dc093943569f83715d171de":[3,0,6,1,3,0],
 "gui__internal__bookmark_8h.html#a9b30510c546e78a5b26196d9d81ecefc":[3,0,6,1,3,5],
 "gui__internal__bookmark_8h.html#ac8814e3322eb4d20868b6d1c36a986ff":[3,0,6,1,3,2],
@@ -15,7 +14,6 @@ var NAVTREEINDEX24 =
 "gui__internal__command_8c.html#a47f8a7cab6198e70e49b0af6448d0253":[3,0,6,1,4,32],
 "gui__internal__command_8c.html#a500c1f6d4cc2f4f3449bef7ee00d56be":[3,0,6,1,4,12],
 "gui__internal__command_8c.html#a5554cfbff1062fe0abe6e66011d6fa43":[3,0,6,1,4,22],
-"gui__internal__command_8c.html#a56abfaab87c46691c1ef3ad0df23e864":[3,0,6,1,4,39],
 "gui__internal__command_8c.html#a57641a03211640d94a4096f787b7d4aa":[3,0,6,1,4,31],
 "gui__internal__command_8c.html#a58d26586f67497c51ca61aa874d56678":[3,0,6,1,4,18],
 "gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad":[3,0,6,1,4,16],
@@ -140,7 +138,6 @@ var NAVTREEINDEX24 =
 "gui__internal__menu_8c.html#a22624cccb53298669d635a7823ef994d":[3,0,6,1,12,12],
 "gui__internal__menu_8c.html#a5030f54289a2db536ed2615735d5f7ea":[3,0,6,1,12,6],
 "gui__internal__menu_8c.html#a52dcaa46dfd89271838a9f83276ae0d7":[3,0,6,1,12,10],
-"gui__internal__menu_8c.html#a56abfaab87c46691c1ef3ad0df23e864":[3,0,6,1,12,15],
 "gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c":[3,0,6,1,12,5],
 "gui__internal__menu_8c.html#a9b041c65dfeacb45a3209fa07263229f":[3,0,6,1,12,1],
 "gui__internal__menu_8c.html#abbd409c7f639259710d35c093b12fa9d":[3,0,6,1,12,13],
@@ -249,5 +246,8 @@ var NAVTREEINDEX24 =
 "gui__internal__search_8c.html#a4a5ca7c08039d29c40734d7b55de8fae":[3,0,6,1,17,14],
 "gui__internal__search_8c.html#a4d344f004d3e14c07c03abaac8e2ba3f":[3,0,6,1,17,21],
 "gui__internal__search_8c.html#a4ed78d4533e919f897bea9534af7c190":[3,0,6,1,17,0],
-"gui__internal__search_8c.html#a53a64a42723c2ef81f4ed2695b9b7947":[3,0,6,1,17,9]
+"gui__internal__search_8c.html#a53a64a42723c2ef81f4ed2695b9b7947":[3,0,6,1,17,9],
+"gui__internal__search_8c.html#a55e6a400a09eb5a026bfa47d433450c7":[3,0,6,1,17,22],
+"gui__internal__search_8c.html#a5990519e5ef885767df496399a7479d8":[3,0,6,1,17,17],
+"gui__internal__search_8c.html#a6df0406b52cd7715dd50047701874dc8":[3,0,6,1,17,10]
 };

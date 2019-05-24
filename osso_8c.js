@@ -8,6 +8,5 @@ var osso_8c =
     [ "plugin_deinit", "osso_8c.html#a8a02dc8581cd4267536b00829347230d", null ],
     [ "plugin_init", "osso_8c.html#ga1eaae939034896b436dffbf5e93c0da1", null ],
     [ "callback", "osso_8c.html#a76720310d48e06d5c9849f910e1f018a", null ],
-    [ "osso_context", "osso_8c.html#ad959ab626ea8c26fdae7506e07869e43", null ],
-    [ "version", "osso_8c.html#a0205f8f54719e41e19f524f26370bd42", null ]
+    [ "osso_context", "osso_8c.html#ad959ab626ea8c26fdae7506e07869e43", null ]
 ];

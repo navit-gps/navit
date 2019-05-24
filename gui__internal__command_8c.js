@@ -45,6 +45,5 @@ var gui__internal__command_8c =
     [ "gui_internal_escape", "gui__internal__command_8c.html#af4b94af7418635d2a7053d669fc711b6", null ],
     [ "gui_internal_get_data", "gui__internal__command_8c.html#a2cc54184f281823f75815143c90b5857", null ],
     [ "gui_internal_onclick", "gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91", null ],
-    [ "commands", "gui__internal__command_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988", null ],
-    [ "version", "gui__internal__command_8c.html#a56abfaab87c46691c1ef3ad0df23e864", null ]
+    [ "commands", "gui__internal__command_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988", null ]
 ];
