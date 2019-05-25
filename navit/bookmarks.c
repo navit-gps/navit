@@ -363,7 +363,7 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
     }
 
 #ifdef FlushFileBuffers
-	FlushFileBuffers(f)
+    FlushFileBuffers(f)
 #endif FlushFileBuffers
 
     fclose(f);
@@ -377,7 +377,7 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
 
     unlink(this_->bookmark_file);
 #ifdef _POSIX
-	sync();
+    sync();
 #endif _POSIX
     result=(rename(this_->working_file,this_->bookmark_file)==0);
     if (!result) {
