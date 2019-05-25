@@ -359,32 +359,33 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
         }
         limit--;
 
-        this_->bookmarks_list=g_list_next(this_->bookmarks_list);
-    }
+		this_->bookmarks_list=g_list_next(this_->bookmarks_list);
+	}
+#ifdef FlushFileBuffers
+	FlushFileBuffers(f)
+#endif FlushFileBuffers
 
 #ifdef FlushFileBuffers
 	FlushFileBuffers(f)
 #endif FlushFileBuffers
 
-    fclose(f);
-
-    g_hash_table_destroy(dedup);
-
-    if (this_->mr) {
-        map_rect_destroy(this_->mr);
-        this_->mr = 0;
-    }
-
-    unlink(this_->bookmark_file);
+	g_hash_table_destroy(dedup);
+	
+	if (this_->mr) {
+	    map_rect_destroy(this_->mr);
+	    this_->mr = 0;
+	}
+	
+	unlink(this_->bookmark_file);
 #ifdef _POSIX
-    sync();
+	sync();
 #endif _POSIX
-    sync();
-    result=(rename(this_->working_file,this_->bookmark_file)==0);
-    if (!result) {
-        navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
-    }
-    return result;
+	result=(rename(this_->working_file,this_->bookmark_file)==0);
+	if (!result) 
+	{
+		navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
+	}
+	return result;
 }
 
 /**
