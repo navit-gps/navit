@@ -905,9 +905,53 @@ attr_list_dup(struct attr **attrs) {
     return ret;
 }
 
-int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
-    int len=0,quoted;
-    char *p,*e,*n;
+/**
+ * @brief Copy a string from @p src to @p dest, unescaping characters
+ *
+ * @note Escaped characters are "\\\\" (double backslash) resulting in '\\' (single backslash)
+ *       and "\\\"" (backslash followed by double quote), resulting in '"' (double quote)
+ *       but we will escape any other character, for example "\\ " will result in ' ' (space)
+ *
+ * @param[out] dest The location where to store the unescaped string
+ * @param[in] src The source string to copy (and to unescape)
+ * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.
+ *
+ * @return A pointer to the destination string @p dest
+ */
+static char *strncpy_unescape(char *dest, const char *src, size_t n) {
+    char *dest_ptr;	/* A pointer to the currently parsed character inside string dest */
+
+    for (dest_ptr=dest; (dest_ptr-dest) < n && (*src != '\0'); src++, dest_ptr++) {
+        if (*src == '\\') {
+            src++;
+        }
+        *dest_ptr = *src;
+        if (*dest_ptr == '\0') {	/* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+            return dest;
+        }
+    }
+    if ((dest_ptr-dest) < n)
+        *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
+    else
+        dbg(lvl_error, "strncpy_unescape will return a non NUL-terminated string. Trouble ahead.");
+
+    return dest;
+}
+
+/**
+ * @brief Extract an attribute from an input line!
+ *
+ * @param[in] line The input line, must be non-NULL and pointing to a NUL terminated string
+ * @param[in] name The name of the attribute to search
+ * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search
+ * @param[out] val_ret A string where we should store the resulting value for the search attribute, must be non-NULL
+ * @param[out] name_ret The actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
+ */
+int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret) {
+    int len=0,quoted,escaped;
+    const char *p;
+    char *e;
+    const char *n;
 
     dbg(lvl_debug,"get_tag %s from %s", name, line);
     if (name)
@@ -928,15 +972,23 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
             return 0;
         p=e+1;
         quoted=0;
+        escaped=0;
         while (*p) {
             if (*p == ' ' && !quoted)
                 break;
             if (*p == '"')
                 quoted=1-quoted;
+            if (*p == '\\') {	/* Next character is escaped */
+                escaped++;
+                if (*(p+1))	/* Make sure the string is not terminating just after this escape character */
+                    p++;	/* if the string continues, skip the next character, whatever is is (space, double-quote or backslash) */
+                else
+                    dbg(lvl_warning, "Trailing backslash in input string \"%s\"", line);
+            }
             p++;
         }
-        if (name == NULL || (e-n == len && !strncmp(n, name, len))) {
-            if (name_ret) {
+        if (name == NULL || (e-n == len && strncmp(n, name, len)==0)) {	/* We matched the searched attribute name */
+            if (name_ret) {	/* If instructed to, store the actual name into the string pointed by name_ret */
                 len=e-n;
                 strncpy(name_ret, n, len);
                 name_ret[len]='\0';
@@ -947,8 +999,12 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
                 e++;
                 len-=2;
             }
-            strncpy(val_ret, e, len);
-            val_ret[len]='\0';
+            /* Note: in the strncpy* calls below, we give a max size_t argument exactly matching the string lengh we want to copy within the source string e, so no terminating NUL char will be appended */
+            if (escaped)
+                strncpy_unescape(val_ret, e, len-escaped);	/* Unescape if necessary */
+            else
+                strncpy(val_ret, e, len);
+            val_ret[len-escaped]='\0';	/* Because no NUL terminating char was copied over, we manually append it here to terminate the C-string properly, just after the copied string */
             if (pos)
                 *pos=p-line;
             return 1;
