@@ -146,6 +146,7 @@ int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2);
 int coord_rect_contains(struct coord_rect *r, struct coord *c);
 void coord_rect_extend(struct coord_rect *r, struct coord *c);
 void coord_format(float lat,float lng, enum coord_format, char * buffer, int size);
+char *coordinates_geo(const struct coord_geo *gc, char sep);
 
 /* prototypes */
 enum coord_format;

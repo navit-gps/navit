@@ -359,6 +359,42 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
 
 }
 
+/**
+ * @brief Converts a WGS84 coordinate pair to its string representation.
+ *
+ * This function takes a coordinate pair with latitude and longitude in degrees and converts them to a
+ * string of the form {@code 45°28'0" N 9°11'26" E}.
+ *
+ * @param gc A WGS84 coordinate pair
+ * @param sep The separator character to insert between latitude and longitude
+ *
+ * @return The coordinates as a formatted string
+ */
+char *coordinates_geo(const struct coord_geo *gc, char sep) {
+    char latc='N',lngc='E';
+    int lat_deg,lat_min,lat_sec;
+    int lng_deg,lng_min,lng_sec;
+    struct coord_geo g=*gc;
+
+    if (g.lat < 0) {
+        g.lat=-g.lat;
+        latc='S';
+    }
+    if (g.lng < 0) {
+        g.lng=-g.lng;
+        lngc='W';
+    }
+    lat_sec=fmod(g.lat*3600+0.5,60);
+    lat_min=fmod(g.lat*60-lat_sec/60.0+0.5,60);
+    lat_deg=g.lat-lat_min/60.0-lat_sec/3600.0+0.5;
+    lng_sec=fmod(g.lng*3600+0.5,60);
+    lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
+    lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
+
+    return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
+}
+
+
 unsigned int coord_hash(const void *key) {
     const struct coord *c=key;
     return c->x^c->y;
