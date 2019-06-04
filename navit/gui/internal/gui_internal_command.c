@@ -188,7 +188,7 @@ static char *gui_internal_escape(enum escape_mode mode, const char *in) {
         }
     }
 
-    if (mode & escape_mode_string) /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
+    if (mode & escape_mode_string) /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
         *dst++='"';
 
     *dst++='\0';
