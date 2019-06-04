@@ -63,6 +63,7 @@ static uint32_t total_samples_skipped;
 //
 static uint32_t last_play_position=0;
 
+static uint32_t wave_samplerate;
 //>
 // wave_init 
 //
@@ -77,11 +78,13 @@ static uint32_t last_play_position=0;
 //
 //<wave_init
 
-void wave_init() {
+int wave_init(int srate) {
   ENTER("wave_init");
 
   audio_info_t ainfo;
   char *audio_device = NULL;
+
+	wave_samplerate = srate;
 
   audio_device = getenv("AUDIODEV");
   if (audio_device != NULL) {
@@ -101,21 +104,22 @@ void wave_init() {
   SHOW("wave_init() sun_audio_fd: %d\n", sun_audio_fd);
 
   if (sun_audio_fd < 0) {
-    return;
+    return(0);
   }
 
   ioctl(sun_audio_fd, AUDIO_GETINFO, &ainfo);
   SHOW("wave_init() play buffer size: %d\n", ainfo.play.buffer_size);
   ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
   ainfo.play.channels = 1;
-  ainfo.play.sample_rate = SAMPLE_RATE;
+  ainfo.play.sample_rate = wave_samplerate;
   ainfo.play.precision = SAMPLE_SIZE;
 
   if (ioctl(sun_audio_fd, AUDIO_SETINFO, &ainfo) == -1) {
     SHOW("wave_init() failed to set audio params: %s\n", strerror(errno));
     close(sun_audio_fd);
-    return;
+    return(0);
   }
+  return(1);
 }
 
 //>
@@ -306,7 +310,11 @@ int wave_close(void* theHandler)
 int wave_is_busy(void* theHandler)
 {
    uint32_t time;
-   wave_get_remaining_time(total_samples_sent - 1, &time);
+   if (total_samples_sent >= 1) {
+       wave_get_remaining_time(total_samples_sent - 1, &time);
+   } else {
+       time = 0;
+   }
    return time != 0;
 }
 
@@ -516,7 +524,7 @@ int wave_get_remaining_time(uint32_t sample, uint32_t* time)
       (actual_index <= ainfo.play.samples)) { 
     *time = 0;
   } else {
-    a_time = ((actual_index - ainfo.play.samples) * 1000) / SAMPLE_RATE;
+    a_time = ((actual_index - ainfo.play.samples) * 1000) / wave_samplerate;
     *time = (uint32_t) a_time;
   }
   SHOW("wave_get_remaining_time for %d: %d\n", sample, *time);
@@ -527,7 +535,7 @@ int wave_get_remaining_time(uint32_t sample, uint32_t* time)
 #else
 // notdef USE_SADA
 
-void wave_init() {}
+init wave_init() {return 1;}
 void* wave_open(const char* the_api) {return (void *)1;}
 size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t theSize) {return theSize;}
 int wave_close(void* theHandler) {return 0;}

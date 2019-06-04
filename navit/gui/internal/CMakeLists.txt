@@ -1,3 +1,7 @@
+if (GUI_INTERNAL_VISUAL_DBG)
+	add_definitions ("-DGUI_INTERNAL_VISUAL_DBG")
+endif(GUI_INTERNAL_VISUAL_DBG)
+
 if(USE_AUDIO_FRAMEWORK)
         set(audio_sources gui_internal_media.c )
 endif(USE_AUDIO_FRAMEWORK)

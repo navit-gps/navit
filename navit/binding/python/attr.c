@@ -22,78 +22,67 @@
 #include "attr.h"
 
 typedef struct {
-	PyObject_HEAD
-	int ref;
-	struct attr *attr;
+    PyObject_HEAD
+    int ref;
+    struct attr *attr;
 } attrObject;
 
-static PyObject *
-attr_func(attrObject *self, PyObject *args)
-{
-	const char *file;
-	int ret;
-	if (!PyArg_ParseTuple(args, "s", &file))
-		return NULL;
-	ret=0;
-	return Py_BuildValue("i",ret);
+static PyObject *attr_func(attrObject *self, PyObject *args) {
+    const char *file;
+    int ret;
+    if (!PyArg_ParseTuple(args, "s", &file))
+        return NULL;
+    ret=0;
+    return Py_BuildValue("i",ret);
 }
 
 
 
 static PyMethodDef attr_methods[] = {
-	{"func",	(PyCFunction) attr_func, METH_VARARGS },
-	{NULL, NULL },
+    {"func",	(PyCFunction) attr_func, METH_VARARGS },
+    {NULL, NULL },
 };
 
 
-static PyObject *
-attr_getattr_py(PyObject *self, char *name)
-{
-	return Py_FindMethod(attr_methods, self, name);
+static PyObject *attr_getattr_py(PyObject *self, char *name) {
+    return Py_FindMethod(attr_methods, self, name);
 }
 
-static void
-attr_destroy_py(attrObject *self)
-{
-	if (! self->ref)
-		attr_free(self->attr);
+static void attr_destroy_py(attrObject *self) {
+    if (! self->ref)
+        attr_free(self->attr);
 }
 
 PyTypeObject attr_Type = {
-	Obj_HEAD
-	.tp_name="attr",
-	.tp_basicsize=sizeof(attrObject),
-	.tp_dealloc=(destructor)attr_destroy_py,
-	.tp_getattr=attr_getattr_py,
+    Obj_HEAD
+    .tp_name="attr",
+    .tp_basicsize=sizeof(attrObject),
+    .tp_dealloc=(destructor)attr_destroy_py,
+    .tp_getattr=attr_getattr_py,
 };
 
 struct attr *
-attr_py_get(PyObject *self)
-{
-	return ((attrObject *)self)->attr;
+attr_py_get(PyObject *self) {
+    return ((attrObject *)self)->attr;
 }
 
-PyObject *
-attr_new_py(PyObject *self, PyObject *args)
-{
-	attrObject *ret;
-	const char *name,*value;
-        if (!PyArg_ParseTuple(args, "ss", &name, &value))
-                return NULL;
-	ret=PyObject_NEW(attrObject, &attr_Type);
-	ret->attr=attr_new_from_text(name, value);
-	ret->ref=0;
-	return (PyObject *)ret;
+PyObject *attr_new_py(PyObject *self, PyObject *args) {
+    attrObject *ret;
+    const char *name,*value;
+    if (!PyArg_ParseTuple(args, "ss", &name, &value))
+        return NULL;
+    ret=PyObject_NEW(attrObject, &attr_Type);
+    ret->attr=attr_new_from_text(name, value);
+    ret->ref=0;
+    return (PyObject *)ret;
 }
 
-PyObject *
-attr_new_py_ref(struct attr *attr)
-{
-	attrObject *ret;
+PyObject *attr_new_py_ref(struct attr *attr) {
+    attrObject *ret;
 
-	ret=PyObject_NEW(attrObject, &attr_Type);
-	ret->ref=1;
-	ret->attr=attr;
-	return (PyObject *)ret;
+    ret=PyObject_NEW(attrObject, &attr_Type);
+    ret->ref=1;
+    ret->attr=attr;
+    return (PyObject *)ret;
 }
 

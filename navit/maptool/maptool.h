@@ -177,7 +177,7 @@ struct buffer {
 };
 
 void save_buffer(char *filename, struct buffer *b, long long offset);
-void load_buffer(char *filename, struct buffer *b, long long offset, long long size);
+int load_buffer(char *filename, struct buffer *b, long long offset, long long size);
 long long sizeof_buffer(char *filename);
 
 /* ch.c */
@@ -398,7 +398,7 @@ void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
-void zip_write_index(struct zip_info *info);
+int zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
 struct zip_info *zip_new(void);
 void zip_set_zip64(struct zip_info *info, int on);

@@ -51,7 +51,7 @@ extern int default_flags[];
 #define item_is_town(item) ((item).type >= type_town_label && (item).type <= type_district_label_1e7)
 #define item_is_district(item) ((item).type >= type_district_label && (item).type <= type_district_label_1e7)
 #define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
-#define item_is_point(item) ((item).type < type_line) 
+#define item_is_point(item) ((item).type < type_line)
 #define item_is_custom_poi(item) ((item).type >= type_poi_customg && (item).type < type_line)
 #define item_is_street(item) (((item).type >= type_street_nopass && (item).type <= type_roundabout) \
                                ||  (item).type == type_street_service \
@@ -130,6 +130,7 @@ void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
+int item_coord_get_within_range(struct item *i, struct coord *c, int max, struct coord *start, struct coord *end);
 int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to);
 int item_coord_is_node(struct item *it);
 void item_attr_rewind(struct item *it);

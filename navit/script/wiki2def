@@ -29,9 +29,9 @@ EOT
 done
 type="n"
 wget -O - "http://wiki.navit-project.org/index.php/Item_def.h?action=edit" |
-awk '/<textarea/,/<\/textarea/ { print $0 }' | 
+awk '/<textarea/,/<\/textarea/ { print $0 }' |
 grep "^| " |
-sed -e 's/^| *//' -e 's/ *$//' -e 's/ *|/|/g' -e 's/| */|/g' -e 's/||/|/g' | 
+sed -e 's/^| *//' -e 's/ *$//' -e 's/ *|/|/g' -e 's/| */|/g' -e 's/||/|/g' |
 while read id item description osmtags dummy
 do
 	if [[ "$id" == colspan=* ]]

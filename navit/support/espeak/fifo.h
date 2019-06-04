@@ -9,7 +9,7 @@
 
 // Initialize the fifo component.
 // First function to be called.
-void fifo_init();
+void fifo_init(void);
 
 // Add an espeak command.
 //
@@ -36,15 +36,15 @@ espeak_ERROR fifo_add_commands (t_espeak_command* c1, t_espeak_command* c2);
 // The current running command must be stopped and the awaiting commands are cleared.
 // Return: EE_OK: operation achieved 
 //         EE_INTERNAL_ERROR.
-espeak_ERROR fifo_stop ();
+espeak_ERROR fifo_stop (void);
 
 // Is there a running command?
 // Returns 1 if yes; 0 otherwise.
-int fifo_is_busy ();
+int fifo_is_busy (void);
 
 // Terminate the fifo component.
 // Last function to be called.
-void fifo_terminate();
+void fifo_terminate(void);
 
 // Indicates if the running command is still enabled.
 //
@@ -53,6 +53,6 @@ void fifo_terminate();
 // stopping speech as soon as a cancel command is applied. 
 //
 // Returns 1 if yes, or 0 otherwise.
-int fifo_is_command_enabled();
+int fifo_is_command_enabled(void);
 
 #endif

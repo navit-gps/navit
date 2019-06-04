@@ -19,7 +19,7 @@ Rectangle {
    }
 
     Text {
-        id: txtItem; text: container.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: container.horizontalCenter; 
+        id: txtItem; text: container.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: container.horizontalCenter;
 	color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
     }
 

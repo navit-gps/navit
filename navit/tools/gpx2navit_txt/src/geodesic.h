@@ -56,10 +56,10 @@ GEOD_EXTERN struct geodesic {
 # define f64	GEODESIC.FLAT64
 # define ellipse GEODESIC.ELLIPSE
 
-    
+
 GEOD_EXTERN int n_alpha, n_S;
 GEOD_EXTERN double to_meter, fr_meter, del_alpha;
-	
+
 void geod_set(int, char **);
 void geod_for(void);
 void geod_pre(void);

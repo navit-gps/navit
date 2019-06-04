@@ -11,9 +11,9 @@ Rectangle {
     function pageOpen() {
     	Navit.load("PageMain.qml");
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -25,7 +25,7 @@ Rectangle {
 	height: gui.height-cellar.height;
 	anchors.horizontalCenter: parent.horizontalCenter;
 	anchors.verticalCenter: parent.verticalCenter;
-    }	
+    }
 
     Cellar {id: cellar;anchors.bottom: main.bottom; anchors.horizontalCenter: main.horizontalCenter; width: main.width }
 }

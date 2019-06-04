@@ -119,7 +119,7 @@ struct zip_enc {
 	short version;
 	char vendor_id1,vendor_id2;
 	char encryption_strength;
-	short compress_method; 
+	short compress_method;
 } ATTRIBUTE_PACKED;
 
 #define zip_eoc_sig 0x6054b50
@@ -166,10 +166,6 @@ struct zip64_eocl {
 	long long zip64lofst;
 	int zip74lnum;
 } ATTRIBUTE_PACKED;
-
-struct zip_alignment_check {
-	int x[sizeof(struct zip_cd) == 46 ? 1:-1];
-};
 
 #ifdef HAVE_PRAGMA_PACK
 #pragma pack(pop)

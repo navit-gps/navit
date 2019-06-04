@@ -32,7 +32,7 @@ use constant FILETYPE_OSMCHANGE => 1;
 use constant FILETYPE_OSM       => 2;
 
 sub new
-{ 
+{
   my $obj = bless{}, shift;
   my $proc = shift;
   my $prog = shift;
@@ -46,7 +46,7 @@ sub new
 
 # With this initialiser, your process will get called with instantiated objects rather than useless details
 sub init
-{ 
+{
   my $obj = bless{}, shift;
   my $proc = shift;
   my $prog = shift;
@@ -61,12 +61,12 @@ sub init
 sub _process
 {
   my($self, $command, $entity, $attr, $tags, $segs) = @_;
-  
+
   if( defined $self->{oldproc} )
   {
     return $self->{oldproc}->($command, $entity, $attr, $tags, $segs);
   }
-  
+
   my $ent;
   if( $entity eq "node" )
   {
@@ -90,7 +90,7 @@ sub load{
 
   $self->{filetype} = FILETYPE_UNKNOWN;
   $self->{state} = STATE_INIT;
-  
+
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     my $fh = data_open($file_name);
@@ -120,7 +120,7 @@ sub parse($)
   my ($self, $string) = @_;
 
   $self->{state} = STATE_INIT;
-  
+
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     $self->{input_length} = length($string);
@@ -145,7 +145,7 @@ sub parse($)
 # Function is called whenever an XML tag is started
 sub DoStart
 {
-#print @_,"\n";   
+#print @_,"\n";
   my ($self, $Expat, $Name, %Attr) = @_;
 
   if( $self->{filetype} == FILETYPE_UNKNOWN )
@@ -161,7 +161,7 @@ sub DoStart
       } elsif($Name eq "osm"){
         $self->{state} = STATE_EXPECT_ENTITY;
         $self->{filetype} = FILETYPE_OSM;
-        
+
         if( $Attr{version} ne "0.3" and $Attr{version} ne "0.4" )
         { die "OsmChangeReaderV3 can only read 0.3 and 0.4 files, found '$Attr{version}'\n" }
       } else {
@@ -284,7 +284,7 @@ OsmChangeReaderV3 - Module for reading OpenStreetMap V3 Change XML data files
 
   my $OSM = new Geo::OSM::OsmChangeReader(\&process);
   $OSM->load("Data/changes.osc");
-  
+
   sub process
   {
     my($OSM, $command, $entity, $attr, $tags, $segs) = @_;

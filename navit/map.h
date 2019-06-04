@@ -18,7 +18,7 @@
  */
 
 /** @file
- * 
+ *
  * @brief Contains exported functions / structures for map.c
  *
  * This file contains code that works together with map.c and that is exported
@@ -65,12 +65,16 @@ struct map_selection {
 };
 
 /**
- * @brief Holds all functions a map plugin has to implement to be useable
+ * @brief Holds all functions a map plugin has to implement to be usable
  *
- * This structure holds pointers to a map plugin's functions navit's core will call
- * to communicate with the plugin. For further information look into map.c - there exist
+ * This structure holds pointers to a map plugin's functions, which Navit's core will call
+ * to communicate with the plugin. For further information look into map.c, which has
  * functions with the same names acting more or less as "wrappers" around the functions here.
  * Especially the arguments (and their meaning) of each function will be described there.
+ *
+ * Note that there is no separate method to remove an item from a map. This is instead accomplished by
+ * retrieving the item, then setting its type to `type_none` via its `item_type_set` method (provided
+ * the item and its map support removal).
  */
 struct map_methods {
 	enum projection pro;        /**< The projection used for that type of map */
@@ -79,13 +83,13 @@ struct map_methods {
 	struct map_rect_priv *  (*map_rect_new)(struct map_priv *map, struct map_selection *sel); /**< Function to create a new map rect on the map. */
 	void			(*map_rect_destroy)(struct map_rect_priv *mr); /**< Function to destroy a map rect */
 	struct item *		(*map_rect_get_item)(struct map_rect_priv *mr); /**< Function to return the next item from a map rect */
-	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo); /**< Function to get an item with a specific ID from a map rect */
-	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial); /**< Function to start a new search on the map */
-	void			(*map_search_destroy)(struct map_search_priv *ms); /**< Function to destroy a map search struct */
-	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /**< Function to get the next item of a search on the map */
+	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo); /**< Function to get an item with a specific ID from a map rect, can be NULL */
+	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial); /**< Function to start a new search on the map, can be NULL */
+	void			(*map_search_destroy)(struct map_search_priv *ms); /**< Function to destroy a map search struct, ignored if `map_search_new` is NULL */
+	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /**< Function to get the next item of a search on the map, ignored if `map_search_new` is NULL */
 	struct item *		(*map_rect_create_item)(struct map_rect_priv *mr, enum item_type type); /**< Function to create a new item in the map */
-	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr);
-        int			(*map_set_attr)(struct map_priv *priv, struct attr *attr);
+	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr); /**< Function to get a map attribute, can be NULL */
+        int			(*map_set_attr)(struct map_priv *priv, struct attr *attr); /**< Function to set a map attribute, can be NULL */
 
 };
 

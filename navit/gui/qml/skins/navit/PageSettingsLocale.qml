@@ -12,9 +12,9 @@ Rectangle {
     function pageOpen() {
         page.opacity = 1;
     }
-    
-    Component.onCompleted: pageOpen();    
-    
+
+    Component.onCompleted: pageOpen();
+
     Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
@@ -22,7 +22,7 @@ Rectangle {
     Grid {
         columns: 1;rows: 3
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.verticalCenter: parent.verticalCenter; 
+        anchors.verticalCenter: parent.verticalCenter;
 
 	Text { id: lang; text: gui.localeName; color: "White";font.pointSize: gui.height/24 }
 	Text { id: langname; text: gui.langName; color: "White";font.pointSize: gui.height/24 }

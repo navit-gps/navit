@@ -51,7 +51,7 @@ public slots:
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			QString label;
 			QString path;
-			
+
 			if (item->type != type_bookmark && item->type != type_bookmark_folder) continue;
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label=QString::fromLocal8Bit(attr.u.str);
@@ -72,7 +72,7 @@ public slots:
 			entries.appendChild(entry);
 		}
 
-		dbg(lvl_info,"%s\n",retDoc.toString().toLocal8Bit().constData());
+		dbg(lvl_info,"%s",retDoc.toString().toLocal8Bit().constData());
 		return retDoc.toString();
 	}
 	QString AddFolder(QString description) {
@@ -144,7 +144,7 @@ public slots:
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 
 			label=QString::fromLocal8Bit(attr.u.str);
-			dbg(lvl_debug,"Bookmark is %s\n",bookmark.toStdString().c_str());
+			dbg(lvl_debug,"Bookmark is %s",bookmark.toStdString().c_str());
 			if (label.compare(bookmark)) continue;
 			item_coord_get(item, &c, 1);
 			if (this->object->currentPoint!=NULL) {

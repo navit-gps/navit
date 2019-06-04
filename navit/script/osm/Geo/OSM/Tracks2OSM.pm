@@ -33,7 +33,7 @@ sub create_node($$) {
     my $osm_nodes = shift;
     my $elem      = shift;
 
-    printf STDERR "create_node(): lat or lon undefined : $elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
+    printf STDERR "create_node(): lat or lon undefined : $elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n"
 	unless  defined($elem->{lat}) && defined($elem->{lon}) ;
 
     my $id=0;
@@ -95,7 +95,7 @@ sub tracks2osm($){
 	};
 	for my $elem ( @{$track} ) {
 	    my $node_id   = $elem->{node_id}      || create_node($osm_nodes,$elem);
-	    
+
 	    # -------------------------------------------- Add to Way
 	    push(@{$osm_ways->{$osm_way_number}->{nd}},$node_id);
 	    $count_valid_points_for_ways++;

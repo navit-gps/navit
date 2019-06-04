@@ -57,12 +57,26 @@
        id="grid4140" />
   </sodipodi:namedview>
   <path
-     d="M 24 0 C 14.712 0 7.1992187 7.5127812 7.1992188 16.800781 C 7.1992188 29.400781 24 48 24 48 C 24 48 40.800781 29.400781 40.800781 16.800781 C 40.800781 7.5127812 33.288 2.3684758e-15 24 0 z M 24 4 C 31.131238 4 36.800781 9.6695427 36.800781 16.800781 C 36.800781 21.323004 33.110977 28.921035 29.085938 34.886719 C 26.543988 38.654253 25.528858 39.652618 24 41.476562 C 22.471142 39.652618 21.456012 38.654253 18.914062 34.886719 C 14.889022 28.921035 11.199219 21.323004 11.199219 16.800781 C 11.199219 9.6695427 16.868761 4 24 4 z "
+     d="M 24,0 C 14.712,0 7.1992188,7.5127812 7.1992188,16.800781 c 0,6.3 4.2001952,9.099414 8.4003902,15.324219 C 19.799805,38.349805 24,48 24,48 c 0,0 4.200195,-9.650195 8.40039,-15.875 4.200196,-6.224804 8.400391,-9.024219 8.400391,-15.324219 C 40.800781,7.5127812 33.288,0 24,0 Z m 0,4 C 31.131238,4 36.800781,9.6695427 36.800781,16.800781 36.736982,22 35.172,22.774 31.086,27.887 27,33 26,37.000219 24,40.476781 22,37.000219 20.828,32.774 16.914,27.887 13,23 11.199219,22 11.199219,16.800781 11.199219,9.6695427 16.868761,4 24,4 Z"
      transform="scale(0.5,0.5)"
      id="path4"
-     style="fill:#ffffff" />
+     style="fill:#ffffff"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssscssssczczcs" />
   <path
      d="M0 0h24v24H0z"
      fill="none"
      id="path6" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 9.2741765,7 C 9.2741765,7 10,5 12,5 c 2,0 3,1.2462169 3,3 0,1.7537831 -2.293761,2 -3,3 0,1.23884 0,2.5 0,2.5"
+     id="path4137"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="czzcc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 12,14.716639 12,16"
+     id="path4139"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cc" />
 </svg>

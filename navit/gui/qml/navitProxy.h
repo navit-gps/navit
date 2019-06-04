@@ -51,7 +51,7 @@ public slots:
 
 		while (getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, iter) ) {
 			QStandardItem* curItem=new QStandardItem();
-			//Listed attributes are usualy have very complex structure	
+			//Listed attributes are usualy have very complex structure
 			if (attr.type==attr_layout) {
 				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
 				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemName);

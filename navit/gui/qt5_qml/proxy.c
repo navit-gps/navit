@@ -11,8 +11,7 @@
 #include "search.h"
 
 
-char * get_icon(struct navit *nav, struct item *item)
-{
+char * get_icon(struct navit *nav, struct item *item) {
 
     struct attr layout;
     struct attr icon_src;
@@ -25,7 +24,7 @@ char * get_icon(struct navit *nav, struct item *item)
         while(itemgra) {
             GList *types=((struct itemgra *)itemgra->data)->type;
             while(types) {
-                if((long)types->data==item->type) { 
+                if((long)types->data==item->type) {
                     GList *element=((struct itemgra *)itemgra->data)->elements;
                     while(element) {
                         struct element * el=element->data;
@@ -41,12 +40,10 @@ char * get_icon(struct navit *nav, struct item *item)
                                     if(!src || !src[0])
                                         src="%s";
                                     icon=g_strdup_printf(src,map_convert_string_tmp(item->map,icon_src.u.str));
-                                }
-                                else {
+                                } else {
                                     icon=g_strdup(el->u.icon.src);
                                 }
-                            }
-                            else {
+                            } else {
                                 icon=g_strdup(el->u.icon.src);
                             }
                             icon[strlen(icon)-3]='s';

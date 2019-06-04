@@ -28,9 +28,9 @@ main(int argc, char **argv)
 	int ret;
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
-	NSString *locale = [[NSLocale currentLocale] localeIdentifier]; 
+	NSString *locale = [[NSLocale currentLocale] localeIdentifier];
 	char *lang=g_strdup_printf("%s.UTF-8",[locale UTF8String]);
-	dbg(0,"lang %s\n",lang);
+	dbg(0,"lang %s",lang);
 	setenv("LANG",lang,0);
 	setlocale(LC_ALL, NULL);
 
@@ -40,7 +40,7 @@ main(int argc, char **argv)
 	argv[0]=g_strdup_printf("%s/bin/navit",s);
 	setenv("NAVIT_USER_DATADIR",user,0);
 
-	dbg(0,"calling main_real\n");
+	dbg(0,"calling main_real");
 	ret=main_real(argc, argv);
 	g_free(argv[0]);
 	g_free(user);

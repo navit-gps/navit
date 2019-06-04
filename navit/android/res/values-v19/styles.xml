@@ -5,16 +5,7 @@
         NavitBaseTheme from BOTH res/values/styles.xml and
         res/values-v19/styles.xml on API 19+ devices.
     -->
-    <style name="NavitBaseTheme" parent="android:Theme.Holo">
-
-        <!-- Main theme colors -->
-        <!-- your app branding color for the app bar -->
-        <item name="android:colorPrimary">@color/navitYellow500</item>
-        <!-- darker variant for the status bar and contextual app bars -->
-        <item name="android:colorPrimaryDark">@color/navitYellow700</item>
-        <!-- theme UI controls like checkboxes and text fields -->
-        <item name="android:colorAccent">@color/navitBlue500</item>
-    </style>
+    <style name="NavitBaseTheme" parent="android:Theme.Holo"/>
 
     <!--
         Main Activity theme for API 19+. This theme completely replaces

@@ -1,11 +1,12 @@
 
 
 #define CASCADE_PARALLEL 1         /* Type of synthesis model */
-#define ALL_PARALLEL     2 
+#define ALL_PARALLEL     2
 
 #define IMPULSIVE        1         /* Type of voicing source */
 #define NATURAL          2
 #define SAMPLED          3
+#define SAMPLED2         4
 
 #define PI               3.1415927
 
@@ -68,7 +69,7 @@ typedef struct
 	int scale_wav;     // depends on the voicing source
 
 #define N_RSN 20
-#define Rnpc 0
+#define Rnz  0   // nasal zero, anti-resonator
 #define R1c  1
 #define R2c  2
 #define R3c  3
@@ -77,7 +78,7 @@ typedef struct
 #define R6c  6
 #define R7c  7
 #define R8c  8
-#define Rnz  9
+#define Rnpc 9   // nasal pole
 
 #define Rparallel 10
 #define Rnpp 10
@@ -96,7 +97,7 @@ typedef struct
   resonator_t rsn_next[N_RSN];
 
 } klatt_global_t, *klatt_global_ptr;
-  
+
 /* Structure for Klatt Parameters */
 
 #define F_NZ   0  // nasal zero formant
@@ -111,25 +112,25 @@ typedef struct
 
 typedef struct
 {
-	long F0hz10; /* Voicing fund freq in Hz                          */
-	long AVdb;   /* Amp of voicing in dB,            0 to   70       */
+	int F0hz10; /* Voicing fund freq in Hz                          */
+	int AVdb;   /* Amp of voicing in dB,            0 to   70       */
 	int Fhz[10];  // formant Hz, F_NZ to F6 to F_NP
 	int Bhz[10];
 	int Ap[10];   /* Amp of parallel formants in dB,    0 to   80       */
 	int Bphz[10]; /* Parallel formants bw in Hz,       40 to 1000      */
 
-	long ASP;    /* Amp of aspiration in dB,         0 to   70       */
-	long Kopen;  /* # of samples in open period,     10 to   65      */
-	long Aturb;  /* Breathiness in voicing,          0 to   80       */
-	long TLTdb;  /* Voicing spectral tilt in dB,     0 to   24       */
-	long AF;     /* Amp of frication in dB,          0 to   80       */
-	long Kskew;  /* Skewness of alternate periods,   0 to   40 in sample#/2  */
+	int ASP;    /* Amp of aspiration in dB,         0 to   70       */
+	int Kopen;  /* # of samples in open period,     10 to   65      */
+	int Aturb;  /* Breathiness in voicing,          0 to   80       */
+	int TLTdb;  /* Voicing spectral tilt in dB,     0 to   24       */
+	int AF;     /* Amp of frication in dB,          0 to   80       */
+	int Kskew;  /* Skewness of alternate periods,   0 to   40 in sample#/2  */
 
-	long AB;     /* Amp of bypass fric. in dB,       0 to   80       */
-	long AVpdb;  /* Amp of voicing,  par in dB,      0 to   70       */
-	long Gain0;  /* Overall gain, 60 dB is unity,    0 to   60       */
+	int AB;     /* Amp of bypass fric. in dB,       0 to   80       */
+	int AVpdb;  /* Amp of voicing,  par in dB,      0 to   70       */
+	int Gain0;  /* Overall gain, 60 dB is unity,    0 to   60       */
 
-	long AVdb_tmp;      //copy of AVdb, which is changed within parwave()
+	int AVdb_tmp;      //copy of AVdb, which is changed within parwave()
 	int Fhz_next[10];    // Fhz for the next chunk, so we can do interpolation of resonator (a,b,c) parameters
 	int Bhz_next[10];
  } klatt_frame_t, *klatt_frame_ptr;
