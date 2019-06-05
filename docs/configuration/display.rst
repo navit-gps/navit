@@ -33,7 +33,7 @@ They can be activated and configured as following:
 
  <graphics type="gtk_drawing_area"/>
 
-As mentioned, it's usually best to leave this as whatever the default is within your <tt>navit.xml</tt>, and only mess around with it if you know what you are doing, or have been told to by one of the developers.
+As mentioned, it's usually best to leave this as whatever the default is within your :xml:`navit.xml`, and only mess around with it if you know what you are doing, or have been told to by one of the developers.
 
 Graphical User Interface
 ------------------------
