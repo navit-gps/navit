@@ -27,7 +27,7 @@ Navit comes **preshipped** with a default ``navit.xml`` together with ``navit_la
 Navit will apply settings in the following order:
 * in the current directory (used on Windows)
 * location supplied as first argument on the command line, e.g.: ``navit /home/myusername/navittestconfig.xml`` (Used mainly for development)
-* in the current directory as navit.xml.local (Used mainly for development)
+* in the current directory as ``navit.xml.local`` (Used mainly for development)
 
 {{note
 |In any case, you have to **adapt settings** to your system!<br> This includes especially GPS, map provider and vehicle: [[Basic configuration]]
