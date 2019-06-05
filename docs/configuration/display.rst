@@ -50,7 +50,7 @@ QML2
 
 Generic GUI Options
 ~~~~~~~~~~~~~~~~~~~
-There are some options available for the <tt>gui</tt> tag which are used by all the GUI types. These include:
+There are some options available for the ``gui`` tag which are used by all the GUI types. These include:
 
 * **fullscreen** - Enables Navit to start in fullscreen mode.
 * **pitch** - The pitch value to pitch the map to when selecting 3D mode from the menus.
