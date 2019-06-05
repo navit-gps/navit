@@ -114,7 +114,7 @@ enum escape_mode {
 /**
  * @brief Escape special characters from a string
  *
- * @param mode The escape mode that need to be enabled (see enum escape_mode)
+ * @param mode The escape mode that needs to be enabled (see enum escape_mode)
  * @param in The string to escape
  *
  * @return The escaped string
