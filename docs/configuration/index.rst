@@ -52,7 +52,7 @@ Common options such as units, position, zoom and map orientation, ... be configu
 | width="33%" valign="top" style="background:#FFFFFF; border:2px solid #48be1f; margin-top:50px;" |
 <!-- DISPLAY -->
 {| style="width:100%; vertical-align:top; background:#FFFFFF;"
-|- 
+|-
 ! style="padding:2px" | <h2 style="margin:3px; background:#48be1f; font-size:120%; font-weight:bold; border:1px solid #48be1f; text-align:left; color:#fff; padding:0.2em 0.4em;">Display</h2>
 |-
 | style="margin:2px; padding:10px;" |
