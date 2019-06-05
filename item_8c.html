@@ -293,9 +293,9 @@ Variables</h2></td></tr>
 <p>This function is not safe to call after destroying the item's map rect, and doing so may cause errors with some map implementations.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">it</td><td>The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div></div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div></div><!-- fragment --> . </td></tr>
-    <tr><td class="paramname">attr_type</td><td>The attribute type to retrieve, or <code>attr_any</code> to retrieve the next attribute </td></tr>
-    <tr><td class="paramname">attr</td><td>Receives the attribute retrieved</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">it</td><td>The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the <div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div></div><!-- fragment --> . There can only be one active item per<div class="fragment"><div class="line"><a class="code" href="structmap__rect.html">map_rect</a> </div></div><!-- fragment --> . </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">attr_type</td><td>The attribute type to retrieve, or <code>attr_any</code> to retrieve the next attribute </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">attr</td><td>Receives the attribute retrieved</td></tr>
   </table>
   </dd>
 </dl>
