@@ -227,7 +227,7 @@ jobs:
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
-  merge_trunk_in_master:
+  check_spelling:
     <<: *defaults
     steps:
       - checkout
