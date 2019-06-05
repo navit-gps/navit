@@ -104,7 +104,7 @@ How an object is placed in a tile
 
 An object is placed inside of a tile using the following approach
 
-* If the object can fit into one of the 4 top most tiles it is placed in that tile
+* If the object can fit into one of the 4 top tiles it is placed in that tile
 
 * The 4 sub-tiles are then checked to see if the object will fit inside of any of the four tiles that are contained inside of the sub-tile.  If so, it is moved down a tile.  This step is repeated until the object spans 2 or more tiles (or the lowest tile level is reached)
 
