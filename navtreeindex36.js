@@ -1,5 +1,7 @@
 var NAVTREEINDEX36 =
 {
+"structauxmap.html#a7594976c83af27766a1fc181d679dd4a":[2,0,14,2],
+"structauxmap.html#a85c329f54cb7217837cb7e010c0110ce":[2,0,14,4],
 "structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,14,5],
 "structbinfile__hash__entry.html":[2,0,16],
 "structbinfile__hash__entry.html#a2631cf4f1bb3277a7fafc7a7b5a01e60":[2,0,16,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX36 =
 "structcountry__search.html#ae851cdc69c67e2cd8330a7445b4e4030":[2,0,65,4],
 "structcountry__table.html":[2,0,66],
 "structcountry__table.html#a1787d3c169ef66601b15cac8d0115c55":[2,0,66,4],
-"structcountry__table.html#a33b7fe946b1a776d99dd6139cec77cda":[2,0,66,0],
-"structcountry__table.html#a38b2f435b8fc114ef7514ce324ecb153":[2,0,66,3],
-"structcountry__table.html#a5c29145ec4f4c4fd56ef883d4e70c933":[2,0,66,5]
+"structcountry__table.html#a33b7fe946b1a776d99dd6139cec77cda":[2,0,66,0]
 };

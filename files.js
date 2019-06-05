@@ -74,7 +74,7 @@ var files =
     [ "gui.h", "gui_8h.html", "gui_8h" ],
     [ "item.c", "item_8c.html", "item_8c" ],
     [ "item.h", "item_8h.html", "item_8h" ],
-    [ "item_def.h", "item__def_8h.html", null ],
+    [ "item_def.h", "item__def_8h.html", "item__def_8h" ],
     [ "keys.h", "keys_8h.html", "keys_8h" ],
     [ "layer.h", "layer_8h.html", "layer_8h" ],
     [ "layout.c", "layout_8c.html", "layout_8c" ],

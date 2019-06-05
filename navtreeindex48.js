@@ -1,5 +1,7 @@
 var NAVTREEINDEX48 =
 {
+"structtile.html#a9672b980d62b163e3b3612ef160695a4":[2,0,380,4],
+"structtile.html#ab503553844667df2adc2a68bd689b05d":[2,0,380,6],
 "structtile.html#adbb0fa9d4d05aaa70cbb06afec107a44":[2,0,380,9],
 "structtile.html#adfe6df80097e5aff8c44b77d6a06a637":[2,0,380,0],
 "structtile__data.html":[2,0,381],
@@ -247,7 +249,5 @@ var NAVTREEINDEX48 =
 "structtree__leaf__h.html":[2,0,407],
 "structtree__leaf__h.html#a5f7f9e28dfaff508d30edbf9e243da80":[2,0,407,0],
 "structtree__leaf__v.html":[2,0,408],
-"structtree__leaf__v.html#a173d92c79c22f7a474d47b3a4e3f010e":[2,0,408,0],
-"structtree__leaf__v.html#ad0e739b1f1c10641d4eb28e83d411432":[2,0,408,1],
-"structtree__search.html":[2,0,409]
+"structtree__leaf__v.html#a173d92c79c22f7a474d47b3a4e3f010e":[2,0,408,0]
 };
