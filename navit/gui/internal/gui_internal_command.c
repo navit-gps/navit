@@ -152,7 +152,9 @@ static char *gui_internal_escape(enum escape_mode mode, const char *in) {
     }
     src=in;
     out=dst=g_malloc(len+1); /* +1 character for NUL termination */
-    if (mode & escape_mode_string)	/* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
+
+    /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
+    if (mode & escape_mode_string)
         *dst++='"';
 
     while (*src) {
@@ -179,8 +181,7 @@ static char *gui_internal_escape(enum escape_mode mode, const char *in) {
                 dst+=strlen(gt);
             } else
                 *dst++=*src++;
-        }
-        else {
+        } else {
             if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
                 *dst++='\\';
             }
@@ -188,7 +189,8 @@ static char *gui_internal_escape(enum escape_mode mode, const char *in) {
         }
     }
 
-    if (mode & escape_mode_string) /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
+    /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
+    if (mode & escape_mode_string)
         *dst++='"';
 
     *dst++='\0';
