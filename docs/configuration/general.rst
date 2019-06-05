@@ -1,6 +1,8 @@
 ==General Options==
 Settings which affect Navit's general behaviour are located within the <tt><navit .. ></tt> tag. In a default installation, this is found on line 31 of <tt>navit.xml</tt>. By default, the <tt>navit</tt> tag is set as follows:
 
+.. code-block:: xml
+
 <source lang="xml">
  <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 </source>
