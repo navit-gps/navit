@@ -20,7 +20,7 @@ The XML configuration file is splitted into sections within a hierarchy:
 </config>
 </source>
 
-Navit comes **preshipped** with a default navit.xml together with navit_layout_*.xml files that are stored at various locations (depending on your system). For Linux-like OSes:
+Navit comes **preshipped** with a default ``navit.xml`` together with ``navit_layout_*.xml`` files that are stored at various locations (depending on your system). For Linux-like OSes:
 * in ~/.navit/ : e.g : /home/myusername/.navit/navit.xml (This is probably to best place to customize your settings!)
 * in /usr/share/navit or /etc/navit
 
