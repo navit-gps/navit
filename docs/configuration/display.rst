@@ -16,8 +16,8 @@ The current list of available graphics drivers:
 * **android**, for the Android port
 * **cocoa**, for the iPhone port
 * **gtk_drawing_area**,  usually most appropriate on Linux desktop systems
-* **sdl**, render inside an X window, or direct to the Linux framebuffer, with min dependencies on external libraries. 
-* **qt5**, render using Qt5 library, either using QWidgets or QML. On top of any Qt5 supported display technology. 
+* **sdl**, render inside an X window, or direct to the Linux framebuffer, with min dependencies on external libraries.
+* **qt5**, render using Qt5 library, either using QWidgets or QML. On top of any Qt5 supported display technology.
 * **win32** - useable with <tt>gtk</tt> or <tt>internal</tt> GUIs for Windows systems only.
 
 Experimental/less maintained drivers:

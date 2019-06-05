@@ -40,7 +40,7 @@ or to orient North:
 Orienting the map North whilst in [[3D]] mode will provide visually confusing results, and is not recommended. When in 3D mode, it's best to have the map oriented in the direction of travel.
 
 ===Autozoom===
-Navit has the ability to **autozoom** the map in or out dependent upon your speed. 
+Navit has the ability to **autozoom** the map in or out dependent upon your speed.
 
  autozoom_active="1"
 

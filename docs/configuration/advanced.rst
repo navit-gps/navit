@@ -4,7 +4,7 @@ The rest of this webpage is meant for advanced/power users who'd like to fiddle 
 
 Speech
 ------
-Navit can announce driving directions with voice. Navit can use different mechanisms to play these announcements. 
+Navit can announce driving directions with voice. Navit can use different mechanisms to play these announcements.
 Note that not all tools are available on all platforms.
 
 Prerecorded samples
@@ -13,9 +13,9 @@ Navit is able to compose phrases if you give it a set of prerecorded **samples**
 
 .. code-block:: xml
 
-    <speech type="cmdline" data="aplay -q %s" 
+    <speech type="cmdline" data="aplay -q %s"
     sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
-    vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/> 
+    vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
 
 
 The directory ''sample_dir'' should contain audio files. ''sample_suffix'' is the common file type suffix of those files. The names of the files (without the suffix) must correspond to the text they contain. For each text it wants to speak, Navit will look for one or more sample files with corresponding names (ignoring upper/lower case). So for "turn right in 300 meters" you could use turn.wav, right.wav, in.wav, 300.wav, meters.wav. Navit will prefer files that contain multiple words: If file "turn right.wav" is present, it will be used even if you have turn.wav and right.wav.
