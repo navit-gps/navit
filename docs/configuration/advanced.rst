@@ -55,7 +55,7 @@ Android
 
 Start up in silent mode
 ~~~~~~~~~~~~~~~~~~~~~~~
-To have Navit start up in silent mode, insert <code>active="0"</code> somewhere in your <code>speech</code> tag. For example on Android:
+To have Navit start up in silent mode, insert ``<code>active="0"</code>`` somewhere in your ``<code>speech</code>`` tag. For example on Android:
 
 .. code-block:: xml
 
