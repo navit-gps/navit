@@ -88,15 +88,15 @@ You can calculate the bounding box of the current tile.
 
 Then there are two possibilities:
 
-* The tile overlaps with the area you are interested in : Then simply copy the whole file data, including its header to the output, and add an entry to the directory which will be written later
-* The tile doesn't overlap : Then don't drop that file, but instead write a file with size 0 and the same name to the output (I will explain later why this is needed), and add an entry to the directory
+* The tile overlaps with the area you are interested in: Then simply copy the whole file data, including its header to the output, and add an entry to the directory which will be written later
+* The tile doesn't overlap: Then don't drop that file, but instead write a file with size 0 and the same name to the output (I will explain later why this is needed), and add an entry to the directory
 
 At some point you will have reached the end of the zip files, then you have to write the zip directory and the "end of directory" marker.
 
 This will be very fast (you don't have to look into the zip files, which would mean decompressing and compressing them again) but has some disadvantages:
 
 * You will have many empty files in it which are not really necessary. This is needed because the reference to sub-tiles are by number, and not by name (would be slow), and so the position of a tile within the zip file is not allowed to change
-* You get some data you didn't want to have : this is because a tile which overlaps with your area of course doesn't contain only data from your wanted area, but from the area where it is located
+* You get some data you didn't want to have: this is because a tile which overlaps with your area of course doesn't contain only data from your wanted area, but from the area where it is located
 
 
 How an object is placed in a tile
