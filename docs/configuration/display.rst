@@ -56,7 +56,7 @@ There are some options available for the <tt>gui</tt> tag which are used by all 
 * **pitch** - The pitch value to pitch the map to when selecting 3D mode from the menus.
 * **dimensions** - w="1024" h="600"
 
-The following example uses the <tt>internal</tt> GUI, and starts Navit up in fullscreen mode, and will pitch the map to 35 degrees when 3D mode is selected from the menu. Note that to start Navit in 3D mode by default, [[#Initial 3D pitch|change the <tt>pitch</tt> value in the <tt>navit</tt> tag]]:
+The following example uses the :xml:`internal` GUI, and starts Navit up in fullscreen mode, and will pitch the map to 35 degrees when 3D mode is selected from the menu. Note that to start Navit in 3D mode by default, [[#Initial 3D pitch|change the :xml:`pitch` value in the :xml:`navit` tag]]:
 
 .. code-block:: xml
 
