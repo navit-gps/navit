@@ -23,7 +23,7 @@ The current list of available graphics drivers:
 Experimental/less maintained drivers:
 
 * **qt_qpainter**, render inside X window or on top of Qt Palmtop Environment.
-* **opengl**, rendering via OpenGL <!--is it some 3D or accelerated stuff? What about OpenGL ES?-->
+* **opengl**, rendering via OpenGL
 * **gtk_gl_ext**, rendering via OpenGL using GTK+ OpenGL extension
 * **gd**, rendering using the GD Graphics Library
 
