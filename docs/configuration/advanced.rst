@@ -98,4 +98,4 @@ references to the XML-Tag "layer" with attribute "name" of value "points" within
  </navit>
  </config>
 
-Use this as your $HOME/.navit/navit.xml and you will get everything under <config>..</config> except <navit>..</navit> (first xi:include), plus <navit> as specified plus everything from navit within config, except the vehicle definitions (second xi:include).
+Use this as your ``$HOME/.navit/navit.xml`` and you will get everything under ``<config>..</config>`` except ``<navit>..</navit>`` (first ``xi:include``), plus ``<navit>`` as specified plus everything from navit within config, except the vehicle definitions (second ``xi:include``).
