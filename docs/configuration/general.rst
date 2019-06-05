@@ -6,6 +6,7 @@ Settings which affect Navit's general behaviour are located within the <tt><navi
 <source lang="xml">
  <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 </source>
+
 Some common attributes are discussed below. For more advanced features, see [[Configuration/Full_list_of_options | the full list of options]].
 
 ===Initial map position===
