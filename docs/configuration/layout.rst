@@ -6,6 +6,9 @@ A number of user-generated layouts and cursor definitions are available at [[Lay
 ===Defining layers===
 A layout consist of one cursor and one or more **layers** which are each a set of rules on how and when to draw certain items. Those rules are called **itemgra**. The layers are rendered one by one in the order they appear in the XML config file, as are the items in each layer. If you can't see an item make sure there is not another one hiding it. If your item is hidden, you can move your item further down in the layout section of the file.
 
+
+.. code-block:: xml
+
 <source lang="xml">
  <layout name="Demo layout" color="#ffefb7" font="Liberation Sans" active="1">
 	<cursor w="26" h="26">
