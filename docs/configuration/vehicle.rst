@@ -78,6 +78,9 @@ This will give a log file named YearMonthDaySequencenumber.gpx/.nmea which will 
 <!--how to define, where the file get's stored?-->
 
 To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display <!--do I need to add it as a map source?-->
+
+.. code-block:: xml
+
 <source lang="xml">
  <log type="binfile" data="track.bin" flush_size="0"/>
 </source>
