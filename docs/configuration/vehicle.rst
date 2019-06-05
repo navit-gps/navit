@@ -93,6 +93,9 @@ For customizing what is stored, see [[GPX]]
 <!-- this is tricky, here we need a step by step introduction-->
 Defines the behaviour of the routing and are usually linked to a vehicle section, so switching the "vehicle" (type of mobility) from within Navit, routing also will change its behaviour. This way, it is possible to include steps for pedestrian routing, but to exclude it for bike, horse or car routing. Within the vehicleprofile section, roadprofile sections are used to describe the routing behaviour of different roads. Here's a very basic example:
 
+
+.. code-block:: xml
+
 <source lang="xml">
 <vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
   <roadprofile item_types="path,track_ground" speed="12" route_weight="5">
