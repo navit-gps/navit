@@ -4,6 +4,9 @@ It is also possible to edit the navit.xml file for your Android device under Win
 Setting up Navit is done by editing a configuration file called "**navit.xml**".
 Editing XML configurations files in a text editor is simple, they are just plain text XML files, that can be edited with any editor. Just remember to ''turn off 'save UTF8 byte mark' in Preferences'' or navit may complain very much on the first byte of the file.<br>
 The XML configuration file is splitted into sections within a hierarchy:
+
+.. code-block:: xml
+
 <source lang="xml">
 <config>
   <plugins></plugins>
