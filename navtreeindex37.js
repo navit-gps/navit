@@ -1,5 +1,8 @@
 var NAVTREEINDEX37 =
 {
+"structcountry__table.html":[2,0,66],
+"structcountry__table.html#a1787d3c169ef66601b15cac8d0115c55":[2,0,66,4],
+"structcountry__table.html#a33b7fe946b1a776d99dd6139cec77cda":[2,0,66,0],
 "structcountry__table.html#a38b2f435b8fc114ef7514ce324ecb153":[2,0,66,3],
 "structcountry__table.html#a5c29145ec4f4c4fd56ef883d4e70c933":[2,0,66,5],
 "structcountry__table.html#ab184030828b75ff553eea8d6d020fd22":[2,0,66,6],
@@ -246,8 +249,5 @@ var NAVTREEINDEX37 =
 "structfibheap.html#a5e34642bc14833100deae0d0de3a4397":[2,0,101,6],
 "structfibheap.html#a8c4ed62c7b0bea44d7f413bc6bab8b5f":[2,0,101,4],
 "structfibheap.html#ac7d95d6064a563db57081dc0806cc5a4":[2,0,101,7],
-"structfibheap.html#afcc7d98926220306a3b2d2d26f1843d9":[2,0,101,1],
-"structfibheap__el.html":[2,0,102],
-"structfibheap__el.html#a0b8170199e60c3898a0631e8aff09f02":[2,0,102,6],
-"structfibheap__el.html#a52ea78529e5e4c7ae961c2ad89d6f645":[2,0,102,2]
+"structfibheap.html#afcc7d98926220306a3b2d2d26f1843d9":[2,0,101,1]
 };

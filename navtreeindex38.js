@@ -1,5 +1,8 @@
 var NAVTREEINDEX38 =
 {
+"structfibheap__el.html":[2,0,102],
+"structfibheap__el.html#a0b8170199e60c3898a0631e8aff09f02":[2,0,102,6],
+"structfibheap__el.html#a52ea78529e5e4c7ae961c2ad89d6f645":[2,0,102,2],
 "structfibheap__el.html#a55d42286c622340f39e1cb2f344e4158":[2,0,102,3],
 "structfibheap__el.html#a93168db14df595022703d87c3bb9d37d":[2,0,102,5],
 "structfibheap__el.html#a9ceb73752324f84a14e80984faccc4b6":[2,0,102,4],
@@ -209,8 +212,8 @@ var NAVTREEINDEX38 =
 "structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb":[2,0,124,0],
 "structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16":[2,0,124,2],
 "structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4":[2,0,124,1],
-"structgps__sat.html":[0,2,0,2,0],
 "structgps__sat.html":[0,2,0,10,0],
+"structgps__sat.html":[0,2,0,2,0],
 "structgps__status.html":[2,0,126],
 "structgps__status.html#a30a0f4080c2b22c302725c0cd53cd971":[2,0,126,2],
 "structgps__status.html#a85d3b4b02b2162d86649eef8a0c0c0ca":[2,0,126,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX38 =
 "structgraphics__font__methods.html":[2,0,130],
 "structgraphics__font__methods.html#a4f9a55ce240c80f232849bd3e004d76c":[2,0,130,0],
 "structgraphics__font__priv.html":[2,0,131],
-"structgraphics__font__priv.html#a06be50e1be8f9249e23fc6646973dffb":[2,0,131,2],
-"structgraphics__font__priv.html#a09ac4b6e9714e46f62a2df93e34e1f9c":[2,0,131,3],
-"structgraphics__font__priv.html#a16b284ac076afc501ad95afc37b6e870":[2,0,131,5],
-"structgraphics__font__priv.html#a722168747f76ba22837db5db50fd423a":[2,0,131,0]
+"structgraphics__font__priv.html#a06be50e1be8f9249e23fc6646973dffb":[2,0,131,2]
 };

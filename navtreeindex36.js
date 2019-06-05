@@ -1,5 +1,8 @@
 var NAVTREEINDEX36 =
 {
+"structauxmap.html#a1ffdc905e89af720359630b35b466d18":[2,0,14,6],
+"structauxmap.html#a306758b3fbe91d19ad183c46d8f2b989":[2,0,14,1],
+"structauxmap.html#a36e4cd4811137c49535913fe4bd9d0ad":[2,0,14,3],
 "structauxmap.html#a7594976c83af27766a1fc181d679dd4a":[2,0,14,2],
 "structauxmap.html#a85c329f54cb7217837cb7e010c0110ce":[2,0,14,4],
 "structauxmap.html#ae9f5cc086f60f23e5f7c8fa497a087ee":[2,0,14,5],
@@ -246,8 +249,5 @@ var NAVTREEINDEX36 =
 "structcountry__search.html#ac025c10192228ac2ee436ff546c43f3f":[2,0,65,5],
 "structcountry__search.html#ac266a8e5e0202425c39baae45c45dc1a":[2,0,65,6],
 "structcountry__search.html#acd8b20f3f0fa9e2fdc2b6307d49ea92a":[2,0,65,1],
-"structcountry__search.html#ae851cdc69c67e2cd8330a7445b4e4030":[2,0,65,4],
-"structcountry__table.html":[2,0,66],
-"structcountry__table.html#a1787d3c169ef66601b15cac8d0115c55":[2,0,66,4],
-"structcountry__table.html#a33b7fe946b1a776d99dd6139cec77cda":[2,0,66,0]
+"structcountry__search.html#ae851cdc69c67e2cd8330a7445b4e4030":[2,0,65,4]
 };

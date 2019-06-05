@@ -4,9 +4,12 @@ var gui__internal__command_8c =
       [ "escape_mode_none", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053", null ],
       [ "escape_mode_string", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4", null ],
       [ "escape_mode_quote", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685", null ],
-      [ "escape_mode_html", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e", null ],
+      [ "escape_mode_html_amp", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06", null ],
       [ "escape_mode_html_quote", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3", null ],
-      [ "escape_mode_html_apos", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a", null ]
+      [ "escape_mode_html_apos", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a", null ],
+      [ "escape_mode_html_lt", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060", null ],
+      [ "escape_mode_html_gt", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006", null ],
+      [ "escape_mode_html", "gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e", null ]
     ] ],
     [ "coordinates_geo", "gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc", null ],
     [ "gui_internal_append_attr", "gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2", null ],
@@ -42,7 +45,7 @@ var gui__internal__command_8c =
     [ "gui_internal_cmd_write", "gui__internal__command_8c.html#a47f8a7cab6198e70e49b0af6448d0253", null ],
     [ "gui_internal_command_init", "gui__internal__command_8c.html#ab9e592595eb77bbff396b42c6fb87890", null ],
     [ "gui_internal_coordinates", "gui__internal__command_8c.html#a9ddab30b99d7724be31043f3103fd1de", null ],
-    [ "gui_internal_escape", "gui__internal__command_8c.html#af4b94af7418635d2a7053d669fc711b6", null ],
+    [ "gui_internal_escape", "gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb", null ],
     [ "gui_internal_get_data", "gui__internal__command_8c.html#a2cc54184f281823f75815143c90b5857", null ],
     [ "gui_internal_onclick", "gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91", null ],
     [ "commands", "gui__internal__command_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988", null ]
