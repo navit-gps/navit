@@ -23,7 +23,7 @@ Obsolete options:
 -->
 
 ===GPS===
-Most esential detail is the gps source, that need to be adapted to your local setup.
+Most essential detail is the gps source, that need to be adapted to your local setup.
 
 
 **Local:**
@@ -33,7 +33,7 @@ Windows:
 ** For Locosys GT31 (or BGT31 plugged by USB), settings are: source="serial:COM3 baud=38400 parity=N data=8 stop=1" where COM3 should be replaced by the correct COM over USB number.
 
 Windows Mobile:
-* source="wince:GPD1:" - using the internal GPS driver, configured from Windows Remote GPS Settings. 
+* source="wince:GPD1:" - using the internal GPS driver, configured from Windows Remote GPS Settings.
 ** To use a BT GPS it must be configured as outgoing com port and paired, then selected as hardware port in GPS Settings.
 ** To start bluetooth on navit startup add bluetooth="yes". When exiting navit, the previous bluetooth state is recovered.
 * source="wince:COM1:" baudrate="57600"
@@ -43,7 +43,7 @@ There is useful [http://w5.nuinternet.com/s660100031/SirfTech.htm. SirfTech util
 Linux:
 * source="file:/dev/rfcomm0"	- BlueTooth GPS
 * source="file:/dev/ttyS0"	- serial GPS connected to the first serial port (you may need to add the correct baudrate eg.: freerunner source="file:/dev/ttySAC1" baudrate="9600")
-* source="gpsd_dbus:"           - via dbus, postion reported by gpsd
+* source="gpsd_dbus:"           - via dbus, position reported by gpsd
 
 **Network based:**<br>
 If you want to connect multiple tools to your GPS, you need an multiplexer tool, as gpsd or gypsy.
@@ -59,7 +59,7 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 * source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source.
 * source="null://" : no GPS at all
 
-===Logging tracks=== 
+===Logging tracks===
 To record your trip , you can add a sub-instance "log" to the vehicle. It is possible to add multiple logs.
 
 <source lang="xml">

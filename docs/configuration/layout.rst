@@ -30,7 +30,7 @@ For infos about map icons, see [[Icons]]
 
 ===Overriding default (shipped) layouts===
 When the XML config file is parsed, layouts are taken in the order they come, and a layout with an already existing name overrides a previous definition.
-The default (shipped) navit.xml includes first system-wide navit_layout_*.xml files then the user-specific navit_layout_*.xml files, so the system-wide navit_layout_*.xml files can be overriden by adding a user-specific navit-layout_*.xml containing the same **name** attribute.
+The default (shipped) navit.xml includes first system-wide navit_layout_*.xml files then the user-specific navit_layout_*.xml files, so the system-wide navit_layout_*.xml files can be overiden by adding a user-specific navit-layout_*.xml containing the same **name** attribute.
 
 Copying the default **navit.xml** file to the user-specific location will still use the default shipped layout files, but copying one or several layout files as well to the user-specific location (and modifying them) allow to override these specific layouts.
 
