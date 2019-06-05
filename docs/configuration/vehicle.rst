@@ -3,6 +3,9 @@ It's important to understand the separate but linked Navit concepts of a **vehic
 
 A simple vehicle definition looks like this:
 
+
+.. code-block:: xml
+
 <source lang="xml">
   <vehicle name="My" enabled="yes" source="file://dev/ttyS0"/ active="1"/>
 </source>
