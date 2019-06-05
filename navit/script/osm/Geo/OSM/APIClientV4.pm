@@ -22,10 +22,10 @@ use POSIX qw(sigprocmask);
 sub new
 {
   my( $class, %attr ) = @_;
-  
+
   my $obj = bless {}, $class;
 
-  my $url = $attr{api};  
+  my $url = $attr{api};
   if( not defined $url )
   {
     croak "Did not specify aip url";
@@ -34,7 +34,7 @@ sub new
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = $url;
   $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV4', timeout => 1200);
-  
+
   if( defined $attr{username} and defined $attr{password} )
   {
     if( $obj->{url} =~ m,http://([\w.]+)/, )
@@ -44,7 +44,7 @@ sub new
     my $encoded = MIME::Base64::encode_base64("$attr{username}:$attr{password}","");
     $obj->{client}->default_header( "Authorization", "Basic $encoded" );
   }
-  
+
   $obj->{reader} = init Geo::OSM::OsmReader( sub { _process($obj,@_) } );
   return $obj;
 }
@@ -62,7 +62,7 @@ sub _process
   if( ref $obj->{buffer} eq "CODE" )
   { $obj->{buffer}->($ent); return }
   die "Internal error: don't know what to do with buffer $obj->{buffer}";
-}  
+}
 
 # Utility function to handle the temporary blocking of signals in a way that
 # works with exception handling.
@@ -104,18 +104,18 @@ sub create
   $ent->set_id($oldid);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/create";
   $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
 #  print $res->as_string;
 
   if( $res->code == 200 )
   {
     return $res->content
   }
-    
+
   $self->{last_error} = $res;
   return undef;
 }
@@ -126,11 +126,11 @@ sub modify
   my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
   return undef;
@@ -142,11 +142,11 @@ sub delete
   my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request DELETE => $self->{url}."/".$ent->type()."/".$ent->id();
 #  $req->content($content);
-  
+
 #  print $req->as_string;
-  
+
   my $res = $self->_request($req);
-  
+
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
   return undef;
@@ -157,9 +157,9 @@ sub get($$)
   my $self = shift;
   my $type = shift;
   my $id = shift;
-  
+
   my $req = new HTTP::Request GET => $self->{url}."/$type/$id";
-  
+
   my $res = $self->_request($req);
 
   if( $res->code != 200 )
@@ -167,7 +167,7 @@ sub get($$)
     $self->{last_error} = $res;
     return undef;
   }
-  
+
   my @res;
   $self->{buffer} = \@res;
   $self->{reader}->parse($res->content);
@@ -176,7 +176,7 @@ sub get($$)
   {
     die "Unexpected response for get_$type [".$res->content()."]\n";
   }
-  
+
   return $res[0];
 }
 
@@ -203,9 +203,9 @@ sub map($$$$)
 {
   my $self = shift;
   my @bbox = @_;
-  
+
   my $req = new HTTP::Request GET => $self->{url}."/map?bbox=$bbox[0],$bbox[1],$bbox[2],$bbox[3]";
-  
+
   my $res = $self->_request($req);
 
   if( $res->code != 200 )
@@ -213,12 +213,12 @@ sub map($$$$)
     $self->{last_error} = $res;
     return undef;
   }
-  
+
   my @res;
   $self->{buffer} = \@res;
   $self->{reader}->parse($res->content);
   undef $self->{buffer};
-  
+
   return \@res;
 }
 

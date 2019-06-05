@@ -19,7 +19,7 @@
 
 /** @file attr_def.h
  * @brief Attribute definitions.
- * 
+ *
  * Any attribute used by a Navit object must be defined in this file.
  *
  * @author Navit Team
@@ -29,6 +29,12 @@
 /* prototypes */
 
 /* common */
+#ifndef ATTR
+#define ATTR(x) extern ##x;
+#endif
+#ifndef ATTR2
+#define ATTR2(x,y) extern ##y;
+#endif
 ATTR2(0x00000000,none)
 ATTR(any)
 ATTR(any_xml)
@@ -344,11 +350,11 @@ ATTR(daylayout)
 ATTR(nightlayout)
 ATTR(xml_text)
 ATTR(layout_name)
-ATTR_UNUSED
+ATTR(default_layout)
 ATTR_UNUSED
 ATTR(status_text)
 ATTR(log_gpx_desc)
-ATTR(map_pass)
+ATTR_UNUSED
 ATTR_UNUSED
 ATTR(socket)
 /* These attributes for house number interpolation are only written by
@@ -433,6 +439,8 @@ ATTR(text_color)
 ATTR(idle_color)
 ATTR(background_color2)
 ATTR(text_background)
+ATTR(destination_dir_color)
+ATTR(north_color)
 ATTR2(0x0007ffff,type_color_end)
 ATTR2(0x00080000,type_object_begin)
 ATTR(navit)
@@ -476,6 +484,7 @@ ATTR(maps)
 ATTR(layout)
 ATTR(profile_option)
 ATTR(script)
+ATTR(traffic)
 ATTR2(0x0008ffff,type_object_end)
 ATTR2(0x00090000,type_coord_begin)
 ATTR2(0x0009ffff,type_coord_end)

@@ -35,7 +35,7 @@ public slots:
 	QString getAttr(const QString &attr_name) {
 		QString ret;
 		struct attr attr;
-		
+
 		getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, NULL);
 		if (ATTR_IS_INT(attr.type)) {
 			ret.setNum(attr.u.num);
@@ -55,7 +55,7 @@ public slots:
 			struct attr attr_value;
 			double *helper;
 
-			dbg(lvl_debug,"Setting %s to %s\n",attr_name.toStdString().c_str(),attr_string.toStdString().c_str());
+			dbg(lvl_debug,"Setting %s to %s",attr_name.toStdString().c_str(),attr_string.toStdString().c_str());
 			getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr_value, NULL);
 
 			if (ATTR_IS_INT(attr_value.type)) {
@@ -81,7 +81,7 @@ public slots:
 
 			return;
 	}
-	
+
 	int itemId() {
 		return _itemId;
 	}

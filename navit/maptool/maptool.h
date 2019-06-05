@@ -23,9 +23,6 @@
 #include "attr.h"
 #include "geom.h"
 #include "types.h"
-#ifdef HAVE_LIBCRYPTO
-#include <openssl/md5.h>
-#endif
 
 #define sq(x) ((double)(x)*(x))
 
@@ -180,7 +177,7 @@ struct buffer {
 };
 
 void save_buffer(char *filename, struct buffer *b, long long offset);
-void load_buffer(char *filename, struct buffer *b, long long offset, long long size);
+int load_buffer(char *filename, struct buffer *b, long long offset, long long size);
 long long sizeof_buffer(char *filename);
 
 /* ch.c */
@@ -239,7 +236,7 @@ extern struct item_bin *tmp_item_bin;
 extern long long slice_size;
 extern int attr_debug_level;
 extern char *suffix;
-extern int ignore_unkown;
+extern int ignore_unknown;
 extern GHashTable *dedupe_ways_hash;
 extern int slices;
 extern struct buffer node_buffer;
@@ -401,11 +398,9 @@ void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
-void zip_write_index(struct zip_info *info);
+int zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
 struct zip_info *zip_new(void);
-void zip_set_md5(struct zip_info *info, int on);
-int zip_get_md5(struct zip_info *info, unsigned char *out);
 void zip_set_zip64(struct zip_info *info, int on);
 void zip_set_compression_level(struct zip_info *info, int level);
 void zip_set_maxnamelen(struct zip_info *info, int max);

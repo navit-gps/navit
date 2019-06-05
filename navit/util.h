@@ -21,14 +21,16 @@
 #define NAVIT_types_H
 
 #include <ctype.h>
+#include <time.h>
 #include "config.h"
 
-#define max(a,b) ((a) > (b) ? (a) : (b))
-#define min(a,b) ((a) < (b) ? (a) : (b))
+#define MAX_MISMATCH 100
 
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
+unsigned int uint_sqrt(unsigned int n);
 int navit_utf8_strcasecmp(const char *s1, const char *s2);
+int compare_name_systematic(const char *s1, const char *s2);
 GList * g_hash_to_list(GHashTable *h);
 GList * g_hash_to_list_keys(GHashTable *h);
 gchar * g_strconcat_printf(gchar *buffer, gchar *fmt, ...);
@@ -39,7 +41,13 @@ wchar_t* newSysString(const char *toconvert);
 char * newSysString(const char *toconvert);
 #endif
 #endif
+
+void square_shape_str(char *s);
+
 unsigned int iso8601_to_secs(char *iso8601);
+time_t mkgmtime(struct tm * pt);
+time_t iso8601_to_time(char * iso8601);
+char * time_to_iso8601(time_t time);
 char * current_to_iso8601(void);
 
 #if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))

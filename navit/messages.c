@@ -25,133 +25,123 @@
 #include "attr.h"
 
 struct messagelist {
-	struct message *messages;	/**< All the messages that can currently be shown */
-	int last_mid;							/**< Last Message ID */
-	int maxage;								/**< Maximum age of messages */
-	int maxnum;								/**< Maximum number of messages */
-	struct callback *msg_cleanup_cb;			/**< Callback to clean up the messages */
-	struct event_timeout *msg_cleanup_to;		/**< Idle event to clean up the messages */
+    struct message *messages;	/**< All the messages that can currently be shown */
+    int last_mid;							/**< Last Message ID */
+    int maxage;								/**< Maximum age of messages */
+    int maxnum;								/**< Maximum number of messages */
+    struct callback *msg_cleanup_cb;			/**< Callback to clean up the messages */
+    struct event_timeout *msg_cleanup_to;		/**< Idle event to clean up the messages */
 };
 
-int
-message_new(struct messagelist *this_, const char *message)
-{
-	struct message *msg;
+int message_new(struct messagelist *this_, const char *message) {
+    struct message *msg;
 
-	msg = g_new0(struct message, 1);
-	msg->text = g_strdup(message);
-	msg->id = ++(this_->last_mid);
-	msg->time = time(NULL);
+    msg = g_new0(struct message, 1);
+    msg->text = g_strdup(message);
+    msg->id = ++(this_->last_mid);
+    msg->time = time(NULL);
 
-	msg->next = this_->messages;
-	this_->messages = msg;
+    msg->next = this_->messages;
+    this_->messages = msg;
 
-	return msg->id;
+    return msg->id;
 }
 
-int
-message_delete(struct messagelist *this_, int mid)
-{
-	struct message *msg,*last;;
+int message_delete(struct messagelist *this_, int mid) {
+    struct message *msg,*last;;
 
-	msg = this_->messages;
-	last = NULL;
+    msg = this_->messages;
+    last = NULL;
 
-	while (msg) {
-		if (msg->id == mid) {
-			break;
-		}
+    while (msg) {
+        if (msg->id == mid) {
+            break;
+        }
 
-		last = msg;
-		msg = msg->next;
-	}
+        last = msg;
+        msg = msg->next;
+    }
 
-	if (msg) {
-		if (last) {
-			last->next = msg->next;
-		} else {
-			this_->messages = msg->next;
-		}
+    if (msg) {
+        if (last) {
+            last->next = msg->next;
+        } else {
+            this_->messages = msg->next;
+        }
 
-		g_free(msg->text);
-		g_free(msg);
+        g_free(msg->text);
+        g_free(msg);
 
-		return 1;
-	} else {
-		return 0;
-	}
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
-static void 
-message_cleanup(struct messagelist *this_)
-{
-	struct message *msg,*next,*prev=NULL;
-	int i;
-	time_t now;
+static void message_cleanup(struct messagelist *this_) {
+    struct message *msg,*next,*prev=NULL;
+    int i;
+    time_t now;
 
-	msg = this_->messages;
+    msg = this_->messages;
 
-	now = time(NULL);
+    now = time(NULL);
 
-	i = 0;
-	while (msg && (i < this_->maxnum)) {
-		if ((this_->maxage > 0) && (now - msg->time) > this_->maxage) {
-			break;
-		}
+    i = 0;
+    while (msg && (i < this_->maxnum)) {
+        if ((this_->maxage > 0) && (now - msg->time) > this_->maxage) {
+            break;
+        }
 
-		i++;
-		prev = msg;
-		msg = msg->next;
-	}
+        i++;
+        prev = msg;
+        msg = msg->next;
+    }
 
-	if (prev) {
-		prev->next = NULL;
-	} else {
-		this_->messages = NULL;
-	}
+    if (prev) {
+        prev->next = NULL;
+    } else {
+        this_->messages = NULL;
+    }
 
-	while (msg) {
-		next = msg->next;
+    while (msg) {
+        next = msg->next;
 
-		g_free(msg->text);
-		g_free(msg);
+        g_free(msg->text);
+        g_free(msg);
 
-		msg = next;
-	}
+        msg = next;
+    }
 }
 
 struct messagelist
-*messagelist_new(struct attr **attrs)
-{
-	struct messagelist *this = g_new0(struct messagelist, 1);
-	struct attr num_attr,age_attr;
+*messagelist_new(struct attr **attrs) {
+    struct messagelist *this = g_new0(struct messagelist, 1);
+    struct attr num_attr,age_attr;
 
-	if (attr_generic_get_attr(attrs, NULL, attr_message_maxage, &age_attr, NULL)) {
-		this->maxage = age_attr.u.num;
-	} else {
-		this->maxage = 10;
-	}
+    if (attr_generic_get_attr(attrs, NULL, attr_message_maxage, &age_attr, NULL)) {
+        this->maxage = age_attr.u.num;
+    } else {
+        this->maxage = 10;
+    }
 
-	if (attr_generic_get_attr(attrs, NULL, attr_message_maxnum, &num_attr, NULL)) {
-		this->maxnum = num_attr.u.num;
-	} else {
-		this->maxnum = 3;
-	}
+    if (attr_generic_get_attr(attrs, NULL, attr_message_maxnum, &num_attr, NULL)) {
+        this->maxnum = num_attr.u.num;
+    } else {
+        this->maxnum = 3;
+    }
 
-	return this;
+    return this;
 }
 
-void
-messagelist_init(struct messagelist *this_)
-{
-	if (!event_system())
-		return;
-	this_->msg_cleanup_cb = callback_new_1(callback_cast(message_cleanup), this_);
-	this_->msg_cleanup_to = event_add_timeout(1000, 1, this_->msg_cleanup_cb);
+void messagelist_init(struct messagelist *this_) {
+    if (!event_system())
+        return;
+    this_->msg_cleanup_cb = callback_new_1(callback_cast(message_cleanup), this_);
+    this_->msg_cleanup_to = event_add_timeout(1000, 1, this_->msg_cleanup_cb);
 }
 
-struct message 
-*message_get(struct messagelist *this_)
-{
-	return this_->messages;
+struct message
+*message_get(struct messagelist *this_) {
+    return this_->messages;
 }

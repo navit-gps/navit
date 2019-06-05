@@ -112,7 +112,7 @@ struct graphics_font_priv {
 	#if REVERSE_Y
 			pc.y=graphics->h-pc.y-gr->h;
 	#endif
-			dbg(1,"draw %dx%d at %f,%f\n",gr->w,gr->h,pc.x,pc.y);
+			dbg(1,"draw %dx%d at %f,%f",gr->w,gr->h,pc.x,pc.y);
 			CGContextDrawLayerAtPoint(X, pc, gr->layer);
 		}
 		gr=gr->next;
@@ -128,7 +128,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -141,7 +141,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -153,7 +153,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d",touches.count,p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -165,7 +165,7 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=pc.x;
 	p.y=pc.y;
-	dbg(1,"Enter count=%d %d %d\n",touches.count,p.x,p.y);
+	dbg(1,"Enter count=%d %d %d",touches.count,p.x,p.y);
 	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 
@@ -175,8 +175,8 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
-	dbg(1,"Enter %d %d\n",p.x,p.y);
+
+	dbg(1,"Enter %d %d",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -185,8 +185,8 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
-	dbg(1,"Enter %d %d\n",p.x,p.y);
+
+	dbg(1,"Enter %d %d",p.x,p.y);
         callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -195,8 +195,8 @@ struct graphics_font_priv {
 	struct point p;
 	p.x=theEvent.locationInWindow.x;
 	p.y=graphics->h-theEvent.locationInWindow.y;
-	
-	dbg(1,"Enter %d %d\n",p.x,p.y);
+
+	dbg(1,"Enter %d %d",p.x,p.y);
 	callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 #endif
@@ -233,7 +233,7 @@ struct graphics_font_priv {
 	return [self init];
 }
 
-static 
+static
 void free_graphics(struct graphics_priv *gr)
 {
 	if (gr->layer) {
@@ -280,7 +280,7 @@ setup_graphics(struct graphics_priv *gr)
 }
 
 - (void)didReceiveMemoryWarning {
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 }
 
 - (void)viewDidUnload {
@@ -355,7 +355,7 @@ applicationDidFinishLaunching:(NSNotification *)aNotification
 
 	if (global_graphics_cocoa) {
 		callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)appFrame.size.width, (int)appFrame.size.height);
-		
+
 	}
 
 #if USE_UIKIT
@@ -378,7 +378,7 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	if (mode == draw_mode_end) {
-		dbg(1,"end %p\n",gr);
+		dbg(1,"end %p",gr);
 		if (!gr->parent) {
 #if USE_UIKIT
 			[gr->view setNeedsDisplay];
@@ -404,7 +404,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     	CGContextBeginPath(gr->layer_context);
 	CGContextAddLines(gr->layer_context, points, count);
 	CGContextStrokePath(gr->layer_context);
-	
+
 }
 
 static void
@@ -427,7 +427,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 {
 	CGRect lr=CGRectMake(p->x, p->y, w, h);
 	if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
-		dbg(1,"clear %p %dx%d\n",gr,w,h);
+		dbg(1,"clear %p %dx%d",gr,w,h);
 		free_graphics(gr);
 		setup_graphics(gr);
 	}
@@ -533,8 +533,8 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 }
 
 static struct graphics_gc_methods gc_methods = {
-	gc_destroy, 
-	gc_set_linewidth, 
+	gc_destroy,
+	gc_set_linewidth,
 	gc_set_dashes,
 	gc_set_foreground,
 	gc_set_background,
@@ -571,7 +571,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 
 	CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
 	CGDataProviderRelease(imgDataProvider);
-	dbg(1,"size %dx%d\n",CGImageGetWidth(image),CGImageGetHeight(image));
+	dbg(1,"size %dx%d",CGImageGetWidth(image),CGImageGetHeight(image));
 	if (w)
 		*w=CGImageGetWidth(image);
 	if (h)
@@ -586,7 +586,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 static void *
 get_data(struct graphics_priv *this, const char *type)
 {
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 	if (strcmp(type,"window"))
 		return NULL;
 	return &this->win;
@@ -630,14 +630,14 @@ static struct graphics_methods graphics_methods = {
 	draw_polygon,
 	draw_rectangle,
 	NULL, /* draw_circle, */
-	draw_text, 
+	draw_text,
 	draw_image,
 	NULL, /* draw_image_warp, */
 	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
-	overlay_new, 
+	overlay_new,
 	image_new,
 	get_data,
 	image_free,
@@ -670,7 +670,7 @@ graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr
 {
 	struct graphics_priv *ret;
 	*meth=graphics_methods;
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 	if(!event_request_system("cocoa","graphics_cocoa"))
 		return NULL;
 	ret=g_new0(struct graphics_priv, 1);
@@ -683,7 +683,7 @@ static void
 event_cocoa_main_loop_run(void)
 {
 
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 #if 0
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -693,9 +693,9 @@ event_cocoa_main_loop_run(void)
 #endif
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 #if USE_UIKIT
-	dbg(0,"calling main\n");
+	dbg(0,"calling main");
 	int retval = UIApplicationMain(main_argc, main_argv, nil, @"NavitAppDelegate");
-	dbg(0,"retval=%d\n",retval);
+	dbg(0,"retval=%d",retval);
 #else
 	NavitAppDelegate * delegate = [[NavitAppDelegate alloc] init];
 	NSApplication * application = [NSApplication sharedApplication];
@@ -739,7 +739,7 @@ event_cocoa_add_timeout(int timeout, int multi, struct callback *cb)
 	NavitTimer *ret=[[NavitTimer alloc]init];
 	ret->cb=cb;
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:multi?YES:NO];
-	dbg(1,"timer=%p\n",ret->timer);
+	dbg(1,"timer=%p",ret->timer);
 	return (struct event_timeout *)ret;
 }
 
@@ -748,7 +748,7 @@ static void
 event_cocoa_remove_timeout(struct event_timeout *ev)
 {
 	NavitTimer *t=(NavitTimer *)ev;
-	
+
 	[t->timer invalidate];
 	[t release];
 }
@@ -761,7 +761,7 @@ event_cocoa_add_idle(int priority, struct callback *cb)
 	ret->cb=cb;
 	ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(onTimer:) userInfo:nil repeats:YES];
 
-	dbg(1,"timer=%p\n",ret->timer);
+	dbg(1,"timer=%p",ret->timer);
 	return (struct event_idle *)ret;
 }
 
@@ -769,7 +769,7 @@ static void
 event_cocoa_remove_idle(struct event_idle *ev)
 {
 	NavitTimer *t=(NavitTimer *)ev;
-	
+
 	[t->timer invalidate];
 	[t release];
 }
@@ -782,7 +782,7 @@ static struct event_methods event_cocoa_methods = {
 	event_cocoa_add_timeout,
 	event_cocoa_remove_timeout,
 	event_cocoa_add_idle,
-	event_cocoa_remove_idle, 
+	event_cocoa_remove_idle,
 	NULL, /* event_cocoa_call_callback, */
 };
 
@@ -790,7 +790,7 @@ static struct event_methods event_cocoa_methods = {
 static struct event_priv *
 event_cocoa_new(struct event_methods *meth)
 {
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 	*meth=event_cocoa_methods;
 	return NULL;
 }
@@ -799,7 +799,7 @@ event_cocoa_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-	dbg(0,"enter\n");
+	dbg(0,"enter");
 	plugin_register_category_graphics("cocoa", graphics_cocoa_new);
 	plugin_register_category_event("cocoa", event_cocoa_new);
 }

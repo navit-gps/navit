@@ -18,6 +18,13 @@
  */
 
 /* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */
+#ifndef ITEM
+#define ITEM(x) extern ##x;
+#endif
+#ifndef ITEM2
+#define ITEM2(x,y) extern ##y;
+#endif
+
 ITEM2(0x00000000,none)
 ITEM2(0x00000001,point_unspecified)
 ITEM(town_streets)
@@ -621,4 +628,11 @@ ITEM(poly_place5)
 ITEM(poly_place6)
 ITEM(poly_water_tiled)
 ITEM(poly_meadow)
+ITEM(poly_depot)
+ITEM(poly_garages)
+ITEM(poly_greenhouse)
+ITEM(poly_orchard)
+ITEM(poly_plantnursery)
+ITEM(poly_port)
+ITEM(poly_saltpond)
 ITEM2(0xffffffff,last)

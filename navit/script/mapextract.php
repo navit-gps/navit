@@ -1,13 +1,13 @@
 #!/usr/local/bin/php &#8211;q
 <?php
 function getmercator($sx,$sy,$ex,$ey) {
-	
+
 	$sx = $sx*6371000.0*M_PI/180;
 	$sy = log(tan(M_PI_4+$sy*M_PI/360))*6371000.0;
-	
+
 	$ex = $ex*6371000.0*M_PI/180;
 	$ey = log(tan(M_PI_4+$ey*M_PI/360))*6371000.0;
-	
+
 	return array(
 		'l' => array(
 				'x' => $sx,
@@ -18,7 +18,7 @@ function getmercator($sx,$sy,$ex,$ey) {
 				'y' => $ey
 			)
 	);
-	
+
 }
 function contains_bbox($c, &$r) {
 	if ($c['l']['x'] > $r['h']['x'])
@@ -29,7 +29,7 @@ function contains_bbox($c, &$r) {
 		return false;
 	elseif ($c['h']['y'] < $r['l']['y'])
 		return false;
-	else 
+	else
 		return true;
 }
 
@@ -41,38 +41,38 @@ $files['output'] = 'myarea.bin';
 
 $formats = array();
 $formats['ziphpack'] = "lssssslLLSS";
-$formats['zipheader']  = "l" . "ziplocsig";	# Signature (is always the same)
-$formats['zipheader'] .= "/s" . "zipver";	# zip version needed
-$formats['zipheader'] .= "/s" . "zipgenfld";# type of os that generated the file
-$formats['zipheader'] .= "/s" . "zipmthd";	# 
-$formats['zipheader'] .= "/s" . "ziptime";	# time
-$formats['zipheader'] .= "/s" . "zipdate";	# date
-$formats['zipheader'] .= "/l" . "zipcrc";	# crc checksum
-$formats['zipheader'] .= "/L" . "zipsize";	# data size
-$formats['zipheader'] .= "/L" . "zipuncmp";	# uncompressed size
-$formats['zipheader'] .= "/S" . "zipfnln";	# length of filename
-$formats['zipheader'] .= "/S" . "zipxtraln";# length of extra data (always 0)
+$formats['zipheader']  = "lziplocsig";	# Signature (is always the same)
+$formats['zipheader'] .= "/szipver";	# zip version needed
+$formats['zipheader'] .= "/szipgenfld";# type of os that generated the file
+$formats['zipheader'] .= "/szipmthd";	#
+$formats['zipheader'] .= "/sziptime";	# time
+$formats['zipheader'] .= "/szipdate";	# date
+$formats['zipheader'] .= "/lzipcrc";	# crc checksum
+$formats['zipheader'] .= "/Lzipsize";	# data size
+$formats['zipheader'] .= "/Lzipuncmp";	# uncompressed size
+$formats['zipheader'] .= "/Szipfnln";	# length of filename
+$formats['zipheader'] .= "/Szipxtraln";# length of extra data (always 0)
 
 $formats['zipcd'] = "".
-	"i" . "zipcensig/".
-	"c" . "zipcver/".
-	"c" . "zipcos/".
-	"c" . "zipcvxt/".
-	"c" . "zipcexos/".
-	"s" . "zipcflg/".
-	"s" . "zipcmthd/".
-	"s" . "ziptim/".
-	"s" . "zipdat/".
-	"i" . "zipccrc/".
-	"I" . "zipcsiz/".
-	"I" . "zipcunc/".
-	"S" . "zipcfnl/".
-	"S" . "zipcxtl/".
-	"S" . "zipccml/".
-	"S" . "zipdsk/".
-	"S" . "zipint/".
-	"I" . "zipext/".
-	"I" . "zipofst/".
+	"izipcensig/".
+	"czipcver/".
+	"czipcos/".
+	"czipcvxt/".
+	"czipcexos/".
+	"szipcflg/".
+	"szipcmthd/".
+	"sziptim/".
+	"szipdat/".
+	"izipccrc/".
+	"Izipcsiz/".
+	"Izipcunc/".
+	"Szipcfnl/".
+	"Szipcxtl/".
+	"Szipccml/".
+	"Szipdsk/".
+	"Szipint/".
+	"Izipext/".
+	"Izipofst/";
 $formats['zipcdpack'] = "iccccssssiIISSSSSII";
 
 $formats['zipcontent'] = "i5x/i5y/ii";
@@ -91,26 +91,26 @@ $offset = 0;
 
 /**
  * Read through zipheaders
- * 
+ *
  */
 while (!feof($fp)) {
-	
+
 	$buffer = fread($fp, 30);
 	$tileinfo = unpack($formats['zipheader'], $buffer);
-	
+
 	if ($tileinfo['zipfnln'] <= 0)
 		break;
-	
+
 	$filename = fread($fp, $tileinfo['zipfnln']);
 	$x=0;
 	$done=false;
-	
+
 	$r = $world_bbox;
-	
+
 	while (!$done) {
 		$c['x'] = floor( ($r['l']['x'] + $r['h']['x'])/2 );
 		$c['y'] = floor( ($r['l']['y'] + $r['h']['y'])/2 );
-		
+
 		switch($filename[$x]) {
 		case 'a':
 			$r['l']['x'] = $c['x'];
@@ -133,23 +133,23 @@ while (!feof($fp)) {
 		}
 		$x++;
 	}
-	
+
 	$tilecontent = fread($fp, $tileinfo['zipsize']);
-	
+
 	/* Area inside box, save it! */
 	if (contains_bbox($fetch_bbox, $r)) {
 		#echo "In box. ";
 		#echo $filename . " ";
 		$zipheader = $buffer;
 		#echo "\n";
-		
+
 	/* Area outside of box, set zipcontent=0 */
 	} else {
 		$tileinfo['zipmthd'] = $tileinfo['zipcrc'] = $tileinfo['zipsize'] = $tileinfo['zipuncmp'] = 0;
 		#echo "Out of box";
 		$zipheader = $tileinfo;
 		$tilecontent = '';
-		$zipheader = pack($formats['ziphpack'], 
+		$zipheader = pack($formats['ziphpack'],
 							$tileinfo['ziplocsig'],
 							$tileinfo['zipver'],
 							$tileinfo['zipgenfld'],
@@ -163,11 +163,11 @@ while (!feof($fp)) {
 							$tileinfo['zipxtraln']
 							);
 	}
-	
+
 	$put = $zipheader.$filename.$tilecontent;
 	$files[$filename]['header'] = $tileinfo;
 	$files[$filename]['size'] = strlen($put);
-	
+
 	$zipcd = array();
 	$zipcd['zipcensig'] = 0x02014b50;
 	$zipcd['zipcver'] 	= $tileinfo['zipver'];
@@ -210,11 +210,11 @@ while (!feof($fp)) {
 		$zipcd['zipext'],
 		$zipcd['zipofst']
 	) . $filename;
-		
-	
+
+
 	fwrite($sp, $put);
 	$offset += strlen($put);
-	
+
 }
 
 fwrite($sp, $zipcd_data);
