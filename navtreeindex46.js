@@ -1,5 +1,7 @@
 var NAVTREEINDEX46 =
 {
+"structquadtree__node.html#a945e9398b39d05836b8f44e3253e1083":[2,0,306,9],
+"structquadtree__node.html#ab50b993216f0ed9f72e68a4a152331f1":[2,0,306,2],
 "structquadtree__node.html#ad1054907f11bd5fc2a2178244df7612c":[2,0,306,8],
 "structquadtree__node.html#ae8effd2ecc43cecc63d6579215418d26":[2,0,306,3],
 "structquadtree__node.html#af679cd109d44364072ba14ad614b2ff9":[2,0,306,11],
@@ -247,7 +249,5 @@ var NAVTREEINDEX46 =
 "structsearch__list__house__number.html#ac23ed7c3ae6ba52d073743a5aad78269":[2,0,344,0],
 "structsearch__list__house__number.html#af94a41a1b7bd52ead7db7d1eb526f73d":[2,0,344,2],
 "structsearch__list__level.html":[2,0,345],
-"structsearch__list__level.html#a11481a33570b790a5d7cf448b20690b4":[2,0,345,7],
-"structsearch__list__level.html#a11da8041feae51072bf14fef2068f8a6":[2,0,345,0],
-"structsearch__list__level.html#a154f4b4031aad0a3e4b03367d9cea50e":[2,0,345,6]
+"structsearch__list__level.html#a11481a33570b790a5d7cf448b20690b4":[2,0,345,7]
 };

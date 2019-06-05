@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"functions_func_w.html":[2,2,1,23],
+"functions_g.html":[2,2,0,9],
 "functions_h.html":[2,2,0,10],
 "functions_i.html":[2,2,0,11],
 "functions_j.html":[2,2,0,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX11 =
 "garmin__img_8c.html#af9f9894688a47571a10da1d0d76ec7bf":[3,0,8,4,0,99],
 "garmin__img_8c.html#afd8d704fff636cf0234e92c1eade927c":[3,0,8,4,0,115],
 "gentypes_8c.html":[3,0,8,3,4],
-"gentypes_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,8,3,4,2],
-"gentypes_8c.html#a67e602c7b16a3ad76d80e670d0ee4a87":[3,0,8,3,4,1],
-"gentypes_8c.html#a983e12ff365733e2dca1e1b3c02d7b53":[3,0,8,3,4,3]
+"gentypes_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,8,3,4,2]
 };

@@ -25,7 +25,7 @@ var files =
     [ "atom.h", "atom_8h.html", "atom_8h" ],
     [ "attr.c", "attr_8c.html", "attr_8c" ],
     [ "attr.h", "attr_8h.html", "attr_8h" ],
-    [ "attr_def.h", "attr__def_8h.html", null ],
+    [ "attr_def.h", "attr__def_8h.html", "attr__def_8h" ],
     [ "navigation.c", "navigation_8c.html", "navigation_8c" ],
     [ "navit.c", "navit_8c.html", "navit_8c" ],
     [ "route.c", "route_8c.html", "route_8c" ],
