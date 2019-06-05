@@ -65,6 +65,9 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 ===Logging tracks===
 To record your trip , you can add a sub-instance "log" to the vehicle. It is possible to add multiple logs.
 
+
+.. code-block:: xml
+
 <source lang="xml">
  <log type="gpx" data="track_%Y%m%d%i.gpx" flush_size="1048576" flush_time="900" />
  <log type="nmea" data="track_%Y%m%d%i.nmea" flush_size="1048576" flush_time="900" />
