@@ -72,15 +72,15 @@ The first GUI is embedded in Navit core and is primarily aimed at [[touchscreen]
 
 Options
 ^^^^^^^
-A number of options specific to the <tt>internal</tt> GUI are available. These include:
+A number of options specific to the ``internal`` GUI are available. These include:
 
-* **font_size** - Base text size to use within the <tt>internal</tt> menu.
+* **font_size** - Base text size to use within the ``internal`` menu.
 * **icon_xs** - The size that extra-small style icons should be scaled to (e.g. country flag on town search).
-* **icon_s** - The size that small style icons should be scaled to (e.g. icons of <tt>internal</tt> GUI toolbar).
+* **icon_s** - The size that small style icons should be scaled to (e.g. icons of ``internal`` GUI toolbar).
 * **icon_l** - The size that large style icons should be scaled to (e.g. icons of internal GUI menu).
-* **menu_on_map_click** - Toggles the ability to bring up the menu screen when clicking on the map. See the [[Internal_Gui#Menu_Configuration|<tt>internal</tt> GUI page]] for more information.
+* **menu_on_map_click** - Toggles the ability to bring up the menu screen when clicking on the map. See the [[Internal_Gui#Menu_Configuration|``internal`` GUI page]] for more information.
 
-An example <tt>gui</tt> tag using the previous options is shown below:
+An example ``gui`` tag using the previous options is shown below:
 
 .. code-block:: xml
 
@@ -99,7 +99,7 @@ The second GUI is called **gtk**, and is most useful for those users who wish to
 
 Options
 ^^^^^^^
-A number of options specific to the <tt>gtk</tt> GUI are available. These include:
+A number of options specific to the ``gtk`` GUI are available. These include:
 
 * menubar - enable/disable the menubar
 * toolbar - enable/disable the toolbar

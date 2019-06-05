@@ -1,5 +1,5 @@
 ==General Options==
-Settings which affect Navit's general behaviour are located within the <tt><navit .. ></tt> tag. In a default installation, this is found on line 31 of <tt>navit.xml</tt>. By default, the <tt>navit</tt> tag is set as follows:
+Settings which affect Navit's general behaviour are located within the ``<navit .. >`` tag. In a default installation, this is found on line 31 of ``navit.xml``. By default, the ``navit`` tag is set as follows:
 
 .. code-block:: xml
 
