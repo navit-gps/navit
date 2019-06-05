@@ -11,6 +11,9 @@ Some common attributes are discussed below. For more advanced features, see [[Co
 ===Initial map position===
 On Navit's very first startup, it needs a **center** to look at on the map. By default this is set to Munich in Germany, which is conveniently covered by the sample map created on installation.
 
+
+.. code-block:: xml
+
 <source lang="xml">
  center="11.5666 48.1333"
 </source>
