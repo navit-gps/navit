@@ -227,6 +227,29 @@ jobs:
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  check_spelling:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get -y install curl
+      - run:
+          name: Install misspell
+          command: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - run:
+          name: Check docs folder for misspells
+          command: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                exit -1
+              fi
+
+
 workflows:
   version: 2
   build_all:
@@ -275,3 +298,7 @@ workflows:
           filters:
             branches:
               only: /^trunk$/
+      - check_spelling:
+          filters:
+            branches:
+              only: /^readthedocs$/
