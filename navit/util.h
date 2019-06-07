@@ -46,6 +46,7 @@ void strtolower(char *dest, const char *src);
 unsigned int uint_sqrt(unsigned int n);
 int navit_utf8_strcasecmp(const char *s1, const char *s2);
 char *str_escape(enum escape_mode mode, const char *in);
+char *strncpy_unescape(char *dest, const char *src, size_t n);
 int compare_name_systematic(const char *s1, const char *s2);
 GList * g_hash_to_list(GHashTable *h);
 GList * g_hash_to_list_keys(GHashTable *h);

@@ -201,6 +201,40 @@ char *str_escape(enum escape_mode mode, const char *in) {
 }
 
 /**
+ * @brief Copy a string from @p src to @p dest, unescaping characters
+ *
+ * @note Escaped characters are "\\\\" (double backslash) resulting in '\\' (single backslash)
+ *       and "\\\"" (backslash followed by double quote), resulting in '"' (double quote)
+ *       but we will escape any other character, for example "\\ " will result in ' ' (space)
+ *       This is the reverse of function str_escape, except that we assume (and only support) unescaping mode escape_mode_quote here
+ *
+ * @param[out] dest The location where to store the unescaped string
+ * @param[in] src The source string to copy (and to unescape)
+ * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.
+ *
+ * @return A pointer to the destination string @p dest
+ */
+char *strncpy_unescape(char *dest, const char *src, size_t n) {
+    char *dest_ptr;	/* A pointer to the currently parsed character inside string dest */
+
+    for (dest_ptr=dest; (dest_ptr-dest) < n && (*src != '\0'); src++, dest_ptr++) {
+        if (*src == '\\') {
+            src++;
+        }
+        *dest_ptr = *src;
+        if (*dest_ptr == '\0') {	/* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+            return dest;
+        }
+    }
+    if ((dest_ptr-dest) < n)
+        *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
+    else
+        dbg(lvl_error, "strncpy_unescape will return a non NUL-terminated string. Trouble ahead.");
+
+    return dest;
+}
+
+/**
  * @brief Parser states for `parse_for_systematic_comparison()`.
  */
 enum parse_state {
