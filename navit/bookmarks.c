@@ -717,7 +717,7 @@ static void write_former_destinations(GList* former_destinations, char *former_d
         for(currdest = former_destinations; currdest; currdest = g_list_next(currdest)) {
             dest = currdest->data;
             if (dest->description)
-                fprintf(f,"type=%s label=\"%s\"\n", item_to_name(dest->type), dest->description);
+                fprintf(f,"type=%s label=\"%s\"\n", item_to_name(dest->type), /*string_escape(*/dest->description/*)*/);
             else
                 fprintf(f,"type=%s\n", item_to_name(dest->type));
             c_list = dest->c;

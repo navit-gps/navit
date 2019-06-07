@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <math.h>
 #include "android.h"
 #include <android/log.h>
 #include "navit.h"
@@ -11,6 +12,7 @@
 #include "callback.h"
 #include "country.h"
 #include "projection.h"
+#include "coord.h"
 #include "map.h"
 #include "mapset.h"
 #include "navit_nls.h"
@@ -141,7 +143,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallbac
     const char *s;
     dbg(lvl_debug,"enter %p %p",(struct callback *)id,str);
     s=(*env)->GetStringUTFChars(env, str, NULL);
-    dbg(lvl_debug,"key=%d",s);
+    dbg(lvl_debug,"key=%s",s);
     if (id)
         callback_call_1((struct callback *)id,s);
     (*env)->ReleaseStringUTFChars(env, str, s);
@@ -329,16 +331,25 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
 
         transform_reverse(transform, &p, &c);
 
-
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = transform_get_projection(transform);
 
+        struct coord_geo g;
+        transform_to_geo(pc.pro, &c, &g);
+        char *coord_str = coordinates_geo(&g, ' ');	/* Check where this string buffer is allocated */
+
+        char hexdump_str[strlen(coord_str)*3+1];
+        for (int i=0; i<strlen(coord_str); i++) {
+            sprintf(&(hexdump_str[i*3]), "%02hhx ", coord_str[i]);
+        }
         dbg(lvl_debug,"22x=%d",pc.x);
         dbg(lvl_debug,"22y=%d",pc.y);
 
         // start navigation asynchronous
-        navit_set_destination(attr.u.navit, &pc, "Lionel#Lionel", 1);
+        navit_set_destination(attr.u.navit, &pc, coord_str, 1);
+
+        g_free(coord_str);
     }
     break;
     case 3: {
