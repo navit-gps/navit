@@ -294,11 +294,10 @@ void coord_print(enum projection pro, struct coord *c, FILE *out) {
  * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
  * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
  * @param fmt The format to use.
- *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.5000°N 110.5000°E
- *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.00'N 110°30.00'E
- *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00"N 110°30'30"E
- *
- *
+ *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
+ *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
  * @param[out] buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
@@ -373,11 +372,10 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
  * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
  * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
  * @param fmt The format to use.
- *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.5000°N 110.5000°E
- *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.00'N 110°30.00'E
- *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00"N 110°30'30"E
- *
- *
+ *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
+ *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
  * @param[out] buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
  * @param size The size of the buffer
  *
