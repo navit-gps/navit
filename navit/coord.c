@@ -380,7 +380,7 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
  * @param size The size of the buffer
  *
  */
-void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size) {
+inline void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size) {
 	coord_format_with_sep(lat, lng, fmt, buffer, size, NULL);
 }
 
@@ -414,9 +414,31 @@ char *coordinates_geo(const struct coord_geo *gc, char sep) {
     lat_deg=g.lat-lat_min/60.0-lat_sec/3600.0+0.5;
     lng_sec=fmod(g.lng*3600+0.5,60);
     lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
-    lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
+    lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;
 
-    return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
+    char *result=g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
+
+    char other_result[128];
+
+    coord_format(gc->lat,gc->lng, DEGREES_MINUTES_SECONDS_BRIEF, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
+    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
+
+    dbg(lvl_error, "Lionel: output string for geo coords is \"%s\"", result);
+    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES_SECONDS_BRIEF coord_format is \"%s\"", other_result);
+
+    coord_format(gc->lat,gc->lng, DEGREES_DECIMAL, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
+    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
+    dbg(lvl_error, "Lionel: output string using DEGREES_DECIMAL coord_format is \"%s\"", other_result);
+
+    coord_format(gc->lat,gc->lng, DEGREES_MINUTES, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
+    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
+    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES coord_format is \"%s\"", other_result);
+
+    coord_format(gc->lat,gc->lng, DEGREES_MINUTES_SECONDS, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
+    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
+    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES_SECONDS coord_format is \"%s\"", other_result);
+
+    return result;
 }
 
 
