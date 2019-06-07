@@ -441,12 +441,25 @@ char *coordinates_geo(const struct coord_geo *gc, char sep) {
     return result;
 }
 
-
+/**
+ * @brief Generate a hash from a struct coord pointed by key
+ *
+ * @param[in] key A pointer to the struct coord to hash
+ * @return The resulting hash
+ */
 unsigned int coord_hash(const void *key) {
     const struct coord *c=key;
     return c->x^c->y;
 }
 
+/**
+ * @brief Test if two struct coord structures are equal
+ *
+ * @param[in] a A pointer to the first struct coord
+ * @param[in] b A pointer to the second struct coord
+ *
+ * @return TRUE if a and b are equal, FALSE otherwise
+ */
 int coord_equal(const void *a, const void *b) {
     const struct coord *c_a=a;
     const struct coord *c_b=b;
@@ -454,4 +467,5 @@ int coord_equal(const void *a, const void *b) {
         return TRUE;
     return FALSE;
 }
+
 /** @} */
