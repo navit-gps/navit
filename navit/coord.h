@@ -114,20 +114,25 @@ enum coord_format
 {
 	/**
 	 * Degrees with decimal places.
-	 * Ie 20.5000 N 110.5000 E
+	 * ie 20.500000°N 110.500000°E
 	 */
 	DEGREES_DECIMAL,
 
 	/**
 	 * Degrees and minutes.
-	 * ie 20 30.00 N 110 30.00 E
+	 * ie 20°30.0000' N 110°30.0000' E
 	 */
 	DEGREES_MINUTES,
 	/**
 	 * Degrees, minutes and seconds.
-	 * ie 20 30 30.00 N 110 30 30 E
+	 * ie 20°30'30.00" N 110°30'30.00" E
 	 */
-	DEGREES_MINUTES_SECONDS
+	DEGREES_MINUTES_SECONDS,
+	/**
+	 * Degrees, minutes and seconds, brief
+	 * ie 20°30'30"N 110°30'30"E
+	 */
+	DEGREES_MINUTES_SECONDS_BRIEF
 };
 
 enum projection;
