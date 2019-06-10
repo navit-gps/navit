@@ -64,57 +64,6 @@ char *gui_internal_coordinates(struct pcoord *pc, char sep) {
 
 }
 
-enum escape_mode {
-    escape_mode_none=0,
-    escape_mode_string=1,
-    escape_mode_quote=2,
-    escape_mode_html=4,
-    escape_mode_html_quote=8,
-    escape_mode_html_apos=16,
-};
-
-/* todo &=&amp;, < = &lt; */
-
-static char *gui_internal_escape(enum escape_mode mode, char *in) {
-    int len=mode & escape_mode_string ? 3:1;
-    char *dst,*out,*src=in;
-    char *quot="&quot;";
-    char *apos="&apos;";
-    while (*src) {
-        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
-            len++;
-        if (*src == '"' && mode == escape_mode_html_quote)
-            len+=strlen(quot);
-        else if (*src == '\'' && mode == escape_mode_html_apos)
-            len+=strlen(apos);
-        else
-            len++;
-        src++;
-    }
-    src=in;
-    out=dst=g_malloc(len);
-    if (mode & escape_mode_string)
-        *dst++='"';
-    while (*src) {
-        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
-            *dst++='\\';
-        if (*src == '"' && mode == escape_mode_html_quote) {
-            strcpy(dst,quot);
-            src++;
-            dst+=strlen(quot);
-        } else if (*src == '\'' && mode == escape_mode_html_apos) {
-            strcpy(dst,apos);
-            src++;
-            dst+=strlen(apos);
-        } else
-            *dst++=*src++;
-    }
-    if (mode & escape_mode_string)
-        *dst++='"';
-    *dst++='\0';
-    return out;
-}
-
 static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out,
                                     int *valid) {
     struct attr escaped;
@@ -128,7 +77,7 @@ static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struc
     }
     if (ATTR_IS_STRING(in[0]->type)) {
         escaped.type=in[0]->type;
-        escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
+        escaped.u.str=str_escape(escape_mode_string,in[0]->u.str);
     } else if (ATTR_IS_INT(in[0]->type)) {
         escaped.type=attr_type_string_begin;
         escaped.u.str=g_strdup_printf("%ld",in[0]->u.num);
@@ -1022,10 +971,10 @@ void gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr *
 static char *gui_internal_append_attr(char *str, enum escape_mode mode, char *pre, struct attr *attr, char *post) {
     char *astr=NULL;
     if (ATTR_IS_STRING(attr->type))
-        astr=gui_internal_escape(mode, attr->u.str);
+        astr=str_escape(mode, attr->u.str);
     else if (ATTR_IS_COORD_GEO(attr->type)) {
         char *str2=coordinates_geo(attr->u.coord_geo, '\n');
-        astr=gui_internal_escape(mode, str2);
+        astr=str_escape(mode, str2);
         g_free(str2);
     } else if (ATTR_IS_INT(attr->type))
         astr=g_strdup_printf("%ld",attr->u.num);
@@ -1093,7 +1042,7 @@ static void gui_internal_onclick(struct attr ***in, char **onclick, char *set) {
             if (!strcmp(format,"se")) {
                 replacement=gui_internal_append_attr(NULL, escape_mode_string, "", *i++, "");
                 if (is_arg) {
-                    char *arg=gui_internal_escape(escape_mode_string, replacement);
+                    char *arg=str_escape(escape_mode_string, replacement);
                     args=g_strconcat_printf(args, "%s%s", args ? "," : "", arg);
                     g_free(replacement);
                     g_free(arg);
@@ -1118,7 +1067,7 @@ static void gui_internal_onclick(struct attr ***in, char **onclick, char *set) {
     if (str && strlen(str)) {
         char *old=*onclick;
         if (set) {
-            char *setstr=gui_internal_escape(escape_mode_string,str);
+            char *setstr=str_escape(escape_mode_string,str);
             char *argssep="";
             if (args && strlen(args))
                 argssep=",";
@@ -1170,7 +1119,7 @@ static void gui_internal_cmd_img(struct gui_priv * this, char *function, struct 
     gui_internal_onclick(&in,&onclick,"set");
     gui_internal_onclick(&in,&onclick,NULL);
     if (strlen(onclick)) {
-        char *tmp=gui_internal_escape(escape_mode_html_apos, onclick);
+        char *tmp=str_escape(escape_mode_html_apos, onclick);
         str=g_strconcat_printf(str," onclick='%s'",tmp);
         g_free(tmp);
     }
