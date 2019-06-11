@@ -43,27 +43,6 @@
 
 extern char *version;
 
-/**
- * @brief Converts a coordinate pair to its WGS84 string representation.
- *
- * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
- * {@code 45°28'0" N 9°11'26" E}.
- *
- * @param gc A coordinate pair
- * @param sep The separator character to insert between latitude and longitude
- *
- * @return The coordinates as a formatted string
- */
-char *gui_internal_coordinates(struct pcoord *pc, char sep) {
-    struct coord_geo g;
-    struct coord c;
-    c.x=pc->x;
-    c.y=pc->y;
-    transform_to_geo(pc->pro, &c, &g);
-    return coordinates_geo(&g, sep);
-
-}
-
 static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out,
                                     int *valid) {
     struct attr escaped;
@@ -973,9 +952,9 @@ static char *gui_internal_append_attr(char *str, enum escape_mode mode, char *pr
     if (ATTR_IS_STRING(attr->type))
         astr=str_escape(mode, attr->u.str);
     else if (ATTR_IS_COORD_GEO(attr->type)) {
-        char *str2=coordinates_geo(attr->u.coord_geo, '\n');
-        astr=str_escape(mode, str2);
-        g_free(str2);
+        char coord_str[32];
+        coord_geo_format_short(attr->u.coord_geo, coord_str, sizeof(coord_str), "\n");
+        astr=str_escape(mode, coord_str);
     } else if (ATTR_IS_INT(attr->type))
         astr=g_strdup_printf("%ld",attr->u.num);
     else

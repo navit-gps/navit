@@ -1044,7 +1044,6 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     struct coord_geo g;
     struct pcoord pc;
     struct coord c;
-    char *coord;
 
     if (pc_in) {
         pc=*pc_in;
@@ -1067,9 +1066,9 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     wb=gui_internal_menu(this, name);
     w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
     gui_internal_widget_append(wb, w);
-    coord=gui_internal_coordinates(&pc, ' ');
-    gui_internal_widget_append(w, gui_internal_label_new(this, coord));
-    g_free(coord);
+    char coord_str[32];
+    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+    gui_internal_widget_append(w, gui_internal_label_new(this, coord_str));
     wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
     gui_internal_widget_append(w,wtable);
 

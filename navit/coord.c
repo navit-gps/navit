@@ -298,7 +298,7 @@ void coord_print(enum projection pro, struct coord *c, FILE *out) {
  *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
  *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
  *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
- * @param[out] buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  *
@@ -364,7 +364,6 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lng_deg),floor(lng_min),round(lng_sec),lng_c);
         break;
     }
-
 }
 
 /**
@@ -376,69 +375,48 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
  *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
  *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
  *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
- * @param[out] buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
  * @param size The size of the buffer
  *
  */
 inline void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size) {
-	coord_format_with_sep(lat, lng, fmt, buffer, size, NULL);
+    coord_format_with_sep(lat, lng, fmt, buffer, size, NULL);
 }
 
 /**
  * @brief Converts a WGS84 coordinate pair to its string representation.
  *
  * This function takes a coordinate pair with latitude and longitude in degrees and converts them to a
- * string of the form {@code 45°28'0" N 9°11'26" E}.
+ * string of the form {@code 45°28'0"N 9°11'26"E}.
  *
  * @param gc A WGS84 coordinate pair
- * @param sep The separator character to insert between latitude and longitude
- *
- * @return The coordinates as a formatted string
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  */
-char *coordinates_geo(const struct coord_geo *gc, char sep) {
-    char latc='N',lngc='E';
-    int lat_deg,lat_min,lat_sec;
-    int lng_deg,lng_min,lng_sec;
-    struct coord_geo g=*gc;
+inline void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep) {
+    dbg_assert(gc != NULL);
+    coord_format_with_sep(gc->lat, gc->lng, DEGREES_MINUTES_SECONDS, buffer, size, sep);
+}
 
-    if (g.lat < 0) {
-        g.lat=-g.lat;
-        latc='S';
-    }
-    if (g.lng < 0) {
-        g.lng=-g.lng;
-        lngc='W';
-    }
-    lat_sec=fmod(g.lat*3600+0.5,60);
-    lat_min=fmod(g.lat*60-lat_sec/60.0+0.5,60);
-    lat_deg=g.lat-lat_min/60.0-lat_sec/3600.0+0.5;
-    lng_sec=fmod(g.lng*3600+0.5,60);
-    lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
-    lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;
-
-    char *result=g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
-
-    char other_result[128];
-
-    coord_format(gc->lat,gc->lng, DEGREES_MINUTES_SECONDS_BRIEF, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
-    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
-
-    dbg(lvl_error, "Lionel: output string for geo coords is \"%s\"", result);
-    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES_SECONDS_BRIEF coord_format is \"%s\"", other_result);
-
-    coord_format(gc->lat,gc->lng, DEGREES_DECIMAL, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
-    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
-    dbg(lvl_error, "Lionel: output string using DEGREES_DECIMAL coord_format is \"%s\"", other_result);
-
-    coord_format(gc->lat,gc->lng, DEGREES_MINUTES, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
-    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
-    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES coord_format is \"%s\"", other_result);
-
-    coord_format(gc->lat,gc->lng, DEGREES_MINUTES_SECONDS, other_result, sizeof(other_result));	/* Warning: may not contain trailing '\0' */
-    other_result[127]='\0';	/* Force termination of string, truncating if necessary */
-    dbg(lvl_error, "Lionel: output string using DEGREES_MINUTES_SECONDS coord_format is \"%s\"", other_result);
-
-    return result;
+/**
+ * @brief Converts a coordinate pair to its WGS84 string representation.
+ *
+ * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
+ * {@code 45°28'0"N 9°11'26"E}.
+ *
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
+ */
+inline void pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep) {
+    dbg_assert(pc != NULL);
+    struct coord_geo g;
+    struct coord c;
+    c.x=pc->x;
+    c.y=pc->y;
+    transform_to_geo(pc->pro, &c, &g);
+    coord_format_with_sep(g.lat, g.lng, DEGREES_MINUTES_SECONDS, buffer, size, sep);
 }
 
 /**

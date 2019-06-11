@@ -336,8 +336,9 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         pc.pro = transform_get_projection(transform);
 
         struct coord_geo g;
+        char coord_str[32];
         transform_to_geo(pc.pro, &c, &g);
-        char *coord_str = coordinates_geo(&g, ' ');	/* Check where this string buffer is allocated */
+        coord_geo_format_short(&g, coord_str, sizeof(coord_str), " ");
 
         char hexdump_str[strlen(coord_str)*3+1];
         for (int i=0; i<strlen(coord_str); i++) {
@@ -348,8 +349,6 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
 
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
-
-        g_free(coord_str);
     }
     break;
     case 3: {
