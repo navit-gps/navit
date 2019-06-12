@@ -7,7 +7,7 @@ When pushing a pull request, please make sure you follow our:
 * [programming guidelines](https://wiki.navit-project.org/index.php/Programming_guidelines)
 * [commit message guidelines](https://wiki.navit-project.org/index.php/Commit_guidelines)
 
-For more information on our developement process, see: https://wiki.navit-project.org/index.php/Development
+For more information on our development process, see: https://wiki.navit-project.org/index.php/Development
 ## Submitting patches
 
 We are very happy that you like to participate and help the [[team]] to improve Navit :) To make this teamwork a pleasure for all, we will try to guide you trough this process:
@@ -27,7 +27,7 @@ Point out that you like to submit a patch.
  * Get the newest Git Navit version (see [this documentation](https://help.github.com/en/articles/syncing-a-fork) on how to sync your fork) and apply your changes once more
  * Test if everything still works fine
  * [Create a pull request](https://help.github.com/articles/creating-a-pull-request/) on github
- * Wait to verify that all the tests in our CI finish succesfully
+ * Wait to verify that all the tests in our CI finish successfully
 
 
 ### Review
