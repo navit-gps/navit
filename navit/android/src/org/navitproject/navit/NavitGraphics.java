@@ -201,7 +201,8 @@ public class NavitGraphics {
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
 
-            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + "..");
+            String clickCoord = GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y);
+            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
             menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
             menu.add(1, 2, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
@@ -734,6 +735,8 @@ public class NavitGraphics {
     public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 
     public native void MotionCallback(int id, int x, int y);
+
+    public native String GetCoordForPoint(int id, int x, int y);
 
     public native String GetDefaultCountry(int id, String s);
 

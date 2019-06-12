@@ -192,8 +192,6 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNI
     (*env)->ReleaseStringUTFChars(env, feed, s);
 }
 
-
-
 // type: 0=town, 1=street, 2=House#
 void android_return_search_result(struct jni_object *jni_o, int type, struct pcoord *location, const char *address) {
     struct coord_geo geo_location;
@@ -310,7 +308,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         struct coord c;
         struct pcoord pc;
 
-        struct transformation *transform=navit_get_trans(attr.u.navit); /* Interesting code... to use in point to nearest town search? */
+        struct transformation *transform=navit_get_trans(attr.u.navit);
 
         s=(*env)->GetStringUTFChars(env, str, NULL);
         char parse_str[strlen(s) + 1];
@@ -396,6 +394,43 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     }
 
     return ret;
+}
+
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForPoint( JNIEnv* env, jobject thiz, int id,
+        int x, int y) {
+
+    jstring return_string = NULL;
+
+    dbg(lvl_error,"enter %s %d %d",__func__,x,y);
+
+    struct attr attr;
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    struct transformation *transform=navit_get_trans(attr.u.navit); /* Interesting code... to use in point to nearest town search? */
+    struct point p;
+    struct coord c;
+    struct pcoord pc;
+
+    p.x = x;
+    p.y = y;
+
+    dbg(lvl_error,"Lionel: x=%d",p.x);
+    dbg(lvl_error,"Lionel: y=%d",p.y);
+
+    transform_reverse(transform, &p, &c);
+
+    pc.x = c.x;
+    pc.y = c.y;
+    pc.pro = transform_get_projection(transform);
+
+    struct coord_geo g;
+    char coord_str[32];
+    transform_to_geo(pc.pro, &c, &g);
+    coord_geo_format_short(&g, coord_str, sizeof(coord_str), " ");
+
+    dbg(lvl_error,"Will return title: \"%s\"",coord_str);
+    return_string = (*env)->NewStringUTF(env,coord_str);
+    return return_string;
 }
 
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobject thiz,
