@@ -293,12 +293,13 @@ void coord_print(enum projection pro, struct coord *c, FILE *out) {
  * @brief Converts a lat/lon into a text formatted text string.
  * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
  * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
- * @param fmt The format to use.
- *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E
- *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
- *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
- *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
- * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param fmt The format to use:
+ *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E (max: 26 bytes)
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E (max: 30 bytes)
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E (max: 32 bytes)
+ *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E (max 24 bytes)
+ * @param[out] buffer A buffer large enough to hold the output (bearing in mind '°' uses 2 bytes in UTF-8).
+ *                    Maximum size depends on the format, see values above, and add an extra character for the terminating NUL character
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  *
@@ -396,7 +397,7 @@ inline void coord_format(float lat,float lng, enum coord_format fmt, char *buffe
  */
 inline void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep) {
     dbg_assert(gc != NULL);
-    coord_format_with_sep(gc->lat, gc->lng, DEGREES_MINUTES_SECONDS, buffer, size, sep);
+    coord_format_with_sep(gc->lat, gc->lng, DEGREES_MINUTES_SECONDS_BRIEF, buffer, size, sep);
 }
 
 /**
@@ -416,7 +417,7 @@ inline void pcoord_format_short(const struct pcoord *pc, char *buffer, int size,
     c.x=pc->x;
     c.y=pc->y;
     transform_to_geo(pc->pro, &c, &g);
-    coord_format_with_sep(g.lat, g.lng, DEGREES_MINUTES_SECONDS, buffer, size, sep);
+    coord_format_with_sep(g.lat, g.lng, DEGREES_MINUTES_SECONDS_BRIEF, buffer, size, sep);
 }
 
 /**
