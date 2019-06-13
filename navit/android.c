@@ -314,7 +314,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         char parse_str[strlen(s) + 1];
         strcpy(parse_str, s);
         (*env)->ReleaseStringUTFChars(env, str, s);
-        dbg(lvl_error,"*****string=%s",parse_str);
+        dbg(lvl_debug,"*****string=%s",parse_str);
 
         // set destination to (pixel-x#pixel-y)
         // pixel-x
@@ -333,17 +333,10 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         pc.y = c.y;
         pc.pro = transform_get_projection(transform);
 
-        struct coord_geo g;
         char coord_str[32];
-        transform_to_geo(pc.pro, &c, &g);
-        coord_geo_format_short(&g, coord_str, sizeof(coord_str), " ");
+        pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
 
-        char hexdump_str[strlen(coord_str)*3+1];
-        for (int i=0; i<strlen(coord_str); i++) {
-            sprintf(&(hexdump_str[i*3]), "%02hhx ", coord_str[i]);
-        }
-        dbg(lvl_debug,"22x=%d",pc.x);
-        dbg(lvl_debug,"22y=%d",pc.y);
+        dbg(lvl_debug,"Setting destination to %s",coord_str);
 
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
@@ -420,10 +413,8 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForP
     pc.y = c.y;
     pc.pro = transform_get_projection(transform);
 
-    struct coord_geo g;
     char coord_str[32];
-    transform_to_geo(pc.pro, &c, &g);
-    coord_geo_format_short(&g, coord_str, sizeof(coord_str), " ");
+    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
 
     dbg(lvl_error,"Will return title: \"%s\"",coord_str);
     return_string = (*env)->NewStringUTF(env,coord_str);
