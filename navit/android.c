@@ -414,9 +414,6 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForP
     p.x = x;
     p.y = y;
 
-    dbg(lvl_error,"Lionel: x=%d",p.x);
-    dbg(lvl_error,"Lionel: y=%d",p.y);
-
     transform_reverse(transform, &p, &c);
 
     pc.x = c.x;
