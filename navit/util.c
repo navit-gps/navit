@@ -134,7 +134,7 @@ char *str_escape(enum escape_mode mode, const char *in) {
     static const char *lt="&lt;";
     static const char *gt="&gt;";
 
-    dbg(lvl_debug, "Entering %s with string=\"%s\", escape mode %d", __func__, in, mode);
+    dbg(lvl_debug, "Will escape string=\"%s\", escape mode %d", in, mode);
     while (*src) {
         if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
             len++;
@@ -196,7 +196,7 @@ char *str_escape(enum escape_mode mode, const char *in) {
         *dst++='"';
 
     *dst++='\0';
-    dbg(lvl_debug, "Exitting %s with string=\"%s\"", __func__, out);
+    dbg(lvl_debug, "Result of escaped string=\"%s\"", out);
     return out;
 }
 
@@ -228,8 +228,9 @@ char *strncpy_unescape(char *dest, const char *src, size_t n) {
     }
     if ((dest_ptr-dest) < n)
         *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
-    else
-        dbg(lvl_error, "strncpy_unescape will return a non NUL-terminated string. Trouble ahead.");
+    else {
+        // strncpy_unescape will return a non NUL-terminated string. Trouble ahead if this is not handled properly
+    }
 
     return dest;
 }

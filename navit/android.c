@@ -233,7 +233,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     struct attr attr;
     const char *s;
     jint ret = 0;
-    dbg(lvl_error,"enter %d %p",channel,str);
+    dbg(lvl_debug,"enter %d %p",channel,str);
 
     config_get_attr(config_get(), attr_navit, &attr, NULL);
 
@@ -394,12 +394,10 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForP
 
     jstring return_string = NULL;
 
-    dbg(lvl_error,"enter %s %d %d",__func__,x,y);
-
     struct attr attr;
     config_get_attr(config_get(), attr_navit, &attr, NULL);
 
-    struct transformation *transform=navit_get_trans(attr.u.navit); /* Interesting code... to use in point to nearest town search? */
+    struct transformation *transform=navit_get_trans(attr.u.navit);
     struct point p;
     struct coord c;
     struct pcoord pc;
@@ -416,7 +414,7 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForP
     char coord_str[32];
     pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
 
-    dbg(lvl_error,"Will return title: \"%s\"",coord_str);
+    dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
     return_string = (*env)->NewStringUTF(env,coord_str);
     return return_string;
 }

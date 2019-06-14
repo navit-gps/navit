@@ -214,7 +214,6 @@ public class NavitGraphics {
                 case 1:
                     Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
-                    Log.e(TAG, "Got contextual menu click");
                     msg.sendToTarget();
                     break;
             }
@@ -694,7 +693,6 @@ public class NavitGraphics {
                 case CLB_SET_DISPLAY_DESTINATION:
                     int x = msg.arg1;
                     int y = msg.arg2;
-                    Log.e(TAG, "In callback_handler for CLB_SET_DISPLAY_DESTINATION");
                     CallbackMessageChannel(4, "" + x + "#" + y);
                     break;
                 case CLB_CALL_CMD:

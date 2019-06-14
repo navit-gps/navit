@@ -401,11 +401,12 @@ inline void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int
 }
 
 /**
- * @brief Converts a coordinate pair to its WGS84 string representation.
+ * @brief Converts an integer mercator coordinate pair to its string representation.
  *
  * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
  * {@code 45°28'0"N 9°11'26"E}.
  *
+ * @param pc Coordinates as integer mercator
  * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
