@@ -222,7 +222,8 @@ char *strncpy_unescape(char *dest, const char *src, size_t n) {
             src++;
         }
         *dest_ptr = *src;
-        if (*dest_ptr == '\0') {	/* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+        if (*dest_ptr == '\0') {
+            /* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
             return dest;
         }
     }
