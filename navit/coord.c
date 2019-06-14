@@ -358,11 +358,13 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
         break;
     case DEGREES_MINUTES_SECONDS_BRIEF:
         if (lat<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lat_deg),floor(lat_min),round(lat_sec),lat_c);
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lat_deg),floor(lat_min),
+                                  round(lat_sec),lat_c);
         if ((lat<360)&&(lng<360))
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
         if (lng<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lng_deg),floor(lng_min),round(lng_sec),lng_c);
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lng_deg),floor(lng_min),
+                                  round(lng_sec),lng_c);
         break;
     }
 }

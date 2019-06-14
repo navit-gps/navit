@@ -711,7 +711,8 @@ static GList* find_destination_in_list(struct former_destination* dest_to_remove
  * @param[in] former_destination_file The name of the output text file
  * @param proj The projection used to represent coordinates in former_destinations' list elements
  */
-static void write_former_destinations(const GList* former_destinations, const char *former_destination_file, enum projection proj) {
+static void write_former_destinations(const GList* former_destinations, const char *former_destination_file,
+                                      enum projection proj) {
     FILE *f;
     const GList* currdest = NULL;
     GList* c_list = NULL;

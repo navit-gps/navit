@@ -971,7 +971,8 @@ int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, 
                 strncpy_unescape(val_ret, e, len-escaped);	/* Unescape if necessary */
             else
                 strncpy(val_ret, e, len);
-            val_ret[len-escaped]='\0';	/* Because no NUL terminating char was copied over, we manually append it here to terminate the C-string properly, just after the copied string */
+            /* Because no NUL terminating char was copied over, we manually append it here to terminate the C-string properly, just after the copied string */
+            val_ret[len-escaped]='\0';
             if (pos)
                 *pos=p-line;
             return 1;
