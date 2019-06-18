@@ -82,7 +82,7 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState) {
     case QAudio::StoppedState:
         break;
     case QAudio::InterruptedState:
-    	break;
+        break;
     case QAudio::IdleState:
         /*remove all data that was already read*/
         data->remove(0, buffer->pos());
