@@ -41,7 +41,7 @@ extern "C" {
 #include <windows.h>
 #endif
 #include "QNavitWidget.h"
-#include "QNavitWidget.moc"
+//#include "QNavitWidget.moc"
 #include "graphics_qt5.h"
 
 QNavitWidget::QNavitWidget(struct graphics_priv* my_graphics_priv,
