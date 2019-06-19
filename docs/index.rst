@@ -25,6 +25,7 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
     :glob:
     :numbered:
     :maxdepth: 2
+    :caption: Navit's user manual
 
     basic_configuration
     maps
@@ -38,3 +39,10 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 .. * :ref:`search`
 
 .. __: https://github.com/navit-gps/navit/
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+   :caption: Navit's developer documentation
+
+   development/programming_guidelines
