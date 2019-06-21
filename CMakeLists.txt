@@ -584,7 +584,7 @@ if(NOT CACHE_SIZE)
 endif(NOT CACHE_SIZE)
 
 if(WIN32 OR WINCE)
-	SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
+	SET(CMAKE_EXECUTABLE_SUFFIX ".exe") #remove it when wince'll use cmake 3
 	add_module(graphics/win32 "Windows detected" TRUE)
 	add_plugin(support/win32 "Windows detected" TRUE)
 
