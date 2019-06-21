@@ -41,8 +41,6 @@
 #include <arpa/inet.h>
 #endif
 
-extern char *version;
-
 static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out,
                                     int *valid) {
     struct attr escaped;
@@ -91,7 +89,7 @@ static void gui_internal_cmd2_about(struct gui_priv *this, char *function, struc
     g_free(text);
 
     //Version
-    text=g_strdup_printf("%s",version);
+    text=g_strdup_printf("%s",NAVIT_VERSION);
     gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
     w->flags=gravity_top_center|orientation_horizontal|flags_expand;
     g_free(text);

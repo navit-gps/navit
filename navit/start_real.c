@@ -27,7 +27,6 @@
 #include <XGetopt.h>
 #endif
 #include "config_.h"
-#include "version.h"
 #include "item.h"
 #include "coord.h"
 #include "main.h"
@@ -52,7 +51,6 @@
 #include <winbase.h>
 #endif
 
-char *version=PACKAGE_VERSION"+git:"GIT_VERSION""NAVIT_VARIANT;
 int main_argc;
 char * const* main_argv;
 
@@ -128,7 +126,7 @@ int main_real(int argc, char * const* argv) {
                 exit(0);
                 break;
             case 'v':
-                printf("%s %s\n", "navit", version);
+                printf("%s %s\n", "navit", NAVIT_VERSION);
                 exit(0);
                 break;
             case 'c':
