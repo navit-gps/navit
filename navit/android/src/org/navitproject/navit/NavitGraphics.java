@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -49,6 +50,7 @@ import android.view.WindowInsets;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.net.Uri;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -165,6 +167,7 @@ public class NavitGraphics {
         static final int  DRAG       = 1;
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
+        Context context;
 
         Method eventGetX = null;
         Method eventGetY = null;
@@ -173,6 +176,7 @@ public class NavitGraphics {
 
         public NavitView(Context context) {
             super(context);
+            this.context = context;
             try {
                 eventGetX = android.view.MotionEvent.class.getMethod("getX", int.class);
                 eventGetY = android.view.MotionEvent.class.getMethod("getY", int.class);
@@ -205,7 +209,8 @@ public class NavitGraphics {
             menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
             menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
-            menu.add(1, 2, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            menu.add(1, 2, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
+            menu.add(1, 3, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
@@ -215,6 +220,16 @@ public class NavitGraphics {
                     Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
+                    break;
+                case 2:
+                    Log.e(TAG, "User clicked on view on menu");
+                    Uri intentUri = Uri.parse("geo:37.7749,-122.4194");
+                    Intent mapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    if (mapViewIntent.resolveActivity(context.getPackageManager()) != null) {
+                        context.startActivity(mapViewIntent);
+                    } else {
+                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application, discarding...");
+                    }
                     break;
             }
             return false;
