@@ -437,6 +437,7 @@ var annotated_dup =
     [ "z_clip_result", "structz__clip__result.html", "structz__clip__result" ],
     [ "zip64_eoc", "structzip64__eoc.html", "structzip64__eoc" ],
     [ "zip64_eocl", "structzip64__eocl.html", "structzip64__eocl" ],
+    [ "zip_alignment_check", "structzip__alignment__check.html", "structzip__alignment__check" ],
     [ "zip_cd", "structzip__cd.html", "structzip__cd" ],
     [ "zip_cd_ext", "structzip__cd__ext.html", "structzip__cd__ext" ],
     [ "zip_enc", "structzip__enc.html", "structzip__enc" ],

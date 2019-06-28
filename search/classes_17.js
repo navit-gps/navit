@@ -3,6 +3,7 @@ var searchData=
   ['z_5fclip_5fresult',['z_clip_result',['../structz__clip__result.html',1,'']]],
   ['zip64_5feoc',['zip64_eoc',['../structzip64__eoc.html',1,'']]],
   ['zip64_5feocl',['zip64_eocl',['../structzip64__eocl.html',1,'']]],
+  ['zip_5falignment_5fcheck',['zip_alignment_check',['../structzip__alignment__check.html',1,'']]],
   ['zip_5fcd',['zip_cd',['../structzip__cd.html',1,'']]],
   ['zip_5fcd_5fext',['zip_cd_ext',['../structzip__cd__ext.html',1,'']]],
   ['zip_5fenc',['zip_enc',['../structzip__enc.html',1,'']]],

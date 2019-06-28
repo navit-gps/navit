@@ -8,6 +8,7 @@ var zipfile_8h =
     [ "zip_eoc", "structzip__eoc.html", "structzip__eoc" ],
     [ "zip64_eoc", "structzip64__eoc.html", "structzip64__eoc" ],
     [ "zip64_eocl", "structzip64__eocl.html", "structzip64__eocl" ],
+    [ "zip_alignment_check", "structzip__alignment__check.html", "structzip__alignment__check" ],
     [ "ATTRIBUTE_PACKED", "zipfile_8h.html#a4efcc7e404e131398beda35653b59357", null ],
     [ "zip64_eoc_sig", "zipfile_8h.html#ac0062f99ded34ffe6e71f74815e63c18", null ],
     [ "zip64_eoc_sig_rev", "zipfile_8h.html#a846a8df13ef93a0b687a68f2312b9b8e", null ],

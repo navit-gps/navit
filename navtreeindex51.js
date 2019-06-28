@@ -1,5 +1,7 @@
 var NAVTREEINDEX51 =
 {
+"sunriset_8c.html#a8c77aabe9264df7d2cca006a2b7b7cf6":[3,0,131,3],
+"sunriset_8c.html#a9910e866c15e5dd400c1856a95d454cc":[3,0,131,6],
 "sunriset_8h.html":[3,0,132],
 "sunriset_8h.html#a01a862be86e92b083de9bff9c0326769":[3,0,132,22],
 "sunriset_8h.html#a0cddeee5e46ec5968eebf87fd85f045a":[3,0,132,24],
@@ -247,7 +249,5 @@ var NAVTREEINDEX51 =
 "traffic_8c.html#a1e4309f6ab9c116090146730f8de4e98":[3,0,135,35],
 "traffic_8c.html#a21943079a16ce7539a38e78ada7e2dba":[3,0,135,56],
 "traffic_8c.html#a22c417bbda7e671ff61258c217aa922a":[3,0,135,107],
-"traffic_8c.html#a253ffcfc6a776c71b9dbb6f12c9b1c17":[3,0,135,49],
-"traffic_8c.html#a27d4db64e08bdab9e726951382b32f39":[3,0,135,91],
-"traffic_8c.html#a2a135077f3f105707150c700f04ebba7":[3,0,135,47]
+"traffic_8c.html#a253ffcfc6a776c71b9dbb6f12c9b1c17":[3,0,135,49]
 };
