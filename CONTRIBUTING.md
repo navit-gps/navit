@@ -7,7 +7,7 @@ then checkout the [Wiki](https://wiki.navit-project.org/index.php/Main_Page)
 and our [ReadTheDocs space](https://navit.readthedocs.io)
 
 When pushing a pull request, please make sure you follow our:
-* [programming guidelines](https://navit.readthedocs.io/en/latest/development/programming_guidelines.html)
+* [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
 * [commit message guidelines](https://wiki.navit-project.org/index.php/Commit_guidelines)
 
 For more information on our development process, see: https://wiki.navit-project.org/index.php/Development
@@ -33,7 +33,7 @@ Prepare your repository:
 
 Enhance Navit:
  * Find the bug (and please address only one issue per patch!) and try to fix it
- * always document new functions according to the doxygen standard discussed in the [programming guidelines](https://navit.readthedocs.io/en/latest/development/programming_guidelines.html)
+ * always document new functions according to the doxygen standard discussed in the [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
  * Test test test if still compiles and the behaviour is as expected
  * Think about possible side effects (as performance, different settings, ...)
 
@@ -57,7 +57,7 @@ So that's it, you helped Navit to go one step forward. Thank you very much :)
 
 ## See also
 
- * [programming guidelines](https://navit.readthedocs.io/en/latest/development/programming_guidelines.html)
+ * [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
  * [commit message guidelines](https://wiki.navit-project.org/index.php/Commit_guidelines)
  * [Reporting Bugs](https://wiki.navit-project.org/index.php/Reporting_Bugs)
  * [Translations](https://wiki.navit-project.org/index.php/Translations)
