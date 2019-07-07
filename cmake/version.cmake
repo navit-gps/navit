@@ -1,9 +1,6 @@
 FIND_PROGRAM(GIT_EXECUTABLE NAMES git git.exe DOC "git command line client")
-IF(NOT APPLE)
 FIND_PROGRAM(DATE_EXECUTABLE NAMES date DOC "unix date command")
-ELSE(NOT APPLE) #for apple use gdate as date has different syntax
-FIND_PROGRAM(DATE_EXECUTABLE NAMES gdate DOC "unix date command")
-ENDIF(NOT APPLE)
+
 get_filename_component(SOURCE_DIR ${SRC} PATH)
 
 if (GIT_EXECUTABLE)

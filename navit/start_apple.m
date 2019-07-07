@@ -21,7 +21,6 @@
 #import <Foundation/Foundation.h>
 #include <glib.h>
 #include <stdlib.h>
-#include "debug.h"  /* we use debug here so include it */
 
 int
 main(int argc, char **argv)
