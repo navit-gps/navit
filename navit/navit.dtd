@@ -17,29 +17,13 @@
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
 <!ATTLIST log attr_types CDATA #IMPLIED>
-<!ELEMENT navit (center, zoom, orientation, graphics,,gui+,log*,osd*,traffic*,vehicle*,
-tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,layout+,default_layout,recent_dest,drag_bitmap) >
+<!ELEMENT navit (graphics,gui+,log*,osd*,traffic*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,layout+) >
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
 <!ATTLIST navit orientation CDATA #REQUIRED>
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ATTLIST navit drag_bitmap CDATA #IMPLIED>
-<!ATTLIST navit default_layout CDATA #IMPLIED>
-<!ATTLIST navit  graphics CDATA #IMPLIED>
-<!ATTLIST navit  gui CDATA #IMPLIED>
-<!ATTLIST navit  log CDATA #IMPLIED>
-<!ATTLIST navit  osd CDATA #IMPLIED>
-<!ATTLIST navit  traffic CDATA #IMPLIED>
-<!ATTLIST navit  vehicle CDATA #IMPLIED>
-<!ATTLIST navit  vehicleprofile CDATA #IMPLIED>
-<!ATTLIST navit  route CDATA #IMPLIED>
-<!ATTLIST navit  navigation CDATA #IMPLIED>
-<!ATTLIST navit  speech CDATA #IMPLIED>
-<!ATTLIST navit  mapset CDATA #IMPLIED>
-<!ATTLIST navit  layer CDATA #IMPLIED>
-<!ATTLIST navit  layout CDATA #IMPLIED>
-<!ATTLIST navit  default_layout CDATA #IMPLIED>
 <!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
