@@ -518,7 +518,7 @@ int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrva
         result = attrval->num;
     if(treat_neg_as_rel && (result <0) )
         result = whole+result;
-    dbg(lvl_error, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi %f, -> %d", attrval->type, attrval->num,
+    dbg(lvl_debug, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi %f, -> %d", attrval->type, attrval->num,
         whole, treat_neg_as_rel, dpi, result);
     return result;
 }
