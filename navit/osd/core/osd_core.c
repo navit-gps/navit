@@ -504,16 +504,16 @@ static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_method
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 120;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_route_guard_draw);
     meth->set_attr = set_std_osd_attr;
@@ -1058,16 +1058,16 @@ static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *
     struct color orange_color= {0xffff,0xa5a5,0x0000,0xffff};
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 120;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_odometer_draw);
     meth->set_attr = set_std_osd_attr;
@@ -1275,16 +1275,16 @@ static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_meth
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 120;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_cmd_interface_draw);
 
@@ -1435,16 +1435,16 @@ static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods 
     struct color orange_color= {0xffff,0xa5a5,0x0000,0xffff};
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 120;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_stopwatch_draw);
     meth->set_attr = set_std_osd_attr;
@@ -1560,16 +1560,16 @@ static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *m
     struct color red_color= {0xffff,0x0400,0x0400,0xffff};
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
     meth->set_attr = set_std_osd_attr;
@@ -1613,9 +1613,9 @@ struct osd_button {
  * @param img The image displayed by the item
  */
 static void osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img) {
-    if((opc->osd_item.rel_w.type == REL) && (opc->osd_item.rel_w.num == 0))
+    if((opc->osd_item.rel_w.type == OSD_RELATIVE) && (opc->osd_item.rel_w.num == 0))
         opc->osd_item.w=img->width;
-    if((opc->osd_item.rel_h.type == REL) && (opc->osd_item.rel_h.num == 0))
+    if((opc->osd_item.rel_h.type == OSD_RELATIVE) && (opc->osd_item.rel_h.num == 0))
         opc->osd_item.h=img->height;
 }
 
@@ -1758,9 +1758,9 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
     /*Value of 0% is stored in relative attributes as ATTR_REL_RELSHIFT, we use this value as "width/height unset" flag */
-    opc->osd_item.rel_w.type = REL;
+    opc->osd_item.rel_w.type = OSD_RELATIVE;
     opc->osd_item.rel_w.num = 0;
-    opc->osd_item.rel_h.type = REL;
+    opc->osd_item.rel_h.type = OSD_RELATIVE;
     opc->osd_item.rel_h.num = 0;
 
     meth->set_attr = set_std_osd_attr;
@@ -1845,9 +1845,9 @@ static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *met
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
     /*Value of 0% is stored in relative attributes as ATTR_REL_RELSHIFT, we use this value as "width/height unset" flag */
-    opc->osd_item.rel_w.type = REL;
+    opc->osd_item.rel_w.type = OSD_RELATIVE;
     opc->osd_item.rel_w.num = 0;
-    opc->osd_item.rel_h.type = REL;
+    opc->osd_item.rel_h.type = OSD_RELATIVE;
     opc->osd_item.rel_h.num = 0;
     meth->set_attr = set_std_osd_attr;
     opc->spec_set_attr_func = osd_button_set_attr;
@@ -2032,16 +2032,16 @@ static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = -80;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 70;
     opc->osd_item.navit = nav;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 70;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;  // FIXME may not be needed
     opc->osd_item.meth.draw = osd_draw_cast(osd_navigation_status_draw);
     meth->set_attr = set_std_osd_attr;
@@ -2181,16 +2181,16 @@ static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_meth
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = -80;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 70;
     opc->osd_item.navit = nav;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 70;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_nav_next_turn_draw);
     meth->set_attr = set_std_osd_attr;
@@ -2311,13 +2311,13 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
     char *command = "announcer_toggle()";
 
     opc->data = (void*)this;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 48;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 48;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = -64;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 76;
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_nav_toggle_announcer_draw);
@@ -2598,7 +2598,7 @@ static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods 
     opc->osd_item.w = 60;
     opc->osd_item.h = 80;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_speed_cam_draw);
     meth->set_attr = set_std_osd_attr;
@@ -2850,13 +2850,13 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num=-80;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num=20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num=60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num=60;
     opc->osd_item.navit = nav;
     this->active=-1;
@@ -3485,16 +3485,16 @@ static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = -80;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = 20;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 20;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
     meth->set_attr = set_std_osd_attr;
@@ -3598,16 +3598,16 @@ static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = -80;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
     opc->osd_item.navit = nav;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 40;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_gps_status_draw);
     meth->set_attr = set_std_osd_attr;
@@ -3707,16 +3707,16 @@ static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *me
     struct attr *attr;
 
     opc->data = (void*)this;
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = -80;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 40;
     opc->osd_item.navit = nav;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_volume_draw);
     meth->set_attr = set_std_osd_attr;
@@ -3878,7 +3878,7 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
 
     opc->data = (void*)this;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_scale_draw);
@@ -3984,15 +3984,15 @@ static struct osd_priv *osd_auxmap_new(struct navit *nav, struct osd_methods *me
     struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
     opc->data = (void*)this;
 
-    opc->osd_item.rel_x.type = PIXELS;
+    opc->osd_item.rel_x.type = OSD_PIXELS;
     opc->osd_item.rel_x.num = 20;
-    opc->osd_item.rel_y.type = PIXELS;
+    opc->osd_item.rel_y.type = OSD_PIXELS;
     opc->osd_item.rel_y.num = -80;
-    opc->osd_item.rel_w.type = PIXELS;
+    opc->osd_item.rel_w.type = OSD_PIXELS;
     opc->osd_item.rel_w.num = 60;
-    opc->osd_item.rel_h.type = PIXELS;
+    opc->osd_item.rel_h.type = OSD_PIXELS;
     opc->osd_item.rel_h.num = 40;
-    opc->osd_item.font_size.type = PIXELS;
+    opc->osd_item.font_size.type = OSD_PIXELS;
     opc->osd_item.font_size.num = 200;
     meth->set_attr = set_std_osd_attr;
 

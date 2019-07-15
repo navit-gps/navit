@@ -231,15 +231,15 @@ attr_new_from_text(const char *name, const char *value) {
         if (attr >= attr_type_osd_coordinate_begin && attr <= attr_type_osd_coordinate_end) {
             char * tail;
             ret->u.osd_display_coordinate = g_malloc(sizeof(*(ret->u.osd_display_coordinate)));
-            ret->u.osd_display_coordinate->type = PIXELS;
+            ret->u.osd_display_coordinate->type = OSD_PIXELS;
             ret->u.osd_display_coordinate->num=strtod(value,&tail);
             if (*tail) {
                 if(!strcmp(tail, "%")) {
-                    ret->u.osd_display_coordinate->type=REL;
+                    ret->u.osd_display_coordinate->type=OSD_RELATIVE;
                 } else if(!strcmp(tail, "in")) {
-                    ret->u.osd_display_coordinate->type=IN;
+                    ret->u.osd_display_coordinate->type=OSD_INCHES;
                 } else if(!strcmp(tail, "mm")) {
-                    ret->u.osd_display_coordinate->type=MM;
+                    ret->u.osd_display_coordinate->type=OSD_MILLIMETERS;
                 } else {
                     dbg(lvl_error,
                         "Incorrect value '%s' for attribute '%s';  expected a number (pixels), value in inches, value in mm, or a relative value in percent. "
@@ -466,16 +466,16 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     }
     if (type >= attr_type_osd_coordinate_begin && type <= attr_type_osd_coordinate_end) {
         switch(attr->u.osd_display_coordinate->type) {
-        case PIXELS:
+        case OSD_PIXELS:
             return g_strdup_printf("%f",attr->u.osd_display_coordinate->num);
             break;
-        case REL:
+        case OSD_RELATIVE:
             return g_strdup_printf("%f %%",attr->u.osd_display_coordinate->num);
             break;
-        case IN:
+        case OSD_INCHES:
             return g_strdup_printf("%f in",attr->u.osd_display_coordinate->num);
             break;
-        case MM:
+        case OSD_MILLIMETERS:
             return g_strdup_printf("%f mm",attr->u.osd_display_coordinate->num);
             break;
         }

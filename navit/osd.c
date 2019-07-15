@@ -188,11 +188,11 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
         h -= (padding->top + padding->bottom);
     }
 
-    if(!((item->rel_w.type == REL) && (item->rel_w.num == 0)))
+    if(!((item->rel_w.type == OSD_RELATIVE) && (item->rel_w.num == 0)))
         item->w=osd_rel2real(navit_get_graphics(item->navit), &(item->rel_w), w, 1);
     if(item->w<0)
         item->w=0;
-    if(!((item->rel_h.type == REL) && (item->rel_h.num == 0)))
+    if(!((item->rel_h.type == OSD_RELATIVE) && (item->rel_h.num == 0)))
         item->h=osd_rel2real(navit_get_graphics(item->navit),&(item->rel_h), h, 1);
     if(item->h<0)
         item->h=0;
@@ -511,11 +511,11 @@ int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * att
             whole, treat_neg_as_rel, dpi);
     }
 
-    if (attrval->type == REL)
+    if (attrval->type == OSD_RELATIVE)
         result = (((double)whole) * attrval->num)/ ((double)100);
-    else if (attrval->type == MM) {
+    else if (attrval->type == OSD_MILLIMETERS) {
         result = osd_mm_to_in(attrval->num) * dpi;
-    } else if (attrval->type == IN) {
+    } else if (attrval->type == OSD_INCHES) {
         result = attrval->num * dpi;
     } else
         result = attrval->num;

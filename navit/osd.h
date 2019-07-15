@@ -41,10 +41,10 @@ struct osd_item_methods {
 };
 
 typedef enum {
-    PIXELS=0, /** number is in pixels. No calculation required */
-    MM, /** number is in mm. Use dpi value to calculate to pixels */
-    IN, /** number is in inches. Use dpi value to calculate to pixels */
-    REL /** number is in % display space. Use available pixels to calculate to pixels */
+    OSD_PIXELS=0, /** number is in pixels. No calculation required */
+    OSD_MILLIMETERS, /** number is in mm. Use dpi value to calculate to pixels */
+    OSD_INCHES, /** number is in inches. Use dpi value to calculate to pixels */
+    OSD_RELATIVE /** number is in % display space. Use available pixels to calculate to pixels */
 } osd_display_coordinate_type;
 
 struct osd_display_coordinate {
