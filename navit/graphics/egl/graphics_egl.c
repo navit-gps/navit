@@ -36,6 +36,7 @@
 #include "callback.h"
 #include "keys.h"
 #include "window.h"
+#include "osd.h"
 #include "navit/font/freetype/font_freetype.h"
 
 #include "SDL_image.h"
@@ -1255,10 +1256,10 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
 
     this->width = SCREEN_WIDTH;
     if ((attr = attr_search(attrs, NULL, attr_w)))
-        this->width = attr->u.num;
+        this->width = attr->u.osd_display_coordinate->num;
     this->height = SCREEN_HEIGHT;
     if ((attr = attr_search(attrs, NULL, attr_h)))
-        this->height = attr->u.num;
+        this->height = attr->u.osd_display_coordinate->num;
     this->timeout = 100;
     if ((attr = attr_search(attrs, NULL, attr_timeout)))
         this->timeout = attr->u.num;

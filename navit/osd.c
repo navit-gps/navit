@@ -114,32 +114,32 @@ void osd_wrap_point(struct point *p, struct navit *nav) {
 
 }
 
-static void osd_evaluate_command(struct osd_item *this, struct navit *nav) {
+static void osd_evaluate_command(struct osd_item *this_, struct navit *nav) {
     struct attr navit;
     navit.type=attr_navit;
     navit.u.navit=nav;
-    dbg(lvl_debug, "calling command '%s'", this->command);
-    command_evaluate(&navit, this->command);
+    dbg(lvl_debug, "calling command '%s'", this_->command);
+    command_evaluate(&navit, this_->command);
 }
 
-void osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p) {
+void osd_std_click(struct osd_item *this_, struct navit *nav, int pressed, int button, struct point *p) {
     int click_is_outside_item;
-    struct point bp = this->p;
-    if (!this->command || !this->command[0])
+    struct point bp = this_->p;
+    if (!this_->command || !this_->command[0])
         return;
     osd_wrap_point(&bp, nav);
-    click_is_outside_item = p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h;
-    if ((click_is_outside_item || !this->configured) && !this->pressed)
+    click_is_outside_item = p->x < bp.x || p->y < bp.y || p->x > bp.x + this_->w || p->y > bp.y + this_->h;
+    if ((click_is_outside_item || !this_->configured) && !this_->pressed)
         return;
     if (button != 1)
         return;
-    if (!!pressed == !!this->pressed)
+    if (!!pressed == !!this_->pressed)
         return;
     if (navit_ignore_button(nav))
         return;
-    this->pressed = pressed;
-    if (pressed && this->command)
-        osd_evaluate_command(this, nav);
+    this_->pressed = pressed;
+    if (pressed && this_->command)
+        osd_evaluate_command(this_, nav);
 }
 
 void osd_std_resize(struct osd_item *item) {
@@ -189,15 +189,15 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
     }
 
     if(!((item->rel_w.type == REL) && (item->rel_w.num == 0)))
-        item->w=osd_rel2real(item->navit, &(item->rel_w), w, 1);
+        item->w=osd_rel2real(navit_get_graphics(item->navit), &(item->rel_w), w, 1);
     if(item->w<0)
         item->w=0;
     if(!((item->rel_h.type == REL) && (item->rel_h.num == 0)))
-        item->h=osd_rel2real(item->navit,&(item->rel_h), h, 1);
+        item->h=osd_rel2real(navit_get_graphics(item->navit),&(item->rel_h), h, 1);
     if(item->h<0)
         item->h=0;
-    item->p.x=osd_rel2real(item->navit, &(item->rel_x), w, 1);
-    item->p.y=osd_rel2real(item->navit, &(item->rel_y), h, 1);
+    item->p.x=osd_rel2real(navit_get_graphics(item->navit), &(item->rel_x), w, 1);
+    item->p.y=osd_rel2real(navit_get_graphics(item->navit), &(item->rel_y), h, 1);
 
     /* add left and top padding to item->p */
     if (padding) {
@@ -492,21 +492,24 @@ static inline double osd_mm_to_in(double mm) {
 /**
  * @brief Derive absolute value from relative attribute, given value of the whole range.
  *
- * @param nav navit handle to get screen dpi value.
+ * @param gra graphics handle to get screen dpi value.
  * @param attrval Value of u.osd_display_coordinate member of attribute capable of holding display coordinates.
  * @param whole Range counted as 100%.
  * @param treat_neg_as_rel Replace negative absolute values with whole+attr.u.num.
  *
  * @return Absolute value corresponding to given relative value.
  */
-int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel) {
+int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel) {
     int result;
-    double dpi;
+    double dpi = 75;
 
-    /* get graphics handle if one */
-    struct graphics *navit_gr = navit_get_graphics(nav);
-    /* get screen dpi value */
-    dpi = graphics_get_dpi(navit_gr);
+    if(gra != NULL) {
+        /* get screen dpi value */
+        dpi = graphics_get_dpi(gra);
+    } else {
+        dbg(lvl_error, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi NULL (%f)", attrval->type, attrval->num,
+            whole, treat_neg_as_rel, dpi);
+    }
 
     if (attrval->type == REL)
         result = (((double)whole) * attrval->num)/ ((double)100);
@@ -518,7 +521,8 @@ int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrva
         result = attrval->num;
     if(treat_neg_as_rel && (result <0) )
         result = whole+result;
-    dbg(lvl_debug, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi %f, -> %d", attrval->type, attrval->num,
+    dbg(lvl_warning, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi %f, -> %d", attrval->type,
+        attrval->num,
         whole, treat_neg_as_rel, dpi, result);
     return result;
 }

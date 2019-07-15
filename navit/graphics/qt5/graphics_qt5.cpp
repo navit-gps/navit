@@ -35,6 +35,7 @@ extern "C" {
 #include "graphics.h"
 #include "plugin.h"
 #include "window.h"
+#include "osd.h"
 }
 
 #include "event_qt5.h"
@@ -1042,11 +1043,11 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
             geomet = primary->availableGeometry();
         }
         /* check for height */
-        if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))
-            geomet.setHeight(h->u.num);
+        if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.osd_display_coordinate->num > 100))
+            geomet.setHeight(h->u.osd_display_coordinate->num);
         /* check for width */
-        if ((w = attr_search(attrs, NULL, attr_w)) && (w->u.num > 100))
-            geomet.setWidth(w->u.num);
+        if ((w = attr_search(attrs, NULL, attr_w)) && (w->u.osd_display_coordinate->num > 100))
+            geomet.setWidth(w->u.osd_display_coordinate->num);
 #if USE_QML
         if (graphics_priv->window != NULL) {
             graphics_priv->window->resize(geomet.width(), geomet.height());

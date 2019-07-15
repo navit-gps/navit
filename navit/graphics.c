@@ -2131,7 +2131,14 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             break;
         case element_icon:
             if (count) {
+                int x, y;
+                x = osd_rel2real(gra, &e->u.icon.x, 0, 0);
+                y = osd_rel2real(gra, &e->u.icon.y, 0, 0);
                 if (!img || item_is_custom_poi(di->item)) {
+                    int w, h;
+                    //BUG: get maximum width for % usage
+                    w = osd_rel2real(gra, &e->u.icon.width, 0, 0);
+                    h = osd_rel2real(gra, &e->u.icon.height, 0, 0);
                     if (item_is_custom_poi(di->item)) {
                         char *icon;
                         char *src;
@@ -2145,7 +2152,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                         g_free(icon);
                     } else
                         path=graphics_icon_path(e->u.icon.src);
-                    img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+                    img=graphics_image_new_scaled_rotated(gra, path, w, h, e->u.icon.rotation);
                     if (img)
                         dc->img=img;
                     else
@@ -2153,9 +2160,9 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                     g_free(path);
                 }
                 if (img) {
-                    if (e->u.icon.x != -1 || e->u.icon.y != -1) {
-                        p.x=pa[0].x - e->u.icon.x;
-                        p.y=pa[0].y - e->u.icon.y;
+                    if (x != -1 || y != -1) {
+                        p.x=pa[0].x - x;
+                        p.y=pa[0].y - y;
                     } else {
                         p.x=pa[0].x - img->hot.x;
                         p.y=pa[0].y - img->hot.y;

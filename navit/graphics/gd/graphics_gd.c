@@ -31,6 +31,7 @@
 #include "window.h"
 #include "navit.h"
 #include "debug.h"
+#include "osd.h"
 #include "navit/font/freetype/font_freetype.h"
 
 
@@ -279,7 +280,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
+        int *w, int *h, struct point *hot, int rotation) {
     FILE *file;
     struct graphics_image_priv *ret=NULL;
     gdImagePtr im=NULL;
@@ -376,7 +378,8 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 }
 
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     struct font_freetype_text *t;
     struct font_freetype_glyph *g, **gp;
     gdImagePtr im;
@@ -428,7 +431,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     gr->freetype_methods.text_destroy(t);
 }
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
     gdImageCopy(gr->im, img->im, p->x, p->y, 0, 0, img->im->sx, img->im->sy);
 }
 
@@ -507,7 +511,8 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     }
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound);
 
 static void add_overlays(struct graphics_priv *overlay, gdImagePtr im) {
     while (overlay) {
@@ -656,8 +661,8 @@ static int set_attr_do(struct graphics_priv *gr, struct attr *attr, int init) {
     char *s,*c,*n,*p;
     switch (attr->type) {
     case attr_w:
-        if (gr->w != attr->u.num) {
-            gr->w=attr->u.num;
+        if (gr->w != attr->u.osd_display_coordinate->num) {
+            gr->w=attr->u.osd_display_coordinate->num;
             if (!init) {
                 if (gr->im)
                     image_destroy(gr);
@@ -667,8 +672,8 @@ static int set_attr_do(struct graphics_priv *gr, struct attr *attr, int init) {
         }
         break;
     case attr_h:
-        if (gr->h != attr->u.num) {
-            gr->h=attr->u.num;
+        if (gr->h != attr->u.osd_display_coordinate->num) {
+            gr->h=attr->u.osd_display_coordinate->num;
             if (!init) {
                 if (gr->im)
                     image_destroy(gr);
@@ -756,7 +761,8 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h, int wraparound) {
     struct font_priv * (*font_freetype_new)(void *meth);
     struct graphics_priv *ret;
 
@@ -784,7 +790,8 @@ static void emit_callback(struct graphics_priv *priv) {
 }
 
 
-static struct graphics_priv *graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct font_priv * (*font_freetype_new)(void *meth);
     struct graphics_priv *ret;
     event_request_system("glib","graphics_gd_new");
@@ -794,7 +801,8 @@ static struct graphics_priv *graphics_gd_new(struct navit *nav, struct graphics_
     *meth=graphics_methods;
     ret=g_new0(struct graphics_priv, 1);
     font_freetype_new(&ret->freetype_methods);
-    meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
+    meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int,
+                    int))ret->freetype_methods.font_new;
     meth->get_text_bbox=ret->freetype_methods.get_text_bbox;
     ret->cb=callback_new_attr_1(callback_cast(emit_callback), attr_navit, ret);
     navit_add_callback(nav, ret->cb);

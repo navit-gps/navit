@@ -32,6 +32,7 @@
 #include "item.h"
 #include "attr.h"
 #include "callback.h"
+#include "osd.h"
 #include "font/freetype/font_freetype.h"
 
 #include "SDL.h"
@@ -1356,9 +1357,9 @@ static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics
 #endif
 
     if ((attr=attr_search(attrs, NULL, attr_w)))
-        w=attr->u.num;
+        w=attr->u.osd_display_coordinate->num;
     if ((attr=attr_search(attrs, NULL, attr_h)))
-        h=attr->u.num;
+        h=attr->u.osd_display_coordinate->num;
     if ((attr=attr_search(attrs, NULL, attr_bpp)))
         this->video_bpp=attr->u.num;
     if ((attr=attr_search(attrs, NULL, attr_flags))) {

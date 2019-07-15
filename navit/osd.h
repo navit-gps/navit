@@ -81,7 +81,7 @@ struct osd;
 struct osd *osd_new(struct attr *parent, struct attr **attrs);
 int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out);
 void osd_wrap_point(struct point *p, struct navit *nav);
-void osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p);
+void osd_std_click(struct osd_item *this_, struct navit *nav, int pressed, int button, struct point *p);
 void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags);
 void osd_std_config(struct osd_item *item, struct navit *navit);
 void osd_set_keypress(struct navit *nav, struct osd_item *item);
@@ -92,7 +92,7 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h);
 void osd_fill_with_bgcolor(struct osd_item *item);
 int osd_set_attr(struct osd *osd, struct attr* attr);
 int osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel);
+int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel);
 /* end of prototypes */
 
 #endif

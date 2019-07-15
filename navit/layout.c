@@ -26,6 +26,7 @@
 #include "coord.h"
 #include "debug.h"
 #include "navit.h"
+#include "osd.h"
 
 /**
  * @brief Create a new layout object and attach it to a navit parent
@@ -188,8 +189,8 @@ cursor_new(struct attr *parent, struct attr **attrs) {
         return NULL;
 
     this=g_new0(struct cursor,1);
-    this->w=w->u.num;
-    this->h=h->u.num;
+    this->w=*(w->u.osd_display_coordinate);
+    this->h=*(h->u.osd_display_coordinate);
     name=attr_search(attrs, NULL, attr_name);
     if (name)
         this->name=g_strdup(name->u.str);
@@ -534,21 +535,21 @@ icon_new(struct attr *parent, struct attr **attrs) {
     e->type=element_icon;
     e->u.icon.src=(char *)(e+1);
     if ((w=attr_search(attrs, NULL, attr_w)))
-        e->u.icon.width=w->u.num;
+        e->u.icon.width=*(w->u.osd_display_coordinate);
     else
-        e->u.icon.width=-1;
+        e->u.icon.width.num=-1;
     if ((h=attr_search(attrs, NULL, attr_h)))
-        e->u.icon.height=h->u.num;
+        e->u.icon.height=*(h->u.osd_display_coordinate);
     else
-        e->u.icon.height=-1;
+        e->u.icon.height.num=-1;
     if ((x=attr_search(attrs, NULL, attr_x)))
-        e->u.icon.x=x->u.num;
+        e->u.icon.x=*(x->u.osd_display_coordinate);
     else
-        e->u.icon.x=-1;
+        e->u.icon.x.num=-1;
     if ((y=attr_search(attrs, NULL, attr_y)))
-        e->u.icon.y=y->u.num;
+        e->u.icon.y=*(y->u.osd_display_coordinate);
     else
-        e->u.icon.y=-1;
+        e->u.icon.y.num=-1;
     if ((rotation=attr_search(attrs, NULL, attr_rotation)))
         e->u.icon.rotation=rotation->u.num;
     strcpy(e->u.icon.src,src->u.str);

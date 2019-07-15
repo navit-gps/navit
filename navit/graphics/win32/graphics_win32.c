@@ -19,6 +19,7 @@
 #include "support/win32/ConvertUTF.h"
 #include "profile.h"
 #include "keys.h"
+#include "osd.h"
 
 #ifdef HAVE_API_WIN32_CE
 #include "libc.h"
@@ -1521,16 +1522,16 @@ static struct graphics_priv* graphics_win32_new( struct navit *nav, struct graph
         this_->frame=attr->u.num;
     this_->x=0;
     if ((attr=attr_search(attrs, NULL, attr_x)))
-        this_->x=attr->u.num;
+        this_->x=attr->u.osd_display_coordinate->num;
     this_->y=0;
     if ((attr=attr_search(attrs, NULL, attr_y)))
-        this_->y=attr->u.num;
+        this_->y=attr->u.osd_display_coordinate->num;
     this_->width=792;
     if ((attr=attr_search(attrs, NULL, attr_w)))
-        this_->width=attr->u.num;
+        this_->width=attr->u.osd_display_coordinate->num;
     this_->height=547;
     if ((attr=attr_search(attrs, NULL, attr_h)))
-        this_->height=attr->u.num;
+        this_->height=attr->u.osd_display_coordinate->num;
     this_->overlays = NULL;
     this_->cbl=cbl;
     this_->parent = NULL;

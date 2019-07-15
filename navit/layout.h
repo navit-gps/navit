@@ -22,6 +22,8 @@
 
 #include "item.h"
 #include "color.h"
+#include "point.h"
+#include "osd.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,81 +31,81 @@ extern "C" {
 
 
 struct element {
-	enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
-	struct color color;
-	int text_size;
-	union {
-		struct element_point {
-			char stub;
-		} point;
-		struct element_polyline {
-			int width;
-			int directed;
-			int dash_num;
-			int offset;
-			unsigned char dash_table[4];
-		} polyline;
-		struct element_polygon {
-			char stub;
-		} polygon;
-		struct element_circle {
-			int width;
-			int radius;
-			struct color background_color;
-		} circle;
-		struct element_icon {
-			char *src;
-			int width;
-			int height;
-			int rotation;
-			int x;
-			int y;
-		} icon;
-		struct element_text {
-			struct color background_color;
-		} text;
-	} u;
-	int coord_count;
-	struct coord *coord;
+    enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
+    struct color color;
+    int text_size;
+    union {
+        struct element_point {
+            char stub;
+        } point;
+        struct element_polyline {
+            int width;
+            int directed;
+            int dash_num;
+            int offset;
+            unsigned char dash_table[4];
+        } polyline;
+        struct element_polygon {
+            char stub;
+        } polygon;
+        struct element_circle {
+            int width;
+            int radius;
+            struct color background_color;
+        } circle;
+        struct element_icon {
+            char *src;
+            struct osd_display_coordinate width;
+            struct osd_display_coordinate height;
+            int rotation;
+            struct osd_display_coordinate x;
+            struct osd_display_coordinate y;
+        } icon;
+        struct element_text {
+            struct color background_color;
+        } text;
+    } u;
+    int coord_count;
+    struct coord *coord;
 };
 
 
 struct itemgra {
-	struct range order,sequence_range,speed_range,angle_range;
-	GList *type;
-	GList *elements;
+    struct range order,sequence_range,speed_range,angle_range;
+    GList *type;
+    GList *elements;
 };
 
 struct layer {
-	NAVIT_OBJECT
-	struct navit *navit;
-	char *name;
-	int details;
-	GList *itemgras;
-	int active;
-	struct layer *ref;
+    NAVIT_OBJECT
+    struct navit *navit;
+    char *name;
+    int details;
+    GList *itemgras;
+    int active;
+    struct layer *ref;
 };
 
 struct cursor {
-	struct attr **attrs;
-	struct range *sequence_range;
-	char *name;
-	int w,h;
-	int interval;
+    struct attr **attrs;
+    struct range *sequence_range;
+    char *name;
+    struct osd_display_coordinate w,h;
+    int interval;
 };
 
 struct layout {
-	NAVIT_OBJECT
-	struct navit *navit;
-	char *name;
-	char* dayname;
-	char* nightname;
-	char *font;
-	struct color color;
-	GList *layers;
-	GList *cursors;
-	int order_delta;
-	int active;
+    NAVIT_OBJECT
+    struct navit *navit;
+    char *name;
+    char* dayname;
+    char* nightname;
+    char *font;
+    struct color color;
+    GList *layers;
+    GList *cursors;
+    int order_delta;
+    int active;
 };
 
 /* prototypes */

@@ -34,6 +34,7 @@
 #include "navit/window.h"
 #include "navit/keys.h"
 #include "navit/navit.h"
+#include "navit/osd.h"
 
 #include <qglobal.h>
 #if QT_VERSION < 0x040000
@@ -92,9 +93,9 @@ class RenderArea;
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct graphics_gc_priv {
-	QPen *pen;
-	QBrush *brush;
-	struct color c;
+    QPen *pen;
+    QBrush *brush;
+    struct color c;
 };
 
 //##############################################################################################################
@@ -104,34 +105,34 @@ struct graphics_gc_priv {
 //##############################################################################################################
 struct graphics_priv {
 #ifdef HAVE_QPE
-	QPEApplication *app;
+    QPEApplication *app;
 #else
-	QApplication *app;
+    QApplication *app;
 #endif
-	RenderArea *widget;
-	QPainter *painter;
-	struct graphics_gc_priv *background_gc;
-	unsigned char rgba[4];
-	enum draw_mode_num mode;
-	struct graphics_priv *parent,*overlays,*next;
-	struct point p,pclean;
-	int cleanup;
-	int overlay_disable;
-	int wraparound;
+    RenderArea *widget;
+    QPainter *painter;
+    struct graphics_gc_priv *background_gc;
+    unsigned char rgba[4];
+    enum draw_mode_num mode;
+    struct graphics_priv *parent,*overlays,*next;
+    struct point p,pclean;
+    int cleanup;
+    int overlay_disable;
+    int wraparound;
 #ifdef QT_QPAINTER_USE_FREETYPE
-	struct font_priv * (*font_freetype_new)(void *meth);
-	struct font_freetype_methods freetype_methods;
+    struct font_priv * (*font_freetype_new)(void *meth);
+    struct font_freetype_methods freetype_methods;
 #endif
-	int w,h,flags;
-	struct navit* nav;
-	char *window_title;
+    int w,h,flags;
+    struct navit* nav;
+    char *window_title;
 };
 
 void qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev);
 struct event_watch {
-	        QSocketNotifier *sn;
-		        struct callback *cb;
-			        int fd;
+    QSocketNotifier *sn;
+    struct callback *cb;
+    int fd;
 };
 
 void event_qt_remove_timeout(struct event_timeout *ev);

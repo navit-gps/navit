@@ -324,14 +324,22 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
     }
 
     if (cursor && this_->gra && this_->cursor) {
-        this_->cursor_pnt.x+=(this_->cursor->w - cursor->w)/2;
-        this_->cursor_pnt.y+=(this_->cursor->h - cursor->h)/2;
-        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 0);
+        int w, h, thisw, thish;
+        thisw = osd_rel2real(this_->gra, &(this_->cursor->w), 0, 0);
+        thish = osd_rel2real(this_->gra, &(this_->cursor->h), 0, 0);
+        w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
+        h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
+        this_->cursor_pnt.x+=(thisw - w)/2;
+        this_->cursor_pnt.y+=(thish - h)/2;
+        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, w, h, 0);
     }
 
     if (cursor) {
-        sc.x=cursor->w/2;
-        sc.y=cursor->h/2;
+        int w, h;
+        w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
+        h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
+        sc.x=w/2;
+        sc.y=h/2;
         if (!this_->cursor && this_->gra)
             graphics_overlay_disable(this_->gra, 0);
     } else {
@@ -354,6 +362,7 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
  * @param speed The speed of the vehicle.
  */
 void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
+    int thisw, thish;
     if (angle < 0)
         angle+=360;
     dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d", this_, gra, pnt, angle, speed);
@@ -363,11 +372,13 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
     this_->speed=speed;
     if (!this_->cursor)
         return;
-    this_->cursor_pnt.x-=this_->cursor->w/2;
-    this_->cursor_pnt.y-=this_->cursor->h/2;
+    thisw = osd_rel2real(gra, &(this_->cursor->w), 0, 0);
+    thish = osd_rel2real(gra, &(this_->cursor->h), 0, 0);
+    this_->cursor_pnt.x-=thisw/2;
+    this_->cursor_pnt.y-=thish/2;
     if (!this_->gra) {
         struct color c;
-        this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->cursor->w, this_->cursor->h, 0);
+        this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, thisw, thish, 0);
         if (this_->gra) {
             graphics_init(this_->gra);
             this_->bg=graphics_gc_new(this_->gra);
@@ -404,6 +415,7 @@ static void vehicle_set_default_name(struct vehicle *this_) {
 static void vehicle_draw_do(struct vehicle *this_) {
     struct point p;
     struct cursor *cursor=this_->cursor;
+    int w, h;
     int speed=this_->speed;
     int angle=this_->angle;
     int sequence=this_->sequence;
@@ -424,7 +436,9 @@ static void vehicle_draw_do(struct vehicle *this_) {
     graphics_draw_mode(this_->gra, draw_mode_begin);
     p.x=0;
     p.y=0;
-    graphics_draw_rectangle(this_->gra, this_->bg, &p, cursor->w, cursor->h);
+    w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
+    h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
+    graphics_draw_rectangle(this_->gra, this_->bg, &p, w, h);
     attr=cursor->attrs;
     while (*attr) {
         if ((*attr)->type == attr_itemgra) {
