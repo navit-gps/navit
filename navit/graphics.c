@@ -51,6 +51,7 @@
 #include "callback.h"
 #include "file.h"
 #include "event.h"
+#include "osd.h"
 
 
 //##############################################################################################################
@@ -203,7 +204,7 @@ static int graphics_set_attr_do(struct graphics *gra, struct attr *attr) {
         gra->contrast=attr->u.num;
         break;
     case attr_font_size:
-        gra->font_size=attr->u.num;
+        gra->font_size=attr->u.osd_display_coordinate->num;
         return 1;
     default:
         return 0;
@@ -2939,5 +2940,17 @@ static void graphics_process_selection(struct graphics *gra, struct displaylist 
         graphics_process_selection_item(dl, item);
         curr=g_list_next(curr);
     }
+}
+
+/**
+ * @brief get display resolution in DPI
+ * This method returns the native display density in DPI
+ * @param gra graphics handle
+ * @returns dpi value. May be fraction therefore double.
+ */
+double graphics_get_dpi(struct graphics *gra) {
+    if (!gra->meth.get_dpi)
+        return 96;
+    return (gra->meth.get_dpi(gra->priv));
 }
 

@@ -188,16 +188,16 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
         h -= (padding->top + padding->bottom);
     }
 
-    if(item->rel_w!=ATTR_REL_RELSHIFT)
-        item->w=attr_rel2real(item->rel_w, w, 1);
+    if(!((item->rel_w.type == REL) && (item->rel_w.num == 0)))
+        item->w=osd_rel2real(item->navit, &(item->rel_w), w, 1);
     if(item->w<0)
         item->w=0;
-    if(item->rel_h!=ATTR_REL_RELSHIFT)
-        item->h=attr_rel2real(item->rel_h, h, 1);
+    if(!((item->rel_h.type == REL) && (item->rel_h.num == 0)))
+        item->h=osd_rel2real(item->navit,&(item->rel_h), h, 1);
     if(item->h<0)
         item->h=0;
-    item->p.x=attr_rel2real(item->rel_x, w, 1);
-    item->p.y=attr_rel2real(item->rel_y, h, 1);
+    item->p.x=osd_rel2real(item->navit, &(item->rel_x), w, 1);
+    item->p.y=osd_rel2real(item->navit, &(item->rel_y), h, 1);
 
     /* add left and top padding to item->p */
     if (padding) {
@@ -312,27 +312,27 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
 
     attr = attr_search(attrs, NULL, attr_w);
     if (attr) {
-        item->rel_w = attr->u.num;
+        item->rel_w = *(attr->u.osd_display_coordinate);
     }
 
     attr = attr_search(attrs, NULL, attr_h);
     if (attr) {
-        item->rel_h = attr->u.num;
+        item->rel_h = *(attr->u.osd_display_coordinate);
     }
 
     attr = attr_search(attrs, NULL, attr_x);
     if (attr) {
-        item->rel_x = attr->u.num;
+        item->rel_x = *(attr->u.osd_display_coordinate);
     }
 
     attr = attr_search(attrs, NULL, attr_y);
     if (attr) {
-        item->rel_y = attr->u.num;
+        item->rel_y = *(attr->u.osd_display_coordinate);
     }
 
     attr = attr_search(attrs, NULL, attr_font_size);
     if (attr)
-        item->font_size = attr->u.num;
+        item->font_size = *(attr->u.osd_display_coordinate);
 
     attr=attr_search(attrs, NULL, attr_background_color);
     if (attr)
@@ -442,7 +442,7 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
     graphics_gc_set_foreground(item->graphic_fg, &item->color_fg);
 
     if (item->flags & ITEM_HAS_TEXT) {
-        item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size, 1);
+        item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size.num, 1);
         item->graphic_fg_text = graphics_gc_new(item->gr);
         graphics_gc_set_foreground(item->graphic_fg_text, &item->text_color);
     }
@@ -477,3 +477,48 @@ struct object_func osd_func = {
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,
 };
+
+/**
+ * @brief Convert mm to inches
+ *
+ * @param Value in mm
+ *
+ * @return Value in inches
+ */
+static inline double osd_mm_to_in(double mm) {
+    return (mm * 0.03937007874);
+}
+
+/**
+ * @brief Derive absolute value from relative attribute, given value of the whole range.
+ *
+ * @param nav navit handle to get screen dpi value.
+ * @param attrval Value of u.osd_display_coordinate member of attribute capable of holding display coordinates.
+ * @param whole Range counted as 100%.
+ * @param treat_neg_as_rel Replace negative absolute values with whole+attr.u.num.
+ *
+ * @return Absolute value corresponding to given relative value.
+ */
+int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel) {
+    int result;
+    double dpi;
+
+    /* get graphics handle if one */
+    struct graphics *navit_gr = navit_get_graphics(nav);
+    /* get screen dpi value */
+    dpi = graphics_get_dpi(navit_gr);
+
+    if (attrval->type == REL)
+        result = (((double)whole) * attrval->num)/ ((double)100);
+    else if (attrval->type == MM) {
+        result = osd_mm_to_in(attrval->num) * dpi;
+    } else if (attrval->type == IN) {
+        result = attrval->num * dpi;
+    } else
+        result = attrval->num;
+    if(treat_neg_as_rel && (result <0) )
+        result = whole+result;
+    dbg(lvl_error, "attrval->type %d, attrval->num %f, whole %d, neg_as_rel %d, dpi %f, -> %d", attrval->type, attrval->num,
+        whole, treat_neg_as_rel, dpi, result);
+    return result;
+}

@@ -79,6 +79,7 @@
 #include "debug.h"
 #include "fib.h"
 #include "types.h"
+#include "osd.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_html.h"
@@ -1642,6 +1643,7 @@ char *gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
             break;
         case '\\':
             p=*pattern++;
+        // fall through
         default:
             *r++=p;
         }
@@ -1663,6 +1665,7 @@ static int gui_internal_match(const char *pattern, const char *string) {
             break;
         case '\\':
             p=*pattern++;
+        // fall through
         default:
             if (*string++ != p)
                 return 0;
@@ -3195,7 +3198,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
     gui_internal_command_init(this, attrs);
 
     if( (attr=attr_search(attrs,NULL,attr_font_size))) {
-        this->config.font_size=attr->u.num;
+        this->config.font_size=attr->u.osd_display_coordinate->num;
     } else {
         this->config.font_size=-1;
     }

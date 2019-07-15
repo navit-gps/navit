@@ -43,6 +43,7 @@
 #include "util.h"
 #include "types.h"
 #include "xmlconfig.h"
+#include "osd.h"
 
 struct attr_name {
     enum attr_type attr;
@@ -214,7 +215,7 @@ attr_new_from_text(const char *name, const char *value) {
             ret->u.str=g_strdup(value);
             break;
         }
-        if (attr >= attr_type_int_begin && attr < attr_type_rel_abs_begin) {
+        if (attr >= attr_type_int_begin && attr < attr_type_boolean_begin) {
             char *tail;
             if (value[0] == '0' && value[1] == 'x')
                 ret->u.num=strtoul(value, &tail, 0);
@@ -227,28 +228,23 @@ attr_new_from_text(const char *name, const char *value) {
             }
             break;
         }
-        if (attr >= attr_type_rel_abs_begin && attr < attr_type_boolean_begin) {
-            char *tail;
-            int value_is_relative=0;
-            ret->u.num=strtol(value, &tail, 0);
+        if (attr >= attr_type_osd_coordinate_begin && attr <= attr_type_osd_coordinate_end) {
+            char * tail;
+            ret->u.osd_display_coordinate = g_malloc(sizeof(*(ret->u.osd_display_coordinate)));
+            ret->u.osd_display_coordinate->type = PIXELS;
+            ret->u.osd_display_coordinate->num=strtod(value,&tail);
             if (*tail) {
-                if (!strcmp(tail, "%")) {
-                    value_is_relative=1;
+                if(!strcmp(tail, "%")) {
+                    ret->u.osd_display_coordinate->type=REL;
+                } else if(!strcmp(tail, "in")) {
+                    ret->u.osd_display_coordinate->type=IN;
+                } else if(!strcmp(tail, "mm")) {
+                    ret->u.osd_display_coordinate->type=MM;
                 } else {
-                    dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number or a relative value in percent. "
+                    dbg(lvl_error,
+                        "Incorrect value '%s' for attribute '%s';  expected a number (pixels), value in inches, value in mm, or a relative value in percent. "
                         "Defaulting to 0.\n", value, name);
-                    ret->u.num=0;
-                }
-            }
-            if (value_is_relative) {
-                if ((ret->u.num > ATTR_REL_MAXREL) || (ret->u.num < ATTR_REL_MINREL)) {
-                    dbg(lvl_error, "Relative possibly-relative attribute with value out of range: %li", ret->u.num);
-                }
-
-                ret->u.num += ATTR_REL_RELSHIFT;
-            } else {
-                if ((ret->u.num > ATTR_REL_MAXABS) || (ret->u.num < ATTR_REL_MINABS)) {
-                    dbg(lvl_error, "Non-relative possibly-relative attribute with value out of range: %li", ret->u.num);
+                    ret->u.osd_display_coordinate->num=0;
                 }
             }
             break;
@@ -467,6 +463,22 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     }
     if (type >= attr_type_item_type_begin && type <= attr_type_item_type_end) {
         return g_strdup_printf("0x%ld[%s]",attr->u.num,item_to_name(attr->u.num));
+    }
+    if (type >= attr_type_osd_coordinate_begin && type <= attr_type_osd_coordinate_end) {
+        switch(attr->u.osd_display_coordinate->type) {
+        case PIXELS:
+            return g_strdup_printf("%f",attr->u.osd_display_coordinate->num);
+            break;
+        case REL:
+            return g_strdup_printf("%f %%",attr->u.osd_display_coordinate->num);
+            break;
+        case IN:
+            return g_strdup_printf("%f in",attr->u.osd_display_coordinate->num);
+            break;
+        case MM:
+            return g_strdup_printf("%f mm",attr->u.osd_display_coordinate->num);
+            break;
+        }
     }
     if (type == attr_nav_status) {
         return nav_status_to_text(attr->u.num);
@@ -770,6 +782,8 @@ int attr_data_size(struct attr *attr) {
         while (attr->u.attr_types[i++] != attr_none);
         return i*sizeof(enum attr_type);
     }
+    if (attr->type >= attr_type_osd_coordinate_begin && attr->type <= attr_type_osd_coordinate_end)
+        return sizeof(*(attr->u.osd_display_coordinate));
     dbg(lvl_error,"size for %s unknown", attr_to_name(attr->type));
     return 0;
 }
@@ -993,20 +1007,5 @@ int attr_types_contains_default(enum attr_type *types, enum attr_type type, int 
     return attr_types_contains(types, type);
 }
 
-/**
- * @brief Derive absolute value from relative attribute, given value of the whole range.
- *
- * @param attrval Value of u.num member of attribute capable of holding relative values.
- * @param whole Range counted as 100%.
- * @param treat_neg_as_rel Replace negative absolute values with whole+attr.u.num.
- *
- * @return Absolute value corresponding to given relative value.
- */
-int attr_rel2real(int attrval, int whole, int treat_neg_as_rel) {
-    if (attrval > ATTR_REL_MAXABS)
-        return whole * (attrval - ATTR_REL_RELSHIFT)/100;
-    if(treat_neg_as_rel && attrval<0 )
-        return whole+attrval;
-    return attrval;
-}
+
 

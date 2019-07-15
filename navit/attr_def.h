@@ -200,16 +200,6 @@ ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
 ATTR(autozoom_max)
 ATTR(nav_status)
-ATTR2(0x00027500,type_rel_abs_begin)
-/* These attributes are int that can either hold relative or absolute values. See the
- * documentation of ATTR_REL_RELSHIFT for details.
- */
-ATTR(h)
-ATTR(w)
-ATTR(x)
-ATTR(y)
-ATTR(font_size)
-
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
@@ -414,6 +404,19 @@ ATTR(ch_edge)
 ATTR(zipfile_ref_block)
 ATTR(item_id)
 ATTR(pdl_gps_update)
+ATTR2(0x00044000,type_osd_coordinate_begin)
+/** These attributes hold display coordinates and sizes. They may be given in
+ *   -% for relative to scrren width or height,
+ *   -in for size in inches. Obeys dpi value.
+ *   -mm for size in mm. Obeys dpi value.
+ *   in pixels.
+ */
+ATTR(h)
+ATTR(w)
+ATTR(x)
+ATTR(y)
+ATTR(font_size)
+ATTR2(0x0004ffff,type_osd_coordinate_end)
 ATTR2(0x0004ffff,type_special_end)
 ATTR2(0x00050000,type_double_begin)
 ATTR(position_height)

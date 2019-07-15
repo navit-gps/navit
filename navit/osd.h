@@ -28,38 +28,50 @@ struct attr;
 #define DISABLE_OVERLAY 4
 
 struct osd_methods {
-	void (*osd_destroy)(struct osd_priv *osd);
-	int (*set_attr)(struct osd_priv *osd, struct attr* attr);
-	void (*destroy)(struct osd_priv *osd);
-	int (*get_attr)(struct osd_priv *osd, enum attr_type type, struct attr* attr);
+    void (*osd_destroy)(struct osd_priv *osd);
+    int (*set_attr)(struct osd_priv *osd, struct attr* attr);
+    void (*destroy)(struct osd_priv *osd);
+    int (*get_attr)(struct osd_priv *osd, enum attr_type type, struct attr* attr);
 };
 
 #define osd_draw_cast(x) (void (*)(struct osd_priv *osd, struct navit *navit, struct vehicle *v))(x)
 
 struct osd_item_methods {
-	void (*draw)(struct osd_priv *osd, struct navit *navit, struct vehicle *v);
+    void (*draw)(struct osd_priv *osd, struct navit *navit, struct vehicle *v);
+};
+
+typedef enum {
+    PIXELS=0, /** number is in pixels. No calculation required */
+    MM, /** number is in mm. Use dpi value to calculate to pixels */
+    IN, /** number is in inches. Use dpi value to calculate to pixels */
+    REL /** number is in % display space. Use available pixels to calculate to pixels */
+} osd_display_coordinate_type;
+
+struct osd_display_coordinate {
+    double num;
+    osd_display_coordinate_type type;
 };
 
 struct osd_item {
-	struct point p;
-	struct osd_item_methods meth;
-	int flags, w, h, fg_line_width, font_size, osd_configuration, configured;
-	int rel_w, rel_h, rel_x, rel_y;
-	struct color color_bg, color_fg, text_color;
-	struct navit *navit;
-	struct graphics *gr;
-	struct graphics_gc *graphic_bg, *graphic_fg, *graphic_fg_text;
-	struct graphics_font *font;
-	char *font_name;
-	struct callback *cb;
-	struct callback *resize_cb;
-	struct callback *reconfig_cb;
-	struct callback *keypress_cb;
-	int pressed;
-	char *command;
-	struct command_saved *enable_cs;
-	char *accesskey;
-	int do_draw; /**< Whether the item needs to be redrawn. */
+    struct point p;
+    struct osd_item_methods meth;
+    int flags, w, h, fg_line_width,  osd_configuration, configured;
+    struct osd_display_coordinate rel_w, rel_h, rel_x, rel_y, font_size;
+    struct color color_bg, color_fg, text_color;
+    struct navit *navit;
+    struct graphics *gr;
+    struct graphics_gc *graphic_bg, *graphic_fg, *graphic_fg_text;
+    struct graphics_font *font;
+    char *font_name;
+    struct callback *cb;
+    struct callback *resize_cb;
+    struct callback *reconfig_cb;
+    struct callback *keypress_cb;
+    int pressed;
+    char *command;
+    struct command_saved *enable_cs;
+    char *accesskey;
+    int do_draw; /**< Whether the item needs to be redrawn. */
 };
 
 /* prototypes */
@@ -80,6 +92,7 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h);
 void osd_fill_with_bgcolor(struct osd_item *item);
 int osd_set_attr(struct osd *osd, struct attr* attr);
 int osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int osd_rel2real(struct navit *nav, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel);
 /* end of prototypes */
 
 #endif
