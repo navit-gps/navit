@@ -466,6 +466,9 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     }
     if (type >= attr_type_osd_coordinate_begin && type <= attr_type_osd_coordinate_end) {
         switch(attr->u.osd_display_coordinate->type) {
+        case OSD_NOT_SET:
+            return g_strdup_printf("%s","OSD_NOT_SET");
+            break;
         case OSD_PIXELS:
             return g_strdup_printf("%f",attr->u.osd_display_coordinate->num);
             break;

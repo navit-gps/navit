@@ -151,7 +151,7 @@ void osd_std_resize(struct osd_item *item) {
  *
  * If the geometry of the OSD item is specified relative to screen dimensions,
  * this function will set its absolute dimensions accordingly. If relative width
- * or relative height is set to 0% (int value is equal to ATTR_REL_RELSHIFT),
+ * or relative height is not set,
  * object width (height) is not changed here, for button and image osds it means
  * to derive values from the underlying image.
  *
@@ -188,11 +188,11 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
         h -= (padding->top + padding->bottom);
     }
 
-    if(!((item->rel_w.type == OSD_RELATIVE) && (item->rel_w.num == 0)))
+    if(item->rel_w.type != OSD_NOT_SET)
         item->w=osd_rel2real(navit_get_graphics(item->navit), &(item->rel_w), w, 1);
     if(item->w<0)
         item->w=0;
-    if(!((item->rel_h.type == OSD_RELATIVE) && (item->rel_h.num == 0)))
+    if(item->rel_h.type != OSD_NOT_SET)
         item->h=osd_rel2real(navit_get_graphics(item->navit),&(item->rel_h), h, 1);
     if(item->h<0)
         item->h=0;
@@ -517,6 +517,9 @@ int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * att
         result = osd_mm_to_in(attrval->num) * dpi;
     } else if (attrval->type == OSD_INCHES) {
         result = attrval->num * dpi;
+    } else if (attrval->type == OSD_NOT_SET) {
+        result = -1;
+        return result;
     } else
         result = attrval->num;
     if(treat_neg_as_rel && (result <0) )

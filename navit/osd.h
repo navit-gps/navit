@@ -41,6 +41,7 @@ struct osd_item_methods {
 };
 
 typedef enum {
+    OSD_NOT_SET=-1, /** marker for value invalid. Will never be pared from configuration */
     OSD_PIXELS=0, /** number is in pixels. No calculation required */
     OSD_MILLIMETERS, /** number is in mm. Use dpi value to calculate to pixels */
     OSD_INCHES, /** number is in inches. Use dpi value to calculate to pixels */

@@ -1601,7 +1601,7 @@ struct osd_button {
 /**
  * @brief Adjusts width and height of an OSD item to fit the image it displays.
  *
- * A width or height of 0%, stored in relative attributes as {@code ATTR_REL_RELSHIFT}, is used as a flag
+ * A OSD_NOT_SET width or height , stored in relative attributes, is used as a flag
  * indicating that the respective dimension is unset, i.e. determined by the dimensions of its image.
  *
  * If this is the case for height and/or width, the respective dimension will be updated to fit the image.
@@ -1613,9 +1613,9 @@ struct osd_button {
  * @param img The image displayed by the item
  */
 static void osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics_image *img) {
-    if((opc->osd_item.rel_w.type == OSD_RELATIVE) && (opc->osd_item.rel_w.num == 0))
+    if(opc->osd_item.rel_w.type == OSD_NOT_SET)
         opc->osd_item.w=img->width;
-    if((opc->osd_item.rel_h.type == OSD_RELATIVE) && (opc->osd_item.rel_h.num == 0))
+    if(opc->osd_item.rel_h.type == OSD_NOT_SET)
         opc->osd_item.h=img->height;
 }
 
@@ -1757,11 +1757,9 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
     opc->data = (void*)this;
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
-    /*Value of 0% is stored in relative attributes as ATTR_REL_RELSHIFT, we use this value as "width/height unset" flag */
-    opc->osd_item.rel_w.type = OSD_RELATIVE;
-    opc->osd_item.rel_w.num = 0;
-    opc->osd_item.rel_h.type = OSD_RELATIVE;
-    opc->osd_item.rel_h.num = 0;
+    /*Relative values of OSD_NOT_SET type are used to indicate "width/height unset" */
+    opc->osd_item.rel_w.type = OSD_NOT_SET;
+    opc->osd_item.rel_h.type = OSD_NOT_SET;
 
     meth->set_attr = set_std_osd_attr;
     opc->spec_set_attr_func = osd_button_set_attr;
@@ -1844,11 +1842,9 @@ static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *met
     opc->data = (void*)this;
     opc->osd_item.navit = nav;
     opc->osd_item.meth.draw = osd_draw_cast(osd_button_draw);
-    /*Value of 0% is stored in relative attributes as ATTR_REL_RELSHIFT, we use this value as "width/height unset" flag */
-    opc->osd_item.rel_w.type = OSD_RELATIVE;
-    opc->osd_item.rel_w.num = 0;
-    opc->osd_item.rel_h.type = OSD_RELATIVE;
-    opc->osd_item.rel_h.num = 0;
+    /*Relative values of OSD_NOT_SET type are used to indicate "width/height unset" */
+    opc->osd_item.rel_w.type = OSD_NOT_SET;
+    opc->osd_item.rel_h.type = OSD_NOT_SET;
     meth->set_attr = set_std_osd_attr;
     opc->spec_set_attr_func = osd_button_set_attr;
 
