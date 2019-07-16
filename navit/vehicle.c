@@ -69,6 +69,7 @@ struct vehicle {
     struct callback *animate_callback;
     struct event_timeout *animate_timer;
     struct point cursor_pnt;
+    int need_resize;
     struct graphics *gra;
     struct graphics_gc *bg;
     struct transformation *trans;
@@ -309,7 +310,8 @@ int vehicle_remove_attr(struct vehicle *this_, struct attr *attr) {
  * @author Ralph Sennhauser (10/2009)
  */
 void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) {
-    struct point sc;
+    dbg(lvl_debug,"enter this_=%p cursot=%p overwrit=%d, this_->cursor_fixed=%d, this_->gra=%p", this_, cursor, overwrite,
+        this_->cursor_fixed, this_->gra);
     if (this_->cursor_fixed && !overwrite)
         return;
     if (this_->animate_callback) {
@@ -322,34 +324,10 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
         this_->animate_callback=callback_new_2(callback_cast(vehicle_draw_do), this_, 0);
         this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
     }
-
-    if (cursor && this_->gra && this_->cursor) {
-        int w, h, thisw, thish;
-        thisw = osd_rel2real(this_->gra, &(this_->cursor->w), 0, 0);
-        thish = osd_rel2real(this_->gra, &(this_->cursor->h), 0, 0);
-        w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
-        h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
-        this_->cursor_pnt.x+=(thisw - w)/2;
-        this_->cursor_pnt.y+=(thish - h)/2;
-        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, w, h, 0);
-    }
-
-    if (cursor) {
-        int w, h;
-        w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
-        h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
-        sc.x=w/2;
-        sc.y=h/2;
-        if (!this_->cursor && this_->gra)
-            graphics_overlay_disable(this_->gra, 0);
-    } else {
-        sc.x=sc.y=0;
-        if (this_->cursor && this_->gra)
-            graphics_overlay_disable(this_->gra, 1);
-    }
-    transform_set_screen_center(this_->trans, &sc);
-
+    /* we changed the curser, so the overlay (if existing) may need a resize */
+    this_->need_resize=1;
     this_->cursor=cursor;
+    /* vehicle_draw will care for the graphics */
 }
 
 /**
@@ -363,6 +341,7 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
  */
 void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
     int thisw, thish;
+    struct point sc;
     if (angle < 0)
         angle+=360;
     dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d", this_, gra, pnt, angle, speed);
@@ -374,10 +353,23 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
         return;
     thisw = osd_rel2real(gra, &(this_->cursor->w), 0, 0);
     thish = osd_rel2real(gra, &(this_->cursor->h), 0, 0);
-    this_->cursor_pnt.x-=thisw/2;
-    this_->cursor_pnt.y-=thish/2;
+
+    /* set transform center to the middle of the cursor */
+    sc.x = thisw/2;
+    sc.y = thish/2;
+    transform_set_screen_center(this_->trans, &sc);
+    /*TODO: use the transformation to scale the cursor to fit inside the scaled surrounding.
+     * to do this we need to scan all coordinates inside the cursor to get it's bounding box
+     * in raw pixels. then we can scale it to fit */
+
+    /* move the cursor point from te center to the top left*/
+    this_->cursor_pnt.x-=(thisw/2);
+    this_->cursor_pnt.y-=(thish/2);
     if (!this_->gra) {
         struct color c;
+        this_->need_resize=0;
+        /*TODO: increase size of overlay, to match cursor rectangle rotated by 45 degrees.
+         * as we ca not rotate the whole overlay and ost graphics (correctly) clip */
         this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, thisw, thish, 0);
         if (this_->gra) {
             graphics_init(this_->gra);
@@ -389,7 +381,14 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
             graphics_gc_set_foreground(this_->bg, &c);
             graphics_background_gc(this_->gra, this_->bg);
         }
+    } else if (this_->need_resize) {
+        /* seems the cursor was changed. Need to resize */
+        /*TODO: increase size of overlay, to match cursor rectangle rotated by 45 degrees.
+         * as we ca not rotate the whole overlay and ost graphics (correctly) clip */
+        this_->need_resize=0;
+        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, thisw, thish, 0);
     }
+
     vehicle_draw_do(this_);
 }
 
