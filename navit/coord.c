@@ -27,6 +27,10 @@
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"
+
+#include "color.h"
+#include "point.h"
+#include "osd.h"
 /**
  * @defgroup coord Coordinate handling functions
  * @{
@@ -60,7 +64,7 @@ struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
     y=attr_search(attrs, NULL, attr_y);
     if (!x || !y)
         return NULL;
-    return coord_new(x->u.num, y->u.num);
+    return coord_new(x->u.osd_display_coordinate->num, y->u.osd_display_coordinate->num);
 }
 
 
