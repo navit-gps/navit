@@ -822,7 +822,6 @@ double get_dpi(struct graphics_priv * gr) {
         dpi = primary->logicalDotsPerInch();
     }
     return (double)dpi;
-
 }
 
 static struct graphics_methods graphics_methods = {
