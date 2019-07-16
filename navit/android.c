@@ -334,7 +334,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         pc.pro = transform_get_projection(transform);
 
         char coord_str[32];
-        pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+        pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
 
         dbg(lvl_debug,"Setting destination to %s",coord_str);
 
@@ -390,7 +390,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
 }
 
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForPoint( JNIEnv* env, jobject thiz, int id,
-        int x, int y) {
+        int x, int y, jboolean absolute_coord) {
 
     jstring return_string = NULL;
 
@@ -412,7 +412,10 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForP
     pc.pro = transform_get_projection(transform);
 
     char coord_str[32];
-    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+    if (absolute_coord)
+        pcoord_format_absolute(&pc, coord_str, sizeof(coord_str), ",");
+    else
+        pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
 
     dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
     return_string = (*env)->NewStringUTF(env,coord_str);

@@ -26,6 +26,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -53,6 +55,7 @@ import android.widget.RelativeLayout;
 import android.net.Uri;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -167,12 +170,16 @@ public class NavitGraphics {
         static final int  DRAG       = 1;
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
-        Context context;
+        static final int  MENU_DRIVE_HERE = 1; /* Menu item IDs For method onMenuItemClick() */
+        static final int  MENU_VIEW       = 2;
+        static final int  MENU_CANCEL     = 3;
+        Context           context;
 
         Method eventGetX = null;
         Method eventGetY = null;
 
         PointF    mPressedPosition = null;
+        Intent    mContextMenuMapViewIntent = null;	/* ACTION_VIEW intent for a geo coordinates used when clicking on view in the map contextual menu */
 
         public NavitView(Context context) {
             super(context);
@@ -205,30 +212,49 @@ public class NavitGraphics {
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
 
-            String clickCoord = GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y);
+            String clickCoord = GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, false);
             menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
-            menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
+            menu.add(1, MENU_DRIVE_HERE, NONE, activity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
-            menu.add(1, 2, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
-            menu.add(1, 3, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            /* Check if there is at least one application that can process a geo intent... */
+            Uri intentUri = Uri.parse("geo:" + GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true));
+            mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
+            
+            PackageManager packageManager = context.getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+            boolean isIntentSafe = (activities.size() > 0);
+            /* ... and if so, add a menu option to open the currently clicked location inside an external app */
+            if (isIntentSafe) {
+                menu.add(1, MENU_VIEW, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
+            } else {
+                Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed in contextual menu");
+            }
+            menu.add(1, MENU_CANCEL, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            if (item.getItemId() != MENU_VIEW)
+                mContextMenuMapViewIntent = null;	/* Detroy the map view intent if the user didn't select the MENU_VIEW action */
+            
             switch (item.getItemId()) {
-                case 1:
+                case MENU_DRIVE_HERE:
                     Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
                     break;
-                case 2:
-                    Log.e(TAG, "User clicked on view on menu");
-                    Uri intentUri = Uri.parse("geo:37.7749,-122.4194");
-                    Intent mapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-                    if (mapViewIntent.resolveActivity(context.getPackageManager()) != null) {
-                        context.startActivity(mapViewIntent);
+                case MENU_VIEW:
+                    if (mContextMenuMapViewIntent != null) {
+	                    Log.e(TAG, "User clicked on view on menu");
+	                    if (mContextMenuMapViewIntent.resolveActivity(context.getPackageManager()) != null) {
+	                        context.startActivity(mContextMenuMapViewIntent);
+	                    } else {
+	                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
+	                    }
+	                    mContextMenuMapViewIntent = null;	/* Destoy the intent once it has been used */
                     } else {
-                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application, discarding...");
+                        Log.e(TAG, "User clicked on view on menu but intent was null. Discarding...");
                     }
                     break;
             }
@@ -749,7 +775,7 @@ public class NavitGraphics {
 
     public native void MotionCallback(int id, int x, int y);
 
-    public native String GetCoordForPoint(int id, int x, int y);
+    public native String GetCoordForPoint(int id, int x, int y, boolean absolute_coord);
 
     public native String GetDefaultCountry(int id, String s);
 
