@@ -107,9 +107,9 @@ const int SMALL_PROFILE=2;
  * [2] => Small profile (default)
  */
 static struct gui_config_settings config_profiles[]= {
-    {545,32,48,96,10}
-    , {300,32,48,64,3}
-    ,{200,16,32,48,2}
+    {545,{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=96},{.type=OSD_PIXELS,.num=10}}
+    , {300,{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=64},{.type=OSD_PIXELS,.num=3}}
+    , {200,{.type=OSD_PIXELS,.num=16},{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=2}}
 };
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
@@ -510,28 +510,31 @@ void gui_internal_apply_config(struct gui_priv *this) {
         this->font_size = this->config.font_size;
     }
 
-    if(this->config.icon_xs == -1 ) {
-        this->icon_xs = current_config->icon_xs;
+    if(this->config.icon_xs.type == OSD_NOT_SET ) {
+        this->icon_xs = osd_rel2real(this->gra, &(current_config->icon_xs), this->root.w, 0);
     } else {
-        this->icon_xs = this->config.icon_xs;
+        this->icon_xs = osd_rel2real(this->gra, &(this->config.icon_xs), this->root.w, 0);
     }
 
-    if(this->config.icon_s == -1 ) {
-        this->icon_s = current_config->icon_s;
+    if(this->config.icon_s.type == OSD_NOT_SET ) {
+        this->icon_s = osd_rel2real(this->gra, &(current_config->icon_s), this->root.w, 0);
     } else {
-        this->icon_s = this->config.icon_s;
+        this->icon_s = osd_rel2real(this->gra, &(this->config.icon_s), this->root.w, 0);
     }
-    if(this->config.icon_l == -1 ) {
-        this->icon_l = current_config->icon_l;
+    if(this->config.icon_l.type == OSD_NOT_SET ) {
+        this->icon_l = osd_rel2real(this->gra, &(current_config->icon_l), this->root.w, 0);
     } else {
-        this->icon_l = this->config.icon_l;
+        this->icon_l = osd_rel2real(this->gra, &(this->config.icon_l), this->root.w, 0);
     }
-    if(this->config.spacing == -1 ) {
-        this->spacing = current_config->spacing;
+    if(this->config.spacing.type == OSD_NOT_SET ) {
+        this->spacing = osd_rel2real(this->gra, &(current_config->spacing), this->root.w, 0);
     } else {
-        this->spacing = this->config.spacing;
-        dbg(lvl_info, "Overriding default spacing %d with value %d provided in config file", current_config->spacing,
-            this->config.spacing);
+        this->spacing = osd_rel2real(this->gra, &(this->config.spacing), this->root.w, 0);
+        dbg(lvl_info, "Overriding default spacing %d %f with value %d %f provided in config file",
+            current_config->spacing.type,
+            current_config->spacing.num,
+            this->config.spacing.type,
+            this->config.spacing.num);
     }
     if (!this->fonts[0]) {
         int i,sizes[]= {100,66,50};
@@ -3203,24 +3206,24 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
         this->config.font_size=-1;
     }
     if( (attr=attr_search(attrs,NULL,attr_icon_xs))) {
-        this->config.icon_xs=attr->u.num;
+        this->config.icon_xs=*(attr->u.osd_display_coordinate);
     } else {
-        this->config.icon_xs=-1;
+        this->config.icon_xs.type=OSD_NOT_SET;
     }
     if( (attr=attr_search(attrs,NULL,attr_icon_l))) {
-        this->config.icon_l=attr->u.num;
+        this->config.icon_l=*(attr->u.osd_display_coordinate);
     } else {
-        this->config.icon_l=-1;
+        this->config.icon_l.type=OSD_NOT_SET;
     }
     if( (attr=attr_search(attrs,NULL,attr_icon_s))) {
-        this->config.icon_s=attr->u.num;
+        this->config.icon_s=*(attr->u.osd_display_coordinate);
     } else {
-        this->config.icon_s=-1;
+        this->config.icon_s.type=OSD_NOT_SET;
     }
     if( (attr=attr_search(attrs,NULL,attr_spacing))) {
-        this->config.spacing=attr->u.num;
+        this->config.spacing=*(attr->u.osd_display_coordinate);
     } else {
-        this->config.spacing=-1;
+        this->config.spacing.type=OSD_NOT_SET;
     }
     if( (attr=attr_search(attrs,NULL,attr_gui_speech))) {
         this->speech=attr->u.num;

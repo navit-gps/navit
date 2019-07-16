@@ -9,6 +9,7 @@
 #include "navit.h"
 #include "navit_nls.h"
 #include "bookmarks.h"
+#include "osd.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"

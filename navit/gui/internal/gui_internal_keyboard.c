@@ -6,6 +6,7 @@
 #include "callback.h"
 #include "graphics.h"
 #include "debug.h"
+#include "osd.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"

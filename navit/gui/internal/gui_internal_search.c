@@ -14,6 +14,7 @@
 #include "country.h"
 #include "track.h"
 #include "linguistics.h"
+#include "osd.h"
 #include "gui_internal.h"
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"

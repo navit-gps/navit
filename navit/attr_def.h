@@ -83,10 +83,10 @@ ATTR(antialias)
 ATTR(order_delta)
 ATTR(baudrate)
 ATTR_UNUSED
-ATTR(icon_xs)
-ATTR(icon_l)
-ATTR(icon_s)
-ATTR(spacing)
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
+ATTR_UNUSED
 ATTR(recent_dest)
 ATTR(destination_distance)
 ATTR(check_version)
@@ -416,6 +416,10 @@ ATTR(w)
 ATTR(x)
 ATTR(y)
 ATTR(font_size)
+ATTR(icon_xs)
+ATTR(icon_l)
+ATTR(icon_s)
+ATTR(spacing)
 ATTR2(0x0004ffff,type_osd_coordinate_end)
 ATTR2(0x0004ffff,type_special_end)
 ATTR2(0x00050000,type_double_begin)

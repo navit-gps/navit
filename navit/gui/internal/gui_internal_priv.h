@@ -14,19 +14,19 @@ struct gui_config_settings {
      * The size (in pixels) that xs style icons should be scaled to.
      * This icon size is typically used in various lists and should be set to value which allows a list row to be easily cliked or dragged.
      */
-    int icon_xs;
+    struct osd_display_coordinate icon_xs;
     /**
      * The size (in pixels) that s style icons (small) should be scaled to, used for the menu top row icons
      */
-    int icon_s;
+    struct osd_display_coordinate icon_s;
     /**
      * The size (in pixels) that l style icons should be scaled to, used for icons defined in the menu html
      */
-    int icon_l;
+    struct osd_display_coordinate icon_l;
     /**
-     * The default amount of spacing (in pixels) to place between GUI elements.
+     * The default amount of spacing to place between GUI elements.
      */
-    int spacing;
+    struct osd_display_coordinate spacing;
 
 };
 
