@@ -23,6 +23,7 @@
 #include "config.h"
 #include "window.h"
 #include "point.h"
+#include "coord.h"
 #include "graphics.h"
 #include "color.h"
 #include "item.h"

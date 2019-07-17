@@ -48,6 +48,7 @@
 #include <navit/event.h>
 #include <navit/command.h>
 #include <navit/config_.h>
+#include "coord.h"
 #include "graphics.h"
 #include "color.h"
 #include "osd.h"

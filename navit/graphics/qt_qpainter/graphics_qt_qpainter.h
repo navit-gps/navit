@@ -27,6 +27,7 @@
 #include "navit/item.h"
 #include "navit/graphics.h"
 #include "navit/color.h"
+#include "navit/coord.h"
 #include "navit/debug.h"
 #include "navit/plugin.h"
 #include "navit/callback.h"

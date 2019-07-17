@@ -26,6 +26,7 @@
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
+#include "coord.h"
 #include "plugin.h"
 #include "callback.h"
 #include "window.h"
