@@ -404,8 +404,18 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
         sc.x = this_->real_w/2;
         sc.y = this_->real_h/2;
         transform_set_screen_center(this_->trans, &sc);
-        /*TODO: use the transformation to scale the cursor to fit inside the scaled surrounding.
-         * We already have the bbox in br / tl. */
+
+        if((this_->cursor->w.type != OSD_PIXELS) && (this_->cursor->h.type != OSD_PIXELS)) {
+            navit_float xfactor;
+            navit_float yfactor;
+            /* if our root box uses non pixel values, we simply scale the content to fit the
+             * dpi compensated rectangle. */
+            xfactor = (navit_float)(this_->br.x - this_->tl.x) / ((navit_float) thisw);
+            yfactor = (navit_float)(this_->br.y - this_->tl.y) / ((navit_float) thish);
+            dbg(lvl_debug,"scale x %f, y %f", xfactor, yfactor);
+            /* use the bigger factor. This way it will fit. May behave strange on very asymetric cursors. */
+            transform_set_scale(this_->trans, (xfactor > yfactor) ? (xfactor * 16.0): (yfactor * 16.0));
+        }
 
     }
 
@@ -460,7 +470,6 @@ static void vehicle_set_default_name(struct vehicle *this_) {
 static void vehicle_draw_do(struct vehicle *this_) {
     struct point p;
     struct cursor *cursor=this_->cursor;
-    int w, h;
     int speed=this_->speed;
     int angle=this_->angle;
     int sequence=this_->sequence;
@@ -481,9 +490,8 @@ static void vehicle_draw_do(struct vehicle *this_) {
     graphics_draw_mode(this_->gra, draw_mode_begin);
     p.x=0;
     p.y=0;
-    w = osd_rel2real(this_->gra, &(cursor->w), 0, 0);
-    h = osd_rel2real(this_->gra, &(cursor->h), 0, 0);
-    graphics_draw_rectangle(this_->gra, this_->bg, &p, w, h);
+    /* clear old content by overwriting with an rectangle */
+    graphics_draw_rectangle(this_->gra, this_->bg, &p, this_->real_w, this_->real_h);
     attr=cursor->attrs;
     while (*attr) {
         if ((*attr)->type == attr_itemgra) {
