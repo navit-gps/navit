@@ -40,6 +40,7 @@
 #include "event.h"
 #include "debug.h"
 #include "point.h"
+#include "coord.h"
 #include "graphics.h"
 #include "color.h"
 #include "item.h"
@@ -980,13 +981,13 @@ static void *get_data(struct graphics_priv *this, char const *type) {
  * @param gr self handle
  * @return dpi value
  */
-static double get_dpi(struct graphics_priv * gr) {
+static navit_float get_dpi(struct graphics_priv * gr) {
     gdouble dpi = 96;
     GdkScreen *screen = gtk_widget_get_screen(gr->widget);
     if(screen != NULL) {
         dpi = gdk_screen_get_resolution (screen);
     }
-    return (double) dpi;
+    return (navit_float) dpi;
 }
 
 

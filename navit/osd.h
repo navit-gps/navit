@@ -49,7 +49,7 @@ typedef enum {
 } osd_display_coordinate_type;
 
 struct osd_display_coordinate {
-    double num;
+    navit_float num;
     osd_display_coordinate_type type;
 };
 

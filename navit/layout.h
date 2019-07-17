@@ -23,6 +23,7 @@
 #include "item.h"
 #include "color.h"
 #include "point.h"
+#include "coord.h"
 #include "osd.h"
 
 #ifdef __cplusplus

@@ -31,6 +31,7 @@
 #include "attr.h"
 #include "config.h"
 #include "point.h"
+#include "coord.h"
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"

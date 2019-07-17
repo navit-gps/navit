@@ -35,6 +35,8 @@
 #include "string.h"
 #include "draw_info.h"
 #include "point.h"
+#include "coord.h"
+
 #include "graphics.h"
 #include "projection.h"
 #include "item.h"

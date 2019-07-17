@@ -158,7 +158,7 @@ struct graphics_methods {
     int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
     int (*show_native_keyboard)(struct graphics_keyboard *kbd);
     void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
-    double (*get_dpi)(struct graphics_priv * gr);
+    navit_float (*get_dpi)(struct graphics_priv * gr);
 };
 
 

@@ -31,6 +31,7 @@ extern "C" {
 #include "event.h"
 
 #include "point.h" /* needs to be before graphics.h */
+#include "coord.h"
 
 #include "graphics.h"
 #include "keys.h"

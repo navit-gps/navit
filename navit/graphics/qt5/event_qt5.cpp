@@ -30,6 +30,7 @@ extern "C" {
 #include "navit/event.h"
 
 #include "navit/point.h" /* needs to be before graphics.h */
+#include "navit/coord.h"
 
 #include "navit/graphics.h"
 #include "navit/item.h"

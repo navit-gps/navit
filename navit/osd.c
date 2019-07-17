@@ -25,6 +25,8 @@
 #include "color.h"
 #include "point.h"
 #include "navit.h"
+#include "coord.h"
+
 #include "graphics.h"
 #include "command.h"
 #include "callback.h"
@@ -501,7 +503,7 @@ static inline double osd_mm_to_in(double mm) {
  */
 int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * attrval, int whole, int treat_neg_as_rel) {
     int result;
-    double dpi = 75;
+    navit_float dpi = 75;
 
     if(gra != NULL) {
         /* get screen dpi value */
@@ -512,7 +514,7 @@ int osd_rel2real(struct graphics *gra, const struct osd_display_coordinate * att
     }
 
     if (attrval->type == OSD_RELATIVE)
-        result = (((double)whole) * attrval->num)/ ((double)100);
+        result = (((navit_float)whole) * attrval->num)/ ((navit_float)100);
     else if (attrval->type == OSD_MILLIMETERS) {
         result = osd_mm_to_in(attrval->num) * dpi;
     } else if (attrval->type == OSD_INCHES) {

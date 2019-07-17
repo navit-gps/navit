@@ -31,6 +31,7 @@ extern "C" {
 #include "event.h"
 
 #include "point.h" /* needs to be before graphics.h */
+#include "coord.h" /* needs to be before graphics.h */
 
 #include "graphics.h"
 #include "plugin.h"
@@ -815,13 +816,13 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
  * @param gr self handle
  * @return dpi value
  */
-double get_dpi(struct graphics_priv * gr) {
+navit_float get_dpi(struct graphics_priv * gr) {
     qreal dpi = 96;
     QScreen* primary = navit_app->primaryScreen();
     if (primary != NULL) {
         dpi = primary->logicalDotsPerInch();
     }
-    return (double)dpi;
+    return (navit_float)dpi;
 }
 
 static struct graphics_methods graphics_methods = {
