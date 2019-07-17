@@ -73,6 +73,8 @@ struct vehicle {
     int need_resize;
     int real_w;
     int real_h;
+    struct coord tl;
+    struct coord br;
     struct graphics *gra;
     struct graphics_gc *bg;
     struct transformation *trans;
@@ -331,6 +333,25 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
     this_->need_resize=1;
     this_->cursor=cursor;
 
+    /* calculate the raw bounding box of the cursor*/
+    if (this_->cursor) {
+        struct attr **attr;
+        this_->tl.x = 0;
+        this_->tl.y = 0;
+        this_->br.x = 0;
+        this_->br.y = 0;
+        attr=cursor->attrs;
+        while (*attr) {
+            if ((*attr)->type == attr_itemgra) {
+                struct itemgra *itm=(*attr)->u.itemgra;
+                /* use all elements for outline regardless if speed or angle ranged */
+                graphics_itmgra_bbox(itm, &(this_->tl), &(this_->br));
+            }
+            ++attr;
+        }
+        dbg(lvl_debug,"got cursor bbox %d,%d %d,%d", this_->tl.x, this_->tl.y,this_->br.x, this_->br.y);
+    }
+
     /* if the graphics was already created, but a NULL cursor was set, we need to disable
      * otherwise stale overlay
      */
@@ -383,10 +404,10 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
         sc.x = this_->real_w/2;
         sc.y = this_->real_h/2;
         transform_set_screen_center(this_->trans, &sc);
+        /*TODO: use the transformation to scale the cursor to fit inside the scaled surrounding.
+         * We already have the bbox in br / tl. */
+
     }
-    /*TODO: use the transformation to scale the cursor to fit inside the scaled surrounding.
-     * to do this we need to scan all coordinates inside the cursor to get it's bounding box
-     * in raw pixels. then we can scale it to fit */
 
     /* move the cursor point from te center to the top left*/
     this_->cursor_pnt.x-=(this_->real_w/2);

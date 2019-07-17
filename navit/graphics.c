@@ -2222,6 +2222,81 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
     }
 }
 
+/**
+ * @brief alter a box to contain a point
+ *
+ * @param pt new point
+ * @param tl top left of existing box
+ * @param br bottom right of existing box
+ * @param width line width to assume at the point
+ * @returns nothing
+ */
+static void graphics_itemgra_add_point_to_bbox (const struct coord *pt, struct coord *tl, struct coord *br, int width) {
+    if (pt->x-width < tl->x)
+        tl->x = pt->x-width;
+    if (pt->x+width > br->x)
+        br->x = pt->x+width;
+    if (pt->y-width < tl->y)
+        tl->y = pt->y-width;
+    if (pt->y+width > br->y)
+        br->y = pt->y+width;
+}
+
+/**
+ * @brief get bounding box of a raw and unscaled itemgra.
+ *
+ * @param itm the itemgra
+ * @param tl top left coordinate of the itemgra. Needs to be properly initialized.
+ * @param br bottom right coordinate of the itemgra. Needs to be properly initialized.
+ * returns notinhg
+ */
+void graphics_itmgra_bbox(struct itemgra * itm, struct coord *tl, struct coord *br) {
+    GList *es;
+    if(!itm || !tl || !br)
+        return;
+
+    es = itm->elements;
+    while(es) {
+        struct element *e=es->data;
+        switch (e->type) {
+        case element_point:
+            if(e->coord_count > 0)
+                graphics_itemgra_add_point_to_bbox (&(e->coord[0]), tl, br, 0);
+            break;
+        case element_polyline:
+        case element_polygon:
+            if(e->coord_count > 0) {
+                int a;
+                int width = 0;
+                if(e->type == element_polyline)
+                    width = e->u.polyline.width;
+                for(a=0; a < e->coord_count; a ++)
+                    graphics_itemgra_add_point_to_bbox (&(e->coord[a]), tl, br,width);
+            }
+            break;
+        case element_circle:
+            if(e->coord_count > 0) {
+                struct coord box;
+                box.x = e->coord[0].x - e->u.circle.radius;
+                box.y = e->coord[0].y - e->u.circle.radius;
+                graphics_itemgra_add_point_to_bbox (&box, tl, br, e->u.circle.width);
+                box.x = e->coord[0].x + e->u.circle.radius;
+                box.y = e->coord[0].y + e->u.circle.radius;
+                graphics_itemgra_add_point_to_bbox (&box, tl, br, e->u.circle.width);
+            }
+            break;
+        case element_text:
+        case element_icon:
+        case element_image:
+        case element_arrows:
+            /* ignore */
+            dbg(lvl_error,"getting bbox for \"text, icon, image, arows\" not yet supported.");
+            break;
+        }
+        es=g_list_next(es);
+    }
+}
+
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t, char *label) {
     GList *es;
     struct display_context dc;
