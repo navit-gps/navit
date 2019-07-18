@@ -107,9 +107,9 @@ const int SMALL_PROFILE=2;
  * [2] => Small profile (default)
  */
 static struct gui_config_settings config_profiles[]= {
-    {545,{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=96},{.type=OSD_PIXELS,.num=10}}
-    , {300,{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=64},{.type=OSD_PIXELS,.num=3}}
-    , {200,{.type=OSD_PIXELS,.num=16},{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=2}}
+    {{.type=OSD_PIXELS,.num=545},{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=96},{.type=OSD_PIXELS,.num=10}}
+    , {{.type=OSD_PIXELS,.num=300},{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=64},{.type=OSD_PIXELS,.num=3}}
+    , {{.type=OSD_PIXELS,.num=200},{.type=OSD_PIXELS,.num=16},{.type=OSD_PIXELS,.num=32},{.type=OSD_PIXELS,.num=48},{.type=OSD_PIXELS,.num=2}}
 };
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
@@ -504,10 +504,14 @@ void gui_internal_apply_config(struct gui_priv *this) {
     /*
      * Apply override values from config file
      */
-    if(this->config.font_size == -1 ) {
-        this->font_size = current_config->font_size;
+    if(this->config.font_size.type == OSD_NOT_SET ) {
+        this->font_size = osd_rel2real(this->gra, &(current_config->font_size), this->root.w, 0);
+        if(current_config->font_size.type!=OSD_PIXELS)
+            this->font_size = (this->font_size * 64 * 72) / 300;
     } else {
-        this->font_size = this->config.font_size;
+        this->font_size = osd_rel2real(this->gra, &(this->config.font_size), this->root.w, 0);
+        if(this->config.font_size.type!=OSD_PIXELS)
+            this->font_size = (this->font_size * 64 * 72) / 300;
     }
 
     if(this->config.icon_xs.type == OSD_NOT_SET ) {
@@ -3201,9 +3205,9 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
     gui_internal_command_init(this, attrs);
 
     if( (attr=attr_search(attrs,NULL,attr_font_size))) {
-        this->config.font_size=attr->u.osd_display_coordinate->num;
+        this->config.font_size=*(attr->u.osd_display_coordinate);
     } else {
-        this->config.font_size=-1;
+        this->config.font_size.type=OSD_NOT_SET;
     }
     if( (attr=attr_search(attrs,NULL,attr_icon_xs))) {
         this->config.icon_xs=*(attr->u.osd_display_coordinate);

@@ -9,7 +9,7 @@ struct gui_config_settings {
     /**
      * The base size (in fractions of a point) to use for text.
      */
-    int font_size;
+    struct osd_display_coordinate font_size;
     /**
      * The size (in pixels) that xs style icons should be scaled to.
      * This icon size is typically used in various lists and should be set to value which allows a list row to be easily cliked or dragged.
