@@ -428,11 +428,8 @@ void graphics_remove_callback(struct graphics *this_, struct callback *cb) {
  * @author Martin Schaller (04/2008)
 */
 struct graphics_font * graphics_font_new(struct graphics *gra, int size, int flags) {
-    struct graphics_font *this_;
 
-    this_=g_new0(struct graphics_font,1);
-    this_->priv=gra->meth.font_new(gra->priv, &this_->meth, gra->default_font, size, flags);
-    return this_;
+    return graphics_named_font_new(gra, gra->default_font, size, flags);
 }
 
 struct graphics_font * graphics_named_font_new(struct graphics *gra, char *font, int size, int flags) {
@@ -919,7 +916,7 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
         circle_to_points(p, r, 0, -1, 1026, pnt, &i, 1);
         pnt[i] = pnt[0];
         i++;
-        this_->meth.draw_lines(this_->priv, gc->priv, pnt, i);
+        graphics_draw_lines(this_, gc, pnt, i);
     }
 }
 
@@ -931,6 +928,21 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
 */
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h) {
     this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
+}
+
+/**
+ * @brief Draw a plain polygon on the display
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ */
+static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
+    if (! gra->meth.draw_polygon) {
+        return;
+    }
+    gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
 }
 
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
@@ -949,9 +961,9 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
     p[i]=p[0];
     i++;
     if (fill)
-        this_->meth.draw_polygon(this_->priv, gc->priv, p, i);
+        graphics_draw_polygon(this_,gc,p,i);
     else
-        this_->meth.draw_lines(this_->priv, gc->priv, p, i);
+        graphics_draw_lines(this_,gc,p,i);
 }
 
 
@@ -1004,6 +1016,20 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
     this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
 }
 
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
+static void graphics_draw_image_warp(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count,
+                                     struct graphics_image *img) {
+    if(this_->meth.draw_image_warp)
+        this_->meth.draw_image_warp(this_->priv, gc->priv, p, count, img->priv);
+    else {
+        dbg(lvl_error,"draw_image_warp not supported by graphics driver");
+    }
+}
 
 //##############################################################################################################
 //# Description:
@@ -1204,7 +1230,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
     struct point pb[5];
 
     if (gra->meth.get_text_bbox) {
-        gra->meth.get_text_bbox(gra->priv, font->priv, label, 0x10000, 0x0, pb, 1);
+        graphics_get_text_bbox(gra,font,label,0x10000, 0x00, pb, 1);
         tl=(pb[2].x-pb[0].x);
         th=(pb[0].y-pb[1].y);
     } else {
@@ -1237,7 +1263,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
             p_t.x=x;
             p_t.y=y;
             if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y)
-                gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
+                graphics_draw_text(gra, fg, bg, font, label, &p_t, dx*0x10000/l, dy*0x10000/l);
         }
     }
 }
@@ -1249,7 +1275,7 @@ static void display_draw_arrow(struct point *p, int dx, int dy, int l, struct gr
     pnt[0].y+=-dy*l/65536-dx*l/65536;
     pnt[2].x+=-dx*l/65536-dy*l/65536;
     pnt[2].y+=-dy*l/65536+dx*l/65536;
-    gra->meth.draw_lines(gra->priv, gc->priv, pnt, 3);
+    graphics_draw_lines(gra, gc, pnt, 3);
 }
 
 static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count) {
@@ -1612,9 +1638,8 @@ static void draw_init_ctx(struct draw_polyline_context *ctx, int maxpoints) {
 }
 
 
-static void graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, struct graphics_gc_priv *gc_priv,
-        struct point *pnt, int count, int *width,  void (*draw)(struct graphics_priv *gr, struct graphics_gc_priv *gc,
-                struct point *p, int count)) {
+static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc,
+        struct point *pnt, int count, int *width) {
     int maxpoints=200;
     struct draw_polyline_context ctx;
     int i=0;
@@ -1633,7 +1658,7 @@ static void graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, st
         if (ctx.npos < max_circle_points || ctx.ppos >= maxpoints-max_circle_points || !draw_middle(&ctx,&pnt[i])) {
             draw_end(&ctx,&pnt[i]);
             ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
-            draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
+            graphics_draw_polygon(gra, gc, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
             draw_init_ctx(&ctx, maxpoints);
             draw_begin(&ctx,&pnt[i]);
         }
@@ -1642,7 +1667,7 @@ static void graphics_draw_polyline_as_polygon(struct graphics_priv *gra_priv, st
     ctx.prev_shape=ctx.shape;
     draw_end(&ctx,&pnt[count-1]);
     ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
-    draw(gra_priv, gc_priv, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
+    graphics_draw_polygon(gra, gc, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
 }
 
 
@@ -1792,9 +1817,9 @@ void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc
                 // ... then draw the resulting polyline
                 if (points_to_draw_cnt > 1) {
                     if (poly) {
-                        graphics_draw_polyline_as_polygon(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt, w, gra->meth.draw_polygon);
+                        graphics_draw_polyline_as_polygon(gra, gc, points_to_draw, points_to_draw_cnt, w);
                     } else
-                        gra->meth.draw_lines(gra->priv, gc->priv, points_to_draw, points_to_draw_cnt);
+                        graphics_draw_lines(gra, gc, points_to_draw, points_to_draw_cnt);
                     points_to_draw_cnt=0;
                 }
             }
@@ -1894,7 +1919,7 @@ void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc,
             pout=p2;
         }
     }
-    gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
+    graphics_draw_polygon(gra, gc, pin, count_in);
     if (count_in >= limit) {
         g_free(p1);
         g_free(p2);
@@ -2030,8 +2055,8 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
 
     /* Parse all stored lines, and display them */
     for (label_linepos=0; label_linepos<label_nblines; label_linepos++) {
-        gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label_lines[label_linepos],
-                            &pref, 0x10000, 0);
+        graphics_draw_text(gra, fg, bg, font, label_lines[label_linepos],
+                           &pref, 0x10000, 0);
         pref.y+=line_spacing;
     }
     g_free(input_label);
@@ -2080,7 +2105,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             graphics_draw_polygon_clipped(gra, gc, pa, count);
             break;
         case element_polyline: {
-            gc->meth.gc_set_linewidth(gc->priv, 1);
+            graphics_gc_set_linewidth(gc, 1);
             if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
                 graphics_gc_set_dashes(gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table, e->u.polyline.dash_num);
             for (i = 0 ; i < count ; i++) {
@@ -2093,7 +2118,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
         case element_circle:
             if (count) {
                 if (e->u.circle.width > 1)
-                    gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+                    graphics_gc_set_linewidth(gc, e->u.polyline.width);
                 graphics_draw_circle(gra, gc, pa, e->u.circle.radius);
                 if (di->label && e->text_size) {
                     struct graphics_font *font=get_font(gra, e->text_size);
@@ -2159,7 +2184,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                         p.x=pa[0].x - img->hot.x;
                         p.y=pa[0].y - img->hot.y;
                     }
-                    gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+                    graphics_draw_image(gra, gra->gc[0], &p, img);
                 }
             }
             break;
@@ -2168,7 +2193,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             if (gra->meth.draw_image_warp) {
                 img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
                 if (img)
-                    gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, img->priv);
+                    graphics_draw_image_warp(gra, gra->gc[0], pa, count, img);
             } else
                 dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
             break;
@@ -2524,9 +2549,9 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
     graphics_background_gc(gra, gra->gc[0]);
     if (flags & 1)
         callback_list_call_attr_0(gra->cbl, attr_predraw);
-    gra->meth.draw_mode(gra->priv, draw_mode_begin);
+    graphics_draw_mode(gra, draw_mode_begin);
     if (!(flags & 2))
-        gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
+        graphics_draw_rectangle(gra, gra->gc[0], &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
     if (l)	{
         order+=l->order_delta;
         xdisplay_draw(displaylist, gra, l, order>0?order:0);
@@ -2534,7 +2559,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
     if (flags & 1)
         callback_list_call_attr_0(gra->cbl, attr_postdraw);
     if (!(flags & 4))
-        gra->meth.draw_mode(gra->priv, draw_mode_end);
+        graphics_draw_mode(gra, draw_mode_end);
 }
 
 static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset,
