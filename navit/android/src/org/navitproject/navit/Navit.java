@@ -585,18 +585,23 @@ public class Navit extends Activity {
         String[] geo = geoString.split(",");
         if (geo.length == 2) {
             try {
-                Bundle b = new Bundle();
-                Float lat = Float.valueOf(geo[0]);
-                Float lon = Float.valueOf(geo[1]);
-                b.putFloat("lat", lat);
-                b.putFloat("lon", lon);
-                b.putString("q", name);
-                Message msg = Message.obtain(N_NavitGraphics.callback_handler,
-                        msgType.ordinal());
+                if (N_NavitGraphics != null) {
+                    Bundle b = new Bundle();
+                    Float lat = Float.valueOf(geo[0]);
+                    Float lon = Float.valueOf(geo[1]);
+                    b.putFloat("lat", lat);
+                    b.putFloat("lon", lon);
+                    b.putString("q", name);
+                    Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                            msgType.ordinal());
 
-                msg.setData(b);
-                msg.sendToTarget();
-                Log.d(TAG, "target found (b): " + geoString);
+                    msg.setData(b);
+                    msg.sendToTarget();
+                    Log.d(TAG, "target found (b): " + geoString);
+                } else {
+                    /* This happens when clicking on a point, selecting view (intent) and choosing navit as the serving application, thus looping the intent back to ourselves */
+                    Log.e(TAG, "Cannot invoke callback_handler because N_NavitGraphics is null");
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
