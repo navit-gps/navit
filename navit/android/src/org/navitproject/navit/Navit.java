@@ -519,10 +519,7 @@ public class Navit extends Activity {
                     if (navi_scheme.equals("google.navigation")) {
                         parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
                     } else if (navi_scheme.equals("geo") && startup_intent.getAction().equals("android.intent.action.VIEW")) {
-                        String geoString = startup_intent.getDataString().substring(4);     /* Remove the geo: prefix */
-                        Log.d(TAG, "We caught a geo intent for position " + geoString);
-                        invokeCallbackOnGeo(geoString, NavitGraphics.msg_type.CLB_SET_DESTINATION, "");
-                        //invokeCallbackOnGeo(startup_intent.getData().getSchemeSpecificPart(), NavitGraphics.msg_type.CLB_SET_DESTINATION, "");
+                        invokeCallbackOnGeo(startup_intent.getData().getSchemeSpecificPart(), NavitGraphics.msg_type.CLB_SET_DESTINATION, "");
                     }
                 }
             } else {
@@ -599,7 +596,7 @@ public class Navit extends Activity {
 
                 msg.setData(b);
                 msg.sendToTarget();
-                Log.e(TAG, "target found (b): " + geoString);
+                Log.d(TAG, "target found (b): " + geoString);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
