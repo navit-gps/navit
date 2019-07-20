@@ -51,6 +51,7 @@
 #include "callback.h"
 #include "file.h"
 #include "event.h"
+#include "navit.h"
 
 
 //##############################################################################################################
@@ -148,7 +149,7 @@ static int graphics_dpi_scale(struct graphics * gra, int p) {
     navit_float result;
     if(gra == NULL)
         return p;
-    result = (((navit_float)p) * gra->real_dpi) / gra->virtual_dpi;
+    result = ((navit_float)p) * (gra->real_dpi/gra->virtual_dpi);
     return (int) result;
 }
 static struct point graphics_dpi_scale_point(struct graphics * gra, struct point *p) {
@@ -163,7 +164,7 @@ static int graphics_dpi_unscale(struct graphics * gra, int p) {
     navit_float result;
     if(gra == NULL)
         return p;
-    result = (((navit_float)p) / gra->virtual_dpi) * gra->real_dpi;
+    result = ((navit_float)p) * (gra->virtual_dpi/gra->real_dpi);
     return (int) result;
 }
 static struct point graphics_dpi_unscale_point(struct graphics * gra, struct point *p) {
@@ -346,7 +347,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_=g_new0(struct graphics, 1);
     this_->attrs=attr_list_dup(attrs);
     /*TODO: add attrs for virtual and real dpi */
-    this_->virtual_dpi = 95;
+    this_->virtual_dpi = 96;
     this_->real_dpi = this_->virtual_dpi;
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
@@ -359,6 +360,11 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->gamma=65536;
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
+    this_->real_dpi = graphics_get_dpi(this_);
+    dbg(lvl_error,"Using virtual dpi %f, real dpi %f", this_->virtual_dpi, this_->real_dpi);
+    if(this_->real_dpi != this_->virtual_dpi)
+        callback_list_call_attr_2(this_->cbl, attr_resize, GINT_TO_POINTER(navit_get_width(parent->u.navit)),
+                                  GINT_TO_POINTER(navit_get_height(parent->u.navit)));
     while (*attrs) {
         graphics_set_attr_do(this_,*attrs);
         attrs++;
@@ -422,6 +428,8 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
     if (!parent->meth.overlay_new)
         return NULL;
     this_=g_new0(struct graphics, 1);
+    this_->virtual_dpi = parent->virtual_dpi;
+    this_->real_dpi = parent->real_dpi;
     p_scaled=graphics_dpi_scale_point(parent,p);
     w_scaled=graphics_dpi_scale(parent,w);
     h_scaled=graphics_dpi_scale(parent,h);
@@ -3110,3 +3118,29 @@ static void graphics_process_selection(struct graphics *gra, struct displaylist 
     }
 }
 
+/**
+ * @brief get display resolution in DPI
+ * This method returns the native display density in DPI
+ * @param gra graphics handle
+ * @returns dpi value. May be fraction therefore double.
+ */
+navit_float graphics_get_dpi(struct graphics *gra) {
+    navit_float result;
+    if (!gra->meth.get_dpi)
+        return gra->virtual_dpi;
+    result = gra->meth.get_dpi(gra->priv);
+    /* check if there is a difference from at lead 100 dpi,
+     * otherwise refuse to scale */
+    if(result < gra->virtual_dpi) {
+        if((gra->virtual_dpi - result) < 50) {
+            dbg(lvl_debug,"Virtual dpi %f too close to real dpi %f to scale", gra->virtual_dpi, result);
+            result = gra->virtual_dpi;
+        }
+    } else {
+        if ((result - gra->virtual_dpi) < 50) {
+            dbg(lvl_debug,"Virtual dpi %f too close to real dpi %f to scale", gra->virtual_dpi, result);
+            result = gra->virtual_dpi;
+        }
+    }
+    return (result);
+}

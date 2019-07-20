@@ -813,6 +813,20 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
 #endif
 }
 
+/**
+ * @brief Return number of dots per inch
+ * @param gr self handle
+ * @return dpi value
+ */
+static navit_float get_dpi(struct graphics_priv * gr) {
+    qreal dpi = 96;
+    QScreen* primary = navit_app->primaryScreen();
+    if (primary != NULL) {
+        dpi = primary->logicalDotsPerInch();
+    }
+    return (navit_float)dpi;
+}
+
 static struct graphics_methods graphics_methods = {
     graphics_destroy,
     draw_mode,
@@ -834,6 +848,10 @@ static struct graphics_methods graphics_methods = {
     get_text_bbox,
     overlay_disable,
     overlay_resize,
+    NULL, //set_attr
+    NULL, //show_native_keyboard
+    NULL, //hide_native_keyboard
+    get_dpi
 };
 
 /* create new graphics context on given context */
