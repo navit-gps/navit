@@ -277,6 +277,49 @@ void graphics_set_rect(struct graphics *gra, struct point_rect *pr) {
 }
 
 /**
+ * @brief unscale coordinates coming from the graphics backend via callback.
+ *
+ * @param l pointer to callback list
+ * @param pcount number of parameters attached to this callback
+ * @param p list of parameters
+ * @param context context handed over by callback_list_add_patch_function, gra in this case.
+ * @return nothing
+ */
+static void graphics_dpi_patch (struct callback_list *l, enum attr_type type, int pcount, void **p, void * context) {
+    /* this is black magic. We scaled all coordinates to the graphics backend
+     * to compensate screen dpi. Since the backends communicate back via the callback
+     * list, we hook this function to unscale the coordinates coming back to
+     * navit before actually calling the callbacks.
+     */
+    struct graphics * gra;
+    gra = (struct graphics *) context;
+    if(gra == NULL)
+        return;
+
+    if((type == attr_resize) && (pcount >= 2)) {
+        int w, h;
+        w = GPOINTER_TO_INT(p[0]);
+        h = GPOINTER_TO_INT(p[1]);
+        dbg(lvl_debug,"scaling attr_resize %d, %d, %d", pcount, w, h);
+        p[0] = GINT_TO_POINTER(graphics_dpi_unscale(gra,w));
+        p[1] = GINT_TO_POINTER(graphics_dpi_unscale(gra,h));
+    }
+    if((type == attr_button) && (pcount >=3)) {
+        struct point * pnt;
+        pnt = (struct point *) p[2];
+        dbg(lvl_debug,"scaling attr_button %d, %d, %d", pcount, pnt->x, pnt->y);
+        *pnt = graphics_dpi_unscale_point(gra, pnt);
+    }
+    if((type == attr_motion) && (pcount >=1)) {
+        struct point * pnt;
+        pnt = (struct point *) p[0];
+        dbg(lvl_debug,"scaling attr_motion %d, %d, %d", pcount, pnt->x, pnt->y);
+        *pnt = graphics_dpi_unscale_point(gra, pnt);
+    }
+    /* any more?  attr_keypress doesn't come with coordinates */
+}
+
+/**
  * Creates a new graphics object
  * attr type required
  * @param <>
@@ -304,6 +347,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
     cbl_attr.u.callback_list=this_->cbl;
+    callback_list_add_patch_function (this_->cbl, graphics_dpi_patch, (void*) this_);
     this_->attrs=attr_generic_add_attr(this_->attrs, &cbl_attr);
     this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, this_->attrs, this_->cbl);
     this_->brightness=0;
