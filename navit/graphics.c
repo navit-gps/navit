@@ -88,6 +88,9 @@ struct graphics {
     */
     int current_z_order;
     GHashTable *image_cache_hash;
+    /* for dpi compensation */
+    navit_float virtual_dpi;
+    navit_float real_dpi;
 };
 
 struct display_context {
@@ -143,10 +146,9 @@ static void graphics_gc_init(struct graphics *this_);
 
 static int graphics_dpi_scale(struct graphics * gra, int p) {
     navit_float result;
-    navit_float dpi = 400.0; /* hardware dpi */
-    navit_float unit = 95.0; /* navit assumes 95 dpi, 1px == 1/95 in */
-    result = (((navit_float)p) * dpi) / unit;
-    result = p * 2;
+    if(gra == NULL)
+        return p;
+    result = (((navit_float)p) * gra->real_dpi) / gra->virtual_dpi;
     return (int) result;
 }
 static struct point graphics_dpi_scale_point(struct graphics * gra, struct point *p) {
@@ -159,10 +161,9 @@ static struct point graphics_dpi_scale_point(struct graphics * gra, struct point
 }
 static int graphics_dpi_unscale(struct graphics * gra, int p) {
     navit_float result;
-    navit_float dpi = 400.0; /* hardware dpi */
-    navit_float unit = 95.0; /* navit assumes 95 dpi, 1px == 1/95 in */
-    result = (((navit_float)p) / unit) * dpi;
-    result = p/2;
+    if(gra == NULL)
+        return p;
+    result = (((navit_float)p) / gra->virtual_dpi) * gra->real_dpi;
     return (int) result;
 }
 static struct point graphics_dpi_unscale_point(struct graphics * gra, struct point *p) {
@@ -344,6 +345,9 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     }
     this_=g_new0(struct graphics, 1);
     this_->attrs=attr_list_dup(attrs);
+    /*TODO: add attrs for virtual and real dpi */
+    this_->virtual_dpi = 95;
+    this_->real_dpi = this_->virtual_dpi;
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
     cbl_attr.u.callback_list=this_->cbl;

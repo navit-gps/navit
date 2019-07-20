@@ -209,7 +209,7 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
     }
 
     /* Convert silly font size to pixels. by 64 is to convert fixpoint to int. */
-    dbg(lvl_error, "(font %s, %d=%f, %d)", font, size,((float)size)/64.0, ((size * 300) / 72) / 64);
+    dbg(lvl_debug, "(font %s, %d=%f, %d)", font, size,((float)size)/64.0, ((size * 300) / 72) / 64);
     font_priv->font->setPixelSize(((size * 300) / 72) / 64);
     //font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
     /* Check for bold font */
