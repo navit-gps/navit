@@ -141,7 +141,7 @@ static void graphics_process_selection(struct graphics *gra, struct displaylist 
 static void graphics_gc_init(struct graphics *this_);
 
 
-static int graphics_dpi_scale(int p) {
+static int graphics_dpi_scale(struct graphics * gra, int p) {
     navit_float result;
     navit_float dpi = 400.0; /* hardware dpi */
     navit_float unit = 95.0; /* navit assumes 95 dpi, 1px == 1/95 in */
@@ -149,15 +149,15 @@ static int graphics_dpi_scale(int p) {
     result = p * 2;
     return (int) result;
 }
-static struct point graphics_dpi_scale_point(struct point *p) {
+static struct point graphics_dpi_scale_point(struct graphics * gra, struct point *p) {
     struct point result = {-1,-1};
     if(!p)
         return result;
-    result.x = graphics_dpi_scale(p->x);
-    result.y = graphics_dpi_scale(p->y);
+    result.x = graphics_dpi_scale(gra, p->x);
+    result.y = graphics_dpi_scale(gra, p->y);
     return result;
 }
-static int graphics_dpi_unscale(int p) {
+static int graphics_dpi_unscale(struct graphics * gra, int p) {
     navit_float result;
     navit_float dpi = 400.0; /* hardware dpi */
     navit_float unit = 95.0; /* navit assumes 95 dpi, 1px == 1/95 in */
@@ -165,12 +165,12 @@ static int graphics_dpi_unscale(int p) {
     result = p/2;
     return (int) result;
 }
-static struct point graphics_dpi_unscale_point(struct point *p) {
+static struct point graphics_dpi_unscale_point(struct graphics * gra, struct point *p) {
     struct point result = {-1,-1};
     if(!p)
         return result;
-    result.x = graphics_dpi_unscale(p->x);
-    result.y = graphics_dpi_unscale(p->y);
+    result.x = graphics_dpi_unscale(gra, p->x);
+    result.y = graphics_dpi_unscale(gra, p->y);
     return result;
 }
 
@@ -374,9 +374,9 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
     if (!parent->meth.overlay_new)
         return NULL;
     this_=g_new0(struct graphics, 1);
-    p_scaled = graphics_dpi_scale_point(p);
-    w_scaled = graphics_dpi_scale(w);
-    h_scaled =graphics_dpi_scale(h);
+    p_scaled=graphics_dpi_scale_point(parent,p);
+    w_scaled=graphics_dpi_scale(parent,w);
+    h_scaled=graphics_dpi_scale(parent,h);
     this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, &p_scaled, w_scaled, h_scaled, wraparound);
     this_->image_cache_hash = parent->image_cache_hash;
     this_->parent = parent;
@@ -409,9 +409,9 @@ void graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int
         return;
     }
 
-    p_scaled = graphics_dpi_scale_point(p);
-    w_scaled = graphics_dpi_scale(w);
-    h_scaled =graphics_dpi_scale(h);
+    p_scaled = graphics_dpi_scale_point(this_,p);
+    w_scaled = graphics_dpi_scale(this_,w);
+    h_scaled =graphics_dpi_scale(this_,h);
     this_->meth.overlay_resize(this_->priv, &p_scaled, w_scaled, h_scaled, wraparound);
 }
 
@@ -480,7 +480,7 @@ struct graphics_font * graphics_named_font_new(struct graphics *gra, char *font,
     struct graphics_font *this_;
 
     this_=g_new0(struct graphics_font,1);
-    this_->priv=gra->meth.font_new(gra->priv, &this_->meth, font, graphics_dpi_scale(size), flags);
+    this_->priv=gra->meth.font_new(gra->priv, &this_->meth, font, graphics_dpi_scale(gra,size), flags);
     return this_;
 }
 
@@ -644,7 +644,7 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c) {
  * @author Martin Schaller (04/2008)
 */
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width) {
-    gc->meth.gc_set_linewidth(gc->priv, graphics_dpi_scale(width));
+    gc->meth.gc_set_linewidth(gc->priv, graphics_dpi_scale(gc->gra, width));
 }
 
 /**
@@ -658,9 +658,10 @@ void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsig
         int a;
         unsigned char * dash_list_scaled = g_alloca(sizeof (unsigned char) * n);
         for(a = 0; a < n; a ++) {
-            dash_list_scaled[a]=graphics_dpi_scale(dash_list[a]);
+            dash_list_scaled[a]=graphics_dpi_scale(gc->gra,dash_list[a]);
         }
-        gc->meth.gc_set_dashes(gc->priv, width, offset, dash_list, n);
+        gc->meth.gc_set_dashes(gc->priv, graphics_dpi_scale(gc->gra,width), graphics_dpi_scale(gc->gra,offset),
+                               dash_list_scaled, n);
     }
 }
 
@@ -775,33 +776,33 @@ static void image_new_helper(struct graphics *gra, struct graphics_image *this_,
                 struct graphics_image_buffer buffer= {"buffer:",graphics_image_type_unknown};
                 buffer.start=start;
                 buffer.len=len;
-                this_->hot = graphics_dpi_scale_point(&this_->hot);
+                this_->hot = graphics_dpi_scale_point(gra,&this_->hot);
                 if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_scale(this_->width);
+                    this_->width = graphics_dpi_scale(gra,this_->width);
                 if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_scale(this_->height);
+                    this_->height = graphics_dpi_scale(gra,this_->height);
                 this_->priv=gra->meth.image_new(gra->priv, &this_->meth, (char *)&buffer, &this_->width, &this_->height, &this_->hot,
                                                 rotate);
-                this_->hot = graphics_dpi_unscale_point(&this_->hot);
+                this_->hot = graphics_dpi_unscale_point(gra,&this_->hot);
                 if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_unscale(this_->width);
+                    this_->width = graphics_dpi_unscale(gra,this_->width);
                 if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_unscale(this_->height);
+                    this_->height = graphics_dpi_unscale(gra,this_->height);
                 g_free(start);
             }
         } else {
             if (strcmp(new_name,"buffer:")) {
-                this_->hot = graphics_dpi_scale_point(&this_->hot);
+                this_->hot = graphics_dpi_scale_point(gra,&this_->hot);
                 if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_scale(this_->width);
+                    this_->width = graphics_dpi_scale(gra,this_->width);
                 if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_scale(this_->height);
+                    this_->height = graphics_dpi_scale(gra,this_->height);
                 this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
-                this_->hot = graphics_dpi_unscale_point(&this_->hot);
+                this_->hot = graphics_dpi_unscale_point(gra,&this_->hot);
                 if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_unscale(this_->width);
+                    this_->width = graphics_dpi_unscale(gra,this_->width);
                 if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_unscale(this_->height);
+                    this_->height = graphics_dpi_unscale(gra,this_->height);
             }
         }
         if (this_->priv) {
@@ -968,8 +969,8 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
     struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
     int a;
     for(a=0; a < count; a ++)
-        p_scaled[a] = graphics_dpi_scale_point(&(p[a]));
-    this_->meth.draw_lines(this_->priv, gc->priv, p, count);
+        p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
+    this_->meth.draw_lines(this_->priv, gc->priv, p_scaled, count);
 }
 
 /**
@@ -986,8 +987,8 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
     int i=0;
     if(this_->meth.draw_circle) {
         struct point p_scaled;
-        p_scaled = graphics_dpi_scale_point(p);
-        this_->meth.draw_circle(this_->priv, gc->priv, &p_scaled, graphics_dpi_scale(r));
+        p_scaled = graphics_dpi_scale_point(this_,p);
+        this_->meth.draw_circle(this_->priv, gc->priv, &p_scaled, graphics_dpi_scale(this_,r));
     } else {
         /* do not scale circle_to_points */
         circle_to_points(p, r, 0, -1, 1026, pnt, &i, 1);
@@ -1005,8 +1006,8 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
 */
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h) {
     struct point p_scaled;
-    p_scaled = graphics_dpi_scale_point(p);
-    this_->meth.draw_rectangle(this_->priv, gc->priv, &p_scaled, graphics_dpi_scale(w), graphics_dpi_scale(h));
+    p_scaled = graphics_dpi_scale_point(this_,p);
+    this_->meth.draw_rectangle(this_->priv, gc->priv, &p_scaled, graphics_dpi_scale(this_,w), graphics_dpi_scale(this_,h));
 }
 
 /**
@@ -1024,7 +1025,7 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
         struct point * pin_scaled =  g_alloca(sizeof (struct point)*count_in);
         int a;
         for(a=0; a < count_in; a ++)
-            pin_scaled[a] = graphics_dpi_scale_point(&(pin[a]));
+            pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
         gra->meth.draw_polygon(gra->priv, gc->priv, pin_scaled, count_in);
     }
 }
@@ -1060,7 +1061,7 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2,
                         struct graphics_font *font, char *text, struct point *p, int dx, int dy) {
     struct point p_scaled;
-    p_scaled = graphics_dpi_scale_point(p);
+    p_scaled = graphics_dpi_scale_point(this_,p);
     this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, &p_scaled, dx, dy);
 }
 
@@ -1074,6 +1075,7 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy,
                             struct point *ret, int estimate) {
     this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret, estimate);
+    *ret=graphics_dpi_unscale_point(this_,ret);
 }
 
 /**
@@ -1100,7 +1102,7 @@ int  graphics_is_disabled(struct graphics *this_) {
 */
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img) {
     struct point p_scaled;
-    p_scaled = graphics_dpi_scale_point(p);
+    p_scaled = graphics_dpi_scale_point(this_,p);
     this_->meth.draw_image(this_->priv, gc->priv, &p_scaled, img->priv);
 }
 
@@ -1116,7 +1118,7 @@ static void graphics_draw_image_warp(struct graphics *this_, struct graphics_gc 
         struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
         int a;
         for(a=0; a < count; a ++)
-            p_scaled[a] = graphics_dpi_scale_point(&(p[a]));
+            p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
         this_->meth.draw_image_warp(this_->priv, gc->priv, p_scaled, count, img->priv);
     } else {
         dbg(lvl_error,"draw_image_warp not supported by graphics driver");
@@ -1132,7 +1134,7 @@ int graphics_draw_drag(struct graphics *this_, struct point *p) {
     struct point p_scaled;
     if (!this_->meth.draw_drag)
         return 0;
-    p_scaled = graphics_dpi_scale_point(p);
+    p_scaled = graphics_dpi_scale_point(this_,p);
     this_->meth.draw_drag(this_->priv, &p_scaled);
     return 1;
 }
