@@ -317,11 +317,11 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
 
     if (fmt==DEGREES_DECIMAL_ABSOLUTE) {
         if (lat<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f",lat);
         if ((lat<360)&&(lng<360))
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
         if (lng<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f",lng);
         return;
     }
 
@@ -439,7 +439,7 @@ inline void pcoord_format_degree_short(const struct pcoord *pc, char *buffer, in
  * @brief Converts an integer mercator coordinate pair to its string representation.
  *
  * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
- * {@code 45.28 -9.114333"E}.
+ * {@code 45.28 -9.114333}.
  *
  * @param pc Coordinates as integer mercator
  * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (at least 23 bytes)
