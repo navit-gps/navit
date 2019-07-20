@@ -219,7 +219,7 @@ public class NavitGraphics {
             /* Check if there is at least one application that can process a geo intent... */
             Uri intentUri = Uri.parse("geo:" + GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true));
             mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
-            
+
             PackageManager packageManager = context.getPackageManager();
             List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
                     PackageManager.MATCH_DEFAULT_ONLY);
@@ -237,7 +237,7 @@ public class NavitGraphics {
         public boolean onMenuItemClick(MenuItem item) {
             if (item.getItemId() != MENU_VIEW)
                 mContextMenuMapViewIntent = null;	/* Detroy the map view intent if the user didn't select the MENU_VIEW action */
-            
+
             switch (item.getItemId()) {
                 case MENU_DRIVE_HERE:
                     Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
@@ -246,13 +246,12 @@ public class NavitGraphics {
                     break;
                 case MENU_VIEW:
                     if (mContextMenuMapViewIntent != null) {
-	                    Log.e(TAG, "User clicked on view on menu");
-	                    if (mContextMenuMapViewIntent.resolveActivity(context.getPackageManager()) != null) {
-	                        context.startActivity(mContextMenuMapViewIntent);
-	                    } else {
-	                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
-	                    }
-	                    mContextMenuMapViewIntent = null;	/* Destoy the intent once it has been used */
+                        if (mContextMenuMapViewIntent.resolveActivity(context.getPackageManager()) != null) {
+                            context.startActivity(mContextMenuMapViewIntent);
+                        } else {
+                            Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
+                        }
+                        mContextMenuMapViewIntent = null;	/* Destoy the intent once it has been used */
                     } else {
                         Log.e(TAG, "User clicked on view on menu but intent was null. Discarding...");
                     }

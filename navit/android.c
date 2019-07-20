@@ -381,11 +381,9 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         char coord_str[32];
         if (!name || *name == '\0') {     /* When name is an empty string, use the geo coord instead */
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
-            dbg(lvl_error,"Coord str is:\"%s\"", coord_str);
             name = coord_str;
         }
         navit_set_destination(attr.u.navit, &pc, name, 1);
-
     }
     break;
     default:
