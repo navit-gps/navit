@@ -509,13 +509,21 @@ public class Navit extends Activity {
         // intent_data = "google.navigation:q=48.25676,16.643";
         // intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
         // intent_data = "google.navigation:ll=48.25676,16.643";
+        // intent_data = "geo:48.25676,16.643";
         if (startup_intent != null) {
             if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L) {
                 Log.d(TAG, "**2**A " + startup_intent.getAction());
                 Log.d(TAG, "**2**D " + startup_intent.getDataString());
                 String navi_scheme = startup_intent.getScheme();
-                if (navi_scheme != null && navi_scheme.equals("google.navigation")) {
-                    parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
+                if (navi_scheme != null) {
+                    if (navi_scheme.equals("google.navigation")) {
+                        parseNavigationURI(startup_intent.getData().getSchemeSpecificPart());
+                    } else if (navi_scheme.equals("geo") && startup_intent.getAction().equals("android.intent.action.VIEW")) {
+                        String geoString = startup_intent.getDataString().substring(4);     /* Remove the geo: prefix */
+                        Log.d(TAG, "We caught a geo intent for position " + geoString);
+                        invokeCallbackOnGeo(geoString, NavitGraphics.msg_type.CLB_SET_DESTINATION, "");
+                        //invokeCallbackOnGeo(startup_intent.getData().getSchemeSpecificPart(), NavitGraphics.msg_type.CLB_SET_DESTINATION, "");
+                    }
                 }
             } else {
                 Log.e(TAG, "timestamp for navigate_to expired! not using data");
@@ -569,6 +577,42 @@ public class Navit extends Activity {
         }
     }
 
+    /**
+     * @brief Invoke N_NavitGraphics.callback_handler on a geograhical position
+     *
+     * @param geoString A string containing the target geographical position with a format like "48.25676,16.643"
+     * @param msgType The type of message to send to the callback (see NavitGraphics.msg_type for possible values)
+     * @param name The name/label to associate to the geographical position
+    **/
+    private void invokeCallbackOnGeo(String geoString, NavitGraphics.msg_type msgType, String name) {
+        String[] geo = geoString.split(",");
+        if (geo.length == 2) {
+            try {
+                Bundle b = new Bundle();
+                Float lat = Float.valueOf(geo[0]);
+                Float lon = Float.valueOf(geo[1]);
+                b.putFloat("lat", lat);
+                b.putFloat("lon", lon);
+                b.putString("q", name);
+                Message msg = Message.obtain(N_NavitGraphics.callback_handler,
+                        msgType.ordinal());
+
+                msg.setData(b);
+                msg.sendToTarget();
+                Log.e(TAG, "target found (b): " + geoString);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.w(TAG, "Ignoring invalid geo string: " + geoString);
+        }
+    }
+
+    /**
+     * @brief Pase google navigation URIs (usually starting with "google.navigation:") and take the appropriate actions
+     *
+     * @param schemeSpecificPart A string containing the URI scheme, for example "ll=48.25676,16.643&q=blabla-strasse"
+    **/
     private void parseNavigationURI(String schemeSpecificPart) {
         String[] naviData = schemeSpecificPart.split("&");
         Pattern p = Pattern.compile("(.*)=(.*)");
@@ -586,39 +630,17 @@ public class Navit extends Activity {
         // c: google.navigation:ll=48.25676,16.643
         // b: google.navigation:q=48.25676,16.643
 
-        Float lat;
-        Float lon;
-        Bundle b = new Bundle();
-
         String geoString = params.get("ll");
+        String address = null;
         if (geoString != null) {
-            String address = params.get("q");
-            if (address != null) {
-                b.putString("q", address);
-            }
+            address = params.get("q");
         } else {
             geoString = params.get("q");
         }
 
         if (geoString != null) {
             if (geoString.matches("^[+-]{0,1}\\d+(|\\.\\d*),[+-]{0,1}\\d+(|\\.\\d*)$")) {
-                String[] geo = geoString.split(",");
-                if (geo.length == 2) {
-                    try {
-                        lat = Float.valueOf(geo[0]);
-                        lon = Float.valueOf(geo[1]);
-                        b.putFloat("lat", lat);
-                        b.putFloat("lon", lon);
-                        Message msg = Message.obtain(N_NavitGraphics.callback_handler,
-                                NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
-
-                        msg.setData(b);
-                        msg.sendToTarget();
-                        Log.e(TAG, "target found (b): " + geoString);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                }
+                invokeCallbackOnGeo(geoString, NavitGraphics.msg_type.CLB_SET_DESTINATION, address);
             } else {
                 start_targetsearch_from_intent(geoString);
             }
@@ -957,6 +979,7 @@ public class Navit extends Activity {
 
     public native void NavitDestroy();
 
+    public native int CallbackMessageChannel(int i, String s);
 
     private String getLocalizedString(String text) {
         return NavitGraphics.CallbackLocalizedString(text);

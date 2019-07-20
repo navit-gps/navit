@@ -356,13 +356,13 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
         char *p;
         char *stopstring;
 
-        // lat
+        // latitude
         p = strtok (parse_str,"#");
         g.lat = strtof(p, &stopstring);
-        // lon
+        // longitude
         p = strtok (NULL, "#");
         g.lng = strtof(p, &stopstring);
-        // description
+        // description/name of the place identied by lat and long
         name = strtok (NULL, "#");
 
         dbg(lvl_debug,"lat=%f",g.lat);
