@@ -536,11 +536,11 @@ static void draw_text(struct graphics_priv* gr, struct graphics_gc_priv* fg, str
         shadow.setColor(bg->pen->color());
         shadow.setWidth(3);
         painter->setPen(shadow);
-        path.addText(0, (font->font->pixelSize()/2) * -1, *font->font, tmp);
+        path.addText(0, 0, *font->font, tmp);
         painter->drawPath(path);
     }
     painter->setPen(*fg->pen);
-    painter->drawText(0, (font->font->pixelSize()/2) *-1, tmp);
+    painter->drawText(0, 0, tmp);
     painter->setWorldMatrix(sav);
 #endif
 }

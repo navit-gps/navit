@@ -1131,7 +1131,10 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy,
                             struct point *ret, int estimate) {
     this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret, estimate);
-    *ret=graphics_dpi_unscale_point(this_,ret);
+    ret[0]=graphics_dpi_unscale_point(this_,&(ret[0]));
+    ret[1]=graphics_dpi_unscale_point(this_,&(ret[1]));
+    ret[2]=graphics_dpi_unscale_point(this_,&(ret[2]));
+    ret[3]=graphics_dpi_unscale_point(this_,&(ret[3]));
 }
 
 /**
