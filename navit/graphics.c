@@ -330,7 +330,7 @@ static void graphics_dpi_patch (struct callback_list *l, enum attr_type type, in
 */
 struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     struct graphics *this_;
-    struct attr *type_attr, cbl_attr;
+    struct attr *type_attr, cbl_attr, *real_dpi_attr, *virtual_dpi_attr;
     struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
             struct callback_list *cbl);
 
@@ -344,10 +344,15 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
         dbg(lvl_error,"Failed to load graphics plugin %s.", type_attr->u.str);
         return NULL;
     }
+
+    virtual_dpi_attr=attr_search(attrs, NULL, attr_virtual_dpi);
+    real_dpi_attr=attr_search(attrs, NULL, attr_real_dpi);
+
     this_=g_new0(struct graphics, 1);
     this_->attrs=attr_list_dup(attrs);
-    /*TODO: add attrs for virtual and real dpi */
     this_->virtual_dpi = 96;
+    if(virtual_dpi_attr != NULL)
+        this_->virtual_dpi=virtual_dpi_attr->u.num;
     this_->real_dpi = this_->virtual_dpi;
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
@@ -360,7 +365,10 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->gamma=65536;
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
-    this_->real_dpi = graphics_get_dpi(this_);
+    if(real_dpi_attr != NULL)
+        this_->real_dpi=real_dpi_attr->u.num;
+    else
+        this_->real_dpi = graphics_get_dpi(this_);
     dbg(lvl_error,"Using virtual dpi %f, real dpi %f", this_->virtual_dpi, this_->real_dpi);
     if(this_->real_dpi != this_->virtual_dpi)
         callback_list_call_attr_2(this_->cbl, attr_resize, GINT_TO_POINTER(navit_get_width(parent->u.navit)),
