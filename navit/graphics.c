@@ -90,8 +90,7 @@ struct graphics {
     int current_z_order;
     GHashTable *image_cache_hash;
     /* for dpi compensation */
-    navit_float virtual_dpi;
-    navit_float real_dpi;
+    int dpi_factor;
 };
 
 struct display_context {
@@ -146,11 +145,11 @@ static void graphics_gc_init(struct graphics *this_);
 
 
 static int graphics_dpi_scale(struct graphics * gra, int p) {
-    navit_float result;
+    int result;
     if(gra == NULL)
         return p;
-    result = ((navit_float)p) * (gra->real_dpi/gra->virtual_dpi);
-    return (int) result;
+    result = p * gra->dpi_factor;
+    return result;
 }
 static struct point graphics_dpi_scale_point(struct graphics * gra, struct point *p) {
     struct point result = {-1,-1};
@@ -161,11 +160,11 @@ static struct point graphics_dpi_scale_point(struct graphics * gra, struct point
     return result;
 }
 static int graphics_dpi_unscale(struct graphics * gra, int p) {
-    navit_float result;
+    int result;
     if(gra == NULL)
         return p;
-    result = ((navit_float)p) * (gra->virtual_dpi/gra->real_dpi);
-    return (int) result;
+    result = p / gra->dpi_factor;
+    return result;
 }
 static struct point graphics_dpi_unscale_point(struct graphics * gra, struct point *p) {
     struct point result = {-1,-1};
@@ -345,17 +344,10 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
 
-    virtual_dpi_attr=attr_search(attrs, NULL, attr_virtual_dpi);
-    real_dpi_attr=attr_search(attrs, NULL, attr_real_dpi);
-
     this_=g_new0(struct graphics, 1);
     this_->attrs=attr_list_dup(attrs);
-    /*get virtual dpi */
-    this_->virtual_dpi = 96;
-    if(virtual_dpi_attr != NULL)
-        this_->virtual_dpi=virtual_dpi_attr->u.num;
-    /* default to 1:1 scaling */
-    this_->real_dpi = this_->virtual_dpi;
+    /* start with no scaling */
+    this_->dpi_factor=1;
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
     cbl_attr.u.callback_list=this_->cbl;
@@ -367,17 +359,24 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->gamma=65536;
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
-    /* get hardware dpi from config or backend */
-    if(real_dpi_attr != NULL)
-        this_->real_dpi=real_dpi_attr->u.num;
-    else {
-        /* Only get hardware DPI if virtual_dpi was provided in the config. This needs to be set on every
-         * platform individually, as currently there seem to be no sane default. */
-        if(virtual_dpi_attr != NULL)
-            this_->real_dpi = graphics_get_dpi(this_);
+    /*get dpi */
+    virtual_dpi_attr=attr_search(attrs, NULL, attr_virtual_dpi);
+    real_dpi_attr=attr_search(attrs, NULL, attr_real_dpi);
+    if(virtual_dpi_attr != NULL) {
+        navit_float virtual_dpi, real_dpi=0;
+        virtual_dpi=virtual_dpi_attr->u.num;
+        if(real_dpi_attr != NULL)
+            real_dpi=real_dpi_attr->u.num;
+        else
+            real_dpi=graphics_get_dpi(this_);
+        if((real_dpi != 0) && (virtual_dpi != 0)) {
+            this_->dpi_factor = round(real_dpi / virtual_dpi);
+            if(this_->dpi_factor < 1)
+                this_->dpi_factor = 1;
+            dbg(lvl_error,"Using virtual dpi %f, real dpi %f factor %d", virtual_dpi, real_dpi, this_->dpi_factor);
+        }
     }
-    dbg(lvl_error,"Using virtual dpi %f, real dpi %f", this_->virtual_dpi, this_->real_dpi);
-    if(this_->real_dpi != this_->virtual_dpi)
+    if(this_->dpi_factor != 1)
         callback_list_call_attr_2(this_->cbl, attr_resize, GINT_TO_POINTER(navit_get_width(parent->u.navit)),
                                   GINT_TO_POINTER(navit_get_height(parent->u.navit)));
     while (*attrs) {
@@ -443,8 +442,7 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
     if (!parent->meth.overlay_new)
         return NULL;
     this_=g_new0(struct graphics, 1);
-    this_->virtual_dpi = parent->virtual_dpi;
-    this_->real_dpi = parent->real_dpi;
+    this_->dpi_factor = parent->dpi_factor;
     p_scaled=graphics_dpi_scale_point(parent,p);
     w_scaled=graphics_dpi_scale(parent,w);
     h_scaled=graphics_dpi_scale(parent,h);
@@ -3143,22 +3141,7 @@ static void graphics_process_selection(struct graphics *gra, struct displaylist 
  * @returns dpi value. May be fraction therefore double.
  */
 navit_float graphics_get_dpi(struct graphics *gra) {
-    navit_float result;
     if (!gra->meth.get_dpi)
-        return gra->virtual_dpi;
-    result = gra->meth.get_dpi(gra->priv);
-    /* check if there is a difference from at least 50 dpi,
-     * otherwise refuse to scale */
-    if(result < gra->virtual_dpi) {
-        if((gra->virtual_dpi - result) < 50) {
-            dbg(lvl_debug,"Virtual dpi %f too close to real dpi %f to scale", gra->virtual_dpi, result);
-            result = gra->virtual_dpi;
-        }
-    } else {
-        if ((result - gra->virtual_dpi) < 50) {
-            dbg(lvl_debug,"Virtual dpi %f too close to real dpi %f to scale", gra->virtual_dpi, result);
-            result = gra->virtual_dpi;
-        }
-    }
-    return (result);
+        return 0;
+    return gra->meth.get_dpi(gra->priv);
 }

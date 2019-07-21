@@ -822,7 +822,7 @@ static navit_float get_dpi(struct graphics_priv * gr) {
     qreal dpi = 96;
     QScreen* primary = navit_app->primaryScreen();
     if (primary != NULL) {
-        dpi = primary->logicalDotsPerInch();
+        dpi = primary->physicalDotsPerInch();
     }
     return (navit_float)dpi;
 }
