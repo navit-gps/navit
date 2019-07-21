@@ -350,9 +350,11 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
 
     this_=g_new0(struct graphics, 1);
     this_->attrs=attr_list_dup(attrs);
+    /*get virtual dpi */
     this_->virtual_dpi = 96;
     if(virtual_dpi_attr != NULL)
         this_->virtual_dpi=virtual_dpi_attr->u.num;
+    /* default to 1:1 scaling */
     this_->real_dpi = this_->virtual_dpi;
     this_->cbl=callback_list_new();
     cbl_attr.type=attr_callback_list;
@@ -365,10 +367,15 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->gamma=65536;
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
+    /* get hardware dpi from config or backend */
     if(real_dpi_attr != NULL)
         this_->real_dpi=real_dpi_attr->u.num;
-    else
-        this_->real_dpi = graphics_get_dpi(this_);
+    else {
+        /* Only get hardware DPI if virtual_dpi was provided in the config. This needs to be set on every
+         * platform individually, as currently there seem to be no sane default. */
+        if(virtual_dpi_attr != NULL)
+            this_->real_dpi = graphics_get_dpi(this_);
+    }
     dbg(lvl_error,"Using virtual dpi %f, real dpi %f", this_->virtual_dpi, this_->real_dpi);
     if(this_->real_dpi != this_->virtual_dpi)
         callback_list_call_attr_2(this_->cbl, attr_resize, GINT_TO_POINTER(navit_get_width(parent->u.navit)),
@@ -3140,7 +3147,7 @@ navit_float graphics_get_dpi(struct graphics *gra) {
     if (!gra->meth.get_dpi)
         return gra->virtual_dpi;
     result = gra->meth.get_dpi(gra->priv);
-    /* check if there is a difference from at lead 100 dpi,
+    /* check if there is a difference from at least 50 dpi,
      * otherwise refuse to scale */
     if(result < gra->virtual_dpi) {
         if((gra->virtual_dpi - result) < 50) {
