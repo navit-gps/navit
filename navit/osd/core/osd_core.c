@@ -954,10 +954,11 @@ static void osd_odometer_click(struct osd_priv_common *opc, struct navit *nav, i
         return;
     if (button != 1)
         return;
-    if (navit_ignore_button(nav))
-        return;
     if (!!pressed == !!opc->osd_item.pressed)
         return;
+    if (navit_ignore_button(nav))
+        return;
+    opc->osd_item.pressed=pressed;
 
     gettimeofday(&tv,NULL);
     curr_time = (double)(tv.tv_usec)/1000000.0+tv.tv_sec;
@@ -1359,10 +1360,11 @@ static void osd_stopwatch_click(struct osd_priv_common *opc, struct navit *nav, 
         return;
     if (button != 1)
         return;
-    if (navit_ignore_button(nav))
-        return;
     if (!!pressed == !!opc->osd_item.pressed)
         return;
+    if (navit_ignore_button(nav))
+        return;
+    opc->osd_item.pressed=pressed;
 
     if (pressed) { //single click handling
 
@@ -2725,13 +2727,17 @@ static void osd_speed_warner_click(struct osd_priv_common *opc, struct navit *na
         return;
     if (button != 1)
         return;
-    if (navit_ignore_button(nav))
-        return;
     if (!!pressed == !!opc->osd_item.pressed)
         return;
 
-    this->active = !this->active;
-    osd_speed_warner_draw(opc, nav, NULL);
+    if (navit_ignore_button(nav))
+        return;
+    opc->osd_item.pressed=pressed;
+    if (pressed)
+    {
+        this->active = !this->active;
+        osd_speed_warner_draw(opc, nav, NULL);
+    }
 }
 
 
