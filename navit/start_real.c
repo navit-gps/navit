@@ -207,7 +207,6 @@ int main_real(int argc, char * const* argv) {
         dbg(lvl_error, "%s", _("Internal initialization failed, exiting. Check previous error messages."));
         exit(5);
     }
-    main_update_default_layout(navit.u.navit);
     conf.type=attr_config;
     conf.u.config=config;
     if (startup_file) {
