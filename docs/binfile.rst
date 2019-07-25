@@ -114,7 +114,7 @@ An object 'fits' inside of a tile if the coordinates of the object (min lat, min
 
 Any object that cross the equator or the poles is placed in the top-most tile because it can not fit inside of any sub-tile.
 
-Some important objects are placed into upper level tiles despite of their length to be easier reachable for routing or display purposes. This is done by specifying maximum tile name length for them in phase34_process_file() function in `navit/maptool/misc.c`__.
+Some important objects are placed into upper level tiles despite of their length to be easier reachable for routing or display purposes. This is done by specifying maximum tile name length for them in item_order_by_type() function in `navit/maptool/misc.c`__.
 
 BTW, "order" (zoom level) values used to query map and referred in <itemgra> and route_depth are equal to (tile_name_length-4).
 
