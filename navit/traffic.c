@@ -1723,7 +1723,7 @@ static struct map_rect * traffic_location_open_map_rect(struct traffic_location 
     transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
     rg->sel = route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
-            ROUTE_RECT_DIST_ABS(this_->fuzziness));
+                         ROUTE_RECT_DIST_ABS(this_->fuzziness));
 
     if (!rg->sel)
         return NULL;
