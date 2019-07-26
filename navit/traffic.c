@@ -80,10 +80,10 @@
 #define ROUTE_ORDER 18
 
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
-#define ROUTE_RECT_DIST_ABS 1000
+#define ROUTE_RECT_DIST_ABS(x) ((x == location_fuzziness_low_res) ? 1000 : 100)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
-#define ROUTE_RECT_DIST_REL 0
+#define ROUTE_RECT_DIST_REL(x) 0
 
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
@@ -1721,7 +1721,8 @@ static struct map_rect * traffic_location_open_map_rect(struct traffic_location 
     transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
     transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
-    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
+    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+            ROUTE_RECT_DIST_ABS(this_->fuzziness));
 
     if (!rg->sel)
         return NULL;
