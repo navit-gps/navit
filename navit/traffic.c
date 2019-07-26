@@ -1789,6 +1789,23 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                 route_graph_add_turn_restriction(rg, item);
             else if ((item->type < route_item_first) || (item->type > route_item_last))
                 continue;
+            /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+            if ((this_->road_type == type_highway_land) || (this_->road_type == type_highway_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp))
+                    continue;
+            } else if (this_->road_type == type_street_n_lanes) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city))
+                    continue;
+            } else if ((this_->road_type == type_street_4_land) || (this_->road_type == type_street_4_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city) &&
+                        (item->type != type_street_3_land) && (item->type != type_street_3_city))
+                    continue;
+            }
             if (item_get_default_flags(item->type)) {
 
                 item_coord_rewind(item);
