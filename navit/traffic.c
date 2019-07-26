@@ -76,8 +76,9 @@
 /** Flag to indicate the message store should not be exported */
 #define PROCESS_MESSAGES_NO_DUMP_STORE 1 << 1
 
-/** The lowest order of items to consider */
-#define ROUTE_ORDER 18
+/** The lowest order of items to consider (always the default order for the next-lower road type) */
+#define ROUTE_ORDER(x) (((x == type_highway_land) || (x == type_highway_city) || (x == type_street_n_lanes)) \
+        ? 10 : ((x == type_street_4_land) || (x == type_street_4_city)) ? 12 : 18)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
 #define ROUTE_RECT_DIST_ABS(x) ((x == location_fuzziness_low_res) ? 1000 : 100)
@@ -1721,7 +1722,7 @@ static struct map_rect * traffic_location_open_map_rect(struct traffic_location 
     transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
     transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
-    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+    rg->sel = route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
             ROUTE_RECT_DIST_ABS(this_->fuzziness));
 
     if (!rg->sel)
