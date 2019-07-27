@@ -5206,7 +5206,7 @@ struct map * traffic_get_map(struct traffic *this_) {
         a_description.type = attr_description;
         a_description.u.str = "Traffic";
         a_traffic.type = attr_traffic;
-        a_description.u.traffic = this_;
+        a_traffic.u.traffic = this_;
 
         attrs[0] = &a_type;
         attrs[1] = &data;
