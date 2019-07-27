@@ -555,6 +555,7 @@ static void osm_read_input_data(struct maptool_params *p, char *suffix) {
         p->osm.towns=tempfile(suffix,"towns",1);
     }
     if (p->process_ways && p->process_nodes) {
+        p->osm.multipolygons=tempfile(suffix,"multipolygons",1);
         p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",1);
         p->osm.line2poi=tempfile(suffix,"line2poi",1);
         p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
@@ -599,6 +600,8 @@ static void osm_read_input_data(struct maptool_params *p, char *suffix) {
         fclose(p->osm.nodes);
     if (p->osm.turn_restrictions)
         fclose(p->osm.turn_restrictions);
+    if (p->osm.multipolygons)
+        fclose(p->osm.multipolygons);
     if (p->osm.associated_streets)
         fclose(p->osm.associated_streets);
     if (p->osm.house_number_interpolations)
@@ -723,6 +726,21 @@ static void osm_process_turn_restrictions(struct maptool_params *p, char *suffix
         tempfile_unlink(suffix,"turn_restrictions");
 }
 
+static void osm_process_multipolygons(struct maptool_params *p, char *suffix) {
+    FILE *ways_split, *ways_split_index, *relations, *coords;
+    p->osm.multipolygons=tempfile(suffix,"multipolygons",0);
+    if(!p->osm.multipolygons)
+        return;
+    relations=tempfile(suffix,"relations", 1);
+    coords=fopen("coords.tmp", "rb");
+    ways_split=tempfile(suffix,"ways_split",0);
+    ways_split_index=tempfile(suffix,"ways_split_index",0);
+    process_multipolygons(p->osm.multipolygons,coords,ways_split,ways_split_index,relations);
+    fclose(coords);
+    fclose(relations);
+    fclose(p->osm.multipolygons);
+}
+
 static void maptool_dump(struct maptool_params *p, char *suffix) {
     char *files[10];
     int i,files_count=0;
@@ -822,6 +840,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         tempfile_unlink(suffix,"ways_split_ref");
         tempfile_unlink(suffix,"coastline");
         tempfile_unlink(suffix,"turn_restrictions");
+        tempfile_unlink(suffix,"multipolygons");
         tempfile_unlink(suffix,"graph");
         tempfile_unlink(suffix,"tilesdir");
         tempfile_unlink(suffix,"boundaries");
@@ -1007,6 +1026,11 @@ int main(int argc, char **argv) {
         }
         if(!p.keep_tmpfiles)
             tempfile_unlink(suffix,"ways_split_index");
+    }
+    if (start_phase(&p,"generating multipolygons")) {
+        if(p.process_relations) {
+            osm_process_multipolygons(&p, suffix);
+        }
     }
     if (p.process_relations && p.process_ways && p.process_nodes
             && start_phase(&p,"processing associated street relations")) {

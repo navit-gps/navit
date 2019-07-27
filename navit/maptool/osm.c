@@ -1616,8 +1616,23 @@ void osm_end_relation(struct maptool_osm *osm) {
 
     if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
         tmp_item_bin->type=type;
-    } else
+    } else {
         type=type_none;
+        tmp_item_bin->type=type;
+    }
+
+    fprintf(stderr,"relation_type=%s\n", relation_type);
+    if ((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+        item_bin_write(tmp_item_bin, osm->multipolygons);
+    }
+
+    /*TODO: check if this was a bug: Previously attr_longest_match always failed, because
+     * item_is_poly_place never matched causing attr_mapping_rel2poly_place to be empty.
+     * Since I don't know what happenes if type suddenly is != type_none, I force the
+     * old behaviour here */
+    type=type_none;
+    tmp_item_bin->type=type;
+
 
     if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
             && (boundary || type!=type_none)) {
@@ -2641,6 +2656,163 @@ void process_house_number_interpolations(FILE *in, struct files_relation_process
     relations_destroy(relations);
     g_list_foreach(fp.allocations, (GFunc)free, NULL);
     g_list_free(fp.allocations);
+}
+
+#define MEMBER_MAX 20
+struct multipolygon {
+    osmid relid;
+    struct item_bin * rel;
+    int inner_count;
+    int outer_count;
+    struct item_bin ** inner;
+    struct item_bin ** outer;
+    int order;
+};
+
+static void process_multipolygons_finish(GList *tr, FILE *out) {
+    GList *l=tr;
+    fprintf(stderr,"process_multipolygons_finish\n");
+    while(l) {
+        int a;
+        struct multipolygon *multipolygon=l->data;
+        struct rect bbox;
+        /* combine outer to full loops */
+
+        /* combine inner to full loops */
+
+        /* calculate bounding box */
+
+        /* write out */
+        int order;
+        char tilebuf[20]="";
+        struct item_bin* ib=tmp_item_bin;
+        item_bin_init(ib,multipolygon->rel->type);
+        item_bin_copy_coord(ib,multipolygon->outer[0],1);
+        item_bin_copy_attr(ib,multipolygon->rel,attr_osm_relationid);
+
+        for(a = 0; a < multipolygon->inner_count; a ++) {
+            int hole_len;
+            char * buffer;
+            int used =0;
+            osmid * id;
+            hole_len = multipolygon->inner[a]->clen *4;
+            hole_len+=4 + 8;
+            buffer=g_alloca(hole_len);
+            id = (osmid *) item_bin_get_attr(multipolygon->inner[a], attr_osm_wayid, NULL);
+            if(id !=NULL)
+                memcpy(&(buffer[used]), id, sizeof(id));
+            used += sizeof(id);
+            memcpy(&(buffer[used]), &(multipolygon->inner[a]->clen), hole_len - used);
+            item_bin_add_attr_data(ib, attr_poly_hole, buffer, hole_len);
+        }
+
+        order=tile(&bbox,"",tilebuf,sizeof(tilebuf)-1,overlap,NULL);
+        if(order > multipolygon->order)
+            order=multipolygon->order;
+
+        item_bin_add_attr_range(ib,attr_order,0,order);
+        item_bin_write(ib, out);
+
+        /* clean up this item */
+        for (a=0; a < multipolygon->inner_count; a ++)
+            g_free(multipolygon->inner[a]);
+        g_free(multipolygon->inner);
+        for (a=0; a < multipolygon->outer_count; a ++)
+            g_free(multipolygon->outer[a]);
+        g_free(multipolygon->outer);
+        g_free(multipolygon->rel);
+        g_free(multipolygon);
+        /* next item */
+        l = g_list_next(l);
+    }
+    /* done with that list. All items referred should be deleted already. */
+    g_list_free(tr);
+}
+
+static void process_multipolygons_member(void *func_priv, void *relation_priv, struct item_bin *member,
+        void *member_priv) {
+    int type=(long)member_priv;
+    int i;
+    struct multipolygon *multipolygon=relation_priv;
+    fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
+            (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
+    /* we remeber the whole binary item, as we may want to have the attributes later on finalize */
+    if(type) {
+        /* copy the member as inner */
+        multipolygon->inner=(struct item_bin**) g_realloc(multipolygon->inner,
+                            sizeof(struct item_bin *) * (multipolygon->inner_count +1));
+        multipolygon->inner[multipolygon->inner_count]=item_bin_dup(member);
+        multipolygon->inner_count ++;
+    } else {
+        /* copy the member as outer */
+        multipolygon->outer=(struct item_bin**) g_realloc(multipolygon->outer,
+                            sizeof(struct item_bin *) * (multipolygon->outer_count +1));
+        multipolygon->outer[multipolygon->outer_count]=item_bin_dup(member);
+        multipolygon->outer_count ++;
+    }
+    i=item_order_by_type(member->type);
+    if(i<multipolygon->order)
+        multipolygon->order=i;
+
+}
+
+static GList *process_multipolygons_setup(FILE *in, struct relations *relations) {
+    struct relation_member outer[MEMBER_MAX];
+    int outer_count=0;
+    struct relation_member inner[MEMBER_MAX];
+    int inner_count=0;
+    long long relid;
+    struct item_bin *ib;
+    struct relations_func *relations_func;
+    int min_count;
+    GList *multipolygons=NULL;
+
+    fseek(in, 0, SEEK_SET);
+    relations_func=relations_func_new(process_multipolygons_member, NULL);
+    while ((ib=read_item(in))) {
+        int a;
+        struct multipolygon *p_multipolygon;
+        relid=item_bin_get_relationid(ib);
+        min_count=0;
+        while((outer_count < MEMBER_MAX) && (search_relation_member(ib, "outer",&(outer[outer_count]),&min_count))) {
+            if(outer[outer_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member ");
+            outer_count ++;
+        }
+        min_count=0;
+        while((inner_count < MEMBER_MAX) && (search_relation_member(ib, "inner",&(inner[inner_count]),&min_count))) {
+            if(inner[inner_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for inner member ");
+            inner_count ++;
+        }
+        fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
+        if(outer == 0) {
+            osm_warning("relation",relid,0,"multipolygon: missing outer member ");
+            continue;
+        }
+        p_multipolygon=g_new0(struct multipolygon, 1);
+        p_multipolygon->relid=relid;
+        p_multipolygon->order=255;
+        p_multipolygon->rel=item_bin_dup(ib);
+        for (a = 0; a < outer_count; a ++)
+            relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 0, outer[a].type,
+                                                outer[a].id);
+        for (a = 0; a < inner_count; a ++)
+            relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 1, inner[a].type,
+                                                inner[a].id);
+        multipolygons=g_list_append(multipolygons, p_multipolygon);
+    }
+    return multipolygons;
+}
+
+void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
+    struct relations *relations=relations_new();
+    GList *multipolygons;
+    fseek(in, 0, SEEK_SET);
+    multipolygons=process_multipolygons_setup(in, relations);
+    relations_process(relations, coords, ways);
+    process_multipolygons_finish(multipolygons, out);
+    relations_destroy(relations);
 }
 
 struct turn_restriction {

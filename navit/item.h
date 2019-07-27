@@ -50,7 +50,7 @@ extern int default_flags[];
 #define item_type_is_area(type) ((type) >= type_area)
 #define item_is_town(item) ((item).type >= type_town_label && (item).type <= type_district_label_1e7)
 #define item_is_district(item) ((item).type >= type_district_label && (item).type <= type_district_label_1e7)
-#define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
+#define item_is_poly_place(item) ((item).type >= type_poly_place && (item).type <= type_poly_place6)
 #define item_is_point(item) ((item).type < type_line)
 #define item_is_custom_poi(item) ((item).type >= type_poi_customg && (item).type < type_line)
 #define item_is_street(item) (((item).type >= type_street_nopass && (item).type <= type_roundabout) \
@@ -68,26 +68,26 @@ extern int default_flags[];
 struct coord;
 
 enum change_mode {
-	change_mode_delete,
-	change_mode_modify,
-	change_mode_append,
-	change_mode_prepend,
+    change_mode_delete,
+    change_mode_modify,
+    change_mode_append,
+    change_mode_prepend,
 };
 
 struct item_methods {
-	void (*item_coord_rewind)(void *priv_data);
-	int (*item_coord_get)(void *priv_data, struct coord *c, int count);
-	void (*item_attr_rewind)(void *priv_data);
-	int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
-	int (*item_coord_is_node)(void *priv_data);
-	int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
-	int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
-	int (*item_type_set)(void *priv_data, enum item_type type);
+    void (*item_coord_rewind)(void *priv_data);
+    int (*item_coord_get)(void *priv_data, struct coord *c, int count);
+    void (*item_attr_rewind)(void *priv_data);
+    int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
+    int (*item_coord_is_node)(void *priv_data);
+    int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
+    int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
+    int (*item_type_set)(void *priv_data, enum item_type type);
 };
 
 struct item_id {
-	int id_hi;
-	int id_lo;
+    int id_hi;
+    int id_lo;
 };
 
 #define ITEM_ID_FMT "(0x%x,0x%x)"
@@ -97,16 +97,16 @@ struct item_id {
  * Represents an object on a map, such as a POI, a building, a way or a boundary.
  */
 struct item {
-	enum item_type type; /**< Type of the item.*/
-	int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
-	int id_lo; /**< Second part of the ID of the item.*/
-	struct map *map; /**< The map this items belongs to.*/
-	struct item_methods *meth; /**< Methods to manipulate this item.*/
-	void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
+    enum item_type type; /**< Type of the item.*/
+    int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
+    int id_lo; /**< Second part of the ID of the item.*/
+    struct map *map; /**< The map this items belongs to.*/
+    struct item_methods *meth; /**< Methods to manipulate this item.*/
+    void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
 };
 
 extern struct item_range {
-	enum item_type min,max;
+    enum item_type min,max;
 } item_range_all;
 
 extern struct item busy_item;

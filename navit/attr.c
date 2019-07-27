@@ -43,6 +43,7 @@
 #include "util.h"
 #include "types.h"
 #include "xmlconfig.h"
+#include "layout.h"
 
 struct attr_name {
     enum attr_type attr;
@@ -471,6 +472,9 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     if (type == attr_nav_status) {
         return nav_status_to_text(attr->u.num);
     }
+    if (type == attr_poly_hole) {
+        return g_strdup_printf("osm_wayid=%lld", attr->u.poly_hole->osmid);
+    }
     return g_strdup_printf("(no text[%s])", attr_to_name(type));
 }
 
@@ -769,6 +773,9 @@ int attr_data_size(struct attr *attr) {
         int i=0;
         while (attr->u.attr_types[i++] != attr_none);
         return i*sizeof(enum attr_type);
+    }
+    if (attr->type == attr_poly_hole) {
+        return (sizeof(attr->u.poly_hole->coord_count) + (attr->u.poly_hole->coord_count * sizeof(*attr->u.poly_hole->coord)));
     }
     dbg(lvl_error,"size for %s unknown", attr_to_name(attr->type));
     return 0;
