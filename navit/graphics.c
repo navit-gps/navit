@@ -1304,16 +1304,26 @@ int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keybo
 #include "popup.h"
 #include <stdio.h>
 
+struct displayitem_poly_holes {
+    int count;
+    int *ccount;
+    struct coord ** coords;
+};
+
 /**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
+ * @brief graphics display item structure
+ *
+ * The graphics item passes the ap items and other items with this structure
+ * to the graphics drawing routines. The struct is only a stub. It is allocated
+ * including "count -1" struct coord's following c[0], if "holes" not NULL, by a
+ * polygon hole structure, and if label != NULL, a series of zero terminated
+ * strings followed by another zero for label.
 */
 struct displayitem {
     struct displayitem *next;
     struct item item;
     char *label;
+    struct displayitem_poly_holes * holes;
     int z_order;
     int count;
     struct coord c[0];
@@ -1349,8 +1359,15 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     struct displayitem *di;
     int len,i;
     char *p;
+    struct attr attr;
+    int hole_count=0;
+    int hole_total_coords=0;
+    int holes_length;
 
+    /* calculate number of bytes required */
+    /* own length */
     len=sizeof(*di)+count*sizeof(*c);
+    /* add length of lables including closing zero */
     if (label && label_count) {
         for (i = 0 ; i < label_count ; i++) {
             if (label[i])
@@ -1359,12 +1376,44 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
                 len++;
         }
     }
+    /* add length for holes */
+    item_attr_rewind(item);
+    while(item_attr_get(item, attr_poly_hole, &attr)) {
+        dbg(lvl_error,"got hole %lld",attr.u.poly_hole->osmid);
+        hole_count ++;
+        hole_total_coords += attr.u.poly_hole->coord_count;
+    }
+    holes_length = sizeof(struct displayitem_poly_holes) + hole_count * sizeof(int) + hole_count * sizeof(
+                       struct coord *) + hole_total_coords * sizeof(struct coord);
+    dbg(lvl_error,"got %d holes with %d coords total", hole_count, hole_total_coords);
+    len += holes_length;
+
     p=g_malloc(len);
 
     di=(struct displayitem *)p;
     p+=sizeof(*di)+count*sizeof(*c);
     di->item=*item;
     di->z_order=0;
+    di->holes=NULL;
+    if(hole_count > 0) {
+        struct displayitem_poly_holes* holes;
+        holes=(struct displayitem_poly_holes *) p;
+        p+=sizeof(*holes);
+        holes->count=0;
+        holes->ccount = (int *) p;
+        p+=hole_count * sizeof(int);
+        holes->coords = (struct coord **)p;
+        p+=hole_count * sizeof(struct coord *);
+        item_attr_rewind(item);
+        while(item_attr_get(item, attr_poly_hole, &attr)) {
+            holes->coords[holes->count] = (struct coord *)p;
+            holes->ccount[holes->count] = attr.u.poly_hole->coord_count;
+            memcpy(holes->coords[holes->count], attr.u.poly_hole->coord, holes->ccount[holes->count] * sizeof(struct coord));
+            p += holes->ccount[holes->count] * sizeof(struct coord);
+            holes->count ++;
+        }
+        di->holes=holes;
+    }
     if (label && label_count) {
         di->label=p;
         for (i = 0 ; i < label_count ; i++) {
@@ -2260,6 +2309,10 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             graphics_gc_set_foreground(gc, &e->color);
             dc->gc=gc;
         }
+        if(di->holes != NULL) {
+            dbg(lvl_error,"drawing somthing with %d holes",di->holes->count);
+        }
+
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             count=limit_count(di->c, count);
         if (dc->type == type_poly_water_tiled)
