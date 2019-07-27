@@ -1623,6 +1623,7 @@ void osm_end_relation(struct maptool_osm *osm) {
 
     fprintf(stderr,"relation_type=%s\n", relation_type);
     if ((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
         item_bin_write(tmp_item_bin, osm->multipolygons);
     }
 
@@ -1681,6 +1682,8 @@ static void relation_add_tag(char *k, char *v) {
         }
     } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
+    } else if (! g_strcmp0(k,"name")) {
+        attr_strings_save(attr_string_label, v);
     }
     if (add_tag) {
         char *tag;
@@ -2689,6 +2692,7 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         item_bin_init(ib,multipolygon->rel->type);
         item_bin_copy_coord(ib,multipolygon->outer[0],1);
         item_bin_copy_attr(ib,multipolygon->rel,attr_osm_relationid);
+        item_bin_copy_attr(ib,multipolygon->rel,attr_label);
 
         for(a = 0; a < multipolygon->inner_count; a ++) {
             int hole_len;
@@ -2702,6 +2706,9 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
             if(id !=NULL)
                 memcpy(&(buffer[used]), id, sizeof(id));
             used += sizeof(id);
+            /* item_bin gives the coordinate count in 32bit values. We want to have it in
+             * number of coordinates. So divide by 2. Then we can memcopy*/
+            multipolygon->inner[a]->clen /= 2;
             memcpy(&(buffer[used]), &(multipolygon->inner[a]->clen), hole_len - used);
             item_bin_add_attr_data(ib, attr_poly_hole, buffer, hole_len);
         }
