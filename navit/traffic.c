@@ -251,6 +251,8 @@ struct xml_element {
     char * text;                 /**< Character data (NULL-terminated) */
 };
 
+static struct map_methods traffic_map_meth;
+
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
                                  int flags, struct attr **attrs, struct coord *c, int count, char * id);
@@ -267,6 +269,7 @@ static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
 static int tm_type_set(void *priv_data, enum item_type type);
+struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
@@ -1706,6 +1709,27 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
 }
 
 /**
+ * @brief Obtains a map selection for the traffic location.
+ *
+ * The map selection is a rectangle around the points of the traffic location, with some extra padding as
+ * specified in `ROUTE_RECT_DIST_REL` and `ROUTE_RECT_DIST_ABS`, with a map order specified in `ROUTE_ORDER`.
+ *
+ * @param this_ The traffic location
+ * @param projection The projection to be used by coordinates of the selection (should correspond to the
+ * projection of the target map)
+ *
+ * @return A map selection
+ */
+struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection) {
+    /* Corners of the enclosing rectangle, in Mercator coordinates */
+    struct coord c1, c2;
+    transform_from_geo(projection, this_->priv->sw, &c1);
+    transform_from_geo(projection, this_->priv->ne, &c2);
+    return route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+            ROUTE_RECT_DIST_ABS(this_->fuzziness));
+}
+
+/**
  * @brief Opens a map rectangle around the end points of the traffic location.
  *
  * Prior to calling this function, the caller must ensure `rg->m` points to the map to be used, and the enclosing
@@ -1718,14 +1742,7 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
  */
 static struct map_rect * traffic_location_open_map_rect(struct traffic_location * this_, struct route_graph * rg) {
     /* Corners of the enclosing rectangle, in Mercator coordinates */
-    struct coord c1, c2;
-
-    transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
-    transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
-
-    rg->sel = route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
-                         ROUTE_RECT_DIST_ABS(this_->fuzziness));
-
+    rg->sel = traffic_location_get_rect(this_, map_projection(rg->m));
     if (!rg->sel)
         return NULL;
     rg->mr = map_rect_new(rg->m, rg->sel);
