@@ -136,6 +136,7 @@ struct traffic_message_priv {
  */
 struct map_priv {
     GList * items;              /**< The map items */
+    struct traffic_shared_priv *shared; /**< Private data shared between all instances */
     // TODO items by start/end coordinates? In a later phase…
 };
 
@@ -5151,9 +5152,17 @@ struct item ** traffic_message_get_items(struct traffic_message * this_) {
  */
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret;
+    struct attr *traffic_attr;
+
+    traffic_attr = attr_search(attrs, NULL, attr_traffic);
+    if (!traffic_attr) {
+        dbg(lvl_error, "attr_traffic not found!");
+        return NULL;
+    }
 
     ret = g_new0(struct map_priv, 1);
     *meth = traffic_map_meth;
+    ret->shared = traffic_attr->u.traffic->shared;
 
     return ret;
 }
@@ -5187,18 +5196,21 @@ struct map * traffic_get_map(struct traffic *this_) {
     if (!this_->map) {
         /* no map yet, create a new one */
         struct attr *attrs[4];
-        struct attr a_type,data,a_description;
+        struct attr a_type,data,a_description,a_traffic;
         a_type.type = attr_type;
         a_type.u.str = "traffic";
         data.type = attr_data;
         data.u.str = "";
         a_description.type = attr_description;
         a_description.u.str = "Traffic";
+        a_traffic.type = attr_traffic;
+        a_description.u.traffic = this_;
 
         attrs[0] = &a_type;
         attrs[1] = &data;
         attrs[2] = &a_description;
-        attrs[3] = NULL;
+        attrs[3] = &a_traffic;
+        attrs[4] = NULL;
 
         this_->map = map_new(NULL, attrs);
         navit_object_ref((struct navit_object *) this_->map);
