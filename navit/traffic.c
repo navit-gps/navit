@@ -96,6 +96,9 @@ struct traffic_shared_priv {
     GList * messages;           /**< Currently active messages */
     GList * message_queue;      /**< Queued messages, waiting to be processed */
     // TODO messages by ID?                 In a later phase…
+    struct mapset *ms;          /**< The mapset used for routing */
+    struct route *rt;           /**< The route to notify of traffic changes */
+    struct map *map;            /**< The traffic map, in which traffic distortions are stored */
 };
 
 /**
@@ -113,9 +116,6 @@ struct traffic {
     struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;    /**< Idle callback to process new messages */
     struct event_idle *idle_ev;  /**< The pointer to the idle event */
-    struct mapset *ms;           /**< The mapset used for routing */
-    struct route *rt;            /**< The route to notify of traffic changes */
-    struct map *map;             /**< The traffic map, in which traffic distortions are stored */
 };
 
 struct traffic_location_priv {
@@ -3857,7 +3857,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
                     /* else find matching segments from scratch */
-                    traffic_message_add_segments(message, this_->ms, data, this_->map, this_->rt);
+                    traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
@@ -3876,7 +3876,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                    traffic_message_remove_item_data(stored_msg, message, this_->rt);
+                    traffic_message_remove_item_data(stored_msg, message, this_->shared->rt);
                     traffic_message_destroy(stored_msg);
                 }
 
@@ -3928,7 +3928,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 if (stored_msg->priv->items)
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                traffic_message_remove_item_data(stored_msg, NULL, this_->rt);
+                traffic_message_remove_item_data(stored_msg, NULL, this_->shared->rt);
                 traffic_message_destroy(stored_msg);
             }
 
@@ -3949,7 +3949,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     }
 
     /* TODO see comment on route_recalculate_partial about thread-safety */
-    route_recalculate_partial(this_->rt);
+    route_recalculate_partial(this_->shared->rt);
 
     /* trigger redraw if segments have changed */
     if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
@@ -4037,8 +4037,6 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
     // TODO do this once and cycle through all plugins
     this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
     this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
-
-    this_->map = NULL;
 
     if (!this_->shared)
         traffic_set_shared(this_);
@@ -5180,20 +5178,7 @@ struct map * traffic_get_map(struct traffic *this_) {
     struct traffic_message ** messages;
     struct traffic_message ** cur_msg;
 
-    if (!this_->map) {
-        /* see if any of the other instances has already created a map */
-        attr = g_new0(struct attr, 1);
-        iter = navit_attr_iter_new();
-        while (navit_get_attr(this_->navit, attr_traffic, attr, iter)) {
-            traffic = (struct traffic *) attr->u.navit_object;
-            if (traffic->map)
-                this_->map = traffic->map;
-        }
-        navit_attr_iter_destroy(iter);
-        g_free(attr);
-    }
-
-    if (!this_->map) {
+    if (!this_->shared->map) {
         /* no map yet, create a new one */
         struct attr *attrs[4];
         struct attr a_type,data,a_description,a_traffic;
@@ -5212,8 +5197,8 @@ struct map * traffic_get_map(struct traffic *this_) {
         attrs[3] = &a_traffic;
         attrs[4] = NULL;
 
-        this_->map = map_new(NULL, attrs);
-        navit_object_ref((struct navit_object *) this_->map);
+        this_->shared->map = map_new(NULL, attrs);
+        navit_object_ref((struct navit_object *) this_->shared->map);
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
@@ -5234,7 +5219,7 @@ struct map * traffic_get_map(struct traffic *this_) {
         }
     }
 
-    return this_->map;
+    return this_->shared->map;
 }
 
 /**
@@ -5326,11 +5311,11 @@ void traffic_process_messages(struct traffic * this_, struct traffic_message ** 
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
-    this_->ms = ms;
+    this_->shared->ms = ms;
 }
 
 void traffic_set_route(struct traffic *this_, struct route *rt) {
-    this_->rt = rt;
+    this_->shared->rt = rt;
 }
 
 struct object_func traffic_func = {
