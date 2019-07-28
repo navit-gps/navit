@@ -905,6 +905,7 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                     /* TODO do this in an idle loop, not here */
                     data = traffic_message_parse_events(message);
                     traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                    g_free(data);
                 }
                 map_selection_destroy(ms);
             }
