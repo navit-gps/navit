@@ -81,6 +81,9 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState) {
         break;
     case QAudio::StoppedState:
         break;
+// Sailfish's QT version doesn't have this. Doesn't do anything either.
+//    case QAudio::InterruptedState:
+//        break;
     case QAudio::IdleState:
         /*remove all data that was already read*/
         data->remove(0, buffer->pos());

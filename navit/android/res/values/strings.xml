@@ -7,6 +7,7 @@
   <string name="cancel">Cancel</string>
 
 	<!-- NOTIFICATION -->
+	<string name="channel_name">Navit</string>
 	<string name="notification_ticker">Navit started</string>
 	<string name="notification_event_default">Navit running</string>
 

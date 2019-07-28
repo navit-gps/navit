@@ -38,7 +38,7 @@ extern "C" {
 #include <time.h>
 
 #include "vehicle_qt5.h"
-#include "vehicle_qt5.moc"
+//#include "vehicle_qt5.moc"
 #include <QDateTime>
 
 /**

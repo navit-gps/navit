@@ -16,10 +16,17 @@
 #cmakedefine USE_LIBGNUINTL 1
 #cmakedefine HAVE_BYTESWAP_H 1
 /* Versions */
+#cmakedefine GIT_VERSION "@GIT_VERSION@"
+#ifndef GIT_VERSION
+#define GIT_VERSION "xdevxgitxnotxfound"
+#endif
+
+#define NAVIT_VARIANT "-"
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 #cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
 #cmakedefine PACKAGE "@PACKAGE@"
 #cmakedefine LOCALEDIR "@LOCALEDIR@"
+#define NAVIT_VERSION PACKAGE_VERSION "+git:" GIT_VERSION NAVIT_VARIANT
 
 #cmakedefine HAVE_ZLIB 1
 

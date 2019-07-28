@@ -76,14 +76,15 @@
 /** Flag to indicate the message store should not be exported */
 #define PROCESS_MESSAGES_NO_DUMP_STORE 1 << 1
 
-/** The lowest order of items to consider */
-#define ROUTE_ORDER 18
+/** The lowest order of items to consider (always the default order for the next-lower road type) */
+#define ROUTE_ORDER(x) (((x == type_highway_land) || (x == type_highway_city) || (x == type_street_n_lanes)) \
+        ? 10 : ((x == type_street_4_land) || (x == type_street_4_city)) ? 12 : 18)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
-#define ROUTE_RECT_DIST_ABS 1000
+#define ROUTE_RECT_DIST_ABS(x) ((x == location_fuzziness_low_res) ? 1000 : 100)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
-#define ROUTE_RECT_DIST_REL 0
+#define ROUTE_RECT_DIST_REL(x) 0
 
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
@@ -95,6 +96,9 @@ struct traffic_shared_priv {
     GList * messages;           /**< Currently active messages */
     GList * message_queue;      /**< Queued messages, waiting to be processed */
     // TODO messages by ID?                 In a later phase…
+    struct mapset *ms;          /**< The mapset used for routing */
+    struct route *rt;           /**< The route to notify of traffic changes */
+    struct map *map;            /**< The traffic map, in which traffic distortions are stored */
 };
 
 /**
@@ -112,9 +116,6 @@ struct traffic {
     struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;    /**< Idle callback to process new messages */
     struct event_idle *idle_ev;  /**< The pointer to the idle event */
-    struct mapset *ms;           /**< The mapset used for routing */
-    struct route *rt;            /**< The route to notify of traffic changes */
-    struct map *map;             /**< The traffic map, in which traffic distortions are stored */
 };
 
 struct traffic_location_priv {
@@ -135,6 +136,7 @@ struct traffic_message_priv {
  */
 struct map_priv {
     GList * items;              /**< The map items */
+    struct traffic_shared_priv *shared; /**< Private data shared between all instances */
     // TODO items by start/end coordinates? In a later phase…
 };
 
@@ -249,6 +251,8 @@ struct xml_element {
     char * text;                 /**< Character data (NULL-terminated) */
 };
 
+static struct map_methods traffic_map_meth;
+
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
                                  int flags, struct attr **attrs, struct coord *c, int count, char * id);
@@ -265,6 +269,7 @@ static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
 static int tm_type_set(void *priv_data, enum item_type type);
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
@@ -272,6 +277,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                                         struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
+static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords);
 static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
@@ -867,11 +873,43 @@ static void tm_destroy(struct map_priv *priv) {
  */
 static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct map_rect_priv * mr;
+
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Map selection for current message */
+    struct map_selection * ms;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
     dbg(lvl_debug,"enter");
     mr=g_new0(struct map_rect_priv, 1);
     mr->mpriv = priv;
     mr->next_item = priv->items;
     /* all other pointers are initially NULL */
+
+    /* lazy location matching */
+    if (sel != NULL)
+        /* TODO experimental: if no selection is passed, do not resolve any locations */
+        for (msgiter = priv->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+            message = (struct traffic_message *) msgiter->data;
+            if (message->priv->items == NULL) {
+                traffic_location_set_enclosing_rect(message->location, NULL);
+                ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                if ((sel == NULL) || coord_rect_overlap(&(ms->u.c_rect), &(sel->u.c_rect))) {
+                    /* TODO the sel criterion is obsolete if we keep the enclosing condition */
+                    /* TODO do this in an idle loop, not here */
+                    data = traffic_message_parse_events(message);
+                    traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                    g_free(data);
+                }
+                map_selection_destroy(ms);
+            }
+        }
     return mr;
 }
 
@@ -951,6 +989,27 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
     map_priv->items = g_list_append(map_priv->items, ret);
 
     return ret;
+}
+
+
+/**
+ * @brief Gets an attribute from the traffic map
+ *
+ * This only supports the `attr_traffic` attribute, which is currently only used for the purpose of
+ * identifying the map as a traffic map. Note, however, that for now the attribute will have a null pointer.
+ *
+ * @param map_priv Private data of the traffic map
+ * @param type The type of the attribute to be read
+ * @param attr Pointer to an attrib-structure where the attribute should be written to
+ * @return True if the attribute type was found, false if not
+ */
+static int * tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
+    if (attr_type == attr_traffic) {
+        attr->type = attr_traffic;
+        attr->u.traffic = NULL;
+        return 1;
+    } else
+        return 0;
 }
 
 /**
@@ -1072,7 +1131,7 @@ static struct map_methods traffic_map_meth = {
     NULL,             /* map_search_destroy: Destroy a map search struct, ignored if `map_search_new` is NULL */
     NULL,             /* map_search_get_item: Get the next item of a search on the map */
     tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
-    NULL,             /* map_get_attr */
+    tm_get_attr,      /* map_get_attr */
     NULL,             /* map_set_attr */
 };
 
@@ -1704,6 +1763,27 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
 }
 
 /**
+ * @brief Obtains a map selection for the traffic location.
+ *
+ * The map selection is a rectangle around the points of the traffic location, with some extra padding as
+ * specified in `ROUTE_RECT_DIST_REL` and `ROUTE_RECT_DIST_ABS`, with a map order specified in `ROUTE_ORDER`.
+ *
+ * @param this_ The traffic location
+ * @param projection The projection to be used by coordinates of the selection (should correspond to the
+ * projection of the target map)
+ *
+ * @return A map selection
+ */
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection) {
+    /* Corners of the enclosing rectangle, in Mercator coordinates */
+    struct coord c1, c2;
+    transform_from_geo(projection, this_->priv->sw, &c1);
+    transform_from_geo(projection, this_->priv->ne, &c2);
+    return route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+            ROUTE_RECT_DIST_ABS(this_->fuzziness));
+}
+
+/**
  * @brief Opens a map rectangle around the end points of the traffic location.
  *
  * Prior to calling this function, the caller must ensure `rg->m` points to the map to be used, and the enclosing
@@ -1716,13 +1796,7 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
  */
 static struct map_rect * traffic_location_open_map_rect(struct traffic_location * this_, struct route_graph * rg) {
     /* Corners of the enclosing rectangle, in Mercator coordinates */
-    struct coord c1, c2;
-
-    transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
-    transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
-
-    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
-
+    rg->sel = traffic_location_get_rect(this_, map_projection(rg->m));
     if (!rg->sel)
         return NULL;
     rg->mr = map_rect_new(rg->m, rg->sel);
@@ -1780,6 +1854,9 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
@@ -1787,6 +1864,23 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                 route_graph_add_turn_restriction(rg, item);
             else if ((item->type < route_item_first) || (item->type > route_item_last))
                 continue;
+            /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+            if ((this_->road_type == type_highway_land) || (this_->road_type == type_highway_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp))
+                    continue;
+            } else if (this_->road_type == type_street_n_lanes) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city))
+                    continue;
+            } else if ((this_->road_type == type_street_4_land) || (this_->road_type == type_street_4_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city) &&
+                        (item->type != type_street_3_land) && (item->type != type_street_3_city))
+                    continue;
+            }
             if (item_get_default_flags(item->type)) {
 
                 item_coord_rewind(item);
@@ -2442,6 +2536,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     /* The point from the location to match */
     struct traffic_point * trpoint = NULL;
 
+    /* Map attribute (currently not evaluated) */
+    struct attr attr;
+
     /* The item being processed */
     struct item *item;
 
@@ -2467,6 +2564,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
@@ -3782,6 +3882,12 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
+    /* Holds queried attributes */
+    struct attr attr;
+
+    /* Map selections for the location and the route, and iterator */
+    struct map_selection * loc_ms, * rt_ms, * ms_iter;
+
     /* Time elapsed since start */
     double msec = 0;
 
@@ -3836,8 +3942,26 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
-                    /* else find matching segments from scratch */
-                    traffic_message_add_segments(message, this_->ms, data, this_->map, this_->rt);
+                    /*
+                     * We need to find matching segments from scratch.
+                     * This needs to happen immediately if we have a route and the location is within its map
+                     * selection, as the message might have an effect on the route. Otherwise this operation
+                     * is deferred until a rectangle overlapping with the location is queried.
+                     */
+                    if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
+                            && (!(attr.u.num & route_status_destination_set))) {
+                        traffic_location_set_enclosing_rect(message->location, NULL);
+                        loc_ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                        rt_ms = route_get_selection(this_->shared->rt);
+                        for (ms_iter = rt_ms; ms_iter; ms_iter = ms_iter->next)
+                            if (coord_rect_overlap(&(loc_ms->u.c_rect), &(ms_iter->u.c_rect))) {
+                                /* TODO do this in an idle loop, not here */
+                                traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+                                break;
+                            }
+                        map_selection_destroy(loc_ms);
+                        map_selection_destroy(rt_ms);
+                    }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
@@ -3856,7 +3980,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                    traffic_message_remove_item_data(stored_msg, message, this_->rt);
+                    traffic_message_remove_item_data(stored_msg, message, this_->shared->rt);
                     traffic_message_destroy(stored_msg);
                 }
 
@@ -3908,7 +4032,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 if (stored_msg->priv->items)
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                traffic_message_remove_item_data(stored_msg, NULL, this_->rt);
+                traffic_message_remove_item_data(stored_msg, NULL, this_->shared->rt);
                 traffic_message_destroy(stored_msg);
             }
 
@@ -3929,7 +4053,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     }
 
     /* TODO see comment on route_recalculate_partial about thread-safety */
-    route_recalculate_partial(this_->rt);
+    route_recalculate_partial(this_->shared->rt);
 
     /* trigger redraw if segments have changed */
     if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
@@ -4017,8 +4141,6 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
     // TODO do this once and cycle through all plugins
     this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
     this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
-
-    this_->map = NULL;
 
     if (!this_->shared)
         traffic_set_shared(this_);
@@ -5132,9 +5254,17 @@ struct item ** traffic_message_get_items(struct traffic_message * this_) {
  */
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret;
+    struct attr *traffic_attr;
+
+    traffic_attr = attr_search(attrs, NULL, attr_traffic);
+    if (!traffic_attr) {
+        dbg(lvl_error, "attr_traffic not found!");
+        return NULL;
+    }
 
     ret = g_new0(struct map_priv, 1);
     *meth = traffic_map_meth;
+    ret->shared = traffic_attr->u.traffic->shared;
 
     return ret;
 }
@@ -5145,44 +5275,31 @@ void traffic_init(void) {
 }
 
 struct map * traffic_get_map(struct traffic *this_) {
-    struct attr_iter *iter;
-    struct attr *attr;
-    struct traffic * traffic;
     char * filename;
     struct traffic_message ** messages;
     struct traffic_message ** cur_msg;
 
-    if (!this_->map) {
-        /* see if any of the other instances has already created a map */
-        attr = g_new0(struct attr, 1);
-        iter = navit_attr_iter_new();
-        while (navit_get_attr(this_->navit, attr_traffic, attr, iter)) {
-            traffic = (struct traffic *) attr->u.navit_object;
-            if (traffic->map)
-                this_->map = traffic->map;
-        }
-        navit_attr_iter_destroy(iter);
-        g_free(attr);
-    }
-
-    if (!this_->map) {
+    if (!this_->shared->map) {
         /* no map yet, create a new one */
         struct attr *attrs[4];
-        struct attr a_type,data,a_description;
+        struct attr a_type,data,a_description,a_traffic;
         a_type.type = attr_type;
         a_type.u.str = "traffic";
         data.type = attr_data;
         data.u.str = "";
         a_description.type = attr_description;
         a_description.u.str = "Traffic";
+        a_traffic.type = attr_traffic;
+        a_traffic.u.traffic = this_;
 
         attrs[0] = &a_type;
         attrs[1] = &data;
         attrs[2] = &a_description;
-        attrs[3] = NULL;
+        attrs[3] = &a_traffic;
+        attrs[4] = NULL;
 
-        this_->map = map_new(NULL, attrs);
-        navit_object_ref((struct navit_object *) this_->map);
+        this_->shared->map = map_new(NULL, attrs);
+        navit_object_ref((struct navit_object *) this_->shared->map);
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
@@ -5203,7 +5320,7 @@ struct map * traffic_get_map(struct traffic *this_) {
         }
     }
 
-    return this_->map;
+    return this_->shared->map;
 }
 
 /**
@@ -5270,6 +5387,24 @@ struct traffic_message ** traffic_get_stored_messages(struct traffic *this_) {
     struct traffic_message ** out = ret;
     GList * in = this_->shared->messages;
 
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
+    /* Ensure all locations are fully resolved */
+    for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+        message = (struct traffic_message *) msgiter->data;
+        if (message->priv->items == NULL) {
+            data = traffic_message_parse_events(message);
+            traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+            g_free(data);
+        }
+    }
     while (in) {
         *out = (struct traffic_message *) in->data;
         in = g_list_next(in);
@@ -5295,11 +5430,11 @@ void traffic_process_messages(struct traffic * this_, struct traffic_message ** 
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
-    this_->ms = ms;
+    this_->shared->ms = ms;
 }
 
 void traffic_set_route(struct traffic *this_, struct route *rt) {
-    this_->rt = rt;
+    this_->shared->rt = rt;
 }
 
 struct object_func traffic_func = {

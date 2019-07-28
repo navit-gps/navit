@@ -1183,6 +1183,8 @@ static gboolean graphics_sdl_idle(void *data) {
 #ifdef USE_WEBOS
             quit_event_loop = 1;
             navit_destroy(gr->nav);
+#else
+            callback_list_call_attr_0(gr->cbl, attr_window_closed);
 #endif
             break;
         }
