@@ -7,6 +7,7 @@ var callback_8c =
     [ "callback_destroy", "callback_8c.html#a00702c701fa5313aace16c0299536dd3", null ],
     [ "callback_list_add", "callback_8c.html#a73fb26714769874fc25af119bbeeab1b", null ],
     [ "callback_list_add_new", "callback_8c.html#a55ec76bf83b35423d7c5705cc0762c8b", null ],
+    [ "callback_list_add_patch_function", "callback_8c.html#a307e27fb3c05e84c7a761496c869b2e9", null ],
     [ "callback_list_call", "callback_8c.html#ae84652407cd70acb1ca8940a5cc80d6a", null ],
     [ "callback_list_call_args", "callback_8c.html#ae42906b8ae18a859104499c2f44fd94d", null ],
     [ "callback_list_call_attr", "callback_8c.html#aa62e8c37f3ec49ddb43cf60917369198", null ],

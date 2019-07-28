@@ -82,6 +82,7 @@ $(document).ready(function(){initNavTree('callback_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">callback.h File Reference</div>  </div>
@@ -147,6 +148,11 @@ Macros</h2></td></tr>
 <tr class="memitem:aefbe6726c48359199c9051cb5e4ca942"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>(x)&#160;&#160;&#160;(void (*)(void))(x)</td></tr>
 <tr class="separator:aefbe6726c48359199c9051cb5e4ca942"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a2928004481012b601d7fb0d47fca8e77"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#a2928004481012b601d7fb0d47fca8e77">callback_patch</a>) (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, int pcount, void **<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, void *<a class="el" href="structcontext.html">context</a>)</td></tr>
+<tr class="separator:a2928004481012b601d7fb0d47fca8e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:affc2e9963cff9676464c343b7ce2e1e8"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#affc2e9963cff9676464c343b7ce2e1e8">callback_list_new</a> (void)</td></tr>
@@ -171,6 +177,8 @@ Functions</h2></td></tr>
 <tr class="separator:acddacea5602cf130d7dba44393d201ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2a4b3bd1594f485a5f88f8912ccbced"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#ab2a4b3bd1594f485a5f88f8912ccbced">callback_list_remove_destroy</a> (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:ab2a4b3bd1594f485a5f88f8912ccbced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a307e27fb3c05e84c7a761496c869b2e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#a307e27fb3c05e84c7a761496c869b2e9">callback_list_add_patch_function</a> (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, <a class="el" href="callback_8h.html#a2928004481012b601d7fb0d47fca8e77">callback_patch</a> patch, void *<a class="el" href="structcontext.html">context</a>)</td></tr>
+<tr class="separator:a307e27fb3c05e84c7a761496c869b2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3b4f1e2b107be3c72ff9c5d4dc659b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call</a> (struct <a class="el" href="structcallback.html">callback</a> *cb, int pcount, void **<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>)</td></tr>
 <tr class="separator:af3b4f1e2b107be3c72ff9c5d4dc659b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab979ce38eb7a6b50a49a3336cbe15130"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8h.html#ab979ce38eb7a6b50a49a3336cbe15130">callback_call_args</a> (struct <a class="el" href="structcallback.html">callback</a> *cb, int count,...)</td></tr>
@@ -653,7 +661,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#a559cb5175d3010ee245f2eeae3f7bf84">configure()</a>, <a class="el" href="graphics__win32_8c.html#a36bd318a5e9edba158ac55d62b824fdc">CreateGraphicsWindows()</a>, <a class="el" href="classRenderArea.html#ac648a3f9b95946f8a3fa2bac5f273111">RenderArea::do_resize()</a>, <a class="el" href="graphics__gd_8c.html#a7e10dcb543e2d89ec274c18b4ae36268">emit_callback()</a>, <a class="el" href="graphics__egl_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data()</a>, <a class="el" href="graphics__opengl_8c.html#a5eba11e51394ee128d37a4a49ac47806">graphics_opengl_idle()</a>, <a class="el" href="graphics__sdl_8c.html#afeb6352f263b448d64580c8c060eafd8">graphics_sdl_idle()</a>, <a class="el" href="gui__internal__html_8h.html#a1df1887f4ae6177f607d0593ce8df00e">gui_internal_html_menu()</a>, <a class="el" href="gui__internal__priv_8h.html#a740c6b2e98e9b223a1094551d22c7db4">gui_internal_menu_vehicle_settings()</a>, <a class="el" href="map_8h.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr()</a>, <a class="el" href="group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd">navit_add_attr()</a>, <a class="el" href="xmlconfig_8h.html#a7297412d2fdc39b25ff0350d72998558">navit_object_add_attr()</a>, <a class="el" href="xmlconfig_8h.html#a25021d26272b28e961f35e107dfc26f8">navit_object_callbacks()</a>, <a class="el" href="xmlconfig_8h.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr()</a>, <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>, <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>, <a class="el" href="group__navit.html#ga3cbb047ddec49c4c894197dfe3b79a8f">navit_vehicle_update_status()</a>, <a class="el" href="graphics__egl_8c.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize()</a>, <a class="el" href="graphics__android_8c.html#aeae8987e336df8386927936a4e64bae7">resize_callback()</a>, <a class="el" href="graphics__opengl_8c.html#a2e3000d9791d87514c8787b7eb931235">resize_callback_do()</a>, <a class="el" href="route_8h.html#acad5a08b925ad1fa0429997b0febde9b">route_set_attr()</a>, <a class="el" href="graphics__sdl_8c.html#ac7210e0356bd2ffa491bb3c5880af036">window_fullscreen()</a>, and <a class="el" href="graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef">WndProc()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#a559cb5175d3010ee245f2eeae3f7bf84">configure()</a>, <a class="el" href="graphics__win32_8c.html#a36bd318a5e9edba158ac55d62b824fdc">CreateGraphicsWindows()</a>, <a class="el" href="classRenderArea.html#ac648a3f9b95946f8a3fa2bac5f273111">RenderArea::do_resize()</a>, <a class="el" href="graphics__gd_8c.html#a7e10dcb543e2d89ec274c18b4ae36268">emit_callback()</a>, <a class="el" href="graphics__egl_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data()</a>, <a class="el" href="graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15">graphics_new()</a>, <a class="el" href="graphics__opengl_8c.html#a5eba11e51394ee128d37a4a49ac47806">graphics_opengl_idle()</a>, <a class="el" href="graphics__sdl_8c.html#afeb6352f263b448d64580c8c060eafd8">graphics_sdl_idle()</a>, <a class="el" href="gui__internal__html_8h.html#a1df1887f4ae6177f607d0593ce8df00e">gui_internal_html_menu()</a>, <a class="el" href="gui__internal__priv_8h.html#a740c6b2e98e9b223a1094551d22c7db4">gui_internal_menu_vehicle_settings()</a>, <a class="el" href="map_8h.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr()</a>, <a class="el" href="group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd">navit_add_attr()</a>, <a class="el" href="xmlconfig_8h.html#a7297412d2fdc39b25ff0350d72998558">navit_object_add_attr()</a>, <a class="el" href="xmlconfig_8h.html#a25021d26272b28e961f35e107dfc26f8">navit_object_callbacks()</a>, <a class="el" href="xmlconfig_8h.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr()</a>, <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>, <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>, <a class="el" href="group__navit.html#ga3cbb047ddec49c4c894197dfe3b79a8f">navit_vehicle_update_status()</a>, <a class="el" href="graphics__egl_8c.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize()</a>, <a class="el" href="graphics__android_8c.html#aeae8987e336df8386927936a4e64bae7">resize_callback()</a>, <a class="el" href="graphics__opengl_8c.html#a2e3000d9791d87514c8787b7eb931235">resize_callback_do()</a>, <a class="el" href="route_8h.html#acad5a08b925ad1fa0429997b0febde9b">route_set_attr()</a>, <a class="el" href="graphics__sdl_8c.html#ac7210e0356bd2ffa491bb3c5880af036">window_fullscreen()</a>, and <a class="el" href="graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef">WndProc()</a>.</p>
 
 </div>
 </div>
@@ -1141,6 +1149,21 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a2928004481012b601d7fb0d47fca8e77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2928004481012b601d7fb0d47fca8e77">&#9670;&nbsp;</a></span>callback_patch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* callback_patch) (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, int pcount, void **<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, void *<a class="el" href="structcontext.html">context</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="af3b4f1e2b107be3c72ff9c5d4dc659b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3b4f1e2b107be3c72ff9c5d4dc659b5">&#9670;&nbsp;</a></span>callback_call()</h2>
@@ -1310,6 +1333,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a307e27fb3c05e84c7a761496c869b2e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a307e27fb3c05e84c7a761496c869b2e9">&#9670;&nbsp;</a></span>callback_list_add_patch_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void callback_list_add_patch_function </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="callback_8h.html#a2928004481012b601d7fb0d47fca8e77">callback_patch</a>&#160;</td>
+          <td class="paramname"><em>patch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604">context</a>, <a class="el" href="structcallback__list.html#aaeaa5cf15f7f33dd5ae1cc70ee099659">callback_list::patch</a>, and <a class="el" href="structcallback__list.html#a591fbbdc37713e49be8c07a2f8f5a01f">callback_list::patch_context</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15">graphics_new()</a>.</p>
+
+</div>
+</div>
 <a id="ae84652407cd70acb1ca8940a5cc80d6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae84652407cd70acb1ca8940a5cc80d6a">&#9670;&nbsp;</a></span>callback_list_call()</h2>
 
@@ -1422,7 +1483,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="callback_8c.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call()</a>, <a class="el" href="structcallback__list.html#a72624737bb8ce8d602327d16fcee8424">callback_list::list</a>, and <a class="el" href="structcallback.html#af7e22d26b453207c12ebecbf27b17bcf">callback::type</a>.</p>
+<p class="reference">References <a class="el" href="callback_8c.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call()</a>, <a class="el" href="structcallback__list.html#a72624737bb8ce8d602327d16fcee8424">callback_list::list</a>, <a class="el" href="structcallback__list.html#aaeaa5cf15f7f33dd5ae1cc70ee099659">callback_list::patch</a>, <a class="el" href="structcallback__list.html#a591fbbdc37713e49be8c07a2f8f5a01f">callback_list::patch_context</a>, and <a class="el" href="structcallback.html#af7e22d26b453207c12ebecbf27b17bcf">callback::type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="callback_8h.html#ae84652407cd70acb1ca8940a5cc80d6a">callback_list_call()</a>, and <a class="el" href="callback_8h.html#a6c0cca0832bba464da0c91ac3aebeee6">callback_list_call_attr_args()</a>.</p>
 

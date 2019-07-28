@@ -116,6 +116,7 @@ var searchData=
   ['download',['download',['../structmap__priv.html#a7838ba1b62b4a4e25335281f1a0e49b8',1,'map_priv']]],
   ['download_5fenabled',['download_enabled',['../structmap__priv.html#a691dbc476defc77afdfa586f87093109',1,'map_priv']]],
   ['downloaded_5fmaps_5fchilds',['downloaded_maps_childs',['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a742565f9fd07dd6e5a0f95dabc87e3be',1,'org::navitproject::navit::NavitDownloadSelectMapActivity']]],
+  ['dpi_5ffactor',['dpi_factor',['../structgraphics.html#a5b33c1b902098efb4b841fe7d6881476',1,'graphics']]],
   ['dpmsversion',['DPMSVersion',['../struct__VIDEO__POWER__MANAGEMENT.html#accc91c88250d7d89539acd7da118a585',1,'_VIDEO_POWER_MANAGEMENT']]],
   ['drag',['DRAG',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a144460716fc85df2180d8d22c04fd37d',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['drag_5fbitmap',['drag_bitmap',['../structnavit.html#ab44e4a3492f8b6c715fa00210d414ef1',1,'navit']]],

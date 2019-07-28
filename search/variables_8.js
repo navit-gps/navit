@@ -28,6 +28,7 @@ var searchData=
   ['get_5fattr',['get_attr',['../structwidget.html#a73397ea59db65478f378d3969230d164',1,'widget::get_attr()'],['../structgui__methods.html#a0440569333d8d05fc7500de0fef5aa59',1,'gui_methods::get_attr()'],['../structosd__methods.html#ac465c1fef8f6790f74621f39e00fdf1f',1,'osd_methods::get_attr()'],['../structobject__func.html#a2f54842bb47555e51e1153989e8cad13',1,'object_func::get_attr()']]],
   ['get_5fdata',['get_data',['../structgraphics__methods.html#a5ef6265dcce15a12dc4216f657100ab7',1,'graphics_methods']]],
   ['get_5fdisplay',['get_display',['../structgraphics__opengl__window__system__methods.html#aa894c8067871f7b1bcc445f7f86e10bc',1,'graphics_opengl_window_system_methods']]],
+  ['get_5fdpi',['get_dpi',['../structgraphics__methods.html#aff7b043beff85fc74104aef78ed530bb',1,'graphics_methods']]],
   ['get_5fflags',['get_flags',['../structgui__internal__widget__methods.html#aea703d92397a6ac3debabe703f92b2a1',1,'gui_internal_widget_methods']]],
   ['get_5fglyph',['get_glyph',['../structfont__freetype__methods.html#aa397713a71e4ffaca206e5b3772ece53',1,'font_freetype_methods']]],
   ['get_5fmessages',['get_messages',['../structtraffic__methods.html#a7b9471a0194d92b4737e80b06d43fd1a',1,'traffic_methods']]],

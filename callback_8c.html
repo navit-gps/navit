@@ -124,6 +124,8 @@ Functions</h2></td></tr>
 <tr class="separator:acddacea5602cf130d7dba44393d201ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2a4b3bd1594f485a5f88f8912ccbced"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8c.html#ab2a4b3bd1594f485a5f88f8912ccbced">callback_list_remove_destroy</a> (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:ab2a4b3bd1594f485a5f88f8912ccbced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a307e27fb3c05e84c7a761496c869b2e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8c.html#a307e27fb3c05e84c7a761496c869b2e9">callback_list_add_patch_function</a> (struct <a class="el" href="structcallback__list.html">callback_list</a> *l, <a class="el" href="callback_8h.html#a2928004481012b601d7fb0d47fca8e77">callback_patch</a> patch, void *<a class="el" href="structcontext.html">context</a>)</td></tr>
+<tr class="separator:a307e27fb3c05e84c7a761496c869b2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3b4f1e2b107be3c72ff9c5d4dc659b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8c.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call</a> (struct <a class="el" href="structcallback.html">callback</a> *cb, int pcount, void **<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>)</td></tr>
 <tr class="separator:af3b4f1e2b107be3c72ff9c5d4dc659b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab979ce38eb7a6b50a49a3336cbe15130"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="callback_8c.html#ab979ce38eb7a6b50a49a3336cbe15130">callback_call_args</a> (struct <a class="el" href="structcallback.html">callback</a> *cb, int count,...)</td></tr>
@@ -308,6 +310,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a307e27fb3c05e84c7a761496c869b2e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a307e27fb3c05e84c7a761496c869b2e9">&#9670;&nbsp;</a></span>callback_list_add_patch_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void callback_list_add_patch_function </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="callback_8h.html#a2928004481012b601d7fb0d47fca8e77">callback_patch</a>&#160;</td>
+          <td class="paramname"><em>patch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604">context</a>, <a class="el" href="structcallback__list.html#aaeaa5cf15f7f33dd5ae1cc70ee099659">callback_list::patch</a>, and <a class="el" href="structcallback__list.html#a591fbbdc37713e49be8c07a2f8f5a01f">callback_list::patch_context</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15">graphics_new()</a>.</p>
+
+</div>
+</div>
 <a id="ae84652407cd70acb1ca8940a5cc80d6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae84652407cd70acb1ca8940a5cc80d6a">&#9670;&nbsp;</a></span>callback_list_call()</h2>
 
@@ -420,7 +460,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="callback_8c.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call()</a>, <a class="el" href="structcallback__list.html#a72624737bb8ce8d602327d16fcee8424">callback_list::list</a>, and <a class="el" href="structcallback.html#af7e22d26b453207c12ebecbf27b17bcf">callback::type</a>.</p>
+<p class="reference">References <a class="el" href="callback_8c.html#af3b4f1e2b107be3c72ff9c5d4dc659b5">callback_call()</a>, <a class="el" href="structcallback__list.html#a72624737bb8ce8d602327d16fcee8424">callback_list::list</a>, <a class="el" href="structcallback__list.html#aaeaa5cf15f7f33dd5ae1cc70ee099659">callback_list::patch</a>, <a class="el" href="structcallback__list.html#a591fbbdc37713e49be8c07a2f8f5a01f">callback_list::patch_context</a>, and <a class="el" href="structcallback.html#af7e22d26b453207c12ebecbf27b17bcf">callback::type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="callback_8h.html#ae84652407cd70acb1ca8940a5cc80d6a">callback_list_call()</a>, and <a class="el" href="callback_8h.html#a6c0cca0832bba464da0c91ac3aebeee6">callback_list_call_attr_args()</a>.</p>
 

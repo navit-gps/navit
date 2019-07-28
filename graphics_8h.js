@@ -62,6 +62,7 @@ var graphics_8h =
     [ "graphics_gc_set_linewidth", "graphics_8h.html#a7763c3bb4b5a77666fa580ade99cedda", null ],
     [ "graphics_get_attr", "graphics_8h.html#a5cc054aa0f9a36abe31a8cbefd5c5e97", null ],
     [ "graphics_get_data", "graphics_8h.html#a1078b0b63913aabe459d72d795c2ed4a", null ],
+    [ "graphics_get_dpi", "graphics_8h.html#a631792554824a53365270b720a15b474", null ],
     [ "graphics_get_text_bbox", "graphics_8h.html#abc516ca06af2f5c44540e2577a080f64", null ],
     [ "graphics_hide_native_keyboard", "graphics_8h.html#abfc23e410d71e734e4316fb8898d20f4", null ],
     [ "graphics_icon_path", "graphics_8h.html#a1bcc4e8da1d463c29ff9fb6c66dd1f3e", null ],

@@ -8,6 +8,7 @@ var structgraphics =
     [ "current_z_order", "structgraphics.html#aa6fda1593495b84abfe6d023d3b0bf50", null ],
     [ "default_font", "structgraphics.html#aa06c67491ee7e4102f50db1d06edbb79", null ],
     [ "disabled", "structgraphics.html#a086ff6c3e756e19ede0d520e330cc73f", null ],
+    [ "dpi_factor", "structgraphics.html#a5b33c1b902098efb4b841fe7d6881476", null ],
     [ "font", "structgraphics.html#a5e0e801c2e84a56d3f0b7e1e5383d4cf", null ],
     [ "font_len", "structgraphics.html#a00eb307a992dd5c8f4aeeb74836a5b2b", null ],
     [ "font_size", "structgraphics.html#a3afe80e5b53a8697b4265e7797da1931", null ],

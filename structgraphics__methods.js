@@ -13,6 +13,7 @@ var structgraphics__methods =
     [ "font_new", "structgraphics__methods.html#a44a0a0abacc60537df2c79cfd549e3db", null ],
     [ "gc_new", "structgraphics__methods.html#a78b893dd611b79f65290ffadd60559cb", null ],
     [ "get_data", "structgraphics__methods.html#a5ef6265dcce15a12dc4216f657100ab7", null ],
+    [ "get_dpi", "structgraphics__methods.html#aff7b043beff85fc74104aef78ed530bb", null ],
     [ "get_text_bbox", "structgraphics__methods.html#ad8d75edc14b2b7c639ba2bb790998200", null ],
     [ "graphics_destroy", "structgraphics__methods.html#ac383841ce74800ed22460ebc459956de", null ],
     [ "hide_native_keyboard", "structgraphics__methods.html#a5a2e88411fb3dfb27d9d9e4ca65e6b86", null ],
