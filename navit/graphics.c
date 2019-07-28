@@ -2279,6 +2279,56 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
     g_free(input_label);
 }
 
+/**
+ * @brief coordnate transfor hole coordinates
+ *
+ * This function transform a whole set of polygon holes. It therefore allocates memory
+ * attached to a displayitem_poly_holes structure and call transform
+ *
+ * @param trans transformation to be used
+ * @param pro projection to be used
+ * @param in filled holes structure to transform
+ * @param out structure to place result in. Remember to deallocate!
+ * @param mindist minimal distance between points
+ */
+static void displayitem_transform_holes(struct transformation *trans, enum projection pro,
+                                        struct displayitem_poly_holes * in, struct displayitem_poly_holes * out, int mindist) {
+    if(out == NULL)
+        return;
+    out->count = 0;
+    out->ccount=NULL;
+    out->coords=NULL;
+    if((in != NULL) && (in->count > 0)) {
+        int a;
+        /* alloc space for hole conversion. */
+        out->count = in->count;
+        out->ccount = g_malloc0(sizeof(*(out->ccount)) * in->count);
+        out->coords = g_malloc0(sizeof(*(out->coords)) * in->count);
+        for(a = 0; a < in->count; a ++) {
+            in->ccount[a]=limit_count(in->coords[a], in->ccount[a]);
+            out->coords[a]=g_malloc0(sizeof(*(out->coords[a])) * in->ccount[a]);
+            out->ccount[a]=transform(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
+        }
+    }
+}
+
+/**
+ * @brief free hole structure allocated by displayitem_transform_holes
+ *
+ * @param holes structure to deallocate
+ */
+static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
+    if(holes == NULL)
+        return;
+    if(holes->count > 0) {
+        int a;
+        for(a=0; a < holes->count; a ++) {
+            g_free(holes->coords[a]);
+        }
+        g_free(holes->ccount);
+        g_free(holes->coords);
+    }
+}
 
 /**
  * @brief Draw a displayitem element
@@ -2291,6 +2341,7 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
  */
 static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
+    int limit=0;
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
     struct graphics *gra=dc->gra;
     struct graphics_gc *gc=dc->gc;
@@ -2301,6 +2352,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
 
     while (di) {
         int i,count=di->count,mindist=dc->mindist;
+        struct displayitem_poly_holes t_holes;
 
         di->z_order=++(gra->current_z_order);
 
@@ -2309,11 +2361,13 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             graphics_gc_set_foreground(gc, &e->color);
             dc->gc=gc;
         }
-        if(di->holes != NULL) {
-            dbg(lvl_error,"drawing somthing with %d holes",di->holes->count);
-        }
 
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
+            limit = 0;
+
+        displayitem_transform_holes(dc->trans, dc->pro, di->holes, &t_holes, mindist);
+
+        if (limit)
             count=limit_count(di->c, count);
         if (dc->type == type_poly_water_tiled)
             mindist=0;
@@ -2368,9 +2422,12 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
                     graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
                     dc->gc_background=gc_background;
                 }
-                if (font)
+                if (font) {
+                    int a;
                     label_line(gra, gc, gc_background, font, pa, count, di->label);
-                else
+                    for(a = 0; a < t_holes.count; a ++)
+                        label_line(gra, gc, gc_background, font, (struct point *)t_holes.coords[a], t_holes.ccount[a], di->label);
+                } else
                     dbg(lvl_error,"Failed to get font with size %d",e->text_size);
             }
             break;
@@ -2425,6 +2482,9 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             dbg(lvl_error, "Unhandled element type %d", e->type);
 
         }
+        /* free space allocated for holes */
+        displayitem_free_holes(&t_holes);
+
         di=di->next;
     }
 }
