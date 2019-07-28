@@ -3882,6 +3882,12 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
+    /* Holds queried attributes */
+    struct attr attr;
+
+    /* Map selections for the location and the route, and iterator */
+    struct map_selection * loc_ms, * rt_ms, * ms_iter;
+
     /* Time elapsed since start */
     double msec = 0;
 
@@ -3936,8 +3942,26 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
-                    /* else find matching segments from scratch */
-                    traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+                    /*
+                     * We need to find matching segments from scratch.
+                     * This needs to happen immediately if we have a route and the location is within its map
+                     * selection, as the message might have an effect on the route. Otherwise this operation
+                     * is deferred until a rectangle overlapping with the location is queried.
+                     */
+                    if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
+                            && (!(attr.u.num & route_status_destination_set))) {
+                        traffic_location_set_enclosing_rect(message->location, NULL);
+                        loc_ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                        rt_ms = route_get_selection(this_->shared->rt);
+                        for (ms_iter = rt_ms; ms_iter; ms_iter = ms_iter->next)
+                            if (coord_rect_overlap(&(loc_ms->u.c_rect), &(ms_iter->u.c_rect))) {
+                                /* TODO do this in an idle loop, not here */
+                                traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+                                break;
+                            }
+                        map_selection_destroy(loc_ms);
+                        map_selection_destroy(rt_ms);
+                    }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
@@ -5363,6 +5387,24 @@ struct traffic_message ** traffic_get_stored_messages(struct traffic *this_) {
     struct traffic_message ** out = ret;
     GList * in = this_->shared->messages;
 
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
+    /* Ensure all locations are fully resolved */
+    for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+        message = (struct traffic_message *) msgiter->data;
+        if (message->priv->items == NULL) {
+            data = traffic_message_parse_events(message);
+            traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+            g_free(data);
+        }
+    }
     while (in) {
         *out = (struct traffic_message *) in->data;
         in = g_list_next(in);
