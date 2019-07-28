@@ -5250,9 +5250,6 @@ void traffic_init(void) {
 }
 
 struct map * traffic_get_map(struct traffic *this_) {
-    struct attr_iter *iter;
-    struct attr *attr;
-    struct traffic * traffic;
     char * filename;
     struct traffic_message ** messages;
     struct traffic_message ** cur_msg;
