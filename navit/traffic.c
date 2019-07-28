@@ -1004,11 +1004,10 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
  * @return True if the attribute type was found, false if not
  */
 static int * tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
-    int ret = 0;
     if (attr_type == attr_traffic) {
         attr->type = attr_traffic;
         attr->u.traffic = NULL;
-        ret = 1;
+        return 1;
     } else
         return 0;
 }
