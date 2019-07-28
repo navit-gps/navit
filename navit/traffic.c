@@ -277,6 +277,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
                                         struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
+static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords);
 static void traffic_dump_messages_to_xml(struct traffic * this_);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
@@ -872,11 +873,41 @@ static void tm_destroy(struct map_priv *priv) {
  */
 static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct map_rect_priv * mr;
+
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Map selection for current message */
+    struct map_selection * ms;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
     dbg(lvl_debug,"enter");
     mr=g_new0(struct map_rect_priv, 1);
     mr->mpriv = priv;
     mr->next_item = priv->items;
     /* all other pointers are initially NULL */
+
+    /* lazy location matching */
+    if (sel != NULL)
+        /* TODO experimental: if no selection is passed, do not resolve any locations */
+        for (msgiter = priv->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+            message = (struct traffic_message *) msgiter->data;
+            if (message->priv->items == NULL) {
+                traffic_location_set_enclosing_rect(message->location, NULL);
+                ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                if ((sel == NULL) || coord_rect_overlap(&(ms->u.c_rect), &(sel->u.c_rect))) {
+                    /* TODO the sel criterion is obsolete if we keep the enclosing condition */
+                    /* TODO do this in an idle loop, not here */
+                    data = traffic_message_parse_events(message);
+                    traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                }
+            }
+        }
     return mr;
 }
 
@@ -956,6 +987,28 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
     map_priv->items = g_list_append(map_priv->items, ret);
 
     return ret;
+}
+
+
+/**
+ * @brief Gets an attribute from the traffic map
+ *
+ * This only supports the `attr_traffic` attribute, which is currently only used for the purpose of
+ * identifying the map as a traffic map. Note, however, that for now the attribute will have a null pointer.
+ *
+ * @param map_priv Private data of the traffic map
+ * @param type The type of the attribute to be read
+ * @param attr Pointer to an attrib-structure where the attribute should be written to
+ * @return True if the attribute type was found, false if not
+ */
+static int * tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
+    int ret = 0;
+    if (attr_type == attr_traffic) {
+        attr->type = attr_traffic;
+        attr->u.traffic = NULL;
+        ret = 1;
+    } else
+        return 0;
 }
 
 /**
@@ -1077,7 +1130,7 @@ static struct map_methods traffic_map_meth = {
     NULL,             /* map_search_destroy: Destroy a map search struct, ignored if `map_search_new` is NULL */
     NULL,             /* map_search_get_item: Get the next item of a search on the map */
     tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
-    NULL,             /* map_get_attr */
+    tm_get_attr,      /* map_get_attr */
     NULL,             /* map_set_attr */
 };
 
@@ -1800,6 +1853,9 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
@@ -2479,6 +2535,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     /* The point from the location to match */
     struct traffic_point * trpoint = NULL;
 
+    /* Map attribute (currently not evaluated) */
+    struct attr attr;
+
     /* The item being processed */
     struct item *item;
 
@@ -2504,6 +2563,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
