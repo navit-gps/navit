@@ -2764,11 +2764,6 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
 }
 
 static GList *process_multipolygons_setup(FILE *in, struct relations *relations) {
-    struct relation_member outer[MEMBER_MAX];
-    int outer_count=0;
-    struct relation_member inner[MEMBER_MAX];
-    int inner_count=0;
-    long long relid;
     struct item_bin *ib;
     struct relations_func *relations_func;
     int min_count;
@@ -2777,6 +2772,11 @@ static GList *process_multipolygons_setup(FILE *in, struct relations *relations)
     fseek(in, 0, SEEK_SET);
     relations_func=relations_func_new(process_multipolygons_member, NULL);
     while ((ib=read_item(in))) {
+        struct relation_member outer[MEMBER_MAX];
+        int outer_count=0;
+        struct relation_member inner[MEMBER_MAX];
+        int inner_count=0;
+        long long relid;
         int a;
         struct multipolygon *p_multipolygon;
         relid=item_bin_get_relationid(ib);
