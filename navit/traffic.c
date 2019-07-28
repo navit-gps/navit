@@ -1780,7 +1780,7 @@ static struct map_selection * traffic_location_get_rect(struct traffic_location 
     transform_from_geo(projection, this_->priv->sw, &c1);
     transform_from_geo(projection, this_->priv->ne, &c2);
     return route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
-            ROUTE_RECT_DIST_ABS(this_->fuzziness));
+                      ROUTE_RECT_DIST_ABS(this_->fuzziness));
 }
 
 /**
