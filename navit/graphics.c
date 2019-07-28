@@ -1099,6 +1099,47 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
     }
 }
 
+/**
+ * @brief Draw a plain polygon with holes on the display
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ * @param hole_count The number of hole polygons to cut out
+ * @param pcount array of [hole_count] integers giving the number of
+ *        points per hole
+ * @param holes array of point arrays for the hole polygons
+ */
+static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphics_gc *gc, struct point *pin,
+        int count_in, int hole_count, int* ccount, struct point **holes) {
+    if (! gra->meth.draw_polygon_with_holes) {
+        /* TODO: add attr to configure if polygons with holes should be drawn without
+         *       the holes if no graphics support for this is present.
+         */
+        graphics_draw_polygon(gra, gc, pin, count_in);
+        return;
+    } else {
+        struct point * pin_scaled = g_alloca(sizeof (struct point)*count_in);
+        struct point ** holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        int a;
+        int b;
+        /* scale the outline */
+        for(a=0; a < count_in; a ++)
+            pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
+        /*scale the holes */
+        for(b=0; b < hole_count; b ++) {
+            holes_scaled[b] = g_malloc(sizeof(*(holes_scaled[b])) * ccount[b]);
+            for(a=0; a < ccount[b]; a ++)
+                holes_scaled[b][a] = graphics_dpi_scale_point(gra,&(holes[b][a]));
+        }
+        gra->meth.draw_polygon_with_holes(gra->priv, gc->priv, pin_scaled, count_in, hole_count, ccount, holes_scaled);
+        /* free the hole arrays */
+        for(b=0; b < hole_count; b ++)
+            g_free(holes_scaled[b]);
+    }
+}
+
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
                                      int r, int fill) {
     struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
@@ -2353,6 +2394,7 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
     while (di) {
         int i,count=di->count,mindist=dc->mindist;
         struct displayitem_poly_holes t_holes;
+        t_holes.count=0;
 
         di->z_order=++(gra->current_z_order);
 
@@ -2377,7 +2419,11 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
-            graphics_draw_polygon_clipped(gra, gc, pa, count);
+            /*TODO: implement a "clipped" version of graphics_draw_polygon_with_holes*/
+            if(t_holes.count > 0)
+                graphics_draw_polygon_with_holes(gra, gc, pa, count, t_holes.count, t_holes.ccount, (struct point **)t_holes.coords);
+            else
+                graphics_draw_polygon_clipped(gra, gc, pa, count);
             break;
         case element_polyline: {
             graphics_gc_set_linewidth(gc, 1);
