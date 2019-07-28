@@ -269,7 +269,7 @@ static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
 static int tm_type_set(void *priv_data, enum item_type type);
-struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection);
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
@@ -1774,7 +1774,7 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
  *
  * @return A map selection
  */
-struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection) {
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection) {
     /* Corners of the enclosing rectangle, in Mercator coordinates */
     struct coord c1, c2;
     transform_from_geo(projection, this_->priv->sw, &c1);
