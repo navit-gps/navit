@@ -1569,6 +1569,7 @@ int boundary;
 void osm_add_relation(osmid id) {
     osmid_attr_value=id;
     in_relation=1;
+    attr_strings_clear();
     debug_attr_buffer[0]='\0';
     relation_type[0]='\0';
     iso_code[0]='\0';
@@ -2689,6 +2690,12 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         int order;
         char tilebuf[20]="";
         struct item_bin* ib=tmp_item_bin;
+        if(multipolygon->outer_count == 0 || multipolygon->outer[0] == NULL) {
+            fprintf(stderr,"unresolved outer  %lld\n", multipolygon->relid);
+            /* seems this polygons "outer" could not be resolved. Skip it */
+            l = g_list_next(l);
+            continue;
+        }
         item_bin_init(ib,multipolygon->rel->type);
         item_bin_copy_coord(ib,multipolygon->outer[0],1);
         item_bin_copy_attr(ib,multipolygon->rel,attr_osm_relationid);
@@ -2704,8 +2711,8 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
             buffer=g_alloca(hole_len);
             id = (osmid *) item_bin_get_attr(multipolygon->inner[a], attr_osm_wayid, NULL);
             if(id !=NULL)
-                memcpy(&(buffer[used]), id, sizeof(id));
-            used += sizeof(id);
+                memcpy(&(buffer[used]), id, sizeof(*id));
+            used += sizeof(*id);
             /* item_bin gives the coordinate count in 32bit values. We want to have it in
              * number of coordinates. So divide by 2. Then we can memcopy*/
             multipolygon->inner[a]->clen /= 2;
