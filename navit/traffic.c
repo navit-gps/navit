@@ -3949,7 +3949,8 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                      * is deferred until a rectangle overlapping with the location is queried.
                      */
                     if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
-                            && (!(attr.u.num & route_status_destination_set))) {
+                            && route_get_pos(this_->shared->rt)
+                            && ((attr.u.num & route_status_destination_set))) {
                         traffic_location_set_enclosing_rect(message->location, NULL);
                         loc_ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
                         rt_ms = route_get_selection(this_->shared->rt);
