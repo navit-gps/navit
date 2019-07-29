@@ -880,8 +880,8 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
     /* Current message */
     struct traffic_message * message;
 
-    /* Map selection for current message */
-    struct map_selection * ms;
+    /* Map selection for current message, current map rect selection */
+    struct map_selection * msg_sel, * rect_sel;
 
     /* Attributes for traffic distortions generated from the current traffic message */
     struct seg_data * data;
@@ -899,15 +899,15 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
             message = (struct traffic_message *) msgiter->data;
             if (message->priv->items == NULL) {
                 traffic_location_set_enclosing_rect(message->location, NULL);
-                ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
-                if ((sel == NULL) || coord_rect_overlap(&(ms->u.c_rect), &(sel->u.c_rect))) {
-                    /* TODO the sel criterion is obsolete if we keep the enclosing condition */
-                    /* TODO do this in an idle loop, not here */
-                    data = traffic_message_parse_events(message);
-                    traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
-                    g_free(data);
-                }
-                map_selection_destroy(ms);
+                msg_sel = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                for (rect_sel = sel; rect_sel; rect_sel = rect_sel->next)
+                    if (coord_rect_overlap(&(msg_sel->u.c_rect), &(rect_sel->u.c_rect))) {
+                        /* TODO do this in an idle loop, not here */
+                        data = traffic_message_parse_events(message);
+                        traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                        g_free(data);
+                    }
+                map_selection_destroy(msg_sel);
             }
         }
     return mr;
