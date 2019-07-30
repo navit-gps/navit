@@ -5283,7 +5283,7 @@ struct map * traffic_get_map(struct traffic *this_) {
 
     if (!this_->shared->map) {
         /* no map yet, create a new one */
-        struct attr *attrs[4];
+        struct attr *attrs[5];
         struct attr a_type,data,a_description,a_traffic;
         a_type.type = attr_type;
         a_type.u.str = "traffic";
