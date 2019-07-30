@@ -29,7 +29,6 @@ extern "C" {
 #endif
 
 struct poly_hole {
-    long long osmid;
     int coord_count;
     struct coord coord[1];
 };

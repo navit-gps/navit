@@ -473,7 +473,7 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
         return nav_status_to_text(attr->u.num);
     }
     if (type == attr_poly_hole) {
-        return g_strdup_printf("osm_wayid=%lld", attr->u.poly_hole->osmid);
+        return g_strdup_printf("count=%d", attr->u.poly_hole->coord_count);
     }
     return g_strdup_printf("(no text[%s])", attr_to_name(type));
 }

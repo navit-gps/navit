@@ -2684,7 +2684,7 @@ struct multipolygon {
  *        1: used forward 2: used reverse
  * @returns: index of matching part, -1 if none matches or all are consumed already.
  */
-static int  process_multipolygon_find_match(struct coord* coord, int in_count, struct item_bin **parts, int*used) {
+static int  process_multipolygons_find_match(struct coord* coord, int in_count, struct item_bin **parts, int*used) {
     int i;
     for(i=0; i < in_count; i ++) {
         if(!used[i]) {
@@ -2724,17 +2724,48 @@ static int  process_multipolygon_find_match(struct coord* coord, int in_count, s
     return -1;
 }
 
-static int process_multipolygon_find_loop(int in_count, struct item_bin ** parts, int **scount, int *** sequences) {
+static int process_multipolygons_find_loop(int in_count, struct item_bin ** parts, int **scount, int *** sequences,
+        int **direction) {
     int done=0;
     int loop_count=0;
     int *used;
     if((in_count == 0) || (parts == NULL) || (sequences == NULL) || (scount == NULL))
         return 0;
+    fprintf(stderr,"find loops in %d parts\n",in_count);
     /* start with nothing */
     *sequences = NULL;
     *scount = NULL;
+    *direction = NULL;
+    /* allocate the usage and direction array.*/
     used=g_malloc0(in_count * sizeof(int));
-    fprintf(stderr,"find loops in %d parts\n",in_count);
+#if 0
+    while (! done) {
+        int a;
+        /* search for a new loop */
+        /* find first unused part to begin */
+        for(a=0; a < in_count; a ++) {
+            if(!used[a])
+                break;
+        }
+        if(!(a < in_count)) {
+            /* got no unused part */
+            done=1;
+        } else {
+            char * sequence;
+            int part_count = 0;
+            int done_loop = 0;
+            /* start a new sequence */
+            sequence=g_malloc0(in_count * sizeof(int));
+            /* consume the first item */
+            used[a] = 1;
+            /* add to sequence */
+            sequence[part_count]=a;
+            part_count ++;
+            while ((part_count < in_count) || (done_loop)) {
+            }
+        }
+    }
+#else
     while(!done) {
         int a;
         int done_loop=0;
@@ -2749,15 +2780,14 @@ static int process_multipolygon_find_loop(int in_count, struct item_bin ** parts
         /* chech if actually one was found */
         if(!(a < in_count)) {
             done = 1;
-        } else {
-            sequence=g_malloc0(in_count * sizeof(int));
         }
-
-        /* consume this, and start sequence */
-        used[a] = 1; /** always start keeping order */
-        sequence[part_count] = a;
-        /* will increase part_count later */
-
+        if(! done) {
+            sequence=g_malloc0(in_count * sizeof(int));
+            /* consume this, and start sequence */
+            used[a] = 1; /** always start keeping order */
+            sequence[part_count] = a;
+            /* will increase part_count later */
+        }
 
         while((!have_loop) && (!done_loop) && (!done)) {
             struct coord *first, *last;
@@ -2774,17 +2804,19 @@ static int process_multipolygon_find_loop(int in_count, struct item_bin ** parts
             /* check if this is a loop already */
             if((first->x == last->x) && (first->y == last->y))
                 have_loop=1;
-
-            /* No loop yet, try to find the next matching part */
-            sequence[part_count +1] = process_multipolygon_find_match(last, in_count, parts, used);
-            /*process_multipolygon_find_match coped for "used" already*/
-            if(sequence[part_count +1] >= 0) {
-                /*  matching part found */
-                part_count ++;
-                /*next iteration will check for loop*/
-            } else {
-                done_loop=1;
-            }
+            if((!have_loop) && (part_count + 1  < in_count)) {
+                /* No loop yet, try to find the next matching part */
+                sequence[part_count +1] = process_multipolygons_find_match(last, in_count, parts, used);
+                /*process_multipolygon_find_match coped for "used" already*/
+                if(sequence[part_count +1] >= 0) {
+                    /*  matching part found */
+                    part_count ++;
+                    /*next iteration will check for loop*/
+                } else {
+                    done_loop=1;
+                }
+            } else
+                done=1;
 
         }
         if(have_loop) {
@@ -2810,10 +2842,57 @@ static int process_multipolygon_find_loop(int in_count, struct item_bin ** parts
             g_free(sequence);
         }
     }
+#endif
     fprintf(stderr,"found %d loops\n", loop_count);
-    g_free(used);
+    *direction = used;
     return loop_count;
 }
+
+static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+        struct coord *  buffer) {
+    int points = 0;
+    int a;
+
+    if((bin == NULL) || (scount <= 0) || (sequence == NULL))
+        return 0;
+
+    for(a=0; a < scount; a++) {
+        int pcount;
+        struct coord * c;
+        c= (struct coord *) (bin[sequence[a]] + 1);
+        pcount= bin[sequence[a]]->clen / 2;
+        /* cut the duplicate on all than the first one */
+        if(a!=0)
+            pcount --;
+
+        if((buffer != NULL) && (direction !=NULL)) {
+            if(direction[a] == 1) {
+                memcpy(&(buffer[points]), c, pcount * sizeof(struct coord));
+            } else {
+                int b;
+                struct coord * target = &(buffer[points]);
+                for (b=0; b < pcount; b ++) {
+                    target[b] = c[(bin[sequence[a]]->clen / 2) - pcount -1];
+                }
+            }
+        }
+        points += pcount;
+    }
+    return points;
+}
+
+/**
+ * @brief get number of coordinates inside a sequence calculated by process_multipolygon_find_loop
+ *
+ * @param bin the array of all raw members of this multipolygon
+ * @param scount number of members inside this sequence
+ * @param sequence sequence calculated by process_multipolygon_find_loop
+ * @returns number of coords
+ */
+static int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
+    return process_multipolygons_loop_dump(bin,scount,sequence,NULL,NULL);
+}
+
 static inline void dump_sequence(const char * string, int loop_count, int*scount, int**sequences) {
     int i;
     int j;
@@ -2833,19 +2912,21 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         int b;
         struct multipolygon *multipolygon=l->data;
         struct rect bbox;
-        int inner_loop_count;
+        int inner_loop_count=0;
         int *inner_scount=NULL;
+        int *inner_direction=NULL;
         int **inner_sequences=NULL;
-        int outer_loop_count=NULL;
+        int outer_loop_count=0;
         int *outer_scount=NULL;
+        int *outer_direction=NULL;
         int **outer_sequences=NULL;
         /* combine outer to full loops */
-        outer_loop_count = process_multipolygon_find_loop(multipolygon->outer_count,multipolygon->outer, &outer_scount,
-                           &outer_sequences);
+        outer_loop_count = process_multipolygons_find_loop(multipolygon->outer_count,multipolygon->outer, &outer_scount,
+                           &outer_sequences, &outer_direction);
 
         /* combine inner to full loops */
-        inner_loop_count = process_multipolygon_find_loop(multipolygon->inner_count,multipolygon->inner, &inner_scount,
-                           &inner_sequences);
+        inner_loop_count = process_multipolygons_find_loop(multipolygon->inner_count,multipolygon->inner, &inner_scount,
+                           &inner_sequences, &inner_direction);
 
         dump_sequence("outer",outer_loop_count, outer_scount, outer_sequences);
         dump_sequence("inner",inner_loop_count, inner_scount, inner_sequences);
@@ -2857,34 +2938,42 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
             int order;
             char tilebuf[20]="";
             struct item_bin* ib=tmp_item_bin;
-            if(multipolygon->outer_count == 0 || multipolygon->outer[0] == NULL) {
+            int outer_length;
+            struct coord * outer_buffer;
+            if(outer_loop_count == 0) {
                 fprintf(stderr,"unresolved outer  %lld\n", multipolygon->relid);
                 /* seems this polygons "outer" could not be resolved. Skip it */
                 l = g_list_next(l);
                 continue;
             }
+            outer_length = process_multipolygons_loop_count(multipolygon->outer, outer_scount[b],
+                           outer_sequences[b]) * sizeof(struct coord);
+            outer_buffer = (struct coord *) g_malloc0(outer_length);
+            outer_length = process_multipolygons_loop_dump(multipolygon->outer, outer_scount[b], outer_sequences[b],
+                           outer_direction, outer_buffer);
             item_bin_init(ib,multipolygon->rel->type);
-            item_bin_copy_coord(ib,multipolygon->outer[0],1);
+            item_bin_add_coord(ib, outer_buffer, outer_length);
+            g_free(outer_buffer);
             item_bin_copy_attr(ib,multipolygon->rel,attr_osm_relationid);
             item_bin_copy_attr(ib,multipolygon->rel,attr_label);
 
-            for(a = 0; a < multipolygon->inner_count; a ++) {
+            for(a = 0; a < inner_loop_count; a ++) {
                 int hole_len;
                 char * buffer;
                 int used =0;
-                osmid * id;
-                hole_len = multipolygon->inner[a]->clen *4;
-                hole_len+=4 + 8;
-                buffer=g_alloca(hole_len);
-                id = (osmid *) item_bin_get_attr(multipolygon->inner[a], attr_osm_wayid, NULL);
-                if(id !=NULL)
-                    memcpy(&(buffer[used]), id, sizeof(*id));
-                used += sizeof(*id);
-                /* item_bin gives the coordinate count in 32bit values. We want to have it in
-                 * number of coordinates. So divide by 2. Then we can memcopy*/
-                multipolygon->inner[a]->clen /= 2;
-                memcpy(&(buffer[used]), &(multipolygon->inner[a]->clen), hole_len - used);
-                item_bin_add_attr_data(ib, attr_poly_hole, buffer, hole_len);
+                int inner_len =0;
+                hole_len = process_multipolygons_loop_count(multipolygon->inner, inner_scount[a], inner_sequences[a]);
+                inner_len = (hole_len * sizeof(struct coord));
+                inner_len+=4;
+                buffer=g_malloc0(inner_len);
+                memcpy(&(buffer[used]), &(hole_len), sizeof(int));
+                used += sizeof(int);
+                fprintf(stderr,"hole_len %d, used %d\n", hole_len, used);
+                used += process_multipolygons_loop_dump(multipolygon->inner, inner_scount[a], inner_sequences[a], inner_direction,
+                                                        (struct coord *)&(buffer[used])) * sizeof(struct coord);
+                fprintf(stderr,"hole_len %d, used %d\n", hole_len, used);
+                item_bin_add_attr_data(ib, attr_poly_hole, buffer, inner_len);
+                g_free(buffer);
             }
 
             order=tile(&bbox,"",tilebuf,sizeof(tilebuf)-1,overlap,NULL);
@@ -2899,10 +2988,12 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
             g_free (outer_sequences[a]);
         g_free(outer_sequences);
         g_free(outer_scount);
+        g_free(outer_direction);
         for(a=0; a < inner_loop_count; a ++)
             g_free (inner_sequences[a]);
         g_free(inner_sequences);
         g_free(inner_scount);
+        g_free(inner_direction);
         /* clean up this item */
         for (a=0; a < multipolygon->inner_count; a ++)
             g_free(multipolygon->inner[a]);

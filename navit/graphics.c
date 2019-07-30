@@ -1420,13 +1420,13 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     /* add length for holes */
     item_attr_rewind(item);
     while(item_attr_get(item, attr_poly_hole, &attr)) {
-        dbg(lvl_error,"got hole %lld",attr.u.poly_hole->osmid);
         hole_count ++;
         hole_total_coords += attr.u.poly_hole->coord_count;
     }
     holes_length = sizeof(struct displayitem_poly_holes) + hole_count * sizeof(int) + hole_count * sizeof(
                        struct coord *) + hole_total_coords * sizeof(struct coord);
-    dbg(lvl_error,"got %d holes with %d coords total", hole_count, hole_total_coords);
+    if(hole_count > 0)
+        dbg(lvl_error,"got %d holes with %d coords total", hole_count, hole_total_coords);
     len += holes_length;
 
     p=g_malloc(len);
