@@ -1426,7 +1426,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     holes_length = sizeof(struct displayitem_poly_holes) + hole_count * sizeof(int) + hole_count * sizeof(
                        struct coord *) + hole_total_coords * sizeof(struct coord);
     if(hole_count > 0)
-        dbg(lvl_error,"got %d holes with %d coords total", hole_count, hole_total_coords);
+        dbg(lvl_debug,"got %d holes with %d coords total", hole_count, hole_total_coords);
     len += holes_length;
 
     p=g_malloc(len);
