@@ -1621,14 +1621,18 @@ void osm_end_relation(struct maptool_osm *osm) {
             tmp_item_bin->type = type;
         } else {
             type=type_none;
-            tmp_item_bin->type=type;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=type;
         }
     } else {
         if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
             tmp_item_bin->type=type;
         } else {
             type=type_none;
-            tmp_item_bin->type=type;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=type;
         }
     }
 
