@@ -1625,6 +1625,8 @@ void osm_end_relation(struct maptool_osm *osm) {
              * indicating the turn restrictions */
             //tmp_item_bin->type=type;
         }
+        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+        item_bin_write(tmp_item_bin, osm->multipolygons);
     } else {
         if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
             tmp_item_bin->type=type;
@@ -1634,17 +1636,13 @@ void osm_end_relation(struct maptool_osm *osm) {
              * indicating the turn restrictions */
             //tmp_item_bin->type=type;
         }
+        if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
+                && (boundary || type!=type_none)) {
+            item_bin_write(tmp_item_bin, osm->boundaries);
+        }
     }
 
-    if ((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
-        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
-        item_bin_write(tmp_item_bin, osm->multipolygons);
-    }
 
-    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-            && (boundary || type!=type_none)) {
-        item_bin_write(tmp_item_bin, osm->boundaries);
-    }
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
