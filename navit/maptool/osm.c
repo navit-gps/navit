@@ -1615,26 +1615,27 @@ void osm_end_relation(struct maptool_osm *osm) {
 
     in_relation=0;
 
-    if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
-        tmp_item_bin->type=type;
+    fprintf(stderr,"relation_type=%s\n", relation_type);
+    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, &type, 1)) {
+            tmp_item_bin->type = type;
+        } else {
+            type=type_none;
+            tmp_item_bin->type=type;
+        }
     } else {
-        type=type_none;
-        tmp_item_bin->type=type;
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+            tmp_item_bin->type=type;
+        } else {
+            type=type_none;
+            tmp_item_bin->type=type;
+        }
     }
 
-    fprintf(stderr,"relation_type=%s\n", relation_type);
     if ((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
         item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
         item_bin_write(tmp_item_bin, osm->multipolygons);
     }
-
-    /*TODO: check if this was a bug: Previously attr_longest_match always failed, because
-     * item_is_poly_place never matched causing attr_mapping_rel2poly_place to be empty.
-     * Since I don't know what happenes if type suddenly is != type_none, I force the
-     * old behaviour here */
-    type=type_none;
-    tmp_item_bin->type=type;
-
 
     if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
             && (boundary || type!=type_none)) {
@@ -1758,8 +1759,6 @@ void osm_end_way(struct maptool_osm *osm) {
         add_flags=0;
         if (types[i] == type_none)
             continue;
-        if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
-            continue;
         if (types[i] != type_street_unkn) {
             if(types[i]<type_area)
                 count_lines++;
@@ -1848,8 +1847,6 @@ void osm_end_node(struct maptool_osm *osm) {
     }
     for (i = 0 ; i < count ; i++) {
         if (types[i] == type_none)
-            continue;
-        if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
             continue;
         item_bin=init_item(types[i]);
         if (item_is_town(*item_bin) && attr_strings[attr_string_population])

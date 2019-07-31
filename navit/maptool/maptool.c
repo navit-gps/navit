@@ -731,14 +731,18 @@ static void osm_process_multipolygons(struct maptool_params *p, char *suffix) {
     p->osm.multipolygons=tempfile(suffix,"multipolygons",0);
     if(!p->osm.multipolygons)
         return;
-    relations=tempfile(suffix,"relations", 1);
+    relations=tempfile(suffix,"multipolygons_out", 1);
     coords=fopen("coords.tmp", "rb");
     ways_split=tempfile(suffix,"ways_split",0);
     ways_split_index=tempfile(suffix,"ways_split_index",0);
     process_multipolygons(p->osm.multipolygons,coords,ways_split,ways_split_index,relations);
+    fclose(ways_split_index);
+    fclose(ways_split);
     fclose(coords);
     fclose(relations);
     fclose(p->osm.multipolygons);
+    if(!p->keep_tmpfiles)
+        tempfile_unlink(suffix,"multipolygons");
 }
 
 static void maptool_dump(struct maptool_params *p, char *suffix) {
@@ -748,8 +752,10 @@ static void maptool_dump(struct maptool_params *p, char *suffix) {
         files[files_count++]="nodes";
     if (p->process_ways)
         files[files_count++]="ways_split";
-    if (p->process_relations)
+    if (p->process_relations) {
         files[files_count++]="relations";
+        files[files_count++]="multipolygons_out";
+    }
     for (i = 0 ; i < files_count ; i++) {
         FILE *f=tempfile(suffix,files[i],0);
         if (f) {
@@ -833,6 +839,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
     }
     if(!p->keep_tmpfiles) {
         tempfile_unlink(suffix,"relations");
+        tempfile_unlink(suffix,"multipolygons_out");
         tempfile_unlink(suffix,"nodes");
         tempfile_unlink(suffix,"ways_split");
         tempfile_unlink(suffix,"poly2poi_resolved");
@@ -1024,14 +1031,15 @@ int main(int argc, char **argv) {
         if (p.process_relations) {
             osm_process_turn_restrictions(&p, suffix);
         }
-        if(!p.keep_tmpfiles)
-            tempfile_unlink(suffix,"ways_split_index");
     }
     if (start_phase(&p,"generating multipolygons")) {
         if(p.process_relations) {
             osm_process_multipolygons(&p, suffix);
         }
     }
+    if(!p.keep_tmpfiles)
+        tempfile_unlink(suffix,"ways_split_index");
+
     if (p.process_relations && p.process_ways && p.process_nodes
             && start_phase(&p,"processing associated street relations")) {
         struct files_relation_processing *files_relproc = files_relation_processing_new(p.osm.line2poi, suffix);
@@ -1068,6 +1076,8 @@ int main(int argc, char **argv) {
         exit(0);
     }
     if (p.process_relations) {
+        filenames[filename_count]="multipolygons_out";
+        referencenames[filename_count++]=NULL;
         filenames[filename_count]="relations";
         referencenames[filename_count++]=NULL;
         filenames[filename_count]="towns_poly";
