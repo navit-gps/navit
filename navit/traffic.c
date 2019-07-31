@@ -278,7 +278,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
 static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords);
-static void traffic_dump_messages_to_xml(struct traffic * this_);
+static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static int traffic_process_messages_int(struct traffic * this_, int flags);
@@ -729,6 +729,38 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
     return ret;
 }
 
+/**
+ * @brief Dumps an item to a file in textfile format.
+ *
+ * All data passed to this method is safe to free after the method returns, and doing so is the
+ * responsibility of the caller.
+ *
+ * @param item The item
+ * @param f The file to write to
+ */
+static void tm_item_dump_to_file(struct item * item, FILE * f) {
+    struct item_priv * ip = (struct item_priv *) item->priv_data;
+    struct attr **attrs = ip->attrs;
+    struct coord *c = ip->coords;
+    int i;
+    char * attr_text;
+
+    fprintf(f, "type=%s", item_to_name(item->type));
+    fprintf(f, " id=0x%x,0x%x", item->id_hi, item->id_lo);
+    while (*attrs) {
+        attr_text = attr_to_text(*attrs, NULL, 0);
+        /* FIXME this may not work properly for all attribute types */
+        fprintf(f, " %s=%s", attr_to_name((*attrs)->type), attr_text);
+        g_free(attr_text);
+        attrs++;
+    }
+    fprintf(f, "\n");
+
+    for (i = 0; i < ip->coord_count; i++) {
+        fprintf(f,"0x%x 0x%x\n", c[i].x, c[i].y);
+    }
+}
+
 #ifdef TRAFFIC_DEBUG
 /**
  * @brief Dumps an item to a textfile map.
@@ -755,19 +787,7 @@ static void tm_dump_item_to_textfile(struct item * item) {
     if (dist_filename) {
         FILE *map = fopen(dist_filename,"a");
         if (map) {
-            fprintf(map, "type=%s", item_to_name(item->type));
-            while (*attrs) {
-                attr_text = attr_to_text(*attrs, NULL, 0);
-                /* FIXME this may not work properly for all attribute types */
-                fprintf(map, " %s=%s", attr_to_name((*attrs)->type), attr_text);
-                g_free(attr_text);
-                attrs++;
-            }
-            fprintf(map, "\n");
-
-            for (i = 0; i < ip->coord_count; i++) {
-                fprintf(map,"0x%x 0x%x\n", c[i].x, c[i].y);
-            }
+            tm_item_dump_to_file(item, map);
             fclose(map);
         } else {
             dbg(lvl_error,"could not open file for distortions !!");
@@ -886,6 +906,9 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
     /* Attributes for traffic distortions generated from the current traffic message */
     struct seg_data * data;
 
+    /* Whether new segments have been added */
+    int dirty = 0;
+
     dbg(lvl_debug,"enter");
     mr=g_new0(struct map_rect_priv, 1);
     mr->mpriv = priv;
@@ -906,11 +929,15 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                         data = traffic_message_parse_events(message);
                         traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
                         g_free(data);
+                        dirty = 1;
                         break;
                     }
                 map_selection_destroy(msg_sel);
             }
         }
+    if (dirty)
+        /* dump message store if new messages have been received */
+        traffic_dump_messages_to_xml(priv->shared);
     return mr;
 }
 
@@ -3703,7 +3730,7 @@ static void traffic_set_shared(struct traffic *this_) {
 /**
  * @brief Dumps all currently active traffic messages to an XML file.
  */
-static void traffic_dump_messages_to_xml(struct traffic * this_) {
+static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared) {
     /* add the configuration directory to the name of the file to use */
     char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
                                        "/traffic.xml", NULL);
@@ -3713,12 +3740,13 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
     char * point_names[5] = {"from", "at", "via", "not_via", "to"};
     struct traffic_point * points[5];
     int i, j;
+    struct item ** curr;
 
     if (traffic_filename) {
         FILE *f = fopen(traffic_filename,"w");
         if (f) {
             fprintf(f, "<navit_messages>\n");
-            for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+            for (msgiter = shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
                 message = (struct traffic_message *) msgiter->data;
                 points[0] = message->location->from;
                 points[1] = message->location->at;
@@ -3787,6 +3815,16 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
                         fprintf(f, "%+f %+f", points[i]->coord.lat, points[i]->coord.lng);
                         fprintf(f, "</%s>\n", point_names[i]);
                     }
+
+                if (message->priv->items) {
+                    fprintf(f, "      <navit_items>\n");
+                    fprintf(f, "<![CDATA[\n");
+                    for (curr = message->priv->items; *curr; curr++) {
+                        tm_item_dump_to_file(*curr, f);
+                    }
+                    fprintf(f, "]]>\n");
+                    fprintf(f, "      </navit_items>\n");
+                }
 
                 fprintf(f, "    </location>\n");
 
@@ -4051,7 +4089,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
 #endif
 
         /* dump message store if new messages have been received */
-        traffic_dump_messages_to_xml(this_);
+        traffic_dump_messages_to_xml(this_->shared);
     }
 
     /* TODO see comment on route_recalculate_partial about thread-safety */
