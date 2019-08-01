@@ -1615,7 +1615,6 @@ void osm_end_relation(struct maptool_osm *osm) {
 
     in_relation=0;
 
-    fprintf(stderr,"relation_type=%s\n", relation_type);
     if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
         if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, &type, 1)) {
             tmp_item_bin->type = type;
@@ -2699,7 +2698,7 @@ static int  process_multipolygons_find_match(struct item_bin* part,int part_used
             struct coord *try_first, *try_last;
 
             if(parts[i]->clen < 2) {
-                fprintf(stderr,"skipping single point");
+                //fprintf(stderr,"skipping single point");
                 used[i] = 1;
                 continue;
             }
@@ -2707,20 +2706,16 @@ static int  process_multipolygons_find_match(struct item_bin* part,int part_used
             try_first=(struct coord *)(parts[i] +1);
             try_last=(struct coord *)(parts[i] +1);
             try_last+=(parts[i]->clen / 2) - 1;
-            fprintf(stderr, "0x%x,0x%x try_first[%d] 0x%x,0x%x try_last[%d] 0x%x,0x%x\n",coord->x, coord->y,i,try_first->x,
-                    try_first->y, i, try_last->x,
-                    try_last->y);
+            //fprintf(stderr, "0x%x,0x%x try_first[%d] 0x%x,0x%x try_last[%d] 0x%x,0x%x\n",coord->x, coord->y,i,try_first->x,
+            //        try_first->y, i, try_last->x,
+            //        try_last->y);
 
             if((coord->x == try_first->x) && (coord->y == try_first->y)) {
                 /* forward match */
-                //fprintf(stderr,"forward match\n");
                 have_match=1;
             } else if((coord->x == try_last->x) && (coord->y == try_last->y)) {
-                fprintf(stderr,"reverse match\n");
                 /* reverse match */
                 have_match=2;
-                /* copy first to last foor loop check */
-                try_last = try_first;
             }
             /* add match to sequence */
             if(have_match) {
@@ -2793,14 +2788,15 @@ static int process_multipolygons_find_loop(int in_count, struct item_bin ** part
         return 0;
 }
 
-static int process_multipolygons_find_loops(int in_count, struct item_bin ** parts, int **scount, int *** sequences,
+static int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+        int *** sequences,
         int **direction) {
     int done=0;
     int loop_count=0;
     int *used;
     if((in_count == 0) || (parts == NULL) || (sequences == NULL) || (scount == NULL))
         return 0;
-    fprintf(stderr,"find loops in %d parts\n",in_count);
+    //fprintf(stderr,"find loops in %d parts\n",in_count);
     /* start with nothing */
     *sequences = NULL;
     *scount = NULL;
@@ -2814,7 +2810,7 @@ static int process_multipolygons_find_loops(int in_count, struct item_bin ** par
         if(sequence_count < 0) {
             done = 1;
         } else if(sequence_count == 0) {
-            fprintf(stderr,"skipping nonclosed sequence\n");
+            osm_warning("relation",relid,0,"multipolygon: skipping non loop sequence\n");
             /* skip empty sequence */
             g_free(sequence);
         } else {
@@ -2827,7 +2823,7 @@ static int process_multipolygons_find_loops(int in_count, struct item_bin ** par
             loop_count ++;
         }
     } while (!done);
-    fprintf(stderr,"found %d loops\n", loop_count);
+    //fprintf(stderr,"found %d loops\n", loop_count);
     *direction = used;
     return loop_count;
 }
@@ -2850,16 +2846,20 @@ static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, in
         if(a!=0)
             pcount --;
         if((buffer != NULL) && (direction !=NULL)) {
-            if(direction[a] == 1) {
+            if(direction[sequence[a]] == 1) {
                 memcpy(&(buffer[points]), c, pcount * sizeof(struct coord));
             } else {
                 int b;
                 struct coord * target = &(buffer[points]);
+                //fprintf(stderr,"R:");
                 for (b=0; b < pcount; b ++) {
                     target[b] = c[(bin[sequence[a]]->clen / 2) - b -1];
                 }
             }
         }
+        //if(buffer !=NULL) {
+        //    fprintf(stderr, "%d (%x, %x)-%d-(%x, %x)\n",sequence[a],  buffer[points].x, buffer[points].y, pcount, buffer[points+pcount-1].x, buffer[points+pcount-1].y);
+        //}
         points += pcount;
     }
     return points;
@@ -2877,15 +2877,19 @@ static int process_multipolygons_loop_count(struct item_bin** bin, int scount, i
     return process_multipolygons_loop_dump(bin,scount,sequence,NULL,NULL);
 }
 
-static inline void dump_sequence(const char * string, int loop_count, int*scount, int**sequences) {
+static inline void dump_sequence(const char * string, int loop_count, int*scount, int**sequences, int*direction) {
+#if 0
     int i;
     int j;
     for(j=0; j<loop_count; j++) {
         fprintf(stderr,"loop %s :",string);
-        for(i=0; i < scount[j]; i ++)
+        for(i=0; i < scount[j]; i ++) {
+            fprintf(stderr, "%s", (direction[sequences[j][i]]== 1)? "":"R");
             fprintf(stderr, "%d ", sequences[j][i]);
+        }
         fprintf(stderr, "\n");
     }
+#endif
 }
 
 static void process_multipolygons_finish(GList *tr, FILE *out) {
@@ -2904,15 +2908,17 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         int *outer_direction=NULL;
         int **outer_sequences=NULL;
         /* combine outer to full loops */
-        outer_loop_count = process_multipolygons_find_loops(multipolygon->outer_count,multipolygon->outer, &outer_scount,
+        outer_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->outer_count,multipolygon->outer,
+                           &outer_scount,
                            &outer_sequences, &outer_direction);
 
         /* combine inner to full loops */
-        inner_loop_count = process_multipolygons_find_loops(multipolygon->inner_count,multipolygon->inner, &inner_scount,
+        inner_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->inner_count,multipolygon->inner,
+                           &inner_scount,
                            &inner_sequences, &inner_direction);
 
-        dump_sequence("outer",outer_loop_count, outer_scount, outer_sequences);
-        dump_sequence("inner",inner_loop_count, inner_scount, inner_sequences);
+        dump_sequence("outer",outer_loop_count, outer_scount, outer_sequences, outer_direction);
+        dump_sequence("inner",inner_loop_count, inner_scount, inner_sequences, inner_direction);
 
 
         for(b=0; b<outer_loop_count; b++) {
@@ -2929,8 +2935,8 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
                 l = g_list_next(l);
                 continue;
             }
-            long long relid=item_bin_get_relationid(multipolygon->rel);
-            fprintf(stderr,"process %lld\n", relid);
+            //long long relid=item_bin_get_relationid(multipolygon->rel);
+            //fprintf(stderr,"process %lld\n", relid);
             outer_length = process_multipolygons_loop_count(multipolygon->outer, outer_scount[b],
                            outer_sequences[b]) * sizeof(struct coord);
             outer_buffer = (struct coord *) g_malloc0(outer_length);
@@ -2978,6 +2984,8 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
             item_bin_add_attr_range(ib,attr_order,0,order);
             item_bin_write(ib, out);
         }
+        /* just for fun...*/
+        processed_relations ++;
         /* clean up the sequences */
         for(a=0; a < outer_loop_count; a ++)
             g_free (outer_sequences[a]);
@@ -3010,8 +3018,8 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
     int type=(long)member_priv;
     int i;
     struct multipolygon *multipolygon=relation_priv;
-    fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
-            (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
+    //fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
+    //        (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
     /* we remeber the whole binary item, as we may want to have the attributes later on finalize */
     if(type) {
         /* copy the member as inner */
@@ -3055,7 +3063,7 @@ static GList *process_multipolygons_setup(FILE *in, struct relations *relations)
         inner = g_malloc0(sizeof(struct relation_member));
         while(search_relation_member(ib, "outer",&(outer[outer_count]),&min_count)) {
             if(outer[outer_count].type != rel_member_way)
-                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member ");
+                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member\n");
             outer_count ++;
             /*realloc outer to make space for next */
             outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
@@ -3063,14 +3071,15 @@ static GList *process_multipolygons_setup(FILE *in, struct relations *relations)
         min_count=0;
         while(search_relation_member(ib, "inner",&(inner[inner_count]),&min_count)) {
             if(inner[inner_count].type != rel_member_way)
-                osm_warning("relation",relid,0,"multipolygon: wrong type for inner member ");
+                osm_warning("relation",relid,0,"multipolygon: wrong type for inner member\n");
             inner_count ++;
             /*realloc inner to make space for next */
             inner = g_realloc(inner, sizeof(struct relation_member) * (inner_count +1));
         }
-        fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
+        //fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
         if(outer_count == 0) {
-            osm_warning("relation",relid,0,"multipolygon: missing outer member ");
+            osm_warning("relation",relid,0,"multipolygon: missing outer member\n");
+
             continue;
         }
         p_multipolygon=g_new0(struct multipolygon, 1);
