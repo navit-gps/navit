@@ -3818,11 +3818,11 @@ static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared) {
 
                 if (message->priv->items) {
                     fprintf(f, "      <navit_items>\n");
-                    fprintf(f, "<![CDATA[\n");
+                    //fprintf(f, "<![CDATA[\n");
                     for (curr = message->priv->items; *curr; curr++) {
                         tm_item_dump_to_file(*curr, f);
                     }
-                    fprintf(f, "]]>\n");
+                    //fprintf(f, "]]>\n");
                     fprintf(f, "      </navit_items>\n");
                 }
 
