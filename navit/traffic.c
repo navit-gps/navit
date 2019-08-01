@@ -4534,6 +4534,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
         traffic_xml_element_destroy(el);
         state->tagstack = g_list_remove(state->tagstack, state->tagstack->data);
     }
+    if (!state->is_valid)
+        state->is_valid = traffic_xml_is_tagstack_valid(state);
     state->is_opened = 0;
 }
 
