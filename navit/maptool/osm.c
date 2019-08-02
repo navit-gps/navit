@@ -3017,7 +3017,13 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
         void *member_priv) {
     int type=(long)member_priv;
     int i;
+    int * dup;
     struct multipolygon *multipolygon=relation_priv;
+    dup=item_bin_get_attr(member,attr_duplicate,NULL);
+    if(dup != NULL) {
+        //fprintf(stderr,"skip duplicate \n");
+        return;
+    }
     //fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
     //        (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
     /* we remeber the whole binary item, as we may want to have the attributes later on finalize */
