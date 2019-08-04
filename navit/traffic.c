@@ -411,7 +411,7 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
  * @param msgid The message ID
  * @param speed The maximum speed for the segment (`INT_MAX` if none given)
  * @param delay The delay for the segment, in tenths of seconds (0 for none)
- * @param attrs Additional attributes specified by the message
+ * @param attrs Additional attributes specified by the message, can be NULL
  * @param route The route affected by the changes
  *
  * @return true if data was changed, false if not
