@@ -3046,21 +3046,24 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
 
 }
 
-static GList *process_multipolygons_setup(FILE *in, struct relations *relations) {
-    struct item_bin *ib;
-    struct relations_func *relations_func;
-    int min_count;
-    GList *multipolygons=NULL;
-
-    fseek(in, 0, SEEK_SET);
-    relations_func=relations_func_new(process_multipolygons_member, NULL);
-    while ((ib=read_item(in))) {
+/**
+ * @brief prepare one multipolygon relation for relattion processing
+ *
+ * @param ib the relation
+ * @param relations the relation processing structure
+ * @param relations_func function to use for the members
+ * @param multipolygons write the resulting multipolygons to the list
+ */
+static void process_multipolygons_setup_one(struct item_bin * ib, struct relations * relations,
+        struct relations_func * relations_func, GList ** multipolygons) {
+    if(ib != NULL) {
         struct relation_member *outer=NULL;
         int outer_count=0;
         struct relation_member *inner=NULL;;
         int inner_count=0;
         long long relid;
         int a;
+        int min_count;
         struct multipolygon *p_multipolygon;
         relid=item_bin_get_relationid(ib);
         min_count=0;
@@ -3085,35 +3088,171 @@ static GList *process_multipolygons_setup(FILE *in, struct relations *relations)
         //fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
         if(outer_count == 0) {
             osm_warning("relation",relid,0,"multipolygon: missing outer member\n");
-
-            continue;
+        } else {
+            p_multipolygon=g_new0(struct multipolygon, 1);
+            p_multipolygon->relid=relid;
+            p_multipolygon->order=255;
+            p_multipolygon->rel=item_bin_dup(ib);
+            for (a = 0; a < outer_count; a ++)
+                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 0, outer[a].type,
+                                                    outer[a].id);
+            for (a = 0; a < inner_count; a ++)
+                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 1, inner[a].type,
+                                                    inner[a].id);
+            *multipolygons=g_list_append(*multipolygons, p_multipolygon);
         }
-        p_multipolygon=g_new0(struct multipolygon, 1);
-        p_multipolygon->relid=relid;
-        p_multipolygon->order=255;
-        p_multipolygon->rel=item_bin_dup(ib);
-        for (a = 0; a < outer_count; a ++)
-            relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 0, outer[a].type,
-                                                outer[a].id);
-        for (a = 0; a < inner_count; a ++)
-            relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 1, inner[a].type,
-                                                inner[a].id);
-        multipolygons=g_list_append(multipolygons, p_multipolygon);
         /* clean up*/
         g_free(inner);
         g_free(outer);
     }
+}
+
+/**
+ * @brief worker thread private storage
+ */
+struct process_multipolygon_setup_thread {
+    int number;
+    GAsyncQueue * queue;
+    struct relations * relations;
+    struct relations_func * relations_func;
+    GList* multipolygons;
+    GThread * thread;
+};
+
+/**
+ * @brief dummy memory location to pass a end condition to worker threads, as NULL cannot be passed.
+ */
+static struct item_bin killer;
+
+/**
+ * @brief multipolygons setup worker thread.
+ *
+ * This thread processes any item passed to it via async queue into it's local relations
+ * function.
+ * @param data this threads local storage
+ */
+static gpointer process_multipolygons_setup_worker (gpointer data) {
+    struct item_bin * ib;
+    //long long relid;
+    struct process_multipolygon_setup_thread * me = (struct process_multipolygon_setup_thread*) data;
+    fprintf(stderr,"worker %d up\n", me->number);
+    while((ib=g_async_queue_pop (me->queue)) != &killer) {
+        //relid=item_bin_get_relationid(ib);
+        //fprintf(stderr,"worker %d processing %lld\n", me->number, relid);
+        process_multipolygons_setup_one(ib, me->relations, me->relations_func, &(me->multipolygons));
+        /* done with that. Free the item_bin */
+        g_free(ib);
+    }
+    fprintf(stderr,"worker %d exit\n", me->number);
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+/**
+ * @brief prepare multipolygon way matching
+ *
+ * This function reads all multipolygon relations and prepares relations structures
+ * for later way matching. Since this scales quite ugly, (O^3) i think, we use multiple threads
+ * creating their own hash each. This way none of the hashes get's that big, and we can utilize
+ * more cpu power.
+ *
+ * @param in file containing the relations
+ * @param thread_count number of threads to use
+ * @param relations array of preallocated relations structures. One per thread.
+ *
+ * @returns array of GLists. One per thread containing the resulting structures.
+ */
+static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct relations **relations) {
+    struct process_multipolygon_setup_thread *sthread;
+
+    struct item_bin *ib;
+    struct relations_func *relations_func;
+    int i;
+    GList **multipolygons=NULL;
+    /* allocate and reference async queue */
+    GAsyncQueue * ib_queue=g_async_queue_new ();
+    g_async_queue_ref(ib_queue);
+    /* allocate per thread storage */
+    sthread=g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
+
+    fseek(in, 0, SEEK_SET);
+    relations_func=relations_func_new(process_multipolygons_member, NULL);
+
+    /* start the threads */
+    for(i=0; i < thread_count; i ++) {
+        sthread[i].number = i;
+        sthread[i].queue = ib_queue;
+        sthread[i].relations_func = relations_func;
+        sthread[i].relations = relations[i];
+        sthread[i].multipolygons = NULL;
+        sthread[i].thread = g_thread_new ("process_multipolygons_setup_worker", process_multipolygons_setup_worker,
+                                          &(sthread[i]));
+    }
+
+    while ((ib=read_item(in))) {
+        /* get a duplicate of the returned item, as the one returned shares buffer */
+        struct item_bin * dup = item_bin_dup(ib);
+        //long long relid;
+        //relid=item_bin_get_relationid(dup);
+        //fprintf(stderr,"Pushing %lld\n", relid);
+        /* the dup's will be freed by the thread processing them*/
+        g_async_queue_push(ib_queue,dup);
+        /* limit queue size. This is ugly, but since GAsyncQueue doesn't support
+         * push to block when the queue reached a decent size, I help myself
+         * with this ugly hack */
+        while(g_async_queue_length(ib_queue) > 1000)
+            usleep(200);
+    }
+
+    /* stop iand join all remaining threads */
+    for(i = 0; i < thread_count; i ++)
+        g_async_queue_push(ib_queue,&killer);
+    for(i=0; i < thread_count; i ++)
+        g_thread_join(sthread[i].thread);
+
+    /* rescue the resulting glist */
+    multipolygons = g_malloc0(sizeof(GList *) * thread_count);
+    for(i =0; i < thread_count; i ++)
+        multipolygons[i]=sthread[i].multipolygons;
+
+    /* free the thread storage */
+    g_free(sthread);
+
+    /* release the queue */
+    g_async_queue_unref(ib_queue);
+
+    /* return the list of multipolygons */
     return multipolygons;
 }
 
 void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
-    struct relations *relations=relations_new();
-    GList *multipolygons;
+    int thread_count = 4;
+    int i;
+    struct relations **relations;
+    GList **multipolygons = NULL;
+
+    relations = g_malloc0(sizeof(struct relations *) * thread_count);
+    for(i=0; i < thread_count; i ++)
+        relations[i] = relations_new();
     fseek(in, 0, SEEK_SET);
-    multipolygons=process_multipolygons_setup(in, relations);
-    relations_process(relations, coords, ways);
-    process_multipolygons_finish(multipolygons, out);
-    relations_destroy(relations);
+    multipolygons=process_multipolygons_setup(in,thread_count,relations);
+    /* Here we get an array of resulting relations structures and resultin
+     * GLists.
+     * Of course we need to iterate the ways multiple times, but that's fast
+     * compared to hashing the relations structures
+     * This even saves a lot of main memory, as we can process every result from
+     * every thread at once completely. Since we know it's self containing
+     */
+    for( i=0; i < thread_count; i ++) {
+        if(coords)
+            fseek(coords, 0,SEEK_SET);
+        if(ways)
+            fseek(ways, 0,SEEK_SET);
+        relations_process(relations[i], coords, ways);
+        process_multipolygons_finish(multipolygons[i], out);
+        relations_destroy(relations[i]);
+    }
+    g_free(relations);
 }
 
 struct turn_restriction {
