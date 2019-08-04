@@ -2696,6 +2696,84 @@ static int route_graph_point_is_endpoint_candidate(struct route_graph_point *thi
     return ret;
 }
 
+static int traffic_get_item_speed(struct item * item, struct seg_data * data, int item_maxspeed) {
+    /* Speed calculated in various ways */
+    int maxspeed, speed, penalized_speed, factor_speed;
+
+    speed = data->speed;
+    if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
+        if (item_maxspeed != INT_MAX) {
+            maxspeed = item_maxspeed;
+        } else {
+            switch (item->type) {
+            case type_highway_land:
+            case type_street_n_lanes:
+                maxspeed = 100;
+                break;
+            case type_highway_city:
+            case type_street_4_land:
+                maxspeed = 80;
+                break;
+            case type_street_3_land:
+                maxspeed = 70;
+                break;
+            case type_street_2_land:
+                maxspeed = 65;
+                break;
+            case type_street_1_land:
+                maxspeed = 60;
+                break;
+            case type_street_4_city:
+                maxspeed = 50;
+                break;
+            case type_ramp:
+            case type_street_3_city:
+            case type_street_unkn:
+                maxspeed = 40;
+                break;
+            case type_street_2_city:
+            case type_track_paved:
+                maxspeed = 30;
+                break;
+            case type_track:
+            case type_cycleway:
+                maxspeed = 20;
+                break;
+            case type_roundabout:
+            case type_street_1_city:
+            case type_street_0:
+            case type_living_street:
+            case type_street_service:
+            case type_street_parking_lane:
+            case type_path:
+            case type_track_ground:
+            case type_track_gravelled:
+            case type_track_unpaved:
+            case type_track_grass:
+            case type_bridleway:
+                maxspeed = 10;
+                break;
+            case type_street_pedestrian:
+            case type_footway:
+            case type_steps:
+                maxspeed = 5;
+                break;
+            default:
+                maxspeed = 50;
+            }
+        }
+        penalized_speed = maxspeed - data->speed_penalty;
+        if (penalized_speed < 5)
+            penalized_speed = 5;
+        factor_speed = maxspeed * data->speed_factor / 100;
+        if (speed > penalized_speed)
+            speed = penalized_speed;
+        if (speed > factor_speed)
+            speed = factor_speed;
+    }
+    return speed;
+}
+
 /**
  * @brief Generates segments affected by a traffic message.
  *
@@ -2750,8 +2828,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Coordinates of matched segment, sorted */
     struct coord *cd, *cs;
 
-    /* Speed calculated in various ways */
-    int maxspeed, speed, penalized_speed, factor_speed;
+    /* Speed for the current segment */
+    int speed;
 
     /* Delay for the current segment */
     int delay;
@@ -3153,77 +3231,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             cs = g_new0(struct coord, ccnt);
             cd = cs;
 
-            speed = data->speed;
-            if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
-                if (s->data.flags & AF_SPEED_LIMIT) {
-                    maxspeed = RSD_MAXSPEED(&s->data);
-                } else {
-                    switch (s->data.item.type) {
-                    case type_highway_land:
-                    case type_street_n_lanes:
-                        maxspeed = 100;
-                        break;
-                    case type_highway_city:
-                    case type_street_4_land:
-                        maxspeed = 80;
-                        break;
-                    case type_street_3_land:
-                        maxspeed = 70;
-                        break;
-                    case type_street_2_land:
-                        maxspeed = 65;
-                        break;
-                    case type_street_1_land:
-                        maxspeed = 60;
-                        break;
-                    case type_street_4_city:
-                        maxspeed = 50;
-                        break;
-                    case type_ramp:
-                    case type_street_3_city:
-                    case type_street_unkn:
-                        maxspeed = 40;
-                        break;
-                    case type_street_2_city:
-                    case type_track_paved:
-                        maxspeed = 30;
-                        break;
-                    case type_track:
-                    case type_cycleway:
-                        maxspeed = 20;
-                        break;
-                    case type_roundabout:
-                    case type_street_1_city:
-                    case type_street_0:
-                    case type_living_street:
-                    case type_street_service:
-                    case type_street_parking_lane:
-                    case type_path:
-                    case type_track_ground:
-                    case type_track_gravelled:
-                    case type_track_unpaved:
-                    case type_track_grass:
-                    case type_bridleway:
-                        maxspeed = 10;
-                        break;
-                    case type_street_pedestrian:
-                    case type_footway:
-                    case type_steps:
-                        maxspeed = 5;
-                        break;
-                    default:
-                        maxspeed = 50;
-                    }
-                }
-                penalized_speed = maxspeed - data->speed_penalty;
-                if (penalized_speed < 5)
-                    penalized_speed = 5;
-                factor_speed = maxspeed * data->speed_factor / 100;
-                if (speed > penalized_speed)
-                    speed = penalized_speed;
-                if (speed > factor_speed)
-                    speed = factor_speed;
-            }
+            speed = traffic_get_item_speed(&(s->data.item), data,
+                    (s->data.flags & AF_SPEED_LIMIT) ? RSD_MAXSPEED(&s->data) : INT_MAX);
 
             if (data->delay)
                 delay = data->delay * s->data.len / len;
