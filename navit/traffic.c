@@ -2696,6 +2696,13 @@ static int route_graph_point_is_endpoint_candidate(struct route_graph_point *thi
     return ret;
 }
 
+/**
+ * @brief Gets the speed for a traffic distortion item.
+ *
+ * @param item The road item to which the traffic distortion refers (not the traffic distortion item)
+ * @param data Segment data
+ * @param item_maxspeed Speed limit for the item, `INT_MAX` if none
+ */
 static int traffic_get_item_speed(struct item * item, struct seg_data * data, int item_maxspeed) {
     /* Speed calculated in various ways */
     int maxspeed, speed, penalized_speed, factor_speed;
