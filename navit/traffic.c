@@ -3232,7 +3232,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             cd = cs;
 
             speed = traffic_get_item_speed(&(s->data.item), data,
-                    (s->data.flags & AF_SPEED_LIMIT) ? RSD_MAXSPEED(&s->data) : INT_MAX);
+                                           (s->data.flags & AF_SPEED_LIMIT) ? RSD_MAXSPEED(&s->data) : INT_MAX);
 
             if (data->delay)
                 delay = data->delay * s->data.len / len;
