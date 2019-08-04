@@ -2894,7 +2894,7 @@ static inline void dump_sequence(const char * string, int loop_count, int*scount
 
 static void process_multipolygons_finish(GList *tr, FILE *out) {
     GList *l=tr;
-    fprintf(stderr,"process_multipolygons_finish\n");
+    //fprintf(stderr,"process_multipolygons_finish\n");
     while(l) {
         int a;
         int b;
@@ -3226,7 +3226,7 @@ static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct r
 }
 
 void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
-    int thread_count = 4;
+    /* thread count is from maptool.c as commandline parameter */
     int i;
     struct relations **relations;
     GList **multipolygons = NULL;
@@ -3235,6 +3235,7 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
     for(i=0; i < thread_count; i ++)
         relations[i] = relations_new();
     fseek(in, 0, SEEK_SET);
+    fprintf(stderr,"process_multipolygons:setup (threads %d)\n", thread_count);
     multipolygons=process_multipolygons_setup(in,thread_count,relations);
     /* Here we get an array of resulting relations structures and resultin
      * GLists.
@@ -3248,7 +3249,9 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
             fseek(coords, 0,SEEK_SET);
         if(ways)
             fseek(ways, 0,SEEK_SET);
+        fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
         relations_process(relations[i], coords, ways);
+        fprintf(stderr,"process_multipolygons:finish (thread %d)\n", i);
         process_multipolygons_finish(multipolygons[i], out);
         relations_destroy(relations[i]);
     }

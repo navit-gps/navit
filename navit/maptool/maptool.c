@@ -52,6 +52,7 @@
 long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
 int attr_debug_level=1;
 int ignore_unknown = 0;
+int thread_count=8; /* good default even on single cores */
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -301,6 +302,7 @@ static void usage(void) {
             "-S (--slice-size) <size>          : limit memory to use for some large internal buffers, in bytes. Default is %dGB.\n",
             SLIZE_SIZE_DEFAULT_GB);
     fprintf(f,"-t (--timestamp) <y-m-dTh:m:s>    : Set zip timestamp\n");
+    fprintf(f,"-T (--threads) <count>            : Set number of threads (for some operations)\n");
     fprintf(f,
             "-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
     fprintf(f,"-W (--ways-only)                  : process only ways\n");
@@ -377,6 +379,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"protobuf", 0, 0, 'P'},
         {"start", 1, 0, 's'},
         {"timestamp", 1, 0, 't'},
+        {"threads", 1, 0, 'T'},
         {"input-file", 1, 0, 'i'},
         {"rule-file", 1, 0, 'r'},
         {"ignore-unknown", 0, 0, 'n'},
@@ -391,7 +394,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
 #ifdef HAVE_POSTGRESQL
                      "d:"
 #endif
-                     "e:hi:knm:p:r:s:t:wu:z:Ux:", long_options, option_index);
+                     "e:hi:knm:p:r:s:t:T:wu:z:Ux:", long_options, option_index);
     if (c == -1)
         return 1;
     switch (c) {
@@ -492,6 +495,9 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         break;
     case 't':
         p->timestamp=optarg;
+        break;
+    case 'T':
+        thread_count=atoi(optarg);
         break;
     case 'w':
         dedupe_ways_hash=g_hash_table_new(NULL, NULL);
@@ -727,18 +733,19 @@ static void osm_process_turn_restrictions(struct maptool_params *p, char *suffix
 }
 
 static void osm_process_multipolygons(struct maptool_params *p, char *suffix) {
-    FILE *ways_split, *ways_split_index, *relations, *coords;
+    FILE *ways_split, *ways_split_index, *relations/*, *coords*/;
     p->osm.multipolygons=tempfile(suffix,"multipolygons",0);
     if(!p->osm.multipolygons)
         return;
     relations=tempfile(suffix,"multipolygons_out", 1);
-    coords=fopen("coords.tmp", "rb");
+    /* no coords in multipolygons. */
+    //coords=fopen("coords.tmp", "rb");
     ways_split=tempfile(suffix,"ways_split",0);
     ways_split_index=tempfile(suffix,"ways_split_index",0);
-    process_multipolygons(p->osm.multipolygons,coords,ways_split,ways_split_index,relations);
+    process_multipolygons(p->osm.multipolygons,/*coords*/NULL,ways_split,ways_split_index,relations);
     fclose(ways_split_index);
     fclose(ways_split);
-    fclose(coords);
+    //fclose(coords);
     fclose(relations);
     fclose(p->osm.multipolygons);
     if(!p->keep_tmpfiles)

@@ -235,6 +235,7 @@ extern struct item_bin *tmp_item_bin;
 /* maptool.c */
 
 extern long long slice_size;
+extern int thread_count;
 extern int attr_debug_level;
 extern char *suffix;
 extern int ignore_unknown;
