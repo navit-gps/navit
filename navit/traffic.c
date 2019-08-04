@@ -2782,6 +2782,20 @@ static int traffic_get_item_speed(struct item * item, struct seg_data * data, in
 }
 
 /**
+ * @brief Gets the delay for a traffic distortion item
+ *
+ * @param delay Total delay for all items associated with the same message and direction
+ * @param item_len Length of the current item
+ * @param len Combined length of all items associated with the same message and direction
+ */
+static int traffic_get_item_delay(int delay, int item_len, int len) {
+    if (delay)
+        return delay * item_len / len;
+    else
+        return delay;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
@@ -3241,10 +3255,7 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             speed = traffic_get_item_speed(&(s->data.item), data,
                                            (s->data.flags & AF_SPEED_LIMIT) ? RSD_MAXSPEED(&s->data) : INT_MAX);
 
-            if (data->delay)
-                delay = data->delay * s->data.len / len;
-            else
-                delay = data->delay;
+            delay = traffic_get_item_delay(data->delay, s->data.len, len);
 
             for (i = 0; i < ccnt; i++) {
                 *cd++ = *c++;
