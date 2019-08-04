@@ -3040,6 +3040,7 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
         multipolygon->outer[multipolygon->outer_count]=item_bin_dup(member);
         multipolygon->outer_count ++;
     }
+    processed_ways ++;
     i=item_order_by_type(member->type);
     if(i<multipolygon->order)
         multipolygon->order=i;
@@ -3137,6 +3138,7 @@ static gpointer process_multipolygons_setup_worker (gpointer data) {
     struct process_multipolygon_setup_thread * me = (struct process_multipolygon_setup_thread*) data;
     fprintf(stderr,"worker %d up\n", me->number);
     while((ib=g_async_queue_pop (me->queue)) != &killer) {
+        processed_relations ++;
         //relid=item_bin_get_relationid(ib);
         //fprintf(stderr,"worker %d processing %lld\n", me->number, relid);
         process_multipolygons_setup_one(ib, me->relations, me->relations_func, &(me->multipolygons));
@@ -3230,6 +3232,7 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
     int i;
     struct relations **relations;
     GList **multipolygons = NULL;
+    sig_alrm(0);
 
     relations = g_malloc0(sizeof(struct relations *) * thread_count);
     for(i=0; i < thread_count; i ++)
@@ -3244,6 +3247,10 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
      * This even saves a lot of main memory, as we can process every result from
      * every thread at once completely. Since we know it's self containing
      */
+    sig_alrm(0);
+    processed_relations=0;
+    processed_ways=0;
+    sig_alrm(0);
     for( i=0; i < thread_count; i ++) {
         if(coords)
             fseek(coords, 0,SEEK_SET);
@@ -3256,6 +3263,8 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
         relations_destroy(relations[i]);
     }
     g_free(relations);
+    sig_alrm(0);
+    sig_alrm_end();
 }
 
 struct turn_restriction {
