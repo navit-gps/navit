@@ -392,7 +392,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"index-size", 0, 0, 'x'},
         {0, 0, 0, 0}
     };
-    c = getopt_long (argc, argv, "6B:DEMNO:PS:Wa:bc"
+    c = getopt_long (argc, argv, "36B:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
                      "d:"
 #endif
