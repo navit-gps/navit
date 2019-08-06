@@ -279,7 +279,8 @@ static void usage(void) {
     fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
     fprintf(f,"Available switches:\n");
     fprintf(f,"-h (--help)                       : this screen\n");
-    fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
+    fprintf(f,"-3 (--32bit)                      : set zip 32 bit compression\n");
+    fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression (default)\n");
     fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
     fprintf(f,"-c (--dump-coordinates)           : dump coordinates after phase 1\n");
 #ifdef HAVE_POSTGRESQL
@@ -358,6 +359,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     int pos,c,i;
 
     static struct option long_options[] = {
+        {"32bit", 0, 0, '3'},
         {"64bit", 0, 0, '6'},
         {"attr-debug-level", 1, 0, 'a'},
         {"binfile", 0, 0, 'b'},
@@ -398,6 +400,9 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     if (c == -1)
         return 1;
     switch (c) {
+    case '3':
+        p->zip64=0;
+        break;
     case '6':
         p->zip64=1;
         break;
@@ -923,6 +928,7 @@ int main(int argc, char **argv) {
     linguistics_init();
 
     memset(&p, 0, sizeof(p));
+    p.zip64=1; /* default to 64 bit zip */
 #ifdef HAVE_ZLIB
     p.compression_level=9;
 #endif
