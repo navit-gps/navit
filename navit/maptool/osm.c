@@ -2667,7 +2667,6 @@ struct multipolygon {
     int outer_count;
     struct item_bin ** inner;
     struct item_bin ** outer;
-    int order;
 };
 
 /**
@@ -2924,7 +2923,6 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         for(b=0; b<outer_loop_count; b++) {
             struct rect outer_bbox;
             /* write out */
-            int order;
             char tilebuf[20]="";
             struct item_bin* ib=tmp_item_bin;
             int outer_length;
@@ -2976,12 +2974,6 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
                     item_bin_add_attr_data(ib, attr_poly_hole, buffer, inner_len);
                 g_free(buffer);
             }
-
-            order=tile(&outer_bbox,"",tilebuf,sizeof(tilebuf)-1,overlap,NULL);
-            if(order > multipolygon->order)
-                order=multipolygon->order;
-
-            item_bin_add_attr_range(ib,attr_order,0,order);
             item_bin_write(ib, out);
         }
         /* just for fun...*/
@@ -3041,10 +3033,6 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
         multipolygon->outer_count ++;
     }
     processed_ways ++;
-    i=item_order_by_type(member->type);
-    if(i<multipolygon->order)
-        multipolygon->order=i;
-
 }
 
 /**
@@ -3092,7 +3080,6 @@ static void process_multipolygons_setup_one(struct item_bin * ib, struct relatio
         } else {
             p_multipolygon=g_new0(struct multipolygon, 1);
             p_multipolygon->relid=relid;
-            p_multipolygon->order=255;
             p_multipolygon->rel=item_bin_dup(ib);
             for (a = 0; a < outer_count; a ++)
                 relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 0, outer[a].type,
