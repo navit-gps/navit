@@ -2923,7 +2923,6 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
         for(b=0; b<outer_loop_count; b++) {
             struct rect outer_bbox;
             /* write out */
-            char tilebuf[20]="";
             struct item_bin* ib=tmp_item_bin;
             int outer_length;
             struct coord * outer_buffer;
@@ -3008,7 +3007,6 @@ static void process_multipolygons_finish(GList *tr, FILE *out) {
 static void process_multipolygons_member(void *func_priv, void *relation_priv, struct item_bin *member,
         void *member_priv) {
     int type=(long)member_priv;
-    int i;
     int * dup;
     struct multipolygon *multipolygon=relation_priv;
     dup=item_bin_get_attr(member,attr_duplicate,NULL);
