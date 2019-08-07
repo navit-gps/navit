@@ -2332,8 +2332,8 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
  * @param out structure to place result in. Remember to deallocate!
  * @param mindist minimal distance between points
  */
-static void displayitem_transform_holes(struct transformation *trans, enum projection pro,
-                                        struct displayitem_poly_holes * in, struct displayitem_poly_holes * out, int mindist) {
+static inline void displayitem_transform_holes(struct transformation *trans, enum projection pro,
+        struct displayitem_poly_holes * in, struct displayitem_poly_holes * out, int mindist) {
     if(out == NULL)
         return;
     out->count = 0;
@@ -2341,7 +2341,7 @@ static void displayitem_transform_holes(struct transformation *trans, enum proje
     out->coords=NULL;
     if((in != NULL) && (in->count > 0)) {
         int a;
-        /* alloc space for hole conversion. */
+        /* alloc space for hole conversion. To be freed with displayitem_free_holes later*/
         out->count = in->count;
         out->ccount = g_malloc0(sizeof(*(out->ccount)) * in->count);
         out->coords = g_malloc0(sizeof(*(out->coords)) * in->count);
@@ -2371,6 +2371,130 @@ static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
     }
 }
 
+
+static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
+        int count, struct displayitem_poly_holes * holes) {
+    /*TODO: implement a "clipped" version of graphics_draw_polygon_with_holes*/
+    if((holes != NULL) && (holes->count > 0))
+        graphics_draw_polygon_with_holes(gra, dc->gc, pa, count, holes->count, holes->ccount, (struct point **)holes->coords);
+    else
+        graphics_draw_polygon_clipped(gra, dc->gc, pa, count);
+}
+
+static inline void displayitem_draw_polyline(struct display_context * dc, struct element * e, struct graphics * gra,
+        struct point * pa, int count, int *width) {
+    int i;
+    graphics_gc_set_linewidth(dc->gc, 1);
+    if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+        graphics_gc_set_dashes(dc->gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table,
+                               e->u.polyline.dash_num);
+    for (i = 0 ; i < count ; i++) {
+        if (width[i] < 2)
+            width[i]=2;
+    }
+    graphics_draw_polyline_clipped(gra, dc->gc, pa, count, width, e->u.polyline.width > 1);
+}
+
+static inline void displayitem_draw_circle(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra, struct point * pa, int count) {
+    if (count) {
+        if (e->u.circle.width > 1)
+            graphics_gc_set_linewidth(dc->gc, e->u.polyline.width);
+        graphics_draw_circle(gra, dc->gc, pa, e->u.circle.radius);
+        if (di->label && e->text_size) {
+            struct graphics_font *font=get_font(gra, e->text_size);
+            struct graphics_gc *gc_background=dc->gc_background;
+            if (! gc_background && e->u.circle.background_color.a) {
+                gc_background=graphics_gc_new(gra);
+                graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
+                dc->gc_background=gc_background;
+            }
+            if (font) {
+                struct point p;
+                /* Set p to the center of the circle */
+                p.x=pa[0].x+(e->u.circle.radius/2);
+                p.y=pa[0].y+(e->u.circle.radius/2);
+                multiline_label_draw(gra, dc->gc, gc_background, font, p, di->label, e->text_size+1);
+            } else
+                dbg(lvl_error,"Failed to get font with size %d",e->text_size);
+        }
+    }
+}
+
+static inline void displayitem_draw_text(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra,  struct point * pa, int count,  struct displayitem_poly_holes * holes) {
+    if (count && di->label) {
+        struct graphics_font *font=get_font(gra, e->text_size);
+        struct graphics_gc *gc_background=dc->gc_background;
+        if (! gc_background && e->u.text.background_color.a) {
+            gc_background=graphics_gc_new(gra);
+            graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
+            dc->gc_background=gc_background;
+        }
+        if (font) {
+            int a;
+            label_line(gra, dc->gc, gc_background, font, pa, count, di->label);
+            if(holes != NULL) {
+                for(a = 0; a < holes->count; a ++)
+                    label_line(gra, dc->gc, gc_background, font, (struct point *)holes->coords[a], holes->ccount[a], di->label);
+            }
+        } else
+            dbg(lvl_error,"Failed to get font with size %d",e->text_size);
+    }
+}
+
+static inline void displayitem_draw_icon(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra, struct point * pa, int count) {
+    if (count) {
+        struct graphics_image *img=dc->img;
+        if (!img || item_is_custom_poi(di->item)) {
+            char *path;
+            if (item_is_custom_poi(di->item)) {
+                char *icon;
+                char *src;
+                if (img)
+                    graphics_image_free(dc->gra, img);
+                src=e->u.icon.src;
+                if (!src || !src[0])
+                    src="%s";
+                icon=g_strdup_printf(src,di->label+strlen(di->label)+1);
+                path=graphics_icon_path(icon);
+                g_free(icon);
+            } else
+                path=graphics_icon_path(e->u.icon.src);
+            img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+            if (img)
+                dc->img=img;
+            else
+                dbg(lvl_debug,"failed to load icon '%s'", path);
+            g_free(path);
+        }
+        if (img) {
+            struct point p;
+            if (e->u.icon.x != -1 || e->u.icon.y != -1) {
+                p.x=pa[0].x - e->u.icon.x;
+                p.y=pa[0].y - e->u.icon.y;
+            } else {
+                p.x=pa[0].x - img->hot.x;
+                p.y=pa[0].y - img->hot.y;
+            }
+            graphics_draw_image(gra, gra->gc[0], &p, img);
+        }
+    }
+}
+
+static inline void displayitem_draw_image (struct displayitem *di, struct display_context *dc, struct graphics * gra,
+        struct point * pa, int count) {
+    dbg(lvl_debug,"image: '%s'", di->label);
+    struct graphics_image *img=dc->img;
+    if (gra->meth.draw_image_warp) {
+        img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
+        if (img)
+            graphics_draw_image_warp(gra, gra->gc[0], pa, count, img);
+    } else
+        dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
+}
+
 /**
  * @brief Draw a displayitem element
  *
@@ -2385,21 +2509,17 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
     int limit=0;
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
     struct graphics *gra=dc->gra;
-    struct graphics_gc *gc=dc->gc;
     struct element *e=dc->e;
-    struct graphics_image *img=dc->img;
-    struct point p;
-    char *path;
 
     while (di) {
-        int i,count=di->count,mindist=dc->mindist;
+        int count=di->count,mindist=dc->mindist;
         struct displayitem_poly_holes t_holes;
         t_holes.count=0;
 
         di->z_order=++(gra->current_z_order);
 
-        if (! gc) {
-            gc=graphics_gc_new(gra);
+        if (! dc->gc) {
+            struct graphics_gc * gc=graphics_gc_new(gra);
             graphics_gc_set_foreground(gc, &e->color);
             dc->gc=gc;
         }
@@ -2419,110 +2539,25 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
-            /*TODO: implement a "clipped" version of graphics_draw_polygon_with_holes*/
-            if(t_holes.count > 0)
-                graphics_draw_polygon_with_holes(gra, gc, pa, count, t_holes.count, t_holes.ccount, (struct point **)t_holes.coords);
-            else
-                graphics_draw_polygon_clipped(gra, gc, pa, count);
+            displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
             break;
-        case element_polyline: {
-            graphics_gc_set_linewidth(gc, 1);
-            if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-                graphics_gc_set_dashes(gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table, e->u.polyline.dash_num);
-            for (i = 0 ; i < count ; i++) {
-                if (width[i] < 2)
-                    width[i]=2;
-            }
-            graphics_draw_polyline_clipped(gra, gc, pa, count, width, e->u.polyline.width > 1);
-        }
-        break;
+        case element_polyline:
+            displayitem_draw_polyline(dc, e, gra, pa, count, width);
+            break;
         case element_circle:
-            if (count) {
-                if (e->u.circle.width > 1)
-                    graphics_gc_set_linewidth(gc, e->u.polyline.width);
-                graphics_draw_circle(gra, gc, pa, e->u.circle.radius);
-                if (di->label && e->text_size) {
-                    struct graphics_font *font=get_font(gra, e->text_size);
-                    struct graphics_gc *gc_background=dc->gc_background;
-                    if (! gc_background && e->u.circle.background_color.a) {
-                        gc_background=graphics_gc_new(gra);
-                        graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
-                        dc->gc_background=gc_background;
-                    }
-                    if (font) {
-                        /* Set p to the center of the circle */
-                        p.x=pa[0].x+(e->u.circle.radius/2);
-                        p.y=pa[0].y+(e->u.circle.radius/2);
-                        multiline_label_draw(gra, gc, gc_background, font, p, di->label, e->text_size+1);
-                    } else
-                        dbg(lvl_error,"Failed to get font with size %d",e->text_size);
-                }
-            }
+            displayitem_draw_circle(di, dc, e, gra, pa, count);
             break;
         case element_text:
-            if (count && di->label) {
-                struct graphics_font *font=get_font(gra, e->text_size);
-                struct graphics_gc *gc_background=dc->gc_background;
-                if (! gc_background && e->u.text.background_color.a) {
-                    gc_background=graphics_gc_new(gra);
-                    graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
-                    dc->gc_background=gc_background;
-                }
-                if (font) {
-                    int a;
-                    label_line(gra, gc, gc_background, font, pa, count, di->label);
-                    for(a = 0; a < t_holes.count; a ++)
-                        label_line(gra, gc, gc_background, font, (struct point *)t_holes.coords[a], t_holes.ccount[a], di->label);
-                } else
-                    dbg(lvl_error,"Failed to get font with size %d",e->text_size);
-            }
+            displayitem_draw_text(di, dc, e, gra, pa,  count, &t_holes);
             break;
         case element_icon:
-            if (count) {
-                if (!img || item_is_custom_poi(di->item)) {
-                    if (item_is_custom_poi(di->item)) {
-                        char *icon;
-                        char *src;
-                        if (img)
-                            graphics_image_free(dc->gra, img);
-                        src=e->u.icon.src;
-                        if (!src || !src[0])
-                            src="%s";
-                        icon=g_strdup_printf(src,di->label+strlen(di->label)+1);
-                        path=graphics_icon_path(icon);
-                        g_free(icon);
-                    } else
-                        path=graphics_icon_path(e->u.icon.src);
-                    img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-                    if (img)
-                        dc->img=img;
-                    else
-                        dbg(lvl_debug,"failed to load icon '%s'", path);
-                    g_free(path);
-                }
-                if (img) {
-                    if (e->u.icon.x != -1 || e->u.icon.y != -1) {
-                        p.x=pa[0].x - e->u.icon.x;
-                        p.y=pa[0].y - e->u.icon.y;
-                    } else {
-                        p.x=pa[0].x - img->hot.x;
-                        p.y=pa[0].y - img->hot.y;
-                    }
-                    graphics_draw_image(gra, gra->gc[0], &p, img);
-                }
-            }
+            displayitem_draw_icon(di, dc, e, gra, pa, count);
             break;
         case element_image:
-            dbg(lvl_debug,"image: '%s'", di->label);
-            if (gra->meth.draw_image_warp) {
-                img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
-                if (img)
-                    graphics_draw_image_warp(gra, gra->gc[0], pa, count, img);
-            } else
-                dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
+            displayitem_draw_image (di, dc,  gra, pa, count);
             break;
         case element_arrows:
-            display_draw_arrows(gra,gc,pa,count);
+            display_draw_arrows(gra,dc->gc,pa,count);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);
