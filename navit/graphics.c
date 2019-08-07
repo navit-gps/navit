@@ -1390,6 +1390,35 @@ static void xdisplay_free(struct displaylist *dl) {
 }
 
 /**
+ * @brief add the holes structure into preallocated area after displayitem
+ *
+ * @param item to extract holes from
+ * @param hole_count precounted number of holes
+ * @param p changeable pointer to buffer. Advanced by the size used
+ * @returns pointer to newly created holes structure
+ */
+static inline struct displayitem_poly_holes *  display_add_holes(struct item *item,int hole_count,  char ** p) {
+    struct attr attr;
+    struct displayitem_poly_holes* holes;
+    holes=(struct displayitem_poly_holes *) *p;
+    *p+=sizeof(*holes);
+    holes->count=0;
+    holes->ccount = (int *) *p;
+    *p+=hole_count * sizeof(int);
+    holes->coords = (struct coord **)*p;
+    *p+=hole_count * sizeof(struct coord *);
+    item_attr_rewind(item);
+    while(item_attr_get(item, attr_poly_hole, &attr)) {
+        holes->coords[holes->count] = (struct coord *)*p;
+        holes->ccount[holes->count] = attr.u.poly_hole->coord_count;
+        memcpy(holes->coords[holes->count], attr.u.poly_hole->coord, holes->ccount[holes->count] * sizeof(struct coord));
+        *p += holes->ccount[holes->count] * sizeof(struct coord);
+        holes->count ++;
+    }
+    return holes;
+}
+
+/**
  * FIXME
  * @param <>
  * @returns <>
@@ -1437,23 +1466,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     di->z_order=0;
     di->holes=NULL;
     if(hole_count > 0) {
-        struct displayitem_poly_holes* holes;
-        holes=(struct displayitem_poly_holes *) p;
-        p+=sizeof(*holes);
-        holes->count=0;
-        holes->ccount = (int *) p;
-        p+=hole_count * sizeof(int);
-        holes->coords = (struct coord **)p;
-        p+=hole_count * sizeof(struct coord *);
-        item_attr_rewind(item);
-        while(item_attr_get(item, attr_poly_hole, &attr)) {
-            holes->coords[holes->count] = (struct coord *)p;
-            holes->ccount[holes->count] = attr.u.poly_hole->coord_count;
-            memcpy(holes->coords[holes->count], attr.u.poly_hole->coord, holes->ccount[holes->count] * sizeof(struct coord));
-            p += holes->ccount[holes->count] * sizeof(struct coord);
-            holes->count ++;
-        }
-        di->holes=holes;
+        di->holes = display_add_holes(item, hole_count, &p);
     }
     if (label && label_count) {
         di->label=p;
