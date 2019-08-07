@@ -86,6 +86,9 @@
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
 #define ROUTE_RECT_DIST_REL(x) 0
 
+/** Maximum textfile line size */
+#define TEXTFILE_LINE_SIZE 512
+
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
 
@@ -119,6 +122,7 @@ struct traffic {
 };
 
 struct traffic_location_priv {
+    char * txt_data;                   /*!< Persisted location data in txtfile map format. */
     struct coord_geo * sw;             /*!< Southwestern corner of rectangle enclosing all points.
 	                                    *   Calculated by Navit from the points of the location. */
     struct coord_geo * ne;             /*!< Northeastern corner of rectangle enclosing all points.
@@ -234,6 +238,7 @@ struct xml_state {
     struct traffic_point * not_via;     /**< A point NOT between `from` and `to`. Required on ring roads
 	                                     *   unless `via` is used; cannot be used together with `at`. */
     struct traffic_location * location; /**< The location to which the next message refers. */
+    char * location_txt_data;           /**< Persisted location data in txtfile map format. */
     GList * si;                         /**< Supplementary information items for the next event. */
     GList * events;                     /**< The events for the next message. */
 };
@@ -1031,7 +1036,7 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
  * @param attr Pointer to an attrib-structure where the attribute should be written to
  * @return True if the attribute type was found, false if not
  */
-static int * tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
+static int tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
     if (attr_type == attr_traffic) {
         attr->type = attr_traffic;
         attr->u.traffic = NULL;
@@ -3307,6 +3312,186 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 }
 
 /**
+ * @brief Restores segments associated with a traffic message from cached data.
+ *
+ * This reads textfile map data and compares it to data in the current map set. If one or more items
+ * (identified by their ID) are no longer present in the map, or their coordinates no longer match, the
+ * cached data is discarded and the location needs to be expanded into a set of segments as for a new
+ * message. Otherwise the cached segments are added to the traffic map.
+ *
+ * While this operation does require extensive examination of map data, it is still less expensive than
+ * expanding the location from scratch, as the most expensive operation in the latter is routing between the
+ * points involved.
+ *
+ * @param this_ The traffic message
+ * @param ms The mapset to use for matching
+ * @param data Data for the segments to be added to the map, in textfile format
+ * @param map The traffic map
+ * @param route The route affected by the changes
+ *
+ * @return `true` if the locations were matched successfully, `false` if there was a failure.
+ */
+static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms, char * data,
+        struct map *map, struct route * route) {
+    /* Textfile data: pointers to current and next line, copy and length of current line */
+    char * data_curr = data, * data_next, * line = NULL;
+    int len;
+
+    /* Iterator */
+    int i;
+
+    /* Data for attribute parsing */
+    int pos;
+    char name[TEXTFILE_LINE_SIZE];
+    char value[TEXTFILE_LINE_SIZE];
+
+    /* Item data */
+    enum item_type type;
+    int id_hi;
+    int id_lo;
+    int flags;
+    struct attr * attrs[TEXTFILE_LINE_SIZE / 4];
+    int acnt;
+
+    /* For map matching */
+    struct mapset_handle *msh;
+    struct map * m;
+    struct attr attr;
+    struct map_selection * msel;
+    struct map_rect * mr;
+
+    /*
+     * Coordinate count for matched segment
+     * (-1 if we are expecting item type and attributes in the next line rather than coordinates)
+     */
+    int ccnt = -1;
+
+    /* Coordinates of matched segment and pointer into it, order as read from map */
+    struct coord *c, ca[2048];
+
+    /* Newly added item */
+    struct item * item;
+
+    /* Item and location length */
+    int item_len, loc_len = 0;
+
+    /* Items and their lengths */
+    GList * items = NULL, * curr_item;
+    GList * lengths = NULL, * curr_length;
+
+    struct seg_data * seg_data;
+
+    dbg(lvl_debug, "*****checkpoint RESTORE-1");
+    traffic_location_set_enclosing_rect(this_->location, NULL);
+
+    while (1) {
+        if (data_curr) {
+            data_next = strchr(data_curr, 0x10);
+            len = data_next ? (data_next - data_curr) : strlen(data_curr);
+            line = g_new0(char, len + 1);
+            strncpy(line, data_curr, len);
+        }
+        if (line && (ccnt < 0)) {
+            /* first line with item type and attributes */
+            pos = 0;
+            type = type_none;
+            id_hi = -1;
+            id_lo = -1;
+            acnt = 0;
+            while (attr_from_line(line, NULL, &pos, value, name)) {
+                if (!strcmp(name, "type")) {
+                    /* item type */
+                    type = item_from_name(value);
+                } else if (!strcmp(name, "id")) {
+                    /* item ID */
+                    sscanf(value, "%d,%d", &id_hi, &id_lo);
+                } else if (!strcmp(name, "flags")) {
+                    char *tail;
+                    if (value[0] == '0' && value[1] == 'x')
+                        flags = strtoul(value, &tail, 0);
+                    else
+                        flags = strtol(value, &tail, 0);
+                    if (*tail) {
+                        dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number. \n", value, name);
+                        // ret->u.num=0; // TODO check if flags are parseable as currently written
+                    }
+                } else {
+                    /* generic attribute */
+                    attrs[acnt] = attr_new_from_text(name, value);
+                    if (attrs[acnt])
+                        acnt++;
+                }
+            }
+            attrs[acnt] = NULL;
+            ccnt = 0;
+            g_free(line);
+            line = NULL;
+            if (data_next)
+                data_curr = data_next + 1;
+            else {
+                data_curr = NULL;
+                // TODO abort (last item is invalid as it has no coords)
+            }
+        } else if (line && coord_parse(line, projection_mg, &ca[ccnt])) {
+            /* add coordinates until we hit a line without */
+            ccnt++;
+            g_free(line);
+            line = NULL;
+            if (data_next)
+                data_curr = data_next + 1;
+            else
+                data_curr = NULL;
+        } else {
+            /* end of coordinates, find matching item */
+            if (line) {
+                g_free(line);
+                line = NULL;
+            }
+
+            ccnt = -1;
+
+            item = tm_add_item(map, type, id_hi, id_lo, flags, attrs, ca, ccnt,
+                               this_->id);
+            items = g_list_append(items, item);
+            item_len = 0;
+            for (i = 1; i < ccnt; i++)
+                item_len += transform_distance(map_projection(item->map), &(ca[i-1]), &(ca[i]));
+            lengths = g_list_append(lengths, (void *) item_len);
+            loc_len += item_len;
+            for (i = 0; attrs[i]; i++) {
+                g_free(attrs[i]);
+                attrs[i] = NULL;
+            }
+
+            if (!data_curr)
+                /* no more data to process, finish up */
+                break;
+        }
+    }
+    seg_data = traffic_message_parse_events(this_);
+    this_->priv->items = g_new0(struct item *, g_list_length(items) + 1);
+    i = 0;
+    curr_item = items;
+    curr_length = lengths;
+    while (items && lengths) {
+        item = (struct item *) curr_item->data;
+        tm_item_add_message_data(item, this_->id,
+                traffic_get_item_speed(item, seg_data, INT_MAX), // TODO use segment maxspeed if set
+                traffic_get_item_delay(seg_data->delay, (int) curr_length->data, loc_len),
+                NULL, route);
+        this_->priv->items[i] = item;
+        /* move on to next item */
+        curr_item = g_list_next(curr_item);
+        curr_length = g_list_next(curr_length);
+        i++;
+    }
+    g_list_free(items);
+    g_list_free(lengths);
+    g_free(seg_data);
+    return 1; // TODO 0 if no match
+}
+
+/**
  * @brief Prints a dump of a message to debug output.
  *
  * @param this_ The message to dump
@@ -4008,13 +4193,18 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
+                    if (message->location->priv->txt_data) {
+                        traffic_message_restore_segments(message, this_->shared->ms,
+                                message->location->priv->txt_data, this_->shared->map, this_->shared->rt);
+                    }
                     /*
                      * We need to find matching segments from scratch.
                      * This needs to happen immediately if we have a route and the location is within its map
                      * selection, as the message might have an effect on the route. Otherwise this operation
                      * is deferred until a rectangle overlapping with the location is queried.
                      */
-                    if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
+                    if (!message->priv->items
+                            && route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
                             && route_get_pos(this_->shared->rt)
                             && ((attr.u.num & route_status_destination_set))) {
                         traffic_location_set_enclosing_rect(message->location, NULL);
@@ -4037,6 +4227,11 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 /* store message */
                 this_->shared->messages = g_list_append(this_->shared->messages, message);
                 dbg(lvl_debug, "*****checkpoint PROCESS-5");
+            }
+
+            if (message->location->priv->txt_data) {
+                g_free(message->location->priv->txt_data);
+                message->location->priv->txt_data = NULL;
             }
 
             /* delete replaced messages */
@@ -4492,6 +4687,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->at = NULL;
             state->via = NULL;
             state->not_via = NULL;
+            state->location->priv->txt_data = state->location_txt_data;
+            state->location_txt_data = NULL;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "event")) {
             count = g_list_length(state->si);
             if (count) {
@@ -4531,6 +4728,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             point = &state->via;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "not_via")) {
             point = &state->not_via;
+        } else if (!g_ascii_strcasecmp((char *) tag_name, "navit_items")) {
+            state->location_txt_data = el->text;
         }
 
         /*
