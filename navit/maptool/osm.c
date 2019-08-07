@@ -1609,39 +1609,40 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
+static inline void osm_end_relation_multipolygon (struct maptool_osm * osm, enum item_type* type) {
+    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, type, 1)) {
+            tmp_item_bin->type = *type;
+        } else {
+            *type=type_none;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=*type;
+        }
+        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+        item_bin_write(tmp_item_bin, osm->multipolygons);
+    } else {
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, type, 1)) {
+            tmp_item_bin->type=*type;
+        } else {
+            *type=type_none;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=*type;
+        }
+        if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
+                && (boundary || *type!=type_none)) {
+            item_bin_write(tmp_item_bin, osm->boundaries);
+        }
+    }
+}
 
 void osm_end_relation(struct maptool_osm *osm) {
     enum item_type type;
 
     in_relation=0;
-
-    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
-        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, &type, 1)) {
-            tmp_item_bin->type = type;
-        } else {
-            type=type_none;
-            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
-             * indicating the turn restrictions */
-            //tmp_item_bin->type=type;
-        }
-        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
-        item_bin_write(tmp_item_bin, osm->multipolygons);
-    } else {
-        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
-            tmp_item_bin->type=type;
-        } else {
-            type=type_none;
-            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
-             * indicating the turn restrictions */
-            //tmp_item_bin->type=type;
-        }
-        if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-                && (boundary || type!=type_none)) {
-            item_bin_write(tmp_item_bin, osm->boundaries);
-        }
-    }
-
-
+    /* sets tmp_item_bin type and other fields */
+    osm_end_relation_multipolygon (osm, &type);
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
@@ -2055,6 +2056,7 @@ static void osm_process_town_by_boundary_update_attrs(struct item_bin *town, str
             case 'M':
                 /* Here we patch the boundary itself to convert it to town polygon later*/
                 b->ib->type=type_poly_place6;
+            /*fall through*/
             case 'm':
                 attr_type=attr_municipality_name;
                 break;
