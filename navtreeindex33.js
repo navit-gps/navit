@@ -1,7 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"quadtree_8c.html#aae086106cfb7bde767419bd06bf96c39":[3,0,8,1,2,17],
-"quadtree_8c.html#ab19c760f9cf0bd84663551db094e6618":[3,0,8,1,2,6],
 "quadtree_8c.html#ab99829ad4f998171b0fd939a2c7d9320":[3,0,8,1,2,20],
 "quadtree_8c.html#ac07bc6fe538e0c7557ad1be6e48a4d5b":[3,0,8,1,2,9],
 "quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331":[3,0,8,1,2,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX33 =
 "route_8h.html#a1e90604386a268d7a2fef169495ad81cada18f3f37c54daba5451074e29cd1fbc":[3,0,118,3,3],
 "route_8h.html#a1e90604386a268d7a2fef169495ad81caf17539ef3ca1f04981c7a921a9a93d77":[3,0,118,3,1],
 "route_8h.html#a248081bb540de81b2fbbcbe2593dc29c":[3,0,118,27],
-"route_8h.html#a25508afaaf0b6f06ec5bf467593b81fc":[3,0,118,21]
+"route_8h.html#a25508afaaf0b6f06ec5bf467593b81fc":[3,0,118,21],
+"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87":[3,0,118,4],
+"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a467af9642a5e7b543f884615951548d5":[3,0,118,4,3]
 };

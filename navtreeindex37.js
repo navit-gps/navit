@@ -1,7 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structcountry.html#a9cedfb24e379cb2997523c808254820f":[2,0,63,2],
-"structcountry.html#afb7b04f64a7f8661d44f6c279d39fa35":[2,0,63,4],
 "structcountry__isonum.html":[2,0,64],
 "structcountry__isonum.html#a579a5067bb1d6a5323e1215b37fc057b":[2,0,64,3],
 "structcountry__isonum.html#a75bbcabda2880853ce788b57c5824a60":[2,0,64,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX37 =
 "structevent__watch.html#af58a7990f92607a17c4f46da6044c509":[2,0,99,3],
 "structfat__block.html":[2,0,100],
 "structfat__block.html#a2930b2357196148ec4a38e54a72461a8":[2,0,100,0],
-"structfat__block.html#a2b2bdbf87de4ae3f2367c0b820779f5b":[2,0,100,7]
+"structfat__block.html#a2b2bdbf87de4ae3f2367c0b820779f5b":[2,0,100,7],
+"structfat__block.html#a313b0c6a6de6cfdaf82677b4cc5f225d":[2,0,100,6],
+"structfat__block.html#a6d628511ba95f82f6fea693b7be42bc1":[2,0,100,1]
 };

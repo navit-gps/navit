@@ -1,7 +1,5 @@
 var NAVTREEINDEX47 =
 {
-"structsearch__list__common.html#a46a9d626eaffb38ec76519c95ba8b0e0":[2,0,342,8],
-"structsearch__list__common.html#a52460d4b724f9125a65abf0289dbaad2":[2,0,342,9],
 "structsearch__list__common.html#a746c42c53982deb29de12afdeecbb427":[2,0,342,4],
 "structsearch__list__common.html#a7f5e5c5bf202864c2a09ad0b011f2590":[2,0,342,7],
 "structsearch__list__common.html#a80882007cf79e5989bae7950a04a3f78":[2,0,342,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX47 =
 "structsuffix.html":[2,0,375],
 "structsuffix.html#a01fe89647141832575d1fcd5a1ca1155":[2,0,375,1],
 "structsuffix.html#a7211c140732fb96ed2908ab445b15ea8":[2,0,375,2],
-"structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111":[2,0,375,0]
+"structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111":[2,0,375,0],
+"structtable__column__desc.html":[2,0,376],
+"structtable__column__desc.html#a325fd0472dc67a4b8f99457d58771039":[2,0,376,1]
 };

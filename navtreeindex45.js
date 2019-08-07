@@ -1,7 +1,5 @@
 var NAVTREEINDEX45 =
 {
-"structodometer.html#aabc26afeb2af4f2942f82d313ba6cc0d":[2,0,261,6],
-"structodometer.html#abb9a15fbbc763e20674ed74f421611b7":[2,0,261,12],
 "structodometer.html#abdf4cf85ce25ce4c1bd3f959cd9b3cbf":[2,0,261,4],
 "structodometer.html#ac055ecfa93276bc3231d044f4afcf702":[2,0,261,1],
 "structodometer.html#ae3fb4b87bde88e9cc8d5c06d0666589b":[2,0,261,17],
@@ -249,5 +247,7 @@ var NAVTREEINDEX45 =
 "structquadtree__item.html#ad902d5beeac8869dfe42b061f2a696e4":[2,0,303,4],
 "structquadtree__item.html#add699d4c21f351296282b7937e1c9b56":[2,0,303,3],
 "structquadtree__iter.html":[2,0,304],
-"structquadtree__iter.html#a00b4aba93c26da349e912afd307e96aa":[2,0,304,7]
+"structquadtree__iter.html#a00b4aba93c26da349e912afd307e96aa":[2,0,304,7],
+"structquadtree__iter.html#a05f65a922ee61921cc9e91a466f766d0":[2,0,304,5],
+"structquadtree__iter.html#a05f958ed28956f708761adbd96def94e":[2,0,304,4]
 };

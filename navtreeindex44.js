@@ -1,7 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"structnav__next__turn.html#ad75cef187297af02b48cc850c2a625c7":[2,0,225,2],
-"structnav__toggle__announcer.html":[2,0,226],
 "structnav__toggle__announcer.html#a4002988a3f087caac31fd16e992dc4e4":[2,0,226,3],
 "structnav__toggle__announcer.html#a70c677dbd9a6fe421e535f668e5660a6":[2,0,226,5],
 "structnav__toggle__announcer.html#a9099b4aae9c734a5c837db1f649c539c":[2,0,226,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX44 =
 "structodometer.html#a9a2aa3e47c51fce56a6ece26cdf3a04d":[2,0,261,9],
 "structodometer.html#a9e419e9a5ce6504928d935c7bff04803":[2,0,261,7],
 "structodometer.html#aa0bc124067b34c3ff1271530fade3e95":[2,0,261,15],
-"structodometer.html#aab8f5da3176ee28dfe9b30406848a9d9":[2,0,261,11]
+"structodometer.html#aab8f5da3176ee28dfe9b30406848a9d9":[2,0,261,11],
+"structodometer.html#aabc26afeb2af4f2942f82d313ba6cc0d":[2,0,261,6],
+"structodometer.html#abb9a15fbbc763e20674ed74f421611b7":[2,0,261,12]
 };

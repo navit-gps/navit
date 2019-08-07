@@ -9,6 +9,5 @@ var main_8h =
     [ "main_iter_destroy", "main_8h.html#ae49325884d4f16328fc5260e1327deec", null ],
     [ "main_iter_new", "main_8h.html#ad5cf61c11585b05c8025bd8c32d13403", null ],
     [ "main_remove_attr", "main_8h.html#ab0a0ede0eb6b96e6e8ba0bb845d1f38b", null ],
-    [ "main_remove_navit", "main_8h.html#a5a5241616774ff37b0fc01c867c61bb6", null ],
-    [ "main_update_default_layout", "main_8h.html#a454cba07d0aab8d431caacd105d78c36", null ]
+    [ "main_remove_navit", "main_8h.html#a5a5241616774ff37b0fc01c867c61bb6", null ]
 ];
