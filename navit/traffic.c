@@ -3476,9 +3476,9 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     while (items && lengths) {
         item = (struct item *) curr_item->data;
         tm_item_add_message_data(item, this_->id,
-                traffic_get_item_speed(item, seg_data, INT_MAX), // TODO use segment maxspeed if set
-                traffic_get_item_delay(seg_data->delay, (int) curr_length->data, loc_len),
-                NULL, route);
+                                 traffic_get_item_speed(item, seg_data, INT_MAX), // TODO use segment maxspeed if set
+                                 traffic_get_item_delay(seg_data->delay, (int) curr_length->data, loc_len),
+                                 NULL, route);
         this_->priv->items[i] = item;
         /* move on to next item */
         curr_item = g_list_next(curr_item);
@@ -4195,7 +4195,10 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
                     if (message->location->priv->txt_data) {
                         traffic_message_restore_segments(message, this_->shared->ms,
-                                message->location->priv->txt_data, this_->shared->map, this_->shared->rt);
+                                                         message->location->priv->txt_data,
+                                                         this_->shared->map, this_->shared->rt);
+                    } else {
+                        dbg(lvl_debug, "location has no txt_data, nothing to restore");
                     }
                     /*
                      * We need to find matching segments from scratch.
