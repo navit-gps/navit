@@ -2577,6 +2577,7 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
     di->item.map=NULL;
     di->z_order=0;
     di->label=label;
+    di->holes=NULL;
     dc.gra=gra;
     dc.gc=NULL;
     dc.gc_background=NULL;
