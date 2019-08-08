@@ -4735,7 +4735,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
         } else if (!g_ascii_strcasecmp((char *) tag_name, "not_via")) {
             point = &state->not_via;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "navit_items")) {
-            state->location_txt_data = el->text;
+            state->location_txt_data = g_strdup(el->text);
         }
 
         /*
