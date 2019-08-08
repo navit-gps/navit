@@ -3474,7 +3474,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     i = 0;
     curr_item = items;
     curr_length = lengths;
-    while (items && lengths) {
+    while (curr_item && curr_length) {
         item = (struct item *) curr_item->data;
         tm_item_add_message_data(item, this_->id,
                                  traffic_get_item_speed(item, seg_data, INT_MAX), // TODO use segment maxspeed if set
