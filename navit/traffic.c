@@ -3448,7 +3448,6 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                 line = NULL;
             }
 
-            ccnt = -1;
 
             item = tm_add_item(map, type, id_hi, id_lo, flags, attrs, ca, ccnt,
                                this_->id);
@@ -3466,6 +3465,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             if (!data_curr)
                 /* no more data to process, finish up */
                 break;
+
+            ccnt = -1;
         }
     }
     seg_data = traffic_message_parse_events(this_);
