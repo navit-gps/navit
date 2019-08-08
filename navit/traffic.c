@@ -4599,6 +4599,7 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
      * event: Everything handled in end callback
      * merge: No attributes, everything handled in children's callbacks
      * from, to, at, via, not_via: Everything handled in end callback
+     * navit_items: Everything handled in end callback
      */
 }
 
