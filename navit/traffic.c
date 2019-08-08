@@ -3386,7 +3386,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
 
     while (1) {
         if (data_curr) {
-            data_next = strchr(data_curr, 0x10);
+            data_next = strchr(data_curr, 0x0a);
             len = data_next ? (data_next - data_curr) : strlen(data_curr);
             line = g_new0(char, len + 1);
             strncpy(line, data_curr, len);
