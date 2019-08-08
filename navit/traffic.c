@@ -4540,7 +4540,8 @@ static int traffic_xml_is_tagstack_valid(struct xml_state * state) {
                  || !g_ascii_strcasecmp(el->tag_name, "to")
                  || !g_ascii_strcasecmp(el->tag_name, "at")
                  || !g_ascii_strcasecmp(el->tag_name, "via")
-                 || !g_ascii_strcasecmp(el->tag_name, "not_via"))
+                 || !g_ascii_strcasecmp(el->tag_name, "not_via")
+                 || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
         else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "event"));
