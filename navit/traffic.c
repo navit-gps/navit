@@ -3381,7 +3381,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
 
     struct seg_data * seg_data;
 
-    dbg(lvl_debug, "*****checkpoint RESTORE-1");
+    dbg(lvl_debug, "*****checkpoint RESTORE-1, data:\n%s", data);
     traffic_location_set_enclosing_rect(this_->location, NULL);
 
     while (1) {
@@ -3390,6 +3390,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             len = data_next ? (data_next - data_curr) : strlen(data_curr);
             line = g_new0(char, len + 1);
             strncpy(line, data_curr, len);
+            dbg(lvl_debug, "*****checkpoint RESTORE-2, line: %s", line);
         }
         if (line && (ccnt < 0)) {
             /* first line with item type and attributes */
