@@ -3412,8 +3412,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     else
                         flags = strtol(value, &tail, 0);
                     if (*tail) {
-                        dbg(lvl_error, "Incorrect value '%s' for attribute '%s';  expected a number. \n", value, name);
-                        // ret->u.num=0; // TODO check if flags are parseable as currently written
+                        dbg(lvl_warning, "Incorrect value '%s' for attribute '%s': expected a number, assuming 0x%x. \n", value, name, flags);
                     }
                 } else {
                     /* generic attribute */
