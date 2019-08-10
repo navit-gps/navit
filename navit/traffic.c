@@ -3394,19 +3394,25 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
         }
         if (line && (ccnt < 0)) {
             /* first line with item type and attributes */
+            dbg(lvl_debug, "*****checkpoint RESTORE-3, item/attribute line");
             pos = 0;
             type = type_none;
             id_hi = -1;
             id_lo = -1;
             acnt = 0;
             while (attr_from_line(line, NULL, &pos, value, name)) {
+                dbg(lvl_debug, "*****checkpoint RESTORE-4, parsing %s=%s", name, value);
+                ccnt = 0;
                 if (!strcmp(name, "type")) {
                     /* item type */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing type: %s", value);
                     type = item_from_name(value);
                 } else if (!strcmp(name, "id")) {
                     /* item ID */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing ID: %s", value);
                     sscanf(value, "%d,%d", &id_hi, &id_lo);
                 } else if (!strcmp(name, "flags")) {
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing flags: %s", value);
                     char *tail;
                     if (value[0] == '0' && value[1] == 'x')
                         flags = strtoul(value, &tail, 0);
@@ -3417,13 +3423,17 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     }
                 } else {
                     /* generic attribute */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing attribute %s=%s", name, value);
                     attrs[acnt] = attr_new_from_text(name, value);
                     if (attrs[acnt])
                         acnt++;
                 }
             }
+            if (ccnt < 0) {
+                /* empty line, ignore */
+                dbg(lvl_debug, "*****checkpoint RESTORE-4, skipping empty line");
+            }
             attrs[acnt] = NULL;
-            ccnt = 0;
             g_free(line);
             line = NULL;
             if (data_next)
