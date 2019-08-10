@@ -294,6 +294,8 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing);
+static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new,
+        struct route * route);
 
 static struct item_methods methods_traffic_item = {
     tm_coord_rewind,
@@ -3359,6 +3361,10 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct attr attr;
     struct map_selection * msel;
     struct map_rect * mr;
+    struct item * map_item;
+    int * default_flags;
+    int item_flags, segmented, maxspeed;
+    struct coord map_c;
 
     /*
      * Coordinate count for matched segment
@@ -3464,8 +3470,136 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                 break;
             }
 
+            /*
+             * Walk through mapset and look for a routable item with a matching ID and geometry.
+             * If no match is found, the map data has changed since we generated the cached segments and we
+             * need to recreate the data. In this case, stop processing segments immediately and drop any
+             * segments restored so far.
+             */
+            dbg(lvl_debug, "*****checkpoint RESTORE-5, comparing item 0x%x, 0x%x to map data", id_hi, id_lo);
+            msh = mapset_open(ms);
+            map_item = NULL;
 
+            while (!map_item && (m = mapset_next(msh, 2))) {
+                /* Skip traffic map (identified by the `attr_traffic` attribute) */
+                if (map_get_attr(m, attr_traffic, &attr, NULL))
+                    continue;
 
+                msel = traffic_location_get_rect(this_->location, map_projection(m));
+                if (!msel)
+                    continue;
+                mr = map_rect_new(m, msel);
+                if (!mr) {
+                    map_selection_destroy(msel);
+                    msel = NULL;
+                    continue;
+                }
+                /*
+                 * Iterate through items in the map.
+                 * map_rect_get_item_byid() does not work here as some map drivers do not support it, while
+                 * other map drivers have unique IDs and will return the same item over and over again, and
+                 * yet others may essentially just call map_rect_get_item() until the ID matches or the
+                 * result is NULL.
+                 */
+                while (!map_item && (map_item = map_rect_get_item(mr))) {
+                    /* If IDs do not match, continue */
+                    if ((map_item->id_hi != id_hi) || (map_item->id_lo != id_lo)) {
+                        map_item = NULL;
+                        continue;
+                    }
+                    /* If item is not routable, continue */
+                    if ((map_item->type < route_item_first) || (map_item->type > route_item_last)) {
+                        map_item = NULL;
+                        continue;
+                    }
+                    /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+                    if ((this_->location->road_type == type_highway_land) || (this_->location->road_type == type_highway_city)) {
+                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp)) {
+                            map_item = NULL;
+                            continue;
+                        }
+                    } else if (this_->location->road_type == type_street_n_lanes) {
+                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                                (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city)) {
+                            map_item = NULL;
+                            continue;
+                        }
+                    } else if ((this_->location->road_type == type_street_4_land) || (this_->location->road_type == type_street_4_city)) {
+                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                                (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city) &&
+                                (map_item->type != type_street_3_land) && (map_item->type != type_street_3_city)) {
+                            map_item = NULL;
+                            continue;
+                        }
+                    }
+                    /* Get flags (access and other) for the item */
+                    if (!(default_flags = item_get_default_flags(map_item->type)))
+                        default_flags = &item_default_flags_value;
+                    if (item_attr_get(map_item, attr_flags, &attr)) {
+                        item_flags = attr.u.num;
+                        segmented = (item_flags & AF_SEGMENTED);
+                    } else {
+                        item_flags = *default_flags;
+                        segmented = 0;
+                    }
+                    /* Get maxspeed, if any */
+                    if ((item_flags & AF_SPEED_LIMIT) && (item_attr_get(map_item, attr_maxspeed, &attr)))
+                        maxspeed = attr.u.num;
+                    else
+                        maxspeed = INT_MAX;
+                    /* Compare coordinates */
+                    item_coord_rewind(map_item);
+                    if (!segmented) {
+                        for (i = 0; i < ccnt; i++) {
+                            if (!item_coord_get(map_item, &map_c, 1)) {
+                                /* map item has fewer coordinates than cached item */
+                                map_item = 0;
+                                break;
+                            }
+                            if ((map_c.x != ca[i].x) || (map_c.y != ca[i].y)) {
+                                /* coordinate mismatch between map item and cached item */
+                                map_item = 0;
+                                break;
+                            }
+                        }
+                        if (item_coord_get(map_item, &map_c, 1)) {
+                            /* map item has more coordinates than cached item */
+                            map_item = 0;
+                            break;
+                        }
+                    } else {
+                        /* TODO implement comparison for segmented items */
+                        map_item = NULL;
+                    }
+                }
+
+                map_selection_destroy(msel);
+                msel = NULL;
+                map_rect_destroy(mr);
+                mr = NULL;
+            }
+            mapset_close(msh);
+            msh = NULL;
+
+            if (!map_item) {
+                dbg(lvl_debug, "*****checkpoint RESTORE-6, item 0x%x, 0x%x does not match map data, discarding", id_hi, id_lo);
+                traffic_message_remove_item_data(this_, NULL, route);
+                for (curr_item = items; curr_item; curr_item = g_list_next(curr_item))
+                    g_free(curr_item->data);
+                g_list_free(items);
+                g_list_free(lengths);
+                for (i = 0; attrs[i]; i++) {
+                    g_free(attrs[i]);
+                    attrs[i] = NULL;
+                }
+                dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s need to be regenerated", this_->id);
+                return 0;
+            }
+
+            dbg(lvl_debug, "*****checkpoint RESTORE-6, item 0x%x, 0x%x matches map data, adding", id_hi, id_lo);
             item = tm_add_item(map, type, id_hi, id_lo, flags, attrs, ca, ccnt,
                                this_->id);
             items = g_list_append(items, item);
@@ -3485,7 +3619,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
 
             ccnt = -1;
         }
-    }
+    } /* while 1 */
     seg_data = traffic_message_parse_events(this_);
     this_->priv->items = g_new0(struct item *, g_list_length(items) + 1);
     i = 0;
@@ -3494,7 +3628,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     while (curr_item && curr_length) {
         item = (struct item *) curr_item->data;
         tm_item_add_message_data(item, this_->id,
-                                 traffic_get_item_speed(item, seg_data, INT_MAX), // TODO use segment maxspeed if set
+                                 traffic_get_item_speed(item, seg_data, maxspeed),
                                  traffic_get_item_delay(seg_data->delay, (int) curr_length->data, loc_len),
                                  NULL, route);
         this_->priv->items[i] = item;
@@ -3506,7 +3640,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     g_list_free(items);
     g_list_free(lengths);
     g_free(seg_data);
-    return 1; // TODO 0 if no match
+    dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s restored from cache", this_->id);
+    return 1;
 }
 
 /**
