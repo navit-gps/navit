@@ -3410,7 +3410,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                 } else if (!strcmp(name, "id")) {
                     /* item ID */
                     dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing ID: %s", value);
-                    sscanf(value, "%d,%d", &id_hi, &id_lo);
+                    sscanf(value, "%i,%i", &id_hi, &id_lo);
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.2, ID is 0x%x,0x%x", id_hi, id_lo);
                 } else if (!strcmp(name, "flags")) {
                     dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing flags: %s", value);
                     char *tail;
