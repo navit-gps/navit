@@ -3458,6 +3458,12 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                 g_free(line);
                 line = NULL;
             }
+            if (ccnt < 1) {
+                /* not a complete item, possibly trailing empty line */
+                dbg(lvl_debug, "*****checkpoint RESTORE-5, skipping incomplete item (possibly trailing empty line)");
+                break;
+            }
+
 
 
             item = tm_add_item(map, type, id_hi, id_lo, flags, attrs, ca, ccnt,
