@@ -92,6 +92,9 @@
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
 
+/** Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
+int item_default_flags_value = AF_ALL;
+
 /**
  * @brief Private data shared between all traffic instances.
  */
@@ -1870,9 +1873,6 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     /* Whether the current item is segmented */
     int segmented;
 
-    /* Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
-    int default_flags_value = AF_ALL;
-
     /* Default flags assumed for the current item type */
     int *default_flags;
 
@@ -1927,7 +1927,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                     segmented = 0;
 
                     if (!(default_flags = item_get_default_flags(item->type)))
-                        default_flags = &default_flags_value;
+                        default_flags = &item_default_flags_value;
                     if (item_attr_get(item, attr_flags, &attr)) {
                         data.flags = attr.u.num;
                         segmented = (data.flags & AF_SEGMENTED);
