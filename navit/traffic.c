@@ -758,10 +758,15 @@ static void tm_item_dump_to_file(struct item * item, FILE * f) {
     fprintf(f, "type=%s", item_to_name(item->type));
     fprintf(f, " id=0x%x,0x%x", item->id_hi, item->id_lo);
     while (*attrs) {
-        attr_text = attr_to_text(*attrs, NULL, 0);
-        /* FIXME this may not work properly for all attribute types */
-        fprintf(f, " %s=%s", attr_to_name((*attrs)->type), attr_text);
-        g_free(attr_text);
+        if ((*attrs)->type == attr_flags) {
+            /* special handling for flags */
+            fprintf(f, " flags=0x%x", (*attrs)->u.num);
+        } else {
+            attr_text = attr_to_text(*attrs, NULL, 0);
+            /* FIXME this may not work properly for all attribute types */
+            fprintf(f, " %s=%s", attr_to_name((*attrs)->type), attr_text);
+            g_free(attr_text);
+        }
         attrs++;
     }
     fprintf(f, "\n");
