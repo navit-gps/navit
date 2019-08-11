@@ -3572,6 +3572,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         }
                     } else {
                         /* TODO implement comparison for segmented items */
+                        dbg(lvl_debug, "*****checkpoint RESTORE-5.1, restoring segmented items is not supported yet");
                         map_item = NULL;
                     }
                 }
