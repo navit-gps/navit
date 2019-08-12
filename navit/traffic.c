@@ -947,7 +947,7 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                         if (message->location->priv->txt_data) {
                             dbg(lvl_debug, "location has txt_data, trying to restore");
                             traffic_message_restore_segments(message, priv->shared->ms,
-                                    priv->shared->map, priv->shared->rt);
+                                                             priv->shared->map, priv->shared->rt);
                         } else {
                             dbg(lvl_debug, "location has no txt_data, nothing to restore");
                         }
@@ -4387,7 +4387,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                                 if (message->location->priv->txt_data) {
                                     dbg(lvl_debug, "location has txt_data, trying to restore segments");
                                     traffic_message_restore_segments(message, this_->shared->ms,
-                                            this_->shared->map, this_->shared->rt);
+                                                                     this_->shared->map, this_->shared->rt);
                                 } else {
                                     dbg(lvl_debug, "location has no txt_data, nothing to restore");
                                 }
@@ -4400,7 +4400,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                                 if (!message->priv->items) {
                                     /* TODO do this in an idle loop, not here */
                                     traffic_message_add_segments(message, this_->shared->ms, data,
-                                            this_->shared->map, this_->shared->rt);
+                                                                 this_->shared->map, this_->shared->rt);
                                     break;
                                     map_selection_destroy(loc_ms);
                                     map_selection_destroy(rt_ms);
