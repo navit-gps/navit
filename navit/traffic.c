@@ -283,6 +283,8 @@ static struct route_graph * traffic_location_get_route_graph(struct traffic_loca
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
                                         struct map *map, struct route * route);
+static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms,
+        struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
 static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords);
@@ -941,9 +943,21 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                 for (rect_sel = sel; rect_sel; rect_sel = rect_sel->next)
                     if (coord_rect_overlap(&(msg_sel->u.c_rect), &(rect_sel->u.c_rect))) {
                         /* TODO do this in an idle loop, not here */
-                        data = traffic_message_parse_events(message);
-                        traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
-                        g_free(data);
+                        /* lazy cache restore */
+                        if (message->location->priv->txt_data) {
+                            dbg(lvl_debug, "location has txt_data, trying to restore");
+                            traffic_message_restore_segments(message, priv->shared->ms,
+                                    message->location->priv->txt_data,
+                                    priv->shared->map, priv->shared->rt);
+                        } else {
+                            dbg(lvl_debug, "location has no txt_data, nothing to restore");
+                        }
+                        /* if cache restore yielded no items, expand from scratch */
+                        if (message->priv->items == NULL) {
+                            data = traffic_message_parse_events(message);
+                            traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                            g_free(data);
+                        }
                         dirty = 1;
                         break;
                     }
@@ -3338,10 +3352,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
  *
  * @return `true` if the locations were matched successfully, `false` if there was a failure.
  */
-static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms, char * data,
+static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms,
         struct map *map, struct route * route) {
     /* Textfile data: pointers to current and next line, copy and length of current line */
-    char * data_curr = data, * data_next, * line = NULL;
+    char * data_curr = this_->location->priv->txt_data, * data_next, * line = NULL;
     int len;
 
     /* Iterator */
@@ -3392,7 +3406,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
 
     struct seg_data * seg_data;
 
-    dbg(lvl_debug, "*****checkpoint RESTORE-1, data:\n%s", data);
+    dbg(lvl_debug, "*****checkpoint RESTORE-1, txt_data:\n%s", this_->location->priv->txt_data);
     traffic_location_set_enclosing_rect(this_->location, NULL);
 
     while (1) {
@@ -3601,6 +3615,10 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     g_free(attrs[i]);
                     attrs[i] = NULL;
                 }
+                if (this_->location->priv->txt_data) {
+                    g_free(this_->location->priv->txt_data);
+                    this_->location->priv->txt_data = NULL;
+                }
                 dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s need to be regenerated", this_->id);
                 return 0;
             }
@@ -3646,6 +3664,10 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     g_list_free(items);
     g_list_free(lengths);
     g_free(seg_data);
+    if (this_->location->priv->txt_data) {
+        g_free(this_->location->priv->txt_data);
+        this_->location->priv->txt_data = NULL;
+    }
     dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s restored from cache", this_->id);
     return 1;
 }
@@ -4352,21 +4374,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
-                    if (message->location->priv->txt_data) {
-                        traffic_message_restore_segments(message, this_->shared->ms,
-                                                         message->location->priv->txt_data,
-                                                         this_->shared->map, this_->shared->rt);
-                    } else {
-                        dbg(lvl_debug, "location has no txt_data, nothing to restore");
-                    }
-                    /*
-                     * We need to find matching segments from scratch.
-                     * This needs to happen immediately if we have a route and the location is within its map
-                     * selection, as the message might have an effect on the route. Otherwise this operation
-                     * is deferred until a rectangle overlapping with the location is queried.
-                     */
-                    if (!message->priv->items
-                            && route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
+                    if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
                             && route_get_pos(this_->shared->rt)
                             && ((attr.u.num & route_status_destination_set))) {
                         traffic_location_set_enclosing_rect(message->location, NULL);
@@ -4374,12 +4382,31 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                         rt_ms = route_get_selection(this_->shared->rt);
                         for (ms_iter = rt_ms; ms_iter; ms_iter = ms_iter->next)
                             if (coord_rect_overlap(&(loc_ms->u.c_rect), &(ms_iter->u.c_rect))) {
-                                /* TODO do this in an idle loop, not here */
-                                traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
-                                break;
+                                /*
+                                 * If we have cached segments, restore them.
+                                 */
+                                if (message->location->priv->txt_data) {
+                                    dbg(lvl_debug, "location has txt_data, trying to restore segments");
+                                    traffic_message_restore_segments(message, this_->shared->ms,
+                                            this_->shared->map, this_->shared->rt);
+                                } else {
+                                    dbg(lvl_debug, "location has no txt_data, nothing to restore");
+                                }
+                                /*
+                                 * We need to find matching segments from scratch.
+                                 * This needs to happen immediately if we have a route and the location is within its map
+                                 * selection, as the message might have an effect on the route. Otherwise this operation
+                                 * is deferred until a rectangle overlapping with the location is queried.
+                                 */
+                                if (!message->priv->items) {
+                                    /* TODO do this in an idle loop, not here */
+                                    traffic_message_add_segments(message, this_->shared->ms, data,
+                                            this_->shared->map, this_->shared->rt);
+                                    break;
+                                    map_selection_destroy(loc_ms);
+                                    map_selection_destroy(rt_ms);
+                                }
                             }
-                        map_selection_destroy(loc_ms);
-                        map_selection_destroy(rt_ms);
                     }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
@@ -4389,11 +4416,6 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 /* store message */
                 this_->shared->messages = g_list_append(this_->shared->messages, message);
                 dbg(lvl_debug, "*****checkpoint PROCESS-5");
-            }
-
-            if (message->location->priv->txt_data) {
-                g_free(message->location->priv->txt_data);
-                message->location->priv->txt_data = NULL;
             }
 
             /* delete replaced messages */
