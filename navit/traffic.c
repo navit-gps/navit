@@ -947,7 +947,6 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                         if (message->location->priv->txt_data) {
                             dbg(lvl_debug, "location has txt_data, trying to restore");
                             traffic_message_restore_segments(message, priv->shared->ms,
-                                    message->location->priv->txt_data,
                                     priv->shared->map, priv->shared->rt);
                         } else {
                             dbg(lvl_debug, "location has no txt_data, nothing to restore");
