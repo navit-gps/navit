@@ -5493,6 +5493,8 @@ void traffic_location_destroy(struct traffic_location * this_) {
         g_free(this_->road_ref);
     if (this_->tmc_table)
         g_free(this_->tmc_table);
+    if (this_->priv->txt_data)
+        g_free(this_->priv->txt_data);
     if (this_->priv->sw)
         g_free(this_->priv->sw);
     if (this_->priv->ne)
