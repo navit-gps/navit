@@ -762,7 +762,7 @@ static void tm_item_dump_to_file(struct item * item, FILE * f) {
     while (*attrs) {
         if ((*attrs)->type == attr_flags) {
             /* special handling for flags */
-            fprintf(f, " flags=0x%x", (*attrs)->u.num);
+            fprintf(f, " flags=0x%x", (unsigned int)(*attrs)->u.num);
         } else {
             attr_text = attr_to_text(*attrs, NULL, 0);
             /* FIXME this may not work properly for all attribute types */
@@ -4214,11 +4214,8 @@ static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared) {
                         tm_item_dump_to_file(*curr, f);
                     }
                     fprintf(f, "      </navit_items>\n");
-                } else if (message->location->priv->txt_data) {
-                    fprintf(f, "      <navit_items>");
-                    fprintf(f, message->location->priv->txt_data);
-                    fprintf(f, "      </navit_items>\n");
-                }
+                } else if (message->location->priv->txt_data)
+                    fprintf(f, "      <navit_items>%s</navit_items>\n", message->location->priv->txt_data);
 
                 fprintf(f, "    </location>\n");
 
