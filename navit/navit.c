@@ -798,7 +798,7 @@ void navit_zoom_in(struct navit *this_, int factor, struct point *p) {
 }
 
 /**
- * Change the current zoom level
+ * Change the current zoom level, further to the ground
  *
  * @param navit The navit instance
  * @param factor The zoom factor, usually 2
@@ -2488,7 +2488,7 @@ void navit_drag_map(struct navit *this_, struct point *origin, struct point *des
  *
  *@param this_ The navit object
  */
-static void navit_set_center_cursor_draw(struct navit *this_) {
+void navit_set_center_cursor_draw(struct navit *this_) {
     navit_set_center_cursor(this_,1,0);
     if (this_->ready == 3)
         navit_draw_async(this_, 1);
