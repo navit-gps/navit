@@ -2460,6 +2460,27 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
 }
 
 /**
+ * @brief Drags (moves) the map
+ *
+ * Drags (moves) the map from origin point to the destination point
+ *
+ * @param navit The navit instance
+ * @param origin The point point where the drag starts
+ * @param destination The point where to map should be dragged to
+ * @returns nothing
+ */
+
+void navit_drag_map(struct navit *this_, struct point *origin, struct point *destination) {
+    update_transformation(this_->trans, origin, destination);
+    graphics_draw_drag(this_->gra, NULL);
+    transform_copy(this_->trans, this_->trans_cursor);
+    graphics_overlay_disable(this_->gra, 0);
+    if (!this_->zoomed)
+        navit_set_timeout(this_);
+    navit_draw(this_);
+}
+
+/**
  * @brief Recenters the map so that the vehicle cursor is visible
  *
  * This function first calls {@code navit_set_center_cursor()} to recalculate the map display, then
