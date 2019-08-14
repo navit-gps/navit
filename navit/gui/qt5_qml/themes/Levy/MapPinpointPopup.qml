@@ -10,6 +10,7 @@ Popup {
     property string horizontalPosition: "left"
     property int xOffset: __root.horizontalPosition == "left"? __root.width * 0.1 : 0
     property int yOffset: __root.verticalPosition == "top"? __root.width * 0.1 : 0
+    signal menuItemClicked (var action)
     background: Item {
         x: xOffset
         y: yOffset
@@ -129,6 +130,12 @@ Popup {
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     anchors.right: parent.right
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        __root.menuItemClicked(action)
+                    }
                 }
             }
         }
