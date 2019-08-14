@@ -22,7 +22,7 @@ endif()
 if(USE_QML)
 	set(QML 1)
 	qt5_add_resources(QT5_QRC "graphics_qt5.qrc")
-	set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" ${QT5_QRC})
+        set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" "QNavitQuick_2.cpp" ${QT5_QRC})
 endif ()
 
 #check if we have QWIDGET
