@@ -945,5 +945,6 @@
         <file>themes/Levy/assets/corner-arrow-right.svg</file>
         <file>themes/Levy/assets/corner-arrow.svg</file>
         <file>themes/Levy/assets/destination-view.png</file>
+        <file>themes/Levy/icons.js</file>
     </qresource>
 </RCC>

@@ -8,8 +8,11 @@ ColumnLayout {
     signal dimensionClicked()
     signal zoomInClicked()
     signal zoomOutClicked()
+    signal compassClicked()
 
-    property int mapDimension : 3
+    property int pitch: 0
+    property int orientation: 0
+    property bool autoZoom : true
 
     Item {
         id: modes
@@ -34,7 +37,7 @@ ColumnLayout {
                 anchors.fill: parent
                 Text {
                     id: element5
-                    text: qsTr("A")
+                    text: __root.autoZoom ? "M" : "A"
                     font.pixelSize: parent.height * 0.4
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -65,7 +68,7 @@ ColumnLayout {
                 id: element6
                 Text {
                     id: element7
-                    text: __root.mapDimension + "D"
+                    text: __root.pitch === 0 ? "3D" : "2D"
                     font.pixelSize: parent.height * 0.4
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -170,12 +173,21 @@ ColumnLayout {
         }
 
         Image {
-            id: image1
+            id: compassNeedle
             height: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             fillMode: Image.PreserveAspectFit
             source: "assets/compass-arrow.png"
+            transform: Rotation{
+                origin.x:compassNeedle.width / 2
+                origin.y:compassNeedle.height / 2
+                angle:__root.orientation
+            }
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: __root.compassClicked()
         }
     }
     states: [
