@@ -2621,6 +2621,8 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 #endif
                 attr_updated=1;
             }
+            if (attr_updated && this_->ready == 3)
+                navit_draw(this_);
         }
         break;
     case attr_osd_configuration:
