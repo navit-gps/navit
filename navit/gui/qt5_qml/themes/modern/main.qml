@@ -1,5 +1,5 @@
-import com.navit.graphics_qt5 1.0
 import QtQuick 2.2
+import Navit 1.0
 
 Rectangle {
 	width: 800
@@ -27,7 +27,7 @@ Rectangle {
 	color: "black"
 	id: container
 
-	QNavitQuick {
+    NavitMap {
 		id: navit1
 		width: parent.width
 		height: parent.height
