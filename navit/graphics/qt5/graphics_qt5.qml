@@ -1,12 +1,11 @@
-import com.navit.graphics_qt5 1.0
 import QtQuick 2.2
 import QtQuick.Window 2.0
+import Navit 1.0
+import Navit.Graphics 1.0
 
-QNavitQuick {
+NavitMap {
     id: navit1
     anchors.fill: parent
+    navit: Navit
     focus: true
-    Component.onCompleted: {
-        navit1.setGraphicContext(graphics_qt5_context)
-    }
 }
