@@ -67,7 +67,7 @@ extern int default_flags[];
  * @param item The struct item
  * @return Returns true if the item is a POI type otherwise returns false
  */
-#define item_is_poi(item)  ((item).type >= type_poi_lake && (item).type <= type_poi) \
+#define item_is_poi(item)  (((item).type >= type_poi_lake && (item).type <= type_poi) \
                         || ((item).type >= type_poi_land_feature && (item).type <= type_poi_zoo) \
                         || ((item).type >= type_poi_gc_multi && (item).type <= type_poi_cafe) \
                         || ((item).type >= type_poi_peak && (item).type <= type_poi_image) \
@@ -76,7 +76,7 @@ extern int default_flags[];
                         || ((item).type >= type_poi_vending_machine && (item).type <= type_poi_shop_shoes) \
                         || ((item).type >= type_poi_tree && (item).type <= type_poi_shop_photo) \
                         || ((item).type >= type_poi_pub && (item).type <= type_poi_bahai) \
-                        || ((item).type >= type_poi_customh && (item).type <= type_poi_customf)
+                        || ((item).type >= type_poi_customh && (item).type <= type_poi_customf))
 
 #define item_is_equal_id(a,b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
 #define item_is_equal(a,b) (item_is_equal_id(a,b) && (a).map == (b).map)
