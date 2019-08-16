@@ -136,13 +136,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build for Windows
+          name: Prepare the Windows build environment
           command: |
             apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
             apt-get install -y software-properties-common
             add-apt-repository -y ppa:george-edison55/cmake-3.x
             apt-get remove -y cmake
-            apt-get install -y cmake3
+            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+      - run:
+          name: Build for Windows
+          command: |
             bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
@@ -224,6 +227,29 @@ jobs:
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  check_spelling:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get -y install curl
+      - run:
+          name: Install misspell
+          command: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - run:
+          name: Check docs folder for misspells
+          command: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                exit -1
+              fi
+
+
 workflows:
   version: 2
   build_all:
@@ -272,3 +298,7 @@ workflows:
           filters:
             branches:
               only: /^trunk$/
+      - check_spelling:
+          filters:
+            branches:
+              only: /^readthedocs$/
