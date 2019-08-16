@@ -68,7 +68,7 @@ jobs:
   build_android:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-28-ndk
+      - image: circleci/android:api-29
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -78,13 +78,18 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
           name: Install Android SDK components
           command: sdkmanager "cmake;3.6.4111459"
+      - run:
+          name: Install ndk
+          command: |
+            echo y | sdkmanager --licenses
+            echo y | sdkmanager ndk-bundle
       - run:
           name: Build for Android
           command: bash scripts/build_android.sh

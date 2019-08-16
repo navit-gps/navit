@@ -22,7 +22,7 @@ endif()
 if(USE_QML)
 	set(QML 1)
 	qt5_add_resources(QT5_QRC "graphics_qt5.qrc")
-	set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" ${QT5_QRC})
+        set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitQuick.cpp" "QNavitQuick_2.cpp" ${QT5_QRC})
 endif ()
 
 #check if we have QWIDGET
@@ -31,7 +31,7 @@ if(USE_QWIDGET)
 	set(GRAPHICS_QT5_ADDITIONAL ${GRAPHICS_QT5_ADDITIONAL} "QNavitWidget.cpp")
 endif ()
 
-module_add_library(graphics_qt5 graphics_qt5.cpp event_qt5.cpp ${GRAPHICS_QT5_ADDITIONAL})
+module_add_library(graphics_qt5 graphics_qt5.cpp event_qt5.cpp navitinstance.h ${GRAPHICS_QT5_ADDITIONAL})
 # pass QML and QWIDGET preference to source
 target_compile_definitions(graphics_qt5 PRIVATE USE_QML=${QML} USE_QWIDGET=${QWIDGET} HAVE_FREETYPE=${HAVE_FREETYPE})
 
