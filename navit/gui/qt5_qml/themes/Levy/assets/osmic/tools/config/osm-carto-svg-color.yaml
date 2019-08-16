@@ -1,0 +1,207 @@
+input_basedir: "."
+
+input:
+  - name: "accommodation"
+  - name: "administration"
+  - name: "amenity"
+  - name: "barrier"
+  - name: "eat-drink"
+  - name: "emergency"
+  - name: "energy"
+  - name: "health"
+  - name: "money"
+  - name: "nature"
+  - name: "outdoor"
+  - name: "religious"
+  - name: "shop"
+  - name: "sports"
+  - name: "tourism"
+  - name: "transport"
+
+output_basedir: "export"
+# WARNING: deletes all files within output directory if it exists
+empty_output: true
+format: "svg"
+
+global_style:
+  padding: 1
+  fill: "#734a08"
+
+power-wind:
+  fill: "#555555"
+hunting-stand:
+  fill: "#555555"
+peak:
+  fill: "#d08f55"
+saddle:
+  fill: "#d08f55"
+rental-bicycle:
+  fill: "#0092da"
+airport:
+  fill: "#0092da"
+heliport:
+  fill: "#0092da"
+metro:
+  fill: "#0092da"
+railway-halt:
+  fill: "#0092da"
+railway-station:
+  fill: "#0092da"
+taxi:
+  fill: "#0092da"
+tram-stop:
+  fill: "#0092da"
+bus-stop:
+  fill: "#0092da"
+bus-station:
+  fill: "#0092da"
+lighthouse:
+  fill: "#0092da"
+camping:
+  fill: "#0092da"
+caravan:
+  fill: "#0092da"
+shared-car:
+  fill: "#0092da"
+rental-car:
+  fill: "#0092da"
+fuel:
+  fill: "#0092da"
+elevator:
+  fill: "#0092da"
+ferry:
+  fill: "#0092da"
+charging-station:
+  fill: "#0092da"
+subway-entrance:
+  fill: "#0092da"
+ford:
+  fill: "#0092da"
+hostel:
+  fill: "#0092da"
+hotel:
+  fill: "#0092da"
+motel:
+  fill: "#0092da"
+embassy:
+  fill: "#0092da"
+parking-car:
+  fill: "#0092da"
+parking-bicycle:
+  fill: "#0092da"
+parking-garage-car:
+  fill: "#0092da"
+hospital:
+  fill: "#da0092"
+doctor:
+  fill: "#da0092"
+pharmacy:
+  fill: "#da0092"
+dentist:
+  fill: "#da0092"
+mast:
+  fill: "#555555"
+mast-communications:
+  fill: "#555555"
+water-tower:
+  fill: "#555555"
+christian:
+  fill: "#000000"
+christian-orthodox:
+  fill: "#000000"
+place-of-worship:
+  fill: "#000000"
+taoist:
+  fill: "#000000"
+buddhist:
+  fill: "#000000"
+hinduist:
+  fill: "#000000"
+sikhist:
+  fill: "#000000"
+muslim:
+  fill: "#000000"
+jewish:
+  fill: "#000000"
+shintoist:
+  fill: "#000000"
+alcohol:
+  fill: "#ac39ac"
+bakery:
+  fill: "#ac39ac"
+bicycle:
+  fill: "#ac39ac"
+books:
+  fill: "#ac39ac"
+butcher:
+  fill: "#ac39ac"
+car:
+  fill: "#ac39ac"
+clothes:
+  fill: "#ac39ac"
+convenience:
+  fill: "#ac39ac"
+doityourself:
+  fill: "#ac39ac"
+electronics:
+  fill: "#ac39ac"
+florist:
+  fill: "#ac39ac"
+furniture:
+  fill: "#ac39ac"
+gift:
+  fill: "#ac39ac"
+greengrocer:
+  fill: "#ac39ac"
+hairdresser:
+  fill: "#ac39ac"
+jewellery:
+  fill: "#ac39ac"
+kiosk:
+  fill: "#ac39ac"
+ice-cream:
+  fill: "#ac39ac"
+mobile-phone:
+  fill: "#ac39ac"
+optician:
+  fill: "#ac39ac"
+pet:
+  fill: "#ac39ac"
+shoes:
+  fill: "#ac39ac"
+supermarket:
+  fill: "#ac39ac"
+confectionery:
+  fill: "#ac39ac"
+computer:
+  fill: "#ac39ac"
+photo:
+  fill: "#ac39ac"
+car-parts:
+  fill: "#ac39ac"
+beauty:
+  fill: "#ac39ac"
+news:
+  fill: "#ac39ac"
+hifi:
+  fill: "#ac39ac"
+laundry:
+  fill: "#ac39ac"
+beverages:
+  fill: "#ac39ac"
+stationery:
+  fill: "#ac39ac"
+toys:
+  fill: "#ac39ac"
+garden-centre:
+  fill: "#ac39ac"
+copyshop:
+  fill: "#ac39ac"
+chemist:
+  fill: "#ac39ac"
+repair-car:
+  fill: "#ac39ac"
+repair-bicycle:
+  fill: "#ac39ac"
+veterinary:
+  fill: "#da0092"

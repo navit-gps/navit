@@ -1,0 +1,28 @@
+input_basedir: "."
+
+input:
+  - name: "accommodation"
+  - name: "administration"
+  - name: "amenity"
+  - name: "barrier"
+  - name: "eat-drink"
+  - name: "emergency"
+  - name: "energy"
+  - name: "health"
+  - name: "money"
+  - name: "nature"
+  - name: "outdoor"
+  - name: "religious"
+  - name: "shop"
+  - name: "sports"
+  - name: "tourism"
+  - name: "transport"
+
+output_basedir: "export"
+# WARNING: deletes all files within output directory if it exists
+empty_output: true
+format: "font"
+size_filter: 14
+
+font:
+  output_basedir: "font"
