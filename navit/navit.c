@@ -798,7 +798,7 @@ void navit_zoom_in(struct navit *this_, int factor, struct point *p) {
 }
 
 /**
- * Change the current zoom level
+ * Change the current zoom level, further to the ground
  *
  * @param navit The navit instance
  * @param factor The zoom factor, usually 2
@@ -2460,6 +2460,27 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
 }
 
 /**
+ * @brief Drags (moves) the map
+ *
+ * Drags (moves) the map from origin point to the destination point
+ *
+ * @param navit The navit instance
+ * @param origin The point point where the drag starts
+ * @param destination The point where to map should be dragged to
+ * @returns nothing
+ */
+
+void navit_drag_map(struct navit *this_, struct point *origin, struct point *destination) {
+    update_transformation(this_->trans, origin, destination);
+    graphics_draw_drag(this_->gra, NULL);
+    transform_copy(this_->trans, this_->trans_cursor);
+    graphics_overlay_disable(this_->gra, 0);
+    if (!this_->zoomed)
+        navit_set_timeout(this_);
+    navit_draw(this_);
+}
+
+/**
  * @brief Recenters the map so that the vehicle cursor is visible
  *
  * This function first calls {@code navit_set_center_cursor()} to recalculate the map display, then
@@ -2467,7 +2488,7 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
  *
  *@param this_ The navit object
  */
-static void navit_set_center_cursor_draw(struct navit *this_) {
+void navit_set_center_cursor_draw(struct navit *this_) {
     navit_set_center_cursor(this_,1,0);
     if (this_->ready == 3)
         navit_draw_async(this_, 1);
@@ -2551,6 +2572,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout:
         if(!attr->u.layout)
             return 0;
+        dbg(lvl_debug,"setting attr_layout to %s", attr->u.layout->name);
         if(this_->layout_current!=attr->u.layout) {
             navit_update_current_layout(this_, attr->u.layout);
             graphics_font_destroy_all(this_->gra);
@@ -2563,6 +2585,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout_name:
         if(!attr->u.str)
             return 0;
+        dbg(lvl_debug,"setting attr_layout_name to %s", attr->u.str);
         l=this_->layouts;
         while (l) {
             lay=l->data;
@@ -2600,6 +2623,8 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 #endif
                 attr_updated=1;
             }
+            if (attr_updated && this_->ready == 3)
+                navit_draw(this_);
         }
         break;
     case attr_osd_configuration:
@@ -3000,9 +3025,27 @@ static int navit_add_log(struct navit *this_, struct log *log) {
 
 static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
+    int is_default=0;
+    int is_active=0;
     this_->layouts = g_list_append(this_->layouts, layout);
+    /** check if we want to immediately activate this layout.
+     * Unfortunately we have concurring conditions about when to activate
+     * a layout:
+     * - A layout could bear the "active" property
+     * - A layout's name could match this_->default_layout_name
+     * This cannot be fully resolved, as we cannot predict the future, so
+     * lets set the last parsed layout active, which either matches default_layout_name or
+     * bears the "active" tag, or is the first layout ever parsed.
+     */
+    if((layout->name != NULL) && (this_->default_layout_name != NULL)) {
+        if (strcmp(layout->name, this_->default_layout_name) == 0)
+            is_default = 1;
+    }
     layout_get_attr(layout, attr_active, &active, NULL);
-    if(active.u.num || !this_->layout_current) {
+    if(active.u.num)
+        is_active = 1;
+    dbg(lvl_debug, "add layout '%s' is_default %d, is_active %d", layout->name, is_default, is_active);
+    if(is_default || is_active || !this_->layout_current) {
         this_->layout_current=layout;
         return 1;
     }

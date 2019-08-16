@@ -1,0 +1,337 @@
+/*
+  Icon Font: osmic
+*/
+
+@font-face {
+  font-family: "osmic";
+  src: url("./osmic.eot");
+  src: url("./osmic.eot?#iefix") format("embedded-opentype"),
+       url("./osmic.woff") format("woff"),
+       url("./osmic.ttf") format("truetype"),
+       url("./osmic.svg#osmic") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "osmic";
+    src: url("./osmic.svg#osmic") format("svg");
+  }
+}
+
+[data-icon]:before { content: attr(data-icon); }
+
+[data-icon]:before,
+.oc-airport:before,
+.oc-alcohol:before,
+.oc-archaeological-site:before,
+.oc-atm:before,
+.oc-bakery:before,
+.oc-bank:before,
+.oc-bar:before,
+.oc-beauty:before,
+.oc-bench:before,
+.oc-beverages:before,
+.oc-bicycle:before,
+.oc-biergarten:before,
+.oc-bollard:before,
+.oc-books:before,
+.oc-buddhist:before,
+.oc-bus-station:before,
+.oc-bus-stop:before,
+.oc-butcher:before,
+.oc-cafe:before,
+.oc-camping:before,
+.oc-car:before,
+.oc-car-parts:before,
+.oc-caravan:before,
+.oc-castle-defensive:before,
+.oc-castle-fortress:before,
+.oc-castle-manor:before,
+.oc-castle-palace:before,
+.oc-castle-stately:before,
+.oc-cattle-grid:before,
+.oc-cemetery:before,
+.oc-charging-station:before,
+.oc-chemist:before,
+.oc-christian:before,
+.oc-christian-orthodox:before,
+.oc-cinema:before,
+.oc-city-gate:before,
+.oc-clock:before,
+.oc-clothes:before,
+.oc-computer:before,
+.oc-confectionery:before,
+.oc-convenience:before,
+.oc-copyshop:before,
+.oc-courthouse:before,
+.oc-dentist:before,
+.oc-doctor:before,
+.oc-doityourself:before,
+.oc-drinking-water:before,
+.oc-electronics:before,
+.oc-elevator:before,
+.oc-embassy:before,
+.oc-emergency-phone:before,
+.oc-entrance:before,
+.oc-exit:before,
+.oc-fast-food:before,
+.oc-ferry:before,
+.oc-fire-station:before,
+.oc-florist:before,
+.oc-ford:before,
+.oc-fort:before,
+.oc-fountain:before,
+.oc-fuel:before,
+.oc-furniture:before,
+.oc-garden-centre:before,
+.oc-gate:before,
+.oc-gift:before,
+.oc-government:before,
+.oc-greengrocer:before,
+.oc-guidepost:before,
+.oc-hairdresser:before,
+.oc-heliport:before,
+.oc-hifi:before,
+.oc-hinduist:before,
+.oc-hospital:before,
+.oc-hostel:before,
+.oc-hotel:before,
+.oc-hunting-stand:before,
+.oc-ice-cream:before,
+.oc-information:before,
+.oc-jewellery:before,
+.oc-jewish:before,
+.oc-kiosk:before,
+.oc-laundry:before,
+.oc-library:before,
+.oc-lift-gate:before,
+.oc-lighthouse:before,
+.oc-luggage:before,
+.oc-mast:before,
+.oc-mast-communications:before,
+.oc-memorial:before,
+.oc-metro:before,
+.oc-mobile-phone:before,
+.oc-monument:before,
+.oc-motel:before,
+.oc-museum:before,
+.oc-muslim:before,
+.oc-news:before,
+.oc-nightclub:before,
+.oc-optician:before,
+.oc-parking-bicycle:before,
+.oc-parking-car:before,
+.oc-parking-garage-car:before,
+.oc-peak:before,
+.oc-pet:before,
+.oc-pharmacy:before,
+.oc-photo:before,
+.oc-place-of-worship:before,
+.oc-playground:before,
+.oc-police:before,
+.oc-post-office:before,
+.oc-power-wind:before,
+.oc-prison:before,
+.oc-pub:before,
+.oc-railway-halt:before,
+.oc-railway-station:before,
+.oc-recycling:before,
+.oc-rental-bicycle:before,
+.oc-rental-car:before,
+.oc-repair-bicycle:before,
+.oc-repair-car:before,
+.oc-restaurant:before,
+.oc-saddle:before,
+.oc-shared-car:before,
+.oc-shintoist:before,
+.oc-shoes:before,
+.oc-sikhist:before,
+.oc-spring:before,
+.oc-stationery:before,
+.oc-steps:before,
+.oc-supermarket:before,
+.oc-swimming:before,
+.oc-table:before,
+.oc-taoist:before,
+.oc-taxi:before,
+.oc-telephone:before,
+.oc-theatre:before,
+.oc-toilets:before,
+.oc-town-hall:before,
+.oc-toys:before,
+.oc-tram-stop:before,
+.oc-tree-coniferous:before,
+.oc-tree-deciduous:before,
+.oc-tree-unspecified:before,
+.oc-veterinary:before,
+.oc-viewpoint:before,
+.oc-waste-basket:before,
+.oc-watchtower:before,
+.oc-water-tower:before,
+.oc-waterfall:before,
+.oc-windmill:before {
+  display: inline-block;
+  font-family: "osmic";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.oc-airport:before { content: "\f100"; }
+.oc-alcohol:before { content: "\f101"; }
+.oc-archaeological-site:before { content: "\f102"; }
+.oc-atm:before { content: "\f103"; }
+.oc-bakery:before { content: "\f104"; }
+.oc-bank:before { content: "\f105"; }
+.oc-bar:before { content: "\f106"; }
+.oc-beauty:before { content: "\f183"; }
+.oc-bench:before { content: "\f107"; }
+.oc-beverages:before { content: "\f187"; }
+.oc-bicycle:before { content: "\f108"; }
+.oc-biergarten:before { content: "\f109"; }
+.oc-bollard:before { content: "\f18e"; }
+.oc-books:before { content: "\f10a"; }
+.oc-buddhist:before { content: "\f10b"; }
+.oc-bus-station:before { content: "\f10c"; }
+.oc-bus-stop:before { content: "\f10d"; }
+.oc-butcher:before { content: "\f10e"; }
+.oc-cafe:before { content: "\f10f"; }
+.oc-camping:before { content: "\f110"; }
+.oc-car:before { content: "\f111"; }
+.oc-car-parts:before { content: "\f182"; }
+.oc-caravan:before { content: "\f112"; }
+.oc-castle-defensive:before { content: "\f113"; }
+.oc-castle-fortress:before { content: "\f114"; }
+.oc-castle-manor:before { content: "\f115"; }
+.oc-castle-palace:before { content: "\f116"; }
+.oc-castle-stately:before { content: "\f117"; }
+.oc-cattle-grid:before { content: "\f193"; }
+.oc-cemetery:before { content: "\f17c"; }
+.oc-charging-station:before { content: "\f16f"; }
+.oc-chemist:before { content: "\f197"; }
+.oc-christian:before { content: "\f118"; }
+.oc-christian-orthodox:before { content: "\f119"; }
+.oc-cinema:before { content: "\f11a"; }
+.oc-city-gate:before { content: "\f11b"; }
+.oc-clock:before { content: "\f18c"; }
+.oc-clothes:before { content: "\f11c"; }
+.oc-computer:before { content: "\f18d"; }
+.oc-confectionery:before { content: "\f18b"; }
+.oc-convenience:before { content: "\f11d"; }
+.oc-copyshop:before { content: "\f188"; }
+.oc-courthouse:before { content: "\f11e"; }
+.oc-dentist:before { content: "\f11f"; }
+.oc-doctor:before { content: "\f120"; }
+.oc-doityourself:before { content: "\f121"; }
+.oc-drinking-water:before { content: "\f122"; }
+.oc-electronics:before { content: "\f123"; }
+.oc-elevator:before { content: "\f196"; }
+.oc-embassy:before { content: "\f124"; }
+.oc-emergency-phone:before { content: "\f17d"; }
+.oc-entrance:before { content: "\f171"; }
+.oc-exit:before { content: "\f172"; }
+.oc-fast-food:before { content: "\f125"; }
+.oc-ferry:before { content: "\f170"; }
+.oc-fire-station:before { content: "\f126"; }
+.oc-florist:before { content: "\f127"; }
+.oc-ford:before { content: "\f191"; }
+.oc-fort:before { content: "\f17f"; }
+.oc-fountain:before { content: "\f128"; }
+.oc-fuel:before { content: "\f129"; }
+.oc-furniture:before { content: "\f12a"; }
+.oc-garden-centre:before { content: "\f179"; }
+.oc-gate:before { content: "\f18f"; }
+.oc-gift:before { content: "\f12b"; }
+.oc-government:before { content: "\f12c"; }
+.oc-greengrocer:before { content: "\f12d"; }
+.oc-guidepost:before { content: "\f12e"; }
+.oc-hairdresser:before { content: "\f12f"; }
+.oc-heliport:before { content: "\f130"; }
+.oc-hifi:before { content: "\f185"; }
+.oc-hinduist:before { content: "\f131"; }
+.oc-hospital:before { content: "\f132"; }
+.oc-hostel:before { content: "\f133"; }
+.oc-hotel:before { content: "\f134"; }
+.oc-hunting-stand:before { content: "\f135"; }
+.oc-ice-cream:before { content: "\f136"; }
+.oc-information:before { content: "\f137"; }
+.oc-jewellery:before { content: "\f138"; }
+.oc-jewish:before { content: "\f139"; }
+.oc-kiosk:before { content: "\f13a"; }
+.oc-laundry:before { content: "\f186"; }
+.oc-library:before { content: "\f13b"; }
+.oc-lift-gate:before { content: "\f190"; }
+.oc-lighthouse:before { content: "\f13c"; }
+.oc-luggage:before { content: "\f195"; }
+.oc-mast:before { content: "\f13d"; }
+.oc-mast-communications:before { content: "\f13e"; }
+.oc-memorial:before { content: "\f13f"; }
+.oc-metro:before { content: "\f140"; }
+.oc-mobile-phone:before { content: "\f141"; }
+.oc-monument:before { content: "\f142"; }
+.oc-motel:before { content: "\f143"; }
+.oc-museum:before { content: "\f144"; }
+.oc-muslim:before { content: "\f145"; }
+.oc-news:before { content: "\f184"; }
+.oc-nightclub:before { content: "\f146"; }
+.oc-optician:before { content: "\f147"; }
+.oc-parking-bicycle:before { content: "\f148"; }
+.oc-parking-car:before { content: "\f149"; }
+.oc-parking-garage-car:before { content: "\f14a"; }
+.oc-peak:before { content: "\f14b"; }
+.oc-pet:before { content: "\f14c"; }
+.oc-pharmacy:before { content: "\f14d"; }
+.oc-photo:before { content: "\f181"; }
+.oc-place-of-worship:before { content: "\f14e"; }
+.oc-playground:before { content: "\f14f"; }
+.oc-police:before { content: "\f150"; }
+.oc-post-office:before { content: "\f151"; }
+.oc-power-wind:before { content: "\f152"; }
+.oc-prison:before { content: "\f153"; }
+.oc-pub:before { content: "\f154"; }
+.oc-railway-halt:before { content: "\f155"; }
+.oc-railway-station:before { content: "\f156"; }
+.oc-recycling:before { content: "\f157"; }
+.oc-rental-bicycle:before { content: "\f158"; }
+.oc-rental-car:before { content: "\f159"; }
+.oc-repair-bicycle:before { content: "\f15a"; }
+.oc-repair-car:before { content: "\f15b"; }
+.oc-restaurant:before { content: "\f15c"; }
+.oc-saddle:before { content: "\f15d"; }
+.oc-shared-car:before { content: "\f15e"; }
+.oc-shintoist:before { content: "\f15f"; }
+.oc-shoes:before { content: "\f160"; }
+.oc-sikhist:before { content: "\f161"; }
+.oc-spring:before { content: "\f162"; }
+.oc-stationery:before { content: "\f189"; }
+.oc-steps:before { content: "\f192"; }
+.oc-supermarket:before { content: "\f164"; }
+.oc-swimming:before { content: "\f173"; }
+.oc-table:before { content: "\f165"; }
+.oc-taoist:before { content: "\f166"; }
+.oc-taxi:before { content: "\f167"; }
+.oc-telephone:before { content: "\f17e"; }
+.oc-theatre:before { content: "\f168"; }
+.oc-toilets:before { content: "\f169"; }
+.oc-town-hall:before { content: "\f16a"; }
+.oc-toys:before { content: "\f17a"; }
+.oc-tram-stop:before { content: "\f16b"; }
+.oc-tree-coniferous:before { content: "\f177"; }
+.oc-tree-deciduous:before { content: "\f176"; }
+.oc-tree-unspecified:before { content: "\f18a"; }
+.oc-veterinary:before { content: "\f194"; }
+.oc-viewpoint:before { content: "\f178"; }
+.oc-waste-basket:before { content: "\f16c"; }
+.oc-watchtower:before { content: "\f16d"; }
+.oc-water-tower:before { content: "\f16e"; }
+.oc-waterfall:before { content: "\f174"; }
+.oc-windmill:before { content: "\f17b"; }

@@ -328,10 +328,6 @@ static void win_set_nls(void) {
 }
 #endif
 
-void main_update_default_layout(struct navit *navit) {
-    navit_update_current_layout(navit, NULL);
-}
-
 void main_init(const char *program) {
     char *s;
 #ifdef _UNICODE		/* currently for wince */
