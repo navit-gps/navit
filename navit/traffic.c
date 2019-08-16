@@ -76,14 +76,15 @@
 /** Flag to indicate the message store should not be exported */
 #define PROCESS_MESSAGES_NO_DUMP_STORE 1 << 1
 
-/** The lowest order of items to consider */
-#define ROUTE_ORDER 18
+/** The lowest order of items to consider (always the default order for the next-lower road type) */
+#define ROUTE_ORDER(x) (((x == type_highway_land) || (x == type_highway_city) || (x == type_street_n_lanes)) \
+        ? 10 : ((x == type_street_4_land) || (x == type_street_4_city)) ? 12 : 18)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
-#define ROUTE_RECT_DIST_ABS 1000
+#define ROUTE_RECT_DIST_ABS(x) ((x == location_fuzziness_low_res) ? 1000 : 100)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
-#define ROUTE_RECT_DIST_REL 0
+#define ROUTE_RECT_DIST_REL(x) 0
 
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
@@ -1721,7 +1722,8 @@ static struct map_rect * traffic_location_open_map_rect(struct traffic_location 
     transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
     transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
 
-    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
+    rg->sel = route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+                         ROUTE_RECT_DIST_ABS(this_->fuzziness));
 
     if (!rg->sel)
         return NULL;
@@ -1787,6 +1789,23 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                 route_graph_add_turn_restriction(rg, item);
             else if ((item->type < route_item_first) || (item->type > route_item_last))
                 continue;
+            /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+            if ((this_->road_type == type_highway_land) || (this_->road_type == type_highway_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp))
+                    continue;
+            } else if (this_->road_type == type_street_n_lanes) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city))
+                    continue;
+            } else if ((this_->road_type == type_street_4_land) || (this_->road_type == type_street_4_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city) &&
+                        (item->type != type_street_3_land) && (item->type != type_street_3_city))
+                    continue;
+            }
             if (item_get_default_flags(item->type)) {
 
                 item_coord_rewind(item);

@@ -1,0 +1,62 @@
+input_basedir: "."
+
+input:
+  - name: "administration"
+    include:
+      - "town-hall"
+  - name: "amenity"
+    include:
+      - "cemetery"
+      - "entrance-10"
+      - "toilets"
+  - name: "emergency"
+    include:
+      - "emergency-phone"
+  - name: "energy"
+  - name: "health"
+    include:
+      - "hospital"
+  - name: "nature"
+    include:
+      - "peak-10"
+      - "saddle-10"
+  - name: "outdoor"
+    exclude:
+      - "mast"
+      - "waste-basket-14"
+  - name: "religious"
+  - name: "tourism"
+    include:
+      - "archaeological-site"
+      - "information"
+      - "memorial-10"
+      - "monument"
+      - "viewpoint"
+      - "windmill"
+  - name: "transport"
+    exclude:
+      - "bus-stop-14"
+      - "charging-station"
+      - "ferry"
+      - "fuel"
+      - "heliport"
+      - "luggage"
+      - "parking-bicycle"
+      - "parking-car"
+      - "parking-garage-car"
+      - "shared-car"
+      - "taxi"
+
+output_basedir: "export"
+# WARNING: deletes all files within output directory if it exists
+empty_output: true
+format: "svg"
+
+global_style:
+  padding: 1
+  fill: "#505050"
+
+  halo:
+    fill: "#ffffff"
+    width: 1
+    opacity: 0.3
