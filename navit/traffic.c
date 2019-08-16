@@ -3602,7 +3602,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
                         continue;
                     dbg(lvl_debug, "*****checkpoint RESTORE-6.0, comparing item 0x%x, 0x%x to map data",
-                            pitem->id_hi, pitem->id_lo);
+                        pitem->id_hi, pitem->id_lo);
                     /* Get flags (access and other) for the item */
                     if (!(default_flags = item_get_default_flags(map_item->type)))
                         default_flags = &item_default_flags_value;
@@ -3625,14 +3625,14 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                             if (!item_coord_get(map_item, &map_c, 1)) {
                                 /* map item has fewer coordinates than cached item */
                                 dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has fewer coordinates than cached item",
-                                        pitem->id_hi, pitem->id_lo);
+                                    pitem->id_hi, pitem->id_lo);
                                 map_item = NULL;
                                 break;
                             }
                             if ((map_c.x != pitem->coords[i].x) || (map_c.y != pitem->coords[i].y)) {
                                 /* coordinate mismatch between map item and cached item */
                                 dbg(lvl_debug, "*****checkpoint RESTORE-6.1, coordinate #%d for item 0x%x, 0x%x does not match",
-                                        i, pitem->id_hi, pitem->id_lo);
+                                    i, pitem->id_hi, pitem->id_lo);
                                 map_item = NULL;
                                 break;
                             }
@@ -3640,7 +3640,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         if (map_item && item_coord_get(map_item, &map_c, 1)) {
                             /* map item has more coordinates than cached item */
                             dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has more coordinates than cached item",
-                                    pitem->id_hi, pitem->id_lo);
+                                pitem->id_hi, pitem->id_lo);
                             map_item = NULL;
                             continue;
                         }
@@ -3675,7 +3675,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
         pitem = (struct parsed_item *) curr_item->data;
         if (!pitem->is_matched) {
             dbg(lvl_debug, "*****checkpoint RESTORE-6.2, item 0x%x, 0x%x is unmatched",
-                    pitem->id_hi, pitem->id_lo);
+                pitem->id_hi, pitem->id_lo);
             is_matched = 0;
         }
     }
@@ -3688,12 +3688,12 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
         for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
             pitem = (struct parsed_item *) curr_item->data;
             item = tm_add_item(map, pitem->type, pitem->id_hi, pitem->id_lo, pitem->flags, pitem->attrs,
-                    pitem->coords, pitem->coord_count, this_->id);
+                               pitem->coords, pitem->coord_count, this_->id);
             parsed_item_destroy(pitem);
             tm_item_add_message_data(item, this_->id,
-                    traffic_get_item_speed(item, seg_data, maxspeed),
-                    traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
-                    NULL, route);
+                                     traffic_get_item_speed(item, seg_data, maxspeed),
+                                     traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
+                                     NULL, route);
             this_->priv->items[i] = item;
             i++;
         }
