@@ -2551,6 +2551,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout:
         if(!attr->u.layout)
             return 0;
+        dbg(lvl_debug,"setting attr_layout to %s", attr->u.layout->name);
         if(this_->layout_current!=attr->u.layout) {
             navit_update_current_layout(this_, attr->u.layout);
             graphics_font_destroy_all(this_->gra);
@@ -2563,6 +2564,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout_name:
         if(!attr->u.str)
             return 0;
+        dbg(lvl_debug,"setting attr_layout_name to %s", attr->u.str);
         l=this_->layouts;
         while (l) {
             lay=l->data;
@@ -3000,9 +3002,27 @@ static int navit_add_log(struct navit *this_, struct log *log) {
 
 static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
+    int is_default=0;
+    int is_active=0;
     this_->layouts = g_list_append(this_->layouts, layout);
+    /** check if we want to immediately activate this layout.
+     * Unfortunately we have concurring conditions about when to activate
+     * a layout:
+     * - A layout could bear the "active" property
+     * - A layout's name could match this_->default_layout_name
+     * This cannot be fully resolved, as we cannot predict the future, so
+     * lets set the last parsed layout active, which either matches default_layout_name or
+     * bears the "active" tag, or is the first layout ever parsed.
+     */
+    if((layout->name != NULL) && (this_->default_layout_name != NULL)) {
+        if (strcmp(layout->name, this_->default_layout_name) == 0)
+            is_default = 1;
+    }
     layout_get_attr(layout, attr_active, &active, NULL);
-    if(active.u.num || !this_->layout_current) {
+    if(active.u.num)
+        is_active = 1;
+    dbg(lvl_debug, "add layout '%s' is_default %d, is_active %d", layout->name, is_default, is_active);
+    if(is_default || is_active || !this_->layout_current) {
         this_->layout_current=layout;
         return 1;
     }
