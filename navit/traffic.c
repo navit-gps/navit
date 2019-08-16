@@ -188,6 +188,21 @@ struct item_priv {
 };
 
 /**
+ * @brief Parsed data for a cached item
+ */
+struct parsed_item {
+    enum item_type type;        /**< The item type */
+    int id_hi;                  /**< The high-order part of the identifier */
+    int id_lo;                  /**< The low-order part of the identifier */
+    int flags;                  /**< Access and other flags for the item */
+    struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
+    struct coord *coords;       /**< The coordinates for the item */
+    int coord_count;            /**< The number of elements in `coords` */
+    int length;                 /**< The length of the segment in meters */
+    int is_matched;             /**< Whether any of the maps has a matching item */
+};
+
+/**
  * @brief Data for segments affected by a traffic message.
  *
  * Speed can be specified in three different ways:
@@ -339,6 +354,18 @@ static int boolean_new(const char * string, int deflt) {
     if (!g_ascii_strcasecmp(string, "no") || !g_ascii_strcasecmp(string, "false") || ((string[0] == '0') && !atoi(string)))
         return 0;
     return deflt;
+}
+
+/**
+ * @brief Destructor for `struct parsed_item`
+ *
+ * This frees up the `struct parsed_item` and all associated data. The pointer passed to this function will
+ * be invalid after it returns.
+ */
+static void parsed_item_destroy(struct parsed_item * this_) {
+    g_free(this_->coords);
+    attr_list_free(this_->attrs);
+    g_free(this_);
 }
 
 /**
@@ -3391,17 +3418,20 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     int ccnt = -1;
 
     /* Coordinates of matched segment and pointer into it, order as read from map */
-    struct coord *c, ca[2048];
+    struct coord ca[2048];
 
     /* Newly added item */
+    struct parsed_item * pitem;
     struct item * item;
 
-    /* Item and location length */
-    int item_len, loc_len = 0;
+    /* Location length */
+    int loc_len = 0;
 
-    /* Items and their lengths */
+    /* List of parsed items */
     GList * items = NULL, * curr_item;
-    GList * lengths = NULL, * curr_length;
+
+    /* Whether all items are matched by a map item */
+    int is_matched;
 
     struct seg_data * seg_data;
 
@@ -3488,71 +3518,91 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                 break;
             }
 
+            pitem = g_new0(struct parsed_item, 1);
+            pitem->id_hi = id_hi;
+            pitem->id_lo = id_lo;
+            pitem->type = type;
+            pitem->flags = flags;
+            pitem->coords = g_new0(struct coord, ccnt);
+            for (i = 0; i < ccnt; i++)
+                pitem->coords[i] = ca[i];
+            pitem->coord_count = ccnt;
+            pitem->attrs = attr_list_dup(attrs);
+            for (i = 0; attrs[i]; i++) {
+                g_free(attrs[i]);
+                attrs[i] = NULL;
+            }
+            items = g_list_append(items, pitem);
+
+            if (!data_curr)
+                /* no more data to process, finish up */
+                break;
+
+            ccnt = -1;
+        }
+    } /* while 1 */
+
+    /*
+     * Walk through mapset and look for a routable item with a matching ID and geometry.
+     * If no match is found, the map data has changed since we generated the cached segments and we
+     * need to recreate the data. In this case, stop processing segments immediately and drop any
+     * segments restored so far.
+     */
+    if (items) {
+        dbg(lvl_debug, "*****checkpoint RESTORE-6, comparing items to map data");
+        msh = mapset_open(ms);
+        map_item = NULL;
+
+        while (!map_item && (m = mapset_next(msh, 2))) {
+            /* Skip traffic map (identified by the `attr_traffic` attribute) */
+            if (map_get_attr(m, attr_traffic, &attr, NULL))
+                continue;
+
+            msel = traffic_location_get_rect(this_->location, map_projection(m));
+            if (!msel)
+                continue;
+            mr = map_rect_new(m, msel);
+            if (!mr) {
+                map_selection_destroy(msel);
+                msel = NULL;
+                continue;
+            }
             /*
-             * Walk through mapset and look for a routable item with a matching ID and geometry.
-             * If no match is found, the map data has changed since we generated the cached segments and we
-             * need to recreate the data. In this case, stop processing segments immediately and drop any
-             * segments restored so far.
+             * Iterate through items in the map.
              */
-            dbg(lvl_debug, "*****checkpoint RESTORE-5, comparing item 0x%x, 0x%x to map data", id_hi, id_lo);
-            msh = mapset_open(ms);
-            map_item = NULL;
-
-            while (!map_item && (m = mapset_next(msh, 2))) {
-                /* Skip traffic map (identified by the `attr_traffic` attribute) */
-                if (map_get_attr(m, attr_traffic, &attr, NULL))
+            while ((map_item = map_rect_get_item(mr))) {
+                /* If item is not routable, continue */
+                if ((map_item->type < route_item_first) || (map_item->type > route_item_last))
                     continue;
-
-                msel = traffic_location_get_rect(this_->location, map_projection(m));
-                if (!msel)
-                    continue;
-                mr = map_rect_new(m, msel);
-                if (!mr) {
-                    map_selection_destroy(msel);
-                    msel = NULL;
-                    continue;
+                /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+                if ((this_->location->road_type == type_highway_land) || (this_->location->road_type == type_highway_city)) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp))
+                        continue;
+                } else if (this_->location->road_type == type_street_n_lanes) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                            (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city))
+                        continue;
+                } else if ((this_->location->road_type == type_street_4_land) || (this_->location->road_type == type_street_4_city)) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                            (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city) &&
+                            (map_item->type != type_street_3_land) && (map_item->type != type_street_3_city))
+                        continue;
                 }
-                /*
-                 * Iterate through items in the map.
-                 * map_rect_get_item_byid() does not work here as some map drivers do not support it, while
-                 * other map drivers have unique IDs and will return the same item over and over again, and
-                 * yet others may essentially just call map_rect_get_item() until the ID matches or the
-                 * result is NULL.
-                 */
-                while (!map_item && (map_item = map_rect_get_item(mr))) {
+                /* Look for a matching item in the cache */
+                for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+                    pitem = (struct parsed_item *) curr_item->data;
+
+                    /* Skip already-matched items */
+                    if (pitem->is_matched)
+                        continue;
                     /* If IDs do not match, continue */
-                    if ((map_item->id_hi != id_hi) || (map_item->id_lo != id_lo)) {
-                        map_item = NULL;
+                    if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
                         continue;
-                    }
-                    /* If item is not routable, continue */
-                    if ((map_item->type < route_item_first) || (map_item->type > route_item_last)) {
-                        map_item = NULL;
-                        continue;
-                    }
-                    /* If road class is motorway, trunk or primary, ignore roads more than one level below */
-                    if ((this_->location->road_type == type_highway_land) || (this_->location->road_type == type_highway_city)) {
-                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
-                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp)) {
-                            map_item = NULL;
-                            continue;
-                        }
-                    } else if (this_->location->road_type == type_street_n_lanes) {
-                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
-                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
-                                (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city)) {
-                            map_item = NULL;
-                            continue;
-                        }
-                    } else if ((this_->location->road_type == type_street_4_land) || (this_->location->road_type == type_street_4_city)) {
-                        if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
-                                (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
-                                (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city) &&
-                                (map_item->type != type_street_3_land) && (map_item->type != type_street_3_city)) {
-                            map_item = NULL;
-                            continue;
-                        }
-                    }
+                    dbg(lvl_debug, "*****checkpoint RESTORE-6.0, comparing item 0x%x, 0x%x to map data",
+                            pitem->id_hi, pitem->id_lo);
                     /* Get flags (access and other) for the item */
                     if (!(default_flags = item_get_default_flags(map_item->type)))
                         default_flags = &item_default_flags_value;
@@ -3571,104 +3621,101 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     /* Compare coordinates */
                     item_coord_rewind(map_item);
                     if (!segmented) {
-                        for (i = 0; i < ccnt; i++) {
+                        for (i = 0; i < pitem->coord_count; i++) {
                             if (!item_coord_get(map_item, &map_c, 1)) {
                                 /* map item has fewer coordinates than cached item */
-                                map_item = 0;
+                                dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has fewer coordinates than cached item",
+                                        pitem->id_hi, pitem->id_lo);
+                                map_item = NULL;
                                 break;
                             }
-                            if ((map_c.x != ca[i].x) || (map_c.y != ca[i].y)) {
+                            if ((map_c.x != pitem->coords[i].x) || (map_c.y != pitem->coords[i].y)) {
                                 /* coordinate mismatch between map item and cached item */
-                                map_item = 0;
+                                dbg(lvl_debug, "*****checkpoint RESTORE-6.1, coordinate #%d for item 0x%x, 0x%x does not match",
+                                        i, pitem->id_hi, pitem->id_lo);
+                                map_item = NULL;
                                 break;
                             }
                         }
-                        if (item_coord_get(map_item, &map_c, 1)) {
+                        if (map_item && item_coord_get(map_item, &map_c, 1)) {
                             /* map item has more coordinates than cached item */
-                            map_item = 0;
-                            break;
+                            dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has more coordinates than cached item",
+                                    pitem->id_hi, pitem->id_lo);
+                            map_item = NULL;
+                            continue;
                         }
                     } else {
                         /* TODO implement comparison for segmented items */
-                        dbg(lvl_debug, "*****checkpoint RESTORE-5.1, restoring segmented items is not supported yet");
+                        dbg(lvl_debug, "*****checkpoint RESTORE-6.1, restoring segmented items is not supported yet");
                         map_item = NULL;
                     }
+                    if (map_item) {
+                        pitem->is_matched = 1;
+                        for (i = 1; i < ccnt; i++)
+                            pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
+                        loc_len += pitem->length;
+                    }
                 }
-
-                map_selection_destroy(msel);
-                msel = NULL;
-                map_rect_destroy(mr);
-                mr = NULL;
-            }
-            mapset_close(msh);
-            msh = NULL;
-
-            if (!map_item) {
-                dbg(lvl_debug, "*****checkpoint RESTORE-6, item 0x%x, 0x%x does not match map data, discarding", id_hi, id_lo);
-                traffic_message_remove_item_data(this_, NULL, route);
-                for (curr_item = items; curr_item; curr_item = g_list_next(curr_item))
-                    g_free(curr_item->data);
-                g_list_free(items);
-                g_list_free(lengths);
-                for (i = 0; attrs[i]; i++) {
-                    g_free(attrs[i]);
-                    attrs[i] = NULL;
-                }
-                if (this_->location->priv->txt_data) {
-                    g_free(this_->location->priv->txt_data);
-                    this_->location->priv->txt_data = NULL;
-                }
-                dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s need to be regenerated", this_->id);
-                return 0;
             }
 
-            dbg(lvl_debug, "*****checkpoint RESTORE-6, item 0x%x, 0x%x matches map data, adding", id_hi, id_lo);
-            item = tm_add_item(map, type, id_hi, id_lo, flags, attrs, ca, ccnt,
-                               this_->id);
-            items = g_list_append(items, item);
-            item_len = 0;
-            for (i = 1; i < ccnt; i++)
-                item_len += transform_distance(map_projection(item->map), &(ca[i-1]), &(ca[i]));
-            lengths = g_list_append(lengths, (void *) item_len);
-            loc_len += item_len;
-            for (i = 0; attrs[i]; i++) {
-                g_free(attrs[i]);
-                attrs[i] = NULL;
-            }
-
-            if (!data_curr)
-                /* no more data to process, finish up */
-                break;
-
-            ccnt = -1;
+            map_selection_destroy(msel);
+            msel = NULL;
+            map_rect_destroy(mr);
+            mr = NULL;
         }
-    } /* while 1 */
-    seg_data = traffic_message_parse_events(this_);
-    this_->priv->items = g_new0(struct item *, g_list_length(items) + 1);
-    i = 0;
-    curr_item = items;
-    curr_length = lengths;
-    while (curr_item && curr_length) {
-        item = (struct item *) curr_item->data;
-        tm_item_add_message_data(item, this_->id,
-                                 traffic_get_item_speed(item, seg_data, maxspeed),
-                                 traffic_get_item_delay(seg_data->delay, (int) curr_length->data, loc_len),
-                                 NULL, route);
-        this_->priv->items[i] = item;
-        /* move on to next item */
-        curr_item = g_list_next(curr_item);
-        curr_length = g_list_next(curr_length);
-        i++;
+        mapset_close(msh);
+        msh = NULL;
+    } else {
+        dbg(lvl_debug, "*****checkpoint RESTORE-6, no items to compare");
     }
-    g_list_free(items);
-    g_list_free(lengths);
-    g_free(seg_data);
+
+    /* No items = no match; else examine each item */
+    is_matched = !!items;
+    for (curr_item = items; is_matched && curr_item; curr_item = g_list_next(curr_item)) {
+        pitem = (struct parsed_item *) curr_item->data;
+        if (!pitem->is_matched) {
+            dbg(lvl_debug, "*****checkpoint RESTORE-6.2, item 0x%x, 0x%x is unmatched",
+                    pitem->id_hi, pitem->id_lo);
+            is_matched = 0;
+        }
+    }
+
+    if (is_matched) {
+        dbg(lvl_debug, "*****checkpoint RESTORE-7, restoring items for message %s from cache", this_->id);
+        seg_data = traffic_message_parse_events(this_);
+        this_->priv->items = g_new0(struct item *, g_list_length(items) + 1);
+        i = 0;
+        for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+            pitem = (struct parsed_item *) curr_item->data;
+            item = tm_add_item(map, pitem->type, pitem->id_hi, pitem->id_lo, pitem->flags, pitem->attrs,
+                    pitem->coords, pitem->coord_count, this_->id);
+            parsed_item_destroy(pitem);
+            tm_item_add_message_data(item, this_->id,
+                    traffic_get_item_speed(item, seg_data, maxspeed),
+                    traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
+                    NULL, route);
+            this_->priv->items[i] = item;
+            i++;
+        }
+        g_list_free(items);
+        items = NULL;
+        g_free(seg_data);
+    } else {
+        dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s need to be regenerated", this_->id);
+    }
+
+    /* clean up */
+    for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+        pitem = (struct parsed_item *) curr_item->data;
+        parsed_item_destroy(pitem);
+    }
     if (this_->location->priv->txt_data) {
         g_free(this_->location->priv->txt_data);
         this_->location->priv->txt_data = NULL;
     }
-    dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s restored from cache", this_->id);
-    return 1;
+
+    dbg(lvl_debug, "*****checkpoint RESTORE-8, done");
+    return is_matched;
 }
 
 /**
