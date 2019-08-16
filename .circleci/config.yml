@@ -263,10 +263,9 @@ workflows:
       - build_linux:
           requires:
             - sanity_check
-      - build_android
-#      - build_android:
-#          requires:
-#            - sanity_check
+      - build_android:
+          requires:
+            - sanity_check
       - build_sailfish:
           requires:
             - sanity_check
