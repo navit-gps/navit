@@ -345,10 +345,10 @@ void item_attr_rewind(struct item *it) {
  * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
  * with some map implementations.
  *
- * @param it The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the
+ * @param[in] it The map item whose attribute to retrieve. This must be the active item, i.e. the last one retrieved from the
  * {@code map_rect}. There can only be one active item per {@code map_rect}.
- * @param attr_type The attribute type to retrieve, or `attr_any` to retrieve the next attribute
- * @param attr Receives the attribute retrieved
+ * @param[in] attr_type The attribute type to retrieve, or `attr_any` to retrieve the next attribute
+ * @param[out] attr Receives the attribute retrieved
  *
  * @return True on success, false on failure
  */

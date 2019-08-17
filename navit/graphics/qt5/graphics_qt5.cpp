@@ -172,7 +172,10 @@ static const char* fontfamilies[] = {
  * @param	gr	own private context
  * @param	meth	fill this structure with correct functions to be called with handle as interface to font
  * @param	font	font family e.g. "Arial"
- * @param	size	Font size in ???
+ * @param	size	Font size in 16.6 fractional points @ 300dpi. This is bullsh***. The encoding is freetypes
+ *          16.6 fixed point format usually giving points. One point is usually 72th part of an inch. But
+ *          navit does not honor dpi correct. It's traditionally used freetype backend is fixed to 300 dpi.
+ *          So this value is (300/72) pixels
  * @param	flags	Font flags (currently 1 if bold and 0 if not)
  *
  * @return	font handle
@@ -205,8 +208,9 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
         dbg(lvl_debug, "No matching font. Resort to: %s", font_priv->font->family().toUtf8().data());
     }
 
-    /* No clue why factor 20. Found this by comparing to Freetype rendering. */
-    font_priv->font->setPointSize(size / 20);
+    /* Convert silly font size to pixels. by 64 is to convert fixpoint to int. */
+    dbg(lvl_debug, "(font %s, %d=%f, %d)", font, size,((float)size)/64.0, ((size * 300) / 72) / 64);
+    font_priv->font->setPixelSize(((size * 300) / 72) / 64);
     //font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
     /* Check for bold font */
     if (flags) {
@@ -809,6 +813,20 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
 #endif
 }
 
+/**
+ * @brief Return number of dots per inch
+ * @param gr self handle
+ * @return dpi value
+ */
+static navit_float get_dpi(struct graphics_priv * gr) {
+    qreal dpi = 96;
+    QScreen* primary = navit_app->primaryScreen();
+    if (primary != NULL) {
+        dpi = primary->physicalDotsPerInch();
+    }
+    return (navit_float)dpi;
+}
+
 static struct graphics_methods graphics_methods = {
     graphics_destroy,
     draw_mode,
@@ -830,6 +848,10 @@ static struct graphics_methods graphics_methods = {
     get_text_bbox,
     overlay_disable,
     overlay_resize,
+    NULL, //set_attr
+    NULL, //show_native_keyboard
+    NULL, //hide_native_keyboard
+    get_dpi
 };
 
 /* create new graphics context on given context */

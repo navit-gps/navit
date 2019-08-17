@@ -44,7 +44,7 @@ extern "C" {
 #endif
 
 #include "event_qt5.h"
-#include "event_qt5.moc"
+//#include "event_qt5.moc"
 #include "graphics_qt5.h"
 #include <QSocketNotifier>
 

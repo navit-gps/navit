@@ -68,7 +68,7 @@ jobs:
   build_android:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-28-ndk
+      - image: circleci/android:api-29
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -78,13 +78,18 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
           name: Install Android SDK components
           command: sdkmanager "cmake;3.6.4111459"
+      - run:
+          name: Install ndk
+          command: |
+            echo y | sdkmanager --licenses
+            echo y | sdkmanager ndk-bundle
       - run:
           name: Build for Android
           command: bash scripts/build_android.sh
@@ -227,6 +232,29 @@ jobs:
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  check_spelling:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get -y install curl
+      - run:
+          name: Install misspell
+          command: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - run:
+          name: Check docs folder for misspells
+          command: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                exit -1
+              fi
+
+
 workflows:
   version: 2
   build_all:
@@ -275,3 +303,7 @@ workflows:
           filters:
             branches:
               only: /^trunk$/
+      - check_spelling:
+          filters:
+            branches:
+              only: /^readthedocs$/
