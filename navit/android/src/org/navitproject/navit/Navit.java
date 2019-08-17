@@ -444,7 +444,7 @@ public class Navit extends Activity {
         ActivityResults = new NavitActivityResult[16];
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"NavitDoNotDimScreen");
+        wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"navit:DoNotDimScreen");
 
         if (!extractRes(langc, NAVIT_DATA_DIR + "/locale/" + langc + "/LC_MESSAGES/navit.mo")) {
             Log.e(TAG, "Failed to extract language resource " + langc);
