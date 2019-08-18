@@ -327,7 +327,7 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
         this_->animate_callback=callback_new_2(callback_cast(vehicle_draw_do), this_, 0);
         this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
     }
-    /* we changed the curser, so the overlay (if existing) may need a resize */
+    /* we changed the cursor, so the overlay (if existing) may need a resize */
     this_->need_resize=1;
     this_->cursor=cursor;
 
@@ -368,7 +368,7 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
         /* recalculate real size of the required overlay */
         navit_float radius;
 
-        /* get the radius of the out cyrcle. Pythagoras greets */
+        /* get the radius of the out circle. Pythagoras greets */
         radius = navit_sqrt((this_->cursor->w * this_->cursor->w) + (this_->cursor->h * this_->cursor->h));
         /* since we rotate the rectangle around the center to indicate direction, the overlay needs to be at least the
          * radius of the out circle big. The +1 compensates the rounding error.
