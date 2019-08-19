@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="100%"
+   height="100%"
+   viewBox="0 0 14 14"
+   id="svg2">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <rect
+     width="14"
+     height="14"
+     x="0"
+     y="0"
+     id="canvas"
+     style="fill:none;stroke:none;visibility:hidden" />
+  <path
+     d="M 2,1 C 0.8344723,1 0,1.7955215 0,3 L 0,14 7,14 7,6.125 C 7,6.125 7.875,6 7.875,7 l 0,4 c 0,2 1.864698,2.125 2.125,2.125 0.275652,0 2.125,-0.124975 2.125,-2.125 l 0,-4 c 0,0 1.387558,0.017377 1.375,-2.96875 l -0.75,0 0,-2 C 12.75,1.4640917 12,1.4675079 12,2 l 0,2 -1,0 0,-2 C 11,1.4538157 10.25,1.4548128 10.25,2 l 0,2 -0.75,0 c 0.012522,2.9863904 1.375,3 1.375,3 l 0,4 c 0,0.874159 -0.767136,0.875 -0.875,0.875 -0.107864,0 -0.875,-0.04279 -0.875,-0.875 l 0,-4 C 9.125,5.7190916 8,4.875 7,4.875 L 7,3 C 7,1.7775442 6.1835046,1 5,1 z M 3,4 5,4 3.75,6 5.25,6 2.5,10 2,10 3,7 1.75,7 z"
+     id="charging-station"
+     style="fill:#000000;fill-opacity:1;stroke:none" />
+</svg>

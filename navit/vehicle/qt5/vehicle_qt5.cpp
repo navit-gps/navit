@@ -196,7 +196,11 @@ static int vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
     case attr_position_time_iso8601:
         if (priv->fix_time) {
             struct tm tm;
+#ifdef WIN32
+            if (gmtime_s(&tm, &priv->fix_time)) {
+#else
             if (gmtime_r(&priv->fix_time, &tm)) {
+#endif
                 strftime(priv->fixiso8601, sizeof(priv->fixiso8601),
                          "%Y-%m-%dT%TZ", &tm);
                 attr->u.str = priv->fixiso8601;

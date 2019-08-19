@@ -20,6 +20,7 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlEngine>
 
 #include <glib.h>
 
@@ -56,6 +57,12 @@ extern "C" {
 
 #include "layout.h"
 }
+
+#include "navitinstance.h"
+#include "navitpoimodel.h"
+#include "navitrecentsmodel.h"
+#include "navitfavouritesmodel.h"
+
 struct gui_priv {
     /* navit internal handle */
     struct navit* nav;
@@ -87,13 +94,10 @@ struct gui_priv {
     QQmlApplicationEngine* engine;
     QObject* loader; /* Loader QML component to load our QML parts to the QML engine */
 
-    class Backend* backend;
-
     /* configuration */
     int menu_on_map_click;
 };
 
-#include "backend.h"
 
 static void gui_qt5_qml_button(void* data, int pressed, int button, struct point* p) {
     struct gui_priv* gui_priv = (struct gui_priv*)data;
@@ -109,7 +113,7 @@ static void gui_qt5_qml_button(void* data, int pressed, int button, struct point
     if (button == 1 && gui_priv->menu_on_map_click) {
         dbg(lvl_debug, "navit wants us to enter menu");
         /*TODO: want to emit a signal somewhere? */
-        gui_priv->backend->showMenu(p);
+        //        gui_priv->backend->showMenu(p);
     }
 }
 
@@ -213,19 +217,24 @@ static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* 
         return 1;
     }
 
-    gui_priv->backend = new Backend();
-    gui_priv->backend->set_navit(gui_priv->nav);
-    gui_priv->backend->set_engine(gui_priv->engine);
+    //    gui_priv->backend = new Backend();
+    //    gui_priv->backend->set_navit(gui_priv->nav);
+    //    gui_priv->backend->set_engine(gui_priv->engine);
 
-    gui_priv->engine->rootContext()->setContextProperty("backend", gui_priv->backend);
+    //    gui_priv->engine->rootContext()->setContextProperty("backend", gui_priv->backend);
+
     // gui_priv->engine->rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
+
+    qmlRegisterType<NavitPOIModel>("Navit.POI", 1, 0, "NavitPOIModel");
+    qmlRegisterType<NavitRecentsModel>("Navit.Recents", 1, 0, "NavitRecentsModel");
+    qmlRegisterType<NavitFavouritesModel>("Navit.Favourites", 1, 0, "NavitFavouritesModel");
 
     /* find the loader component */
     gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject*>("navit_loader");
     if (gui_priv->loader != NULL) {
         dbg(lvl_debug, "navit_loader found");
         /* load our root window into the loader component */
-        gui_priv->loader->setProperty("source", "qrc:///skins/modern/main.qml");
+        gui_priv->loader->setProperty("source", "qrc:/themes/Levy/MainLayout.qml");
     }
 
     transform_get_size(trans, &gui_priv->w, &gui_priv->h);

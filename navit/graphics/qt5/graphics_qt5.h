@@ -38,6 +38,7 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+#include "navitinstance.h"
 #endif
 #if USE_QWIDGET
 #include "QNavitWidget.h"
@@ -78,6 +79,7 @@ struct graphics_priv {
     QQmlApplicationEngine* engine;
     GraphicsPriv* GPriv;
     QQuickWindow* window;
+    NavitInstance *navitInstance;
 #endif
 #if USE_QWIDGET
     QNavitWidget* widget;

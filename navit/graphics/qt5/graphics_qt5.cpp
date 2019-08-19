@@ -51,6 +51,7 @@ extern "C" {
 #include <QSvgRenderer>
 #if USE_QML
 #include "QNavitQuick.h"
+#include "QNavitQuick_2.h"
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
@@ -104,8 +105,8 @@ static void graphics_destroy(struct graphics_priv* gr) {
             delete (gr->widget);
 #endif
 #if USE_QML
-        if (gr->GPriv != NULL)
-            delete (gr->GPriv);
+        if (gr->navitInstance != NULL)
+            delete (gr->navitInstance);
 #endif
     }
     /* unregister from parent, if any */
@@ -631,9 +632,9 @@ static void draw_drag(struct graphics_priv* gr, struct point* p) {
             gr->widget->repaint(damage_x, damage_y, damage_w, damage_h);
 #endif
 #if USE_QML
-// No need to emit update, as QNavitQuic always repaints everything.
-//    if (gr->GPriv != NULL)
-//        gr->GPriv->emit_update();
+        // No need to emit update, as QNavitQuic always repaints everything.
+        //    if (gr->navitInstance != NULL)
+        //        gr->navitInstance->emit_update();
 #endif
     }
 }
@@ -675,8 +676,8 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
             gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-        if (gr->GPriv != NULL)
-            gr->GPriv->emit_update();
+        if (gr->navitInstance != NULL)
+            gr->navitInstance->emit_update();
 
 #endif
 
@@ -821,8 +822,8 @@ static void overlay_disable(struct graphics_priv* gr, int disable) {
         gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-    if (gr->GPriv != NULL)
-        gr->GPriv->emit_update();
+    if (gr->navitInstance != NULL)
+        gr->navitInstance->emit_update();
 
 #endif
 }
@@ -848,8 +849,8 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
         gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-    if (gr->GPriv != NULL)
-        gr->GPriv->emit_update();
+    if (gr->navitInstance != NULL)
+        gr->navitInstance->emit_update();
 
 #endif
 }
@@ -914,7 +915,7 @@ static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphi
 #endif
 #if USE_QML
     graphics_priv->window = gr->window;
-    graphics_priv->GPriv = gr->GPriv;
+    graphics_priv->navitInstance = gr->navitInstance;
 #endif
 #if USE_QWIDGET
     graphics_priv->widget = gr->widget;
@@ -939,6 +940,15 @@ static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphi
     //        dbg(lvl_debug,"New overlay: %p", graphics_priv);
 
     return graphics_priv;
+}
+
+static NavitInstance *navitInst;
+
+static QObject *navit_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return navitInst;
 }
 
 /* create application and initial graphics context */
@@ -1042,14 +1052,20 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->GPriv = NULL;
     if (use_qml) {
         /* register our QtQuick widget to allow it's usage within QML */
-        qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
+        qmlRegisterType<QNavitQuick>("Navit.Graphics", 1, 0, "NavitMap");
+        qmlRegisterType<QNavitQuick_2>("Navit.Graphics", 2, 0, "NavitMap");
+
+        graphics_priv->navitInstance = new NavitInstance(nav, graphics_priv);
+        navitInst = graphics_priv->navitInstance;
+
+        qmlRegisterSingletonType<NavitInstance>("Navit", 1, 0, "Navit", navit_singletontype_provider);
+
         /* get our qml application from embedded resources. May be replaced by the
              * QtQuick gui component if enabled */
         graphics_priv->engine = new QQmlApplicationEngine();
         if (graphics_priv->engine != NULL) {
-            graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
             QQmlContext* context = graphics_priv->engine->rootContext();
-            context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
+
             graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
             /* Get the engine's root window (for resizing) */
             QObject* toplevel = graphics_priv->engine->rootObjects().value(0);

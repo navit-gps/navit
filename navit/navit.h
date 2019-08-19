@@ -104,6 +104,8 @@ void navit_zoom_to_route(struct navit *this_, int orientation);
 void navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout);
 void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation);
 void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout);
+void navit_drag_map(struct navit *this_, struct point *origin, struct point *destination);
+void navit_set_center_cursor_draw(struct navit *this_);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name);

@@ -50,12 +50,6 @@ QNavitQuick::QNavitQuick(QQuickItem* parent)
     graphics_priv = NULL;
 }
 
-void QNavitQuick::setGraphicContext(GraphicsPriv* gp) {
-    dbg(lvl_debug, "enter");
-    graphics_priv = gp->gp;
-    QObject::connect(gp, SIGNAL(update()), this, SLOT(update()));
-}
-
 static void paintOverlays(QPainter* painter, struct graphics_priv* gp, QPaintEvent* event) {
     GHashTableIter iter;
     struct graphics_priv *key, *value;
@@ -259,3 +253,16 @@ void QNavitQuick::wheelEvent(QWheelEvent* event) {
 
     event->accept();
 }
+
+NavitInstance* QNavitQuick::navitInstance(){
+    return m_navitInstance;
+}
+
+void QNavitQuick::setNavitInstance(NavitInstance *navit){
+    dbg(lvl_debug, "enter");
+    m_navitInstance=navit;
+    graphics_priv = navit->m_graphics_priv;
+
+    QObject::connect(navit, SIGNAL(update()), this, SLOT(update()));
+}
+
