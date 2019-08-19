@@ -22,8 +22,13 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin
 export JVM_OPTS="-Xmx3200m"
 export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
+# processing xml is messed up a bit after the original introduction of gradle
+# so a useless install of ant here even if using gradle/ninja
+
+sudo apt-get install -y ant
+
 echo Run CMake
-cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DUSE_PLUGINS=n -DBUILD_MAPTOOL=n -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DSAMPLE_MAP=n || exit 1
+cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y || exit 1
 
 echo Process icons
 pushd navit/icons
@@ -44,6 +49,8 @@ pushd ../navit/android/res/raw
 rename 'y/A-Z/a-z/' ./*.mo
 popd
 popd
+
+
 
 echo Process xml config files
 make navit_config_xml || exit 96
