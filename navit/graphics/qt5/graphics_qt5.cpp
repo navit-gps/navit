@@ -50,6 +50,7 @@ extern "C" {
 #include <QSvgRenderer>
 #if USE_QML
 #include "QNavitQuick.h"
+#include "QNavitQuick_2.h"
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
@@ -103,8 +104,8 @@ static void graphics_destroy(struct graphics_priv* gr) {
             delete (gr->widget);
 #endif
 #if USE_QML
-        if (gr->GPriv != NULL)
-            delete (gr->GPriv);
+        if (gr->navitInstance != NULL)
+            delete (gr->navitInstance);
 #endif
     }
     /* unregister from parent, if any */
@@ -172,7 +173,10 @@ static const char* fontfamilies[] = {
  * @param	gr	own private context
  * @param	meth	fill this structure with correct functions to be called with handle as interface to font
  * @param	font	font family e.g. "Arial"
- * @param	size	Font size in ???
+ * @param	size	Font size in 16.6 fractional points @ 300dpi. This is bullsh***. The encoding is freetypes
+ *          16.6 fixed point format usually giving points. One point is usually 72th part of an inch. But
+ *          navit does not honor dpi correct. It's traditionally used freetype backend is fixed to 300 dpi.
+ *          So this value is (300/72) pixels
  * @param	flags	Font flags (currently 1 if bold and 0 if not)
  *
  * @return	font handle
@@ -205,8 +209,9 @@ static struct graphics_font_priv* font_new(struct graphics_priv* gr, struct grap
         dbg(lvl_debug, "No matching font. Resort to: %s", font_priv->font->family().toUtf8().data());
     }
 
-    /* No clue why factor 20. Found this by comparing to Freetype rendering. */
-    font_priv->font->setPointSize(size / 20);
+    /* Convert silly font size to pixels. by 64 is to convert fixpoint to int. */
+    dbg(lvl_debug, "(font %s, %d=%f, %d)", font, size,((float)size)/64.0, ((size * 300) / 72) / 64);
+    font_priv->font->setPixelSize(((size * 300) / 72) / 64);
     //font_priv->font->setStyleStrategy(QFont::NoSubpixelAntialias);
     /* Check for bold font */
     if (flags) {
@@ -588,9 +593,9 @@ static void draw_drag(struct graphics_priv* gr, struct point* p) {
             gr->widget->repaint(damage_x, damage_y, damage_w, damage_h);
 #endif
 #if USE_QML
-// No need to emit update, as QNavitQuic always repaints everything.
-//    if (gr->GPriv != NULL)
-//        gr->GPriv->emit_update();
+        // No need to emit update, as QNavitQuic always repaints everything.
+        //    if (gr->navitInstance != NULL)
+        //        gr->navitInstance->emit_update();
 #endif
     }
 }
@@ -630,8 +635,8 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
             gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-        if (gr->GPriv != NULL)
-            gr->GPriv->emit_update();
+        if (gr->navitInstance != NULL)
+            gr->navitInstance->emit_update();
 
 #endif
 
@@ -776,8 +781,8 @@ static void overlay_disable(struct graphics_priv* gr, int disable) {
         gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-    if (gr->GPriv != NULL)
-        gr->GPriv->emit_update();
+    if (gr->navitInstance != NULL)
+        gr->navitInstance->emit_update();
 
 #endif
 }
@@ -803,10 +808,24 @@ static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int
         gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
 #endif
 #if USE_QML
-    if (gr->GPriv != NULL)
-        gr->GPriv->emit_update();
+    if (gr->navitInstance != NULL)
+        gr->navitInstance->emit_update();
 
 #endif
+}
+
+/**
+ * @brief Return number of dots per inch
+ * @param gr self handle
+ * @return dpi value
+ */
+static navit_float get_dpi(struct graphics_priv * gr) {
+    qreal dpi = 96;
+    QScreen* primary = navit_app->primaryScreen();
+    if (primary != NULL) {
+        dpi = primary->physicalDotsPerInch();
+    }
+    return (navit_float)dpi;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -830,6 +849,10 @@ static struct graphics_methods graphics_methods = {
     get_text_bbox,
     overlay_disable,
     overlay_resize,
+    NULL, //set_attr
+    NULL, //show_native_keyboard
+    NULL, //hide_native_keyboard
+    get_dpi
 };
 
 /* create new graphics context on given context */
@@ -850,7 +873,7 @@ static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphi
 #endif
 #if USE_QML
     graphics_priv->window = gr->window;
-    graphics_priv->GPriv = gr->GPriv;
+    graphics_priv->navitInstance = gr->navitInstance;
 #endif
 #if USE_QWIDGET
     graphics_priv->widget = gr->widget;
@@ -875,6 +898,15 @@ static struct graphics_priv* overlay_new(struct graphics_priv* gr, struct graphi
     //        dbg(lvl_debug,"New overlay: %p", graphics_priv);
 
     return graphics_priv;
+}
+
+static NavitInstance *navitInst;
+
+static QObject *navit_singletontype_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return navitInst;
 }
 
 /* create application and initial graphics context */
@@ -978,14 +1010,20 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->GPriv = NULL;
     if (use_qml) {
         /* register our QtQuick widget to allow it's usage within QML */
-        qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
+        qmlRegisterType<QNavitQuick>("Navit.Graphics", 1, 0, "NavitMap");
+        qmlRegisterType<QNavitQuick_2>("Navit.Graphics", 2, 0, "NavitMap");
+
+        graphics_priv->navitInstance = new NavitInstance(nav, graphics_priv);
+        navitInst = graphics_priv->navitInstance;
+
+        qmlRegisterSingletonType<NavitInstance>("Navit", 1, 0, "Navit", navit_singletontype_provider);
+
         /* get our qml application from embedded resources. May be replaced by the
              * QtQuick gui component if enabled */
         graphics_priv->engine = new QQmlApplicationEngine();
         if (graphics_priv->engine != NULL) {
-            graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
             QQmlContext* context = graphics_priv->engine->rootContext();
-            context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
+
             graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
             /* Get the engine's root window (for resizing) */
             QObject* toplevel = graphics_priv->engine->rootObjects().value(0);

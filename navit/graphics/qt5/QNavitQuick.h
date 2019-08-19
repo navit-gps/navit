@@ -24,15 +24,17 @@ class QNavitQuick;
 #include <QtQuick/QQuickPaintedItem>
 
 #include "graphics_qt5.h"
+#include "navitinstance.h"
 
 class QNavitQuick : public QQuickPaintedItem {
     Q_OBJECT
+    Q_PROPERTY(NavitInstance *navit READ   navitInstance    WRITE setNavitInstance)
 public:
     void paint(QPainter* painter);
     QNavitQuick(QQuickItem* parent = 0);
 
-
-    Q_INVOKABLE void setGraphicContext(GraphicsPriv* gp);
+    NavitInstance *navitInstance();
+    void setNavitInstance(NavitInstance *navit);
 
 protected:
     virtual void keyPressEvent(QKeyEvent* event);
@@ -46,6 +48,7 @@ protected:
 
 private:
     struct graphics_priv* graphics_priv;
+    NavitInstance * m_navitInstance;
 };
 
 #endif

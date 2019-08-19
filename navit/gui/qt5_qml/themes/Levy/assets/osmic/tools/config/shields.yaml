@@ -1,0 +1,35 @@
+input_basedir: "."
+
+input:
+  - name: "accommodation"
+  - name: "administration"
+  - name: "amenity"
+  - name: "barrier"
+  - name: "eat-drink"
+  - name: "emergency"
+  - name: "energy"
+  - name: "health"
+  - name: "money"
+  - name: "nature"
+  - name: "outdoor"
+  - name: "religious"
+  - name: "shop"
+  - name: "sports"
+  - name: "tourism"
+  - name: "transport"
+
+output_basedir: "export"
+# WARNING: deletes all files within output directory if it exists
+empty_output: true
+format: "svg"
+
+global_style:
+  padding: 1
+  fill: "#1a1a1a"
+
+  shield:
+    fill: "#efefef"
+    stroke_fill: "#1a1a1a"
+    stroke_width: 1
+    rounded: 3
+    padding: 2

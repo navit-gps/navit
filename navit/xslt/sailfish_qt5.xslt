@@ -13,7 +13,7 @@
    </xsl:template>
 
    <xsl:template match="/config/navit/graphics[1]">
-      <graphics type="qt5" qt5_platform="wayland"/>
+      <graphics type="qt5" qt5_platform="wayland" virtual_dpi="245"/>
       <xsl:text>&#x0A; 		</xsl:text>
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
