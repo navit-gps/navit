@@ -793,13 +793,13 @@ navigation_new(struct attr *parent, struct attr **attrs) {
         }
     }
 
-    if ((attr=attr_search(attrs, NULL, attr_tell_street_name))) {
+    if ((attr=attr_search(attrs, attr_tell_street_name))) {
         ret->tell_street_name = attr->u.num;
     }
-    if ((attr=attr_search(attrs, NULL, attr_delay))) {
+    if ((attr=attr_search(attrs, attr_delay))) {
         ret->delay = attr->u.num;
     }
-    if ((attr=attr_search(attrs, NULL, attr_flags))) {
+    if ((attr=attr_search(attrs, attr_flags))) {
         ret->flags = attr->u.num;
     }
     return ret;
@@ -4050,24 +4050,28 @@ static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_typ
                 this_->str=attr->u.str=g_strdup_printf("delta:%d", cmd->delta);
                 return 1;
             }
+        /* fall through */
         case 3:
             this_->debug_idx++;
             if (prev) {
                 this_->str=attr->u.str=g_strdup_printf("prev street_name:%s", prev->way.name);
                 return 1;
             }
+        /* fall through */
         case 4:
             this_->debug_idx++;
             if (prev) {
                 this_->str=attr->u.str=g_strdup_printf("prev street_name_systematic:%s", prev->way.name_systematic);
                 return 1;
             }
+        /* fall through */
         case 5:
             this_->debug_idx++;
             if (prev) {
                 this_->str=attr->u.str=g_strdup_printf("prev angle:(%d -) %d", prev->way.angle2, prev->angle_end);
                 return 1;
             }
+        /* fall through */
         case 6:
             this_->debug_idx++;
             this_->ways=itm->way.next;
@@ -4075,6 +4079,7 @@ static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_typ
                 this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->way.item.type));
                 return 1;
             }
+        /* fall through */
         case 7:
             if (this_->ways && prev) {
                 this_->str=attr->u.str=g_strdup_printf("other item angle:%d delta:%d flags:%d dir:%d type:%s id:(0x%x,0x%x)",
@@ -4084,6 +4089,7 @@ static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_typ
                 return 1;
             }
             this_->debug_idx++;
+        /* fall through */
         case 8:
             this_->debug_idx++;
             if (prev) {
@@ -4108,6 +4114,7 @@ static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_typ
                                                maneuver->delta);
                 return 1;
             }
+        /* fall through */
 
         default:
             this_->attr_next=attr_none;
@@ -4287,7 +4294,7 @@ static struct map_priv *navigation_map_new(struct map_methods *meth, struct attr
     struct map_priv *ret;
     struct attr *navigation_attr;
 
-    navigation_attr=attr_search(attrs, NULL, attr_navigation);
+    navigation_attr=attr_search(attrs, attr_navigation);
     if (! navigation_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

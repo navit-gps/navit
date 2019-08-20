@@ -801,7 +801,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
     switch(res) {
     case -1:
         dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard");
-    /* no break */
+    /* fall through */
     case 0:
         g_free(kbd);
         return NULL;

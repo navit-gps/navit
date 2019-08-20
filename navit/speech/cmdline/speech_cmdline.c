@@ -207,16 +207,16 @@ static struct speech_methods speechd_meth = {
 static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this;
     struct attr *attr;
-    attr=attr_search(attrs, NULL, attr_data);
+    attr=attr_search(attrs, attr_data);
     if (! attr)
         return NULL;
     this=g_new0(struct speech_priv,1);
     this->cmdline=g_strdup(attr->u.str);
-    if ((attr=attr_search(attrs, NULL, attr_sample_dir)))
+    if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
-    if ((attr=attr_search(attrs, NULL, attr_sample_suffix)))
+    if ((attr=attr_search(attrs, attr_sample_suffix)))
         this->sample_suffix=g_strdup(attr->u.str);
-    if ((attr=attr_search(attrs, NULL, attr_flags)))
+    if ((attr=attr_search(attrs, attr_flags)))
         this->flags=attr->u.num;
     if (this->sample_dir && this->sample_suffix) {
         void *handle=file_opendir(this->sample_dir);

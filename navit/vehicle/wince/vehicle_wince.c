@@ -913,7 +913,7 @@ static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods
     char *cp;
 
     dbg(lvl_debug, "enter");
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     ret = g_new0(struct vehicle_priv, 1);
     ret->fd = -1;
     ret->cbl = cbl;
@@ -933,18 +933,18 @@ static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods
     ret->fixtime[0] = '\0';
     ret->ev_fix_timeout = NULL;
 
-    time = attr_search(attrs, NULL, attr_time);
+    time = attr_search(attrs, attr_time);
     if (time)
         ret->time=time->u.num;
-    baudrate = attr_search(attrs, NULL, attr_baudrate);
+    baudrate = attr_search(attrs, attr_baudrate);
     if (baudrate) {
         ret->baudrate = baudrate->u.num;
     }
-    checksum_ignore = attr_search(attrs, NULL, attr_checksum_ignore);
+    checksum_ignore = attr_search(attrs, attr_checksum_ignore);
     if (checksum_ignore)
         ret->checksum_ignore=checksum_ignore->u.num;
     ret->attrs = attrs;
-    on_eof = attr_search(attrs, NULL, attr_on_eof);
+    on_eof = attr_search(attrs, attr_on_eof);
     if (on_eof && !g_strcasecmp(on_eof->u.str, "stop"))
         ret->on_eof=1;
     if (on_eof && !g_strcasecmp(on_eof->u.str, "exit"))
@@ -961,7 +961,7 @@ static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods
 
     ret->read_buffer = g_malloc(buffer_size);
 
-    handle_bluetooth = attr_search(attrs, NULL, attr_bluetooth);
+    handle_bluetooth = attr_search(attrs, attr_bluetooth);
     if ( handle_bluetooth && handle_bluetooth->u.num == 1 )
         initBth(ret);
 

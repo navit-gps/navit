@@ -74,11 +74,13 @@ static void sigsegv(int sig) {
 #include <unistd.h>
 static void sigsegv(int sig) {
     char buffer[256];
+    int retval;
     if (segv_level > 1)
         sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());
     else
         sprintf(buffer, "gdb -ex bt -ex detach -ex quit %s %d", gdb_program, getpid());
-    system(buffer);
+    retval = system(buffer);
+    fprintf(stderr, "calling gdb returned %d\n", retval);
     exit(1);
 }
 #endif
@@ -158,13 +160,13 @@ struct debug *
 debug_new(struct attr *parent, struct attr **attrs) {
     struct attr *name,*dbg_level_attr,*level_attr;
     dbg_level level;
-    name=attr_search(attrs, NULL, attr_name);
-    dbg_level_attr=attr_search(attrs, NULL, attr_dbg_level);
-    level_attr=attr_search(attrs, NULL, attr_level);
+    name=attr_search(attrs, attr_name);
+    dbg_level_attr=attr_search(attrs, attr_dbg_level);
+    level_attr=attr_search(attrs, attr_level);
     level = parse_dbg_level(dbg_level_attr,level_attr);
 #ifdef HAVE_SOCKET
     if (!name && level==lvl_unset) {
-        struct attr *socket_attr=attr_search(attrs, NULL, attr_socket);
+        struct attr *socket_attr=attr_search(attrs, attr_socket);
         char *p,*s;
         if (!socket_attr)
             return NULL;

@@ -75,7 +75,7 @@ static bool qt5_espeak_init_espeak(struct speech_priv* sr, struct attr** attrs) 
     struct attr* path;
 
     /* prepare espeak library path home */
-    path = attr_search(attrs, NULL, attr_path);
+    path = attr_search(attrs, attr_path);
     if (path) {
         sr->path_home = g_strdup(path->u.str);
     } else {
@@ -114,7 +114,7 @@ static bool qt5_espeak_init_language(struct speech_priv* pr, struct attr** attrs
     espeak_ERROR error;
     espeak_VOICE voice_spec;
 
-    language = attr_search(attrs, NULL, attr_language);
+    language = attr_search(attrs, attr_language);
     if (language) {
         lang_str = g_strdup(language->u.str);
     } else {

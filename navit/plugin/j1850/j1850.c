@@ -461,7 +461,7 @@ static struct osd_priv *osd_j1850_new(struct navit *nav, struct osd_methods *met
     this->osd_item.meth.draw = osd_draw_cast(osd_j1850_draw);
 
     osd_set_std_attr(attrs, &this->osd_item, 2);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_j1850_init), attr_graphics_ready, this));
     return (struct osd_priv *) this;

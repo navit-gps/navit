@@ -21,7 +21,7 @@
 #define NAVIT_COLOR_H
 
 struct color {
-	int r,g,b,a;
+    int r,g,b,a;
 };
 
 #define COLOR_BITDEPTH 16
@@ -34,6 +34,9 @@ struct color {
 #define COLOR_TRANSPARENT ((struct color) {COLOR_TRANSPARENT_})
 #define COLOR_FMT "0x%x,0x%x,0x%x,0x%x"
 #define COLOR_ARGS(c) (c).r,(c).g,(c).b,(c).a
+/*default alpha value to apply for all things flagged AF_UNDERGROUND
+ *use solid color to not change default behaviour*/
+#define UNDERGROUND_ALPHA_ 0xFFFF
 
 #define COLOR_IS_SAME(c1,c2) ((c1).r==(c2).r && (c1).g==(c2).g && (c1).b==(c2).b && (c1).a==(c2).a)
 #define COLOR_IS_WHITE(c) COLOR_IS_SAME(c, COLOR_WHITE)

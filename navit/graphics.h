@@ -43,7 +43,7 @@ struct mapset;
 
 /* This enum must be synchronized with the constants in NavitGraphics.java. */
 enum draw_mode_num {
-    draw_mode_begin, draw_mode_end
+    draw_mode_begin, draw_mode_end, draw_mode_begin_clear
 };
 
 struct graphics_priv;
@@ -160,6 +160,8 @@ struct graphics_methods {
     int (*show_native_keyboard)(struct graphics_keyboard *kbd);
     void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
     navit_float (*get_dpi)(struct graphics_priv * gr);
+    void (*draw_polygon_with_holes) (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes);
 };
 
 
@@ -178,6 +180,7 @@ struct graphics_gc_methods {
     void (*gc_set_dashes)(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n);
     void (*gc_set_foreground)(struct graphics_gc_priv *gc, struct color *c);
     void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
+    void (*gc_set_texture)(struct graphics_gc_priv *gc, struct graphics_image_priv *img);
 };
 
 /**
@@ -249,8 +252,10 @@ struct graphics_gc *graphics_gc_new(struct graphics *gra);
 void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
+void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
 void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n);
+gboolean graphics_gc_has_texture(struct graphics_gc *gc);
 struct graphics_image *graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h);
 struct graphics_image *graphics_image_new_scaled_rotated(struct graphics *gra, char *path, int w, int h, int rotate);
 struct graphics_image *graphics_image_new(struct graphics *gra, char *path);
@@ -272,6 +277,7 @@ int graphics_draw_drag(struct graphics *this_, struct point *p);
 void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
 void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, struct point *p);
 char *graphics_icon_path(const char *icon);
+char *graphics_texture_path(const char *texture);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t, char *label);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans,
                                struct layout *l, int flags);

@@ -34,6 +34,7 @@
          <xsl:attribute name="icon_s"><xsl:value-of select="number($ICON_MEDIUM)"/></xsl:attribute>
          <xsl:attribute name="icon_l"><xsl:value-of select="number($ICON_BIG)"/></xsl:attribute>
          <xsl:attribute name="spacing"><xsl:value-of select="round(2*number($OSD_SIZE))"/></xsl:attribute>
+	 <xsl:attribute name="keyboard">false</xsl:attribute>
          <xsl:apply-templates/>
       </xsl:copy>
    </xsl:template>

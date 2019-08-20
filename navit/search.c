@@ -119,7 +119,6 @@ int search_list_level(enum attr_type attr_type) {
     case attr_country_name:
         return 0;
     case attr_town_postal:
-        return 1;
     case attr_town_name:
     case attr_district_name:
     case attr_town_or_district_name:
@@ -136,13 +135,20 @@ int search_list_level(enum attr_type attr_type) {
     }
 }
 
-static char *search_fix_spaces(char *str) {
+/**
+ * @brief Replaces ',' and '/' by ' ', deduplicates spaces within the string
+ *        and strips spaces from both ends of the string
+ *
+ * @param pointer to the string to cleanup
+ * @return pointer to the cleaned up string
+ */
+char *search_fix_spaces(const char *str) {
     int i;
     int len=strlen(str);
     char c,*s,*d,*ret=g_strdup(str);
 
     for (i = 0 ; i < len ; i++) {
-        if (ret[i] == ',' || ret[i] == ',' || ret[i] == '/')
+        if (ret[i] == ',' || ret[i] == '/')
             ret[i]=' ';
     }
     s=ret;
@@ -161,6 +167,9 @@ static char *search_fix_spaces(char *str) {
             len--;
         }
     } while (c);
+    // Make sure the string is terminated at current position even if nothing has been added to it.
+    // This case happen when you use a string containing only chars that will be discarded.
+    *d='\0';
     return ret;
 }
 
