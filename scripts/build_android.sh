@@ -28,25 +28,29 @@ export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryEr
 sudo apt-get install -y ant
 
 echo Run CMake
+test -z "$PKG_CONFIG_LIBDIR" && export PKG_CONFIG_LIBDIR=""     # Force cmake below to run ignore build host libraries when using pkgconfig.
+# Note: If you want to compile against specific target libraries that are searched using pkgconfig, please run this script with variable PKG_CONFIG_LIBDIR set to the appropriate path
 cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y || exit 1
 
 echo Process icons
 pushd navit/icons
 make || exit 32
+rm -rf ../android/res/drawable-nodpi
 mkdir ../android/res/drawable-nodpi
 cp ./*.png ../android/res/drawable-nodpi
 pushd ../android/res/drawable-nodpi
-rename 'y/A-Z/a-z/' ./*.png
+rename -f 'y/A-Z/a-z/' ./*.png
 popd
 popd
 
 echo Process translations
 pushd po
 make || exit 64
+rm -rf ../navit/android/res/raw
 mkdir ../navit/android/res/raw
 cp ./*.mo ../navit/android/res/raw
 pushd ../navit/android/res/raw
-rename 'y/A-Z/a-z/' ./*.mo
+rename -f 'y/A-Z/a-z/' ./*.mo
 popd
 popd
 
@@ -55,6 +59,7 @@ popd
 echo Process xml config files
 make navit_config_xml || exit 96
 pushd navit
+rm -rf ./android/assets
 mkdir -p ./android/assets
 cp -R config ./android/assets/
 popd

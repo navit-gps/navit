@@ -35,8 +35,8 @@ enum attr_type {
 #define ATTR2(x,y) attr_##y=x,
 #define ATTR(x) attr_##x,
 
-    /* Special macro for unused attribute types. Creates a placeholder entry
-     * in the enum so the following values do not change. */
+/* Special macro for unused attribute types. Creates a placeholder entry
+ * in the enum so the following values do not change. */
 #define ATTR_UNUSED ATTR_UNUSED_L(__LINE__)
 #define ATTR_UNUSED_L(x) ATTR_UNUSED_WITH_LINE_NUMBER(x)
 #define ATTR_UNUSED_WITH_LINE_NUMBER(x) ATTR_UNUSED_##x,
@@ -155,62 +155,62 @@ struct range {
 };
 
 struct attr {
-    enum attr_type type;
-    union {
-        char *str;
-        void *data;
-        long num;
-        struct item *item;
-        enum item_type item_type;
-        enum projection projection;
-        double * numd;
-        struct color *color;
-        struct coord_geo *coord_geo;
-        struct navit *navit;
-        struct callback *callback;
-        struct callback_list *callback_list;
-        struct vehicle *vehicle;
-        struct layout *layout;
-        struct layer *layer;
-        struct map *map;
-        struct mapset *mapset;
-        struct log *log;
-        struct route *route;
-        struct navigation *navigation;
-        struct coord *coord;
-        struct pcoord *pcoord;
-        struct gui *gui;
-        struct graphics *graphics;
-        struct tracking *tracking;
-        struct itemgra *itemgra;
-        struct plugin *plugin;
-        struct plugins *plugins;
-        struct polygon *polygon;
-        struct polyline *polyline;
-        struct circle *circle;
-        struct text *text;
-        struct icon *icon;
-        struct image *image;
-        struct arrows *arrows;
-        struct element *element;
-        struct speech *speech;
-        struct cursor *cursor;
-        struct displaylist *displaylist;
-        struct transformation *transformation;
-        struct vehicleprofile *vehicleprofile;
-        struct roadprofile *roadprofile;
-        struct bookmarks *bookmarks;
-        struct config *config;
-        struct osd *osd;
-        struct range range;
-        struct navit_object *navit_object;
-        int *dash;
-        enum item_type *item_types;
-        enum attr_type *attr_types;
-        long long *num64;
-        struct attr *attrs;
-        struct poly_hole *poly_hole;
-    } u;
+	enum attr_type type;
+	union {
+		char *str;
+		void *data;
+		long num;
+		struct item *item;
+		enum item_type item_type;
+		enum projection projection;
+		double * numd;
+		struct color *color;
+		struct coord_geo *coord_geo;
+		struct navit *navit;
+		struct callback *callback;
+		struct callback_list *callback_list;
+		struct vehicle *vehicle;
+		struct layout *layout;
+		struct layer *layer;
+		struct map *map;
+		struct mapset *mapset;
+		struct log *log;
+		struct route *route;
+		struct navigation *navigation;
+		struct coord *coord;
+		struct pcoord *pcoord;
+		struct gui *gui;
+		struct graphics *graphics;
+		struct tracking *tracking;
+		struct itemgra *itemgra;
+		struct plugin *plugin;
+		struct plugins *plugins;
+		struct polygon *polygon;
+		struct polyline *polyline;
+		struct circle *circle;
+		struct text *text;
+		struct icon *icon;
+		struct image *image;
+		struct arrows *arrows;
+		struct element *element;
+		struct speech *speech;
+		struct cursor *cursor;
+		struct displaylist *displaylist;
+		struct transformation *transformation;
+		struct vehicleprofile *vehicleprofile;
+		struct roadprofile *roadprofile;
+		struct bookmarks *bookmarks;
+		struct config *config;
+		struct osd *osd;
+		struct range range;
+		struct navit_object *navit_object;
+		struct traffic *traffic;
+		int *dash;
+		enum item_type *item_types;
+		enum attr_type *attr_types;
+		long long *num64;
+		struct attr *attrs;
+	} u;
 };
 
 struct attr_iter;
