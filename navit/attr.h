@@ -204,6 +204,7 @@ struct attr {
         struct osd *osd;
         struct range range;
         struct navit_object *navit_object;
+        struct traffic *traffic;
         int *dash;
         enum item_type *item_types;
         enum attr_type *attr_types;
