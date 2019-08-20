@@ -112,7 +112,7 @@ var searchData=
   ['sgr',['sgr',['../ch_8c.html#aaf947e381ddf761eac681f88e61d0df6',1,'ch.c']]],
   ['sgr_5fnodes_5fhash',['sgr_nodes_hash',['../ch_8c.html#a33ec7dc395c03f6caee5c9d68a7d6548',1,'ch.c']]],
   ['shape',['shape',['../structdraw__polyline__context.html#a460099dced94df3589dc6e4d0a848b77',1,'draw_polyline_context']]],
-  ['shared',['shared',['../structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2',1,'traffic']]],
+  ['shared',['shared',['../structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2',1,'traffic::shared()'],['../structmap__priv.html#a16e751689b73ec5cec2ef91f25568485',1,'map_priv::shared()']]],
   ['sharp_5fturn_5flimit',['sharp_turn_limit',['../navigation_8c.html#a27b8f1091b0fa5990ecb9bbb61b8687b',1,'navigation.c']]],
   ['shfullscreenptr',['SHFullScreenPtr',['../ceglue_8c.html#a53c94e139dc81f3a122181f74f1f555b',1,'SHFullScreenPtr():&#160;ceglue.c'],['../ceglue_8h.html#aa99e01ea1182e86b8efb4ac26922ee54',1,'SHFullScreenPtr():&#160;ceglue.c']]],
   ['shift',['shift',['../garmin__img_8c.html#afd8d704fff636cf0234e92c1eade927c',1,'garmin_img.c']]],

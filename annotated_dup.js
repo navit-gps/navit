@@ -279,6 +279,7 @@ var annotated_dup =
     [ "padding", "structpadding.html", "structpadding" ],
     [ "param_list", "structparam__list.html", "structparam__list" ],
     [ "parent", "structparent.html", "structparent" ],
+    [ "parsed_item", "structparsed__item.html", "structparsed__item" ],
     [ "parsedata", "structparsedata.html", "structparsedata" ],
     [ "pathattr", "structpathattr.html", "structpathattr" ],
     [ "pcoord", "structpcoord.html", "structpcoord" ],

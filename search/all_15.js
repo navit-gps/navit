@@ -307,7 +307,7 @@ var searchData=
   ['shapefile_5fcoord',['shapefile_coord',['../shapefile_8c.html#a5c2788c64008e93245a31f4166a505ed',1,'shapefile.c']]],
   ['shapefile_5fcoord_5fget',['shapefile_coord_get',['../shapefile_8c.html#a61af1af0981bd1c2086b070b6f8ae85e',1,'shapefile.c']]],
   ['shapefile_5fcoord_5frewind',['shapefile_coord_rewind',['../shapefile_8c.html#a4331f90dabdc80eadccae0deea10229b',1,'shapefile.c']]],
-  ['shared',['shared',['../structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2',1,'traffic']]],
+  ['shared',['shared',['../structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2',1,'traffic::shared()'],['../structmap__priv.html#a16e751689b73ec5cec2ef91f25568485',1,'map_priv::shared()']]],
   ['sharp_5fturn_5flimit',['sharp_turn_limit',['../navigation_8c.html#a27b8f1091b0fa5990ecb9bbb61b8687b',1,'navigation.c']]],
   ['shell_5fescape',['shell_escape',['../util_8c.html#a3ab0b1f69d3c79007f9bcd9502c879f3',1,'shell_escape(char *arg):&#160;util.c'],['../util_8h.html#a3ab0b1f69d3c79007f9bcd9502c879f3',1,'shell_escape(char *arg):&#160;util.c']]],
   ['shfullscreenptr',['SHFullScreenPtr',['../ceglue_8c.html#a53c94e139dc81f3a122181f74f1f555b',1,'SHFullScreenPtr():&#160;ceglue.c'],['../ceglue_8h.html#aa99e01ea1182e86b8efb4ac26922ee54',1,'SHFullScreenPtr():&#160;ceglue.c']]],

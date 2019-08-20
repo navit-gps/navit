@@ -6,6 +6,7 @@ var structxml__state =
     [ "is_opened", "structxml__state.html#ac52a921148ce1379360e9865b0b2bbda", null ],
     [ "is_valid", "structxml__state.html#abd98f943564aacad51ebabef2a5b03ac", null ],
     [ "location", "structxml__state.html#a9063c28df6f677c183cffbec9a81af32", null ],
+    [ "location_txt_data", "structxml__state.html#a7465a44708e7a6d72dcf99006226673d", null ],
     [ "messages", "structxml__state.html#a47d67eee64d514d2923df0ffbf59f25e", null ],
     [ "not_via", "structxml__state.html#a1a3fb5821192508aa7dc15213dd2c6e3", null ],
     [ "si", "structxml__state.html#ac1f68b365ab1a0aeeca618b7bbe1e1af", null ],

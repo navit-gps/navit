@@ -96,10 +96,33 @@ Data Fields</h2></td></tr>
 <tr class="separator:af8c196119d2acba8216c5c794e006db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96c3016adb5810a83f5ac7f7744b5bd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__shared__priv.html#a96c3016adb5810a83f5ac7f7744b5bd4">message_queue</a></td></tr>
 <tr class="separator:a96c3016adb5810a83f5ac7f7744b5bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b6993268d8f88060e8412dc86719707"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmapset.html">mapset</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__shared__priv.html#a5b6993268d8f88060e8412dc86719707">ms</a></td></tr>
+<tr class="separator:a5b6993268d8f88060e8412dc86719707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae481162136144c7f48332c3fdc39a543"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structroute.html">route</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__shared__priv.html#ae481162136144c7f48332c3fdc39a543">rt</a></td></tr>
+<tr class="separator:ae481162136144c7f48332c3fdc39a543"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b04e50bb4dccd1e0bec3209a2671641"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap.html">map</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__shared__priv.html#a9b04e50bb4dccd1e0bec3209a2671641">map</a></td></tr>
+<tr class="separator:a9b04e50bb4dccd1e0bec3209a2671641"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Private data shared between all traffic instances. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
+<a id="a9b04e50bb4dccd1e0bec3209a2671641"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b04e50bb4dccd1e0bec3209a2671641">&#9670;&nbsp;</a></span>map</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmap.html">map</a>* traffic_shared_priv::map</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The traffic map, in which traffic distortions are stored </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#ac26422b7c3c6b219a9d1501a149c2b87">tm_add_item()</a>, <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, <a class="el" href="traffic_8h.html#a132f0eee106bfc793e1a81a874a29d72">traffic_get_map()</a>, <a class="el" href="traffic_8h.html#aa845847836d26c8a1daf5a61a06ce755">traffic_get_stored_messages()</a>, and <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>.</p>
+
+</div>
+</div>
 <a id="a96c3016adb5810a83f5ac7f7744b5bd4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96c3016adb5810a83f5ac7f7744b5bd4">&#9670;&nbsp;</a></span>message_queue</h2>
 
@@ -130,7 +153,41 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Currently active messages </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic_8c.html#aec4ed39462c5b4f0576718e41c1230f9">traffic_dump_messages_to_xml()</a>, <a class="el" href="traffic_8h.html#a132f0eee106bfc793e1a81a874a29d72">traffic_get_map()</a>, <a class="el" href="traffic_8h.html#aa845847836d26c8a1daf5a61a06ce755">traffic_get_stored_messages()</a>, <a class="el" href="traffic_8c.html#a92396b1490f09f5ea62666af742fcb77">traffic_loop()</a>, and <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, <a class="el" href="traffic_8c.html#a51d708950844b6929f22363c5906b8e6">traffic_dump_messages_to_xml()</a>, <a class="el" href="traffic_8h.html#a132f0eee106bfc793e1a81a874a29d72">traffic_get_map()</a>, <a class="el" href="traffic_8h.html#aa845847836d26c8a1daf5a61a06ce755">traffic_get_stored_messages()</a>, <a class="el" href="traffic_8c.html#a92396b1490f09f5ea62666af742fcb77">traffic_loop()</a>, and <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>.</p>
+
+</div>
+</div>
+<a id="a5b6993268d8f88060e8412dc86719707"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b6993268d8f88060e8412dc86719707">&#9670;&nbsp;</a></span>ms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmapset.html">mapset</a>* traffic_shared_priv::ms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The mapset used for routing </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, <a class="el" href="traffic_8h.html#aa845847836d26c8a1daf5a61a06ce755">traffic_get_stored_messages()</a>, <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, and <a class="el" href="traffic_8h.html#a58dfa6ad9e4d60a27d1943384abcaa0c">traffic_set_mapset()</a>.</p>
+
+</div>
+</div>
+<a id="ae481162136144c7f48332c3fdc39a543"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae481162136144c7f48332c3fdc39a543">&#9670;&nbsp;</a></span>rt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structroute.html">route</a>* traffic_shared_priv::rt</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The route to notify of traffic changes </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, <a class="el" href="traffic_8h.html#aa845847836d26c8a1daf5a61a06ce755">traffic_get_stored_messages()</a>, <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, and <a class="el" href="traffic_8h.html#af490a6f053971e1ec4dd0cc7f0c5f3ed">traffic_set_route()</a>.</p>
 
 </div>
 </div>

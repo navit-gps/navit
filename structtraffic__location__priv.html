@@ -89,6 +89,8 @@ $(document).ready(function(){initNavTree('structtraffic__location__priv.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
+<tr class="memitem:a792fb1c29407742de9b3950aff7227ff"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__location__priv.html#a792fb1c29407742de9b3950aff7227ff">txt_data</a></td></tr>
+<tr class="separator:a792fb1c29407742de9b3950aff7227ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33d0c1e7522a9035b50d4dfa6d6bea4b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord__geo.html">coord_geo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__location__priv.html#a33d0c1e7522a9035b50d4dfa6d6bea4b">sw</a></td></tr>
 <tr class="separator:a33d0c1e7522a9035b50d4dfa6d6bea4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a157660738b33d46b7900d86d9b69137d"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord__geo.html">coord_geo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__location__priv.html#a157660738b33d46b7900d86d9b69137d">ne</a></td></tr>
@@ -108,7 +110,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Northeastern corner of rectangle enclosing all points. Calculated by Navit from the points of the location. </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic_8h.html#ac921c8be1646f5fc77e3a7c0c307fdd5">traffic_location_destroy()</a>, <a class="el" href="traffic_8h.html#a4bf56ca75d542033207ec2cd1f356791">traffic_location_new()</a>, <a class="el" href="traffic_8c.html#aec7ac3a4358a3fd3e8d97a88f5af2502">traffic_location_open_map_rect()</a>, and <a class="el" href="traffic_8c.html#a96fa61a3bd0cd0da30e966e31d66ab0a">traffic_location_set_enclosing_rect()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic_8h.html#ac921c8be1646f5fc77e3a7c0c307fdd5">traffic_location_destroy()</a>, <a class="el" href="traffic_8c.html#a2271dcd199c43987581638c5efaa8794">traffic_location_get_rect()</a>, <a class="el" href="traffic_8h.html#a4bf56ca75d542033207ec2cd1f356791">traffic_location_new()</a>, and <a class="el" href="traffic_8c.html#a96fa61a3bd0cd0da30e966e31d66ab0a">traffic_location_set_enclosing_rect()</a>.</p>
 
 </div>
 </div>
@@ -125,7 +127,24 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Southwestern corner of rectangle enclosing all points. Calculated by Navit from the points of the location. </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic_8h.html#ac921c8be1646f5fc77e3a7c0c307fdd5">traffic_location_destroy()</a>, <a class="el" href="traffic_8h.html#a4bf56ca75d542033207ec2cd1f356791">traffic_location_new()</a>, <a class="el" href="traffic_8c.html#aec7ac3a4358a3fd3e8d97a88f5af2502">traffic_location_open_map_rect()</a>, and <a class="el" href="traffic_8c.html#a96fa61a3bd0cd0da30e966e31d66ab0a">traffic_location_set_enclosing_rect()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic_8h.html#ac921c8be1646f5fc77e3a7c0c307fdd5">traffic_location_destroy()</a>, <a class="el" href="traffic_8c.html#a2271dcd199c43987581638c5efaa8794">traffic_location_get_rect()</a>, <a class="el" href="traffic_8h.html#a4bf56ca75d542033207ec2cd1f356791">traffic_location_new()</a>, and <a class="el" href="traffic_8c.html#a96fa61a3bd0cd0da30e966e31d66ab0a">traffic_location_set_enclosing_rect()</a>.</p>
+
+</div>
+</div>
+<a id="a792fb1c29407742de9b3950aff7227ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a792fb1c29407742de9b3950aff7227ff">&#9670;&nbsp;</a></span>txt_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* traffic_location_priv::txt_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Persisted location data in txtfile map format. </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, <a class="el" href="traffic_8c.html#a51d708950844b6929f22363c5906b8e6">traffic_dump_messages_to_xml()</a>, <a class="el" href="traffic_8h.html#ac921c8be1646f5fc77e3a7c0c307fdd5">traffic_location_destroy()</a>, <a class="el" href="traffic_8c.html#a06624f0322fa03bd7f15e98c2e1b453d">traffic_message_restore_segments()</a>, <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, and <a class="el" href="traffic_8c.html#a73ad8e4d2c58afd581a7fafcab4a699b">traffic_xml_end()</a>.</p>
 
 </div>
 </div>

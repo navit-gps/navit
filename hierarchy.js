@@ -289,6 +289,7 @@ var hierarchy =
     [ "padding", "structpadding.html", null ],
     [ "param_list", "structparam__list.html", null ],
     [ "parent", "structparent.html", null ],
+    [ "parsed_item", "structparsed__item.html", null ],
     [ "parsedata", "structparsedata.html", null ],
     [ "pathattr", "structpathattr.html", null ],
     [ "pcoord", "structpcoord.html", null ],

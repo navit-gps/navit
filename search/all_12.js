@@ -63,6 +63,8 @@ var searchData=
   ['parse_5fvalue',['parse_value',['../cJSON_8c.html#aa9d7542467e921558b62ea2dbd4b9c60',1,'cJSON.c']]],
   ['parse_5fway',['parse_way',['../osm__xml_8c.html#aa3165b5eaeb2d3d4968974d678803215',1,'osm_xml.c']]],
   ['parse_5fxkbd_5fargs',['parse_xkbd_args',['../destination_8c.html#addde9006790c194b938e6274e683b40d',1,'destination.c']]],
+  ['parsed_5fitem',['parsed_item',['../structparsed__item.html',1,'']]],
+  ['parsed_5fitem_5fdestroy',['parsed_item_destroy',['../traffic_8c.html#a39f929403012780781092d988aa0e365',1,'traffic.c']]],
   ['parsedata',['parsedata',['../structparsedata.html',1,'parsedata'],['../gpx2navit__txt_8h.html#afb3300060e1d1729a586c44d131a274d',1,'parsedata():&#160;gpx2navit_txt.h']]],
   ['parsedirectorypath',['parseDirectoryPath',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#af8f19e3b92e5dff4a0fd18ee0f4e57fb',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['parsemain',['parseMain',['../gpx2navit__txt_8h.html#ac80ec0656f515c93abf717b20f96c018',1,'parseMain(g2sprop *pr):&#160;parser.c'],['../parser_8c.html#ad1797dba0bb6a67f52378a33f992db49',1,'parseMain(g2sprop *prop):&#160;parser.c']]],

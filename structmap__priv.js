@@ -57,6 +57,7 @@ var structmap__priv =
     [ "search_data", "structmap__priv.html#a4e21d17921b5eb9d1fb73398726a94c6", null ],
     [ "search_offset", "structmap__priv.html#af184cebbe0af040a8a805316d7853696", null ],
     [ "search_size", "structmap__priv.html#a36210f170828f7f64c1798d7085de0aa", null ],
+    [ "shared", "structmap__priv.html#a16e751689b73ec5cec2ef91f25568485", null ],
     [ "tracking", "structmap__priv.html#a39514cb3509ac87d500587372fa98187", null ],
     [ "tree_root", "structmap__priv.html#a67969c7494971a394f950025f82edce9", null ],
     [ "update_available", "structmap__priv.html#a98f9db17335c16c1a038c16e9848ffaf", null ],

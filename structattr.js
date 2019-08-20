@@ -49,6 +49,7 @@ var structattr =
     [ "str", "structattr.html#a2a2a2da11501e5c4b5464938c91b87e9", null ],
     [ "text", "structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9", null ],
     [ "tracking", "structattr.html#a3121eab5589d9c11ceb1dd67635eab36", null ],
+    [ "traffic", "structattr.html#a7d47f66e026978deb924275dcda16283", null ],
     [ "transformation", "structattr.html#a7b87158e92e3ccb2527dbf471e68faaa", null ],
     [ "type", "structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457", null ],
     [ "u", "structattr.html#a682d33096ece5ad806426918c15c4b10", null ],

@@ -49,6 +49,7 @@ var route_8c =
     [ "route_get_mapset", "route_8c.html#a277947f9dd480a8206d068d45a71c25c", null ],
     [ "route_get_path_set", "route_8c.html#a549ab0769b7e477e18dd72f90cfdb232", null ],
     [ "route_get_pos", "route_8c.html#a213e3f87cabf82aff4f235c06a8e8ab1", null ],
+    [ "route_get_selection", "route_8c.html#ae33151a12d43376844654ccfcfb72888", null ],
     [ "route_get_traffic_distortion", "route_8c.html#abfacad51ae5ecadb1c520b8bfa06c64c", null ],
     [ "route_graph_add_point", "route_8c.html#a061079967bbc666657df78bd29aba6e5", null ],
     [ "route_graph_add_segment", "route_8c.html#a323d5a36e3dd17eeacd67761f9199c45", null ],
