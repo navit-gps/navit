@@ -226,6 +226,7 @@ enum si_type {
 	si_vehicle_with_trailer,      /*!< For vehicles with trailers only (TODO currently not supported) */
 };
 
+struct traffic;
 struct traffic_priv;
 struct traffic_location_priv;
 struct traffic_message_priv;
