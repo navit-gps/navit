@@ -11,6 +11,8 @@ var searchData=
   ['read_5fbuffer',['read_buffer',['../group__vehicle-wince.html#gafc79c30a0a3f3eecebbacc98907a26cd',1,'vehicle_priv']]],
   ['read_5fbuffer_5fpos',['read_buffer_pos',['../group__vehicle-wince.html#ga8bcf9f25b9e0f2808d336f7fadfcba5f',1,'vehicle_priv']]],
   ['ready',['ready',['../structnavit.html#af5fa12f2f5e227c5d8f0f6c3c3b53116',1,'navit']]],
+  ['real_5fh',['real_h',['../structvehicle.html#a907850e924cf34638a460d395c8b5e3b',1,'vehicle']]],
+  ['real_5fw',['real_w',['../structvehicle.html#a53e1870dc477623db33de1fe32bd6949',1,'vehicle']]],
   ['reason',['reason',['../structwidget.html#a18d2a3772399d2e6a568648946f6bf69',1,'widget']]],
   ['receive_5ftime',['receive_time',['../structtraffic__message.html#a844f3185ebaccee2846c7681464b7001',1,'traffic_message']]],
   ['receiver',['receiver',['../structvehicle__priv.html#a2c483fa7f40982cb621704e9eecf5ad8',1,'vehicle_priv']]],

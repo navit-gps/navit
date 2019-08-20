@@ -43,6 +43,8 @@ var searchData=
   ['readdata',['readData',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a2b852166ad13522ce9cb51e46e1f9583',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['readfileinfo',['readFileInfo',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a96c829a1aef563fe69237fbcab4de0da',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['ready',['ready',['../structnavit.html#af5fa12f2f5e227c5d8f0f6c3c3b53116',1,'navit']]],
+  ['real_5fh',['real_h',['../structvehicle.html#a907850e924cf34638a460d395c8b5e3b',1,'vehicle']]],
+  ['real_5fw',['real_w',['../structvehicle.html#a53e1870dc477623db33de1fe32bd6949',1,'vehicle']]],
   ['reason',['reason',['../structwidget.html#a18d2a3772399d2e6a568648946f6bf69',1,'widget']]],
   ['receive_5ftime',['receive_time',['../structtraffic__message.html#a844f3185ebaccee2846c7681464b7001',1,'traffic_message']]],
   ['receiveaddress',['receiveAddress',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a086aab815df8a0e7aad907f4511c6676',1,'org::navitproject::navit::NavitAddressSearchActivity']]],

@@ -93,6 +93,7 @@ var searchData=
   ['nd_5fid',['nd_id',['../structnode__item.html#a9a0fdc00c3bb8e6d51f3f5095c7ece9b',1,'node_item']]],
   ['ndashes',['ndashes',['../structgraphics__gc__priv.html#ac49bae814358878c26a4c632dd6eace7',1,'graphics_gc_priv']]],
   ['ne',['ne',['../structtraffic__location__priv.html#a157660738b33d46b7900d86d9b69137d',1,'traffic_location_priv']]],
+  ['need_5fresize',['need_resize',['../structvehicle.html#a5a3055bad5034fe8839d7a72fea02e3c',1,'vehicle']]],
   ['needsstats',['needsStats',['../structg2sprop.html#a4ac3a5c763c6a2d971a014381489dce8',1,'g2sprop']]],
   ['nentities',['nEntities',['../structmap__priv.html#a23b8717528bcf7ef04f2da7bea2e74f6',1,'map_priv']]],
   ['new',['new',['../structfilter.html#aebcca0c78c3db357b5b2d5c555123159',1,'filter']]],

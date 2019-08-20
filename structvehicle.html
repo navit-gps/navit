@@ -111,6 +111,12 @@ Data Fields</h2></td></tr>
 <tr class="separator:a287885e3953cbd912e06b9f8f9f52bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef589c87006024feb522ae6d5e767707"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structpoint.html">point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#aef589c87006024feb522ae6d5e767707">cursor_pnt</a></td></tr>
 <tr class="separator:aef589c87006024feb522ae6d5e767707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a3055bad5034fe8839d7a72fea02e3c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#a5a3055bad5034fe8839d7a72fea02e3c">need_resize</a></td></tr>
+<tr class="separator:a5a3055bad5034fe8839d7a72fea02e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53e1870dc477623db33de1fe32bd6949"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#a53e1870dc477623db33de1fe32bd6949">real_w</a></td></tr>
+<tr class="separator:a53e1870dc477623db33de1fe32bd6949"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a907850e924cf34638a460d395c8b5e3b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#a907850e924cf34638a460d395c8b5e3b">real_h</a></td></tr>
+<tr class="separator:a907850e924cf34638a460d395c8b5e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1de09e800837c7545950fb4d01371467"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#a1de09e800837c7545950fb4d01371467">gra</a></td></tr>
 <tr class="separator:a1de09e800837c7545950fb4d01371467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab390af01a95ca7812a60fe821083b3df"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle.html#ab390af01a95ca7812a60fe821083b3df">bg</a></td></tr>
@@ -251,7 +257,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>, <a class="el" href="vehicle_8h.html#a8bb82bcef3a18950effc5d45dcddb0a0">vehicle_get_cursor_data()</a>, and <a class="el" href="vehicle_8h.html#a6ca2660b5bf01115304d952d1b083aba">vehicle_set_cursor()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>, and <a class="el" href="vehicle_8h.html#a8bb82bcef3a18950effc5d45dcddb0a0">vehicle_get_cursor_data()</a>.</p>
 
 </div>
 </div>
@@ -333,6 +339,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a5a3055bad5034fe8839d7a72fea02e3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a3055bad5034fe8839d7a72fea02e3c">&#9670;&nbsp;</a></span>need_resize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int vehicle::need_resize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, and <a class="el" href="vehicle_8h.html#a6ca2660b5bf01115304d952d1b083aba">vehicle_set_cursor()</a>.</p>
+
+</div>
+</div>
 <a id="a87a5c2e6901775bb3932a9e2e4ffb902"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a87a5c2e6901775bb3932a9e2e4ffb902">&#9670;&nbsp;</a></span>nmea_log</h2>
 
@@ -360,6 +382,38 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="vehicle_8h.html#aa90d6b5f10e041eb3e7d627040d716ef">vehicle_destroy()</a>, <a class="el" href="vehicle_8h.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr()</a>, <a class="el" href="vehicle_8c.html#a3347d6504efad5930e1067415bcce40d">vehicle_log_binfile()</a>, <a class="el" href="vehicle_8c.html#a1ccafaf0bd4a2da407ebe59c0d2631dc">vehicle_log_gpx()</a>, <a class="el" href="vehicle_8c.html#a9507da560211027db07d8b9a23b5d4cc">vehicle_log_nmea()</a>, <a class="el" href="vehicle_8c.html#af685746c2e81c4000dd5eee6c6161da7">vehicle_log_textfile()</a>, and <a class="el" href="vehicle_8h.html#a5f940ec1c91e1d2bc0e8872a8fe6a45c">vehicle_set_attr()</a>.</p>
+
+</div>
+</div>
+<a id="a907850e924cf34638a460d395c8b5e3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a907850e924cf34638a460d395c8b5e3b">&#9670;&nbsp;</a></span>real_h</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int vehicle::real_h</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, and <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>.</p>
+
+</div>
+</div>
+<a id="a53e1870dc477623db33de1fe32bd6949"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53e1870dc477623db33de1fe32bd6949">&#9670;&nbsp;</a></span>real_w</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int vehicle::real_w</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, and <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>.</p>
 
 </div>
 </div>
@@ -407,7 +461,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#aa90d6b5f10e041eb3e7d627040d716ef">vehicle_destroy()</a>, <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>, and <a class="el" href="vehicle_8h.html#a6ca2660b5bf01115304d952d1b083aba">vehicle_set_cursor()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vehicle_8h.html#aa90d6b5f10e041eb3e7d627040d716ef">vehicle_destroy()</a>, <a class="el" href="vehicle_8h.html#ab7af8b4062d6959019e6de3983cec79c">vehicle_draw()</a>, and <a class="el" href="vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8">vehicle_draw_do()</a>.</p>
 
 </div>
 </div>

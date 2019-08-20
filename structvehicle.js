@@ -13,8 +13,11 @@ var structvehicle =
     [ "gra", "structvehicle.html#a1de09e800837c7545950fb4d01371467", null ],
     [ "log_to_cb", "structvehicle.html#a6d4a2f1e38631ffb087fe232409ca9fa", null ],
     [ "meth", "structvehicle.html#aa8b7db06b8713affc1803c7011023f5b", null ],
+    [ "need_resize", "structvehicle.html#a5a3055bad5034fe8839d7a72fea02e3c", null ],
     [ "nmea_log", "structvehicle.html#a87a5c2e6901775bb3932a9e2e4ffb902", null ],
     [ "priv", "structvehicle.html#a2748222ca616f04388fad2ae81efa093", null ],
+    [ "real_h", "structvehicle.html#a907850e924cf34638a460d395c8b5e3b", null ],
+    [ "real_w", "structvehicle.html#a53e1870dc477623db33de1fe32bd6949", null ],
     [ "sequence", "structvehicle.html#a32c3eded2cf7db036ebc472fbea8160d", null ],
     [ "speed", "structvehicle.html#a26b8e34e52f6bbf90c5c044eb2fd7e07", null ],
     [ "trans", "structvehicle.html#a89fc94f513cd50b9818be45e80b33615", null ]
