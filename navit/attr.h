@@ -204,6 +204,7 @@ struct attr {
         struct osd *osd;
         struct range range;
         struct navit_object *navit_object;
+        struct traffic *traffic;
         int *dash;
         enum item_type *item_types;
         enum attr_type *attr_types;
@@ -222,7 +223,7 @@ char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);
 char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map);
 char *attr_to_text(struct attr *attr, struct map *map, int pretty);
-struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
+struct attr *attr_search(struct attr **attrs, enum attr_type attr);
 int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr,
                           struct attr_iter *iter);
 struct attr **attr_generic_set_attr(struct attr **attrs, struct attr *attr);
@@ -237,12 +238,13 @@ void attr_data_set(struct attr *attr, void *data);
 void attr_data_set_le(struct attr *attr, void *data);
 void attr_free_content(struct attr *attr);
 void attr_free(struct attr *attr);
+void attr_free_g(struct attr *attr, void * unused); /* to use as GFunc in glib context */
 void attr_dup_content(struct attr *src, struct attr *dst);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
 struct attr **attr_list_append(struct attr **attrs, struct attr *attr);
-int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
+int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret);
 int attr_types_contains(enum attr_type *types, enum attr_type type);
 int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);
 int attr_rel2real(int attrval, int whole, int treat_neg_as_rel);

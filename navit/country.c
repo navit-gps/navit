@@ -284,6 +284,7 @@ static struct country country[]= {
     {548,	"VAN",	"VU", "VUT", /* 548 */ _n("Vanuatu")},
     {876,	NULL,	"WF", "WLF", /* 876 */ _n("Wallis and Futuna")},
     {882,	"WS",	"WS", "WSM", /* 882 */ _n("Samoa")},
+    {412,	"XK",	"XK", "XXK", /* 412 */ _n("Kosovo")},
     {887,	"YAR",	"YE", "YEM", /* 887 */ _n("Yemen")},
     {175,	NULL,	"YT", "MYT", /* 175 */ _n("Mayotte")},
     {710,	"ZA",	"ZA", "ZAF", /* 710 */ _n("South Africa") },

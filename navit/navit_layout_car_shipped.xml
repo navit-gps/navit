@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car" nightlayout="Car-dark" color="#ffefb7" icon_w="22" icon_h="22" underground_alpha="0x77" font="Liberation Sans">
 	<cursor w="57" h="57">
 		<itemgra speed_range="-2">
 			<polyline color="#00BC00" radius="0" width="4">
@@ -66,52 +66,40 @@
 			</polyline>
 		</itemgra>
 	</cursor>
+	<!--
+		After modifying the layers in navit_layout_car_shipped.xml,
+		run the navit_layout_car_generatedarkxml.sh script to
+		automatically update the layers in
+		navit_layout_car_dark_shipped.xml. Do not modify the layers in
+		navit_layout_car_dark_shipped.xml directly, as changes will be
+		lost when the script is run.
+	-->
 	<layer name="polygons">
 		<itemgra item_types="image" order="0-">
 			<image/>
-		</itemgra>
-		<itemgra item_types="poly_nature_reserve" order="10-">
-			<polygon color="#cedec6"/>
-			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_glacier" order="10-">
 			<polygon color="#ddecec"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_town" order="0-">
-			<polygon color="#ffc895"/>
+			<polygon color="#ffccaa"/>
 			<polyline color="#ebb481"/>
+		</itemgra>
+		<itemgra item_types="poly_industry,poly_place" order="0-">
+			<polygon color="#dddddd"/>
+			<polyline color="#bbbbbb"/>
 		</itemgra>
 		<itemgra item_types="poly_naval_base" order="10-">
 			<polygon color="#6a9993"/>
 			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_airfield" order="10-">
-			<polygon color="#ecd3cf"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_university" order="8-">
-			<polygon color="#d68fb8"/>
-			<polyline color="#881155"/>
 		</itemgra>
 		<itemgra item_types="poly_college" order="10-">
 			<polygon color="#f4f4f4"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_attraction" order="10-">
-			<polygon color="#01a36c"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_theme_park" order="10-">
-			<polygon color="#01a36c"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_water_park" order="10-">
-			<polygon color="#8cc1c8"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_zoo" order="10-">
-			<polygon color="#ccbda5"/>
+			<polygon color="#aabbbb"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_depot" order="10-">
@@ -155,19 +143,21 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_camp_site" order="10-">
-			<polygon color="#339900"/>
+			<polygon color="#77dd77"/>
+			<polyline color="#55bb55"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
-			<polygon color="#8d9723"/>
+			<polygon color="#88dd66"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_golf_course" order="10-">
-			<polygon color="#419a22"/>
+			<polygon color="#66dd88"/>
+			<polyline color="#44bb66"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
-			<polygon color="#553f23"/>
+			<polygon color="#553f23" src="wetland.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_fell" order="10-">
@@ -179,11 +169,17 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_brownfield" order="10-">
-			<polygon color="#b6b690"/>
+			<polygon color="#ddcc88"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_park" order="0-">
+			<polygon color="#99dd77"/>
+			<polyline color="#77bb55"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_heath" order="10-">
 			<polygon color="#d6d99f"/>
+			<polyline color="#bbbb77"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_scree" order="10-">
@@ -191,7 +187,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_quarry" order="10-">
-			<polygon color="#e4caad"/>
+			<polygon color="#c5c3c3" src="quarry.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_landfill" order="10-">
@@ -199,15 +195,11 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_construction" order="10-">
-			<polygon color="#f47216"/>
+			<polygon color="#cc776699"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_range" order="10-">
-			<polygon color="#6d6b63"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_danger_area" order="10-">
-			<polygon color="#f2ba1b"/>
+			<polygon color="#998877"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_common" order="10-">
@@ -215,12 +207,12 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_recreation_ground" order="10-">
-			<polygon color="#8fa400"/>
+			<polygon color="#88bb33"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_playground" order="10-">
-			<polygon color="#b4c479"/>
-			<text text_size="5"/>
+		<itemgra item_types="poly_sport" order="10-">
+			<polygon color="#a5dc72"/>
+			<polyline color="#88bb55"/>
 		</itemgra>
 		<itemgra item_types="poly_fishing" order="10-">
 			<polygon color="#713907"/>
@@ -239,11 +231,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_picnic_site" order="10-">
-			<polygon color="#797548"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_wood" order="0-">
-			<polygon color="#8ec78d"/>
+			<polygon color="#dddd99"/>
+			<polyline color="#bbbb77"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_greenhouse" order="10-">
@@ -252,6 +241,7 @@
 		</itemgra>
 		<itemgra item_types="poly_orchard" order="10-">
 			<polygon color="#9edc90"/>
+			<polyline color="#77bb77"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_plantnursery" order="10-">
@@ -259,13 +249,25 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_farm" order="0-">
-			<polygon color="#c7f1a3"/>
-			<polyline color="#79c691"/>
+			<polygon color="#ddeecc"/>
+			<polyline color="#bbccaa"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_cemetery" order="1-">
+			<polygon color="#ccddcc" src="cemetery.png" w="32" h="32"/>
+		</itemgra>
+		<itemgra item_types="poly_car_parking" order="1-">
+			<polygon color="#eedd77"/>
+			<polyline color="#ccbb55"/>
+		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
-			<polygon color="#c7f1a3"/>
+			<polygon color="#bbee99"/>
 			<polyline color="#79c691"/>
+		</itemgra>
+		<itemgra item_types="poly_playground" order="10-">
+			<polygon color="#ccee99"/>
+			<polyline color="#aacc77"/>
+			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_water_tiled" order="0-">
 			<polygon color="#82c8ea"/>
@@ -275,20 +277,23 @@
 			<polyline color="#ffefb7"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="9-">
-			<polygon color="#a0a0a0"/>
+		<itemgra item_types="poly_flats,poly_scrub,poly_marine,plantation,tundra" order="9-">
+			<polygon color="#c8d7ab" src="scrub.png" w="50" h="50"/>
+			<polyline color="#aabb88"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_park" order="0-">
-			<polygon color="#7cc334"/>
+		<itemgra item_types="poly_wood" order="0-">
+			<polygon color="#88bb88" src="wood.png" w="100" h="100"/>
+			<polyline color="#669966"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
-			<polygon color="#fbed66"/>
+			<polygon color="#eeee77"/>
+			<polyline color="#cccc55"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_mud" order="0-">
-			<polygon color="#96ced4"/>
+			<polygon color="#aaccdd" src="wetland.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="10">
@@ -336,14 +341,9 @@
 			<polyline color="#dddddd" width="34"/>
 			<polygon color="#dddddd"/>
 		</itemgra>
-		<itemgra item_types="poly_airport" order="0-">
-			<polygon color="#a0a0a0"/>
-		</itemgra>
-		<itemgra item_types="poly_sport,poly_sports_pitch" order="0-">
-			<polygon color="#4af04f"/>
-		</itemgra>
-		<itemgra item_types="poly_industry,poly_place" order="0-">
-			<polygon color="#e6e6e6"/>
+		<itemgra item_types="poly_sports_pitch" order="10-">
+			<polygon color="#88ee88"/>
+			<polyline color="#55bb55"/>
 		</itemgra>
 		<itemgra item_types="poly_service" order="8-18">
 			<polygon color="#fefefe"/>
@@ -389,10 +389,19 @@
 			<polygon color="#d7804a"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_dam" order="12-">
+			<polygon color="#adadad"/>
+			<polyline color="#444444"/>
+			<text text_size="5"/>
+		</itemgra>
 		<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 			<polygon color="#82c8ea"/>
 			<polyline color="#5096b8"/>
 			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_swimming_pool" order="10-">
+			<polygon color="#82c8ea"/>
+			<polyline color="#5096b8"/>
 		</itemgra>
 		<itemgra item_types="water_line" order="0-">
 			<polyline color="#5096b8" width="1"/>
@@ -448,12 +457,6 @@
 		<itemgra item_types="poly_terminal" order="7-">
 			<polygon color="#e3c6a6"/>
 		</itemgra>
-		<itemgra item_types="poly_cemetery" order="1-">
-			<polygon color="#bde3cb"/>
-		</itemgra>
-		<itemgra item_types="poly_car_parking" order="1-">
-			<polygon color="#e7cf87"/>
-		</itemgra>
 		<itemgra item_types="poly_artwork" order="10-">
 			<polygon color="#fefbc5"/>
 			<text text_size="5"/>
@@ -466,20 +469,29 @@
 			<polygon color="#b6554e"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_barracks" order="10-">
-			<polygon color="#b6a6a6"/>
+		<itemgra item_types="sports_track" order="10-">
+			<polyline color="#b6554e" width="1"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_garages" order="10-">
 			<polygon color="#deddcc"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="archaeological_site" order="8-">
+			<polyline color="#d9cfb6" width="3"/>
+			<text text_size="8"/>
+		</itemgra>
 		<itemgra item_types="poly_building" order="0-">
-			<polygon color="#b6a6a6"/>
+			<polygon color="#aaaaaa"/>
+			<polyline color="#777777"/>
 		</itemgra>
 		<itemgra item_types="rail" order="6-">
 			<polyline color="#696969" width="3"/>
 			<polyline color="#ffffff" width="1" dash="5,5"/>
+		</itemgra>
+		<itemgra item_types="rail_narrow_gauge" order="6-">
+			<polyline color="#696969" width="3"/>
+			<polyline color="#ffffff" width="1" dash="4,4"/>
 		</itemgra>
 		<itemgra item_types="ferry" order="5-">
 			<polyline color="#000000" width="1" dash="10"/>
@@ -489,6 +501,48 @@
 		</itemgra>
 		<itemgra item_types="border_state" order="0-">
 			<polyline color="#808080" width="1"/>
+		</itemgra>
+		<itemgra item_types="poly_university" order="8-">
+			<polygon color="#d68fb888"/>
+			<polyline color="#88115588"/>
+		</itemgra>
+		<itemgra item_types="poly_barracks" order="10-">
+			<polygon color="#b6a6a6aa"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_zoo" order="10-">
+			<polyline color="#ccbda599" width="10"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_nature_reserve" order="10-">
+			<polyline color="#cedec666" width="10"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_theme_park" order="10-">
+			<polyline color="#01a36c99" width="10"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_water_park" order="10-">
+			<polyline color="#8cc1c899" width="10"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_military_zone,poly_military" order="9-">
+			<polygon color="#a0a0a044" src="diagonal-stripes-gray.png" w="16" h="16"/>
+			<polyline color="#969696b5" width="1"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_airport" order="0-">
+			<polygon color="#a0a0a066"/>
+		</itemgra>
+		<itemgra item_types="poly_airfield" order="10-">
+			<polygon color="#ecd3cf66" src="diagonal-stripes-gray.png" w="16" h="16"/>
+			<polyline color="#969696b5" width="1"/>
+			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_danger_area" order="8-">
+				<polygon color="#f2ba1b33" src="diagonal-stripes.png" w="16" h="16"/>
+				<polyline color="#ff0000b5"/>
+				<text text_size="5"/>
 		</itemgra>
 	</layer>
 	<layer name="heightlines">
@@ -627,13 +681,13 @@
 			<polyline color="#800000" width="1" dash="7,15"/>
 		</itemgra>
 		<itemgra item_types="track_unpaved,track_ground,path,hiking,hiking_mountain,hiking_mountain_demanding,hiking_alpine,hiking_alpine_demanding,hiking_alpine_difficult" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#555555" width="1"/>
 		</itemgra>
 		<itemgra item_types="bridleway" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#666644" width="1"/>
 		</itemgra>
 		<itemgra item_types="cycleway" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#664466" width="1"/>
 		</itemgra>
 		<itemgra item_types="piste_downhill_novice" order="10-12">
 			<polyline color="#00A000" width="1"/>
@@ -787,22 +841,27 @@
 		<itemgra item_types="street_pedestrian,living_street" order="14">
 			<polyline color="#d2d2d2" width="13"/>
 			<polyline color="#dddddd" width="9"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="15">
 			<polyline color="#d2d2d2" width="18"/>
 			<polyline color="#dddddd" width="14"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="16">
 			<polyline color="#d2d2d2" width="21"/>
 			<polyline color="#dddddd" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="17">
 			<polyline color="#d2d2d2" width="25"/>
 			<polyline color="#dddddd" width="21"/>
+			<arrows color="#0000FF" width="19" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="18">
 			<polyline color="#d2d2d2" width="40"/>
 			<polyline color="#dddddd" width="34"/>
+			<arrows color="#0000FF" width="32" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="10">
 			<polyline color="#d2d2d2" width="4"/>
@@ -823,22 +882,27 @@
 		<itemgra item_types="street_service" order="14">
 			<polyline color="#d2d2d2" width="7"/>
 			<polyline color="#fefefe" width="5"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="15">
 			<polyline color="#d2d2d2" width="8"/>
 			<polyline color="#fefefe" width="6"/>
+			<arrows color="#0000FF" width="5" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="16">
 			<polyline color="#d2d2d2" width="9"/>
 			<polyline color="#fefefe" width="7"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="17">
 			<polyline color="#d2d2d2" width="10"/>
 			<polyline color="#fefefe" width="8"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="18">
 			<polyline color="#d2d2d2" width="11"/>
 			<polyline color="#fefefe" width="9"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="12">
 			<polyline color="#d2d2d2" width="4"/>
@@ -855,18 +919,22 @@
 		<itemgra item_types="street_parking_lane" order="15">
 			<polyline color="#d2d2d2" width="6"/>
 			<polyline color="#fefefe" width="4"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="16">
 			<polyline color="#d2d2d2" width="7"/>
 			<polyline color="#fefefe" width="5"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="17">
 			<polyline color="#d2d2d2" width="8"/>
 			<polyline color="#fefefe" width="6"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="18">
 			<polyline color="#d2d2d2" width="9"/>
 			<polyline color="#fefefe" width="7"/>
+			<arrows color="#0000FF" width="5" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="10">
 			<polyline color="#d2d2d2" width="4"/>
@@ -887,22 +955,27 @@
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="14">
 			<polyline color="#d2d2d2" width="17"/>
 			<polyline color="#ffffff" width="13"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="15">
 			<polyline color="#d2d2d2" width="18"/>
 			<polyline color="#ffffff" width="14"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="16">
 			<polyline color="#d2d2d2" width="30"/>
 			<polyline color="#ffffff" width="26"/>
+			<arrows color="#0000FF" width="24" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="17">
 			<polyline color="#d2d2d2" width="67"/>
 			<polyline color="#ffffff" width="61"/>
+			<arrows color="#0000FF" width="59" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="18">
 			<polyline color="#d2d2d2" width="132"/>
 			<polyline color="#ffffff" width="126"/>
+			<arrows color="#0000FF" width="124" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="7-8">
 			<polyline color="#c0c0c0" width="2"/>
@@ -930,22 +1003,27 @@
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="14">
 			<polyline color="#c0c0c0" width="14"/>
 			<polyline color="#ffff00" width="11"/>
+			<arrows color="#0000FF" width="9" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="15">
 			<polyline color="#c0c0c0" width="19"/>
 			<polyline color="#ffff00" width="15"/>
+			<arrows color="#0000FF" width="13" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="16">
 			<polyline color="#c0c0c0" width="30"/>
 			<polyline color="#ffff00" width="26"/>
+			<arrows color="#0000FF" width="24" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="17">
 			<polyline color="#c0c0c0" width="63"/>
 			<polyline color="#ffff00" width="57"/>
+			<arrows color="#0000FF" width="55" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="18">
 			<polyline color="#c0c0c0" width="100"/>
 			<polyline color="#ffff00" width="90"/>
+			<arrows color="#0000FF" width="88" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="7-8">
 			<polyline color="#a0a0a0" width="3"/>
@@ -974,22 +1052,27 @@
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="14">
 			<polyline color="#a0a0a0" width="21"/>
 			<polyline color="#ffff00" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="15">
 			<polyline color="#a0a0a0" width="25"/>
 			<polyline color="#ffff00" width="21"/>
+			<arrows color="#0000FF" width="19" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="16">
 			<polyline color="#a0a0a0" width="40"/>
 			<polyline color="#ffff00" width="34"/>
+			<arrows color="#0000FF" width="32" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="17">
 			<polyline color="#a0a0a0" width="79"/>
 			<polyline color="#ffff00" width="73"/>
+			<arrows color="#0000FF" width="70" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="18">
 			<polyline color="#a0a0a0" width="156"/>
 			<polyline color="#ffff00" width="150"/>
+			<arrows color="#0000FF" width="148" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="2-6">
 			<polyline color="#404040" width="1"/>
@@ -1021,22 +1104,27 @@
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="14">
 			<polyline color="#000000" width="21"/>
 			<polyline color="#ff0000" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="15">
 			<polyline color="#000000" width="24"/>
 			<polyline color="#ff0000" width="20"/>
+			<arrows color="#0000FF" width="18" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="16">
 			<polyline color="#000000" width="39"/>
 			<polyline color="#ff0000" width="33"/>
+			<arrows color="#0000FF" width="30" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="17">
 			<polyline color="#000000" width="78"/>
 			<polyline color="#ff0000" width="72"/>
+			<arrows color="#0000FF" width="70" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="18">
 			<polyline color="#000000" width="156"/>
 			<polyline color="#ff0000" width="150"/>
+			<arrows color="#0000FF" width="148" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="highway_city,highway_land" order="2">
 			<polyline color="#ff0000" width="1"/>
@@ -1093,11 +1181,13 @@
 			<polyline color="#ff0000" width="133"/>
 			<polyline color="#ffff00" width="127"/>
 			<polyline color="#ff0000" width="1"/>
+			<arrows color="#0000FF" width="125" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="highway_city,highway_land" order="18">
 			<polyline color="#ff0000" width="264"/>
 			<polyline color="#ffff00" width="258"/>
 			<polyline color="#ff0000" width="1"/>
+			<arrows color="#0000FF" width="256" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="tracking_0" order="0-">
 			<polyline color="#000000" width="3"/>
@@ -1271,6 +1361,9 @@
 		<itemgra item_types="rail_tram" order="10-">
 			<polyline color="#606060" width="2"/>
 		</itemgra>
+		<itemgra item_types="cliff" order="12-">
+			<polyline color="#606060" width="1"/>
+		</itemgra>
 	</layer>
 	<layer name="labels">
 		<itemgra item_types="house_number" order="15-">
@@ -1309,7 +1402,7 @@
 		<itemgra item_types="town_label_1e4" order="6-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
-		<itemgra item_types="town_label_2e4,town_label_5e4" order="5-8">
+		<itemgra item_types="town_label_2e4,town_label_5e4" order="7-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
 		<itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="5-">
@@ -1530,6 +1623,9 @@
 		<itemgra item_types="poi_attraction" order="11-">
 			<icon src="attraction.png"/>
 		</itemgra>
+		<itemgra item_types="poi_cave" order="11-">
+			<icon src="cave.png"/>
+		</itemgra>
 		<itemgra item_types="poi_cafe" order="12-">
 			<icon src="cafe.png"/>
 		</itemgra>
@@ -1689,7 +1785,7 @@
 		<itemgra item_types="poi_firebrigade" order="12-">
 			<icon src="firebrigade.png"/>
 		</itemgra>
-		<itemgra item_types="poi_fish" order="9-">
+		<itemgra item_types="poi_fish" order="12-">
 			<icon src="fish.xpm"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="12-">
@@ -1899,13 +1995,13 @@
 		<itemgra item_types="poi_wine" order="12-">
 			<icon src="wine.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_worship" order="8-">
+		<itemgra item_types="poi_worship" order="11-">
 			<icon src="worship.png"/>
 		</itemgra>
 		<itemgra item_types="poi_wrecker" order="12-">
 			<icon src="wrecker.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_zoo" order="9-">
+		<itemgra item_types="poi_zoo" order="12-">
 			<icon src="zoo.png"/>
 		</itemgra>
 		<itemgra item_types="poi_picnic" order="12-">
@@ -1975,6 +2071,9 @@
 		<itemgra item_types="poi_monument" order="12-">
 			<icon src="memorial.png"/>
 		</itemgra>
+		<itemgra item_types="poi_archaeological_site" order="12-">
+			<icon src="archaeological_site.png"/>
+		</itemgra>
 		<itemgra item_types="poi_shelter" order="11-">
 			<icon src="shelter.png"/>
 		</itemgra>
@@ -2004,7 +2103,7 @@
 		</itemgra>
 	</layer>
 	<layer name="POI Labels">
-		<itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_car_sharing,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,poi_pub,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_atm,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_bahai,poi_buddhist,poi_hindu,poi_islamic,poi_jain,poi_jewish,poi_pagan,poi_pastafarian,poi_shinto,poi_sikh,poi_taoist,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_bicycle,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint,vehicle" order="14-">
+		<itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_car_sharing,poi_fuel,poi_shopping,poi_cave,poi_attraction,poi_cafe,poi_bar,poi_pub,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_atm,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_bahai,poi_buddhist,poi_hindu,poi_islamic,poi_jain,poi_jewish,poi_pagan,poi_pastafarian,poi_shinto,poi_sikh,poi_taoist,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_bicycle,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_archaeological_site,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint,vehicle" order="14-">
 			<circle color="#606060" radius="0" width="0" text_size="10"/>
 		</itemgra>
 		<itemgra item_types="poi_custom0,poi_custom1,poi_custom2,poi_custom3,poi_custom4,poi_custom5,poi_custom6,poi_custom7,poi_custom8,poi_custom9,poi_customa,poi_customb,poi_customc,poi_customd,poi_custome,poi_customf" order="14-">

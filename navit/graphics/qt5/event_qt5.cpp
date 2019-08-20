@@ -92,7 +92,6 @@ void qt5_navit_timer::timerEvent(QTimerEvent* event) {
 qt5_navit_timer* qt5_timer = NULL;
 
 static void event_qt5_main_loop_run(void) {
-
     dbg(lvl_debug, "enter");
     if (navit_app != NULL)
         navit_app->exec();

@@ -2,8 +2,7 @@
 
 function check_pocketcab()
 {
-	which pocketpc-cab &> /dev/null
-	if [ $? -ne 0 ]
+	if ! which pocketpc-cab &> /dev/null
 	then
 		echo "You don't have pocketpc-cab installed or not in PATH"
 		exit

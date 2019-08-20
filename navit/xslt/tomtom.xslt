@@ -11,6 +11,7 @@
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="config"/>
+		<xsl:apply-templates select="layout"/>
 	</xsl:template>
 
 	<xsl:template match="config">
@@ -52,6 +53,13 @@
 			</mapset>
 			<xsl:copy-of select="layer"/>
 			<xsl:copy-of select="layout"/>
+			<xsl:copy-of select="xi:include"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="layout">
+		<xsl:copy>
+			<xsl:copy-of select="@*|node()"/>
 		</xsl:copy>
 	</xsl:template>
 </xsl:transform>

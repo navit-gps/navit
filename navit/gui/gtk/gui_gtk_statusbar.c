@@ -38,7 +38,7 @@
 struct statusbar_priv {
     struct gui_priv *gui;
     GtkWidget *hbox;
-    char gps_text[128];
+    char gps_text[500];
     GtkWidget *gps;
     char route_text[128];
     GtkWidget *route;
@@ -88,7 +88,7 @@ static void statusbar_route_update(struct statusbar_priv *this, struct navit *na
     double route_len=0;     /* Distance to destination. We get it in kilometers. */
     time_t eta;
     struct tm *eta_tm=NULL;
-    char buffer[128];
+    char buffer[109];
     double lng, lat, direction=0, height=0, speed=0, hdop=0;
     int sats=0, qual=0;
     int status=0;
@@ -155,15 +155,16 @@ static void statusbar_route_update(struct statusbar_priv *this, struct navit *na
         qual=attr.u.num;
     coord_format(lat,lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 
-    sprintf(this->gps_text,"GPS:%s %02d/%02d HD:%02.2f %s %4.0f%s %3.0f°%-2s %3.1f%s",
-            status_fix2str(status),
-            sats, qual, hdop, buffer,
-            imperial ? height * FEET_PER_METER : height,
-            imperial == TRUE ? "\'" : "m",
-            direction, dir,
-            imperial == TRUE ? speed * KILOMETERS_TO_MILES : speed,
-            imperial == TRUE ? " mph" : "km/h"
-           );
+    snprintf(this->gps_text,sizeof(this->gps_text),"GPS:%s %02d/%02d HD:%02.2f %s %4.0f%s %3.0f°%-2s %3.1f%s",
+             status_fix2str(status),
+             sats, qual, hdop, buffer,
+             imperial ? height * FEET_PER_METER : height,
+             imperial == TRUE ? "\'" : "m",
+             direction, dir,
+             imperial == TRUE ? speed * KILOMETERS_TO_MILES : speed,
+             imperial == TRUE ? " mph" : "km/h"
+            );
+    this->gps_text[sizeof(this->gps_text)-1] = 0;
 
     gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 }

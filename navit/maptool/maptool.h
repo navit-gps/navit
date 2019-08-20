@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -211,6 +211,7 @@ struct attr_bin * item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type
 struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
+void item_bin_add_hole(struct item_bin * ib, struct coord * coord, int ccount);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
 void item_bin_remove_attr(struct item_bin *ib, void *ptr);
 void item_bin_write(struct item_bin *ib, FILE *out);
@@ -231,6 +232,10 @@ struct item_bin *read_item(FILE *in);
 struct item_bin *read_item_range(FILE *in, int *min, int *max);
 struct item_bin *init_item(enum item_type type);
 extern struct item_bin *tmp_item_bin;
+
+/* itembin_slicer.c */
+void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *reference, char * buffer, int min);
+
 
 /* maptool.c */
 
@@ -345,6 +350,7 @@ void relations_add_relation_member_entry(struct relations *rel, struct relations
         void *member_priv, enum relation_member_type type, osmid id);
 void relations_add_relation_default_entry(struct relations *rel, struct relations_func *func);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
+void relations_process_multi(struct relations **rel, int count, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
 
 
@@ -400,7 +406,7 @@ int write_aux_tiles(struct zip_info *zip_info);
 int create_tile_hash(void);
 void write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out);
 void merge_tiles(struct tile_info *info);
-struct attr map_information_attrs[32];
+extern struct attr map_information_attrs[32];
 void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 
@@ -421,6 +427,14 @@ int zip_get_zipnum(struct zip_info *info);
 void zip_set_zipnum(struct zip_info *info, int num);
 void zip_close(struct zip_info *info);
 void zip_destroy(struct zip_info *info);
+
+/* osm.c */
+int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+                                     int *** sequences,
+                                     int **direction);
+int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+                                    struct coord *  buffer);
+int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence);
 
 /* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to GHashTable's */
 struct maptool_force_64 {
