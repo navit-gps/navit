@@ -549,7 +549,7 @@ struct map_priv *
 map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
     int i,maybe_missing;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
+    struct attr *data=attr_search(attrs, attr_data);
     char *filename;
     struct file_wordexp *wexp;
     char **wexp_data;
@@ -561,7 +561,7 @@ map_new_mg(struct map_methods *meth, struct attr **attrs, struct callback_list *
     wexp_data=file_wordexp_get_array(wexp);
 
     *meth=map_methods_mg;
-    data=attr_search(attrs, NULL, attr_data);
+    data=attr_search(attrs, attr_data);
 
     m=g_new(struct map_priv, 1);
     m->id=++map_id;

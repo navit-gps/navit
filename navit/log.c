@@ -47,7 +47,9 @@
 #include "debug.h"
 #include "xmlconfig.h"
 #include "log.h"
-
+#ifndef HAVE_API_WIN32_BASE
+#include <errno.h>
+#endif
 struct log_data {
     int len;
     int max_len;
@@ -239,7 +241,8 @@ static void log_flush(struct log *this_, enum log_flags flags) {
 #ifndef HAVE_API_WIN32_BASE
     if (flags & log_flag_truncate) {
         pos=ftell(this_->f);
-        ftruncate(fileno(this_->f), pos);
+        if(ftruncate(fileno(this_->f), pos) <0)
+            dbg(lvl_error,"Error on fruncate (%s)", strerror(errno));
     }
 #endif
     if (this_->trailer.len) {
@@ -366,7 +369,7 @@ log_new(struct attr * parent,struct attr **attrs) {
     dbg(lvl_debug,"enter");
     ret->func=&log_func;
     navit_object_ref((struct navit_object *)ret);
-    data=attr_search(attrs, NULL, attr_data);
+    data=attr_search(attrs, attr_data);
     if (! data)
         return NULL;
     filename=data->u.str;
@@ -379,19 +382,19 @@ log_new(struct attr * parent,struct attr **attrs) {
         ret->filename=g_strdup(filename);
     if (wexp)
         file_wordexp_destroy(wexp);
-    overwrite=attr_search(attrs, NULL, attr_overwrite);
+    overwrite=attr_search(attrs, attr_overwrite);
     if (overwrite)
         ret->overwrite=overwrite->u.num;
-    lazy=attr_search(attrs, NULL, attr_lazy);
+    lazy=attr_search(attrs, attr_lazy);
     if (lazy)
         ret->lazy=lazy->u.num;
-    mkdir=attr_search(attrs, NULL, attr_mkdir);
+    mkdir=attr_search(attrs, attr_mkdir);
     if (mkdir)
         ret->mkdir=mkdir->u.num;
-    flush_size=attr_search(attrs, NULL, attr_flush_size);
+    flush_size=attr_search(attrs, attr_flush_size);
     if (flush_size)
         ret->flush_size=flush_size->u.num;
-    flush_time=attr_search(attrs, NULL, attr_flush_time);
+    flush_time=attr_search(attrs, attr_flush_time);
     if (flush_time)
         ret->flush_time=flush_time->u.num;
     if (ret->flush_time) {

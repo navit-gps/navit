@@ -661,7 +661,7 @@ static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attr
     m->qitem_hash = g_hash_table_new_full(g_int_hash, g_int_equal, g_free, quadtree_item_free_do);
     m->tree_root = tree_root;
 
-    attr_types = attr_search(attrs, NULL, attr_attr_types);
+    attr_types = attr_search(attrs, attr_attr_types);
     if(attr_types) {
         enum attr_type* at = attr_types->u.attr_types;
         while(*at != attr_none) {
@@ -682,7 +682,7 @@ static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attr
         return NULL;
     }
 
-    charset  = attr_search(attrs, NULL, attr_charset);
+    charset  = attr_search(attrs, attr_charset);
     if(charset) {
         dbg(lvl_debug,"charset:%s",charset->u.str);
         m->charset=g_strdup(charset->u.str);
@@ -694,7 +694,7 @@ static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attr
         return NULL;
     }
 
-    item_type_attr=attr_search(attrs, NULL, attr_item_type);
+    item_type_attr=attr_search(attrs, attr_item_type);
 
     if( !item_type_attr || item_type_attr->u.item_type==type_none) {
         return NULL;
@@ -702,13 +702,13 @@ static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attr
 
     m->item_type = item_type_attr->u.item_type;
 
-    flags=attr_search(attrs, NULL, attr_flags);
+    flags=attr_search(attrs, attr_flags);
     if (flags)
         m->flags=flags->u.num;
 
     *meth = map_methods_csv;
 
-    data=attr_search(attrs, NULL, attr_data);
+    data=attr_search(attrs, attr_data);
 
     if(data) {
         struct file_wordexp *wexp;

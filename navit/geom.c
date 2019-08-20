@@ -191,7 +191,8 @@ int geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
 
 
 
-GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third) {
+GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second,
+                                 struct geom_poly_segment *third) {
     int count;
     struct geom_poly_segment *ret;
     struct coord *pos;
@@ -226,7 +227,8 @@ GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, s
     return list;
 }
 
-void geom_poly_segment_destroy(struct geom_poly_segment *seg) {
+/* unused id for GFunc compatibiliy */
+void geom_poly_segment_destroy(struct geom_poly_segment *seg, void * unused) {
     g_free(seg->first);
     g_free(seg);
 }
@@ -234,7 +236,7 @@ void geom_poly_segment_destroy(struct geom_poly_segment *seg) {
 GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg) {
     if (seg) {
         list=g_list_remove(list, seg);
-        geom_poly_segment_destroy(seg);
+        geom_poly_segment_destroy(seg, NULL);
     }
     return list;
 }
