@@ -35,20 +35,22 @@ cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,
 echo Process icons
 pushd navit/icons
 make || exit 32
+rm -rf ../android/res/drawable-nodpi
 mkdir ../android/res/drawable-nodpi
 cp ./*.png ../android/res/drawable-nodpi
 pushd ../android/res/drawable-nodpi
-rename 'y/A-Z/a-z/' ./*.png
+rename -f 'y/A-Z/a-z/' ./*.png
 popd
 popd
 
 echo Process translations
 pushd po
 make || exit 64
+rm -rf ../navit/android/res/raw
 mkdir ../navit/android/res/raw
 cp ./*.mo ../navit/android/res/raw
 pushd ../navit/android/res/raw
-rename 'y/A-Z/a-z/' ./*.mo
+rename -f 'y/A-Z/a-z/' ./*.mo
 popd
 popd
 
@@ -57,6 +59,7 @@ popd
 echo Process xml config files
 make navit_config_xml || exit 96
 pushd navit
+rm -rf ./android/assets
 mkdir -p ./android/assets
 cp -R config ./android/assets/
 popd
