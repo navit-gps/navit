@@ -338,6 +338,14 @@ map_rect_get_item(struct map_rect *mr) {
 /**
  * @brief Returns the item specified by the ID
  *
+ * Map drivers may or may not allow multiple items with identical IDs. This function is not guaranteed to be
+ * suitable for iterating over multiple items with identical IDs in the same manner as `map_rect_get_item()`,
+ * as multiple subsequent calls may return items which were already returned by earlier calls.
+ *
+ * If you are working with maps which allow multiple items with identical IDs, the only portable way to
+ * iterate over all items with a given ID is to use `map_rect_get_item()` and skip all items with
+ * non-matching IDs.
+ *
  * @param mr The map rect to search for the item
  * @param id_hi High part of the ID to be found
  * @param id_lo Low part of the ID to be found
