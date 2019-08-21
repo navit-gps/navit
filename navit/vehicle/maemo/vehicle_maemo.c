@@ -269,7 +269,7 @@ static int vehicle_maemo_position_attr_get(struct vehicle_priv *priv,
     break;
     case attr_active:
         dbg(lvl_debug,"Attr requested: position_active");
-        active = attr_search(priv->attrs,NULL,attr_active);
+        active = attr_search(priv->attrs,attr_active);
         if(active != NULL) {
             attr->u.num=active->u.num;
             return 1;
@@ -295,10 +295,10 @@ static struct vehicle_priv *vehicle_maemo_new_maemo(struct vehicle_methods
     struct attr *source, *retry_int;
 
     dbg(lvl_debug, "enter");
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     ret = g_new0(struct vehicle_priv, 1);
     ret->source = g_strdup(source->u.str);
-    retry_int = attr_search(attrs, NULL, attr_retry_interval);
+    retry_int = attr_search(attrs, attr_retry_interval);
     if (retry_int) {
         ret->retry_interval = retry_int->u.num;
         if (ret->retry_interval !=1 && ret->retry_interval !=2 && ret->retry_interval !=5 && ret->retry_interval !=10

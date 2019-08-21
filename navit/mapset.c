@@ -74,7 +74,7 @@ struct mapset *mapset_dup(struct mapset *ms) {
 
 
 struct attr_iter *
-mapset_attr_iter_new(void) {
+mapset_attr_iter_new(void* unused) {
     return g_new0(struct attr_iter, 1);
 }
 
@@ -179,11 +179,19 @@ mapset_open(struct mapset *ms) {
 /**
  * @brief Gets the next map from a mapset handle
  *
- * If you set active to true, this function will not return any maps that
- * have the attr_active attribute associated with them and set to false.
+ * The `active` argument governs whether (and how) to limit the search to active maps:
+ *
+ * Passing 0 causes this function to cycle through all maps, whether active or not.
+ *
+ * Passing a value of 2 will return only maps which have the `attr_route_active` attribute set to true.
+ *
+ * Passing a value of 3 will return only maps which have the `attr_search_active` attribute set to true.
+ *
+ * Passing any other nonzero value will return only maps which have the `attr_active` attribute set to true,
+ * or not set at all.
  *
  * @param msh The mapset handle to get the next map of
- * @param active Set to true to only get active maps (See description)
+ * @param active Whether to cycle only through active maps (see description)
  * @return The next map
  */
 struct map * mapset_next(struct mapset_handle *msh, int active) {

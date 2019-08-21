@@ -284,43 +284,45 @@ static void image_free(struct graphics_priv *gr, struct graphics_image_priv * gi
     g_free(gi);
 }
 
-static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+
+    dbg(lvl_debug, "draw_polygon_with_holes: %p ", gc);
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
     }
 
-    Sint16 *vx, *vy;
-    Sint16 x, y;
-    int i;
-
-    vx = alloca(count * sizeof(Sint16));
-    vy = alloca(count * sizeof(Sint16));
-
-    for(i = 0; i < count; i++) {
-        x = (Sint16)p[i].x;
-        y = (Sint16)p[i].y;
-        vx[i] = x;
-        vy[i] = y;
-
-        dbg(lvl_debug, "draw_polygon: %p %i %d,%d", gc, i, p[i].x, p[i].y);
-    }
+    /* SDL library (SDL_gfx) uses array of X and array of Y instead of array of points
+     * as the rest of navit does. This requires translating the coordinates from one struct
+     * into another. As we have our own version of SDL_gfx anyway, I step aside from this
+     * mechanic and continue using points. This breaks (pseudo= compatibility with stock
+     * sdl_graphics. Since we need to raytrace the polygons anyway, we can prepare the
+     * coordinates for SDL primitives there.
+     */
 
     if(gr->aa) {
-        raster_aapolygon(gr->screen, count, vx, vy,
-                         SDL_MapRGBA(gr->screen->format,
-                                     gc->fore_r,
-                                     gc->fore_g,
-                                     gc->fore_b,
-                                     gc->fore_a));
+        raster_aapolygon_with_holes(gr->screen, p, count, hole_count, ccount, holes,
+                                    SDL_MapRGBA(gr->screen->format,
+                                                gc->fore_r,
+                                                gc->fore_g,
+                                                gc->fore_b,
+                                                gc->fore_a));
     } else {
-        raster_polygon(gr->screen, count, vx, vy,
-                       SDL_MapRGBA(gr->screen->format,
-                                   gc->fore_r,
-                                   gc->fore_g,
-                                   gc->fore_b,
-                                   gc->fore_a));
+        raster_polygon_with_holes(gr->screen, p, count, hole_count, ccount, holes,
+                                  SDL_MapRGBA(gr->screen->format,
+                                              gc->fore_r,
+                                              gc->fore_g,
+                                              gc->fore_b,
+                                              gc->fore_a));
     }
+}
+
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+    dbg(lvl_debug, "draw_polygon: %p ", gc);
+    /* Use polygon with holes primitive as this seems to be better performing than the
+     * traditional SDL_gfx like ones */
+    draw_polygon_with_holes(gr, gc, p, count, 0, NULL, NULL);
 }
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
@@ -435,7 +437,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
                 x_lw_adj = round((float)lw/2.0);
                 y_lw_adj = 0;
             } else {
-                angle = (M_PI/2.0) - atan(abs(dx)/abs(dy));
+                angle = (M_PI/2.0) - atan(abs((int)dx)/abs((int)dy));
                 x_lw_adj = round(sin(angle)*(float)lw/2.0);
                 y_lw_adj = round(cos(angle)*(float)lw/2.0);
                 if((x_lw_adj < 0) || (y_lw_adj < 0)) {
@@ -819,6 +821,8 @@ static struct graphics_methods graphics_methods = {
     NULL, /* set_attr */
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
+    NULL, /* get_dpi */
+    draw_polygon_with_holes
 };
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
@@ -1355,17 +1359,17 @@ static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics
     this->video_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
 #endif
 
-    if ((attr=attr_search(attrs, NULL, attr_w)))
+    if ((attr=attr_search(attrs, attr_w)))
         w=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_h)))
+    if ((attr=attr_search(attrs, attr_h)))
         h=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_bpp)))
+    if ((attr=attr_search(attrs, attr_bpp)))
         this->video_bpp=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_flags))) {
+    if ((attr=attr_search(attrs, attr_flags))) {
         if (attr->u.num & 1)
             this->video_flags = SDL_SWSURFACE;
     }
-    if ((attr=attr_search(attrs, NULL, attr_frame))) {
+    if ((attr=attr_search(attrs, attr_frame))) {
         if(!attr->u.num)
             this->video_flags |= SDL_NOFRAME;
     }
@@ -1424,7 +1428,7 @@ static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics
     this->overlay_enable = 1;
 
     this->aa = 1;
-    if((attr=attr_search(attrs, NULL, attr_antialias)))
+    if((attr=attr_search(attrs, attr_antialias)))
         this->aa = attr->u.num;
 
     this->resize_callback_initial=1;

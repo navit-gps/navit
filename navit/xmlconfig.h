@@ -78,54 +78,56 @@ typedef void *(*object_func_unref)(void *);
  * see fit.
  */
 struct object_func {
-	enum attr_type type;                           /**< The object type */
-	void *(*create)(struct attr *parent, struct attr **attrs); /**< Function to create a new object instance */
-	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter); /**< Function
+    enum attr_type type;                           /**< The object type */
+    void *(*create)(struct attr *parent, struct attr **attrs); /**< Function to create a new object instance */
+    int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter); /**< Function
 	                                                 *  to get an attribute of the object,
 	                                                 *  set to `navit_object_get_attr` for default behavior */
-	struct attr_iter *(*iter_new)(void *);         /**< Function to obtain a new attribute iterator,
+    struct attr_iter *(*iter_new)(void *);         /**< Function to obtain a new attribute iterator,
 	                                                 *  set to `navit_object_attr_iter_new` for default
 	                                                 *  behavior, can be NULL for some object types */
-	void (*iter_destroy)(struct attr_iter *);      /**< Function to destroy an attribute iterator,
+    void (*iter_destroy)(struct attr_iter *);      /**< Function to destroy an attribute iterator,
 	                                                 *  set to `navit_object_attr_iter_destroy` for default
 	                                                 *  behavior, can be NULL for some object types */
-	int (*set_attr)(void *, struct attr *attr);    /**< Function to set an attribute,
+    int (*set_attr)(void *, struct attr *attr);    /**< Function to set an attribute,
 	                                                 *  set to `navit_object_set_attr` for default behavior,
 	                                                 *  can be NULL for some object types */
-	int (*add_attr)(void *, struct attr *attr);    /**< Function to add an attribute,
+    int (*add_attr)(void *, struct attr *attr);    /**< Function to add an attribute,
 	                                                 *  set to `navit_object_add_attr` for default behavior,
 	                                                 *  can be NULL for some object types */
-	int (*remove_attr)(void *, struct attr *attr); /**< Function to remove an attribute,
+    int (*remove_attr)(void *, struct attr *attr); /**< Function to remove an attribute,
 	                                                 *  set to `navit_object_remove_attr` for default behavior,
 	                                                 *  can be NULL for some object types */
-	int (*init)(void *);                           /**< TODO,
+    int (*init)(void *);                           /**< TODO,
 	                                                 *  can be NULL for some object types */
-	void (*destroy)(void *);                       /**< Function to destroy an object instance,
+    void (*destroy)(void *);                       /**< Function to destroy an object instance,
 	                                                 *  set to `navit_object_destroy` for default behavior,
 	                                                 *  can be NULL */
-	void *(*dup)(void *);                          /**< Function to create a copy of an object instance */
-	void *(*ref)(void *);                          /**< Function to increase the reference count for an
+    void *(*dup)(void *);                          /**< Function to create a copy of an object instance */
+    void *(*ref)(void *);                          /**< Function to increase the reference count for an
 	                                                 *  object instance, set to `navit_object_ref` for
 	                                                 *  default behavior, can be NULL for some object types */
-	void *(*unref)(void *);                        /**< Function to decrease the reference count for an
+    void *(*unref)(void *);                        /**< Function to decrease the reference count for an
 	                                                 *  object instance, set to `navit_object_unref` for
 	                                                 *  default behavior, can be NULL for some object types */
 };
 
-extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func, speech_func, navigation_func, route_func, traffic_func;
+extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func,
+           layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func,
+           speech_func, navigation_func, route_func, traffic_func;
 
 #define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_roadprofile || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option || (x) == attr_script || (x) == attr_log || (x) == attr_speech || (x) == attr_navigation || (x) == attr_route)
 
 #define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
 struct navit_object {
-	NAVIT_OBJECT
+    NAVIT_OBJECT
 };
 
 int navit_object_set_methods(void *in, int in_size, void *out, int out_size);
 struct navit_object *navit_object_new(struct attr **attrs, struct object_func *func, int size);
 struct navit_object *navit_object_ref(struct navit_object *obj);
-void navit_object_unref(struct navit_object *obj);
-struct attr_iter * navit_object_attr_iter_new(void);
+void* navit_object_unref(struct navit_object *obj);
+struct attr_iter * navit_object_attr_iter_new(void * unused);
 void navit_object_attr_iter_destroy(struct attr_iter *iter);
 int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void navit_object_callbacks(struct navit_object *obj, struct attr *attr);
@@ -140,10 +142,12 @@ typedef GError xmlerror;
 enum attr_type;
 struct object_func *object_func_lookup(enum attr_type type);
 int xml_parse_file(char *filename, void *data,
-		void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
-		void (*end)(xml_context *, const char *, void *, GError **),
-		void (*text)(xml_context *, const char *, gsize, void *, GError **));
-int xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **), void (*text)(xml_context*, const char *, gsize, void *, GError **));
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **));
+int xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **,
+                   const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context*, const char *, gsize, void *, GError **));
 gboolean config_load(const char *filename, xmlerror **error);
 //static void xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error);
 

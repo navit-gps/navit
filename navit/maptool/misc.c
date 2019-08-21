@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -213,12 +213,20 @@ int item_order_by_type(enum item_type type) {
     return max;
 }
 
+static inline int filter_unknown(struct item_bin * ib) {
+    if(ignore_unknown && (ib->type==type_point_unkn || ib->type==type_street_unkn || ib->type==type_none))
+        return 1;
+    return 0;
+}
+
 static void phase34_process_file(struct tile_info *info, FILE *in, FILE *reference) {
     struct item_bin *ib;
     struct attr_bin *a;
     int max;
 
     while ((ib=read_item(in))) {
+        if(filter_unknown(ib))
+            continue;
         if (ib->type < 0x80000000)
             processed_nodes++;
         else
@@ -239,6 +247,8 @@ static void phase34_process_file_range(struct tile_info *info, FILE *in, FILE *r
     int min,max;
 
     while ((ib=read_item_range(in, &min, &max))) {
+        if(filter_unknown(ib))
+            continue;
         if (ib->type < 0x80000000)
             processed_nodes++;
         else
@@ -278,6 +288,8 @@ static int phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in,
 void dump(FILE *in) {
     struct item_bin *ib;
     while ((ib=read_item(in))) {
+        if(filter_unknown(ib))
+            continue;
         dump_itembin(ib);
     }
 }

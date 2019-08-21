@@ -45,6 +45,7 @@ extern "C" {
 #include <QFont>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 #include <QScreen>
 #include <QSvgRenderer>
@@ -269,12 +270,32 @@ static void gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
     //gc->brush->setColor(col);
 }
 
+void gc_set_texture (struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
+    if(img == NULL) {
+        //disable texture mode
+        gc->brush->setStyle(Qt::SolidPattern);
+    } else {
+        //set and enable texture
+        //Use a new pixmap
+        QPixmap background(img->pixmap->size());
+        //Use fill color
+        background.fill(gc->brush->color());
+        //Get a painter
+        QPainter painter(&background);
+        //Blit the (transparent) image on pixmap.
+        painter.drawPixmap(0, 0, *(img->pixmap));
+        //Set the texture to the brush.
+        gc->brush->setTexture(background);
+    }
+}
+
 static struct graphics_gc_methods gc_methods = {
     gc_destroy,
     gc_set_linewidth,
     gc_set_dashes,
     gc_set_foreground,
-    gc_set_background
+    gc_set_background,
+    gc_set_texture
 };
 
 static struct graphics_gc_priv* gc_new(struct graphics_priv* gr, struct graphics_gc_methods* meth) {
@@ -409,27 +430,45 @@ static void draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, 
         polygon.putPoints(i, 1, p[i].x, p[i].y);
     gr->painter->setPen(*gc->pen);
     gr->painter->setBrush(*gc->brush);
-    /* if the polygon is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->drawPolygon(polygon);
-        gr->painter->setCompositionMode(mode);
-    }
+
     gr->painter->drawPolygon(polygon);
+}
+
+static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+    int i;
+    int j;
+    QPainterPath path;
+    QPainterPath inner;
+    QPolygon polygon;
+    //dbg(lvl_error,"enter gr=%p, gc=%p, (%d, %d) holes %d", gr, gc, p->x, p->y, hole_count);
+    if (gr->painter == NULL)
+        return;
+    gr->painter->setPen(*gc->pen);
+    gr->painter->setBrush(*gc->brush);
+    /* construct outer polygon */
+    for (i = 0; i < count; i++)
+        polygon.putPoints(i, 1, p[i].x, p[i].y);
+    /* add it to outer path */
+    path.addPolygon(polygon);
+    /* construct the polygons for the holes and add them to inner */
+    for(j=0; j<hole_count; j ++) {
+        QPolygon hole;
+        for (i = 0; i < ccount[j]; i++)
+            hole.putPoints(i, 1, holes[j][i].x, holes[j][i].y);
+        inner.addPolygon(hole);
+    }
+    /* intersect */
+    if(hole_count > 0)
+        path = path.subtracted(inner);
+
+    gr->painter->drawPath(path);
 }
 
 static void draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h) {
     //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
     if (gr->painter == NULL)
         return;
-    /* if the rectangle is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
-        gr->painter->setCompositionMode(mode);
-    }
     gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
 }
 
@@ -610,9 +649,11 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     case draw_mode_begin:
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
         gr->use_count++;
-        if (gr->painter == NULL)
+        if (gr->painter == NULL) {
+            if(gr->parent != NULL)
+                gr->pixmap->fill(QColor(0,0,0,0));
             gr->painter = new QPainter(gr->pixmap);
-        else
+        } else
             dbg(lvl_debug, "drawing on %p already active", gr);
         break;
     case draw_mode_end:
@@ -852,7 +893,8 @@ static struct graphics_methods graphics_methods = {
     NULL, //set_attr
     NULL, //show_native_keyboard
     NULL, //hide_native_keyboard
-    get_dpi
+    get_dpi,
+    draw_polygon_with_holes
 };
 
 /* create new graphics context on given context */
@@ -923,7 +965,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     //dbg(lvl_debug,"enter");
 
     /* get qt widget attr */
-    if ((attr_widget = attr_search(attrs, NULL, attr_qt5_widget))) {
+    if ((attr_widget = attr_search(attrs, attr_qt5_widget))) {
         /* check if we shall use qml */
         if (strcmp(attr_widget->u.str, "qwidget") == 0) {
             use_qml = false;
@@ -942,7 +984,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     *meth = graphics_methods;
 
     /* get event loop from config and request event loop*/
-    event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
+    event_loop_system = attr_search(attrs, attr_event_loop_system);
     if (event_loop_system && event_loop_system->u.str) {
         //dbg(lvl_debug, "event_system is %s", event_loop_system->u.str);
         if (!event_request_system(event_loop_system->u.str, "graphics_qt5"))
@@ -971,7 +1013,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->argv[graphics_priv->argc] = g_strdup("navit");
     graphics_priv->argc++;
     /* Get qt platform from config */
-    if ((platform = attr_search(attrs, NULL, attr_qt5_platform))) {
+    if ((platform = attr_search(attrs, attr_qt5_platform))) {
         graphics_priv->argv[graphics_priv->argc] = g_strdup("-platform");
         graphics_priv->argc++;
         graphics_priv->argv[graphics_priv->argc] = g_strdup(platform->u.str);
@@ -1037,7 +1079,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
         graphics_priv->widget = new QNavitWidget(graphics_priv, NULL, Qt::Window);
     }
 #endif
-    if ((fullscreen = attr_search(attrs, NULL, attr_fullscreen)) && (fullscreen->u.num)) {
+    if ((fullscreen = attr_search(attrs, attr_fullscreen)) && (fullscreen->u.num)) {
         /* show this maximized */
 #if USE_QML
         if (graphics_priv->window != NULL)
@@ -1061,10 +1103,10 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
             geomet = primary->availableGeometry();
         }
         /* check for height */
-        if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))
+        if ((h = attr_search(attrs, attr_h)) && (h->u.num > 100))
             geomet.setHeight(h->u.num);
         /* check for width */
-        if ((w = attr_search(attrs, NULL, attr_w)) && (w->u.num > 100))
+        if ((w = attr_search(attrs, attr_w)) && (w->u.num > 100))
             geomet.setWidth(w->u.num);
 #if USE_QML
         if (graphics_priv->window != NULL) {

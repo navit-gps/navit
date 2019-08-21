@@ -28,9 +28,9 @@ struct point;
 struct vehicle_priv;
 
 struct vehicle_methods {
-	void (*destroy)(struct vehicle_priv *priv);
-	int (*position_attr_get)(struct vehicle_priv *priv, enum attr_type type, struct attr *attr);
-	int (*set_attr)(struct vehicle_priv *priv, struct attr *attr);
+    void (*destroy)(struct vehicle_priv *priv);
+    int (*position_attr_get)(struct vehicle_priv *priv, enum attr_type type, struct attr *attr);
+    int (*set_attr)(struct vehicle_priv *priv, struct attr *attr);
 };
 
 /* prototypes */
@@ -43,7 +43,7 @@ struct point;
 struct vehicle;
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
 void vehicle_destroy(struct vehicle *this_);
-struct attr_iter *vehicle_attr_iter_new(void);
+struct attr_iter *vehicle_attr_iter_new(void * unused);
 void vehicle_attr_iter_destroy(struct attr_iter *iter);
 int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr);

@@ -220,7 +220,7 @@ void plugin_destroy(struct plugin *pl) {
 }
 
 struct plugins *
-plugins_new(void) {
+plugins_new(struct attr * in, struct attr ** out) {
     struct plugins *ret=g_new0(struct plugins, 1);
     ret->hash=g_hash_table_new(g_str_hash, g_str_equal);
     pls=ret;
@@ -243,17 +243,17 @@ plugin_new(struct attr *parent, struct attr **attrs) {
     if (parent)
         pls=parent->u.plugins;
 
-    if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
+    if (! (path_attr=attr_search(attrs, attr_path))) {
         dbg(lvl_error,"missing path");
         return NULL;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_active))) {
+    if ( (attr=attr_search(attrs, attr_active))) {
         active=attr->u.num;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_lazy))) {
+    if ( (attr=attr_search(attrs, attr_lazy))) {
         lazy=attr->u.num;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_ondemand))) {
+    if ( (attr=attr_search(attrs, attr_ondemand))) {
         ondemand=attr->u.num;
     }
     dbg(lvl_debug, "path=\"%s\", active=%d, lazy=%d, ondemand=%d",path_attr->u.str, active, lazy, ondemand);
@@ -300,7 +300,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 #endif
 }
 
-void plugins_init(struct plugins *pls) {
+int plugins_init(struct plugins *pls) {
 #ifdef USE_PLUGINS
     struct plugin *pl;
     GList *l;
@@ -322,6 +322,7 @@ void plugins_init(struct plugins *pls) {
         dbg(lvl_error, "Warning: No plugins found. Is Navit installed correctly?");
     }
 #endif
+    return 0;
 }
 
 void plugins_destroy(struct plugins *pls) {

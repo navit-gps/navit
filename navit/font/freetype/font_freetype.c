@@ -86,7 +86,8 @@ static int library_init = 0;
 static int library_deinit = 0;
 
 
-static void font_freetype_get_text_bbox(struct graphics_priv *gr, struct font_freetype_font *font, char *text, int dx, int dy, struct point *ret, int estimate) {
+static void font_freetype_get_text_bbox(struct graphics_priv *gr, struct font_freetype_font *font, char *text, int dx,
+                                        int dy, struct point *ret, int estimate) {
     char *p = text;
     FT_BBox bbox;
     FT_UInt glyph_index;
@@ -233,8 +234,12 @@ static struct font_freetype_text *font_freetype_text_new(char *text, struct font
 #else
             fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8, text, textlen, unicode_text);
 #endif
-        fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
-        // TODO: check return value
+        /* fribidi_log2vis seems to be deprecated, but I don't know what to replace it with */
+        if(fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL) == 0) {
+            dbg(lvl_error,"fribidi_log2vis error condition detected. Try to recover");
+            /* error condition. Continue withthe original unicode text instead */
+            memcpy(visual_unicode_text, unicode_text, sizeof(unicode_text));
+        }
 #ifdef FRIBIDIOLD
         fribidi_unicode_to_utf8(visual_unicode_text, unicode_len, visual_text);
 #else
@@ -362,7 +367,8 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 #endif
 
 /** Implementation of font_freetype_methods.font_new */
-static struct font_freetype_font *font_freetype_font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags) {
+static struct font_freetype_font *font_freetype_font_new(struct graphics_priv *gr, struct graphics_font_methods *meth,
+        char *fontfamily, int size, int flags) {
     struct font_freetype_font *font =
         g_new(struct font_freetype_font, 1);
     int exact, found=0;
@@ -503,7 +509,8 @@ static struct font_freetype_font *font_freetype_font_new(struct graphics_priv *g
 }
 
 /** Implementation of font_freetype_methods.get_shadow. */
-static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *foreground, struct color *background) {
+static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g, unsigned char *data, int stride,
+        struct color *foreground, struct color *background) {
     int x, y, w = g->w, h = g->h;
     unsigned int bg, fg;
     unsigned char *pm, *psp,*ps,*psn;
@@ -555,7 +562,8 @@ static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g, unsigne
 }
 
 /** Implementation of font_freetype_methods.get_glyph. */
-static int font_freetype_glyph_get_glyph(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *fg, struct color *bg, struct color *transparent) {
+static int font_freetype_glyph_get_glyph(struct font_freetype_glyph *g, unsigned char *data, int stride,
+        struct color *fg, struct color *bg, struct color *transparent) {
     int x, y, w = g->w, h = g->h;
     unsigned int tr;
     unsigned char v,vi,*pm, *ps;

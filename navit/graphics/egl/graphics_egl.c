@@ -1254,16 +1254,16 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
     this->show_overlays = 1;
 
     this->width = SCREEN_WIDTH;
-    if ((attr = attr_search(attrs, NULL, attr_w)))
+    if ((attr = attr_search(attrs, attr_w)))
         this->width = attr->u.num;
     this->height = SCREEN_HEIGHT;
-    if ((attr = attr_search(attrs, NULL, attr_h)))
+    if ((attr = attr_search(attrs, attr_h)))
         this->height = attr->u.num;
     this->timeout = 100;
-    if ((attr = attr_search(attrs, NULL, attr_timeout)))
+    if ((attr = attr_search(attrs, attr_timeout)))
         this->timeout = attr->u.num;
     this->delay = 0;
-    if ((attr = attr_search(attrs, NULL, attr_delay)))
+    if ((attr = attr_search(attrs, attr_delay)))
         this->delay = attr->u.num;
     this->cbl = cbl;
 
