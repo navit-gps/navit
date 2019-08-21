@@ -23,9 +23,9 @@ export JVM_OPTS="-Xmx3200m"
 export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
 # processing xml is messed up a bit after the original introduction of gradle
-# so a useless install of ant here even if using gradle/ninja
+# so require a useless install of ant here even if using gradle/ninja
 
-sudo apt-get install -y ant
+which ant > /dev/null || { echo "FATAL: ant is not installed; install manually and retry."; exit 1; }
 
 echo Run CMake
 test -z "$PKG_CONFIG_LIBDIR" && export PKG_CONFIG_LIBDIR=""     # Force cmake below to run ignore build host libraries when using pkgconfig.
