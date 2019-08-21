@@ -905,6 +905,29 @@ attr_list_dup(struct attr **attrs) {
     return ret;
 }
 
+/**
+ * @brief Retrieves an attribute from a line in textfile format.
+ *
+ * If `name` is NULL, this function returns the first attribute found; otherwise it looks for an attribute
+ * named `name`.
+ *
+ * If `pos` is specified, it acts as an offset pointer: Any data in `line` before `*pos` will be skipped.
+ * When the function returns, the value pointed to by `pos` will be incremented by the number of characters
+ * parsed. This can be used to iteratively retrieve all attributes: declare a local variable, set it to zero,
+ * then iteratively call this function with a pointer to the same variable until it returns false.
+ *
+ * `val_ret` must be allocated (and later freed) by the caller, and have sufficient capacity to hold the
+ * parsed value including the terminating NULL character. The minimum safe size is
+ * `strlen(line) - strlen(name) - *pos` (assuming zero for NULL pointers).
+ *
+ * @param line The line to parse
+ * @param name The name of the attribute to retrieve; if NULL,
+ * @param pos Offset pointer, see description
+ * @param val_ret Points to a buffer which will receive the value as text
+ * @param name_ret Points to a buffer which will receive the name of the attribute parsed, can be NULL
+ *
+ * @return true if successful, false in case of failure
+ */
 int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
     int len=0,quoted;
     char *p,*e,*n;
