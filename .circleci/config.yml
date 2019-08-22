@@ -78,10 +78,10 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+          name: Install ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+            sudo apt-get install -y ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
           name: Install Android SDK components
           command: sdkmanager "cmake;3.6.4111459"
