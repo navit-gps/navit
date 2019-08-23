@@ -46,3 +46,4 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    :caption: Navit's developer documentation
 
    development/programming_guidelines
+   development/commit_guidelines
