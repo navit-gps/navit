@@ -61,7 +61,7 @@ jobs:
           command:  mkdir ../rpmbuild
       - run:
           name: run build
-          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
       - store_artifacts:
           name: Store rpm
           path: ../rpmbuild/RPMS/
