@@ -180,5 +180,13 @@ void relations_destroy(struct relations *relations) {
         g_hash_table_foreach(relations->member_hash[i], (GHFunc)relations_destroy_func, NULL);
         g_hash_table_destroy(relations->member_hash[i]);
     }
+    if(relations->default_members != NULL) {
+        GList *ll=relations->default_members;
+        while (ll) {
+            g_free(ll->data);
+            ll=g_list_next(ll);
+        }
+        g_list_free(relations->default_members);
+    }
     g_free(relations);
 }
