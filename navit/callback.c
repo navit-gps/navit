@@ -23,6 +23,7 @@
 #include "debug.h"
 #include "callback.h"
 
+
 struct callback {
     /* func has variable number of arguments, not (void),
      * but we must declare something... */
@@ -34,6 +35,8 @@ struct callback {
 };
 
 struct callback_list {
+    callback_patch patch;
+    void * patch_context;
     GList *list;
 };
 
@@ -115,6 +118,13 @@ void callback_list_remove_destroy(struct callback_list *l, struct callback *cb) 
     g_free(cb);
 }
 
+void callback_list_add_patch_function (struct callback_list *l, callback_patch patch, void * context) {
+    if(!l)
+        return;
+    l->patch = patch;
+    l->patch_context = context;
+}
+
 void callback_call(struct callback *cb, int pcount, void **p) {
     int i;
     void *pf[8];
@@ -193,6 +203,8 @@ void callback_list_call_attr(struct callback_list *l, enum attr_type type, int p
     if (!l) {
         return;
     }
+    if(l->patch != NULL)
+        l->patch(l, type, pcount, p, l->patch_context);
 
     cbi=l->list;
     while (cbi) {

@@ -16,7 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #include <glib.h>
 #ifdef HAVE_UNISTD_H
@@ -42,7 +41,7 @@ extern "C" {
 #include <windows.h>
 #endif
 #include "QNavitWidget.h"
-#include "QNavitWidget.moc"
+//#include "QNavitWidget.moc"
 #include "graphics_qt5.h"
 
 QNavitWidget::QNavitWidget(struct graphics_priv* my_graphics_priv,
@@ -89,17 +88,23 @@ void QNavitWidget::paintEvent(QPaintEvent* event) {
     painter.drawPixmap(event->rect().x(), event->rect().y(), *graphics_priv->pixmap,
                        event->rect().x() - graphics_priv->scroll_x, event->rect().y() - graphics_priv->scroll_y,
                        event->rect().width(), event->rect().height());
-    paintOverlays(&painter, graphics_priv, event);
+    /* disable on root pane disables ALL overlays (for drag of background) */
+    if(!(graphics_priv->disable)) {
+        paintOverlays(&painter, graphics_priv, event);
+    };
 }
 
 void QNavitWidget::resizeEvent(QResizeEvent* event) {
     QPainter* painter = NULL;
     if (graphics_priv->pixmap != NULL) {
-        delete graphics_priv->pixmap;
-        graphics_priv->pixmap = NULL;
+        if((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
+            delete graphics_priv->pixmap;
+            graphics_priv->pixmap = NULL;
+        }
     }
-
-    graphics_priv->pixmap = new QPixmap(size());
+    if (graphics_priv->pixmap == NULL) {
+        graphics_priv->pixmap = new QPixmap(size());
+    }
     painter = new QPainter(graphics_priv->pixmap);
     if (painter != NULL) {
         QBrush brush;

@@ -167,6 +167,10 @@ struct zip64_eocl {
 	int zip74lnum;
 } ATTRIBUTE_PACKED;
 
+struct zip_alignment_check {
+	int x[sizeof(struct zip_cd) == 46 ? 1:-1];
+};
+
 #ifdef HAVE_PRAGMA_PACK
 #pragma pack(pop)
 #endif

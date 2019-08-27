@@ -476,7 +476,7 @@ gui_internal_time_help(struct gui_priv *this) {
 /**
  * Applies the configuration values to this based on the settings
  * specified in the configuration file (this->config) and
- * the most approriate default profile based on screen resolution.
+ * the most appropriate default profile based on screen resolution.
  *
  * This function should be run after this->root is setup and could
  * be rerun after the window is resized.
@@ -895,125 +895,6 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 }
 
 /**
- * @brief Get the search result map (and create it if it does not exist)
- *
- * @param this The GUI context
- *
- * @return A pointer to the map named "search_results" or NULL if there wasa failure
- */
-static struct map *get_search_results_map(struct gui_priv *this) {
-
-    struct mapset *ms;
-    struct map *map;
-
-    ms=navit_get_mapset(this->nav);
-
-    if(!ms)
-        return NULL;
-
-    map=mapset_get_map_by_name(ms, "search_results");
-    if(!map) {
-        struct attr *attrs[10], attrmap;
-        enum attr_type types[]= {attr_position_longitude,attr_position_latitude,attr_label,attr_none};
-        int i;
-
-        attrs[0]=g_new0(struct attr,1);
-        attrs[0]->type=attr_type;
-        attrs[0]->u.str="csv";
-
-        attrs[1]=g_new0(struct attr,1);
-        attrs[1]->type=attr_name;
-        attrs[1]->u.str="search_results";
-
-        attrs[2]=g_new0(struct attr,1);
-        attrs[2]->type=attr_charset;
-        attrs[2]->u.str="utf-8";
-
-        attrs[3]=g_new0(struct attr,1);
-        attrs[3]->type=attr_item_type;
-        attrs[3]->u.num=type_found_item;
-
-        attrs[4]=g_new0(struct attr,1);
-        attrs[4]->type=attr_attr_types;
-        attrs[4]->u.attr_types=types;
-        attrs[5]=NULL;
-
-        attrmap.type=attr_map;
-        map=attrmap.u.map=map_new(NULL,attrs);
-        if(map)
-            mapset_add_attr(ms,&attrmap);
-
-        for(i=0; attrs[i]; i++)
-            g_free(attrs[i]);
-    }
-    return map;
-}
-
-/**
- * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
- *
- * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
- */
-static void square_shape_str(char *s) {
-    char *c;
-    char *last_break;
-    unsigned int max_cols = 0;
-    unsigned int cur_cols = 0;
-    unsigned int max_rows = 0;
-    unsigned int surface;
-    unsigned int target_cols;
-
-    if (!s)
-        return;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
-            if (max_cols < cur_cols)
-                max_cols = cur_cols;
-            cur_cols = 0;
-            max_rows++;
-        } else
-            cur_cols++;
-    }
-    if (max_cols < cur_cols)
-        max_cols = cur_cols;
-    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
-        max_rows++;
-    /* Give twice more room for rows (hence the factor 2 below)
-     * This will render as a rectangular shape, taking more horizontal space than vertical */
-    surface = max_rows * 2 * max_cols;
-    target_cols = uint_sqrt(surface);
-
-    if (target_cols < max_cols)
-        target_cols = max_cols;
-
-    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
-    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
-        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
-
-    cur_cols = 0;
-    last_break = NULL;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
-            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
-                if (last_break) {
-                    *last_break =
-                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-                    cur_cols = c-last_break;
-                }
-            }
-            last_break = c;	/* Record this position as a candidate to insert a line break */
-        }
-        cur_cols++;
-    }
-    if (cur_cols>=target_cols && last_break) {
-        *last_break =
-            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-    }
-
-    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
-}
-
-/**
  * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
  *        the style type_found_item (name for each point will also be displayed aside)
  *
@@ -1024,28 +905,10 @@ static void square_shape_str(char *s) {
  */
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
     struct widget *w;
-    struct map *map;
-    struct map_rect *mr;
-    struct item *item;
-    GList *l;
+    GList *l;	/* Cursor in the list of widgets */
+    GList* list = NULL;	/* List we will create to store the points to add to the result map */
     struct attr a;
-    int count;
-    char *name_label;
-
-    map = get_search_results_map(this);
-    if(!map)
-        return;
-
-
-    mr = map_rect_new(map, NULL);
-
-    if(!mr)
-        return;
-
-    /* Clean the map */
-    while((item = map_rect_get_item(mr))!=NULL) {
-        item_type_set(item,type_none);
-    }
+    GList* p;
 
     this->results_map_population=0;
 
@@ -1053,43 +916,33 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     for(w=table; w && w->type!=widget_table; w=w->parent);
 
     if(!w) {
-        map_rect_destroy(mr);
         dbg(lvl_warning,"Can't find the results table - only map clean up is done.");
-        return;
-    }
-
-    /* Populate the map with search results*/
-    for(l=w->children, count=0; l; l=g_list_next(l)) {
-        struct widget *wr=l->data;
-        if(wr->type==widget_table_row) {
-            struct widget *wi=wr->children->data;
-            struct item* it;
-            if(wi->name==NULL)
-                continue;
-            dbg(lvl_info,"%s",wi->name);
-            it=map_rect_create_item(mr,type_found_item);
-            if(it) {
-                struct coord c;
-                struct attr a;
-                c.x=wi->c.x;
-                c.y=wi->c.y;
-                item_coord_set(it, &c, 1, change_mode_modify);
-                a.type=attr_label;
-                name_label = g_strdup(wi->name);
-                square_shape_str(name_label);
-                a.u.str=name_label;
-                item_attr_set(it, &a, change_mode_modify);
-                if (r) {
-                    if(!count++)
-                        r->lu=r->rl=c;
-                    else
-                        coord_rect_extend(r,&c);
-                }
+    } else {
+        /* Create a GList containing all search results */
+        for(l=w->children; l; l=g_list_next(l)) {
+            struct widget *wr=l->data;
+            if(wr->type==widget_table_row) {
+                struct widget *wi=wr->children->data;
+                if(wi->name==NULL)
+                    continue;
+                struct lcoord *result = g_new0(struct lcoord, 1);
+                result->c.x=wi->c.x;
+                result->c.y=wi->c.y;
+                result->label=g_strdup(wi->name);
+                list = g_list_prepend(list, result);
             }
         }
     }
-    map_rect_destroy(mr);
-    if(!count)
+    this->results_map_population=navit_populate_search_results_map(this->nav, list, r);
+    /* Parse the GList starting at list and free all payloads before freeing the list itself */
+    if (list) {
+        for(p=list; p; p=g_list_next(p)) {
+            if (((struct lcoord *)(p->data))->label)
+                g_free(((struct lcoord *)(p->data))->label);
+        }
+    }
+    g_list_free(list);
+    if(!this->results_map_population)
         return;
     a.type=attr_orientation;
     a.u.num=0;
@@ -1098,7 +951,6 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
         navit_zoom_to_rect(this->nav,r);
         gui_internal_prune_menu(this, NULL);
     }
-    this->results_map_population=count;
 }
 
 /**
@@ -2679,33 +2531,50 @@ static void gui_internal_setup(struct gui_priv *this) {
     g_free(gui_file);
 }
 
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void gui_internal_resize(void *data, int w, int h) {
+/**
+ * @brief Callback function invoked when display area is resized
+ *
+ * @param data A generic argument structure pointer, here we use it to store the the internal GUI context (this)
+ * @param wnew The new width of the display area
+ * @param hnew The new height of the display area
+ *
+ * @author Martin Schaller
+ * @date 2008/04
+ */
+static void gui_internal_resize(void *data, int wnew, int hnew) {
+    GList *l;
+    struct widget *w;
+
     struct gui_priv *this=data;
     int changed=0;
 
     gui_internal_setup(this);
 
-    if (this->root.w != w || this->root.h != h) {
-        this->root.w=w;
-        this->root.h=h;
-        changed=1;
-    }
+    changed=gui_internal_menu_needs_resizing(this, &(this->root), wnew, hnew);
+
     /*
      * If we're drawing behind system bars on Android, watching for actual size changes will not catch
      * fullscreen toggle events. As a workaround, always assume a size change if padding is supplied.
      */
     if (!changed && this->gra && graphics_get_data(this->gra, "padding"))
         changed = 1;
-    dbg(lvl_debug,"w=%d h=%d children=%p", w, h, this->root.children);
-    navit_handle_resize(this->nav, w, h);
+    navit_handle_resize(this->nav, wnew, hnew);
     if (this->root.children) {
         if (changed) {
-            gui_internal_html_main_menu(this);
+            l = g_list_last(this->root.children);
+            if (l) {
+                w=l->data;
+                if (!gui_internal_widget_reload_href(this,
+                                                     w)) { /* If the foremost widget is a HTML menu, reload & redraw it from its href */
+                    /* If not, resize the foremost widget */
+                    dbg(lvl_debug, "Current GUI displayed is not a menu");
+                    dbg(lvl_debug, "Will call resize with w=%d, h=%d", wnew, hnew)
+                    gui_internal_menu_resize(this, wnew, hnew);
+                    gui_internal_menu_render(this);
+                } else {
+                    dbg(lvl_debug,"Current GUI displayed is a menu");
+                }
+            }
         } else {
             gui_internal_menu_render(this);
         }

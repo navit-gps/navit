@@ -142,8 +142,8 @@ enum event_type {
 	event_restriction_exit_blocked,                    /*!< `q_int` th exit slip road blocked */
 	event_restriction_exit_reopened,                   /*!< Exit reopened */
 	event_restriction_intermittent_closures,           /*!< Intermittent short term closures */
-	event_restriction_lane_blocked,                    /*!< `q:int` lanes blocked */
-	event_restriction_lane_closed,                     /*!< `q:int` lanes closed */
+	event_restriction_lane_blocked,                    /*!< `q_int` lanes blocked */
+	event_restriction_lane_closed,                     /*!< `q_int` lanes closed */
 	event_restriction_open,                            /*!< Open */
 	event_restriction_ramp_blocked,                    /*!< Ramps blocked */
 	event_restriction_ramp_closed,                     /*!< Ramps closed */
@@ -226,6 +226,7 @@ enum si_type {
 	si_vehicle_with_trailer,      /*!< For vehicles with trailers only (TODO currently not supported) */
 };
 
+struct traffic;
 struct traffic_priv;
 struct traffic_location_priv;
 struct traffic_message_priv;

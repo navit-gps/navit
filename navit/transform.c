@@ -261,7 +261,16 @@ transform_dup(struct transformation *t) {
 static const navit_float gar2geo_units = 360.0/(1<<24);
 static const navit_float geo2gar_units = 1/(360.0/(1<<24));
 
-void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g) {
+/**
+ * @brief Transform the coordinates of a geographical point from a coord representation to a geographical (lat, long) representation
+ *
+ * @note This is the reverse of transform_from_geo()
+ *
+ * @param pro The projection to use during the transformation
+ * @param[in] c The coordinates as a struct coord format
+ * @param[out] g The coordinates converted to coord_geo (latitude, longitude)
+ */
+void transform_to_geo(enum projection pro, const struct coord *c, struct coord_geo *g) {
     int x,y,northern,zone;
     switch (pro) {
     case projection_mg:
@@ -288,7 +297,16 @@ void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
     }
 }
 
-void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c) {
+/**
+ * @brief Transform the coordinates of a geographical point from a geographical (lat, long) representation to a coord representation
+ *
+ * @note This is the reverse of transform_to_geo()
+ *
+ * @param pro The projection to use during the transformation
+ * @param[in] g The coordinates as coord_geo (latitude, longitude)
+ * @param[out] c The coordinates converted to a struct coord format
+ */
+void transform_from_geo(enum projection pro, const struct coord_geo *g, struct coord *c) {
     switch (pro) {
     case projection_mg:
         c->x=g->lng*6371000.0*M_PI/180;
@@ -993,6 +1011,15 @@ int transform_int_scale(int y) {
 }
 #endif
 
+/**
+ * @brief Calculates the distance between two points.
+ *
+ * @param pro The projection used for `c1` and `c2`.
+ * @param c1 The first point.
+ * @param c2 The second point.
+ *
+ * @return The distance in meters.
+ */
 double transform_distance(enum projection pro, struct coord *c1, struct coord *c2) {
     if (pro == projection_mg) {
 #ifndef AVOID_FLOAT

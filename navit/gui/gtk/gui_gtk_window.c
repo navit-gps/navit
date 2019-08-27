@@ -325,6 +325,7 @@ static void gui_gtk_action_activate(GtkAction *action, struct action_cb_data *da
     if(data->attr.type == attr_destination) {
         char * label;
         g_object_get(G_OBJECT(action), "label", &label,NULL);
+        navit_populate_search_results_map(data->gui->nav, NULL, NULL); 	/* Remove any highlighted point on the map */
         navit_set_destination(data->gui->nav, data->attr.u.pcoord, label, 1);
         g_free(label);
     }
