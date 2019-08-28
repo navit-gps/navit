@@ -27,7 +27,6 @@
 #include <XGetopt.h>
 #endif
 #include "config_.h"
-#include "version.h"
 #include "item.h"
 #include "coord.h"
 #include "main.h"
@@ -46,12 +45,12 @@
 #include "atom.h"
 #include "command.h"
 #include "geom.h"
+#include "traffic.h"
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
 #endif
 
-char *version=PACKAGE_VERSION"+git:"GIT_VERSION""NAVIT_VARIANT;
 int main_argc;
 char * const* main_argv;
 
@@ -110,6 +109,7 @@ int main_real(int argc, char * const* argv) {
     search_init();
     linguistics_init();
     geom_init();
+    traffic_init();
     config_file=NULL;
 #ifdef HAVE_GETOPT_H
     opterr=0;  //don't bomb out on errors.
@@ -126,7 +126,7 @@ int main_real(int argc, char * const* argv) {
                 exit(0);
                 break;
             case 'v':
-                printf("%s %s\n", "navit", version);
+                printf("%s %s\n", "navit", NAVIT_VERSION);
                 exit(0);
                 break;
             case 'c':
@@ -189,7 +189,7 @@ int main_real(int argc, char * const* argv) {
         li = g_list_next(li);
     }
 
-    dbg(lvl_debug,"Loading %s",config_file);
+    dbg(lvl_debug,"Loading config from '%s'",config_file);
     if (!config_load(config_file, &error)) {
         dbg(lvl_error, _("Error parsing config file '%s': %s"), config_file, error ? error->message : "");
     } else {

@@ -445,7 +445,14 @@ static void gui_internal_html_text(xml_context *dummy, const char *text, gsize l
 }
 
 void gui_internal_html_parse_text(struct gui_priv *this, char *doc) {
-    xml_parse_text(doc, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+    int res;
+
+    res = xml_parse_text(doc, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+
+    if (!res) {
+        dbg(lvl_error, "FATAL: Failed to parse XML data (looks like incorrect configuration for internal GUI).\n");
+        exit(1);
+    }
 }
 
 void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor) {

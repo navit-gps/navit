@@ -23,6 +23,7 @@
 #include "debug.h"
 #include "callback.h"
 
+
 struct callback {
     /* func has variable number of arguments, not (void),
      * but we must declare something... */
@@ -34,18 +35,18 @@ struct callback {
 };
 
 struct callback_list {
+    callback_patch patch;
+    void * patch_context;
     GList *list;
 };
 
-struct callback_list *
-callback_list_new(void) {
+struct callback_list * callback_list_new(void) {
     struct callback_list *ret=g_new0(struct callback_list, 1);
 
     return ret;
 }
 
-struct callback *
-callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p) {
+struct callback * callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p) {
     struct callback *ret;
     int i;
 
@@ -59,8 +60,7 @@ callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p)
     return ret;
 }
 
-struct callback *
-callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) {
+struct callback * callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -71,13 +71,11 @@ callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...) 
     return callback_new_attr(func, type, count, p);
 }
 
-struct callback *
-callback_new(void (*func)(void), int pcount, void **p) {
+struct callback * callback_new(void (*func)(void), int pcount, void **p) {
     return callback_new_attr(func, attr_none, pcount, p);
 }
 
-struct callback *
-callback_new_args(void (*func)(void), int count, ...) {
+struct callback * callback_new_args(void (*func)(void), int count, ...) {
     int i;
     void **p=g_alloca(sizeof(void*)*count);
     va_list ap;
@@ -103,8 +101,7 @@ void callback_list_add(struct callback_list *l, struct callback *cb) {
 }
 
 
-struct callback *
-callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p) {
+struct callback * callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p) {
     struct callback *ret;
 
     ret=callback_new(func, pcount, p);
@@ -119,6 +116,13 @@ void callback_list_remove(struct callback_list *l, struct callback *cb) {
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb) {
     callback_list_remove(l, cb);
     g_free(cb);
+}
+
+void callback_list_add_patch_function (struct callback_list *l, callback_patch patch, void * context) {
+    if(!l)
+        return;
+    l->patch = patch;
+    l->patch_context = context;
 }
 
 void callback_call(struct callback *cb, int pcount, void **p) {
@@ -199,6 +203,8 @@ void callback_list_call_attr(struct callback_list *l, enum attr_type type, int p
     if (!l) {
         return;
     }
+    if(l->patch != NULL)
+        l->patch(l, type, pcount, p, l->patch_context);
 
     cbi=l->list;
     while (cbi) {

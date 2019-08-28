@@ -93,6 +93,245 @@ int navit_utf8_strcasecmp(const char *s1, const char *s2) {
     return cmpres;
 }
 
+/**
+ * @brief Trims all leading and trailing whitespace characters from a string.
+ *
+ * Whitespace characters are all up to and including 0x20.
+ *
+ * This function operates in-place, i.e. `s` will be modified.
+ *
+ * @param s The string to trim
+ */
+static void strtrim(char *s) {
+    char *tmp = g_strdup(s);
+    char *in = tmp;
+    while (strlen(in) && (in[0] <= 0x20))
+        in++;
+    while (strlen(in) && (in[strlen(in) - 1] <= 0x20))
+        in[strlen(in) - 1] = 0;
+    strcpy(s, in);
+    g_free(tmp);
+}
+
+/**
+ * @brief Parser states for `parse_for_systematic_comparison()`.
+ */
+enum parse_state {
+    parse_state_whitespace,
+    parse_state_numeric,
+    parse_state_alpha,
+};
+
+/**
+ * @brief Parses a string for systematic comparison.
+ *
+ * This is a helper function for `compare_name_systematic()`.
+ *
+ * The string is broken down into numeric and non-numeric parts. Whitespace characters are discarded
+ * unless they are surrounded by string characters, in which case the whole unit is treated as one
+ * string part. All strings are converted to lowercase and leading zeroes stripped from numbers.
+ *
+ * @param s The string to parse
+ *
+ * @return A buffer containing the parsed string, parts delimited by a null character, the last part
+ * followed by a double null character.
+ */
+static char * parse_for_systematic_comparison(const char *s) {
+    char *ret = g_malloc0(strlen(s) * 2 + 1);
+    const char *in = s;
+    char *out = ret;
+    char *part;
+    enum parse_state state = parse_state_whitespace;
+    int i = 0;
+    char c;
+
+    dbg(lvl_debug, "enter\n");
+
+    while (i < strlen(in)) {
+        c = in[i];
+        if ((c <= 0x20) || (c == ',') || (c == '-') || (c == '.') || (c == '/')) {
+            /* whitespace */
+            if (state == parse_state_numeric) {
+                part = g_malloc0(i + 1);
+                strncpy(part, in, i);
+                sprintf(part, "%d", atoi(part));
+                strcpy(out, part);
+                out += strlen(part) + 1;
+                dbg(lvl_debug, "part='%s'\n", part);
+                g_free(part);
+                in += i;
+                i = 1;
+                state = parse_state_whitespace;
+            } else
+                i++;
+        } else if ((c >= '0') && (c <= '9')) {
+            /* numeric */
+            if (state == parse_state_alpha) {
+                part = g_malloc0(i + 1);
+                strncpy(part, in, i);
+                strtrim(part);
+                strcpy(out, part);
+                out += strlen(part) + 1;
+                dbg(lvl_debug, "part='%s'\n", part);
+                g_free(part);
+                in += i;
+                i = 1;
+            } else
+                i++;
+            state = parse_state_numeric;
+        } else {
+            /* alpha */
+            if (state == parse_state_numeric) {
+                part = g_malloc0(i + 1);
+                strncpy(part, in, i);
+                sprintf(part, "%d", atoi(part));
+                strcpy(out, part);
+                out += strlen(part) + 1;
+                dbg(lvl_debug, "part='%s'\n", part);
+                g_free(part);
+                in += i;
+                i = 1;
+            } else
+                i++;
+            state = parse_state_alpha;
+        }
+    }
+
+    if (strlen(in) > 0) {
+        if (state == parse_state_numeric) {
+            part = g_malloc0(strlen(in) + 1);
+            strcpy(part, in);
+            sprintf(part, "%d", atoi(part));
+            strcpy(out, part);
+            dbg(lvl_debug, "part='%s'\n", part);
+            g_free(part);
+        } else if (state == parse_state_alpha) {
+            part = g_malloc0(strlen(in) + 1);
+            strcpy(part, in);
+            strtrim(part);
+            strcpy(out, part);
+            dbg(lvl_debug, "part='%s'\n", part);
+            g_free(part);
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * @brief Compares two name_systematic strings.
+ *
+ * A name_systematic string is typically used for road reference numbers (A 4, I-51, SP526). This
+ * function performs a fuzzy comparison: Each string is broken down into numeric and non-numeric parts.
+ * Then both strings are compared part by part. The following rules apply:
+ *
+ * \li Semicolons denote sequences of strings, and the best match between any pair of strings from `s1` and `s2` is
+ * returned.
+ * \li Whitespace bordering on a number is discarded.
+ * \li Whitespace surrounded by string characters is treated as one string with the surrounding characters.
+ * \li If one string has more parts than the other, the shorter string is padded with null parts.
+ * \li null equals null.
+ * \li null does not equal non-null.
+ * \li Numeric parts are compared as integers, hence `'042'` equals `'42'`.
+ * \li Comparison of string parts is case-insensitive.
+ *
+ * Partial matches are currently determined by determining each part of one string with each part of the other. Each
+ * part of one string that is matched by at least one part of the other increases the score. Order is currently not
+ * taken into account, i.e. `'42A'` and `'A-42A'` are both considered full (not partial) matches for `'A42'`. Future
+ * versions may change this.
+ *
+ * @param s1 The first string
+ * @param s2 The second string
+ *
+ * @return 0 if both strings match, nonzero if they do not. `MAX_MISMATCH` indicates a complete mismatch; values in
+ * between indicate partial matches (lower values correspond to better matches).
+ */
+int compare_name_systematic(const char *s1, const char *s2) {
+    int ret = MAX_MISMATCH;
+    int tmp;
+    int elements = 0, matches = 0;
+    char *l = NULL, *r = NULL, *l0, *r0;
+
+    if (!s1 || !s1[0]) {
+        if (!s2 || !s2[0])
+            return 0;
+        else
+            return MAX_MISMATCH;
+    } else if (!s2 || !s2[0])
+        return MAX_MISMATCH;
+
+    /* break up strings at semicolons and parse each separately, return 0 if any two match */
+    if (strchr(s1, ';')) {
+        l = g_strdup(s1);
+        for (l0 = strtok(l, ";"); l0; l0 = strtok(NULL, ";")) {
+            tmp = compare_name_systematic(l0, s2);
+            if (tmp < ret)
+                ret = tmp;
+            if (!ret)
+                break;
+        }
+        g_free(l);
+        return ret;
+    } else if (strchr(s2, ';')) {
+        r = g_strdup(s2);
+        for (r0 = strtok(r, ";"); r0; r0 = strtok(NULL, ";")) {
+            tmp = compare_name_systematic(s1, r0);
+            if (tmp < ret)
+                ret = tmp;
+            if (!ret)
+                break;
+        }
+        g_free(r);
+        return ret;
+    }
+
+    /* s1 and s2 are single strings (no semicolons) */
+    l0 = parse_for_systematic_comparison(s1);
+    r0 = parse_for_systematic_comparison(s2);
+
+    /* count left-hand elements and all left-hand elements matched by a right-hand element */
+    for (l = l0; l[0]; l += strlen(l) + 1) {
+        elements++;
+        for (r = r0; r[0]; r += strlen(r) + 1) {
+            if (atoi(l) || (l[0] == '0')) {
+                if ((atoi(r) || (r[0] == '0')) && (atoi(l) == atoi(r))) {
+                    matches++;
+                    break;
+                }
+            } else if (!strcasecmp(l, r)) {
+                matches++;
+                break;
+            }
+        }
+    }
+
+    /* same in the opposite direction */
+    for (r = r0; r[0]; r += strlen(r) + 1) {
+        elements++;
+        for (l = l0; l[0]; l += strlen(l) + 1) {
+            if (atoi(l) || (l[0] == '0')) {
+                if ((atoi(r) || (r[0] == '0')) && (atoi(l) == atoi(r))) {
+                    matches++;
+                    break;
+                }
+            } else if (!strcasecmp(l, r)) {
+                matches++;
+                break;
+            }
+        }
+    }
+
+    g_free(l0);
+    g_free(r0);
+
+    ret = ((elements - matches) * MAX_MISMATCH) / elements;
+
+    dbg(lvl_debug, "'%s' %s '%s', ret=%d",
+        s1, ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
+
+    return ret;
+}
+
 static void hash_callback(gpointer key, gpointer value, gpointer user_data) {
     GList **l=user_data;
     *l=g_list_prepend(*l, value);
@@ -290,6 +529,70 @@ char * newSysString(const char *toconvert) {
 #endif
 #endif
 
+/**
+ * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
+ *
+ * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
+ */
+void square_shape_str(char *s) {
+    char *c;
+    char *last_break;
+    unsigned int max_cols = 0;
+    unsigned int cur_cols = 0;
+    unsigned int max_rows = 0;
+    unsigned int surface;
+    unsigned int target_cols;
+
+    if (!s)
+        return;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (max_cols < cur_cols)
+                max_cols = cur_cols;
+            cur_cols = 0;
+            max_rows++;
+        } else
+            cur_cols++;
+    }
+    if (max_cols < cur_cols)
+        max_cols = cur_cols;
+    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+        max_rows++;
+    /* Give twice more room for rows (hence the factor 2 below)
+     * This will render as a rectangular shape, taking more horizontal space than vertical */
+    surface = max_rows * 2 * max_cols;
+    target_cols = uint_sqrt(surface);
+
+    if (target_cols < max_cols)
+        target_cols = max_cols;
+
+    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
+    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
+        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+
+    cur_cols = 0;
+    last_break = NULL;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+                if (last_break) {
+                    *last_break =
+                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+                    cur_cols = c-last_break;
+                }
+            }
+            last_break = c;	/* Record this position as a candidate to insert a line break */
+        }
+        cur_cols++;
+    }
+    if (cur_cols>=target_cols && last_break) {
+        *last_break =
+            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+    }
+
+    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
+}
+
 #if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
 /**
  * Impements a simple incomplete version of gettimeofday. Only usefull for messuring
@@ -338,28 +641,152 @@ unsigned int iso8601_to_secs(char *iso8601) {
 }
 
 /**
+ * @brief Converts a `tm` structure to `time_t`
+ *
+ * Returns the value of type `time_t` that represents the UTC time described by the `tm` structure
+ * pointed to by `pt` (which may be modified).
+ *
+ * This function performs the reverse translation that `gmtime()` does. As this functionality is absent
+ * in the standard library, it is emulated by calling `mktime()`, converting its output into both GMT
+ * and local time, comparing the results and calling `mktime()` again with an input adjusted for the
+ * offset in the opposite direction. This ensures maximum portability.
+ *
+ * The values of the `tm_wday` and `tm_yday` members of `pt` are ignored, and the values of the other
+ * members are interpreted even if out of their valid ranges (see `struct tm`). For example, `tm_mday`
+ * may contain values above 31, which are interpreted accordingly as the days that follow the last day
+ * of the selected month.
+ *
+ * A call to this function automatically adjusts the values of the members of `pt` if they are off-range
+ * or—in the case of `tm_wday` and `tm_yday`—if their values are inconsistent with the other members.
+ *
+ */
+time_t mkgmtime(struct tm * pt) {
+    time_t ret;
+
+    /* Input, GMT and local time */
+    struct tm * pti, * pgt, * plt;
+
+    pti = g_memdup(pt, sizeof(struct tm));
+
+    ret = mktime(pti);
+
+    pgt = g_memdup(gmtime(&ret), sizeof(struct tm));
+    plt = g_memdup(localtime(&ret), sizeof(struct tm));
+
+    pti->tm_year = pt->tm_year - pgt->tm_year + plt->tm_year;
+    pti->tm_mon = pt->tm_mon - pgt->tm_mon + plt->tm_mon;
+    pti->tm_mday = pt->tm_mday - pgt->tm_mday + plt->tm_mday;
+    pti->tm_hour = pt->tm_hour - pgt->tm_hour + plt->tm_hour;
+    pti->tm_min = pt->tm_min - pgt->tm_min + plt->tm_min;
+    pti->tm_sec = pt->tm_sec - pgt->tm_sec + plt->tm_sec;
+
+    ret = mktime(pti);
+
+    dbg(lvl_debug, "time %ld (%02d-%02d-%02d %02d:%02d:%02d)\n", ret, pti->tm_year, pti->tm_mon, pti->tm_mday,
+        pti->tm_hour, pti->tm_min, pti->tm_sec);
+
+    g_free(pti);
+    g_free(pgt);
+    g_free(plt);
+
+    return ret;
+}
+
+/**
+ * @brief Converts an ISO 8601-style time string into `time_t`.
+ */
+time_t iso8601_to_time(char * iso8601) {
+    /* Date/time fields (YYYY-MM-DD-hh-mm-ss) */
+    int val[8];
+
+    int i = 0;
+
+    /* Start of next integer portion and current position */
+    char *start = iso8601, *pos = iso8601;
+
+    /* Time struct */
+    struct tm tm;
+
+    memset(&tm, 0, sizeof(struct tm));
+
+    while (*pos && i < 6) {
+        if (*pos < '0' || *pos > '9') {
+            val[i++] = atoi(start);
+            if (i == 6)
+                break;
+            pos++;
+            start = pos;
+        }
+        if (*pos)
+            pos++;
+    }
+    val[6] = 0;
+    val[7] = 0;
+    if (*pos && i == 6) {
+        if (pos[1] && pos[2] && (!pos[3] || pos[3] == ':')) {
+            val[6] = atoi(pos);
+            if (pos[3] == ':') {
+                pos += 3;
+                val[7] = (val[6] < 0) ? -atoi(pos) : atoi(pos);
+            }
+        } else if (pos[1] && pos[2] && pos[3] && pos[4]) {
+            val[6] = atoi(pos) / 100;
+            val[7] = atoi(pos) % 100;
+        }
+    }
+
+    tm.tm_year = val[0] - 1900;
+    tm.tm_mon = val[1] - 1;
+    tm.tm_mday = val[2];
+    tm.tm_hour = val[3] - val[6];
+    tm.tm_min = val[4] - val[7];
+    tm.tm_sec = val[5];
+
+    dbg(lvl_debug, "time %s (%02d-%02d-%02d %02d:%02d:%02d)\n", iso8601, tm.tm_year, tm.tm_mon, tm.tm_mday,
+        tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+    return mkgmtime(&tm);
+}
+
+/**
+ * @brief Converts time to ISO8601 format.
+ *
+ * The caller is responsible for freeing the return value of this function when it is no longer needed.
+ *
+ * @param time The time, as returned by `time()` and related functions
+ *
+ * @return Time in ISO8601 format
+ */
+char * time_to_iso8601(time_t time) {
+    char *timep=NULL;
+    char buffer[32];
+    struct tm *tm;
+
+    tm = gmtime(&time);
+    if (tm) {
+        strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
+        timep=g_strdup(buffer);
+    }
+    return timep;
+}
+
+/**
  * @brief Outputs local system time in ISO 8601 format.
  *
  * @return Time in ISO 8601 format
  */
 char *current_to_iso8601(void) {
-    char *timep=NULL;
 #ifdef HAVE_API_WIN32_BASE
+    char *timep=NULL;
     SYSTEMTIME ST;
     GetSystemTime(&ST);
     timep=g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ",ST.wYear,ST.wMonth,ST.wDay,ST.wHour,ST.wMinute,ST.wSecond);
-#else
-    char buffer[32];
-    time_t tnow;
-    struct tm *tm;
-    tnow = time(0);
-    tm = gmtime(&tnow);
-    if (tm) {
-        strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
-        timep=g_strdup(buffer);
-    }
-#endif
     return timep;
+#else
+    time_t tnow;
+    tnow = time(0);
+    return time_to_iso8601(tnow);
+#endif
 }
 
 

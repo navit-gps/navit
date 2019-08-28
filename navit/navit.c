@@ -44,6 +44,7 @@
 #include "coord.h"
 #include "point.h"
 #include "transform.h"
+#include "traffic.h"
 #include "param.h"
 #include "menu.h"
 #include "graphics.h"
@@ -114,7 +115,8 @@ struct navit {
     GList *mapsets;
     GList *layouts;
     struct gui *gui;
-    struct layout *layout_current;
+    char *default_layout_name;	/*!< The default layout indicated by the config file (if any) */
+    struct layout *layout_current;	/*!< The current layout theme used to display the map */
     struct graphics *gra;
     struct action *action;
     struct transformation *trans, *trans_cursor;
@@ -211,6 +213,13 @@ void navit_add_mapset(struct navit *this_, struct mapset *ms) {
     this_->mapsets = g_list_append(this_->mapsets, ms);
 }
 
+/**
+ * @brief Get the current mapset
+ *
+ * @param this_ The navit instance
+ *
+ * @return A pointer to the current mapset
+ */
 struct mapset *
 navit_get_mapset(struct navit *this_) {
     if(this_->mapsets) {
@@ -219,6 +228,131 @@ navit_get_mapset(struct navit *this_) {
         dbg(lvl_error,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml");
     }
     return NULL;
+}
+
+/**
+ * @brief Get the search result map (and create it if it does not exist)
+ *
+ * @param this_ The navit instance
+ *
+ * @return A pointer to the map named "search_results" or NULL if there wasa failure
+ */
+struct map *navit_get_search_results_map(struct navit *this_) {
+
+    struct mapset *ms;
+    struct map *map;
+
+    ms=navit_get_mapset(this_);
+
+    if(!ms)
+        return NULL;
+
+    map=mapset_get_map_by_name(ms, "search_results");
+    if(!map) {
+        struct attr *attrs[10], attrmap;
+        enum attr_type types[]= {attr_position_longitude,attr_position_latitude,attr_label,attr_none};
+        int i;
+
+        attrs[0]=g_new0(struct attr,1);
+        attrs[0]->type=attr_type;
+        attrs[0]->u.str="csv";
+
+        attrs[1]=g_new0(struct attr,1);
+        attrs[1]->type=attr_name;
+        attrs[1]->u.str="search_results";
+
+        attrs[2]=g_new0(struct attr,1);
+        attrs[2]->type=attr_charset;
+        attrs[2]->u.str="utf-8";
+
+        attrs[3]=g_new0(struct attr,1);
+        attrs[3]->type=attr_item_type;
+        attrs[3]->u.num=type_found_item;
+
+        attrs[4]=g_new0(struct attr,1);
+        attrs[4]->type=attr_attr_types;
+        attrs[4]->u.attr_types=types;
+        attrs[5]=NULL;
+
+        attrmap.type=attr_map;
+        map=attrmap.u.map=map_new(NULL,attrs);
+        if(map)
+            mapset_add_attr(ms,&attrmap);
+
+        for(i=0; attrs[i]; i++)
+            g_free(attrs[i]);
+    }
+    return map;
+}
+
+/**
+ * @brief Populate a map containing one or more search result points
+ *
+ * These search results will be displayed as an overlay on the top of the geographic map.
+ *
+ * @warning Each call to this function will replace currently displayed results, it will not add to them
+ *
+ * @param this_ The navit instance
+ * @param search_results A GList storing {@code struct lcoord} elements to display on the result map
+ *                       If this argument in NULL, all existing results will be removed from the map
+ * @param[in,out] coord_rect An optional rectangular zone that will be extended to contain all result points
+ *                           or NULL if no zone needs to be computed
+ * @return The number of results actually added to the map
+ */
+int navit_populate_search_results_map(struct navit *this_, GList *search_results, struct coord_rect *r) {
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    GList *curr_result = search_results;
+    int count;
+    char *name_label;
+
+    map = navit_get_search_results_map(this_);
+    if(!map)
+        return 0;
+
+    mr = map_rect_new(map, NULL);
+
+    if(!mr)
+        return 0;
+
+    /* Clean the map */
+    while((item = map_rect_get_item(mr))!=NULL) {
+        item_type_set(item,type_none);
+    }
+
+    if(!search_results) {
+        map_rect_destroy(mr);
+        dbg(lvl_warning,"NULL result table - only map clean up is done.");
+        return 0;
+    }
+
+    /* Populate the map with search results*/
+    for(curr_result = search_results, count=0; curr_result; curr_result=g_list_next(curr_result)) {
+        struct lcoord *point = curr_result->data;
+        struct item* it;
+        if(point->label==NULL)
+            continue;
+        dbg(lvl_info,"%s",point->label);
+        it=map_rect_create_item(mr,type_found_item);
+        if(it) {
+            struct attr a;
+            item_coord_set(it, &(point->c), 1, change_mode_modify);
+            a.type=attr_label;
+            name_label = g_strdup(point->label);
+            square_shape_str(name_label);
+            a.u.str=name_label;
+            item_attr_set(it, &a, change_mode_modify);
+            if (r) {
+                if(!count++)
+                    r->lu=r->rl=point->c;
+                else
+                    coord_rect_extend(r,&(point->c));
+            }
+        }
+    }
+    map_rect_destroy(mr);
+    return count;
 }
 
 struct tracking *
@@ -1342,6 +1476,7 @@ navit_new(struct attr *parent, struct attr **attrs) {
     this_->tracking_flag=1;
     this_->recentdest_count=10;
     this_->osd_configuration=-1;
+    this_->default_layout_name=NULL;
 
     this_->center_timeout = 10;
     this_->use_mousewheel = 1;
@@ -1928,6 +2063,9 @@ void navit_init(struct navit *this_) {
     struct map *map;
     int callback;
     char *center_file;
+    struct attr_iter *iter;
+    struct attr *attr;
+    struct traffic * traffic;
 
     dbg(lvl_info,"enter gui %p graphics %p",this_->gui,this_->gra);
 
@@ -1995,6 +2133,26 @@ void navit_init(struct navit *this_) {
             if (this_->route)
                 tracking_set_route(this_->tracking, this_->route);
         }
+
+        attr = g_new0(struct attr, 1);
+        iter = navit_attr_iter_new();
+        map = NULL;
+        while (navit_get_attr(this_, attr_traffic, attr, iter)) {
+            traffic = (struct traffic *) attr->u.navit_object;
+            traffic_set_mapset(traffic, ms);
+            if (this_->route)
+                traffic_set_route(traffic, this_->route);
+            /* add the first map found */
+            if (!map && (map = traffic_get_map(traffic))) {
+                struct attr map_a;
+                map_a.type = attr_map;
+                map_a.u.map = map;
+                mapset_add_attr(ms, &map_a);
+            }
+        }
+        navit_attr_iter_destroy(iter);
+        g_free(attr);
+
         if (this_->navigation) {
             if ((map=navigation_get_map(this_->navigation))) {
                 struct attr map_a,active;
@@ -2382,11 +2540,20 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         attr_updated=(this_->vehicle->follow_curr != attr->u.num);
         this_->vehicle->follow_curr = attr->u.num;
         break;
+    case attr_default_layout:
+        if(!attr->u.str)
+            return 0;
+        if(this_->default_layout_name)	/* There is already a default layout, ignore this new value */
+            g_free(this_->default_layout_name);	/* Drop the previous layout name, use the this one instead */
+        this_->default_layout_name=g_strdup(attr->u.str);
+        attr_updated=1;
+        break;
     case attr_layout:
         if(!attr->u.layout)
             return 0;
+        dbg(lvl_debug,"setting attr_layout to %s", attr->u.layout->name);
         if(this_->layout_current!=attr->u.layout) {
-            this_->layout_current=attr->u.layout;
+            navit_update_current_layout(this_, attr->u.layout);
             graphics_font_destroy_all(this_->gra);
             navit_set_cursors(this_);
             if (this_->ready == 3)
@@ -2397,6 +2564,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout_name:
         if(!attr->u.str)
             return 0;
+        dbg(lvl_debug,"setting attr_layout_name to %s", attr->u.str);
         l=this_->layouts;
         while (l) {
             lay=l->data;
@@ -2765,6 +2933,58 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
     return ret;
 }
 
+/**
+ * @brief Select the default layout by name
+ *
+ * @param this_ The navit instance
+ * @param name The new default layout's name
+ *
+ * @return The first layout match (if any), or NULL if there was no match
+ */
+struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name) {
+    struct attr_iter *iter;
+    struct attr layout_attr;
+    struct layout *result = NULL;
+
+    if (!layout_name)
+        return NULL;
+    iter=navit_attr_iter_new();
+    while (navit_get_attr(this_, attr_layout, &layout_attr, iter)) {
+        if (strcmp(layout_attr.u.layout->name, layout_name) == 0) {
+            result = layout_attr.u.layout;
+        }
+    }
+    navit_attr_iter_destroy(iter);
+    return result;
+}
+
+/**
+ * @brief Set the current layout
+ *
+ * @param this_ The navit instance
+ * @param layout The layout to set as default (if NULL, we will set the current layout according to the default name stored in this_->default_layout_name
+ *
+ * @note If argument @p layout is NULL and the default layout name in the config file does not exist or has not been provided in the config file, the default layout is unchanged
+ */
+void navit_update_current_layout(struct navit *this_, struct layout *layout) {
+    struct layout *default_layout = NULL;
+
+    if (layout) {
+        this_->layout_current=layout;
+    } else {
+        if (this_->default_layout_name) {	/* If a default layout name was provided */
+            default_layout=navit_get_layout_by_name(this_, this_->default_layout_name);
+            if (default_layout) {
+                dbg(lvl_debug, "Found the config-specified default layout '%s'", this_->default_layout_name);
+                this_->layout_current=default_layout;
+                return;
+            } else {
+                dbg(lvl_warning, "No definition exists in config for specified default layout '%s'", this_->default_layout_name);
+            }
+        }
+    }
+}
+
 static int navit_add_log(struct navit *this_, struct log *log) {
     struct attr type_attr;
     if (!log_get_attr(log, attr_type, &type_attr, NULL))
@@ -2782,9 +3002,27 @@ static int navit_add_log(struct navit *this_, struct log *log) {
 
 static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
+    int is_default=0;
+    int is_active=0;
     this_->layouts = g_list_append(this_->layouts, layout);
+    /** check if we want to immediately activate this layout.
+     * Unfortunately we have concurring conditions about when to activate
+     * a layout:
+     * - A layout could bear the "active" property
+     * - A layout's name could match this_->default_layout_name
+     * This cannot be fully resolved, as we cannot predict the future, so
+     * lets set the last parsed layout active, which either matches default_layout_name or
+     * bears the "active" tag, or is the first layout ever parsed.
+     */
+    if((layout->name != NULL) && (this_->default_layout_name != NULL)) {
+        if (strcmp(layout->name, this_->default_layout_name) == 0)
+            is_default = 1;
+    }
     layout_get_attr(layout, attr_active, &active, NULL);
-    if(active.u.num || !this_->layout_current) {
+    if(active.u.num)
+        is_active = 1;
+    dbg(lvl_debug, "add layout '%s' is_default %d, is_active %d", layout->name, is_default, is_active);
+    if(is_default || is_active || !this_->layout_current) {
         this_->layout_current=layout;
         return 1;
     }
@@ -2843,6 +3081,7 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         break;
     case attr_layer:
     case attr_script:
+    case attr_traffic:
         break;
     default:
         return 0;

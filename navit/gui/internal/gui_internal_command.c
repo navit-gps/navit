@@ -41,8 +41,6 @@
 #include <arpa/inet.h>
 #endif
 
-extern char *version;
-
 /**
  * @brief Converts a WGS84 coordinate pair to its string representation.
  *
@@ -101,20 +99,38 @@ char *gui_internal_coordinates(struct pcoord *pc, char sep) {
 
 enum escape_mode {
     escape_mode_none=0,
-    escape_mode_string=1,
-    escape_mode_quote=2,
-    escape_mode_html=4,
-    escape_mode_html_quote=8,
-    escape_mode_html_apos=16,
+    escape_mode_string=1,	/*!< Surround string by double quotes */
+    escape_mode_quote=2,	/*!< Escape double quotes and backslashes */
+    escape_mode_html_amp=4,	/*!< Use HTML-style escape sequences for ampersands */
+    escape_mode_html_quote=8,	/*!< Use HTML-style escape sequences for double quotes */
+    escape_mode_html_apos=16,	/*!< Use HTML-style escape sequences for single quotes (apostrophes) */
+    escape_mode_html_lt=16,	/*!< Use HTML-style escape sequences for lower than sign ('<') */
+    escape_mode_html_gt=16,	/*!< Use HTML-style escape sequences for greater than sign ('>') */
+    escape_mode_html=escape_mode_html_amp|escape_mode_html_quote|escape_mode_html_apos|escape_mode_html_lt|escape_mode_html_gt,	/*!< Use all known HTML-style escape sequences */
 };
 
-/* todo &=&amp;, < = &lt; */
+/**
+ * @brief Escape special characters from a string
+ *
+ * @param mode The escape mode that needs to be enabled (see enum escape_mode)
+ * @param in The string to escape
+ *
+ * @return The escaped string
+ *
+ * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes
+ * @warning The returned string has been allocated and g_free() must thus be called on this string
+ */
+static char *gui_internal_escape(enum escape_mode mode, const char *in) {
+    int len=mode & escape_mode_string ? 2:0;	/* Add 2 characters to the length of the buffer if quoting is enabled */
+    char *dst,*out;
+    const char *src=in;
+    static const char *quot="&quot;";
+    static const char *apos="&apos;";
+    static const char *amp="&amp;";
+    static const char *lt="&lt;";
+    static const char *gt="&gt;";
 
-static char *gui_internal_escape(enum escape_mode mode, char *in) {
-    int len=mode & escape_mode_string ? 3:1;
-    char *dst,*out,*src=in;
-    char *quot="&quot;";
-    char *apos="&apos;";
+    dbg(lvl_debug, "Entering %s with string=\"%s\", escape mode %d", __func__, in, mode);
     while (*src) {
         if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
             len++;
@@ -122,31 +138,61 @@ static char *gui_internal_escape(enum escape_mode mode, char *in) {
             len+=strlen(quot);
         else if (*src == '\'' && mode == escape_mode_html_apos)
             len+=strlen(apos);
+        else if (*src == '&' && mode == escape_mode_html_amp)
+            len+=strlen(amp);
+        else if (*src == '<' && mode == escape_mode_html_lt)
+            len+=strlen(lt);
+        else if (*src == '>' && mode == escape_mode_html_gt)
+            len+=strlen(gt);
         else
             len++;
         src++;
     }
     src=in;
-    out=dst=g_malloc(len);
+    out=dst=g_malloc(len+1); /* +1 character for NUL termination */
+
+    /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
     if (mode & escape_mode_string)
         *dst++='"';
+
     while (*src) {
-        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
-            *dst++='\\';
-        if (*src == '"' && mode == escape_mode_html_quote) {
-            strcpy(dst,quot);
-            src++;
-            dst+=strlen(quot);
-        } else if (*src == '\'' && mode == escape_mode_html_apos) {
-            strcpy(dst,apos);
-            src++;
-            dst+=strlen(apos);
-        } else
+        if (mode & escape_mode_html) {	/* In html escape mode, only process HTML escape sequence, not backslashes or quotes */
+            if (*src == '"' && (mode & escape_mode_html_quote)) {
+                strcpy(dst,quot);
+                src++;
+                dst+=strlen(quot);
+            } else if (*src == '\'' && (mode & escape_mode_html_apos)) {
+                strcpy(dst,apos);
+                src++;
+                dst+=strlen(apos);
+            } else if (*src == '&' && (mode & escape_mode_html_amp)) {
+                strcpy(dst,amp);
+                src++;
+                dst+=strlen(amp);
+            } else if (*src == '<' && (mode & escape_mode_html_lt)) {
+                strcpy(dst,lt);
+                src++;
+                dst+=strlen(lt);
+            } else if (*src == '>' && (mode & escape_mode_html_gt)) {
+                strcpy(dst,gt);
+                src++;
+                dst+=strlen(gt);
+            } else
+                *dst++=*src++;
+        } else {
+            if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
+                *dst++='\\';
+            }
             *dst++=*src++;
+        }
     }
+
+    /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
     if (mode & escape_mode_string)
         *dst++='"';
+
     *dst++='\0';
+    dbg(lvl_debug, "Exitting %s with string=\"%s\"", __func__, out);
     return out;
 }
 
@@ -198,7 +244,7 @@ static void gui_internal_cmd2_about(struct gui_priv *this, char *function, struc
     g_free(text);
 
     //Version
-    text=g_strdup_printf("%s",version);
+    text=g_strdup_printf("%s",NAVIT_VERSION);
     gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
     w->flags=gravity_top_center|orientation_horizontal|flags_expand;
     g_free(text);

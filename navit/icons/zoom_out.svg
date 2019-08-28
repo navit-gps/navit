@@ -12,48 +12,90 @@
    width="48"
    height="48"
    id="svg2"
-   sodipodi:version="0.32"
-   inkscape:version="0.47 r22583"
-   sodipodi:docname="zoom_in.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/zeroedout/share/usr/share/navit/xpm/zoom_in.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90"
-   version="1.0">
+   version="1.1"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="zoom_out.svg"
+   inkscape:export-filename="/home/michael/src/navit-artwork/zoom_in.png"
+   inkscape:export-xdpi="134.99994"
+   inkscape:export-ydpi="134.99994">
   <defs
      id="defs4">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 24 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="48 : 24 : 1"
-       inkscape:persp3d-origin="24 : 16 : 1"
-       id="perspective11" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath428">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path430" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath416">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path418" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath544">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,96 96,96 96,0 0,0 0,96 z"
+         id="path546" />
+    </clipPath>
   </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     gridtolerance="10000"
-     guidetolerance="10"
-     objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.919596"
-     inkscape:cx="13.199956"
-     inkscape:cy="14.64192"
+     inkscape:zoom="15.8125"
+     inkscape:cx="9.2964433"
+     inkscape:cy="24"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="973"
-     inkscape:window-x="-6"
-     inkscape:window-y="0"
-     width="48px"
-     height="48px"
      showguides="true"
-     inkscape:window-maximized="1" />
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1000"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="0,40"
+       id="guide2985"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="0,8"
+       id="guide2987"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="8,0"
+       id="guide2989"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="40,0"
+       id="guide2991"
+       inkscape:locked="false" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3763"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -62,47 +104,27 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="lower copy"
-     id="g3036"
-     inkscape:groupmode="layer"
-     style="display:inline"
-     sodipodi:insensitive="true">
-    <path
-       transform="matrix(0.84928644,0,0,0.84928644,3.5710462,3.6632047)"
-       d="m 47.603437,23.945744 a 23.549181,23.549181 0 1 1 -47.09836155,0 23.549181,23.549181 0 1 1 47.09836155,0 z"
-       sodipodi:ry="23.549181"
-       sodipodi:rx="23.549181"
-       sodipodi:cy="23.945744"
-       sodipodi:cx="24.054256"
-       id="path3038"
-       style="fill:#999999;fill-opacity:0.38536586;stroke:none;display:inline"
-       sodipodi:type="arc" />
-    <path
-       transform="matrix(0.77851257,0,0,0.77851257,5.273459,5.3579376)"
-       d="m 47.603437,23.945744 a 23.549181,23.549181 0 1 1 -47.09836155,0 23.549181,23.549181 0 1 1 47.09836155,0 z"
-       sodipodi:ry="23.549181"
-       sodipodi:rx="23.549181"
-       sodipodi:cy="23.945744"
-       sodipodi:cx="24.054256"
-       id="path6552"
-       style="fill:none;stroke:#999999;stroke-width:4.28166914;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
-       sodipodi:type="arc" />
-  </g>
-  <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     style="display:inline">
+     transform="translate(0,-1004.3622)">
+    <rect
+       style="fill:#000000;fill-opacity:0.62745098;stroke:none"
+       id="rect2993"
+       width="48"
+       height="48.000019"
+       x="3.5527137e-15"
+       y="1004.3622"
+       rx="4" />
     <path
-       id="path2178"
-       style="fill:none;stroke:#999999;stroke-width:4.0538249;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0;marker-start:none"
-       d="m 12.508912,24 c 22.982175,0 22.982175,0 22.982175,0"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       d="m 30.870212,1032.488 h -1.445398 l -0.512293,-0.494 c 1.793025,-2.0858 2.872499,-4.7936 2.872499,-7.7393 0,-6.5683 -5.324185,-11.8925 -11.89251,-11.8925 -6.568325,0 -11.89251,5.3242 -11.89251,11.8925 0,6.5683 5.324185,11.8925 11.89251,11.8925 2.945683,0 5.653516,-1.0795 7.73928,-2.8725 l 0.493996,0.5123 v 1.4454 l 9.148085,9.1298 L 40,1041.6361 Z m -10.977702,0 c -4.555746,0 -8.233276,-3.6775 -8.233276,-8.2333 0,-4.5557 3.67753,-8.2333 8.233276,-8.2333 4.555746,0 8.233276,3.6776 8.233276,8.2333 0,4.5558 -3.67753,8.2333 -8.233276,8.2333 z m -4.574042,-9.1481 h 9.148084 v 1.8296 h -9.148084 z"
+       id="path2"
+       style="stroke-width:1.8296169;fill:#ffffff" />
   </g>
 </svg>

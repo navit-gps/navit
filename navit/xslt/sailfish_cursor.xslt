@@ -12,7 +12,7 @@
       </xsl:copy>
    </xsl:template>
 
-   <xsl:template match="/config/navit/layout[@name='Car' or @name='Car-dark']/cursor">
+   <xsl:template match="/layout[@name='Car' or @name='Car-dark']/cursor">
       <cursor w="57" h="57">
         <xsl:text>&#x0A;				</xsl:text>
         <itemgra speed_range="-2">

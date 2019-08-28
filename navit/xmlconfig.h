@@ -112,7 +112,7 @@ struct object_func {
 	                                                 *  default behavior, can be NULL for some object types */
 };
 
-extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func, speech_func, navigation_func, route_func;
+extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_func, vehicle_func, maps_func, layout_func, roadprofile_func, vehicleprofile_func, layer_func, config_func, profile_option_func, script_func, log_func, speech_func, navigation_func, route_func, traffic_func;
 
 #define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_roadprofile || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option || (x) == attr_script || (x) == attr_log || (x) == attr_speech || (x) == attr_navigation || (x) == attr_route)
 
@@ -139,7 +139,11 @@ typedef GError xmlerror;
 /* prototypes */
 enum attr_type;
 struct object_func *object_func_lookup(enum attr_type type);
-void xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **), void (*text)(xml_context*, const char *, gsize, void *, GError **));
+int xml_parse_file(char *filename, void *data,
+		void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+		void (*end)(xml_context *, const char *, void *, GError **),
+		void (*text)(xml_context *, const char *, gsize, void *, GError **));
+int xml_parse_text(const char *document, void *data, void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **), void (*end)(xml_context *, const char *, void *, GError **), void (*text)(xml_context*, const char *, gsize, void *, GError **));
 gboolean config_load(const char *filename, xmlerror **error);
 //static void xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error);
 

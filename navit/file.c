@@ -44,8 +44,6 @@
 #include <netdb.h>
 #endif
 
-extern char *version;
-
 #ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
@@ -98,7 +96,8 @@ static int file_socket_connect(char *host, char *service) {
 }
 
 static void file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent) {
-    char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,version,
+    char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,
+                                  NAVIT_VERSION,
                                   host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
     write(file->fd, request, strlen(request));
     dbg(lvl_debug,"%s",request);
@@ -231,7 +230,13 @@ file_create_url(char *url) {
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
 
-int file_is_dir(char *name) {
+/**
+ * @brief Check if a given path corresponds to a directory
+ *
+ * @param name The path to the filesystem element
+ * @return !=0 (true) if @p name is a directory
+ */
+int file_is_dir(const char *name) {
     struct stat buf;
     if (! stat(name, &buf)) {
         return S_ISDIR(buf.st_mode);
@@ -240,7 +245,13 @@ int file_is_dir(char *name) {
 
 }
 
-int file_is_reg(char *name) {
+/**
+ * @brief Check if a given path corresponds to a regular file
+ *
+ * @param name The path to the filesystem element
+ * @return !=0 (true) if @p name is a regular file
+ */
+int file_is_reg(const char *name) {
     struct stat buf;
     if (! stat(name, &buf)) {
         return S_ISREG(buf.st_mode);

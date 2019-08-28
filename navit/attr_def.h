@@ -29,6 +29,12 @@
 /* prototypes */
 
 /* common */
+#ifndef ATTR
+#define ATTR(x) extern ##x;
+#endif
+#ifndef ATTR2
+#define ATTR2(x,y) extern ##y;
+#endif
 ATTR2(0x00000000,none)
 ATTR(any)
 ATTR(any_xml)
@@ -194,6 +200,8 @@ ATTR(turn_around_penalty)
 ATTR(turn_around_penalty2)
 ATTR(autozoom_max)
 ATTR(nav_status)
+ATTR(virtual_dpi)
+ATTR(real_dpi)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative or absolute values. See the
  * documentation of ATTR_REL_RELSHIFT for details.
@@ -344,7 +352,7 @@ ATTR(daylayout)
 ATTR(nightlayout)
 ATTR(xml_text)
 ATTR(layout_name)
-ATTR_UNUSED
+ATTR(default_layout)
 ATTR_UNUSED
 ATTR(status_text)
 ATTR(log_gpx_desc)
@@ -478,6 +486,7 @@ ATTR(maps)
 ATTR(layout)
 ATTR(profile_option)
 ATTR(script)
+ATTR(traffic)
 ATTR2(0x0008ffff,type_object_end)
 ATTR2(0x00090000,type_coord_begin)
 ATTR2(0x0009ffff,type_coord_end)

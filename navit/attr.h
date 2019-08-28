@@ -91,6 +91,7 @@ enum attr_format {
 #define AF_PBH (AF_PEDESTRIAN|AF_BIKE|AF_HORSE)
 #define AF_MOTORIZED_FAST (AF_MOTORCYCLE|AF_CAR|AF_HIGH_OCCUPANCY_CAR|AF_TAXI|AF_PUBLIC_BUS|AF_DELIVERY_TRUCK|AF_TRANSPORT_TRUCK|AF_EMERGENCY_VEHICLES)
 #define AF_ALL (AF_PBH|AF_MOPED|AF_MOTORIZED_FAST)
+#define AF_DISTORTIONMASK (AF_ALL|AF_ONEWAYMASK)
 
 
 #define AF_DG_ANY		(1<<0)
@@ -203,6 +204,7 @@ struct attr {
 		struct osd *osd;
 		struct range range;
 		struct navit_object *navit_object;
+		struct traffic *traffic;
 		int *dash;
 		enum item_type *item_types;
 		enum attr_type *attr_types;

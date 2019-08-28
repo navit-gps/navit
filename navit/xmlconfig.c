@@ -279,6 +279,8 @@ object_func_lookup(enum attr_type type) {
         return &tracking_func;
     case attr_speech:
         return &speech_func;
+    case attr_traffic:
+        return &traffic_func;
     case attr_vehicle:
         return &vehicle_func;
     case attr_vehicleprofile:
@@ -332,7 +334,7 @@ static char *element_fixmes[]= {
 };
 
 static void initStatic(void) {
-    elements=g_new0(struct element_func,44); //43 is a number of elements + ending NULL element
+    elements=g_new0(struct element_func, 45); //44 is a number of elements + ending NULL element
 
     elements[0].name="config";
     elements[0].parent=NULL;
@@ -547,6 +549,11 @@ static void initStatic(void) {
     elements[42].parent="navit";
     elements[42].func=NULL;
     elements[42].type=attr_script;
+
+    elements[43].name="traffic";
+    elements[43].parent="navit";
+    elements[43].func=NULL;
+    elements[43].type=attr_traffic;
 }
 
 /**
@@ -698,6 +705,15 @@ static void end_element (xml_context *context,
 
 static gboolean parse_file(struct xmldocument *document, xmlerror **error);
 
+/**
+ * @brief Handle xi:include XML tags
+ *
+ * @param context The XML context in which we are parsing
+ * @param[in] attribute_names An array of strings containing all XML attributes of the xi:include tag
+ * @param[in] attribute_values An array of strings containing all XML values (one per entry in @p attribute_names)
+ * @param doc_old The current document being parsed (before moving to the one referenced in this xi:include
+ * @param[out] error A description of the error encountered if any
+ */
 static void xinclude(xml_context *context, const gchar **attribute_names, const gchar **attribute_values,
                      struct xmldocument *doc_old, xmlerror **error) {
     struct xmldocument doc_new;
@@ -705,11 +721,15 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
     int i,count;
     const char *href=NULL;
     char **we_files;
+    char *included_filename=NULL;
+    char *doc_base=NULL;
+    char *tmp=NULL;
 
     if (doc_old->level >= 16) {
         g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include recursion too deep");
         return;
     }
+    dbg(lvl_debug, "At level %d, processing xi:include in document href=\"%s\"", doc_old->level, doc_old->href);
     memset(&doc_new, 0, sizeof(doc_new));
     i=0;
     while (attribute_names[i]) {
@@ -739,8 +759,8 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
     }
     doc_new.level=doc_old->level+1;
     doc_new.user_data=doc_old->user_data;
-    if (! href) {
-        dbg(lvl_debug,"no href, using '%s'", doc_old->href);
+    if (!href) {
+        dbg(lvl_debug,"no href%s, using own ref '%s'", doc_new.xpointer?" (but xpointer provided)":"", doc_old->href);
         doc_new.href=doc_old->href;
         if (file_exists(doc_new.href)) {
             parse_file(&doc_new, error);
@@ -750,23 +770,36 @@ static void xinclude(xml_context *context, const gchar **attribute_names, const 
     } else {
         dbg(lvl_debug,"expanding '%s'", href);
         we=file_wordexp_new(href);
-        we_files=file_wordexp_get_array(we);
+        we_files=file_wordexp_get_array(we);	/* Expand wildcards (if any) into a list of files */
         count=file_wordexp_get_count(we);
         dbg(lvl_debug,"%d results", count);
-        if (file_exists(we_files[0])) {
-            for (i = 0 ; i < count ; i++) {
-                dbg(lvl_debug,"result[%d]='%s'", i, we_files[i]);
-                doc_new.href=we_files[i];
-                parse_file(&doc_new, error);
+        for (i = 0 ; i < count ; i++) {
+            included_filename = g_strdup(we_files[i]);
+            if (*included_filename != '\0') { /* Non empty href */
+                if (!g_path_is_absolute(included_filename)) {	/* The filename's path is relative */
+                    doc_base = g_path_get_dirname(doc_old->href);	/* Get our own absolute path */
+                    if (*doc_base && file_is_dir(doc_base)) {
+                        tmp = included_filename;
+                        included_filename = g_strconcat(doc_base, G_DIR_SEPARATOR_S, tmp, NULL);
+                        g_free(tmp); /* Free initial included_filename buffer (saved in tmp) */
+                    }
+                    g_free(doc_base);
+                    dbg(lvl_debug,"converted relative filename='%s' to absolute filename='%s'", we_files[i], included_filename);
+                }
+                dbg(lvl_debug,"result[%d]='%s'", i, included_filename);
+                if (file_exists(included_filename)) {
+                    doc_new.href=included_filename;
+                    parse_file(&doc_new, error);	/* Now run the parser on the included XML file */
+                } else {
+                    dbg(lvl_error,"Unable to include '%s'",included_filename);
+                }
             }
-        } else {
-            dbg(lvl_error,"Unable to include %s",we_files[0]);
+            g_free(included_filename);
         }
         file_wordexp_destroy(we);
-
     }
-
 }
+
 static int strncmp_len(const char *s1, int s1len, const char *s2) {
     int ret;
     ret=strncmp(s1, s2, s1len);
@@ -1009,35 +1042,96 @@ static void parse_node_text(ezxml_t node, void *data, void (*start)(void *, cons
 }
 #endif
 
-void xml_parse_text(const char *document, void *data,
-                    void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
-                    void (*end)(xml_context *, const char *, void *, GError **),
-                    void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+/**
+ * @brief Parses an XML file.
+ *
+ * @param filename The XML file to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int xml_parse_file(char *filename, void *data,
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
+    int ret = 0;
+#if !USE_EZXML
+    gchar *contents;
+    gsize len;
+
+    if (g_file_get_contents(filename, &contents, &len, NULL)) {
+        dbg(lvl_debug, "XML data:\n%s\n", contents);
+        ret = xml_parse_text(contents, data, start, end, text);
+        g_free(contents);
+    } else {
+        dbg(lvl_error,"could not open XML file");
+    }
+#else
+    FILE *f;
+    ezxml_t root;
+
+    f = fopen(filename,"rb");
+    if (f) {
+        root = ezxml_parse_fp(f);
+        fclose(f);
+        if (root) {
+            parse_node_text(root, data, start, end, text);
+            ezxml_free(root);
+            ret = 1;
+        }
+    } else {
+        dbg(lvl_error,"could not open XML file");
+    }
+#endif
+    return ret;
+}
+
+/**
+ * @brief Parses XML text.
+ *
+ * @param document The XML data to parse
+ * @param data Points to a user-defined data structure which will be passed to each of the callbacks
+ * passed in the following arguments
+ * @param start Callback which will be called when an open tag is encountered
+ * @param end Callback which will be called when a close tag is encountered
+ * @param text Callback which will be called when character data is encountered
+ *
+ * @return True on success, false on failure.
+ */
+int xml_parse_text(const char *document, void *data,
+                   void (*start)(xml_context *, const char *, const char **, const char **, void *, GError **),
+                   void (*end)(xml_context *, const char *, void *, GError **),
+                   void (*text)(xml_context *, const char *, gsize, void *, GError **)) {
 #if !USE_EZXML
     GMarkupParser parser = { start, end, text, NULL, NULL};
     xml_context *context;
     gboolean result;
 
-    context = g_markup_parse_context_new (&parser, 0, data, NULL);
     if (!document) {
-        dbg(lvl_error, "FATAL: No XML data supplied (looks like incorrect configuration for internal GUI).");
-        exit(1);
+        dbg(lvl_error, "FATAL: No XML data supplied.");
+        return 0;
     }
+    context = g_markup_parse_context_new (&parser, 0, data, NULL);
     result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
+    g_markup_parse_context_free (context);
     if (!result) {
         dbg(lvl_error, "FATAL: Cannot parse data as XML: '%s'", document);
-        exit(1);
+        return 0;
     }
-    g_markup_parse_context_free (context);
 #else
     char *str=g_strdup(document);
     ezxml_t root = ezxml_parse_str(str, strlen(str));
     if (!root)
-        return;
+        return 0;
     parse_node_text(root, data, start, end, text);
     ezxml_free(root);
     g_free(str);
 #endif
+    return 1;
 }
 
 

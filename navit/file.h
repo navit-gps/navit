@@ -65,7 +65,8 @@ struct attr;
 int file_request(struct file *f, struct attr **options);
 char *file_http_header(struct file *f, char *header);
 struct file *file_create(char *name, struct attr **options);
-int file_is_dir(char *name);
+int file_is_dir(const char *name);
+int file_is_reg(const char *name);
 long long file_size(struct file *file);
 int file_mkdir(char *name, int pflag);
 int file_mmap(struct file *file);
@@ -95,7 +96,6 @@ int file_version(struct file *file, int byname);
 void *file_get_os_handle(struct file *file);
 int file_set_cache_size(int cache_size);
 void file_init(void);
-int file_is_reg(char *name);
 void file_data_remove(struct file *file, unsigned char *data);
 /* end of prototypes */
 

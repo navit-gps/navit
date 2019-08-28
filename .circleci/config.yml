@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: ubuntu:14.04
+    - image: ubuntu:18.04
 jobs:
   sanity_check:
     <<: *defaults
@@ -19,12 +19,12 @@ jobs:
       - checkout
       - run:
           name: Id
-          command: sudo cat /etc/*release
+          command: cat /etc/*release
       - run:
           name: Setup requirements
           command: |
             bash scripts/setup_common_requirements.sh
-            apt-get install -y libpng12-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
       - run:
           name: Build for Linux
           command: bash scripts/build_linux.sh
@@ -39,8 +39,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install doxygen
-          command: apt-get update && apt-get -y install doxygen ca-certificates git
+          name: Install doxygen and other essentials
+          command: apt-get update && apt-get -y install doxygen ca-certificates git rsync
       - run:
           name: Run doxygen
           command: cd navit && doxygen
@@ -49,10 +49,26 @@ jobs:
           command: bash scripts/update_doxygen.sh
       - store_artifacts:
           path: /root/project/doc
+  build_sailfish:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: install docker
+          command: circleci-install docker
+      - run:
+          name: make build dir
+          command:  mkdir ../rpmbuild
+      - run:
+          name: run build
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+      - store_artifacts:
+          name: Store rpm
+          path: ../rpmbuild/RPMS/
   build_android:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-29
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -60,55 +76,23 @@ jobs:
       - checkout
       - run:
           name: Id
-          command: sudo cat /etc/*release
+          command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin
+          name: Install ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
-            sudo apt-get install cmake gettext libsaxonb-java librsvg2-bin
-            cmake ./ -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96
+            sudo apt-get update
+            sudo apt-get install -y ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
-          name: Process icons
+          name: Install Android SDK components
+          command: sdkmanager "cmake;3.6.4111459"
+      - run:
+          name: Install ndk
           command: |
-            cd navit/icons
-            make
-            mkdir ../android/res/drawable-nodpi
-            rename 'y/A-Z/a-z/' *
-            cp *.png ../android/res/drawable-nodpi
-            cd ../../
+            echo y | sdkmanager --licenses
+            echo y | sdkmanager ndk-bundle
       - run:
-          name: Process translations
-          command: |
-            cd po
-            make
-            mkdir ../navit/android/res/raw
-            rename 'y/A-Z/a-z/' *
-            cp *.mo ../navit/android/res/raw
-            cd ../
-      - run:
-          name: Process xml's
-          command: |
-            cd navit
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitldpi.xml OSD_SIZE=1 ICON_SMALL=24 ICON_MEDIUM=32 ICON_BIG=48
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitmdpi.xml OSD_SIZE=1.33 ICON_SMALL=32 ICON_MEDIUM=48 ICON_BIG=64
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navithdpi.xml OSD_SIZE=2 ICON_SMALL=48 ICON_MEDIUM=64 ICON_BIG=96
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxhdpi.xml OSD_SIZE=2.67 ICON_SMALL=64 ICON_MEDIUM=96 ICON_BIG=128
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxhdpi.xml OSD_SIZE=4 ICON_SMALL=96 ICON_MEDIUM=128 ICON_BIG=192
-            saxonb-xslt -s:navit_shipped.xml -xsl:xslt/android.xslt -o:navitxxxhdpi.xml OSD_SIZE=5.33 ICON_SMALL=128 ICON_MEDIUM=192 ICON_BIG=256
-            mv *dpi.xml android/res/raw
-            cd ../
-      - run:
-         name: Chmod permissions
-         command: sudo chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew -v
-#          command: ./gradlew androidDependencies
-      - run:
-         name: Install ndk
-         command: sdkmanager ndk-bundle
-      - run:
-          name: Build
-          command: ./gradlew assembleDebug
+          name: Build for Android
+          command: bash scripts/build_android.sh
       - run:
           name: Run Lint Test
           command: |
@@ -125,6 +109,10 @@ jobs:
           name: Store APK
           path: navit/android/build/outputs/apk
           destination: apk
+      - store_artifacts:
+          name: Store translations
+          path: po
+          destination: translations
       - store_artifacts:
           name: Store logs
           path: navit/android/build/outputs/logs
@@ -143,14 +131,26 @@ jobs:
           destination: reports
       - store_test_results:
           path: test-results
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
   build_win32:
-    <<: *defaults
+    docker:
+      - image: ubuntu:14.04
     steps:
       - checkout
       - run:
+          name: Prepare the Windows build environment
+          command: |
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
+            apt-get install -y software-properties-common
+            add-apt-repository -y ppa:george-edison55/cmake-3.x
+            apt-get remove -y cmake
+            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+      - run:
           name: Build for Windows
           command: |
-            bash scripts/setup_common_requirements.sh
             bash scripts/build_win32.sh
       - store_artifacts:
           path: win32/navit.exe
@@ -179,7 +179,7 @@ jobs:
   build_tomtom_minimal:
     <<: *defaults
     docker:
-      - image: navit/tomtom-build-image
+      - image: navit/tomtom-ng
     steps:
       - checkout
       - run:
@@ -199,7 +199,7 @@ jobs:
   build_tomtom_plugin:
     <<: *defaults
     docker:
-      - image: navit/tomtom-build-image
+      - image: navit/tomtom-ng
     steps:
       - checkout
       - run:
@@ -228,10 +228,33 @@ jobs:
           command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - add_ssh_keys:
           fingerprints:
-            - "16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
+            - "58:42:73:90:cc:68:f7:34:7e:37:37:fa:b3:26:1f:a5"
       - run:
           name: Update results to Github
           command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  check_spelling:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get -y install curl
+      - run:
+          name: Install misspell
+          command: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - run:
+          name: Check docs folder for misspells
+          command: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                exit -1
+              fi
+
+
 workflows:
   version: 2
   build_all:
@@ -241,6 +264,9 @@ workflows:
           requires:
             - sanity_check
       - build_android:
+          requires:
+            - sanity_check
+      - build_sailfish:
           requires:
             - sanity_check
       - build_win32:
@@ -277,3 +303,7 @@ workflows:
           filters:
             branches:
               only: /^trunk$/
+      - check_spelling:
+          filters:
+            branches:
+              only: /^readthedocs$/

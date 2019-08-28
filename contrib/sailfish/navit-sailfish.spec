@@ -9,8 +9,8 @@
 Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
-Version: 0.5.1
-Release: 5
+Version: 0.5.3
+Release: 1
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -101,6 +101,11 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 #       -DMAN_DIR:PATH=share/harbour-navit/man1
 
+%pre
+if [ -d %{_datadir}/harbour-navit/espeak-data ]; then
+    rm -rf %{_datadir}/harbour-navit/espeak-data
+fi
+
 %install
 %make_install
 #copy in sailfish config
@@ -109,6 +114,12 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 %files
 %defattr(644, root, root, 755)
 %{_datadir}/harbour-navit/navit.xml
+%{_datadir}/harbour-navit/navit_layout_bike.xml
+%{_datadir}/harbour-navit/navit_layout_car.xml
+%{_datadir}/harbour-navit/navit_layout_car_android.xml
+%{_datadir}/harbour-navit/navit_layout_car_dark.xml
+%{_datadir}/harbour-navit/navit_layout_car_simple.xml
+%{_datadir}/harbour-navit/navit_layout_th.xml
 %{_datadir}/harbour-navit/icons/
 %{_datadir}/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/harbour-navit/espeak-data/
@@ -125,6 +136,26 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 
 
 %changelog
+*Mon Oct 01 2018 metalstrolch 0.5.3-1
+- fix rpm updating from 0.5.1 by adding %pre section
+
+*Fri Aug 31 2018 metalstrolch 0.5.3-0
+
+Release 0.5.2 was missing the version number update in the CMakefile. This release fixes this.
+
+*Fri Aug 31 2018 metalstrolch 0.5.2-0
+
+This release has seen a big work on code quality and homogeneity.
+
+If you want to know what has changed see the Changelog at: https://github.com/navit-gps/navit/blob/v0.5.2/CHANGELOG.md
+
+For the full list of commits, see: v0.5.1...v0.5.2
+
+Please report issues at http://trac.navit-project.org or https://github.com/navit-gps/navit/issues
+The documentation can be found at http://navit.readthedocs.io/
+
+To get the latest builds, see: http://download.navit-project.org/
+
 *Tue Oct 17 2017 metalstrolch 0.5.1-5
 - Update upstream
 

@@ -34,7 +34,7 @@
 #include "callback.h"
 #include "font/freetype/font_freetype.h"
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 #include <math.h>
 
 #ifdef USE_WEBOS
@@ -56,7 +56,7 @@
 #include "raster.h"
 
 #include <event.h>
-#include <SDL/SDL_image.h>
+#include "SDL_image.h"
 #include <alloca.h>
 
 /* TODO: union overlay + non-overlay to reduce size */
@@ -252,7 +252,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
+        int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
@@ -526,7 +527,8 @@ static void resize_ft_buffer (unsigned int new_size) {
     }
 }
 
-static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                              struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
@@ -661,7 +663,8 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable)
             || (gr->overlay_parent && gr->overlay_parent->overlay_enable
                 && !gr->overlay_enable)) {
@@ -685,7 +688,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     gr->freetype_methods.text_destroy(t);
 }
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
         return;
@@ -817,7 +821,8 @@ static struct graphics_methods graphics_methods = {
     NULL, /* hide_native_keyboard */
 };
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+        int w, int h,int wraparound) {
     struct graphics_priv *ov;
     Uint32 rmask, gmask, bmask, amask;
     int i;
@@ -1178,6 +1183,8 @@ static gboolean graphics_sdl_idle(void *data) {
 #ifdef USE_WEBOS
             quit_event_loop = 1;
             navit_destroy(gr->nav);
+#else
+            callback_list_call_attr_0(gr->cbl, attr_window_closed);
 #endif
             break;
         }
@@ -1275,7 +1282,8 @@ static gboolean graphics_sdl_idle(void *data) {
 }
 
 
-static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct font_priv *(*font_freetype_new) (void *meth);
     struct attr *attr;

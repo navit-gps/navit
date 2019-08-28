@@ -261,6 +261,7 @@ struct country_table {
     { 404,"Kenya"},
     { 408,"Korea, Democratic People's Republic of"},
     { 410,"Korea, Republic of"},
+    { 412,"Kosovo,Kosova"},
     { 414,"Kuwait"},
     { 417,"Kyrgyzstan"},
     { 418,"Lao People's Democratic Republic"},
@@ -1619,7 +1620,8 @@ void osm_end_relation(struct maptool_osm *osm) {
     } else
         type=type_none;
 
-    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary")) && (boundary || type!=type_none)) {
+    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
+            && (boundary || type!=type_none)) {
         item_bin_write(tmp_item_bin, osm->boundaries);
     }
 

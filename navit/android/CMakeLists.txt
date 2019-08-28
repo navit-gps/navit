@@ -35,7 +35,6 @@ if (ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
 		-D ANDROID_API_VERSION=${ANDROID_API_VERSION}
 		-D ANDROID_PERMISSIONS:string="${ANDROID_PERMISSIONS_EXPANDED}"
 		-D STRIP_M="1"
-		-P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 		)
 
 	add_custom_command (
@@ -48,26 +47,53 @@ if (ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
 	add_custom_target( android_resources
 		DEPENDS build.xml ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} ${LANG_RESOURCES}
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res/raw/
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/ldpi
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/mdpi
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/hdpi
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/xhdpi
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/xxhdpi
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/assets/config/xxxhdpi
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
 		COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/navit/libnavit.so ${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}/
 		COMMAND ${CMAKE_COMMAND}
-		-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/navit*.xml"
-		-D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
-		-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/ldpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/ldpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 		COMMAND ${CMAKE_COMMAND}
-		-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/icons/*.png"
-		-D DST=${CMAKE_CURRENT_BINARY_DIR}/res/drawable-nodpi
-		-D LOWER=1
-		-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/mdpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/mdpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 		COMMAND ${CMAKE_COMMAND}
-		-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/lib[b-z]*.so"
-		-D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
-		-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/hdpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/hdpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 		COMMAND ${CMAKE_COMMAND}
-		-D GLOB_EXP="${PROJECT_BINARY_DIR}/po/*.mo"
-		-D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
-		-D LOWER=1
-		-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/xhdpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/xhdpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+		COMMAND ${CMAKE_COMMAND}
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/xxhdpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/xxhdpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+		COMMAND ${CMAKE_COMMAND}
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/config/xxxhdpi/*.xml"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/assets/config/xxxhdpi
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+		COMMAND ${CMAKE_COMMAND}
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/icons/*.png"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/res/drawable-nodpi
+			-D LOWER=1
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+		COMMAND ${CMAKE_COMMAND}
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/navit/*/*/.libs/lib[b-z]*.so"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/libs/${ANDROID_ARCH}
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
+		COMMAND ${CMAKE_COMMAND}
+			-D GLOB_EXP="${PROJECT_BINARY_DIR}/po/*.mo"
+			-D DST=${CMAKE_CURRENT_BINARY_DIR}/res/raw
+			-D LOWER=1
+			-P ${PROJECT_SOURCE_DIR}/cmake/copy_files.cmake
 		)
 
 	add_dependencies (android_resources images locales ${NAVIT_LIBNAME})
