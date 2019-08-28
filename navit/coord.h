@@ -36,6 +36,18 @@ struct coord {
 	int y; /*!< Y-Value */
 };
 
+/**
+ * @brief An integer mercator coordinate packed with a text label
+ *
+ * This structure holds information about an item (coordinates & label) on a map. This can be
+ * used in a list as group of points to display as search results on a map.
+ * It is used to structure input data for function navit_populate_search_results_map()
+ */
+struct lcoord {
+    struct coord c;	/*!< The coordinates for this item */
+    char *label;	/*!< A label to associate to this item */
+};
+
 /*! A integer mercator coordinate carrying its projection */
 struct pcoord {
 	enum projection pro;

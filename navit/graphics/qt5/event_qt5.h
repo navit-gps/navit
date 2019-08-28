@@ -16,15 +16,13 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #include <QObject>
 #include <glib.h>
 
 class qt5_navit_timer : public QObject {
     Q_OBJECT
-public:
-    qt5_navit_timer(QObject* parent = 0);
+public: qt5_navit_timer(QObject* parent = 0);
     GHashTable* timer_type;
     GHashTable* timer_callback;
     GHashTable* watches;

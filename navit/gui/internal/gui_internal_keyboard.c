@@ -33,6 +33,8 @@ void gui_internal_keyboard_to_upper_case(struct gui_priv *this) {
         gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_UPPER | VKBD_FLAG_2);
     if (md->keyboard_mode == (VKBD_CYRILLIC_LOWER | VKBD_FLAG_2))
         gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_UPPER | VKBD_FLAG_2);
+    if (md->keyboard_mode == (VKBD_GREEK_LOWER | VKBD_FLAG_2))
+        gui_internal_keyboard_do(this, md->keyboard, VKBD_GREEK_UPPER | VKBD_FLAG_2);
 }
 
 /**
@@ -56,6 +58,8 @@ void gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
         gui_internal_keyboard_do(this, md->keyboard, VKBD_UMLAUT_LOWER | VKBD_FLAG_2);
     if (md->keyboard_mode == (VKBD_CYRILLIC_UPPER | VKBD_FLAG_2))
         gui_internal_keyboard_do(this, md->keyboard, VKBD_CYRILLIC_LOWER | VKBD_FLAG_2);
+    if (md->keyboard_mode == (VKBD_GREEK_UPPER | VKBD_FLAG_2))
+        gui_internal_keyboard_do(this, md->keyboard, VKBD_GREEK_LOWER | VKBD_FLAG_2);
 }
 
 /**
@@ -118,7 +122,9 @@ struct gui_internal_keyb_mode {
     /*32: VKBD_UMLAUT_LOWER  */ {"äöü", 2, VKBD_UMLAUT_UPPER,   VKBD_LATIN_LOWER},
     /*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_LOWER, VKBD_LATIN_UPPER},
     /*48: VKBD_CYRILLIC_LOWER*/ {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER},
-    /*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2}
+    /*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2},
+    /*64: VKBD_GREEK_UPPER   */ {"ABΓ", 2, VKBD_GREEK_LOWER,    VKBD_LATIN_UPPER},
+    /*72: VKBD_GREEK_LOWER   */ {"abγ", 2, VKBD_GREEK_UPPER,    VKBD_LATIN_LOWER}
 };
 
 
@@ -133,6 +139,17 @@ struct gui_internal_keyb_mode {
 			-> datai = (mode & VKBD_MASK_7) | ((x) & VKBD_LAYOUT_MASK)
 #define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
 #define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
+
+
+static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data,
+        int neww, int newh) {
+    struct menu_data *md=gui_internal_menu_data(this);
+    struct widget *old_wkbdb = md->keyboard;
+
+    dbg(lvl_debug, "resize called for keyboard widget %p with w=%d, h=%d", w, neww, newh);
+    gui_internal_keyboard_do(this, old_wkbdb, md->keyboard_mode);
+}
+
 /**
  * @brief Creates a new keyboard widget or switches the layout of an existing widget
  *
@@ -167,6 +184,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         else
             render=1;
         gui_internal_widget_children_destroy(this, wkbdb);
+        gui_internal_widget_reset_pack(this, wkbdb);
+        gui_internal_widget_pack(this, wkbdb);
     } else
         wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
     md->keyboard=wkbdb;
@@ -176,11 +195,14 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
     wkbd->cols=8;
     wkbd->spx=0;
     wkbd->spy=0;
+    wkbd->on_resize=gui_internal_keyboard_topbox_resize;
     max_w=max_w/8;
     max_h=max_h/8; // Allows 3 results in the list when searching for Towns
     wkbd->p.y=max_h*2;
     if (((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_UPPER)
-            || ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_LOWER)) { // Russian/Ukrainian/Belarussian layout needs more space...
+            || ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_LOWER)
+            || ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_UPPER)
+            || ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_LOWER)) { // Russian/Ukrainian/Belarussian/Greek layout needs more space...
         max_h=max_h*4/5;
         max_w=max_w*8/9;
         wkbd->cols=9;
@@ -251,7 +273,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
 
         if (!(mode & VKBD_MASK_7)) {
-            SPACER();
+            MODE(VKBD_GREEK_UPPER);
             KEY("-");
             KEY("'");
             wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
@@ -259,7 +281,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
             SPACER();
             SPACER();
         } else {
-            SPACER();
+            if (mode == VKBD_GREEK_UPPER)
+                MODE(VKBD_GREEK_LOWER);
+            else
+                MODE(VKBD_GREEK_UPPER);
             MODE(VKBD_CYRILLIC_UPPER);
             MODE(VKBD_CYRILLIC_LOWER);
             wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
@@ -448,6 +473,112 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
     }
+    if ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_UPPER) {
+        KEY("Α");
+        KEY("Β");
+        KEY("Γ");
+        KEY("Δ");
+        KEY("Ε");
+        KEY("Ζ");
+        KEY("Η");
+        KEY("Θ");
+        KEY("Ι");
+        KEY("Κ");
+        KEY("Λ");
+        KEY("Μ");
+        KEY("Ν");
+        KEY("Ξ");
+        KEY("Ο");
+        KEY("Π");
+        KEY("Ρ");
+        KEY("Σ");
+        KEY("Τ");
+        KEY("Υ");
+        KEY("Φ");
+        KEY("Χ");
+        KEY("Ψ");
+        KEY("Ω");
+        KEY("Ή");
+        KEY("Ά");
+        KEY("Ό");
+        KEY("Ί");
+        KEY("Ώ");
+        KEY("Έ");
+        KEY("Ύ");
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+
+        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk->datai = mode | VKBD_FLAG_1024;
+
+        SWCASE();
+
+        MODE(VKBD_NUMERIC);
+
+        SPACER();
+
+        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+    }
+    if ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_LOWER) {
+        KEY("α");
+        KEY("β");
+        KEY("γ");
+        KEY("δ");
+        KEY("ε");
+        KEY("ζ");
+        KEY("η");
+        KEY("θ");
+        KEY("ι");
+        KEY("κ");
+        KEY("λ");
+        KEY("μ");
+        KEY("ν");
+        KEY("ξ");
+        KEY("ο");
+        KEY("π");
+        KEY("ρ");
+        KEY("σ");
+        KEY("τ");
+        KEY("υ");
+        KEY("φ");
+        KEY("χ");
+        KEY("ψ");
+        KEY("ω");
+        KEY("ή");
+        KEY("ά");
+        KEY("ό");
+        KEY("ί");
+        KEY("ώ");
+        KEY("έ");
+        KEY("ύ");
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        SPACER();
+        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+
+        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk->datai = mode | VKBD_FLAG_1024;
+
+        SWCASE();
+
+        MODE(VKBD_NUMERIC);
+
+        SPACER();
+
+        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+    }
 
 
     if(md->search_list && md->search_list->type==widget_table) {
@@ -594,6 +725,8 @@ int gui_internal_keyboard_init_mode(char *lang) {
         ret = VKBD_CYRILLIC_UPPER;
     else if (strstr(lang,"MN"))
         ret = VKBD_CYRILLIC_UPPER;
+    else if (strstr(lang,"GR"))
+        ret = VKBD_GREEK_UPPER;
     g_free(lang);
     return ret;
 }

@@ -298,7 +298,7 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
         item->color_bg.r = 0x0;
         item->color_bg.g = 0x0;
         item->color_bg.b = 0x0;
-        item->color_bg.a = 0x5fff;
+        item->color_bg.a = 0x9fff;
     }
 
     attr=attr_search(attrs, NULL, attr_osd_configuration);

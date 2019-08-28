@@ -16,7 +16,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-// style with: clang-format -style=WebKit -i *
 
 #include <glib.h>
 #include <stdio.h>
@@ -45,7 +44,7 @@ extern "C" {
 #endif
 
 #include "event_qt5.h"
-#include "event_qt5.moc"
+//#include "event_qt5.moc"
 #include "graphics_qt5.h"
 #include <QSocketNotifier>
 

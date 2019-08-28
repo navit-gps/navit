@@ -1,4 +1,4 @@
-The following files are lincensed under the terms of the
+The following files are licensed under the terms of the
 GNU General Public License (see GPL-2):
 
 navit/tools/gpx2navit_txt/src/utils.c
@@ -105,7 +105,7 @@ navit/callback.c
 contrib/android_build.sh
 contrib/sjjb_import.pl
 
-The following files are lincensed under the terms of the
+The following files are licensed under the terms of the
 GNU Library General Public License (see LGPL):
 
 navit/callback.h
