@@ -840,6 +840,9 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
     /* remember fill mode */
     int holdmode = GetPolyFillMode( gr->hMemDC );
 
+    /* set polygon fill mode */
+    SetPolyFillMode( gr->hMemDC, ALTERNATE );
+
     /* use poly path */
     if(BeginPath(gr->hMemDC)) {
         int a;
