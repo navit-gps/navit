@@ -827,6 +827,11 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     SelectObject( gr->hMemDC, holdpen);
 }
 
+#if HAVE_API_WIN32_CE
+/*
+ * Windows CE doesn't support PaintPath used for other versions. No polygon with holes support for CE yet.
+ */
+#else
 static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
                                      int hole_count, int* ccount, struct point **holes) {
     /* remeber pen and brush */
@@ -875,6 +880,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
     SelectObject( gr->hMemDC, holdbrush);
     SelectObject( gr->hMemDC, holdpen);
 }
+#endif
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
@@ -1513,7 +1519,11 @@ static struct graphics_methods graphics_methods = {
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
     NULL, /* get dpi */
+#if HAVE_API_WIN32_CE
+    NULL, /* draw_polygon_with_holes */
+#else
     draw_polygon_with_holes
+#endif
 };
 
 
