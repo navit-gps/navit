@@ -871,10 +871,10 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
             } else
                 Polyline( gr->hMemDC, (POINT *)(holes[a]), ccount[a]);
         }
-        /* fill the shape */
-        FillPath(gr->hMemDC);
         /* done with this path */
         EndPath(gr->hMemDC);
+        /* fill the shape */
+        FillPath(gr->hMemDC);
     }
 
     /* restore fill mode */
