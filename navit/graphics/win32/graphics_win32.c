@@ -874,7 +874,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
         /* done with this path */
         EndPath(gr->hMemDC);
         /* fill the shape */
-        FillPath(gr->hMemDC);
+        StrokePath(gr->hMemDC);
     }
 
     /* restore fill mode */
