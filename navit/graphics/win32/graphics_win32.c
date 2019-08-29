@@ -827,6 +827,54 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     SelectObject( gr->hMemDC, holdpen);
 }
 
+static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+    /* remeber pen and brush */
+    HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
+    HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
+    /* remember fill mode */
+    int holdmode = GetPolyFillMode( gr->hMemDC );
+
+    /* use poly path */
+    if(BeginPath(gr->hMemDC)) {
+        int a;
+        /* add outer polygon */
+        if (sizeof(POINT) != sizeof(struct point)) {
+            int i;
+            POINT* points=g_alloca(sizeof(POINT)*count);
+            for ( i=0; i< count; i++ ) {
+                points[i].x = p[i].x;
+                points[i].y = p[i].y;
+            }
+            Polygon( gr->hMemDC, points, count );
+        } else
+            Polygon( gr->hMemDC, (POINT *)p, count);
+
+        /* add inner polygons */
+        for(a = 0; a<hole_count; a ++) {
+            if (sizeof(POINT) != sizeof(struct point)) {
+                int i;
+                POINT* points=g_alloca(sizeof(POINT)*ccount[a]);
+                for ( i=0; i< ccount[a]; i++ ) {
+                    points[i].x = holes[a][i].x;
+                    points[i].y = holes[a][i].y;
+                }
+                Polygon( gr->hMemDC, points, ccount[a] );
+            } else
+                Polygon( gr->hMemDC, (POINT *)(holes[a]), ccount[a]);
+        }
+        /* fill the shape */
+        FillPath(gr->hMemDC);
+        /* done with this path */
+        EndPath(gr->hMemDC);
+    }
+
+    /* restore fill mode */
+    SetPolyFillMode(gr->hMemDC, holdmode);
+    /* restore pen and brush */
+    SelectObject( gr->hMemDC, holdbrush);
+    SelectObject( gr->hMemDC, holdpen);
+}
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
@@ -1464,6 +1512,8 @@ static struct graphics_methods graphics_methods = {
     overlay_resize,
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
+    NULL, /* get dpi */
+    draw_polygon_with_holes
 };
 
 
