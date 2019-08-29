@@ -192,6 +192,8 @@ if(PKG_CONFIG_FOUND)
 	if(IMLIB2_FOUND)
 		set(HAVE_IMLIB2 1)
 	endif(IMLIB2_FOUND)
+else(PKG_CONFIG_FOUND)
+        set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
 endif(PKG_CONFIG_FOUND)
 
 #find_package(Iconv)
