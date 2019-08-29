@@ -27,43 +27,19 @@ export LN_S="ln -s"
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
 JOBS=$(nproc --all)
 
+OUT_PATH="/tmp/tomtom/sdcard"
+[ -d $OUT_PATH ] && rm -rf $OUT_PATH
+
 mkdir -p build
 pushd build
-cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE \
+cmake ../ -DCMAKE_INSTALL_PREFIX=$OUT_PATH -DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2/ -Dsupport/gettext_intl=TRUE \
 -DHAVE_API_TOMTOM=TRUE -DXSLTS=tomtom -DAVOID_FLOAT=TRUE -Dmap/mg=FALSE -DUSE_PLUGINS=0 -DCMAKE_TOOLCHAIN_FILE=../Toolchain/$ARCH.cmake \
 -DDISABLE_QT=ON -DSAMPLE_MAP=n -DBUILD_MAPTOOL=n
 make -j$JOBS
+
 make install
 
-# creating directories
-OUT_PATH="/tmp/tomtom/sdcard"
-[ -d $OUT_PATH ] && rm -rf $OUT_PATH
-mkdir -p $OUT_PATH/navit/bin
-mkdir -p $OUT_PATH/navit/share/fonts
-mkdir -p $OUT_PATH/navit/share/icons
-mkdir -p $OUT_PATH/navit/share/maps
-mkdir -p $OUT_PATH/navit/share/locale
+cpack -G TGZ
 
-# navit executable
-cp navit/navit $OUT_PATH/navit/bin
-
-# fonts
-cp -r ../navit/fonts/*.ttf $OUT_PATH/navit/share/fonts
-
-# images and xml
-cp $PREFIX/share/navit/icons/*16.png $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/icons/*32.png $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/icons/*48.png $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/icons/*64.png $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/icons/nav*.* $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/icons/country*.png $OUT_PATH/navit/share/icons
-cd ..
-cp $PREFIX/share/navit/navit.xml ./tomtom480.xml
-
-# locale
-cp -r $PREFIX/share/locale $OUT_PATH/navit/share/locale
-
-
-cd $OUT_PATH
 mkdir /output
-zip -r /output/navitom_minimal.zip navit
+cp navit.tar.gz /output/navit_tomtom_minimal_$(git describe --tags).tar.gz
