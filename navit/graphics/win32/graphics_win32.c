@@ -854,9 +854,9 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
                 points[i].x = p[i].x;
                 points[i].y = p[i].y;
             }
-            Polygon( gr->hMemDC, points, count );
+            Polyline( gr->hMemDC, points, count );
         } else
-            Polygon( gr->hMemDC, (POINT *)p, count);
+            Polyline( gr->hMemDC, (POINT *)p, count);
 
         /* add inner polygons */
         for(a = 0; a<hole_count; a ++) {
@@ -867,9 +867,9 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
                     points[i].x = holes[a][i].x;
                     points[i].y = holes[a][i].y;
                 }
-                Polygon( gr->hMemDC, points, ccount[a] );
+                Polyline( gr->hMemDC, points, ccount[a] );
             } else
-                Polygon( gr->hMemDC, (POINT *)(holes[a]), ccount[a]);
+                Polyline( gr->hMemDC, (POINT *)(holes[a]), ccount[a]);
         }
         /* fill the shape */
         FillPath(gr->hMemDC);
