@@ -857,7 +857,6 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
             Polyline( gr->hMemDC, points, count );
         } else
             Polyline( gr->hMemDC, (POINT *)p, count);
-
         /* add inner polygons */
         for(a = 0; a<hole_count; a ++) {
             if (sizeof(POINT) != sizeof(struct point)) {
@@ -874,7 +873,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
         /* done with this path */
         EndPath(gr->hMemDC);
         /* fill the shape */
-        StrokePath(gr->hMemDC);
+        FillPath(gr->hMemDC);
     }
 
     /* restore fill mode */
@@ -1519,6 +1518,7 @@ static struct graphics_methods graphics_methods = {
     get_text_bbox,
     overlay_disable,
     overlay_resize,
+    NULL, /* set_attr */
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
     NULL, /* get dpi */
