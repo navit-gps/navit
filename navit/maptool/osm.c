@@ -138,7 +138,22 @@ char *osm_types[]= {"unknown","node","way","relation"};
 struct country_table {
     int countryid;
     char *names;
-    char *admin_levels;
+    char *admin_levels; /**<
+                         * String indicating how to interpret admin levels for this country.
+                         *
+                         * Each character of the string specifies how to treat the corresponding admin level.
+                         * The first character corresponds to level 3, each following character to the next
+                         * lower level (usually up to level 8, but that is just a convention):
+                         * `s`: use the name as the state label, `c`: use the name as the county label,
+                         * `m`: use the name as the municipality label, `M`: same as `m`, but additionally
+                         * use the boundary as the town boundary, `T`: use the boundary the town boundary and
+                         * ignore the name. All other characters are ignored; by convention use the digit
+                         * corresponding to the admin level to indicate this level should be skipped.
+                         *
+                         * See
+                         * https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#10_admin_level_values_for_specific_countries
+                         * for values used in specific countries.
+                         */
     FILE *file;
     int size;
     struct rect r;
