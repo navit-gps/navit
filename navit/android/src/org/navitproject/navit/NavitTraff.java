@@ -39,11 +39,10 @@ import java.util.List;
  */
 public class NavitTraff extends BroadcastReceiver {
     /** Identifier for the callback function. */
-    private final long mCbid;
     private final static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
     private final static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
     private final static String EXTRA_FEED = "feed";
-
+    private final long mCbid;
     /**
      * @brief Forwards a newly received TraFF feed to the traffic module for processing.
      *
