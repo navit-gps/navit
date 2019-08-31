@@ -95,8 +95,7 @@ public class Navit extends Activity {
     private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      map_filename_path               = null;
-    static final String                NAVIT_DATA_DIR                  = "/data/data/" + NAVIT_PACKAGE_NAME;
-    private static final String        NAVIT_DATA_SHARE_DIR            = NAVIT_DATA_DIR + "/share";
+    static String                      NAVIT_DATA_DIR                  = null;
     public static final String         NAVIT_PREFS                     = "NavitPrefs";
     Boolean                            isFullscreen                    = false;
     private static final int           MY_PERMISSIONS_REQUEST_ALL      = 101;
@@ -432,7 +431,8 @@ public class Navit extends Activity {
         // make sure the new path for the navitmap.bin file(s) exist!!
         File navit_maps_dir = new File(map_filename_path);
         navit_maps_dir.mkdirs();
-
+        NAVIT_DATA_DIR = getApplicationContext().getFilesDir().getPath();
+        final String NAVIT_DATA_SHARE_DIR = NAVIT_DATA_DIR + "/share";
         // make sure the share dir exists
         File navit_data_share_dir = new File(NAVIT_DATA_SHARE_DIR);
         navit_data_share_dir.mkdirs();
