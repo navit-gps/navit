@@ -21,9 +21,8 @@ NAVIT="./navit"
 
 function check_wmctrl()
 {
-	which wmctrl > /dev/null
-
-	if [ $? -ne 0 ] ; then
+	if ! which wmctrl > /dev/null
+	then
 		echo "I need the 'wmctrl' program. Exit."
 		exit 1
 	fi
@@ -39,9 +38,8 @@ function start_navit()
 
 	pid=$!
 
-	echo -n "$pid" > $PIDFILE
-
-	if [ $? -eq 0 ] ; then
+	if ! echo -n "$pid" > $PIDFILE
+	then
 		echo "Started navit with PID $pid."
 	else
 		kill $pid
@@ -59,12 +57,12 @@ function check_navit()
 {
 	if [ -f $PIDFILE ] ; then
     pid=$(cat $PIDFILE)
-		kill -0 $pid 2>/dev/null
-		if [ $? -eq 0 ] ; then
-			echo "Bringing Navit to front"
+		if ! kill -0 $pid 2>/dev/null
+		then
+            echo "Bringing Navit to front"
 
-      winid=$(wmctrl -l -p | grep -e "^[^:blank:]*[:blank:]*[^:blank:]*[:blank:]*$pid[:blank:]*" | sed 's/ .*//')
-			wmctrl -i -R $winid
+            winid=$(wmctrl -l -p | grep -e "^[^:blank:]*[:blank:]*[^:blank:]*[:blank:]*$pid[:blank:]*" | sed 's/ .*//')
+            wmctrl -i -R $winid
 
 			exit 0
 		fi
