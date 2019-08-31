@@ -23,11 +23,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 
-
+@SuppressWarnings("unused")
 class NavitSensors implements SensorEventListener {
     private final long mCallbackid;
 
-    private native void SensorCallback(long id, int sensor, float x, float y, float z);
+    private native void sensorCallback(long id, int sensor, float x, float y, float z);
 
 
     NavitSensors(Context context, long cbid) {
@@ -47,7 +47,7 @@ class NavitSensors implements SensorEventListener {
     public void onSensorChanged(SensorEvent sev) {
         // Log.e("NavitSensor","Type:" + sev.sensor.getType() + " X:" + sev.values[0] + " Y:"+sev.values[1]+" Z:"
         // +sev.values[2]);
-        SensorCallback(mCallbackid, sev.sensor.getType(), sev.values[0], sev.values[1], sev.values[2]);
+        sensorCallback(mCallbackid, sev.sensor.getType(), sev.values[0], sev.values[1], sev.values[2]);
     }
 }
 
