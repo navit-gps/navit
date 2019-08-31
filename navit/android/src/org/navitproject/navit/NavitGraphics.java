@@ -57,7 +57,7 @@ import java.util.ArrayList;
 public class NavitGraphics {
     private static final String            TAG = "NavitGraphics";
     private final NavitGraphics            parent_graphics;
-    private final ArrayList<NavitGraphics> overlays = new ArrayList<NavitGraphics>();
+    private final ArrayList<NavitGraphics> overlays = new ArrayList<>();
     private int                            bitmap_w;
     private int                            bitmap_h;
     private int                            pos_x;
@@ -183,7 +183,7 @@ public class NavitGraphics {
 
         @Override
         @TargetApi(20)
-        public WindowInsets onApplyWindowInsets (WindowInsets insets) {
+        public WindowInsets onApplyWindowInsets(WindowInsets insets) {
             /*
              * We're skipping the top inset here because it appears to have a bug on most Android versions tested,
              * causing it to report between 24 and 64 dip more than what is actually occupied by the system UI.
@@ -665,7 +665,7 @@ public class NavitGraphics {
         view.requestFocus();
     }
 
-    public enum msg_type {
+    enum msg_type {
         CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION,
         CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
     }
