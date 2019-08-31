@@ -414,7 +414,7 @@ Waypoint</text></img>
 			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
 		</mapset>
 
-		<!-- Mapset template for openstreetmaps -->
+		<!-- Mapset template for OpenStreetMap -->
 		<mapset enabled="no">
 			<map type="binfile" enabled="yes" data="/media/mmc2/MapsNavit/osm_europe.bin"/>
 		</mapset>
