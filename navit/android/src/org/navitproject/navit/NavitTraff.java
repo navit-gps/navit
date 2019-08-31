@@ -38,14 +38,11 @@ import java.util.List;
  * TraFF feeds and forwards them to the traffic module for processing.
  */
 public class NavitTraff extends BroadcastReceiver {
-    private final static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
-
-    private final static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
-
-    private final static String EXTRA_FEED = "feed";
-
     /** Identifier for the callback function. */
-    private long cbid;
+    private final long mCbid;
+    private final static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
+    private final static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
+    private final static String EXTRA_FEED = "feed";
 
     /**
      * @brief Forwards a newly received TraFF feed to the traffic module for processing.
@@ -67,7 +64,7 @@ public class NavitTraff extends BroadcastReceiver {
      * @param cbid The callback identifier for the native method to call upon receiving a feed
      */
     NavitTraff(Context context, long cbid) {
-        this.cbid = cbid;
+        this.mCbid = cbid;
 
         /* An intent filter for TraFF events. */
         IntentFilter traffFilter = new IntentFilter();
@@ -99,7 +96,7 @@ public class NavitTraff extends BroadcastReceiver {
             if (feed == null) {
                 Log.w(this.getClass().getSimpleName(), "empty feed, ignoring");
             } else {
-                onFeedReceived(cbid, feed);
+                onFeedReceived(mCbid, feed);
             }
         }
     }

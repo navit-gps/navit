@@ -17,8 +17,8 @@ import java.io.File;
 public class NavitDialogs extends Handler {
 
     // Dialogs
-    public static final int DIALOG_MAPDOWNLOAD = 1;
-    public static final int DIALOG_BACKUP_RESTORE = 2;
+    private static final int DIALOG_MAPDOWNLOAD = 1;
+    private static final int DIALOG_BACKUP_RESTORE = 2;
     // dialog messages
     static final int MSG_MAP_DOWNLOAD_FINISHED = 0;
     static final int MSG_PROGRESS_BAR = 1;
@@ -31,7 +31,7 @@ public class NavitDialogs extends Handler {
     private final String TAG = this.getClass().getName();
     private ProgressDialog mapdownloader_dialog = null;
     private NavitMapDownloader mapdownloader = null;
-    private Navit mActivity;
+    private final Navit mActivity;
 
     NavitDialogs(Navit activity) {
         super();
@@ -39,7 +39,7 @@ public class NavitDialogs extends Handler {
         mHandler = this;
     }
 
-    static public void sendDialogMessage(int what, String title, String text, int dialog_num,
+    static private void sendDialogMessage(int what, String title, String text, int dialog_num,
             int value1, int value2) {
         Message msg = mHandler.obtainMessage(what);
         Bundle data = new Bundle();
@@ -143,9 +143,9 @@ public class NavitDialogs extends Handler {
 
             case DIALOG_BACKUP_RESTORE:
                 /* Create a Dialog that Displays Options wether to Backup or Restore */
-                builder.setTitle(mActivity.getTstring(R.string.choose_an_action)).
-                        setCancelable(true).
-                        setItems(R.array.dialog_backup_restore_items,
+                builder.setTitle(mActivity.getTstring(R.string.choose_an_action))
+                        .setCancelable(true)
+                        .setItems(R.array.dialog_backup_restore_items,
                             new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -189,7 +189,7 @@ public class NavitDialogs extends Handler {
                 }
 
                 builder.setTitle(mActivity.getTstring(R.string.select_backup));
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity,
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity,
                         android.R.layout.simple_spinner_item, backups);
                 builder.setAdapter(adapter, new OnClickListener() {
 
@@ -206,7 +206,7 @@ public class NavitDialogs extends Handler {
         return null;
     }
 
-    public void prepareDialog(int id) {
+    private void prepareDialog(int id) {
 
         /* Remove the Dialog to force Android to rerun onCreateDialog */
         if (id == DIALOG_SELECT_BACKUP) {
