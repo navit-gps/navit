@@ -108,8 +108,8 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* e
     exit(0);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz, jlong id,
-        jint w, jint h) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz,
+        jlong id, jint w, jint h) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,w,h);
     if (id)
         callback_call_2((struct callback *)id,w,h);
@@ -122,22 +122,22 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_PaddingChangedC
         callback_call_4((struct callback *)id, left, top, right, bottom);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz, jlong id,
-        jint pressed, jint button, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz,
+        jlong id, jint pressed, jint button, jint x, jint y) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,pressed,button);
     if (id)
         callback_call_4((struct callback *)id,pressed,button,x,y);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz, jlong id,
-        jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz,
+        jlong id, jint x, jint y) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,x,y);
     if (id)
         callback_call_2((struct callback *)id,x,y);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz, jlong id,
-        jstring str) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz,
+        jlong id, jstring str) {
     const char *s;
     dbg(lvl_debug,"enter %p %p",(struct callback *)id,str);
     s=(*env)->GetStringUTFChars(env, str, NULL);
@@ -147,14 +147,15 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallbac
     (*env)->ReleaseStringUTFChars(env, str, s);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz, jlong id) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz,
+        jlong id) {
     void (*event_handler)(void *) = *(void **)id;
     dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
     event_handler((void*)id);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject thiz, jlong id,
-        jobject location) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject thiz,
+        jlong id, jobject location) {
     callback_call_1((struct callback *)id, (void *)location);
 }
 
@@ -175,14 +176,14 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_watchCallback( JNI
     callback_call_0((struct callback *)id);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject thiz, jlong id,
-        jint sensor, jfloat x, jfloat y, jfloat z) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject thiz,
+        jlong id, jint sensor, jfloat x, jfloat y, jfloat z) {
     dbg(lvl_debug,"enter %p %p %f %f %f",thiz, (void *)id,x,y,z);
     callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNIEnv * env, jobject thiz, jlong id,
-        jstring feed) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNIEnv * env, jobject thiz,
+        jlong id, jstring feed) {
     const char *s;
     s = (*env)->GetStringUTFChars(env, feed, NULL);
     if (id)
