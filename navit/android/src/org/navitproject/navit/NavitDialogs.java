@@ -17,8 +17,8 @@ import java.io.File;
 public class NavitDialogs extends Handler {
 
     // Dialogs
-    private static final int DIALOG_MAPDOWNLOAD = 1;
-    private static final int DIALOG_BACKUP_RESTORE = 2;
+    static final int DIALOG_MAPDOWNLOAD = 1;
+    static final int DIALOG_BACKUP_RESTORE = 2;
     // dialog messages
     static final int MSG_MAP_DOWNLOAD_FINISHED = 0;
     static final int MSG_PROGRESS_BAR = 1;
@@ -39,7 +39,7 @@ public class NavitDialogs extends Handler {
         mHandler = this;
     }
 
-    static private void sendDialogMessage(int what, String title, String text, int dialog_num,
+    static void sendDialogMessage(int what, String title, String text, int dialog_num,
             int value1, int value2) {
         Message msg = mHandler.obtainMessage(what);
         Bundle data = new Bundle();
@@ -206,7 +206,7 @@ public class NavitDialogs extends Handler {
         return null;
     }
 
-    private void prepareDialog(int id) {
+    void prepareDialog(int id) {
 
         /* Remove the Dialog to force Android to rerun onCreateDialog */
         if (id == DIALOG_SELECT_BACKUP) {
