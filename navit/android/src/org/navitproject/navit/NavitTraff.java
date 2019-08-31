@@ -38,19 +38,14 @@ import java.util.List;
  * TraFF feeds and forwards them to the traffic module for processing.
  */
 public class NavitTraff extends BroadcastReceiver {
-    public static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
+    private final static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
 
-    public static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
+    private final static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
 
-    public static String EXTRA_FEED = "feed";
+    private final static String EXTRA_FEED = "feed";
 
     /** Identifier for the callback function. */
-    private int cbid;
-
-    private Context context = null;
-
-    /** An intent filter for TraFF events. */
-    private IntentFilter traffFilter = new IntentFilter();
+    private long cbid;
 
     /**
      * @brief Forwards a newly received TraFF feed to the traffic module for processing.
@@ -60,7 +55,7 @@ public class NavitTraff extends BroadcastReceiver {
      * @param id The identifier for the native callback implementation
      * @param feed The TraFF feed
      */
-    public native void onFeedReceived(int id, String feed);
+    public native void onFeedReceived(long id, String feed);
 
     /**
      * @brief Creates a new {@code NavitTraff} instance.
@@ -71,10 +66,11 @@ public class NavitTraff extends BroadcastReceiver {
      * @param context The context
      * @param cbid The callback identifier for the native method to call upon receiving a feed
      */
-    NavitTraff(Context context, int cbid) {
-        this.context = context;
+    NavitTraff(Context context, long cbid) {
         this.cbid = cbid;
 
+        /* An intent filter for TraFF events. */
+        IntentFilter traffFilter = new IntentFilter();
         traffFilter.addAction(ACTION_TRAFF_FEED);
         traffFilter.addAction(ACTION_TRAFF_POLL);
 
@@ -85,7 +81,7 @@ public class NavitTraff extends BroadcastReceiver {
         Intent outIntent = new Intent(ACTION_TRAFF_POLL);
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> receivers = pm.queryBroadcastReceivers(outIntent, 0);
-        if (receivers != null)
+        if (receivers != null) {
             for (ResolveInfo receiver : receivers) {
                 ComponentName cn = new ComponentName(receiver.activityInfo.applicationInfo.packageName,
                         receiver.activityInfo.name);
@@ -93,16 +89,18 @@ public class NavitTraff extends BroadcastReceiver {
                 outIntent.setComponent(cn);
                 context.sendBroadcast(outIntent, Manifest.permission.ACCESS_COARSE_LOCATION);
             }
+        }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if ((intent != null) && (intent.getAction().equals(ACTION_TRAFF_FEED))) {
             String feed = intent.getStringExtra(EXTRA_FEED);
-            if (feed == null)
+            if (feed == null) {
                 Log.w(this.getClass().getSimpleName(), "empty feed, ignoring");
-            else
+            } else {
                 onFeedReceived(cbid, feed);
+            }
         }
     }
 }

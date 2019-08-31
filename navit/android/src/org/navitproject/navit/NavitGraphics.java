@@ -632,8 +632,9 @@ public class NavitGraphics {
      * @param activity The main activity.
      */
     protected void setActivity(final Activity activity) {
-        if (Navit.graphics == null)
+        if (Navit.graphics == null) {
             Navit.graphics = this;
+        }
         this.activity = (Navit) activity;
         view = new NavitView(activity);
         view.setClickable(false);
@@ -721,17 +722,17 @@ public class NavitGraphics {
         }
     };
 
-    public native void SizeChangedCallback(int id, int x, int y);
+    public native void SizeChangedCallback(long id, int x, int y);
 
-    public native void PaddingChangedCallback(int id, int left, int right, int top, int bottom);
+    public native void PaddingChangedCallback(long id, int left, int right, int top, int bottom);
 
-    public native void KeypressCallback(int id, String s);
+    public native void KeypressCallback(long id, String s);
 
     public native int CallbackMessageChannel(int i, String s);
 
-    public native void ButtonCallback(int id, int pressed, int button, int x, int y);
+    public native void ButtonCallback(long id, int pressed, int button, int x, int y);
 
-    public native void MotionCallback(int id, int x, int y);
+    public native void MotionCallback(long id, int x, int y);
 
     public native String GetDefaultCountry(int id, String s);
 
@@ -739,11 +740,11 @@ public class NavitGraphics {
 
     private Canvas  draw_canvas;
     private Bitmap  draw_bitmap;
-    private int SizeChangedCallbackID;
-    private int PaddingChangedCallbackID;
-    private int ButtonCallbackID;
-    private int MotionCallbackID;
-    private int KeypressCallbackID;
+    private long SizeChangedCallbackID;
+    private long PaddingChangedCallbackID;
+    private long ButtonCallbackID;
+    private long MotionCallbackID;
+    private long KeypressCallbackID;
 
     /**
      * @brief Adjust views used to tint navigation and status bars.
@@ -822,9 +823,9 @@ public class NavitGraphics {
                 } else {
                     Log.d(TAG, String.format("view w=%d h=%d x=%.0f y=%.0f",
                             view.getWidth(), view.getHeight(), view.getX(), view.getY()));
-                    if (view.getRootWindowInsets() == null)
+                    if (view.getRootWindowInsets() == null) {
                         Log.w(TAG, "No root window insets, cannot update padding");
-                    else {
+                    } else {
                         Log.d(TAG, String.format("RootWindowInsets left=%d right=%d top=%d bottom=%d",
                                 view.getRootWindowInsets().getSystemWindowInsetLeft(),
                                 view.getRootWindowInsets().getSystemWindowInsetRight(),
@@ -844,9 +845,9 @@ public class NavitGraphics {
                  * The status bar is always visible unless we are in fullscreen mode. (Fortunately, none of the
                  * versions affected by this support split screen mode, which would have further complicated things.)
                  */
-                if (activity.isFullscreen)
+                if (activity.isFullscreen) {
                     padding_top = 0;
-                else {
+                } else {
                     Resources resources = view.getResources();
                     int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
                     padding_top = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
@@ -954,26 +955,26 @@ public class NavitGraphics {
         }
     }
 
-    public void setSizeChangedCallback(int id) {
+    public void setSizeChangedCallback(long id) {
         SizeChangedCallbackID = id;
     }
 
-    public void setPaddingChangedCallback(int id) {
+    public void setPaddingChangedCallback(long id) {
         PaddingChangedCallbackID = id;
     }
 
-    public void setButtonCallback(int id) {
+    public void setButtonCallback(long id) {
         ButtonCallbackID = id;
     }
 
-    public void setMotionCallback(int id) {
+    public void setMotionCallback(long id) {
         MotionCallbackID = id;
         if (activity != null) {
             activity.setMotionCallback(id, this);
         }
     }
 
-    public void setKeypressCallback(int id) {
+    public void setKeypressCallback(long id) {
         KeypressCallbackID = id;
         // set callback id also in main intent (for menus)
         if (activity != null) {

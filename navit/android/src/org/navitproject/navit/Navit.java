@@ -364,8 +364,9 @@ public class Navit extends Activity {
         // NOTIFICATION
         // Setup the status bar notification
         // This notification is removed in the exit() function
-        if (isLaunch)
+        if (isLaunch) {
             createNotificationChannel();
+        }
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
@@ -419,9 +420,15 @@ public class Navit extends Activity {
         Log.d(TAG, "Language " + lang);
 
         SharedPreferences prefs = getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
-        map_filename_path  = prefs.getString("filenamePath",
-                Environment.getExternalStorageDirectory().getPath() + "/navit/");
 
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            map_filename_path  = prefs.getString("filenamePath",
+                    Environment.getExternalStorageDirectory().getPath() + "/navit/");
+        } else {
+            map_filename_path = prefs.getString("filenamePath",
+                    getApplicationContext().getFilesDir().getPath() + '/');
+        }
+        Log.d(TAG,"path = " + map_filename_path);
         // make sure the new path for the navitmap.bin file(s) exist!!
         File navit_maps_dir = new File(map_filename_path);
         navit_maps_dir.mkdirs();
@@ -481,12 +488,13 @@ public class Navit extends Activity {
         } catch (IOException e) {
             Log.e(TAG, "Failed to access assets using AssetManager");
         }
-
+        Log.d(TAG, "Navit for = " + System.getProperty("os.arch"));
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
         NavitMain(this, getApplication(), NavitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
                 NAVIT_DATA_DIR + "/bin/navit", map_filename_path, isLaunch);
-        if (graphics != null)
+        if (graphics != null) {
             graphics.setActivity(this);
+        }
 
         showInfos();
 
@@ -662,11 +670,11 @@ public class Navit extends Activity {
     private NavitGraphics N_NavitGraphics = null;
 
     // callback id gets set here when called from NavitGraphics
-    public void setKeypressCallback(int kp_cb_id, NavitGraphics ng) {
+    public void setKeypressCallback(long kp_cb_id, NavitGraphics ng) {
         N_NavitGraphics = ng;
     }
 
-    public void setMotionCallback(int mo_cb_id, NavitGraphics ng) {
+    public void setMotionCallback(long mo_cb_id, NavitGraphics ng) {
         N_NavitGraphics = ng;
     }
 
@@ -876,8 +884,9 @@ public class Navit extends Activity {
                 }
                 break;
             default :
-                if (ActivityResults[requestCode] != null)
+                if (ActivityResults[requestCode] != null) {
                     ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
+                }
                 break;
         }
     }

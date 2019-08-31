@@ -32,12 +32,12 @@ public class NavitTimeout implements Runnable {
         }
     };
     private boolean event_multi;
-    private int event_callbackid;
+    private long event_callbackid;
     private int event_timeout;
 
-    public native void TimeoutCallback(int id);
+    public native void TimeoutCallback(long id);
 
-    NavitTimeout(int timeout, boolean multi, int callbackid) {
+    NavitTimeout(int timeout, boolean multi, long callbackid) {
         event_timeout = timeout;
         event_multi = multi;
         event_callbackid = callbackid;
