@@ -176,7 +176,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_watchCallback( JNI
     callback_call_0((struct callback *)id);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_sensorCallback( JNIEnv* env, jobject thiz,
         jlong id, jint sensor, jfloat x, jfloat y, jfloat z) {
     dbg(lvl_debug,"enter %p %p %f %f %f",thiz, (void *)id,x,y,z);
     callback_call_4((struct callback *)id, sensor, &x, &y, &z);
