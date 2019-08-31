@@ -38,6 +38,14 @@ import java.util.List;
  * TraFF feeds and forwards them to the traffic module for processing.
  */
 public class NavitTraff extends BroadcastReceiver {
+
+
+    /** Identifier for the callback function. */
+    private static final String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
+    private static final String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
+    private static final String EXTRA_FEED = "feed";
+    private final long mCbid;
+
     /**
      * @brief Forwards a newly received TraFF feed to the traffic module for processing.
      *
@@ -47,12 +55,6 @@ public class NavitTraff extends BroadcastReceiver {
      * @param feed The TraFF feed
      */
     public native void onFeedReceived(long id, String feed);
-    private final long mCbid;
-    /** Identifier for the callback function. */
-    private final static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
-    private final static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
-    private final static String EXTRA_FEED = "feed";
-
 
     /**
      * @brief Creates a new {@code NavitTraff} instance.

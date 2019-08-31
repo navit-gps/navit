@@ -670,7 +670,7 @@ public class NavitGraphics {
         CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
     }
 
-    static private final msg_type[] msg_values = msg_type.values();
+    private static final msg_type[] msg_values = msg_type.values();
 
     public final Handler    callback_handler    = new Handler() {
         public void handleMessage(Message msg) {
