@@ -17,8 +17,8 @@ public class NavitMap {
         }
     }
 
-    NavitMap(String map_location) {
-        File mapFile = new File(map_location);
+    NavitMap(String mapLocation) {
+        File mapFile = new File(mapLocation);
 
         mMapPath = mapFile.getParent() + "/";
         mFileName = mapFile.getName();

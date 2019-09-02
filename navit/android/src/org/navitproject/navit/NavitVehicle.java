@@ -46,34 +46,34 @@ public class NavitVehicle {
 
     private static LocationManager sLocationManager = null;
     private static Context context = null;
-    private long vehicle_pcbid;
-    private long vehicle_scbid;
-    private long vehicle_fcbid;
-    private String preciseProvider;
-    private String fastProvider;
+    private long vehiclePcbid;
+    private long vehicleScbid;
+    private long vehicleFcbid;
+    private String mPreciseProvider;
+    private String mFastProvider;
 
     private static NavitLocationListener preciseLocationListener = null;
     private static NavitLocationListener fastLocationListener = null;
 
-    public native void VehicleCallback(long id, Location location);
+    public native void vehicleCallback(long id, Location location);
 
-    public native void VehicleCallback(long id, int satsInView, int satsUsed);
+    public native void vehicleCallback(long id, int satsInView, int satsUsed);
 
-    public native void VehicleCallback(long id, int enabled);
+    public native void vehicleCallback(long id, int enabled);
 
     private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
-        public boolean precise = false;
+        public boolean mPrecise = false;
 
         public void onLocationChanged(Location location) {
             lastLocation = location;
             // Disable the fast provider if still active
-            if (precise && fastProvider != null) {
+            if (mPrecise && mFastProvider != null) {
                 sLocationManager.removeUpdates(fastLocationListener);
-                fastProvider = null;
+                mFastProvider = null;
             }
 
-            VehicleCallback(vehicle_pcbid, location);
-            VehicleCallback(vehicle_fcbid, 1);
+            vehicleCallback(vehiclePcbid, location);
+            vehicleCallback(vehicleFcbid, 1);
         }
 
         public void onProviderDisabled(String provider) {}
@@ -101,17 +101,17 @@ public class NavitVehicle {
                     satsUsed++;
                 }
             }
-            VehicleCallback(vehicle_scbid, satsInView, satsUsed);
+            vehicleCallback(vehicleScbid, satsInView, satsUsed);
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GPS_FIX_CHANGE)) {
                 if (intent.getBooleanExtra("enabled", false)) {
-                    VehicleCallback(vehicle_fcbid, 1);
+                    vehicleCallback(vehicleFcbid, 1);
                 } else {
                     if (!intent.getBooleanExtra("enabled", true)) {
-                        VehicleCallback(vehicle_fcbid, 0);
+                        vehicleCallback(vehicleFcbid, 0);
                     }
                 }
             }
@@ -121,7 +121,7 @@ public class NavitVehicle {
     /**
      * @brief Creates a new {@code NavitVehicle}
      *
-     * @param context
+     * @param context the context
      * @param pcbid The address of the position callback function called when a location update is received
      * @param scbid The address of the status callback function called when a status update is received
      * @param fcbid The address of the fix callback function called when a
@@ -136,7 +136,7 @@ public class NavitVehicle {
         this.context = context;
         sLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         preciseLocationListener = new NavitLocationListener();
-        preciseLocationListener.precise = true;
+        preciseLocationListener.mPrecise = true;
         fastLocationListener = new NavitLocationListener();
 
         /* Use 2 LocationProviders, one precise (usually GPS), and one
@@ -161,16 +161,16 @@ public class NavitVehicle {
 
         Log.e("NavitVehicle", "Providers " + sLocationManager.getAllProviders());
 
-        preciseProvider = sLocationManager.getBestProvider(highCriteria, false);
-        Log.e("NavitVehicle", "Precise Provider " + preciseProvider);
-        fastProvider = sLocationManager.getBestProvider(lowCriteria, false);
-        Log.e("NavitVehicle", "Fast Provider " + fastProvider);
-        vehicle_pcbid = pcbid;
-        vehicle_scbid = scbid;
-        vehicle_fcbid = fcbid;
+        mPreciseProvider = sLocationManager.getBestProvider(highCriteria, false);
+        Log.e("NavitVehicle", "Precise Provider " + mPreciseProvider);
+        mFastProvider = sLocationManager.getBestProvider(lowCriteria, false);
+        Log.e("NavitVehicle", "Fast Provider " + mFastProvider);
+        vehiclePcbid = pcbid;
+        vehicleScbid = scbid;
+        vehicleFcbid = fcbid;
 
         context.registerReceiver(preciseLocationListener, new IntentFilter(GPS_FIX_CHANGE));
-        sLocationManager.requestLocationUpdates(preciseProvider, 0, 0, preciseLocationListener);
+        sLocationManager.requestLocationUpdates(mPreciseProvider, 0, 0, preciseLocationListener);
         sLocationManager.addGpsStatusListener(preciseLocationListener);
 
         /*
@@ -179,18 +179,18 @@ public class NavitVehicle {
          * listeners for the same provider but pick the fast provider manually. (Usually there will
          * only be two providers in total, which makes the choice easy.)
          */
-        if (fastProvider == null || preciseProvider.compareTo(fastProvider) == 0) {
+        if (mFastProvider == null || mPreciseProvider.compareTo(mFastProvider) == 0) {
             List<String> fastProviderList = sLocationManager.getProviders(lowCriteria, false);
-            fastProvider = null;
+            mFastProvider = null;
             for (String fastCandidate: fastProviderList) {
-                if (preciseProvider.compareTo(fastCandidate) != 0) {
-                    fastProvider = fastCandidate;
+                if (mPreciseProvider.compareTo(fastCandidate) != 0) {
+                    mFastProvider = fastCandidate;
                     break;
                 }
             }
         }
-        if (fastProvider != null) {
-            sLocationManager.requestLocationUpdates(fastProvider, 0, 0, fastLocationListener);
+        if (mFastProvider != null) {
+            sLocationManager.requestLocationUpdates(mFastProvider, 0, 0, fastLocationListener);
         }
     }
 

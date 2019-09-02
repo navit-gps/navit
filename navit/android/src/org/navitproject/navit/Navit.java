@@ -182,15 +182,15 @@ public class Navit extends Activity {
      * Translates a string from its id
      * in R.strings
      *
-     * @param Rid resource identifier
+     * @param riD resource identifier
      * @return translated string
      */
-    String getTstring(int Rid) {
-        return getLocalizedString(getString(Rid));
+    String getTstring(int riD) {
+        return getLocalizedString(getString(riD));
     }
 
     /**
-     * Check if a specific file needs to be extracted from the apk archive
+     * Check if a specific file needs to be extracted from the apk archive.
      * This is based on whether the file already exist, and if so, whether it is older than the archive or not
      *
      * @param filename The full path to the file
@@ -226,7 +226,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Extract a resource from the apk archive (res/raw) and save it to a local file
+     * Extract a resource from the apk archive (res/raw) and save it to a local file.
      *
      * @param result The full path to the local file
      * @param resname The name of the resource file in the archive
@@ -261,7 +261,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Extract an asset from the apk archive (assets) and save it to a local file
+     * Extract an asset from the apk archive (assets) and save it to a local file.
      *
      * @param output The full path to the output local file
      * @param assetFileName The full path of the asset file within the archive
@@ -422,17 +422,17 @@ public class Navit extends Activity {
             mapFilenamePath = prefs.getString("filenamePath",
                     Environment.getExternalStorageDirectory().getPath() + "/navit/");
         } else {
-            mapFilenamePath = prefs.getString("filenamePath", NAVIT_DATA_DIR+ '/');
+            mapFilenamePath = prefs.getString("filenamePath", NAVIT_DATA_DIR + '/');
         }
         Log.d(TAG,"mapFilenamePath = " + mapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
-        File navit_maps_dir = new File(mapFilenamePath);
-        navit_maps_dir.mkdirs();
+        File navitMapsDir = new File(mapFilenamePath);
+        navitMapsDir.mkdirs();
 
         final String NAVIT_DATA_SHARE_DIR = NAVIT_DATA_DIR + "/share";
         // make sure the share dir exists
-        File navit_data_share_dir = new File(NAVIT_DATA_SHARE_DIR);
-        navit_data_share_dir.mkdirs();
+        File navitDataShareDir = new File(NAVIT_DATA_SHARE_DIR);
+        navitDataShareDir.mkdirs();
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -454,33 +454,33 @@ public class Navit extends Activity {
             Log.e(TAG, "Failed to extract language resource " + langc);
         }
 
-        String my_display_density;
+        String myDisplayDensity;
         if (densityDpi <= 120) {
-            my_display_density = "ldpi";
+            myDisplayDensity = "ldpi";
         } else if (densityDpi <= 160) {
-            my_display_density = "mdpi";
+            myDisplayDensity = "mdpi";
         } else if (densityDpi < 240) {
-            my_display_density = "hdpi";
+            myDisplayDensity = "hdpi";
         } else if (densityDpi < 320) {
-            my_display_density = "xhdpi";
+            myDisplayDensity = "xhdpi";
         } else if (densityDpi < 480) {
-            my_display_density = "xxhdpi";
+            myDisplayDensity = "xxhdpi";
         } else if (densityDpi < 640) {
-            my_display_density = "xxxhdpi";
+            myDisplayDensity = "xxxhdpi";
         } else {
             Log.w(TAG, "found device of very high density (" + densityDpi + ")");
             Log.w(TAG, "using xxxhdpi values");
-            my_display_density = "xxxhdpi";
+            myDisplayDensity = "xxxhdpi";
         }
-        Log.i(TAG, "Device density detected: " + my_display_density);
+        Log.i(TAG, "Device density detected: " + myDisplayDensity);
 
         try {
             AssetManager assetMgr = NavitResources.getAssets();
-            String[] children = assetMgr.list("config/" + my_display_density);
+            String[] children = assetMgr.list("config/" + myDisplayDensity);
             for (String child : children) {
                 Log.d(TAG, "Processing config file '" + child + "' from assets");
-                if (!extractAsset("config/" + my_display_density + "/" + child, NAVIT_DATA_DIR + "/share/" + child)) {
-                    Log.e(TAG, "Failed to extract asset config/" + my_display_density + "/" + child);
+                if (!extractAsset("config/" + myDisplayDensity + "/" + child, NAVIT_DATA_DIR + "/share/" + child)) {
+                    Log.e(TAG, "Failed to extract asset config/" + myDisplayDensity + "/" + child);
                 }
             }
         } catch (IOException e) {
@@ -488,8 +488,8 @@ public class Navit extends Activity {
         }
         Log.d(TAG, "Navit for = " + System.getProperty("os.arch"));
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
-        NavitMain(this, getApplication(), navitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density,
-                NAVIT_DATA_DIR + "/bin/navit", mapFilenamePath, isLaunch);
+        navitMain(this, getApplication(), navitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK),
+                      myDisplayDensity, NAVIT_DATA_DIR + "/bin/navit", mapFilenamePath, isLaunch);
         if (graphics != null) {
             graphics.setActivity(this);
         }
@@ -630,8 +630,8 @@ public class Navit extends Activity {
         }
     }
 
-    public void setActivityResult(int requestCode, NavitActivityResult ActivityResult) {
-        mActivityResults[requestCode] = ActivityResult;
+    public void setActivityResult(int requestCode, NavitActivityResult activityResult) {
+        mActivityResults[requestCode] = activityResult;
     }
 
 
@@ -680,14 +680,14 @@ public class Navit extends Activity {
     }
 
 
-    private void start_targetsearch_from_intent(String target_address) {
-        if (target_address == null || target_address.equals("")) {
+    private void start_targetsearch_from_intent(String targetAddress) {
+        if (targetAddress == null || targetAddress.equals("")) {
             // empty search string entered
             Toast.makeText(getApplicationContext(), getTstring(R.string.address_search_not_found),
                     Toast.LENGTH_LONG).show(); //TRANS
         } else {
             Intent searchIntent = new Intent(this, NavitAddressSearchActivity.class);
-            searchIntent.putExtra("search_string", target_address);
+            searchIntent.putExtra("search_string", targetAddress);
             this.startActivityForResult(searchIntent, NavitAddressSearch_id);
         }
     }
@@ -744,8 +744,8 @@ public class Navit extends Activity {
                 break;
             case 6 :
                 // ok startup address search activity
-                Intent search_intent = new Intent(this, NavitAddressSearchActivity.class);
-                this.startActivityForResult(search_intent, NavitAddressSearch_id);
+                Intent searchIntent = new Intent(this, NavitAddressSearchActivity.class);
+                this.startActivityForResult(searchIntent, NavitAddressSearch_id);
                 break;
             case 7 :
                 /* Backup / Restore */
@@ -804,7 +804,7 @@ public class Navit extends Activity {
         int width = display.getWidth();
         int height = display.getHeight();
         int maxHeight = height * 47 / 100;
-        int inputHeight = width* 63 / 100;
+        int inputHeight = width * 63 / 100;
         if (inputHeight > (maxHeight)) {
             inputHeight = maxHeight;
         }
@@ -955,13 +955,13 @@ public class Navit extends Activity {
     private void exit() {
         nm.cancelAll();
         NavitVehicle.removeListener();
-        NavitDestroy();
+        navitDestroy();
     }
 
-    public native void NavitMain(Navit x, Application application, String lang, int version,
+    public native void navitMain(Navit x, Application application, String lang, int version,
             String display_density_string, String path, String path2, boolean isLaunch);
 
-    public native void NavitDestroy();
+    public native void navitDestroy();
 
 
     private String getLocalizedString(String text) {
