@@ -954,7 +954,7 @@ public class Navit extends Activity {
 
     private void exit() {
         nm.cancelAll();
-        NavitVehicle.removeListener();
+        NavitVehicle.removeListeners(this.getApplicationContext());
         navitDestroy();
     }
 

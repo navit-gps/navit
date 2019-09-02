@@ -43,13 +43,11 @@ public class NavitVehicle {
     private static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
 
     static Location lastLocation = null;
-
     private static LocationManager sLocationManager = null;
-    private static Context context = null;
-    private long vehiclePcbid;
-    private long vehicleScbid;
-    private long vehicleFcbid;
-    private String mPreciseProvider;
+    private Context mContext = null;
+    private long mVehiclePcbid;
+    private long mVehicleScbid;
+    private long mVehicleFcbid;
     private String mFastProvider;
 
     private static NavitLocationListener preciseLocationListener = null;
@@ -62,7 +60,7 @@ public class NavitVehicle {
     public native void vehicleCallback(long id, int enabled);
 
     private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
-        public boolean mPrecise = false;
+        boolean mPrecise = false;
 
         public void onLocationChanged(Location location) {
             lastLocation = location;
@@ -71,22 +69,19 @@ public class NavitVehicle {
                 sLocationManager.removeUpdates(fastLocationListener);
                 mFastProvider = null;
             }
-
-            vehicleCallback(vehiclePcbid, location);
-            vehicleCallback(vehicleFcbid, 1);
+            vehicleCallback(mVehiclePcbid, location);
+            vehicleCallback(mVehicleFcbid, 1);
         }
 
         public void onProviderDisabled(String provider) {}
-
         public void onProviderEnabled(String provider) {}
-
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
         /**
          * Called when the status of the GPS changes.
          */
         public void onGpsStatusChanged(int event) {
-            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
                 return;
@@ -101,17 +96,17 @@ public class NavitVehicle {
                     satsUsed++;
                 }
             }
-            vehicleCallback(vehicleScbid, satsInView, satsUsed);
+            vehicleCallback(mVehicleScbid, satsInView, satsUsed);
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GPS_FIX_CHANGE)) {
                 if (intent.getBooleanExtra("enabled", false)) {
-                    vehicleCallback(vehicleFcbid, 1);
+                    vehicleCallback(mVehicleFcbid, 1);
                 } else {
                     if (!intent.getBooleanExtra("enabled", true)) {
-                        vehicleCallback(vehicleFcbid, 0);
+                        vehicleCallback(mVehicleFcbid, 0);
                     }
                 }
             }
@@ -133,7 +128,7 @@ public class NavitVehicle {
             // Permission is not granted
             return;
         }
-        this.context = context;
+        this.mContext = context;
         sLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         preciseLocationListener = new NavitLocationListener();
         preciseLocationListener.mPrecise = true;
@@ -159,15 +154,15 @@ public class NavitVehicle {
         lowCriteria.setCostAllowed(true);
         lowCriteria.setPowerRequirement(Criteria.POWER_HIGH);
 
-        Log.e("NavitVehicle", "Providers " + sLocationManager.getAllProviders());
+        Log.d("NavitVehicle", "Providers " + sLocationManager.getAllProviders());
 
-        mPreciseProvider = sLocationManager.getBestProvider(highCriteria, false);
-        Log.e("NavitVehicle", "Precise Provider " + mPreciseProvider);
+        String mPreciseProvider = sLocationManager.getBestProvider(highCriteria, false);
+        Log.d("NavitVehicle", "Precise Provider " + mPreciseProvider);
         mFastProvider = sLocationManager.getBestProvider(lowCriteria, false);
-        Log.e("NavitVehicle", "Fast Provider " + mFastProvider);
-        vehiclePcbid = pcbid;
-        vehicleScbid = scbid;
-        vehicleFcbid = fcbid;
+        Log.d("NavitVehicle", "Fast Provider " + mFastProvider);
+        mVehiclePcbid = pcbid;
+        mVehicleScbid = scbid;
+        mVehicleFcbid = fcbid;
 
         context.registerReceiver(preciseLocationListener, new IntentFilter(GPS_FIX_CHANGE));
         sLocationManager.requestLocationUpdates(mPreciseProvider, 0, 0, preciseLocationListener);
@@ -194,17 +189,16 @@ public class NavitVehicle {
         }
     }
 
-    public static void removeListener() {
+    static void removeListeners(Context applicationContext) {
         if (sLocationManager != null) {
             if (preciseLocationListener != null) {
                 sLocationManager.removeUpdates(preciseLocationListener);
                 sLocationManager.removeGpsStatusListener(preciseLocationListener);
-                context.unregisterReceiver(preciseLocationListener);
+                applicationContext.unregisterReceiver(preciseLocationListener);
             }
             if (fastLocationListener != null) {
                 sLocationManager.removeUpdates(fastLocationListener);
             }
         }
-
     }
 }

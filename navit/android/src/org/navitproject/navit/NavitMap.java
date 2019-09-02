@@ -30,8 +30,8 @@ public class NavitMap {
     }
 
     public long size() {
-        File map_file = new File(mMapPath + mFileName);
-        return map_file.length();
+        File mapFile = new File(mMapPath + mFileName);
+        return mapFile.length();
     }
 
     public String getLocation() {
