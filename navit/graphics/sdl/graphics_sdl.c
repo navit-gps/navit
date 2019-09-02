@@ -284,6 +284,40 @@ static void image_free(struct graphics_priv *gr, struct graphics_image_priv * gi
     g_free(gi);
 }
 
+static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+
+    dbg(lvl_debug, "draw_polygon_with_holes: %p ", gc);
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
+            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
+        return;
+    }
+
+    /* SDL library (SDL_gfx) uses array of X and array of Y instead of array of points
+     * as the rest of navit does. This requires translating the coordinates from one struct
+     * into another. As we have our own version of SDL_gfx anyway, I step aside from this
+     * mechanic and continue using points. This breaks (pseudo= compatibility with stock
+     * sdl_graphics. Since we need to raytrace the polygons anyway, we can prepare the
+     * coordinates for SDL primitives there.
+     */
+
+    if(gr->aa) {
+        raster_aapolygon_with_holes(gr->screen, p, count, hole_count, ccount, holes,
+                                    SDL_MapRGBA(gr->screen->format,
+                                                gc->fore_r,
+                                                gc->fore_g,
+                                                gc->fore_b,
+                                                gc->fore_a));
+    } else {
+        raster_polygon_with_holes(gr->screen, p, count, hole_count, ccount, holes,
+                                  SDL_MapRGBA(gr->screen->format,
+                                              gc->fore_r,
+                                              gc->fore_g,
+                                              gc->fore_b,
+                                              gc->fore_a));
+    }
+}
+
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
             && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
@@ -819,6 +853,8 @@ static struct graphics_methods graphics_methods = {
     NULL, /* set_attr */
     NULL, /* show_native_keyboard */
     NULL, /* hide_native_keyboard */
+    NULL, /* get_dpi */
+    draw_polygon_with_holes
 };
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
