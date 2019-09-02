@@ -87,7 +87,7 @@ int android_find_static_method(jclass class, char *name, char *args, jmethodID *
     return 1;
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env, jobject thiz, jobject activity,
         jobject application, jstring lang, jint version, jstring display_density_string, jstring path, jstring map_path,
         jboolean isLaunch) {
     const char *langstr;
@@ -123,7 +123,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env,
     }
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* env, jobject thiz) {
+JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitDestroy( JNIEnv* env, jobject thiz) {
     dbg(lvl_debug, "shutdown navit");
     exit(0);
 }
@@ -175,7 +175,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_timeoutCallback(
     event_handler((void*)(intptr_t)id);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_vehicleCallback( JNIEnv * env, jobject thiz,
         jlong id, jobject location) {
     callback_call_1((struct callback *)(intptr_t)id, (void *)location);
 }
