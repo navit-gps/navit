@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitDestroy( JNIEnv* e
     exit(0);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_sizeChangedCallback( JNIEnv* env, jobject thiz,
         jlong id, jint w, jint h) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,w,h);
     if (id) {
@@ -136,28 +136,28 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCall
     }
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback(JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_paddingChangedCallback(JNIEnv* env, jobject thiz,
         jlong id, jint left, jint top, jint right, jint bottom) {
     dbg(lvl_debug,"enter %p %d %d %d %d",(struct callback *)(intptr_t)id, left, top, right, bottom);
     if (id)
         callback_call_4((struct callback *)(intptr_t)id, left, top, right, bottom);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_buttonCallback( JNIEnv* env, jobject thiz,
         jlong id, jint pressed, jint button, jint x, jint y) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,pressed,button);
     if (id)
         callback_call_4((struct callback *)(intptr_t)id,pressed,button,x,y);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_motionCallback( JNIEnv* env, jobject thiz,
         jlong id, jint x, jint y) {
     dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,x,y);
     if (id)
         callback_call_2((struct callback *)(intptr_t)id,x,y);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_keypressCallback( JNIEnv* env, jobject thiz,
         jlong id, jstring str) {
     const char *s;
     dbg(lvl_debug,"enter %p %p",(struct callback *)(intptr_t)id,str);
@@ -231,7 +231,7 @@ void android_return_search_result(struct jni_object *jni_o, int type, struct pco
     (*env)->DeleteLocalRef(jni_o->env, jaddress);
 }
 
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString( JNIEnv* env, jclass thiz,
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_callbackLocalizedString( JNIEnv* env, jclass thiz,
         jstring str) {
     const char *s;
     const char *localized_str;
@@ -250,7 +250,7 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackLoca
     return js;
 }
 
-JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz,
+JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel( JNIEnv* env, jobject thiz,
         jint channel, jstring str) {
     struct attr attr;
     const char *s;
@@ -410,7 +410,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobject thiz,
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCountry( JNIEnv* env, jobject thiz,
         jint channel, jstring str) {
     struct attr search_attr, country_name, country_iso2, *country_attr;
     struct tracking *tracking;
@@ -448,7 +448,7 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCo
     return return_string;
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_GetAllCountries( JNIEnv* env, jclass thiz) {
+JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllCountries( JNIEnv* env, jclass thiz) {
     struct attr search_attr;
     struct search_list_result *res;
     GList* countries = NULL;
@@ -705,7 +705,7 @@ static void start_search(struct android_search_priv *search_priv, const char *se
     dbg(lvl_debug,"leave");
 }
 
-JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch( JNIEnv* env,
+JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch( JNIEnv* env,
         jobject thiz, jint partial, jstring country, jstring str) {
     struct attr attr;
     const char *search_string =(*env)->GetStringUTFChars(env, str, NULL);
@@ -756,7 +756,7 @@ JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_C
     return (jlong)(long)search_priv;
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch( JNIEnv* env,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_callbackCancelAddressSearch( JNIEnv* env,
         jobject thiz, jlong handle) {
     struct android_search_priv *priv = (void*)(long)handle;
 
