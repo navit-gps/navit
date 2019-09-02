@@ -633,7 +633,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(resize_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (long)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setPaddingChangedCallback", "(J)V");
     if (cid == NULL) {
@@ -641,7 +641,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(padding_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (long)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setButtonCallback", "(J)V");
     if (cid == NULL) {
@@ -649,7 +649,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(button_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (long)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setMotionCallback", "(J)V");
     if (cid == NULL) {
@@ -657,7 +657,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(motion_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (long)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setKeypressCallback", "(J)V");
     if (cid == NULL) {
@@ -665,7 +665,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(keypress_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (long)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     if (!find_method(ret->NavitGraphicsClass, "draw_polyline", "(Landroid/graphics/Paint;[I)V",
                      &ret->NavitGraphics_draw_polyline))
@@ -911,7 +911,7 @@ static jmethodID NavitWatch_remove;
 static void do_poll(JNIEnv *env, int fd, int cond) {
     struct pollfd pfd;
     pfd.fd=fd;
-    dbg(lvl_debug,"%p poll called for %d %d", fd, cond);
+    dbg(lvl_debug,"poll called for %d %d", fd, cond);
     switch ((enum event_watch_cond)cond) {
     case event_watch_cond_read:
         pfd.events=POLLIN;
@@ -931,8 +931,8 @@ static void do_poll(JNIEnv *env, int fd, int cond) {
 
 static struct event_watch *event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     jobject ret;
-    ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (long)do_poll, h, (int) cond, (long)cb);
-    dbg(lvl_debug,"result for %d,%d,%p=%p",h,cond,cb,ret);
+    ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (jlong)do_poll, h, (jint) cond, (jlong)cb);
+    dbg(lvl_debug,"result for %p,%d,%p = %p",h,cond,cb,ret);
     if (ret)
         ret = (*jnienv)->NewGlobalRef(jnienv, ret);
     return (struct event_watch *)ret;
@@ -973,7 +973,8 @@ static struct event_timeout *event_android_add_timeout(int timeout, int multi, s
     ret->cb = cb;
     ret->multi = multi;
     ret->handle_timeout = event_android_handle_timeout;
-    ret->jni_timeout = (*jnienv)->NewObject(jnienv, NavitTimeoutClass, NavitTimeout_init, timeout, multi, (long)ret);
+    ret->jni_timeout = (*jnienv)->NewObject(jnienv, NavitTimeoutClass, NavitTimeout_init, timeout, multi, (jlong)(ret));
+    dbg(lvl_debug,"result for %d,%d,%p = %p",timeout,multi,cb,ret);
     if (ret->jni_timeout)
         ret->jni_timeout = (*jnienv)->NewGlobalRef(jnienv, ret->jni_timeout);
     return ret;
