@@ -489,18 +489,18 @@ public class NavitMapDownloader extends Thread {
     private static final int UPDATE_PROGRESS_TIME_NS = 1000 * 1000000; // 1ns=1E-9s
     private static final int MAX_RETRIES = 5;
     private final String TAG = this.getClass().getName();
-    private final String map_filename_path;
-    private final osm_map_values map_values;
-    private final int map_id;
-    private Boolean stop_me = false;
-    private long uiLastUpdated = -1;
-    private Boolean retryDownload = false; //Download failed, but
-    private int retry_counter = 0;
+    private final String mMapFilenamePath;
+    private final osm_map_values mMapValues;
+    private final int mMapId;
+    private Boolean mStopMe = false;
+    private long mUiLastUpdated = -1;
+    private Boolean mRetryDownload = false; //Download failed, but
+    private int mRetryCounter = 0;
 
     NavitMapDownloader(int map_id) {
-        this.map_values = osm_maps[map_id];
-        this.map_id = map_id;
-        this.map_filename_path = Navit.mapFilenamePath;
+        this.mMapValues = osm_maps[map_id];
+        this.mMapId = map_id;
+        this.mMapFilenamePath = Navit.mapFilenamePath;
     }
 
     public static NavitMap[] getAvailableMaps() {
@@ -525,42 +525,42 @@ public class NavitMapDownloader extends Thread {
     }
 
     public void run() {
-        stop_me = false;
-        retry_counter = 0;
+        mStopMe = false;
+        mRetryCounter = 0;
 
-        Log.v(TAG, "start download " + map_values.map_name);
-        updateProgress(0, map_values.est_size_bytes,
-                Navit.getInstance().getTstring(R.string.map_downloading) + ": " + map_values.map_name);
+        Log.v(TAG, "start download " + mMapValues.map_name);
+        updateProgress(0, mMapValues.est_size_bytes,
+                Navit.getInstance().getTstring(R.string.map_downloading) + ": " + mMapValues.map_name);
 
         boolean success;
         do {
             try {
-                Thread.sleep(10 + retry_counter * 1000);
+                Thread.sleep(10 + mRetryCounter * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            retryDownload = false;
+            mRetryDownload = false;
             success = download_osm_map();
         } while (!success
-                && retryDownload
-                && retry_counter < MAX_RETRIES
-                && !stop_me);
+                && mRetryDownload
+                && mRetryCounter < MAX_RETRIES
+                && !mStopMe);
 
         if (success) {
-            toast(map_values.map_name + " " + Navit.getInstance().getTstring(R.string.map_download_ready));
+            toast(mMapValues.map_name + " " + Navit.getInstance().getTstring(R.string.map_download_ready));
             getMapInfoFile().delete();
             Log.d(TAG, "success");
         }
 
-        if (success || stop_me) {
+        if (success || mStopMe) {
             NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                    map_filename_path + map_values.map_name + ".bin", null, -1, success ? 1 : 0, map_id);
+                    mMapFilenamePath + mMapValues.map_name + ".bin", null, -1, success ? 1 : 0, mMapId);
         }
     }
 
     public void stop_thread() {
-        stop_me = true;
-        Log.d(TAG, "stop_me -> true");
+        mStopMe = true;
+        Log.d(TAG, "mStopMe -> true");
     }
 
     private boolean checkFreeSpace(long needed_bytes) {
@@ -590,7 +590,7 @@ public class NavitMapDownloader extends Thread {
         File finalOutputFile = getMapFile();
 
         if (finalOutputFile.exists()) {
-            Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().callback_handler,
+            Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
                         NavitGraphics.msg_type.CLB_DELETE_MAP.ordinal());
             Bundle b = new Bundle();
             b.putString("title", finalOutputFile.getAbsolutePath());
@@ -642,7 +642,7 @@ public class NavitMapDownloader extends Thread {
             }
 
             if (real_size_bytes <= 0) {
-                real_size_bytes = map_values.est_size_bytes;
+                real_size_bytes = mMapValues.est_size_bytes;
             }
 
             Log.d(TAG, "size: " + real_size_bytes + ", read: " + already_read + ", timestamp: "
@@ -664,7 +664,7 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getDestinationFile() {
-        File outputFile = new File(map_filename_path, map_values.map_name + ".tmp");
+        File outputFile = new File(mMapFilenamePath, mMapValues.map_name + ".tmp");
         outputFile.getParentFile().mkdir();
         return outputFile;
     }
@@ -694,11 +694,11 @@ public class NavitMapDownloader extends Thread {
         URL url;
         try {
             url =
-                new URL("http://maps.navit-project.org/api/map/?bbox=" + map_values.lon1 + ","
-                        + map_values.lat1
-                        + "," + map_values.lon2 + "," + map_values.lat2);
+                new URL("http://maps.navit-project.org/api/map/?bbox=" + mMapValues.lon1 + ","
+                        + mMapValues.lat1
+                        + "," + mMapValues.lon2 + "," + mMapValues.lat2);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "We failed to create a URL to " + map_values.map_name);
+            Log.e(TAG, "We failed to create a URL to " + mMapValues.map_name);
             e.printStackTrace();
             return null;
         }
@@ -708,7 +708,7 @@ public class NavitMapDownloader extends Thread {
 
     private long getFreeSpace() {
         try {
-            StatFs fsInfo = new StatFs(map_filename_path);
+            StatFs fsInfo = new StatFs(mMapFilenamePath);
             return (long) fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
         } catch (Exception e) {
             return -1;
@@ -721,7 +721,7 @@ public class NavitMapDownloader extends Thread {
             bif = new BufferedInputStream(c.getInputStream(), MAP_READ_FILE_BUFFER);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found on server: " + e);
-            if (retry_counter > 0) {
+            if (mRetryCounter > 0) {
                 getMapInfoFile().delete();
             }
             enableRetry();
@@ -735,11 +735,11 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getMapFile() {
-        return new File(map_filename_path, map_values.map_name + ".bin");
+        return new File(mMapFilenamePath, mMapValues.map_name + ".bin");
     }
 
     private File getMapInfoFile() {
-        return new File(map_filename_path, map_values.map_name + ".tmp.info");
+        return new File(mMapFilenamePath, mMapValues.map_name + ".tmp.info");
     }
 
     private BufferedOutputStream getOutputStream(File outputFile, boolean resume) {
@@ -779,7 +779,7 @@ public class NavitMapDownloader extends Thread {
         boolean success = false;
 
         try {
-            while (!stop_me && (len1 = bif.read(buffer)) != -1) {
+            while (!mStopMe && (len1 = bif.read(buffer)) != -1) {
                 already_read += len1;
                 updateProgress(start_timestamp, startOffset, already_read, real_size_bytes);
 
@@ -804,7 +804,7 @@ public class NavitMapDownloader extends Thread {
                 }
             }
 
-            if (stop_me) {
+            if (mStopMe) {
                 toast(Navit.getInstance().getTstring(R.string.map_download_download_aborted));
             } else if (already_read < real_size_bytes) {
                 Log.d(TAG, "Server send only " + already_read + " bytes of " + real_size_bytes);
@@ -848,7 +848,7 @@ public class NavitMapDownloader extends Thread {
     private void updateProgress(long startTime, long offsetBytes, long readBytes, long maxBytes) {
         long currentTime = System.nanoTime();
 
-        if ((currentTime > uiLastUpdated + UPDATE_PROGRESS_TIME_NS) && startTime != currentTime) {
+        if ((currentTime > mUiLastUpdated + UPDATE_PROGRESS_TIME_NS) && startTime != currentTime) {
             float per_second_overall = (readBytes - offsetBytes) / ((currentTime - startTime) / 1000000000f);
             long bytes_remaining = maxBytes - readBytes;
             int eta_seconds = (int) (bytes_remaining / per_second_overall);
@@ -861,17 +861,17 @@ public class NavitMapDownloader extends Thread {
             }
             String info = String.format("%s: %s\n %dMb / %dMb\n %.1f kb/s %s: %s",
                         Navit.getInstance().getTstring(R.string.map_downloading),
-                        map_values.map_name, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
+                        mMapValues.map_name, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
                         per_second_overall / 1024f, Navit.getInstance().getTstring(R.string.map_download_eta),
                         eta_string);
 
-            if (retry_counter > 0) {
-                info += "\n Retry " + retry_counter + "/" + MAX_RETRIES;
+            if (mRetryCounter > 0) {
+                info += "\n Retry " + mRetryCounter + "/" + MAX_RETRIES;
             }
             Log.d(TAG, "info: " + info);
 
             updateProgress(readBytes, maxBytes, info);
-            uiLastUpdated = currentTime;
+            mUiLastUpdated = currentTime;
         }
     }
 
@@ -899,8 +899,8 @@ public class NavitMapDownloader extends Thread {
     }
 
     private void enableRetry() {
-        retryDownload = true;
-        retry_counter++;
+        mRetryDownload = true;
+        mRetryCounter++;
     }
 
     public static class osm_map_values {
