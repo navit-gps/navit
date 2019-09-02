@@ -223,14 +223,14 @@ public class NavitGraphics {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            canvas.drawBitmap(draw_bitmap, pos_x, pos_y, null);
+            canvas.drawBitmap(mDrawBitmap, pos_x, pos_y, null);
             if (overlay_disabled == 0) {
                 // assume we ARE in map view mode!
                 in_map = true;
                 for (NavitGraphics overlay : overlays) {
                     if (overlay.overlay_disabled == 0) {
                         Rect r = overlay.get_rect();
-                        canvas.drawBitmap(overlay.draw_bitmap, r.left, r.top, null);
+                        canvas.drawBitmap(overlay.mDrawBitmap, r.left, r.top, null);
                     }
                 }
             } else {
@@ -295,7 +295,7 @@ public class NavitGraphics {
             if (switch_value == MotionEvent.ACTION_DOWN) {
                 touch_mode = PRESSED;
                 if (!in_map) {
-                    ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                    buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                 }
                 mPressedPosition = new PointF(x, y);
                 postDelayed(this, time_for_long_press);
@@ -306,8 +306,8 @@ public class NavitGraphics {
                     case DRAG:
                         Log.d(TAG, "onTouch move");
 
-                        MotionCallback(MotionCallbackID, x, y);
-                        ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+                        motionCallback(mMotionCallbackID, x, y);
+                        buttonCallback(mButtonCallbackID, 0, 1, x, y); // up
 
                         break;
                     case ZOOM:
@@ -319,17 +319,17 @@ public class NavitGraphics {
 
                         if (scale > 1.3) {
                             // zoom in
-                            CallbackMessageChannel(1, null);
+                            callbackMessageChannel(1, null);
                         } else if (scale < 0.8) {
                             // zoom out
-                            CallbackMessageChannel(2, null);
+                            callbackMessageChannel(2, null);
                         }
                         break;
                     case PRESSED:
                         if (in_map) {
-                            ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                            buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                         }
-                        ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+                        buttonCallback(mButtonCallbackID, 0, 1, x, y); // up
 
                         break;
                 }
@@ -337,7 +337,7 @@ public class NavitGraphics {
             } else if (switch_value == MotionEvent.ACTION_MOVE) {
                 switch (touch_mode) {
                     case DRAG:
-                        MotionCallback(MotionCallbackID, x, y);
+                        motionCallback(mMotionCallbackID, x, y);
                         break;
                     case ZOOM:
                         float newDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
@@ -345,18 +345,18 @@ public class NavitGraphics {
                         Log.d(TAG, "New scale = " + scale);
                         if (scale > 1.2) {
                             // zoom in
-                            CallbackMessageChannel(1, "");
+                            callbackMessageChannel(1, "");
                             oldDist = newDist;
                         } else if (scale < 0.8) {
                             oldDist = newDist;
                             // zoom out
-                            CallbackMessageChannel(2, "");
+                            callbackMessageChannel(2, "");
                         }
                         break;
                     case PRESSED:
                         Log.d(TAG, "Start drag mode");
                         if (spacing(mPressedPosition, new PointF(event.getX(), event.getY())) > 20f) {
-                            ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+                            buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                             touch_mode = DRAG;
                         }
                         break;
@@ -489,7 +489,7 @@ public class NavitGraphics {
             }
 
             if (s != null) {
-                KeypressCallback(KeypressCallbackID, s);
+                keypressCallback(mKeypressCallbackID, s);
             }
             return true;
         }
@@ -540,7 +540,7 @@ public class NavitGraphics {
             }
 
             if (s != null) {
-                KeypressCallback(KeypressCallbackID, s);
+                keypressCallback(mKeypressCallbackID, s);
             }
             return true;
         }
@@ -550,7 +550,7 @@ public class NavitGraphics {
             String s;
             if (keyCode == KeyEvent.KEYCODE_UNKNOWN) {
                 s = event.getCharacters();
-                KeypressCallback(KeypressCallbackID, s);
+                keypressCallback(mKeypressCallbackID, s);
                 return true;
             }
             return super.onKeyMultiple(keyCode, count, event);
@@ -583,7 +583,7 @@ public class NavitGraphics {
                 }
             }
             if (s != null) {
-                KeypressCallback(KeypressCallbackID, s);
+                keypressCallback(mKeypressCallbackID, s);
             }
             return true;
         }
@@ -614,13 +614,13 @@ public class NavitGraphics {
             }
             setActivity(activity);
         } else {
-            draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             bitmap_w = w;
             bitmap_h = h;
             pos_x = x;
             pos_y = y;
             pos_wraparound = wraparound;
-            draw_canvas = new Canvas(draw_bitmap);
+            mDrawCanvas = new Canvas(mDrawBitmap);
             parent.overlays.add(this);
         }
         parent_graphics = parent;
@@ -678,75 +678,75 @@ public class NavitGraphics {
         public void handleMessage(Message msg) {
             switch (msg_values[msg.what]) {
                 case CLB_ZOOM_IN:
-                    CallbackMessageChannel(1, "");
+                    callbackMessageChannel(1, "");
                     break;
                 case CLB_ZOOM_OUT:
-                    CallbackMessageChannel(2, "");
+                    callbackMessageChannel(2, "");
                     break;
                 case CLB_MOVE:
-                    MotionCallback(MotionCallbackID, msg.getData().getInt("x"), msg.getData().getInt("y"));
+                    motionCallback(mMotionCallbackID, msg.getData().getInt("x"), msg.getData().getInt("y"));
                     break;
                 case CLB_SET_DESTINATION:
                     String lat = Float.toString(msg.getData().getFloat("lat"));
                     String lon = Float.toString(msg.getData().getFloat("lon"));
                     String q = msg.getData().getString(("q"));
-                    CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
+                    callbackMessageChannel(3, lat + "#" + lon + "#" + q);
                     break;
                 case CLB_SET_DISPLAY_DESTINATION:
                     int x = msg.arg1;
                     int y = msg.arg2;
-                    CallbackMessageChannel(4, "" + x + "#" + y);
+                    callbackMessageChannel(4, "" + x + "#" + y);
                     break;
                 case CLB_CALL_CMD:
                     String cmd = msg.getData().getString(("cmd"));
-                    CallbackMessageChannel(5, cmd);
+                    callbackMessageChannel(5, cmd);
                     break;
                 case CLB_BUTTON_UP:
-                    ButtonCallback(ButtonCallbackID, 0, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // up
+                    buttonCallback(mButtonCallbackID, 0, 1, msg.getData().getInt("x"), msg.getData().getInt("y")); // up
                     break;
                 case CLB_BUTTON_DOWN:
                     // down
-                    ButtonCallback(ButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y"));
+                    buttonCallback(mButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y"));
                     break;
                 case CLB_COUNTRY_CHOOSER:
                     break;
                 case CLB_LOAD_MAP:
-                    CallbackMessageChannel(6, msg.getData().getString(("title")));
+                    callbackMessageChannel(6, msg.getData().getString(("title")));
                     break;
                 case CLB_DELETE_MAP:
                     File toDelete = new File(msg.getData().getString(("title")));
                     toDelete.delete();
                     //fallthrough
                 case CLB_UNLOAD_MAP:
-                    CallbackMessageChannel(7, msg.getData().getString(("title")));
+                    callbackMessageChannel(7, msg.getData().getString(("title")));
                     break;
             }
         }
     };
 
-    public native void SizeChangedCallback(long id, int x, int y);
+    public native void sizeChangedCallback(long id, int x, int y);
 
-    public native void PaddingChangedCallback(long id, int left, int right, int top, int bottom);
+    public native void paddingChangedCallback(long id, int left, int right, int top, int bottom);
 
-    public native void KeypressCallback(long id, String s);
+    public native void keypressCallback(long id, String s);
 
-    public native int CallbackMessageChannel(int i, String s);
+    public native int callbackMessageChannel(int i, String s);
 
-    public native void ButtonCallback(long id, int pressed, int button, int x, int y);
+    public native void buttonCallback(long id, int pressed, int button, int x, int y);
 
-    public native void MotionCallback(long id, int x, int y);
+    public native void motionCallback(long id, int x, int y);
 
-    public native String GetDefaultCountry(int id, String s);
+    public native String getDefaultCountry(int id, String s);
 
-    public static native String[][] GetAllCountries();
+    public static native String[][] getAllCountries();
 
-    private Canvas  draw_canvas;
-    private Bitmap  draw_bitmap;
-    private long SizeChangedCallbackID;
-    private long PaddingChangedCallbackID;
-    private long ButtonCallbackID;
-    private long MotionCallbackID;
-    private long KeypressCallbackID;
+    private Canvas mDrawCanvas;
+    private Bitmap mDrawBitmap;
+    private long mSizeChangedCallbackID;
+    private long mPaddingChangedCallbackID;
+    private long mButtonCallbackID;
+    private long mMotionCallbackID;
+    private long mKeypressCallbackID;
 
     /**
      * @brief Adjust views used to tint navigation and status bars.
@@ -802,7 +802,7 @@ public class NavitGraphics {
             }
         });
 
-        PaddingChangedCallback(PaddingChangedCallbackID, padding_left, padding_top, padding_right, padding_bottom);
+        paddingChangedCallback(mPaddingChangedCallbackID, padding_left, padding_top, padding_right, padding_bottom);
     }
 
     /**
@@ -874,11 +874,12 @@ public class NavitGraphics {
                  *
                  * The navigation bar is shown on devices that report they have no physical menu button. This seems to
                  * work even on devices that allow disabling the physical buttons (and use the navigation bar, in which
-                 * case they report no physical menu button is available; tested with a OnePlus One running CyanogenMod).
+                 * case they report no physical menu button is available; tested with a OnePlus One running CyanogenMod)
                  *
                  * If shown, the navigation bar may appear on the side or at the bottom. The logic to determine this is
                  * taken from AOSP RenderSessionImpl.findNavigationBar()
-                 * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/layoutlib/bridge/impl/RenderSessionImpl.java
+                 * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/
+                 * layoutlib/bridge/impl/RenderSessionImpl.java
                  */
                 Resources resources = view.getResources();
                 int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
@@ -933,11 +934,11 @@ public class NavitGraphics {
 
             adjustSystemBarsTintingViews();
 
-            draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            draw_canvas = new Canvas(draw_bitmap);
+            mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            mDrawCanvas = new Canvas(mDrawBitmap);
             bitmap_w = w;
             bitmap_h = h;
-            SizeChangedCallback(SizeChangedCallbackID, w, h);
+            sizeChangedCallback(mSizeChangedCallbackID, w, h);
         }
     }
 
@@ -967,26 +968,26 @@ public class NavitGraphics {
     }
 
     public void setSizeChangedCallback(long id) {
-        SizeChangedCallbackID = id;
+        mSizeChangedCallbackID = id;
     }
 
     public void setPaddingChangedCallback(long id) {
-        PaddingChangedCallbackID = id;
+        mPaddingChangedCallbackID = id;
     }
 
     public void setButtonCallback(long id) {
-        ButtonCallbackID = id;
+        mButtonCallbackID = id;
     }
 
     public void setMotionCallback(long id) {
-        MotionCallbackID = id;
+        mMotionCallbackID = id;
         if (activity != null) {
             activity.setMotionCallback(id, this);
         }
     }
 
     public void setKeypressCallback(long id) {
-        KeypressCallbackID = id;
+        mKeypressCallbackID = id;
         // set callback id also in main intent (for menus)
         if (activity != null) {
             activity.setKeypressCallback(id, this);
@@ -1020,7 +1021,7 @@ public class NavitGraphics {
             path.lineTo(c[i], c[i + 1]);
         }
         //global_path.close();
-        draw_canvas.drawPath(path, paint);
+        mDrawCanvas.drawPath(path, paint);
         paint.setPathEffect(null);
     }
 
@@ -1036,7 +1037,7 @@ public class NavitGraphics {
             path.lineTo(c[i], c[i + 1]);
         }
         //global_path.close();
-        draw_canvas.drawPath(path, paint);
+        mDrawCanvas.drawPath(path, paint);
     }
 
     protected void draw_rectangle(Paint paint, int x, int y, int w, int h) {
@@ -1044,12 +1045,12 @@ public class NavitGraphics {
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         //paint.setStrokeWidth(0);
-        draw_canvas.drawRect(r, paint);
+        mDrawCanvas.drawRect(r, paint);
     }
 
     protected void draw_circle(Paint paint, int x, int y, int r) {
         paint.setStyle(Paint.Style.STROKE);
-        draw_canvas.drawCircle(x, y, r / 2, paint);
+        mDrawCanvas.drawCircle(x, y, r / 2, paint);
     }
 
     protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy, int bgcolor) {
@@ -1071,24 +1072,24 @@ public class NavitGraphics {
             paint.setColor(bgcolor);
             paint.setStyle(Paint.Style.STROKE);
             if (path == null) {
-                draw_canvas.drawText(text, x, y, paint);
+                mDrawCanvas.drawText(text, x, y, paint);
             } else {
-                draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
+                mDrawCanvas.drawTextOnPath(text, path, 0, 0, paint);
             }
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(oldcolor);
         }
 
         if (path == null) {
-            draw_canvas.drawText(text, x, y, paint);
+            mDrawCanvas.drawText(text, x, y, paint);
         } else {
-            draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
+            mDrawCanvas.drawTextOnPath(text, path, 0, 0, paint);
         }
         paint.clearShadowLayer();
     }
 
     protected void draw_image(Paint paint, int x, int y, Bitmap bitmap) {
-        draw_canvas.drawBitmap(bitmap, x, y, null);
+        mDrawCanvas.drawBitmap(bitmap, x, y, null);
     }
 
     /* takes an image and draws it on the screen as a prerendered maptile
@@ -1128,7 +1129,7 @@ public class NavitGraphics {
             matrix.preScale(scale, scale);
             matrix.postTranslate(p0x, p0y);
             matrix.postRotate(angle, p0x, p0y);
-            draw_canvas.drawBitmap(bitmap, matrix, paint);
+            mDrawCanvas.drawBitmap(bitmap, matrix, paint);
         }
     }
 
@@ -1145,7 +1146,7 @@ public class NavitGraphics {
             }
         }
         if (mode == draw_mode_begin && parent_graphics != null) {
-            draw_bitmap.eraseColor(0);
+            mDrawBitmap.eraseColor(0);
         }
 
     }
@@ -1170,14 +1171,14 @@ public class NavitGraphics {
     }
 
     protected void overlay_resize(int x, int y, int w, int h, int wraparound) {
-        draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         bitmap_w = w;
         bitmap_h = h;
         pos_x = x;
         pos_y = y;
         pos_wraparound = wraparound;
-        draw_canvas.setBitmap(draw_bitmap);
+        mDrawCanvas.setBitmap(mDrawBitmap);
     }
 
-    public static native String CallbackLocalizedString(String s);
+    public static native String callbackLocalizedString(String s);
 }

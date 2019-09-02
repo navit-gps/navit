@@ -825,8 +825,8 @@ public class Navit extends Activity {
 
 
     void setDestination(float latitude, float longitude, String address) {
-        Toast.makeText(getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n" + address,
-                Toast.LENGTH_LONG).show(); //TRANS
+        Toast.makeText(getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n"
+                + address, Toast.LENGTH_LONG).show(); //TRANS
 
         Message msg = Message.obtain(mNavitGraphics.callback_handler,
                 NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
@@ -959,13 +959,13 @@ public class Navit extends Activity {
     }
 
     public native void navitMain(Navit x, Application application, String lang, int version,
-            String display_density_string, String path, String path2, boolean isLaunch);
+            String displayDensityString, String path, String path2, boolean isLaunch);
 
     public native void navitDestroy();
 
 
     private String getLocalizedString(String text) {
-        return NavitGraphics.CallbackLocalizedString(text);
+        return NavitGraphics.callbackLocalizedString(text);
     }
 
 

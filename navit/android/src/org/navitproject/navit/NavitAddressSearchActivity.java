@@ -242,7 +242,7 @@ public class NavitAddressSearchActivity extends Activity {
     }
 
     private void requestCountryDialog() {
-        final String[][] all_countries = NavitGraphics.GetAllCountries();
+        final String[][] all_countries = NavitGraphics.getAllCountries();
 
         Comparator<String[]> country_comperator = new Comparator<String[]>() {
             public int compare(String[] object1, String[] object2) {
@@ -347,9 +347,9 @@ public class NavitAddressSearchActivity extends Activity {
         search_results_wait.dismiss();
     }
 
-    public native long CallbackStartAddressSearch(int partial_match, String country, String s);
+    public native long callbackStartAddressSearch(int partial_match, String country, String s);
 
-    public native void CallbackCancelAddressSearch(long handle);
+    public native void callbackCancelAddressSearch(long handle);
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -366,12 +366,12 @@ public class NavitAddressSearchActivity extends Activity {
         search_results_streets = 0;
         search_results_streets_hn = 0;
 
-        search_handle = CallbackStartAddressSearch(mPartialSearch ? 1 : 0, mCountry, mAddressString);
+        search_handle = callbackStartAddressSearch(mPartialSearch ? 1 : 0, mCountry, mAddressString);
 
         search_results_wait.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                CallbackCancelAddressSearch(search_handle);
+                callbackCancelAddressSearch(search_handle);
                 search_handle = 0;
                 search_results_wait.dismiss();
             }
