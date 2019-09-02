@@ -276,24 +276,27 @@ Waypoint</text></img>
 			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
-		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="steps" speed="2" route_weight="5" />
-			<roadprofile item_types="street_pedestrian,footway" speed="5" route_weight="10" />
-			<roadprofile item_types="path,track_ground" speed="12" route_weight="12" />
-			<roadprofile item_types="track_gravelled" speed="17" route_weight="15" />
-			<!-- cycleways, paved tracks, serviceways etc. are the favourite ways -->
-			<roadprofile item_types="track_paved,cycleway,street_service,street_parking_lane" speed="22" route_weight="20" />
+		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000002" flags_reverse_mask="0x40000001" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
+			<!-- cycleways and paved tracks are the favourite ways (caveat: can be next to a main road) -->
+			<roadprofile item_types="track_paved,cycleway" speed="20" route_weight="20" />
 			<!-- residential, unclassified, living street etc. -->
-			<roadprofile item_types="street_0,street_1_city,living_street" speed="20" route_weight="15" />
-			<!-- tertiary and minor roads are acceptable, but should be avoided in favour of tracks and cycleways -->
-			<roadprofile item_types="street_2_city,street_1_land,street_2_land" speed="22" route_weight="12" />
-			<!-- secondary etc. are acceptable when necessary -->
-			<roadprofile item_types="street_3_city" speed="22" route_weight="10" />
-			<!-- primary, trunk etc. should be avoided -->
-			<roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7" />
-			<!-- Those types do not appear in maptool.c and therefore are not used ATM -->
-			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7" />
-			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="street_0,street_1_city,street_1_land,living_street" speed="20" route_weight="20" />
+			<!-- ways shared with pedestrians are OK if access flags permit, but lower preference (caveat: may or may not be segregated) -->
+			<roadprofile item_types="street_pedestrian,footway" speed="17" route_weight="17" />
+			<!-- serviceways etc. are OK but lower preference -->
+			<roadprofile item_types="street_service,street_parking_lane" speed="17" route_weight="15" />
+			<!-- tertiary roads are acceptable, but should be avoided in favour of tracks and cycleways -->
+			<roadprofile item_types="street_2_city,street_2_land" speed="20" route_weight="15" />
+			<!-- secondary, primary and trunk are acceptable when necessary, but give preference to lower tiers -->
+			<roadprofile item_types="street_3_city,street_3_land" speed="20" route_weight="15" />
+			<roadprofile item_types="street_4_land,street_4_city" speed="20" route_weight="12" />
+			<roadprofile item_types="street_n_lanes,ramp" speed="20" route_weight="10" />
+			<!-- low preference for rough terrain -->
+			<roadprofile item_types="path,track_ground" speed="7" route_weight="7" />
+			<roadprofile item_types="track_gravelled" speed="17" route_weight="12" />
+			<!-- avoid steps unless that means a huge detour -->
+			<roadprofile item_types="steps" speed="2" route_weight="2" />
+			<!--roundabout does not apply to OSM maps -->
 			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
