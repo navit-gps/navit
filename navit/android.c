@@ -25,6 +25,7 @@ JNIEnv *jnienv;
 jobject *android_activity = NULL;
 jobject *android_application = NULL;
 int android_version;
+JavaVM *cachedJVM = NULL;
 
 struct android_search_priv {
     struct jni_object search_result_obj;
@@ -37,6 +38,25 @@ struct android_search_priv {
     int partial;
     int found;
 };
+
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *aVm, void *aReserved) {
+    cachedJVM = aVm;
+    if ((*aVm)->GetEnv(aVm,(void**)&jnienv, JNI_VERSION_1_6) != JNI_OK) {
+        dbg(lvl_error,"Failed to get the environment");
+        return -1;
+    }
+    dbg(lvl_debug,"Found the environment");
+    return JNI_VERSION_1_6;
+}
+
+
+JNIEnv* jni_getenv() {
+    JNIEnv* env_this;
+    (*cachedJVM)->GetEnv(cachedJVM, (void**) &env_this, JNI_VERSION_1_6);
+    return env_this;
+}
+
 
 int android_find_class_global(char *name, jclass *ret) {
     *ret=(*jnienv)->FindClass(jnienv, name);
@@ -110,59 +130,60 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitDestroy( JNIEnv* e
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz,
         jlong id, jint w, jint h) {
-    dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,w,h);
-    if (id)
-        callback_call_2((struct callback *)id,w,h);
+    dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,w,h);
+    if (id) {
+        callback_call_2((struct callback *)(intptr_t)id, w, h);
+    }
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback(JNIEnv* env, jobject thiz,
         jlong id, jint left, jint top, jint right, jint bottom) {
-    dbg(lvl_debug,"enter %p %d %d %d %d",(struct callback *)id, left, top, right, bottom);
+    dbg(lvl_debug,"enter %p %d %d %d %d",(struct callback *)(intptr_t)id, left, top, right, bottom);
     if (id)
-        callback_call_4((struct callback *)id, left, top, right, bottom);
+        callback_call_4((struct callback *)(intptr_t)id, left, top, right, bottom);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz,
         jlong id, jint pressed, jint button, jint x, jint y) {
-    dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,pressed,button);
+    dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,pressed,button);
     if (id)
-        callback_call_4((struct callback *)id,pressed,button,x,y);
+        callback_call_4((struct callback *)(intptr_t)id,pressed,button,x,y);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz,
         jlong id, jint x, jint y) {
-    dbg(lvl_debug,"enter %p %d %d",(struct callback *)id,x,y);
+    dbg(lvl_debug,"enter %p %d %d",(struct callback *)(intptr_t)id,x,y);
     if (id)
-        callback_call_2((struct callback *)id,x,y);
+        callback_call_2((struct callback *)(intptr_t)id,x,y);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz,
         jlong id, jstring str) {
     const char *s;
-    dbg(lvl_debug,"enter %p %p",(struct callback *)id,str);
+    dbg(lvl_debug,"enter %p %p",(struct callback *)(intptr_t)id,str);
     s=(*env)->GetStringUTFChars(env, str, NULL);
     dbg(lvl_debug,"key=%d",s);
     if (id)
-        callback_call_1((struct callback *)id,s);
+        callback_call_1((struct callback *)(intptr_t)id,s);
     (*env)->ReleaseStringUTFChars(env, str, s);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject thiz,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_timeoutCallback( JNIEnv* env, jobject thiz,
         jlong id) {
-    void (*event_handler)(void *) = *(void **)id;
-    dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
-    event_handler((void*)id);
+    dbg(lvl_debug,"enter %p %p %p %lld",thiz,(void *)id, (void *)(intptr_t)id, id);
+    void (*event_handler)(void *) = *((void **)(intptr_t)id);
+    event_handler((void*)(intptr_t)id);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject thiz,
         jlong id, jobject location) {
-    callback_call_1((struct callback *)id, (void *)location);
+    callback_call_1((struct callback *)(intptr_t)id, (void *)location);
 }
 
-JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, jlong id) {
-    dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
-    callback_call_0((struct callback *)id);
-}
+//JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, jlong id) {
+//    dbg(lvl_debug,"enter %p %p",thiz, (void *)(intptr_t)id);
+//    callback_call_0((struct callback *)(intptr_t)id);
+//}
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env, jobject thiz, jlong func, jint fd,
         jint cond) {
@@ -172,14 +193,14 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env,
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_watchCallback( JNIEnv* env, jobject thiz, jlong id) {
-    dbg(lvl_debug,"enter %p %p",thiz, (void *)id);
-    callback_call_0((struct callback *)id);
+    dbg(lvl_debug,"enter %p %p",thiz, (void *)(intptr_t)id);
+    callback_call_0((struct callback *)(intptr_t)id);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_sensorCallback( JNIEnv* env, jobject thiz,
         jlong id, jint sensor, jfloat x, jfloat y, jfloat z) {
-    dbg(lvl_debug,"enter %p %p %f %f %f",thiz, (void *)id,x,y,z);
-    callback_call_4((struct callback *)id, sensor, &x, &y, &z);
+    dbg(lvl_debug,"enter %p %p %f %f %f",thiz, (void *)(intptr_t)id,x,y,z);
+    callback_call_4((struct callback *)(intptr_t)id, sensor, &x, &y, &z);
 }
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNIEnv * env, jobject thiz,
@@ -187,7 +208,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNI
     const char *s;
     s = (*env)->GetStringUTFChars(env, feed, NULL);
     if (id)
-        callback_call_1((struct callback *) id, s);
+        callback_call_1((struct callback *)(intptr_t) id, s);
     (*env)->ReleaseStringUTFChars(env, feed, s);
 }
 
