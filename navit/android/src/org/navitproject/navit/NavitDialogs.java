@@ -71,10 +71,10 @@ public class NavitDialogs extends Handler {
                                 NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
                     Bundle b = new Bundle();
                     int mi = msg.getData().getInt("value2");
-                    double lon = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].lon1) + Double
-                            .parseDouble(NavitMapDownloader.osm_maps[mi].lon2)) / 2.0;
-                    double lat = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].lat1) + Double
-                            .parseDouble(NavitMapDownloader.osm_maps[mi].lat2)) / 2.0;
+                    double lon = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLon1) + Double
+                            .parseDouble(NavitMapDownloader.osm_maps[mi].mLon2)) / 2.0;
+                    double lat = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLat1) + Double
+                            .parseDouble(NavitMapDownloader.osm_maps[mi].mLat2)) / 2.0;
                     b.putString("cmd", "set_center(\"" + lon + " " + lat + "\",1); zoom=256");
                     msgOut.setData(b);
                     msgOut.sendToTarget();
