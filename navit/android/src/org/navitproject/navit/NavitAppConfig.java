@@ -65,9 +65,9 @@ public class NavitAppConfig extends Application {
         SharedPreferences.Editor editSettings = mSettings.edit();
 
         editSettings.putInt("LastAddress", mLastAddressField);
-        editSettings.putString("LastAddress_" + mLastAddressField, newAddress.addr);
-        editSettings.putFloat("LastAddress_Lat_" + mLastAddressField, newAddress.lat);
-        editSettings.putFloat("LastAddress_Lon_" + mLastAddressField, newAddress.lon);
+        editSettings.putString("LastAddress_" + mLastAddressField, newAddress.mAddr);
+        editSettings.putFloat("LastAddress_Lat_" + mLastAddressField, newAddress.mLat);
+        editSettings.putFloat("LastAddress_Lon_" + mLastAddressField, newAddress.mLon);
 
         editSettings.apply();
     }
