@@ -244,13 +244,13 @@ public class NavitAddressSearchActivity extends Activity {
     private void requestCountryDialog() {
         final String[][] all_countries = NavitGraphics.getAllCountries();
 
-        Comparator<String[]> countryComperator = new Comparator<String[]>() {
+        Comparator<String[]> countryComparator = new Comparator<String[]>() {
             public int compare(String[] object1, String[] object2) {
                 return object1[1].compareTo(object2[1]);
             }
         };
 
-        Arrays.sort(all_countries, countryComperator);
+        Arrays.sort(all_countries, countryComparator);
 
         AlertDialog.Builder mapModeChooser = new AlertDialog.Builder(this);
         // ToDo also show icons and country code
@@ -267,7 +267,6 @@ public class NavitAddressSearchActivity extends Activity {
                 SharedPreferences.Editor edit_settings = settings.edit();
                 edit_settings.putString("DefaultCountry", mCountry);
                 edit_settings.apply();
-
                 setCountryButtonImage();
             }
         });

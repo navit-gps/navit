@@ -85,7 +85,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
-    private void updateMapsForLocation(NavitMapDownloader.osm_map_values[] osmMaps) {
+    private void updateMapsForLocation(NavitMapDownloader.OsmMapValues[] osmMaps) {
         Location currentLocation = NavitVehicle.lastLocation;
         if (maps_current_position_childs.size() == 0 || (currentLocation != null
                     && !currentLocationKnown)) {
@@ -124,8 +124,8 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                         currentMapIndex++) {
                     if (osmMaps[currentMapIndex].isInMap(currentLocation)) {
                         HashMap<String, String> currentPositionMapChild = new HashMap<String, String>();
-                        currentPositionMapChild.put("map_name", osmMaps[currentMapIndex].map_name + " "
-                                    + (osmMaps[currentMapIndex].est_size_bytes / 1024 / 1024)
+                        currentPositionMapChild.put("map_name", osmMaps[currentMapIndex].mapName + " "
+                                    + (osmMaps[currentMapIndex].mEstSizeBytes / 1024 / 1024)
                                     + "MB");
                         currentPositionMapChild.put("map_index", String.valueOf(currentMapIndex));
 
@@ -138,7 +138,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
     private SimpleExpandableListAdapter createAdapter() {
 
-        NavitMapDownloader.osm_map_values[] osmMaps = NavitMapDownloader.osm_maps;
+        NavitMapDownloader.OsmMapValues[] osmMaps = NavitMapDownloader.osm_maps;
 
         ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
         ArrayList<ArrayList<HashMap<String, String>>> resultChilds =
@@ -169,14 +169,14 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                 }
                 secList = new ArrayList<HashMap<String, String>>();
                 HashMap<String, String> mapInfoHash = new HashMap<String, String>();
-                mapInfoHash.put("category_name", osmMaps[currentMapIndex].map_name);
+                mapInfoHash.put("category_name", osmMaps[currentMapIndex].mapName);
                 resultGroups.add(mapInfoHash);
             }
 
             HashMap<String, String> child = new HashMap<String, String>();
             child.put("map_name", (osmMaps[currentMapIndex].level > 1 ? MAP_BULLETPOINT : "")
-                    + osmMaps[currentMapIndex].map_name + " "
-                    + (osmMaps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
+                    + osmMaps[currentMapIndex].mapName + " "
+                    + (osmMaps[currentMapIndex].mEstSizeBytes / 1024 / 1024) + "MB");
             child.put("map_index", String.valueOf(currentMapIndex));
 
             secList.add(child);
@@ -202,7 +202,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         String mapIndex = child.get("map_index");
         if (mapIndex != null) {
             int mi = Integer.parseInt(mapIndex);
-            if (NavitMapDownloader.osm_maps[mi].est_size_bytes / 1024 / 1024 / 950 >= 4) {
+            if (NavitMapDownloader.osm_maps[mi].mEstSizeBytes / 1024 / 1024 / 950 >= 4) {
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         Navit.getInstance().getTstring(R.string.map_download_oversize),
                         -1, 0, 0);
