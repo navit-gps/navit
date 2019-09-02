@@ -85,7 +85,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
-    private void updateMapsForLocation(NavitMapDownloader.osm_map_values[] osm_maps) {
+    private void updateMapsForLocation(NavitMapDownloader.osm_map_values[] osmMaps) {
         Location currentLocation = NavitVehicle.lastLocation;
         if (maps_current_position_childs.size() == 0 || (currentLocation != null
                     && !currentLocationKnown)) {
@@ -120,12 +120,12 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             if (currentLocation != null) {
                 // if this map contains data to our current position, add it to
                 // the MapsOfCurrentLocation-list
-                for (int currentMapIndex = 0; currentMapIndex < osm_maps.length;
+                for (int currentMapIndex = 0; currentMapIndex < osmMaps.length;
                         currentMapIndex++) {
-                    if (osm_maps[currentMapIndex].isInMap(currentLocation)) {
+                    if (osmMaps[currentMapIndex].isInMap(currentLocation)) {
                         HashMap<String, String> currentPositionMapChild = new HashMap<String, String>();
-                        currentPositionMapChild.put("map_name", osm_maps[currentMapIndex].map_name + " "
-                                    + (osm_maps[currentMapIndex].est_size_bytes / 1024 / 1024)
+                        currentPositionMapChild.put("map_name", osmMaps[currentMapIndex].map_name + " "
+                                    + (osmMaps[currentMapIndex].est_size_bytes / 1024 / 1024)
                                     + "MB");
                         currentPositionMapChild.put("map_index", String.valueOf(currentMapIndex));
 
@@ -138,7 +138,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
     private SimpleExpandableListAdapter createAdapter() {
 
-        NavitMapDownloader.osm_map_values[] osm_maps = NavitMapDownloader.osm_maps;
+        NavitMapDownloader.osm_map_values[] osmMaps = NavitMapDownloader.osm_maps;
 
         ArrayList<HashMap<String, String>> resultGroups = new ArrayList<HashMap<String, String>>();
         ArrayList<ArrayList<HashMap<String, String>>> resultChilds =
@@ -162,21 +162,21 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         resultChilds.add(maps_current_position_childs);
 
         // add all maps
-        for (int currentMapIndex = 0; currentMapIndex < osm_maps.length; currentMapIndex++) {
-            if (osm_maps[currentMapIndex].level == 0) {
+        for (int currentMapIndex = 0; currentMapIndex < osmMaps.length; currentMapIndex++) {
+            if (osmMaps[currentMapIndex].level == 0) {
                 if (secList.size() > 0) {
                     resultChilds.add(secList);
                 }
                 secList = new ArrayList<HashMap<String, String>>();
                 HashMap<String, String> map_info_hash = new HashMap<String, String>();
-                map_info_hash.put("category_name", osm_maps[currentMapIndex].map_name);
+                map_info_hash.put("category_name", osmMaps[currentMapIndex].map_name);
                 resultGroups.add(map_info_hash);
             }
 
             HashMap<String, String> child = new HashMap<String, String>();
-            child.put("map_name", (osm_maps[currentMapIndex].level > 1 ? MAP_BULLETPOINT : "")
-                    + osm_maps[currentMapIndex].map_name + " "
-                    + (osm_maps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
+            child.put("map_name", (osmMaps[currentMapIndex].level > 1 ? MAP_BULLETPOINT : "")
+                    + osmMaps[currentMapIndex].map_name + " "
+                    + (osmMaps[currentMapIndex].est_size_bytes / 1024 / 1024) + "MB");
             child.put("map_index", String.valueOf(currentMapIndex));
 
             secList.add(child);
@@ -234,7 +234,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Log.d(TAG, "Delete Map");
-                        Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().callback_handler,
+                        Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
                                     NavitGraphics.msg_type.CLB_DELETE_MAP.ordinal());
                         Bundle b = new Bundle();
                         b.putString("title", map_location);

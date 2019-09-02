@@ -491,7 +491,7 @@ public class Navit extends Activity {
         navitMain(this, getApplication(), navitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK),
                       myDisplayDensity, NAVIT_DATA_DIR + "/bin/navit", mapFilenamePath, isLaunch);
         if (graphics != null) {
-            graphics.setActivity(this);
+            graphics.setmActivity(this);
         }
 
         showInfos();
@@ -614,7 +614,7 @@ public class Navit extends Activity {
                         lon = Float.valueOf(geo[1]);
                         b.putFloat("lat", lat);
                         b.putFloat("lon", lon);
-                        Message msg = Message.obtain(mNavitGraphics.callback_handler,
+                        Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
                                 NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
 
                         msg.setData(b);
@@ -702,14 +702,14 @@ public class Navit extends Activity {
         switch (id) {
             case 1 :
                 // zoom in
-                Message.obtain(mNavitGraphics.callback_handler,
+                Message.obtain(mNavitGraphics.mCallbackHandler,
                         NavitGraphics.msg_type.CLB_ZOOM_IN.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom in");
                 break;
             case 2 :
                 // zoom out
-                Message.obtain(mNavitGraphics.callback_handler,
+                Message.obtain(mNavitGraphics.mCallbackHandler,
                         NavitGraphics.msg_type.CLB_ZOOM_OUT.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom out");
@@ -721,21 +721,21 @@ public class Navit extends Activity {
                 break;
             case 5 :
                 // toggle the normal POI layers and labels (to avoid double POIs)
-                Message msg = Message.obtain(mNavitGraphics.callback_handler,
+                Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
                         NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
                 Bundle b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Symbols\");");
                 msg.setData(b);
                 msg.sendToTarget();
 
-                msg = Message.obtain(mNavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Labels\");");
                 msg.setData(b);
                 msg.sendToTarget();
 
                 // toggle full POI icons on/off
-                msg = Message.obtain(mNavitGraphics.callback_handler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
                 msg.setData(b);
@@ -828,7 +828,7 @@ public class Navit extends Activity {
         Toast.makeText(getApplicationContext(),getTstring(R.string.address_search_set_destination) + "\n"
                 + address, Toast.LENGTH_LONG).show(); //TRANS
 
-        Message msg = Message.obtain(mNavitGraphics.callback_handler,
+        Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
                 NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
         Bundle b = new Bundle();
         b.putFloat("lat", latitude);
@@ -854,7 +854,7 @@ public class Navit extends Activity {
                             getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")),
                             Toast.LENGTH_LONG).show(); //TRANS
 
-                    Message msg = Message.obtain(mNavitGraphics.callback_handler,
+                    Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
                             NavitGraphics.msg_type.CLB_SET_DESTINATION.ordinal());
                     msg.setData(destination);
                     msg.sendToTarget();
