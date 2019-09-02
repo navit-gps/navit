@@ -24,16 +24,16 @@ import android.util.Log;
 
 
 @SuppressWarnings("unused")
-public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
+class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
 
-    private final Navit navit;
+    private final Navit mNavit;
     private final int MY_DATA_CHECK_CODE = 1;
     private final String TAG = this.getClass().getName();
     private TextToSpeech mTts;
 
 
     NavitSpeech2(Navit navit) {
-        this.navit = navit;
+        this.mNavit = navit;
         navit.setActivityResult(1, this);
         Log.d(TAG, "Create");
         Intent checkIntent = new Intent();
@@ -57,23 +57,23 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
         if (requestCode == MY_DATA_CHECK_CODE) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 // success, create the TTS instance
-                mTts = new TextToSpeech(navit.getApplication(), this);
+                mTts = new TextToSpeech(mNavit.getApplication(), this);
             } else {
                 // missing data, ask to install it
-                AlertDialog.Builder builder = new AlertDialog.Builder(navit);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mNavit);
                 builder
-                    .setTitle(navit.getTstring(R.string.TTS_title_data_missing))
-                    .setMessage(navit.getTstring(R.string.TTS_qery_install_data))
-                    .setPositiveButton(navit.getTstring(R.string.yes),
+                    .setTitle(mNavit.getTstring(R.string.TTS_title_data_missing))
+                    .setMessage(mNavit.getTstring(R.string.TTS_qery_install_data))
+                    .setPositiveButton(mNavit.getTstring(R.string.yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent installIntent = new Intent();
                                     installIntent.setAction(
                                             TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                                    navit.startActivity(installIntent);
+                                    mNavit.startActivity(installIntent);
                                 }
                             })
-                .setNegativeButton(navit.getTstring(R.string.no), null)
+                .setNegativeButton(mNavit.getTstring(R.string.no), null)
                     .show();
             }
         }

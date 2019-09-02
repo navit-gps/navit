@@ -64,14 +64,14 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                     String.format(
                         (Navit.getInstance().getTstring(R.string.map_location_unavailable)),
-                        Navit.map_filename_path),
+                        Navit.mapFilenamePath),
                     -1, 0, 0);
             finish();
         }
     }
 
     private long getFreeSpace() {
-        StatFs fsInfo = new StatFs(Navit.map_filename_path);
+        StatFs fsInfo = new StatFs(Navit.mapFilenamePath);
         return (long) fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
     }
 
@@ -79,7 +79,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         downloaded_maps_childs.clear();
         for (NavitMap map : NavitMapDownloader.getAvailableMaps()) {
             HashMap<String, String> child = new HashMap<String, String>();
-            child.put("map_name", map.mapName + " " + (map.size() / 1024 / 1024) + "MB");
+            child.put("map_name", map.mMapName + " " + (map.size() / 1024 / 1024) + "MB");
             child.put("map_location", map.getLocation());
             downloaded_maps_childs.add(child);
         }
@@ -226,7 +226,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
         NavitMap maptoDelete = new NavitMap(map_location);
         deleteMapBox.setMessage(
-                maptoDelete.mapName + " " + String.valueOf(maptoDelete.size() / 1024 / 1024)
+                maptoDelete.mMapName + " " + String.valueOf(maptoDelete.size() / 1024 / 1024)
                 + "MB");
 
         // TRANS

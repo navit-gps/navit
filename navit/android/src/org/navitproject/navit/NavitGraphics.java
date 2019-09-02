@@ -85,8 +85,6 @@ public class NavitGraphics {
     private static final long              time_for_long_press = 300L;
 
 
-    private Handler timer_handler = new Handler();
-
     public void setBackgroundColor(int bgcolor) {
         this.bgcolor = bgcolor;
         if (leftTintView != null) {
@@ -189,7 +187,9 @@ public class NavitGraphics {
              * causing it to report between 24 and 64 dip more than what is actually occupied by the system UI.
              * The top inset is retrieved in handleResize(), with logic depending on the platform version.
              */
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH
+            //        && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+            ) {
                 padding_left = insets.getSystemWindowInsetLeft();
                 padding_right = insets.getSystemWindowInsetRight();
                 padding_bottom = insets.getSystemWindowInsetBottom();
@@ -646,7 +646,9 @@ public class NavitGraphics {
         relativelayout.addView(view);
 
         /* The navigational and status bar tinting code is meaningful only on API19+ */
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+ //               && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+                       ) {
             frameLayout = new FrameLayout(activity);
             frameLayout.addView(relativelayout);
             leftTintView = new SystemBarTintView(activity);
@@ -756,6 +758,13 @@ public class NavitGraphics {
      *
      */
     private void adjustSystemBarsTintingViews() {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT
+     //           || android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                   ) {
+            return;
+        }
+
         /* hide tint bars during update to prevent ugly effects */
         leftTintView.setVisibility(View.GONE);
         rightTintView.setVisibility(View.GONE);
@@ -804,7 +813,7 @@ public class NavitGraphics {
      *
      */
     @TargetApi(23)
-    public void handleResize(int w, int h) {
+    void handleResize(int w, int h) {
         if (this.parent_graphics != null) {
             this.parent_graphics.handleResize(w, h);
         } else {
@@ -845,14 +854,16 @@ public class NavitGraphics {
                  * The status bar is always visible unless we are in fullscreen mode. (Fortunately, none of the
                  * versions affected by this support split screen mode, which would have further complicated things.)
                  */
-                if (activity.isFullscreen) {
+                if (activity.mIsFullscreen) {
                     padding_top = 0;
                 } else {
                     Resources resources = view.getResources();
                     int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
                     padding_top = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
                 }
-            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT
+                    //&& android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+            ) {
                 /*
                  * API 19 does not support window insets at all, forcing us to do even more guessing than on API 20-22:
                  *
@@ -892,7 +903,7 @@ public class NavitGraphics {
                     /* frameLayout is only created on platforms supporting navigation and status bar tinting */
 
                     Navit navit = activity;
-                    boolean isStatusShowing = !navit.isFullscreen;
+                    boolean isStatusShowing = !navit.mIsFullscreen;
                     boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
                     Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
 

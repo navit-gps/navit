@@ -11,7 +11,6 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 public class NavitAppConfig extends Application {
 
     private static final int         MAX_LAST_ADDRESSES = 10;
-    private static final String      TAG                = "Navit";
 
     private List<NavitAddress> mLastAddresses     = null;
     private int                      mLastAddressField;
@@ -23,21 +22,21 @@ public class NavitAppConfig extends Application {
         super.onCreate();
     }
 
-    public List<NavitAddress> getLastAddresses() {
+    List<NavitAddress> getLastAddresses() {
         if (mLastAddresses == null) {
-            mLastAddresses = new ArrayList<NavitAddress>();
+            mLastAddresses = new ArrayList<>();
             int mLastAddressField = mSettings.getInt("LastAddress", -1);
             if (mLastAddressField >= 0) {
                 int index = mLastAddressField;
                 do {
-                    String addr_str = mSettings.getString("LastAddress_" + String.valueOf(index), "");
+                    String addrStr = mSettings.getString("LastAddress_" + index, "");
 
-                    if (addr_str.length() > 0) {
+                    if (addrStr.length() > 0) {
                         mLastAddresses.add(new NavitAddress(
                                                1,
-                                               mSettings.getFloat("LastAddress_Lat_" + String.valueOf(index), 0),
-                                               mSettings.getFloat("LastAddress_Lon_" + String.valueOf(index), 0),
-                                               addr_str));
+                                               mSettings.getFloat("LastAddress_Lat_" + index, 0),
+                                               mSettings.getFloat("LastAddress_Lon_" + index, 0),
+                                               addrStr));
                     }
 
                     if (--index < 0) {
@@ -50,7 +49,7 @@ public class NavitAppConfig extends Application {
         return mLastAddresses;
     }
 
-    public void addLastAddress(NavitAddress newAddress) {
+    void addLastAddress(NavitAddress newAddress) {
         getLastAddresses();
 
         mLastAddresses.add(newAddress);
@@ -66,9 +65,9 @@ public class NavitAppConfig extends Application {
         SharedPreferences.Editor editSettings = mSettings.edit();
 
         editSettings.putInt("LastAddress", mLastAddressField);
-        editSettings.putString("LastAddress_" + String.valueOf(mLastAddressField), newAddress.addr);
-        editSettings.putFloat("LastAddress_Lat_" + String.valueOf(mLastAddressField), newAddress.lat);
-        editSettings.putFloat("LastAddress_Lon_" + String.valueOf(mLastAddressField), newAddress.lon);
+        editSettings.putString("LastAddress_" + mLastAddressField, newAddress.addr);
+        editSettings.putFloat("LastAddress_Lat_" + mLastAddressField, newAddress.lat);
+        editSettings.putFloat("LastAddress_Lon_" + mLastAddressField, newAddress.lon);
 
         editSettings.apply();
     }
