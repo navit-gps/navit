@@ -16,13 +16,13 @@ import java.util.Map.Entry;
 
 public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
 
-    private Navit mActivity;
+    private final Navit mActivity;
 
     private ProgressDialog mDialog;
 
-    private String mTimestamp;
+    private final String mTimestamp;
 
-    public NavitRestoreTask(Navit context, String timestamp) {
+    NavitRestoreTask(Navit context, String timestamp) {
         mActivity = context;
         mTimestamp = timestamp;
     }
@@ -84,13 +84,13 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
                 String key = entry.getKey();
 
                 if (value instanceof Boolean) {
-                    prefEditor.putBoolean(key, ((Boolean) value).booleanValue());
+                    prefEditor.putBoolean(key, (Boolean) value);
                 } else if (value instanceof Float) {
-                    prefEditor.putFloat(key, ((Float) value).floatValue());
+                    prefEditor.putFloat(key, (Float) value);
                 } else if (value instanceof Integer) {
-                    prefEditor.putInt(key, ((Integer) value).intValue());
+                    prefEditor.putInt(key, (Integer) value);
                 } else if (value instanceof Long) {
-                    prefEditor.putLong(key, ((Long) value).longValue());
+                    prefEditor.putLong(key, (Long) value);
                 } else if (value instanceof String) {
                     prefEditor.putString(key, (String) value);
                 }
@@ -136,7 +136,7 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
                 Toast.LENGTH_LONG).show();
         NotificationManager nm = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(R.string.app_name);
-        NavitVehicle.removeListener();
+        NavitVehicle.removeListeners(mActivity.getApplicationContext());
         mActivity.finish();
     }
 
