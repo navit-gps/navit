@@ -145,20 +145,20 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                 new ArrayList<ArrayList<HashMap<String, String>>>();
 
         // add already downloaded maps (group and empty child list
-        HashMap<String, String> downloaded_maps_hash = new HashMap<String, String>();
-        downloaded_maps_hash
+        HashMap<String, String> downloadedMapsHash = new HashMap<String, String>();
+        downloadedMapsHash
             .put("category_name", Navit.getInstance().getTstring(R.string.maps_installed));
-        resultGroups.add(downloaded_maps_hash);
+        resultGroups.add(downloadedMapsHash);
         downloaded_maps_childs = new ArrayList<HashMap<String, String>>();
         resultChilds.add(downloaded_maps_childs);
 
         ArrayList<HashMap<String, String>> secList = new ArrayList<HashMap<String, String>>();
         maps_current_position_childs = new ArrayList<HashMap<String, String>>();
         // maps containing the current location
-        HashMap<String, String> matching_maps = new HashMap<String, String>();
-        matching_maps.put("category_name",
+        HashMap<String, String> matchingMaps = new HashMap<String, String>();
+        matchingMaps.put("category_name",
                 Navit.getInstance().getTstring(R.string.maps_for_current_location));
-        resultGroups.add(matching_maps);
+        resultGroups.add(matchingMaps);
         resultChilds.add(maps_current_position_childs);
 
         // add all maps
@@ -168,9 +168,9 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                     resultChilds.add(secList);
                 }
                 secList = new ArrayList<HashMap<String, String>>();
-                HashMap<String, String> map_info_hash = new HashMap<String, String>();
-                map_info_hash.put("category_name", osmMaps[currentMapIndex].map_name);
-                resultGroups.add(map_info_hash);
+                HashMap<String, String> mapInfoHash = new HashMap<String, String>();
+                mapInfoHash.put("category_name", osmMaps[currentMapIndex].map_name);
+                resultGroups.add(mapInfoHash);
             }
 
             HashMap<String, String> child = new HashMap<String, String>();
@@ -199,9 +199,9 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         @SuppressWarnings("unchecked")
         HashMap<String, String> child = (HashMap<String, String>) adapter.getChild(groupPosition, childPosition);
 
-        String map_index = child.get("map_index");
-        if (map_index != null) {
-            int mi = Integer.parseInt(map_index);
+        String mapIndex = child.get("map_index");
+        if (mapIndex != null) {
+            int mi = Integer.parseInt(mapIndex);
             if (NavitMapDownloader.osm_maps[mi].est_size_bytes / 1024 / 1024 / 950 >= 4) {
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         Navit.getInstance().getTstring(R.string.map_download_oversize),
@@ -219,12 +219,12 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         return true;
     }
 
-    private void askForMapDeletion(final String map_location) {
+    private void askForMapDeletion(final String mapLocation) {
         AlertDialog.Builder deleteMapBox = new AlertDialog.Builder(this);
         deleteMapBox.setTitle(Navit.getInstance().getTstring(R.string.map_delete));
         deleteMapBox.setCancelable(true);
 
-        NavitMap maptoDelete = new NavitMap(map_location);
+        NavitMap maptoDelete = new NavitMap(mapLocation);
         deleteMapBox.setMessage(
                 maptoDelete.mMapName + " " + String.valueOf(maptoDelete.size() / 1024 / 1024)
                 + "MB");
@@ -237,7 +237,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                         Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
                                     NavitGraphics.msg_type.CLB_DELETE_MAP.ordinal());
                         Bundle b = new Bundle();
-                        b.putString("title", map_location);
+                        b.putString("title", mapLocation);
                         msg.setData(b);
                         msg.sendToTarget();
                         finish();

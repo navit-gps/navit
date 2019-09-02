@@ -667,11 +667,11 @@ public class Navit extends Activity {
     private NavitGraphics mNavitGraphics = null;
 
     // callback id gets set here when called from NavitGraphics
-    public void setKeypressCallback(long kp_cb_id, NavitGraphics ng) {
+    public void setKeypressCallback(long unused, NavitGraphics ng) {
         mNavitGraphics = ng;
     }
 
-    public void setMotionCallback(long mo_cb_id, NavitGraphics ng) {
+    public void setMotionCallback(long undused, NavitGraphics ng) {
         mNavitGraphics = ng;
     }
 
