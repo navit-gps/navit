@@ -56,54 +56,54 @@ import java.util.ArrayList;
 
 public class NavitGraphics {
     private static final String            TAG = "NavitGraphics";
-    private final NavitGraphics            parent_graphics;
-    private final ArrayList<NavitGraphics> overlays = new ArrayList<>();
-    private int                            bitmap_w;
-    private int                            bitmap_h;
-    private int                            pos_x;
-    private int                            pos_y;
-    private int                            pos_wraparound;
-    private int                            overlay_disabled;
-    private int                            bgcolor;
-    private float                          trackball_x;
-    private float                          trackball_y;
-    private int                            padding_left                    = 0;
-    private int                            padding_right                   = 0;
-    private int                            padding_top                     = 0;
-    private int                            padding_bottom                  = 0;
-    private View                           view;
-    private SystemBarTintView              leftTintView;
-    private SystemBarTintView              rightTintView;
-    private SystemBarTintView              topTintView;
-    private SystemBarTintView              bottomTintView;
-    private FrameLayout                    frameLayout;
-    private RelativeLayout                 relativelayout;
-    private NavitCamera                    camera                          = null;
-    private Navit                          activity;
-    private static Boolean                 in_map = false;
+    private final NavitGraphics            mNavitGraphics;
+    private final ArrayList<NavitGraphics> mOverlays = new ArrayList<>();
+    private int                            mBitmapWidth;
+    private int                            mBitmapHeight;
+    private int                            mPosX;
+    private int                            mPosY;
+    private int                            mPosWraparound;
+    private int                            mOverlayDisabled;
+    private int                            mBgColor;
+    private float                          mTrackballX;
+    private float                          mTrackballY;
+    private int                            mPaddingLeft = 0;
+    private int                            mPaddingRight = 0;
+    private int                            mPaddingTop = 0;
+    private int                            mPaddingBottom = 0;
+    private View                           mView;
+    private SystemBarTintView              mLeftTintView;
+    private SystemBarTintView              mRightTintView;
+    private SystemBarTintView              mTopTintView;
+    private SystemBarTintView              mBottomTintView;
+    private FrameLayout                    mFrameLayout;
+    private RelativeLayout                 mRelativeLayout;
+    private NavitCamera                    mCamera = null;
+    private Navit                          mActivity;
+    private static Boolean                 mInMap = false;
     // for menu key
-    private static final long              time_for_long_press = 300L;
+    private static final long              mTimeForLongPress = 300L;
 
 
     public void setBackgroundColor(int bgcolor) {
-        this.bgcolor = bgcolor;
-        if (leftTintView != null) {
-            leftTintView.setBackgroundColor(bgcolor);
+        this.mBgColor = bgcolor;
+        if (mLeftTintView != null) {
+            mLeftTintView.setBackgroundColor(bgcolor);
         }
-        if (rightTintView != null) {
-            rightTintView.setBackgroundColor(bgcolor);
+        if (mRightTintView != null) {
+            mRightTintView.setBackgroundColor(bgcolor);
         }
-        if (topTintView != null) {
-            topTintView.setBackgroundColor(bgcolor);
+        if (mTopTintView != null) {
+            mTopTintView.setBackgroundColor(bgcolor);
         }
-        if (bottomTintView != null) {
-            bottomTintView.setBackgroundColor(bgcolor);
+        if (mBottomTintView != null) {
+            mBottomTintView.setBackgroundColor(bgcolor);
         }
     }
 
     private void SetCamera(int use_camera) {
-        if (use_camera != 0 && camera == null) {
-            // activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (use_camera != 0 && mCamera == null) {
+            // mActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
             addCamera();
             addCameraView();
         }
@@ -116,41 +116,41 @@ public class NavitGraphics {
      * {@link #addCameraView()}.
      */
     private void addCamera() {
-        camera = new NavitCamera(activity);
+        mCamera = new NavitCamera(mActivity);
     }
 
     /**
      * @brief Adds a view for the camera.
      *
-     * If {@link #camera} is null, this method is a no-op.
+     * If {@link #mCamera} is null, this method is a no-op.
      */
     private void addCameraView() {
-        if (camera != null) {
-            relativelayout.addView(camera);
-            relativelayout.bringChildToFront(view);
+        if (mCamera != null) {
+            mRelativeLayout.addView(mCamera);
+            mRelativeLayout.bringChildToFront(mView);
         }
     }
 
     private Rect get_rect() {
         Rect ret = new Rect();
-        ret.left = pos_x;
-        ret.top = pos_y;
-        if (pos_wraparound != 0) {
+        ret.left = mPosX;
+        ret.top = mPosY;
+        if (mPosWraparound != 0) {
             if (ret.left < 0) {
-                ret.left += parent_graphics.bitmap_w;
+                ret.left += mNavitGraphics.mBitmapWidth;
             }
             if (ret.top < 0) {
-                ret.top += parent_graphics.bitmap_h;
+                ret.top += mNavitGraphics.mBitmapHeight;
             }
         }
-        ret.right = ret.left + bitmap_w;
-        ret.bottom = ret.top + bitmap_h;
-        if (pos_wraparound != 0) {
-            if (bitmap_w < 0) {
-                ret.right = ret.left + bitmap_w + parent_graphics.bitmap_w;
+        ret.right = ret.left + mBitmapWidth;
+        ret.bottom = ret.top + mBitmapHeight;
+        if (mPosWraparound != 0) {
+            if (mBitmapWidth < 0) {
+                ret.right = ret.left + mBitmapWidth + mNavitGraphics.mBitmapWidth;
             }
-            if (bitmap_h < 0) {
-                ret.bottom = ret.top + bitmap_h + parent_graphics.bitmap_h;
+            if (mBitmapHeight < 0) {
+                ret.bottom = ret.top + mBitmapHeight + mNavitGraphics.mBitmapHeight;
             }
         }
         return ret;
@@ -190,9 +190,9 @@ public class NavitGraphics {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH
             //        && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
             ) {
-                padding_left = insets.getSystemWindowInsetLeft();
-                padding_right = insets.getSystemWindowInsetRight();
-                padding_bottom = insets.getSystemWindowInsetBottom();
+                mPaddingLeft = insets.getSystemWindowInsetLeft();
+                mPaddingRight = insets.getSystemWindowInsetRight();
+                mPaddingBottom = insets.getSystemWindowInsetBottom();
             }
             return super.onApplyWindowInsets(insets);
         }
@@ -201,17 +201,17 @@ public class NavitGraphics {
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
 
-            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + "..");
-            menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
+            menu.setHeaderTitle(mActivity.getTstring(R.string.position_popup_title) + "..");
+            menu.add(1, 1, NONE, mActivity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
-            menu.add(1, 2, NONE, activity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            menu.add(1, 2, NONE, mActivity.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
-                    Message msg = Message.obtain(callback_handler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
+                    Message msg = Message.obtain(mCallbackHandler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
                     break;
@@ -223,12 +223,12 @@ public class NavitGraphics {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            canvas.drawBitmap(mDrawBitmap, pos_x, pos_y, null);
-            if (overlay_disabled == 0) {
+            canvas.drawBitmap(mDrawBitmap, mPosX, mPosY, null);
+            if (mOverlayDisabled == 0) {
                 // assume we ARE in map view mode!
-                in_map = true;
-                for (NavitGraphics overlay : overlays) {
-                    if (overlay.overlay_disabled == 0) {
+                mInMap = true;
+                for (NavitGraphics overlay : mOverlays) {
+                    if (overlay.mOverlayDisabled == 0) {
                         Rect r = overlay.get_rect();
                         canvas.drawBitmap(overlay.mDrawBitmap, r.left, r.top, null);
                     }
@@ -258,7 +258,7 @@ public class NavitGraphics {
         void do_longpress_action() {
             Log.d(TAG, "do_longpress_action enter");
 
-            activity.openContextMenu(this);
+            mActivity.openContextMenu(this);
         }
 
         private int getActionField(String fieldname, Object obj) {
@@ -294,11 +294,11 @@ public class NavitGraphics {
 
             if (switch_value == MotionEvent.ACTION_DOWN) {
                 touch_mode = PRESSED;
-                if (!in_map) {
+                if (!mInMap) {
                     buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                 }
                 mPressedPosition = new PointF(x, y);
-                postDelayed(this, time_for_long_press);
+                postDelayed(this, mTimeForLongPress);
             } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == _ACTION_POINTER_UP_)) {
                 Log.d(TAG, "ACTION_UP");
 
@@ -326,7 +326,7 @@ public class NavitGraphics {
                         }
                         break;
                     case PRESSED:
-                        if (in_map) {
+                        if (mInMap) {
                             buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                         }
                         buttonCallback(mButtonCallbackID, 0, 1, x, y); // up
@@ -404,13 +404,13 @@ public class NavitGraphics {
                         s = String.valueOf((char) 8);
                         break;
                     case KeyEvent.KEYCODE_MENU:
-                        if (!in_map) {
+                        if (!mInMap) {
                             // if last menukeypress is less than 0.2 seconds away then count longpress
                             if ((System.currentTimeMillis() - Navit.last_pressed_menu_key) < interval_for_long_press) {
                                 Navit.time_pressed_menu_key = Navit.time_pressed_menu_key
                                     + (System.currentTimeMillis() - Navit.last_pressed_menu_key);
                                 // on long press let softkeyboard popup
-                                if (Navit.time_pressed_menu_key > time_for_long_press) {
+                                if (Navit.time_pressed_menu_key > mTimeForLongPress) {
                                     Navit.show_soft_keyboard = true;
                                     Navit.time_pressed_menu_key = 0L;
                                     // need to draw to get the keyboard showing
@@ -432,7 +432,7 @@ public class NavitGraphics {
                         }
                     case KeyEvent.KEYCODE_SEARCH:
                         /* Handle event in Main Activity if map is shown */
-                        if (in_map) {
+                        if (mInMap) {
                             return false;
                         }
 
@@ -445,7 +445,7 @@ public class NavitGraphics {
                         s = String.valueOf((char) 3);
                         break;
                     case KeyEvent.KEYCODE_VOLUME_UP:
-                        if (!in_map) {
+                        if (!mInMap) {
                             // if in menu view:
                             // use as UP key
                             s = String.valueOf((char) 16);
@@ -457,7 +457,7 @@ public class NavitGraphics {
                         }
                         break;
                     case KeyEvent.KEYCODE_VOLUME_DOWN:
-                        if (!in_map) {
+                        if (!mInMap) {
                             // if in menu view:
                             // use as DOWN key
                             s = String.valueOf((char) 14);
@@ -503,12 +503,12 @@ public class NavitGraphics {
             if (i == 0) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_VOLUME_UP:
-                        return (!in_map);
+                        return (!mInMap);
                     case KeyEvent.KEYCODE_VOLUME_DOWN:
-                        return (!in_map);
+                        return (!mInMap);
                     case KeyEvent.KEYCODE_SEARCH:
                         /* Handle event in Main Activity if map is shown */
-                        if (in_map) {
+                        if (mInMap) {
                             return false;
                         }
                         break;
@@ -519,7 +519,7 @@ public class NavitGraphics {
                         //s = java.lang.String.valueOf((char) 27);
                         return true;
                     case KeyEvent.KEYCODE_MENU:
-                        if (!in_map) {
+                        if (!mInMap) {
                             if (Navit.show_soft_keyboard_now_showing) {
                                 // if soft keyboard showing on screen, dont use menu button as select key
                             } else {
@@ -563,23 +563,23 @@ public class NavitGraphics {
                 s = java.lang.String.valueOf((char) 13);
             }
             if (event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
-                trackball_x += event.getX();
-                trackball_y += event.getY();
-                if (trackball_x <= -1) {
+                mTrackballX += event.getX();
+                mTrackballY += event.getY();
+                if (mTrackballX <= -1) {
                     s = java.lang.String.valueOf((char) 2);
-                    trackball_x += 1;
+                    mTrackballX += 1;
                 }
-                if (trackball_x >= 1) {
+                if (mTrackballX >= 1) {
                     s = java.lang.String.valueOf((char) 6);
-                    trackball_x -= 1;
+                    mTrackballX -= 1;
                 }
-                if (trackball_y <= -1) {
+                if (mTrackballY <= -1) {
                     s = java.lang.String.valueOf((char) 16);
-                    trackball_y += 1;
+                    mTrackballY += 1;
                 }
-                if (trackball_y >= 1) {
+                if (mTrackballY >= 1) {
                     s = java.lang.String.valueOf((char) 14);
-                    trackball_y -= 1;
+                    mTrackballY -= 1;
                 }
             }
             if (s != null) {
@@ -589,7 +589,7 @@ public class NavitGraphics {
         }
 
         public void run() {
-            if (in_map && touch_mode == PRESSED) {
+            if (mInMap && touch_mode == PRESSED) {
                 do_longpress_action();
                 touch_mode = NONE;
             }
@@ -601,70 +601,70 @@ public class NavitGraphics {
 
         public SystemBarTintView(Context context) {
             super(context);
-            this.setBackgroundColor(bgcolor);
+            this.setBackgroundColor(mBgColor);
         }
 
     }
 
-    public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
-            int wraparound, int use_camera) {
+    public NavitGraphics(final Activity mActivity, NavitGraphics parent, int x, int y, int w, int h,
+                         int wraparound, int useCamera) {
         if (parent == null) {
-            if (use_camera != 0) {
+            if (useCamera != 0) {
                 addCamera();
             }
-            setActivity(activity);
+            setmActivity(mActivity);
         } else {
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            bitmap_w = w;
-            bitmap_h = h;
-            pos_x = x;
-            pos_y = y;
-            pos_wraparound = wraparound;
+            mBitmapWidth = w;
+            mBitmapHeight = h;
+            mPosX = x;
+            mPosY = y;
+            mPosWraparound = wraparound;
             mDrawCanvas = new Canvas(mDrawBitmap);
-            parent.overlays.add(this);
+            parent.mOverlays.add(this);
         }
-        parent_graphics = parent;
+        mNavitGraphics = parent;
     }
 
     /**
-     * @brief Sets up the main activity.
+     * @brief Sets up the main mActivity.
      *
-     * @param activity The main activity.
+     * @param mActivity The main mActivity.
      */
-    protected void setActivity(final Activity activity) {
+    protected void setmActivity(final Activity mActivity) {
         if (Navit.graphics == null) {
             Navit.graphics = this;
         }
-        this.activity = (Navit) activity;
-        view = new NavitView(activity);
-        view.setClickable(false);
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.setKeepScreenOn(true);
-        relativelayout = new RelativeLayout(activity);
+        this.mActivity = (Navit) mActivity;
+        mView = new NavitView(mActivity);
+        mView.setClickable(false);
+        mView.setFocusable(true);
+        mView.setFocusableInTouchMode(true);
+        mView.setKeepScreenOn(true);
+        mRelativeLayout = new RelativeLayout(mActivity);
         addCameraView();
-        relativelayout.addView(view);
+        mRelativeLayout.addView(mView);
 
         /* The navigational and status bar tinting code is meaningful only on API19+ */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
  //               && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
                        ) {
-            frameLayout = new FrameLayout(activity);
-            frameLayout.addView(relativelayout);
-            leftTintView = new SystemBarTintView(activity);
-            rightTintView = new SystemBarTintView(activity);
-            topTintView = new SystemBarTintView(activity);
-            bottomTintView = new SystemBarTintView(activity);
-            frameLayout.addView(leftTintView);
-            frameLayout.addView(rightTintView);
-            frameLayout.addView(topTintView);
-            frameLayout.addView(bottomTintView);
-            activity.setContentView(frameLayout);
+            mFrameLayout = new FrameLayout(mActivity);
+            mFrameLayout.addView(mRelativeLayout);
+            mLeftTintView = new SystemBarTintView(mActivity);
+            mRightTintView = new SystemBarTintView(mActivity);
+            mTopTintView = new SystemBarTintView(mActivity);
+            mBottomTintView = new SystemBarTintView(mActivity);
+            mFrameLayout.addView(mLeftTintView);
+            mFrameLayout.addView(mRightTintView);
+            mFrameLayout.addView(mTopTintView);
+            mFrameLayout.addView(mBottomTintView);
+            mActivity.setContentView(mFrameLayout);
         } else {
-            activity.setContentView(relativelayout);
+            mActivity.setContentView(mRelativeLayout);
         }
 
-        view.requestFocus();
+        mView.requestFocus();
     }
 
     enum msg_type {
@@ -674,7 +674,7 @@ public class NavitGraphics {
 
     private static final msg_type[] msg_values = msg_type.values();
 
-    public final Handler    callback_handler    = new Handler() {
+    public final Handler mCallbackHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg_values[msg.what]) {
                 case CLB_ZOOM_IN:
@@ -759,50 +759,48 @@ public class NavitGraphics {
      */
     private void adjustSystemBarsTintingViews() {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT
-     //           || android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                   ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
 
         /* hide tint bars during update to prevent ugly effects */
-        leftTintView.setVisibility(View.GONE);
-        rightTintView.setVisibility(View.GONE);
-        topTintView.setVisibility(View.GONE);
-        bottomTintView.setVisibility(View.GONE);
+        mLeftTintView.setVisibility(View.GONE);
+        mRightTintView.setVisibility(View.GONE);
+        mTopTintView.setVisibility(View.GONE);
+        mBottomTintView.setVisibility(View.GONE);
 
-        frameLayout.post(new Runnable() {
+        mFrameLayout.post(new Runnable() {
             @Override
             public void run() {
-                FrameLayout.LayoutParams leftLayoutParams = new FrameLayout.LayoutParams(padding_left,
+                FrameLayout.LayoutParams leftLayoutParams = new FrameLayout.LayoutParams(mPaddingLeft,
                         LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT);
-                leftTintView.setLayoutParams(leftLayoutParams);
+                mLeftTintView.setLayoutParams(leftLayoutParams);
 
-                FrameLayout.LayoutParams rightLayoutParams = new FrameLayout.LayoutParams(padding_right,
+                FrameLayout.LayoutParams rightLayoutParams = new FrameLayout.LayoutParams(mPaddingRight,
                         LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.RIGHT);
-                rightTintView.setLayoutParams(rightLayoutParams);
+                mRightTintView.setLayoutParams(rightLayoutParams);
 
                 FrameLayout.LayoutParams topLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        padding_top, Gravity.TOP);
+                        mPaddingTop, Gravity.TOP);
                 /* Prevent horizontal and vertical tint views from overlapping */
-                topLayoutParams.setMargins(padding_left, 0, padding_right, 0);
-                topTintView.setLayoutParams(topLayoutParams);
+                topLayoutParams.setMargins(mPaddingLeft, 0, mPaddingRight, 0);
+                mTopTintView.setLayoutParams(topLayoutParams);
 
                 FrameLayout.LayoutParams bottomLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        padding_bottom, Gravity.BOTTOM);
+                        mPaddingBottom, Gravity.BOTTOM);
                 /* Prevent horizontal and vertical tint views from overlapping */
-                bottomLayoutParams.setMargins(padding_left, 0, padding_right, 0);
-                bottomTintView.setLayoutParams(bottomLayoutParams);
+                bottomLayoutParams.setMargins(mPaddingLeft, 0, mPaddingRight, 0);
+                mBottomTintView.setLayoutParams(bottomLayoutParams);
 
                 /* show tint bars again */
-                leftTintView.setVisibility(View.VISIBLE);
-                rightTintView.setVisibility(View.VISIBLE);
-                topTintView.setVisibility(View.VISIBLE);
-                bottomTintView.setVisibility(View.VISIBLE);
+                mLeftTintView.setVisibility(View.VISIBLE);
+                mRightTintView.setVisibility(View.VISIBLE);
+                mTopTintView.setVisibility(View.VISIBLE);
+                mBottomTintView.setVisibility(View.VISIBLE);
             }
         });
 
-        paddingChangedCallback(mPaddingChangedCallbackID, padding_left, padding_top, padding_right, padding_bottom);
+        paddingChangedCallback(mPaddingChangedCallbackID, mPaddingLeft, mPaddingTop, mPaddingRight, mPaddingBottom);
     }
 
     /**
@@ -814,8 +812,8 @@ public class NavitGraphics {
      */
     @TargetApi(23)
     void handleResize(int w, int h) {
-        if (this.parent_graphics != null) {
-            this.parent_graphics.handleResize(w, h);
+        if (this.mNavitGraphics != null) {
+            this.mNavitGraphics.handleResize(w, h);
         } else {
             Log.d(TAG, String.format("handleResize w=%d h=%d", w, h));
 
@@ -827,20 +825,20 @@ public class NavitGraphics {
                  * by NavitView#onApplyWindowInsets(), though this is affected by a different bug. Luckily, the two
                  * bugs appear to be complementary, allowing us to mix and match results.
                  */
-                if (view == null) {
+                if (mView == null) {
                     Log.w(TAG, "view is null, cannot update padding");
                 } else {
                     Log.d(TAG, String.format("view w=%d h=%d x=%.0f y=%.0f",
-                            view.getWidth(), view.getHeight(), view.getX(), view.getY()));
-                    if (view.getRootWindowInsets() == null) {
+                            mView.getWidth(), mView.getHeight(), mView.getX(), mView.getY()));
+                    if (mView.getRootWindowInsets() == null) {
                         Log.w(TAG, "No root window insets, cannot update padding");
                     } else {
                         Log.d(TAG, String.format("RootWindowInsets left=%d right=%d top=%d bottom=%d",
-                                view.getRootWindowInsets().getSystemWindowInsetLeft(),
-                                view.getRootWindowInsets().getSystemWindowInsetRight(),
-                                view.getRootWindowInsets().getSystemWindowInsetTop(),
-                                view.getRootWindowInsets().getSystemWindowInsetBottom()));
-                        padding_top = view.getRootWindowInsets().getSystemWindowInsetTop();
+                                mView.getRootWindowInsets().getSystemWindowInsetLeft(),
+                                mView.getRootWindowInsets().getSystemWindowInsetRight(),
+                                mView.getRootWindowInsets().getSystemWindowInsetTop(),
+                                mView.getRootWindowInsets().getSystemWindowInsetBottom()));
+                        mPaddingTop = mView.getRootWindowInsets().getSystemWindowInsetTop();
                     }
                 }
             } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
@@ -854,12 +852,12 @@ public class NavitGraphics {
                  * The status bar is always visible unless we are in fullscreen mode. (Fortunately, none of the
                  * versions affected by this support split screen mode, which would have further complicated things.)
                  */
-                if (activity.mIsFullscreen) {
-                    padding_top = 0;
+                if (mActivity.mIsFullscreen) {
+                    mPaddingTop = 0;
                 } else {
-                    Resources resources = view.getResources();
+                    Resources resources = mView.getResources();
                     int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
-                    padding_top = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+                    mPaddingTop = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
                 }
             } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT
                     //&& android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
@@ -881,7 +879,7 @@ public class NavitGraphics {
                  * platform/frameworks/base/tools/layoutlib/bridge/src/com/android/
                  * layoutlib/bridge/impl/RenderSessionImpl.java
                  */
-                Resources resources = view.getResources();
+                Resources resources = mView.getResources();
                 int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
                 int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
                 int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
@@ -898,12 +896,12 @@ public class NavitGraphics {
                                 status_bar_height, action_bar_default_height, navigation_bar_height,
                                 navigation_bar_height_landscape, navigation_bar_width));
 
-                if (activity == null) {
+                if (mActivity == null) {
                     Log.w(TAG, "Main Activity is not a Navit instance, cannot update padding");
-                } else if (frameLayout != null) {
-                    /* frameLayout is only created on platforms supporting navigation and status bar tinting */
+                } else if (mFrameLayout != null) {
+                    /* mFrameLayout is only created on platforms supporting navigation and status bar tinting */
 
-                    Navit navit = activity;
+                    Navit navit = mActivity;
                     boolean isStatusShowing = !navit.mIsFullscreen;
                     boolean isNavShowing = !ViewConfigurationCompat.hasPermanentMenuKey(ViewConfiguration.get(navit));
                     Log.d(TAG, String.format("isStatusShowing=%b isNavShowing=%b", isStatusShowing, isNavShowing));
@@ -915,29 +913,29 @@ public class NavitGraphics {
                     Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
                             isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
 
-                    padding_left = 0;
-                    padding_top = isStatusShowing ? status_bar_height : 0;
-                    padding_right = (isNavShowing && !isNavAtBottom) ? navigation_bar_width : 0;
-                    padding_bottom = (!(isNavShowing && isNavAtBottom)) ? 0 : (
+                    mPaddingLeft = 0;
+                    mPaddingTop = isStatusShowing ? status_bar_height : 0;
+                    mPaddingRight = (isNavShowing && !isNavAtBottom) ? navigation_bar_width : 0;
+                    mPaddingBottom = (!(isNavShowing && isNavAtBottom)) ? 0 : (
                             isLandscape ? navigation_bar_height_landscape : navigation_bar_height);
                 }
             } else {
                 /* API 18 and below does not support drawing under the system bars, padding is 0 all around */
-                padding_left = 0;
-                padding_right = 0;
-                padding_top = 0;
-                padding_bottom = 0;
+                mPaddingLeft = 0;
+                mPaddingRight = 0;
+                mPaddingTop = 0;
+                mPaddingBottom = 0;
             }
 
             Log.d(TAG, String.format("Padding left=%d top=%d right=%d bottom=%d",
-                    padding_left, padding_top, padding_right, padding_bottom));
+                    mPaddingLeft, mPaddingTop, mPaddingRight, mPaddingBottom));
 
             adjustSystemBarsTintingViews();
 
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mDrawCanvas = new Canvas(mDrawBitmap);
-            bitmap_w = w;
-            bitmap_h = h;
+            mBitmapWidth = w;
+            mBitmapHeight = h;
             sizeChangedCallback(mSizeChangedCallbackID, w, h);
         }
     }
@@ -962,7 +960,7 @@ public class NavitGraphics {
             if (Build.VERSION.SDK_INT <= 13) {
                 return false;
             } else {
-                return ViewConfiguration.get(activity.getApplication()).hasPermanentMenuKey();
+                return ViewConfiguration.get(mActivity.getApplication()).hasPermanentMenuKey();
             }
         }
     }
@@ -981,16 +979,16 @@ public class NavitGraphics {
 
     public void setMotionCallback(long id) {
         mMotionCallbackID = id;
-        if (activity != null) {
-            activity.setMotionCallback(id, this);
+        if (mActivity != null) {
+            mActivity.setMotionCallback(id, this);
         }
     }
 
     public void setKeypressCallback(long id) {
         mKeypressCallbackID = id;
         // set callback id also in main intent (for menus)
-        if (activity != null) {
-            activity.setKeypressCallback(id, this);
+        if (mActivity != null) {
+            mActivity.setKeypressCallback(id, this);
         }
     }
 
@@ -1139,44 +1137,44 @@ public class NavitGraphics {
 
     protected void draw_mode(int mode) {
         if (mode == draw_mode_end) {
-            if (parent_graphics == null) {
-                view.invalidate();
+            if (mNavitGraphics == null) {
+                mView.invalidate();
             } else {
-                parent_graphics.view.invalidate(get_rect());
+                mNavitGraphics.mView.invalidate(get_rect());
             }
         }
-        if (mode == draw_mode_begin && parent_graphics != null) {
+        if (mode == draw_mode_begin && mNavitGraphics != null) {
             mDrawBitmap.eraseColor(0);
         }
 
     }
 
     protected void draw_drag(int x, int y) {
-        pos_x = x;
-        pos_y = y;
+        mPosX = x;
+        mPosY = y;
     }
 
     protected void overlay_disable(int disable) {
-        Log.d(TAG,"overlay_disable: " + disable + "Parent: " + (parent_graphics != null));
+        Log.d(TAG,"overlay_disable: " + disable + "Parent: " + (mNavitGraphics != null));
         // assume we are NOT in map view mode!
-        if (parent_graphics == null) {
-            in_map = (disable == 0);
+        if (mNavitGraphics == null) {
+            mInMap = (disable == 0);
         }
-        if (overlay_disabled != disable) {
-            overlay_disabled = disable;
-            if (parent_graphics != null) {
-                parent_graphics.view.invalidate(get_rect());
+        if (mOverlayDisabled != disable) {
+            mOverlayDisabled = disable;
+            if (mNavitGraphics != null) {
+                mNavitGraphics.mView.invalidate(get_rect());
             }
         }
     }
 
     protected void overlay_resize(int x, int y, int w, int h, int wraparound) {
         mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap_w = w;
-        bitmap_h = h;
-        pos_x = x;
-        pos_y = y;
-        pos_wraparound = wraparound;
+        mBitmapWidth = w;
+        mBitmapHeight = h;
+        mPosX = x;
+        mPosY = y;
+        mPosWraparound = wraparound;
         mDrawCanvas.setBitmap(mDrawBitmap);
     }
 

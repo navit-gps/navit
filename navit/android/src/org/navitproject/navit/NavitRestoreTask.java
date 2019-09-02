@@ -17,9 +17,7 @@ import java.util.Map.Entry;
 public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
 
     private final Navit mActivity;
-
     private ProgressDialog mDialog;
-
     private final String mTimestamp;
 
     NavitRestoreTask(Navit context, String timestamp) {
@@ -136,7 +134,6 @@ public class NavitRestoreTask extends AsyncTask<Void, Void, String> {
                 Toast.LENGTH_LONG).show();
         NotificationManager nm = (NotificationManager) mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(R.string.app_name);
-        NavitVehicle.removeListeners(mActivity.getApplicationContext());
         mActivity.finish();
     }
 
