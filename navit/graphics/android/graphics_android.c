@@ -696,7 +696,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0;
     if (!find_method(ret->NavitGraphicsClass, "overlay_resize", "(IIIII)V", &ret->NavitGraphics_overlay_resize))
         return 0;
-    if (!find_method(ret->NavitGraphicsClass, "SetCamera", "(I)V", &ret->NavitGraphics_SetCamera))
+    if (!find_method(ret->NavitGraphicsClass, "setCamera", "(I)V", &ret->NavitGraphics_SetCamera))
         return 0;
 #if 0
     set_activity(ret->NavitGraphics);
