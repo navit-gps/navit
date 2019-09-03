@@ -38,7 +38,7 @@ import java.util.List;
 
 
 
-class NavitVehicle {
+public class NavitVehicle {
 
     private static final String GPS_FIX_CHANGE = "android.location.GPS_FIX_CHANGE";
 
