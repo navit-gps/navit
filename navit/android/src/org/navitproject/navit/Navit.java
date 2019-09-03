@@ -334,8 +334,8 @@ public class Navit extends Activity {
 
     private void verifyPermissions() {
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {Log.d(TAG,"ask for permission(s)");
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG,"ask for permission(s)");
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQ_FINE_LOC);
         }
