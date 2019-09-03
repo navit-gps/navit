@@ -62,13 +62,13 @@ public class NavitDialogs extends Handler {
                 mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
                 if (msg.getData().getInt("value1") == 1) {
                     Message msgOut = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                                NavitGraphics.msg_type.CLB_LOAD_MAP.ordinal());
+                                NavitGraphics.msgType.CLB_LOAD_MAP.ordinal());
                     msgOut.setData(msg.getData());
                     msgOut.sendToTarget();
 
                     msgOut = Message
                         .obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                                NavitGraphics.msg_type.CLB_CALL_CMD.ordinal());
+                                NavitGraphics.msgType.CLB_CALL_CMD.ordinal());
                     Bundle b = new Bundle();
                     int mi = msg.getData().getInt("value2");
                     double lon = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLon1) + Double

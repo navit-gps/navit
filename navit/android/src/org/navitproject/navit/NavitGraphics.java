@@ -54,7 +54,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
-public class NavitGraphics {
+class NavitGraphics {
     private static final String            TAG = "NavitGraphics";
     private final NavitGraphics            mNavitGraphics;
     private final ArrayList<NavitGraphics> mOverlays = new ArrayList<>();
@@ -85,7 +85,7 @@ public class NavitGraphics {
     private static final long              mTimeForLongPress = 300L;
 
 
-    public void setBackgroundColor(int bgcolor) {
+    void setBackgroundColor(int bgcolor) {
         this.mBgColor = bgcolor;
         if (mLeftTintView != null) {
             mLeftTintView.setBackgroundColor(bgcolor);
@@ -169,7 +169,7 @@ public class NavitGraphics {
 
         PointF mPressedPosition = null;
 
-        public NavitView(Context context) {
+        NavitView(Context context) {
             super(context);
             try {
                 eventGetX = android.view.MotionEvent.class.getMethod("getX", int.class);
@@ -606,7 +606,7 @@ public class NavitGraphics {
 
     }
 
-    public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
+    NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
                          int wraparound, int useCamera) {
         if (parent == null) {
             if (useCamera != 0) {
@@ -628,10 +628,9 @@ public class NavitGraphics {
 
     /**
      * @brief Sets up the main view.
-     *
-     * @param activity The main activity.
+     *@param activity The main activity.
      */
-    protected void setmActivity(final Activity activity) {
+    void setmActivity(final Activity activity) {
         if (Navit.graphics == null) {
             Navit.graphics = this;
         }
@@ -674,7 +673,7 @@ public class NavitGraphics {
 
     private static final msgType[] msg_values = msgType.values();
 
-    public final Handler mCallbackHandler = new Handler() {
+    final Handler mCallbackHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg_values[msg.what]) {
                 case CLB_ZOOM_IN:
@@ -724,21 +723,21 @@ public class NavitGraphics {
         }
     };
 
-    public native void sizeChangedCallback(long id, int x, int y);
+    native void sizeChangedCallback(long id, int x, int y);
 
-    public native void paddingChangedCallback(long id, int left, int right, int top, int bottom);
+    native void paddingChangedCallback(long id, int left, int right, int top, int bottom);
 
-    public native void keypressCallback(long id, String s);
+    native void keypressCallback(long id, String s);
 
-    public native int callbackMessageChannel(int i, String s);
+    native int callbackMessageChannel(int i, String s);
 
-    public native void buttonCallback(long id, int pressed, int button, int x, int y);
+    native void buttonCallback(long id, int pressed, int button, int x, int y);
 
-    public native void motionCallback(long id, int x, int y);
+    native void motionCallback(long id, int x, int y);
 
-    public native String getDefaultCountry(int id, String s);
+    native String getDefaultCountry(int id, String s);
 
-    public static native String[][] getAllCountries();
+    static native String[][] getAllCountries();
 
     private Canvas mDrawCanvas;
     private Bitmap mDrawBitmap;
@@ -965,26 +964,26 @@ public class NavitGraphics {
         }
     }
 
-    public void setSizeChangedCallback(long id) {
+    void setSizeChangedCallback(long id) {
         mSizeChangedCallbackID = id;
     }
 
-    public void setPaddingChangedCallback(long id) {
+    void setPaddingChangedCallback(long id) {
         mPaddingChangedCallbackID = id;
     }
 
-    public void setButtonCallback(long id) {
+    void setButtonCallback(long id) {
         mButtonCallbackID = id;
     }
 
-    public void setMotionCallback(long id) {
+    void setMotionCallback(long id) {
         mMotionCallbackID = id;
         if (mActivity != null) {
             mActivity.setGraphics(this);
         }
     }
 
-    public void setKeypressCallback(long id) {
+    void setKeypressCallback(long id) {
         mKeypressCallbackID = id;
     }
 
@@ -1174,5 +1173,5 @@ public class NavitGraphics {
         mDrawCanvas.setBitmap(mDrawBitmap);
     }
 
-    public static native String callbackLocalizedString(String s);
+    static native String callbackLocalizedString(String s);
 }
