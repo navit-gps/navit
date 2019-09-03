@@ -164,11 +164,11 @@ public class NavitAddressSearchActivity extends Activity {
         });
 
         // address: label and text field
-        TextView addr_view = new TextView(this);
-        addr_view.setText(Navit.getInstance().getTstring(R.string.address_enter_destination)); // TRANS
-        addr_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-        addr_view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        addr_view.setPadding(4, 4, 4, 4);
+        TextView addrView = new TextView(this);
+        addrView.setText(Navit.getInstance().getTstring(R.string.address_enter_destination)); // TRANS
+        addrView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+        addrView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        addrView.setPadding(4, 4, 4, 4);
 
         // partial match checkbox
         final CheckBox checkboxPartialMatch = new CheckBox(this);
@@ -231,7 +231,7 @@ public class NavitAddressSearchActivity extends Activity {
 
         searchSettingsLayout.addView(mCountryButton);
         searchSettingsLayout.addView(checkboxPartialMatch);
-        panel.addView(addr_view);
+        panel.addView(addrView);
         panel.addView(address_string);
         panel.addView(searchSettingsLayout);
         panel.addView(btnSearch);
