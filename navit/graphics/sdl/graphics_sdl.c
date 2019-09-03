@@ -319,42 +319,10 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
 }
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
-    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent
-            && gr->overlay_parent->overlay_enable && !gr->overlay_enable) ) {
-        return;
-    }
-
-    Sint16 *vx, *vy;
-    Sint16 x, y;
-    int i;
-
-    vx = alloca(count * sizeof(Sint16));
-    vy = alloca(count * sizeof(Sint16));
-
-    for(i = 0; i < count; i++) {
-        x = (Sint16)p[i].x;
-        y = (Sint16)p[i].y;
-        vx[i] = x;
-        vy[i] = y;
-
-        dbg(lvl_debug, "draw_polygon: %p %i %d,%d", gc, i, p[i].x, p[i].y);
-    }
-
-    if(gr->aa) {
-        raster_aapolygon(gr->screen, count, vx, vy,
-                         SDL_MapRGBA(gr->screen->format,
-                                     gc->fore_r,
-                                     gc->fore_g,
-                                     gc->fore_b,
-                                     gc->fore_a));
-    } else {
-        raster_polygon(gr->screen, count, vx, vy,
-                       SDL_MapRGBA(gr->screen->format,
-                                   gc->fore_r,
-                                   gc->fore_g,
-                                   gc->fore_b,
-                                   gc->fore_a));
-    }
+    dbg(lvl_debug, "draw_polygon: %p ", gc);
+    /* Use polygon with holes primitive as this seems to be better performing than the
+     * traditional SDL_gfx like ones */
+    draw_polygon_with_holes(gr, gc, p, count, 0, NULL, NULL);
 }
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
