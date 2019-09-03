@@ -25,7 +25,6 @@ JNIEnv *jnienv;
 jobject *android_activity = NULL;
 jobject *android_application = NULL;
 int android_version;
-JavaVM *cachedJVM = NULL;
 
 struct android_search_priv {
     struct jni_object search_result_obj;
@@ -41,7 +40,6 @@ struct android_search_priv {
 
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *aVm, void *aReserved) {
-    cachedJVM = aVm;
     if ((*aVm)->GetEnv(aVm,(void**)&jnienv, JNI_VERSION_1_6) != JNI_OK) {
         dbg(lvl_error,"Failed to get the environment");
         return -1;
@@ -49,14 +47,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *aVm, void *aReserved) {
     dbg(lvl_debug,"Found the environment");
     return JNI_VERSION_1_6;
 }
-
-
-JNIEnv* jni_getenv() {
-    JNIEnv* env_this;
-    (*cachedJVM)->GetEnv(cachedJVM, (void**) &env_this, JNI_VERSION_1_6);
-    return env_this;
-}
-
 
 int android_find_class_global(char *name, jclass *ret) {
     *ret=(*jnienv)->FindClass(jnienv, name);
@@ -179,11 +169,6 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_vehicleCallback(
         jlong id, jobject location) {
     callback_call_1((struct callback *)(intptr_t)id, (void *)location);
 }
-
-//JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, jlong id) {
-//    dbg(lvl_debug,"enter %p %p",thiz, (void *)(intptr_t)id);
-//    callback_call_0((struct callback *)(intptr_t)id);
-//}
 
 JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env, jobject thiz, jlong func, jint fd,
         jint cond) {
