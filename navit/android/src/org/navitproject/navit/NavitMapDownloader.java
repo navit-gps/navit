@@ -488,7 +488,7 @@ public class NavitMapDownloader extends Thread {
     private static final int MAP_READ_FILE_BUFFER = 1024 * 64;
     private static final int UPDATE_PROGRESS_TIME_NS = 1000 * 1000000; // 1ns=1E-9s
     private static final int MAX_RETRIES = 5;
-    private final String TAG = this.getClass().getName();
+    private static final String TAG = "NavitMapDownLoader";
     private final String mMapFilenamePath;
     private final OsmMapValues mMapValues;
     private final int mMapId;
@@ -528,9 +528,9 @@ public class NavitMapDownloader extends Thread {
         mStopMe = false;
         mRetryCounter = 0;
 
-        Log.v(TAG, "start download " + mMapValues.mapName);
+        Log.v(TAG, "start download " + mMapValues.mMapName);
         updateProgress(0, mMapValues.mEstSizeBytes,
-                Navit.getInstance().getTstring(R.string.map_downloading) + ": " + mMapValues.mapName);
+                Navit.getInstance().getTstring(R.string.map_downloading) + ": " + mMapValues.mMapName);
 
         boolean success;
         do {
@@ -547,14 +547,14 @@ public class NavitMapDownloader extends Thread {
                 && !mStopMe);
 
         if (success) {
-            toast(mMapValues.mapName + " " + Navit.getInstance().getTstring(R.string.map_download_ready));
+            toast(mMapValues.mMapName + " " + Navit.getInstance().getTstring(R.string.map_download_ready));
             getMapInfoFile().delete();
             Log.d(TAG, "success");
         }
 
         if (success || mStopMe) {
             NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                    mMapFilenamePath + mMapValues.mapName + ".bin", null, -1, success ? 1 : 0, mMapId);
+                    mMapFilenamePath + mMapValues.mMapName + ".bin", null, -1, success ? 1 : 0, mMapId);
         }
     }
 
@@ -591,7 +591,7 @@ public class NavitMapDownloader extends Thread {
 
         if (finalOutputFile.exists()) {
             Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                        NavitGraphics.msg_type.CLB_DELETE_MAP.ordinal());
+                        NavitGraphics.msgType.CLB_DELETE_MAP.ordinal());
             Bundle b = new Bundle();
             b.putString("title", finalOutputFile.getAbsolutePath());
             msg.setData(b);
@@ -664,19 +664,19 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getDestinationFile() {
-        File outputFile = new File(mMapFilenamePath, mMapValues.mapName + ".tmp");
+        File outputFile = new File(mMapFilenamePath, mMapValues.mMapName + ".tmp");
         outputFile.getParentFile().mkdir();
         return outputFile;
     }
 
-    private boolean downloadData(URLConnection c, long already_read, long real_size_bytes, boolean resume,
+    private boolean downloadData(URLConnection c, long alreadyRead, long realSizeBytes, boolean resume,
             File outputFile) {
         boolean success = false;
         BufferedOutputStream buf = getOutputStream(outputFile, resume);
         BufferedInputStream bif = getInputStream(c);
 
         if (buf != null && bif != null) {
-            success = readData(buf, bif, already_read, real_size_bytes);
+            success = readData(buf, bif, alreadyRead, realSizeBytes);
             // always cleanup, as we might get errors when trying to resume
             try {
                 buf.flush();
@@ -698,7 +698,7 @@ public class NavitMapDownloader extends Thread {
                         + mMapValues.mLat1
                         + "," + mMapValues.mLon2 + "," + mMapValues.mLat2);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "We failed to create a URL to " + mMapValues.mapName);
+            Log.e(TAG, "We failed to create a URL to " + mMapValues.mMapName);
             e.printStackTrace();
             return null;
         }
@@ -735,11 +735,11 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getMapFile() {
-        return new File(mMapFilenamePath, mMapValues.mapName + ".bin");
+        return new File(mMapFilenamePath, mMapValues.mMapName + ".bin");
     }
 
     private File getMapInfoFile() {
-        return new File(mMapFilenamePath, mMapValues.mapName + ".tmp.info");
+        return new File(mMapFilenamePath, mMapValues.mMapName + ".tmp.info");
     }
 
     private BufferedOutputStream getOutputStream(File outputFile, boolean resume) {
@@ -861,7 +861,7 @@ public class NavitMapDownloader extends Thread {
             }
             String info = String.format("%s: %s\n %dMb / %dMb\n %.1f kb/s %s: %s",
                         Navit.getInstance().getTstring(R.string.map_downloading),
-                        mMapValues.mapName, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
+                        mMapValues.mMapName, readBytes / 1024 / 1024, maxBytes / 1024 / 1024,
                         perSecondOverall / 1024f, Navit.getInstance().getTstring(R.string.map_download_eta),
                         etaString);
 
@@ -909,21 +909,21 @@ public class NavitMapDownloader extends Thread {
         final String mLat1;
         final String mLon2;
         final String mLat2;
-        final String mapName;
+        final String mMapName;
         final long mEstSizeBytes;
-        final int level;
+        final int mLevel;
 
 
-        private OsmMapValues(String mapname, String lon_1, String lat_1, String lon_2,
-                             String lat_2,
-                             long bytes_est, int level) {
-            this.mapName = mapname;
-            this.mLon1 = lon_1;
-            this.mLat1 = lat_1;
-            this.mLon2 = lon_2;
-            this.mLat2 = lat_2;
-            this.mEstSizeBytes = bytes_est;
-            this.level = level;
+        private OsmMapValues(String mapname, String lon1, String lat1, String lon2,
+                             String lat2,
+                             long bytesEst, int level) {
+            this.mMapName = mapname;
+            this.mLon1 = lon1;
+            this.mLat1 = lat1;
+            this.mLon2 = lon2;
+            this.mLat2 = lat2;
+            this.mEstSizeBytes = bytesEst;
+            this.mLevel = level;
         }
 
         public boolean isInMap(Location location) {
