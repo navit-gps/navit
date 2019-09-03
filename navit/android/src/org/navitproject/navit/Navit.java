@@ -429,9 +429,8 @@ public class Navit extends Activity {
         File navitMapsDir = new File(mapFilenamePath);
         navitMapsDir.mkdirs();
 
-        final String NAVIT_DATA_SHARE_DIR = NAVIT_DATA_DIR + "/share";
         // make sure the share dir exists
-        File navitDataShareDir = new File(NAVIT_DATA_SHARE_DIR);
+        File navitDataShareDir = new File(NAVIT_DATA_DIR + "/share");
         navitDataShareDir.mkdirs();
 
         Display display = getWindowManager().getDefaultDisplay();
