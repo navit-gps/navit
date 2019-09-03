@@ -95,7 +95,7 @@ public class Navit extends Activity {
     static String                      NAVIT_DATA_DIR                  = null;
     public static final String         NAVIT_PREFS                     = "NavitPrefs";
     Boolean                            mIsFullscreen                   = false;
-    private static final int           MY_PERMISSIONS_REQUEST_ALL      = 101;
+    private static final int           MY_PERMISSIONS_REQ_FINE_LOC     = 103;
     private static NotificationManager nm;
     private static Navit               navit                           = null;
 
@@ -332,6 +332,15 @@ public class Navit extends Activity {
         }
     }
 
+    private void verifyPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {Log.d(TAG,"ask for permission(s)");
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQ_FINE_LOC);
+        }
+    }
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -389,15 +398,7 @@ public class Navit extends Activity {
         }
         nm.notify(R.string.app_name, navitNotification);// Show the notification
 
-        if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    || (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            Log.d(TAG,"ask for permission(s)");
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ALL);
-        }
+        verifyPermissions();
         // get the local language -------------
         Locale locale = java.util.Locale.getDefault();
         String lang = locale.getLanguage();
@@ -419,13 +420,9 @@ public class Navit extends Activity {
 
         SharedPreferences prefs = getSharedPreferences(NAVIT_PREFS,MODE_PRIVATE);
         NAVIT_DATA_DIR = getApplicationContext().getFilesDir().getPath();
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            mapFilenamePath = prefs.getString("filenamePath",
-                    Environment.getExternalStorageDirectory().getPath() + "/navit/");
-        } else {
-            mapFilenamePath = prefs.getString("filenamePath", NAVIT_DATA_DIR + '/');
-        }
-        Log.d(TAG,"mapFilenamePath = " + mapFilenamePath);
+        mapFilenamePath = prefs.getString("filenamePath", NAVIT_DATA_DIR + '/');
+        Log.i(TAG,"NAVITDATADIR = " + NAVIT_DATA_DIR );
+        Log.i(TAG,"mapFilenamePath = " + mapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
         File navitMapsDir = new File(mapFilenamePath);
         navitMapsDir.mkdirs();
@@ -486,7 +483,6 @@ public class Navit extends Activity {
         } catch (IOException e) {
             Log.e(TAG, "Failed to access assets using AssetManager");
         }
-        Log.d(TAG, "Navit for = " + System.getProperty("os.arch"));
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(android.os.Build.VERSION.SDK));
         navitMain(this, getApplication(), navitLanguage, Integer.valueOf(android.os.Build.VERSION.SDK),
                       myDisplayDensity, NAVIT_DATA_DIR + "/bin/navit", mapFilenamePath, isLaunch);
@@ -554,9 +550,8 @@ public class Navit extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ALL: {
-                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            case MY_PERMISSIONS_REQ_FINE_LOC: {
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 AlertDialog.Builder infobox = new AlertDialog.Builder(this);
@@ -927,7 +922,7 @@ public class Navit extends Activity {
         }
 
         Display display = getWindowManager().getDefaultDisplay();
-        if (Build.VERSION.SDK_INT < 17) { /* -------------------- FIXME ------------------- */
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             w = display.getWidth();
             h = display.getHeight();
         } else {
