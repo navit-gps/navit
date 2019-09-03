@@ -335,8 +335,6 @@ public class Navit extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        /* Whether this is the first launch of Navit (as opposed to the activity being recreated) */
-        boolean isLaunch = (navit == null);
 
         super.onCreate(savedInstanceState);
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -345,7 +343,6 @@ public class Navit extends Activity {
             this.getActionBar().hide();
         }
 
-        navit = this;
         mDialogs = new NavitDialogs(this);
 
         NavitResources = getResources();
@@ -360,9 +357,13 @@ public class Navit extends Activity {
         // NOTIFICATION
         // Setup the status bar notification
         // This notification is removed in the exit() function
+
+        /* Whether this is the first launch of Navit (as opposed to the activity being recreated) */
+        boolean isLaunch = (navit == null);
         if (isLaunch) {
             createNotificationChannel();
         }
+        navit = this;
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  // Grab a handle to the NotificationManager
         PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
 
@@ -662,13 +663,7 @@ public class Navit extends Activity {
         return true;
     }
 
-    // define callback id here
     private NavitGraphics mNavitGraphics = null;
-
-    // callback id gets set here when called from NavitGraphics
-   // public void setKeypressCallback(long unused, NavitGraphics ng) {
-    //    mNavitGraphics = ng;
-    //}
 
     public void setGraphics(NavitGraphics ng) {
         mNavitGraphics = ng;
@@ -677,7 +672,6 @@ public class Navit extends Activity {
     public NavitGraphics getNavitGraphics() {
         return mNavitGraphics;
     }
-
 
     private void start_targetsearch_from_intent(String targetAddress) {
         if (targetAddress == null || targetAddress.equals("")) {

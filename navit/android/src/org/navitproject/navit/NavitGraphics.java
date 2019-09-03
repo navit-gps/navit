@@ -907,7 +907,7 @@ class NavitGraphics {
                             == Configuration.ORIENTATION_LANDSCAPE);
                     boolean isNavAtBottom = (!isLandscape)
                             || (navit.getResources().getConfiguration().smallestScreenWidthDp >= 600);
-                    Log.d(TAG, String.format("isNavAtBottom=%b (Configuration.smallestScreenWidthDp=%d, isLandscape=%b)",
+                    Log.d(TAG, String.format("isNavAtBottom=%b (Config.smallestScreenWidthDp=%d, isLandscape=%b)",
                             isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
 
                     mPaddingLeft = 0;
