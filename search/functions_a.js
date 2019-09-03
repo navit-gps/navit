@@ -40,6 +40,7 @@ var searchData=
   ['invokedefault',['invokeDefault',['../browserplugin_8c.html#ae8b2db5722235e54ca653a06704779e0',1,'browserplugin.c']]],
   ['is_5fdouble',['is_double',['../command_8c.html#a517abfd39ecef120c2358a77d5aa8d50',1,'command.c']]],
   ['is_5finside',['is_inside',['../graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8',1,'graphics.c']]],
+  ['is_5floop',['is_loop',['../osm_8c.html#ae9a4a51447af914635443f2417c8ab1a',1,'osm.c']]],
   ['is_5fmotorway_5flike',['is_motorway_like',['../navigation_8c.html#aee707d5cd03a4a4b20b71fe3ca515ca5',1,'navigation.c']]],
   ['is_5framp',['is_ramp',['../navigation_8c.html#a5aad81445b8df7d0bd3835edbd078866',1,'navigation.c']]],
   ['is_5fsame_5fstreet2',['is_same_street2',['../navigation_8c.html#a132ffa9b3f99eb243b923e15e87cf5ed',1,'navigation.c']]],

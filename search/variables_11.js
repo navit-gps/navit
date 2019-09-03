@@ -96,6 +96,7 @@ var searchData=
   ['pois',['pois',['../classBackend.html#a81eeec800db7df2081694641fed26116',1,'Backend']]],
   ['poly',['poly',['../structmap__rect__priv.html#aeb0c591a520519f34a25ec6f44687fc0',1,'map_rect_priv']]],
   ['poly2poi',['poly2poi',['../structmaptool__osm.html#a6a3aa6471a384e1fe6d0a7c0680118ef',1,'maptool_osm']]],
+  ['poly_5fhole',['poly_hole',['../structattr.html#a638b672a3e8d210b0b77e73b9bc1957d',1,'attr']]],
   ['poly_5fmeth',['poly_meth',['../poly_8c.html#a17cc361260d2e6cc789208b37356a5ad',1,'poly.c']]],
   ['poly_5fnext',['poly_next',['../structpoly__priv.html#ad04487a48215219faa40af3472160eb2',1,'poly_priv']]],
   ['poly_5fnum',['poly_num',['../structpoly__priv.html#ac64a1620f91a421f48c853885eee5f68',1,'poly_priv']]],

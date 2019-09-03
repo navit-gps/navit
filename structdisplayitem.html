@@ -86,6 +86,9 @@ $(document).ready(function(){initNavTree('structdisplayitem.html','');});
 <div class="title">displayitem Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>graphics display item structure  
+ <a href="structdisplayitem.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -95,6 +98,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a045a228120f83ec493219c3ad9ef8f72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9eb57069cfb4c2666a067175ac5176c8"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdisplayitem.html#a9eb57069cfb4c2666a067175ac5176c8">label</a></td></tr>
 <tr class="separator:a9eb57069cfb4c2666a067175ac5176c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25248c51d835a9353d7b622314ef71bb"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structdisplayitem__poly__holes.html">displayitem_poly_holes</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdisplayitem.html#a25248c51d835a9353d7b622314ef71bb">holes</a></td></tr>
+<tr class="separator:a25248c51d835a9353d7b622314ef71bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab44aa97c70407b8778041dae0161f636"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdisplayitem.html#ab44aa97c70407b8778041dae0161f636">z_order</a></td></tr>
 <tr class="separator:ab44aa97c70407b8778041dae0161f636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a439b2dac1557feb2d5f4a5afd68cd8a9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdisplayitem.html#a439b2dac1557feb2d5f4a5afd68cd8a9">count</a></td></tr>
@@ -103,14 +108,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:ac82b2f0884a91a6010618e435faeb426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>FIXME </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">&lt;&gt;</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>&lt;&gt; </dd></dl>
-<dl class="section author"><dt>Author</dt><dd>Martin Schaller (04/2008) </dd></dl>
+<div class="textblock"><p>graphics display item structure </p>
+<p>The graphics item passes the ap items and other items with this structure to the graphics drawing routines. The struct is only a stub. It is allocated including "count -1" struct coord's following c[0], if "holes" not NULL, by a polygon hole structure, and if label != NULL, a series of zero terminated strings followed by another zero for label. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a id="ac82b2f0884a91a6010618e435faeb426"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac82b2f0884a91a6010618e435faeb426">&#9670;&nbsp;</a></span>c</h2>
@@ -144,6 +143,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a25248c51d835a9353d7b622314ef71bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25248c51d835a9353d7b622314ef71bb">&#9670;&nbsp;</a></span>holes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structdisplayitem__poly__holes.html">displayitem_poly_holes</a>* displayitem::holes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aacda2978472c679b00749934ac5d0d40">display_add()</a>, <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, and <a class="el" href="graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>.</p>
+
+</div>
+</div>
 <a id="a045a228120f83ec493219c3ad9ef8f72"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a045a228120f83ec493219c3ad9ef8f72">&#9670;&nbsp;</a></span>item</h2>
 
@@ -156,7 +171,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aacda2978472c679b00749934ac5d0d40">display_add()</a>, <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, <a class="el" href="graphics_8h.html#a1338a87aa242be87514545654fdcdbc9">graphics_displayitem_get_item()</a>, <a class="el" href="graphics_8h.html#a13081c584551dc733185be2ccdea0479">graphics_displayitem_within_dist()</a>, <a class="el" href="graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>, <a class="el" href="graphics_8c.html#adb33069ce4c48cd35040977afb634426">graphics_process_selection_item()</a>, and <a class="el" href="graphics_8h.html#af40a584801730be67ac1f575a03ef084">graphics_remove_selection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aacda2978472c679b00749934ac5d0d40">display_add()</a>, <a class="el" href="graphics_8c.html#a201204d7814f740452d16cdc0d4e1bbf">displayitem_draw_icon()</a>, <a class="el" href="graphics_8h.html#a1338a87aa242be87514545654fdcdbc9">graphics_displayitem_get_item()</a>, <a class="el" href="graphics_8h.html#a13081c584551dc733185be2ccdea0479">graphics_displayitem_within_dist()</a>, <a class="el" href="graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>, <a class="el" href="graphics_8c.html#adb33069ce4c48cd35040977afb634426">graphics_process_selection_item()</a>, and <a class="el" href="graphics_8h.html#af40a584801730be67ac1f575a03ef084">graphics_remove_selection()</a>.</p>
 
 </div>
 </div>
@@ -172,7 +187,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aacda2978472c679b00749934ac5d0d40">display_add()</a>, <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, <a class="el" href="graphics_8h.html#a59a54547b5359a0a63f8234e14f390a5">graphics_displayitem_get_label()</a>, <a class="el" href="graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>, <a class="el" href="graphics_8c.html#adb33069ce4c48cd35040977afb634426">graphics_process_selection_item()</a>, and <a class="el" href="graphics_8h.html#af40a584801730be67ac1f575a03ef084">graphics_remove_selection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aacda2978472c679b00749934ac5d0d40">display_add()</a>, <a class="el" href="graphics_8c.html#a347798813a5a0f755f802a119161d4b7">displayitem_draw_circle()</a>, <a class="el" href="graphics_8c.html#a201204d7814f740452d16cdc0d4e1bbf">displayitem_draw_icon()</a>, <a class="el" href="graphics_8c.html#aad0fdf6d1f03e4b9d86c030144edac73">displayitem_draw_image()</a>, <a class="el" href="graphics_8c.html#a288dc5beed17d6b6b8c1e4364e2608a2">displayitem_draw_text()</a>, <a class="el" href="graphics_8h.html#a59a54547b5359a0a63f8234e14f390a5">graphics_displayitem_get_label()</a>, <a class="el" href="graphics_8h.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>, <a class="el" href="graphics_8c.html#adb33069ce4c48cd35040977afb634426">graphics_process_selection_item()</a>, and <a class="el" href="graphics_8h.html#af40a584801730be67ac1f575a03ef084">graphics_remove_selection()</a>.</p>
 
 </div>
 </div>

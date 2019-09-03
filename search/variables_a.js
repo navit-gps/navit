@@ -68,6 +68,8 @@ var searchData=
   ['info',['info',['../structrgn__point.html#acd1ca5e6cd7fbc277013fa2640db67f5',1,'rgn_point::info()'],['../structrgn__poly.html#aef25c8060fa11a6524b316dd597a2b5f',1,'rgn_poly::info()'],['../garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1',1,'info():&#160;garmin_img.c']]],
   ['init',['init',['../group__plugins.html#ga7239cfc6b8e8ef5454ba5ad3e9ef828a',1,'plugin::init()'],['../structobject__func.html#aaebbfc52918e057090fcae87bdec1a9a',1,'object_func::init()']]],
   ['init_5fstring_5findex',['init_string_index',['../structj1850.html#aa8e5c895fd4ca0dae2ead0e2c4e59cf8',1,'j1850']]],
+  ['inner',['inner',['../structmultipolygon.html#a1ac69da1d2b2d60098c66c9e76d2bbe1',1,'multipolygon']]],
+  ['inner_5fcount',['inner_count',['../structmultipolygon.html#a6e0ebd9c3fb3af7288e5ee146dc2d536',1,'multipolygon']]],
   ['input',['input',['../structmaptool__params.html#aff1c4aa53c5815019ed996d81942ca94',1,'maptool_params']]],
   ['input_5ffile',['input_file',['../structmaptool__params.html#aebba5f9002c705eb14cf2604ccdc71d8',1,'maptool_params']]],
   ['insert',['insert',['../structcache.html#a40a3a62e161d06067614608958b173a0',1,'cache']]],

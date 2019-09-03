@@ -139,6 +139,8 @@ Functions</h2></td></tr>
 <tr class="separator:af614abb9152680903a876b5f8cc7480a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a4f7bf0f3f593dee249cf516d68f0e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_2misc_8c.html#a3a4f7bf0f3f593dee249cf516d68f0e0">item_order_by_type</a> (enum <a class="el" href="item_8h.html#a2679318a14061852e50df3c6e4e42f62">item_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>)</td></tr>
 <tr class="separator:a3a4f7bf0f3f593dee249cf516d68f0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a082ffd7c2399b9a2068e71b49d9dd2bf"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf">filter_unknown</a> (struct <a class="el" href="structitem__bin.html">item_bin</a> *ib)</td></tr>
+<tr class="separator:a082ffd7c2399b9a2068e71b49d9dd2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94710339565517dc0ab71f348fafec91"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_2misc_8c.html#a94710339565517dc0ab71f348fafec91">phase34_process_file</a> (struct <a class="el" href="structtile__info.html">tile_info</a> *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, FILE *in, FILE *reference)</td></tr>
 <tr class="separator:a94710339565517dc0ab71f348fafec91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f71c1ba13c9bd8ae3ea2a556f2b1587"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_2misc_8c.html#a2f71c1ba13c9bd8ae3ea2a556f2b1587">phase34_process_file_range</a> (struct <a class="el" href="structtile__info.html">tile_info</a> *<a class="el" href="garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1">info</a>, FILE *in, FILE *reference)</td></tr>
@@ -291,7 +293,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="maptool_2misc_8c.html#a2df3cece5bb4ddd9b58b670412135cd3">bbox_extend()</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, and <a class="el" href="structrect.html#af3e8c03479c6bdd0723513ef5c6ff5aa">rect::h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox()</a>, <a class="el" href="gui__internal__priv_8h.html#a4fd955925a6330096a5fb006d07161ce">gui_internal_cmd_map_download()</a>, <a class="el" href="maptool_8h.html#ac991c10aa3dd4ffb81b4c34aaba36c42">item_bin_write_clipped()</a>, <a class="el" href="osd__core_8c.html#a99c2e93db2ce347aef3fa40d045400bb">osd_cmd_interface_draw()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="osd__core_8c.html#ad86e59ee7e69545d881064ea9d27b700">osd_route_guard_draw()</a>, <a class="el" href="osd__core_8c.html#ab1ba9b04384d99394e2f2c4f2824dcc8">osd_scale_draw()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>, <a class="el" href="osd__core_8c.html#a769bb80e8557a8a7208da0721c5e36af">osd_stopwatch_draw()</a>, and <a class="el" href="tile_8c.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox()</a>, <a class="el" href="gui__internal__priv_8h.html#a4fd955925a6330096a5fb006d07161ce">gui_internal_cmd_map_download()</a>, <a class="el" href="maptool_8h.html#ac991c10aa3dd4ffb81b4c34aaba36c42">item_bin_write_clipped()</a>, <a class="el" href="osd__core_8c.html#a99c2e93db2ce347aef3fa40d045400bb">osd_cmd_interface_draw()</a>, <a class="el" href="osd__core_8c.html#a8ec589bef5aa2b80cf52734966b98332">osd_compass_draw()</a>, <a class="el" href="osd__core_8c.html#ad86e59ee7e69545d881064ea9d27b700">osd_route_guard_draw()</a>, <a class="el" href="osd__core_8c.html#ab1ba9b04384d99394e2f2c4f2824dcc8">osd_scale_draw()</a>, <a class="el" href="osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955">osd_speed_cam_draw()</a>, <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>, <a class="el" href="osd__core_8c.html#a769bb80e8557a8a7208da0721c5e36af">osd_stopwatch_draw()</a>, <a class="el" href="osm_8c.html#a9b4ab02256442cd8eea8b908a4cbafef">process_multipolygons_finish()</a>, and <a class="el" href="tile_8c.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>.</p>
 
 </div>
 </div>
@@ -377,7 +379,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structrect.html#af3e8c03479c6bdd0723513ef5c6ff5aa">rect::h</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aaf2e734c53675a43976af4c07ee72410">boundary_find_matches()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aaf2e734c53675a43976af4c07ee72410">boundary_find_matches()</a>, and <a class="el" href="osm_8c.html#a9b4ab02256442cd8eea8b908a4cbafef">process_multipolygons_finish()</a>.</p>
 
 </div>
 </div>
@@ -479,7 +481,37 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="itembin_8c.html#af9985606d82feba6fe0afa9613f8e26c">dump_itembin()</a>, and <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>.</p>
+<p class="reference">References <a class="el" href="itembin_8c.html#af9985606d82feba6fe0afa9613f8e26c">dump_itembin()</a>, <a class="el" href="maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf">filter_unknown()</a>, and <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>.</p>
+
+</div>
+</div>
+<a id="a082ffd7c2399b9a2068e71b49d9dd2bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a082ffd7c2399b9a2068e71b49d9dd2bf">&#9670;&nbsp;</a></span>filter_unknown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int filter_unknown </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structitem__bin.html">item_bin</a> *&#160;</td>
+          <td class="paramname"><em>ib</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="maptool_8c.html#a3c17423814c5e3ff353e37deed653a17">ignore_unknown</a>, and <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="maptool_2misc_8c.html#a71e82a6b58b12ccd1128bc3fba2286b6">dump()</a>, <a class="el" href="maptool_2misc_8c.html#a94710339565517dc0ab71f348fafec91">phase34_process_file()</a>, and <a class="el" href="maptool_2misc_8c.html#a2f71c1ba13c9bd8ae3ea2a556f2b1587">phase34_process_file_range()</a>.</p>
 
 </div>
 </div>
@@ -647,7 +679,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="itembin_8c.html#ac1d2cd36d97b88f5665bbe8a3952a3d0">item_bin_get_attr_bin()</a>, <a class="el" href="maptool_2misc_8c.html#a3a4f7bf0f3f593dee249cf516d68f0e0">item_order_by_type()</a>, <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>, <a class="el" href="maptool_8c.html#ae6055f00942b80bb96addf39b1f28c88">processed_nodes</a>, <a class="el" href="maptool_8c.html#a52fab99336a5b9134dd8edf8e0e8cb12">processed_ways</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="maptool_8h.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>, and <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>.</p>
+<p class="reference">References <a class="el" href="maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf">filter_unknown()</a>, <a class="el" href="itembin_8c.html#ac1d2cd36d97b88f5665bbe8a3952a3d0">item_bin_get_attr_bin()</a>, <a class="el" href="maptool_2misc_8c.html#a3a4f7bf0f3f593dee249cf516d68f0e0">item_order_by_type()</a>, <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>, <a class="el" href="maptool_8c.html#ae6055f00942b80bb96addf39b1f28c88">processed_nodes</a>, <a class="el" href="maptool_8c.html#a52fab99336a5b9134dd8edf8e0e8cb12">processed_ways</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="maptool_8h.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>, and <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_2misc_8c.html#a4c0c980a13f1a0ca57dc0bcdb944a664">phase34()</a>.</p>
 
@@ -693,7 +725,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>, <a class="el" href="maptool_8c.html#ae6055f00942b80bb96addf39b1f28c88">processed_nodes</a>, <a class="el" href="maptool_8c.html#a52fab99336a5b9134dd8edf8e0e8cb12">processed_ways</a>, <a class="el" href="itembin__buffer_8c.html#a1b43d0a2762a5f7e4217c58bfce84733">read_item_range()</a>, <a class="el" href="maptool_8h.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>, and <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>.</p>
+<p class="reference">References <a class="el" href="maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf">filter_unknown()</a>, <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>, <a class="el" href="maptool_8c.html#ae6055f00942b80bb96addf39b1f28c88">processed_nodes</a>, <a class="el" href="maptool_8c.html#a52fab99336a5b9134dd8edf8e0e8cb12">processed_ways</a>, <a class="el" href="itembin__buffer_8c.html#a1b43d0a2762a5f7e4217c58bfce84733">read_item_range()</a>, <a class="el" href="maptool_8h.html#a55d3e017b2b62f1ce886e895d45d660b">tile_write_item_minmax()</a>, and <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_2misc_8c.html#a4c0c980a13f1a0ca57dc0bcdb944a664">phase34()</a>.</p>
 

@@ -8,6 +8,7 @@ var structgraphics__methods =
     [ "draw_lines", "structgraphics__methods.html#a0dd827b36bc59e603cd339ffe1ca89df", null ],
     [ "draw_mode", "structgraphics__methods.html#ad5da728c844e96d3cef9808b13ac50d6", null ],
     [ "draw_polygon", "structgraphics__methods.html#ab503de8638d2b90964b62bee5bfb1062", null ],
+    [ "draw_polygon_with_holes", "structgraphics__methods.html#a4a8245077ea9f87725c5913d9f5f71db", null ],
     [ "draw_rectangle", "structgraphics__methods.html#ab1d5db8dedefcfb61b5002e1a057cad7", null ],
     [ "draw_text", "structgraphics__methods.html#a00f80a81cd830de4a5c664e005466c6b", null ],
     [ "font_new", "structgraphics__methods.html#a44a0a0abacc60537df2c79cfd549e3db", null ],

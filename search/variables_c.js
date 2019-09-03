@@ -10,5 +10,6 @@ var searchData=
   ['keypress',['keypress',['../structgraphics__opengl__window__system.html#a7f753d4c1c48850465f4bb1f04c1ca72',1,'graphics_opengl_window_system']]],
   ['keypress_5fcb',['keypress_cb',['../structgui__priv.html#a85aae7ab7a9538c828bd985e69d6d673',1,'gui_priv::keypress_cb()'],['../structosd__item.html#a15130092885815c0a40d2f14a4e9af5f',1,'osd_item::keypress_cb()']]],
   ['keypresscallbackid',['KeypressCallbackID',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a81fc5a32063325617b773ca3c42d3b63',1,'org::navitproject::navit::NavitGraphics']]],
-  ['keywords',['keywords',['../structg2sattr.html#ab1bc583e540789c10cede5017095201d',1,'g2sattr']]]
+  ['keywords',['keywords',['../structg2sattr.html#ab1bc583e540789c10cede5017095201d',1,'g2sattr']]],
+  ['killer',['killer',['../osm_8c.html#a42e6b75b1a230c40a1d4737511fc1633',1,'osm.c']]]
 ];

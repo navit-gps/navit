@@ -382,7 +382,7 @@ var searchData=
   ['navitvehicle',['NavitVehicle',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html',1,'org.navitproject.navit.NavitVehicle'],['../structvehicle__priv.html#a2341da6fc5e4b92589a093ff1dccf89f',1,'vehicle_priv::NavitVehicle()'],['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#ac4dc9d2eec58e27febb1b1618fdd8f34',1,'org.navitproject.navit.NavitVehicle.NavitVehicle()']]],
   ['navitvehicle_2ejava',['NavitVehicle.java',['../NavitVehicle_8java.html',1,'']]],
   ['navitvehicleclass',['NavitVehicleClass',['../structvehicle__priv.html#ad1ba23a84cd7e33c629242a665b8705c',1,'vehicle_priv']]],
-  ['navitview',['NavitView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html',1,'org.navitproject.navit.NavitGraphics.NavitView'],['../interfaceNavitView.html',1,'NavitView'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ace04d44950159ac4102942b74ae7946d',1,'org.navitproject.navit.NavitGraphics.NavitView.NavitView()']]],
+  ['navitview',['NavitView',['../interfaceNavitView.html',1,'NavitView'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html',1,'org.navitproject.navit.NavitGraphics.NavitView'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ace04d44950159ac4102942b74ae7946d',1,'org.navitproject.navit.NavitGraphics.NavitView.NavitView()']]],
   ['navitviewcontroller',['NavitViewController',['../interfaceNavitViewController.html',1,'']]],
   ['navitwatch',['NavitWatch',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html',1,'org.navitproject.navit.NavitWatch'],['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a753c70e663593ea2b31459f4498375df',1,'org.navitproject.navit.NavitWatch.NavitWatch()']]],
   ['navitwatch_2ejava',['NavitWatch.java',['../NavitWatch_8java.html',1,'']]],
@@ -512,6 +512,6 @@ var searchData=
   ['num_5fother_5fways',['num_other_ways',['../structnavigation__maneuver.html#a43459dcae17f6f2333deb9c407c663b1',1,'navigation_maneuver']]],
   ['num_5fsimilar_5fways',['num_similar_ways',['../structnavigation__maneuver.html#a173856d3d5c64a52aa96b92b628587de',1,'navigation_maneuver']]],
   ['num_5fsubtiles',['num_subtiles',['../structtile__head.html#ae3f5b24b3e2b30d93d22892ab2630fbb',1,'tile_head']]],
-  ['number',['number',['../structhousenumber.html#aa908b2c7c59ffb9f336b9420a4eeda65',1,'housenumber::number()'],['../structg2scolumns.html#a8ed200f15bbb692dce32899eaa940050',1,'g2scolumns::number()'],['../structpathattr.html#a6f3063a3e779917b2380fda596567823',1,'pathattr::number()'],['../structg2sattr.html#a62707fb816bae18ebccbbd4a69cc82e5',1,'g2sattr::number()']]],
+  ['number',['number',['../structhousenumber.html#aa908b2c7c59ffb9f336b9420a4eeda65',1,'housenumber::number()'],['../structprocess__multipolygon__setup__thread.html#a9fc0318d2c51506df61b01a5f3510a99',1,'process_multipolygon_setup_thread::number()'],['../structg2scolumns.html#a8ed200f15bbb692dce32899eaa940050',1,'g2scolumns::number()'],['../structpathattr.html#a6f3063a3e779917b2380fda596567823',1,'pathattr::number()'],['../structg2sattr.html#a62707fb816bae18ebccbbd4a69cc82e5',1,'g2sattr::number()']]],
   ['numd',['numd',['../structattr.html#a76048cf7f2de123ea5250cf82f32702b',1,'attr']]]
 ];

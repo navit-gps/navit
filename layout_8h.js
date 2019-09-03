@@ -1,5 +1,6 @@
 var layout_8h =
 [
+    [ "poly_hole", "structpoly__hole.html", "structpoly__hole" ],
     [ "element", "structelement.html", "structelement" ],
     [ "itemgra", "structitemgra.html", "structitemgra" ],
     [ "layer", "structlayer.html", "structlayer" ],

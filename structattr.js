@@ -39,6 +39,7 @@ var structattr =
     [ "pcoord", "structattr.html#a7f9d730eeaf044058e3bfd09f9291166", null ],
     [ "plugin", "structattr.html#a4e20433592bb734a5404f146331737dc", null ],
     [ "plugins", "structattr.html#a832b752a2cb21b7323d4b7abece81bdc", null ],
+    [ "poly_hole", "structattr.html#a638b672a3e8d210b0b77e73b9bc1957d", null ],
     [ "polygon", "structattr.html#afcd101aa3e134cb823191522281de025", null ],
     [ "polyline", "structattr.html#aa8f0b411f378c32c87e11b6d79a6ca71", null ],
     [ "projection", "structattr.html#a64b169265cf7d88891b946e72adcf8aa", null ],

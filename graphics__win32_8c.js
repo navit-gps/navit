@@ -25,6 +25,7 @@ var graphics__win32_8c =
     [ "draw_lines", "graphics__win32_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c", null ],
     [ "draw_mode", "graphics__win32_8c.html#ab6bdd08d0de06ed02373ebf0434198c0", null ],
     [ "draw_polygon", "graphics__win32_8c.html#ad23ec2e18eb0e803d1db5ce00f624297", null ],
+    [ "draw_polygon_with_holes", "graphics__win32_8c.html#abede460fd607c07286fff792e1ca0696", null ],
     [ "draw_rectangle", "graphics__win32_8c.html#a4267fcdc24196b92a1f2786683fbf743", null ],
     [ "draw_text", "graphics__win32_8c.html#a6585029b964eeceb550f0e4d0dab9286", null ],
     [ "ErrorExit", "graphics__win32_8c.html#a9b7f658505b94c608af302b966404fd9", null ],

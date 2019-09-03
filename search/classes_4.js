@@ -11,6 +11,7 @@ var searchData=
   ['diagram_5fpoint',['diagram_point',['../structdiagram__point.html',1,'']]],
   ['display_5fcontext',['display_context',['../structdisplay__context.html',1,'']]],
   ['displayitem',['displayitem',['../structdisplayitem.html',1,'']]],
+  ['displayitem_5fpoly_5fholes',['displayitem_poly_holes',['../structdisplayitem__poly__holes.html',1,'']]],
   ['displaylist',['displaylist',['../structdisplaylist.html',1,'']]],
   ['displaylist_5fhandle',['displaylist_handle',['../structdisplaylist__handle.html',1,'']]],
   ['displaylist_5ficon_5fcache',['displaylist_icon_cache',['../structdisplaylist__icon__cache.html',1,'']]],

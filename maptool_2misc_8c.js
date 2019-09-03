@@ -12,6 +12,7 @@ var maptool_2misc_8c =
     [ "bbox_extend", "maptool_2misc_8c.html#a2df3cece5bb4ddd9b58b670412135cd3", null ],
     [ "contains_bbox", "maptool_2misc_8c.html#a6aa960191a741020917b59e3a564f0ad", null ],
     [ "dump", "maptool_2misc_8c.html#a71e82a6b58b12ccd1128bc3fba2286b6", null ],
+    [ "filter_unknown", "maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf", null ],
     [ "item_order_by_type", "maptool_2misc_8c.html#a3a4f7bf0f3f593dee249cf516d68f0e0", null ],
     [ "phase1_map", "maptool_2misc_8c.html#af614abb9152680903a876b5f8cc7480a", null ],
     [ "phase34", "maptool_2misc_8c.html#a4c0c980a13f1a0ca57dc0bcdb944a664", null ],

@@ -17,8 +17,10 @@ var searchData=
   ['point_5fdata',['point_data',['../structpoint__data.html',1,'']]],
   ['point_5frect',['point_rect',['../structpoint__rect.html',1,'']]],
   ['poiobject',['PoiObject',['../classPoiObject.html',1,'']]],
+  ['poly_5fhole',['poly_hole',['../structpoly__hole.html',1,'']]],
   ['poly_5fpriv',['poly_priv',['../structpoly__priv.html',1,'']]],
   ['population_5ftable',['population_table',['../structpopulation__table.html',1,'']]],
+  ['process_5fmultipolygon_5fsetup_5fthread',['process_multipolygon_setup_thread',['../structprocess__multipolygon__setup__thread.html',1,'']]],
   ['process_5frelation_5fmember_5ffunc_5fpriv',['process_relation_member_func_priv',['../structprocess__relation__member__func__priv.html',1,'']]],
   ['profile_5foption',['profile_option',['../structprofile__option.html',1,'']]],
   ['projection_5fname',['projection_name',['../structprojection__name.html',1,'']]]

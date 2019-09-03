@@ -18,6 +18,7 @@ var maptool_8c =
     [ "maptool_load_tilesdir", "maptool_8c.html#ab1355976097dbfcf4083978c103e01af", null ],
     [ "osm_count_references", "maptool_8c.html#a0fe4352dda41b14a61340f04c4957620", null ],
     [ "osm_process_coastlines", "maptool_8c.html#a8f4b5d22f5f9368aee2052dd6216a397", null ],
+    [ "osm_process_multipolygons", "maptool_8c.html#a71770ea014f8885d851a2b53e78081fc", null ],
     [ "osm_process_turn_restrictions", "maptool_8c.html#a956a8a99c8a340e71337cd92aa7b8a08", null ],
     [ "osm_process_way2poi", "maptool_8c.html#a125d204b1c05df0ab8131dc9e46e4785", null ],
     [ "osm_read_input_data", "maptool_8c.html#a3646d2293954d57abc0e33c57494067a", null ],
@@ -51,5 +52,6 @@ var maptool_8c =
     [ "slices", "maptool_8c.html#ac0314d7115d525af9479178e15c5381f", null ],
     [ "start_brk", "maptool_8c.html#a9c537d1cfb27b9b9f4393f57ef146512", null ],
     [ "start_ts", "maptool_8c.html#a8dbabd8b972fbe00d01ff05328b78fc5", null ],
+    [ "thread_count", "maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8", null ],
     [ "unknown_country", "maptool_8c.html#afbc9fd6521f1f3c7f623dde0fe7bebd6", null ]
 ];

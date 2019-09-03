@@ -49,6 +49,8 @@ var searchData=
   ['osso_5fcontext',['osso_context',['../osso_8c.html#ad959ab626ea8c26fdae7506e07869e43',1,'osso.c']]],
   ['other',['other',['../structimg__header.html#af1a0202e87fb78e42e73d5074bb37ff9',1,'img_header::other()'],['../garmin__img_8c.html#aad667ffdb9449b95cf1bd1bf07160879',1,'other():&#160;garmin_img.c']]],
   ['out',['out',['../structprocess__relation__member__func__priv.html#a3f9cb26bd487ea533354ad96778673b6',1,'process_relation_member_func_priv']]],
+  ['outer',['outer',['../structmultipolygon.html#ac9f1c6beabd63fdf6df3d25f4f687a45',1,'multipolygon']]],
+  ['outer_5fcount',['outer_count',['../structmultipolygon.html#a8832d539ec0507f9346dfb82107487cf',1,'multipolygon']]],
   ['output',['output',['../structg2sprop.html#acb62579da32ded3f2f8697f4856345bf',1,'g2sprop']]],
   ['overlap',['overlap',['../structtile__parameter.html#a9eadb41f6a36fb94c1ec98ff96891340',1,'tile_parameter::overlap()'],['../maptool_8c.html#aed0a8a19fcd367d13f422c4b53a0b696',1,'overlap():&#160;maptool.c'],['../maptool_8h.html#aed0a8a19fcd367d13f422c4b53a0b696',1,'overlap():&#160;maptool.c']]],
   ['overlay',['overlay',['../structgraphics__priv.html#aafa10f3f91fffb7e8622faee3cb6a992',1,'graphics_priv']]],

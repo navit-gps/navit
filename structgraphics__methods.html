@@ -140,6 +140,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a5a2e88411fb3dfb27d9d9e4ca65e6b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff7b043beff85fc74104aef78ed530bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#aff7b043beff85fc74104aef78ed530bb">get_dpi</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr)</td></tr>
 <tr class="separator:aff7b043beff85fc74104aef78ed530bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a8245077ea9f87725c5913d9f5f71db"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__methods.html#a4a8245077ea9f87725c5913d9f5f71db">draw_polygon_with_holes</a> )(struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td></tr>
+<tr class="separator:a4a8245077ea9f87725c5913d9f5f71db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a3888a0724e702c51617b7b59c7dba60c"></a>
@@ -218,7 +220,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>, and <a class="el" href="graphics_8c.html#a83501c4d4a03436e13a32cd7be161285">graphics_draw_image_warp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aad0fdf6d1f03e4b9d86c030144edac73">displayitem_draw_image()</a>, and <a class="el" href="graphics_8c.html#a83501c4d4a03436e13a32cd7be161285">graphics_draw_image_warp()</a>.</p>
 
 </div>
 </div>
@@ -267,6 +269,22 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="graphics_8c.html#a67a8a482dcd53cd6b9cf25605266006f">graphics_draw_polygon()</a>.</p>
+
+</div>
+</div>
+<a id="a4a8245077ea9f87725c5913d9f5f71db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a8245077ea9f87725c5913d9f5f71db">&#9670;&nbsp;</a></span>draw_polygon_with_holes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* graphics_methods::draw_polygon_with_holes) (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#affb31a2a0d3e4603e900cd4d051c2eca">graphics_draw_polygon_with_holes()</a>.</p>
 
 </div>
 </div>

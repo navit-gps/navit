@@ -4,6 +4,7 @@ var structmaptool__osm =
     [ "boundaries", "structmaptool__osm.html#a08594d25986affb2648a804ecc988f83", null ],
     [ "house_number_interpolations", "structmaptool__osm.html#a4c618870388023044b49e77ac42f9bcf", null ],
     [ "line2poi", "structmaptool__osm.html#a332fe9293324f8ff1be16c735dd9db10", null ],
+    [ "multipolygons", "structmaptool__osm.html#ae40410192e9e750218c6e81af9ef3ae3", null ],
     [ "nodes", "structmaptool__osm.html#a0e3b21d3acbdca509c82b117070f4537", null ],
     [ "poly2poi", "structmaptool__osm.html#a6a3aa6471a384e1fe6d0a7c0680118ef", null ],
     [ "towns", "structmaptool__osm.html#a83564b2a55cdd74776288bb954ffd1ff", null ],

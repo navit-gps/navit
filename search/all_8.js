@@ -190,6 +190,7 @@ var searchData=
   ['filter_5fentry',['filter_entry',['../structfilter__entry.html',1,'']]],
   ['filter_5fpois',['filter_pois',['../classBackend.html#abb9b2de08cd20b766b984e3dd12f6df8',1,'Backend']]],
   ['filter_5ftype',['filter_type',['../filter_8c.html#a6a1f24db57b2bb66e10ff4b7327b7166',1,'filter.c']]],
+  ['filter_5funknown',['filter_unknown',['../maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'misc.c']]],
   ['filterextension',['filterExtension',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#ae7851fd08f9550862d8666995c89d1a5',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['filterfileextension',['filterFileExtension',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a6a1a665e9ecded182d3c3a9ad49f39cb',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['filters',['filters',['../structmap__priv.html#a7103126032a432f27ce38f164a397323',1,'map_priv']]],

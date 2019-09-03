@@ -23,5 +23,6 @@ var searchData=
   ['keyreleaseevent',['keyReleaseEvent',['../classQNavitQuick.html#a518190a989ca469bc55e1b4533de35b0',1,'QNavitQuick']]],
   ['keys_2eh',['keys.h',['../keys_8h.html',1,'']]],
   ['keywords',['keywords',['../structg2sattr.html#ab1bc583e540789c10cede5017095201d',1,'g2sattr']]],
+  ['killer',['killer',['../osm_8c.html#a42e6b75b1a230c40a1d4737511fc1633',1,'osm.c']]],
   ['kilometers_5fto_5fmiles',['KILOMETERS_TO_MILES',['../navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6',1,'navigation.h']]]
 ];

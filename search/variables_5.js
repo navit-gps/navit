@@ -133,6 +133,7 @@ var searchData=
   ['draw_5fmode_5fbegin',['draw_mode_begin',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a8ca09ff7dba8ecf911b75313f7eb7c50',1,'org::navitproject::navit::NavitGraphics']]],
   ['draw_5fmode_5fend',['draw_mode_end',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a195e75bbe122efe09f04d681133f7360',1,'org::navitproject::navit::NavitGraphics']]],
   ['draw_5fpolygon',['draw_polygon',['../structgraphics__methods.html#ab503de8638d2b90964b62bee5bfb1062',1,'graphics_methods']]],
+  ['draw_5fpolygon_5fwith_5fholes',['draw_polygon_with_holes',['../structgraphics__methods.html#a4a8245077ea9f87725c5913d9f5f71db',1,'graphics_methods']]],
   ['draw_5frectangle',['draw_rectangle',['../structgraphics__methods.html#ab1d5db8dedefcfb61b5002e1a057cad7',1,'graphics_methods']]],
   ['draw_5ftext',['draw_text',['../structgraphics__methods.html#a00f80a81cd830de4a5c664e005466c6b',1,'graphics_methods']]],
   ['dst_5fseg',['dst_seg',['../structroute__graph__point.html#ae5e8159759fe598848d93d747924c9ea',1,'route_graph_point']]],

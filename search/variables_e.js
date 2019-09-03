@@ -230,6 +230,7 @@ var searchData=
   ['mtts',['mTts',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#afdd4e94e364c48a45c60cd83a543ce97',1,'org::navitproject::navit::NavitSpeech2']]],
   ['multi',['multi',['../structevent__timeout.html#adf8db0941d0ebeabefa8679ad044115c',1,'event_timeout']]],
   ['multiplier',['multiplier',['../structlabel__data__offset.html#ad197fe32e3aed81d2d85af8b7eb7cdfe',1,'label_data_offset::multiplier()'],['../garmin__img_8c.html#a2f5022c7bc53de98ba18e0facd5c1914',1,'multiplier():&#160;garmin_img.c']]],
+  ['multipolygons',['multipolygons',['../structmaptool__osm.html#ae40410192e9e750218c6e81af9ef3ae3',1,'maptool_osm::multipolygons()'],['../structprocess__multipolygon__setup__thread.html#a822d4796ad792495bff84c03f31bbe7b',1,'process_multipolygon_setup_thread::multipolygons()']]],
   ['mvp_5flocation',['mvp_location',['../structgraphics__priv.html#a137b6d8feeb82e1e166f366bac70d3f9',1,'graphics_priv']]],
   ['my_5fdata_5fcheck_5fcode',['MY_DATA_CHECK_CODE',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#af7782773a77ba6aee3b580cba163132a',1,'org::navitproject::navit::NavitSpeech2']]],
   ['my_5fdisplay_5fdensity',['my_display_density',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a455c8ba41034a64027c900076a913f4b',1,'org::navitproject::navit::Navit']]],

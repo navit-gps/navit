@@ -160,6 +160,8 @@ Functions</h2></td></tr>
 <tr class="separator:a90d3c22cb1dfd9850c373c137ee4e84c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad23ec2e18eb0e803d1db5ce00f624297"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
 <tr class="separator:ad23ec2e18eb0e803d1db5ce00f624297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abede460fd607c07286fff792e1ca0696"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td></tr>
+<tr class="separator:abede460fd607c07286fff792e1ca0696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4267fcdc24196b92a1f2786683fbf743"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int w, int h)</td></tr>
 <tr class="separator:a4267fcdc24196b92a1f2786683fbf743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0284e13ff04d3d79092c2fdf352fab6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#af0284e13ff04d3d79092c2fdf352fab6">draw_circle</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int r)</td></tr>
@@ -218,6 +220,9 @@ Functions</h2></td></tr>
 <tr class="separator:ac3c1e20efa0c6b6851b58212318406ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00810ac2c7209e149e278ba6458b7cd3"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *this, char const *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>)</td></tr>
 <tr class="separator:a00810ac2c7209e149e278ba6458b7cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6005266522242b1dca06e38e39ea71a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#ac6005266522242b1dca06e38e39ea71a">get_dpi</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr)</td></tr>
+<tr class="memdesc:ac6005266522242b1dca06e38e39ea71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return number of dots per inch.  <a href="#ac6005266522242b1dca06e38e39ea71a">More...</a><br /></td></tr>
+<tr class="separator:ac6005266522242b1dca06e38e39ea71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45b6bbb18454dbae8d66a50ebe9a5ba4"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#a45b6bbb18454dbae8d66a50ebe9a5ba4">graphics_gtk_drawing_area_new</a> (struct <a class="el" href="structnavit.html">navit</a> *nav, struct <a class="el" href="structgraphics__methods.html">graphics_methods</a> *meth, struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>)</td></tr>
 <tr class="separator:a45b6bbb18454dbae8d66a50ebe9a5ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__gtk__drawing__area_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
@@ -836,6 +841,74 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="abede460fd607c07286fff792e1ca0696"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abede460fd607c07286fff792e1ca0696">&#9670;&nbsp;</a></span>draw_polygon_with_holes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void draw_polygon_with_holes </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *&#160;</td>
+          <td class="paramname"><em>gr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hole_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> **&#160;</td>
+          <td class="paramname"><em>holes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structgraphics__gc__priv.html#aecc41ff64327f4d255dac9eca2802153">graphics_gc_priv::c</a>, <a class="el" href="structgraphics__priv.html#a10e73366b0d18b13a1ebe48403b1de56">graphics_priv::cairo</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a35096c7d1039a575fb72c28dd804dd8d">set_drawing_color()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+</div>
+</div>
 <a id="a4267fcdc24196b92a1f2786683fbf743"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4267fcdc24196b92a1f2786683fbf743">&#9670;&nbsp;</a></span>draw_rectangle()</h2>
 
@@ -1387,6 +1460,43 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a32af90cf45b027c8b8faffb94cf2b8c4">keypress()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structgraphics__priv.html#ac200b36e2df5e0df1cc761f80d26b167">graphics_priv::win</a>, <a class="el" href="structgraphics__priv.html#a023d26f61e1bf219cbf9f36c92630dab">graphics_priv::win_h</a>, <a class="el" href="structgraphics__priv.html#a719a57de38f1a388c42f9764a5b09cfd">graphics_priv::win_w</a>, and <a class="el" href="structgraphics__priv.html#a044e53bbf81910beb227e2548ca6a0b7">graphics_priv::window_title</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#a7ba0a584d23c430361d52e445bfe21d3">set_attr()</a>.</p>
+
+</div>
+</div>
+<a id="ac6005266522242b1dca06e38e39ea71a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6005266522242b1dca06e38e39ea71a">&#9670;&nbsp;</a></span>get_dpi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> get_dpi </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *&#160;</td>
+          <td class="paramname"><em>gr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return number of dots per inch. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gr</td><td>self handle </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>dpi value </dd></dl>
+
+<p class="reference">References <a class="el" href="structgraphics__priv.html#a0f7bc0184ffe41fe21c7a00641e5d2df">graphics_priv::screen</a>, and <a class="el" href="structgraphics__priv.html#abd84eff402b35a8782ac8dd686531323">graphics_priv::widget</a>.</p>
 
 </div>
 </div>
@@ -2162,7 +2272,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structcolor.html#ada88c609a801744faf4f35601733f96f">color::a</a>, <a class="el" href="structcolor.html#af18acfb5e593334f215f2f9c391f25e7">color::b</a>, <a class="el" href="color_8h.html#aab9344602d772fec4ef162c7a450a368">COLOR_BITDEPTH</a>, <a class="el" href="structcolor.html#a7b23afbfdc39f8f97369aa0f9cdad48d">color::g</a>, and <a class="el" href="structcolor.html#adf42bf89ce203b7b9b3677bd6ae571d8">color::r</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6">expose()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#a73bfbbcd62d853c868830b81ae959efc">set_stroke_params_from_gc()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6">expose()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#a73bfbbcd62d853c868830b81ae959efc">set_stroke_params_from_gc()</a>.</p>
 
 </div>
 </div>
@@ -2293,25 +2403,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#af0284e13ff04d3d79092c2fdf352fab6">draw_circle</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a>,</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    NULL,</div><div class="line"></div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a7856f35830b1fa376059ebec6f7371cf">overlay_new</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a2c5bb31edbda349777e53025fb3df921">overlay_disable</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#ad552d3ea1d330a32db7e84ed800dadc4">overlay_resize</a>,</div><div class="line">    <a class="code" href="graphics__gtk__drawing__area_8c.html#a7ba0a584d23c430361d52e445bfe21d3">set_attr</a>,</div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">}</div><div class="ttc" id="graphics__gtk__drawing__area_8c_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:534</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_ae91386415b77840ccbc72f44e1e506f8"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:184</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:387</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:112</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:530</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:274</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_ad552d3ea1d330a32db7e84ed800dadc4"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad552d3ea1d330a32db7e84ed800dadc4">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:784</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a7856f35830b1fa376059ebec6f7371cf"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a7856f35830b1fa376059ebec6f7371cf">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:869</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_af0284e13ff04d3d79092c2fdf352fab6"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#af0284e13ff04d3d79092c2fdf352fab6">draw_circle</a></div><div class="ttdeci">static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:307</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a00810ac2c7209e149e278ba6458b7cd3"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, char const *type)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:933</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a7ba0a584d23c430361d52e445bfe21d3"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a7ba0a584d23c430361d52e445bfe21d3">set_attr</a></div><div class="ttdeci">static int set_attr(struct graphics_priv *gr, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:858</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a2c5bb31edbda349777e53025fb3df921"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a2c5bb31edbda349777e53025fb3df921">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disabled)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:773</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:520</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:296</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:362</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_ae4456740fdea7713830cce6af320e250"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:258</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_ae911ae167e5a0b90dda7215392ed91c5"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:165</div></div>
-<div class="ttc" id="graphics__gtk__drawing__area_8c_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_gtk_drawing_area.c:286</div></div>
-</div><!-- fragment -->
+
 <p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#a7ba878323e460951936aa2e0f6bbf186">graphics_gtk_drawing_area_new_helper()</a>.</p>
 
 </div>
