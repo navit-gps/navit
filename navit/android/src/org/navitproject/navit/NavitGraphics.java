@@ -101,8 +101,8 @@ public class NavitGraphics {
         }
     }
 
-    private void SetCamera(int use_camera) {
-        if (use_camera != 0 && mCamera == null) {
+    private void setCamera(int useCamera) {
+        if (useCamera != 0 && mCamera == null) {
             // mActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
             addCamera();
             addCameraView();
@@ -157,8 +157,8 @@ public class NavitGraphics {
     }
 
     private class NavitView extends View implements Runnable, MenuItem.OnMenuItemClickListener {
-        int               touch_mode = NONE;
-        float             oldDist    = 0;
+        int               mTouchMode = NONE;
+        float             mOldDist = 0;
         static final int  NONE       = 0;
         static final int  DRAG       = 1;
         static final int  ZOOM       = 2;
@@ -167,7 +167,7 @@ public class NavitGraphics {
         Method eventGetX = null;
         Method eventGetY = null;
 
-        PointF    mPressedPosition = null;
+        PointF mPressedPosition = null;
 
         public NavitView(Context context) {
             super(context);
@@ -175,7 +175,7 @@ public class NavitGraphics {
                 eventGetX = android.view.MotionEvent.class.getMethod("getX", int.class);
                 eventGetY = android.view.MotionEvent.class.getMethod("getY", int.class);
             } catch (Exception e) {
-                Log.e(TAG, "Multitouch zoom not supported");
+                Log.d(TAG, "Multitouch zoom not supported");
             }
         }
 
@@ -211,7 +211,7 @@ public class NavitGraphics {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
-                    Message msg = Message.obtain(mCallbackHandler, msg_type.CLB_SET_DISPLAY_DESTINATION.ordinal(),
+                    Message msg = Message.obtain(mCallbackHandler, msgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
                     break;
@@ -283,26 +283,26 @@ public class NavitGraphics {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
-            int _ACTION_POINTER_UP_ = getActionField("ACTION_POINTER_UP", event);
-            int _ACTION_POINTER_DOWN_ = getActionField("ACTION_POINTER_DOWN", event);
-            int _ACTION_MASK_ = getActionField("ACTION_MASK", event);
+            final int ACTION_POINTER_UP = getActionField("ACTION_POINTER_UP", event);
+            final int ACTION_POINTER_DOWN = getActionField("ACTION_POINTER_DOWN", event);
+            final int ACTION_MASK = getActionField("ACTION_MASK", event);
 
             int switch_value = event.getAction();
-            if (_ACTION_MASK_ != -999) {
-                switch_value = (event.getAction() & _ACTION_MASK_);
+            if (ACTION_MASK != -999) {
+                switch_value = (event.getAction() & ACTION_MASK);
             }
 
             if (switch_value == MotionEvent.ACTION_DOWN) {
-                touch_mode = PRESSED;
+                mTouchMode = PRESSED;
                 if (!mInMap) {
                     buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                 }
                 mPressedPosition = new PointF(x, y);
                 postDelayed(this, mTimeForLongPress);
-            } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == _ACTION_POINTER_UP_)) {
+            } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == ACTION_POINTER_UP)) {
                 Log.d(TAG, "ACTION_UP");
 
-                switch (touch_mode) {
+                switch (mTouchMode) {
                     case DRAG:
                         Log.d(TAG, "onTouch move");
 
@@ -314,7 +314,7 @@ public class NavitGraphics {
                         float newDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
                         float scale = 0;
                         if (newDist > 10f) {
-                            scale = newDist / oldDist;
+                            scale = newDist / mOldDist;
                         }
 
                         if (scale > 1.3) {
@@ -333,22 +333,22 @@ public class NavitGraphics {
 
                         break;
                 }
-                touch_mode = NONE;
+                mTouchMode = NONE;
             } else if (switch_value == MotionEvent.ACTION_MOVE) {
-                switch (touch_mode) {
+                switch (mTouchMode) {
                     case DRAG:
                         motionCallback(mMotionCallbackID, x, y);
                         break;
                     case ZOOM:
                         float newDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
-                        float scale = newDist / oldDist;
+                        float scale = newDist / mOldDist;
                         Log.d(TAG, "New scale = " + scale);
                         if (scale > 1.2) {
                             // zoom in
                             callbackMessageChannel(1, "");
-                            oldDist = newDist;
+                            mOldDist = newDist;
                         } else if (scale < 0.8) {
-                            oldDist = newDist;
+                            mOldDist = newDist;
                             // zoom out
                             callbackMessageChannel(2, "");
                         }
@@ -357,14 +357,14 @@ public class NavitGraphics {
                         Log.d(TAG, "Start drag mode");
                         if (spacing(mPressedPosition, new PointF(event.getX(), event.getY())) > 20f) {
                             buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
-                            touch_mode = DRAG;
+                            mTouchMode = DRAG;
                         }
                         break;
                 }
-            } else if (switch_value == _ACTION_POINTER_DOWN_) {
-                oldDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
-                if (oldDist > 2f) {
-                    touch_mode = ZOOM;
+            } else if (switch_value == ACTION_POINTER_DOWN) {
+                mOldDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
+                if (mOldDist > 2f) {
+                    mTouchMode = ZOOM;
                 }
             }
             return true;
@@ -589,9 +589,9 @@ public class NavitGraphics {
         }
 
         public void run() {
-            if (mInMap && touch_mode == PRESSED) {
+            if (mInMap && mTouchMode == PRESSED) {
                 do_longpress_action();
-                touch_mode = NONE;
+                mTouchMode = NONE;
             }
         }
 
@@ -606,13 +606,13 @@ public class NavitGraphics {
 
     }
 
-    public NavitGraphics(final Activity mActivity, NavitGraphics parent, int x, int y, int w, int h,
+    public NavitGraphics(final Activity activity, NavitGraphics parent, int x, int y, int w, int h,
                          int wraparound, int useCamera) {
         if (parent == null) {
             if (useCamera != 0) {
                 addCamera();
             }
-            setmActivity(mActivity);
+            setmActivity(activity);
         } else {
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mBitmapWidth = w;
@@ -627,15 +627,15 @@ public class NavitGraphics {
     }
 
     /**
-     * @brief Sets up the main mActivity.
+     * @brief Sets up the main view.
      *
-     * @param mActivity The main mActivity.
+     * @param activity The main activity.
      */
-    protected void setmActivity(final Activity mActivity) {
+    protected void setmActivity(final Activity activity) {
         if (Navit.graphics == null) {
             Navit.graphics = this;
         }
-        this.mActivity = (Navit) mActivity;
+        this.mActivity = (Navit) activity;
         mView = new NavitView(mActivity);
         mView.setClickable(false);
         mView.setFocusable(true);
@@ -667,12 +667,12 @@ public class NavitGraphics {
         mView.requestFocus();
     }
 
-    enum msg_type {
+    enum msgType {
         CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION,
         CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
     }
 
-    private static final msg_type[] msg_values = msg_type.values();
+    private static final msgType[] msg_values = msgType.values();
 
     public final Handler mCallbackHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -880,21 +880,21 @@ public class NavitGraphics {
                  * layoutlib/bridge/impl/RenderSessionImpl.java
                  */
                 Resources resources = mView.getResources();
-                int shid = resources.getIdentifier("status_bar_height", "dimen", "android");
-                int adhid = resources.getIdentifier("action_bar_default_height", "dimen", "android");
-                int nhid = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-                int nhlid = resources.getIdentifier("navigation_bar_height_landscape", "dimen", "android");
-                int nwid = resources.getIdentifier("navigation_bar_width", "dimen", "android");
-                int status_bar_height = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
-                int action_bar_default_height = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
-                int navigation_bar_height = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
-                int navigation_bar_height_landscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
-                int navigation_bar_width = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
+                int shid = resources.getIdentifier("statusBarHeight", "dimen", "android");
+                int adhid = resources.getIdentifier("actionBarDefaultHeight", "dimen", "android");
+                int nhid = resources.getIdentifier("navigationBarHeight", "dimen", "android");
+                int nhlid = resources.getIdentifier("navigationBarHeightLandscape", "dimen", "android");
+                int nwid = resources.getIdentifier("navigationBarWidth", "dimen", "android");
+                int statusBarHeight = (shid > 0) ? resources.getDimensionPixelSize(shid) : 0;
+                int actionBarDefaultHeight = (adhid > 0) ? resources.getDimensionPixelSize(adhid) : 0;
+                int navigationBarHeight = (nhid > 0) ? resources.getDimensionPixelSize(nhid) : 0;
+                int navigationBarHeightLandscape = (nhlid > 0) ? resources.getDimensionPixelSize(nhlid) : 0;
+                int navigationBarWidth = (nwid > 0) ? resources.getDimensionPixelSize(nwid) : 0;
                 Log.d(TAG, String.format(
-                        "status_bar_height=%d, action_bar_default_height=%d, navigation_bar_height=%d, "
-                                + "navigation_bar_height_landscape=%d, navigation_bar_width=%d",
-                                status_bar_height, action_bar_default_height, navigation_bar_height,
-                                navigation_bar_height_landscape, navigation_bar_width));
+                        "statusBarHeight=%d, actionBarDefaultHeight=%d, navigationBarHeight=%d, "
+                                + "navigationBarHeightLandscape=%d, navigationBarWidth=%d",
+                                statusBarHeight, actionBarDefaultHeight, navigationBarHeight,
+                                navigationBarHeightLandscape, navigationBarWidth));
 
                 if (mActivity == null) {
                     Log.w(TAG, "Main Activity is not a Navit instance, cannot update padding");
@@ -914,10 +914,10 @@ public class NavitGraphics {
                             isNavAtBottom, navit.getResources().getConfiguration().smallestScreenWidthDp, isLandscape));
 
                     mPaddingLeft = 0;
-                    mPaddingTop = isStatusShowing ? status_bar_height : 0;
-                    mPaddingRight = (isNavShowing && !isNavAtBottom) ? navigation_bar_width : 0;
+                    mPaddingTop = isStatusShowing ? statusBarHeight : 0;
+                    mPaddingRight = (isNavShowing && !isNavAtBottom) ? navigationBarWidth : 0;
                     mPaddingBottom = (!(isNavShowing && isNavAtBottom)) ? 0 : (
-                            isLandscape ? navigation_bar_height_landscape : navigation_bar_height);
+                            isLandscape ? navigationBarHeightLandscape : navigationBarHeight);
                 }
             } else {
                 /* API 18 and below does not support drawing under the system bars, padding is 0 all around */
@@ -980,16 +980,12 @@ public class NavitGraphics {
     public void setMotionCallback(long id) {
         mMotionCallbackID = id;
         if (mActivity != null) {
-            mActivity.setMotionCallback(id, this);
+            mActivity.setGraphics(this);
         }
     }
 
     public void setKeypressCallback(long id) {
         mKeypressCallbackID = id;
-        // set callback id also in main intent (for menus)
-        if (mActivity != null) {
-            mActivity.setKeypressCallback(id, this);
-        }
     }
 
 
