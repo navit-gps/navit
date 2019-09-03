@@ -615,7 +615,7 @@ public class Navit extends Activity {
                         b.putFloat("lat", lat);
                         b.putFloat("lon", lon);
                         Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
-                                NavitGraphics.msgType.CLB_SET_DESTINATION.ordinal());
+                                NavitGraphics.MsgType.CLB_SET_DESTINATION.ordinal());
 
                         msg.setData(b);
                         msg.sendToTarget();
@@ -703,14 +703,14 @@ public class Navit extends Activity {
             case 1 :
                 // zoom in
                 Message.obtain(mNavitGraphics.mCallbackHandler,
-                        NavitGraphics.msgType.CLB_ZOOM_IN.ordinal()).sendToTarget();
+                        NavitGraphics.MsgType.CLB_ZOOM_IN.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom in");
                 break;
             case 2 :
                 // zoom out
                 Message.obtain(mNavitGraphics.mCallbackHandler,
-                        NavitGraphics.msgType.CLB_ZOOM_OUT.ordinal()).sendToTarget();
+                        NavitGraphics.MsgType.CLB_ZOOM_OUT.ordinal()).sendToTarget();
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom out");
                 break;
@@ -722,20 +722,20 @@ public class Navit extends Activity {
             case 5 :
                 // toggle the normal POI layers and labels (to avoid double POIs)
                 Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
-                        NavitGraphics.msgType.CLB_CALL_CMD.ordinal());
+                        NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
                 Bundle b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Symbols\");");
                 msg.setData(b);
                 msg.sendToTarget();
 
-                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.msgType.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Labels\");");
                 msg.setData(b);
                 msg.sendToTarget();
 
                 // toggle full POI icons on/off
-                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.msgType.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(mNavitGraphics.mCallbackHandler, NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
                 msg.setData(b);
@@ -829,7 +829,7 @@ public class Navit extends Activity {
                 + address, Toast.LENGTH_LONG).show(); //TRANS
 
         Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
-                NavitGraphics.msgType.CLB_SET_DESTINATION.ordinal());
+                NavitGraphics.MsgType.CLB_SET_DESTINATION.ordinal());
         Bundle b = new Bundle();
         b.putFloat("lat", latitude);
         b.putFloat("lon", longitude);
@@ -855,7 +855,7 @@ public class Navit extends Activity {
                             Toast.LENGTH_LONG).show(); //TRANS
 
                     Message msg = Message.obtain(mNavitGraphics.mCallbackHandler,
-                            NavitGraphics.msgType.CLB_SET_DESTINATION.ordinal());
+                            NavitGraphics.MsgType.CLB_SET_DESTINATION.ordinal());
                     msg.setData(destination);
                     msg.sendToTarget();
                 }

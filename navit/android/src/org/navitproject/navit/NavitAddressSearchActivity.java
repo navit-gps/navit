@@ -78,7 +78,6 @@ public class NavitAddressSearchActivity extends Activity {
     private String             mCountry;
     private ImageButton        mCountryButton;
     private ProgressDialog mSearchResultsWait = null;
-    public RelativeLayout      NavitAddressSearchActivity_layout;
     private int mSearchResultsTowns = 0;
     private int mSearchResultsStreets = 0;
     private int mSearchResultsStreetsHn = 0;
@@ -105,17 +104,17 @@ public class NavitAddressSearchActivity extends Activity {
         // We have all images stored as drawable_nodpi resources which allows native code to manipulate them
         // without interference with android builtin choosing and scaling system. But that makes us to
         // reinvent the wheel here to show an image in android native interface.
-        int[] flag_icon_sizes = {24,32,48,64,96};
-        int exact_size, nearest_size;
-        exact_size = (int)(Navit.metrics.density * 24.0 - .5);
-        nearest_size = flag_icon_sizes[0];
-        for (int size: flag_icon_sizes) {
-            nearest_size = size;
-            if (exact_size <= size) {
+        int[] flagIconSizes = {24,32,48,64,96};
+        int exactSize, nearestSize;
+        exactSize = (int)(Navit.metrics.density * 24.0 - .5);
+        nearestSize = flagIconSizes[0];
+        for (int size: flagIconSizes) {
+            nearestSize = size;
+            if (exactSize <= size) {
                 break;
             }
         }
-        mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_" + nearest_size + "_" + nearest_size));
+        mCountryButton.setImageResource(getDrawableID("country_" + mCountry + "_" + nearestSize + "_" + nearestSize));
     }
 
 
@@ -125,10 +124,10 @@ public class NavitAddressSearchActivity extends Activity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String search_string = extras.getString(("search_string"));
-            if (search_string != null) {
+            String searchString = extras.getString(("search_string"));
+            if (searchString != null) {
                 mPartialSearch = true;
-                mAddressString = search_string;
+                mAddressString = searchString;
                 executeSearch();
                 return;
             }
@@ -149,9 +148,9 @@ public class NavitAddressSearchActivity extends Activity {
         if (mCountry == null) {
             Locale defaultLocale = Locale.getDefault();
             mCountry = defaultLocale.getCountry().toLowerCase(defaultLocale);
-            SharedPreferences.Editor edit_settings = settings.edit();
-            edit_settings.putString("DefaultCountry", mCountry);
-            edit_settings.apply();
+            SharedPreferences.Editor editSettings = settings.edit();
+            editSettings.putString("DefaultCountry", mCountry);
+            editSettings.apply();
         }
 
         mCountryButton = new ImageButton(this);
@@ -254,19 +253,19 @@ public class NavitAddressSearchActivity extends Activity {
 
         AlertDialog.Builder mapModeChooser = new AlertDialog.Builder(this);
         // ToDo also show icons and country code
-        String[] country_name = new String[all_countries.length];
+        String[] countryName = new String[all_countries.length];
 
-        for (int country_index = 0; country_index < all_countries.length; country_index++) {
-            country_name[country_index] = all_countries[country_index][1];
+        for (int countryIndex = 0; countryIndex < all_countries.length; countryIndex++) {
+            countryName[countryIndex] = all_countries[countryIndex][1];
         }
 
-        mapModeChooser.setItems(country_name, new DialogInterface.OnClickListener() {
+        mapModeChooser.setItems(countryName, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 SharedPreferences settings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
                 mCountry = all_countries[item][0];
-                SharedPreferences.Editor edit_settings = settings.edit();
-                edit_settings.putString("DefaultCountry", mCountry);
-                edit_settings.apply();
+                SharedPreferences.Editor editSettings = settings.edit();
+                editSettings.putString("DefaultCountry", mCountry);
+                editSettings.apply();
                 setCountryButtonImage();
             }
         });
@@ -346,7 +345,7 @@ public class NavitAddressSearchActivity extends Activity {
         mSearchResultsWait.dismiss();
     }
 
-    native long callbackStartAddressSearch(int partial_match, String country, String s);
+    native long callbackStartAddressSearch(int partialMatch, String country, String s);
 
     native void callbackCancelAddressSearch(long handle);
 

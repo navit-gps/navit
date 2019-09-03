@@ -28,7 +28,7 @@ public class NavitDialogs extends Handler {
     private static final int DIALOG_SELECT_BACKUP = 3;
     private static final int MSG_REMOVE_DIALOG_GENERIC = 99;
     private static Handler mHandler;
-    private final String TAG = this.getClass().getName();
+    private static final String TAG = "NavitDialogs";
     private ProgressDialog mMapdownloaderDialog = null;
     private NavitMapDownloader mMapdownloader = null;
     private final Navit mActivity;
@@ -62,13 +62,13 @@ public class NavitDialogs extends Handler {
                 mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
                 if (msg.getData().getInt("value1") == 1) {
                     Message msgOut = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                                NavitGraphics.msgType.CLB_LOAD_MAP.ordinal());
+                                NavitGraphics.MsgType.CLB_LOAD_MAP.ordinal());
                     msgOut.setData(msg.getData());
                     msgOut.sendToTarget();
 
                     msgOut = Message
                         .obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                                NavitGraphics.msgType.CLB_CALL_CMD.ordinal());
+                                NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
                     Bundle b = new Bundle();
                     int mi = msg.getData().getInt("value2");
                     double lon = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLon1) + Double

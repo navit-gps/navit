@@ -27,8 +27,8 @@ import android.util.Log;
 class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
 
     private final Navit mNavit;
-    private final int MY_DATA_CHECK_CODE = 1;
-    private final String TAG = this.getClass().getName();
+    private static final int MY_DATA_CHECK_CODE = 1;
+    private static final String TAG = "NavitSpeech2";
     private TextToSpeech mTts;
 
 

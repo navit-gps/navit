@@ -44,7 +44,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static ArrayList<HashMap<String, String>> downloaded_maps_childs = null;
     private static ArrayList<HashMap<String, String>> maps_current_position_childs = null;
     private static boolean currentLocationKnown = false;
-    private final String TAG = this.getClass().getName();
+    private static final String TAG = "DownloadSelectMapActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -235,7 +235,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Log.d(TAG, "Delete Map");
                         Message msg = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
-                                    NavitGraphics.msgType.CLB_DELETE_MAP.ordinal());
+                                    NavitGraphics.MsgType.CLB_DELETE_MAP.ordinal());
                         Bundle b = new Bundle();
                         b.putString("title", mapLocation);
                         msg.setData(b);

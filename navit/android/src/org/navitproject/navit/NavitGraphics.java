@@ -164,16 +164,16 @@ class NavitGraphics {
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
 
-        Method eventGetX = null;
-        Method eventGetY = null;
+        Method mEventGetX = null;
+        Method mEventGetY = null;
 
         PointF mPressedPosition = null;
 
         NavitView(Context context) {
             super(context);
             try {
-                eventGetX = android.view.MotionEvent.class.getMethod("getX", int.class);
-                eventGetY = android.view.MotionEvent.class.getMethod("getY", int.class);
+                mEventGetX = android.view.MotionEvent.class.getMethod("getX", int.class);
+                mEventGetY = android.view.MotionEvent.class.getMethod("getY", int.class);
             } catch (Exception e) {
                 Log.d(TAG, "Multitouch zoom not supported");
             }
@@ -211,7 +211,7 @@ class NavitGraphics {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case 1:
-                    Message msg = Message.obtain(mCallbackHandler, msgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
+                    Message msg = Message.obtain(mCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                             (int)mPressedPosition.x, (int)mPressedPosition.y);
                     msg.sendToTarget();
                     break;
@@ -262,18 +262,18 @@ class NavitGraphics {
         }
 
         private int getActionField(String fieldname, Object obj) {
-            int ret_value = -999;
+            int retValue = -999;
             try {
                 java.lang.reflect.Field field = android.view.MotionEvent.class.getField(fieldname);
                 try {
-                    ret_value = field.getInt(obj);
+                    retValue = field.getInt(obj);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } catch (NoSuchFieldException ex) {
                 ex.printStackTrace();
             }
-            return ret_value;
+            return retValue;
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -283,23 +283,23 @@ class NavitGraphics {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
-            final int ACTION_POINTER_UP = getActionField("ACTION_POINTER_UP", event);
-            final int ACTION_POINTER_DOWN = getActionField("ACTION_POINTER_DOWN", event);
-            final int ACTION_MASK = getActionField("ACTION_MASK", event);
+            final int actionPointerUp = getActionField("ACTION_POINTER_UP", event);
+            final int actionPointerDown = getActionField("ACTION_POINTER_DOWN", event);
+            final int actionMask = getActionField("ACTION_MASK", event);
 
-            int switch_value = event.getAction();
-            if (ACTION_MASK != -999) {
-                switch_value = (event.getAction() & ACTION_MASK);
+            int switchValue = event.getAction();
+            if (actionMask != -999) {
+                switchValue = (event.getAction() & actionMask);
             }
 
-            if (switch_value == MotionEvent.ACTION_DOWN) {
+            if (switchValue == MotionEvent.ACTION_DOWN) {
                 mTouchMode = PRESSED;
                 if (!mInMap) {
                     buttonCallback(mButtonCallbackID, 1, 1, x, y); // down
                 }
                 mPressedPosition = new PointF(x, y);
                 postDelayed(this, mTimeForLongPress);
-            } else if ((switch_value == MotionEvent.ACTION_UP) || (switch_value == ACTION_POINTER_UP)) {
+            } else if ((switchValue == MotionEvent.ACTION_UP) || (switchValue == actionPointerUp)) {
                 Log.d(TAG, "ACTION_UP");
 
                 switch (mTouchMode) {
@@ -334,7 +334,7 @@ class NavitGraphics {
                         break;
                 }
                 mTouchMode = NONE;
-            } else if (switch_value == MotionEvent.ACTION_MOVE) {
+            } else if (switchValue == MotionEvent.ACTION_MOVE) {
                 switch (mTouchMode) {
                     case DRAG:
                         motionCallback(mMotionCallbackID, x, y);
@@ -361,7 +361,7 @@ class NavitGraphics {
                         }
                         break;
                 }
-            } else if (switch_value == ACTION_POINTER_DOWN) {
+            } else if (switchValue == actionPointerDown) {
                 mOldDist = spacing(getFloatValue(event, 0), getFloatValue(event, 1));
                 if (mOldDist > 2f) {
                     mTouchMode = ZOOM;
@@ -379,10 +379,10 @@ class NavitGraphics {
         private PointF getFloatValue(Object instance, Object argument) {
             PointF pos = new PointF(0,0);
 
-            if (eventGetX != null && eventGetY != null) {
+            if (mEventGetX != null && mEventGetY != null) {
                 try {
-                    Float x = (java.lang.Float) eventGetX.invoke(instance, argument);
-                    Float y = (java.lang.Float) eventGetY.invoke(instance, argument);
+                    Float x = (java.lang.Float) mEventGetX.invoke(instance, argument);
+                    Float y = (java.lang.Float) mEventGetY.invoke(instance, argument);
                     pos.set(x, y);
 
                 } catch (Exception e) {
@@ -396,7 +396,7 @@ class NavitGraphics {
         public boolean onKeyDown(int keyCode, KeyEvent event) {
             int i;
             String s = null;
-            long interval_for_long_press = 200L;
+            long intervalForLongPress = 200L;
             i = event.getUnicodeChar();
             if (i == 0) {
                 switch (keyCode) {
@@ -406,7 +406,7 @@ class NavitGraphics {
                     case KeyEvent.KEYCODE_MENU:
                         if (!mInMap) {
                             // if last menukeypress is less than 0.2 seconds away then count longpress
-                            if ((System.currentTimeMillis() - Navit.last_pressed_menu_key) < interval_for_long_press) {
+                            if ((System.currentTimeMillis() - Navit.last_pressed_menu_key) < intervalForLongPress) {
                                 Navit.time_pressed_menu_key = Navit.time_pressed_menu_key
                                     + (System.currentTimeMillis() - Navit.last_pressed_menu_key);
                                 // on long press let softkeyboard popup
@@ -645,9 +645,7 @@ class NavitGraphics {
         mRelativeLayout.addView(mView);
 
         /* The navigational and status bar tinting code is meaningful only on API19+ */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
- //               && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O
-                       ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mFrameLayout = new FrameLayout(mActivity);
             mFrameLayout.addView(mRelativeLayout);
             mLeftTintView = new SystemBarTintView(mActivity);
@@ -666,12 +664,12 @@ class NavitGraphics {
         mView.requestFocus();
     }
 
-    enum msgType {
+    enum MsgType {
         CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION,
         CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
     }
 
-    private static final msgType[] msg_values = msgType.values();
+    private static final MsgType[] msg_values = MsgType.values();
 
     final Handler mCallbackHandler = new Handler() {
         public void handleMessage(Message msg) {
