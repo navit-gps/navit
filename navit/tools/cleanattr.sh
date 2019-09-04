@@ -20,8 +20,8 @@ if [ -f $TMPFILE ] ; then
 		exit 1;
 fi
 
-touch $TMPFILE
-if [ $? -ne 0 ] ; then
+if ! touch $TMPFILE
+then
 		echo "Could not write to temporary file $TEMPFILE."
 		echo "Please make sure you have write access to the temporary directory."
 		exit 1;
@@ -35,9 +35,8 @@ cp $ATTRFILE $TMPFILE
 for ATTRNAME in $ATTRLIST ; do
 		ATTR="attr_$ATTRNAME"
 
-		grep -rI $ATTR ./* > /dev/null
-
-		if [ $? -ne 0 ] ; then
+		if ! grep -rI $ATTR ./* > /dev/null
+		then
 				echo "Unused attribute: $ATTR"
 				grep -v "ATTR($ATTRNAME)" $TMPFILE > $TMPFILE2
 				mv $TMPFILE2 $TMPFILE
