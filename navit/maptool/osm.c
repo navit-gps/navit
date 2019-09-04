@@ -216,7 +216,7 @@ struct country_table {
     { 191,"Croatia,Republika Hrvatska,HR"},
     { 192,"Cuba"},
     { 196,"Cyprus"},
-    { 203,"Czech Republic,Česká republika,CZ"},
+    { 203,"Czech Republic,Česká republika,CZ","345cm8"},
     { 204,"Benin"},
     { 208,"Denmark,Danmark,DK"},
     { 212,"Dominica"},
