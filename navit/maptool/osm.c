@@ -242,7 +242,7 @@ struct country_table {
     { 268,"Georgia"},
     { 270,"Gambia"},
     { 275,"Palestinian Territory, Occupied"},
-    { 276,"Germany,Deutschland,Bundesrepublik Deutschland","345c7M"},
+    { 276,"Germany,Deutschland,Bundesrepublik Deutschland","3s5c7M"},
     { 288,"Ghana"},
     { 292,"Gibraltar"},
     { 296,"Kiribati"},
