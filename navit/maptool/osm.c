@@ -170,7 +170,7 @@ struct country_table {
     { 31,"Azerbaijan"},
     { 32,"Argentina,República Argentina,AR "},
     { 36,"Australia,AUS"},
-    { 40,"Austria,Österreich,AUT"},
+    { 40,"Austria,Österreich,AUT","3s5c78"},
     { 44,"Bahamas"},
     { 48,"Bahrain"},
     { 50,"Bangladesh"},
