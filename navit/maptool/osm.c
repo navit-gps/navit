@@ -1585,6 +1585,7 @@ int boundary;
 void osm_add_relation(osmid id) {
     osmid_attr_value=id;
     in_relation=1;
+    attr_strings_clear();
     debug_attr_buffer[0]='\0';
     relation_type[0]='\0';
     iso_code[0]='\0';
@@ -1624,21 +1625,40 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
+static inline void osm_end_relation_multipolygon (struct maptool_osm * osm, enum item_type* type) {
+    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, type, 1)) {
+            tmp_item_bin->type = *type;
+        } else {
+            *type=type_none;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=*type;
+        }
+        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+        item_bin_write(tmp_item_bin, osm->multipolygons);
+    } else {
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, type, 1)) {
+            tmp_item_bin->type=*type;
+        } else {
+            *type=type_none;
+            /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
+             * indicating the turn restrictions */
+            //tmp_item_bin->type=*type;
+        }
+        if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
+                && (boundary || *type!=type_none)) {
+            item_bin_write(tmp_item_bin, osm->boundaries);
+        }
+    }
+}
 
 void osm_end_relation(struct maptool_osm *osm) {
     enum item_type type;
 
     in_relation=0;
-
-    if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
-        tmp_item_bin->type=type;
-    } else
-        type=type_none;
-
-    if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-            && (boundary || type!=type_none)) {
-        item_bin_write(tmp_item_bin, osm->boundaries);
-    }
+    /* sets tmp_item_bin type and other fields */
+    osm_end_relation_multipolygon (osm, &type);
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
@@ -1682,6 +1702,8 @@ static void relation_add_tag(char *k, char *v) {
         }
     } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
+    } else if (! g_strcmp0(k,"name")) {
+        attr_strings_save(attr_string_label, v);
     }
     if (add_tag) {
         char *tag;
@@ -1754,8 +1776,6 @@ void osm_end_way(struct maptool_osm *osm) {
     for (i = 0 ; i < count ; i++) {
         add_flags=0;
         if (types[i] == type_none)
-            continue;
-        if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
             continue;
         if (types[i] != type_street_unkn) {
             if(types[i]<type_area)
@@ -1845,8 +1865,6 @@ void osm_end_node(struct maptool_osm *osm) {
     }
     for (i = 0 ; i < count ; i++) {
         if (types[i] == type_none)
-            continue;
-        if (ignore_unknown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
             continue;
         item_bin=init_item(types[i]);
         if (item_is_town(*item_bin) && attr_strings[attr_string_population])
@@ -2054,6 +2072,7 @@ static void osm_process_town_by_boundary_update_attrs(struct item_bin *town, str
             case 'M':
                 /* Here we patch the boundary itself to convert it to town polygon later*/
                 b->ib->type=type_poly_place6;
+            /*fall through*/
             case 'm':
                 attr_type=attr_municipality_name;
                 break;
@@ -2657,6 +2676,598 @@ void process_house_number_interpolations(FILE *in, struct files_relation_process
     relations_destroy(relations);
     g_list_foreach(fp.allocations, (GFunc)free, NULL);
     g_list_free(fp.allocations);
+}
+
+struct multipolygon {
+    osmid relid;
+    struct item_bin * rel;
+    int inner_count;
+    int outer_count;
+    struct item_bin ** inner;
+    struct item_bin ** outer;
+};
+
+/**
+ * @brief find the nect matching polygon segment
+ * This can be used to find the next matching "line" to form a polygon.
+ * @param part current line part
+ * @param part_used how this part was used
+ * @param in_count number of lines passed in parts
+ * @parts array of item_bin pointers giving the single parts
+ * @parts used int array, one for each part, indicating wheather the part was already used. This
+ *        function sets the usage for the mathcing part if one is found. Usage is 0: not used,
+ *        1: used forward 2: used reverse
+ * @returns: index of matching part, -1 if none matches or all are consumed already.
+ */
+static int  process_multipolygons_find_match(struct item_bin* part,int part_used, int in_count, struct item_bin **parts,
+        int*used) {
+    int i;
+    struct coord * coord;
+    /*get the actual ending coordinate of the sequence*/
+    coord=(struct coord *)(part +1);
+    if(part_used == 1) {
+        /* was a standard match. Need last coordinate */
+        coord+=(part->clen / 2) - 1;
+    }
+    for(i=0; i < in_count; i ++) {
+        if(!used[i]) {
+            int have_match = 0;
+            struct coord *try_first, *try_last;
+
+            if(parts[i]->clen < 2) {
+                //fprintf(stderr,"skipping single point");
+                used[i] = 1;
+                continue;
+            }
+
+            try_first=(struct coord *)(parts[i] +1);
+            try_last=(struct coord *)(parts[i] +1);
+            try_last+=(parts[i]->clen / 2) - 1;
+            //fprintf(stderr, "0x%x,0x%x try_first[%d] 0x%x,0x%x try_last[%d] 0x%x,0x%x\n",coord->x, coord->y,i,try_first->x,
+            //        try_first->y, i, try_last->x,
+            //        try_last->y);
+
+            if((coord->x == try_first->x) && (coord->y == try_first->y)) {
+                /* forward match */
+                have_match=1;
+            } else if((coord->x == try_last->x) && (coord->y == try_last->y)) {
+                /* reverse match */
+                have_match=2;
+            }
+            /* add match to sequence */
+            if(have_match) {
+                used[i]=have_match;
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+static int is_loop (struct item_bin * start_part, int start_used, struct item_bin * end_part, int end_used) {
+    struct coord *first, *last;
+    /*get the actual starting coordinate of the sequence*/
+    first=(struct coord *)(start_part +1);
+    if(start_used != 1) {
+        /* was a reverse match. Need first coordinate */
+        first+=(start_part->clen / 2) - 1;
+    }
+
+    /*get the actual ending coordinate of the sequence*/
+    last=(struct coord *)(end_part +1);
+    if(end_used == 1) {
+        /* was a standard match. Need last coordinate */
+        last+=(end_part->clen / 2) - 1;
+    }
+    if((first->x == last->x) && (first->y == last->y))
+        return 1;
+    return 0;
+}
+
+static int process_multipolygons_find_loop(int in_count, struct item_bin ** parts, int* sequence, int * used) {
+    int a;
+    int sequence_count=0;
+    /* assume we already have the sequence array*/
+
+    /* to start find a unused part */
+    for(a=0; a < in_count; a ++) {
+        if(!used[a])
+            break;
+    }
+    if(!(a < in_count)) {
+        /* got no unused part. indicate no more loops possible */
+        return -1;
+    }
+    /* consume this part */
+    used[a] = 1;
+    sequence[sequence_count]=a;
+    sequence_count ++;
+
+    /* check all parts until no more matches, or a loop is found */
+    while(!is_loop (parts[sequence[0]], used[sequence[0]], parts[sequence[sequence_count-1]],
+                    used[sequence[sequence_count-1]])) {
+        int match;
+        /* get new mathching part */
+        match=process_multipolygons_find_match(parts[sequence[sequence_count-1]],used[sequence[sequence_count-1]], in_count,
+                                               parts, used);
+        if(match >= 0) {
+            sequence[sequence_count]=match;
+            sequence_count ++;
+        } else {
+            break;
+        }
+    }
+
+    /* check if this is a loop already */
+    if(is_loop (parts[sequence[0]], used[sequence[0]], parts[sequence[sequence_count-1]], used[sequence[sequence_count-1]]))
+        return sequence_count;
+    else
+        return 0;
+}
+
+static int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+        int *** sequences,
+        int **direction) {
+    int done=0;
+    int loop_count=0;
+    int *used;
+    if((in_count == 0) || (parts == NULL) || (sequences == NULL) || (scount == NULL))
+        return 0;
+    //fprintf(stderr,"find loops in %d parts\n",in_count);
+    /* start with nothing */
+    *sequences = NULL;
+    *scount = NULL;
+    *direction = NULL;
+    /* allocate the usage and direction array.*/
+    used=g_malloc0(in_count * sizeof(int));
+    do {
+        int sequence_count;
+        int * sequence = g_malloc0(in_count * sizeof(int));
+        sequence_count = process_multipolygons_find_loop(in_count, parts, sequence,  used);
+        if(sequence_count < 0) {
+            done = 1;
+        } else if(sequence_count == 0) {
+            osm_warning("relation",relid,0,"multipolygon: skipping non loop sequence\n");
+            /* skip empty sequence */
+            g_free(sequence);
+        } else {
+            /* increase space for sequences */
+            (*scount)=(int*) g_realloc((*scount), (loop_count +1) * sizeof(int));
+            (*sequences)=(int**) g_realloc((*sequences), (loop_count +1) * sizeof(int*));
+            /* hook it in */
+            (*scount)[loop_count] = sequence_count;
+            (*sequences)[loop_count] = sequence;
+            loop_count ++;
+        }
+    } while (!done);
+    //fprintf(stderr,"found %d loops\n", loop_count);
+    *direction = used;
+    return loop_count;
+}
+
+static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+        struct coord *  buffer) {
+    int points = 0;
+    int a;
+
+    if((bin == NULL) || (scount <= 0) || (sequence == NULL))
+        return 0;
+
+    for(a=0; a < scount; a++) {
+        int pcount;
+        struct coord * c;
+        c= (struct coord *) (bin[sequence[a]] + 1);
+        pcount= bin[sequence[a]]->clen / 2;
+
+        /* remove the duplicate point if not the first one */
+        if(a!=0)
+            pcount --;
+        if((buffer != NULL) && (direction !=NULL)) {
+            if(direction[sequence[a]] == 1) {
+                memcpy(&(buffer[points]), c, pcount * sizeof(struct coord));
+            } else {
+                int b;
+                struct coord * target = &(buffer[points]);
+                //fprintf(stderr,"R:");
+                for (b=0; b < pcount; b ++) {
+                    target[b] = c[(bin[sequence[a]]->clen / 2) - b -1];
+                }
+            }
+        }
+        //if(buffer !=NULL) {
+        //    fprintf(stderr, "%d (%x, %x)-%d-(%x, %x)\n",sequence[a],  buffer[points].x, buffer[points].y, pcount, buffer[points+pcount-1].x, buffer[points+pcount-1].y);
+        //}
+        points += pcount;
+    }
+    return points;
+}
+
+/**
+ * @brief get number of coordinates inside a sequence calculated by process_multipolygon_find_loop
+ *
+ * @param bin the array of all raw members of this multipolygon
+ * @param scount number of members inside this sequence
+ * @param sequence sequence calculated by process_multipolygon_find_loop
+ * @returns number of coords
+ */
+static int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
+    return process_multipolygons_loop_dump(bin,scount,sequence,NULL,NULL);
+}
+
+static inline void dump_sequence(const char * string, int loop_count, int*scount, int**sequences, int*direction) {
+#if 0
+    int i;
+    int j;
+    for(j=0; j<loop_count; j++) {
+        fprintf(stderr,"loop %s :",string);
+        for(i=0; i < scount[j]; i ++) {
+            fprintf(stderr, "%s", (direction[sequences[j][i]]== 1)? "":"R");
+            fprintf(stderr, "%d ", sequences[j][i]);
+        }
+        fprintf(stderr, "\n");
+    }
+#endif
+}
+
+static void process_multipolygons_finish(GList *tr, FILE *out) {
+    GList *l=tr;
+    //fprintf(stderr,"process_multipolygons_finish\n");
+    while(l) {
+        int a;
+        int b;
+        struct multipolygon *multipolygon=l->data;
+        int inner_loop_count=0;
+        int *inner_scount=NULL;
+        int *inner_direction=NULL;
+        int **inner_sequences=NULL;
+        int outer_loop_count=0;
+        int *outer_scount=NULL;
+        int *outer_direction=NULL;
+        int **outer_sequences=NULL;
+        /* combine outer to full loops */
+        outer_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->outer_count,multipolygon->outer,
+                           &outer_scount,
+                           &outer_sequences, &outer_direction);
+
+        /* combine inner to full loops */
+        inner_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->inner_count,multipolygon->inner,
+                           &inner_scount,
+                           &inner_sequences, &inner_direction);
+
+        dump_sequence("outer",outer_loop_count, outer_scount, outer_sequences, outer_direction);
+        dump_sequence("inner",inner_loop_count, inner_scount, inner_sequences, inner_direction);
+
+
+        for(b=0; b<outer_loop_count; b++) {
+            struct rect outer_bbox;
+            /* write out */
+            struct item_bin* ib=tmp_item_bin;
+            int outer_length;
+            struct coord * outer_buffer;
+            if(outer_loop_count == 0) {
+                fprintf(stderr,"unresolved outer  %lld\n", multipolygon->relid);
+                /* seems this polygons "outer" could not be resolved. Skip it */
+                l = g_list_next(l);
+                continue;
+            }
+            //long long relid=item_bin_get_relationid(multipolygon->rel);
+            //fprintf(stderr,"process %lld\n", relid);
+            outer_length = process_multipolygons_loop_count(multipolygon->outer, outer_scount[b],
+                           outer_sequences[b]) * sizeof(struct coord);
+            outer_buffer = (struct coord *) g_malloc0(outer_length);
+            outer_length = process_multipolygons_loop_dump(multipolygon->outer, outer_scount[b], outer_sequences[b],
+                           outer_direction, outer_buffer);
+            item_bin_init(ib,multipolygon->rel->type);
+            item_bin_add_coord(ib, outer_buffer, outer_length);
+            g_free(outer_buffer);
+            item_bin_copy_attr(ib,multipolygon->rel,attr_osm_relationid);
+            item_bin_copy_attr(ib,multipolygon->rel,attr_label);
+            /*calculate bbox*/
+            bbox((struct coord*)(ib +1), (ib->clen/2), &outer_bbox);
+
+            for(a = 0; a < inner_loop_count; a ++) {
+                int d;
+                int hole_len;
+                char * buffer;
+                int used =0;
+                int inner_len =0;
+                int inside = 0;
+                struct coord *hole_coord;
+                hole_len = process_multipolygons_loop_count(multipolygon->inner, inner_scount[a], inner_sequences[a]);
+                inner_len = (hole_len * sizeof(struct coord));
+                inner_len+=4;
+                buffer=g_malloc0(inner_len);
+                memcpy(&(buffer[used]), &(hole_len), sizeof(int));
+                used += sizeof(int);
+                hole_coord = (struct coord*) &(buffer[used]);
+                used += process_multipolygons_loop_dump(multipolygon->inner, inner_scount[a], inner_sequences[a], inner_direction,
+                                                        (struct coord *)&(buffer[used])) * sizeof(struct coord);
+                /* check if at least one point is inside the outer */
+                for(d=0; d < hole_len; d++)
+                    if(bbox_contains_coord(&outer_bbox,hole_coord))
+                        inside=1;
+
+                if(inside)
+                    item_bin_add_attr_data(ib, attr_poly_hole, buffer, inner_len);
+                g_free(buffer);
+            }
+            item_bin_write(ib, out);
+        }
+        /* just for fun...*/
+        processed_relations ++;
+        /* clean up the sequences */
+        for(a=0; a < outer_loop_count; a ++)
+            g_free (outer_sequences[a]);
+        g_free(outer_sequences);
+        g_free(outer_scount);
+        g_free(outer_direction);
+        for(a=0; a < inner_loop_count; a ++)
+            g_free (inner_sequences[a]);
+        g_free(inner_sequences);
+        g_free(inner_scount);
+        g_free(inner_direction);
+        /* clean up this item */
+        for (a=0; a < multipolygon->inner_count; a ++)
+            g_free(multipolygon->inner[a]);
+        g_free(multipolygon->inner);
+        for (a=0; a < multipolygon->outer_count; a ++)
+            g_free(multipolygon->outer[a]);
+        g_free(multipolygon->outer);
+        g_free(multipolygon->rel);
+        g_free(multipolygon);
+        /* next item */
+        l = g_list_next(l);
+    }
+    /* done with that list. All items referred should be deleted already. */
+    g_list_free(tr);
+}
+
+static void process_multipolygons_member(void *func_priv, void *relation_priv, struct item_bin *member,
+        void *member_priv) {
+    int type=(long)member_priv;
+    int * dup;
+    struct multipolygon *multipolygon=relation_priv;
+    dup=item_bin_get_attr(member,attr_duplicate,NULL);
+    if(dup != NULL) {
+        //fprintf(stderr,"skip duplicate \n");
+        return;
+    }
+    //fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
+    //        (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
+    /* we remeber the whole binary item, as we may want to have the attributes later on finalize */
+    if(type) {
+        /* copy the member as inner */
+        multipolygon->inner=(struct item_bin**) g_realloc(multipolygon->inner,
+                            sizeof(struct item_bin *) * (multipolygon->inner_count +1));
+        multipolygon->inner[multipolygon->inner_count]=item_bin_dup(member);
+        multipolygon->inner_count ++;
+    } else {
+        /* copy the member as outer */
+        multipolygon->outer=(struct item_bin**) g_realloc(multipolygon->outer,
+                            sizeof(struct item_bin *) * (multipolygon->outer_count +1));
+        multipolygon->outer[multipolygon->outer_count]=item_bin_dup(member);
+        multipolygon->outer_count ++;
+    }
+    processed_ways ++;
+}
+
+/**
+ * @brief prepare one multipolygon relation for relattion processing
+ *
+ * @param ib the relation
+ * @param relations the relation processing structure
+ * @param relations_func function to use for the members
+ * @param multipolygons write the resulting multipolygons to the list
+ */
+static void process_multipolygons_setup_one(struct item_bin * ib, struct relations * relations,
+        struct relations_func * relations_func, GList ** multipolygons) {
+    if(ib != NULL) {
+        struct relation_member *outer=NULL;
+        int outer_count=0;
+        struct relation_member *inner=NULL;;
+        int inner_count=0;
+        long long relid;
+        int a;
+        int min_count;
+        struct multipolygon *p_multipolygon;
+        relid=item_bin_get_relationid(ib);
+        min_count=0;
+        /* allocate a slot for inner and outer */
+        outer = g_malloc0(sizeof(struct relation_member));
+        inner = g_malloc0(sizeof(struct relation_member));
+        while(search_relation_member(ib, "outer",&(outer[outer_count]),&min_count)) {
+            if(outer[outer_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member\n");
+            outer_count ++;
+            /*realloc outer to make space for next */
+            outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
+        }
+        min_count=0;
+        while(search_relation_member(ib, "inner",&(inner[inner_count]),&min_count)) {
+            if(inner[inner_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for inner member\n");
+            inner_count ++;
+            /*realloc inner to make space for next */
+            inner = g_realloc(inner, sizeof(struct relation_member) * (inner_count +1));
+        }
+        //fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
+        if(outer_count == 0) {
+            osm_warning("relation",relid,0,"multipolygon: missing outer member\n");
+        } else {
+            p_multipolygon=g_new0(struct multipolygon, 1);
+            p_multipolygon->relid=relid;
+            p_multipolygon->rel=item_bin_dup(ib);
+            for (a = 0; a < outer_count; a ++)
+                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 0, outer[a].type,
+                                                    outer[a].id);
+            for (a = 0; a < inner_count; a ++)
+                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer) 1, inner[a].type,
+                                                    inner[a].id);
+            *multipolygons=g_list_append(*multipolygons, p_multipolygon);
+        }
+        /* clean up*/
+        g_free(inner);
+        g_free(outer);
+    }
+}
+
+/**
+ * @brief worker thread private storage
+ */
+struct process_multipolygon_setup_thread {
+    int number;
+    GAsyncQueue * queue;
+    struct relations * relations;
+    struct relations_func * relations_func;
+    GList* multipolygons;
+    GThread * thread;
+};
+
+/**
+ * @brief dummy memory location to pass a end condition to worker threads, as NULL cannot be passed.
+ */
+static struct item_bin killer;
+
+/**
+ * @brief multipolygons setup worker thread.
+ *
+ * This thread processes any item passed to it via async queue into it's local relations
+ * function.
+ * @param data this threads local storage
+ */
+static gpointer process_multipolygons_setup_worker (gpointer data) {
+    struct item_bin * ib;
+    //long long relid;
+    struct process_multipolygon_setup_thread * me = (struct process_multipolygon_setup_thread*) data;
+    fprintf(stderr,"worker %d up\n", me->number);
+    while((ib=g_async_queue_pop (me->queue)) != &killer) {
+        processed_relations ++;
+        //relid=item_bin_get_relationid(ib);
+        //fprintf(stderr,"worker %d processing %lld\n", me->number, relid);
+        process_multipolygons_setup_one(ib, me->relations, me->relations_func, &(me->multipolygons));
+        /* done with that. Free the item_bin */
+        g_free(ib);
+    }
+    fprintf(stderr,"worker %d exit\n", me->number);
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+/**
+ * @brief prepare multipolygon way matching
+ *
+ * This function reads all multipolygon relations and prepares relations structures
+ * for later way matching. Since this scales quite ugly, (O^3) i think, we use multiple threads
+ * creating their own hash each. This way none of the hashes get's that big, and we can utilize
+ * more cpu power.
+ *
+ * @param in file containing the relations
+ * @param thread_count number of threads to use
+ * @param relations array of preallocated relations structures. One per thread.
+ *
+ * @returns array of GLists. One per thread containing the resulting structures.
+ */
+static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct relations **relations) {
+    struct process_multipolygon_setup_thread *sthread;
+
+    struct item_bin *ib;
+    struct relations_func *relations_func;
+    int i;
+    GList **multipolygons=NULL;
+    /* allocate and reference async queue */
+    GAsyncQueue * ib_queue=g_async_queue_new ();
+    g_async_queue_ref(ib_queue);
+    /* allocate per thread storage */
+    sthread=g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
+
+    fseek(in, 0, SEEK_SET);
+    relations_func=relations_func_new(process_multipolygons_member, NULL);
+
+    /* start the threads */
+    for(i=0; i < thread_count; i ++) {
+        sthread[i].number = i;
+        sthread[i].queue = ib_queue;
+        sthread[i].relations_func = relations_func;
+        sthread[i].relations = relations[i];
+        sthread[i].multipolygons = NULL;
+        sthread[i].thread = g_thread_new ("process_multipolygons_setup_worker", process_multipolygons_setup_worker,
+                                          &(sthread[i]));
+    }
+
+    while ((ib=read_item(in))) {
+        /* get a duplicate of the returned item, as the one returned shares buffer */
+        struct item_bin * dup = item_bin_dup(ib);
+        //long long relid;
+        //relid=item_bin_get_relationid(dup);
+        //fprintf(stderr,"Pushing %lld\n", relid);
+        /* the dup's will be freed by the thread processing them*/
+        g_async_queue_push(ib_queue,dup);
+        /* limit queue size. This is ugly, but since GAsyncQueue doesn't support
+         * push to block when the queue reached a decent size, I help myself
+         * with this ugly hack */
+        while(g_async_queue_length(ib_queue) > 1000)
+            usleep(200);
+    }
+
+    /* stop iand join all remaining threads */
+    for(i = 0; i < thread_count; i ++)
+        g_async_queue_push(ib_queue,&killer);
+    for(i=0; i < thread_count; i ++)
+        g_thread_join(sthread[i].thread);
+
+    /* rescue the resulting glist */
+    multipolygons = g_malloc0(sizeof(GList *) * thread_count);
+    for(i =0; i < thread_count; i ++)
+        multipolygons[i]=sthread[i].multipolygons;
+
+    /* free the thread storage */
+    g_free(sthread);
+
+    /* release the queue */
+    g_async_queue_unref(ib_queue);
+
+    /* return the list of multipolygons */
+    return multipolygons;
+}
+
+void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
+    /* thread count is from maptool.c as commandline parameter */
+    int i;
+    struct relations **relations;
+    GList **multipolygons = NULL;
+    sig_alrm(0);
+
+    relations = g_malloc0(sizeof(struct relations *) * thread_count);
+    for(i=0; i < thread_count; i ++)
+        relations[i] = relations_new();
+    fseek(in, 0, SEEK_SET);
+    fprintf(stderr,"process_multipolygons:setup (threads %d)\n", thread_count);
+    multipolygons=process_multipolygons_setup(in,thread_count,relations);
+    /* Here we get an array of resulting relations structures and resultin
+     * GLists.
+     * Of course we need to iterate the ways multiple times, but that's fast
+     * compared to hashing the relations structures
+     * This even saves a lot of main memory, as we can process every result from
+     * every thread at once completely. Since we know it's self containing
+     */
+    sig_alrm(0);
+    processed_relations=0;
+    processed_ways=0;
+    sig_alrm(0);
+    for( i=0; i < thread_count; i ++) {
+        if(coords)
+            fseek(coords, 0,SEEK_SET);
+        if(ways)
+            fseek(ways, 0,SEEK_SET);
+        fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
+        relations_process(relations[i], coords, ways);
+        fprintf(stderr,"process_multipolygons:finish (thread %d)\n", i);
+        process_multipolygons_finish(multipolygons[i], out);
+        relations_destroy(relations[i]);
+    }
+    g_free(relations);
+    sig_alrm(0);
+    sig_alrm_end();
 }
 
 struct turn_restriction {
