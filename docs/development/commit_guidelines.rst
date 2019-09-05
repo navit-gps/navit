@@ -52,3 +52,65 @@ The comment part is optional. Useful for when applying a patch for example, and 
 The part after `|` will not appear in the wiki.
 
 About the log message, it's up to you :)
+
+Commit tips and tricks
+======================
+
+There are a few tricks that you can use to make your life easier.
+
+Git hook: commit-msg
+--------------------
+
+You can use the following git hook to automatically skip the run of the CI when you are making modifications to
+documentation. To use that hook put the following code in the `.git/hooks/commit-msg` file (you will need to have python
+installed to have this hook working) and make it executable.
+
+.. code-block:: python
+    #!/usr/bin/env python
+
+    import sys
+    import os
+    import subprocess
+    import re
+
+
+    def replace_commit_msg(message):
+        '''
+        Replaces the commit message (which is an array of lines) with the given one.
+        '''
+        with open(sys.argv[1], 'w') as f:
+            f.writelines(message)
+
+    def get_commit_msg():
+        '''
+        commit-msg receives 1 argument which is a temp file where the commit
+        message is stored. This function pulls the commit msg.
+        '''
+        with open(sys.argv[1], 'r') as f:
+            return f.readlines()
+
+
+    if __name__ == '__main__':
+        # List of files about to be comitted
+        files = subprocess.check_output(['git', 'diff', '--name-only', '--staged']).decode('utf-8').splitlines()
+
+        # file patterns we want to skip
+        skip = re.compile(r'^docs/|^CHANGELOG.md$|^CONTRIBUTING.md$|^AUTHORS$|^README.md$|^COPYING$|^COPYRIGHT$|^GPL-2$|^LGPL-2$')
+
+        for item in files:
+            match = skip.match(item)
+            # Delete files that match the current skip pattern
+            if match is not None:
+                files.remove(item)
+
+        # Add "[skip ci]" at the end of the commit message if all files match the pattern
+        if len(files) == 0:
+            msg = get_commit_msg()
+            msg[0] = msg[0].rstrip() + ' [skip ci]'+ os.linesep
+            replace_commit_msg(msg)
+
+        sys.exit(0)
+
+This will add the sentence ` [skip ci]` automatically at the end of your commit message if all the files you commit are
+documentation from the `docs` folder or some other well known documentation that don't need to run through the CI
+process as not affecting the build.
