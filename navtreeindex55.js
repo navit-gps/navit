@@ -1,5 +1,10 @@
 var NAVTREEINDEX55 =
 {
+"win32__gui__destination_8c.html#a21ea949671142e99a8d5f1781db0f92a":[3,0,6,4,4,8],
+"win32__gui__destination_8c.html#a3d41a47376984ae71ee388a1bf97fd8b":[3,0,6,4,4,6],
+"win32__gui__destination_8c.html#a71007378da47c820335f70c780653f76":[3,0,6,4,4,3],
+"win32__gui__destination_8c.html#a8e10d796ca2d5a52e7102c8b34ba1c92":[3,0,6,4,4,7],
+"win32__gui__destination_8c.html#a98d6a1f7f6e5b812123847ce98f2c5e8":[3,0,6,4,4,1],
 "win32__gui__destination_8c.html#a9abee0ab0b9315cad04c652f4db76cc7":[3,0,6,4,4,9],
 "win32__gui__destination_8c.html#acad5e0636a2fcd5eaec6d9757bfe0789":[3,0,6,4,4,5],
 "win32__gui__destination_8c.html#afdf67bb86fe10a74f84204b367eb0110":[3,0,6,4,4,4],

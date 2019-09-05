@@ -151,6 +151,8 @@ Functions</h2></td></tr>
 <tr class="separator:ae91386415b77840ccbc72f44e1e506f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2afce253f32a887536fee776d8290b2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__sdl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__image__priv.html">graphics_image_priv</a> *gi)</td></tr>
 <tr class="separator:aa2afce253f32a887536fee776d8290b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abede460fd607c07286fff792e1ca0696"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td></tr>
+<tr class="separator:abede460fd607c07286fff792e1ca0696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad23ec2e18eb0e803d1db5ce00f624297"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
 <tr class="separator:ad23ec2e18eb0e803d1db5ce00f624297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4267fcdc24196b92a1f2786683fbf743"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__sdl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gr, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int w, int h)</td></tr>
@@ -627,9 +629,79 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05">graphics_priv::aa</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structgraphics__gc__priv.html#a61b4413cf2bea583b0784287fc56fbb4">graphics_gc_priv::fore_a</a>, <a class="el" href="structgraphics__gc__priv.html#a3f2d121b2b19a560ad86404a75f7ea03">graphics_gc_priv::fore_b</a>, <a class="el" href="structgraphics__gc__priv.html#a0d2b5b98ee49a40d3e81798a77ea74d5">graphics_gc_priv::fore_g</a>, <a class="el" href="structgraphics__gc__priv.html#a15a08496013ef7ad9e20e91cd741cd0d">graphics_gc_priv::fore_r</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structgraphics__priv.html#a9cc6670621811f0c8d473cba917688d8">graphics_priv::overlay_enable</a>, <a class="el" href="structgraphics__priv.html#aa96f1904e9f1cf50600da53bd976e2bf">graphics_priv::overlay_parent</a>, <a class="el" href="raster_8c.html#ab8c884f2d93333d9df5c355b6e80a6eb">raster_aapolygon()</a>, <a class="el" href="raster_8c.html#ab6b5af94c090afaf69cb741bc225c51b">raster_polygon()</a>, <a class="el" href="structgraphics__priv.html#a0f7bc0184ffe41fe21c7a00641e5d2df">graphics_priv::screen</a>, <a class="el" href="structgraphics__priv.html#a6cd543834dfabf7d5280075e1d6590c9">graphics_priv::x</a>, and <a class="el" href="structgraphics__priv.html#ae918d544220f9d7300df03cedfa46570">graphics_priv::y</a>.</p>
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines()</a>.</p>
+
+</div>
+</div>
+<a id="abede460fd607c07286fff792e1ca0696"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abede460fd607c07286fff792e1ca0696">&#9670;&nbsp;</a></span>draw_polygon_with_holes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void draw_polygon_with_holes </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *&#160;</td>
+          <td class="paramname"><em>gr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hole_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> **&#160;</td>
+          <td class="paramname"><em>holes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05">graphics_priv::aa</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structgraphics__gc__priv.html#a61b4413cf2bea583b0784287fc56fbb4">graphics_gc_priv::fore_a</a>, <a class="el" href="structgraphics__gc__priv.html#a3f2d121b2b19a560ad86404a75f7ea03">graphics_gc_priv::fore_b</a>, <a class="el" href="structgraphics__gc__priv.html#a0d2b5b98ee49a40d3e81798a77ea74d5">graphics_gc_priv::fore_g</a>, <a class="el" href="structgraphics__gc__priv.html#a15a08496013ef7ad9e20e91cd741cd0d">graphics_gc_priv::fore_r</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structgraphics__priv.html#a9cc6670621811f0c8d473cba917688d8">graphics_priv::overlay_enable</a>, <a class="el" href="structgraphics__priv.html#aa96f1904e9f1cf50600da53bd976e2bf">graphics_priv::overlay_parent</a>, <a class="el" href="raster_8c.html#afbde52f2fd5bdbb7fb4754e1641fa604">raster_aapolygon_with_holes()</a>, <a class="el" href="raster_8c.html#a7141283b1c214b682ce951e453e57ec8">raster_polygon_with_holes()</a>, and <a class="el" href="structgraphics__priv.html#a0f7bc0184ffe41fe21c7a00641e5d2df">graphics_priv::screen</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>.</p>
 
 </div>
 </div>
@@ -1590,21 +1662,22 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a>,</div><div class="line">    NULL ,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a>,</div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">}</div><div class="ttc" id="graphics__sdl_8c_html_ae91386415b77840ccbc72f44e1e506f8"><div class="ttname"><a href="graphics__sdl_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:255</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__sdl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:746</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a>,</div><div class="line">    NULL ,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a>,</div><div class="line">    <a class="code" href="graphics__sdl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a>,</div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a></div><div class="line">}</div><div class="ttc" id="graphics__sdl_8c_html_ae91386415b77840ccbc72f44e1e506f8"><div class="ttname"><a href="graphics__sdl_8c.html#ae91386415b77840ccbc72f44e1e506f8">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:255</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__sdl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:748</div></div>
 <div class="ttc" id="graphics__sdl_8c_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__sdl_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:185</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__sdl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:708</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__sdl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:691</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__sdl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:713</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__sdl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:380</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__sdl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:710</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__sdl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:693</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__sdl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:715</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__sdl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:382</div></div>
 <div class="ttc" id="graphics__sdl_8c_html_aa2afce253f32a887536fee776d8290b2"><div class="ttname"><a href="graphics__sdl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *gi)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:282</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__sdl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:326</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a00810ac2c7209e149e278ba6458b7cd3"><div class="ttname"><a href="graphics__sdl_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, char const *type)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:778</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__sdl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:791</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__sdl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:824</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__sdl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:328</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a00810ac2c7209e149e278ba6458b7cd3"><div class="ttname"><a href="graphics__sdl_8c.html#a00810ac2c7209e149e278ba6458b7cd3">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, char const *type)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:780</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__sdl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:793</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__sdl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:828</div></div>
 <div class="ttc" id="graphics__sdl_8c_html_ae911ae167e5a0b90dda7215392ed91c5"><div class="ttname"><a href="graphics__sdl_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:246</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:287</div></div>
-<div class="ttc" id="graphics__sdl_8c_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__sdl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:666</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:321</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__sdl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:668</div></div>
+<div class="ttc" id="graphics__sdl_8c_html_abede460fd607c07286fff792e1ca0696"><div class="ttname"><a href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a></div><div class="ttdeci">static void draw_polygon_with_holes(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count, int hole_count, int *ccount, struct point **holes)</div><div class="ttdef"><b>Definition:</b> graphics_sdl.c:287</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, and <a class="el" href="graphics__sdl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new()</a>.</p>
 

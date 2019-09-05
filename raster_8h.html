@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('raster_8h.html','');});
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &quot;SDL.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
 </div>
 <p><a href="raster_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -101,12 +102,18 @@ Functions</h2></td></tr>
 <tr class="separator:a0c5194ef9bd6c455ecefd6b5931fab87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6b5af94c090afaf69cb741bc225c51b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#ab6b5af94c090afaf69cb741bc225c51b">raster_polygon</a> (SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col)</td></tr>
 <tr class="separator:ab6b5af94c090afaf69cb741bc225c51b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7141283b1c214b682ce951e453e57ec8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#a7141283b1c214b682ce951e453e57ec8">raster_polygon_with_holes</a> (SDL_Surface *s, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes, uint32_t col)</td></tr>
+<tr class="memdesc:a7141283b1c214b682ce951e453e57ec8"><td class="mdescLeft">&#160;</td><td class="mdescRight">render filled polygon with holes by raycasting along the y axis  <a href="#a7141283b1c214b682ce951e453e57ec8">More...</a><br /></td></tr>
+<tr class="separator:a7141283b1c214b682ce951e453e57ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf937981932765026152bb2ee3722253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#aaf937981932765026152bb2ee3722253">raster_aaline</a> (SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t col)</td></tr>
 <tr class="separator:aaf937981932765026152bb2ee3722253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0739b9ca93f1b4d0fb1651b59ab5b72f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#a0739b9ca93f1b4d0fb1651b59ab5b72f">raster_aacircle</a> (SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t col)</td></tr>
 <tr class="separator:a0739b9ca93f1b4d0fb1651b59ab5b72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac109eb9600b960ea3969fb26327021b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#ac109eb9600b960ea3969fb26327021b2">raster_aapolygon</a> (SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col)</td></tr>
 <tr class="separator:ac109eb9600b960ea3969fb26327021b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbde52f2fd5bdbb7fb4754e1641fa604"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8h.html#afbde52f2fd5bdbb7fb4754e1641fa604">raster_aapolygon_with_holes</a> (SDL_Surface *s, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes, uint32_t col)</td></tr>
+<tr class="memdesc:afbde52f2fd5bdbb7fb4754e1641fa604"><td class="mdescLeft">&#160;</td><td class="mdescRight">render filled polygon with holes by raycasting along the y axis  <a href="#afbde52f2fd5bdbb7fb4754e1641fa604">More...</a><br /></td></tr>
+<tr class="separator:afbde52f2fd5bdbb7fb4754e1641fa604"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a0739b9ca93f1b4d0fb1651b59ab5b72f"></a>
@@ -261,7 +268,81 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="raster_8c.html#a1feca81b44d578d0673414dd9babee1a">gfxPrimitivesCompareInt()</a>, <a class="el" href="raster_8c.html#addbf4ba0da17cb6a4af81ce1e0f8a6f0">gfxPrimitivesPolyAllocatedGlobal</a>, <a class="el" href="raster_8c.html#abd91179365c36ce2db83f2978c598c19">gfxPrimitivesPolyIntsGlobal</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="raster_8c.html#a2faaa467ce7e9efbc396998f39e4c027">raster_aalineColorInt()</a>, and <a class="el" href="raster_8c.html#afe55da8c12d746d666561ef5e73656e5">raster_hline()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>.</p>
+</div>
+</div>
+<a id="afbde52f2fd5bdbb7fb4754e1641fa604"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbde52f2fd5bdbb7fb4754e1641fa604">&#9670;&nbsp;</a></span>raster_aapolygon_with_holes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void raster_aapolygon_with_holes </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Surface *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hole_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> **&#160;</td>
+          <td class="paramname"><em>holes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>col</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>render filled polygon with holes by raycasting along the y axis </p>
+<p>This function renders a filled polygon that can have holes by SDL primitive graphic functions by raycasting along the y axis. This works basically the same as for complex polygons. Only difference is the "holes" are individual polygon loops not connected to the outer loop. FIXME: This draws well as long as the "hole" does not intersect with the outer polygon. However such multipolygons are seen a mapping error in OSM and therefore the rendering err may even help in detecting them. But this could be fixed by never starting a line on a vertex that came from a hole intersection.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>SDL surface to draw on </td></tr>
+    <tr><td class="paramname">p</td><td>Array of points containing the outer polygon </td></tr>
+    <tr><td class="paramname">count</td><td>Number of points in outer polygon </td></tr>
+    <tr><td class="paramname">hole_count</td><td>Number of hole polygons </td></tr>
+    <tr><td class="paramname">ccount</td><td>number of points per hole polygon  holes array of point arrays. One for each "hole" </td></tr>
+    <tr><td class="paramname">col</td><td>Color to draw this. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="raster_8c.html#a2faaa467ce7e9efbc396998f39e4c027">raster_aalineColorInt()</a>, <a class="el" href="raster_8c.html#a7141283b1c214b682ce951e453e57ec8">raster_polygon_with_holes()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>.</p>
 
 </div>
 </div>
@@ -417,7 +498,81 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="raster_8c.html#a3c854162e1655fadcb74c62678a6d461">raster_filledPolygonColorMT()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>.</p>
+</div>
+</div>
+<a id="a7141283b1c214b682ce951e453e57ec8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7141283b1c214b682ce951e453e57ec8">&#9670;&nbsp;</a></span>raster_polygon_with_holes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void raster_polygon_with_holes </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Surface *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hole_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> **&#160;</td>
+          <td class="paramname"><em>holes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>col</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>render filled polygon with holes by raycasting along the y axis </p>
+<p>This function renders a filled polygon that can have holes by SDL primitive graphic functions by raycasting along the y axis. This works basically the same as for complex polygons. Only difference is the "holes" are individual polygon loops not connected to the outer loop. FIXME: This draws well as long as the "hole" does not intersect with the outer polygon. However such multipolygons are seen a mapping error in OSM and therefore the rendering err may even help in detecting them. But this could be fixed by never starting a line on a vertex that came from a hole intersection.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>SDL surface to draw on </td></tr>
+    <tr><td class="paramname">p</td><td>Array of points containing the outer polygon </td></tr>
+    <tr><td class="paramname">count</td><td>Number of points in outer polygon </td></tr>
+    <tr><td class="paramname">hole_count</td><td>Number of hole polygons </td></tr>
+    <tr><td class="paramname">ccount</td><td>number of points per hole polygon  holes array of point arrays. One for each "hole" </td></tr>
+    <tr><td class="paramname">col</td><td>Color to draw this. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="raster_8c.html#a1feca81b44d578d0673414dd9babee1a">gfxPrimitivesCompareInt()</a>, <a class="el" href="raster_8c.html#afe55da8c12d746d666561ef5e73656e5">raster_hline()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, and <a class="el" href="raster_8h.html#afbde52f2fd5bdbb7fb4754e1641fa604">raster_aapolygon_with_holes()</a>.</p>
 
 </div>
 </div>

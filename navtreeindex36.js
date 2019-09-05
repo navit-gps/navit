@@ -1,5 +1,10 @@
 var NAVTREEINDEX36 =
 {
+"structattr.html#a90834771c803ddb4b96f83ed5e5a28c0":[2,0,6,9],
+"structattr.html#a90b30756fbcd44ead3328e996ba3506e":[2,0,6,46],
+"structattr.html#a93638535f1a792b0bd88180c6f2414e3":[2,0,6,16],
+"structattr.html#a9fe0cdea57804f5d5913954dfb2dfa2f":[2,0,6,13],
+"structattr.html#aa0f722d314b56209355bf56e73a66d0a":[2,0,6,12],
 "structattr.html#aa2ba1502d7dac04945712db9ba5df062":[2,0,6,22],
 "structattr.html#aa8f0b411f378c32c87e11b6d79a6ca71":[2,0,6,41],
 "structattr.html#aabfefd7820d2d4d1c0b805c91195f29f":[2,0,6,43],
@@ -244,10 +249,5 @@ var NAVTREEINDEX36 =
 "structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069":[2,0,49,4],
 "structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,49,5],
 "structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19":[2,0,49,3],
-"structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7":[2,0,49,2],
-"structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9":[2,0,49,0],
-"structcompass.html#af370800076ff7cb7357e9524b6f04423":[2,0,49,1],
-"structconfig.html":[2,0,50],
-"structconfigObject.html":[2,0,51],
-"structcontext.html":[2,0,52]
+"structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7":[2,0,49,2]
 };
