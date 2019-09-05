@@ -92,3 +92,9 @@ destination.
 LPA* is slightly more complex, as it allows partial re-evaluation of the route graph as segment costs change. This is
 used by the (still experimental) traffic module, which can process traffic reports and tries to find a way around
 traffic problems. Refer to the Wikipedia page for a full description.
+
+Partnership
+===========
+
+We're also happy to announce our partnership with <short-circuit.com>.
+You will get 5% discount from them if you tell them that you're a NavIt user!
