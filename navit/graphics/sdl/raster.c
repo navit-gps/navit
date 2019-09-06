@@ -16,6 +16,7 @@
 
 
 #include <math.h>
+#include <glib.h>
 
 #include "raster.h"
 
@@ -1953,8 +1954,8 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
                 o = p = -1;
             }
 #else
-
             raster_hline(dst, xa+1, xb, y, color);
+
 #endif
 
 //        raster_rect_inline(dst, xa, y, xb - xa, 1, color);
@@ -1962,3 +1963,199 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     }
 }
 
+/**
+ * @brief render filled polygon with holes by raycasting along the y axis
+ *
+ * This function renders a filled polygon that can have holes by SDL primitive
+ * graphic functions by raycasting along the y axis. This works basically the same
+ * as for complex polygons. Only difference is the "holes" are individual
+ * polygon loops not connected to the outer loop.
+ * FIXME: This draws well as long as the "hole" does not intersect with the
+ * outer polygon. However such multipolygons are seen a mapping error in OSM
+ * and therefore the rendering err may even help in detecting them.
+ * But this could be fixed by never starting a line on a vertex that came from a
+ * hole intersection.
+ *
+ * @param s SDL surface to draw on
+ * @param p Array of points containing the outer polygon
+ * @param count Number of points in outer polygon
+ * @param hole_count Number of hole polygons
+ * @param ccount number of points per hole polygon
+ * @oaram holes array of point arrays. One for each "hole"
+ * @param col Color to draw this.
+ */
+void raster_aapolygon_with_holes (SDL_Surface *s, struct point *p, int count, int hole_count, int* ccount,
+                                  struct point **holes, uint32_t col) {
+    int i;
+    struct point * p1;
+    struct point * p2;
+    /* Check visibility of clipping rectangle */
+    if ((s->clip_rect.w==0) || (s->clip_rect.h==0)) {
+        return;
+    }
+
+    /* Sanity check number of edges */
+    if (count < 3) {
+        return;
+    }
+    /*
+     * Draw antialiased outline
+     */
+    p1 = p2 = p;
+    p2++;
+    for (i = 1; i < count; i++) {
+        raster_aalineColorInt(s, p1->x, p1->y, p2->x, p2->y, col, 0);
+        p1 = p2;
+        p2++;
+    }
+    raster_aalineColorInt(s, p1->x, p1->y, p->x, p->y, col, 0);
+    raster_polygon_with_holes(s, p, count, hole_count, ccount, holes, col);
+}
+
+/**
+ * @brief render filled polygon with holes by raycasting along the y axis
+ *
+ * This function renders a filled polygon that can have holes by SDL primitive
+ * graphic functions by raycasting along the y axis. This works basically the same
+ * as for complex polygons. Only difference is the "holes" are individual
+ * polygon loops not connected to the outer loop.
+ * FIXME: This draws well as long as the "hole" does not intersect with the
+ * outer polygon. However such multipolygons are seen a mapping error in OSM
+ * and therefore the rendering err may even help in detecting them.
+ * But this could be fixed by never starting a line on a vertex that came from a
+ * hole intersection.
+ *
+ * @param s SDL surface to draw on
+ * @param p Array of points containing the outer polygon
+ * @param count Number of points in outer polygon
+ * @param hole_count Number of hole polygons
+ * @param ccount number of points per hole polygon
+ * @oaram holes array of point arrays. One for each "hole"
+ * @param col Color to draw this.
+ */
+void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int hole_count, int* ccount,
+                                struct point **holes, uint32_t col) {
+    int vertex_max;
+    int vertex_count;
+    int * vertexes;
+    int miny, maxy;
+    int i;
+    int y;
+
+    /* Check visibility of clipping rectangle */
+    if ((s->clip_rect.w==0) || (s->clip_rect.h==0)) {
+        return;
+    }
+
+    /* Sanity check number of edges */
+    if (count < 3) {
+        return;
+    }
+
+    /*
+     * Prepare a buffer for vertexes. Maximum number of vertexes is the number of points
+     * of polygon and holes
+     */
+    vertex_max = count;
+    for(i =0; i < hole_count; i ++) {
+        vertex_max += ccount[i];
+    }
+    vertexes = g_malloc(sizeof(int) * vertex_max);
+    if(vertexes == NULL) {
+        return;
+    }
+
+    /* calculate y min and max coordinate. We can ignore the holes, as we won't render hole
+     * parts "bigger" than the surrounding polygon.*/
+    miny = p[0].y;
+    maxy = p[0].y;
+    for (i = 1; (i < count); i++) {
+        if (p[i].y < miny) {
+            miny = p[i].y;
+        } else if (p[i].y > maxy) {
+            maxy = p[i].y;
+        }
+    }
+
+    /* scan y coordinates from miny to maxy */
+    for(y = miny; y <= maxy ; y ++) {
+        int h;
+        vertex_count=0;
+        /* calculate the intersecting points of the polygon with current y and add to vertexes array*/
+        for (i = 0; (i < count); i++) {
+            int ind1;
+            int ind2;
+            struct point p1;
+            struct point p2;
+
+            if (!i) {
+                ind1 = count - 1;
+                ind2 = 0;
+            } else {
+                ind1 = i - 1;
+                ind2 = i;
+            }
+            p1.y = p[ind1].y;
+            p2.y = p[ind2].y;
+            if (p1.y < p2.y) {
+                p1.x = p[ind1].x;
+                p2.x = p[ind2].x;
+            } else if (p1.y > p2.y) {
+                p2.y = p[ind1].y;
+                p1.y = p[ind2].y;
+                p2.x = p[ind1].x;
+                p1.x = p[ind2].x;
+            } else {
+                continue;
+            }
+            if ( ((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y)) ) {
+                vertexes[vertex_count++] = ((65536 * (y - p1.y)) / (p2.y - p1.y)) * (p2.x - p1.x) + (65536 * p1.x);
+            }
+        }
+        for(h= 0; h < hole_count; h ++) {
+            /* add the intersecting points from the holes as well */
+            for (i = 0; (i < ccount[h]); i++) {
+                int ind1;
+                int ind2;
+                struct point p1;
+                struct point p2;
+
+                if (!i) {
+                    ind1 = ccount[h] - 1;
+                    ind2 = 0;
+                } else {
+                    ind1 = i - 1;
+                    ind2 = i;
+                }
+                p1.y = holes[h][ind1].y;
+                p2.y = holes[h][ind2].y;
+                if (p1.y < p2.y) {
+                    p1.x = holes[h][ind1].x;
+                    p2.x = holes[h][ind2].x;
+                } else if (p1.y > p2.y) {
+                    p2.y = holes[h][ind1].y;
+                    p1.y = holes[h][ind2].y;
+                    p2.x = holes[h][ind1].x;
+                    p1.x = holes[h][ind2].x;
+                } else {
+                    continue;
+                }
+                if ( ((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y)) ) {
+                    vertexes[vertex_count++] = ((65536 * (y - p1.y)) / (p2.y - p1.y)) * (p2.x - p1.x) + (65536 * p1.x);
+                }
+            }
+        }
+
+        /* sort the vertexes */
+        qsort(vertexes, vertex_count, sizeof(int), gfxPrimitivesCompareInt);
+        /* draw the lines between every second vertex */
+        for (i = 0; (i < vertex_count); i +=2) {
+            Sint16 xa;
+            Sint16 xb;
+            xa = (vertexes[i] >> 16);
+            xb = (vertexes[i+1] >> 16);
+            raster_hline(s, xa+1, xb, y, col);
+        }
+    }
+    g_free(vertexes);
+}
