@@ -1040,6 +1040,24 @@ static struct map_selection *route_calc_selection(struct coord *c, int count, st
 }
 
 /**
+ * @brief Retrieves the map selection for the route.
+ */
+struct map_selection * route_get_selection(struct route * this_) {
+    struct coord *c = g_alloca(sizeof(struct coord) * (1 + g_list_length(this_->destinations)));
+    int i = 0;
+    GList *tmp;
+
+    c[i++] = this_->pos->c;
+    tmp = this_->destinations;
+    while (tmp) {
+        struct route_info *dst = tmp->data;
+        c[i++] = dst->c;
+        tmp = g_list_next(tmp);
+    }
+    return route_calc_selection(c, i, this_->vehicleprofile);
+}
+
+/**
  * @brief Destroys a list of map selections
  *
  * @param sel Start of the list to be destroyed
