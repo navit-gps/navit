@@ -116,6 +116,9 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>String indicating how to interpret admin levels for this country.</p>
+<p>Each character of the string specifies how to treat the corresponding admin level. The first character corresponds to level 3, each following character to the next lower level (usually up to level 8, but that is just a convention): <code>s</code>: use the name as the state label, <code>c</code>: use the name as the county label, <code>m</code>: use the name as the municipality label, <code>M</code>: same as <code>m</code>, but additionally use the boundary as the town boundary, <code>T</code>: use the boundary the town boundary and ignore the name. All other characters are ignored; by convention use the digit corresponding to the admin level to indicate this level should be skipped.</p>
+<p>See <a href="https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#10_admin_level_values_for_specific_countries">https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#10_admin_level_values_for_specific_countries</a> for values used in specific countries. </p>
 
 <p class="reference">Referenced by <a class="el" href="osm_8c.html#a5b4f1d7df517696016c14246b0595d4d">osm_process_town_by_boundary_update_attrs()</a>.</p>
 
