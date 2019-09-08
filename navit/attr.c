@@ -929,9 +929,9 @@ attr_list_dup(struct attr **attrs) {
  *
  * @param[in] line The line to parse, must be non-NULL and pointing to a NUL terminated string
  * @param[in] name The name of the attribute to retrieve; can be NULL (see description)
- * @param[in,out] pos Offset pointer, see description
+ * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search (see description)
  * @param[out] val_ret Points to a buffer which will receive the value as text
- * @param[out] name_ret Points to a buffer which will receive the name of the attribute parsed, can be NULL
+ * @param[out] name_ret Points to a buffer which will receive the actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
  *
  * @return true if successful, false in case of failure
  */
