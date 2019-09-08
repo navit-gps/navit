@@ -43,6 +43,7 @@
 #include "util.h"
 #include "types.h"
 #include "xmlconfig.h"
+#include "layout.h"
 
 struct attr_name {
     enum attr_type attr;
@@ -471,6 +472,9 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     if (type == attr_nav_status) {
         return nav_status_to_text(attr->u.num);
     }
+    if (type == attr_poly_hole) {
+        return g_strdup_printf("count=%d", attr->u.poly_hole->coord_count);
+    }
     return g_strdup_printf("(no text[%s])", attr_to_name(type));
 }
 
@@ -770,6 +774,9 @@ int attr_data_size(struct attr *attr) {
         while (attr->u.attr_types[i++] != attr_none);
         return i*sizeof(enum attr_type);
     }
+    if (attr->type == attr_poly_hole) {
+        return (sizeof(attr->u.poly_hole->coord_count) + (attr->u.poly_hole->coord_count * sizeof(*attr->u.poly_hole->coord)));
+    }
     dbg(lvl_error,"size for %s unknown", attr_to_name(attr->type));
     return 0;
 }
@@ -906,13 +913,27 @@ attr_list_dup(struct attr **attrs) {
 }
 
 /**
- * @brief Extract an attribute from an input line!
+ * @brief Retrieves an attribute from a line in textfile format.
  *
- * @param[in] line The input line, must be non-NULL and pointing to a NUL terminated string
- * @param[in] name The name of the attribute to search
- * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search
- * @param[out] val_ret A string where we should store the resulting value for the search attribute, must be non-NULL
- * @param[out] name_ret The actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
+ * If `name` is NULL, this function returns the first attribute found; otherwise it looks for an attribute
+ * named `name`.
+ *
+ * If `pos` is specified, it acts as an offset pointer: Any data in `line` before `*pos` will be skipped.
+ * When the function returns, the value pointed to by `pos` will be incremented by the number of characters
+ * parsed. This can be used to iteratively retrieve all attributes: declare a local variable, set it to zero,
+ * then iteratively call this function with a pointer to the same variable until it returns false.
+ *
+ * `val_ret` must be allocated (and later freed) by the caller, and have sufficient capacity to hold the
+ * parsed value including the terminating NULL character. The minimum safe size is
+ * `strlen(line) - strlen(name) - *pos` (assuming zero for NULL pointers).
+ *
+ * @param[in] line The line to parse, must be non-NULL and pointing to a NUL terminated string
+ * @param[in] name The name of the attribute to retrieve; can be NULL (see description)
+ * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search (see description)
+ * @param[out] val_ret Points to a buffer which will receive the value as text
+ * @param[out] name_ret Points to a buffer which will receive the actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
+ *
+ * @return true if successful, false in case of failure
  */
 int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret) {
     int len=0,quoted,escaped;

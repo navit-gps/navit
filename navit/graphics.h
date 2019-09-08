@@ -160,6 +160,8 @@ struct graphics_methods {
     int (*show_native_keyboard)(struct graphics_keyboard *kbd);
     void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
     navit_float (*get_dpi)(struct graphics_priv * gr);
+    void (*draw_polygon_with_holes) (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes);
 };
 
 
