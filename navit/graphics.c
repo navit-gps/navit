@@ -2137,6 +2137,105 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
 }
 
 /**
+ * @brief clip a polygon inside a rectangle
+ *
+ * This function clippes a given polygon inside a rectangle. It writes the result into provided buffer.
+ *
+ * @param[in] r rectangle to clip into
+ * @param[in] pin point array of input polygon
+ * @param[in] count_in number of points in pin
+ * @param[out] out preallocated buffer of at least count_in *8 +1 points size
+ * @param[out] count_out size of out number of points, number of points used in out at return
+ */
+static void graphics_clip_polygon(struct point_rect * r, struct point * in, int count_in, struct point *out,
+                                  int* count_out) {
+    /* set our self a limit for the in stack buffer. To not overflow stack */
+    const int limit=10000;
+    /* get a temp buffer to store points after one direction clipping.
+     * since we are clipping 4 directions, result is always in out at the end*/
+    struct point *temp=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+    struct point *pout;
+    struct point *pin;
+    int edge;
+    int count;
+
+    /* sanity check */
+    if((r == NULL) || (in == NULL) || (out == NULL) || (count_out == NULL) || (*count_out < count_in*8+1)) {
+        return;
+    }
+
+    /* prepare buffers. We have two buffers that we flip over.
+     * 1. the output buffer
+     * 2. temp
+     */
+    if (count_in >= limit) {
+        /* too big. Allocate a buffer (slower) */
+        temp=g_new(struct point, count_in*8+1);
+    }
+    /* use temp as first buffer. So we get the final result in out*/
+    pout = temp;
+    /* start with input polygon */
+    pin=in;
+    /* start with number of points of source polygon*/
+    count=count_in;
+
+    /* clip all four directions of a rectangle */
+    for (edge = 0 ; edge < 4 ; edge++) {
+        int i;
+        /* p is first element in current buffer */
+        struct point *p=pin;
+        /* s is lasst element in current buffer */
+        struct point *s=pin+count-1;
+        /* nothing written yet */
+        *count_out=0;
+
+        /* iterate all points in current buffer */
+        for (i = 0 ; i < count ; i++) {
+            if (is_inside(p, r, edge)) {
+                if (! is_inside(s, r, edge)) {
+                    struct point pi;
+                    /* current segment crosses border from outside to inside. Add crossing point with border first */
+                    poly_intersection(s,p,r,edge,&pi);
+                    pout[(*count_out)++]=pi;
+                }
+                /* add point if inside */
+                pout[(*count_out)++]=*p;
+            } else {
+                if (is_inside(s, r, edge)) {
+                    struct point pi;
+                    /*current segment crosses border from inside to outside. Add crossing point with border */
+                    poly_intersection(p,s,r,edge,&pi);
+                    pout[(*count_out)++]=pi;
+                }
+                /* skip point if outside */
+            }
+            /* move one coordinate forward */
+            s=p;
+            p++;
+        }
+        /* use result of last clipping for next */
+        count=*count_out;
+
+        /* switch buffer */
+        if(pout == temp) {
+            pout=out;
+            pin=temp;
+        } else {
+            pin=out;
+            pout=temp;
+        }
+    }
+
+    /* have clipped poly in out. And number of points now in *count_out */
+
+    /* if we had to allocate the buffer, we need to free it */
+    if (count_in >= limit) {
+        g_free(temp);
+    }
+    return;
+}
+
+/**
  * @brief Draw a plain polygon on the display
  *
  * @param gra The graphics instance on which to draw
@@ -2146,54 +2245,26 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  */
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
-    struct point *pout,*p,*s,pi,*p1,*p2;
     int limit=10000;
     struct point *pa1=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
-    struct point *pa2=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
-    int count_out,edge=3;
-    int i;
+    struct point *clipped;
+    int count_out = count_in*8+1;
+
+    /* prepare buffer */
     if (count_in < limit) {
-        p1=pa1;
-        p2=pa2;
+        /* use on stack buffer */
+        clipped=pa1;
     } else {
-        p1=g_new(struct point, count_in*8+1);
-        p2=g_new(struct point, count_in*8+1);
+        /* too big. allocate buffer (slower) */
+        clipped=g_new(struct point, count_in*8+1);
     }
 
-    pout=p1;
-    for (edge = 0 ; edge < 4 ; edge++) {
-        p=pin;
-        s=pin+count_in-1;
-        count_out=0;
-        for (i = 0 ; i < count_in ; i++) {
-            if (is_inside(p, &r, edge)) {
-                if (! is_inside(s, &r, edge)) {
-                    poly_intersection(s,p,&r,edge,&pi);
-                    pout[count_out++]=pi;
-                }
-                pout[count_out++]=*p;
-            } else {
-                if (is_inside(s, &r, edge)) {
-                    poly_intersection(p,s,&r,edge,&pi);
-                    pout[count_out++]=pi;
-                }
-            }
-            s=p;
-            p++;
-        }
-        count_in=count_out;
-        if (pin == p1) {
-            pin=p2;
-            pout=p1;
-        } else {
-            pin=p1;
-            pout=p2;
-        }
-    }
-    graphics_draw_polygon(gra, gc, pin, count_in);
+    graphics_clip_polygon(&r, pin, count_in, clipped, &count_out);
+    graphics_draw_polygon(gra, gc, clipped, count_out);
+
+    /* if we had to allocate buffer, free it */
     if (count_in >= limit) {
-        g_free(p1);
-        g_free(p2);
+        g_free(clipped);
     }
 }
 
