@@ -345,9 +345,15 @@ Functions</h2></td></tr>
 <tr class="separator:ad0486d32837d1d2f5e331ce1349892a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae5b20946f5f500c7003a981618d6702"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#aae5b20946f5f500c7003a981618d6702">poly_intersection</a> (struct <a class="el" href="structpoint.html">point</a> *p1, struct <a class="el" href="structpoint.html">point</a> *p2, struct <a class="el" href="structpoint__rect.html">point_rect</a> *r, int <a class="el" href="structedge.html">edge</a>, struct <a class="el" href="structpoint.html">point</a> *ret)</td></tr>
 <tr class="separator:aae5b20946f5f500c7003a981618d6702"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1087fc1407ebf95966400edab448152"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#ab1087fc1407ebf95966400edab448152">graphics_clip_polygon</a> (struct <a class="el" href="structpoint__rect.html">point_rect</a> *r, struct <a class="el" href="structpoint.html">point</a> *in, int count_in, struct <a class="el" href="structpoint.html">point</a> *out, int *count_out)</td></tr>
+<tr class="memdesc:ab1087fc1407ebf95966400edab448152"><td class="mdescLeft">&#160;</td><td class="mdescRight">clip a polygon inside a rectangle  <a href="#ab1087fc1407ebf95966400edab448152">More...</a><br /></td></tr>
+<tr class="separator:ab1087fc1407ebf95966400edab448152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *pin, int count_in)</td></tr>
 <tr class="memdesc:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a plain polygon on the display.  <a href="#af9d2d5864a63fe16efe4a7e5f38a33bd">More...</a><br /></td></tr>
 <tr class="separator:af9d2d5864a63fe16efe4a7e5f38a33bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab190f25782a507b92d1c3bb3e9973d8a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#ab190f25782a507b92d1c3bb3e9973d8a">graphics_draw_polygon_with_holes_clipped</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *gc, struct <a class="el" href="structpoint.html">point</a> *pin, int count_in, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td></tr>
+<tr class="memdesc:ab190f25782a507b92d1c3bb3e9973d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a plain polygon with holes on the display.  <a href="#ab190f25782a507b92d1c3bb3e9973d8a">More...</a><br /></td></tr>
+<tr class="separator:ab190f25782a507b92d1c3bb3e9973d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28b341d3b4f1fa9dc0f14e071a1aeeca"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a28b341d3b4f1fa9dc0f14e071a1aeeca">display_context_free</a> (struct <a class="el" href="structdisplay__context.html">display_context</a> *dc)</td></tr>
 <tr class="separator:a28b341d3b4f1fa9dc0f14e071a1aeeca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac591c1afcd11abe2cac8ffb4947804a4"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__font.html">graphics_font</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#ac591c1afcd11abe2cac8ffb4947804a4">get_font</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>)</td></tr>
@@ -1316,7 +1322,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structdisplayitem__poly__holes.html#a37cead239b260fb468f08776437f4edf">displayitem_poly_holes::ccount</a>, <a class="el" href="structdisplayitem__poly__holes.html#a4f270bfd9ad722eb1180edf289ddaa1a">displayitem_poly_holes::coords</a>, <a class="el" href="structdisplayitem__poly__holes.html#afc684eb7e65b2ffa1d3d01425f748a7b">displayitem_poly_holes::count</a>, <a class="el" href="structdisplay__context.html#a9fa858279e57ecad816e43ffa1a2f9f0">display_context::gc</a>, <a class="el" href="graphics_8c.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>, and <a class="el" href="graphics_8c.html#affb31a2a0d3e4603e900cd4d051c2eca">graphics_draw_polygon_with_holes()</a>.</p>
+<p class="reference">References <a class="el" href="structdisplayitem__poly__holes.html#a37cead239b260fb468f08776437f4edf">displayitem_poly_holes::ccount</a>, <a class="el" href="structdisplayitem__poly__holes.html#a4f270bfd9ad722eb1180edf289ddaa1a">displayitem_poly_holes::coords</a>, <a class="el" href="structdisplayitem__poly__holes.html#afc684eb7e65b2ffa1d3d01425f748a7b">displayitem_poly_holes::count</a>, <a class="el" href="structdisplay__context.html#a9fa858279e57ecad816e43ffa1a2f9f0">display_context::gc</a>, <a class="el" href="graphics_8c.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>, and <a class="el" href="graphics_8c.html#ab190f25782a507b92d1c3bb3e9973d8a">graphics_draw_polygon_with_holes_clipped()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics_8c.html#a87f04e22a97306d2daf792909c78c9e2">displayitem_draw()</a>.</p>
 
@@ -2352,6 +2358,77 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="graphics_8c.html#af40a584801730be67ac1f575a03ef084">graphics_remove_selection()</a>, <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>, and <a class="el" href="structgraphics.html#a94b74674cdda2c6142b0d0fd19d3cc31">graphics::selection</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#ac41a535355714f8867a8ae7bb821bc70">gui_internal_cmd_view_on_map()</a>.</p>
+
+</div>
+</div>
+<a id="ab1087fc1407ebf95966400edab448152"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1087fc1407ebf95966400edab448152">&#9670;&nbsp;</a></span>graphics_clip_polygon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void graphics_clip_polygon </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structpoint__rect.html">point_rect</a> *&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count_in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>count_out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>clip a polygon inside a rectangle </p>
+<p>This function clippes a given polygon inside a rectangle. It writes the result into provided buffer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">r</td><td>rectangle to clip into </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>point array of input polygon </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count_in</td><td>number of points in pin </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out</td><td>preallocated buffer of at least count_in *8 +1 points size </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">count_out</td><td>size of out number of points, number of points used in out at return </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8">is_inside()</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, and <a class="el" href="graphics_8c.html#aae5b20946f5f500c7003a981618d6702">poly_intersection()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8h.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>, and <a class="el" href="graphics_8c.html#ab190f25782a507b92d1c3bb3e9973d8a">graphics_draw_polygon_with_holes_clipped()</a>.</p>
 
 </div>
 </div>
@@ -3574,7 +3651,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="graphics_8c.html#a67a8a482dcd53cd6b9cf25605266006f">graphics_draw_polygon()</a>, <a class="el" href="graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8">is_inside()</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="graphics_8c.html#aae5b20946f5f500c7003a981618d6702">poly_intersection()</a>, and <a class="el" href="structgraphics.html#a07a56bda9c786f803f6e97b94e96f406">graphics::r</a>.</p>
+<p class="reference">References <a class="el" href="graphics_8c.html#ab1087fc1407ebf95966400edab448152">graphics_clip_polygon()</a>, <a class="el" href="graphics_8c.html#a67a8a482dcd53cd6b9cf25605266006f">graphics_draw_polygon()</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, and <a class="el" href="structgraphics.html#a07a56bda9c786f803f6e97b94e96f406">graphics::r</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics_8c.html#abeb31054a632215c3677e777b683653a">displayitem_draw_polygon()</a>, and <a class="el" href="osd__core_8c.html#a5a2c70491ba25b7042907c275b7cde99">draw_compass()</a>.</p>
 
@@ -3659,6 +3736,90 @@ Variables</h2></td></tr>
 </dl>
 
 <p class="reference">References <a class="el" href="structgraphics__methods.html#a4a8245077ea9f87725c5913d9f5f71db">graphics_methods::draw_polygon_with_holes</a>, <a class="el" href="graphics_8c.html#a796f16e38bc3e8065afde9fbf9189c23">graphics_dpi_scale_point()</a>, <a class="el" href="graphics_8c.html#a67a8a482dcd53cd6b9cf25605266006f">graphics_draw_polygon()</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#ab190f25782a507b92d1c3bb3e9973d8a">graphics_draw_polygon_with_holes_clipped()</a>.</p>
+
+</div>
+</div>
+<a id="ab190f25782a507b92d1c3bb3e9973d8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab190f25782a507b92d1c3bb3e9973d8a">&#9670;&nbsp;</a></span>graphics_draw_polygon_with_holes_clipped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void graphics_draw_polygon_with_holes_clipped </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gra</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics__gc.html">graphics_gc</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count_in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hole_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> **&#160;</td>
+          <td class="paramname"><em>holes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw a plain polygon with holes on the display. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">gra</td><td>The graphics instance on which to draw </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>The graphics context </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>An array of points forming the polygon </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">count_in</td><td>The number of elements inside <code>pin</code> </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">hole_count</td><td>The number of hole polygons to cut out </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pcount</td><td>array of [hole_count] integers giving the number of points per hole </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">holes</td><td>array of point arrays for the hole polygons </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="graphics_8c.html#ab1087fc1407ebf95966400edab448152">graphics_clip_polygon()</a>, <a class="el" href="graphics_8c.html#affb31a2a0d3e4603e900cd4d051c2eca">graphics_draw_polygon_with_holes()</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, and <a class="el" href="structgraphics.html#a07a56bda9c786f803f6e97b94e96f406">graphics::r</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics_8c.html#abeb31054a632215c3677e777b683653a">displayitem_draw_polygon()</a>.</p>
 
@@ -5792,7 +5953,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structpoint__rect.html#a75cfbb317f6427b2026305f46fabb864">point_rect::lu</a>, <a class="el" href="structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66">point_rect::rl</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics_8h.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#ab1087fc1407ebf95966400edab448152">graphics_clip_polygon()</a>.</p>
 
 </div>
 </div>
@@ -6051,7 +6212,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structpoint__rect.html#a75cfbb317f6427b2026305f46fabb864">point_rect::lu</a>, <a class="el" href="structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66">point_rect::rl</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics_8h.html#af9d2d5864a63fe16efe4a7e5f38a33bd">graphics_draw_polygon_clipped()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#ab1087fc1407ebf95966400edab448152">graphics_clip_polygon()</a>.</p>
 
 </div>
 </div>
