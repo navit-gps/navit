@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
@@ -15,12 +15,16 @@
 
 package org.navitproject.navit;
 
+import static org.navitproject.navit.NavitAppConfig.getTstring;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+
+
 
 
 @SuppressWarnings("unused")
@@ -62,9 +66,9 @@ class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
                 // missing data, ask to install it
                 AlertDialog.Builder builder = new AlertDialog.Builder(mNavit);
                 builder
-                    .setTitle(mNavit.getTstring(R.string.TTS_title_data_missing))
-                    .setMessage(mNavit.getTstring(R.string.TTS_qery_install_data))
-                    .setPositiveButton(mNavit.getTstring(R.string.yes),
+                    .setTitle(getTstring(R.string.TTS_title_data_missing))
+                    .setMessage(getTstring(R.string.TTS_qery_install_data))
+                    .setPositiveButton(getTstring(R.string.yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent installIntent = new Intent();
@@ -73,7 +77,7 @@ class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
                                     mNavit.startActivity(installIntent);
                                 }
                             })
-                .setNegativeButton(mNavit.getTstring(R.string.no), null)
+                .setNegativeButton(getTstring(R.string.no), null)
                     .show();
             }
         }

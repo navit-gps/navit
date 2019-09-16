@@ -57,7 +57,6 @@ android {
         classpath = files()
         reports {
             include ('**/*.java')
-            exclude ('**/FileBrowserActivity.java')
             xml.enabled = true
             html.enabled = true
             xml {
@@ -75,7 +74,6 @@ android {
     applicationVariants.all { variant ->
         // create tasks to generate Javadocs
         task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-            source = variant.javaCompile.source
             classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
             destinationDir = file("build/outputs/docs/javadoc/")
             title = rootProject.name

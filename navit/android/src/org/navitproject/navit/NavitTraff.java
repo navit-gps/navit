@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2018 Navit Team
  *
@@ -32,10 +32,10 @@ import android.util.Log;
 import java.util.List;
 
 /**
- * @brief The TraFF receiver implementation.
+ * The TraFF receiver implementation.
  *
- * This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation, receives
- * TraFF feeds and forwards them to the traffic module for processing.
+ * <p>This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation,
+ * receives TraFF feeds and forwards them to the traffic module for processing.</p>
  */
 public class NavitTraff extends BroadcastReceiver {
 
@@ -45,9 +45,9 @@ public class NavitTraff extends BroadcastReceiver {
     private final long mCbid;
 
     /**
-     * @brief Forwards a newly received TraFF feed to the traffic module for processing.
+     * Forwards a newly received TraFF feed to the traffic module for processing.
      *
-     * This is called when a TraFF feed is received.
+     * <p>This is called when a TraFF feed is received.</p>
      *
      * @param id The identifier for the native callback implementation
      * @param feed The TraFF feed
@@ -55,10 +55,10 @@ public class NavitTraff extends BroadcastReceiver {
     public native void onFeedReceived(long id, String feed);
 
     /**
-     * @brief Creates a new {@code NavitTraff} instance.
+     * Creates a new {@code NavitTraff} instance.
      *
-     * Creating a new {@code NavitTraff} instance registers a broadcast receiver for TraFF broadcasts and polls all
-     * registered sources once to ensure we have messages which were received by these sources before we started up.
+     * <p>Creating a new {@code NavitTraff} instance registers a broadcast receiver for TraFF broadcasts and polls all
+     * registered sources once to ensure we have messages which were received by these sources before we started up.</p>
      *
      * @param context The context
      * @param cbid The callback identifier for the native method to call upon receiving a feed

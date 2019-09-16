@@ -1,5 +1,7 @@
 package org.navitproject.navit;
 
+import static org.navitproject.navit.NavitAppConfig.getTstring;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+
 
 public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
@@ -28,7 +31,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         /* Create a Wait Progress Dialog to inform the User that we are working */
         mDialog = new ProgressDialog(mActivity);
         mDialog.setIndeterminate(true);
-        mDialog.setMessage(mActivity.getTstring(R.string.backing_up));
+        mDialog.setMessage(getTstring(R.string.backing_up));
         mDialog.show();
     }
 
@@ -44,7 +47,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         /* Create the Main Backup Directory if it doesn't exist */
         if (!mainBackupDir.isDirectory()) {
             if (!mainBackupDir.mkdirs()) {
-                return mActivity.getTstring(R.string.failed_to_create_backup_directory);
+                return getTstring(R.string.failed_to_create_backup_directory);
             }
         }
 
@@ -70,29 +73,29 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         /* Create the Backup Directory if it doesn't exist */
         if (!backupDir.isDirectory()) {
             if (!backupDir.mkdirs()) {
-                return mActivity.getTstring(R.string.failed_to_create_backup_directory);
+                return getTstring(R.string.failed_to_create_backup_directory);
             }
         }
 
         ObjectOutputStream preferencesOOs = null;
         try {
             /* Backup Files in home */
-            mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/bookmark.txt",
+            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/bookmark.txt",
                     backupDir.getPath() + "/bookmark.txt");
-            mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/destination.txt",
+            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/destination.txt",
                     backupDir.getPath() + "/destination.txt");
-            mActivity.copyFileIfExists(Navit.NAVIT_DATA_DIR + "/home/gui_internal.txt",
+            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/gui_internal.txt",
                     backupDir.getPath() + "/gui_internal.txt");
 
             /* Backup Shared Preferences */
             preferencesOOs = new ObjectOutputStream(
                     new FileOutputStream(backupDir.getPath() + "/preferences.bak"));
             preferencesOOs.writeObject(
-                    mActivity.getSharedPreferences(Navit.NAVIT_PREFS, Context.MODE_PRIVATE)
+                    mActivity.getSharedPreferences(NavitAppConfig.NAVIT_PREFS, Context.MODE_PRIVATE)
                     .getAll());
         } catch (IOException e) {
             e.printStackTrace();
-            return mActivity.getTstring(R.string.backup_failed);
+            return getTstring(R.string.backup_failed);
         } finally {
             /* Close Stream to prevent Resource Leaks */
             try {
@@ -101,7 +104,7 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return mActivity.getTstring(R.string.backup_failed);
+                return getTstring(R.string.backup_failed);
             }
         }
 
@@ -121,14 +124,14 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
             return;
         }
 
-        Toast.makeText(mActivity, mActivity.getTstring(R.string.backup_successful),
+        Toast.makeText(mActivity, getTstring(R.string.backup_successful),
                 Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        Toast.makeText(mActivity, mActivity.getTstring(R.string.backup_failed), Toast.LENGTH_LONG)
+        Toast.makeText(mActivity, getTstring(R.string.backup_failed), Toast.LENGTH_LONG)
             .show();
         mDialog.dismiss();
     }

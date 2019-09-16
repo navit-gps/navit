@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -25,7 +25,7 @@ import android.util.Log;
 
 class NavitWatch implements Runnable {
 
-    private static WatchHandler handler = new WatchHandler();
+    private static WatchHandler sHandler = new WatchHandler();
     private Thread mThread;
     private boolean mRemoved;
     private long mWatchFunc;
@@ -66,7 +66,7 @@ class NavitWatch implements Runnable {
                 break;
             }
             mCallbackPending = true;
-            handler.post(mCallbackRunnable);
+            sHandler.post(mCallbackRunnable);
             try {
                 // Log.e("NavitWatch","wait");
                 synchronized (this) {

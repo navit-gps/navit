@@ -629,7 +629,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setSizeChangedCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetResizeCallback method found");
+        dbg(lvl_error,"no setResizeCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(resize_callback), ret);
@@ -637,7 +637,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setPaddingChangedCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetPaddingCallback method found");
+        dbg(lvl_error,"no setPaddingCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(padding_callback), ret);
@@ -645,7 +645,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setButtonCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetButtonCallback method found");
+        dbg(lvl_error,"no setButtonCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(button_callback), ret);
@@ -653,7 +653,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setMotionCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetMotionCallback method found");
+        dbg(lvl_error,"no setMotionCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(motion_callback), ret);
@@ -661,7 +661,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
 
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setKeypressCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetKeypressCallback method found");
+        dbg(lvl_error,"no setKeypressCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(keypress_callback), ret);
@@ -732,7 +732,7 @@ static void graphics_android_disable_suspend(struct window *win) {
 static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in,
         struct attr ***out, int *valid) {
     int ncmd=0;
-    dbg(0,"Running %s",function);
+    dbg(lvl_debug,"Running %s",function);
     if(!strcmp(function,"map_download_dialog")) {
         ncmd=3;
     } else if(!strcmp(function,"backup_restore_dialog")) {
@@ -932,7 +932,7 @@ static void do_poll(JNIEnv *env, int fd, int cond) {
 static struct event_watch *event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     jobject ret;
     ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (jlong)do_poll, h, (jint) cond, (jlong)cb);
-    dbg(lvl_debug,"result for %p,%d,%p = %p",h,cond,cb,ret);
+    dbg(lvl_debug,"result for %d,%d,%p = %p",h,cond,cb,ret);
     if (ret)
         ret = (*jnienv)->NewGlobalRef(jnienv, ret);
     return (struct event_watch *)ret;
@@ -1057,7 +1057,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
     Navit_disableSuspend = (*jnienv)->GetMethodID(jnienv, NavitClass, "disableSuspend", "()V");
     if (Navit_disableSuspend == NULL)
         return NULL;
-    Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "exit", "()V");
+    Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "onDestroy", "()V");
     if (Navit_exit == NULL)
         return NULL;
     Navit_fullscreen = (*jnienv)->GetMethodID(jnienv, NavitClass, "fullscreen", "(I)V");

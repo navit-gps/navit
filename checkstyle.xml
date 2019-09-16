@@ -22,7 +22,7 @@
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
 
-    <property name="severity" value="warning"/>
+    <property name="severity" value="error"/>
 
     <property name="fileExtensions" value="java, properties, xml"/>
     <!-- Checks for whitespace                               -->
@@ -144,6 +144,12 @@
             <message key="name.invalidPattern"
              value="Member name ''{0}'' must match pattern ''{1}''."/>
             <property name="severity" value="error"/>
+        </module>
+        <module name="StaticVariableName">
+            <property name="severity" value="error"/>
+            <property name="format" value="^s[A-Z0-9][a-zA-Z0-9]*$"/>
+            <message key="name.invalidPattern"
+             value="Static field names start with s and are camel-cased. (e.g. sFooBar)"/>
         </module>
         <module name="ParameterName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>

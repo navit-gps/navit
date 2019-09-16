@@ -1,5 +1,7 @@
 package org.navitproject.navit;
 
+import static org.navitproject.navit.NavitAppConfig.getTstring;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import java.io.File;
 
+
 public class NavitDialogs extends Handler {
 
     // Dialogs
@@ -27,7 +30,7 @@ public class NavitDialogs extends Handler {
     static final int MSG_START_MAP_DOWNLOAD = 7;
     private static final int DIALOG_SELECT_BACKUP = 3;
     private static final int MSG_REMOVE_DIALOG_GENERIC = 99;
-    private static Handler mHandler;
+    private static Handler sHandler;
     private static final String TAG = "NavitDialogs";
     private ProgressDialog mMapdownloaderDialog = null;
     private NavitMapDownloader mMapdownloader = null;
@@ -36,21 +39,21 @@ public class NavitDialogs extends Handler {
     NavitDialogs(Navit activity) {
         super();
         mActivity = activity;
-        mHandler = this;
+        sHandler = this;
     }
 
     static void sendDialogMessage(int what, String title, String text, int dialogNum,
             int value1, int value2) {
-        Message msg = mHandler.obtainMessage(what);
         Bundle data = new Bundle();
         data.putString("title", title);
         data.putString("text", text);
         data.putInt("value1", value1);
         data.putInt("value2", value2);
         data.putInt("dialog_num", dialogNum);
+        Message msg = sHandler.obtainMessage(what);
         msg.setData(data);
 
-        mHandler.sendMessage(msg);
+        sHandler.sendMessage(msg);
     }
 
     @Override
@@ -61,13 +64,13 @@ public class NavitDialogs extends Handler {
                 mActivity.dismissDialog(DIALOG_MAPDOWNLOAD);
                 mActivity.removeDialog(DIALOG_MAPDOWNLOAD);
                 if (msg.getData().getInt("value1") == 1) {
-                    Message msgOut = Message.obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
+                    Message msgOut = Message.obtain(NavitGraphics.sCallbackHandler,
                                 NavitGraphics.MsgType.CLB_LOAD_MAP.ordinal());
                     msgOut.setData(msg.getData());
                     msgOut.sendToTarget();
 
                     msgOut = Message
-                        .obtain(Navit.getInstance().getNavitGraphics().mCallbackHandler,
+                        .obtain(NavitGraphics.sCallbackHandler,
                                 NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
                     Bundle b = new Bundle();
                     int mi = msg.getData().getInt("value2");
@@ -111,6 +114,8 @@ public class NavitDialogs extends Handler {
                 mActivity.dismissDialog(msg.getData().getInt("dialog_num"));
                 mActivity.removeDialog(msg.getData().getInt("dialog_num"));
                 break;
+            default:
+                Log.e(TAG,"Unexpected value: " + msg.what);
         }
     }
 
@@ -137,35 +142,27 @@ public class NavitDialogs extends Handler {
                 mMapdownloaderDialog.setOnDismissListener(onDismissListener);
                 // show license for OSM maps
                 Toast.makeText(mActivity.getApplicationContext(),
-                        Navit.getInstance().getString(R.string.osm_copyright),
-                        Toast.LENGTH_LONG).show();
+                        R.string.osm_copyright, Toast.LENGTH_LONG).show();
                 return mMapdownloaderDialog;
 
             case DIALOG_BACKUP_RESTORE:
                 /* Create a Dialog that Displays Options wether to Backup or Restore */
-                builder.setTitle(mActivity.getTstring(R.string.choose_an_action))
+                builder.setTitle(getTstring(R.string.choose_an_action))
                         .setCancelable(true)
                         .setItems(R.array.dialog_backup_restore_items,
-                            new DialogInterface.OnClickListener() {
+                            new OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     /* Notify User if no SD Card present */
                                     if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                                        Toast.makeText(mActivity, mActivity
-                                                .getTstring(R.string.please_insert_an_sd_card),
+                                        Toast.makeText(mActivity, getTstring(R.string.please_insert_an_sd_card),
                                                 Toast.LENGTH_LONG).show();
                                     }
-
-                                    switch (which) {
-                                        case 0:
-                                            /* Backup */
-                                            new NavitBackupTask(mActivity).execute();
-                                            break;
-                                        case 1:
-                                            /* Restore */
-                                            mActivity.showDialog(DIALOG_SELECT_BACKUP);
-                                            break;
+                                    if (which == 0) { /* Backup */
+                                        new NavitBackupTask(mActivity).execute();
+                                    } else if (which == 1) { /* Restore */
+                                        mActivity.showDialog(DIALOG_SELECT_BACKUP);
                                     }
                                 }
                             });
@@ -183,12 +180,12 @@ public class NavitDialogs extends Handler {
 
                 if (backups == null || backups.length == 0) {
                     /* No Backups were found */
-                    builder.setTitle(mActivity.getTstring(R.string.no_backup_found));
-                    builder.setNegativeButton(mActivity.getTstring(android.R.string.cancel), null);
+                    builder.setTitle(getTstring(R.string.no_backup_found));
+                    builder.setNegativeButton(getTstring(android.R.string.cancel), null);
                     return builder.create();
                 }
 
-                builder.setTitle(mActivity.getTstring(R.string.select_backup));
+                builder.setTitle(getTstring(R.string.select_backup));
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity,
                         android.R.layout.simple_spinner_item, backups);
                 builder.setAdapter(adapter, new OnClickListener() {
@@ -198,9 +195,11 @@ public class NavitDialogs extends Handler {
                         new NavitRestoreTask(mActivity, adapter.getItem(which)).execute();
                     }
                 });
-                builder.setNegativeButton(mActivity.getTstring(android.R.string.cancel), null);
+                builder.setNegativeButton(getTstring(android.R.string.cancel), null);
 
                 return builder.create();
+            default:
+                Log.e(TAG,"Unexpected value: " + id);
         }
         // should never get here!!
         return null;

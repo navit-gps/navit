@@ -238,9 +238,8 @@ static int vehicle_android_init(struct vehicle_priv *ret) {
         dbg(lvl_error,"no method found");
         return 0; /* exception thrown */
     }
-    dbg(lvl_debug, "at 4 android_application=%p", android_application);
-    ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_application,
-                                           (long) ret->pcb, (long) ret->scb, (long) ret->fcb);
+    ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity,
+                                           (jlong) ret->pcb, (jlong) ret->scb, (jlong) ret->fcb);
     dbg(lvl_debug,"result=%p",ret->NavitVehicle);
     if (!ret->NavitVehicle)
         return 0;

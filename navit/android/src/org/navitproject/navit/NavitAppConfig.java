@@ -2,6 +2,7 @@ package org.navitproject.navit;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +11,19 @@ import org.navitproject.navit.NavitAddressSearchActivity.NavitAddress;
 
 public class NavitAppConfig extends Application {
 
+    public static final String       NAVIT_PREFS = "NavitPrefs";
     private static final int         MAX_LAST_ADDRESSES = 10;
-
-    private List<NavitAddress> mLastAddresses     = null;
+    private static Resources         sResources;
+    private List<NavitAddress>       mLastAddresses     = null;
     private int                      mLastAddressField;
     private SharedPreferences        mSettings;
 
+
     @Override
     public void onCreate() {
-        mSettings = getSharedPreferences(Navit.NAVIT_PREFS, MODE_PRIVATE);
         super.onCreate();
+        mSettings = getSharedPreferences(NAVIT_PREFS, MODE_PRIVATE);
+        sResources = getResources();
     }
 
     List<NavitAddress> getLastAddresses() {
@@ -70,5 +74,28 @@ public class NavitAppConfig extends Application {
         editSettings.putFloat("LastAddress_Lon_" + mLastAddressField, newAddress.mLon);
 
         editSettings.apply();
+    }
+
+    /**
+     * Translates a string from its id
+     * in R.strings
+     *
+     * @param riD resource identifier
+     * @return translated string
+     */
+    static String getTstring(int riD) {
+
+        return callbackLocalizedString(sResources.getString(riD));
+    }
+
+    static native String callbackLocalizedString(String s);
+
+    /*
+     * this is used to load the 'navit' native library on
+     * application startup. The library has already been unpacked at
+     * installation time by the package manager.
+     */
+    static {
+        System.loadLibrary("navit");
     }
 }
