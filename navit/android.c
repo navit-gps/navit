@@ -388,8 +388,8 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz, jint id,
-        int x, int y) {
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz,
+        jint id, int x, int y) {
 
     jstring return_string = NULL;
 
