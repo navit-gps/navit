@@ -10,6 +10,7 @@ var gui__gtk__window_8c =
     [ "KEY_UP", "gui__gtk__window_8c.html#afa086fc916a81e7fd348ec00cf786916", null ],
     [ "KEY_ZOOM_IN", "gui__gtk__window_8c.html#a1c8a501513e0d5434b89eb1cc043d830", null ],
     [ "KEY_ZOOM_OUT", "gui__gtk__window_8c.html#a6bfcb7241a8f6b190962afc2e96921b6", null ],
+    [ "geticon", "gui__gtk__window_8c.html#a66b2c8d5fc9c5dc97cc0fdcc0974a581", null ],
     [ "gui_gtk_action_activate", "gui__gtk__window_8c.html#a8bc1cdfa88d315f3da38c782adf84375", null ],
     [ "gui_gtk_action_changed", "gui__gtk__window_8c.html#ac3b381ee8bb3e4f36e5df100455b1e63", null ],
     [ "gui_gtk_action_toggled", "gui__gtk__window_8c.html#a86131d3b38a35f2cdb0cb286dfd311ca", null ],

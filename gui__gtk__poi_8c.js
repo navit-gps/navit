@@ -5,7 +5,7 @@ var gui__gtk__poi_8c =
     [ "button_map_clicked", "gui__gtk__poi_8c.html#a48e058fc663023680298acaf89a41975", null ],
     [ "button_visit_clicked", "gui__gtk__poi_8c.html#a3e7517d4a97860d2d325dad922f9eb39", null ],
     [ "category_list_model", "gui__gtk__poi_8c.html#a41b3e28b867e3b7e63055b36284b80f7", null ],
-    [ "geticon", "gui__gtk__poi_8c.html#a4d090e35dc33a6fc9d3fcf52de4d3b67", null ],
+    [ "geticon", "gui__gtk__poi_8c.html#aa255822bb0858e0d9e32f079a164685a", null ],
     [ "gtk_gui_poi", "gui__gtk__poi_8c.html#a3a335999dea686e09c76234b16e5e9a8", null ],
     [ "model_poi", "gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492", null ],
     [ "treeview_poi_changed", "gui__gtk__poi_8c.html#abce9ecfbb58ba2bea5fe07b40b17b906", null ],

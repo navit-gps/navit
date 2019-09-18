@@ -146,6 +146,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a66b2c8d5fc9c5dc97cc0fdcc0974a581"><td class="memItemLeft" align="right" valign="top">GdkPixbuf *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#a66b2c8d5fc9c5dc97cc0fdcc0974a581">geticon</a> (const char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>)</td></tr>
+<tr class="memdesc:a66b2c8d5fc9c5dc97cc0fdcc0974a581"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pixbuf representing an icon for the catalog.  <a href="#a66b2c8d5fc9c5dc97cc0fdcc0974a581">More...</a><br /></td></tr>
+<tr class="separator:a66b2c8d5fc9c5dc97cc0fdcc0974a581"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad26e4115e664642e2e2814065a123e1c"><td class="memItemLeft" align="right" valign="top">static gboolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#ad26e4115e664642e2e2814065a123e1c">keypress</a> (GtkWidget *<a class="el" href="structwidget.html">widget</a>, GdkEventKey *event, struct <a class="el" href="structgui__priv.html">gui_priv</a> *this)</td></tr>
 <tr class="separator:ad26e4115e664642e2e2814065a123e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfbac38c45ad5bda0a6481d761df1996"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgraphics.html">graphics</a> *gra)</td></tr>
@@ -338,6 +341,41 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a66b2c8d5fc9c5dc97cc0fdcc0974a581"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66b2c8d5fc9c5dc97cc0fdcc0974a581">&#9670;&nbsp;</a></span>geticon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GdkPixbuf* geticon </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get a pixbuf representing an icon for the catalog. </p>
+<p>Navit, a modular navigation system. Copyright (C) 2005-2013 Navit Team</p>
+<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the icon to use (eg: "pharmacy.png" </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pixbuf containing this icon of NULL if the icon could not be loaded </dd></dl>
+
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="graphics_8c.html#a1bcc4e8da1d463c29ff9fb6c66dd1f3e">graphics_icon_path()</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__gtk__poi_8c.html#a41b3e28b867e3b7e63055b36284b80f7">category_list_model()</a>, and <a class="el" href="gui__gtk__window_8c.html#a5ada493099f0df9555959dbeef8d66e4">gui_gtk_new()</a>.</p>
+
+</div>
+</div>
 <a id="a8bc1cdfa88d315f3da38c782adf84375"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bc1cdfa88d315f3da38c782adf84375">&#9670;&nbsp;</a></span>gui_gtk_action_activate()</h2>
 
@@ -1082,7 +1120,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structaction__cb__data.html#ac371555dfbeb05e8bfe368b7c7b9b11c">action_cb_data::attr</a>, <a class="el" href="attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="event_8c.html#a68bf52f223d8ad1e5a9e9a457a62630c">event_request_system()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#ab1a5b7c09abf7d85e16b27d9f652314b">fullscreen()</a>, <a class="el" href="gui__gtk__window_8c.html#a1cb1859c507e0d9f065bb227f43fd589">gui_gtk_delete()</a>, <a class="el" href="gui__gtk__window_8c.html#ab84fac096f831aeb22f37e03d60deffa">gui_gtk_init()</a>, <a class="el" href="gui__gtk__window_8c.html#ae069ffd543bc86fae1ed03fd8dfc5ec2">gui_gtk_methods</a>, <a class="el" href="graphics__win32_8h.html#a91667ac564b0e000882ef76783f6d3fb">gui_gtk_statusbar_new()</a>, <a class="el" href="gui__gtk_8h.html#a405697f9ed86d14921b6a65e4d5f3ed3">gui_gtk_ui_init()</a>, <a class="el" href="structgui__priv.html#a2df49bafcb4c223d5e78356e4cba668a">gui_priv::h</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structgui__priv.html#a7ba7d3d20cefc54b97ad798f603e30d8">gui_priv::w</a>.</p>
+<p class="reference">References <a class="el" href="structaction__cb__data.html#ac371555dfbeb05e8bfe368b7c7b9b11c">action_cb_data::attr</a>, <a class="el" href="attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="event_8c.html#a68bf52f223d8ad1e5a9e9a457a62630c">event_request_system()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#ab1a5b7c09abf7d85e16b27d9f652314b">fullscreen()</a>, <a class="el" href="gui__gtk__window_8c.html#a66b2c8d5fc9c5dc97cc0fdcc0974a581">geticon()</a>, <a class="el" href="gui__gtk__window_8c.html#a1cb1859c507e0d9f065bb227f43fd589">gui_gtk_delete()</a>, <a class="el" href="gui__gtk__window_8c.html#ab84fac096f831aeb22f37e03d60deffa">gui_gtk_init()</a>, <a class="el" href="gui__gtk__window_8c.html#ae069ffd543bc86fae1ed03fd8dfc5ec2">gui_gtk_methods</a>, <a class="el" href="graphics__win32_8h.html#a91667ac564b0e000882ef76783f6d3fb">gui_gtk_statusbar_new()</a>, <a class="el" href="gui__gtk_8h.html#a405697f9ed86d14921b6a65e4d5f3ed3">gui_gtk_ui_init()</a>, <a class="el" href="structgui__priv.html#a2df49bafcb4c223d5e78356e4cba668a">gui_priv::h</a>, <a class="el" href="group__navit.html#gabad777fba3e5022f3bc4c0d7c693e684">navit_add_callback()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structgui__priv.html#a7ba7d3d20cefc54b97ad798f603e30d8">gui_priv::w</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__gtk__window_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 
@@ -1402,8 +1440,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a>,</div><div class="line">    <a class="code" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a>,</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a>,</div><div class="line">    <a class="code" href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a>,</div><div class="line">}</div><div class="ttc" id="gui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:202</div></div>
-<div class="ttc" id="gui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:242</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a>,</div><div class="line">    <a class="code" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a>,</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a>,</div><div class="line">    <a class="code" href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a>,</div><div class="line">}</div><div class="ttc" id="gui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:204</div></div>
+<div class="ttc" id="gui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition:</b> gui_gtk_window.c:244</div></div>
 <div class="ttc" id="graphics__win32_8h_html_a033bfd57391341071819b9b338d1e4ee"><div class="ttname"><a href="graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee">gui_gtk_datawindow_new</a></div><div class="ttdeci">struct datawindow_priv * gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth)</div></div>
 <div class="ttc" id="graphics__win32_8h_html_a49a9d00040f4c52e6c6433d880f5411c"><div class="ttname"><a href="graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c">gui_gtk_popup_new</a></div><div class="ttdeci">struct menu_priv * gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth)</div><div class="ttdef"><b>Definition:</b> gui_gtk_action.c:615</div></div>
 </div><!-- fragment -->

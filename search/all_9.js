@@ -197,7 +197,7 @@ var searchData=
   ['getfilelength',['GetFileLength',['../speak_8c.html#ab8742df0460ed0aa3d81a2d2a67fb18d',1,'speak.c']]],
   ['getfloatvalue',['getFloatValue',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ae7f93ff4be582a0b9b82ad7b44d30216',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['getfreespace',['getFreeSpace',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#ae91514b8317498e0dda8ce1e41463b31',1,'org.navitproject.navit.FileBrowserActivity.getFreeSpace()'],['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#ab01d7a1139d0de888fe6e26e97333359',1,'org.navitproject.navit.NavitDownloadSelectMapActivity.getFreeSpace()'],['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a836205772661cff8ede526001a35af4e',1,'org.navitproject.navit.NavitMapDownloader.getFreeSpace()']]],
-  ['geticon',['geticon',['../gui__gtk__poi_8c.html#a4d090e35dc33a6fc9d3fcf52de4d3b67',1,'gui_gtk_poi.c']]],
+  ['geticon',['geticon',['../gui__gtk__poi_8c.html#aa255822bb0858e0d9e32f079a164685a',1,'geticon(const char *name):&#160;gui_gtk_poi.c'],['../gui__gtk__window_8c.html#a66b2c8d5fc9c5dc97cc0fdcc0974a581',1,'geticon(const char *name):&#160;gui_gtk_poi.c']]],
   ['getinformation',['getInformation',['../classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7',1,'NGQPoint']]],
   ['getinputstream',['getInputStream',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#acc71ac4664b9518772050c4e272ee8c5',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['getinstance',['getInstance',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#af38957a1bed7403235400aa5fca1a10a',1,'org::navitproject::navit::Navit']]],

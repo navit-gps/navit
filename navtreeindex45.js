@@ -1,5 +1,6 @@
 var NAVTREEINDEX45 =
 {
+"structnewnode.html#a22eaee53b9e6677b6cb0ff25278be501":[2,0,246,0],
 "structnl2gl__t.html":[2,0,257],
 "structnl2gl__t.html#a12e5d266fc102eda3b979b08148ba01a":[2,0,257,2],
 "structnl2gl__t.html#a9aca0f5f1fd177a3976e8b0325d49f60":[2,0,257,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX45 =
 "structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495":[2,0,284,0],
 "structpcoord.html#a875f35249b19419eb6dfbad5ff18f268":[2,0,284,1],
 "structpcoordObject.html":[2,0,285],
-"structpcoordObject.html#a1860fc117a52cee2fb5a3ed0021a521c":[2,0,285,0],
-"structpedestrian.html":[2,0,286]
+"structpcoordObject.html#a1860fc117a52cee2fb5a3ed0021a521c":[2,0,285,0]
 };

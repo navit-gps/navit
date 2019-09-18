@@ -1,5 +1,6 @@
 var NAVTREEINDEX39 =
 {
+"structgar2navit.html":[2,0,123],
 "structgar2navit.html#a09b0c742ceb81ec3a81e2777a519c6d5":[2,0,123,4],
 "structgar2navit.html#a13e33702fdf88009c2f705d2b6be9e6c":[2,0,123,0],
 "structgar2navit.html#a2ff1f937f061c72e0f8f7ff18d991ef1":[2,0,123,3],
@@ -25,8 +26,8 @@ var NAVTREEINDEX39 =
 "structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb":[2,0,125,0],
 "structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16":[2,0,125,2],
 "structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4":[2,0,125,1],
-"structgps__sat.html":[0,2,0,2,0],
 "structgps__sat.html":[0,2,0,10,0],
+"structgps__sat.html":[0,2,0,2,0],
 "structgps__status.html":[2,0,127],
 "structgps__status.html#a30a0f4080c2b22c302725c0cd53cd971":[2,0,127,2],
 "structgps__status.html#a85d3b4b02b2162d86649eef8a0c0c0ca":[2,0,127,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX39 =
 "structgraphics__priv.html#a110caec89bd114e4e882f5584bc583f4":[2,0,146,42],
 "structgraphics__priv.html#a12f7bd791a2fd98e3de06d601c222c7e":[2,0,146,21],
 "structgraphics__priv.html#a134ce95665ddaddf88ca07e01f939855":[2,0,146,13],
-"structgraphics__priv.html#a137b6d8feeb82e1e166f366bac70d3f9":[2,0,146,73],
-"structgraphics__priv.html#a15103f9a151cd3df9aaeb3b819535e73":[2,0,146,40]
+"structgraphics__priv.html#a137b6d8feeb82e1e166f366bac70d3f9":[2,0,146,73]
 };
