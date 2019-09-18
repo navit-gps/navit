@@ -73,6 +73,8 @@
 #define KEY_RIGHT GDK_Right
 #endif
 
+GdkPixbuf *geticon(const char *name);
+
 static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this) {
     int w,h;
     struct transformation *t;
@@ -717,6 +719,7 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     this->vbox = gtk_vbox_new(FALSE, 0);
     gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
     gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+    gtk_window_set_default_icon(geticon("navit_plain_bk.png"));
     gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
     gtk_widget_realize(this->win);
     gui_gtk_ui_init(this);
