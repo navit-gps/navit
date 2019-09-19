@@ -239,8 +239,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_farm" order="0-">
-			<polygon color="#c7f1a3"/>
-			<polyline color="#79c691"/>
+			<polygon color="#eef0d5"/>
+			<polyline color="#c7c9ae"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
