@@ -24,7 +24,6 @@
 
 JNIEnv *jnienv;
 jobject *android_activity = NULL;
-//int android_version;
 
 struct android_search_priv {
     struct jni_object search_result_obj;
@@ -79,10 +78,16 @@ int android_find_static_method(jclass class, char *name, char *args, jmethodID *
 
 
 
-/*
+/**
+ * @brief Starts the Navitlib for Android
  *
- *
- *
+ * @param env provided by JVM
+ * @param thiz the calling instance
+ * @param activity the Navit instance
+ * @param lang a string describing the language
+ * @param disply_density_string refers to xml version to use
+ * @param path relates to NAVIT_DATA_DIR on linux
+ * @param map_path where the binfiles are stored
  */
 JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env, jobject thiz, jobject activity,
         jstring lang, jstring display_density_string, jstring path, jstring map_path) {
