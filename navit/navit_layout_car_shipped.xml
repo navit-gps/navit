@@ -82,10 +82,6 @@
 			<polygon color="#6a9993"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_university" order="8-">
-			<polygon color="#d68fb8"/>
-			<polyline color="#881155"/>
-		</itemgra>
 		<itemgra item_types="poly_college" order="10-">
 			<polygon color="#f4f4f4"/>
 			<text text_size="5"/>
@@ -443,10 +439,6 @@
 			<polygon color="#b6554e"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_barracks" order="10-">
-			<polygon color="#b6a6a6"/>
-			<text text_size="5"/>
-		</itemgra>
 		<itemgra item_types="poly_garages" order="10-">
 			<polygon color="#deddcc"/>
 			<text text_size="5"/>
@@ -466,6 +458,14 @@
 		</itemgra>
 		<itemgra item_types="border_state" order="0-">
 			<polyline color="#808080" width="1"/>
+		</itemgra>
+		<itemgra item_types="poly_university" order="8-">
+			<polygon color="#d68fb888"/>
+			<polyline color="#88115588"/>
+		</itemgra>
+		<itemgra item_types="poly_barracks" order="10-">
+			<polygon color="#b6a6a6aa"/>
+			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_zoo" order="10-">
 			<polyline color="#ccbda599" width="10"/>
