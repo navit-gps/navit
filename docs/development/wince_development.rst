@@ -32,22 +32,22 @@ Building Navit using Cmake
     #!/bin/bash
     export NAVIT_PATH="/usr/src/navit"
     export MINGW32CE_PATH="/opt/mingw32ce"
-    export PATH=$PATH:$MINGW32CE_PATH/bin 
-    
+    export PATH=$PATH:$MINGW32CE_PATH/bin
+
     cd $NAVIT_PATH
-    if [ ! -e build ]; then 
+    if [ ! -e build ]; then
       mkdir build;
     fi;
     cd build
-    
+
     cmake \
     -DCMAKE_TOOLCHAIN_FILE=$NAVIT_PATH/Toolchain/arm-mingw32ce.cmake \
     -Dsvg2png_scaling:STRING=0,16 \
     -Dsvg2png_scaling_nav:STRING=32 \
     -Dsvg2png_scaling_country:STRING=16 \
     $NAVIT_PATH
-    
-    make 
+
+    make
 
 For subsequential builds it is sufficient to issue "make" in the build directory.
 A rerun of cmake is only neccessary if parameters are changed.
@@ -256,7 +256,7 @@ Add to `navit\support\wordexp\glob.h`: `|| defined __CEGCC__`
 Change include in `navit\vehicle\wince\vehicle_wince.c`: `#include <sys/io.h>`
 
 Add to `navit\file.c`: `&& !defined __CEGCC__`
-   
+
 .. code-block:: bash
 
     make -j
