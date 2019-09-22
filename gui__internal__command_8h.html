@@ -92,7 +92,6 @@ $(document).ready(function(){initNavTree('gui__internal__command_8h.html','');})
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a9ddab30b99d7724be31043f3103fd1de"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8h.html#a9ddab30b99d7724be31043f3103fd1de">gui_internal_coordinates</a> (struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char sep)</td></tr>
-<tr class="memdesc:a9ddab30b99d7724be31043f3103fd1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a coordinate pair to its WGS84 string representation.  <a href="#a9ddab30b99d7724be31043f3103fd1de">More...</a><br /></td></tr>
 <tr class="separator:a9ddab30b99d7724be31043f3103fd1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9710ec42aa14276049a361c66a92d7a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8h.html#a9710ec42aa14276049a361c66a92d7a2">gui_internal_cmd2_quit</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, char *function, struct <a class="el" href="structattr.html">attr</a> **in, struct <a class="el" href="structattr.html">attr</a> ***out, int *valid)</td></tr>
 <tr class="separator:a9710ec42aa14276049a361c66a92d7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,21 +206,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Converts a coordinate pair to its WGS84 string representation. </p>
-<p>This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form </p><div class="fragment"><div class="line">45°28<span class="stringliteral">&#39;0&quot; N 9°11&#39;</span>26<span class="stringliteral">&quot; E </span></div></div><!-- fragment --><p> .</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gc</td><td>A coordinate pair </td></tr>
-    <tr><td class="paramname">sep</td><td>The separator character to insert between latitude and longitude</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The coordinates as a formatted string </dd></dl>
-
-<p class="reference">References <a class="el" href="gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc">coordinates_geo()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="gui__internal__priv_8h.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>

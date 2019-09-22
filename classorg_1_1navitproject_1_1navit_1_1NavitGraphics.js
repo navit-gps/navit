@@ -21,6 +21,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics =
     [ "draw_text", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a21dbcb1c957a2a7c89862513671257ee", null ],
     [ "get_rect", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae09c7e46f036dbbb0df73b23c212dae9", null ],
     [ "GetAllCountries", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a64ebc42b90007e18e225fe5a66455b8a", null ],
+    [ "getCoordForPoint", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a821a0963be898c25729e8440cf608805", null ],
     [ "GetDefaultCountry", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a54d43760423b78a6708e71050be4c022", null ],
     [ "handleResize", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#adc8b705e3316bad3989a34df9eb2b61f", null ],
     [ "hasMenuButton", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af48fbcc4ebf9c5b32844065fb706948a", null ],

@@ -10,6 +10,7 @@ var searchData=
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fcallbacklocalizedstring',['Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString',['../android_8c.html#a4b8da23c98cf14ea1ebc11c90610a299',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fcallbackmessagechannel',['Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel',['../android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fgetallcountries',['Java_org_navitproject_navit_NavitGraphics_GetAllCountries',['../android_8c.html#a09397869eae0e76e3be1a61884641d92',1,'android.c']]],
+  ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fgetcoordforpoint',['Java_org_navitproject_navit_NavitGraphics_getCoordForPoint',['../android_8c.html#ac1ff999108e1638e7d8f6a1e18666085',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fgetdefaultcountry',['Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry',['../android_8c.html#a417a09dbc390b2059d28d7ac85867c86',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fkeypresscallback',['Java_org_navitproject_navit_NavitGraphics_KeypressCallback',['../android_8c.html#a13bb31f6c678599774ba7b72ee0e696d',1,'android.c']]],
   ['java_5forg_5fnavitproject_5fnavit_5fnavitgraphics_5fmotioncallback',['Java_org_navitproject_navit_NavitGraphics_MotionCallback',['../android_8c.html#a994e8bf5a1f9460d0b8d1956462c67d1',1,'android.c']]],

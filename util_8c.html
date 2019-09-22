@@ -128,6 +128,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a596f073572e3a9c0a9c2bbecc1e0ac7c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a596f073572e3a9c0a9c2bbecc1e0ac7c">strtrim</a> (char *s)</td></tr>
 <tr class="memdesc:a596f073572e3a9c0a9c2bbecc1e0ac7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trims all leading and trailing whitespace characters from a string.  <a href="#a596f073572e3a9c0a9c2bbecc1e0ac7c">More...</a><br /></td></tr>
 <tr class="separator:a596f073572e3a9c0a9c2bbecc1e0ac7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0c4a25781140f2a07393456d9216e03"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#ab0c4a25781140f2a07393456d9216e03">str_escape</a> (enum <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> mode, const char *in)</td></tr>
+<tr class="memdesc:ab0c4a25781140f2a07393456d9216e03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escape special characters from a string.  <a href="#ab0c4a25781140f2a07393456d9216e03">More...</a><br /></td></tr>
+<tr class="separator:ab0c4a25781140f2a07393456d9216e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa03e0ea60bfde3ec1a84975f513435ea"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#aa03e0ea60bfde3ec1a84975f513435ea">strncpy_unescape</a> (char *dest, const char *src, size_t n)</td></tr>
+<tr class="memdesc:aa03e0ea60bfde3ec1a84975f513435ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a string from <code>src</code> to <code>dest</code>, unescaping characters.  <a href="#aa03e0ea60bfde3ec1a84975f513435ea">More...</a><br /></td></tr>
+<tr class="separator:aa03e0ea60bfde3ec1a84975f513435ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3b0dd00913c35a29e7c8e316f613709"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#af3b0dd00913c35a29e7c8e316f613709">parse_for_systematic_comparison</a> (const char *s)</td></tr>
 <tr class="memdesc:af3b0dd00913c35a29e7c8e316f613709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string for systematic comparison.  <a href="#af3b0dd00913c35a29e7c8e316f613709">More...</a><br /></td></tr>
 <tr class="separator:af3b0dd00913c35a29e7c8e316f613709"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -884,6 +890,100 @@ Functions</h2></td></tr>
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="util_8c.html#a70805df95eef35ea1fc94143a32e6fdc">uint_sqrt()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group__navit.html#ga4e48c7ee2f835c45c1fd9e22761f3fe0">navit_populate_search_results_map()</a>.</p>
+
+</div>
+</div>
+<a id="ab0c4a25781140f2a07393456d9216e03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0c4a25781140f2a07393456d9216e03">&#9670;&nbsp;</a></span>str_escape()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* str_escape </td>
+          <td>(</td>
+          <td class="paramtype">enum <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a>&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>in</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Escape special characters from a string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>The escape mode that needs to be enabled (see enum escape_mode) </td></tr>
+    <tr><td class="paramname">in</td><td>The string to escape</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The escaped string</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The returned string has been allocated and g_free() must thus be called on this string </dd></dl>
+
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06">escape_mode_html_amp</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006">escape_mode_html_gt</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060">escape_mode_html_lt</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3">escape_mode_html_quote</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685">escape_mode_quote</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__command_8c.html#a8600468cf5044ecabb64410aa87b5b73">gui_internal_cmd_escape()</a>, <a class="el" href="gui__internal__command_8c.html#a6af9e07b2b00f0d6c7fdae278e10dc13">gui_internal_cmd_img()</a>, <a class="el" href="gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91">gui_internal_onclick()</a>, and <a class="el" href="bookmarks_8c.html#ae99ca8bad2fb9039c04e5754e6ef117e">write_former_destinations()</a>.</p>
+
+</div>
+</div>
+<a id="aa03e0ea60bfde3ec1a84975f513435ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa03e0ea60bfde3ec1a84975f513435ea">&#9670;&nbsp;</a></span>strncpy_unescape()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* strncpy_unescape </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy a string from <code>src</code> to <code>dest</code>, unescaping characters. </p>
+<dl class="section note"><dt>Note</dt><dd>Escaped characters are "\\\\" (double backslash) resulting in '\' (single backslash) and "\\\"" (backslash followed by double quote), resulting in '"' (double quote) but we will escape any other character, for example "\\ " will result in ' ' (space) This is the reverse of function str_escape, except that we assume (and only support) unescaping mode escape_mode_quote here</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">dest</td><td>The location where to store the unescaped string </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>The source string to copy (and to unescape) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">n</td><td>The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the destination string <code>dest</code> </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacestartup.html#a2fd577439fdb6590469c7be5ff2dca86">startup::dest</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="attr_8h.html#ae3ad97418331abb806502b2d5bf76579">attr_from_line()</a>.</p>
 
 </div>
 </div>

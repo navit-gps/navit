@@ -27,6 +27,8 @@ var util_8c =
     [ "spawn_process_info_free", "util_8c.html#af2843263548b7303487ac8ae403b56ae", null ],
     [ "spawn_process_init", "util_8c.html#a1d3db22e64d6081b5674305557538115", null ],
     [ "square_shape_str", "util_8c.html#afbc75e37f04e28a94e51fc53134ba651", null ],
+    [ "str_escape", "util_8c.html#ab0c4a25781140f2a07393456d9216e03", null ],
+    [ "strncpy_unescape", "util_8c.html#aa03e0ea60bfde3ec1a84975f513435ea", null ],
     [ "strtolower", "util_8c.html#ac6b7377df3a4fcbff23b8f8ecde6d221", null ],
     [ "strtoupper", "util_8c.html#a2596fc665ff7a1fd98a965bd349be472", null ],
     [ "strtrim", "util_8c.html#a596f073572e3a9c0a9c2bbecc1e0ac7c", null ],

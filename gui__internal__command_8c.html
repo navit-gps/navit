@@ -81,7 +81,6 @@ $(document).ready(function(){initNavTree('gui__internal__command_8c.html','');})
 
 <div class="header">
   <div class="summary">
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -124,35 +123,8 @@ $(document).ready(function(){initNavTree('gui__internal__command_8c.html','');})
 <code>#include &quot;<a class="el" href="gui__internal__poi_8h_source.html">gui_internal_poi.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gui__internal__command_8h_source.html">gui_internal_command.h</a>&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a94d96b8b944dc9436b819510f4e19cf0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> { <br />
-&#160;&#160;<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053">escape_mode_none</a> =0, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a> =1, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685">escape_mode_quote</a> =2, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06">escape_mode_html_amp</a> =4, 
-<br />
-&#160;&#160;<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3">escape_mode_html_quote</a> =8, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a> =16, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060">escape_mode_html_lt</a> =16, 
-<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006">escape_mode_html_gt</a> =16, 
-<br />
-&#160;&#160;<a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a> =escape_mode_html_amp|escape_mode_html_quote|escape_mode_html_apos|escape_mode_html_lt|escape_mode_html_gt
-<br />
- }</td></tr>
-<tr class="separator:a94d96b8b944dc9436b819510f4e19cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:addeb4b2e5938e273caf67db4dbdc91cc"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc">coordinates_geo</a> (const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *gc, char sep)</td></tr>
-<tr class="memdesc:addeb4b2e5938e273caf67db4dbdc91cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a WGS84 coordinate pair to its string representation.  <a href="#addeb4b2e5938e273caf67db4dbdc91cc">More...</a><br /></td></tr>
-<tr class="separator:addeb4b2e5938e273caf67db4dbdc91cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ddab30b99d7724be31043f3103fd1de"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a9ddab30b99d7724be31043f3103fd1de">gui_internal_coordinates</a> (struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char sep)</td></tr>
-<tr class="memdesc:a9ddab30b99d7724be31043f3103fd1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a coordinate pair to its WGS84 string representation.  <a href="#a9ddab30b99d7724be31043f3103fd1de">More...</a><br /></td></tr>
-<tr class="separator:a9ddab30b99d7724be31043f3103fd1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17e8f1f0e8b712b0c77c7323a81afafb"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb">gui_internal_escape</a> (enum <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> mode, const char *in)</td></tr>
-<tr class="memdesc:a17e8f1f0e8b712b0c77c7323a81afafb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escape special characters from a string.  <a href="#a17e8f1f0e8b712b0c77c7323a81afafb">More...</a><br /></td></tr>
-<tr class="separator:a17e8f1f0e8b712b0c77c7323a81afafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8600468cf5044ecabb64410aa87b5b73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a8600468cf5044ecabb64410aa87b5b73">gui_internal_cmd_escape</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, char *function, struct <a class="el" href="structattr.html">attr</a> **in, struct <a class="el" href="structattr.html">attr</a> ***out, int *valid)</td></tr>
 <tr class="separator:a8600468cf5044ecabb64410aa87b5b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41ed296cf55f45883e004971dda42573"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a41ed296cf55f45883e004971dda42573">gui_internal_cmd2_about</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, char *function, struct <a class="el" href="structattr.html">attr</a> **in, struct <a class="el" href="structattr.html">attr</a> ***out, int *valid)</td></tr>
@@ -208,7 +180,7 @@ Functions</h2></td></tr>
 <tr class="separator:ae6d90cb4dc52e1e0ad9a3decb472f62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9710ec42aa14276049a361c66a92d7a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a9710ec42aa14276049a361c66a92d7a2">gui_internal_cmd2_quit</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, char *function, struct <a class="el" href="structattr.html">attr</a> **in, struct <a class="el" href="structattr.html">attr</a> ***out, int *valid)</td></tr>
 <tr class="separator:a9710ec42aa14276049a361c66a92d7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bed7dffd099a5c56b902f03cd46eeb2"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr</a> (char *str, enum <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> mode, char *pre, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, char *post)</td></tr>
+<tr class="memitem:a8bed7dffd099a5c56b902f03cd46eeb2"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr</a> (char *str, enum <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> mode, char *pre, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, char *post)</td></tr>
 <tr class="separator:a8bed7dffd099a5c56b902f03cd46eeb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47f8a7cab6198e70e49b0af6448d0253"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a47f8a7cab6198e70e49b0af6448d0253">gui_internal_cmd_write</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, char *function, struct <a class="el" href="structattr.html">attr</a> **in, struct <a class="el" href="structattr.html">attr</a> ***out, int *valid)</td></tr>
 <tr class="separator:a47f8a7cab6198e70e49b0af6448d0253"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,92 +200,7 @@ Variables</h2></td></tr>
 <tr class="memitem:a7cfa223fa2b1e0cda6c6cd64bd16d988"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structcommand__table.html">command_table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__command_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988">commands</a> []</td></tr>
 <tr class="separator:a7cfa223fa2b1e0cda6c6cd64bd16d988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a94d96b8b944dc9436b819510f4e19cf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94d96b8b944dc9436b819510f4e19cf0">&#9670;&nbsp;</a></span>escape_mode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053"></a>escape_mode_none&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4"></a>escape_mode_string&#160;</td><td class="fielddoc"><p>Surround string by double quotes </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685"></a>escape_mode_quote&#160;</td><td class="fielddoc"><p>Escape double quotes and backslashes </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06"></a>escape_mode_html_amp&#160;</td><td class="fielddoc"><p>Use HTML-style escape sequences for ampersands </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3"></a>escape_mode_html_quote&#160;</td><td class="fielddoc"><p>Use HTML-style escape sequences for double quotes </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a"></a>escape_mode_html_apos&#160;</td><td class="fielddoc"><p>Use HTML-style escape sequences for single quotes (apostrophes) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060"></a>escape_mode_html_lt&#160;</td><td class="fielddoc"><p>Use HTML-style escape sequences for lower than sign ('&lt;') </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006"></a>escape_mode_html_gt&#160;</td><td class="fielddoc"><p>Use HTML-style escape sequences for greater than sign ('&gt;') </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e"></a>escape_mode_html&#160;</td><td class="fielddoc"><p>Use all known HTML-style escape sequences </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="addeb4b2e5938e273caf67db4dbdc91cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addeb4b2e5938e273caf67db4dbdc91cc">&#9670;&nbsp;</a></span>coordinates_geo()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static char* coordinates_geo </td>
-          <td>(</td>
-          <td class="paramtype">const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *&#160;</td>
-          <td class="paramname"><em>gc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>sep</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Converts a WGS84 coordinate pair to its string representation. </p>
-<p>This function takes a coordinate pair with latitude and longitude in degrees and converts them to a string of the form</p><div class="fragment"><div class="line">45°28<span class="stringliteral">&#39;0&quot; N 9°11&#39;</span>26<span class="stringliteral">&quot; E </span></div></div><!-- fragment --><p> .</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gc</td><td>A WGS84 coordinate pair </td></tr>
-    <tr><td class="paramname">sep</td><td>The separator character to insert between latitude and longitude</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The coordinates as a formatted string </dd></dl>
-
-<p class="reference">References <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, and <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, and <a class="el" href="gui__internal__command_8h.html#a9ddab30b99d7724be31043f3103fd1de">gui_internal_coordinates()</a>.</p>
-
-</div>
-</div>
 <a id="a8bed7dffd099a5c56b902f03cd46eeb2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bed7dffd099a5c56b902f03cd46eeb2">&#9670;&nbsp;</a></span>gui_internal_append_attr()</h2>
 
@@ -332,7 +219,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">enum <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a>&#160;</td>
+          <td class="paramtype">enum <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a>&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
@@ -366,7 +253,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8h.html#a265db2f14a071beed130ea26a8c08af7">ATTR_IS_COORD_GEO</a>, <a class="el" href="attr_8h.html#a587859842cdbc81262100a1432347247">ATTR_IS_INT</a>, <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc">coordinates_geo()</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb">gui_internal_escape()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8h.html#a265db2f14a071beed130ea26a8c08af7">ATTR_IS_COORD_GEO</a>, <a class="el" href="attr_8h.html#a587859842cdbc81262100a1432347247">ATTR_IS_INT</a>, <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="group__coord.html#gade6434857738cf8f4d5575ed89208f8b">coord_geo_format_short()</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="util_8c.html#ab0c4a25781140f2a07393456d9216e03">str_escape()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a6af9e07b2b00f0d6c7fdae278e10dc13">gui_internal_cmd_img()</a>, <a class="el" href="gui__internal__command_8c.html#a47f8a7cab6198e70e49b0af6448d0253">gui_internal_cmd_write()</a>, and <a class="el" href="gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91">gui_internal_onclick()</a>.</p>
 
@@ -1741,7 +1628,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#a78e42e6261bed949dfc5cb98f1291bb1">attr_dup()</a>, <a class="el" href="attr_8c.html#a16f8181e76fc7339c0dde03da8b62e50">attr_generic_add_attr()</a>, <a class="el" href="attr_8h.html#a587859842cdbc81262100a1432347247">ATTR_IS_INT</a>, <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb">gui_internal_escape()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a78e42e6261bed949dfc5cb98f1291bb1">attr_dup()</a>, <a class="el" href="attr_8c.html#a16f8181e76fc7339c0dde03da8b62e50">attr_generic_add_attr()</a>, <a class="el" href="attr_8h.html#a587859842cdbc81262100a1432347247">ATTR_IS_INT</a>, <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="util_8c.html#ab0c4a25781140f2a07393456d9216e03">str_escape()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 </div>
 </div>
@@ -1855,7 +1742,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb">gui_internal_escape()</a>, <a class="el" href="gui__internal__html_8c.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>, <a class="el" href="gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91">gui_internal_onclick()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, and <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>.</p>
+<p class="reference">References <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__html_8c.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>, <a class="el" href="gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91">gui_internal_onclick()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="util_8c.html#ab0c4a25781140f2a07393456d9216e03">str_escape()</a>.</p>
 
 </div>
 </div>
@@ -2051,7 +1938,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053">escape_mode_none</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__html_8c.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>.</p>
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053">escape_mode_none</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__html_8c.html#ab8c09ef2414d92ccdb8edd46ae6478ea">gui_internal_html_parse_text()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>.</p>
 
 </div>
 </div>
@@ -2084,101 +1971,6 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search()</a>, <a class="el" href="structattr.html#ab23a65e41997a8b784ca269170bfb561">attr::callback_list</a>, <a class="el" href="command_8c.html#af4ad5cba872ab321271516efed127d87">command_add_table()</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a17946220aad4f37e599da2431c9aa783">gui_internal_new()</a>.</p>
-
-</div>
-</div>
-<a id="a9ddab30b99d7724be31043f3103fd1de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ddab30b99d7724be31043f3103fd1de">&#9670;&nbsp;</a></span>gui_internal_coordinates()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* gui_internal_coordinates </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
-          <td class="paramname"><em>pc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>sep</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Converts a coordinate pair to its WGS84 string representation. </p>
-<p>This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form </p><div class="fragment"><div class="line">45°28<span class="stringliteral">&#39;0&quot; N 9°11&#39;</span>26<span class="stringliteral">&quot; E </span></div></div><!-- fragment --><p> .</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gc</td><td>A coordinate pair </td></tr>
-    <tr><td class="paramname">sep</td><td>The separator character to insert between latitude and longitude</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The coordinates as a formatted string </dd></dl>
-
-<p class="reference">References <a class="el" href="gui__internal__command_8c.html#addeb4b2e5938e273caf67db4dbdc91cc">coordinates_geo()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="gui__internal__priv_8h.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
-
-</div>
-</div>
-<a id="a17e8f1f0e8b712b0c77c7323a81afafb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17e8f1f0e8b712b0c77c7323a81afafb">&#9670;&nbsp;</a></span>gui_internal_escape()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static char* gui_internal_escape </td>
-          <td>(</td>
-          <td class="paramtype">enum <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a>&#160;</td>
-          <td class="paramname"><em>mode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>in</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Escape special characters from a string. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mode</td><td>The escape mode that needs to be enabled (see enum escape_mode) </td></tr>
-    <tr><td class="paramname">in</td><td>The string to escape</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The escaped string</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>The returned string has been allocated and g_free() must thus be called on this string </dd></dl>
-
-<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06">escape_mode_html_amp</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006">escape_mode_html_gt</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060">escape_mode_html_lt</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3">escape_mode_html_quote</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685">escape_mode_quote</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__command_8c.html#a8600468cf5044ecabb64410aa87b5b73">gui_internal_cmd_escape()</a>, <a class="el" href="gui__internal__command_8c.html#a6af9e07b2b00f0d6c7fdae278e10dc13">gui_internal_cmd_img()</a>, and <a class="el" href="gui__internal__command_8c.html#aeb0ab729da1bceb6b9e9e013f479bf91">gui_internal_onclick()</a>.</p>
 
 </div>
 </div>
@@ -2272,7 +2064,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__command_8c.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="gui__internal__command_8c.html#a17e8f1f0e8b712b0c77c7323a81afafb">gui_internal_escape()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, and <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>.</p>
+<p class="reference">References <a class="el" href="attr_8h.html#addf0afce3170b1ed29581dd93add8965">ATTR_IS_STRING</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a>, <a class="el" href="util_8c.html#a593fb5941e287be932ddad0f71201262">g_strconcat_printf()</a>, <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="util_8c.html#ab0c4a25781140f2a07393456d9216e03">str_escape()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a6af9e07b2b00f0d6c7fdae278e10dc13">gui_internal_cmd_img()</a>.</p>
 

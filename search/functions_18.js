@@ -36,7 +36,7 @@ var searchData=
   ['write_5fchanges',['write_changes',['../binfile_8c.html#a41a976a416063184df56c409ff8015e7',1,'binfile.c']]],
   ['write_5fchanges_5fdo',['write_changes_do',['../binfile_8c.html#a78a0c6baec850cb6bd006b9914a55220',1,'binfile.c']]],
   ['write_5fcountrydir',['write_countrydir',['../maptool_8h.html#a4a1677e51b7388c9213e738c932be266',1,'write_countrydir(struct zip_info *zip_info, int max_index_size):&#160;osm.c'],['../osm_8c.html#a4a1677e51b7388c9213e738c932be266',1,'write_countrydir(struct zip_info *zip_info, int max_index_size):&#160;osm.c']]],
-  ['write_5fformer_5fdestinations',['write_former_destinations',['../bookmarks_8c.html#a2be9e4c4a1b186e4d9b791610e35d1be',1,'bookmarks.c']]],
+  ['write_5fformer_5fdestinations',['write_former_destinations',['../bookmarks_8c.html#ae99ca8bad2fb9039c04e5754e6ef117e',1,'bookmarks.c']]],
   ['write_5fitem',['write_item',['../tile_8c.html#ae3ee41b25b0059d8a7f02f75dfd0b960',1,'tile.c']]],
   ['write_5fitem_5fway_5fsubsection',['write_item_way_subsection',['../osm_8c.html#a40122a28a5024c59dc56269cd0ce52c6',1,'osm.c']]],
   ['write_5fitem_5fway_5fsubsection_5findex',['write_item_way_subsection_index',['../osm_8c.html#a7c7f41a2271aaf031b15d32a5fd08f57',1,'osm.c']]],

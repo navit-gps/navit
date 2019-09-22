@@ -113,12 +113,23 @@ Functions</h2></td></tr>
 <tr class="separator:ga61bdcf26825ab8b41cfcf1a035800a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5360dd50aed330d83233f0970fbfa2c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga5360dd50aed330d83233f0970fbfa2c4">coord_print</a> (enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> pro, struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, FILE *out)</td></tr>
 <tr class="separator:ga5360dd50aed330d83233f0970fbfa2c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9721df4355df61120c300550f91a9d01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga9721df4355df61120c300550f91a9d01">coord_format_with_sep</a> (float <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, float lng, enum <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a> fmt, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, const char *sep)</td></tr>
+<tr class="memdesc:ga9721df4355df61120c300550f91a9d01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a lat/lon into a text formatted text string.  <a href="#ga9721df4355df61120c300550f91a9d01">More...</a><br /></td></tr>
+<tr class="separator:ga9721df4355df61120c300550f91a9d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga328d4ac6d4e7430fd75f89b48649e057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga328d4ac6d4e7430fd75f89b48649e057">coord_format</a> (float <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, float lng, enum <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a> fmt, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>)</td></tr>
 <tr class="memdesc:ga328d4ac6d4e7430fd75f89b48649e057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a lat/lon into a text formatted text string.  <a href="#ga328d4ac6d4e7430fd75f89b48649e057">More...</a><br /></td></tr>
 <tr class="separator:ga328d4ac6d4e7430fd75f89b48649e057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade6434857738cf8f4d5575ed89208f8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gade6434857738cf8f4d5575ed89208f8b">coord_geo_format_short</a> (const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *gc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
+<tr class="memdesc:gade6434857738cf8f4d5575ed89208f8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a WGS84 coordinate pair to its string representation.  <a href="#gade6434857738cf8f4d5575ed89208f8b">More...</a><br /></td></tr>
+<tr class="separator:gade6434857738cf8f4d5575ed89208f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short</a> (const struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
+<tr class="memdesc:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer mercator coordinate pair to its string representation.  <a href="#gac5b234f8ccc46a2b2a41ce31f246c277">More...</a><br /></td></tr>
+<tr class="separator:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3972be1f6b7d3323209010d985086c42"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga3972be1f6b7d3323209010d985086c42">coord_hash</a> (const void *<a class="el" href="tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33">key</a>)</td></tr>
+<tr class="memdesc:ga3972be1f6b7d3323209010d985086c42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a hash from a struct coord pointed by key.  <a href="#ga3972be1f6b7d3323209010d985086c42">More...</a><br /></td></tr>
 <tr class="separator:ga3972be1f6b7d3323209010d985086c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06a6048dfc714dc5e591c2cf6551c6e1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga06a6048dfc714dc5e591c2cf6551c6e1">coord_equal</a> (const void *a, const void *b)</td></tr>
+<tr class="memdesc:ga06a6048dfc714dc5e591c2cf6551c6e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if two struct coord structures are equal.  <a href="#ga06a6048dfc714dc5e591c2cf6551c6e1">More...</a><br /></td></tr>
 <tr class="separator:ga06a6048dfc714dc5e591c2cf6551c6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -173,6 +184,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Test if two struct coord structures are equal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>A pointer to the first struct coord </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">b</td><td>A pointer to the second struct coord</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>TRUE if a and b are equal, FALSE otherwise </dd></dl>
+
 <p class="reference">References <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="ch_8c.html#af958dcfe6fdaa5acf307dfb1b57dd6da">coord_hash_new()</a>, and <a class="el" href="bookmarks_8c.html#a448f8703ba449c83097fe5e5fa315964">destination_equal()</a>.</p>
@@ -184,6 +205,9 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a> </td>
@@ -221,26 +245,171 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Converts a lat/lon into a text formatted text string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lat</td><td>The latitude (if lat is 360 or greater, the latitude will be omitted) </td></tr>
-    <tr><td class="paramname">lng</td><td>The longitude (if lng is 360 or greater, the longitude will be omitted) </td></tr>
-    <tr><td class="paramname">fmt</td><td>The format to use. <ul>
-<li>DEGREES_DECIMAL=&gt;Degrees with decimal places, i.e. 20.5000°N 110.5000°E </li>
-<li>DEGREES_MINUTES=&gt;Degrees and minutes, i.e. 20°30.00'N 110°30.00'E </li>
-<li>DEGREES_MINUTES_SECONDS=&gt;Degrees, minutes and seconds, i.e. 20°30'30.00"N 110°30'30"E</li>
+    <tr><td class="paramdir"></td><td class="paramname">lat</td><td>The latitude (if lat is 360 or greater, the latitude will be omitted) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">lng</td><td>The longitude (if lng is 360 or greater, the longitude will be omitted) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">fmt</td><td>The format to use. <ul>
+<li>DEGREES_DECIMAL=&gt;Degrees with decimal places, i.e. 20.500000°N 110.500000°E </li>
+<li>DEGREES_MINUTES=&gt;Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E </li>
+<li>DEGREES_MINUTES_SECONDS=&gt;Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E </li>
+<li>DEGREES_MINUTES_SECONDS_BRIEF=&gt;Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E </li>
 </ul>
 </td></tr>
-    <tr><td class="paramname">buffer</td><td>A buffer large enough to hold the output + a terminating NULL (up to 31 bytes) </td></tr>
-    <tr><td class="paramname">size</td><td>The size of the buffer </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">size</td><td>The size of the buffer </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72">DEGREES_DECIMAL</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c">DEGREES_MINUTES</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d">DEGREES_MINUTES_SECONDS</a>, and <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>.</p>
+<p class="reference">References <a class="el" href="group__coord.html#ga9721df4355df61120c300550f91a9d01">coord_format_with_sep()</a>.</p>
+
+</div>
+</div>
+<a id="ga9721df4355df61120c300550f91a9d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9721df4355df61120c300550f91a9d01">&#9670;&nbsp;</a></span>coord_format_with_sep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void coord_format_with_sep </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>lat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>lng</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a>&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a lat/lon into a text formatted text string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">lat</td><td>The latitude (if lat is 360 or greater, the latitude will be omitted) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">lng</td><td>The longitude (if lng is 360 or greater, the longitude will be omitted) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">fmt</td><td>The format to use: <ul>
+<li>DEGREES_DECIMAL=&gt;Degrees with decimal places, i.e. 20.500000°N 110.500000°E (max: 26 bytes) </li>
+<li>DEGREES_MINUTES=&gt;Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E (max: 30 bytes) </li>
+<li>DEGREES_MINUTES_SECONDS=&gt;Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E (max: 32 bytes) </li>
+<li>DEGREES_MINUTES_SECONDS_BRIEF=&gt;Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E (max 24 bytes) </li>
+</ul>
+</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A buffer large enough to hold the output (bearing in mind '°' uses 2 bytes in UTF-8). Maximum size depends on the format, see values above, and add an extra character for the terminating NUL character </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">size</td><td>The size of the buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sep</td><td>The separator to use (if needed) between latitude and longitude (if NULL we will use a space) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72">DEGREES_DECIMAL</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c">DEGREES_MINUTES</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d">DEGREES_MINUTES_SECONDS</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0">DEGREES_MINUTES_SECONDS_BRIEF</a>, and <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__coord.html#ga328d4ac6d4e7430fd75f89b48649e057">coord_format()</a>, <a class="el" href="group__coord.html#gade6434857738cf8f4d5575ed89208f8b">coord_geo_format_short()</a>, and <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short()</a>.</p>
+
+</div>
+</div>
+<a id="gade6434857738cf8f4d5575ed89208f8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade6434857738cf8f4d5575ed89208f8b">&#9670;&nbsp;</a></span>coord_geo_format_short()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void coord_geo_format_short </td>
+          <td>(</td>
+          <td class="paramtype">const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>sep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a WGS84 coordinate pair to its string representation. </p>
+<p>This function takes a coordinate pair with latitude and longitude in degrees and converts them to a string of the form</p><div class="fragment"><div class="line">45°28<span class="stringliteral">&#39;0&quot;N 9°11&#39;</span>26<span class="stringliteral">&quot;E </span></div></div><!-- fragment --><p> .</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">gc</td><td>A WGS84 coordinate pair </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">size</td><td>The size of the buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sep</td><td>The separator to use (if needed) between latitude and longitude (if NULL we will use a space) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="group__coord.html#ga9721df4355df61120c300550f91a9d01">coord_format_with_sep()</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0">DEGREES_MINUTES_SECONDS_BRIEF</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, and <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8bed7dffd099a5c56b902f03cd46eeb2">gui_internal_append_attr()</a>.</p>
 
 </div>
 </div>
@@ -287,6 +456,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generate a hash from a struct coord pointed by key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>A pointer to the struct coord to hash </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting hash </dd></dl>
 
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33">key</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">y</a>.</p>
 
@@ -594,6 +772,70 @@ Functions</h2></td></tr>
 <p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7">coord_rect::rl</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mg_8h.html#a7871942b43a37816f70ada3943de32a9">block_init()</a>, <a class="el" href="mg_8h.html#adc5d1a45aa1a30f532012d99a6b3cc81">block_next()</a>, <a class="el" href="mg_8h.html#ae6979a06d77dcc702b9ed50430e3f464">block_next_lin()</a>, <a class="el" href="gui__internal__command_8c.html#a5da19bf1ada68c6435d7b8e1478ca1ad">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="binfile_8c.html#a057c1432b59e12f339c63dea62eeb8a3">map_download_selection_check()</a>, <a class="el" href="poly_8c.html#a0b4f6aed0b770731b731e07828f75a2a">poly_get()</a>, <a class="el" href="binfile_8c.html#a35d953ed2fe24fad0fde34180cecfa78">selection_contains()</a>, <a class="el" href="traffic_8c.html#a07d66850814efbe4eef01f12a3300aef">tm_rect_new()</a>, and <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>.</p>
+
+</div>
+</div>
+<a id="gac5b234f8ccc46a2b2a41ce31f246c277"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac5b234f8ccc46a2b2a41ce31f246c277">&#9670;&nbsp;</a></span>pcoord_format_short()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pcoord_format_short </td>
+          <td>(</td>
+          <td class="paramtype">const struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
+          <td class="paramname"><em>pc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>sep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts an integer mercator coordinate pair to its string representation. </p>
+<p>This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form </p><div class="fragment"><div class="line">45°28<span class="stringliteral">&#39;0&quot;N 9°11&#39;</span>26<span class="stringliteral">&quot;E </span></div></div><!-- fragment --><p> .</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">pc</td><td>Coordinates as integer mercator </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">size</td><td>The size of the buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sep</td><td>The separator to use (if needed) between latitude and longitude (if NULL we will use a space) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="group__coord.html#ga9721df4355df61120c300550f91a9d01">coord_format_with_sep()</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0">DEGREES_MINUTES_SECONDS_BRIEF</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal__priv_8h.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, <a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel()</a>, and <a class="el" href="android_8c.html#ac1ff999108e1638e7d8f6a1e18666085">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</a>.</p>
 
 </div>
 </div>

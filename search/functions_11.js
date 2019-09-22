@@ -41,6 +41,7 @@ var searchData=
   ['pc',['pc',['../classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e',1,'NGQPoint']]],
   ['pcoord_5fdestroy_5fpy',['pcoord_destroy_py',['../pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b',1,'pcoord.c']]],
   ['pcoord_5fencode',['pcoord_encode',['../binding__dbus_8c.html#a1ba2e7992ea80c64977a55b1ca8ab7f4',1,'binding_dbus.c']]],
+  ['pcoord_5fformat_5fshort',['pcoord_format_short',['../group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277',1,'pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c'],['../group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277',1,'pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c']]],
   ['pcoord_5ffunc',['pcoord_func',['../pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8',1,'pcoord.c']]],
   ['pcoord_5fget_5ffrom_5fmessage',['pcoord_get_from_message',['../binding__dbus_8c.html#a9aedd7fd9d261196018280d5d1bbc7c1',1,'binding_dbus.c']]],
   ['pcoord_5fgetattr_5fpy',['pcoord_getattr_py',['../pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35',1,'pcoord.c']]],

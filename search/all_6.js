@@ -129,6 +129,7 @@ var searchData=
   ['degrees_5fdecimal',['DEGREES_DECIMAL',['../coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72',1,'coord.h']]],
   ['degrees_5fminutes',['DEGREES_MINUTES',['../coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c',1,'coord.h']]],
   ['degrees_5fminutes_5fseconds',['DEGREES_MINUTES_SECONDS',['../coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d',1,'coord.h']]],
+  ['degrees_5fminutes_5fseconds_5fbrief',['DEGREES_MINUTES_SECONDS_BRIEF',['../coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0',1,'coord.h']]],
   ['del_5falpha',['del_alpha',['../geodesic_8h.html#a7a719c2b2b8cc7693defeda7cb7cff9d',1,'geodesic.h']]],
   ['delay',['delay',['../structgraphics__priv.html#a0799cb2aef2bc67ce01586a3eeaa9883',1,'graphics_priv::delay()'],['../structnavigation.html#a748c380840715de6cfd65ab9992394b6',1,'navigation::delay()'],['../structroute__traffic__distortion.html#afcb9effca1acf0ed5899ae0729ab1fd2',1,'route_traffic_distortion::delay()'],['../structitem__msg__priv.html#aa13d73ad0ea8ea283217a4e9c49739c1',1,'item_msg_priv::delay()'],['../structseg__data.html#acdf8e11019783523512ab0dca53be293',1,'seg_data::delay()']]],
   ['delete',['Delete',['../classNGQProxyBookmarks.html#a96c92c8203ad241c048857fe6c1e5af1',1,'NGQProxyBookmarks::Delete()'],['../graphics__gtk__drawing__area_8c.html#a511be494a26a6f1e11e2d743721edbaa',1,'delete():&#160;graphics_gtk_drawing_area.c']]],

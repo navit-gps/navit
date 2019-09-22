@@ -35,5 +35,5 @@ var bookmarks_8c =
     [ "find_destination_in_list", "bookmarks_8c.html#a4de58a53a1ba021585de9d0027901031", null ],
     [ "free_former_destination", "bookmarks_8c.html#a76554dd1b272ef24aefbf38e227267d3", null ],
     [ "read_former_destination_map_as_list", "bookmarks_8c.html#a7536c963f67145457db8da7a789f6087", null ],
-    [ "write_former_destinations", "bookmarks_8c.html#a2be9e4c4a1b186e4d9b791610e35d1be", null ]
+    [ "write_former_destinations", "bookmarks_8c.html#ae99ca8bad2fb9039c04e5754e6ef117e", null ]
 ];

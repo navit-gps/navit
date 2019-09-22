@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('android_8c.html','');});
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
@@ -158,6 +159,8 @@ Functions</h2></td></tr>
 <tr class="separator:a4b8da23c98cf14ea1ebc11c90610a299"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03ff8a0fdf2c7031313356dedcd1d7bb"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jint JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel</a> (JNIEnv *env, jobject thiz, int channel, jobject str)</td></tr>
 <tr class="separator:a03ff8a0fdf2c7031313356dedcd1d7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1ff999108e1638e7d8f6a1e18666085"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ac1ff999108e1638e7d8f6a1e18666085">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint</a> (JNIEnv *env, jobject thiz, jint id, int x, int y)</td></tr>
+<tr class="separator:ac1ff999108e1638e7d8f6a1e18666085"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a417a09dbc390b2059d28d7ac85867c86"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a417a09dbc390b2059d28d7ac85867c86">Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry</a> (JNIEnv *env, jobject thiz, int channel, jobject str)</td></tr>
 <tr class="separator:a417a09dbc390b2059d28d7ac85867c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09397869eae0e76e3be1a61884641d92"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jobjectArray JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a09397869eae0e76e3be1a61884641d92">Java_org_navitproject_navit_NavitGraphics_GetAllCountries</a> (JNIEnv *env, jobject thiz)</td></tr>
@@ -773,7 +776,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr()</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#gad7c73db8437d87f3470c88f8a619c292">navit_draw()</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#gabe8b57e21a0835fa5070f1dbb07de9f8">navit_zoom_in_cursor()</a>, <a class="el" href="group__navit.html#ga1b035def8233343661617a8a456f1e84">navit_zoom_out_cursor()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr()</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#gad7c73db8437d87f3470c88f8a619c292">navit_draw()</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#gabe8b57e21a0835fa5070f1dbb07de9f8">navit_zoom_in_cursor()</a>, <a class="el" href="group__navit.html#ga1b035def8233343661617a8a456f1e84">navit_zoom_out_cursor()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>
@@ -804,6 +807,54 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="structsearch__list__result.html#a6e22252aaf420d05ffc78025bdc9ac71">search_list_result::country</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structsearch__list__country.html#a7f5745a55fe796706fa6a588dbd9c47f">search_list_country::iso2</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structsearch__list__country.html#ae5c310297afb809c61f41367194da79f">search_list_country::name</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="navit__nls_8c.html#a44c4d6ec3651fb5fe7609ea09747363a">navit_nls_gettext()</a>, <a class="el" href="search_8c.html#a861976756c5fc0c9b66a6eb91aa7e694">search_list_destroy()</a>, <a class="el" href="search_8c.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>, <a class="el" href="search_8c.html#a951b63c146576e07dfa8f5e216fea5c9">search_list_new()</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+
+</div>
+</div>
+<a id="ac1ff999108e1638e7d8f6a1e18666085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1ff999108e1638e7d8f6a1e18666085">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint </td>
+          <td>(</td>
+          <td class="paramtype">JNIEnv *&#160;</td>
+          <td class="paramname"><em>env</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jobject&#160;</td>
+          <td class="paramname"><em>thiz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,17 @@
 var util_8h =
 [
     [ "MAX_MISMATCH", "util_8h.html#a1b9300db719789607fadedb3eaf94567", null ],
+    [ "escape_mode", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0", [
+      [ "escape_mode_none", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053", null ],
+      [ "escape_mode_string", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4", null ],
+      [ "escape_mode_quote", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685", null ],
+      [ "escape_mode_html_amp", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06", null ],
+      [ "escape_mode_html_quote", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3", null ],
+      [ "escape_mode_html_apos", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a", null ],
+      [ "escape_mode_html_lt", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060", null ],
+      [ "escape_mode_html_gt", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006", null ],
+      [ "escape_mode_html", "util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e", null ]
+    ] ],
     [ "compare_name_systematic", "util_8h.html#aa17c54818feed047d0a937e8d7085333", null ],
     [ "current_to_iso8601", "util_8h.html#a906f28ed9a96ccd7ccbac645531a3203", null ],
     [ "g_hash_to_list", "util_8h.html#a096102c788a1aee9421c8636c5653b74", null ],
@@ -17,6 +28,8 @@ var util_8h =
     [ "spawn_process_info_free", "util_8h.html#af2843263548b7303487ac8ae403b56ae", null ],
     [ "spawn_process_init", "util_8h.html#a4a8412575e61913d24d36012212e1fd5", null ],
     [ "square_shape_str", "util_8h.html#afbc75e37f04e28a94e51fc53134ba651", null ],
+    [ "str_escape", "util_8h.html#ab0c4a25781140f2a07393456d9216e03", null ],
+    [ "strncpy_unescape", "util_8h.html#aa03e0ea60bfde3ec1a84975f513435ea", null ],
     [ "strtolower", "util_8h.html#ac6b7377df3a4fcbff23b8f8ecde6d221", null ],
     [ "strtoupper", "util_8h.html#a2596fc665ff7a1fd98a965bd349be472", null ],
     [ "time_to_iso8601", "util_8h.html#ab3ca16b02372aa7a2b38bfab5e7a9c0f", null ],

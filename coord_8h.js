@@ -19,11 +19,14 @@ var coord_8h =
     [ "coord_format", "coord_8h.html#ab414d48bf3be54c39da88757cf788300", [
       [ "DEGREES_DECIMAL", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72", null ],
       [ "DEGREES_MINUTES", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c", null ],
-      [ "DEGREES_MINUTES_SECONDS", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d", null ]
+      [ "DEGREES_MINUTES_SECONDS", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d", null ],
+      [ "DEGREES_MINUTES_SECONDS_BRIEF", "coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0", null ]
     ] ],
     [ "coord_destroy", "group__coord.html#gad191c6f8f958bfe80345f76549c00dea", null ],
     [ "coord_equal", "group__coord.html#ga06a6048dfc714dc5e591c2cf6551c6e1", null ],
     [ "coord_format", "group__coord.html#ga328d4ac6d4e7430fd75f89b48649e057", null ],
+    [ "coord_format_with_sep", "group__coord.html#ga9721df4355df61120c300550f91a9d01", null ],
+    [ "coord_geo_format_short", "group__coord.html#gade6434857738cf8f4d5575ed89208f8b", null ],
     [ "coord_get", "group__coord.html#ga070022fd4aaf0fd34bd7307078a4eeac", null ],
     [ "coord_hash", "group__coord.html#ga3972be1f6b7d3323209010d985086c42", null ],
     [ "coord_new", "group__coord.html#gaeb489edd13309353cb486f855c00dbe5", null ],
@@ -35,5 +38,7 @@ var coord_8h =
     [ "coord_rect_extend", "group__coord.html#ga2c6d628b067bab6c56eb6504207e6feb", null ],
     [ "coord_rect_new", "group__coord.html#ga63815cc089c2d7107496a8eb8512ac27", null ],
     [ "coord_rect_overlap", "group__coord.html#ga738eb455670a0c22187903d0d97100f1", null ],
+    [ "coordinates_geo", "coord_8h.html#a106d5695be86a881ac2960868f742148", null ],
+    [ "pcoord_format_short", "group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277", null ],
     [ "pcoord_parse", "group__coord.html#ga61bdcf26825ab8b41cfcf1a035800a75", null ]
 ];

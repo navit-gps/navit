@@ -138,6 +138,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a99b3a65b1f4fd602edee7d633679309d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bookmarks_8h.html#a99b3a65b1f4fd602edee7d633679309d">bookmarks_write_center_to_file</a> (struct <a class="el" href="structbookmarks.html">bookmarks</a> *this_, char *<a class="el" href="structfile.html">file</a>)</td></tr>
 <tr class="separator:a99b3a65b1f4fd602edee7d633679309d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53b8bfb4977976390e2e287778f932b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bookmarks_8h.html#a53b8bfb4977976390e2e287778f932b8">bookmarks_append_destinations</a> (struct <a class="el" href="structmap.html">map</a> *former_destination_map, char *<a class="el" href="structfile.html">file</a>, struct <a class="el" href="structpcoord.html">pcoord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, int count, enum <a class="el" href="item_8h.html#a2679318a14061852e50df3c6e4e42f62">item_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, const char *<a class="el" href="destination_8c.html#a83a6bff093a1144aca515982229c94ca">description</a>, int <a class="el" href="town_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>)</td></tr>
+<tr class="memdesc:a53b8bfb4977976390e2e287778f932b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append recent destination(s) item to the former destionations map.  <a href="#a53b8bfb4977976390e2e287778f932b8">More...</a><br /></td></tr>
 <tr class="separator:a53b8bfb4977976390e2e287778f932b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -276,7 +277,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Append recent destination(s) item to the former destionations map. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Append recent destination(s) item to the former destionations map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">former_destination_map</td><td></td></tr>
     <tr><td class="paramname">former_destination_file</td><td></td></tr>
@@ -289,7 +292,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">_</a>, <a class="el" href="bookmarks_8c.html#a4de58a53a1ba021585de9d0027901031">find_destination_in_list()</a>, <a class="el" href="bookmarks_8c.html#a76554dd1b272ef24aefbf38e227267d3">free_former_destination()</a>, <a class="el" href="map_8c.html#a956c6e8398f832e31fe90634fa982dbf">map_projection()</a>, <a class="el" href="bookmarks_8c.html#a7536c963f67145457db8da7a789f6087">read_former_destination_map_as_list()</a>, <a class="el" href="transform_8c.html#ae1b04ebb9ec02e3a4ddffd54434412a1">transform_from_to()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="bookmarks_8c.html#a2be9e4c4a1b186e4d9b791610e35d1be">write_former_destinations()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">_</a>, <a class="el" href="bookmarks_8c.html#a4de58a53a1ba021585de9d0027901031">find_destination_in_list()</a>, <a class="el" href="bookmarks_8c.html#a76554dd1b272ef24aefbf38e227267d3">free_former_destination()</a>, <a class="el" href="map_8c.html#a956c6e8398f832e31fe90634fa982dbf">map_projection()</a>, <a class="el" href="bookmarks_8c.html#a7536c963f67145457db8da7a789f6087">read_former_destination_map_as_list()</a>, <a class="el" href="transform_8c.html#ae1b04ebb9ec02e3a4ddffd54434412a1">transform_from_to()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="bookmarks_8c.html#ae99ca8bad2fb9039c04e5754e6ef117e">write_former_destinations()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group__navit.html#gad94b3422d9e4aa419d83d2852812dadb">navit_add_destination_description()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#ga8c4ba89eaca2dc43b6f6263b4be97d97">navit_set_destinations()</a>, and <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>.</p>
 
