@@ -50,3 +50,4 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    development/linux_development
    development/macos_development
    development/wince_development
+   development/windows_development
