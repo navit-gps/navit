@@ -11,8 +11,8 @@ At the moment, compiling with [[CMake]] seems to be the only way to create a run
 Compiling / debugging using CodeBlocks & mingw compiler
 =======================================================
 
- Up to and including release 0.0.4 the Win32 builds were supported using the CodeBlocks/mingw development environment, 
- in combination with the glade for win32 GTK devlopment toolkit. For release 0.1.0 and later use native mingw 
+ Up to and including release 0.0.4 the Win32 builds were supported using the CodeBlocks/mingw development environment,
+ in combination with the glade for win32 GTK devlopment toolkit. For release 0.1.0 and later use native mingw
  (see below) or cygwin (see below).
 
 Downloads
@@ -372,7 +372,7 @@ Example setcegccenv.sh:
     export LD_LIBRARY_PATH="$WINCE_PATH/bin"
     export PKG_CONFIG_PATH="$WINCE_PATH/lib/pkgconfig"
     export PKG_CONFIG_LIBDIR="$WINCE_PATH/lib/pkgconfig"
- 
+
 
 For installation, compiling and configuring please see manual for NavIt on Linux.
 
@@ -410,7 +410,7 @@ Then autogen.sh and configure navit. Example configure for wince:
     --disable-vehicle-demo  \
     --disable-binding-dbus \
     --enable-avoid-unaligned \
-    --enable-avoid-float 
+    --enable-avoid-float
 
 If example did not run, do this:
 
@@ -446,15 +446,15 @@ If example did not run, do this:
      --enable-avoid-unaligned \
      --enable-avoid-float \
      --enable-support-libc \
-     PKG_CONFIG=arm-mingw32ce-pkgconfig 
+     PKG_CONFIG=arm-mingw32ce-pkgconfig
 
 
 This is basic just to view the maps. Then: `make`
 As usual, osm2navit.exe will fail to compile. `cd navit && make navit.exe`
 You find navit.exe under (your directory)/navit/navit/navit.exe
 
-Install sync on your system. 
- 
+Install sync on your system.
+
 
 ----
 
@@ -497,7 +497,7 @@ Under SuSE Linux you can run kitchensync (not for all PDA).
 For synchronisation you can also use kpilot under Suse Linux (runs not with all PDA) or Microsoft Active Sync under Windows (free download at Microsoft homepage).
 
 You can put your memory card in card reader and copy data. Over console you must type in `sync` before you remove memory card.
- 
+
 Install navit.exe.
 
 Debian:
@@ -505,13 +505,13 @@ Debian:
 .. code-block::
 
     synce-pcp navit.exe ":/Storage Card/navit.exe"
- 
+
 All other:
 
 .. code-block::
 
     pcp navit.exe ":/Storage Card/navit.exe"
- 
+
 
 Prepare a navit.xml.wince
 
@@ -519,7 +519,7 @@ Change gui to win32 and graphics to win32.
 
 Fix the paths to your maps "/Storage Card/binfilemap.bin"
 
-Debian: 
+Debian:
 
 .. code-block::
 
