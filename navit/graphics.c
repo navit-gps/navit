@@ -1911,12 +1911,13 @@ static void draw_init_ctx(struct draw_polyline_context *ctx, int maxpoints) {
 
 static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc,
         struct point *pnt, int count, int *width) {
+    if (count < 2)
+        return;
+
     int maxpoints=200;
     struct draw_polyline_context ctx;
     int i=0;
     int max_circle_points=20;
-    if (count < 2)
-        return;
     ctx.shape.l=0;
     ctx.shape.wi=0;
     ctx.res=g_alloca(sizeof(struct point)*maxpoints);
