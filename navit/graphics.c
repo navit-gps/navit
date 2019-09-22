@@ -1366,6 +1366,7 @@ struct displayitem {
     char *label;
     struct displayitem_poly_holes * holes;
     int z_order;
+    int flags;
     int count;
     struct coord c[0];
 };
@@ -1433,6 +1434,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     int hole_count=0;
     int hole_total_coords=0;
     int holes_length;
+    int flags=0;
 
     /* calculate number of bytes required */
     /* own length */
@@ -1445,6 +1447,11 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
             else
                 len++;
         }
+    }
+    /* check for and remember flags (for underground drawing) */
+    item_attr_rewind(item);
+    if(item_attr_get(item, attr_flags, &attr)) {
+       flags = attr.u.num;
     }
     /* add length for holes */
     item_attr_rewind(item);
@@ -1464,6 +1471,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     p+=sizeof(*di)+count*sizeof(*c);
     di->item=*item;
     di->z_order=0;
+    di->flags=flags;
     di->holes=NULL;
     if(hole_count > 0) {
         di->holes = display_add_holes(item, hole_count, &p);
@@ -2676,10 +2684,15 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
 
         if (! dc->gc) {
             struct graphics_gc * gc=graphics_gc_new(gra);
-            graphics_gc_set_foreground(gc, &e->color);
             dc->gc=gc;
         }
-
+        if((di->flags & AF_UNDERGROUND) && (dc->e->type != element_text)) {
+           struct color fg_color = e->color;
+           fg_color.a=0x33 << 8;
+           graphics_gc_set_foreground(dc->gc, &fg_color);
+        } else {
+           graphics_gc_set_foreground(dc->gc, &e->color);
+        }
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 
