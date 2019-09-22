@@ -8,6 +8,7 @@ apt-get install -y libglib2.0-dev git autogen autoconf libtool zip
 dpkg --add-architecture i386
 apt-get update
 apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
+apt-get install -y xsltproc
 
 #remove disturbing build artefact for second run
 rm -f /opt/tomtom-sdk/gcc-3.3.4_glibc-2.3.2/arm-linux/sys-root/bin//glib-genmarshal
