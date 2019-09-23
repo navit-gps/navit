@@ -2608,11 +2608,20 @@ static inline void displayitem_draw_text(struct displayitem *di,struct display_c
 }
 
 static inline void displayitem_draw_icon(struct displayitem *di,struct display_context *dc, struct element * e,
-        struct graphics * gra, struct point * pa, int count) {
+        struct graphics * gra, struct point * pa, int count, struct layout * l) {
     if (count) {
         struct graphics_image *img=dc->img;
         if (!img || item_is_custom_poi(di->item)) {
+            int icon_width =  e->u.icon.width;
+            int icon_height = e->u.icon.height;
             char *path;
+            /* get the standard icon size out of the layout if unset */
+            if(l != NULL) {
+                if(icon_height==-1)
+                    icon_height=l->icon_h;
+                if(icon_width==-1)
+                    icon_width=l->icon_w;
+            }
             if (item_is_custom_poi(di->item)) {
                 char *icon;
                 char *src;
@@ -2626,7 +2635,7 @@ static inline void displayitem_draw_icon(struct displayitem *di,struct display_c
                 g_free(icon);
             } else
                 path=graphics_icon_path(e->u.icon.src);
-            img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+            img=graphics_image_new_scaled_rotated(gra, path, icon_width, icon_height, e->u.icon.rotation);
             if (img)
                 dc->img=img;
             else
@@ -2732,7 +2741,7 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
             displayitem_draw_text(di, dc, e, gra, pa,  count, &t_holes);
             break;
         case element_icon:
-            displayitem_draw_icon(di, dc, e, gra, pa, count);
+            displayitem_draw_icon(di, dc, e, gra, pa, count, l);
             break;
         case element_image:
             displayitem_draw_image (di, dc,  gra, pa, count);
