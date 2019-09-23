@@ -406,6 +406,13 @@ int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     }
 }
 
+static void element_set_oneway(struct element *e, struct attr **attrs) {
+    struct attr *oneway;
+    oneway=attr_search(attrs, NULL, attr_oneway);
+    if (oneway)
+        e->oneway=oneway->u.num;
+}
+
 static void element_set_color(struct element *e, struct attr **attrs) {
     struct attr *color;
     color=attr_search(attrs, NULL, attr_color);
@@ -427,6 +434,15 @@ static void element_set_text_size(struct element *e, struct attr **attrs) {
     text_size=attr_search(attrs, NULL, attr_text_size);
     if (text_size)
         e->text_size=text_size->u.num;
+}
+
+static void element_set_arrows_width(struct element *e, struct attr **attrs) {
+    struct attr *width;
+    width=attr_search(attrs, NULL, attr_width);
+    if (width)
+        e->u.arrows.width=width->u.num;
+    else
+        e->u.arrows.width=10;
 }
 
 static void element_set_polyline_width(struct element *e, struct attr **attrs) {
@@ -485,6 +501,7 @@ polygon_new(struct attr *parent, struct attr **attrs) {
     e = g_new0(struct element, 1);
     e->type=element_polygon;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
 
     return (struct polygon *)e;
 }
@@ -496,6 +513,7 @@ polyline_new(struct attr *parent, struct attr **attrs) {
     e = g_new0(struct element, 1);
     e->type=element_polyline;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
     element_set_polyline_width(e, attrs);
     element_set_polyline_directed(e, attrs);
     element_set_polyline_dash(e, attrs);
@@ -515,6 +533,7 @@ circle_new(struct attr *parent, struct attr **attrs) {
     e->u.circle.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.circle.background_color, attrs);
+    element_set_oneway(e, attrs);
     element_set_text_size(e, attrs);
     element_set_circle_width(e, attrs);
     element_set_circle_radius(e, attrs);
@@ -535,6 +554,7 @@ text_new(struct attr *parent, struct attr **attrs) {
     e->u.text.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.text.background_color, attrs);
+    element_set_oneway(e, attrs);
 
     return (struct text *)e;
 }
@@ -589,6 +609,8 @@ arrows_new(struct attr *parent, struct attr **attrs) {
     e = g_malloc0(sizeof(*e));
     e->type=element_arrows;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
+    element_set_arrows_width(e, attrs);
     return (struct arrows *)e;
 }
 

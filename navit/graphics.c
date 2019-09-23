@@ -1547,19 +1547,30 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
     }
 }
 
-static void display_draw_arrow(struct point *p, int dx, int dy, int l, struct graphics_gc *gc, struct graphics *gra) {
-    struct point pnt[3];
+static void display_draw_arrow(struct point *p, long dx, long dy, int width, struct display_context *dc,
+                               struct graphics *gra, int filled) {
+    struct point pnt[4];
+    /* half the width in every direction */
+    width /= 2;
     pnt[0]=pnt[1]=pnt[2]=*p;
-    pnt[0].x+=-dx*l/65536+dy*l/65536;
-    pnt[0].y+=-dy*l/65536-dx*l/65536;
-    pnt[2].x+=-dx*l/65536-dy*l/65536;
-    pnt[2].y+=-dy*l/65536+dx*l/65536;
-    graphics_draw_lines(gra, gc, pnt, 3);
+    pnt[0].x+=-dx*width/65536+dy*width/65536;
+    pnt[0].y+=-dy*width/65536-dx*width/65536;
+    pnt[2].x+=-dx*width/65536-dy*width/65536;
+    pnt[2].y+=-dy*width/65536+dx*width/65536;
+    if(filled) {
+        pnt[3]=pnt[0];
+        graphics_draw_polygon(gra, dc->gc, pnt, 4);
+    } else {
+        graphics_draw_lines(gra, dc->gc, pnt, 3);
+    }
+
 }
 
-static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count) {
-    int i,dx,dy,l;
+static void display_draw_arrows(struct graphics *gra, struct display_context *dc, struct point *pnt, int count,
+                                int *width, int filled) {
+    long i,dx,dy,l;
     struct point p;
+    struct element *e=dc->e;
     for (i = 0 ; i < count-1 ; i++) {
         dx=pnt[i+1].x-pnt[i].x;
         dy=pnt[i+1].y-pnt[i].y;
@@ -1568,13 +1579,29 @@ static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, st
             dx=dx*65536/l;
             dy=dy*65536/l;
             p=pnt[i];
-            p.x+=dx*15/65536;
-            p.y+=dy*15/65536;
-            display_draw_arrow(&p, dx, dy, 10, gc, gra);
-            p=pnt[i+1];
-            p.x-=dx*15/65536;
-            p.y-=dy*15/65536;
-            display_draw_arrow(&p, dx, dy, 10, gc, gra);
+            if(filled) {
+                /* print arrow at middle point */
+                p.x+=dx*(l/2)/65536;
+                p.y+=dy*(l/2)/65536;
+                display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                /* if line is quite long, print arrows at 1/4 and 3/4 length */
+                if(l > (20*width[i])) {
+                    p.x+=dx*(l/4)/65536;
+                    p.y+=dy*(l/4)/65536;
+                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                    p.x+=dx*3*(l/4)/65536;
+                    p.y+=dy*3*(l/4)/65536;
+                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                }
+            } else {
+                p.x+=dx*15/65536;
+                p.y+=dy*15/65536;
+                display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
+                p=pnt[i+1];
+                p.x-=dx*15/65536;
+                p.y-=dy*15/65536;
+                display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
+            }
         }
     }
 }
@@ -2692,6 +2719,13 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
 
         di->z_order=++(gra->current_z_order);
 
+        /* Skip elements that are to be drawn on oneway streets only
+         * if street is not oneway */
+        if((e->oneway) && (!(di->flags & AF_ONEWAY))) {
+            di=di->next;
+            continue;
+        }
+
         if (! dc->gc) {
             struct graphics_gc * gc=graphics_gc_new(gra);
             dc->gc=gc;
@@ -2725,6 +2759,8 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
             mindist=0;
         if (dc->e->type == element_polyline)
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
+        else if (dc->e->type == element_arrows)
+            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
         else
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
@@ -2747,7 +2783,7 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
             displayitem_draw_image (di, dc,  gra, pa, count);
             break;
         case element_arrows:
-            display_draw_arrows(gra,dc->gc,pa,count);
+            display_draw_arrows(gra,dc,pa,count, width, e->oneway);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);

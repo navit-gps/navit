@@ -37,6 +37,7 @@ struct element {
     enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
     struct color color;
     int text_size;
+    int oneway;
     union {
         struct element_point {
             char stub;
@@ -67,6 +68,9 @@ struct element {
         struct element_text {
             struct color background_color;
         } text;
+        struct element_arrows {
+            int width;
+        } arrows;
     } u;
     int coord_count;
     struct coord *coord;
