@@ -1451,7 +1451,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     /* check for and remember flags (for underground drawing) */
     item_attr_rewind(item);
     if(item_attr_get(item, attr_flags, &attr)) {
-       flags = attr.u.num;
+        flags = attr.u.num;
     }
     /* add length for holes */
     item_attr_rewind(item);
@@ -2665,15 +2665,16 @@ static inline void displayitem_draw_image (struct displayitem *di, struct displa
  * This function will invoke the appropriate draw primitive depending on the type of the element to draw
  *
  * @brief di The displayitem to draw
- * @brief dummy Unused
+ * @brief l current layout for getting defaults and underground alpha
  * @brief dc The display_context to use to draw items
  */
-static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
+static void displayitem_draw(struct displayitem *di, struct layout *l, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
     int limit=0;
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
     struct graphics *gra=dc->gra;
     struct element *e=dc->e;
+    int draw_underground=0;
 
     while (di) {
         int count=di->count,mindist=dc->mindist;
@@ -2685,14 +2686,25 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
         if (! dc->gc) {
             struct graphics_gc * gc=graphics_gc_new(gra);
             dc->gc=gc;
+            graphics_gc_set_foreground(dc->gc, &e->color);
         }
+
+        /* If the element id flagged AF_UNDERGROUND, we apply predefined transparenc to it if
+         * it's not the text. */
         if((di->flags & AF_UNDERGROUND) && (dc->e->type != element_text)) {
-           struct color fg_color = e->color;
-           fg_color.a=0x33 << 8;
-           graphics_gc_set_foreground(dc->gc, &fg_color);
+            if(!draw_underground) {
+                struct color fg_color = e->color;
+                fg_color.a= (l != NULL) ? l->underground_alpha: UNDERGROUND_ALPHA_;
+                graphics_gc_set_foreground(dc->gc, &fg_color);
+                draw_underground=1;
+            }
         } else {
-           graphics_gc_set_foreground(dc->gc, &e->color);
+            if(draw_underground) {
+                graphics_gc_set_foreground(dc->gc, &e->color);
+                draw_underground=0;
+            }
         }
+
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 
@@ -2744,7 +2756,8 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *display_list, struct itemgra *itm) {
+static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *display_list, struct itemgra *itm,
+                                   struct layout * l) {
     struct element *e;
     GList *es,*types;
     struct display_context *dc=&display_list->dc;
@@ -2759,7 +2772,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
             dc->type=GPOINTER_TO_INT(types->data);
             entry=get_hash_entry(display_list, dc->type);
             if (entry && entry->di) {
-                displayitem_draw(entry->di, NULL, dc);
+                displayitem_draw(entry->di, l, dc);
                 display_context_free(dc);
             }
             types=g_list_next(types);
@@ -2819,7 +2832,8 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_layer(struct displaylist *display_list, struct graphics *gra, struct layer *lay, int order) {
+static void xdisplay_draw_layer(struct displaylist *display_list, struct graphics *gra, struct layer *lay, int order,
+                                struct layout * l) {
     GList *itms;
     struct itemgra *itm;
 
@@ -2827,7 +2841,7 @@ static void xdisplay_draw_layer(struct displaylist *display_list, struct graphic
     while (itms) {
         itm=itms->data;
         if (order >= itm->order.min && order <= itm->order.max)
-            xdisplay_draw_elements(gra, display_list, itm);
+            xdisplay_draw_elements(gra, display_list, itm, l);
         itms=g_list_next(itms);
     }
 }
@@ -2850,7 +2864,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
         if (lay->active) {
             if (lay->ref)
                 lay=lay->ref;
-            xdisplay_draw_layer(display_list, gra, lay, order);
+            xdisplay_draw_layer(display_list, gra, lay, order, l);
         }
         lays=g_list_next(lays);
     }

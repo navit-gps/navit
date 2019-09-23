@@ -202,6 +202,7 @@ ATTR(autozoom_max)
 ATTR(nav_status)
 ATTR(virtual_dpi)
 ATTR(real_dpi)
+ATTR(underground_alpha)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative or absolute values. See the
  * documentation of ATTR_REL_RELSHIFT for details.

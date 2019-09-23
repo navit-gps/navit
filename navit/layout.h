@@ -105,6 +105,9 @@ struct layout {
     char* nightname;
     char *font;
     struct color color;
+    int underground_alpha;
+    int icon_w;
+    int icon_h;
     GList *layers;
     GList *cursors;
     int order_delta;

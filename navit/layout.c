@@ -39,7 +39,9 @@ layout_new(struct attr *parent, struct attr **attrs) {
     struct layout *l;
     struct navit *navit;
     struct color def_color = {COLOR_BACKGROUND_};
-    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
+    int def_underground_alpha = UNDERGROUND_ALPHA_;
+    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr,
+               *underground_alpha_attr,*icon_attr;
 
     if (! (name_attr=attr_search(attrs, NULL, attr_name)))
         return NULL;
@@ -67,6 +69,21 @@ layout_new(struct attr *parent, struct attr **attrs) {
         l->color = *color_attr->u.color;
     else
         l->color = def_color;
+    if ((underground_alpha_attr=attr_search(attrs, NULL, attr_underground_alpha))) {
+        int a = underground_alpha_attr->u.num;
+        /* for convenience, the alpha value is just 8 bit as usual if using
+        * corresponding attr. therefore we need to shift that up */
+        l->underground_alpha = (a << 8) | a;
+    } else
+        l->underground_alpha = def_underground_alpha;
+    if ((icon_attr=attr_search(attrs, NULL, attr_icon_w)))
+        l->icon_w = icon_attr->u.num;
+    else
+        l->icon_w = -1;
+    if ((icon_attr=attr_search(attrs, NULL, attr_icon_h)))
+        l->icon_h = icon_attr->u.num;
+    else
+        l->icon_h = -1;
     if ((order_delta_attr=attr_search(attrs, NULL, attr_order_delta)))
         l->order_delta=order_delta_attr->u.num;
     if ((active_attr=attr_search(attrs, NULL, attr_active)))
