@@ -1570,7 +1570,6 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
                                 int *width, int filled) {
     long i,dx,dy,l;
     struct point p;
-    struct element *e=dc->e;
     for (i = 0 ; i < count-1 ; i++) {
         dx=pnt[i+1].x-pnt[i].x;
         dy=pnt[i+1].y-pnt[i].y;
@@ -2720,8 +2719,8 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
         di->z_order=++(gra->current_z_order);
 
         /* Skip elements that are to be drawn on oneway streets only
-         * if street is not oneway */
-        if((e->oneway) && (!(di->flags & AF_ONEWAY))) {
+         * if street is not oneway or roundabout */
+        if((e->oneway) && ((!(di->flags & AF_ONEWAY)) || (di->flags & AF_ROUNDABOUT))) {
             di=di->next;
             continue;
         }
