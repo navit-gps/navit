@@ -11,7 +11,6 @@
 #include "callback.h"
 #include "country.h"
 #include "projection.h"
-#include "coord.h"
 #include "map.h"
 #include "mapset.h"
 #include "navit_nls.h"
@@ -82,22 +81,20 @@ int android_find_static_method(jclass class, char *name, char *args, jmethodID *
  * @brief Starts the Navitlib for Android
  *
  * @param env provided by JVM
- * @param thiz the calling instance
- * @param activity the Navit instance
+ * @param thiz the calling Navit instance
  * @param lang a string describing the language
  * @param disply_density_string refers to xml version to use
  * @param path relates to NAVIT_DATA_DIR on linux
  * @param map_path where the binfiles are stored
  */
-JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env, jobject thiz, jobject activity,
+JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env, jobject thiz,
         jstring lang, jstring display_density_string, jstring path, jstring map_path) {
     const char *langstr;
     const char *displaydensitystr;
     const char *map_file_path;
     jnienv=env;
-    if (android_activity)
-        (*jnienv)->DeleteGlobalRef(jnienv, android_activity);
-    android_activity = (*jnienv)->NewGlobalRef(jnienv, activity);
+
+    android_activity = (*jnienv)->NewGlobalRef(jnienv, thiz);
 
     langstr=(*env)->GetStringUTFChars(env, lang, NULL);
     dbg(lvl_debug,"enter env=%p thiz=%p activity=%p lang=%s",env,thiz,android_activity,langstr);
@@ -235,6 +232,7 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitAppConfig_callbackLoc
     return js;
 }
 
+
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCountry( JNIEnv* env, jobject thiz,
         jint channel, jstring str) {
     struct attr search_attr, country_name, country_iso2, *country_attr;
@@ -249,8 +247,9 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCo
 
     country_attr=country_default();
     tracking=navit_get_tracking(attr.u.navit);
-    if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL))
-        country_attr=&search_attr;
+    if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL)) {
+        country_attr = &search_attr;
+    }
     if (country_attr) {
         struct country_search *cs=country_search_new(country_attr, 0);
         struct item *item=country_search_get_item(cs);
@@ -264,8 +263,9 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCo
             while((res=search_list_get_result(search_list))) {
                 dbg(lvl_debug,"Get result: %s", res->country->iso2);
             }
-            if (item_attr_get(item, attr_country_iso2, &country_iso2))
-                return_string = (*env)->NewStringUTF(env,country_iso2.u.str);
+            if (item_attr_get(item, attr_country_iso2, &country_iso2)) {
+                return_string = (*env)->NewStringUTF(env, country_iso2.u.str);
+            }
         }
         country_search_destroy(cs);
     }
@@ -273,6 +273,94 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCo
     return return_string;
 }
 
+
+JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllCountries( JNIEnv* env,
+        jclass thiz) {
+    struct attr search_attr;
+    struct search_list_result *res;
+    GList* countries = NULL;
+    int country_count = 0;
+    jobjectArray all_countries;
+
+    struct attr attr;
+    dbg(lvl_debug,"enter");
+
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    struct mapset *ms=navit_get_mapset(attr.u.navit);
+    struct search_list *search_list = search_list_new(ms);
+    jobjectArray current_country = NULL;
+    search_attr.type=attr_country_all;
+    //dbg(lvl_debug,"country %s", country_name.u.str);
+    search_attr.u.str=g_strdup("");//country_name.u.str;
+    search_list_search(search_list, &search_attr, 1);
+    while((res=search_list_get_result(search_list))) {
+        dbg(lvl_debug,"Get result: %s", res->country->iso2);
+
+        if (strlen(res->country->iso2)==2) {
+            jstring j_iso2 = (*env)->NewStringUTF(env, res->country->iso2);
+            jstring j_name = (*env)->NewStringUTF(env, navit_nls_gettext(res->country->name));
+
+            current_country = (jobjectArray)(*env)->NewObjectArray(env, 2, (*env)->FindClass(env, "java/lang/String"), NULL);
+
+            (*env)->SetObjectArrayElement(env, current_country, 0,  j_iso2);
+            (*env)->SetObjectArrayElement(env, current_country, 1,  j_name);
+
+            (*env)->DeleteLocalRef(env, j_iso2);
+            (*env)->DeleteLocalRef(env, j_name);
+
+            countries = g_list_prepend(countries, current_country);
+            country_count++;
+        }
+    }
+
+    search_list_destroy(search_list);
+    all_countries = (jobjectArray)(*env)->NewObjectArray(env, country_count, (*env)->GetObjectClass(env,current_country),
+                    NULL);
+
+    while(countries) {
+        (*env)->SetObjectArrayElement(env, all_countries, --country_count, countries->data);
+        countries = g_list_delete_link( countries, countries);
+    }
+
+    return all_countries;
+}
+
+
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env,
+        jobject thiz, jint x, jint y, jboolean absolute_coord) {
+
+    jstring return_string = NULL;
+
+    struct attr attr;
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    struct transformation *transform=navit_get_trans(attr.u.navit);
+    struct point p;
+    struct point c;
+    struct pcoord pc;
+
+    p.x = x;
+    p.y = y;
+
+    transform_reverse(transform, &p, &c);
+
+    pc.x = c.x;
+    pc.y = c.y;
+    pc.pro = transform_get_projection(transform);
+
+    char coord_str[32];
+    if (absolute_coord) {
+        pcoord_format_absolute(&pc, coord_str, sizeof(coord_str), ",");
+    } else {
+        pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
+    }
+
+    dbg(lvl_error,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
+    return_string = (*env)->NewStringUTF(env,coord_str);
+
+    return return_string;
+}
 
 JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel( JNIEnv* env, jclass thiz,
         jint channel, jstring str) {
@@ -377,10 +465,9 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         pc.pro = transform_get_projection(transform);
 
         char coord_str[32];
-        pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
-
+        //pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+        pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
         dbg(lvl_debug,"Setting destination to %s",coord_str);
-
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
     }
@@ -418,7 +505,11 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = projection_mg;
-
+        char coord_str[32];
+        if (!name || *name == '\0') {
+            pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
+            name = coord_str;
+        }
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, name, 1);
         break;
@@ -426,128 +517,10 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
     default:
         dbg(lvl_error, "Unknown command: %d", channel);
     }
+
     return ret;
 }
 
-
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz,
-        jint id, int x, int y) {
-
-    jstring return_string = NULL;
-
-    struct attr attr;
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
-
-    struct transformation *transform=navit_get_trans(attr.u.navit);
-    struct point p;
-    struct coord c;
-    struct pcoord pc;
-
-    p.x = x;
-    p.y = y;
-
-    transform_reverse(transform, &p, &c);
-
-    pc.x = c.x;
-    pc.y = c.y;
-    pc.pro = transform_get_projection(transform);
-
-    char coord_str[32];
-    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
-
-    dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
-    return_string = (*env)->NewStringUTF(env,coord_str);
-    return return_string;
-}
-
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobject thiz,
-        int channel, jobject str) {
-    struct attr search_attr, country_name, country_iso2, *country_attr;
-    struct tracking *tracking;
-    struct search_list_result *res;
-    jstring return_string = NULL;
-
-    struct attr attr;
-    dbg(lvl_debug,"enter %d %p",channel,str);
-
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
-
-    country_attr=country_default();
-    tracking=navit_get_tracking(attr.u.navit);
-    if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL))
-        country_attr=&search_attr;
-    if (country_attr) {
-        struct country_search *cs=country_search_new(country_attr, 0);
-        struct item *item=country_search_get_item(cs);
-        if (item && item_attr_get(item, attr_country_name, &country_name)) {
-            struct mapset *ms=navit_get_mapset(attr.u.navit);
-            struct search_list *search_list = search_list_new(ms);
-            search_attr.type=attr_country_all;
-            dbg(lvl_debug,"country %s", country_name.u.str);
-            search_attr.u.str=country_name.u.str;
-            search_list_search(search_list, &search_attr, 0);
-            while((res=search_list_get_result(search_list))) {
-                dbg(lvl_debug,"Get result: %s", res->country->iso2);
-            }
-            if (item_attr_get(item, attr_country_iso2, &country_iso2))
-                return_string = (*env)->NewStringUTF(env,country_iso2.u.str);
-        }
-        country_search_destroy(cs);
-    }
-
-    return return_string;
-}
-
-
-JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllCountries( JNIEnv* env, jclass thiz) {
-    struct attr search_attr;
-    struct search_list_result *res;
-    GList* countries = NULL;
-    int country_count = 0;
-    jobjectArray all_countries;
-
-    struct attr attr;
-    dbg(lvl_debug,"enter");
-
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
-
-    struct mapset *ms=navit_get_mapset(attr.u.navit);
-    struct search_list *search_list = search_list_new(ms);
-    jobjectArray current_country = NULL;
-    search_attr.type=attr_country_all;
-    //dbg(lvl_debug,"country %s", country_name.u.str);
-    search_attr.u.str=g_strdup("");//country_name.u.str;
-    search_list_search(search_list, &search_attr, 1);
-    while((res=search_list_get_result(search_list))) {
-        dbg(lvl_debug,"Get result: %s", res->country->iso2);
-
-        if (strlen(res->country->iso2)==2) {
-            jstring j_iso2 = (*env)->NewStringUTF(env, res->country->iso2);
-            jstring j_name = (*env)->NewStringUTF(env, navit_nls_gettext(res->country->name));
-
-            current_country = (jobjectArray)(*env)->NewObjectArray(env, 2, (*env)->FindClass(env, "java/lang/String"), NULL);
-
-            (*env)->SetObjectArrayElement(env, current_country, 0,  j_iso2);
-            (*env)->SetObjectArrayElement(env, current_country, 1,  j_name);
-
-            (*env)->DeleteLocalRef(env, j_iso2);
-            (*env)->DeleteLocalRef(env, j_name);
-
-            countries = g_list_prepend(countries, current_country);
-            country_count++;
-        }
-    }
-
-    search_list_destroy(search_list);
-    all_countries = (jobjectArray)(*env)->NewObjectArray(env, country_count, (*env)->GetObjectClass(env,current_country),
-                    NULL);
-
-    while(countries) {
-        (*env)->SetObjectArrayElement(env, all_countries, --country_count, countries->data);
-        countries = g_list_delete_link( countries, countries);
-    }
-    return all_countries;
-}
 
 static char *postal_str(struct search_list_result *res, int level) {
     char *ret=NULL;
@@ -739,6 +712,7 @@ static char *search_fix_spaces(const char *str) {
             len--;
         }
     } while (c);
+
     return ret;
 }
 

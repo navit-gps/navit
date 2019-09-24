@@ -25,6 +25,9 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -34,6 +37,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -55,6 +59,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 class NavitGraphics {
@@ -85,7 +90,7 @@ class NavitGraphics {
     private RelativeLayout                 mRelativeLayout;
     private NavitCamera                    mCamera;
     private Navit                          mActivity;
-    private static Boolean                 sInMap = false;
+    private static boolean                 sInMap;
     private boolean mTinting;
 
 
@@ -205,21 +210,50 @@ class NavitGraphics {
             return insets;
         }
 
+        private static final int MENU_DRIVE_HERE = 1;
+        private static final int MENU_VIEW = 2;
+        private static final int MENU_CANCEL = 3;
+
         @Override
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
-            String clickCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y);
-            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
-            menu.add(1, 1, NONE, activity.getTstring(R.string.position_popup_drive_here))
+            String clickCoord = getCoordForPoint((int)mPressedPosition.x, (int)mPressedPosition.y, false);
+            menu.setHeaderTitle(NavitAppConfig.getTstring(R.string.position_popup_title) + " " + clickCoord);
+            menu.add(1, MENU_DRIVE_HERE, NONE, NavitAppConfig.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
+            Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int)mPressedPosition.x,
+                    (int)mPressedPosition.y, true));
+            Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+
+            PackageManager packageManager = this.getContext().getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+            boolean isIntentSafe = (activities.size() > 1); //Navit + at least one other
+            if (isIntentSafe) { // add view with external app option
+                menu.add(1, MENU_VIEW, NONE, NavitAppConfig.getTstring(R.string.position_popup_view))
+                        .setOnMenuItemClickListener(this);
+            } else {
+                Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed");
+            }
+            menu.add(1, MENU_CANCEL, NONE, getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            if (item.getItemId() == 1) {
+            int itemId = item.getItemId();
+            if (itemId == MENU_DRIVE_HERE) {
                 Message msg = Message.obtain(sCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                         (int) mPressedPosition.x, (int) mPressedPosition.y);
                 msg.sendToTarget();
+            } else if (itemId == MENU_VIEW) {
+                Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int) mPressedPosition.x,
+                        (int) mPressedPosition.y, true));
+                Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
+                    this.getContext().startActivity(mContextMenuMapViewIntent);
+                } else {
+                    Log.w(TAG, "ACTION_VIEW intent is not handled by any application, discarding...");
+                }
             }
             return true;
         }
@@ -650,8 +684,8 @@ class NavitGraphics {
     private native void buttonCallback(long id, int pressed, int button, int x, int y);
 
     private native void motionCallback(long id, int x, int y);
-  
-    private native String getCoordForPoint(int id, int x, int y);
+
+    private native String getCoordForPoint(int x, int y, boolean absolutCoord);
 
     static native String[][] getAllCountries();
 

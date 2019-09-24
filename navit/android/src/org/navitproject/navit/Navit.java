@@ -38,7 +38,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -77,7 +76,7 @@ public class Navit extends Activity {
 
 
     public static DisplayMetrics       sMetrics;
-    public static Boolean              sShowSoftKeyboardShowing        = false;
+    public static boolean              sShowSoftKeyboardShowing;
     private static Intent              sStartupIntent;
     private static long                sStartupIntentTimestamp;
     private static final int           MY_PERMISSIONS_REQ_FINE_LOC     = 103;
@@ -88,7 +87,7 @@ public class Navit extends Activity {
     private static final String        TAG                             = "Navit";
     static String                      sMapFilenamePath;
     static String                      sNavitDataDir;
-    Boolean                            mIsFullscreen                   = false;
+    boolean                            mIsFullscreen;
     private NavitDialogs               mDialogs;
     private PowerManager.WakeLock      mWakeLock;
     private NavitActivityResult[]      mActivityResults;
@@ -359,7 +358,7 @@ public class Navit extends Activity {
             Log.e(TAG, "Failed to access assets using AssetManager");
         }
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(Build.VERSION.SDK));
-        navitMain(this, navitLanguage, myDisplayDensity, sNavitDataDir + "/bin/navit", sMapFilenamePath);
+        navitMain(navitLanguage, myDisplayDensity, sNavitDataDir + "/bin/navit", sMapFilenamePath);
         showInfos();
     }
 
@@ -816,7 +815,7 @@ public class Navit extends Activity {
         mWakeLock.release();
     }
 
-    private native void navitMain(Navit x, String lang,
+    private native void navitMain(String lang,
                                   String displayDensityString, String path, String path2);
 
     public native void navitDestroy();

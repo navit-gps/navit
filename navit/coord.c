@@ -294,6 +294,7 @@ void coord_print(enum projection pro, struct coord *c, FILE *out) {
  * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
  * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
  * @param fmt The format to use:
+ *    @li DEGREES_DECIMAL_ABSOLUTE=>Degrees with decimal places, i.e. -20.500000 -110.500000 (max: 22 bytes)
  *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E (max: 26 bytes)
  *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E (max: 30 bytes)
  *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E (max: 32 bytes)
@@ -314,6 +315,16 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
     if (sep == NULL)
         sep = " ";
 
+    if (fmt==DEGREES_DECIMAL_ABSOLUTE) {
+        if (lat<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f",lat);
+        if ((lat<360)&&(lng<360))
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
+        if (lng<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f",lng);
+        return;
+    }
+
     if (lng < 0) {
         lng=-lng;
         lng_c='W';
@@ -322,6 +333,16 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
         lat=-lat;
         lat_c='S';
     }
+
+    if (fmt==DEGREES_DECIMAL) {
+        if (lat<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
+        if ((lat<360)&&(lng<360))
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
+        if (lng<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
+        return;
+    }
     lat_deg=lat;
     lat_min=(lat-floor(lat_deg))*60;
     lat_sec=fmod(lat*3600,60);
@@ -329,15 +350,6 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
     lng_min=(lng-floor(lng_deg))*60;
     lng_sec=fmod(lng*3600,60);
     switch(fmt) {
-
-    case DEGREES_DECIMAL:
-        if (lat<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
-        if ((lat<360)&&(lng<360))
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
-        if (lng<360)
-            size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
-        break;
     case DEGREES_MINUTES:
         if (lat<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.0f°%07.4f' %c",floor(lat_deg),lat_min,lat_c);
@@ -393,7 +405,7 @@ inline void coord_format(float lat,float lng, enum coord_format fmt, char *buffe
  * string of the form {@code 45°28'0"N 9°11'26"E}.
  *
  * @param gc A WGS84 coordinate pair
- * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (at least 25 bytes)
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  */
@@ -409,11 +421,11 @@ inline void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int
  * {@code 45°28'0"N 9°11'26"E}.
  *
  * @param pc Coordinates as integer mercator
- * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (at least 25 bytes)
  * @param size The size of the buffer
  * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  */
-inline void pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep) {
+inline void pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep) {
     dbg_assert(pc != NULL);
     struct coord_geo g;
     struct coord c;
@@ -421,6 +433,27 @@ inline void pcoord_format_short(const struct pcoord *pc, char *buffer, int size,
     c.y=pc->y;
     transform_to_geo(pc->pro, &c, &g);
     coord_format_with_sep(g.lat, g.lng, DEGREES_MINUTES_SECONDS_BRIEF, buffer, size, sep);
+}
+
+/**
+ * @brief Converts an integer mercator coordinate pair to its string representation.
+ *
+ * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
+ * {@code 45.28 -9.114333}.
+ *
+ * @param pc Coordinates as integer mercator
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (at least 23 bytes)
+ * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
+ */
+inline void pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep) {
+    dbg_assert(pc != NULL);
+    struct coord_geo g;
+    struct coord c;
+    c.x=pc->x;
+    c.y=pc->y;
+    transform_to_geo(pc->pro, &c, &g);
+    coord_format_with_sep(g.lat, g.lng, DEGREES_DECIMAL_ABSOLUTE, buffer, size, sep);
 }
 
 /**

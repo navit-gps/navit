@@ -113,6 +113,12 @@ struct coord_geo_cart {
 enum coord_format
 {
 	/**
+	* Degrees with absolute decimal places (positive or negative)
+	* ie -20.500000 -110.500000
+	*/
+	DEGREES_DECIMAL_ABSOLUTE,
+
+	/**
 	 * Degrees with decimal places.
 	 * ie 20.500000°N 110.500000°E
 	 */
@@ -123,11 +129,13 @@ enum coord_format
 	 * ie 20°30.0000' N 110°30.0000' E
 	 */
 	DEGREES_MINUTES,
+
 	/**
 	 * Degrees, minutes and seconds.
 	 * ie 20°30'30.00" N 110°30'30.00" E
 	 */
 	DEGREES_MINUTES_SECONDS,
+
 	/**
 	 * Degrees, minutes and seconds, brief
 	 * ie 20°30'30"N 110°30'30"E
@@ -154,6 +162,8 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
 void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size);
 void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep);
 void pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep);
+void pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep);
+void pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep);
 char *coordinates_geo(const struct coord_geo *gc, char sep);
 
 /* prototypes */
