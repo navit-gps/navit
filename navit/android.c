@@ -156,7 +156,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_keypressCallbac
     const char *s;
     dbg(lvl_debug,"enter %p %p",(struct callback *)(intptr_t)id,str);
     s=(*env)->GetStringUTFChars(env, str, NULL);
-    dbg(lvl_debug,"key = %s",s);
+    dbg(lvl_debug,"key=%s",s);
     if (id)
         callback_call_1((struct callback *)(intptr_t)id,s);
     (*env)->ReleaseStringUTFChars(env, str, s);
@@ -200,8 +200,6 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNI
         callback_call_1((struct callback *)(intptr_t) id, s);
     (*env)->ReleaseStringUTFChars(env, feed, s);
 }
-
-
 
 // type: 0=town, 1=street, 2=House#
 void android_return_search_result(struct jni_object *jni_o, int type, struct pcoord *location, const char *address) {
@@ -378,12 +376,13 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         pc.y = c.y;
         pc.pro = transform_get_projection(transform);
 
-        dbg(lvl_debug, "22x=%d", pc.x);
-        dbg(lvl_debug, "22y=%d", pc.y);
+        char coord_str[32];
+        pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+
+        dbg(lvl_debug,"Setting destination to %s",coord_str);
 
         // start navigation asynchronous
-        navit_set_destination(attr.u.navit, &pc, parse_str, 1);
-        break;
+        navit_set_destination(attr.u.navit, &pc, coord_str, 1);
     }
     case 3: {
         // navigate to geo position
@@ -428,6 +427,75 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         dbg(lvl_error, "Unknown command: %d", channel);
     }
     return ret;
+}
+
+
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz,
+        jint id, int x, int y) {
+
+    jstring return_string = NULL;
+
+    struct attr attr;
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    struct transformation *transform=navit_get_trans(attr.u.navit);
+    struct point p;
+    struct coord c;
+    struct pcoord pc;
+
+    p.x = x;
+    p.y = y;
+
+    transform_reverse(transform, &p, &c);
+
+    pc.x = c.x;
+    pc.y = c.y;
+    pc.pro = transform_get_projection(transform);
+
+    char coord_str[32];
+    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+
+    dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
+    return_string = (*env)->NewStringUTF(env,coord_str);
+    return return_string;
+}
+
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobject thiz,
+        int channel, jobject str) {
+    struct attr search_attr, country_name, country_iso2, *country_attr;
+    struct tracking *tracking;
+    struct search_list_result *res;
+    jstring return_string = NULL;
+
+    struct attr attr;
+    dbg(lvl_debug,"enter %d %p",channel,str);
+
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    country_attr=country_default();
+    tracking=navit_get_tracking(attr.u.navit);
+    if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL))
+        country_attr=&search_attr;
+    if (country_attr) {
+        struct country_search *cs=country_search_new(country_attr, 0);
+        struct item *item=country_search_get_item(cs);
+        if (item && item_attr_get(item, attr_country_name, &country_name)) {
+            struct mapset *ms=navit_get_mapset(attr.u.navit);
+            struct search_list *search_list = search_list_new(ms);
+            search_attr.type=attr_country_all;
+            dbg(lvl_debug,"country %s", country_name.u.str);
+            search_attr.u.str=country_name.u.str;
+            search_list_search(search_list, &search_attr, 0);
+            while((res=search_list_get_result(search_list))) {
+                dbg(lvl_debug,"Get result: %s", res->country->iso2);
+            }
+            if (item_attr_get(item, attr_country_iso2, &country_iso2))
+                return_string = (*env)->NewStringUTF(env,country_iso2.u.str);
+        }
+        country_search_destroy(cs);
+    }
+
+    return return_string;
 }
 
 
