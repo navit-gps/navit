@@ -30,7 +30,7 @@ interval=${from}..${to}
 [[ "${from}" == "${to}" ]] && interval=${to}
 
 for f in $(git diff --name-only ${interval} | sort -u); do
-    if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]]; then
+    if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
         echo "[DEBUG] Skipping file ${f} ..."
         continue
     fi
