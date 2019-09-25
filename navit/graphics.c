@@ -1547,16 +1547,17 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
     }
 }
 
-static void display_draw_arrow(struct point *p, long dx, long dy, int width, struct display_context *dc,
+static void display_draw_arrow(struct point *p, navit_float dx, navit_float dy, navit_float width,
+                               struct display_context *dc,
                                struct graphics *gra, int filled) {
     struct point pnt[4];
     /* half the width in every direction */
     width /= 2;
     pnt[0]=pnt[1]=pnt[2]=*p;
-    pnt[0].x+=-dx*width/65536+dy*width/65536;
-    pnt[0].y+=-dy*width/65536-dx*width/65536;
-    pnt[2].x+=-dx*width/65536-dy*width/65536;
-    pnt[2].y+=-dy*width/65536+dx*width/65536;
+    pnt[0].x+=-dx*width+dy*width;
+    pnt[0].y+=-dy*width-dx*width;
+    pnt[2].x+=-dx*width-dy*width;
+    pnt[2].y+=-dy*width+dx*width;
     if(filled) {
         /* close the loop */
         pnt[3]=pnt[0];
@@ -1567,50 +1568,78 @@ static void display_draw_arrow(struct point *p, long dx, long dy, int width, str
 
 }
 
+/**
+ * @brief draw arrows along a multi polygon line
+ *
+ * This function draws arrows along a multi polygon line, and scales the
+ * arrows according to current view settings by interpolating sizes at
+ * given arrow position,
+ *
+ * @param gra current graphics instance handle
+ * @param dc current drawing context
+ * @param pnt array of points for this polyline
+ * @param count number of points in pnt
+ * @param width arrray of integers giving the expexted line width at the corresponding point
+ * @param filled. True to draw filled arrows, false to draw only line arrows.
+ */
 static void display_draw_arrows(struct graphics *gra, struct display_context *dc, struct point *pnt, int count,
                                 int *width, int filled) {
-    long i,dx,dy,l;
+    navit_float dx,dy,dw,l;
+    int i;
     struct point p;
+    int w;
     for (i = 0 ; i < count-1 ; i++) {
         /* get the X and Y size */
         dx=pnt[i+1].x-pnt[i].x;
         dy=pnt[i+1].y-pnt[i].y;
+        dw=width[i+1] - width[i];
         /* calculate the length of the way segment */
-        l=sqrt(dx*dx+dy*dy);
+        l=navit_sqrt(dx*dx+dy*dy);
         if (l) {
             /* length is not zero */
             /* calculate the vector per length */
-            dx=dx*65536/l;
-            dy=dy*65536/l;
-            /* way starts at starting point */
-            p=pnt[i];
+            dx=dx/l;
+            dy=dy/l;
+            dw=dw/l;
             /* different behaviour for oneway arrows than for routing graph ones */
             if(filled) {
                 if(l > (2*width[i])) {
                     /* print arrow at middle point */
-                    p.x+=dx*(l/2)/65536;
-                    p.y+=dy*(l/2)/65536;
-                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                    p=pnt[i];
+                    p.x+=dx*(l/2);
+                    p.y+=dy*(l/2);
+                    w=width[i];
+                    w+=dw*(l/2);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
                 }
                 /* if line is quite long, print arrows at 1/4 and 3/4 length */
                 if(l > (20*width[i])) {
-                    p.x+=dx*(l/4)/65536;
-                    p.y+=dy*(l/4)/65536;
-                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
-                    p.x+=dx*3*(l/4)/65536;
-                    p.y+=dy*3*(l/4)/65536;
-                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                    /* at 1/4 the line length */
+                    p=pnt[i];
+                    p.x+=dx*(l/4);
+                    p.y+=dy*(l/4);
+                    w=width[i];
+                    w+=dw*(l/4);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
+                    /* at 3/4 the arrow length */
+                    p=pnt[i+1];
+                    p.x-=dx*(l/4);
+                    p.y-=dy*(l/4);
+                    w=width[i+1];
+                    w-=dw*(l/4);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
                 }
             } else {
                 /*FIXME: what if line length was smaller than 15?*/
                 /* print arrow 15 units from start */
-                p.x+=dx*15/65536;
-                p.y+=dy*15/65536;
+                p=pnt[i];
+                p.x+=dx*15;
+                p.y+=dy*15;
                 display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
                 /* print arrow 15 units before end */
                 p=pnt[i+1];
-                p.x-=dx*15/65536;
-                p.y-=dy*15/65536;
+                p.x-=dx*15;
+                p.y-=dy*15;
                 display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
             }
         }
