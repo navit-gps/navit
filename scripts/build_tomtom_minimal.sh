@@ -57,7 +57,7 @@ cp $PREFIX/share/navit/icons/*48.png $OUT_PATH/navit/share/icons
 cp $PREFIX/share/navit/icons/*64.png $OUT_PATH/navit/share/icons
 cp $PREFIX/share/navit/icons/nav*.* $OUT_PATH/navit/share/icons
 cp $PREFIX/share/navit/icons/country*.png $OUT_PATH/navit/share/icons
-cp $PREFIX/share/navit/navit.xml $OUT_PATH/navit/share/tomtom480.xml
+cp $PREFIX/share/navit/*.xml $OUT_PATH/navit/share
 
 # locale
 cp -r $PREFIX/share/locale $OUT_PATH/navit/share
