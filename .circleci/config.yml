@@ -183,13 +183,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
-      - run:
-          name: Setup tomtom requirements
-          command: |
-            bash scripts/setup_tomtom_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (minimal)
           command: |
@@ -207,13 +204,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
-      - run:
-          name: Setup tomtom requirements
-          command: |
-            bash scripts/setup_tomtom_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (plugin)
           command: |
