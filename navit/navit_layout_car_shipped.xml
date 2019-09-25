@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car" nightlayout="Car-dark" color="#ffefb7" icon_w="22" icon_h="22" underground_alpha="0x77" font="Liberation Sans">
 	<cursor w="57" h="57">
 		<itemgra speed_range="-2">
 			<polyline color="#00BC00" radius="0" width="4">
@@ -787,22 +787,27 @@
 		<itemgra item_types="street_pedestrian,living_street" order="14">
 			<polyline color="#d2d2d2" width="13"/>
 			<polyline color="#dddddd" width="9"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="15">
 			<polyline color="#d2d2d2" width="18"/>
 			<polyline color="#dddddd" width="14"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="16">
 			<polyline color="#d2d2d2" width="21"/>
 			<polyline color="#dddddd" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="17">
 			<polyline color="#d2d2d2" width="25"/>
 			<polyline color="#dddddd" width="21"/>
+			<arrows color="#0000FF" width="19" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_pedestrian,living_street" order="18">
 			<polyline color="#d2d2d2" width="40"/>
 			<polyline color="#dddddd" width="34"/>
+			<arrows color="#0000FF" width="32" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="10">
 			<polyline color="#d2d2d2" width="4"/>
@@ -823,22 +828,27 @@
 		<itemgra item_types="street_service" order="14">
 			<polyline color="#d2d2d2" width="7"/>
 			<polyline color="#fefefe" width="5"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="15">
 			<polyline color="#d2d2d2" width="8"/>
 			<polyline color="#fefefe" width="6"/>
+			<arrows color="#0000FF" width="5" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="16">
 			<polyline color="#d2d2d2" width="9"/>
 			<polyline color="#fefefe" width="7"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="17">
 			<polyline color="#d2d2d2" width="10"/>
 			<polyline color="#fefefe" width="8"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_service" order="18">
 			<polyline color="#d2d2d2" width="11"/>
 			<polyline color="#fefefe" width="9"/>
+			<arrows color="#0000FF" width="7" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="12">
 			<polyline color="#d2d2d2" width="4"/>
@@ -855,18 +865,22 @@
 		<itemgra item_types="street_parking_lane" order="15">
 			<polyline color="#d2d2d2" width="6"/>
 			<polyline color="#fefefe" width="4"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="16">
 			<polyline color="#d2d2d2" width="7"/>
 			<polyline color="#fefefe" width="5"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="17">
 			<polyline color="#d2d2d2" width="8"/>
 			<polyline color="#fefefe" width="6"/>
+			<arrows color="#0000FF" width="4" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_parking_lane" order="18">
 			<polyline color="#d2d2d2" width="9"/>
 			<polyline color="#fefefe" width="7"/>
+			<arrows color="#0000FF" width="5" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="10">
 			<polyline color="#d2d2d2" width="4"/>
@@ -887,22 +901,27 @@
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="14">
 			<polyline color="#d2d2d2" width="17"/>
 			<polyline color="#ffffff" width="13"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="15">
 			<polyline color="#d2d2d2" width="18"/>
 			<polyline color="#ffffff" width="14"/>
+			<arrows color="#0000FF" width="12" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="16">
 			<polyline color="#d2d2d2" width="30"/>
 			<polyline color="#ffffff" width="26"/>
+			<arrows color="#0000FF" width="24" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="17">
 			<polyline color="#d2d2d2" width="67"/>
 			<polyline color="#ffffff" width="61"/>
+			<arrows color="#0000FF" width="59" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_0,street_1_city,street_1_land" order="18">
 			<polyline color="#d2d2d2" width="132"/>
 			<polyline color="#ffffff" width="126"/>
+			<arrows color="#0000FF" width="124" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="7-8">
 			<polyline color="#c0c0c0" width="2"/>
@@ -930,22 +949,27 @@
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="14">
 			<polyline color="#c0c0c0" width="14"/>
 			<polyline color="#ffff00" width="11"/>
+			<arrows color="#0000FF" width="9" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="15">
 			<polyline color="#c0c0c0" width="19"/>
 			<polyline color="#ffff00" width="15"/>
+			<arrows color="#0000FF" width="13" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="16">
 			<polyline color="#c0c0c0" width="30"/>
 			<polyline color="#ffff00" width="26"/>
+			<arrows color="#0000FF" width="24" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="17">
 			<polyline color="#c0c0c0" width="63"/>
 			<polyline color="#ffff00" width="57"/>
+			<arrows color="#0000FF" width="55" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_2_city,street_2_land,ramp" order="18">
 			<polyline color="#c0c0c0" width="100"/>
 			<polyline color="#ffff00" width="90"/>
+			<arrows color="#0000FF" width="88" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="7-8">
 			<polyline color="#a0a0a0" width="3"/>
@@ -974,22 +998,27 @@
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="14">
 			<polyline color="#a0a0a0" width="21"/>
 			<polyline color="#ffff00" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="15">
 			<polyline color="#a0a0a0" width="25"/>
 			<polyline color="#ffff00" width="21"/>
+			<arrows color="#0000FF" width="19" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="16">
 			<polyline color="#a0a0a0" width="40"/>
 			<polyline color="#ffff00" width="34"/>
+			<arrows color="#0000FF" width="32" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="17">
 			<polyline color="#a0a0a0" width="79"/>
 			<polyline color="#ffff00" width="73"/>
+			<arrows color="#0000FF" width="70" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_3_city,street_3_land,roundabout" order="18">
 			<polyline color="#a0a0a0" width="156"/>
 			<polyline color="#ffff00" width="150"/>
+			<arrows color="#0000FF" width="148" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="2-6">
 			<polyline color="#404040" width="1"/>
@@ -1021,22 +1050,27 @@
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="14">
 			<polyline color="#000000" width="21"/>
 			<polyline color="#ff0000" width="17"/>
+			<arrows color="#0000FF" width="15" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="15">
 			<polyline color="#000000" width="24"/>
 			<polyline color="#ff0000" width="20"/>
+			<arrows color="#0000FF" width="18" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="16">
 			<polyline color="#000000" width="39"/>
 			<polyline color="#ff0000" width="33"/>
+			<arrows color="#0000FF" width="30" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="17">
 			<polyline color="#000000" width="78"/>
 			<polyline color="#ff0000" width="72"/>
+			<arrows color="#0000FF" width="70" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="street_4_city,street_4_land,street_n_lanes" order="18">
 			<polyline color="#000000" width="156"/>
 			<polyline color="#ff0000" width="150"/>
+			<arrows color="#0000FF" width="148" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="highway_city,highway_land" order="2">
 			<polyline color="#ff0000" width="1"/>
@@ -1093,11 +1127,13 @@
 			<polyline color="#ff0000" width="133"/>
 			<polyline color="#ffff00" width="127"/>
 			<polyline color="#ff0000" width="1"/>
+			<arrows color="#0000FF" width="125" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="highway_city,highway_land" order="18">
 			<polyline color="#ff0000" width="264"/>
 			<polyline color="#ffff00" width="258"/>
 			<polyline color="#ff0000" width="1"/>
+			<arrows color="#0000FF" width="256" oneway="1"/>
 		</itemgra>
 		<itemgra item_types="tracking_0" order="0-">
 			<polyline color="#000000" width="3"/>

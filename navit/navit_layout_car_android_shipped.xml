@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-Android" color="#fef9ee" font="Liberation Sans">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-Android" color="#fef9ee" icon_w="22" icon_h="22" font="Liberation Sans">
 	<cursor w="57" h="57">
 		<itemgra speed_range="-2">
 			<polyline color="#00BC00" radius="0" width="4">

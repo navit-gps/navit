@@ -39,7 +39,9 @@ layout_new(struct attr *parent, struct attr **attrs) {
     struct layout *l;
     struct navit *navit;
     struct color def_color = {COLOR_BACKGROUND_};
-    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
+    int def_underground_alpha = UNDERGROUND_ALPHA_;
+    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr,
+               *underground_alpha_attr,*icon_attr;
 
     if (! (name_attr=attr_search(attrs, NULL, attr_name)))
         return NULL;
@@ -67,6 +69,21 @@ layout_new(struct attr *parent, struct attr **attrs) {
         l->color = *color_attr->u.color;
     else
         l->color = def_color;
+    if ((underground_alpha_attr=attr_search(attrs, NULL, attr_underground_alpha))) {
+        int a = underground_alpha_attr->u.num;
+        /* for convenience, the alpha value is just 8 bit as usual if using
+        * corresponding attr. therefore we need to shift that up */
+        l->underground_alpha = (a << 8) | a;
+    } else
+        l->underground_alpha = def_underground_alpha;
+    if ((icon_attr=attr_search(attrs, NULL, attr_icon_w)))
+        l->icon_w = icon_attr->u.num;
+    else
+        l->icon_w = -1;
+    if ((icon_attr=attr_search(attrs, NULL, attr_icon_h)))
+        l->icon_h = icon_attr->u.num;
+    else
+        l->icon_h = -1;
     if ((order_delta_attr=attr_search(attrs, NULL, attr_order_delta)))
         l->order_delta=order_delta_attr->u.num;
     if ((active_attr=attr_search(attrs, NULL, attr_active)))
@@ -389,6 +406,13 @@ int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     }
 }
 
+static void element_set_oneway(struct element *e, struct attr **attrs) {
+    struct attr *oneway;
+    oneway=attr_search(attrs, NULL, attr_oneway);
+    if (oneway)
+        e->oneway=oneway->u.num;
+}
+
 static void element_set_color(struct element *e, struct attr **attrs) {
     struct attr *color;
     color=attr_search(attrs, NULL, attr_color);
@@ -410,6 +434,15 @@ static void element_set_text_size(struct element *e, struct attr **attrs) {
     text_size=attr_search(attrs, NULL, attr_text_size);
     if (text_size)
         e->text_size=text_size->u.num;
+}
+
+static void element_set_arrows_width(struct element *e, struct attr **attrs) {
+    struct attr *width;
+    width=attr_search(attrs, NULL, attr_width);
+    if (width)
+        e->u.arrows.width=width->u.num;
+    else
+        e->u.arrows.width=10;
 }
 
 static void element_set_polyline_width(struct element *e, struct attr **attrs) {
@@ -468,6 +501,7 @@ polygon_new(struct attr *parent, struct attr **attrs) {
     e = g_new0(struct element, 1);
     e->type=element_polygon;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
 
     return (struct polygon *)e;
 }
@@ -479,6 +513,7 @@ polyline_new(struct attr *parent, struct attr **attrs) {
     e = g_new0(struct element, 1);
     e->type=element_polyline;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
     element_set_polyline_width(e, attrs);
     element_set_polyline_directed(e, attrs);
     element_set_polyline_dash(e, attrs);
@@ -498,6 +533,7 @@ circle_new(struct attr *parent, struct attr **attrs) {
     e->u.circle.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.circle.background_color, attrs);
+    element_set_oneway(e, attrs);
     element_set_text_size(e, attrs);
     element_set_circle_width(e, attrs);
     element_set_circle_radius(e, attrs);
@@ -518,6 +554,7 @@ text_new(struct attr *parent, struct attr **attrs) {
     e->u.text.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.text.background_color, attrs);
+    element_set_oneway(e, attrs);
 
     return (struct text *)e;
 }
@@ -572,6 +609,8 @@ arrows_new(struct attr *parent, struct attr **attrs) {
     e = g_malloc0(sizeof(*e));
     e->type=element_arrows;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
+    element_set_arrows_width(e, attrs);
     return (struct arrows *)e;
 }
 
