@@ -99,7 +99,6 @@ static char *environment_vars[][6]= {
     {NULL,                NULL,         NULL,            NULL,          NULL,           NULL},
 };
 
-
 static void main_setup_environment(int mode) {
     int i=0;
     char *var,*val,*homedir;
