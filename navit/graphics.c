@@ -1558,6 +1558,7 @@ static void display_draw_arrow(struct point *p, long dx, long dy, int width, str
     pnt[2].x+=-dx*width/65536-dy*width/65536;
     pnt[2].y+=-dy*width/65536+dx*width/65536;
     if(filled) {
+        /* close the loop */
         pnt[3]=pnt[0];
         graphics_draw_polygon(gra, dc->gc, pnt, 4);
     } else {
@@ -1571,18 +1572,26 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
     long i,dx,dy,l;
     struct point p;
     for (i = 0 ; i < count-1 ; i++) {
+        /* get the X and Y size */
         dx=pnt[i+1].x-pnt[i].x;
         dy=pnt[i+1].y-pnt[i].y;
+        /* calculate the length of the way segment */
         l=sqrt(dx*dx+dy*dy);
         if (l) {
+            /* length is not zero */
+            /* calculate the vector per length */
             dx=dx*65536/l;
             dy=dy*65536/l;
+            /* way starts at starting point */
             p=pnt[i];
+            /* different behaviour for oneway arrows than for routing graph ones */
             if(filled) {
-                /* print arrow at middle point */
-                p.x+=dx*(l/2)/65536;
-                p.y+=dy*(l/2)/65536;
-                display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                if(l > (2*width[i])) {
+                    /* print arrow at middle point */
+                    p.x+=dx*(l/2)/65536;
+                    p.y+=dy*(l/2)/65536;
+                    display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
+                }
                 /* if line is quite long, print arrows at 1/4 and 3/4 length */
                 if(l > (20*width[i])) {
                     p.x+=dx*(l/4)/65536;
@@ -1593,9 +1602,12 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
                     display_draw_arrow(&p, dx, dy, width[i], dc, gra, filled);
                 }
             } else {
+                /*FIXME: what if line length was smaller than 15?*/
+                /* print arrow 15 units from start */
                 p.x+=dx*15/65536;
                 p.y+=dy*15/65536;
                 display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
+                /* print arrow 15 units before end */
                 p=pnt[i+1];
                 p.x-=dx*15/65536;
                 p.y-=dy*15/65536;
