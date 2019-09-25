@@ -36,8 +36,8 @@ enum escape_mode {
     escape_mode_html_amp=4,	/*!< Use HTML-style escape sequences for ampersands */
     escape_mode_html_quote=8,	/*!< Use HTML-style escape sequences for double quotes */
     escape_mode_html_apos=16,	/*!< Use HTML-style escape sequences for single quotes (apostrophes) */
-    escape_mode_html_lt=16,	/*!< Use HTML-style escape sequences for lower than sign ('<') */
-    escape_mode_html_gt=16,	/*!< Use HTML-style escape sequences for greater than sign ('>') */
+    escape_mode_html_lt=32,	/*!< Use HTML-style escape sequences for lower than sign ('<') */
+    escape_mode_html_gt=64,	/*!< Use HTML-style escape sequences for greater than sign ('>') */
     escape_mode_html=escape_mode_html_amp|escape_mode_html_quote|escape_mode_html_apos|escape_mode_html_lt|escape_mode_html_gt,	/*!< Use all known HTML-style escape sequences */
 };
 

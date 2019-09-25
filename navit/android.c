@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <math.h>
 #include "android.h"
 #include <android/log.h>
 #include "navit.h"
@@ -393,8 +392,8 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetCoordForPoint( JNIEnv* env, jobject thiz, int id,
-        int x, int y, jboolean absolute_coord) {
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz,
+        jint id, int x, int y, jboolean absolute_coord) {
 
     jstring return_string = NULL;
 

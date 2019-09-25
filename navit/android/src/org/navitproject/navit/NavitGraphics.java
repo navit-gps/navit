@@ -212,12 +212,12 @@ public class NavitGraphics {
         protected void onCreateContextMenu(ContextMenu menu) {
             super.onCreateContextMenu(menu);
 
-            String clickCoord = GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, false);
+            String clickCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, false);
             menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
             menu.add(1, MENU_DRIVE_HERE, NONE, activity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
             /* Check if there is at least one application that can process a geo intent... */
-            Uri intentUri = Uri.parse("geo:" + GetCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true));
+            Uri intentUri = Uri.parse("geo:" + getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true));
             mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
 
             PackageManager packageManager = context.getPackageManager();
@@ -774,7 +774,7 @@ public class NavitGraphics {
 
     public native void MotionCallback(int id, int x, int y);
 
-    public native String GetCoordForPoint(int id, int x, int y, boolean absolute_coord);
+    private native String getCoordForPoint(int id, int x, int y, boolean absolute_coord);
 
     public native String GetDefaultCountry(int id, String s);
 
