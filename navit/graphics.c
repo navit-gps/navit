@@ -2394,13 +2394,6 @@ char *graphics_icon_path(const char *icon) {
         ret=g_strdup(icon);
     else {
 #ifdef HAVE_API_ANDROID
-        // get resources for the correct screen density
-        //
-        // this part not needed, android unpacks only the correct version into res/drawable dir!
-        // dbg(lvl_debug,"android icon_path %s",icon);
-        // static char *android_density;
-        // android_density = getenv("ANDROID_DENSITY");
-        // ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
         ret=g_strdup_printf("res/drawable/%s",icon);
 #else
         if (! navit_sharedir)

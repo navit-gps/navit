@@ -175,7 +175,7 @@ class NavitGraphics {
         }
 
         public void onWindowFocusChanged(boolean hasWindowFocus) {
-            Log.e(TAG,"onWindowFocusChanged = " + hasWindowFocus);
+            Log.v(TAG,"onWindowFocusChanged = " + hasWindowFocus);
             // beter aanroepen in Navit of appconfig ?
             if (Navit.sShowSoftKeyboardShowing && hasWindowFocus) {
                 InputMethodManager imm  = (InputMethodManager) mActivity
@@ -192,13 +192,13 @@ class NavitGraphics {
 
         @TargetApi(21)
         public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-            Log.e(TAG,"onApplyWindowInsets");
+            Log.d(TAG,"onApplyWindowInsets");
             if (mTinting) {
                 mPaddingLeft = insets.getSystemWindowInsetLeft();
                 mPaddingRight = insets.getSystemWindowInsetRight();
                 mPaddingBottom = insets.getSystemWindowInsetBottom();
                 mPaddingTop = insets.getSystemWindowInsetTop();
-                Log.e(TAG, String.format("Padding -1a- left=%d top=%d right=%d bottom=%d",
+                Log.v(TAG, String.format("Padding -1a- left=%d top=%d right=%d bottom=%d",
                         mPaddingLeft, mPaddingTop, mPaddingRight, mPaddingBottom));
                 int width = this.getWidth();
                 int height = this.getHeight();
@@ -285,9 +285,8 @@ class NavitGraphics {
             mDrawCanvas = new Canvas(mDrawBitmap);
             mBitmapWidth = w;
             mBitmapHeight = h;
-            //if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && mTinting)
+
             handleResize(w, h);
-            //}
             sizeChangedCallback(mSizeChangedCallbackID, w, h);
         }
 
@@ -438,7 +437,7 @@ class NavitGraphics {
                     keyStr = String.valueOf((char) 16);
                     break;
                 default:
-                    Log.e(TAG, "keycode: " + keyCode);
+                    Log.v(TAG, "keycode: " + keyCode);
             }
             if (keyStr != null) {
                 keypressCallback(mKeypressCallbackID, keyStr);
@@ -667,7 +666,7 @@ class NavitGraphics {
                     break;
                 case CLB_REDRAW:
                 default:
-                    Log.e(TAG, "Unhandled callback : " + msg_values[msg.what]);
+                    Log.d(TAG, "Unhandled callback : " + msg_values[msg.what]);
             }
         }
     }
@@ -1053,7 +1052,7 @@ class NavitGraphics {
         if (!mTinting) {
             return;
         }
-        Log.e(TAG,"workaround gui internal");
+        Log.v(TAG,"workaround gui internal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !inMap) {
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             return;

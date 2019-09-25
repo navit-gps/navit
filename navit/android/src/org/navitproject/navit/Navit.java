@@ -358,7 +358,7 @@ public class Navit extends Activity {
             Log.e(TAG, "Failed to access assets using AssetManager");
         }
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(Build.VERSION.SDK));
-        navitMain(navitLanguage, myDisplayDensity, sNavitDataDir + "/bin/navit", sMapFilenamePath);
+        navitMain(navitLanguage, sNavitDataDir + "/bin/navit", sMapFilenamePath);
         showInfos();
     }
 
@@ -403,18 +403,18 @@ public class Navit extends Activity {
 
     public void onRestart() {
         super.onRestart();
-        Log.e(TAG, "OnRestart");
+        Log.d(TAG, "OnRestart");
     }
 
     public void onStart() {
         super.onStart();
-        Log.e(TAG, "OnStart");
+        Log.d(TAG, "OnStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, "OnResume");
+        Log.d(TAG, "OnResume");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             /* Required to make system bars fully transparent */
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -444,7 +444,7 @@ public class Navit extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        Log.e(TAG, "onPause");
+        Log.d(TAG, "onPause");
     }
 
     @Override
@@ -512,7 +512,7 @@ public class Navit extends Activity {
 
                         msg.setData(b);
                         msg.sendToTarget();
-                        Log.e(TAG, "target found (b): " + geoString);
+                        Log.i(TAG, "target found (b): " + geoString);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
@@ -637,7 +637,7 @@ public class Navit extends Activity {
     /**
      * Shows the Options menu.
      *
-     * <p>Calling this method has the same effect as pressing the hardware Menu button, where present, or touching
+     * <p>Calling this method has the same effect as pressing the hardware Menu button, or touching
      * the overflow button in the Action bar.</p>
      */
     void showMenu() {
@@ -788,9 +788,8 @@ public class Navit extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     void fullscreen(int fullscreen) {
-        int width;
-        int height;
-        View decorView = getWindow().getDecorView(); //?????
+
+        View decorView = getWindow().getDecorView();
 
         mIsFullscreen = (fullscreen != 0);
         if (mIsFullscreen) {
@@ -815,8 +814,7 @@ public class Navit extends Activity {
         mWakeLock.release();
     }
 
-    private native void navitMain(String lang,
-                                  String displayDensityString, String path, String path2);
+    private native void navitMain(String lang, String path, String path2);
 
     public native void navitDestroy();
 

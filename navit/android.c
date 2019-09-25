@@ -76,21 +76,18 @@ int android_find_static_method(jclass class, char *name, char *args, jmethodID *
 }
 
 
-
 /**
  * @brief Starts the Navitlib for Android
  *
  * @param env provided by JVM
  * @param thiz the calling Navit instance
  * @param lang a string describing the language
- * @param disply_density_string refers to xml version to use
  * @param path relates to NAVIT_DATA_DIR on linux
  * @param map_path where the binfiles are stored
  */
 JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env, jobject thiz,
-        jstring lang, jstring display_density_string, jstring path, jstring map_path) {
+        jstring lang, jstring path, jstring map_path) {
     const char *langstr;
-    const char *displaydensitystr;
     const char *map_file_path;
     jnienv=env;
 
@@ -101,14 +98,10 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain( JNIEnv* env,
     setenv("LANG",langstr,1);
     (*env)->ReleaseStringUTFChars(env, lang, langstr);
 
-    displaydensitystr=(*env)->GetStringUTFChars(env, display_density_string, NULL);
-    dbg(lvl_debug,"*****displaydensity=%s",displaydensitystr);
-    setenv("ANDROID_DENSITY",displaydensitystr,1);
-    (*env)->ReleaseStringUTFChars(env, display_density_string, displaydensitystr);
-
     map_file_path=(*env)->GetStringUTFChars(env, map_path, NULL);
     setenv("NAVIT_USER_DATADIR",map_file_path,1);
-    (*env)->ReleaseStringUTFChars(env, display_density_string, map_file_path);
+    (*env)->ReleaseStringUTFChars(env, map_path, map_file_path);
+
     const char *strings=(*env)->GetStringUTFChars(env, path, NULL);
     main_real(1, &strings);
     (*env)->ReleaseStringUTFChars(env, path, strings);
@@ -337,7 +330,7 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
 
     struct transformation *transform=navit_get_trans(attr.u.navit);
     struct point p;
-    struct point c;
+    struct coord c;
     struct pcoord pc;
 
     p.x = x;
