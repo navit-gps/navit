@@ -41,161 +41,6 @@
 #include <arpa/inet.h>
 #endif
 
-/**
- * @brief Converts a WGS84 coordinate pair to its string representation.
- *
- * This function takes a coordinate pair with latitude and longitude in degrees and converts them to a
- * string of the form {@code 45°28'0" N 9°11'26" E}.
- *
- * @param gc A WGS84 coordinate pair
- * @param sep The separator character to insert between latitude and longitude
- *
- * @return The coordinates as a formatted string
- */
-static char *coordinates_geo(const struct coord_geo *gc, char sep) {
-    char latc='N',lngc='E';
-    int lat_deg,lat_min,lat_sec;
-    int lng_deg,lng_min,lng_sec;
-    struct coord_geo g=*gc;
-
-    if (g.lat < 0) {
-        g.lat=-g.lat;
-        latc='S';
-    }
-    if (g.lng < 0) {
-        g.lng=-g.lng;
-        lngc='W';
-    }
-    lat_sec=fmod(g.lat*3600+0.5,60);
-    lat_min=fmod(g.lat*60-lat_sec/60.0+0.5,60);
-    lat_deg=g.lat-lat_min/60.0-lat_sec/3600.0+0.5;
-    lng_sec=fmod(g.lng*3600+0.5,60);
-    lng_min=fmod(g.lng*60-lng_sec/60.0+0.5,60);
-    lng_deg=g.lng-lng_min/60.0-lng_sec/3600.0+0.5;;
-
-    return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
-}
-
-/**
- * @brief Converts a coordinate pair to its WGS84 string representation.
- *
- * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
- * {@code 45°28'0" N 9°11'26" E}.
- *
- * @param gc A coordinate pair
- * @param sep The separator character to insert between latitude and longitude
- *
- * @return The coordinates as a formatted string
- */
-char *gui_internal_coordinates(struct pcoord *pc, char sep) {
-    struct coord_geo g;
-    struct coord c;
-    c.x=pc->x;
-    c.y=pc->y;
-    transform_to_geo(pc->pro, &c, &g);
-    return coordinates_geo(&g, sep);
-
-}
-
-enum escape_mode {
-    escape_mode_none=0,
-    escape_mode_string=1,	/*!< Surround string by double quotes */
-    escape_mode_quote=2,	/*!< Escape double quotes and backslashes */
-    escape_mode_html_amp=4,	/*!< Use HTML-style escape sequences for ampersands */
-    escape_mode_html_quote=8,	/*!< Use HTML-style escape sequences for double quotes */
-    escape_mode_html_apos=16,	/*!< Use HTML-style escape sequences for single quotes (apostrophes) */
-    escape_mode_html_lt=16,	/*!< Use HTML-style escape sequences for lower than sign ('<') */
-    escape_mode_html_gt=16,	/*!< Use HTML-style escape sequences for greater than sign ('>') */
-    escape_mode_html=escape_mode_html_amp|escape_mode_html_quote|escape_mode_html_apos|escape_mode_html_lt|escape_mode_html_gt,	/*!< Use all known HTML-style escape sequences */
-};
-
-/**
- * @brief Escape special characters from a string
- *
- * @param mode The escape mode that needs to be enabled (see enum escape_mode)
- * @param in The string to escape
- *
- * @return The escaped string
- *
- * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes
- * @warning The returned string has been allocated and g_free() must thus be called on this string
- */
-static char *gui_internal_escape(enum escape_mode mode, const char *in) {
-    int len=mode & escape_mode_string ? 2:0;	/* Add 2 characters to the length of the buffer if quoting is enabled */
-    char *dst,*out;
-    const char *src=in;
-    static const char *quot="&quot;";
-    static const char *apos="&apos;";
-    static const char *amp="&amp;";
-    static const char *lt="&lt;";
-    static const char *gt="&gt;";
-
-    dbg(lvl_debug, "Entering %s with string=\"%s\", escape mode %d", __func__, in, mode);
-    while (*src) {
-        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
-            len++;
-        if (*src == '"' && mode == escape_mode_html_quote)
-            len+=strlen(quot);
-        else if (*src == '\'' && mode == escape_mode_html_apos)
-            len+=strlen(apos);
-        else if (*src == '&' && mode == escape_mode_html_amp)
-            len+=strlen(amp);
-        else if (*src == '<' && mode == escape_mode_html_lt)
-            len+=strlen(lt);
-        else if (*src == '>' && mode == escape_mode_html_gt)
-            len+=strlen(gt);
-        else
-            len++;
-        src++;
-    }
-    src=in;
-    out=dst=g_malloc(len+1); /* +1 character for NUL termination */
-
-    /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
-    if (mode & escape_mode_string)
-        *dst++='"';
-
-    while (*src) {
-        if (mode & escape_mode_html) {	/* In html escape mode, only process HTML escape sequence, not backslashes or quotes */
-            if (*src == '"' && (mode & escape_mode_html_quote)) {
-                strcpy(dst,quot);
-                src++;
-                dst+=strlen(quot);
-            } else if (*src == '\'' && (mode & escape_mode_html_apos)) {
-                strcpy(dst,apos);
-                src++;
-                dst+=strlen(apos);
-            } else if (*src == '&' && (mode & escape_mode_html_amp)) {
-                strcpy(dst,amp);
-                src++;
-                dst+=strlen(amp);
-            } else if (*src == '<' && (mode & escape_mode_html_lt)) {
-                strcpy(dst,lt);
-                src++;
-                dst+=strlen(lt);
-            } else if (*src == '>' && (mode & escape_mode_html_gt)) {
-                strcpy(dst,gt);
-                src++;
-                dst+=strlen(gt);
-            } else
-                *dst++=*src++;
-        } else {
-            if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
-                *dst++='\\';
-            }
-            *dst++=*src++;
-        }
-    }
-
-    /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
-    if (mode & escape_mode_string)
-        *dst++='"';
-
-    *dst++='\0';
-    dbg(lvl_debug, "Exitting %s with string=\"%s\"", __func__, out);
-    return out;
-}
-
 static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out,
                                     int *valid) {
     struct attr escaped;
@@ -209,7 +54,7 @@ static void gui_internal_cmd_escape(struct gui_priv *this, char *function, struc
     }
     if (ATTR_IS_STRING(in[0]->type)) {
         escaped.type=in[0]->type;
-        escaped.u.str=gui_internal_escape(escape_mode_string,in[0]->u.str);
+        escaped.u.str=str_escape(escape_mode_string,in[0]->u.str);
     } else if (ATTR_IS_INT(in[0]->type)) {
         escaped.type=attr_type_string_begin;
         escaped.u.str=g_strdup_printf("%ld",in[0]->u.num);
@@ -1103,11 +948,11 @@ void gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr *
 static char *gui_internal_append_attr(char *str, enum escape_mode mode, char *pre, struct attr *attr, char *post) {
     char *astr=NULL;
     if (ATTR_IS_STRING(attr->type))
-        astr=gui_internal_escape(mode, attr->u.str);
+        astr=str_escape(mode, attr->u.str);
     else if (ATTR_IS_COORD_GEO(attr->type)) {
-        char *str2=coordinates_geo(attr->u.coord_geo, '\n');
-        astr=gui_internal_escape(mode, str2);
-        g_free(str2);
+        char coord_str[32];
+        coord_geo_format_short(attr->u.coord_geo, coord_str, sizeof(coord_str), "\n");
+        astr=str_escape(mode, coord_str);
     } else if (ATTR_IS_INT(attr->type))
         astr=g_strdup_printf("%ld",attr->u.num);
     else
@@ -1174,7 +1019,7 @@ static void gui_internal_onclick(struct attr ***in, char **onclick, char *set) {
             if (!strcmp(format,"se")) {
                 replacement=gui_internal_append_attr(NULL, escape_mode_string, "", *i++, "");
                 if (is_arg) {
-                    char *arg=gui_internal_escape(escape_mode_string, replacement);
+                    char *arg=str_escape(escape_mode_string, replacement);
                     args=g_strconcat_printf(args, "%s%s", args ? "," : "", arg);
                     g_free(replacement);
                     g_free(arg);
@@ -1199,7 +1044,7 @@ static void gui_internal_onclick(struct attr ***in, char **onclick, char *set) {
     if (str && strlen(str)) {
         char *old=*onclick;
         if (set) {
-            char *setstr=gui_internal_escape(escape_mode_string,str);
+            char *setstr=str_escape(escape_mode_string,str);
             char *argssep="";
             if (args && strlen(args))
                 argssep=",";
@@ -1251,7 +1096,7 @@ static void gui_internal_cmd_img(struct gui_priv * this, char *function, struct 
     gui_internal_onclick(&in,&onclick,"set");
     gui_internal_onclick(&in,&onclick,NULL);
     if (strlen(onclick)) {
-        char *tmp=gui_internal_escape(escape_mode_html_apos, onclick);
+        char *tmp=str_escape(escape_mode_html_apos, onclick);
         str=g_strconcat_printf(str," onclick='%s'",tmp);
         g_free(tmp);
     }

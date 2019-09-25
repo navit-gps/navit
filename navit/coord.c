@@ -293,23 +293,26 @@ void coord_print(enum projection pro, struct coord *c, FILE *out) {
  * @brief Converts a lat/lon into a text formatted text string.
  * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
  * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
- * @param fmt The format to use.
- *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.5000°N 110.5000°E
- *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.00'N 110°30.00'E
- *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00"N 110°30'30"E
- *
- *
- * @param buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
+ * @param fmt The format to use:
+ *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E (max: 26 bytes)
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E (max: 30 bytes)
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E (max: 32 bytes)
+ *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E (max 24 bytes)
+ * @param[out] buffer A buffer large enough to hold the output (bearing in mind '°' uses 2 bytes in UTF-8).
+ *                    Maximum size depends on the format, see values above, and add an extra character for the terminating NUL character
  * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
  *
  */
-void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int size) {
+void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buffer, int size, const char *sep) {
 
     char lat_c='N';
     char lng_c='E';
     float lat_deg,lat_min,lat_sec;
     float lng_deg,lng_min,lng_sec;
     int size_used=0;
+    if (sep == NULL)
+        sep = " ";
 
     if (lng < 0) {
         lng=-lng;
@@ -331,7 +334,7 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
         if (lat<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
         if ((lat<360)&&(lng<360))
-            size_used+=g_snprintf(buffer+size_used,size-size_used," ");
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
         if (lng<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
         break;
@@ -339,7 +342,7 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
         if (lat<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.0f°%07.4f' %c",floor(lat_deg),lat_min,lat_c);
         if ((lat<360)&&(lng<360))
-            size_used+=g_snprintf(buffer+size_used,size-size_used," ");
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
         if (lng<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.0f°%07.4f' %c",floor(lng_deg),lng_min,lng_c);
         break;
@@ -348,22 +351,97 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.0f°%02.0f'%05.2f\" %c",floor(lat_deg),floor(lat_min),
                                   lat_sec,lat_c);
         if ((lat<360)&&(lng<360))
-            size_used+=g_snprintf(buffer+size_used,size-size_used," ");
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
         if (lng<360)
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.0f°%02.0f'%05.2f\" %c",floor(lng_deg),floor(lng_min),
                                   lng_sec,lng_c);
         break;
-
-
+    case DEGREES_MINUTES_SECONDS_BRIEF:
+        if (lat<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lat_deg),floor(lat_min),
+                                  round(lat_sec),lat_c);
+        if ((lat<360)&&(lng<360))
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%s",sep);
+        if (lng<360)
+            size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lng_deg),floor(lng_min),
+                                  round(lng_sec),lng_c);
+        break;
     }
-
 }
 
+/**
+ * @brief Converts a lat/lon into a text formatted text string.
+ * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
+ * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
+ * @param fmt The format to use.
+ *    @li DEGREES_DECIMAL=>Degrees with decimal places, i.e. 20.500000°N 110.500000°E
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.0000' N 110°30.0000' E
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00" N 110°30'30.00" E
+ *    @li DEGREES_MINUTES_SECONDS_BRIEF=>Degrees, minutes and seconds but with the shortest possible string, i.e. 20°30'30"N 110°30'30"E
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param size The size of the buffer
+ *
+ */
+inline void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size) {
+    coord_format_with_sep(lat, lng, fmt, buffer, size, NULL);
+}
+
+/**
+ * @brief Converts a WGS84 coordinate pair to its string representation.
+ *
+ * This function takes a coordinate pair with latitude and longitude in degrees and converts them to a
+ * string of the form {@code 45°28'0"N 9°11'26"E}.
+ *
+ * @param gc A WGS84 coordinate pair
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
+ */
+inline void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep) {
+    dbg_assert(gc != NULL);
+    coord_format_with_sep(gc->lat, gc->lng, DEGREES_MINUTES_SECONDS_BRIEF, buffer, size, sep);
+}
+
+/**
+ * @brief Converts an integer mercator coordinate pair to its string representation.
+ *
+ * This function takes a coordinate pair, transforms it to WGS84 and converts it to a string of the form
+ * {@code 45°28'0"N 9°11'26"E}.
+ *
+ * @param pc Coordinates as integer mercator
+ * @param[out] buffer A buffer large enough to hold the output + a terminating NUL character (up to 31 bytes)
+ * @param size The size of the buffer
+ * @param[in] sep The separator to use (if needed) between latitude and longitude (if NULL we will use a space)
+ */
+inline void pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep) {
+    dbg_assert(pc != NULL);
+    struct coord_geo g;
+    struct coord c;
+    c.x=pc->x;
+    c.y=pc->y;
+    transform_to_geo(pc->pro, &c, &g);
+    coord_format_with_sep(g.lat, g.lng, DEGREES_MINUTES_SECONDS_BRIEF, buffer, size, sep);
+}
+
+/**
+ * @brief Generate a hash from a struct coord pointed by key
+ *
+ * @param[in] key A pointer to the struct coord to hash
+ * @return The resulting hash
+ */
 unsigned int coord_hash(const void *key) {
     const struct coord *c=key;
     return c->x^c->y;
 }
 
+/**
+ * @brief Test if two struct coord structures are equal
+ *
+ * @param[in] a A pointer to the first struct coord
+ * @param[in] b A pointer to the second struct coord
+ *
+ * @return TRUE if a and b are equal, FALSE otherwise
+ */
 int coord_equal(const void *a, const void *b) {
     const struct coord *c_a=a;
     const struct coord *c_b=b;
@@ -371,4 +449,5 @@ int coord_equal(const void *a, const void *b) {
         return TRUE;
     return FALSE;
 }
+
 /** @} */

@@ -711,22 +711,32 @@ static GList* find_destination_in_list(struct former_destination* dest_to_remove
 
 }
 
-
-static void write_former_destinations(GList* former_destinations, char *former_destination_file, enum projection proj) {
+/**
+ * @brief Write all former destinations into a text file
+ *
+ * @param[in] former_destinations A GList of struct coord data elements containing the list of former destinations
+ * @param[in] former_destination_file The name of the output text file
+ * @param proj The projection used to represent coordinates in former_destinations' list elements
+ */
+static void write_former_destinations(const GList* former_destinations, const char *former_destination_file,
+                                      enum projection proj) {
     FILE *f;
-    GList* currdest = NULL;
+    const GList* currdest = NULL;
     GList* c_list = NULL;
     struct coord *c;
     struct former_destination *dest;
     const char* prostr = projection_to_name(proj);
+    if (prostr == NULL)
+        prostr = "";	/* Protect from NULL pointer dereference below */
+
     f=fopen(former_destination_file, "w");
     if (f) {
         for(currdest = former_destinations; currdest; currdest = g_list_next(currdest)) {
             dest = currdest->data;
+            fprintf(f,"type=%s", item_to_name(dest->type));
             if (dest->description)
-                fprintf(f,"type=%s label=\"%s\"\n", item_to_name(dest->type), dest->description);
-            else
-                fprintf(f,"type=%s\n", item_to_name(dest->type));
+                fprintf(f," label=\"%s\"", str_escape(escape_mode_quote, dest->description));
+            fputc('\n', f);
             c_list = dest->c;
             do {
                 c = (struct coord *)c_list->data;
@@ -742,8 +752,9 @@ static void write_former_destinations(GList* former_destinations, char *former_d
         dbg(lvl_error, "Error updating destinations file %s: %s", former_destination_file, strerror(errno));
     }
 }
+
 /**
- * Append recent destination(s) item to the former destionations map.
+ * @brief Append recent destination(s) item to the former destionations map.
  * @param former_destination_map
  * @param former_destination_file
  * @param c coordinates of item point(s). Can be set to NULL when navigation is stopped to remove type_former_itinerary and
