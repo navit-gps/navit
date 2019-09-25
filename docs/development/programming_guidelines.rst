@@ -9,10 +9,10 @@ Coding Style
 ============
 
 We try to follow those simple rules:
-* indentation is done using 4 spaces
-* the return type of a function is specified on the same line as the function name
-* the open brackets should be at the end of the line (on the same line as the function name or the if/for/while statement)
-* out line length is of 120 characters
+ * indentation is done using 4 spaces
+ * the return type of a function is specified on the same line as the function name
+ * the open brackets should be at the end of the line (on the same line as the function name or the if/for/while statement)
+ * out line length is of 120 characters
 
 To help us keeping a coherent indentation, we use astyle on C, C++ and java files. Usage example:
 
@@ -36,8 +36,7 @@ C Standard
 ----------
 
 C95. That means:
-
-* No inline declarations of variables
+ * No inline declarations of variables
 
 Instead of
 
@@ -58,7 +57,7 @@ use
        a=do_something_else();
     }
 
-* No dynamic arrays
+ * No dynamic arrays
 
 Instead of
 
@@ -76,7 +75,7 @@ use
        struct mystruct *x=g_alloca(count*sizeof(struct mystruct));
     }
 
-* No empty initializers
+ * No empty initializers
 
 Instead of
 
@@ -90,7 +89,7 @@ use
 
     struct mystruct m={0,};
 
-* Use `/*` and `*/` for comments instead of `//`
+ * Use `/*` and `*/` for comments instead of `//`
 
 .. note::
 
@@ -100,12 +99,12 @@ use
 Use of libraries
 ----------------
 
-* Navit uses [GLIB](http://developer.gnome.org/glib/) extensively. In general, code should use GLib's functions in preference to functions from libc.
-  For example, use `g_new()` / `g_free()` / `g_realloc()`, rather than `malloc()` / `free()` / `realloc()`, `g_strdup()` rather than `strdup()`, `g_strcmp0()` rather than `strcmp()` etc.
-* Unfortunately, not all platforms that Navit runs on have a native GLib version.
-  For these platforms, there is code replacing these libraries under `navit/support/`.
-  Take care to only use functions from GLib (or other libraries), that is also present under `navit/support/`.
-  If you need something that is not present there, please discuss it on IRC - it may be possible to add it to the support code.
+ * Navit uses `GLIB <http://developer.gnome.org/glib/>`_ extensively. In general, code should use GLib's functions in preference to functions from libc.
+   For example, use `g_new()` / `g_free()` / `g_realloc()`, rather than `malloc()` / `free()` / `realloc()`, `g_strdup()` rather than `strdup()`, `g_strcmp0()` rather than `strcmp()` etc.
+ * Unfortunately, not all platforms that Navit runs on have a native GLib version.
+   For these platforms, there is code replacing these libraries under `navit/support/`.
+   Take care to only use functions from GLib (or other libraries), that is also present under `navit/support/`.
+   If you need something that is not present there, please discuss it on IRC - it may be possible to add it to the support code.
 
 Comments
 --------
@@ -113,10 +112,10 @@ Comments
 General guidelines
 ``````````````````
 
-* Comments for the entire `file` and `classes/structs/methods/functions` is the `'minimum requirement`'. Examples see below.
-* Please comment your code in a significant and reasonable way.
-* A quick description of (complicated) algorithms makes it easier for other developers and helps them to save a lot of time.
-* Please add a doxygen description for all function you should add. You are we1come to add it too to older functions. Doxygen result can be found [there](http://doxygen.navit-project.org)
+ * Comments for the entire `file` and `classes/structs/methods/functions` is the `'minimum requirement`'. Examples see below.
+ * Please comment your code in a significant and reasonable way.
+ * A quick description of (complicated) algorithms makes it easier for other developers and helps them to save a lot of time.
+ * Please add a doxygen description for all function you should add. You are we1come to add it too to older functions. Doxygen result can be found `there <http://doxygen.navit-project.org>`_
 
 Example :
 
@@ -138,7 +137,7 @@ Example :
 Templates
 `````````
 
-This is an example how you could (should) comment your files and functions. If you have any suggestions for improvement, please feel free to [[Talk:Programming_guidelines|discuss]] them with us. These templates should be doxygen-conform - if not, please correct them. A more comprehensive overview of possible documentation can be found [http://www.stack.nl/~dimitri/doxygen/manual.html here].
+This is an example how you could (should) comment your files and functions. If you have any suggestions for improvement, please feel free to [[Talk:Programming_guidelines|discuss]] them with us. These templates should be doxygen-conform - if not, please correct them. A more comprehensive overview of possible documentation can be found `here <http://www.stack.nl/~dimitri/doxygen/manual.html>`_.
 
 Files
 '''''

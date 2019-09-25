@@ -11,6 +11,7 @@
 #include "callback.h"
 #include "country.h"
 #include "projection.h"
+#include "coord.h"
 #include "map.h"
 #include "mapset.h"
 #include "navit_nls.h"
@@ -141,7 +142,7 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallbac
     const char *s;
     dbg(lvl_debug,"enter %p %p",(struct callback *)id,str);
     s=(*env)->GetStringUTFChars(env, str, NULL);
-    dbg(lvl_debug,"key=%d",s);
+    dbg(lvl_debug,"key=%s",s);
     if (id)
         callback_call_1((struct callback *)id,s);
     (*env)->ReleaseStringUTFChars(env, str, s);
@@ -189,8 +190,6 @@ JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTraff_onFeedReceived(JNI
         callback_call_1((struct callback *) id, s);
     (*env)->ReleaseStringUTFChars(env, feed, s);
 }
-
-
 
 // type: 0=town, 1=street, 2=House#
 void android_return_search_result(struct jni_object *jni_o, int type, struct pcoord *location, const char *address) {
@@ -329,16 +328,17 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
 
         transform_reverse(transform, &p, &c);
 
-
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = transform_get_projection(transform);
 
-        dbg(lvl_debug,"22x=%d",pc.x);
-        dbg(lvl_debug,"22y=%d",pc.y);
+        char coord_str[32];
+        pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+
+        dbg(lvl_debug,"Setting destination to %s",coord_str);
 
         // start navigation asynchronous
-        navit_set_destination(attr.u.navit, &pc, parse_str, 1);
+        navit_set_destination(attr.u.navit, &pc, coord_str, 1);
     }
     break;
     case 3: {
@@ -386,6 +386,36 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessage
     }
 
     return ret;
+}
+
+JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env, jobject thiz,
+        jint id, int x, int y) {
+
+    jstring return_string = NULL;
+
+    struct attr attr;
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    struct transformation *transform=navit_get_trans(attr.u.navit);
+    struct point p;
+    struct coord c;
+    struct pcoord pc;
+
+    p.x = x;
+    p.y = y;
+
+    transform_reverse(transform, &p, &c);
+
+    pc.x = c.x;
+    pc.y = c.y;
+    pc.pro = transform_get_projection(transform);
+
+    char coord_str[32];
+    pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
+
+    dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
+    return_string = (*env)->NewStringUTF(env,coord_str);
+    return return_string;
 }
 
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry( JNIEnv* env, jobject thiz,

@@ -408,27 +408,45 @@ static void draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, 
         polygon.putPoints(i, 1, p[i].x, p[i].y);
     gr->painter->setPen(*gc->pen);
     gr->painter->setBrush(*gc->brush);
-    /* if the polygon is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->drawPolygon(polygon);
-        gr->painter->setCompositionMode(mode);
-    }
+
     gr->painter->drawPolygon(polygon);
+}
+
+static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+    int i;
+    int j;
+    QPainterPath path;
+    QPainterPath inner;
+    QPolygon polygon;
+    //dbg(lvl_error,"enter gr=%p, gc=%p, (%d, %d) holes %d", gr, gc, p->x, p->y, hole_count);
+    if (gr->painter == NULL)
+        return;
+    gr->painter->setPen(*gc->pen);
+    gr->painter->setBrush(*gc->brush);
+    /* construct outer polygon */
+    for (i = 0; i < count; i++)
+        polygon.putPoints(i, 1, p[i].x, p[i].y);
+    /* add it to outer path */
+    path.addPolygon(polygon);
+    /* construct the polygons for the holes and add them to inner */
+    for(j=0; j<hole_count; j ++) {
+        QPolygon hole;
+        for (i = 0; i < ccount[j]; i++)
+            hole.putPoints(i, 1, holes[j][i].x, holes[j][i].y);
+        inner.addPolygon(hole);
+    }
+    /* intersect */
+    if(hole_count > 0)
+        path = path.subtracted(inner);
+
+    gr->painter->drawPath(path);
 }
 
 static void draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc, struct point* p, int w, int h) {
     //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
     if (gr->painter == NULL)
         return;
-    /* if the rectangle is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
-        gr->painter->setCompositionMode(mode);
-    }
     gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
 }
 
@@ -609,9 +627,11 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     case draw_mode_begin:
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
         gr->use_count++;
-        if (gr->painter == NULL)
+        if (gr->painter == NULL) {
+            if(gr->parent != NULL)
+                gr->pixmap->fill(QColor(0,0,0,0));
             gr->painter = new QPainter(gr->pixmap);
-        else
+        } else
             dbg(lvl_debug, "drawing on %p already active", gr);
         break;
     case draw_mode_end:
@@ -851,7 +871,8 @@ static struct graphics_methods graphics_methods = {
     NULL, //set_attr
     NULL, //show_native_keyboard
     NULL, //hide_native_keyboard
-    get_dpi
+    get_dpi,
+    draw_polygon_with_holes
 };
 
 /* create new graphics context on given context */

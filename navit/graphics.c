@@ -1099,6 +1099,47 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
     }
 }
 
+/**
+ * @brief Draw a plain polygon with holes on the display
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ * @param hole_count The number of hole polygons to cut out
+ * @param pcount array of [hole_count] integers giving the number of
+ *        points per hole
+ * @param holes array of point arrays for the hole polygons
+ */
+static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphics_gc *gc, struct point *pin,
+        int count_in, int hole_count, int* ccount, struct point **holes) {
+    if (! gra->meth.draw_polygon_with_holes) {
+        /* TODO: add attr to configure if polygons with holes should be drawn without
+         *       the holes if no graphics support for this is present.
+         */
+        graphics_draw_polygon(gra, gc, pin, count_in);
+        return;
+    } else {
+        struct point * pin_scaled = g_alloca(sizeof (struct point)*count_in);
+        struct point ** holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        int a;
+        int b;
+        /* scale the outline */
+        for(a=0; a < count_in; a ++)
+            pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
+        /*scale the holes */
+        for(b=0; b < hole_count; b ++) {
+            holes_scaled[b] = g_malloc(sizeof(*(holes_scaled[b])) * ccount[b]);
+            for(a=0; a < ccount[b]; a ++)
+                holes_scaled[b][a] = graphics_dpi_scale_point(gra,&(holes[b][a]));
+        }
+        gra->meth.draw_polygon_with_holes(gra->priv, gc->priv, pin_scaled, count_in, hole_count, ccount, holes_scaled);
+        /* free the hole arrays */
+        for(b=0; b < hole_count; b ++)
+            g_free(holes_scaled[b]);
+    }
+}
+
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
                                      int r, int fill) {
     struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
@@ -1304,16 +1345,26 @@ int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keybo
 #include "popup.h"
 #include <stdio.h>
 
+struct displayitem_poly_holes {
+    int count;
+    int *ccount;
+    struct coord ** coords;
+};
+
 /**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
+ * @brief graphics display item structure
+ *
+ * The graphics item passes the ap items and other items with this structure
+ * to the graphics drawing routines. The struct is only a stub. It is allocated
+ * including "count -1" struct coord's following c[0], if "holes" not NULL, by a
+ * polygon hole structure, and if label != NULL, a series of zero terminated
+ * strings followed by another zero for label.
 */
 struct displayitem {
     struct displayitem *next;
     struct item item;
     char *label;
+    struct displayitem_poly_holes * holes;
     int z_order;
     int count;
     struct coord c[0];
@@ -1339,6 +1390,35 @@ static void xdisplay_free(struct displaylist *dl) {
 }
 
 /**
+ * @brief add the holes structure into preallocated area after displayitem
+ *
+ * @param item to extract holes from
+ * @param hole_count precounted number of holes
+ * @param p changeable pointer to buffer. Advanced by the size used
+ * @returns pointer to newly created holes structure
+ */
+static inline struct displayitem_poly_holes *  display_add_holes(struct item *item,int hole_count,  char ** p) {
+    struct attr attr;
+    struct displayitem_poly_holes* holes;
+    holes=(struct displayitem_poly_holes *) *p;
+    *p+=sizeof(*holes);
+    holes->count=0;
+    holes->ccount = (int *) *p;
+    *p+=hole_count * sizeof(int);
+    holes->coords = (struct coord **)*p;
+    *p+=hole_count * sizeof(struct coord *);
+    item_attr_rewind(item);
+    while(item_attr_get(item, attr_poly_hole, &attr)) {
+        holes->coords[holes->count] = (struct coord *)*p;
+        holes->ccount[holes->count] = attr.u.poly_hole->coord_count;
+        memcpy(holes->coords[holes->count], attr.u.poly_hole->coord, holes->ccount[holes->count] * sizeof(struct coord));
+        *p += holes->ccount[holes->count] * sizeof(struct coord);
+        holes->count ++;
+    }
+    return holes;
+}
+
+/**
  * FIXME
  * @param <>
  * @returns <>
@@ -1349,8 +1429,15 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     struct displayitem *di;
     int len,i;
     char *p;
+    struct attr attr;
+    int hole_count=0;
+    int hole_total_coords=0;
+    int holes_length;
 
+    /* calculate number of bytes required */
+    /* own length */
     len=sizeof(*di)+count*sizeof(*c);
+    /* add length of lables including closing zero */
     if (label && label_count) {
         for (i = 0 ; i < label_count ; i++) {
             if (label[i])
@@ -1359,12 +1446,28 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
                 len++;
         }
     }
+    /* add length for holes */
+    item_attr_rewind(item);
+    while(item_attr_get(item, attr_poly_hole, &attr)) {
+        hole_count ++;
+        hole_total_coords += attr.u.poly_hole->coord_count;
+    }
+    holes_length = sizeof(struct displayitem_poly_holes) + hole_count * sizeof(int) + hole_count * sizeof(
+                       struct coord *) + hole_total_coords * sizeof(struct coord);
+    if(hole_count > 0)
+        dbg(lvl_debug,"got %d holes with %d coords total", hole_count, hole_total_coords);
+    len += holes_length;
+
     p=g_malloc(len);
 
     di=(struct displayitem *)p;
     p+=sizeof(*di)+count*sizeof(*c);
     di->item=*item;
     di->z_order=0;
+    di->holes=NULL;
+    if(hole_count > 0) {
+        di->holes = display_add_holes(item, hole_count, &p);
+    }
     if (label && label_count) {
         di->label=p;
         for (i = 0 ; i < label_count ; i++) {
@@ -2034,6 +2137,105 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
 }
 
 /**
+ * @brief clip a polygon inside a rectangle
+ *
+ * This function clippes a given polygon inside a rectangle. It writes the result into provided buffer.
+ *
+ * @param[in] r rectangle to clip into
+ * @param[in] pin point array of input polygon
+ * @param[in] count_in number of points in pin
+ * @param[out] out preallocated buffer of at least count_in *8 +1 points size
+ * @param[out] count_out size of out number of points, number of points used in out at return
+ */
+static void graphics_clip_polygon(struct point_rect * r, struct point * in, int count_in, struct point *out,
+                                  int* count_out) {
+    /* set our self a limit for the in stack buffer. To not overflow stack */
+    const int limit=10000;
+    /* get a temp buffer to store points after one direction clipping.
+     * since we are clipping 4 directions, result is always in out at the end*/
+    struct point *temp=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+    struct point *pout;
+    struct point *pin;
+    int edge;
+    int count;
+
+    /* sanity check */
+    if((r == NULL) || (in == NULL) || (out == NULL) || (count_out == NULL) || (*count_out < count_in*8+1)) {
+        return;
+    }
+
+    /* prepare buffers. We have two buffers that we flip over.
+     * 1. the output buffer
+     * 2. temp
+     */
+    if (count_in >= limit) {
+        /* too big. Allocate a buffer (slower) */
+        temp=g_new(struct point, count_in*8+1);
+    }
+    /* use temp as first buffer. So we get the final result in out*/
+    pout = temp;
+    /* start with input polygon */
+    pin=in;
+    /* start with number of points of source polygon*/
+    count=count_in;
+
+    /* clip all four directions of a rectangle */
+    for (edge = 0 ; edge < 4 ; edge++) {
+        int i;
+        /* p is first element in current buffer */
+        struct point *p=pin;
+        /* s is lasst element in current buffer */
+        struct point *s=pin+count-1;
+        /* nothing written yet */
+        *count_out=0;
+
+        /* iterate all points in current buffer */
+        for (i = 0 ; i < count ; i++) {
+            if (is_inside(p, r, edge)) {
+                if (! is_inside(s, r, edge)) {
+                    struct point pi;
+                    /* current segment crosses border from outside to inside. Add crossing point with border first */
+                    poly_intersection(s,p,r,edge,&pi);
+                    pout[(*count_out)++]=pi;
+                }
+                /* add point if inside */
+                pout[(*count_out)++]=*p;
+            } else {
+                if (is_inside(s, r, edge)) {
+                    struct point pi;
+                    /*current segment crosses border from inside to outside. Add crossing point with border */
+                    poly_intersection(p,s,r,edge,&pi);
+                    pout[(*count_out)++]=pi;
+                }
+                /* skip point if outside */
+            }
+            /* move one coordinate forward */
+            s=p;
+            p++;
+        }
+        /* use result of last clipping for next */
+        count=*count_out;
+
+        /* switch buffer */
+        if(pout == temp) {
+            pout=out;
+            pin=temp;
+        } else {
+            pin=out;
+            pout=temp;
+        }
+    }
+
+    /* have clipped poly in out. And number of points now in *count_out */
+
+    /* if we had to allocate the buffer, we need to free it */
+    if (count_in >= limit) {
+        g_free(temp);
+    }
+    return;
+}
+
+/**
  * @brief Draw a plain polygon on the display
  *
  * @param gra The graphics instance on which to draw
@@ -2043,57 +2245,101 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  */
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
-    struct point *pout,*p,*s,pi,*p1,*p2;
     int limit=10000;
     struct point *pa1=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
-    struct point *pa2=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
-    int count_out,edge=3;
-    int i;
+    struct point *clipped;
+    int count_out = count_in*8+1;
+
+    /* prepare buffer */
     if (count_in < limit) {
-        p1=pa1;
-        p2=pa2;
+        /* use on stack buffer */
+        clipped=pa1;
     } else {
-        p1=g_new(struct point, count_in*8+1);
-        p2=g_new(struct point, count_in*8+1);
+        /* too big. allocate buffer (slower) */
+        clipped=g_new(struct point, count_in*8+1);
     }
 
-    pout=p1;
-    for (edge = 0 ; edge < 4 ; edge++) {
-        p=pin;
-        s=pin+count_in-1;
-        count_out=0;
-        for (i = 0 ; i < count_in ; i++) {
-            if (is_inside(p, &r, edge)) {
-                if (! is_inside(s, &r, edge)) {
-                    poly_intersection(s,p,&r,edge,&pi);
-                    pout[count_out++]=pi;
-                }
-                pout[count_out++]=*p;
-            } else {
-                if (is_inside(s, &r, edge)) {
-                    poly_intersection(p,s,&r,edge,&pi);
-                    pout[count_out++]=pi;
-                }
-            }
-            s=p;
-            p++;
-        }
-        count_in=count_out;
-        if (pin == p1) {
-            pin=p2;
-            pout=p1;
-        } else {
-            pin=p1;
-            pout=p2;
-        }
-    }
-    graphics_draw_polygon(gra, gc, pin, count_in);
+    graphics_clip_polygon(&r, pin, count_in, clipped, &count_out);
+    graphics_draw_polygon(gra, gc, clipped, count_out);
+
+    /* if we had to allocate buffer, free it */
     if (count_in >= limit) {
-        g_free(p1);
-        g_free(p2);
+        g_free(clipped);
     }
 }
 
+/**
+ * @brief Draw a plain polygon with holes on the display
+ *
+ * @param gra The graphics instance on which to draw
+ * @param gc The graphics context
+ * @param[in] pin An array of points forming the polygon
+ * @param count_in The number of elements inside @p pin
+ * @param hole_count The number of hole polygons to cut out
+ * @param pcount array of [hole_count] integers giving the number of
+ *        points per hole
+ * @param holes array of point arrays for the hole polygons
+ */
+static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin,
+        int count_in, int hole_count, int* ccount, struct point **holes) {
+    int i;
+    struct point_rect r=gra->r;
+    int limit=10000;
+    struct point *pa1;
+    struct point *clipped;
+    int total_count_in;
+    int count_out;
+    int count_used;
+    int found_hole_count;
+    int *found_ccount;
+    struct point ** found_holes;
+    /* get total node count for polygon plus all holes */
+    total_count_in = count_in;
+    for(i = 0; i < hole_count; i ++) {
+        total_count_in += ccount[i];
+    }
+    count_out = total_count_in*8+1+hole_count;
+
+    /* prepare buffer */
+    pa1=g_alloca(sizeof(struct point) * (total_count_in < limit ? total_count_in*8+1:0));
+    if (count_in < limit) {
+        /* use on stack buffer */
+        clipped=pa1;
+    } else {
+        /* too big. allocate buffer (slower) */
+        clipped=g_new(struct point, count_in*8+1);
+    }
+    count_used=0;
+
+    /* prepare arrays for new holes */
+    found_ccount=g_alloca(sizeof(int)*hole_count);
+    found_holes=g_alloca(sizeof(struct point*)*hole_count);
+    found_hole_count=0;
+
+    /* clip outer polygon */
+    graphics_clip_polygon(&r, pin, count_in, clipped, &count_out);
+    count_used += count_out;
+    /* clip the holes */
+    for (i=0; i < hole_count; i ++) {
+        struct point* buffer = clipped + count_used;
+        int count = total_count_in*8+1+hole_count - count_used;
+        graphics_clip_polygon(&r, holes[i], ccount[i], buffer, &count);
+        count_used +=count;
+        if(count > 0) {
+            /* only if there are points left after clipping */
+            found_ccount[found_hole_count]=count;
+            found_holes[found_hole_count]=buffer;
+            found_hole_count ++;
+        }
+    }
+    /* call drawing function */
+    graphics_draw_polygon_with_holes(gra, gc, clipped, count_out, found_hole_count, found_ccount, found_holes);
+
+    /* if we had to allocate buffer, free it */
+    if (total_count_in >= limit) {
+        g_free(clipped);
+    }
+}
 
 static void display_context_free(struct display_context *dc) {
     if (dc->gc)
@@ -2230,6 +2476,180 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
     g_free(input_label);
 }
 
+/**
+ * @brief coordnate transfor hole coordinates
+ *
+ * This function transform a whole set of polygon holes. It therefore allocates memory
+ * attached to a displayitem_poly_holes structure and call transform
+ *
+ * @param trans transformation to be used
+ * @param pro projection to be used
+ * @param in filled holes structure to transform
+ * @param out structure to place result in. Remember to deallocate!
+ * @param mindist minimal distance between points
+ */
+static inline void displayitem_transform_holes(struct transformation *trans, enum projection pro,
+        struct displayitem_poly_holes * in, struct displayitem_poly_holes * out, int mindist) {
+    if(out == NULL)
+        return;
+    out->count = 0;
+    out->ccount=NULL;
+    out->coords=NULL;
+    if((in != NULL) && (in->count > 0)) {
+        int a;
+        /* alloc space for hole conversion. To be freed with displayitem_free_holes later*/
+        out->count = in->count;
+        out->ccount = g_malloc0(sizeof(*(out->ccount)) * in->count);
+        out->coords = g_malloc0(sizeof(*(out->coords)) * in->count);
+        for(a = 0; a < in->count; a ++) {
+            in->ccount[a]=limit_count(in->coords[a], in->ccount[a]);
+            out->coords[a]=g_malloc0(sizeof(*(out->coords[a])) * in->ccount[a]);
+            out->ccount[a]=transform(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
+        }
+    }
+}
+
+/**
+ * @brief free hole structure allocated by displayitem_transform_holes
+ *
+ * @param holes structure to deallocate
+ */
+static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
+    if(holes == NULL)
+        return;
+    if(holes->count > 0) {
+        int a;
+        for(a=0; a < holes->count; a ++) {
+            g_free(holes->coords[a]);
+        }
+        g_free(holes->ccount);
+        g_free(holes->coords);
+    }
+}
+
+
+static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
+        int count, struct displayitem_poly_holes * holes) {
+    if((holes != NULL) && (holes->count > 0))
+        graphics_draw_polygon_with_holes_clipped(gra, dc->gc, pa, count, holes->count, holes->ccount,
+                (struct point **)holes->coords);
+    else
+        graphics_draw_polygon_clipped(gra, dc->gc, pa, count);
+}
+
+static inline void displayitem_draw_polyline(struct display_context * dc, struct element * e, struct graphics * gra,
+        struct point * pa, int count, int *width) {
+    int i;
+    graphics_gc_set_linewidth(dc->gc, 1);
+    if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+        graphics_gc_set_dashes(dc->gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table,
+                               e->u.polyline.dash_num);
+    for (i = 0 ; i < count ; i++) {
+        if (width[i] < 2)
+            width[i]=2;
+    }
+    graphics_draw_polyline_clipped(gra, dc->gc, pa, count, width, e->u.polyline.width > 1);
+}
+
+static inline void displayitem_draw_circle(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra, struct point * pa, int count) {
+    if (count) {
+        if (e->u.circle.width > 1)
+            graphics_gc_set_linewidth(dc->gc, e->u.polyline.width);
+        graphics_draw_circle(gra, dc->gc, pa, e->u.circle.radius);
+        if (di->label && e->text_size) {
+            struct graphics_font *font=get_font(gra, e->text_size);
+            struct graphics_gc *gc_background=dc->gc_background;
+            if (! gc_background && e->u.circle.background_color.a) {
+                gc_background=graphics_gc_new(gra);
+                graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
+                dc->gc_background=gc_background;
+            }
+            if (font) {
+                struct point p;
+                /* Set p to the center of the circle */
+                p.x=pa[0].x+(e->u.circle.radius/2);
+                p.y=pa[0].y+(e->u.circle.radius/2);
+                multiline_label_draw(gra, dc->gc, gc_background, font, p, di->label, e->text_size+1);
+            } else
+                dbg(lvl_error,"Failed to get font with size %d",e->text_size);
+        }
+    }
+}
+
+static inline void displayitem_draw_text(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra,  struct point * pa, int count,  struct displayitem_poly_holes * holes) {
+    if (count && di->label) {
+        struct graphics_font *font=get_font(gra, e->text_size);
+        struct graphics_gc *gc_background=dc->gc_background;
+        if (! gc_background && e->u.text.background_color.a) {
+            gc_background=graphics_gc_new(gra);
+            graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
+            dc->gc_background=gc_background;
+        }
+        if (font) {
+            int a;
+            label_line(gra, dc->gc, gc_background, font, pa, count, di->label);
+            if(holes != NULL) {
+                for(a = 0; a < holes->count; a ++)
+                    label_line(gra, dc->gc, gc_background, font, (struct point *)holes->coords[a], holes->ccount[a], di->label);
+            }
+        } else
+            dbg(lvl_error,"Failed to get font with size %d",e->text_size);
+    }
+}
+
+static inline void displayitem_draw_icon(struct displayitem *di,struct display_context *dc, struct element * e,
+        struct graphics * gra, struct point * pa, int count) {
+    if (count) {
+        struct graphics_image *img=dc->img;
+        if (!img || item_is_custom_poi(di->item)) {
+            char *path;
+            if (item_is_custom_poi(di->item)) {
+                char *icon;
+                char *src;
+                if (img)
+                    graphics_image_free(dc->gra, img);
+                src=e->u.icon.src;
+                if (!src || !src[0])
+                    src="%s";
+                icon=g_strdup_printf(src,di->label+strlen(di->label)+1);
+                path=graphics_icon_path(icon);
+                g_free(icon);
+            } else
+                path=graphics_icon_path(e->u.icon.src);
+            img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+            if (img)
+                dc->img=img;
+            else
+                dbg(lvl_debug,"failed to load icon '%s'", path);
+            g_free(path);
+        }
+        if (img) {
+            struct point p;
+            if (e->u.icon.x != -1 || e->u.icon.y != -1) {
+                p.x=pa[0].x - e->u.icon.x;
+                p.y=pa[0].y - e->u.icon.y;
+            } else {
+                p.x=pa[0].x - img->hot.x;
+                p.y=pa[0].y - img->hot.y;
+            }
+            graphics_draw_image(gra, gra->gc[0], &p, img);
+        }
+    }
+}
+
+static inline void displayitem_draw_image (struct displayitem *di, struct display_context *dc, struct graphics * gra,
+        struct point * pa, int count) {
+    dbg(lvl_debug,"image: '%s'", di->label);
+    struct graphics_image *img=dc->img;
+    if (gra->meth.draw_image_warp) {
+        img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
+        if (img)
+            graphics_draw_image_warp(gra, gra->gc[0], pa, count, img);
+    } else
+        dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
+}
 
 /**
  * @brief Draw a displayitem element
@@ -2242,25 +2662,30 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
  */
 static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
     int *width=g_alloca(sizeof(int)*dc->maxlen);
+    int limit=0;
     struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
     struct graphics *gra=dc->gra;
-    struct graphics_gc *gc=dc->gc;
     struct element *e=dc->e;
-    struct graphics_image *img=dc->img;
-    struct point p;
-    char *path;
 
     while (di) {
-        int i,count=di->count,mindist=dc->mindist;
+        int count=di->count,mindist=dc->mindist;
+        struct displayitem_poly_holes t_holes;
+        t_holes.count=0;
 
         di->z_order=++(gra->current_z_order);
 
-        if (! gc) {
-            gc=graphics_gc_new(gra);
+        if (! dc->gc) {
+            struct graphics_gc * gc=graphics_gc_new(gra);
             graphics_gc_set_foreground(gc, &e->color);
             dc->gc=gc;
         }
+
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
+            limit = 0;
+
+        displayitem_transform_holes(dc->trans, dc->pro, di->holes, &t_holes, mindist);
+
+        if (limit)
             count=limit_count(di->c, count);
         if (dc->type == type_poly_water_tiled)
             mindist=0;
@@ -2270,108 +2695,33 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
-            graphics_draw_polygon_clipped(gra, gc, pa, count);
+            displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
             break;
-        case element_polyline: {
-            graphics_gc_set_linewidth(gc, 1);
-            if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-                graphics_gc_set_dashes(gc, e->u.polyline.width, e->u.polyline.offset, e->u.polyline.dash_table, e->u.polyline.dash_num);
-            for (i = 0 ; i < count ; i++) {
-                if (width[i] < 2)
-                    width[i]=2;
-            }
-            graphics_draw_polyline_clipped(gra, gc, pa, count, width, e->u.polyline.width > 1);
-        }
-        break;
+        case element_polyline:
+            displayitem_draw_polyline(dc, e, gra, pa, count, width);
+            break;
         case element_circle:
-            if (count) {
-                if (e->u.circle.width > 1)
-                    graphics_gc_set_linewidth(gc, e->u.polyline.width);
-                graphics_draw_circle(gra, gc, pa, e->u.circle.radius);
-                if (di->label && e->text_size) {
-                    struct graphics_font *font=get_font(gra, e->text_size);
-                    struct graphics_gc *gc_background=dc->gc_background;
-                    if (! gc_background && e->u.circle.background_color.a) {
-                        gc_background=graphics_gc_new(gra);
-                        graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
-                        dc->gc_background=gc_background;
-                    }
-                    if (font) {
-                        /* Set p to the center of the circle */
-                        p.x=pa[0].x+(e->u.circle.radius/2);
-                        p.y=pa[0].y+(e->u.circle.radius/2);
-                        multiline_label_draw(gra, gc, gc_background, font, p, di->label, e->text_size+1);
-                    } else
-                        dbg(lvl_error,"Failed to get font with size %d",e->text_size);
-                }
-            }
+            displayitem_draw_circle(di, dc, e, gra, pa, count);
             break;
         case element_text:
-            if (count && di->label) {
-                struct graphics_font *font=get_font(gra, e->text_size);
-                struct graphics_gc *gc_background=dc->gc_background;
-                if (! gc_background && e->u.text.background_color.a) {
-                    gc_background=graphics_gc_new(gra);
-                    graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
-                    dc->gc_background=gc_background;
-                }
-                if (font)
-                    label_line(gra, gc, gc_background, font, pa, count, di->label);
-                else
-                    dbg(lvl_error,"Failed to get font with size %d",e->text_size);
-            }
+            displayitem_draw_text(di, dc, e, gra, pa,  count, &t_holes);
             break;
         case element_icon:
-            if (count) {
-                if (!img || item_is_custom_poi(di->item)) {
-                    if (item_is_custom_poi(di->item)) {
-                        char *icon;
-                        char *src;
-                        if (img)
-                            graphics_image_free(dc->gra, img);
-                        src=e->u.icon.src;
-                        if (!src || !src[0])
-                            src="%s";
-                        icon=g_strdup_printf(src,di->label+strlen(di->label)+1);
-                        path=graphics_icon_path(icon);
-                        g_free(icon);
-                    } else
-                        path=graphics_icon_path(e->u.icon.src);
-                    img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-                    if (img)
-                        dc->img=img;
-                    else
-                        dbg(lvl_debug,"failed to load icon '%s'", path);
-                    g_free(path);
-                }
-                if (img) {
-                    if (e->u.icon.x != -1 || e->u.icon.y != -1) {
-                        p.x=pa[0].x - e->u.icon.x;
-                        p.y=pa[0].y - e->u.icon.y;
-                    } else {
-                        p.x=pa[0].x - img->hot.x;
-                        p.y=pa[0].y - img->hot.y;
-                    }
-                    graphics_draw_image(gra, gra->gc[0], &p, img);
-                }
-            }
+            displayitem_draw_icon(di, dc, e, gra, pa, count);
             break;
         case element_image:
-            dbg(lvl_debug,"image: '%s'", di->label);
-            if (gra->meth.draw_image_warp) {
-                img=graphics_image_new_scaled_rotated(gra, di->label, IMAGE_W_H_UNSET, IMAGE_W_H_UNSET, 0);
-                if (img)
-                    graphics_draw_image_warp(gra, gra->gc[0], pa, count, img);
-            } else
-                dbg(lvl_error,"draw_image_warp not supported by graphics driver drawing '%s'", di->label);
+            displayitem_draw_image (di, dc,  gra, pa, count);
             break;
         case element_arrows:
-            display_draw_arrows(gra,gc,pa,count);
+            display_draw_arrows(gra,dc->gc,pa,count);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);
 
         }
+        /* free space allocated for holes */
+        displayitem_free_holes(&t_holes);
+
         di=di->next;
     }
 }
@@ -2418,6 +2768,7 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
     di->item.map=NULL;
     di->z_order=0;
     di->label=label;
+    di->holes=NULL;
     dc.gra=gra;
     dc.gc=NULL;
     dc.gc_background=NULL;

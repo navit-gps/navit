@@ -61,14 +61,14 @@ jobs:
           command:  mkdir ../rpmbuild
       - run:
           name: run build
-          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
       - store_artifacts:
           name: Store rpm
           path: ../rpmbuild/RPMS/
   build_android:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-28-ndk
+      - image: circleci/android:api-29
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -78,13 +78,18 @@ jobs:
           name: Id
           command: cat /etc/*release
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+          name: Install ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+            sudo apt-get install -y ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
           name: Install Android SDK components
           command: sdkmanager "cmake;3.6.4111459"
+      - run:
+          name: Install ndk
+          command: |
+            echo y | sdkmanager --licenses
+            echo y | sdkmanager ndk-bundle
       - run:
           name: Build for Android
           command: bash scripts/build_android.sh
