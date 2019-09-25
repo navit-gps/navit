@@ -187,6 +187,10 @@ jobs:
           command: |
             bash scripts/setup_common_requirements.sh
       - run:
+          name: Setup tomtom requirements
+          command: |
+            bash scripts/setup_tomtom_requirements.sh
+      - run:
           name: Build for Tomtom (minimal)
           command: |
             bash scripts/build_tomtom_minimal.sh
@@ -206,6 +210,10 @@ jobs:
           name: Setup common requirements
           command: |
             bash scripts/setup_common_requirements.sh
+      - run:
+          name: Setup tomtom requirements
+          command: |
+            bash scripts/setup_tomtom_requirements.sh
       - run:
           name: Build for Tomtom (plugin)
           command: |
