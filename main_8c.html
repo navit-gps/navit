@@ -124,8 +124,8 @@ Variables</h2></td></tr>
 <tr class="separator:a1be98fbc905911a21bbc4ffe542934e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bb9aea6e64415d105ad710731075fa4"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a></td></tr>
 <tr class="separator:a0bb9aea6e64415d105ad710731075fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0182853d3ff4f1108d493cadf15c343"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#ab0182853d3ff4f1108d493cadf15c343">environment_vars</a> [][5]</td></tr>
-<tr class="separator:ab0182853d3ff4f1108d493cadf15c343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52bf49c99fb5a569100cbfd09fd4b772"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a52bf49c99fb5a569100cbfd09fd4b772">environment_vars</a> [][6]</td></tr>
+<tr class="separator:a52bf49c99fb5a569100cbfd09fd4b772"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ad4654eab82f9a35ebbf9e30f173617e3"></a>
@@ -174,7 +174,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="main_8c.html#ab0182853d3ff4f1108d493cadf15c343">environment_vars</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>.</p>
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="main_8c.html#a52bf49c99fb5a569100cbfd09fd4b772">environment_vars</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, and <a class="el" href="group__navit.html#gabe423e46a78a0085c11e2a69a65a336d">navit_get_user_data_directory()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="main_8h.html#ad4654eab82f9a35ebbf9e30f173617e3">main_init()</a>.</p>
 
@@ -197,8 +197,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0182853d3ff4f1108d493cadf15c343"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0182853d3ff4f1108d493cadf15c343">&#9670;&nbsp;</a></span>environment_vars</h2>
+<a id="a52bf49c99fb5a569100cbfd09fd4b772"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52bf49c99fb5a569100cbfd09fd4b772">&#9670;&nbsp;</a></span>environment_vars</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,7 +207,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">char* environment_vars[][5]</td>
+          <td class="memname">char* environment_vars[][6]</td>
         </tr>
       </table>
   </td>
@@ -216,7 +216,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LIBDIR&quot;</span>,      <span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;:/&quot;</span>LIB_DIR,     <span class="stringliteral">&quot;:\\lib&quot;</span>,      <span class="stringliteral">&quot;:/lib&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_SHAREDIR&quot;</span>,    <span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;:/&quot;</span>SHARE_DIR,   <span class="stringliteral">&quot;:&quot;</span>,           <span class="stringliteral">&quot;:/share&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LOCALEDIR&quot;</span>,   <span class="stringliteral">&quot;:/../locale&quot;</span>,<span class="stringliteral">&quot;:/&quot;</span>LOCALE_DIR,  <span class="stringliteral">&quot;:\\locale&quot;</span>,   <span class="stringliteral">&quot;:/locale&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_USER_DATADIR&quot;</span>,<span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;~/.navit&quot;</span>,      <span class="stringliteral">&quot;:\\data&quot;</span>,     <span class="stringliteral">&quot;:/home&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LOGFILE&quot;</span>,     NULL,         NULL,            <span class="stringliteral">&quot;:\\navit.log&quot;</span>,NULL},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LIBPREFIX&quot;</span>,   <span class="stringliteral">&quot;*/.libs/&quot;</span>,   NULL,            NULL,          NULL},</div><div class="line">    {NULL,                NULL,         NULL,            NULL,          NULL},</div><div class="line">}</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LIBDIR&quot;</span>,      <span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;:/&quot;</span>LIB_DIR,     <span class="stringliteral">&quot;:\\lib&quot;</span>,      <span class="stringliteral">&quot;:/lib&quot;</span>,        <span class="stringliteral">&quot;:\\lib&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_SHAREDIR&quot;</span>,    <span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;:/&quot;</span>SHARE_DIR,   <span class="stringliteral">&quot;:&quot;</span>,           <span class="stringliteral">&quot;:/share&quot;</span>,      <span class="stringliteral">&quot;:&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LOCALEDIR&quot;</span>,   <span class="stringliteral">&quot;:/../locale&quot;</span>,<span class="stringliteral">&quot;:/&quot;</span>LOCALE_DIR,  <span class="stringliteral">&quot;:\\locale&quot;</span>,   <span class="stringliteral">&quot;:/locale&quot;</span>,     <span class="stringliteral">&quot;:\\locale&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_USER_DATADIR&quot;</span>,<span class="stringliteral">&quot;:&quot;</span>,          <span class="stringliteral">&quot;~/.navit&quot;</span>,      <span class="stringliteral">&quot;:\\data&quot;</span>,     <span class="stringliteral">&quot;:/home&quot;</span>,       <span class="stringliteral">&quot;~\\navit&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LOGFILE&quot;</span>,     NULL,         NULL,            <span class="stringliteral">&quot;:\\navit.log&quot;</span>,NULL,           <span class="stringliteral">&quot;:\\navit.log&quot;</span>},</div><div class="line">    {<span class="stringliteral">&quot;NAVIT_LIBPREFIX&quot;</span>,   <span class="stringliteral">&quot;*/.libs/&quot;</span>,   NULL,            NULL,          NULL,           NULL},</div><div class="line">    {NULL,                NULL,         NULL,            NULL,          NULL,           NULL},</div><div class="line">}</div></div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="main_8c.html#a0ed6d205ee99db89fafd7d2b99c1313e">main_setup_environment()</a>.</p>
 
 </div>
