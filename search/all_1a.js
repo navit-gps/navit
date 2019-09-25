@@ -2,8 +2,8 @@ var searchData=
 [
   ['x',['x',['../structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d',1,'coord::x()'],['../structpcoord.html#a875f35249b19419eb6dfbad5ff18f268',1,'pcoord::x()'],['../structcoord__d.html#a2bbee4dc2ea91019c6702a353940212b',1,'coord_d::x()'],['../structcoord__geo__cart.html#a8ad416e3cc04ee4e4c632426f1ca6e71',1,'coord_geo_cart::x()'],['../structfont__freetype__glyph.html#a824a61905e94c08a5e98e52c9314eadc',1,'font_freetype_glyph::x()'],['../structmouse__event__queue__element.html#a3c164fe93b0f8f43b451c282f3db652e',1,'mouse_event_queue_element::x()'],['../structgraphics__priv.html#a6cd543834dfabf7d5280075e1d6590c9',1,'graphics_priv::x()'],['../structcircle.html#a456f83f0a90cae69912e96e092d7b8c3',1,'circle::x()'],['../structwpoint.html#a3f8d759e6add853f110c2575baf813e6',1,'wpoint::x()'],['../structelement.html#a18e88a462664541872b1018c06289ead',1,'element::x()'],['../structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5',1,'point::x()'],['../structcoord__3d.html#abf1d6c8bc29c347f437851b3b23ac433',1,'coord_3d::x()'],['../structzip__alignment__check.html#a5cab645571d0157d5ba4e52b32e1293f',1,'zip_alignment_check::x()']]],
   ['xdisplay_5fdraw',['xdisplay_draw',['../graphics_8c.html#add066cb477abd5eef991f4114757b0e7',1,'graphics.c']]],
-  ['xdisplay_5fdraw_5felements',['xdisplay_draw_elements',['../graphics_8c.html#af55bf6ea5ccdce71bd6c47debce59bff',1,'graphics.c']]],
-  ['xdisplay_5fdraw_5flayer',['xdisplay_draw_layer',['../graphics_8c.html#a0445e79e867fd25d925dd7a6882dc198',1,'graphics.c']]],
+  ['xdisplay_5fdraw_5felements',['xdisplay_draw_elements',['../graphics_8c.html#ab5d7c098092b93832abb7b54ac0587b6',1,'graphics.c']]],
+  ['xdisplay_5fdraw_5flayer',['xdisplay_draw_layer',['../graphics_8c.html#a7d3c031aef60b9f164235d4f37826e72',1,'graphics.c']]],
   ['xdisplay_5ffree',['xdisplay_free',['../graphics_8c.html#acf02ee0c1cb4c8ab0edac0844ab35ccf',1,'graphics.c']]],
   ['xi_5fend_5felement',['xi_end_element',['../xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803',1,'xmlconfig.c']]],
   ['xi_5fstart_5felement',['xi_start_element',['../xmlconfig_8c.html#a4914bc12d14fdb63169790652ac7f1b6',1,'xmlconfig.c']]],

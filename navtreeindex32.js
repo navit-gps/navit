@@ -1,5 +1,8 @@
 var NAVTREEINDEX32 =
 {
+"osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9":[3,0,9,12,22],
+"osm__protobufdb_8c.html#a13eda00dd5efd9440b0eaf5430b73e84":[3,0,9,12,29],
+"osm__protobufdb_8c.html#a13fdec16484ee8a4223016c2acdb91d7":[3,0,9,12,17],
 "osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28":[3,0,9,12,13],
 "osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604":[3,0,9,12,30],
 "osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab":[3,0,9,12,10],
@@ -246,8 +249,5 @@ var NAVTREEINDEX32 =
 "qml__bookmark_8h.html":[3,0,6,3,7],
 "qml__bookmark_8h_source.html":[3,0,6,3,7],
 "qml__map_8cpp.html":[3,0,6,3,8],
-"qml__map_8h.html":[3,0,6,3,9],
-"qml__map_8h_source.html":[3,0,6,3,9],
-"qml__poi_8cpp.html":[3,0,6,3,10],
-"qml__poi_8h.html":[3,0,6,3,11]
+"qml__map_8h.html":[3,0,6,3,9]
 };

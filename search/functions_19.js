@@ -1,8 +1,8 @@
 var searchData=
 [
   ['xdisplay_5fdraw',['xdisplay_draw',['../graphics_8c.html#add066cb477abd5eef991f4114757b0e7',1,'graphics.c']]],
-  ['xdisplay_5fdraw_5felements',['xdisplay_draw_elements',['../graphics_8c.html#af55bf6ea5ccdce71bd6c47debce59bff',1,'graphics.c']]],
-  ['xdisplay_5fdraw_5flayer',['xdisplay_draw_layer',['../graphics_8c.html#a0445e79e867fd25d925dd7a6882dc198',1,'graphics.c']]],
+  ['xdisplay_5fdraw_5felements',['xdisplay_draw_elements',['../graphics_8c.html#ab5d7c098092b93832abb7b54ac0587b6',1,'graphics.c']]],
+  ['xdisplay_5fdraw_5flayer',['xdisplay_draw_layer',['../graphics_8c.html#a7d3c031aef60b9f164235d4f37826e72',1,'graphics.c']]],
   ['xdisplay_5ffree',['xdisplay_free',['../graphics_8c.html#acf02ee0c1cb4c8ab0edac0844ab35ccf',1,'graphics.c']]],
   ['xi_5fend_5felement',['xi_end_element',['../xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803',1,'xmlconfig.c']]],
   ['xi_5fstart_5felement',['xi_start_element',['../xmlconfig_8c.html#a4914bc12d14fdb63169790652ac7f1b6',1,'xmlconfig.c']]],

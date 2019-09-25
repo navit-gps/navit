@@ -68,7 +68,7 @@ var searchData=
   ['argc',['argc',['../structgraphics__priv.html#a4c43c68a050285018727fa29a325ad1d',1,'graphics_priv::argc()'],['../graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;gui_qml.cpp']]],
   ['args',['args',['../structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d',1,'map_rect_priv']]],
   ['argv',['argv',['../structgraphics__priv.html#a251fef08be352963a5fdd073609592da',1,'graphics_priv::argv()'],['../graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;gui_qml.cpp']]],
-  ['arrows',['arrows',['../structattr.html#a18f8d0b1364da65e45acef48c5f022d9',1,'attr']]],
+  ['arrows',['arrows',['../structattr.html#a18f8d0b1364da65e45acef48c5f022d9',1,'attr::arrows()'],['../structelement.html#aa9b4d1bc328777cb12b0b5f1bf63ffe1',1,'element::arrows()']]],
   ['associated_5fstreets',['associated_streets',['../structmaptool__osm.html#a9dc6546d908fb0e68585b17c5afd91c0',1,'maptool_osm']]],
   ['astart',['astart',['../structitem__priv.html#a861f1eaa321b9faeb030654a24279a12',1,'item_priv']]],
   ['async',['async',['../structcommand__saved.html#af1b958d9acb5b24b992e2299262c0753',1,'command_saved']]],

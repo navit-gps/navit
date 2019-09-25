@@ -13,5 +13,6 @@ var color_8h =
     [ "COLOR_TRANSPARENT", "color_8h.html#a7836ebd1d17ff9b43127d69473f7c402", null ],
     [ "COLOR_TRANSPARENT__", "color_8h.html#a52b49f7c2bd02f3bd27dafde0fa9cdfc", null ],
     [ "COLOR_WHITE", "color_8h.html#a9b44987ffdc2af19b635206b94334b69", null ],
-    [ "COLOR_WHITE_", "color_8h.html#ae0ed1afc3f4f834389592c0fcb762a11", null ]
+    [ "COLOR_WHITE_", "color_8h.html#ae0ed1afc3f4f834389592c0fcb762a11", null ],
+    [ "UNDERGROUND_ALPHA_", "color_8h.html#a70e2551822270363f0067bfd7390cbf0", null ]
 ];

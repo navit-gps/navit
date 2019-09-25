@@ -165,7 +165,7 @@ var searchData=
   ['argc',['argc',['../structgraphics__priv.html#a4c43c68a050285018727fa29a325ad1d',1,'graphics_priv::argc()'],['../graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#ad1447518f4372828b8435ae82e48499e',1,'argc():&#160;gui_qml.cpp']]],
   ['args',['args',['../structmap__rect__priv.html#a623b44b7e2225260fd8f962d81a66e8d',1,'map_rect_priv']]],
   ['argv',['argv',['../structgraphics__priv.html#a251fef08be352963a5fdd073609592da',1,'graphics_priv::argv()'],['../graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;graphics_qt_qpainter.cpp'],['../gui__qml_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c',1,'argv():&#160;gui_qml.cpp']]],
-  ['arrows',['arrows',['../structattr.html#a18f8d0b1364da65e45acef48c5f022d9',1,'attr']]],
+  ['arrows',['arrows',['../structattr.html#a18f8d0b1364da65e45acef48c5f022d9',1,'attr::arrows()'],['../structelement.html#aa9b4d1bc328777cb12b0b5f1bf63ffe1',1,'element::arrows()']]],
   ['arrows_5fnew',['arrows_new',['../layout_8c.html#a647e39f10090fb7d917b1c5aec50fc86',1,'arrows_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#a647e39f10090fb7d917b1c5aec50fc86',1,'arrows_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['asind',['asind',['../sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7',1,'sunriset.h']]],
   ['askformapdeletion',['askForMapDeletion',['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#aada3d954afe19eb00c7a150228069cbf',1,'org::navitproject::navit::NavitDownloadSelectMapActivity']]],

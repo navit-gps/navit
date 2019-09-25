@@ -15,7 +15,7 @@ var searchData=
   ['paddingchangedcallback',['PaddingChangedCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a1556f4b57a6e606bfd07faf242271a70',1,'org::navitproject::navit::NavitGraphics']]],
   ['paddingchangedcallbackid',['PaddingChangedCallbackID',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ad24067283e71caaff511c8096687a950',1,'org::navitproject::navit::NavitGraphics']]],
   ['pagenb',['pagenb',['../structpoi__param.html#a58ce6bbebf39f6492c33d797a52ac4c9',1,'poi_param']]],
-  ['paint',['Paint',['../structgraphics__priv.html#a0abb0f3fb461da38203ce19d101f9ea2',1,'graphics_priv::Paint()'],['../classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d',1,'QNavitQuick::paint()']]],
+  ['paint',['paint',['../classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d',1,'QNavitQuick::paint()'],['../structgraphics__priv.html#a0abb0f3fb461da38203ce19d101f9ea2',1,'graphics_priv::Paint()']]],
   ['paint_5finit',['Paint_init',['../structgraphics__priv.html#a99288b497a34d41c3dbf485673bc962b',1,'graphics_priv']]],
   ['paint_5fsetargb',['Paint_setARGB',['../structgraphics__priv.html#aab058e94ebce6dcc8c35b4a2e93d37e7',1,'graphics_priv']]],
   ['paint_5fsetstrokewidth',['Paint_setStrokeWidth',['../structgraphics__priv.html#a2eef73251fd8d8b03ab9d294ca63b0f2',1,'graphics_priv']]],
