@@ -1,30 +1,7 @@
 <resources>
-
-    <!--
-        Base application theme for API 21+. This theme completely replaces
-        NavitBaseTheme from BOTH res/values/styles.xml and
-        res/values-v.../styles.xml on API 21+ devices.
-    -->
-    <style name="NavitBaseTheme" parent="android:Theme.Material">
-
-        <!-- Main theme colors -->
-        <!-- your app branding color for the app bar -->
-        <item name="android:colorPrimary">@color/navitYellow500</item>
-        <!-- darker variant for the status bar and contextual app bars -->
-        <item name="android:colorPrimaryDark">@color/navitYellow700</item>
-        <!-- theme UI controls like checkboxes and text fields -->
-        <item name="android:colorAccent">@color/navitBlue500</item>
-    </style>
-
-    <!--
-        Main Activity theme for API 21+. This theme completely replaces
-        NavitTheme from BOTH res/values/styles.xml and
-        res/values-v21/styles.xml on API 21+ devices.
-    -->
-    <style name="NavitTheme" parent="NavitBaseTheme">
+    <style name="NavitTheme" parent="android:Theme.DeviceDefault.NoActionBar">
 
         <!-- API 21 theme customizations can go here. -->
-
         <!--
             Don't use translucent system bars on API 21 as they are drawn with a semitransparent
             black background which can't be changed.
@@ -39,8 +16,6 @@
         -->
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-
 </resources>

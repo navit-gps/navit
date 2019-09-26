@@ -408,13 +408,7 @@ static void draw_polygon(struct graphics_priv* gr, struct graphics_gc_priv* gc, 
         polygon.putPoints(i, 1, p[i].x, p[i].y);
     gr->painter->setPen(*gc->pen);
     gr->painter->setBrush(*gc->brush);
-    /* if the polygon is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->drawPolygon(polygon);
-        gr->painter->setCompositionMode(mode);
-    }
+
     gr->painter->drawPolygon(polygon);
 }
 
@@ -446,13 +440,6 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
     if(hole_count > 0)
         path = path.subtracted(inner);
 
-    /* if the polygon is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->drawPath(path);
-        gr->painter->setCompositionMode(mode);
-    }
     gr->painter->drawPath(path);
 }
 
@@ -460,13 +447,6 @@ static void draw_rectangle(struct graphics_priv* gr, struct graphics_gc_priv* gc
     //	dbg(lvl_debug,"gr=%p gc=%p %d,%d,%d,%d", gr, gc, p->x, p->y, w, h);
     if (gr->painter == NULL)
         return;
-    /* if the rectangle is transparent, we need to clear it first */
-    if (!gc->brush->isOpaque()) {
-        QPainter::CompositionMode mode = gr->painter->compositionMode();
-        gr->painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
-        gr->painter->setCompositionMode(mode);
-    }
     gr->painter->fillRect(p->x, p->y, w, h, *gc->brush);
 }
 
@@ -647,9 +627,11 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     case draw_mode_begin:
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
         gr->use_count++;
-        if (gr->painter == NULL)
+        if (gr->painter == NULL) {
+            if(gr->parent != NULL)
+                gr->pixmap->fill(QColor(0,0,0,0));
             gr->painter = new QPainter(gr->pixmap);
-        else
+        } else
             dbg(lvl_debug, "drawing on %p already active", gr);
         break;
     case draw_mode_end:

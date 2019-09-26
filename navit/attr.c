@@ -927,17 +927,19 @@ attr_list_dup(struct attr **attrs) {
  * parsed value including the terminating NULL character. The minimum safe size is
  * `strlen(line) - strlen(name) - *pos` (assuming zero for NULL pointers).
  *
- * @param line The line to parse
- * @param name The name of the attribute to retrieve; if NULL,
- * @param pos Offset pointer, see description
- * @param val_ret Points to a buffer which will receive the value as text
- * @param name_ret Points to a buffer which will receive the name of the attribute parsed, can be NULL
+ * @param[in] line The line to parse, must be non-NULL and pointing to a NUL terminated string
+ * @param[in] name The name of the attribute to retrieve; can be NULL (see description)
+ * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search (see description)
+ * @param[out] val_ret Points to a buffer which will receive the value as text
+ * @param[out] name_ret Points to a buffer which will receive the actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
  *
  * @return true if successful, false in case of failure
  */
-int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
-    int len=0,quoted;
-    char *p,*e,*n;
+int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret) {
+    int len=0,quoted,escaped;
+    const char *p;
+    char *e;
+    const char *n;
 
     dbg(lvl_debug,"get_tag %s from %s", name, line);
     if (name)
@@ -958,15 +960,23 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
             return 0;
         p=e+1;
         quoted=0;
+        escaped=0;
         while (*p) {
             if (*p == ' ' && !quoted)
                 break;
             if (*p == '"')
                 quoted=1-quoted;
+            if (*p == '\\') {	/* Next character is escaped */
+                escaped++;
+                if (*(p+1))	/* Make sure the string is not terminating just after this escape character */
+                    p++;	/* if the string continues, skip the next character, whatever is is (space, double-quote or backslash) */
+                else
+                    dbg(lvl_warning, "Trailing backslash in input string \"%s\"", line);
+            }
             p++;
         }
-        if (name == NULL || (e-n == len && !strncmp(n, name, len))) {
-            if (name_ret) {
+        if (name == NULL || (e-n == len && strncmp(n, name, len)==0)) {	/* We matched the searched attribute name */
+            if (name_ret) {	/* If instructed to, store the actual name into the string pointed by name_ret */
                 len=e-n;
                 strncpy(name_ret, n, len);
                 name_ret[len]='\0';
@@ -977,8 +987,13 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
                 e++;
                 len-=2;
             }
-            strncpy(val_ret, e, len);
-            val_ret[len]='\0';
+            /* Note: in the strncpy* calls below, we give a max size_t argument exactly matching the string lengh we want to copy within the source string e, so no terminating NUL char will be appended */
+            if (escaped)
+                strncpy_unescape(val_ret, e, len-escaped);	/* Unescape if necessary */
+            else
+                strncpy(val_ret, e, len);
+            /* Because no NUL terminating char was copied over, we manually append it here to terminate the C-string properly, just after the copied string */
+            val_ret[len-escaped]='\0';
             if (pos)
                 *pos=p-line;
             return 1;

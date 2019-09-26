@@ -37,6 +37,8 @@
 
 #include "navigation.h"         /* for FEET_PER_METER and other conversion factors. */
 
+GdkPixbuf *geticon(const char *name);
+
 /**
  * @brief Context passed around POI search function
  */
@@ -60,13 +62,16 @@ static struct gtk_poi_search {
  * @param name The name of the icon to use (eg: "pharmacy.png"
  * @return A pixbuf containing this icon of NULL if the icon could not be loaded
  */
-static GdkPixbuf *geticon(const char *name) {
+GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
-    icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
+    char *filename = graphics_icon_path(name);
+    icon=gdk_pixbuf_new_from_file(filename,&error);
     if (error) {
         dbg(lvl_error, "failed to load icon '%s': %s", name, error->message);
+        icon=NULL;
     }
+    g_free(filename);
     return icon;
 }
 
