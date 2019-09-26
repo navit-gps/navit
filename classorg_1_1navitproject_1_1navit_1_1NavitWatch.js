@@ -1,18 +1,19 @@
 var classorg_1_1navitproject_1_1navit_1_1NavitWatch =
 [
-    [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a753c70e663593ea2b31459f4498375df", null ],
+    [ "WatchHandler", "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler" ],
+    [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a46fd1875df4a4d4cafc67a416ba904dc", null ],
     [ "callback", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#ae14883508b0367b1acddb2f619279708", null ],
-    [ "poll", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a2bd60cd2aa38666faf60ff49def91d19", null ],
+    [ "poll", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#af18a29f1ab8155dd63898dd8191e46e6", null ],
     [ "remove", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a64bb5eb33af82d76c6a09383318e91ae", null ],
     [ "run", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a277663e7ae11ef894bdec2a0aec7ff82", null ],
-    [ "WatchCallback", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a5f12aa40a53d73dad2ec85c9a75f2577", null ],
-    [ "callback_pending", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a3f4461ad80e7b668b18b4088ead3e8a3", null ],
-    [ "callback_runnable", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a448459ecd14a43bae0aa2aa62aecc385", null ],
-    [ "handler", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#ac7103570eaa85c22cb1f56d28fcc256f", null ],
-    [ "removed", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a10d058bd3408fc640f0442b6c400db92", null ],
-    [ "thread", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a6111e44482723e14c6a156f75918042a", null ],
-    [ "watch_callbackid", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a5cd7c21f577c817f474e32510fe4124f", null ],
-    [ "watch_cond", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#adc49d0097abed79234e052a92d9905dc", null ],
-    [ "watch_fd", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a3c1c28c9f65710a42108255e0f872d5a", null ],
-    [ "watch_func", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a1725cda6177a61d64c7654b6822fe812", null ]
+    [ "watchCallback", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a63d97650bc77bebef0ad1651be1e169f", null ],
+    [ "mCallbackPending", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a43dc6abb59e9c48d5ddbbfeb3a9a1505", null ],
+    [ "mCallbackRunnable", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a07f370a4846ab2d564ce50ebeb9bc90f", null ],
+    [ "mRemoved", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#ad59e6d1a6d9d57bbe0b9829904cfed37", null ],
+    [ "mThread", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a3991de0ef6c1b145f5df5a7fc01faae4", null ],
+    [ "mWatchCallbackid", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a8ded6e064b0376e0f2def16e62f7c1fc", null ],
+    [ "mWatchCond", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a99c842c53260a0d23403f02fe6f42299", null ],
+    [ "mWatchFd", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#acee02f29f274c722020268b87a23fd74", null ],
+    [ "mWatchFunc", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a665d7531265f5bf0528f8d8b9e24ad28", null ],
+    [ "sHandler", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#adbef7cc483ddcf147ef0c6b8ff403573", null ]
 ];

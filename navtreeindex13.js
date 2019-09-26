@@ -1,15 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"gpx2navit__txt_8h.html#a1ec047271b341162781a27e9ea608e51":[3,0,14,0,0,7,23],
-"gpx2navit__txt_8h.html#a21ead5f18e752f9a8f69498c30bc417f":[3,0,14,0,0,7,26],
-"gpx2navit__txt_8h.html#a27e26131fe3338942198a3fc65b1c8d3":[3,0,14,0,0,7,46],
-"gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733":[3,0,14,0,0,7,35],
-"gpx2navit__txt_8h.html#a30fad5f0ba6aab0762f0d225d5f5e29e":[3,0,14,0,0,7,44],
-"gpx2navit__txt_8h.html#a344a7a7e72d816c8ec622403af548f9c":[3,0,14,0,0,7,50],
-"gpx2navit__txt_8h.html#a39912bfe2a55f30e269196f9141d845d":[3,0,14,0,0,7,7],
-"gpx2navit__txt_8h.html#a3c7d2000fbfe075b4d0ae7c98b32a840":[3,0,14,0,0,7,11],
-"gpx2navit__txt_8h.html#a3c889e4bf0f76ce1b79e7aaf574688ce":[3,0,14,0,0,7,30],
-"gpx2navit__txt_8h.html#a459416878c47e910ea36a77fb1bd7b76":[3,0,14,0,0,7,20],
 "gpx2navit__txt_8h.html#a5eae0a5c1f581074f38573a3e66508c2":[3,0,14,0,0,7,36],
 "gpx2navit__txt_8h.html#a5fde3b921060f52cd728415ac6cacd7f":[3,0,14,0,0,7,29],
 "gpx2navit__txt_8h.html#a60a12235056da679c8976cec1faa66e2":[3,0,14,0,0,7,14],
@@ -249,5 +239,15 @@ var NAVTREEINDEX13 =
 "graphics_8h.html#a7763c3bb4b5a77666fa580ade99cedda":[3,0,64,54],
 "graphics_8h.html#a88dd11bab57d40e63e45ce63a111f86f":[3,0,64,51],
 "graphics_8h.html#a922588c7f73a70872a92e29b5cf45b83":[3,0,64,50],
-"graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15":[3,0,64,68]
+"graphics_8h.html#a9b7dd906aa6794966f9f38843d369c15":[3,0,64,68],
+"graphics_8h.html#aa541f937ed35329f6bb1c3cd6c90fd70":[3,0,64,25],
+"graphics_8h.html#aac9fba40cfe11bb90718f0e78b232ba9":[3,0,64,70],
+"graphics_8h.html#ab6c7e7294111973ca56b9eadb68744d6":[3,0,64,13],
+"graphics_8h.html#ab73092ab58b87748cd0ed10583286f47":[3,0,64,20],
+"graphics_8h.html#abc516ca06af2f5c44540e2577a080f64":[3,0,64,58],
+"graphics_8h.html#abf6614712d6fa6fc9518b609cfafb7d9":[3,0,64,63],
+"graphics_8h.html#abfc23e410d71e734e4316fb8898d20f4":[3,0,64,59],
+"graphics_8h.html#ac4e5839a41f2afd567d22ab0d6d1e911":[3,0,64,67],
+"graphics_8h.html#ac5b8949a650e91572fe965ce47a01c04":[3,0,64,72],
+"graphics_8h.html#ac5bc899c6a208b7c45558f850cc703d4":[3,0,64,69]
 };

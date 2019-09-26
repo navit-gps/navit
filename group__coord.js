@@ -16,6 +16,7 @@ var group__coord =
     [ "coord_rect_extend", "group__coord.html#ga2c6d628b067bab6c56eb6504207e6feb", null ],
     [ "coord_rect_new", "group__coord.html#ga63815cc089c2d7107496a8eb8512ac27", null ],
     [ "coord_rect_overlap", "group__coord.html#ga738eb455670a0c22187903d0d97100f1", null ],
-    [ "pcoord_format_short", "group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277", null ],
+    [ "pcoord_format_absolute", "group__coord.html#ga326225758916c1a62619761e5319e3d6", null ],
+    [ "pcoord_format_degree_short", "group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d", null ],
     [ "pcoord_parse", "group__coord.html#ga61bdcf26825ab8b41cfcf1a035800a75", null ]
 ];

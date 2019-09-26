@@ -83,7 +83,8 @@ $(document).ready(function(){initNavTree('classorg_1_1navitproject_1_1navit_1_1N
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pac-methods">Package Functions</a> &#124;
-<a href="#pac-attribs">Package Attributes</a>  </div>
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">org.navitproject.navit.NavitCamera Class Reference</div>  </div>
 </div><!--header-->
@@ -111,12 +112,15 @@ Package Functions</h2></td></tr>
 <tr class="memitem:acc1fe13b1f0873840f9d597b007b54ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#acc1fe13b1f0873840f9d597b007b54ed">NavitCamera</a> (Context <a class="el" href="structcontext.html">context</a>)</td></tr>
 <tr class="separator:acc1fe13b1f0873840f9d597b007b54ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-attribs"></a>
-Package Attributes</h2></td></tr>
-<tr class="memitem:ac290615e8ab1404a652d0015432af673"><td class="memItemLeft" align="right" valign="top">SurfaceHolder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#ac290615e8ab1404a652d0015432af673">mHolder</a></td></tr>
-<tr class="separator:ac290615e8ab1404a652d0015432af673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
 <tr class="memitem:ac9c98ac549f2fa46553d1b291e1fe1be"><td class="memItemLeft" align="right" valign="top">Camera&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#ac9c98ac549f2fa46553d1b291e1fe1be">mCamera</a></td></tr>
 <tr class="separator:ac9c98ac549f2fa46553d1b291e1fe1be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a01d51602b4fe354c90e78ad6bbc6509c"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#a01d51602b4fe354c90e78ad6bbc6509c">TAG</a> = &quot;NavitCamera&quot;</td></tr>
+<tr class="separator:a01d51602b4fe354c90e78ad6bbc6509c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="acc1fe13b1f0873840f9d597b007b54ed"></a>
@@ -191,6 +195,7 @@ Package Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>set up the camera with the new parameters.</p>
 
 </div>
 </div>
@@ -217,6 +222,7 @@ Package Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>acquire the camera and tell it where to draw.</p>
 
 </div>
 </div>
@@ -243,6 +249,7 @@ Package Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>stop the preview and release the camera.</p>
 
 </div>
 </div>
@@ -262,15 +269,15 @@ Package Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac290615e8ab1404a652d0015432af673"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac290615e8ab1404a652d0015432af673">&#9670;&nbsp;</a></span>mHolder</h2>
+<a id="a01d51602b4fe354c90e78ad6bbc6509c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01d51602b4fe354c90e78ad6bbc6509c">&#9670;&nbsp;</a></span>TAG</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -279,12 +286,12 @@ Package Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">SurfaceHolder org.navitproject.navit.NavitCamera.mHolder</td>
+          <td class="memname">final String org.navitproject.navit.NavitCamera.TAG = &quot;NavitCamera&quot;</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

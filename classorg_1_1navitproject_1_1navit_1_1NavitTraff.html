@@ -82,16 +82,13 @@ $(document).ready(function(){initNavTree('classorg_1_1navitproject_1_1navit_1_1N
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pac-methods">Package Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a>  </div>
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">org.navitproject.navit.NavitTraff Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>The TraFF receiver implementation.  
- <a href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for org.navitproject.navit.NavitTraff:</div>
 <div class="dyncontent">
@@ -103,42 +100,36 @@ Inheritance diagram for org.navitproject.navit.NavitTraff:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa1140e1daedfcc733574120b0408c30e"><td class="memItemLeft" align="right" valign="top">native void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aa1140e1daedfcc733574120b0408c30e">onFeedReceived</a> (int id, String feed)</td></tr>
-<tr class="memdesc:aa1140e1daedfcc733574120b0408c30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards a newly received TraFF feed to the traffic module for processing.  <a href="#aa1140e1daedfcc733574120b0408c30e">More...</a><br /></td></tr>
-<tr class="separator:aa1140e1daedfcc733574120b0408c30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b9cafb542aba942288b204027537559"><td class="memItemLeft" align="right" valign="top">native void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a0b9cafb542aba942288b204027537559">onFeedReceived</a> (long id, String feed)</td></tr>
+<tr class="separator:a0b9cafb542aba942288b204027537559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c1a351f6096a960ddde0fa3a66d0ec0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a1c1a351f6096a960ddde0fa3a66d0ec0">onReceive</a> (Context <a class="el" href="structcontext.html">context</a>, Intent intent)</td></tr>
 <tr class="separator:a1c1a351f6096a960ddde0fa3a66d0ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a2324d7a1f251d80fdc89a32373603ad3"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a2324d7a1f251d80fdc89a32373603ad3">ACTION_TRAFF_FEED</a> = &quot;org.traffxml.traff.FEED&quot;</td></tr>
-<tr class="separator:a2324d7a1f251d80fdc89a32373603ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3284efe43518d4845d6121c3a87b552b"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a3284efe43518d4845d6121c3a87b552b">ACTION_TRAFF_POLL</a> = &quot;org.traffxml.traff.POLL&quot;</td></tr>
-<tr class="separator:a3284efe43518d4845d6121c3a87b552b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58f19e5ad58419445d0d175f8a217a28"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a58f19e5ad58419445d0d175f8a217a28">EXTRA_FEED</a> = &quot;feed&quot;</td></tr>
-<tr class="separator:a58f19e5ad58419445d0d175f8a217a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-methods"></a>
 Package Functions</h2></td></tr>
-<tr class="memitem:a870799ca8c2c3ff05b4e578602f7dd30"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30">NavitTraff</a> (Context <a class="el" href="structcontext.html">context</a>, int <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a30025768e5d47c67fa0c7e06545b2236">cbid</a>)</td></tr>
-<tr class="memdesc:a870799ca8c2c3ff05b4e578602f7dd30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new.  <a href="#a870799ca8c2c3ff05b4e578602f7dd30">More...</a><br /></td></tr>
-<tr class="separator:a870799ca8c2c3ff05b4e578602f7dd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedd044087ece0be3db392168b137fd9a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aedd044087ece0be3db392168b137fd9a">NavitTraff</a> (Context <a class="el" href="structcontext.html">context</a>, long cbid)</td></tr>
+<tr class="separator:aedd044087ece0be3db392168b137fd9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a30025768e5d47c67fa0c7e06545b2236"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a30025768e5d47c67fa0c7e06545b2236">cbid</a></td></tr>
-<tr class="separator:a30025768e5d47c67fa0c7e06545b2236"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bba100e55c612a7b71a666ab3c69167"><td class="memItemLeft" align="right" valign="top">Context&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a3bba100e55c612a7b71a666ab3c69167">context</a> = null</td></tr>
-<tr class="separator:a3bba100e55c612a7b71a666ab3c69167"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a226383636b01b4d6e176277d6c046bfe"><td class="memItemLeft" align="right" valign="top">IntentFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a226383636b01b4d6e176277d6c046bfe">traffFilter</a> = new IntentFilter()</td></tr>
-<tr class="separator:a226383636b01b4d6e176277d6c046bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74a5eed0ab3c7aba0be949b9eecca500"><td class="memItemLeft" align="right" valign="top">final long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a74a5eed0ab3c7aba0be949b9eecca500">mCbid</a></td></tr>
+<tr class="separator:a74a5eed0ab3c7aba0be949b9eecca500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:afd3b325f31920c7ffb1004c4b35e979e"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#afd3b325f31920c7ffb1004c4b35e979e">ACTION_TRAFF_FEED</a> = &quot;org.traffxml.traff.FEED&quot;</td></tr>
+<tr class="separator:afd3b325f31920c7ffb1004c4b35e979e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25eea325888a3ef7b01fc4a78eec1ebf"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a25eea325888a3ef7b01fc4a78eec1ebf">ACTION_TRAFF_POLL</a> = &quot;org.traffxml.traff.POLL&quot;</td></tr>
+<tr class="separator:a25eea325888a3ef7b01fc4a78eec1ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af22de65a437c82ef166b4a8db82b07e4"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#af22de65a437c82ef166b4a8db82b07e4">EXTRA_FEED</a> = &quot;feed&quot;</td></tr>
+<tr class="separator:af22de65a437c82ef166b4a8db82b07e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The TraFF receiver implementation. </p>
-<p>This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation, receives TraFF feeds and forwards them to the traffic module for processing. </p>
+<div class="textblock"><p>The TraFF receiver implementation.</p>
+<p>This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation, receives TraFF feeds and forwards them to the traffic module for processing.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a870799ca8c2c3ff05b4e578602f7dd30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a870799ca8c2c3ff05b4e578602f7dd30">&#9670;&nbsp;</a></span>NavitTraff()</h2>
+<a id="aedd044087ece0be3db392168b137fd9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedd044087ece0be3db392168b137fd9a">&#9670;&nbsp;</a></span>NavitTraff()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +146,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>cbid</em>&#160;</td>
         </tr>
         <tr>
@@ -170,10 +161,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Creates a new. </p>
-<div class="fragment"><div class="line"><a class="code" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30">NavitTraff</a> </div></div><!-- fragment --><p> instance.</p>
-<p>Creating a new</p><div class="fragment"><div class="line"><a class="code" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30">NavitTraff</a> </div></div><!-- fragment --><p> instance registers a broadcast receiver for TraFF broadcasts and polls all registered sources once to ensure we have messages which were received by these sources before we started up.</p>
+<p>Creates a new</p><div class="fragment"><div class="line"><a class="code" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aedd044087ece0be3db392168b137fd9a">NavitTraff</a> </div></div><!-- fragment --><p> instance.</p>
+<p>Creating a new</p><div class="fragment"><div class="line"><a class="code" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aedd044087ece0be3db392168b137fd9a">NavitTraff</a> </div></div><!-- fragment --><p> instance registers a broadcast receiver for TraFF broadcasts and polls all registered sources once to ensure we have messages which were received by these sources before we started up.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The context </td></tr>
@@ -182,13 +171,11 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a30025768e5d47c67fa0c7e06545b2236">org.navitproject.navit.NavitTraff.cbid</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a3bba100e55c612a7b71a666ab3c69167">org.navitproject.navit.NavitTraff.context</a>.</p>
-
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa1140e1daedfcc733574120b0408c30e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1140e1daedfcc733574120b0408c30e">&#9670;&nbsp;</a></span>onFeedReceived()</h2>
+<a id="a0b9cafb542aba942288b204027537559"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b9cafb542aba942288b204027537559">&#9670;&nbsp;</a></span>onFeedReceived()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +183,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">native void org.navitproject.navit.NavitTraff.onFeedReceived </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
@@ -212,8 +199,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Forwards a newly received TraFF feed to the traffic module for processing. </p>
+<p>Forwards a newly received TraFF feed to the traffic module for processing.</p>
 <p>This is called when a TraFF feed is received.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -261,13 +247,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aa1140e1daedfcc733574120b0408c30e">org.navitproject.navit.NavitTraff.onFeedReceived()</a>.</p>
+<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a0b9cafb542aba942288b204027537559">org.navitproject.navit.NavitTraff.onFeedReceived()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a2324d7a1f251d80fdc89a32373603ad3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2324d7a1f251d80fdc89a32373603ad3">&#9670;&nbsp;</a></span>ACTION_TRAFF_FEED</h2>
+<a id="afd3b325f31920c7ffb1004c4b35e979e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd3b325f31920c7ffb1004c4b35e979e">&#9670;&nbsp;</a></span>ACTION_TRAFF_FEED</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -276,20 +262,20 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String org.navitproject.navit.NavitTraff.ACTION_TRAFF_FEED = &quot;org.traffxml.traff.FEED&quot;</td>
+          <td class="memname">final String org.navitproject.navit.NavitTraff.ACTION_TRAFF_FEED = &quot;org.traffxml.traff.FEED&quot;</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a3284efe43518d4845d6121c3a87b552b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3284efe43518d4845d6121c3a87b552b">&#9670;&nbsp;</a></span>ACTION_TRAFF_POLL</h2>
+<a id="a25eea325888a3ef7b01fc4a78eec1ebf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25eea325888a3ef7b01fc4a78eec1ebf">&#9670;&nbsp;</a></span>ACTION_TRAFF_POLL</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -298,20 +284,20 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String org.navitproject.navit.NavitTraff.ACTION_TRAFF_POLL = &quot;org.traffxml.traff.POLL&quot;</td>
+          <td class="memname">final String org.navitproject.navit.NavitTraff.ACTION_TRAFF_POLL = &quot;org.traffxml.traff.POLL&quot;</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a30025768e5d47c67fa0c7e06545b2236"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30025768e5d47c67fa0c7e06545b2236">&#9670;&nbsp;</a></span>cbid</h2>
+<a id="af22de65a437c82ef166b4a8db82b07e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af22de65a437c82ef166b4a8db82b07e4">&#9670;&nbsp;</a></span>EXTRA_FEED</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,69 +306,20 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int org.navitproject.navit.NavitTraff.cbid</td>
+          <td class="memname">final String org.navitproject.navit.NavitTraff.EXTRA_FEED = &quot;feed&quot;</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Identifier for the callback function. </p>
-
-<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30">org.navitproject.navit.NavitTraff.NavitTraff()</a>.</p>
-
-</div>
-</div>
-<a id="a3bba100e55c612a7b71a666ab3c69167"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bba100e55c612a7b71a666ab3c69167">&#9670;&nbsp;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Context org.navitproject.navit.NavitTraff.context = null</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a870799ca8c2c3ff05b4e578602f7dd30">org.navitproject.navit.NavitTraff.NavitTraff()</a>.</p>
-
-</div>
-</div>
-<a id="a58f19e5ad58419445d0d175f8a217a28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58f19e5ad58419445d0d175f8a217a28">&#9670;&nbsp;</a></span>EXTRA_FEED</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">String org.navitproject.navit.NavitTraff.EXTRA_FEED = &quot;feed&quot;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a226383636b01b4d6e176277d6c046bfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a226383636b01b4d6e176277d6c046bfe">&#9670;&nbsp;</a></span>traffFilter</h2>
+<a id="a74a5eed0ab3c7aba0be949b9eecca500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74a5eed0ab3c7aba0be949b9eecca500">&#9670;&nbsp;</a></span>mCbid</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -391,7 +328,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">IntentFilter org.navitproject.navit.NavitTraff.traffFilter = new IntentFilter()</td>
+          <td class="memname">final long org.navitproject.navit.NavitTraff.mCbid</td>
         </tr>
       </table>
   </td>
@@ -400,7 +337,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>An intent filter for TraFF events. </p>
 
 </div>
 </div>

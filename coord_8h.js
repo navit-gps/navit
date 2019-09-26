@@ -17,6 +17,7 @@ var coord_8h =
     [ "navit_tan", "coord_8h.html#addba39f52db590f088d67d9e7b4d2f3e", null ],
     [ "navit_float", "coord_8h.html#aae1a07a93ec5038cab0efff724660598", null ],
     [ "coord_format", "coord_8h.html#ab414d48bf3be54c39da88757cf788300", [
+      [ "DEGREES_DECIMAL_ABSOLUTE", "coord_8h.html#ab414d48bf3be54c39da88757cf788300aeac559bc14e46d1bddd329ddc3d91817", null ],
       [ "DEGREES_DECIMAL", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72", null ],
       [ "DEGREES_MINUTES", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c", null ],
       [ "DEGREES_MINUTES_SECONDS", "coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d", null ],
@@ -39,6 +40,7 @@ var coord_8h =
     [ "coord_rect_new", "group__coord.html#ga63815cc089c2d7107496a8eb8512ac27", null ],
     [ "coord_rect_overlap", "group__coord.html#ga738eb455670a0c22187903d0d97100f1", null ],
     [ "coordinates_geo", "coord_8h.html#a106d5695be86a881ac2960868f742148", null ],
-    [ "pcoord_format_short", "group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277", null ],
+    [ "pcoord_format_absolute", "group__coord.html#ga326225758916c1a62619761e5319e3d6", null ],
+    [ "pcoord_format_degree_short", "group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d", null ],
     [ "pcoord_parse", "group__coord.html#ga61bdcf26825ab8b41cfcf1a035800a75", null ]
 ];

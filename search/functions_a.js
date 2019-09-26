@@ -48,7 +48,7 @@ var searchData=
   ['is_5fturn_5fallowed',['is_turn_allowed',['../route_8c.html#a3c5dd9bfabef70fa62830d1f2564c8a8',1,'route.c']]],
   ['is_5fvisible_5fline',['is_visible_line',['../pedestrian_8c.html#add5c71349412336c81abcf407a5d4316',1,'pedestrian.c']]],
   ['is_5fway_5fallowed',['is_way_allowed',['../navigation_8c.html#a20504a61661dd334dbed8bae7e941849',1,'navigation.c']]],
-  ['isinmap',['isInMap',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html#a1fdbe7caafd613044f1ddefb6414771f',1,'org::navitproject::navit::NavitMapDownloader::osm_map_values']]],
+  ['isinmap',['isInMap',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a52ed9300708e539d266e28c2d48645f1',1,'org::navitproject::navit::NavitMapDownloader::OsmMapValues']]],
   ['iso8601_5fto_5fsecs',['iso8601_to_secs',['../util_8c.html#a9a11b449553663eca76c4ca486e7ebd2',1,'iso8601_to_secs(char *iso8601):&#160;util.c'],['../util_8h.html#a9a11b449553663eca76c4ca486e7ebd2',1,'iso8601_to_secs(char *iso8601):&#160;util.c']]],
   ['iso8601_5fto_5ftime',['iso8601_to_time',['../util_8c.html#ae39162efb74e7d6e36a8af262d4a6df0',1,'iso8601_to_time(char *iso8601):&#160;util.c'],['../util_8h.html#ae39162efb74e7d6e36a8af262d4a6df0',1,'iso8601_to_time(char *iso8601):&#160;util.c']]],
   ['issystemspeaking',['isSystemSpeaking',['../interfaceVSSpeechSynthesizer.html#a08b5b4954718a35846cb7952f36bf3d0',1,'VSSpeechSynthesizer']]],

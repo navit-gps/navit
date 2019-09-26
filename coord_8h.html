@@ -143,10 +143,14 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ab414d48bf3be54c39da88757cf788300"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a> { <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72">DEGREES_DECIMAL</a>, 
+<tr class="memitem:ab414d48bf3be54c39da88757cf788300"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300">coord_format</a> { <br />
+&#160;&#160;<a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300aeac559bc14e46d1bddd329ddc3d91817">DEGREES_DECIMAL_ABSOLUTE</a>, 
+<a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72">DEGREES_DECIMAL</a>, 
 <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c">DEGREES_MINUTES</a>, 
 <a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300a9b40f609e4dc87612105062881268f1d">DEGREES_MINUTES_SECONDS</a>, 
-<a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0">DEGREES_MINUTES_SECONDS_BRIEF</a>
+<br />
+&#160;&#160;<a class="el" href="coord_8h.html#ab414d48bf3be54c39da88757cf788300ab59390ee6159466db66d81d37915ddd0">DEGREES_MINUTES_SECONDS_BRIEF</a>
+<br />
  }</td></tr>
 <tr class="separator:ab414d48bf3be54c39da88757cf788300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -185,9 +189,12 @@ Functions</h2></td></tr>
 <tr class="memitem:gade6434857738cf8f4d5575ed89208f8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gade6434857738cf8f4d5575ed89208f8b">coord_geo_format_short</a> (const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *gc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
 <tr class="memdesc:gade6434857738cf8f4d5575ed89208f8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a WGS84 coordinate pair to its string representation.  <a href="group__coord.html#gade6434857738cf8f4d5575ed89208f8b">More...</a><br /></td></tr>
 <tr class="separator:gade6434857738cf8f4d5575ed89208f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short</a> (const struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
-<tr class="memdesc:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer mercator coordinate pair to its string representation.  <a href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">More...</a><br /></td></tr>
-<tr class="separator:gac5b234f8ccc46a2b2a41ce31f246c277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga519c10d47cd6b29afc805d8fbb2ccb8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short</a> (const struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
+<tr class="memdesc:ga519c10d47cd6b29afc805d8fbb2ccb8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer mercator coordinate pair to its string representation.  <a href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">More...</a><br /></td></tr>
+<tr class="separator:ga519c10d47cd6b29afc805d8fbb2ccb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga326225758916c1a62619761e5319e3d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">pcoord_format_absolute</a> (const struct <a class="el" href="structpcoord.html">pcoord</a> *pc, char *<a class="el" href="structbuffer.html">buffer</a>, int <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>, char *sep)</td></tr>
+<tr class="memdesc:ga326225758916c1a62619761e5319e3d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer mercator coordinate pair to its string representation.  <a href="group__coord.html#ga326225758916c1a62619761e5319e3d6">More...</a><br /></td></tr>
+<tr class="separator:ga326225758916c1a62619761e5319e3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a106d5695be86a881ac2960868f742148"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#a106d5695be86a881ac2960868f742148">coordinates_geo</a> (const struct <a class="el" href="structcoord__geo.html">coord_geo</a> *gc, char sep)</td></tr>
 <tr class="separator:a106d5695be86a881ac2960868f742148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3972be1f6b7d3323209010d985086c42"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#ga3972be1f6b7d3323209010d985086c42">coord_hash</a> (const void *<a class="el" href="tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33">key</a>)</td></tr>
@@ -399,7 +406,9 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>An enumeration of formats for printing geographic coordinates in. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72"></a>DEGREES_DECIMAL&#160;</td><td class="fielddoc"><p>Degrees with decimal places. ie 20.500000°N 110.500000°E </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab414d48bf3be54c39da88757cf788300aeac559bc14e46d1bddd329ddc3d91817"></a>DEGREES_DECIMAL_ABSOLUTE&#160;</td><td class="fielddoc"><p>Degrees with absolute decimal places (positive or negative) ie -20.500000 -110.500000 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab414d48bf3be54c39da88757cf788300a75a463d01a1d23d9983b0556f43e7e72"></a>DEGREES_DECIMAL&#160;</td><td class="fielddoc"><p>Degrees with decimal places. ie 20.500000°N 110.500000°E </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ab414d48bf3be54c39da88757cf788300a227f7517d9c114d38cfe5d63962b945c"></a>DEGREES_MINUTES&#160;</td><td class="fielddoc"><p>Degrees and minutes. ie 20°30.0000' N 110°30.0000' E </p>
 </td></tr>

@@ -62,7 +62,7 @@ var searchData=
   ['graphic_5fbg',['graphic_bg',['../structosd__item.html#a6c90e4edede51f26c50734deceea1061',1,'osd_item']]],
   ['graphic_5ffg',['graphic_fg',['../structosd__item.html#a41caf500389648ee9f8ba928870bd474',1,'osd_item']]],
   ['graphic_5ffg_5ftext',['graphic_fg_text',['../structosd__item.html#aecbcec7078d04b769612ad54edf6ed1b',1,'osd_item']]],
-  ['graphics',['graphics',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a1fba3ae4697afce44afef897723c8343',1,'org.navitproject.navit.Navit.graphics()'],['../structattr.html#a93638535f1a792b0bd88180c6f2414e3',1,'attr::graphics()'],['../interfaceNavitView.html#afb3808899c8a706bd0b3719383d45231',1,'NavitView::graphics()']]],
+  ['graphics',['graphics',['../structattr.html#a93638535f1a792b0bd88180c6f2414e3',1,'attr::graphics()'],['../interfaceNavitView.html#afb3808899c8a706bd0b3719383d45231',1,'NavitView::graphics()']]],
   ['graphics_5fdestroy',['graphics_destroy',['../structgraphics__methods.html#ac383841ce74800ed22460ebc459956de',1,'graphics_methods']]],
   ['graphics_5fflags',['graphics_flags',['../structnavit.html#ad70d4ce667cea6d13d45c461ed7edb49',1,'navit']]],
   ['graphics_5ffont_5fpriv',['graphics_font_priv',['../graphics__null_8c.html#ab54e2dc01410fe8092eabd8547842234',1,'graphics_null.c']]],

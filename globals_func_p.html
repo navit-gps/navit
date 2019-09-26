@@ -83,8 +83,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 &#160;
 
 <h3><a id="index_p"></a>- p -</h3><ul>
-<li>padding_callback()
-: <a class="el" href="graphics__android_8c.html#a92ff60dd0d9b560dd4edeb9d65db09fe">graphics_android.c</a>
+<li>padding_changed_callback()
+: <a class="el" href="graphics__android_8c.html#ac444dca4568f829c36efb7125a558854">graphics_android.c</a>
 </li>
 <li>paintOverlays()
 : <a class="el" href="QNavitQuick_8cpp.html#a3e27cc033e73ffddfb4a04c0ec989fe3">QNavitQuick.cpp</a>
@@ -193,9 +193,13 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 <li>pcoord_encode()
 : <a class="el" href="binding__dbus_8c.html#a1ba2e7992ea80c64977a55b1ca8ab7f4">binding_dbus.c</a>
 </li>
-<li>pcoord_format_short()
-: <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">coord.c</a>
-, <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">coord.h</a>
+<li>pcoord_format_absolute()
+: <a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">coord.c</a>
+, <a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">coord.h</a>
+</li>
+<li>pcoord_format_degree_short()
+: <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">coord.c</a>
+, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">coord.h</a>
 </li>
 <li>pcoord_func()
 : <a class="el" href="pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8">pcoord.c</a>
@@ -310,7 +314,9 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 , <a class="el" href="group__plugins.html#ga24464c75a8865fd8cd94ed9d021ab48e">plugin.h</a>
 </li>
 <li>plugin_init()
-: <a class="el" href="speak_8c.html#a1eaae939034896b436dffbf5e93c0da1">speak.c</a>
+: <a class="el" href="speech__cmdline_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_cmdline.c</a>
+, <a class="el" href="speech__dbus_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_dbus.c</a>
+, <a class="el" href="speak_8c.html#a1eaae939034896b436dffbf5e93c0da1">speak.c</a>
 , <a class="el" href="speech__iphone_8m.html#a1eaae939034896b436dffbf5e93c0da1">speech_iphone.m</a>
 , <a class="el" href="qt5__espeak_8cpp.html#a1eaae939034896b436dffbf5e93c0da1">qt5_espeak.cpp</a>
 , <a class="el" href="speech__speech__dispatcher_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_speech_dispatcher.c</a>
@@ -366,8 +372,6 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 , <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">pedestrian.c</a>
 , <a class="el" href="group__vehicle-file.html#ga1eaae939034896b436dffbf5e93c0da1">plugin.h</a>
 , <a class="el" href="speech__android_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_android.c</a>
-, <a class="el" href="speech__cmdline_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_cmdline.c</a>
-, <a class="el" href="speech__dbus_8c.html#a1eaae939034896b436dffbf5e93c0da1">speech_dbus.c</a>
 </li>
 <li>plugin_load()
 : <a class="el" href="group__plugins.html#ga13c8e90a535267c5e3204797595b9ed5">plugin.c</a>
@@ -392,8 +396,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="group__plugins.html#gaa074a3ab18b1fc6ff6ce18bd5f956388">plugin.c</a>
 </li>
 <li>plugin_unload()
-: <a class="el" href="group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d">plugin.h</a>
-, <a class="el" href="group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d">plugin.c</a>
+: <a class="el" href="group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d">plugin.c</a>
+, <a class="el" href="group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d">plugin.h</a>
 </li>
 <li>plugins_destroy()
 : <a class="el" href="group__plugins.html#gafa2ed379c854b20ec13846d3abf36a73">plugin.c</a>
@@ -404,8 +408,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 , <a class="el" href="group__plugins.html#gada5ff5f7ec8e4da87f38db6a0cb4846c">plugin.h</a>
 </li>
 <li>plugins_new()
-: <a class="el" href="group__plugins.html#ga71694854a00eccff1b8387f065789557">plugin.c</a>
-, <a class="el" href="group__plugins.html#ga71694854a00eccff1b8387f065789557">plugin.h</a>
+: <a class="el" href="group__plugins.html#ga71694854a00eccff1b8387f065789557">plugin.h</a>
+, <a class="el" href="group__plugins.html#ga71694854a00eccff1b8387f065789557">plugin.c</a>
 </li>
 <li>pngdecode()
 : <a class="el" href="graphics__win32_8c.html#ac69f474d11a94ac72e085dd3faed5f26">graphics_win32.c</a>
@@ -471,12 +475,12 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 , <a class="el" href="popup_8h.html#a3d7a909a7f21ca807a96913fb19483db">popup.h</a>
 </li>
 <li>popup_activate()
-: <a class="el" href="gui__gtk__action_8c.html#a9755eb439692a97c8b68721020890b40">gui_gtk_action.c</a>
-, <a class="el" href="gui__win32_8c.html#a9755eb439692a97c8b68721020890b40">gui_win32.c</a>
+: <a class="el" href="gui__win32_8c.html#a9755eb439692a97c8b68721020890b40">gui_win32.c</a>
+, <a class="el" href="gui__gtk__action_8c.html#a9755eb439692a97c8b68721020890b40">gui_gtk_action.c</a>
 </li>
 <li>popup_deactivate()
-: <a class="el" href="gui__win32_8c.html#ac28919c7982ea78f3f6e8cd33c8c2451">gui_win32.c</a>
-, <a class="el" href="gui__gtk__action_8c.html#a260d1cbd2bf134223b0472debdf155f5">gui_gtk_action.c</a>
+: <a class="el" href="gui__gtk__action_8c.html#a260d1cbd2bf134223b0472debdf155f5">gui_gtk_action.c</a>
+, <a class="el" href="gui__win32_8c.html#ac28919c7982ea78f3f6e8cd33c8c2451">gui_win32.c</a>
 </li>
 <li>popup_display()
 : <a class="el" href="popup_8c.html#a31a02701201e0dfe6c7b85331268a7d3">popup.c</a>
@@ -528,8 +532,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="search_8c.html#a21740eadbd56344d704ee6d93c415708">search.c</a>
 </li>
 <li>postal_str()
-: <a class="el" href="gui__internal__search_8c.html#a55e6a400a09eb5a026bfa47d433450c7">gui_internal_search.c</a>
-, <a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">android.c</a>
+: <a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">android.c</a>
+, <a class="el" href="gui__internal__search_8c.html#a55e6a400a09eb5a026bfa47d433450c7">gui_internal_search.c</a>
 </li>
 <li>print_array()
 : <a class="el" href="cJSON_8c.html#af1dcc8f2114d998599b506cd5e0645a1">cJSON.c</a>
@@ -593,8 +597,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">boundaries.c</a>
 </li>
 <li>process_coastlines()
-: <a class="el" href="maptool_8h.html#a6d0089b6f5965db6c41ecd7e131b3a67">maptool.h</a>
-, <a class="el" href="coastline_8c.html#a6d0089b6f5965db6c41ecd7e131b3a67">coastline.c</a>
+: <a class="el" href="coastline_8c.html#a6d0089b6f5965db6c41ecd7e131b3a67">coastline.c</a>
+, <a class="el" href="maptool_8h.html#a6d0089b6f5965db6c41ecd7e131b3a67">maptool.h</a>
 </li>
 <li>process_dense()
 : <a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">osm_protobuf.c</a>
@@ -665,8 +669,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="graphics__egl_8c.html#af1a67ef8e88c3688f32a4fc7de7f7efd">graphics_egl.c</a>
 </li>
 <li>process_turn_restrictions()
-: <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">osm.c</a>
-, <a class="el" href="maptool_8h.html#a28d8c95e9b24f364eaf3e0918cbd620a">maptool.h</a>
+: <a class="el" href="maptool_8h.html#a28d8c95e9b24f364eaf3e0918cbd620a">maptool.h</a>
+, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">osm.c</a>
 </li>
 <li>process_turn_restrictions_dump_coord()
 : <a class="el" href="osm_8c.html#af92cd6f414b118cd441edc0b02b5642d">osm.c</a>
@@ -690,8 +694,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6">osm_protobuf.c</a>
 </li>
 <li>process_way2poi()
-: <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">osm.c</a>
-, <a class="el" href="maptool_8h.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">maptool.h</a>
+: <a class="el" href="maptool_8h.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">maptool.h</a>
+, <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">osm.c</a>
 </li>
 <li>ProcessNormalKeys()
 : <a class="el" href="graphics__opengl_8c.html#ab61ac9e8576ae36059e7d035ddec3056">graphics_opengl.c</a>
@@ -716,8 +720,8 @@ $(document).ready(function(){initNavTree('globals_func_p.html','');});
 : <a class="el" href="maptool_8c.html#ad3bd185beace3592c3db41326c5c8af3">maptool.c</a>
 </li>
 <li>projection_from_name()
-: <a class="el" href="projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019">projection.h</a>
-, <a class="el" href="projection_8c.html#a3978616304a97908438c12bb16106a21">projection.c</a>
+: <a class="el" href="projection_8c.html#a3978616304a97908438c12bb16106a21">projection.c</a>
+, <a class="el" href="projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019">projection.h</a>
 </li>
 <li>projection_to_name()
 : <a class="el" href="projection_8h.html#ab6bea86ce7e97569e9eedba942a880a2">projection.h</a>

@@ -58,7 +58,7 @@ var graphics__android_8c =
     [ "overlay_disable", "graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae", null ],
     [ "overlay_new", "graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff", null ],
     [ "overlay_resize", "graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e", null ],
-    [ "padding_callback", "graphics__android_8c.html#a92ff60dd0d9b560dd4edeb9d65db09fe", null ],
+    [ "padding_changed_callback", "graphics__android_8c.html#ac444dca4568f829c36efb7125a558854", null ],
     [ "plugin_init", "graphics__android_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "resize_callback", "graphics__android_8c.html#aeae8987e336df8386927936a4e64bae7", null ],
     [ "set_activity", "graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a", null ],

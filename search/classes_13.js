@@ -10,6 +10,7 @@ var searchData=
   ['tile_5finfo',['tile_info',['../structtile__info.html',1,'']]],
   ['tile_5fparameter',['tile_parameter',['../structtile__parameter.html',1,'']]],
   ['tilt_5fdata',['tilt_data',['../structtilt__data.html',1,'']]],
+  ['timeouthandler',['TimeoutHandler',['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout_1_1TimeoutHandler.html',1,'org::navitproject::navit::NavitTimeout']]],
   ['timestamp',['timestamp',['../structtimestamp.html',1,'']]],
   ['town_5fcountry',['town_country',['../structtown__country.html',1,'']]],
   ['town_5fpriv',['town_priv',['../structtown__priv.html',1,'']]],

@@ -4,7 +4,6 @@ var searchData=
   ['u_5fturn_5flimit',['u_turn_limit',['../navigation_8c.html#a81388baea902a53db5e41d24cdb892b2',1,'navigation.c']]],
   ['ui_5fmanager',['ui_manager',['../structgui__priv.html#a7a4f4c79a5a950ade1e2940a455e80ec',1,'gui_priv']]],
   ['uid',['uid',['../structo5m.html#a058a77711612a8f2bb14018aa0292db5',1,'o5m']]],
-  ['uilastupdated',['uiLastUpdated',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a41fd4b3da968b2efe9154697719c2bfc',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['umlaut_5fmode',['umlaut_mode',['../structgui__internal__keyb__mode.html#a297a29bfc35aa262eb9e170761adf72b',1,'gui_internal_keyb_mode']]],
   ['underground_5falpha',['underground_alpha',['../structlayout.html#a1c4e39b39fd46fd17e02744da3d5a557',1,'layout']]],
   ['unknown1',['unknown1',['../structimg__header.html#a962e390ca4287eae12a7c441f608dc35',1,'img_header::unknown1()'],['../structfile__header.html#a750c786e5117541a04511975ef9b0fba',1,'file_header::unknown1()'],['../structtree__header.html#a9634d39dca4f1abb03695ad144afce42',1,'tree_header::unknown1()'],['../structlabel__header.html#a030f0b89793d86df4f3f90b985626078',1,'label_header::unknown1()'],['../garmin__img_8c.html#a7c795ba6ac9510e8a9065f9686cbafc0',1,'unknown1():&#160;garmin_img.c']]],

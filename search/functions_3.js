@@ -104,6 +104,7 @@ var searchData=
   ['build_5fcountrytable',['build_countrytable',['../osm_8c.html#a4dd290ba06640a25b1b571ceeeaf9da1',1,'osm.c']]],
   ['build_5fmatch',['build_match',['../shapefile_8c.html#a0fdf203092f4d78e35572eff91718c53',1,'shapefile.c']]],
   ['build_5fmatches',['build_matches',['../shapefile_8c.html#ae2839f7fad7ec3a320286dcec78c1361',1,'shapefile.c']]],
+  ['buildnotification',['buildNotification',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ad7a0de2f8dd825cc79b5157fd62097ca',1,'org::navitproject::navit::Navit']]],
   ['builtin_5finit',['builtin_init',['../start__real_8c.html#ad8688c2b5e3877a2b1757adab9bd6727',1,'start_real.c']]],
   ['button_5fbookmark',['button_bookmark',['../destination_8c.html#a3f63ded87c4f4d071284995833cc3d04',1,'destination.c']]],
   ['button_5fcallback',['button_callback',['../graphics__android_8c.html#a8b6cc12a70c871947f24722decad499f',1,'graphics_android.c']]],
@@ -114,5 +115,5 @@ var searchData=
   ['button_5fpress',['button_press',['../graphics__gtk__drawing__area_8c.html#af0616297fefbb8ff7285f141a3261f44',1,'graphics_gtk_drawing_area.c']]],
   ['button_5frelease',['button_release',['../graphics__gtk__drawing__area_8c.html#a2675181dc05c6e57edabfb512c289a1f',1,'graphics_gtk_drawing_area.c']]],
   ['button_5fvisit_5fclicked',['button_visit_clicked',['../gui__gtk__poi_8c.html#a3e7517d4a97860d2d325dad922f9eb39',1,'gui_gtk_poi.c']]],
-  ['buttoncallback',['ButtonCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a925c8d1d32127bbeb50a8de80eaee86d',1,'org::navitproject::navit::NavitGraphics']]]
+  ['buttoncallback',['buttonCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac32e9f99c74d524451498715ed9b01b4',1,'org::navitproject::navit::NavitGraphics']]]
 ];

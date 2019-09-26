@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['padding_5fcallback',['padding_callback',['../graphics__android_8c.html#a92ff60dd0d9b560dd4edeb9d65db09fe',1,'graphics_android.c']]],
-  ['paddingchangedcallback',['PaddingChangedCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a1556f4b57a6e606bfd07faf242271a70',1,'org::navitproject::navit::NavitGraphics']]],
+  ['padding_5fchanged_5fcallback',['padding_changed_callback',['../graphics__android_8c.html#ac444dca4568f829c36efb7125a558854',1,'graphics_android.c']]],
+  ['paddingchangedcallback',['paddingChangedCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5d4ab4eee53508df929752b6ef52db0f',1,'org::navitproject::navit::NavitGraphics']]],
   ['paint',['paint',['../classQNavitQuick.html#a2e6df6fa3a7a6cad53a4303e0314265d',1,'QNavitQuick']]],
   ['paintevent',['paintEvent',['../classQNavitWidget.html#a7296840d1e7a64c19cc69c0c644595ae',1,'QNavitWidget::paintEvent()'],['../classRenderArea.html#a67b7d2e03cd4a27ae18c1e6a8b94f79b',1,'RenderArea::paintEvent()']]],
   ['paintoverlays',['paintOverlays',['../QNavitQuick_8cpp.html#a3e27cc033e73ffddfb4a04c0ec989fe3',1,'paintOverlays(QPainter *painter, struct graphics_priv *gp, QPaintEvent *event):&#160;QNavitQuick.cpp'],['../QNavitWidget_8cpp.html#a3e27cc033e73ffddfb4a04c0ec989fe3',1,'paintOverlays(QPainter *painter, struct graphics_priv *gp, QPaintEvent *event):&#160;QNavitWidget.cpp']]],
@@ -41,7 +41,8 @@ var searchData=
   ['pc',['pc',['../classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e',1,'NGQPoint']]],
   ['pcoord_5fdestroy_5fpy',['pcoord_destroy_py',['../pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b',1,'pcoord.c']]],
   ['pcoord_5fencode',['pcoord_encode',['../binding__dbus_8c.html#a1ba2e7992ea80c64977a55b1ca8ab7f4',1,'binding_dbus.c']]],
-  ['pcoord_5fformat_5fshort',['pcoord_format_short',['../group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277',1,'pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c'],['../group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277',1,'pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c']]],
+  ['pcoord_5fformat_5fabsolute',['pcoord_format_absolute',['../group__coord.html#ga326225758916c1a62619761e5319e3d6',1,'pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c'],['../group__coord.html#ga326225758916c1a62619761e5319e3d6',1,'pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c']]],
+  ['pcoord_5fformat_5fdegree_5fshort',['pcoord_format_degree_short',['../group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d',1,'pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c'],['../group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d',1,'pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep):&#160;coord.c']]],
   ['pcoord_5ffunc',['pcoord_func',['../pcoord_8c.html#addda55a27d0544b444ff40adc35e26c8',1,'pcoord.c']]],
   ['pcoord_5fget_5ffrom_5fmessage',['pcoord_get_from_message',['../binding__dbus_8c.html#a9aedd7fd9d261196018280d5d1bbc7c1',1,'binding_dbus.c']]],
   ['pcoord_5fgetattr_5fpy',['pcoord_getattr_py',['../pcoord_8c.html#a0a4d1a34526e0fa45d731cd0d900ae35',1,'pcoord.c']]],
@@ -99,7 +100,7 @@ var searchData=
   ['pointurl',['pointUrl',['../classNGQPoint.html#a69e3470ebb1aab0122a6e56115a86677',1,'NGQPoint']]],
   ['poiobject',['PoiObject',['../classPoiObject.html#a74966050a9d0b0538ef413265fcd97d9',1,'PoiObject::PoiObject(QObject *parent=0)'],['../classPoiObject.html#a3c5039c01c2661025e4cdc47a871a172',1,'PoiObject::PoiObject(const QString &amp;name, const QString &amp;type, const int distance, const QString &amp;icon, struct pcoord &amp;coords, QObject *parent=0)']]],
   ['poischanged',['poisChanged',['../classBackend.html#ac9e26ec5858b4f1f937c4c734deed2e3',1,'Backend']]],
-  ['poll',['poll',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a2bd60cd2aa38666faf60ff49def91d19',1,'org::navitproject::navit::NavitWatch']]],
+  ['poll',['poll',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#af18a29f1ab8155dd63898dd8191e46e6',1,'org::navitproject::navit::NavitWatch']]],
   ['poly_5fattr_5fget',['poly_attr_get',['../poly_8c.html#acce886d92074efcc72cc79532f2b4833',1,'poly.c']]],
   ['poly_5fattr_5frewind',['poly_attr_rewind',['../poly_8c.html#a1a455769ed9574caf9e60eb260cef988',1,'poly.c']]],
   ['poly_5fcoord_5fget',['poly_coord_get',['../garmin_8c.html#a2ed722b56be77b02d23146619bae4903',1,'poly_coord_get(void *priv_data, struct coord *c, int count):&#160;garmin.c'],['../poly_8c.html#a2ed722b56be77b02d23146619bae4903',1,'poly_coord_get(void *priv_data, struct coord *c, int count):&#160;poly.c']]],

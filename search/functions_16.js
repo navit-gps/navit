@@ -6,7 +6,7 @@ var searchData=
   ['update_5ftransformation',['update_transformation',['../group__navit.html#gac57a7b314c5c0801ca62ee31342bc6e5',1,'navit.c']]],
   ['updatecurrentdirectorytextview',['updateCurrentDirectoryTextView',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a3e3dd27c18c550db77cd48a366a99648',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['updatedownloadedmaps',['updateDownloadedMaps',['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a542f1d5e81e841fb5f9d1c5f34f03d92',1,'org::navitproject::navit::NavitDownloadSelectMapActivity']]],
-  ['updatemapsforlocation',['updateMapsForLocation',['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#ad0d3f6a7fa016dafdaa52284ed4ff1d4',1,'org::navitproject::navit::NavitDownloadSelectMapActivity']]],
+  ['updatemapsforlocation',['updateMapsForLocation',['../classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html#a647043bcf07790ae375373ba6365083f',1,'org::navitproject::navit::NavitDownloadSelectMapActivity']]],
   ['updateprogress',['updateProgress',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ac1f7d07449815a0be3173471500a2733',1,'org.navitproject.navit.NavitMapDownloader.updateProgress(long startTime, long offsetBytes, long readBytes, long maxBytes)'],['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#af5b522f2ba4df330837369d4ea100c6a',1,'org.navitproject.navit.NavitMapDownloader.updateProgress(long positionBytes, long maximumBytes, String infoText)']]],
   ['updatesearch',['updateSearch',['../classBackend.html#a9f51f4ff67b442851c373982f102d64b',1,'Backend']]],
   ['urldecode',['urldecode',['../speech__cmdline_8c.html#a81722b74370f7a8d727bd64852f3912e',1,'speech_cmdline.c']]],

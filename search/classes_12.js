@@ -16,7 +16,6 @@ var searchData=
   ['selector',['selector',['../structselector.html',1,'']]],
   ['shmem_5fheader',['shmem_header',['../structshmem__header.html',1,'']]],
   ['size_5fweight_5flimit',['size_weight_limit',['../structsize__weight__limit.html',1,'']]],
-  ['softinputrestorer',['SoftInputRestorer',['../classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html',1,'org::navitproject::navit::Navit']]],
   ['spawn_5fprocess_5finfo',['spawn_process_info',['../structspawn__process__info.html',1,'']]],
   ['speech',['speech',['../structspeech.html',1,'']]],
   ['speech_5fmethods',['speech_methods',['../structspeech__methods.html',1,'']]],

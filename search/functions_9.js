@@ -4,7 +4,7 @@ var searchData=
   ['handlebuttonclick',['HandleButtonClick',['../graphics__win32_8c.html#ab95c091265df40792440ce33c53bb9f0',1,'graphics_win32.c']]],
   ['handlekeychar',['HandleKeyChar',['../graphics__win32_8c.html#a2c793a6253341cb8fd8e395b3eb551fd',1,'graphics_win32.c']]],
   ['handlekeydown',['HandleKeyDown',['../graphics__win32_8c.html#a4dd98a99b0770d83f006e924777f5e06',1,'graphics_win32.c']]],
-  ['handlemessage',['handleMessage',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#aa9b087a3a606f753337e79ef37740332',1,'org::navitproject::navit::NavitDialogs']]],
+  ['handlemessage',['handleMessage',['../classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html#aa9b087a3a606f753337e79ef37740332',1,'org.navitproject.navit.NavitDialogs.handleMessage()'],['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler.html#a12769c898ac09cda02d86f4ec66034fa',1,'org.navitproject.navit.NavitGraphics.CallBackHandler.handleMessage()'],['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout_1_1TimeoutHandler.html#a2210a9b33ba6700582a5c9b93d80ac34',1,'org.navitproject.navit.NavitTimeout.TimeoutHandler.handleMessage()'],['../classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html#a7452630d2d000dd4e23394bf9fb86b6c',1,'org.navitproject.navit.NavitWatch.WatchHandler.handleMessage()']]],
   ['handleresize',['handleResize',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#adc8b705e3316bad3989a34df9eb2b61f',1,'org::navitproject::navit::NavitGraphics']]],
   ['handlestatechanged',['handleStateChanged',['../classQt5EspeakAudioOut.html#ab3218eee3acfabafde0156a44d57ce57',1,'Qt5EspeakAudioOut']]],
   ['hash_5fcallback',['hash_callback',['../util_8c.html#a7006b21507688e6eac2df34bb8658be8',1,'util.c']]],

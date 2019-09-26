@@ -6,5 +6,5 @@ var classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener =
     [ "onProviderEnabled", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#adb12b57e42f91fbe1443373ac173a588", null ],
     [ "onReceive", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#ac87c76d6920eae3f49f5c775abbf3f4d", null ],
     [ "onStatusChanged", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#aaaf80f0848c7308286f1e60012b9ff54", null ],
-    [ "precise", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#adfaa9a7c8e1764bb380bb120d83ae98d", null ]
+    [ "mPrecise", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#a8a0b6f5e4bf2834dd7377e873342a189", null ]
 ];

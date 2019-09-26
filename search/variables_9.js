@@ -5,7 +5,7 @@ var searchData=
   ['h_5fqueue',['h_queue',['../structspeech__priv.html#ac30d770c0e902a547791c6e7d49a3f0b',1,'speech_priv']]],
   ['h_5fwave_5fout',['h_wave_out',['../structspeech__priv.html#a5d7de3e2a3ea1a4dfcd98ffcd5c0b38f',1,'speech_priv']]],
   ['handle_5ftimeout',['handle_timeout',['../structevent__timeout.html#ab68b2268998c0dbb39769451a26cd0b5',1,'event_timeout']]],
-  ['handler',['handler',['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html#a5f0845a4d5e09a0f67b78bd8fa002af6',1,'org.navitproject.navit.NavitTimeout.handler()'],['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#ac7103570eaa85c22cb1f56d28fcc256f',1,'org.navitproject.navit.NavitWatch.handler()']]],
+  ['handler',['handler',['../classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html#a27c02603080f721d04b3fafad4bcea4d',1,'org::navitproject::navit::NavitTimeout']]],
   ['handler_5fid',['handler_id',['../structmenu__priv.html#aab9ca6a61391abfa94e5adf67ed35a0f',1,'menu_priv']]],
   ['has_5fdata',['has_data',['../group__vehicle-wince.html#ga9e1c077e5b51c21a125c9f91d74e60c2',1,'vehicle_priv']]],
   ['has_5fquit',['has_quit',['../event_8c.html#a13f8d9f2356f7a400f683244f16844ab',1,'event.c']]],

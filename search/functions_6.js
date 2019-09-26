@@ -152,7 +152,6 @@ var searchData=
   ['event_5fwin32_5fremove_5ftimeout',['event_win32_remove_timeout',['../graphics__win32_8c.html#a6e8fd17f25a413a872b77ba4eb94047c',1,'graphics_win32.c']]],
   ['event_5fwin32_5fremove_5fwatch',['event_win32_remove_watch',['../graphics__win32_8c.html#a2deff87e202afefc13b650b979146455',1,'graphics_win32.c']]],
   ['executesearch',['executeSearch',['../classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a0aaff54f98314c275f52daa53f02fe31',1,'org::navitproject::navit::NavitAddressSearchActivity']]],
-  ['exit',['exit',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a991f5ad5394793d7ec46812a7f453ab4',1,'org::navitproject::navit::Navit']]],
   ['exit_5fwith_5ferror',['exit_with_error',['../maptool_8c.html#ac634204a526b11b9d18c54d82123c21d',1,'maptool.c']]],
   ['expand_5ffilenames',['expand_filenames',['../log_8c.html#afb187f31d9f5fc96ced5b711afbb29c6',1,'log.c']]],
   ['expose',['expose',['../graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6',1,'graphics_gtk_drawing_area.c']]],

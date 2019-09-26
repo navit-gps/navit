@@ -101,7 +101,6 @@ $(document).ready(function(){initNavTree('android_8c.html','');});
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
@@ -119,52 +118,53 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aace042e91bf5a67da38b145c836c52b9"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jint JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#aace042e91bf5a67da38b145c836c52b9">JNI_OnLoad</a> (JavaVM *aVm, void *aReserved)</td></tr>
+<tr class="separator:aace042e91bf5a67da38b145c836c52b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e27fbc0cc2695097a90448bec80d140"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global</a> (char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, jclass *ret)</td></tr>
 <tr class="separator:a7e27fbc0cc2695097a90448bec80d140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a037be041befa134110ae94401eb71347"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a037be041befa134110ae94401eb71347">android_find_method</a> (jclass class, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, char *args, jmethodID *ret)</td></tr>
 <tr class="separator:a037be041befa134110ae94401eb71347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac09693f25474a6fba94239d7c3a91046"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ac09693f25474a6fba94239d7c3a91046">android_find_static_method</a> (jclass class, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, char *args, jmethodID *ret)</td></tr>
 <tr class="separator:ac09693f25474a6fba94239d7c3a91046"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c3864feceda5dbfc5a9ab65d49f53d3"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3">Java_org_navitproject_navit_Navit_NavitMain</a> (JNIEnv *env, jobject thiz, jobject activity, jobject application, jobject lang, int <a class="el" href="tools_2gpx2navit__txt_2src_2main_8c.html#af986bd0575ec9b913dfab4b8422509ae">version</a>, jobject display_density_string, jobject path, jobject map_path, jboolean isLaunch)</td></tr>
-<tr class="separator:a0c3864feceda5dbfc5a9ab65d49f53d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfea42a53ef4ce93ece483352a4e78f1"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#abfea42a53ef4ce93ece483352a4e78f1">Java_org_navitproject_navit_Navit_NavitDestroy</a> (JNIEnv *env)</td></tr>
-<tr class="separator:abfea42a53ef4ce93ece483352a4e78f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab171c100232cde8b68691f6420afe8ef"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ab171c100232cde8b68691f6420afe8ef">Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback</a> (JNIEnv *env, jobject thiz, int id, int w, int h)</td></tr>
-<tr class="separator:ab171c100232cde8b68691f6420afe8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3928ad1acb2a2cfcc05e0fd5056591ff"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a3928ad1acb2a2cfcc05e0fd5056591ff">Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback</a> (JNIEnv *env, jobject thiz, int id, int left, int top, int right, int bottom)</td></tr>
-<tr class="separator:a3928ad1acb2a2cfcc05e0fd5056591ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78219db69575c59dd875ce87524d92f6"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a78219db69575c59dd875ce87524d92f6">Java_org_navitproject_navit_NavitGraphics_ButtonCallback</a> (JNIEnv *env, jobject thiz, int id, int pressed, int button, int x, int y)</td></tr>
-<tr class="separator:a78219db69575c59dd875ce87524d92f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a994e8bf5a1f9460d0b8d1956462c67d1"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a994e8bf5a1f9460d0b8d1956462c67d1">Java_org_navitproject_navit_NavitGraphics_MotionCallback</a> (JNIEnv *env, jobject thiz, int id, int x, int y)</td></tr>
-<tr class="separator:a994e8bf5a1f9460d0b8d1956462c67d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13bb31f6c678599774ba7b72ee0e696d"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a13bb31f6c678599774ba7b72ee0e696d">Java_org_navitproject_navit_NavitGraphics_KeypressCallback</a> (JNIEnv *env, jobject thiz, int id, jobject str)</td></tr>
-<tr class="separator:a13bb31f6c678599774ba7b72ee0e696d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a082c20f08b0fd01a3a3577d49fb73e12"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a082c20f08b0fd01a3a3577d49fb73e12">Java_org_navitproject_navit_NavitTimeout_TimeoutCallback</a> (JNIEnv *env, jobject thiz, int id)</td></tr>
-<tr class="separator:a082c20f08b0fd01a3a3577d49fb73e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80cb60ad343cd2c2de88e0b6af251067"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a80cb60ad343cd2c2de88e0b6af251067">Java_org_navitproject_navit_NavitVehicle_VehicleCallback</a> (JNIEnv *env, jobject thiz, int id, jobject location)</td></tr>
-<tr class="separator:a80cb60ad343cd2c2de88e0b6af251067"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a183df996836cadf9d96152fb5de6b0"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a3a183df996836cadf9d96152fb5de6b0">Java_org_navitproject_navit_NavitIdle_IdleCallback</a> (JNIEnv *env, jobject thiz, int id)</td></tr>
-<tr class="separator:a3a183df996836cadf9d96152fb5de6b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a7ba5291fa569de5e33503c4963c744"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a7a7ba5291fa569de5e33503c4963c744">Java_org_navitproject_navit_NavitWatch_poll</a> (JNIEnv *env, jobject thiz, int func, int fd, int cond)</td></tr>
-<tr class="separator:a7a7ba5291fa569de5e33503c4963c744"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb680605b7dacd7e4266562f54f940ad"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#abb680605b7dacd7e4266562f54f940ad">Java_org_navitproject_navit_NavitWatch_WatchCallback</a> (JNIEnv *env, jobject thiz, int id)</td></tr>
-<tr class="separator:abb680605b7dacd7e4266562f54f940ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00823fcfba569972681871812c2176af"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a00823fcfba569972681871812c2176af">Java_org_navitproject_navit_NavitSensors_SensorCallback</a> (JNIEnv *env, jobject thiz, int id, int sensor, float x, float y, float z)</td></tr>
-<tr class="separator:a00823fcfba569972681871812c2176af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a80bad9aefd826cae1d040a992d8562"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a9a80bad9aefd826cae1d040a992d8562">Java_org_navitproject_navit_NavitTraff_onFeedReceived</a> (JNIEnv *env, jobject thiz, int id, jstring feed)</td></tr>
-<tr class="separator:a9a80bad9aefd826cae1d040a992d8562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b9d29202c15b496533459931b326e65"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a3b9d29202c15b496533459931b326e65">Java_org_navitproject_navit_Navit_navitMain</a> (JNIEnv *env, jobject thiz, jstring lang, jstring path, jstring map_path)</td></tr>
+<tr class="memdesc:a3b9d29202c15b496533459931b326e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the Navitlib for Android.  <a href="#a3b9d29202c15b496533459931b326e65">More...</a><br /></td></tr>
+<tr class="separator:a3b9d29202c15b496533459931b326e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bbb1bd77444d65adcc361f907952dbb"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a2bbb1bd77444d65adcc361f907952dbb">Java_org_navitproject_navit_Navit_navitDestroy</a> (JNIEnv *env, jobject thiz)</td></tr>
+<tr class="separator:a2bbb1bd77444d65adcc361f907952dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f3f1a23077c6228c829bb73fb6ca645"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a7f3f1a23077c6228c829bb73fb6ca645">Java_org_navitproject_navit_NavitGraphics_sizeChangedCallback</a> (JNIEnv *env, jobject thiz, jlong id, jint w, jint h)</td></tr>
+<tr class="separator:a7f3f1a23077c6228c829bb73fb6ca645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa541daf1e4849b1643adecef6e7a15e1"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#aa541daf1e4849b1643adecef6e7a15e1">Java_org_navitproject_navit_NavitGraphics_paddingChangedCallback</a> (JNIEnv *env, jobject thiz, jlong id, jint left, jint top, jint right, jint bottom)</td></tr>
+<tr class="separator:aa541daf1e4849b1643adecef6e7a15e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3db79888605c5db31ea137d9a929135b"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a3db79888605c5db31ea137d9a929135b">Java_org_navitproject_navit_NavitGraphics_buttonCallback</a> (JNIEnv *env, jobject thiz, jlong id, jint pressed, jint button, jint x, jint y)</td></tr>
+<tr class="separator:a3db79888605c5db31ea137d9a929135b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3975e174b4fa27cff9fc6d677d8c3af7"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a3975e174b4fa27cff9fc6d677d8c3af7">Java_org_navitproject_navit_NavitGraphics_motionCallback</a> (JNIEnv *env, jobject thiz, jlong id, jint x, jint y)</td></tr>
+<tr class="separator:a3975e174b4fa27cff9fc6d677d8c3af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1afc316799a51f44bed95b42df1cefd5"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a1afc316799a51f44bed95b42df1cefd5">Java_org_navitproject_navit_NavitGraphics_keypressCallback</a> (JNIEnv *env, jobject thiz, jlong id, jstring str)</td></tr>
+<tr class="separator:a1afc316799a51f44bed95b42df1cefd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25792645fab9da67dfe3657b733b6c46"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a25792645fab9da67dfe3657b733b6c46">Java_org_navitproject_navit_NavitTimeout_timeoutCallback</a> (JNIEnv *env, jobject thiz, jlong id)</td></tr>
+<tr class="separator:a25792645fab9da67dfe3657b733b6c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02f3a4f41496ac622bc1ea20865a1f3"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ae02f3a4f41496ac622bc1ea20865a1f3">Java_org_navitproject_navit_NavitVehicle_vehicleCallback</a> (JNIEnv *env, jobject thiz, jlong id, jobject location)</td></tr>
+<tr class="separator:ae02f3a4f41496ac622bc1ea20865a1f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e2aad95376b8bb6d2cb0538750cf84c"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0e2aad95376b8bb6d2cb0538750cf84c">Java_org_navitproject_navit_NavitWatch_poll</a> (JNIEnv *env, jobject thiz, jlong func, jint fd, jint cond)</td></tr>
+<tr class="separator:a0e2aad95376b8bb6d2cb0538750cf84c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a627a1e83d49073c1fb76f14d7b843305"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a627a1e83d49073c1fb76f14d7b843305">Java_org_navitproject_navit_NavitWatch_watchCallback</a> (JNIEnv *env, jobject thiz, jlong id)</td></tr>
+<tr class="separator:a627a1e83d49073c1fb76f14d7b843305"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23c3c3fa160c9238500028c912820086"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a23c3c3fa160c9238500028c912820086">Java_org_navitproject_navit_NavitSensors_sensorCallback</a> (JNIEnv *env, jobject thiz, jlong id, jint sensor, jfloat x, jfloat y, jfloat z)</td></tr>
+<tr class="separator:a23c3c3fa160c9238500028c912820086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cff6c3475f30cd139202860186000ef"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a5cff6c3475f30cd139202860186000ef">Java_org_navitproject_navit_NavitTraff_onFeedReceived</a> (JNIEnv *env, jobject thiz, jlong id, jstring feed)</td></tr>
+<tr class="separator:a5cff6c3475f30cd139202860186000ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fec3fc3ea0e43f26832d3dff8b7a14c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a6fec3fc3ea0e43f26832d3dff8b7a14c">android_return_search_result</a> (struct <a class="el" href="structjni__object.html">jni_object</a> *jni_o, int <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structpcoord.html">pcoord</a> *location, const char *address)</td></tr>
 <tr class="separator:a6fec3fc3ea0e43f26832d3dff8b7a14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b8da23c98cf14ea1ebc11c90610a299"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a4b8da23c98cf14ea1ebc11c90610a299">Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString</a> (JNIEnv *env, jobject thiz, jobject str)</td></tr>
-<tr class="separator:a4b8da23c98cf14ea1ebc11c90610a299"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03ff8a0fdf2c7031313356dedcd1d7bb"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jint JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a03ff8a0fdf2c7031313356dedcd1d7bb">Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel</a> (JNIEnv *env, jobject thiz, int channel, jobject str)</td></tr>
-<tr class="separator:a03ff8a0fdf2c7031313356dedcd1d7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1ff999108e1638e7d8f6a1e18666085"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ac1ff999108e1638e7d8f6a1e18666085">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint</a> (JNIEnv *env, jobject thiz, jint id, int x, int y)</td></tr>
-<tr class="separator:ac1ff999108e1638e7d8f6a1e18666085"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a417a09dbc390b2059d28d7ac85867c86"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a417a09dbc390b2059d28d7ac85867c86">Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry</a> (JNIEnv *env, jobject thiz, int channel, jobject str)</td></tr>
-<tr class="separator:a417a09dbc390b2059d28d7ac85867c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09397869eae0e76e3be1a61884641d92"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jobjectArray JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a09397869eae0e76e3be1a61884641d92">Java_org_navitproject_navit_NavitGraphics_GetAllCountries</a> (JNIEnv *env, jobject thiz)</td></tr>
-<tr class="separator:a09397869eae0e76e3be1a61884641d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec72e045ea2e742e826b2b279aff974e"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#aec72e045ea2e742e826b2b279aff974e">Java_org_navitproject_navit_NavitAppConfig_callbackLocalizedString</a> (JNIEnv *env, jclass thiz, jstring str)</td></tr>
+<tr class="separator:aec72e045ea2e742e826b2b279aff974e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad692882d62681538674602cb8632bf17"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ad692882d62681538674602cb8632bf17">Java_org_navitproject_navit_NavitGraphics_getDefaultCountry</a> (JNIEnv *env, jobject thiz, jint channel, jstring str)</td></tr>
+<tr class="separator:ad692882d62681538674602cb8632bf17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83086c7ef733cbac77c0fa77aaf44c7f"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jobjectArray JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a83086c7ef733cbac77c0fa77aaf44c7f">Java_org_navitproject_navit_NavitGraphics_getAllCountries</a> (JNIEnv *env, jclass thiz)</td></tr>
+<tr class="separator:a83086c7ef733cbac77c0fa77aaf44c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54c3450ff41f75b0b36b7994d9cb8c3d"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a54c3450ff41f75b0b36b7994d9cb8c3d">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint</a> (JNIEnv *env, jobject thiz, jint x, jint y, jboolean absolute_coord)</td></tr>
+<tr class="separator:a54c3450ff41f75b0b36b7994d9cb8c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d983a4bb07240c3d1d429ca1c0feea5"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jint JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0d983a4bb07240c3d1d429ca1c0feea5">Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel</a> (JNIEnv *env, jclass thiz, jint channel, jstring str)</td></tr>
+<tr class="separator:a0d983a4bb07240c3d1d429ca1c0feea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55e6a400a09eb5a026bfa47d433450c7"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">postal_str</a> (struct <a class="el" href="structsearch__list__result.html">search_list_result</a> *res, int <a class="el" href="structlevel.html">level</a>)</td></tr>
 <tr class="separator:a55e6a400a09eb5a026bfa47d433450c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af19391ea1e0978a528a9fb52b5ebac29"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#af19391ea1e0978a528a9fb52b5ebac29">district_str</a> (struct <a class="el" href="structsearch__list__result.html">search_list_result</a> *res, int <a class="el" href="structlevel.html">level</a>)</td></tr>
@@ -173,16 +173,18 @@ Functions</h2></td></tr>
 <tr class="separator:a9eb88ac729576c851c5622a3091e87ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9a5c00a2b6cad54740951082924901a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ab9a5c00a2b6cad54740951082924901a">android_search_end</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv)</td></tr>
 <tr class="separator:ab9a5c00a2b6cad54740951082924901a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af27bedcc294fb3b43e9b4fc6309cdc4b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#af27bedcc294fb3b43e9b4fc6309cdc4b">android_search_idle_result</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv, struct <a class="el" href="structsearch__list__result.html">search_list_result</a> *res)</td></tr>
+<tr class="separator:af27bedcc294fb3b43e9b4fc6309cdc4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c5cd544cf01a9aa49abb5fe1ddc55b1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv)</td></tr>
 <tr class="separator:a4c5cd544cf01a9aa49abb5fe1ddc55b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0d9b7c2317cfead965f89571d8c0d94"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#af0d9b7c2317cfead965f89571d8c0d94">search_fix_spaces</a> (const char *str)</td></tr>
 <tr class="separator:af0d9b7c2317cfead965f89571d8c0d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14854973c5a9c6e3b606deb26035cf73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a14854973c5a9c6e3b606deb26035cf73">start_search</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv, const char *search_string)</td></tr>
 <tr class="separator:a14854973c5a9c6e3b606deb26035cf73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7e4919cc3d636aee702cec090bb7c8a"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jlong JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#aa7e4919cc3d636aee702cec090bb7c8a">Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch</a> (JNIEnv *env, jobject thiz, int partial, jobject <a class="el" href="structcountry.html">country</a>, jobject str)</td></tr>
-<tr class="separator:aa7e4919cc3d636aee702cec090bb7c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6e97babcf2f3250705560296e1830d8"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ad6e97babcf2f3250705560296e1830d8">Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch</a> (JNIEnv *env, jobject thiz, jlong handle)</td></tr>
-<tr class="separator:ad6e97babcf2f3250705560296e1830d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fb15b4ce3ffd0c45b348d56045a63c2"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jlong JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch</a> (JNIEnv *env, jobject thiz, jint partial, jstring <a class="el" href="structcountry.html">country</a>, jstring str)</td></tr>
+<tr class="separator:a0fb15b4ce3ffd0c45b348d56045a63c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5026e128f2c7be57400e829e5e0960af"><td class="memItemLeft" align="right" valign="top">JNIEXPORT void JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a5026e128f2c7be57400e829e5e0960af">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackCancelAddressSearch</a> (JNIEnv *env, jobject thiz, jlong handle)</td></tr>
+<tr class="separator:a5026e128f2c7be57400e829e5e0960af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -190,10 +192,6 @@ Variables</h2></td></tr>
 <tr class="separator:aa65e77e2c5c1dafdda5287a265f5c5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab835292cb19f80d70d6c9f242630de09"><td class="memItemLeft" align="right" valign="top">jobject *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a> = NULL</td></tr>
 <tr class="separator:ab835292cb19f80d70d6c9f242630de09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a173f4f2ef556542207918abf0eaaa9cc"><td class="memItemLeft" align="right" valign="top">jobject *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a173f4f2ef556542207918abf0eaaa9cc">android_application</a> = NULL</td></tr>
-<tr class="separator:a173f4f2ef556542207918abf0eaaa9cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41ae714478042dc7ebbc275c4a766eeb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a41ae714478042dc7ebbc275c4a766eeb">android_version</a></td></tr>
-<tr class="separator:a41ae714478042dc7ebbc275c4a766eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac66f9f78e5f2275c95a4416bdecc3a91"><td class="memItemLeft" align="right" valign="top">static enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ac66f9f78e5f2275c95a4416bdecc3a91">android_search_level</a> []</td></tr>
 <tr class="separator:ac66f9f78e5f2275c95a4416bdecc3a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -356,7 +354,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structjni__object.html#abfb06cf9f3374edd9b786d37d7d5f8a0">jni_object::env</a>, <a class="el" href="structjni__object.html#a74a158cae9196106423dd937ea4da179">jni_object::jm</a>, <a class="el" href="structjni__object.html#a0de1ce3a6a57a919f451d74a6a372f43">jni_object::jo</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8c.html#af27bedcc294fb3b43e9b4fc6309cdc4b">android_search_idle_result()</a>.</p>
 
 </div>
 </div>
@@ -386,7 +384,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="callback_8c.html#a00702c701fa5313aace16c0299536dd3">callback_destroy()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structjni__object.html#abfb06cf9f3374edd9b786d37d7d5f8a0">jni_object::env</a>, <a class="el" href="event_8c.html#a958d2087511a68e1f0a150e76a5713e6">event_remove_idle()</a>, <a class="el" href="structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1">android_search_priv::idle_clb</a>, <a class="el" href="structandroid__search__priv.html#a5e8c8824623d9132531c02a38a1d3afe">android_search_priv::idle_ev</a>, <a class="el" href="structjni__object.html#a0de1ce3a6a57a919f451d74a6a372f43">jni_object::jo</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#a861976756c5fc0c9b66a6eb91aa7e694">search_list_destroy()</a>, and <a class="el" href="structandroid__search__priv.html#af5a94cbb1b440d6a11adaa7db58f58b7">android_search_priv::search_result_obj</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>, and <a class="el" href="android_8c.html#ad6e97babcf2f3250705560296e1830d8">Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>, and <a class="el" href="android_8c.html#a5026e128f2c7be57400e829e5e0960af">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackCancelAddressSearch()</a>.</p>
 
 </div>
 </div>
@@ -414,9 +412,49 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="android_8c.html#a6fec3fc3ea0e43f26832d3dff8b7a14c">android_return_search_result()</a>, <a class="el" href="android_8c.html#ab9a5c00a2b6cad54740951082924901a">android_search_end()</a>, <a class="el" href="android_8c.html#ac66f9f78e5f2275c95a4416bdecc3a91">android_search_level</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structsearch__list__common.html#abb67b4af017902d650e91b08e02b1fe0">search_list_common::c</a>, <a class="el" href="structsearch__list__town.html#affdc1adfcdcc2714cc06d66fccefc900">search_list_town::common</a>, <a class="el" href="structsearch__list__street.html#a35ca2470f706b8f0c6477cc8ad5418e8">search_list_street::common</a>, <a class="el" href="structsearch__list__house__number.html#ac23ed7c3ae6ba52d073743a5aad78269">search_list_house_number::common</a>, <a class="el" href="structsearch__list__result.html#a6e22252aaf420d05ffc78025bdc9ac71">search_list_result::country</a>, <a class="el" href="structandroid__search__priv.html#a086af4c9c9ad06ff07d02f04fafd84ea">android_search_priv::current_phrase_per_level</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structandroid__search__priv.html#ad07fa112dc30709e2f3c3c18cdd3e537">android_search_priv::found</a>, <a class="el" href="structsearch__list__house__number.html#a528071bccfe40038300cbd9d30b25cf1">search_list_house_number::house_number</a>, <a class="el" href="structsearch__list__result.html#a8c5ad9f0589ed0f0bc1dd4a4855fa953">search_list_result::house_number</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="structsearch__list__country.html#ae5c310297afb809c61f41367194da79f">search_list_country::name</a>, <a class="el" href="structsearch__list__street.html#a9d139e92c097e60e6a5eb50068415381">search_list_street::name</a>, <a class="el" href="structandroid__search__priv.html#a1424ba474c65f12e2d8246d32077202b">android_search_priv::partial</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>, <a class="el" href="search_8c.html#a6ca9258386b0ae0f3d510d3964105a9c">search_list_level()</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structandroid__search__priv.html#af5a94cbb1b440d6a11adaa7db58f58b7">android_search_priv::search_result_obj</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structsearch__list__result.html#ae5c340347ea04360aa7b7d90f746c37e">search_list_result::street</a>, <a class="el" href="structsearch__list__result.html#ae0fe345fc0eff57a65cecc2dbbe39ffd">search_list_result::town</a>, <a class="el" href="structsearch__list__common.html#a52460d4b724f9125a65abf0289dbaad2">search_list_common::town_name</a>, <a class="el" href="android_8c.html#a9eb88ac729576c851c5622a3091e87ff">town_str()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="android_8c.html#ab9a5c00a2b6cad54740951082924901a">android_search_end()</a>, <a class="el" href="android_8c.html#af27bedcc294fb3b43e9b4fc6309cdc4b">android_search_idle_result()</a>, <a class="el" href="android_8c.html#ac66f9f78e5f2275c95a4416bdecc3a91">android_search_level</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structandroid__search__priv.html#a086af4c9c9ad06ff07d02f04fafd84ea">android_search_priv::current_phrase_per_level</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structandroid__search__priv.html#ad07fa112dc30709e2f3c3c18cdd3e537">android_search_priv::found</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="structandroid__search__priv.html#a1424ba474c65f12e2d8246d32077202b">android_search_priv::partial</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#a23636fe9ca20de6d68d65848ba7a0a5e">search_list_get_result()</a>, <a class="el" href="search_8c.html#a6ca9258386b0ae0f3d510d3964105a9c">search_list_level()</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="android_8c.html#a14854973c5a9c6e3b606deb26035cf73">start_search()</a>.</p>
+
+</div>
+</div>
+<a id="af27bedcc294fb3b43e9b4fc6309cdc4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af27bedcc294fb3b43e9b4fc6309cdc4b">&#9670;&nbsp;</a></span>android_search_idle_result()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void android_search_idle_result </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *&#160;</td>
+          <td class="paramname"><em>search_priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structsearch__list__result.html">search_list_result</a> *&#160;</td>
+          <td class="paramname"><em>res</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="android_8c.html#a6fec3fc3ea0e43f26832d3dff8b7a14c">android_return_search_result()</a>, <a class="el" href="structsearch__list__common.html#abb67b4af017902d650e91b08e02b1fe0">search_list_common::c</a>, <a class="el" href="structsearch__list__town.html#affdc1adfcdcc2714cc06d66fccefc900">search_list_town::common</a>, <a class="el" href="structsearch__list__street.html#a35ca2470f706b8f0c6477cc8ad5418e8">search_list_street::common</a>, <a class="el" href="structsearch__list__house__number.html#ac23ed7c3ae6ba52d073743a5aad78269">search_list_house_number::common</a>, <a class="el" href="structsearch__list__result.html#a6e22252aaf420d05ffc78025bdc9ac71">search_list_result::country</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structandroid__search__priv.html#ad07fa112dc30709e2f3c3c18cdd3e537">android_search_priv::found</a>, <a class="el" href="structsearch__list__house__number.html#a528071bccfe40038300cbd9d30b25cf1">search_list_house_number::house_number</a>, <a class="el" href="structsearch__list__result.html#a8c5ad9f0589ed0f0bc1dd4a4855fa953">search_list_result::house_number</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structsearch__list__country.html#ae5c310297afb809c61f41367194da79f">search_list_country::name</a>, <a class="el" href="structsearch__list__street.html#a9d139e92c097e60e6a5eb50068415381">search_list_street::name</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="structandroid__search__priv.html#af5a94cbb1b440d6a11adaa7db58f58b7">android_search_priv::search_result_obj</a>, <a class="el" href="structsearch__list__result.html#ae5c340347ea04360aa7b7d90f746c37e">search_list_result::street</a>, <a class="el" href="structsearch__list__result.html#ae0fe345fc0eff57a65cecc2dbbe39ffd">search_list_result::town</a>, <a class="el" href="android_8c.html#a9eb88ac729576c851c5622a3091e87ff">town_str()</a>, and <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>.</p>
 
 </div>
 </div>
@@ -460,18 +498,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abfea42a53ef4ce93ece483352a4e78f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfea42a53ef4ce93ece483352a4e78f1">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_Navit_NavitDestroy()</h2>
+<a id="a2bbb1bd77444d65adcc361f907952dbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bbb1bd77444d65adcc361f907952dbb">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_Navit_navitDestroy()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitDestroy </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitDestroy </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
-          <td class="paramname"><em>env</em></td><td>)</td>
+          <td class="paramname"><em>env</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">jobject&#160;</td>
+          <td class="paramname"><em>thiz</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -480,14 +528,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0c3864feceda5dbfc5a9ab65d49f53d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c3864feceda5dbfc5a9ab65d49f53d3">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_Navit_NavitMain()</h2>
+<a id="a3b9d29202c15b496533459931b326e65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b9d29202c15b496533459931b326e65">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_Navit_navitMain()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_NavitMain </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_Navit_navitMain </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -501,50 +549,20 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>activity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>application</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>lang</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>version</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>display_density_string</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>map_path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jboolean&#160;</td>
-          <td class="paramname"><em>isLaunch</em>&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
+          <td class="paramname"><em>map_path</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -554,18 +572,30 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="android_8c.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a>, <a class="el" href="android_8c.html#a173f4f2ef556542207918abf0eaaa9cc">android_application</a>, <a class="el" href="android_8c.html#a41ae714478042dc7ebbc275c4a766eeb">android_version</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="start__real_8c.html#ade1addd7471c6aa824c4f9fca7b2abba">main_real()</a>, and <a class="el" href="tools_2gpx2navit__txt_2src_2main_8c.html#af986bd0575ec9b913dfab4b8422509ae">version()</a>.</p>
+<p>Starts the Navitlib for Android. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">env</td><td>provided by JVM </td></tr>
+    <tr><td class="paramname">thiz</td><td>the calling Navit instance </td></tr>
+    <tr><td class="paramname">lang</td><td>a string describing the language </td></tr>
+    <tr><td class="paramname">path</td><td>relates to NAVIT_DATA_DIR on linux </td></tr>
+    <tr><td class="paramname">map_path</td><td>where the binfiles are stored </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="android_8c.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="start__real_8c.html#ade1addd7471c6aa824c4f9fca7b2abba">main_real()</a>.</p>
 
 </div>
 </div>
-<a id="ad6e97babcf2f3250705560296e1830d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6e97babcf2f3250705560296e1830d8">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch()</h2>
+<a id="a5026e128f2c7be57400e829e5e0960af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5026e128f2c7be57400e829e5e0960af">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitAddressSearchActivity_callbackCancelAddressSearch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackCancelAddressSearch </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_callbackCancelAddressSearch </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -594,14 +624,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa7e4919cc3d636aee702cec090bb7c8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7e4919cc3d636aee702cec090bb7c8a">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch()</h2>
+<a id="a0fb15b4ce3ffd0c45b348d56045a63c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fb15b4ce3ffd0c45b348d56045a63c2">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch </td>
+          <td class="memname">JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -615,19 +645,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>partial</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>country</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
@@ -642,14 +672,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a78219db69575c59dd875ce87524d92f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78219db69575c59dd875ce87524d92f6">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_ButtonCallback()</h2>
+<a id="aec72e045ea2e742e826b2b279aff974e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec72e045ea2e742e826b2b279aff974e">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitAppConfig_callbackLocalizedString()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_ButtonCallback </td>
+          <td class="memname">JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitAppConfig_callbackLocalizedString </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -657,73 +687,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jclass&#160;</td>
           <td class="paramname"><em>thiz</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>pressed</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>button</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="callback_8h.html#ac031af364f212cc2053d6e71b6d2da93">callback_call_4</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
-
-</div>
-</div>
-<a id="a4b8da23c98cf14ea1ebc11c90610a299"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b8da23c98cf14ea1ebc11c90610a299">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackLocalizedString </td>
-          <td>(</td>
-          <td class="paramtype">JNIEnv *&#160;</td>
-          <td class="paramname"><em>env</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>thiz</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
@@ -738,14 +708,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a03ff8a0fdf2c7031313356dedcd1d7bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03ff8a0fdf2c7031313356dedcd1d7bb">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel()</h2>
+<a id="a3db79888605c5db31ea137d9a929135b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3db79888605c5db31ea137d9a929135b">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_buttonCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_buttonCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -759,13 +729,73 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>pressed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>button</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="callback_8h.html#ac031af364f212cc2053d6e71b6d2da93">callback_call_4</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
+
+</div>
+</div>
+<a id="a0d983a4bb07240c3d1d429ca1c0feea5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d983a4bb07240c3d1d429ca1c0feea5">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel </td>
+          <td>(</td>
+          <td class="paramtype">JNIEnv *&#160;</td>
+          <td class="paramname"><em>env</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jclass&#160;</td>
+          <td class="paramname"><em>thiz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>channel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
@@ -776,18 +806,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr()</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#gad7c73db8437d87f3470c88f8a619c292">navit_draw()</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#gabe8b57e21a0835fa5070f1dbb07de9f8">navit_zoom_in_cursor()</a>, <a class="el" href="group__navit.html#ga1b035def8233343661617a8a456f1e84">navit_zoom_out_cursor()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="mapset_8c.html#adb098564156843a504fe8408c7051dd1">mapset_get_map_by_name()</a>, <a class="el" href="mapset_8c.html#ac3496e82d4fb896c2a1917e6ac11977d">mapset_remove_attr()</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#gad7c73db8437d87f3470c88f8a619c292">navit_draw()</a>, <a class="el" href="group__navit.html#ga500b4ba7a20151bf7603ac2c740b457f">navit_get_mapset()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#gabe8b57e21a0835fa5070f1dbb07de9f8">navit_zoom_in_cursor()</a>, <a class="el" href="group__navit.html#ga1b035def8233343661617a8a456f1e84">navit_zoom_out_cursor()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>
-<a id="a09397869eae0e76e3be1a61884641d92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09397869eae0e76e3be1a61884641d92">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_GetAllCountries()</h2>
+<a id="a83086c7ef733cbac77c0fa77aaf44c7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83086c7ef733cbac77c0fa77aaf44c7f">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getAllCountries()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_GetAllCountries </td>
+          <td class="memname">JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllCountries </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -795,7 +825,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jclass&#160;</td>
           <td class="paramname"><em>thiz</em>&#160;</td>
         </tr>
         <tr>
@@ -810,8 +840,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac1ff999108e1638e7d8f6a1e18666085"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1ff999108e1638e7d8f6a1e18666085">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</h2>
+<a id="a54c3450ff41f75b0b36b7994d9cb8c3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54c3450ff41f75b0b36b7994d9cb8c3d">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -832,19 +862,19 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">jint&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramtype">jint&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jboolean&#160;</td>
+          <td class="paramname"><em>absolute_coord</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -854,18 +884,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__coord.html#gac5b234f8ccc46a2b2a41ce31f246c277">pcoord_format_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">pcoord_format_absolute()</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>
-<a id="a417a09dbc390b2059d28d7ac85867c86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a417a09dbc390b2059d28d7ac85867c86">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry()</h2>
+<a id="ad692882d62681538674602cb8632bf17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad692882d62681538674602cb8632bf17">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getDefaultCountry()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_GetDefaultCountry </td>
+          <td class="memname">JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCountry </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -879,13 +909,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>channel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
@@ -900,14 +930,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a13bb31f6c678599774ba7b72ee0e696d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13bb31f6c678599774ba7b72ee0e696d">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_KeypressCallback()</h2>
+<a id="a1afc316799a51f44bed95b42df1cefd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1afc316799a51f44bed95b42df1cefd5">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_keypressCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_KeypressCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_keypressCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -921,13 +951,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">jobject&#160;</td>
+          <td class="paramtype">jstring&#160;</td>
           <td class="paramname"><em>str</em>&#160;</td>
         </tr>
         <tr>
@@ -942,14 +972,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a994e8bf5a1f9460d0b8d1956462c67d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a994e8bf5a1f9460d0b8d1956462c67d1">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_MotionCallback()</h2>
+<a id="a3975e174b4fa27cff9fc6d677d8c3af7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3975e174b4fa27cff9fc6d677d8c3af7">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_motionCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_MotionCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_motionCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -963,19 +993,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>y</em>&#160;</td>
         </tr>
         <tr>
@@ -990,14 +1020,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3928ad1acb2a2cfcc05e0fd5056591ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3928ad1acb2a2cfcc05e0fd5056591ff">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback()</h2>
+<a id="aa541daf1e4849b1643adecef6e7a15e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa541daf1e4849b1643adecef6e7a15e1">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_paddingChangedCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_PaddingChangedCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_paddingChangedCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1011,31 +1041,31 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>left</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>top</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>right</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>bottom</em>&#160;</td>
         </tr>
         <tr>
@@ -1050,14 +1080,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab171c100232cde8b68691f6420afe8ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab171c100232cde8b68691f6420afe8ef">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback()</h2>
+<a id="a7f3f1a23077c6228c829bb73fb6ca645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f3f1a23077c6228c829bb73fb6ca645">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_sizeChangedCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitGraphics_sizeChangedCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1071,19 +1101,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>w</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>h</em>&#160;</td>
         </tr>
         <tr>
@@ -1098,14 +1128,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3a183df996836cadf9d96152fb5de6b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a183df996836cadf9d96152fb5de6b0">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitIdle_IdleCallback()</h2>
+<a id="a23c3c3fa160c9238500028c912820086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23c3c3fa160c9238500028c912820086">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitSensors_sensorCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitIdle_IdleCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_sensorCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1119,67 +1149,31 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>id</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="callback_8h.html#ad5f34eb337d3f6b98394b5aa02388e1a">callback_call_0</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
-
-</div>
-</div>
-<a id="a00823fcfba569972681871812c2176af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00823fcfba569972681871812c2176af">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitSensors_SensorCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitSensors_SensorCallback </td>
-          <td>(</td>
-          <td class="paramtype">JNIEnv *&#160;</td>
-          <td class="paramname"><em>env</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">jobject&#160;</td>
-          <td class="paramname"><em>thiz</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>sensor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">jfloat&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">jfloat&#160;</td>
           <td class="paramname"><em>y</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">jfloat&#160;</td>
           <td class="paramname"><em>z</em>&#160;</td>
         </tr>
         <tr>
@@ -1194,14 +1188,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a082c20f08b0fd01a3a3577d49fb73e12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a082c20f08b0fd01a3a3577d49fb73e12">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitTimeout_TimeoutCallback()</h2>
+<a id="a25792645fab9da67dfe3657b733b6c46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25792645fab9da67dfe3657b733b6c46">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitTimeout_timeoutCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_TimeoutCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitTimeout_timeoutCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1215,7 +1209,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>&#160;</td>
         </tr>
         <tr>
@@ -1230,8 +1224,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9a80bad9aefd826cae1d040a992d8562"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a80bad9aefd826cae1d040a992d8562">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitTraff_onFeedReceived()</h2>
+<a id="a5cff6c3475f30cd139202860186000ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cff6c3475f30cd139202860186000ef">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitTraff_onFeedReceived()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1251,7 +1245,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
@@ -1272,14 +1266,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a80cb60ad343cd2c2de88e0b6af251067"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80cb60ad343cd2c2de88e0b6af251067">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitVehicle_VehicleCallback()</h2>
+<a id="ae02f3a4f41496ac622bc1ea20865a1f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae02f3a4f41496ac622bc1ea20865a1f3">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitVehicle_vehicleCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_VehicleCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitVehicle_vehicleCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1293,7 +1287,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
@@ -1314,8 +1308,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7a7ba5291fa569de5e33503c4963c744"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a7ba5291fa569de5e33503c4963c744">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitWatch_poll()</h2>
+<a id="a0e2aad95376b8bb6d2cb0538750cf84c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e2aad95376b8bb6d2cb0538750cf84c">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitWatch_poll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1335,19 +1329,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>func</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>fd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jint&#160;</td>
           <td class="paramname"><em>cond</em>&#160;</td>
         </tr>
         <tr>
@@ -1360,14 +1354,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abb680605b7dacd7e4266562f54f940ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb680605b7dacd7e4266562f54f940ad">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitWatch_WatchCallback()</h2>
+<a id="a627a1e83d49073c1fb76f14d7b843305"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a627a1e83d49073c1fb76f14d7b843305">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitWatch_watchCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_WatchCallback </td>
+          <td class="memname">JNIEXPORT void JNICALL Java_org_navitproject_navit_NavitWatch_watchCallback </td>
           <td>(</td>
           <td class="paramtype">JNIEnv *&#160;</td>
           <td class="paramname"><em>env</em>, </td>
@@ -1381,7 +1375,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">jlong&#160;</td>
           <td class="paramname"><em>id</em>&#160;</td>
         </tr>
         <tr>
@@ -1393,6 +1387,36 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="callback_8h.html#ad5f34eb337d3f6b98394b5aa02388e1a">callback_call_0</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
+
+</div>
+</div>
+<a id="aace042e91bf5a67da38b145c836c52b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aace042e91bf5a67da38b145c836c52b9">&#9670;&nbsp;</a></span>JNI_OnLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JNIEXPORT jint JNICALL JNI_OnLoad </td>
+          <td>(</td>
+          <td class="paramtype">JavaVM *&#160;</td>
+          <td class="paramname"><em>aVm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>aReserved</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>.</p>
 
 </div>
 </div>
@@ -1502,7 +1526,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="event_8c.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>, <a class="el" href="structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1">android_search_priv::idle_clb</a>, <a class="el" href="structandroid__search__priv.html#a5e8c8824623d9132531c02a38a1d3afe">android_search_priv::idle_ev</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structandroid__search__priv.html#a1424ba474c65f12e2d8246d32077202b">android_search_priv::partial</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="android_8c.html#af0d9b7c2317cfead965f89571d8c0d94">search_fix_spaces()</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="android_8c.html#aa7e4919cc3d636aee702cec090bb7c8a">Java_org_navitproject_navit_NavitAddressSearchActivity_CallbackStartAddressSearch()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch()</a>.</p>
 
 </div>
 </div>
@@ -1540,9 +1564,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structsearch__list__town.html#affdc1adfcdcc2714cc06d66fccefc900">search_list_town::common</a>, <a class="el" href="structsearch__list__common.html#a352d3819420610358765916392e03f14">search_list_common::county_name</a>, <a class="el" href="android_8c.html#af19391ea1e0978a528a9fb52b5ebac29">district_str()</a>, <a class="el" href="structsearch__list.html#a3872a8477f2a1244b9e1858f78c7d85c">search_list::postal</a>, <a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">postal_str()</a>, <a class="el" href="structsearch__list__result.html#ae0fe345fc0eff57a65cecc2dbbe39ffd">search_list_result::town</a>, and <a class="el" href="structsearch__list__common.html#a52460d4b724f9125a65abf0289dbaad2">search_list_common::town_name</a>.</p>
+<p class="reference">References <a class="el" href="structsearch__list__town.html#affdc1adfcdcc2714cc06d66fccefc900">search_list_town::common</a>, <a class="el" href="structsearch__list__common.html#a352d3819420610358765916392e03f14">search_list_common::county_name</a>, <a class="el" href="android_8c.html#af19391ea1e0978a528a9fb52b5ebac29">district_str()</a>, <a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">postal_str()</a>, <a class="el" href="structsearch__list__result.html#ae0fe345fc0eff57a65cecc2dbbe39ffd">search_list_result::town</a>, and <a class="el" href="structsearch__list__common.html#a52460d4b724f9125a65abf0289dbaad2">search_list_common::town_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8c.html#af27bedcc294fb3b43e9b4fc6309cdc4b">android_search_idle_result()</a>.</p>
 
 </div>
 </div>
@@ -1559,23 +1583,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit()</a>, <a class="el" href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu()</a>, <a class="el" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem()</a>, <a class="el" href="graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a">graphics_android_disable_suspend()</a>, <a class="el" href="graphics__android_8c.html#afa6eb629335f2114460f01ccd1ad065c">graphics_android_fullscreen()</a>, <a class="el" href="graphics__android_8c.html#a638aeba01d8b9884d5f60eeadefc0042">graphics_android_init()</a>, <a class="el" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard()</a>, <a class="el" href="android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3">Java_org_navitproject_navit_Navit_NavitMain()</a>, <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>, <a class="el" href="graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a">set_activity()</a>, <a class="el" href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard()</a>, and <a class="el" href="speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b">speech_android_init()</a>.</p>
-
-</div>
-</div>
-<a id="a173f4f2ef556542207918abf0eaaa9cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a173f4f2ef556542207918abf0eaaa9cc">&#9670;&nbsp;</a></span>android_application</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">jobject* android_application = NULL</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3">Java_org_navitproject_navit_Navit_NavitMain()</a>, <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, and <a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit()</a>, <a class="el" href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu()</a>, <a class="el" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem()</a>, <a class="el" href="graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a">graphics_android_disable_suspend()</a>, <a class="el" href="graphics__android_8c.html#afa6eb629335f2114460f01ccd1ad065c">graphics_android_fullscreen()</a>, <a class="el" href="graphics__android_8c.html#a638aeba01d8b9884d5f60eeadefc0042">graphics_android_init()</a>, <a class="el" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard()</a>, <a class="el" href="android_8c.html#a3b9d29202c15b496533459931b326e65">Java_org_navitproject_navit_Navit_navitMain()</a>, <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>, <a class="el" href="graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a">set_activity()</a>, <a class="el" href="speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b">speech_android_init()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, and <a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init()</a>.</p>
 
 </div>
 </div>
@@ -1603,22 +1611,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a41ae714478042dc7ebbc275c4a766eeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41ae714478042dc7ebbc275c4a766eeb">&#9670;&nbsp;</a></span>android_version</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int android_version</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3">Java_org_navitproject_navit_Navit_NavitMain()</a>, and <a class="el" href="speech__android_8c.html#ade7ac55de364c50decfc75de0279cda9">speech_android_new()</a>.</p>
-
-</div>
-</div>
 <a id="aa65e77e2c5c1dafdda5287a265f5c5ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa65e77e2c5c1dafdda5287a265f5c5ae">&#9670;&nbsp;</a></span>jnienv</h2>
 
@@ -1631,7 +1623,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="android_8h.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global()</a>, <a class="el" href="android_8h.html#a037be041befa134110ae94401eb71347">android_find_method()</a>, <a class="el" href="android_8h.html#ac09693f25474a6fba94239d7c3a91046">android_find_static_method()</a>, <a class="el" href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle()</a>, <a class="el" href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag()</a>, <a class="el" href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image()</a>, <a class="el" href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp()</a>, <a class="el" href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines()</a>, <a class="el" href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode()</a>, <a class="el" href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon()</a>, <a class="el" href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle()</a>, <a class="el" href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text()</a>, <a class="el" href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle()</a>, <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>, <a class="el" href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch()</a>, <a class="el" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit()</a>, <a class="el" href="graphics__android_8c.html#a9a1713f706ebf338d343a50e0a3c06ad">event_android_new()</a>, <a class="el" href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle()</a>, <a class="el" href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout()</a>, <a class="el" href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch()</a>, <a class="el" href="graphics__android_8c.html#adb6ef5194669895260db3e36f4a6d408">find_class_global()</a>, <a class="el" href="graphics__android_8c.html#ab8bb50134cffc0befeb6bae3d9930760">find_method()</a>, <a class="el" href="graphics__android_8c.html#aaa914f1f0a26e5f448e3fd4e731761a9">find_static_method()</a>, <a class="el" href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu()</a>, <a class="el" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem()</a>, <a class="el" href="graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a">graphics_android_disable_suspend()</a>, <a class="el" href="graphics__android_8c.html#afa6eb629335f2114460f01ccd1ad065c">graphics_android_fullscreen()</a>, <a class="el" href="graphics__android_8c.html#a638aeba01d8b9884d5f60eeadefc0042">graphics_android_init()</a>, <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>, <a class="el" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard()</a>, <a class="el" href="graphics__android_8c.html#afea25d9f480111debc4c9fab1ef4c92c">image_new()</a>, <a class="el" href="graphics__android_8c.html#aaf44054328a729b2e4fed1052296aeb0">initPaint()</a>, <a class="el" href="android_8c.html#a0c3864feceda5dbfc5a9ab65d49f53d3">Java_org_navitproject_navit_Navit_NavitMain()</a>, <a class="el" href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable()</a>, <a class="el" href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize()</a>, <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>, <a class="el" href="graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a">set_activity()</a>, <a class="el" href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr()</a>, <a class="el" href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard()</a>, <a class="el" href="speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b">speech_android_init()</a>, <a class="el" href="speech__android_8c.html#a78e5b0c2190be717c1d3dd422e75de1f">speech_android_say()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, <a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init()</a>, and <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8h.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global()</a>, <a class="el" href="android_8h.html#a037be041befa134110ae94401eb71347">android_find_method()</a>, <a class="el" href="android_8h.html#ac09693f25474a6fba94239d7c3a91046">android_find_static_method()</a>, <a class="el" href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle()</a>, <a class="el" href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag()</a>, <a class="el" href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image()</a>, <a class="el" href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp()</a>, <a class="el" href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines()</a>, <a class="el" href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode()</a>, <a class="el" href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon()</a>, <a class="el" href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle()</a>, <a class="el" href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text()</a>, <a class="el" href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle()</a>, <a class="el" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout()</a>, <a class="el" href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch()</a>, <a class="el" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit()</a>, <a class="el" href="graphics__android_8c.html#a9a1713f706ebf338d343a50e0a3c06ad">event_android_new()</a>, <a class="el" href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle()</a>, <a class="el" href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout()</a>, <a class="el" href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch()</a>, <a class="el" href="graphics__android_8c.html#adb6ef5194669895260db3e36f4a6d408">find_class_global()</a>, <a class="el" href="graphics__android_8c.html#ab8bb50134cffc0befeb6bae3d9930760">find_method()</a>, <a class="el" href="graphics__android_8c.html#aaa914f1f0a26e5f448e3fd4e731761a9">find_static_method()</a>, <a class="el" href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu()</a>, <a class="el" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem()</a>, <a class="el" href="graphics__android_8c.html#a0ac4ff9de8d4f49b5df8c8bee5161d8a">graphics_android_disable_suspend()</a>, <a class="el" href="graphics__android_8c.html#afa6eb629335f2114460f01ccd1ad065c">graphics_android_fullscreen()</a>, <a class="el" href="graphics__android_8c.html#a638aeba01d8b9884d5f60eeadefc0042">graphics_android_init()</a>, <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>, <a class="el" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard()</a>, <a class="el" href="graphics__android_8c.html#afea25d9f480111debc4c9fab1ef4c92c">image_new()</a>, <a class="el" href="graphics__android_8c.html#aaf44054328a729b2e4fed1052296aeb0">initPaint()</a>, <a class="el" href="android_8c.html#a3b9d29202c15b496533459931b326e65">Java_org_navitproject_navit_Navit_navitMain()</a>, <a class="el" href="android_8c.html#aace042e91bf5a67da38b145c836c52b9">JNI_OnLoad()</a>, <a class="el" href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable()</a>, <a class="el" href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize()</a>, <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>, <a class="el" href="graphics__android_8c.html#a24ca1fb455c17e1b07f2049091514b3a">set_activity()</a>, <a class="el" href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr()</a>, <a class="el" href="speech__android_8c.html#af0726981bb140e0fe64af0d2cc30f53b">speech_android_init()</a>, <a class="el" href="speech__android_8c.html#a78e5b0c2190be717c1d3dd422e75de1f">speech_android_say()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, <a class="el" href="vehicle__android_8c.html#adb1222b748368b7b5dfcedfb31100052">vehicle_android_init()</a>, and <a class="el" href="vehicle__android_8c.html#a1b83b02eabd1c2ee0b170c376b5b915e">vehicle_android_position_callback()</a>.</p>
 
 </div>
 </div>

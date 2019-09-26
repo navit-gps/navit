@@ -13,7 +13,8 @@ var graphics_8h =
     [ "graphics_data_image", "structgraphics__data__image.html", "structgraphics__data__image" ],
     [ "draw_mode_num", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89a", [
       [ "draw_mode_begin", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa05532e5792068ce2c07421367ef768cb", null ],
-      [ "draw_mode_end", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57", null ]
+      [ "draw_mode_end", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57", null ],
+      [ "draw_mode_begin_clear", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa5104dc24231960f5badaeea16807e9b7", null ]
     ] ],
     [ "graphics_image_type", "graphics_8h.html#a69a49b0ac412dbee7329ebd26b87d280", [
       [ "graphics_image_type_unknown", "graphics_8h.html#a69a49b0ac412dbee7329ebd26b87d280a2a9a605461ac62afec0c53141734b2d6", null ]

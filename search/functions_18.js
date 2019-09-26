@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['watchcallback',['WatchCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a5f12aa40a53d73dad2ec85c9a75f2577',1,'org::navitproject::navit::NavitWatch']]],
+  ['watchcallback',['watchCallback',['../classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#a63d97650bc77bebef0ad1651be1e169f',1,'org::navitproject::navit::NavitWatch']]],
   ['watchevent',['watchEvent',['../classqt5__navit__timer.html#a80e512ba274a85379afba76fa4610559',1,'qt5_navit_timer::watchEvent()'],['../classRenderArea.html#ac2921205b8d304009b3d7153f304c8b8',1,'RenderArea::watchEvent()']]],
   ['wave_5fout',['wave_out',['../speak_8c.html#aed3d8a3b8575ca53c4673125db9f4281',1,'speak.c']]],
   ['waveout_5fclose',['waveout_close',['../speak_8c.html#a0c004fda547076b5514e3e44cd177a58',1,'speak.c']]],
@@ -25,6 +25,7 @@ var searchData=
   ['window_5ffullscreen',['window_fullscreen',['../graphics__sdl_8c.html#ac7210e0356bd2ffa491bb3c5880af036',1,'graphics_sdl.c']]],
   ['window_5ffullscreen_5faction',['window_fullscreen_action',['../gui__gtk__action_8c.html#a8c7c02073eaf473a2e946f08ef915630',1,'gui_gtk_action.c']]],
   ['window_5flayout',['window_layout',['../gui__win32_8c.html#ad20bb69bea623ef4417434c652e4d77c',1,'gui_win32.c']]],
+  ['windowsetup',['windowSetup',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#ad4176d1fdf0a9a64214b985c1266670a',1,'org::navitproject::navit::Navit']]],
   ['wipeattr',['wipeAttr',['../gpx2navit__txt_8h.html#a344a7a7e72d816c8ec622403af548f9c',1,'wipeAttr(g2sattr *attr):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a344a7a7e72d816c8ec622403af548f9c',1,'wipeAttr(g2sattr *attr):&#160;misc.c']]],
   ['wipepathattr',['wipePathAttr',['../gpx2navit__txt_8h.html#abfad51901cc4a177805f94cfc9817d85',1,'wipePathAttr(pathattr *pattr):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#abfad51901cc4a177805f94cfc9817d85',1,'wipePathAttr(pathattr *pattr):&#160;misc.c']]],
   ['within_5fdist_5fline',['within_dist_line',['../graphics_8c.html#a57b2b13866fa9fd3ec69ba5273ef0aa3',1,'graphics.c']]],
@@ -32,6 +33,7 @@ var searchData=
   ['within_5fdist_5fpolygon',['within_dist_polygon',['../graphics_8c.html#aaf60fcbfa817ac80c00c6874aa56b151',1,'graphics.c']]],
   ['within_5fdist_5fpolyline',['within_dist_polyline',['../graphics_8c.html#a6b044b66832f9ad43159f1055747b3da',1,'graphics.c']]],
   ['wndproc',['WndProc',['../graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;graphics_win32.c'],['../gui__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;gui_win32.c']]],
+  ['workaroundforguiinternal',['workAroundForGuiInternal',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a430cf804f45228e98e50c8d0297601c4',1,'org::navitproject::navit::NavitGraphics']]],
   ['write_5faux_5ftiles',['write_aux_tiles',['../maptool_8h.html#af530096ee0ac7648b394eb6d87af5cff',1,'write_aux_tiles(struct zip_info *zip_info):&#160;tile.c'],['../tile_8c.html#af530096ee0ac7648b394eb6d87af5cff',1,'write_aux_tiles(struct zip_info *zip_info):&#160;tile.c']]],
   ['write_5fchanges',['write_changes',['../binfile_8c.html#a41a976a416063184df56c409ff8015e7',1,'binfile.c']]],
   ['write_5fchanges_5fdo',['write_changes_do',['../binfile_8c.html#a78a0c6baec850cb6bd006b9914a55220',1,'binfile.c']]],

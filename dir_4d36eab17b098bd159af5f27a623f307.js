@@ -6,8 +6,7 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
       [ "ItemFileNameComparator", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator.html", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator" ]
     ] ],
     [ "Navit.java", "Navit_8java.html", [
-      [ "Navit", "classorg_1_1navitproject_1_1navit_1_1Navit.html", "classorg_1_1navitproject_1_1navit_1_1Navit" ],
-      [ "SoftInputRestorer", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer.html", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1SoftInputRestorer" ]
+      [ "Navit", "classorg_1_1navitproject_1_1navit_1_1Navit.html", "classorg_1_1navitproject_1_1navit_1_1Navit" ]
     ] ],
     [ "NavitActivityResult.java", "NavitActivityResult_8java.html", [
       [ "NavitActivityResult", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult" ]
@@ -35,14 +34,15 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
       [ "NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics" ],
       [ "NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView" ],
       [ "SystemBarTintView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1SystemBarTintView.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1SystemBarTintView" ],
-      [ "msg_type", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1msg__type.html", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1msg__type" ]
+      [ "MsgType", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType" ],
+      [ "CallBackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler" ]
     ] ],
     [ "NavitMap.java", "NavitMap_8java.html", [
       [ "NavitMap", "classorg_1_1navitproject_1_1navit_1_1NavitMap.html", "classorg_1_1navitproject_1_1navit_1_1NavitMap" ]
     ] ],
     [ "NavitMapDownloader.java", "NavitMapDownloader_8java.html", [
       [ "NavitMapDownloader", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader" ],
-      [ "osm_map_values", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values.html", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1osm__map__values" ]
+      [ "OsmMapValues", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues" ]
     ] ],
     [ "NavitRestoreTask.java", "NavitRestoreTask_8java.html", [
       [ "NavitRestoreTask", "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html", "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask" ]
@@ -54,16 +54,21 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
       [ "NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2" ]
     ] ],
     [ "NavitTimeout.java", "NavitTimeout_8java.html", [
-      [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ]
+      [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ],
+      [ "TimeoutHandler", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout_1_1TimeoutHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout_1_1TimeoutHandler" ]
     ] ],
     [ "NavitTraff.java", "NavitTraff_8java.html", [
       [ "NavitTraff", "classorg_1_1navitproject_1_1navit_1_1NavitTraff.html", "classorg_1_1navitproject_1_1navit_1_1NavitTraff" ]
+    ] ],
+    [ "NavitUtils.java", "NavitUtils_8java.html", [
+      [ "NavitUtils", "classorg_1_1navitproject_1_1navit_1_1NavitUtils.html", "classorg_1_1navitproject_1_1navit_1_1NavitUtils" ]
     ] ],
     [ "NavitVehicle.java", "NavitVehicle_8java.html", [
       [ "NavitVehicle", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle" ],
       [ "NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener" ]
     ] ],
     [ "NavitWatch.java", "NavitWatch_8java.html", [
-      [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch" ]
+      [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch" ],
+      [ "WatchHandler", "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler" ]
     ] ]
 ];
