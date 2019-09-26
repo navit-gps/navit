@@ -2469,13 +2469,6 @@ char *graphics_icon_path(const char *icon) {
         ret=g_strdup(icon);
     else {
 #ifdef HAVE_API_ANDROID
-        // get resources for the correct screen density
-        //
-        // this part not needed, android unpacks only the correct version into res/drawable dir!
-        // dbg(lvl_debug,"android icon_path %s",icon);
-        // static char *android_density;
-        // android_density = getenv("ANDROID_DENSITY");
-        // ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
         ret=g_strdup_printf("res/drawable/%s",icon);
 #else
         if (! navit_sharedir)
@@ -3180,7 +3173,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
     graphics_background_gc(gra, gra->gc[0]);
     if (flags & 1)
         callback_list_call_attr_0(gra->cbl, attr_predraw);
-    graphics_draw_mode(gra, draw_mode_begin);
+    graphics_draw_mode(gra, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
     if (!(flags & 2))
         graphics_draw_rectangle(gra, gra->gc[0], &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
     if (l)	{

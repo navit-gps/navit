@@ -94,8 +94,6 @@ static struct speech_priv *speech_android_new(struct speech_methods *meth, struc
     struct attr *flags;
     *meth=speech_android_meth;
     this=g_new0(struct speech_priv,1);
-    if (android_version < 4)
-        this->flags=3;
     if (!speech_android_init(this)) {
         dbg(lvl_error,"Failed to init speech %p",this->NavitSpeechClass);
         g_free(this);
