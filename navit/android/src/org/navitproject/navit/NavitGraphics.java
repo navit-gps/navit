@@ -228,7 +228,7 @@ class NavitGraphics {
             PackageManager packageManager = this.getContext().getPackageManager();
             List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
                     PackageManager.MATCH_DEFAULT_ONLY);
-            boolean isIntentSafe = (activities.size() > 1); //Navit + at least one other
+            boolean isIntentSafe = (activities.size() > 0); // at least one candidate receiver
             if (isIntentSafe) { // add view with external app option
                 menu.add(1, MENU_VIEW, NONE, NavitAppConfig.getTstring(R.string.position_popup_view))
                         .setOnMenuItemClickListener(this);

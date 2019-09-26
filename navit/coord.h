@@ -161,7 +161,6 @@ void coord_rect_extend(struct coord_rect *r, struct coord *c);
 void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buffer, int size, const char *sep);
 void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size);
 void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep);
-void pcoord_format_short(const struct pcoord *pc, char *buffer, int size, char *sep);
 void pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep);
 void pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep);
 char *coordinates_geo(const struct coord_geo *gc, char sep);
