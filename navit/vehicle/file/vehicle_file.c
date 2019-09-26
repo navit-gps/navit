@@ -684,6 +684,7 @@ static void vehicle_file_io(struct vehicle_priv *priv) {
         case 0:
             vehicle_file_close(priv);
             vehicle_file_open(priv);
+            vehicle_file_enable_watch(priv);
             break;
         case 1:
             vehicle_file_disable_watch(priv);
