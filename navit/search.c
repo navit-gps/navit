@@ -112,23 +112,15 @@ static void search_list_search_free(struct search_list *sl, int level);
 int search_list_level(enum attr_type attr_type) {
     switch(attr_type) {
     case attr_country_all:
-        return 0;
     case attr_country_id:
-        return 0;
     case attr_country_iso2:
-        return 0;
     case attr_country_iso3:
-        return 0;
     case attr_country_car:
-        return 0;
     case attr_country_name:
         return 0;
     case attr_town_postal:
-        return 1;
     case attr_town_name:
-        return 1;
     case attr_district_name:
-        return 1;
     case attr_town_or_district_name:
         return 1;
     case attr_street_name:
