@@ -117,13 +117,13 @@ static int traffic_traff_android_init(struct traffic_priv * this_) {
 
     if (!android_find_class_global("org/navitproject/navit/NavitTraff", &this_->NavitTraffClass))
         return 0;
-    cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "<init>", "(Landroid/content/Context;I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "<init>", "(Landroid/content/Context;J)V");
     if (cid == NULL) {
         dbg(lvl_error,"no method found");
         return 0; /* exception thrown */
     }
-    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_application,
-                                           (int) this_->cbid);
+    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_activity,
+                                           (jlong) this_->cbid);
     dbg(lvl_debug,"result=%p", this_->NavitTraff);
     if (!this_->NavitTraff)
         return 0;

@@ -483,8 +483,9 @@ static void resize_callback(struct graphics_priv *gra, int w, int h) {
     callback_list_call_attr_2(gra->cbl, attr_resize, (void *)w, (void *)h);
 }
 
-static void padding_callback(struct graphics_priv *gra, int left, int top, int right, int bottom) {
-    dbg(lvl_debug, "win.padding left=%d top=%d right=%d bottom=%d ok", left, top, right, bottom);
+static void padding_changed_callback(struct graphics_priv *gra, int left, int top, int right,
+                                     int bottom) {
+    dbg(lvl_error, "win.padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom);
     gra->padding->left = left;
     gra->padding->top = top;
     gra->padding->right = right;
@@ -627,45 +628,45 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
     if (ret->Paint)
         ret->Paint = (*jnienv)->NewGlobalRef(jnienv, ret->Paint);
 
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setSizeChangedCallback", "(I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setSizeChangedCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetResizeCallback method found");
+        dbg(lvl_error,"no setResizeCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(resize_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setPaddingChangedCallback", "(I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setPaddingChangedCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetPaddingCallback method found");
+        dbg(lvl_error,"no setPaddingCallback method found");
         return 0; /* exception thrown */
     }
-    cb=callback_new_1(callback_cast(padding_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+    cb=callback_new_1(callback_cast(padding_changed_callback), ret);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setButtonCallback", "(I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setButtonCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetButtonCallback method found");
+        dbg(lvl_error,"no setButtonCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(button_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setMotionCallback", "(I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setMotionCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetMotionCallback method found");
+        dbg(lvl_error,"no setMotionCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(motion_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setKeypressCallback", "(I)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setKeypressCallback", "(J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no SetKeypressCallback method found");
+        dbg(lvl_error,"no setKeypressCallback method found");
         return 0; /* exception thrown */
     }
     cb=callback_new_1(callback_cast(keypress_callback), ret);
-    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+    (*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (jlong)cb);
 
     if (!find_method(ret->NavitGraphicsClass, "draw_polyline", "(Landroid/graphics/Paint;[I)V",
                      &ret->NavitGraphics_draw_polyline))
@@ -696,7 +697,7 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
         return 0;
     if (!find_method(ret->NavitGraphicsClass, "overlay_resize", "(IIIII)V", &ret->NavitGraphics_overlay_resize))
         return 0;
-    if (!find_method(ret->NavitGraphicsClass, "SetCamera", "(I)V", &ret->NavitGraphics_SetCamera))
+    if (!find_method(ret->NavitGraphicsClass, "setCamera", "(I)V", &ret->NavitGraphics_SetCamera))
         return 0;
 #if 0
     set_activity(ret->NavitGraphics);
@@ -732,7 +733,7 @@ static void graphics_android_disable_suspend(struct window *win) {
 static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in,
         struct attr ***out, int *valid) {
     int ncmd=0;
-    dbg(0,"Running %s",function);
+    dbg(lvl_debug,"Running %s",function);
     if(!strcmp(function,"map_download_dialog")) {
         ncmd=3;
     } else if(!strcmp(function,"backup_restore_dialog")) {
@@ -911,7 +912,7 @@ static jmethodID NavitWatch_remove;
 static void do_poll(JNIEnv *env, int fd, int cond) {
     struct pollfd pfd;
     pfd.fd=fd;
-    dbg(lvl_debug,"%p poll called for %d %d", fd, cond);
+    dbg(lvl_debug,"poll called for %d %d", fd, cond);
     switch ((enum event_watch_cond)cond) {
     case event_watch_cond_read:
         pfd.events=POLLIN;
@@ -931,8 +932,8 @@ static void do_poll(JNIEnv *env, int fd, int cond) {
 
 static struct event_watch *event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
     jobject ret;
-    ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int)do_poll, h, (int) cond, (int)cb);
-    dbg(lvl_debug,"result for %d,%d,%p=%p",h,cond,cb,ret);
+    ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (jlong)do_poll, h, (jint) cond, (jlong)cb);
+    dbg(lvl_debug,"result for %d,%d,%p = %p",h,cond,cb,ret);
     if (ret)
         ret = (*jnienv)->NewGlobalRef(jnienv, ret);
     return (struct event_watch *)ret;
@@ -973,7 +974,8 @@ static struct event_timeout *event_android_add_timeout(int timeout, int multi, s
     ret->cb = cb;
     ret->multi = multi;
     ret->handle_timeout = event_android_handle_timeout;
-    ret->jni_timeout = (*jnienv)->NewObject(jnienv, NavitTimeoutClass, NavitTimeout_init, timeout, multi, (int)ret);
+    ret->jni_timeout = (*jnienv)->NewObject(jnienv, NavitTimeoutClass, NavitTimeout_init, timeout, multi, (jlong)(ret));
+    dbg(lvl_debug,"result for %d,%d,%p = %p",timeout,multi,cb,ret);
     if (ret->jni_timeout)
         ret->jni_timeout = (*jnienv)->NewGlobalRef(jnienv, ret->jni_timeout);
     return ret;
@@ -1025,7 +1027,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
     dbg(lvl_debug,"enter");
     if (!find_class_global("org/navitproject/navit/NavitTimeout", &NavitTimeoutClass))
         return NULL;
-    NavitTimeout_init = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "<init>", "(IZI)V");
+    NavitTimeout_init = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "<init>", "(IZJ)V");
     if (NavitTimeout_init == NULL)
         return NULL;
     NavitTimeout_remove = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "remove", "()V");
@@ -1044,7 +1046,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
 
     if (!find_class_global("org/navitproject/navit/NavitWatch", &NavitWatchClass))
         return NULL;
-    NavitWatch_init = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "<init>", "(IIII)V");
+    NavitWatch_init = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "<init>", "(JIIJ)V");
     if (NavitWatch_init == NULL)
         return NULL;
     NavitWatch_remove = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "remove", "()V");
@@ -1056,7 +1058,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
     Navit_disableSuspend = (*jnienv)->GetMethodID(jnienv, NavitClass, "disableSuspend", "()V");
     if (Navit_disableSuspend == NULL)
         return NULL;
-    Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "exit", "()V");
+    Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "onDestroy", "()V");
     if (Navit_exit == NULL)
         return NULL;
     Navit_fullscreen = (*jnienv)->GetMethodID(jnienv, NavitClass, "fullscreen", "(I)V");
@@ -1076,7 +1078,12 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
     return NULL;
 }
 
-
+/* below needs review, android resizes the view  and the actual height of the keyboard is not
+ * passed down here and is irrelevant, only wether it is onscreen matters, so
+ * android returns a height of 1 px in the case of an onscreen keyboard just
+ * to keep the logic to remove the keyboard from the screen afterwards working untill
+ * the logic in native code is reviewed.
+ * /
 /**
  * @brief Displays the native input method.
  *
@@ -1096,14 +1103,12 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
  * @return True if the input method is going to be displayed, false if not.
  */
 int show_native_keyboard (struct graphics_keyboard *kbd) {
-    kbd->w = -1;
     if (Navit_showNativeKeyboard == NULL) {
         dbg(lvl_error, "method Navit.showNativeKeyboard() not found, cannot display keyboard");
         return 0;
     }
     kbd->h = (*jnienv)->CallIntMethod(jnienv, android_activity, Navit_showNativeKeyboard);
-    dbg(lvl_error, "keyboard size is %d x %d px", kbd->w, kbd->h);
-    dbg(lvl_error, "return");
+    dbg(lvl_error, "keyboard height is %d px is a lie", kbd->h);
     /* zero height means we're not showing a keyboard, therefore normalize height to boolean */
     return !!(kbd->h);
 }
