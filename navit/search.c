@@ -119,7 +119,6 @@ int search_list_level(enum attr_type attr_type) {
     case attr_country_name:
         return 0;
     case attr_town_postal:
-        return 1;
     case attr_town_name:
     case attr_district_name:
     case attr_town_or_district_name:
