@@ -534,6 +534,8 @@ static struct graphics_methods graphics_methods = {
     set_attr,
     show_native_keyboard,
     hide_native_keyboard,
+    NULL, /*get_dpi*/
+    draw_polygon_with_holes
 };
 
 static void resize_callback(struct graphics_priv *gra, int w, int h) {
