@@ -923,18 +923,18 @@ class NavitGraphics {
         // add holes if any
         int coordinates_used = 0;
         // for every hole
-        for(int a = 0; a < ccount.length; a ++) {
+        for(int i = 0; i < ccount.length; i ++) {
             // drop holes with less than 3 coordinates
-            if(ccount[a] > 6) {
+            if(ccount[i] > 6) {
                 path.moveTo(holes[coordinates_used + 0], holes[coordinates_used +1]);
-                for(int b = 2; b < ccount[a]; b += 2) {
-                    path.lineTo(holes[coordinates_used + b], holes[coordinates_used + b + 1]);
+                for(int j = 2; j < ccount[i]; j += 2) {
+                    path.lineTo(holes[coordinates_used + j], holes[coordinates_used + j + 1]);
                 }
                 // close this hole
                 path.close();
             }
             //remeber the used coordinates for next hole
-            coordinates_used += ccount[a];
+            coordinates_used += ccount[i];
         }
 
         // Set fill rule
