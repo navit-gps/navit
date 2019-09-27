@@ -906,7 +906,6 @@ class NavitGraphics {
         paint.setARGB(a,r,g,b);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         //paint.setAntiAlias(true);
-	
         // Check if we got at least three coordinates (3 values)
         if(c.length < 6) {
             return;
@@ -921,7 +920,6 @@ class NavitGraphics {
         }
         // close outer polygon
         path.close();
-	
         // add holes if any
         int coordinates_used = 0;
         // for every hole
