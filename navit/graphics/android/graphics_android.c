@@ -295,7 +295,7 @@ static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, s
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
-static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count,
                                      int hole_count, int* ccount, struct point **holes) {
     int i;
     /* need to get us some arrays for java */
@@ -347,7 +347,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
     (*jnienv)->SetIntArrayRegion(jnienv, java_holes, 0, java_holes_size, j_holes);
     /* call the java function */
     (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polygon_with_holes, gc->gra->Paint,
-                              gc->linewidth, gc->r, gc->g, gc->b, gc-a, java_p, java_ccount, java_holes);
+                              gc->linewidth, gc->r, gc->g, gc->b, gc->a, java_p, java_ccount, java_holes);
     /* clean up */
     (*jnienv)->DeleteLocalRef(jnienv, java_holes);
     (*jnienv)->DeleteLocalRef(jnienv, java_ccount);
@@ -905,7 +905,7 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
              * the navit object (as the fact that graphics also handles input devices is not immedately obvious).
              */
             navit_object_set_attr((struct navit_object *) nav, attr);
-            dbg(lvl_debug, "attr_has_menu_button=%d", attr->u.num);
+            dbg(lvl_debug, "attr_has_menu_button=%ld", attr->u.num);
             g_free(attr);
         }
         ret->NavitGraphics_setBackgroundColor = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setBackgroundColor",
@@ -1147,7 +1147,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
  * android returns a height of 1 px in the case of an onscreen keyboard just
  * to keep the logic to remove the keyboard from the screen afterwards working untill
  * the logic in native code is reviewed.
- * /
+ */
 /**
  * @brief Displays the native input method.
  *
