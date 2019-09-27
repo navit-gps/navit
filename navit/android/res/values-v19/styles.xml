@@ -1,22 +1,8 @@
 <resources>
-
-    <!--
-        Base application theme for API 19+. This theme completely replaces
-        NavitBaseTheme from BOTH res/values/styles.xml and
-        res/values-v19/styles.xml on API 19+ devices.
-    -->
-    <style name="NavitBaseTheme" parent="android:Theme.Holo"/>
-
-    <!--
-        Main Activity theme for API 19+. This theme completely replaces
-        NavitTheme from BOTH res/values/styles.xml and
-        res/values-v19/styles.xml on API 19+ devices.
-    -->
-    <style name="NavitTheme" parent="NavitBaseTheme">
+    <style name="NavitTheme" parent="android:Theme.DeviceDefault.NoActionBar">
 
         <!-- API 19 theme customizations can go here. -->
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-
 </resources>

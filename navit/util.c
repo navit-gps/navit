@@ -114,6 +114,129 @@ static void strtrim(char *s) {
 }
 
 /**
+ * @brief Escape special characters from a string
+ *
+ * @param mode The escape mode that needs to be enabled (see enum escape_mode)
+ * @param in The string to escape
+ *
+ * @return The escaped string
+ *
+ * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes
+ * @warning The returned string has been allocated and g_free() must thus be called on this string
+ */
+char *str_escape(enum escape_mode mode, const char *in) {
+    int len=mode & escape_mode_string ? 2:0;	/* Add 2 characters to the length of the buffer if quoting is enabled */
+    char *dst,*out;
+    const char *src=in;
+    static const char *quot="&quot;";
+    static const char *apos="&apos;";
+    static const char *amp="&amp;";
+    static const char *lt="&lt;";
+    static const char *gt="&gt;";
+
+    dbg(lvl_debug, "Will escape string=\"%s\", escape mode %d", in, mode);
+    while (*src) {
+        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
+            len++;
+        if (*src == '"' && mode == escape_mode_html_quote)
+            len+=strlen(quot);
+        else if (*src == '\'' && mode == escape_mode_html_apos)
+            len+=strlen(apos);
+        else if (*src == '&' && mode == escape_mode_html_amp)
+            len+=strlen(amp);
+        else if (*src == '<' && mode == escape_mode_html_lt)
+            len+=strlen(lt);
+        else if (*src == '>' && mode == escape_mode_html_gt)
+            len+=strlen(gt);
+        else
+            len++;
+        src++;
+    }
+    src=in;
+    out=dst=g_malloc(len+1); /* +1 character for NUL termination */
+
+    /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
+    if (mode & escape_mode_string)
+        *dst++='"';
+
+    while (*src) {
+        if (mode & escape_mode_html) {	/* In html escape mode, only process HTML escape sequence, not backslashes or quotes */
+            if (*src == '"' && (mode & escape_mode_html_quote)) {
+                strcpy(dst,quot);
+                src++;
+                dst+=strlen(quot);
+            } else if (*src == '\'' && (mode & escape_mode_html_apos)) {
+                strcpy(dst,apos);
+                src++;
+                dst+=strlen(apos);
+            } else if (*src == '&' && (mode & escape_mode_html_amp)) {
+                strcpy(dst,amp);
+                src++;
+                dst+=strlen(amp);
+            } else if (*src == '<' && (mode & escape_mode_html_lt)) {
+                strcpy(dst,lt);
+                src++;
+                dst+=strlen(lt);
+            } else if (*src == '>' && (mode & escape_mode_html_gt)) {
+                strcpy(dst,gt);
+                src++;
+                dst+=strlen(gt);
+            } else
+                *dst++=*src++;
+        } else {
+            if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
+                *dst++='\\';
+            }
+            *dst++=*src++;
+        }
+    }
+
+    /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
+    if (mode & escape_mode_string)
+        *dst++='"';
+
+    *dst++='\0';
+    dbg(lvl_debug, "Result of escaped string=\"%s\"", out);
+    return out;
+}
+
+/**
+ * @brief Copy a string from @p src to @p dest, unescaping characters
+ *
+ * @note Escaped characters are "\\\\" (double backslash) resulting in '\\' (single backslash)
+ *       and "\\\"" (backslash followed by double quote), resulting in '"' (double quote)
+ *       but we will escape any other character, for example "\\ " will result in ' ' (space)
+ *       This is the reverse of function str_escape, except that we assume (and only support) unescaping mode escape_mode_quote here
+ *
+ * @param[out] dest The location where to store the unescaped string
+ * @param[in] src The source string to copy (and to unescape)
+ * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.
+ *
+ * @return A pointer to the destination string @p dest
+ */
+char *strncpy_unescape(char *dest, const char *src, size_t n) {
+    char *dest_ptr;	/* A pointer to the currently parsed character inside string dest */
+
+    for (dest_ptr=dest; (dest_ptr-dest) < n && (*src != '\0'); src++, dest_ptr++) {
+        if (*src == '\\') {
+            src++;
+        }
+        *dest_ptr = *src;
+        if (*dest_ptr == '\0') {
+            /* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+            return dest;
+        }
+    }
+    if ((dest_ptr-dest) < n)
+        *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
+    else {
+        // strncpy_unescape will return a non NUL-terminated string. Trouble ahead if this is not handled properly
+    }
+
+    return dest;
+}
+
+/**
  * @brief Parser states for `parse_for_systematic_comparison()`.
  */
 enum parse_state {

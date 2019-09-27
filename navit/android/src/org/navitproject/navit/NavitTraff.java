@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2018 Navit Team
  *
@@ -32,49 +32,42 @@ import android.util.Log;
 import java.util.List;
 
 /**
- * @brief The TraFF receiver implementation.
+ * The TraFF receiver implementation.
  *
- * This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation, receives
- * TraFF feeds and forwards them to the traffic module for processing.
+ * <p>This class registers the broadcast receiver for TraFF feeds, polls all registered sources once on creation,
+ * receives TraFF feeds and forwards them to the traffic module for processing.</p>
  */
 public class NavitTraff extends BroadcastReceiver {
-    public static String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
 
-    public static String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
-
-    public static String EXTRA_FEED = "feed";
-
-    /** Identifier for the callback function. */
-    private int cbid;
-
-    private Context context = null;
-
-    /** An intent filter for TraFF events. */
-    private IntentFilter traffFilter = new IntentFilter();
+    private static final String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
+    private static final String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
+    private static final String EXTRA_FEED = "feed";
+    private final long mCbid;
 
     /**
-     * @brief Forwards a newly received TraFF feed to the traffic module for processing.
+     * Forwards a newly received TraFF feed to the traffic module for processing.
      *
-     * This is called when a TraFF feed is received.
+     * <p>This is called when a TraFF feed is received.</p>
      *
      * @param id The identifier for the native callback implementation
      * @param feed The TraFF feed
      */
-    public native void onFeedReceived(int id, String feed);
+    public native void onFeedReceived(long id, String feed);
 
     /**
-     * @brief Creates a new {@code NavitTraff} instance.
+     * Creates a new {@code NavitTraff} instance.
      *
-     * Creating a new {@code NavitTraff} instance registers a broadcast receiver for TraFF broadcasts and polls all
-     * registered sources once to ensure we have messages which were received by these sources before we started up.
+     * <p>Creating a new {@code NavitTraff} instance registers a broadcast receiver for TraFF broadcasts and polls all
+     * registered sources once to ensure we have messages which were received by these sources before we started up.</p>
      *
      * @param context The context
      * @param cbid The callback identifier for the native method to call upon receiving a feed
      */
-    NavitTraff(Context context, int cbid) {
-        this.context = context;
-        this.cbid = cbid;
+    NavitTraff(Context context, long cbid) {
+        this.mCbid = cbid;
 
+        /* An intent filter for TraFF events. */
+        IntentFilter traffFilter = new IntentFilter();
         traffFilter.addAction(ACTION_TRAFF_FEED);
         traffFilter.addAction(ACTION_TRAFF_POLL);
 
@@ -85,7 +78,7 @@ public class NavitTraff extends BroadcastReceiver {
         Intent outIntent = new Intent(ACTION_TRAFF_POLL);
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> receivers = pm.queryBroadcastReceivers(outIntent, 0);
-        if (receivers != null)
+        if (receivers != null) {
             for (ResolveInfo receiver : receivers) {
                 ComponentName cn = new ComponentName(receiver.activityInfo.applicationInfo.packageName,
                         receiver.activityInfo.name);
@@ -93,16 +86,18 @@ public class NavitTraff extends BroadcastReceiver {
                 outIntent.setComponent(cn);
                 context.sendBroadcast(outIntent, Manifest.permission.ACCESS_COARSE_LOCATION);
             }
+        }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if ((intent != null) && (intent.getAction().equals(ACTION_TRAFF_FEED))) {
             String feed = intent.getStringExtra(EXTRA_FEED);
-            if (feed == null)
+            if (feed == null) {
                 Log.w(this.getClass().getSimpleName(), "empty feed, ignoring");
-            else
-                onFeedReceived(cbid, feed);
+            } else {
+                onFeedReceived(mCbid, feed);
+            }
         }
     }
 }
