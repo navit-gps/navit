@@ -930,7 +930,7 @@ class NavitGraphics {
             if(ccount[a] > 6) {
                 path.moveTo(holes[coordinates_used + 0], holes[coordinates_used +1]);
                 for(int b = 2; b < ccount[a]; b += 2) {
-                    path.lineTo(holes[coordinates_used + b], holes[coordinates_used + b + 1}
+                    path.lineTo(holes[coordinates_used + b], holes[coordinates_used + b + 1]);
                 }
                 // close this hole
                 path.close();
