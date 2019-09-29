@@ -1048,25 +1048,18 @@ class NavitGraphics {
         }
     }
 
-    private void workAroundForGuiInternal(Boolean inMap) {
+    private void workAroundForGuiInternal(boolean inMap) {
         if (!mTinting) {
             return;
         }
         Log.v(TAG,"workaround gui internal");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !inMap) {
-            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !inMap) {
+        
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !inMap) {
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
