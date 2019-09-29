@@ -485,7 +485,7 @@ static void resize_callback(struct graphics_priv *gra, int w, int h) {
 
 static void padding_changed_callback(struct graphics_priv *gra, int left, int top, int right,
                                      int bottom) {
-    dbg(lvl_error, "win.padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom);
+    dbg(lvl_debug, "win.padding left=%d top=%d right=%d bottom=%d", left, top, right, bottom);
     gra->padding->left = left;
     gra->padding->top = top;
     gra->padding->right = right;
