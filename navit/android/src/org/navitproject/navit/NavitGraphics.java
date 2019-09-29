@@ -1053,7 +1053,7 @@ class NavitGraphics {
             return;
         }
         Log.v(TAG,"workaround gui internal");
-        
+
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !inMap) {
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
