@@ -250,7 +250,7 @@ public class NavitGraphics {
                     Log.d("Preparing action intent (" + targetedShareIntents.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
-            if (mContextMenuMapViewIntent != null)
+            if (mContextMenuMapViewIntent != null) {
                 menu.add(1, MENU_VIEW, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
                 Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed in contextual menu");
