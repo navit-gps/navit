@@ -209,16 +209,19 @@ public class NavitGraphics {
             return super.onApplyWindowInsets(insets);
         }
 
-        @Override
-        protected void onCreateContextMenu(ContextMenu menu) {
-            super.onCreateContextMenu(menu);
-
-            String clickCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, false);
-            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
-            menu.add(1, MENU_DRIVE_HERE, NONE, activity.getTstring(R.string.position_popup_drive_here))
-                    .setOnMenuItemClickListener(this);
+        /**
+         * @brief Create an intent for a view action of a point provided by its x and y position on the display
+         *
+         * @param x The x coordinates of the point on the display
+         * @param y The y coordinates of the point on the display
+         *
+         * @return An intent to start to view the specified point on a third-party app on Android (can be null if a view action is not possible)
+        **/
+        protected Intent getViewIntentForDisplayPoint(int x, int y) {
+            Intent result = null;
+            
             /* Check if there is at least one application that can process a geo intent... */
-            String selectedPointCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true);
+            String selectedPointCoord = getCoordForPoint(0, x, y, true);
             Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
             Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
 
@@ -226,8 +229,6 @@ public class NavitGraphics {
             List<ResolveInfo> intentTargetAppList = context.getPackageManager().queryIntentActivities(defaultShareIntent, 0);
             
             String selfPackageName = context.getPackageName(); /* aka: "org.navitproject.navit" */
-            
-            mContextMenuMapViewIntent = null;   /* Destroy any previous intent */
             
             if (!intentTargetAppList.isEmpty()) {
                 for (ResolveInfo resolveInfo : intentTargetAppList) {
@@ -245,11 +246,23 @@ public class NavitGraphics {
                     }
                 }
                 if (customShareIntentList.size()>0) {
-                    mContextMenuMapViewIntent = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size()-1), "Select app to share");
-                    mContextMenuMapViewIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
+                    result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size()-1), "Select app to share");
+                    result.putExtra(Intent.EXTRA_INITIAL_INTENTS, customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
                     Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
+            return result;
+        }
+        
+        @Override
+        protected void onCreateContextMenu(ContextMenu menu) {
+            super.onCreateContextMenu(menu);
+
+            String clickCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, false);
+            menu.setHeaderTitle(activity.getTstring(R.string.position_popup_title) + " " + clickCoord);
+            menu.add(1, MENU_DRIVE_HERE, NONE, activity.getTstring(R.string.position_popup_drive_here))
+                    .setOnMenuItemClickListener(this);
+            mContextMenuMapViewIntent = getViewIntentForDisplayPoint((int)mPressedPosition.x, (int)mPressedPosition.y);
             if (mContextMenuMapViewIntent != null) {
                 menu.add(1, MENU_VIEW, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
