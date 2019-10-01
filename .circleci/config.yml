@@ -9,7 +9,7 @@ jobs:
       - checkout
       - run:
           name: Setup requirements
-          command: bash scripts/setup_common_requirements.sh
+          command: bash scripts/setup_sanitycheck_requirements.sh
       - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
