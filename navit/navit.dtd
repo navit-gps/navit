@@ -17,13 +17,14 @@
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
 <!ATTLIST log attr_types CDATA #IMPLIED>
-<!ELEMENT navit (graphics,gui+,log*,osd*,traffic*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,layout+) >
+<!ELEMENT navit (graphics,gui+,log*,osd*,traffic*,vehicle*,tracking?,vehicleprofile*,route,navigation,speech,mapset+,layer+,xi:include+,layout+) >
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
 <!ATTLIST navit orientation CDATA #REQUIRED>
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ATTLIST navit drag_bitmap CDATA #IMPLIED>
+<!ATTLIST navit default_layout CDATA #IMPLIED>
 <!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
@@ -107,6 +108,10 @@
 <!ATTLIST layout font CDATA #IMPLIED>
 <!ATTLIST layout daylayout CDATA #IMPLIED>
 <!ATTLIST layout nightlayout CDATA #IMPLIED>
+<!ATTLIST layout icon_w CDATA #IMPLIED>
+<!ATTLIST layout icon_h CDATA #IMPLIED>
+<!ATTLIST layout underground_alpha CDATA #IMPLIED>
+<!ATTLIST layout xmlns:xi CDATA #IMPLIED>
 <!ELEMENT layer (itemgra*)>
 <!ATTLIST layer enabled CDATA #IMPLIED>
 <!ATTLIST layer name CDATA #IMPLIED>
@@ -127,22 +132,26 @@
 <!ATTLIST itemgra speed_range CDATA #IMPLIED>
 <!ELEMENT polygon (coord*)>
 <!ATTLIST polygon color CDATA #REQUIRED>
+<!ATTLIST polygon oneway CDATA #IMPLIED>
 <!ELEMENT polyline (coord*)>
 <!ATTLIST polyline color CDATA #REQUIRED>
 <!ATTLIST polyline width CDATA #IMPLIED>
 <!ATTLIST polyline dash CDATA #IMPLIED>
 <!ATTLIST polyline offset CDATA #IMPLIED>
 <!ATTLIST polyline radius CDATA #IMPLIED>
+<!ATTLIST polyline oneway CDATA #IMPLIED>
 <!ELEMENT text EMPTY>
 <!ATTLIST text text_size CDATA #REQUIRED>
 <!ATTLIST text color CDATA #IMPLIED>
 <!ATTLIST text background_color CDATA #IMPLIED>
+<!ATTLIST text oneway CDATA #IMPLIED>
 <!ELEMENT circle (coord*)>
 <!ATTLIST circle color CDATA #REQUIRED>
 <!ATTLIST circle radius CDATA #REQUIRED>
 <!ATTLIST circle width CDATA #IMPLIED>
 <!ATTLIST circle text_size CDATA #IMPLIED>
 <!ATTLIST circle background_color CDATA #IMPLIED>
+<!ATTLIST circle oneway CDATA #IMPLIED>
 <!ELEMENT icon EMPTY>
 <!ATTLIST icon src CDATA #REQUIRED>
 <!ATTLIST icon w CDATA #IMPLIED>
@@ -152,6 +161,7 @@
 <!ELEMENT arrows EMPTY>
 <!ATTLIST arrows color CDATA #REQUIRED>
 <!ATTLIST arrows width CDATA #IMPLIED>
+<!ATTLIST arrows oneway CDATA #IMPLIED>
 <!ELEMENT image EMPTY>
 <!ELEMENT xi:include EMPTY>
 <!ATTLIST xi:include href CDATA #IMPLIED>
