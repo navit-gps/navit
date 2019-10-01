@@ -220,34 +220,34 @@ public class NavitGraphics {
             /* Check if there is at least one application that can process a geo intent... */
             String selectedPointCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true);
             Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
-            Intent shareIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
+            Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
 
-            List<Intent> targetedShareIntents = new ArrayList<Intent>();
-            List<ResolveInfo> intentTargetAppList = context.getPackageManager().queryIntentActivities(shareIntent, 0);
+            List<Intent> customShareIntentList = new ArrayList<Intent>();
+            List<ResolveInfo> intentTargetAppList = context.getPackageManager().queryIntentActivities(defaultShareIntent, 0);
             
-            selfPackageName = context.getPackageName(); /* aka: "org.navitproject.navit" */
+            String selfPackageName = context.getPackageName(); /* aka: "org.navitproject.navit" */
             
             mContextMenuMapViewIntent = null;   /* Destroy any previous intent */
             
             if (!intentTargetAppList.isEmpty()) {
                 for (ResolveInfo resolveInfo : intentTargetAppList) {
                     String packageName = resolveInfo.activityInfo.packageName;
-                    Intent targetedShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    Intent targeteddefaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
                     if (!packageName.equals(selfPackageName)) {
                         Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
-                        targetedShareIntent.setPackage(packageName);
-                        targetedShareIntent.setClassName(
+                        targeteddefaultShareIntent.setPackage(packageName);
+                        targeteddefaultShareIntent.setClassName(
                             resolveInfo.activityInfo.packageName,
                             resolveInfo.activityInfo.name);
-                        targetedShareIntents.add(targetedShareIntent);
+                        customShareIntentList.add(targeteddefaultShareIntent);
                     } else {
                         Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
                     }
                 }
-                if (targetedShareIntents.size()>0) {
-                    mContextMenuMapViewIntent = Intent.createChooser(targetedShareIntents.remove(targetedShareIntents.size()-1), "Select app to share");
-                    mContextMenuMapViewIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[targetedShareIntents.size()]));
-                    Log.d("Preparing action intent (" + targetedShareIntents.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
+                if (customShareIntentList.size()>0) {
+                    mContextMenuMapViewIntent = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size()-1), "Select app to share");
+                    mContextMenuMapViewIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
             if (mContextMenuMapViewIntent != null) {
