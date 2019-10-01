@@ -39,6 +39,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -217,15 +218,39 @@ public class NavitGraphics {
             menu.add(1, MENU_DRIVE_HERE, NONE, activity.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
             /* Check if there is at least one application that can process a geo intent... */
-            Uri intentUri = Uri.parse("geo:" + getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true));
-            mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
+            String selectedPointCoord = getCoordForPoint(0, (int)mPressedPosition.x, (int)mPressedPosition.y, true);
+            Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
+            Intent shareIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
 
-            PackageManager packageManager = context.getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
-            boolean isIntentSafe = (activities.size() > 0);
-            /* ... and if so, add a menu option to open the currently clicked location inside an external app */
-            if (isIntentSafe) {
+            List<Intent> targetedShareIntents = new ArrayList<Intent>();
+            List<ResolveInfo> intentTargetAppList = context.getPackageManager().queryIntentActivities(shareIntent, 0);
+            
+            selfPackageName = context.getPackageName(); /* aka: "org.navitproject.navit" */
+            
+            mContextMenuMapViewIntent = null;   /* Destroy any previous intent */
+            
+            if (!intentTargetAppList.isEmpty()) {
+                for (ResolveInfo resolveInfo : intentTargetAppList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    Intent targetedShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    if (!packageName.equals(selfPackageName)) {
+                        Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
+                        targetedShareIntent.setPackage(packageName);
+                        targetedShareIntent.setClassName(
+                            resolveInfo.activityInfo.packageName,
+                            resolveInfo.activityInfo.name);
+                        targetedShareIntents.add(targetedShareIntent);
+                    } else {
+                        Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
+                    }
+                }
+                if (targetedShareIntents.size()>0) {
+                    mContextMenuMapViewIntent = Intent.createChooser(targetedShareIntents.remove(targetedShareIntents.size()-1), "Select app to share");
+                    mContextMenuMapViewIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[targetedShareIntents.size()]));
+                    Log.d("Preparing action intent (" + targetedShareIntents.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
+                }
+            }
+            if (mContextMenuMapViewIntent != null)
                 menu.add(1, MENU_VIEW, NONE, activity.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
                 Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed in contextual menu");
