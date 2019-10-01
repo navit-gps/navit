@@ -66,7 +66,7 @@ class NavitGraphics {
     private static final String            TAG = "NavitGraphics";
     private static final long              TIME_FOR_LONG_PRESS = 300L;
     private final NavitGraphics            mParentGraphics;
-    private final ArrayList<NavitGraphics> mOverlays = new ArrayList<>();
+    private final ArrayList<NavitGraphics> mOverlays;
     private int                            mBitmapWidth;
     private int                            mBitmapHeight;
     private int                            mPosX;
@@ -80,7 +80,7 @@ class NavitGraphics {
     private int                            mPaddingRight;
     private int                            mPaddingTop;
     private int                            mPaddingBottom;
-    private View                           mView;
+    private NavitView                      mView;
     static final Handler                   sCallbackHandler = new CallBackHandler();
     private SystemBarTintView              mLeftTintView;
     private SystemBarTintView              mRightTintView;
@@ -91,7 +91,7 @@ class NavitGraphics {
     private NavitCamera                    mCamera;
     private Navit                          mActivity;
     private static boolean                 sInMap;
-    private boolean mTinting;
+    private boolean                        mTinting;
 
 
     void setBackgroundColor(int bgcolor) {
@@ -113,23 +113,7 @@ class NavitGraphics {
     private void setCamera(int useCamera) {
         if (useCamera != 0 && mCamera == null) {
             // mActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            addCamera();
-            addCameraView();
-        }
-    }
-
-    /**
-     * Adds a camera.
-     *
-     * <p>This method does not create the view for the camera. This must be done separately by calling
-     * {@link #addCameraView()}.</p>
-     */
-    private void addCamera() {
-        mCamera = new NavitCamera(mActivity);
-    }
-
-    private void addCameraView() {
-        if (mCamera != null) {
+            mCamera = new NavitCamera(mActivity);
             mRelativeLayout.addView(mCamera);
             mRelativeLayout.bringChildToFront(mView);
         }
@@ -167,16 +151,20 @@ class NavitGraphics {
         static final int  DRAG       = 1;
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
-
         PointF mPressedPosition = null;
 
         NavitView(Context context) {
             super(context);
+            // assumption usefull for the KitKat tinting only
+            sInMap = true;
+        }
+
+        boolean isDrag() {
+            return mTouchMode == DRAG;
         }
 
         public void onWindowFocusChanged(boolean hasWindowFocus) {
             Log.v(TAG,"onWindowFocusChanged = " + hasWindowFocus);
-            // beter aanroepen in Navit of appconfig ?
             if (Navit.sShowSoftKeyboardShowing && hasWindowFocus) {
                 InputMethodManager imm  = (InputMethodManager) mActivity
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -249,6 +237,7 @@ class NavitGraphics {
                 Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int) mPressedPosition.x,
                         (int) mPressedPosition.y, true));
                 Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                mContextMenuMapViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
                     this.getContext().startActivity(mContextMenuMapViewIntent);
                 } else {
@@ -556,11 +545,13 @@ class NavitGraphics {
     NavitGraphics(final Activity navit, NavitGraphics parent, int x, int y, int w, int h,
                          int wraparound, int useCamera) {
         if (parent == null) {
+            mOverlays = new ArrayList<>();
             if (useCamera != 0) {
-                addCamera();
+                setCamera(useCamera);
             }
             setmActivity((Navit)navit);
         } else {
+            mOverlays = null;
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mBitmapWidth = w;
             mBitmapHeight = h;
@@ -585,11 +576,9 @@ class NavitGraphics {
         mView.setFocusableInTouchMode(true);
         mView.setKeepScreenOn(true);
         mRelativeLayout = new RelativeLayout(mActivity);
-        addCameraView();
         mRelativeLayout.addView(mView);
         /* The navigational and status bar tinting code is meaningful only on API19+ */
         mTinting = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         if (mTinting) {
             mFrameLayout = new FrameLayout(mActivity);
             mFrameLayout.addView(mRelativeLayout);
@@ -656,9 +645,6 @@ class NavitGraphics {
                 case CLB_DELETE_MAP:
                     //unload map before deleting it !!!
                     callbackMessageChannel(7, msg.getData().getString(("title")));
-                    //remove commentlines below after testing
-                    //File toDelete = new File(msg.getData().getString(("title")));
-                    //toDelete.delete();
                     NavitUtils.removeFileIfExists(msg.getData().getString(("title")));
                     break;
                 case CLB_UNLOAD_MAP:
@@ -773,8 +759,6 @@ class NavitGraphics {
          *
          * All system bar sizes are device defaults and do not change with rotation, but we have
          * to figure out which ones apply.
-         *
-         * Status bar visibility is as on API 20-22.
          *
          * The navigation bar is shown on devices that report they have no physical menu button. This seems to
          * work even on devices that allow disabling the physical buttons (and use the navigation bar, in which
@@ -1034,11 +1018,9 @@ class NavitGraphics {
 
     protected void overlay_disable(int disable) {
         Log.v(TAG,"overlay_disable: " + disable + ", Parent: " + (mParentGraphics != null));
-        // assume we are NOT in map view mode!
-        // but this backfires when dragging the map
         if (mParentGraphics == null) {
             sInMap = (disable == 0);
-            workAroundForGuiInternal(sInMap);
+            workAroundForGuiInternal();
         }
         if (mOverlayDisabled != disable) {
             mOverlayDisabled = disable;
@@ -1048,13 +1030,12 @@ class NavitGraphics {
         }
     }
 
-    private void workAroundForGuiInternal(boolean inMap) {
+    private void workAroundForGuiInternal() {
         if (!mTinting) {
             return;
         }
         Log.v(TAG,"workaround gui internal");
-
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !inMap) {
+        if (!sInMap && !mView.isDrag() && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             return;
