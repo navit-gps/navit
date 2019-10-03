@@ -171,7 +171,7 @@ class NavitGraphics {
 
         PointF mPressedPosition = null;
         Intent mContextMenuMapViewIntent = null; /* ACTION_VIEW intent for a geo coordinates used when clicking on view in the map contextual menu */
-        
+
         NavitView(Context context) {
             super(context);
         }
@@ -222,7 +222,7 @@ class NavitGraphics {
         **/
         protected Intent getViewIntentForDisplayPoint(int x, int y) {
             Intent result = null;
-            
+
             /* Check if there is at least one application that can process a geo intent... */
             String selectedPointCoord = getCoordForPoint(x, y, true);
             Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
@@ -230,9 +230,9 @@ class NavitGraphics {
 
             List<Intent> customShareIntentList = new ArrayList<Intent>();
             List<ResolveInfo> intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
-            
+
             String selfPackageName = this.getContext().getPackageName(); /* aka: "org.navitproject.navit" */
-            
+
             if (!intentTargetAppList.isEmpty()) {
                 for (ResolveInfo resolveInfo : intentTargetAppList) {
                     String packageName = resolveInfo.activityInfo.packageName;
@@ -256,7 +256,7 @@ class NavitGraphics {
             }
             return result;
         }
-        
+
         private static final int MENU_DRIVE_HERE = 1;
         private static final int MENU_VIEW = 2;
         private static final int MENU_CANCEL = 3;
