@@ -236,14 +236,14 @@ class NavitGraphics {
             if (!intentTargetAppList.isEmpty()) {
                 for (ResolveInfo resolveInfo : intentTargetAppList) {
                     String packageName = resolveInfo.activityInfo.packageName;
-                    Intent targeteddefaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    Intent copiedIntent = new Intent(Intent.ACTION_VIEW, intentUri);
                     if (!packageName.equals(selfPackageName)) {
                         Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
-                        targeteddefaultShareIntent.setPackage(packageName);
-                        targeteddefaultShareIntent.setClassName(
+                        copiedIntent.setPackage(packageName);
+                        copiedIntent.setClassName(
                             resolveInfo.activityInfo.packageName,
                             resolveInfo.activityInfo.name);
-                        customShareIntentList.add(targeteddefaultShareIntent);
+                        customShareIntentList.add(copiedIntent);
                     } else {
                         Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
                     }
