@@ -170,7 +170,9 @@ class NavitGraphics {
         static final int  PRESSED    = 3;
 
         PointF mPressedPosition = null;
-        Intent mContextMenuMapViewIntent = null; /* ACTION_VIEW intent for a geo coordinates used when clicking on view in the map contextual menu */
+        // mContextMenuMapViewIntent is the ACTION_VIEW intent for a geo coordinates.
+        // it is used when clicking on view in the map contextual menu
+        Intent mContextMenuMapViewIntent = null;
 
         NavitView(Context context) {
             super(context);
@@ -218,7 +220,8 @@ class NavitGraphics {
          * @param x The x coordinates of the point on the display
          * @param y The y coordinates of the point on the display
          *
-         * @return An intent to start to view the specified point on a third-party app on Android (can be null if a view action is not possible)
+         * @return An intent to start to view the specified point on a third-party app on Android (can be null if a
+         *         view action is not possible)
         **/
         protected Intent getViewIntentForDisplayPoint(int x, int y) {
             Intent result = null;
@@ -226,10 +229,11 @@ class NavitGraphics {
             /* Check if there is at least one application that can process a geo intent... */
             String selectedPointCoord = getCoordForPoint(x, y, true);
             Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
-            Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);	/* Store the intent for future use in onMenuItemClick() */
+            Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
 
             List<Intent> customShareIntentList = new ArrayList<Intent>();
-            List<ResolveInfo> intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
+            List<ResolveInfo> intentTargetAppList;
+            intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
 
             String selfPackageName = this.getContext().getPackageName(); /* aka: "org.navitproject.navit" */
 
@@ -241,17 +245,20 @@ class NavitGraphics {
                         Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
                         copiedIntent.setPackage(packageName);
                         copiedIntent.setClassName(
-                            resolveInfo.activityInfo.packageName,
-                            resolveInfo.activityInfo.name);
+                                resolveInfo.activityInfo.packageName,
+                                resolveInfo.activityInfo.name);
                         customShareIntentList.add(copiedIntent);
                     } else {
                         Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
                     }
                 }
-                if (customShareIntentList.size()>0) {
-                    result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size()-1), "Select app to share");
-                    result.putExtra(Intent.EXTRA_INITIAL_INTENTS, customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
-                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + " candidate apps) to view selected coord: " + selectedPointCoord);
+                if (customShareIntentList.size() > 0) {
+                    result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size() - 1),
+                            "Select app to share");
+                    result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                            customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() +
+                            " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
             return result;
@@ -280,24 +287,24 @@ class NavitGraphics {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             int itemId = item.getItemId();
-            if (itemId != MENU_VIEW)
+            if (itemId != MENU_VIEW) {
                 mContextMenuMapViewIntent = null;	/* Detroy the map view intent if the user didn't select the MENU_VIEW action */
-
+            }
             if (itemId == MENU_DRIVE_HERE) {
                 Message msg = Message.obtain(sCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                         (int) mPressedPosition.x, (int) mPressedPosition.y);
                 msg.sendToTarget();
             } else if (itemId == MENU_VIEW) {
                 if (mContextMenuMapViewIntent != null) {
-                        if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
-                            this.getContext().startActivity(mContextMenuMapViewIntent);
-                        } else {
-                            Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
-                        }
-                        mContextMenuMapViewIntent = null;	/* Destoy the intent once it has been used */
+                    if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
+                        this.getContext().startActivity(mContextMenuMapViewIntent);
                     } else {
-                        Log.e(TAG, "User clicked on view on menu but intent was null. Discarding...");
+                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
                     }
+                    mContextMenuMapViewIntent = null;   /* Destoy the intent once it has been used */
+                } else {
+                    Log.e(TAG, "User clicked on view on menu but intent was null. Discarding...");
+                }
             }
             return true;
         }
@@ -728,7 +735,7 @@ class NavitGraphics {
 
     private native void motionCallback(long id, int x, int y);
 
-    private native String getCoordForPoint(int x, int y, boolean absolute_coord);
+    private native String getCoordForPoint(int x, int y, boolean absoluteCoord);
 
     static native String[][] getAllCountries();
 

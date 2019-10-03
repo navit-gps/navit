@@ -436,8 +436,11 @@ public class Navit extends Activity {
                 if (naviScheme != null) {
                     if (naviScheme.equals("google.navigation")) {
                         parseNavigationURI(sStartupIntent.getData().getSchemeSpecificPart());
-                    } else if (naviScheme.equals("geo") && sStartupIntent.getAction().equals("android.intent.action.VIEW")) {
-                        invokeCallbackOnGeo(sStartupIntent.getData().getSchemeSpecificPart(), NavitGraphics.MsgType.CLB_SET_DESTINATION, "");
+                    } else if (naviScheme.equals("geo") &&
+                               sStartupIntent.getAction().equals("android.intent.action.VIEW")) {
+                        invokeCallbackOnGeo(sStartupIntent.getData().getSchemeSpecificPart(),
+                                            NavitGraphics.MsgType.CLB_SET_DESTINATION,
+                                            "");
                     }
                 }
             } else {
