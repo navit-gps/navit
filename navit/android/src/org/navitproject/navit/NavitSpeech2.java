@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
@@ -15,6 +15,8 @@
 
 package org.navitproject.navit;
 
+import static org.navitproject.navit.NavitAppConfig.getTstring;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,17 +25,19 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 
-@SuppressWarnings("unused")
-public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
 
-    private final Navit navit;
-    private final int MY_DATA_CHECK_CODE = 1;
-    private final String TAG = this.getClass().getName();
+
+@SuppressWarnings("unused")
+class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityResult {
+
+    private final Navit mNavit;
+    private static final int MY_DATA_CHECK_CODE = 1;
+    private static final String TAG = "NavitSpeech2";
     private TextToSpeech mTts;
 
 
     NavitSpeech2(Navit navit) {
-        this.navit = navit;
+        this.mNavit = navit;
         navit.setActivityResult(1, this);
         Log.d(TAG, "Create");
         Intent checkIntent = new Intent();
@@ -57,23 +61,23 @@ public class NavitSpeech2 implements TextToSpeech.OnInitListener, NavitActivityR
         if (requestCode == MY_DATA_CHECK_CODE) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 // success, create the TTS instance
-                mTts = new TextToSpeech(navit.getApplication(), this);
+                mTts = new TextToSpeech(mNavit.getApplication(), this);
             } else {
                 // missing data, ask to install it
-                AlertDialog.Builder builder = new AlertDialog.Builder(navit);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mNavit);
                 builder
-                    .setTitle(navit.getTstring(R.string.TTS_title_data_missing))
-                    .setMessage(navit.getTstring(R.string.TTS_qery_install_data))
-                    .setPositiveButton(navit.getTstring(R.string.yes),
+                    .setTitle(getTstring(R.string.TTS_title_data_missing))
+                    .setMessage(getTstring(R.string.TTS_qery_install_data))
+                    .setPositiveButton(getTstring(R.string.yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent installIntent = new Intent();
                                     installIntent.setAction(
                                             TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                                    navit.startActivity(installIntent);
+                                    mNavit.startActivity(installIntent);
                                 }
                             })
-                .setNegativeButton(navit.getTstring(R.string.no), null)
+                .setNegativeButton(getTstring(R.string.no), null)
                     .show();
             }
         }
