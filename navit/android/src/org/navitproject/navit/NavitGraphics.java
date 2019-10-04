@@ -215,7 +215,7 @@ class NavitGraphics {
         }
 
         /**
-         * Create an intent for a view action of a point provided by its x and y position on the display
+         * Create an intent for a view action of a point provided by its x and y position on the display.
          *
          * @param x The x coordinates of the point on the display
          * @param y The y coordinates of the point on the display

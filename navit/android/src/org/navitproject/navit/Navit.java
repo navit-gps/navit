@@ -215,7 +215,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Show the first start infoxbox (presentation of navit and link website for more info)
+     * Show the first start infoxbox (presentation of navit and link website for more info).
     **/
     private void showInfos() {
         SharedPreferences settings = getSharedPreferences(NavitAppConfig.NAVIT_PREFS, MODE_PRIVATE);
