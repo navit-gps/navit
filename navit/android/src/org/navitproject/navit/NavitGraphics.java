@@ -255,7 +255,7 @@ class NavitGraphics {
                             "Select app to share");
                     result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
                             customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
-                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size()
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + 1
                                + " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
