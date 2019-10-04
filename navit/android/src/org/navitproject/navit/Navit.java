@@ -214,6 +214,9 @@ public class Navit extends Activity {
         return true;
     }
 
+    /**
+     * Show the first start infoxbox (presentation of navit and link website for more info)
+    **/
     private void showInfos() {
         SharedPreferences settings = getSharedPreferences(NavitAppConfig.NAVIT_PREFS, MODE_PRIVATE);
         boolean firstStart = settings.getBoolean("firstStart", true);
@@ -436,8 +439,8 @@ public class Navit extends Activity {
                 if (naviScheme != null) {
                     if (naviScheme.equals("google.navigation")) {
                         parseNavigationURI(sStartupIntent.getData().getSchemeSpecificPart());
-                    } else if (naviScheme.equals("geo") &&
-                               sStartupIntent.getAction().equals("android.intent.action.VIEW")) {
+                    } else if (naviScheme.equals("geo")
+                               && sStartupIntent.getAction().equals("android.intent.action.VIEW")) {
                         invokeCallbackOnGeo(sStartupIntent.getData().getSchemeSpecificPart(),
                                             NavitGraphics.MsgType.CLB_SET_DESTINATION,
                                             "");
@@ -477,7 +480,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * @brief Invoke NavitGraphics.sCallbackHandler on a geographical position
+     * Invoke NavitGraphics.sCallbackHandler on a geographical position
      *
      * @param geoString A string containing the target geographical position with a format like "48.25676,16.643"
      * @param msgType The type of message to send to the callback (see NavitGraphics.MsgType for possible values)
@@ -508,7 +511,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * @brief Pase google navigation URIs (usually starting with "google.navigation:") and take the appropriate actions
+     * Parse google navigation URIs (usually starting with "google.navigation:") and take the appropriate actions
      *
      * @param schemeSpecificPart A string containing the URI scheme, for example "ll=48.25676,16.643&q=blabla-strasse"
     **/

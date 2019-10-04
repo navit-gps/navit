@@ -215,7 +215,7 @@ class NavitGraphics {
         }
 
         /**
-         * @brief Create an intent for a view action of a point provided by its x and y position on the display
+         * Create an intent for a view action of a point provided by its x and y position on the display
          *
          * @param x The x coordinates of the point on the display
          * @param y The y coordinates of the point on the display
@@ -257,8 +257,8 @@ class NavitGraphics {
                             "Select app to share");
                     result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
                             customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
-                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() +
-                            " candidate apps) to view selected coord: " + selectedPointCoord);
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size()
+                               + " candidate apps) to view selected coord: " + selectedPointCoord);
                 }
             }
             return result;
@@ -277,18 +277,21 @@ class NavitGraphics {
                     .setOnMenuItemClickListener(this);
             mContextMenuMapViewIntent = getViewIntentForDisplayPoint((int)mPressedPosition.x, (int)mPressedPosition.y);
             if (mContextMenuMapViewIntent != null) {
-                menu.add(1, MENU_VIEW, NONE, NavitAppConfig.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
+                menu.add(1, MENU_VIEW, NONE,
+                         NavitAppConfig.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
-                Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed in contextual menu");
+                Log.w(TAG, "No application available to handle ACTION_VIEW intent, view option not displayed");
             }
-            menu.add(1, MENU_CANCEL, NONE, NavitAppConfig.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            menu.add(1, MENU_CANCEL, NONE,
+                     NavitAppConfig.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             int itemId = item.getItemId();
             if (itemId != MENU_VIEW) {
-                mContextMenuMapViewIntent = null;	/* Detroy the map view intent if the user didn't select the MENU_VIEW action */
+                /* Destroy any previous map view intent if the user didn't select the MENU_VIEW action */
+                mContextMenuMapViewIntent = null;
             }
             if (itemId == MENU_DRIVE_HERE) {
                 Message msg = Message.obtain(sCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
@@ -299,7 +302,7 @@ class NavitGraphics {
                     if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
                         this.getContext().startActivity(mContextMenuMapViewIntent);
                     } else {
-                        Log.w(TAG, "View menu selected but ACTION_VIEW intent is not handled by any application. Discarding...");
+                        Log.w(TAG, "View menu selected but intent is not handled by any application. Ignoring...");
                     }
                     mContextMenuMapViewIntent = null;   /* Destoy the intent once it has been used */
                 } else {
