@@ -486,7 +486,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         // longitude
         p = strtok (NULL, "#");
         g.lng = strtof(p, &stopstring);
-        // description/name of the place identied by lat and long
+        // description/name of the place identified by lat and long
         name = strtok (NULL, "#");
 
         dbg(lvl_debug, "lat=%f", g.lat);
