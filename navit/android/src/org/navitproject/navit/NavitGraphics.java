@@ -252,7 +252,7 @@ class NavitGraphics {
                 }
                 if (customShareIntentList.size() > 0) {
                     result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size() - 1),
-                            "Select app to share");
+                            NavitAppConfig.getTstring(R.string.use_position_with));
                     result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
                             customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
                     Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + 1
