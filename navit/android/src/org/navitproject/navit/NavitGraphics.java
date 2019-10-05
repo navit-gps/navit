@@ -235,11 +235,13 @@ class NavitGraphics {
             List<ResolveInfo> intentTargetAppList;
             intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
 
+            String selfPackageName = this.getContext().getPackageName(); /* aka: "org.navitproject.navit" */
+
             if (!intentTargetAppList.isEmpty()) {
                 for (ResolveInfo resolveInfo : intentTargetAppList) {
                     String packageName = resolveInfo.activityInfo.packageName;
                     Intent copiedIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-                    if (!packageName.equals(Navit.NAVIT_PACKAGE_NAME)) {
+                    if (!packageName.equals(selfPackageName)) {
                         Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
                         copiedIntent.setPackage(packageName);
                         copiedIntent.setClassName(

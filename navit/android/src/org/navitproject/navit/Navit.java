@@ -83,7 +83,7 @@ public class Navit extends Activity {
     private static final int           NavitDownloaderSelectMap_id     = 967;
     private static final int           NavitAddressSearch_id           = 70;
     private static final int           NavitSelectStorage_id           = 43;
-    public static final String         NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
+    private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      sMapFilenamePath;
     static String                      sNavitDataDir;
