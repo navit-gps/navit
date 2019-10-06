@@ -339,7 +339,15 @@ void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *r
     bbox((struct coord *)(ib+1), ib->clen/2, &r);
     buffer[0]='\0';
     tile(&r, info->suffix, buffer, max, overlap, NULL);
-    tile_write_item_to_tile(info, ib, reference, buffer);
+
+    /*TODO: make '4' and '7' configurable by commandline parameter.
+     * bonus: find out why there is a 'min' parameter here
+     */
+    if((ib->type >= type_area) && (ib->type != type_poly_water_tiled) && (tile_len(buffer) < 4)) {
+        itembin_nicer_slicer(info, ib, reference, buffer, 7);
+    } else {
+        tile_write_item_to_tile(info, ib, reference, buffer);
+    }
 }
 
 int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size) {

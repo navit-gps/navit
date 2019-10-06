@@ -2805,9 +2805,9 @@ static int process_multipolygons_find_loop(int in_count, struct item_bin ** part
         return 0;
 }
 
-static int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
-        int *** sequences,
-        int **direction) {
+int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+                                     int *** sequences,
+                                     int **direction) {
     int done=0;
     int loop_count=0;
     int *used;
@@ -2845,8 +2845,8 @@ static int process_multipolygons_find_loops(osmid relid, int in_count, struct it
     return loop_count;
 }
 
-static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
-        struct coord *  buffer) {
+int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+                                    struct coord *  buffer) {
     int points = 0;
     int a;
 
@@ -2890,7 +2890,7 @@ static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, in
  * @param sequence sequence calculated by process_multipolygon_find_loop
  * @returns number of coords
  */
-static int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
+int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
     return process_multipolygons_loop_dump(bin,scount,sequence,NULL,NULL);
 }
 
