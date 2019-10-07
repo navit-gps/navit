@@ -39,7 +39,8 @@ read_node_item(FILE *in) {
     struct node_item * retval = NULL;
 
     if((last_in != in) || (last_pos != ftell(in))) {
-        fprintf(stderr, "change file. Still %d items\n", out_count - in_count);
+        if((out_count - in_count) > 0)
+            fprintf(stderr, "change file. Still %d items\n", out_count - in_count);
         /* got new file. flush buffer. */
         in_count=0;
         out_count=0;
@@ -53,7 +54,7 @@ read_node_item(FILE *in) {
     } else {
         out_count=0;
         in_count=fread(item_buffer, sizeof(struct node_item), ITEM_COUNT, in);
-        fprintf(stderr, "read %d items\n", in_count);
+        //fprintf(stderr, "read %d items\n", in_count);
         if(in_count < 1) {
             /* buffer still empty after read */
             return NULL;
