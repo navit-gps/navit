@@ -263,6 +263,7 @@ public class Navit extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        Log.d(TAG, "OnCreate");
         super.onCreate(savedInstanceState);
 
         windowSetup();
@@ -415,6 +416,16 @@ public class Navit extends Activity {
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        Log.d(TAG, "OnNewIntent");
+        Navit.sStartupIntent = intent;
+        // hack! Remember time stamps, and only allow 4 secs. later in onResume to set target!
+        Navit.sStartupIntentTimestamp = System.currentTimeMillis();
+        Log.d(TAG, "**3**A " + sStartupIntent.getAction());
+        Log.d(TAG, "**3**D " + sStartupIntent.getDataString());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "OnResume");
@@ -449,13 +460,14 @@ public class Navit extends Activity {
             } else {
                 Log.e(TAG, "timestamp for navigate_to expired! not using data");
             }
+            sStartupIntent = null;
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
+        Log.d(TAG, "OnPause");
     }
 
     @Override
