@@ -616,7 +616,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         msgdata = (struct item_msg_priv *) msglist->data;
         if (msgdata->speed < speed)
             speed = msgdata->speed;
-        if (msgdata->delay < delay)
+        if (msgdata->delay > delay)
             delay = msgdata->delay;
         /* TODO attrs */
     }
