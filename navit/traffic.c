@@ -3651,7 +3651,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     }
                     if (map_item) {
                         pitem->is_matched = 1;
-                        for (i = 1; i < ccnt; i++)
+                        for (i = 1; i < pitem->coord_count; i++)
                             pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
                         loc_len += pitem->length;
                     }
