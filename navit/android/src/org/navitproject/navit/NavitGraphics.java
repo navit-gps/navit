@@ -73,7 +73,6 @@ class NavitGraphics {
     private int                            mPosY;
     private int                            mPosWraparound;
     private int                            mOverlayDisabled;
-    private int                            mBgColor;
     private float                          mTrackballX;
     private float                          mTrackballY;
     private int                            mPaddingLeft;
@@ -94,8 +93,8 @@ class NavitGraphics {
     private boolean                        mTinting;
 
 
+    @SuppressWarnings("unused")
     void setBackgroundColor(int bgcolor) {
-        this.mBgColor = bgcolor;
         if (mLeftTintView != null) {
             mLeftTintView.setBackgroundColor(bgcolor);
         }
@@ -537,13 +536,13 @@ class NavitGraphics {
 
         public SystemBarTintView(Context context) {
             super(context);
-            this.setBackgroundColor(mBgColor);
         }
 
     }
 
+    @SuppressWarnings("unused")
     NavitGraphics(final Activity navit, NavitGraphics parent, int x, int y, int w, int h,
-                         int wraparound, int useCamera) {
+                  int wraparound, int useCamera) {
         if (parent == null) {
             mOverlays = new ArrayList<>();
             if (useCamera != 0) {
@@ -817,6 +816,7 @@ class NavitGraphics {
      *
      * <p>Note that this method is not aware of non-standard mechanisms on some customized builds of Android</p>
      */
+    @SuppressWarnings("unused")
     boolean hasMenuButton() {
         if (Build.VERSION.SDK_INT <= 10) {
             return true;
@@ -829,30 +829,36 @@ class NavitGraphics {
         }
     }
 
+    @SuppressWarnings("unused")
     void setSizeChangedCallback(long id) {
         mSizeChangedCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setPaddingChangedCallback(long id) {
         mPaddingChangedCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setButtonCallback(long id) {
         Log.v(TAG,"set Buttononcallback");
         mButtonCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setMotionCallback(long id) {
         mMotionCallbackID = id;
         Log.v(TAG,"set Motioncallback");
     }
 
+    @SuppressWarnings("unused")
     void setKeypressCallback(long id) {
         Log.v(TAG,"set Keypresscallback");
         mKeypressCallbackID = id;
     }
 
 
+    @SuppressWarnings("unused")
     protected void draw_polyline(Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
@@ -883,6 +889,7 @@ class NavitGraphics {
         paint.setPathEffect(null);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_polygon(Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
@@ -898,6 +905,7 @@ class NavitGraphics {
         mDrawCanvas.drawPath(path, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_rectangle(Paint paint, int x, int y, int w, int h) {
         Rect r = new Rect(x, y, x + w, y + h);
         paint.setStyle(Paint.Style.FILL);
@@ -906,11 +914,13 @@ class NavitGraphics {
         mDrawCanvas.drawRect(r, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_circle(Paint paint, int x, int y, int r) {
         paint.setStyle(Paint.Style.STROKE);
         mDrawCanvas.drawCircle(x, y, r / 2, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy, int bgcolor) {
         int oldcolor = paint.getColor();
         Path path = null;
@@ -997,6 +1007,7 @@ class NavitGraphics {
     /* Used by the pedestrian plugin, draws without a mapbackground */
     private static final int DRAW_MODE_BEGIN_CLEAR = 2;
 
+    @SuppressWarnings("unused")
     protected void draw_mode(int mode) {
         if (mode == DRAW_MODE_END) {
             if (mParentGraphics == null) {
@@ -1011,11 +1022,13 @@ class NavitGraphics {
 
     }
 
+    @SuppressWarnings("unused")
     protected void draw_drag(int x, int y) {
         mPosX = x;
         mPosY = y;
     }
 
+    @SuppressWarnings("unused")
     protected void overlay_disable(int disable) {
         Log.v(TAG,"overlay_disable: " + disable + ", Parent: " + (mParentGraphics != null));
         if (mParentGraphics == null) {
@@ -1046,6 +1059,7 @@ class NavitGraphics {
         }
     }
 
+    @SuppressWarnings("unused")
     protected void overlay_resize(int x, int y, int w, int h, int wraparound) {
         mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mBitmapWidth = w;
