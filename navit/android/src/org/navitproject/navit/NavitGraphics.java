@@ -971,11 +971,6 @@ class NavitGraphics {
      * @param p2x and p2y   specifying the bottom left point, not yet used but kept
      *                      for compatibility with the linux port
      * @param bitmap    Bitmap object holding the image to draw
-     *
-     * TODO make it work with 4 points specified to make it work for 3D mapview, so it can be used
-     *      for small but very detailed maps as well as for large maps with very little detail but large
-     *      coverage.
-     * TODO make it work with rectangular tiles as well ?
      */
     protected void draw_image_warp(Paint paint, int count, int p0x, int p0y, int p1x, int p1y, int p2x, int p2y,
             Bitmap bitmap) {
