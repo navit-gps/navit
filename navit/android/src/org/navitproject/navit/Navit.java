@@ -46,7 +46,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.os.PowerManager;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -648,6 +647,7 @@ public class Navit extends Activity {
      * <p>Calling this method has the same effect as pressing the hardware Menu button, or touching
      * the overflow button in the Action bar.</p>
      */
+    @SuppressWarnings("unused")
     void showMenu() {
         openOptionsMenu();
     }
@@ -658,6 +658,7 @@ public class Navit extends Activity {
      *
      * @return 1 if keyboard is software, 0 if hardware
      */
+    @SuppressWarnings("unused")
     int showNativeKeyboard() {
         Log.d(TAG, "showNativeKeyboard");
         Configuration config = getResources().getConfiguration();
@@ -679,6 +680,7 @@ public class Navit extends Activity {
     /**
      * Hides the native keyboard or other input method.
      */
+    @SuppressWarnings("unused")
     void hideNativeKeyboard() {
         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
         .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -794,30 +796,23 @@ public class Navit extends Activity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @SuppressWarnings("unused")
     void fullscreen(int fullscreen) {
-
-        View decorView = getWindow().getDecorView();
-
-        mIsFullscreen = (fullscreen != 0);
-        if (mIsFullscreen) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+        if(fullscreen != 0) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                decorView.setSystemUiVisibility(uiOptions);
-            }
-
-        } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        }
+        else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                decorView.setSystemUiVisibility(0);
-            }
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 
-    public void disableSuspend() {
+
+    void disableSuspend() {
         mWakeLock.acquire();
         mWakeLock.release();
     }
