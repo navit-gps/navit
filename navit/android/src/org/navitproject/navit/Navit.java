@@ -71,14 +71,83 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 public class Navit extends Activity {
+
+    /**
+     * Nested class storing the intent that was sent to the main navit activity at startup
+    **/
+    private class StartupIntent {
+        /**
+         * Constructor
+         *
+         * @param intent The intent to store in this object
+        **/
+        public StartupIntent(Intent intent) {
+            mStartupIntent = intent;
+            mStartupIntentTimestamp = System.currentTimeMillis();
+        }
+
+        /**
+         * Is the encapsulated intent still valid or too old?
+         *
+         * @return true if the encapsulated intent is recent enough
+        **/
+        public boolean isRecentEnough() {
+            if (mStartupIntent == null)
+                return false;
+            /* We consider the intent is valid for 4s */
+            return (System.currentTimeMillis() <= getExpirationTimeMillis());
+        }
+
+        /**
+         * Compute the system time when the stored intent will become invalid
+         *
+         * @return The system time for invalidation (in ms)
+        **/
+        private long getExpirationTimeMillis() {
+            if (mStartupIntent == null)
+                return 0;
+            /* We give 4s to navit to process the intent */
+            return mStartupIntentTimestamp + 4000L;
+        }
+
+        /**
+         * Getter for the encapsulated intent
+         *
+         * @return The encapsulated intent
+        **/
+        public Intent getIntent() {
+            return mStartupIntent;
+        }
+
+        /**
+         * Represent this object as a string
+         *
+         * @return A string containing the summary of the data we store here
+        **/
+        public String toString() {
+            if (mStartupIntent == null) {
+                return "{null}";
+            } else {
+                String validForStr;
+                long remainingValidity = getExpirationTimeMillis() - System.currentTimeMillis();
+                if (remainingValidity<0) {
+                    validForStr = "(expired since " + -remainingValidity + "ms)";
+                } else {
+                    validForStr = "(valid for " + remainingValidity + "ms)";
+                }
+                return "{ act=" + mStartupIntent.getAction() + " data=" + mStartupIntent.getDataString() + " " + validForStr + " }";
+            }
+        }
+
+        private Intent mStartupIntent;  /*!< The intent we store */
+        private long   mStartupIntentTimestamp; /*!< A timestamp (current time in ms) for when mStartupIntent was recorded */
+    }
 
 
     public static DisplayMetrics       sMetrics;
     public static boolean              sShowSoftKeyboardShowing;
-    private static Intent              sStartupIntent;
-    private static long                sStartupIntentTimestamp;
+    private static StartupIntent       sStartupIntent;
     private static final int           MY_PERMISSIONS_REQ_FINE_LOC     = 103;
     private static final int           NavitDownloaderSelectMap_id     = 967;
     private static final int           NavitAddressSearch_id           = 70;
@@ -269,17 +338,14 @@ public class Navit extends Activity {
         windowSetup();
         mDialogs = new NavitDialogs(this);
 
-        // only take arguments here, onResume gets called all the time (e.g. when screenblanks, etc.)
-        Navit.sStartupIntent = this.getIntent();
-        // hack! Remember time stamps, and only allow 4 secs. later in onResume to set target!
-        Navit.sStartupIntentTimestamp = System.currentTimeMillis();
-        Log.d(TAG, "**1**A " + sStartupIntent.getAction());
-        Log.d(TAG, "**1**D " + sStartupIntent.getDataString());
+        // Only store the startup intent, onResume() gets called all the time (e.g. when screenblanks, etc.) and will process this intent if needed
+        sStartupIntent = new StartupIntent(this.getIntent());
+        Log.d(TAG, "Recording intent " + sStartupIntent.toString());
 
         createNotificationChannel();
         buildNotification();
         verifyPermissions();
-        // get the local language -------------
+        // get the local language
         Locale locale = Locale.getDefault();
         String lang = locale.getLanguage();
         String langc = lang;
@@ -418,11 +484,8 @@ public class Navit extends Activity {
     @Override
     public void onNewIntent(Intent intent) {
         Log.d(TAG, "OnNewIntent");
-        Navit.sStartupIntent = intent;
-        // hack! Remember time stamps, and only allow 4 secs. later in onResume to set target!
-        Navit.sStartupIntentTimestamp = System.currentTimeMillis();
-        Log.d(TAG, "**3**A " + sStartupIntent.getAction());
-        Log.d(TAG, "**3**D " + sStartupIntent.getDataString());
+        sStartupIntent = new StartupIntent(intent);
+        Log.d(TAG, "Recording intent " + sStartupIntent.toString());
     }
 
     @Override
@@ -443,22 +506,22 @@ public class Navit extends Activity {
         // intent_data = "google.navigation:ll=48.25676,16.643";
         // intent_data = "geo:48.25676,16.643";
         if (sStartupIntent != null) {
-            if (System.currentTimeMillis() <= Navit.sStartupIntentTimestamp + 4000L) {
-                Log.d(TAG, "**2**A " + sStartupIntent.getAction());
-                Log.d(TAG, "**2**D " + sStartupIntent.getDataString());
-                String naviScheme = sStartupIntent.getScheme();
+            Log.d(TAG, "Using stored startup intent " + sStartupIntent.toString());
+            if (sStartupIntent.isRecentEnough()) {
+                Intent startupIntent = sStartupIntent.getIntent();
+                String naviScheme = startupIntent.getScheme();
                 if (naviScheme != null) {
                     if (naviScheme.equals("google.navigation")) {
-                        parseNavigationURI(sStartupIntent.getData().getSchemeSpecificPart());
+                        parseNavigationURI(startupIntent.getData().getSchemeSpecificPart());
                     } else if (naviScheme.equals("geo")
-                               && sStartupIntent.getAction().equals("android.intent.action.VIEW")) {
-                        invokeCallbackOnGeo(sStartupIntent.getData().getSchemeSpecificPart(),
+                               && startupIntent.getAction().equals("android.intent.action.VIEW")) {
+                        invokeCallbackOnGeo(startupIntent.getData().getSchemeSpecificPart(),
                                             NavitGraphics.MsgType.CLB_SET_DESTINATION,
                                             "");
                     }
                 }
             } else {
-                Log.e(TAG, "timestamp for navigate_to expired! not using data");
+                Log.e(TAG, "timestamp for startup intent expired! not using data");
             }
             sStartupIntent = null;
         }
