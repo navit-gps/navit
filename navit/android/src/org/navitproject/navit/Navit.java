@@ -294,9 +294,18 @@ public class Navit extends Activity {
         }
         Log.d(TAG, "Language " + lang);
 
-        SharedPreferences prefs = getSharedPreferences(NavitAppConfig.NAVIT_PREFS,MODE_PRIVATE);
+        SharedPreferences settings = getSharedPreferences(NavitAppConfig.NAVIT_PREFS,MODE_PRIVATE);
         sNavitDataDir = getApplicationContext().getFilesDir().getPath();
-        sMapFilenamePath = prefs.getString("filenamePath", sNavitDataDir + '/');
+
+        String candidateFileNamePath = getApplicationContext().getExternalFilesDir(null).toString();
+        boolean firstStart = settings.getBoolean("firstStart", true);
+        if (firstStart) {
+            Log.e(TAG, "set to " + candidateFileNamePath);
+            SharedPreferences.Editor preferenceEditor = settings.edit();
+            preferenceEditor.putString("filenamePath", candidateFileNamePath);
+            preferenceEditor.apply();
+        }
+        sMapFilenamePath = settings.getString("filenamePath", candidateFileNamePath );
         Log.i(TAG,"NavitDataDir = " + sNavitDataDir);
         Log.i(TAG,"mapFilenamePath = " + sMapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
@@ -545,7 +554,7 @@ public class Navit extends Activity {
 
         menu.add(1, 6, 500, getTstring(R.string.optionsmenu_address_search)); //TRANS
         menu.add(1, 10, 600, getTstring(R.string.optionsmenu_set_map_location));
-
+        menu.add(1, 11, 601, "experimental settings");
         menu.add(1, 99, 900, getTstring(R.string.optionsmenu_exit_navit)); //TRANS
 
         /* Only show the Backup to SD-Card Option if we really have one */
@@ -629,6 +638,9 @@ public class Navit extends Activity {
                 break;
             case 10:
                 setMapLocation();
+                break;
+            case 11:
+                setMapLocationNew();
                 break;
             case 99 :
                 // exit
@@ -776,6 +788,14 @@ public class Navit extends Activity {
         fileExploreIntent
             .putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
             .setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
+        startActivityForResult(fileExploreIntent,NavitSelectStorage_id);
+    }
+
+    private void setMapLocationNew() {
+        Intent fileExploreIntent = new Intent(this,NavitSettingsActivity.class);
+        fileExploreIntent
+                .putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
+                .setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
         startActivityForResult(fileExploreIntent,NavitSelectStorage_id);
     }
 
