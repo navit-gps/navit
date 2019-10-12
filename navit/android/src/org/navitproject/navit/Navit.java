@@ -305,7 +305,7 @@ public class Navit extends Activity {
             preferenceEditor.putString("filenamePath", candidateFileNamePath);
             preferenceEditor.apply();
         }
-        sMapFilenamePath = settings.getString("filenamePath", candidateFileNamePath );
+        sMapFilenamePath = settings.getString("filenamePath", candidateFileNamePath);
         Log.i(TAG,"NavitDataDir = " + sNavitDataDir);
         Log.i(TAG,"mapFilenamePath = " + sMapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
