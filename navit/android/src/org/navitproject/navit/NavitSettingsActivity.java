@@ -29,7 +29,7 @@ public class NavitSettingsActivity extends PreferenceActivity {
 
     private PreferenceScreen createPreferenceHierarchy() {
         Log.e(TAG,"onCreateHierarchy");
-        PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
+        final PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
         final CheckBoxPreference checkboxPref = new CheckBoxPreference(this);
         checkboxPref.setTitle("Unlock developer options");
