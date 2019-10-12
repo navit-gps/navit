@@ -2,6 +2,8 @@ package org.navitproject.navit;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -29,6 +31,24 @@ public class NavitSettingsActivity extends PreferenceActivity {
         Log.e(TAG,"onCreateHierarchy");
         PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
+        final CheckBoxPreference checkboxPref = new CheckBoxPreference(this);
+        checkboxPref.setTitle("Unlock developer options");
+        checkboxPref.setEnabled(false);
+        checkboxPref.setSummary("placeholder for an upcoming setting");
+        root.addPreference(checkboxPref);
+
+        final CheckBoxPreference checkboxPref2 = new CheckBoxPreference(this);
+        checkboxPref2.setTitle("Unlock large map download");
+        checkboxPref2.setEnabled(false);
+        checkboxPref2.setSummary("placeholder for an upcoming setting");
+        root.addPreference(checkboxPref2);
+
+        final EditTextPreference customMapserver = new EditTextPreference(this);
+        customMapserver.setEnabled(false);
+        customMapserver.setTitle("custom mapserver");
+        customMapserver.setSummary("upcoming option to select a local share as mapserver");
+        root.addPreference(customMapserver);
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ListPreference listPref = new ListPreference(this);
             File[] candidateDirs = getExternalFilesDirs(null);
@@ -48,6 +68,7 @@ public class NavitSettingsActivity extends PreferenceActivity {
             listPref.setSummary("choose where the maps will be stored");
             root.addPreference(listPref);
         }
+
         return root;
     }
 }

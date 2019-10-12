@@ -539,7 +539,7 @@ public class NavitMapDownloader extends Thread {
 
         if (success || mStopMe) {
             NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                    mMapFilenamePath + mMapValues.mMapName + ".bin", null, -1, success ? 1 : 0, mMapId);
+                    mMapFilenamePath + '/' + mMapValues.mMapName + ".bin", null, -1, success ? 1 : 0, mMapId);
         }
     }
 
