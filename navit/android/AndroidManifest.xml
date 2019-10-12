@@ -10,7 +10,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:usesCleartextTraffic="true" android:label="@string/app_name"
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <application android:usesCleartextTraffic="true"
+        android:label="@string/app_name"
         android:icon="@drawable/icon"
         android:name=".NavitAppConfig"
         android:theme="@style/NavitTheme">
@@ -23,12 +25,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="geo"/>
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="google.navigation" />
             </intent-filter>
         </activity>
         <activity android:name=".NavitAddressSearchActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+        </activity>
+        <activity
+            android:name=".NavitSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
