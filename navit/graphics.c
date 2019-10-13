@@ -1120,10 +1120,21 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         graphics_draw_polygon(gra, gc, pin, count_in);
         return;
     } else {
-        struct point * pin_scaled = g_alloca(sizeof (struct point)*count_in);
-        struct point ** holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        int limit=10000;
+        struct point * pin_scaled;
+        struct point ** holes_scaled;
         int a;
         int b;
+        if(count_in < limit) {
+            pin_scaled = g_alloca(sizeof (struct point)*count_in);
+        } else {
+            pin_scaled = g_malloc(sizeof (struct point)*count_in);
+        }
+        if(hole_count < limit) {
+            holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        } else {
+            holes_scaled = g_malloc(sizeof (struct point *)*hole_count);
+        }
         /* scale the outline */
         for(a=0; a < count_in; a ++)
             pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
@@ -1137,6 +1148,10 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         /* free the hole arrays */
         for(b=0; b < hole_count; b ++)
             g_free(holes_scaled[b]);
+        if(count_in >= limit)
+            g_free(pin_scaled);
+        if(hole_count >= limit)
+            g_free(holes_scaled);
     }
 }
 
@@ -2321,14 +2336,13 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
     int limit=10000;
-    struct point *pa1=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
     struct point *clipped;
     int count_out = count_in*8+1;
 
     /* prepare buffer */
     if (count_in < limit) {
         /* use on stack buffer */
-        clipped=pa1;
+        clipped=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
     } else {
         /* too big. allocate buffer (slower) */
         clipped=g_new(struct point, count_in*8+1);
@@ -2360,7 +2374,6 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     int i;
     struct point_rect r=gra->r;
     int limit=10000;
-    struct point *pa1;
     struct point *clipped;
     int total_count_in;
     int count_out;
@@ -2368,6 +2381,7 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     int found_hole_count;
     int *found_ccount;
     struct point ** found_holes;
+    int need_free;
     /* get total node count for polygon plus all holes */
     total_count_in = count_in;
     for(i = 0; i < hole_count; i ++) {
@@ -2375,20 +2389,28 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     }
     count_out = total_count_in*8+1+hole_count;
 
-    /* prepare buffer */
-    pa1=g_alloca(sizeof(struct point) * (total_count_in < limit ? total_count_in*8+1:0));
-    if (count_in < limit) {
+    /* prepare buffer for outer and all holes!*/
+    if (count_out < limit) {
         /* use on stack buffer */
-        clipped=pa1;
+        clipped=g_alloca(sizeof(struct point) * count_out);
+        /* no need to free on stack buffer */
+        need_free=0;
     } else {
         /* too big. allocate buffer (slower) */
-        clipped=g_new(struct point, count_in*8+1);
+        clipped=g_new(struct point, count_out);
+        /* remember to free this, as we change count_out soon */
+        need_free=1;
     }
     count_used=0;
 
     /* prepare arrays for new holes */
-    found_ccount=g_alloca(sizeof(int)*hole_count);
-    found_holes=g_alloca(sizeof(struct point*)*hole_count);
+    if(hole_count < limit) {
+        found_ccount=g_alloca(sizeof(int)* hole_count);
+        found_holes=g_alloca(sizeof(struct point*)* hole_count);
+    } else {
+        found_ccount=g_malloc(sizeof(int)* hole_count);
+        found_holes=g_malloc(sizeof(struct point*)* hole_count);
+    }
     found_hole_count=0;
 
     /* clip outer polygon */
@@ -2409,9 +2431,12 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     }
     /* call drawing function */
     graphics_draw_polygon_with_holes(gra, gc, clipped, count_out, found_hole_count, found_ccount, found_holes);
-
+    if(hole_count >= limit) {
+        g_free(found_ccount);
+        g_free(found_holes);
+    }
     /* if we had to allocate buffer, free it */
-    if (total_count_in >= limit) {
+    if (need_free) {
         g_free(clipped);
     }
 }
