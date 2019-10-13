@@ -74,11 +74,11 @@ import java.util.regex.Pattern;
 public class Navit extends Activity {
 
     /**
-     * Nested class storing the intent that was sent to the main navit activity at startup
+     * Nested class storing the intent that was sent to the main navit activity at startup.
     **/
     private class StartupIntent {
         /**
-         * Constructor
+         * Constructor.
          *
          * @param intent The intent to store in this object
         **/
@@ -88,31 +88,33 @@ public class Navit extends Activity {
         }
 
         /**
-         * Is the encapsulated intent still valid or too old?
+         * Check if the encapsulated intent still valid or too old.
          *
          * @return true if the encapsulated intent is recent enough
         **/
         public boolean isRecentEnough() {
-            if (mStartupIntent == null)
+            if (mStartupIntent == null) {
                 return false;
+            }
             /* We consider the intent is valid for 4s */
             return (System.currentTimeMillis() <= getExpirationTimeMillis());
         }
 
         /**
-         * Compute the system time when the stored intent will become invalid
+         * Compute the system time when the stored intent will become invalid.
          *
          * @return The system time for invalidation (in ms)
         **/
         private long getExpirationTimeMillis() {
-            if (mStartupIntent == null)
+            if (mStartupIntent == null) {
                 return 0;
+            }
             /* We give 4s to navit to process the intent */
             return mStartupIntentTimestamp + 4000L;
         }
 
         /**
-         * Getter for the encapsulated intent
+         * Getter for the encapsulated intent.
          *
          * @return The encapsulated intent
         **/
@@ -121,7 +123,7 @@ public class Navit extends Activity {
         }
 
         /**
-         * Represent this object as a string
+         * Represent this object as a string.
          *
          * @return A string containing the summary of the data we store here
         **/
@@ -131,17 +133,18 @@ public class Navit extends Activity {
             } else {
                 String validForStr;
                 long remainingValidity = getExpirationTimeMillis() - System.currentTimeMillis();
-                if (remainingValidity<0) {
+                if (remainingValidity < 0) {
                     validForStr = "(expired since " + -remainingValidity + "ms)";
                 } else {
                     validForStr = "(valid for " + remainingValidity + "ms)";
                 }
-                return "{ act=" + mStartupIntent.getAction() + " data=" + mStartupIntent.getDataString() + " " + validForStr + " }";
+                return "{ act=" + mStartupIntent.getAction() + " data=" + mStartupIntent.getDataString()
+                       + " " + validForStr + " }";
             }
         }
 
         private Intent mStartupIntent;  /*!< The intent we store */
-        private long   mStartupIntentTimestamp; /*!< A timestamp (current time in ms) for when mStartupIntent was recorded */
+        private long   mStartupIntentTimestamp; /*!< A timestamp (in ms) for when mStartupIntent was recorded */
     }
 
 
@@ -338,7 +341,8 @@ public class Navit extends Activity {
         windowSetup();
         mDialogs = new NavitDialogs(this);
 
-        // Only store the startup intent, onResume() gets called all the time (e.g. when screenblanks, etc.) and will process this intent if needed
+        /* Only store the startup intent, onResume() gets called all the time (e.g. when screenblanks, etc.) and
+           will process this intent later on if needed */
         sStartupIntent = new StartupIntent(this.getIntent());
         Log.d(TAG, "Recording intent " + sStartupIntent.toString());
 
