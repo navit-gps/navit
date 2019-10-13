@@ -110,10 +110,6 @@ jobs:
           path: navit/android/build/outputs/apk
           destination: apk
       - store_artifacts:
-          name: Store translations
-          path: po
-          destination: translations
-      - store_artifacts:
           name: Store logs
           path: navit/android/build/outputs/logs
           destination: logs
