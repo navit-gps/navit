@@ -798,7 +798,7 @@ public class Navit extends Activity {
 
     @SuppressWarnings("unused")
     void fullscreen(int fullscreen) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             return;
         }
         if (fullscreen != 0) {
