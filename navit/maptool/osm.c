@@ -3088,7 +3088,7 @@ static void process_multipolygons_setup_one(struct item_bin * ib, struct relatio
          * seem to create such.*/
         min_count=0;
         while(search_relation_member(ib, "",&(outer[outer_count]),&min_count)) {
-            osm_warning("relation",relid,0,"multipolygon: using empty role type as outer\n");
+            //osm_warning("relation",relid,0,"multipolygon: using empty role type as outer\n");
             if(outer[outer_count].type != rel_member_way)
                 osm_warning("relation",relid,0,"multipolygon: wrong type for outer member\n");
             outer_count ++;
