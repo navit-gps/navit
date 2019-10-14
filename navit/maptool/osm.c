@@ -3082,6 +3082,19 @@ static void process_multipolygons_setup_one(struct item_bin * ib, struct relatio
             /*realloc outer to make space for next */
             outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
         }
+        /* in ancient times of OSM, multipolygons were created having no "role" for outer loop members.
+         * There are still such multipolygons. Rescue most of them, by treating the role less members
+         * as outer. These multiolygons are treated a mistake nowadays, but even now some editing tools
+         * seem to create such.*/
+        min_count=0;
+        while(search_relation_member(ib, "",&(outer[outer_count]),&min_count)) {
+            osm_warning("relation",relid,0,"multipolygon: using empty role type as outer\n");
+            if(outer[outer_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member\n");
+            outer_count ++;
+            /*realloc outer to make space for next */
+            outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
+        }
         min_count=0;
         while(search_relation_member(ib, "inner",&(inner[inner_count]),&min_count)) {
             if(inner[inner_count].type != rel_member_way)
