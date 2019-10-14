@@ -344,6 +344,11 @@ void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *r
      * bonus: find out why there is a 'min' parameter here
      */
     if((ib->type >= type_area) && (ib->type != type_poly_water_tiled) && (tile_len(buffer) < 4)) {
+        /* Get a new reference tile before slicing ommitting the overlap. This is required
+         * as we want to slice without overlap and therefore we do not miss parts of the
+         * item residing in the overlap area */
+        buffer[0]='\0';
+        tile(&r, info->suffix, buffer, max, 0, NULL);
         itembin_nicer_slicer(info, ib, reference, buffer, 7);
     } else {
         tile_write_item_to_tile(info, ib, reference, buffer);
