@@ -100,24 +100,24 @@ static int itembin_bbox_intersects (struct rect * b1, struct rect * b2) {
  * @param[out] ret - resulting intersection point
  */
 static void itembin_poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret) {
-    double dx=p2->x-p1->x;
     double dy=p2->y-p1->y;
+    double dx=p2->x-p1->x;
     switch(edge) {
     case 0:
-        ret->y=p1->y+(r->l.x-p1->x)*dy/dx;
         ret->x=r->l.x;
+        ret->y=p1->y+(r->l.x-p1->x)*dy/dx;
         break;
     case 1:
-        ret->y=p1->y+(r->h.x-p1->x)*dy/dx;
         ret->x=r->h.x;
+        ret->y=p1->y+(r->h.x-p1->x)*dy/dx;
         break;
     case 2:
-        ret->x=p1->x+(r->l.y-p1->y)*dx/dy;
         ret->y=r->l.y;
+        ret->x=p1->x+(r->l.y-p1->y)*dx/dy;
         break;
     case 3:
-        ret->x=p1->x+(r->h.y-p1->y)*dx/dy;
         ret->y=r->h.y;
+        ret->x=p1->x+(r->h.y-p1->y)*dx/dy;
         break;
     }
 }
@@ -202,37 +202,44 @@ struct slice_result {
     struct coord ** coord; /**< array of coordinate arrays*/
 };
 
+/**
+ * @brief data structure to transfer data between this and the multipolygon
+ *  code in osm.c
+ */
 struct itembin_loop_combiner_context {
-    /* combiner input */
+    /** combiner input */
     int count;
     int * ccount;
     struct item_bin ** part;
-    /* combiner result */
+    /** combiner result */
     int sequence_count;
     int *scount;
     int *direction;
     int **sequences;
 };
 
+/**
+ * @brief data structure to make partd of an item easily avalable for the slicer code
+ */
 struct slicerpolygon {
-    struct item_bin * ib;
+    struct item_bin * ib; /**< reference to the original item */
     /* transfer through the layers */
     FILE* reference;
     char * buffer;
     struct tile_info *info;
     int number;
     /* decoded data */
-    struct rect bbox;
-    int count;
-    struct coord * poly;
-    int hole_count;
-    int * ccount;
-    struct coord ** holes;
-    struct rect * holes_bbox;
-    int attr_len;
-    struct attr_bin * attrs;
-    int f_attr_len;
-    struct attr_bin * f_attrs;
+    struct rect bbox; /**< bbox of the polygons outline */
+    int count; /**< number of coordinates in outer polygon */
+    struct coord * poly; /**< outer polygon */
+    int hole_count; /**< number of hole polygons */
+    int * ccount; /**< number of coordinates per hole polygon */
+    struct coord ** holes; /**< the hole polygons */
+    struct rect * holes_bbox; /**< bboxes of the hole polygons */
+    int attr_len; /**< length of attrs in bytes including the holes as is */
+    struct attr_bin * attrs; /**< first byte of the attrs */
+    int f_attr_len; /**< number of bytes attrs without the holes */
+    struct attr_bin * f_attrs; /**< first byte of attr imege with holes removed */
 };
 
 /**
@@ -285,6 +292,17 @@ static void clear_slice_result (struct slice_result * r) {
     memset(r, 0, sizeof(*r));
 }
 
+/**
+ * @brief add a part to a slice result structure
+ *
+ * This function adds a given line part to a slice result. It allocates the
+ * required space for pointers, but keeps the memory of the parts coordinate array.
+ * the coordinate should not be freed outside
+ *
+ * @param[in] r - slice result structure
+ * @param[in] part - new part coordinate array to add
+ * @param[in] ccount - number of coordinates in new part array.
+ */
 static void itembin_slice_add_part(struct slice_result *r, struct coord * part, int ccount) {
     r->ccount = g_realloc(r->ccount, sizeof(int) * (r->count +1));
     r->ccount[r->count] = ccount;
@@ -303,6 +321,14 @@ static void dump_coords(struct coord *coords, int ccount, FILE* file) {
 }
 #endif
 
+/**
+ * @brief combine the parts of a slice result to closed loops
+ *
+ * This function uses the osm.c multipolygon code to combine the given parts
+ * of a slice resutl structure to closed loops,
+ *
+ * @param[inout] r - slice result to reassign to loops.
+ */
 static void itembin_loop_combiner (struct slice_result *r) {
     struct slice_result out;
     struct itembin_loop_combiner_context c;
