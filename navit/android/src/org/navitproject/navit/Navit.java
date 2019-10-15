@@ -296,7 +296,8 @@ public class Navit extends Activity {
 
         SharedPreferences prefs = getSharedPreferences(NavitAppConfig.NAVIT_PREFS,MODE_PRIVATE);
         sNavitDataDir = getApplicationContext().getFilesDir().getPath();
-        sMapFilenamePath = prefs.getString("filenamePath", sNavitDataDir + '/');
+        String candidateFileNamePath = getApplicationContext().getExternalFilesDir(null).toString();
+        sMapFilenamePath = prefs.getString("filenamePath", candidateFileNamePath + '/');
         Log.i(TAG,"NavitDataDir = " + sNavitDataDir);
         Log.i(TAG,"mapFilenamePath = " + sMapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
