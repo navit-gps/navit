@@ -791,8 +791,8 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
     long long * id;
     int is_relation=0;
 
-    /* for now only slice polygons. */
-    if (ib->type < type_area) {
+    /* for now only slice polygons and things > min. */
+    if (ib->type < type_area || min <= tile_len(buffer)) {
         tile_write_item_to_tile(info, ib, reference, buffer);
         return;
     }
@@ -829,8 +829,8 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
     sp.buffer = buffer;
     sp.number=0;
 
-    /* for all tiles in range...*/
-    while (strcmp(tilecode,tileend) != 0) {
+    /* for all tiles in range. Allow this to overflow if tile_len(buffer) == 0*/
+    do {
         struct rect bbox;
         /* get tile rectangle */
         tile_bbox(tilecode, &bbox, 0);
@@ -847,7 +847,7 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
         /* next tile */
         next_tile(tilecode);
         sp.number ++;
-    }
+    } while (strcmp(tilecode,tileend) != 0);
     itembin_slicerpolygon_free(&sp);
 }
 
