@@ -52,7 +52,7 @@ for f in $(git diff --name-only ${interval} | sort -u); do
             check_diff
         fi
 
-        if [[ "${f}" == "navit/navit_shipped.xml" ]]; then
+        if [[ "${f: -11}" == "shipped.xml" ]]; then
             echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
             xmllint --noout --dtdvalid navit/navit.dtd "$f"
             rc=$?
