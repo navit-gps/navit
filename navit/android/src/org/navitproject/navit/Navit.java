@@ -38,6 +38,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -45,7 +46,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.os.PowerManager;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -296,7 +296,8 @@ public class Navit extends Activity {
 
         SharedPreferences prefs = getSharedPreferences(NavitAppConfig.NAVIT_PREFS,MODE_PRIVATE);
         sNavitDataDir = getApplicationContext().getFilesDir().getPath();
-        sMapFilenamePath = prefs.getString("filenamePath", sNavitDataDir + '/');
+        String candidateFileNamePath = getApplicationContext().getExternalFilesDir(null).toString();
+        sMapFilenamePath = prefs.getString("filenamePath", candidateFileNamePath + '/');
         Log.i(TAG,"NavitDataDir = " + sNavitDataDir);
         Log.i(TAG,"mapFilenamePath = " + sMapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
@@ -370,6 +371,19 @@ public class Navit extends Activity {
                 this.getActionBar().hide();
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+                getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            } else {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
+        }
     }
 
     /* uses NAVIT_PACKAGE_NAME as id */
@@ -415,12 +429,6 @@ public class Navit extends Activity {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "OnResume");
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            /* Required to make system bars fully transparent */
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        }
         //InputMethodManager sInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         // DEBUG
         // intent_data = "google.navigation:q=Wien Burggasse 27";
@@ -640,6 +648,7 @@ public class Navit extends Activity {
      * <p>Calling this method has the same effect as pressing the hardware Menu button, or touching
      * the overflow button in the Action bar.</p>
      */
+    @SuppressWarnings("unused")
     void showMenu() {
         openOptionsMenu();
     }
@@ -650,6 +659,7 @@ public class Navit extends Activity {
      *
      * @return 1 if keyboard is software, 0 if hardware
      */
+    @SuppressWarnings("unused")
     int showNativeKeyboard() {
         Log.d(TAG, "showNativeKeyboard");
         Configuration config = getResources().getConfiguration();
@@ -671,6 +681,7 @@ public class Navit extends Activity {
     /**
      * Hides the native keyboard or other input method.
      */
+    @SuppressWarnings("unused")
     void hideNativeKeyboard() {
         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
         .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -786,30 +797,22 @@ public class Navit extends Activity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @SuppressWarnings("unused")
     void fullscreen(int fullscreen) {
-
-        View decorView = getWindow().getDecorView();
-
-        mIsFullscreen = (fullscreen != 0);
-        if (mIsFullscreen) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return;
+        }
+        if (fullscreen != 0) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                decorView.setSystemUiVisibility(uiOptions);
-            }
-
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                decorView.setSystemUiVisibility(0);
-            }
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 
-    public void disableSuspend() {
+
+    void disableSuspend() {
         mWakeLock.acquire();
         mWakeLock.release();
     }

@@ -52,19 +52,16 @@ class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
      * <p>acquire the camera and tell it where to draw.</p>
      */
     public void surfaceCreated(SurfaceHolder holder) {
-        if (mCamera != null) {
-            try {
-                mCamera = Camera.open();
-                mCamera.setPreviewDisplay(holder);
-            } catch (IOException exception) {
-                mCamera.release();
-                mCamera = null;
-                Log.e(TAG, "IOException");
-            }
-            Log.i(TAG, "surfaceCreated");
-        } else {
-            Log.e(TAG, "null camera");
+        try {
+            mCamera = Camera.open();
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException exception) {
+            mCamera.release();
+            mCamera = null;
+            Log.e(TAG, "IOException");
         }
+        Log.i(TAG, "surfaceCreated");
+
     }
 
 
@@ -74,9 +71,11 @@ class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
      * <p>stop the preview and release the camera.</p>
      */
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mCamera.stopPreview();
-        mCamera = null;
-        Log.e(TAG,"surfaceDestroyed");
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera = null;
+            Log.e(TAG, "surfaceDestroyed");
+        }
     }
 
 
@@ -87,11 +86,13 @@ class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         Log.e(TAG,"surfaceChanged " + w + "x " + h);
-        mCamera.stopPreview();
-        Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setPreviewSize(w, h);
-        mCamera.setParameters(parameters);
-        mCamera.startPreview();
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(w, h);
+            mCamera.setParameters(parameters);
+            mCamera.startPreview();
+        }
     }
 }
 
