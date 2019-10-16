@@ -1,5 +1,9 @@
 var NAVTREEINDEX46 =
 {
+"structpathattr.html#afdf22880bc9c2757c4d1bee69cbf72c0":[2,0,283,4],
+"structpcoord.html":[2,0,284],
+"structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0":[2,0,284,2],
+"structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495":[2,0,284,0],
 "structpcoord.html#a875f35249b19419eb6dfbad5ff18f268":[2,0,284,1],
 "structpcoordObject.html":[2,0,285],
 "structpcoordObject.html#a1860fc117a52cee2fb5a3ed0021a521c":[2,0,285,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX46 =
 "structroute__graph__segment.html":[2,0,335],
 "structroute__graph__segment.html#a31c3757ae649c252b82a989f9bf5e0c8":[2,0,335,4],
 "structroute__graph__segment.html#aa1356012a38df9e5291b2a4d8fd823a6":[2,0,335,1],
-"structroute__graph__segment.html#aebadeeb57b5cb188597240ee39d6ec7f":[2,0,335,5],
-"structroute__graph__segment.html#aeef5d29fa4933dd19abcf8705b4903b0":[2,0,335,3],
-"structroute__graph__segment.html#aeffc5b34e94b3aa86ffe882ebce54dc3":[2,0,335,2],
-"structroute__graph__segment.html#afb360a68e64ed9fda746c90556886e03":[2,0,335,0],
-"structroute__graph__segment__data.html":[2,0,336]
+"structroute__graph__segment.html#aebadeeb57b5cb188597240ee39d6ec7f":[2,0,335,5]
 };

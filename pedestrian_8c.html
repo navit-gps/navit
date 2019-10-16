@@ -144,6 +144,18 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a46abb67fdbe56e896fc4b253d9a1c171"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a46abb67fdbe56e896fc4b253d9a1c171">ORIENTATION_UNKNOWN</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a46abb67fdbe56e896fc4b253d9a1c171"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f166aa542c69097847cfc189cd48057"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a0f166aa542c69097847cfc189cd48057">ORIENTATION_PORTRAIT</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a0f166aa542c69097847cfc189cd48057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accc06995e9834c793d2cc9e96ded0560"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#accc06995e9834c793d2cc9e96ded0560">ORIENTATION_LANDSCAPE</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:accc06995e9834c793d2cc9e96ded0560"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72f2f661d00fcac6af9f6b43a2e8f294"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a72f2f661d00fcac6af9f6b43a2e8f294">ORIENTATION_FLAT</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:a72f2f661d00fcac6af9f6b43a2e8f294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b86825d107b10f5fdf9021a068f668a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a4b86825d107b10f5fdf9021a068f668a">TYPE_ACCELEROMETER</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a4b86825d107b10f5fdf9021a068f668a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae7894a48a184bcc6a6e52744aab717b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#aae7894a48a184bcc6a6e52744aab717b">TYPE_MAGNETIC_FIELD</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:aae7894a48a184bcc6a6e52744aab717b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3d9a6c7f688f0ce18974caf00071474"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#ad3d9a6c7f688f0ce18974caf00071474">DEBUG_COORD_GET</a></td></tr>
 <tr class="separator:ad3d9a6c7f688f0ce18974caf00071474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -237,7 +249,7 @@ Variables</h2></td></tr>
 <tr class="separator:ac81756ed49d49c34ee3a6427a730d2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b696228ab2b86bc6de99ac6499005c6"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> initial_layout&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a5b696228ab2b86bc6de99ac6499005c6">main_layout</a></td></tr>
 <tr class="separator:a5b696228ab2b86bc6de99ac6499005c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cfa223fa2b1e0cda6c6cd64bd16d988"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structcommand__table.html">command_table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988">commands</a> []</td></tr>
+<tr class="memitem:a7cfa223fa2b1e0cda6c6cd64bd16d988"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structcommand__table.html">command_table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988">commands</a> [] = {{&quot;pedestrian_rocket&quot;, command_cast(<a class="el" href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket</a>)},}</td></tr>
 <tr class="separator:a7cfa223fa2b1e0cda6c6cd64bd16d988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13f119ed1c99aabcf78f00f504302d2d"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structbuilding.html">building</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pedestrian_8c.html#a13f119ed1c99aabcf78f00f504302d2d">buildings</a></td></tr>
 <tr class="separator:a13f119ed1c99aabcf78f00f504302d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,6 +276,106 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72f2f661d00fcac6af9f6b43a2e8f294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72f2f661d00fcac6af9f6b43a2e8f294">&#9670;&nbsp;</a></span>ORIENTATION_FLAT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORIENTATION_FLAT&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a6252c53cced4156ca778f7c704946da9">pedestrian_draw_arrows()</a>, and <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+
+</div>
+</div>
+<a id="accc06995e9834c793d2cc9e96ded0560"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accc06995e9834c793d2cc9e96ded0560">&#9670;&nbsp;</a></span>ORIENTATION_LANDSCAPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORIENTATION_LANDSCAPE&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+
+</div>
+</div>
+<a id="a0f166aa542c69097847cfc189cd48057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f166aa542c69097847cfc189cd48057">&#9670;&nbsp;</a></span>ORIENTATION_PORTRAIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORIENTATION_PORTRAIT&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+
+</div>
+</div>
+<a id="a46abb67fdbe56e896fc4b253d9a1c171"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46abb67fdbe56e896fc4b253d9a1c171">&#9670;&nbsp;</a></span>ORIENTATION_UNKNOWN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORIENTATION_UNKNOWN&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team</p>
+<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. </p>
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>.</p>
+
+</div>
+</div>
+<a id="a4b86825d107b10f5fdf9021a068f668a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b86825d107b10f5fdf9021a068f668a">&#9670;&nbsp;</a></span>TYPE_ACCELEROMETER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TYPE_ACCELEROMETER&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+
+</div>
+</div>
+<a id="aae7894a48a184bcc6a6e52744aab717b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae7894a48a184bcc6a6e52744aab717b">&#9670;&nbsp;</a></span>TYPE_MAGNETIC_FIELD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TYPE_MAGNETIC_FIELD&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
 
 </div>
 </div>
@@ -980,7 +1092,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>, <a class="el" href="attr_8c.html#a61a9b82695ff828f7eccdbfe8b258663">attr_new_from_text()</a>, <a class="el" href="group__coord.html#gac1e499de39c791dcf39f1fe89c1351ff">coord_new_from_attrs()</a>, <a class="el" href="structattr.html#a2bb62b7465a8926951b3662ad62ae6e2">attr::cursor</a>, <a class="el" href="layout_8c.html#a974e96cc3d5358bc410fda94e425eda0">cursor_add_attr()</a>, <a class="el" href="layout_8c.html#abb3f3418909627bf020a3f93d89edac0">cursor_new()</a>, <a class="el" href="structattr.html#a5dfee1493326868f0a3b2503e6fa000a">attr::element</a>, <a class="el" href="layout_8c.html#acfe632b7f24b87a434b6fc43507ce559">element_add_attr()</a>, <a class="el" href="structattr.html#a0dc0e1dc91ece3a8af7b6a89750ffc7c">attr::itemgra</a>, <a class="el" href="layout_8c.html#a620a42cacd68a21d395161af9cfb9098">itemgra_add_attr()</a>, <a class="el" href="layout_8c.html#aebd647f7c855d4e81a6a12b82e46949f">itemgra_new()</a>, <a class="el" href="pedestrian_8c.html#a63174cf17c51471d01220c5cf3771186">osd_marker_draw()</a>, <a class="el" href="layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de">polygon_new()</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>, <a class="el" href="attr_8c.html#a61a9b82695ff828f7eccdbfe8b258663">attr_new_from_text()</a>, <a class="el" href="group__coord.html#gac1e499de39c791dcf39f1fe89c1351ff">coord_new_from_attrs()</a>, <a class="el" href="structattr.html#a2bb62b7465a8926951b3662ad62ae6e2">attr::cursor</a>, <a class="el" href="layout_8c.html#a974e96cc3d5358bc410fda94e425eda0">cursor_add_attr()</a>, <a class="el" href="layout_8c.html#abb3f3418909627bf020a3f93d89edac0">cursor_new()</a>, <a class="el" href="structattr.html#a5dfee1493326868f0a3b2503e6fa000a">attr::element</a>, <a class="el" href="layout_8c.html#acfe632b7f24b87a434b6fc43507ce559">element_add_attr()</a>, <a class="el" href="structattr.html#a0dc0e1dc91ece3a8af7b6a89750ffc7c">attr::itemgra</a>, <a class="el" href="layout_8c.html#a620a42cacd68a21d395161af9cfb9098">itemgra_add_attr()</a>, <a class="el" href="layout_8c.html#aebd647f7c855d4e81a6a12b82e46949f">itemgra_new()</a>, <a class="el" href="pedestrian_8c.html#a63174cf17c51471d01220c5cf3771186">osd_marker_draw()</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#af431ece22807e7b4866f9ace494da319">osd_marker_new()</a>.</p>
 
@@ -1166,7 +1278,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="garmin__img_8c.html#a3bce700a88a243b80b791686799ae5f7">center</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structpedestrian.html#a9f81c44db886aac39d93c8b67a2a8431">pedestrian::h</a>, <a class="el" href="osm_8c.html#a1b6910c37842678ed6084354f57f6260">item</a>, <a class="el" href="item_8c.html#ae4ca690f46c2e5d491491d9f706f04e8">item_coord_get()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#ae025c855207536977afd84d39b316e9c">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718">orientation</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#ab25f7b6b19cd1b569d413d72109d1fad">pedestrian_draw_arrow()</a>, <a class="el" href="structattr.html#a2132d9f8722d472ea71342ea68b03754">attr::route</a>, <a class="el" href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr()</a>, <a class="el" href="transform_8c.html#a957cf45974ab30e11fdba372af1468e6">transform_get_angle_delta()</a>, <a class="el" href="transform_8c.html#a740e84249080ba94050d5501fe285db8">transform_get_center()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpedestrian.html#a51f18c396d35ca35282026796bd5d6a1">pedestrian::w</a>, and <a class="el" href="structpedestrian.html#a52a96cacd20e1826d0b9a023592e0a99">pedestrian::yaw</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a3bce700a88a243b80b791686799ae5f7">center</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structpedestrian.html#a9f81c44db886aac39d93c8b67a2a8431">pedestrian::h</a>, <a class="el" href="osm_8c.html#a1b6910c37842678ed6084354f57f6260">item</a>, <a class="el" href="item_8c.html#ae4ca690f46c2e5d491491d9f706f04e8">item_coord_get()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#ae025c855207536977afd84d39b316e9c">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a52e6ae5ec3beaec49ce12ce603d7d72a">map_rect_new()</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718">orientation</a>, <a class="el" href="pedestrian_8c.html#a72f2f661d00fcac6af9f6b43a2e8f294">ORIENTATION_FLAT</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#ab25f7b6b19cd1b569d413d72109d1fad">pedestrian_draw_arrow()</a>, <a class="el" href="structattr.html#a2132d9f8722d472ea71342ea68b03754">attr::route</a>, <a class="el" href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr()</a>, <a class="el" href="transform_8c.html#a957cf45974ab30e11fdba372af1468e6">transform_get_angle_delta()</a>, <a class="el" href="transform_8c.html#a740e84249080ba94050d5501fe285db8">transform_get_center()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpedestrian.html#a51f18c396d35ca35282026796bd5d6a1">pedestrian::w</a>, and <a class="el" href="structpedestrian.html#a52a96cacd20e1826d0b9a023592e0a99">pedestrian::yaw</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a1de72c3aef0edfbdd6617170ce702cb4">pedestrian_graphics_postdraw()</a>.</p>
 
@@ -1342,7 +1454,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="android_8c.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global()</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#abb1262ecd4987c683edc8b1d1dff8f8a">attr::callback</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="callback_8h.html#a69ffe0353900930decf3e49cef0cc421">callback_new_attr_0</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="callback_8h.html#ac6f979b0a38c585f1ec80236d150b54d">callback_new_attr_2</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structattr.html#a93638535f1a792b0bd88180c6f2414e3">attr::graphics</a>, <a class="el" href="graphics_8c.html#a05f933e81f028b7b9d802f44403d8f25">graphics_add_callback()</a>, <a class="el" href="graphics_8c.html#a2630c46e1c7758475ec776f2a3250914">graphics_set_attr()</a>, <a class="el" href="structattr__iter.html#a59f531e966274819d2ecda88c488f936">attr_iter::iter</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structattr.html#a678240cd70634267cfa84eeb0f4c9ad1">attr::layout</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="pedestrian_8c.html#a5b696228ab2b86bc6de99ac6499005c6">main_layout</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="map_8c.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr()</a>, <a class="el" href="structattr.html#abdfb8e542a965dde1babb59536cd4211">attr::mapset</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="structlayout.html#a8f5f53154c58359b95fe431e56b6138e">layout::name</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#ga551e228f9a6ed97cc575af96cd55000c">navit_attr_iter_destroy()</a>, <a class="el" href="group__navit.html#gad8a684b1f8b0bcf386804431e060f199">navit_attr_iter_new()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="pedestrian_8c.html#a78b45610990186012f5aa489a94e85a6">osd_rocket_init()</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#a1de72c3aef0edfbdd6617170ce702cb4">pedestrian_graphics_postdraw()</a>, <a class="el" href="pedestrian_8c.html#a35cd89af28e42c5808893744f5df371a">pedestrian_graphics_resize()</a>, <a class="el" href="pedestrian_8c.html#af293c20c18865c97304cdc38a8c9adab">pedestrian_log()</a>, <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>, <a class="el" href="structattr.html#a2132d9f8722d472ea71342ea68b03754">attr::route</a>, <a class="el" href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr()</a>, <a class="el" href="transform_8c.html#a859d5013f4f0c07d0d2a5d82e3c4b131">transform_set_distance()</a>, <a class="el" href="transform_8c.html#a49a14792e4d46bf7887f5dc006407044">transform_set_hog()</a>, <a class="el" href="transform_8c.html#a4f4e47e02c6fd4655be2b81f05e19bdf">transform_set_pitch()</a>, <a class="el" href="transform_8c.html#a80346ab0b59af0a2b690bdfc90b349e3">transform_set_roll()</a>, <a class="el" href="transform_8c.html#a82dd549a3e2370f027c13b0b04b4ae0d">transform_set_scale()</a>, <a class="el" href="transform_8c.html#aaa191a99a0e24a2e2a24a00f524926ba">transform_set_scales()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>, and <a class="el" href="vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe">vehicle_add_attr()</a>.</p>
+<p class="reference">References <a class="el" href="android_8c.html#ab835292cb19f80d70d6c9f242630de09">android_activity</a>, <a class="el" href="android_8c.html#a7e27fbc0cc2695097a90448bec80d140">android_find_class_global()</a>, <a class="el" href="attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253">attr_to_name()</a>, <a class="el" href="structattr.html#abb1262ecd4987c683edc8b1d1dff8f8a">attr::callback</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="callback_8h.html#a69ffe0353900930decf3e49cef0cc421">callback_new_attr_0</a>, <a class="el" href="callback_8h.html#ae7c649edc48dc3e82a7f513746dcb44e">callback_new_attr_1</a>, <a class="el" href="callback_8h.html#ac6f979b0a38c585f1ec80236d150b54d">callback_new_attr_2</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structattr.html#a93638535f1a792b0bd88180c6f2414e3">attr::graphics</a>, <a class="el" href="graphics_8c.html#a05f933e81f028b7b9d802f44403d8f25">graphics_add_callback()</a>, <a class="el" href="graphics_8c.html#a2630c46e1c7758475ec776f2a3250914">graphics_set_attr()</a>, <a class="el" href="structattr__iter.html#a59f531e966274819d2ecda88c488f936">attr_iter::iter</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structattr.html#a678240cd70634267cfa84eeb0f4c9ad1">attr::layout</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="pedestrian_8c.html#a5b696228ab2b86bc6de99ac6499005c6">main_layout</a>, <a class="el" href="structattr.html#ac07d1f64702eb46e7cc36bbb67d388a9">attr::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="map_8c.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr()</a>, <a class="el" href="structattr.html#abdfb8e542a965dde1babb59536cd4211">attr::mapset</a>, <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, <a class="el" href="structlayout.html#a8f5f53154c58359b95fe431e56b6138e">layout::name</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#ga551e228f9a6ed97cc575af96cd55000c">navit_attr_iter_destroy()</a>, <a class="el" href="group__navit.html#gad8a684b1f8b0bcf386804431e060f199">navit_attr_iter_new()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718">orientation</a>, <a class="el" href="pedestrian_8c.html#ad9c0acfdeaae4bea88844fcc646a5298">orientation_old</a>, <a class="el" href="pedestrian_8c.html#a46abb67fdbe56e896fc4b253d9a1c171">ORIENTATION_UNKNOWN</a>, <a class="el" href="pedestrian_8c.html#a78b45610990186012f5aa489a94e85a6">osd_rocket_init()</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#a1de72c3aef0edfbdd6617170ce702cb4">pedestrian_graphics_postdraw()</a>, <a class="el" href="pedestrian_8c.html#a35cd89af28e42c5808893744f5df371a">pedestrian_graphics_resize()</a>, <a class="el" href="pedestrian_8c.html#af293c20c18865c97304cdc38a8c9adab">pedestrian_log()</a>, <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>, <a class="el" href="structattr.html#a2132d9f8722d472ea71342ea68b03754">attr::route</a>, <a class="el" href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr()</a>, <a class="el" href="transform_8c.html#a859d5013f4f0c07d0d2a5d82e3c4b131">transform_set_distance()</a>, <a class="el" href="transform_8c.html#a49a14792e4d46bf7887f5dc006407044">transform_set_hog()</a>, <a class="el" href="transform_8c.html#a4f4e47e02c6fd4655be2b81f05e19bdf">transform_set_pitch()</a>, <a class="el" href="transform_8c.html#a80346ab0b59af0a2b690bdfc90b349e3">transform_set_roll()</a>, <a class="el" href="transform_8c.html#a82dd549a3e2370f027c13b0b04b4ae0d">transform_set_scale()</a>, <a class="el" href="transform_8c.html#aaa191a99a0e24a2e2a24a00f524926ba">transform_set_scales()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>, and <a class="el" href="vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe">vehicle_add_attr()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a73c4e4baadd0f7bf2aa8da88292bf1e1">pedestrian_navit()</a>, and <a class="el" href="pedestrian_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 
@@ -1432,7 +1544,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#aa2eb347f5b5f786023d4cebf9bfad2e8">callback_new_2</a>, <a class="el" href="callback_8h.html#a21deafaef7371a13a75f8c1981708a82">callback_new_3</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="event_8c.html#a84ab02a7011d6f7f66f4d2502658fb1d">event_add_timeout()</a>, <a class="el" href="event_8c.html#af0b4cc9711e5310e022da11bf0d45519">event_add_watch()</a>, <a class="el" href="event_8h.html#a53ad37122e5e2c1d458cbf380d6547a0afa46f5dbc277c6414f7ca526b154c302">event_watch_cond_read</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="pedestrian_8c.html#a5b696228ab2b86bc6de99ac6499005c6">main_layout</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="group__navit.html#ga44d9e4778a998e569aa807546d6a6a28">navit_set_center_cursor()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718">orientation</a>, <a class="el" href="pedestrian_8c.html#ad9c0acfdeaae4bea88844fcc646a5298">orientation_old</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#a872887ad755b516c4c700bd2dfee3bde">pedestrian_read_tilt()</a>, <a class="el" href="pedestrian_8c.html#ab1bc732e0439f4c6dae4210874a4ac31">pedestrian_write_tilt()</a>, <a class="el" href="pedestrian_8c.html#a7d3572f3efa85dbda24049ab3f6aa944">pedestrian_write_tilt_timer()</a>, <a class="el" href="structtransformation.html#a67cf4f819bcb0f1f6364d5ffb0f77eac">transformation::pitch</a>, <a class="el" href="pedestrian_8c.html#ac81756ed49d49c34ee3a6427a730d2b6">sensors_locked</a>, <a class="el" href="transform_8c.html#a4f4e47e02c6fd4655be2b81f05e19bdf">transform_set_pitch()</a>, <a class="el" href="transform_8c.html#a82dd549a3e2370f027c13b0b04b4ae0d">transform_set_scale()</a>, <a class="el" href="structattr.html#a7b87158e92e3ccb2527dbf471e68faaa">attr::transformation</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structpedestrian.html#a52a96cacd20e1826d0b9a023592e0a99">pedestrian::yaw</a>.</p>
+<p class="reference">References <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#aa2eb347f5b5f786023d4cebf9bfad2e8">callback_new_2</a>, <a class="el" href="callback_8h.html#a21deafaef7371a13a75f8c1981708a82">callback_new_3</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="event_8c.html#a84ab02a7011d6f7f66f4d2502658fb1d">event_add_timeout()</a>, <a class="el" href="event_8c.html#af0b4cc9711e5310e022da11bf0d45519">event_add_watch()</a>, <a class="el" href="event_8h.html#a53ad37122e5e2c1d458cbf380d6547a0afa46f5dbc277c6414f7ca526b154c302">event_watch_cond_read</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="pedestrian_8c.html#a5b696228ab2b86bc6de99ac6499005c6">main_layout</a>, <a class="el" href="structpedestrian.html#a6cbbbaa6366008ad764e426a4b453bf8">pedestrian::nav</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="group__navit.html#ga44d9e4778a998e569aa807546d6a6a28">navit_set_center_cursor()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718">orientation</a>, <a class="el" href="pedestrian_8c.html#a72f2f661d00fcac6af9f6b43a2e8f294">ORIENTATION_FLAT</a>, <a class="el" href="pedestrian_8c.html#accc06995e9834c793d2cc9e96ded0560">ORIENTATION_LANDSCAPE</a>, <a class="el" href="pedestrian_8c.html#ad9c0acfdeaae4bea88844fcc646a5298">orientation_old</a>, <a class="el" href="pedestrian_8c.html#a0f166aa542c69097847cfc189cd48057">ORIENTATION_PORTRAIT</a>, <a class="el" href="pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f">pedestrian_data</a>, <a class="el" href="pedestrian_8c.html#a872887ad755b516c4c700bd2dfee3bde">pedestrian_read_tilt()</a>, <a class="el" href="pedestrian_8c.html#ab1bc732e0439f4c6dae4210874a4ac31">pedestrian_write_tilt()</a>, <a class="el" href="pedestrian_8c.html#a7d3572f3efa85dbda24049ab3f6aa944">pedestrian_write_tilt_timer()</a>, <a class="el" href="structtransformation.html#a67cf4f819bcb0f1f6364d5ffb0f77eac">transformation::pitch</a>, <a class="el" href="pedestrian_8c.html#ac81756ed49d49c34ee3a6427a730d2b6">sensors_locked</a>, <a class="el" href="transform_8c.html#a4f4e47e02c6fd4655be2b81f05e19bdf">transform_set_pitch()</a>, <a class="el" href="transform_8c.html#a82dd549a3e2370f027c13b0b04b4ae0d">transform_set_scale()</a>, <a class="el" href="structattr.html#a7b87158e92e3ccb2527dbf471e68faaa">attr::transformation</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="pedestrian_8c.html#a4b86825d107b10f5fdf9021a068f668a">TYPE_ACCELEROMETER</a>, <a class="el" href="pedestrian_8c.html#aae7894a48a184bcc6a6e52744aab717b">TYPE_MAGNETIC_FIELD</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, and <a class="el" href="structpedestrian.html#a52a96cacd20e1826d0b9a023592e0a99">pedestrian::yaw</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>.</p>
 
@@ -1607,7 +1719,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structcommand__table.html">command_table</a> commands[]</td>
+          <td class="memname">struct <a class="el" href="structcommand__table.html">command_table</a> commands[] = {{&quot;pedestrian_rocket&quot;, command_cast(<a class="el" href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket</a>)},}</td>
         </tr>
       </table>
   </td>
@@ -1616,9 +1728,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;pedestrian_rocket&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket</a>)},</div><div class="line">}</div><div class="ttc" id="command_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition:</b> command.h:32</div></div>
-<div class="ttc" id="pedestrian_8c_html_a68e6d8c355a151e53b0a586ab086b057"><div class="ttname"><a href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket</a></div><div class="ttdeci">static void pedestrian_cmd_pedestrian_rocket(struct rocket *rocket)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:114</div></div>
-</div><!-- fragment -->
+
 </div>
 </div>
 <a id="a7f0158669de514eb00dcf8d3a7408285"></a>
@@ -1672,10 +1782,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team</p>
-<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. </p>
 
 </div>
 </div>
@@ -1714,12 +1820,12 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div><div class="line">    <span class="stringliteral">&quot;utf-8&quot;</span>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ae08bf3f2d66138a8f1a615476d577503">map_route_occluded_destroy</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a166e8567c628f1596df93919adddb2c0">map_route_occluded_rect_new</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a5b5566352cf8c3753bb6884912f6d59c">map_route_occluded_rect_destroy</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ace723fd53676dd3e8f5b3cd40da1b0a7">map_route_occluded_get_item</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ae515a56981615894c7ba72e4500b1c9c">map_route_occluded_get_item_byid</a>,</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line">}</div><div class="ttc" id="pedestrian_8c_html_a5b5566352cf8c3753bb6884912f6d59c"><div class="ttname"><a href="pedestrian_8c.html#a5b5566352cf8c3753bb6884912f6d59c">map_route_occluded_rect_destroy</a></div><div class="ttdeci">static void map_route_occluded_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:843</div></div>
-<div class="ttc" id="pedestrian_8c_html_ace723fd53676dd3e8f5b3cd40da1b0a7"><div class="ttname"><a href="pedestrian_8c.html#ace723fd53676dd3e8f5b3cd40da1b0a7">map_route_occluded_get_item</a></div><div class="ttdeci">static struct item * map_route_occluded_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:867</div></div>
-<div class="ttc" id="pedestrian_8c_html_ae515a56981615894c7ba72e4500b1c9c"><div class="ttname"><a href="pedestrian_8c.html#ae515a56981615894c7ba72e4500b1c9c">map_route_occluded_get_item_byid</a></div><div class="ttdeci">static struct item * map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:896</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div><div class="line">    <span class="stringliteral">&quot;utf-8&quot;</span>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ae08bf3f2d66138a8f1a615476d577503">map_route_occluded_destroy</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a166e8567c628f1596df93919adddb2c0">map_route_occluded_rect_new</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a5b5566352cf8c3753bb6884912f6d59c">map_route_occluded_rect_destroy</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ace723fd53676dd3e8f5b3cd40da1b0a7">map_route_occluded_get_item</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#ae515a56981615894c7ba72e4500b1c9c">map_route_occluded_get_item_byid</a>,</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line">}</div><div class="ttc" id="pedestrian_8c_html_a5b5566352cf8c3753bb6884912f6d59c"><div class="ttname"><a href="pedestrian_8c.html#a5b5566352cf8c3753bb6884912f6d59c">map_route_occluded_rect_destroy</a></div><div class="ttdeci">static void map_route_occluded_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:863</div></div>
+<div class="ttc" id="pedestrian_8c_html_ace723fd53676dd3e8f5b3cd40da1b0a7"><div class="ttname"><a href="pedestrian_8c.html#ace723fd53676dd3e8f5b3cd40da1b0a7">map_route_occluded_get_item</a></div><div class="ttdeci">static struct item * map_route_occluded_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:887</div></div>
+<div class="ttc" id="pedestrian_8c_html_ae515a56981615894c7ba72e4500b1c9c"><div class="ttname"><a href="pedestrian_8c.html#ae515a56981615894c7ba72e4500b1c9c">map_route_occluded_get_item_byid</a></div><div class="ttdeci">static struct item * map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:917</div></div>
 <div class="ttc" id="projection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdef"><b>Definition:</b> projection.h:25</div></div>
-<div class="ttc" id="pedestrian_8c_html_a166e8567c628f1596df93919adddb2c0"><div class="ttname"><a href="pedestrian_8c.html#a166e8567c628f1596df93919adddb2c0">map_route_occluded_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:801</div></div>
-<div class="ttc" id="pedestrian_8c_html_ae08bf3f2d66138a8f1a615476d577503"><div class="ttname"><a href="pedestrian_8c.html#ae08bf3f2d66138a8f1a615476d577503">map_route_occluded_destroy</a></div><div class="ttdeci">static void map_route_occluded_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:795</div></div>
+<div class="ttc" id="pedestrian_8c_html_a166e8567c628f1596df93919adddb2c0"><div class="ttname"><a href="pedestrian_8c.html#a166e8567c628f1596df93919adddb2c0">map_route_occluded_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:820</div></div>
+<div class="ttc" id="pedestrian_8c_html_ae08bf3f2d66138a8f1a615476d577503"><div class="ttname"><a href="pedestrian_8c.html#ae08bf3f2d66138a8f1a615476d577503">map_route_occluded_destroy</a></div><div class="ttdeci">static void map_route_occluded_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:814</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a8323e59bb0ec3dcf508e374d567f08ef">map_route_occluded_new()</a>.</p>
 
@@ -1744,10 +1850,10 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="pedestrian_8c.html#a0f95ffec8633535ddf754539e055a51d">map_route_occluded_coord_rewind</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#af256638a27388563e7081be5f308b7b7">map_route_occluded_coord_get</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a561a46e43d0ca5871de4035982a24d01">map_route_occluded_attr_rewind</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#aef6ffba05bce567ed893d3ebe72f7978">map_route_occluded_attr_get</a>,</div><div class="line">}</div><div class="ttc" id="pedestrian_8c_html_a561a46e43d0ca5871de4035982a24d01"><div class="ttname"><a href="pedestrian_8c.html#a561a46e43d0ca5871de4035982a24d01">map_route_occluded_attr_rewind</a></div><div class="ttdeci">static void map_route_occluded_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:609</div></div>
-<div class="ttc" id="pedestrian_8c_html_af256638a27388563e7081be5f308b7b7"><div class="ttname"><a href="pedestrian_8c.html#af256638a27388563e7081be5f308b7b7">map_route_occluded_coord_get</a></div><div class="ttdeci">static int map_route_occluded_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:629</div></div>
-<div class="ttc" id="pedestrian_8c_html_aef6ffba05bce567ed893d3ebe72f7978"><div class="ttname"><a href="pedestrian_8c.html#aef6ffba05bce567ed893d3ebe72f7978">map_route_occluded_attr_get</a></div><div class="ttdeci">static int map_route_occluded_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:615</div></div>
-<div class="ttc" id="pedestrian_8c_html_a0f95ffec8633535ddf754539e055a51d"><div class="ttname"><a href="pedestrian_8c.html#a0f95ffec8633535ddf754539e055a51d">map_route_occluded_coord_rewind</a></div><div class="ttdeci">static void map_route_occluded_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:596</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="pedestrian_8c.html#a0f95ffec8633535ddf754539e055a51d">map_route_occluded_coord_rewind</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#af256638a27388563e7081be5f308b7b7">map_route_occluded_coord_get</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#a561a46e43d0ca5871de4035982a24d01">map_route_occluded_attr_rewind</a>,</div><div class="line">    <a class="code" href="pedestrian_8c.html#aef6ffba05bce567ed893d3ebe72f7978">map_route_occluded_attr_get</a>,</div><div class="line">}</div><div class="ttc" id="pedestrian_8c_html_a561a46e43d0ca5871de4035982a24d01"><div class="ttname"><a href="pedestrian_8c.html#a561a46e43d0ca5871de4035982a24d01">map_route_occluded_attr_rewind</a></div><div class="ttdeci">static void map_route_occluded_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:633</div></div>
+<div class="ttc" id="pedestrian_8c_html_af256638a27388563e7081be5f308b7b7"><div class="ttname"><a href="pedestrian_8c.html#af256638a27388563e7081be5f308b7b7">map_route_occluded_coord_get</a></div><div class="ttdeci">static int map_route_occluded_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:655</div></div>
+<div class="ttc" id="pedestrian_8c_html_aef6ffba05bce567ed893d3ebe72f7978"><div class="ttname"><a href="pedestrian_8c.html#aef6ffba05bce567ed893d3ebe72f7978">map_route_occluded_attr_get</a></div><div class="ttdeci">static int map_route_occluded_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:639</div></div>
+<div class="ttc" id="pedestrian_8c_html_a0f95ffec8633535ddf754539e055a51d"><div class="ttname"><a href="pedestrian_8c.html#a0f95ffec8633535ddf754539e055a51d">map_route_occluded_coord_rewind</a></div><div class="ttdeci">static void map_route_occluded_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition:</b> pedestrian.c:620</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a166e8567c628f1596df93919adddb2c0">map_route_occluded_rect_new()</a>.</p>
 
@@ -1789,7 +1895,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, <a class="el" href="gui__internal__widget_8c.html#aca60bd67c360ca2b6abdc1a565b79570">gui_internal_box_pack()</a>, <a class="el" href="gui__internal__widget_8h.html#ad505d2736aecb3ad58c0cd655b43d47b">gui_internal_box_resize()</a>, <a class="el" href="pedestrian_8c.html#a6252c53cced4156ca778f7c704946da9">pedestrian_draw_arrows()</a>, and <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics__sdl_8c.html#a02d74da04a65b9c62442247eceb70a30">graphics_sdl_new()</a>, <a class="el" href="gui__internal__widget_8c.html#aca60bd67c360ca2b6abdc1a565b79570">gui_internal_box_pack()</a>, <a class="el" href="gui__internal__widget_8h.html#ad505d2736aecb3ad58c0cd655b43d47b">gui_internal_box_resize()</a>, <a class="el" href="pedestrian_8c.html#a6252c53cced4156ca778f7c704946da9">pedestrian_draw_arrows()</a>, <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, and <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
 
 </div>
 </div>
@@ -1805,7 +1911,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pedestrian_8c.html#a8da9aad3ef0a3ecc8615987664fbd1f3">pedestrian_navit_init()</a>, and <a class="el" href="pedestrian_8c.html#a56cb180e5cbeac09fbfff845c15c2134">pedestrian_setup_tilt()</a>.</p>
 
 </div>
 </div>

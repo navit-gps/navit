@@ -10,5 +10,7 @@ var searchData=
   ['tmod',['TMOD',['../sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1',1,'sunriset.h']]],
   ['transparent_5fbg',['TRANSPARENT_BG',['../osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36',1,'osd.h']]],
   ['twopi',['TWOPI',['../transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a',1,'transform.c']]],
+  ['type_5faccelerometer',['TYPE_ACCELEROMETER',['../pedestrian_8c.html#a4b86825d107b10f5fdf9021a068f668a',1,'pedestrian.c']]],
+  ['type_5fmagnetic_5ffield',['TYPE_MAGNETIC_FIELD',['../pedestrian_8c.html#aae7894a48a184bcc6a6e52744aab717b',1,'pedestrian.c']]],
   ['typelength',['TYPELENGTH',['../gpx2navit__txt_8h.html#ae7fa5b0dbc9038dce1ce8a342a6c0618',1,'gpx2navit_txt.h']]]
 ];

@@ -41,8 +41,6 @@ var searchData=
   ['add_5ftimeout',['add_timeout',['../structevent__methods.html#a78a56f5728c22e0f3cc34bf25d4a4607',1,'event_methods']]],
   ['add_5fwatch',['add_watch',['../structevent__methods.html#a39bed4312c004908d4bf58a650a846ec',1,'event_methods']]],
   ['addbookmark',['AddBookmark',['../classNGQProxyBookmarks.html#ae89e2ed52ab4fa233896207f5bacd0c1',1,'NGQProxyBookmarks']]],
-  ['addcamera',['addCamera',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a7f822135e30eb83a95fa5a4bc5800d2a',1,'org::navitproject::navit::NavitGraphics']]],
-  ['addcameraview',['addCameraView',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a90b5face1a4aea35b7680d60324a726e',1,'org::navitproject::navit::NavitGraphics']]],
   ['adddestination',['addDestination',['../classNGQProxyRoute.html#abd5b0881ad82ee0319d93d003ee94c78',1,'NGQProxyRoute']]],
   ['addfolder',['AddFolder',['../classNGQProxyBookmarks.html#ad968825f3e52d01a5776b98952995d68',1,'NGQProxyBookmarks']]],
   ['addlastaddress',['addLastAddress',['../classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#a0f5e46a4ebdcd288ad571b422c6aca68',1,'org::navitproject::navit::NavitAppConfig']]],

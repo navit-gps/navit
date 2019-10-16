@@ -3,6 +3,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView =
     [ "NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ace04d44950159ac4102942b74ae7946d", null ],
     [ "doLongpressAction", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ae4bf1b315d77834601c5852895a4f366", null ],
     [ "doZoom", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a1d1965d014278618b113f9856010b6c1", null ],
+    [ "isDrag", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ac5da0996e4911fe336c6ba07f9c8819c", null ],
     [ "onApplyWindowInsets", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a6fe221d756efa9b48f922a519cad84b2", null ],
     [ "onCreateContextMenu", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440", null ],
     [ "onDraw", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96", null ],

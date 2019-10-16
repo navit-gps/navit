@@ -33,7 +33,7 @@ var searchData=
   ['within_5fdist_5fpolygon',['within_dist_polygon',['../graphics_8c.html#aaf60fcbfa817ac80c00c6874aa56b151',1,'graphics.c']]],
   ['within_5fdist_5fpolyline',['within_dist_polyline',['../graphics_8c.html#a6b044b66832f9ad43159f1055747b3da',1,'graphics.c']]],
   ['wndproc',['WndProc',['../graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;graphics_win32.c'],['../gui__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;gui_win32.c']]],
-  ['workaroundforguiinternal',['workAroundForGuiInternal',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a430cf804f45228e98e50c8d0297601c4',1,'org::navitproject::navit::NavitGraphics']]],
+  ['workaroundforguiinternal',['workAroundForGuiInternal',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a45c743e17756747ab4d24abaa73c1250',1,'org::navitproject::navit::NavitGraphics']]],
   ['write_5faux_5ftiles',['write_aux_tiles',['../maptool_8h.html#af530096ee0ac7648b394eb6d87af5cff',1,'write_aux_tiles(struct zip_info *zip_info):&#160;tile.c'],['../tile_8c.html#af530096ee0ac7648b394eb6d87af5cff',1,'write_aux_tiles(struct zip_info *zip_info):&#160;tile.c']]],
   ['write_5fchanges',['write_changes',['../binfile_8c.html#a41a976a416063184df56c409ff8015e7',1,'binfile.c']]],
   ['write_5fchanges_5fdo',['write_changes_do',['../binfile_8c.html#a78a0c6baec850cb6bd006b9914a55220',1,'binfile.c']]],

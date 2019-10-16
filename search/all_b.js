@@ -172,6 +172,7 @@ var searchData=
   ['is_5fvalid',['is_valid',['../structxml__state.html#abd98f943564aacad51ebabef2a5b03ac',1,'xml_state']]],
   ['is_5fvisible_5fline',['is_visible_line',['../pedestrian_8c.html#add5c71349412336c81abcf407a5d4316',1,'pedestrian.c']]],
   ['is_5fway_5fallowed',['is_way_allowed',['../navigation_8c.html#a20504a61661dd334dbed8bae7e941849',1,'navigation.c']]],
+  ['isdrag',['isDrag',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ac5da0996e4911fe336c6ba07f9c8819c',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['isedge',['isEdge',['../structg2sprop.html#a3fc6e7de626012954aa1eea223690f17',1,'g2sprop']]],
   ['isfast',['isFast',['../structg2sprop.html#a0447bf6e3c2b36de4d9cc211dd9005df',1,'g2sprop']]],
   ['isinmap',['isInMap',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a52ed9300708e539d266e28c2d48645f1',1,'org::navitproject::navit::NavitMapDownloader::OsmMapValues']]],

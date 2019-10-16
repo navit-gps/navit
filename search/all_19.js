@@ -94,7 +94,7 @@ var searchData=
   ['wnd_5fparent_5fhandle',['wnd_parent_handle',['../structgraphics__priv.html#a0493cb47c708b4b7ce4280cae581af30',1,'graphics_priv']]],
   ['wndproc',['WndProc',['../graphics__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;graphics_win32.c'],['../gui__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef',1,'WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam):&#160;gui_win32.c']]],
   ['wordcount',['wordcount',['../structphrase.html#a914e67fe4c685042a0827c78605a486e',1,'phrase']]],
-  ['workaroundforguiinternal',['workAroundForGuiInternal',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a430cf804f45228e98e50c8d0297601c4',1,'org::navitproject::navit::NavitGraphics']]],
+  ['workaroundforguiinternal',['workAroundForGuiInternal',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a45c743e17756747ab4d24abaa73c1250',1,'org::navitproject::navit::NavitGraphics']]],
   ['working_5ffile',['working_file',['../structbookmarks.html#a1b096a437528c699a85d2b4d3d9a1eed',1,'bookmarks']]],
   ['workload',['workload',['../structdisplaylist.html#a81810371d6e8438f5ebdec8879a76abd',1,'displaylist']]],
   ['world_5fbbox',['world_bbox',['../maptool_8h.html#a81e09c15989c4459bdbf160a071dbb62',1,'world_bbox():&#160;misc.c'],['../maptool_2misc_8c.html#a81e09c15989c4459bdbf160a071dbb62',1,'world_bbox():&#160;misc.c']]],
