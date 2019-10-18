@@ -54,15 +54,25 @@
 /* #define DEMO 1 */
 
 #ifdef HAVE_API_ANDROID
+
 #include <navit/android.h>
+
 #endif
+
+#define ORIENTATION_UNKNOWN 0
+#define ORIENTATION_PORTRAIT 1
+#define ORIENTATION_LANDSCAPE 2
+#define ORIENTATION_FLAT 3
+#define TYPE_ACCELEROMETER 1
+#define TYPE_MAGNETIC_FIELD 2
+
 static struct map *global_map;
 
-int orientation,orientation_old;
+int orientation, orientation_old;
 
 struct pedestrian {
     struct navit *nav;
-    int w,h;
+    int w, h;
     int yaw;
 } pedestrian_data;
 
@@ -78,72 +88,78 @@ struct rocket {
     struct transformation *trans;
     struct displaylist *dl;
     struct mapset *ms;
-    int a,g,t,hog,v,vscale;
+    int a, g, t, hog, v, vscale;
     struct callback *callback;
     struct event_idle *idle;
 };
 
 static void pedestrian_rocket_idle(struct rocket *rocket) {
     struct attr follow;
-    follow.type=attr_follow;
-    follow.u.num=100;
+    follow.type = attr_follow;
+    follow.u.num = 100;
     transform_set_hog(rocket->trans, rocket->hog);
     graphics_displaylist_draw(rocket->gra, rocket->dl, rocket->trans, rocket->layout, 0);
-    rocket->v+=rocket->a-rocket->g;
-    dbg(lvl_debug,"enter v=%d",rocket->v);
-    if (rocket->t > 0)
+    rocket->v += rocket->a - rocket->g;
+    dbg(lvl_debug, "enter v=%d", rocket->v);
+    if (rocket->t > 0) {
         rocket->t--;
-    else
-        rocket->a=0;
-    rocket->hog+=rocket->v/rocket->vscale;
-    dbg(lvl_debug,"hog=%d",rocket->hog);
+    } else {
+        rocket->a = 0;
+    }
+    rocket->hog += rocket->v / rocket->vscale;
+    dbg(lvl_debug, "hog=%d", rocket->hog);
     if (rocket->hog < 0) {
         transform_set_hog(rocket->trans, 0);
         transform_set_order_base(rocket->trans, 14);
         transform_set_scale(rocket->trans, transform_get_scale(rocket->trans));
         graphics_overlay_disable(rocket->gra, 0);
         navit_draw(rocket->navit);
-        follow.u.num=1;
+        follow.u.num = 1;
         event_remove_idle(rocket->idle);
-        rocket->idle=NULL;
-        sensors_locked=0;
+        rocket->idle = NULL;
+        sensors_locked = 0;
     }
     navit_set_attr(rocket->navit, &follow);
 }
 
 static void pedestrian_cmd_pedestrian_rocket(struct rocket *rocket) {
     struct attr attr;
-    int max=0;
+    int max = 0;
 #if 0
     int i,step=10;
 #endif
-    rocket->a=2;
-    rocket->g=1;
-    rocket->t=100;
-    rocket->hog=0;
-    rocket->v=0;
-    rocket->vscale=10;
-    if (! navit_get_attr(rocket->navit, attr_graphics, &attr, NULL))
+    rocket->a = 2;
+    rocket->g = 1;
+    rocket->t = 100;
+    rocket->hog = 0;
+    rocket->v = 0;
+    rocket->vscale = 10;
+    if (!navit_get_attr(rocket->navit, attr_graphics, &attr, NULL)) {
         return;
-    rocket->gra=attr.u.graphics;
-    if (! navit_get_attr(rocket->navit, attr_transformation, &attr, NULL))
+    }
+    rocket->gra = attr.u.graphics;
+    if (!navit_get_attr(rocket->navit, attr_transformation, &attr, NULL)) {
         return;
-    rocket->trans=attr.u.transformation;
-    if (! navit_get_attr(rocket->navit, attr_displaylist, &attr, NULL))
+    }
+    rocket->trans = attr.u.transformation;
+    if (!navit_get_attr(rocket->navit, attr_displaylist, &attr, NULL)) {
         return;
-    rocket->dl=attr.u.displaylist;
-    if (! navit_get_attr(rocket->navit, attr_mapset, &attr, NULL))
+    }
+    rocket->dl = attr.u.displaylist;
+    if (!navit_get_attr(rocket->navit, attr_mapset, &attr, NULL)) {
         return;
-    rocket->ms=attr.u.mapset;
+    }
+    rocket->ms = attr.u.mapset;
     transform_set_hog(rocket->trans, max);
     transform_set_order_base(rocket->trans, 14);
     transform_set_scale(rocket->trans, transform_get_scale(rocket->trans));
     transform_setup_source_rect(rocket->trans);
     graphics_overlay_disable(rocket->gra, 1);
     graphics_draw(rocket->gra, rocket->dl, rocket->ms, rocket->trans, rocket->layout, 0, NULL, 0);
-    sensors_locked=1;
-    if (!rocket->idle)
-        rocket->idle=event_add_idle(50, rocket->callback);
+    sensors_locked = 1;
+    if (!rocket->idle) {
+        rocket->idle = event_add_idle(50, rocket->callback);
+    }
 #if 0
     while (hog >= 0) {
         transform_set_hog(trans, hog);
@@ -172,22 +188,21 @@ static void pedestrian_cmd_pedestrian_rocket(struct rocket *rocket) {
 #endif
 }
 
-static struct command_table commands[] = {
-    {"pedestrian_rocket",command_cast(pedestrian_cmd_pedestrian_rocket)},
-};
-
+static struct command_table commands[] = {{"pedestrian_rocket", command_cast(pedestrian_cmd_pedestrian_rocket)},};
 
 
 static void osd_rocket_init(struct navit *nav) {
-    struct rocket *rocket=g_new0(struct rocket, 1);
+    struct rocket *rocket = g_new0(struct rocket, 1);
     struct attr attr;
-    rocket->navit=nav;
-    rocket->callback=callback_new_1(callback_cast(pedestrian_rocket_idle), rocket);
-    if (navit_get_attr(nav, attr_layout, &attr, NULL))
-        rocket->layout=attr.u.layout;
+    rocket->navit = nav;
+    rocket->callback = callback_new_1(callback_cast(pedestrian_rocket_idle), rocket);
+    if (navit_get_attr(nav, attr_layout, &attr, NULL)) {
+        rocket->layout = attr.u.layout;
+    }
     if (navit_get_attr(nav, attr_callback_list, &attr, NULL)) {
-        dbg(lvl_debug,"ok");
-        command_add_table(attr.u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), rocket);
+        dbg(lvl_debug, "ok");
+        command_add_table(attr.u.callback_list, commands,
+                          sizeof(commands) / sizeof(struct command_table), rocket);
     }
 }
 
@@ -200,8 +215,9 @@ static void osd_marker_draw(struct marker *this, struct navit *nav) {
     struct attr graphics;
     struct point p;
     dbg(lvl_debug,"enter");
-    if (!navit_get_attr(nav, attr_graphics, &graphics, NULL))
+    if (!navit_get_attr(nav, attr_graphics, &graphics, NULL)) {
         return;
+    }
     p.x=40;
     p.y=50;
     cursor_draw(this->cursor, graphics.u.graphics, &p, 0, 45, 0);
@@ -211,90 +227,86 @@ static void osd_marker_draw(struct marker *this, struct navit *nav) {
 
 static void osd_marker_init(struct marker *this, struct navit *nav) {
     struct attr cursor;
-    struct attr itemgra,polygon,polygoncoord1,polygoncoord2,polygoncoord3;
-    struct attr *color=attr_new_from_text("color","#ff0000");
+    struct attr itemgra, polygon, polygoncoord1, polygoncoord2, polygoncoord3;
+    struct attr *color = attr_new_from_text("color", "#ff0000");
 
-    cursor=(struct attr) {
-        attr_cursor, {(void *)cursor_new(NULL, (struct attr *[]) {
+    cursor = (struct attr) {
+        attr_cursor, {(void *) cursor_new(NULL, (struct attr *[]) {
             &(struct attr) {
-                attr_w, {(void *)26}
-            },
-            &(struct attr) {
-                attr_h, {(void *)26}
-            },
-            NULL
+                attr_w, {(void *) 26}
+            }, &(struct attr) {
+                attr_h, {(void *) 26}
+            }, NULL
         })
                      }
     };
-    itemgra=(struct attr) {
-        attr_itemgra, {(void *)itemgra_new(&cursor, (struct attr *[]) {
+    itemgra = (struct attr) {
+        attr_itemgra, {(void *) itemgra_new(&cursor, (struct attr *[]) {
             NULL
         })
                       }
     };
     cursor_add_attr(cursor.u.cursor, &itemgra);
-    polygon=(struct attr) {
-        attr_polygon, {(void *)polygon_new(&itemgra, (struct attr *[]) {
-            color,
+    polygoncoord1 = (struct attr) {
+        attr_coord, {(void *) coord_new_from_attrs(&polygon, (struct attr *[]) {
             &(struct attr) {
-                attr_width, {(void *)2}
-            },
-            NULL
+                attr_x, {(void *) -7}
+            }, &(struct attr) {
+                attr_y, {(void *) -10}
+            }, NULL
         })
-                      }
+                    }
     };
     itemgra_add_attr(itemgra.u.itemgra, &polygon);
-    polygoncoord1=(struct attr) {
-        attr_coord, {(void *)coord_new_from_attrs(&polygon, (struct attr *[]) {
+    polygoncoord1 = (struct attr) {
+        attr_coord, {(void *) coord_new_from_attrs(&polygon, (struct attr *[]) {
             &(struct attr) {
-                attr_x, {(void *)-7}
-            },
-            &(struct attr) {
-                attr_y, {(void *)-10}
-            },
-            NULL
+                attr_x, {(void *) -7}
+            }, &(struct attr) {
+                attr_y, {(void *) -10}
+            }, NULL
         })
                     }
     };
     element_add_attr(polygon.u.element, &polygoncoord1);
-    polygoncoord2=(struct attr) {
-        attr_coord, {(void *)coord_new_from_attrs(&polygon, (struct attr *[]) {
-            &(struct attr) {
-                attr_x, {(void *)0}
-            },
-            &(struct attr) {
-                attr_y, {(void *)12}
-            },
-            NULL
-        })
-                    }
+    polygoncoord2 = (struct attr) {
+        attr_coord, {
+            (void *) coord_new_from_attrs(&polygon, (struct attr *[]) {
+                &(struct attr) {
+                    attr_x, {(void *) 0}
+                },
+                &(struct attr) {
+                    attr_y, {(void *) 12}
+                },
+                NULL
+            })
+        }
     };
     element_add_attr(polygon.u.element, &polygoncoord2);
-    polygoncoord3=(struct attr) {
-        attr_coord, {(void *)coord_new_from_attrs(&polygon, (struct attr *[]) {
-            &(struct attr) {
-                attr_x, {(void *)7}
-            },
-            &(struct attr) {
-                attr_y, {(void *)-10}
-            },
-            NULL
-        })
-                    }
+    polygoncoord3 = (struct attr) {
+        attr_coord, {
+            (void *) coord_new_from_attrs(&polygon, (struct attr *[]) {
+                &(struct attr) {
+                    attr_x, {(void *) 7}
+                },
+                &(struct attr) {
+                    attr_y, {(void *) -10}
+                },
+                NULL
+            })
+        }
     };
     element_add_attr(polygon.u.element, &polygoncoord3);
     attr_free(color);
-    this->cursor=cursor.u.cursor;
+    this->cursor = cursor.u.cursor;
     osd_marker_draw(this, nav);
 }
 
-static struct osd_priv *osd_marker_new(struct navit *nav, struct osd_methods *meth,
-                                       struct attr **attrs) {
+static struct osd_priv * osd_marker_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct marker *this = g_new0(struct marker, 1);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_marker_init), attr_navit, this));
     return (struct osd_priv *) this;
 }
-
 
 
 struct map_priv {
@@ -313,7 +325,7 @@ struct map_rect_priv {
     int idx_base;
     int idx_next;
     int idx;
-    int first,last;
+    int first, last;
     int route_item_done;
     struct coord c_out;
     struct coord c_next;
@@ -327,59 +339,60 @@ struct map_rect_priv {
 static int map_route_occluded_bbox(struct map *map, struct coord_rect *bbox) {
     struct coord c[128];
     struct coord_rect r;
-    int i,first=1,ccount;
-    struct map_rect *map_rect=map_rect_new(map, NULL);
+    int i, first = 1, ccount;
+    struct map_rect *map_rect = map_rect_new(map, NULL);
     struct item *item;
-    while ((item=map_rect_get_item(map_rect))) {
-        ccount=item_coord_get(item, c, 128);
+    while ((item = map_rect_get_item(map_rect))) {
+        ccount = item_coord_get(item, c, 128);
         if (ccount && first) {
-            r.lu=c[0];
-            r.rl=c[0];
-            first=0;
+            r.lu = c[0];
+            r.rl = c[0];
+            first = 0;
         }
-        for (i = 0 ; i < ccount ; i++)
+        for (i = 0; i < ccount; i++) {
             coord_rect_extend(&r, &c[i]);
+        }
     }
     map_rect_destroy(map_rect);
     if (first)
         return 0;
-    *bbox=r;
+    *bbox = r;
     return 1;
 }
 
 static struct building {
     struct street_data *sd;
-    struct coord left,right;
+    struct coord left, right;
     struct building *next;
 } *buildings;
 
 static void map_route_occluded_buildings_free(void) {
-    struct building *next,*b=buildings;
+    struct building *next, *b = buildings;
     while (b) {
         street_data_free(b->sd);
-        next=b->next;
+        next = b->next;
         g_free(b);
-        b=next;
+        b = next;
     }
-    buildings=NULL;
+    buildings = NULL;
 }
 
 static void map_route_occluded_get_buildings(struct mapset *mapset, struct coord_rect *r) {
-    struct mapset_handle *msh=mapset_open(mapset);
+    struct mapset_handle *msh = mapset_open(mapset);
     struct map *map;
     struct map_selection sel;
     struct map_rect *mr;
     struct item *item;
     struct building *b;
-    sel.next=NULL;
-    sel.u.c_rect=*r;
-    sel.order=18;
-    sel.range.min=type_poly_building;
-    sel.range.max=type_poly_building;
+    sel.next = NULL;
+    sel.u.c_rect = *r;
+    sel.order = 18;
+    sel.range.min = type_poly_building;
+    sel.range.max = type_poly_building;
 
     map_route_occluded_buildings_free();
     while ((map = mapset_next(msh, 1))) {
-        mr=map_rect_new(map, &sel);
+        mr = map_rect_new(map, &sel);
         while ((item = map_rect_get_item(mr))) {
             if (item->type == type_poly_building) {
 #if 0
@@ -397,113 +410,121 @@ static void map_route_occluded_get_buildings(struct mapset *mapset, struct coord
 #endif
                     continue;
 #endif
-                b=g_new(struct building, 1);
-                b->sd=street_get_data(item);
-                b->next=buildings;
-                buildings=b;
+                b = g_new(struct building, 1);
+                b->sd = street_get_data(item);
+                b->next = buildings;
+                buildings = b;
             }
         }
         map_rect_destroy(mr);
     }
 }
 
-FILE *debug,*debug2;
+FILE *debug, *debug2;
 
 /* < 0 left, > 0 right */
 
 static int side(struct coord *l0, struct coord *l1, struct coord *p) {
-    int dxl=l1->x-l0->x;
-    int dyl=l1->y-l0->y;
-    int dxp=p->x-l0->x;
-    int dyp=p->y-l0->y;
+    int dxl = l1->x - l0->x;
+    int dyl = l1->y - l0->y;
+    int dxp = p->x - l0->x;
+    int dyp = p->y - l0->y;
 
-    return dxp*dyl-dyp*dxl;
+    return dxp * dyl - dyp * dxl;
 }
 
 static void map_route_occluded_check_buildings(struct coord *c0) {
-    struct building *b=buildings;
-    dbg(lvl_debug,"enter");
-    int i,count;
+    struct building *b = buildings;
+    dbg(lvl_debug, "enter");
+    int i, count;
     struct coord *c;
 #if 1
-    FILE *bdebug,*bldebug;
-    bdebug=fopen("tstb.txt","w");
-    bldebug=fopen("tstbl.txt","w");
+    FILE *bdebug, *bldebug;
+    bdebug = fopen("tstb.txt", "w");
+    bldebug = fopen("tstbl.txt", "w");
 #endif
     while (b) {
-        c=b->sd->c;
-        count=b->sd->count;
-        if (c[count-1].x == c[0].x && c[count-1].y == c[0].y) {
+        c = b->sd->c;
+        count = b->sd->count;
+        if (c[count - 1].x == c[0].x && c[count - 1].y == c[0].y) {
 #if 0
             dbg(lvl_debug,"closed");
 #endif
             count--;
         }
-        for (i = 0 ; i < count ; i++) {
-            if (!i || side(c0, &b->left, &c[i]) < 0)
-                b->left=c[i];
-            if (!i || side(c0, &b->right, &c[i]) > 0)
-                b->right=c[i];
+        for (i = 0; i < count; i++) {
+            if (!i || side(c0, &b->left, &c[i]) < 0) {
+                b->left = c[i];
+            }
+            if (!i || side(c0, &b->right, &c[i]) > 0) {
+                b->right = c[i];
+            }
         }
 #if 1
         if (bdebug) {
-            fprintf(bdebug,"0x%x 0x%x type=poi_hospital\n", b->left.x, b->left.y);
-            fprintf(bdebug,"0x%x 0x%x type=poi_hospital\n", b->right.x, b->right.y);
+            fprintf(bdebug, "0x%x 0x%x type=poi_hospital", b->left.x, b->left.y);
+            fprintf(bdebug, "0x%x 0x%x type=poi_hospital", b->right.x, b->right.y);
         }
         if (bldebug) {
-            fprintf(bldebug,"type=street_nopass\n");
-            fprintf(bldebug,"0x%x 0x%x\n", c0->x, c0->y);
-            fprintf(bldebug,"0x%x 0x%x\n", c0->x+(b->left.x-c0->x)*10, c0->y+(b->left.y-c0->y)*10);
-            fprintf(bldebug,"type=street_nopass\n");
-            fprintf(bldebug,"0x%x 0x%x\n", c0->x, c0->y);
-            fprintf(bldebug,"0x%x 0x%x\n", c0->x+(b->right.x-c0->x)*10, c0->y+(b->right.y-c0->y)*10);
+            fprintf(bldebug, "type=street_nopass");
+            fprintf(bldebug, "0x%x 0x%x", c0->x, c0->y);
+            fprintf(bldebug, "0x%x 0x%x", c0->x + (b->left.x - c0->x) * 10,
+                    c0->y + (b->left.y - c0->y) * 10);
+            fprintf(bldebug, "type=street_nopass");
+            fprintf(bldebug, "0x%x 0x%x", c0->x, c0->y);
+            fprintf(bldebug, "0x%x 0x%x", c0->x + (b->right.x - c0->x) * 10,
+                    c0->y + (b->right.y - c0->y) * 10);
         }
 #endif
-        b=b->next;
+        b = b->next;
     }
 #if 1
-    if (bdebug)
+    if (bdebug) {
         fclose(bdebug);
-    if (bldebug)
+    }
+    if (bldebug) {
         fclose(bldebug);
+    }
 #endif
 }
 
 static int intersect(struct coord *p1, struct coord *p2, struct coord *p3, struct coord *p4, struct coord *i) {
-    double num=(p4->x-p3->x)*(p1->y-p3->y)-(p4->y-p3->y)*(p1->x-p3->x);
-    double den=(p4->y-p3->y)*(p2->x-p1->x)-(p4->x-p3->x)*(p2->y-p1->y);
+    double num = (p4->x - p3->x) * (p1->y - p3->y) - (p4->y - p3->y) * (p1->x - p3->x);
+    double den = (p4->y - p3->y) * (p2->x - p1->x) - (p4->x - p3->x) * (p2->y - p1->y);
     if (num < 0 && den < 0) {
-        num=-num;
-        den=-den;
+        num = -num;
+        den = -den;
     }
-    dbg(lvl_debug,"num=%f den=%f", num, den);
+    dbg(lvl_debug, "num=%f den=%f", num, den);
     if (i) {
-        i->x=p1->x+(num/den)*(p2->x-p1->x)+0.5;
-        i->y=p1->y+(num/den)*(p2->y-p1->y)+0.5;
-        dbg(lvl_debug,"i=0x%x,0x%x", i->x, i->y);
+        i->x = p1->x + (num / den) * (p2->x - p1->x) + 0.5;
+        i->y = p1->y + (num / den) * (p2->y - p1->y) + 0.5;
+        dbg(lvl_debug, "i=0x%x,0x%x", i->x, i->y);
         if (debug2)
-            fprintf(debug2, "0x%x 0x%x type=town_label_5e3\n", i->x, i->y);
+            fprintf(debug2, "0x%x 0x%x type=town_label_5e3", i->x, i->y);
     }
-    if (num < 0 || den < 0)
+    if (num < 0 || den < 0) {
         return -1;
-    if (num > den)
+    }
+    if (num > den) {
         return 257;
-    return 256*num/den;
+    }
+    return 256 * num / den;
 }
 
 /* return
-	0=Not clipped
-	1=Start clipped
-	2=End clipped
-	3=Both clipped
-	4=Invisible
+    0=Not clipped
+    1=Start clipped
+    2=End clipped
+    3=Both clipped
+    4=Invisible
 */
 
 /* #define DEBUG_VISIBLE */
 
 static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2) {
-    int res,ret=0;
-    struct building *b=buildings;
+    int res, ret = 0;
+    struct building *b = buildings;
     struct coord cn;
 #ifdef DEBUG_VISIBLE
     dbg(lvl_debug,"enter");
@@ -511,8 +532,8 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
     while (b) {
         if (side(&b->left, &b->right, c1) < 0 || side(&b->left, &b->right, c2) < 0) {
 #ifdef DEBUG_VISIBLE
-            dbg(lvl_debug,"sides left: start %d end %d right: start %d end %d", side(c0, &b->left, c1), side(c0, &b->left, c2),
-                side(c0, &b->right, c1), side(c0, &b->right, c2));
+            dbg(lvl_debug,"sides left: start %d end %d right: start %d end %d", side(c0, &b->left, c1),
+                side(c0, &b->left, c2), side(c0, &b->right, c1), side(c0, &b->right, c2));
 #endif
             for (;;) {
                 if (side(c0, &b->left, c1) <= 0) {
@@ -520,12 +541,13 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
 #ifdef DEBUG_VISIBLE
                         dbg(lvl_debug,"visible: start is left of left corner and end is right of left corner, clipping end");
 #endif
-                        res=intersect(c0, &b->left, c1, c2, &cn);
-                        if (res < 256)
+                        res = intersect(c0, &b->left, c1, c2, &cn);
+                        if (res < 256) {
                             break;
+                        }
                         if (c1->x != cn.x || c1->y != cn.y) {
-                            *c2=cn;
-                            ret|=2;
+                            *c2 = cn;
+                            ret |= 2;
                             break;
                         }
                     } else
@@ -536,12 +558,13 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
 #ifdef DEBUG_VISIBLE
                         dbg(lvl_debug,"visible: start is right of right corner and end is left of right corner, clipping end");
 #endif
-                        res=intersect(c0, &b->right, c1, c2, &cn);
-                        if (res < 256)
+                        res = intersect(c0, &b->right, c1, c2, &cn);
+                        if (res < 256) {
                             break;
+                        }
                         if (c1->x != cn.x || c1->y != cn.y) {
-                            *c2=cn;
-                            ret|=2;
+                            *c2 = cn;
+                            ret |= 2;
                             break;
                         }
                     } else
@@ -552,12 +575,13 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
 #ifdef DEBUG_VISIBLE
                         dbg(lvl_debug,"visible: end is left of left corner and start is right of left corner, clipping start");
 #endif
-                        res=intersect(c0, &b->left, c1, c2, &cn);
-                        if (res < 256)
+                        res = intersect(c0, &b->left, c1, c2, &cn);
+                        if (res < 256) {
                             break;
+                        }
                         if (c2->x != cn.x || c2->y != cn.y) {
-                            *c1=cn;
-                            ret|=1;
+                            *c1 = cn;
+                            ret |= 1;
                             break;
                         }
                     } else
@@ -568,12 +592,12 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
 #ifdef DEBUG_VISIBLE
                         dbg(lvl_debug,"visible: end is right of right corner and start is left of right corner, clipping start");
 #endif
-                        res=intersect(c0, &b->right, c1, c2, &cn);
+                        res = intersect(c0, &b->right, c1, c2, &cn);
                         if (res < 256)
                             break;
                         if (c2->x != cn.x || c2->y != cn.y) {
-                            *c1=cn;
-                            ret|=1;
+                            *c1 = cn;
+                            ret |= 1;
                             break;
                         }
                     } else
@@ -585,7 +609,7 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
                 return 4;
             }
         }
-        b=b->next;
+        b = b->next;
     }
 #ifdef DEBUG_VISIBLE
     dbg(lvl_debug,"return %d",ret);
@@ -595,160 +619,153 @@ static int is_visible_line(struct coord *c0, struct coord *c1, struct coord *c2)
 
 static void map_route_occluded_coord_rewind(void *priv_data) {
     struct map_rect_priv *mr = priv_data;
-    dbg(lvl_debug,"enter");
-    mr->idx=mr->idx_base;
-    mr->first=1;
-    mr->lseg_done=mr->lseg_done_base;
-    mr->c_next=mr->c_next_base;
-    mr->lseg[0]=mr->lseg_base[0];
-    mr->lseg[1]=mr->lseg_base[1];
-    mr->last=0;
+    dbg(lvl_debug, "enter");
+    mr->idx = mr->idx_base;
+    mr->first = 1;
+    mr->lseg_done = mr->lseg_done_base;
+    mr->c_next = mr->c_next_base;
+    mr->lseg[0] = mr->lseg_base[0];
+    mr->lseg[1] = mr->lseg_base[1];
+    mr->last = 0;
     item_coord_rewind(mr->route_item);
 }
 
 static void map_route_occluded_attr_rewind(void *priv_data) {
-    struct map_rect_priv *mr=priv_data;
-    dbg(lvl_debug,"enter");
+    struct map_rect_priv *mr = priv_data;
+    dbg(lvl_debug, "enter\n");
     item_attr_rewind(mr->route_item);
 }
 
 static int map_route_occluded_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
-    struct map_rect_priv *mr=priv_data;
-    dbg(lvl_debug,"enter");
+    struct map_rect_priv *mr = priv_data;
+    dbg(lvl_debug, "enter\n");
     return item_attr_get(mr->route_item, attr_type, attr);
 }
 
 static int coord_next(struct map_rect_priv *mr, struct coord *c) {
-    if (mr->idx >= mr->sd->count)
+    if (mr->idx >= mr->sd->count) {
         return 1;
-    *c=mr->sd->c[mr->idx++];
+    }
+    *c = mr->sd->c[mr->idx++];
     return 0;
 }
 
 #define DEBUG_COORD_GET
+
 static int map_route_occluded_coord_get(void *priv_data, struct coord *c, int count) {
-    struct map_rect_priv *mr=priv_data;
-    struct coord l0,l1;
-    int vis,ret=0;
+    struct map_rect_priv *mr = priv_data;
+    struct coord l0, l1;
+    int vis, ret = 0;
     char buffer[4096];
 
 #ifdef DEBUG_COORD_GET
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 #endif
     dbg_assert(count >= 2);
-    if (! mr->checked) {
-        mr->c0=mr->sd->c[0];
+    if (!mr->checked) {
+        mr->c0 = mr->sd->c[0];
         map_route_occluded_check_buildings(&mr->c0);
-        mr->checked=1;
+        mr->checked = 1;
     }
     while (ret < count && !mr->last) {
 #ifdef DEBUG_COORD_GET
-        dbg(lvl_debug,"coord first %d lseg_done %d",mr->first,mr->lseg_done);
+        dbg(lvl_debug, "coord first %d lseg_done %d", mr->first, mr->lseg_done);
 #endif
         if (mr->lseg_done) {
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"loading %d of %d from id_lo %d", mr->idx, mr->sd->count, mr->sd->item.id_lo);
+            dbg(lvl_debug, "loading %d of %d from id_lo %d", mr->idx, mr->sd->count,
+                mr->sd->item.id_lo);
 #endif
             if (!mr->idx) {
                 if (coord_next(mr, &mr->lseg[0])) {
-                    mr->route_item_done=1;
-                    mr->last=1;
-                    mr->idx_base=mr->idx=0;
+                    mr->route_item_done = 1;
+                    mr->last = 1;
+                    mr->idx_base = mr->idx = 0;
                     break;
                 }
-                mr->first=1;
+                mr->first = 1;
             } else
-                mr->lseg[0]=mr->lseg[1];
+                mr->lseg[0] = mr->lseg[1];
             if (coord_next(mr, &mr->lseg[1])) {
-                mr->route_item_done=1;
-                mr->last=1;
-                mr->idx_base=mr->idx=0;
+                mr->route_item_done = 1;
+                mr->last = 1;
+                mr->idx_base = mr->idx = 0;
                 break;
             }
-            mr->c_next=mr->lseg[0];
-            mr->lseg_done=0;
+            mr->c_next = mr->lseg[0];
+            mr->lseg_done = 0;
         }
-        l0=mr->c_next;
-        l1=mr->lseg[1];
+        l0 = mr->c_next;
+        l1 = mr->lseg[1];
 #ifdef DEBUG_COORD_GET
-        dbg(lvl_debug,"line (0x%x,0x%x)-(0x%x,0x%x)", l0.x,l0.y,l1.x,l1.y);
+        dbg(lvl_debug, "line (0x%x,0x%x)-(0x%x,0x%x)", l0.x, l0.y, l1.x, l1.y);
 #endif
-        vis=is_visible_line(&mr->c0, &l0, &l1);
+        vis = is_visible_line(&mr->c0, &l0, &l1);
         if (debug) {
-            fprintf(debug,"type=tracking_%d debug=\"%s\"\n",vis*20,buffer);
-            fprintf(debug,"0x%x 0x%x\n", l0.x, l0.y);
-            fprintf(debug,"0x%x 0x%x\n", l1.x, l1.y);
+            fprintf(debug, "type=tracking_%d debug=\"%s\"\n", vis * 20, buffer);
+            fprintf(debug, "0x%x 0x%x", l0.x, l0.y);
+            fprintf(debug, "0x%x 0x%x", l1.x, l1.y);
         }
 #ifdef DEBUG_COORD_GET
-        dbg(lvl_debug,"vis=%d line (0x%x,0x%x)-(0x%x,0x%x)", vis, l0.x,l0.y,l1.x,l1.y);
+        dbg(lvl_debug, "vis=%d line (0x%x,0x%x)-(0x%x,0x%x)", vis, l0.x, l0.y, l1.x, l1.y);
 #endif
-        mr->idx_base=mr->idx;
-        mr->c_next_base=mr->c_next;
-        mr->lseg_base[0]=mr->lseg[0];
-        mr->lseg_base[1]=mr->lseg[1];
-        mr->lseg_done_base=mr->lseg_done;
+        mr->idx_base = mr->idx;
+        mr->c_next_base = mr->c_next;
+        mr->lseg_base[0] = mr->lseg[0];
+        mr->lseg_base[1] = mr->lseg[1];
+        mr->lseg_done_base = mr->lseg_done;
         switch (vis) {
         case 0:
-            mr->c_next_base=mr->c_next;
+            mr->c_next_base = mr->c_next;
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l0.x, l1.y);
+            dbg(lvl_debug, "out 0x%x,0x%x", l0.x, l1.y);
 #endif
-            c[ret++]=l0;
+            c[ret++] = l0;
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l1.x, l1.y);
+            dbg(lvl_debug, "out 0x%x,0x%x", l1.x, l1.y);
 #endif
-            c[ret++]=l1;
-            mr->lseg_done_base=mr->lseg_done=1;
-            mr->last=1;
+            c[ret++] = l1;
+            mr->lseg_done_base = mr->lseg_done = 1;
+            mr->last = 1;
             break;
         case 1:
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"begin clipped");
-            dbg(lvl_debug,"out 0x%x,0x%x", l0.x, l1.y);
+            dbg(lvl_debug, "begin clipped");
+            dbg(lvl_debug, "out 0x%x,0x%x", l0.x, l1.y);
 #endif
-            c[ret++]=l0;
+            c[ret++] = l0;
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l1.x, l1.y);
+            dbg(lvl_debug, "out 0x%x,0x%x", l1.x, l1.y);
 #endif
-            c[ret++]=l1;
-            mr->c_next_base=mr->c_next=l1;
-            mr->last=1;
+            c[ret++] = l1;
+            mr->c_next_base = mr->c_next = l1;
+            mr->last = 1;
             break;
         case 2:
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"end clipped");
+            dbg(lvl_debug, "end clipped");
 #endif
-            mr->c_next_base=mr->c_next;
-#ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l0.x, l1.y);
-#endif
-            c[ret++]=l0;
-#ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l1.x, l1.y);
-#endif
-            c[ret++]=l1;
-            mr->c_next_base=mr->c_next=l1;
-            mr->last=1;
-            break;
         case 3:
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"both clipped");
+            if (vis == 3) {
+                dbg(lvl_debug, "both clipped");
+            }
 #endif
-            mr->c_next_base=mr->c_next;
+            mr->c_next_base = mr->c_next;
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l0.x, l1.y);
+            dbg(lvl_debug, "out 0x%x,0x%x", l0.x, l1.y);
 #endif
-            c[ret++]=l0;
+            c[ret++] = l0;
 #ifdef DEBUG_COORD_GET
-            dbg(lvl_debug,"out 0x%x,0x%x", l1.x, l1.y);
+            dbg(lvl_debug, "out 0x%x,0x%x", l1.x, l1.y);
 #endif
-            c[ret++]=l1;
-            mr->c_next_base=mr->c_next=l1;
-            mr->last=1;
+            c[ret++] = l1;
+            mr->c_next_base = mr->c_next = l1;
+            mr->last = 1;
             break;
         case 4:
-            mr->last=1;
-            mr->lseg_done_base=mr->lseg_done=1;
+            mr->last = 1;
+            mr->lseg_done_base = mr->lseg_done = 1;
             break;
 
 #if 0
@@ -777,10 +794,12 @@ static int map_route_occluded_coord_get(void *priv_data, struct coord *c, int co
         if (!vis)
             break;
 #endif
+    default:
+        break;
     }
 }
 #ifdef DEBUG_COORD_GET
-dbg(lvl_debug,"ret=%d last=%d", ret, mr->last);
+dbg(lvl_debug, "ret=%d last=%d", ret, mr->last);
 #endif
 return ret;
 }
@@ -798,42 +817,43 @@ static void map_route_occluded_destroy(struct map_priv *priv) {
 
 static int no_recurse;
 
-static struct map_rect_priv *map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel) {
-    struct map_rect_priv * mr;
+static struct map_rect_priv * map_route_occluded_rect_new(struct map_priv *priv, struct map_selection *sel) {
+    struct map_rect_priv *mr;
     struct attr route;
     struct attr route_map;
     struct map_rect *route_map_rect;
     struct coord_rect r;
     if (!navit_get_attr(priv->navit, attr_route, &route, NULL)) {
-        dbg(lvl_debug,"no route in navit");
+        dbg(lvl_debug, "no route in navit");
         return NULL;
     }
     if (!route_get_attr(route.u.route, attr_map, &route_map, NULL)) {
-        dbg(lvl_debug,"no map in route");
+        dbg(lvl_debug, "no map in route");
         return NULL;
     }
-    route_map_rect=map_rect_new(route_map.u.map, sel);
+    route_map_rect = map_rect_new(route_map.u.map, sel);
     if (!route_map_rect) {
-        dbg(lvl_debug,"no route map rect");
+        dbg(lvl_debug, "no route map rect");
         return NULL;
     }
     map_dump_file(route_map.u.map, "route.txt");
-    mr=g_new0(struct map_rect_priv, 1);
-    mr->route_map_rect=route_map_rect;
+    mr = g_new0(struct map_rect_priv, 1);
+    mr->route_map_rect = route_map_rect;
     mr->mpriv = priv;
     mr->item.priv_data = mr;
     mr->item.meth = &methods_route_occluded_item;
     mr->item.id_lo = -1;
-    mr->route_item_done=1;
-    mr->lseg_done_base=1;
-    mr->last=1;
+    mr->route_item_done = 1;
+    mr->lseg_done_base = 1;
+    mr->last = 1;
     if (!no_recurse && map_route_occluded_bbox(route_map.u.map, &r)) {
         struct attr mapset;
         no_recurse++;
-        if (navit_get_attr(mr->mpriv->navit, attr_mapset, &mapset, NULL))
+        if (navit_get_attr(mr->mpriv->navit, attr_mapset, &mapset, NULL)) {
             map_route_occluded_get_buildings(mapset.u.mapset, &r);
-        debug=fopen("tst.txt","w");
-        debug2=fopen("tstp.txt","w");
+        }
+        debug = fopen("tst.txt", "w");
+        debug2 = fopen("tstp.txt", "w");
         no_recurse--;
     }
     return mr;
@@ -847,11 +867,11 @@ static void map_route_occluded_rect_destroy(struct map_rect_priv *mr) {
     if (!no_recurse) {
         if (debug) {
             fclose(debug);
-            debug=NULL;
+            debug = NULL;
         }
         if (debug2) {
             fclose(debug2);
-            debug2=NULL;
+            debug2 = NULL;
         }
     }
 #if 0
@@ -865,23 +885,24 @@ static void map_route_occluded_rect_destroy(struct map_rect_priv *mr) {
 }
 
 static struct item *map_route_occluded_get_item(struct map_rect_priv *mr) {
-    dbg(lvl_debug,"enter last=%d",mr->last);
+    dbg(lvl_debug, "enter last=%d", mr->last);
     while (!mr->last) {
         struct coord c[128];
         map_route_occluded_coord_get(mr, c, 128);
     }
     if (mr->route_item_done) {
-        dbg(lvl_debug,"next route item");
+        dbg(lvl_debug, "next route item");
         do {
-            mr->route_item=map_rect_get_item(mr->route_map_rect);
+            mr->route_item = map_rect_get_item(mr->route_map_rect);
         } while (mr->route_item && mr->route_item->type != type_street_route);
-        dbg(lvl_debug,"item %p", mr->route_item);
-        if (!mr->route_item)
+        dbg(lvl_debug, "item %p", mr->route_item);
+        if (!mr->route_item) {
             return NULL;
-        mr->item.type=type_street_route_occluded;
+        }
+        mr->item.type = type_street_route_occluded;
         street_data_free(mr->sd);
-        mr->sd=street_get_data(mr->route_item);
-        mr->route_item_done=0;
+        mr->sd = street_get_data(mr->route_item);
+        mr->route_item_done = 0;
     }
     mr->item.id_lo++;
 #if 0
@@ -889,14 +910,15 @@ static struct item *map_route_occluded_get_item(struct map_rect_priv *mr) {
         return NULL;
 #endif
     map_route_occluded_coord_rewind(mr);
-    dbg(lvl_debug,"type %s", item_to_name(mr->route_item->type));
+    dbg(lvl_debug, "type %s", item_to_name(mr->route_item->type));
     return &mr->item;
 }
 
-static struct item *map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
-    struct item *ret=NULL;
-    while (id_lo-- > 0)
-        ret=map_route_occluded_get_item(mr);
+static struct item * map_route_occluded_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo) {
+    struct item *ret = NULL;
+    while (id_lo-- > 0) {
+        ret = map_route_occluded_get_item(mr);
+    }
     return ret;
 }
 
@@ -917,14 +939,15 @@ static struct map_methods map_route_occluded_methods = {
 static struct map_priv *map_route_occluded_new(struct map_methods *meth, struct attr **attrs) {
     struct map_priv *ret;
     struct attr *navit;
-    dbg(lvl_debug,"enter");
-    navit=attr_search(attrs, NULL, attr_navit);
-    if (! navit)
+    dbg(lvl_debug, "enter\n");
+    navit = attr_search(attrs, NULL, attr_navit);
+    if (!navit) {
         return NULL;
-    ret=g_new0(struct map_priv, 1);
-    *meth=map_route_occluded_methods;
-    ret->navit=navit->u.navit;
-    dbg(lvl_debug,"m=%p navit=%p", ret, ret->navit);
+    }
+    ret = g_new0(struct map_priv, 1);
+    *meth = map_route_occluded_methods;
+    ret->navit = navit->u.navit;
+    dbg(lvl_debug, "m = %p navit = %p", ret, ret->navit);
     return ret;
 }
 
@@ -939,20 +962,20 @@ static void pedestrian_graphics_resize(struct graphics *gra, int w, int h) {
         done=1;
     }
 #endif
-    pedestrian_data.w=w;
-    pedestrian_data.h=h;
+    pedestrian_data.w = w;
+    pedestrian_data.h = h;
 }
 
 
 static void pedestrian_draw_arrow(struct graphics *gra, char *name, int x, int y) {
-    char *src=graphics_icon_path(name);
-    struct graphics_image *img=graphics_image_new(gra, src);
-    struct graphics_gc *gc=graphics_gc_new(gra);
-    struct color col= {0xffff,0xffff,0xffff,0xffff};
+    char *src = graphics_icon_path(name);
+    struct graphics_image *img = graphics_image_new(gra, src);
+    struct graphics_gc *gc = graphics_gc_new(gra);
+    struct color col = {0xffff, 0xffff, 0xffff, 0xffff};
     struct point p;
     graphics_gc_set_foreground(gc, &col);
-    p.x=x;
-    p.y=y;
+    p.x = x;
+    p.y = y;
     graphics_draw_image(gra, gc, &p, img);
     graphics_image_free(gra, img);
     graphics_gc_destroy(gc);
@@ -964,36 +987,43 @@ static void pedestrian_draw_arrows(struct graphics *gra) {
     struct map_rect *route_map_rect;
     struct item *item;
 
-    if (orientation == 2)
+    if (orientation == ORIENTATION_FLAT) {
         return;
+    }
     if (!navit_get_attr(pedestrian_data.nav, attr_route, &route, NULL)) {
-        dbg(lvl_debug,"no route in navit");
+        dbg(lvl_debug, "no route in navit");
         return;
     }
     if (!route_get_attr(route.u.route, attr_map, &route_map, NULL)) {
-        dbg(lvl_debug,"no map in route");
+        dbg(lvl_debug, "no map in route");
         return;
     }
-    route_map_rect=map_rect_new(route_map.u.map, NULL);
+    route_map_rect = map_rect_new(route_map.u.map, NULL);
     if (!route_map_rect) {
-        dbg(lvl_debug,"no route map rect");
+        dbg(lvl_debug, "no route map rect");
         return;
     }
-    while ((item=map_rect_get_item(route_map_rect))) {
+    while ((item = map_rect_get_item(route_map_rect))) {
         if (item->type == type_street_route) {
             struct coord c[2];
             if (item_coord_get(item, c, 2) == 2) {
-                struct coord *center=transform_get_center(navit_get_trans(pedestrian_data.nav));
-                int angle=transform_get_angle_delta(center, &c[1], 0);
-                angle-=pedestrian_data.yaw;
-                if (angle < 0)
-                    angle+=360;
-                if (angle >= 360)
-                    angle-=360;
-                if (angle > 180 && angle < 350)
-                    pedestrian_draw_arrow(gra,"gui_arrow_left_32_32.png",0,pedestrian_data.h/2-16);
-                if (angle > 10 && angle <= 180)
-                    pedestrian_draw_arrow(gra,"gui_arrow_right_32_32.png",pedestrian_data.w-32,pedestrian_data.h/2-16);
+                struct coord *center = transform_get_center(navit_get_trans(pedestrian_data.nav));
+                int angle = transform_get_angle_delta(center, &c[1], 0);
+                angle -= pedestrian_data.yaw;
+                if (angle < 0) {
+                    angle += 360;
+                }
+                if (angle >= 360) {
+                    angle -= 360;
+                }
+                if (angle > 180 && angle < 350) {
+                    pedestrian_draw_arrow(gra, "gui_arrow_left_32_32.png", 0,
+                                          pedestrian_data.h / 2 - 16);
+                }
+                if (angle > 10 && angle <= 180) {
+                    pedestrian_draw_arrow(gra, "gui_arrow_right_32_32.png", pedestrian_data.w - 32,
+                                          pedestrian_data.h / 2 - 16);
+                }
             }
             break;
         }
@@ -1027,7 +1057,7 @@ void pedestrian_write_tilt(int fd, int axis) {
 
     ret=write(fd, buffer+axis, 1);
     if (ret != 2) {
-        dbg(lvl_debug,"ret=%d",ret);
+        dbg(lvl_debug,"ret=%dn",ret);
     }
 }
 
@@ -1096,94 +1126,104 @@ void pedestrian_setup_tilt(struct navit *nav) {
 float sensors[2][3];
 
 static void android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z) {
-    float yaw=0,pitch=0;
+    int yaw = 0, pitch = 0;
     struct attr attr;
-    sensors[sensor-1][0]=*x;
-    sensors[sensor-1][1]=*y;
-    sensors[sensor-1][2]=*z;
-    if (sensors_locked)
+    sensors[sensor - 1][0] = *x;
+    sensors[sensor - 1][1] = *y;
+    sensors[sensor - 1][2] = *z;
+    if (sensors_locked) {
         return;
-    dbg(lvl_debug,"enter %d %f %f %f",sensor,*x,*y,*z);
-    if (sensor == 1) {
-        if (*x > 7.5)
-            orientation=1; /* landscape */
-        if (*y > 7.5)
-            orientation=0; /* portrait */
-        if (*z > 7.5)
-            orientation=2; /* flat */
-        dbg(lvl_debug,"orientation=%d",orientation);
     }
-    if ((orientation_old == 2) != (orientation == 2)) {
+    dbg(lvl_debug, "enter %d %f %f %f\n", sensor, *x, *y, *z);
+    if (sensor == TYPE_ACCELEROMETER) {
+        if (*x > 7.5) {
+            orientation = ORIENTATION_LANDSCAPE;
+        }
+        if (*y > 7.5) {
+            orientation = ORIENTATION_PORTRAIT;
+        }
+        if (*z > 7.5) {
+            orientation = ORIENTATION_FLAT;
+        }
+        dbg(lvl_debug, "orientation = %d\n", orientation);
+    }
+    if ((orientation_old != orientation)) {
         struct attr attr, flags_graphics, osd_configuration;
-        navit_set_attr(nav, orientation == 2 ? &initial_layout:&main_layout);
+        navit_set_attr(nav, orientation == ORIENTATION_FLAT ? &initial_layout : &main_layout);
         navit_get_attr(nav, attr_transformation, &attr, NULL);
-        transform_set_scale(attr.u.transformation, orientation == 2 ? 64:16);
-        flags_graphics.type=attr_flags_graphics;
-        flags_graphics.u.num=orientation == 2 ? 0:10;
+        transform_set_scale(attr.u.transformation, orientation == ORIENTATION_FLAT ? 64 : 16);
+        flags_graphics.type = attr_flags_graphics;
+        flags_graphics.u.num = orientation == ORIENTATION_FLAT ? 0 : 10;
         navit_set_attr(nav, &flags_graphics);
-        osd_configuration.type=attr_osd_configuration;
-        osd_configuration.u.num=orientation == 2 ? 1:2;
+        osd_configuration.type = attr_osd_configuration;
+        osd_configuration.u.num = orientation == ORIENTATION_FLAT ? 1 : 2;
         navit_set_attr(nav, &osd_configuration);
+        orientation_old = orientation;
     }
-    orientation_old=orientation;
+
     switch (orientation) {
-    case 2:
-        if (sensor == 2) {
-            yaw=atan2f(-*y,-*x)*180/M_PI+180;
+    case ORIENTATION_FLAT:
+        if (sensor == TYPE_MAGNETIC_FIELD) {
+            yaw = (int) (atan2f(-*y, -*x) * 180 / M_PI + 180);
         }
-        pitch=0;
+        pitch = 0;
         break;
-    case 1:
-        if (sensor == 1) {
-            pitch=atan2f(*x,*z)*180/M_PI;
+    case ORIENTATION_LANDSCAPE:
+        if (sensor == TYPE_ACCELEROMETER) {
+            pitch = (int) (atan2f(*x, *z) * 180 / M_PI);
         }
-        if (sensor == 2) {
-            yaw=atan2f(-*y,*z)*180/M_PI+180;
+        if (sensor == TYPE_MAGNETIC_FIELD) {
+            yaw = (int) (atan2f(-*y, *z) * 180 / M_PI + 180);
         }
         break;
-    case 0:
-        if (sensor == 1) {
-            pitch=atan2f(*y,*z)*180/M_PI;
+    case ORIENTATION_PORTRAIT:
+        if (sensor == TYPE_ACCELEROMETER) {
+            pitch = (int) (atan2f(*y, *z) * 180 / M_PI);
         }
-        if (sensor == 2) {
-            yaw=atan2f(*x,*z)*180/M_PI+180;
+        if (sensor == TYPE_MAGNETIC_FIELD) {
+            yaw = (int) (atan2f(*x, *z) * 180 / M_PI + 180);
         }
+        break;
+    default:
         break;
     }
     if (navit_get_attr(nav, attr_transformation, &attr, NULL)) {
-        struct transformation *trans=attr.u.transformation;
-        if (sensor == 1) {
-            if (orientation != 2)
-                pitch+=2.0;
-            transform_set_pitch(trans, (int)pitch);
-            dbg(lvl_debug,"pich %d %f",orientation,pitch);
+        struct transformation *trans = attr.u.transformation;
+        if (sensor == TYPE_ACCELEROMETER) {
+            if (orientation != ORIENTATION_FLAT) {
+                pitch += 2.0;
+            }
+            transform_set_pitch(trans, pitch);
+            dbg(lvl_debug, "pich %d %i", orientation, pitch);
         } else {
             struct attr attr;
-            attr.type=attr_orientation;
-            attr.u.num=yaw-1.0;
+            attr.type = attr_orientation;
+            attr.u.num = yaw - 1;
             if (attr.u.num < 0)
-                attr.u.num+=360;
-            pedestrian_data.yaw=attr.u.num;
+                attr.u.num += 360;
+            pedestrian_data.yaw = (int) attr.u.num;
             navit_set_attr(nav, &attr);
-            dbg(lvl_debug,"yaw %d %f",orientation,yaw);
-            if (orientation == 2)
+            dbg(lvl_debug, "yaw %d %i", orientation, yaw);
+            if (orientation == ORIENTATION_FLAT) {
                 navit_set_center_cursor(nav, 1, 0);
+            }
         }
     }
 }
+
 #endif
 
 static void pedestrian_log(char **logstr) {
 #ifdef HAVE_API_ANDROID
-    char *tag=g_strdup_printf(
-                  "\t\t<navit:compass:x>%f</navit:compass:x>\n"
-                  "\t\t<navit:compass:y>%f</navit:compass:y>\n"
-                  "\t\t<navit:compass:z>%f</navit:compass:z>\n"
-                  "\t\t<navit:accel:x>%f</navit:accel:x>\n"
-                  "\t\t<navit:accel:y>%f</navit:accel:y>\n"
-                  "\t\t<navit:accel:z>%f</navit:accel:z>\n",
-                  sensors[0][0],sensors[0][1],sensors[0][2],
-                  sensors[1][0],sensors[1][1],sensors[1][2]);
+    char *tag = g_strdup_printf(
+                    "\t\t<navit:compass:x>%f</navit:compass:x>\n"
+                    "\t\t<navit:compass:y>%f</navit:compass:y>\n"
+                    "\t\t<navit:compass:z>%f</navit:compass:z>\n"
+                    "\t\t<navit:accel:x>%f</navit:accel:x>\n"
+                    "\t\t<navit:accel:y>%f</navit:accel:y>\n"
+                    "\t\t<navit:accel:z>%f</navit:accel:z>\n",
+                    sensors[0][0], sensors[0][1], sensors[0][2],
+                    sensors[1][0], sensors[1][1], sensors[1][2]);
     vehicle_log_gpx_add_tag(tag, logstr);
 #endif
 }
@@ -1193,7 +1233,7 @@ static void vehicle_changed(struct vehicle *v, struct transformation *trans) {
     struct attr attr;
     if (vehicle_get_attr(v, attr_position_direction, &attr, NULL)) {
         int dir=(int)(*attr.u.numd);
-        dbg(lvl_debug,"enter %d",dir);
+        dbg(lvl_debug,"enter %d\n",dir);
         transform_set_pitch(trans, 90);
         transform_set_yaw(trans, dir);
     }
@@ -1206,7 +1246,7 @@ static void pedestrian_navit_init(struct navit *nav) {
     struct attr route_map;
     struct attr map;
     struct attr mapset;
-    struct attr graphics,attr,flags_graphics;
+    struct attr graphics, attr, flags_graphics;
     struct transformation *trans;
     struct attr_iter *iter;
 
@@ -1216,32 +1256,37 @@ static void pedestrian_navit_init(struct navit *nav) {
     jmethodID cid;
     jobject navitsensors;
 
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter\n");
+    orientation = ORIENTATION_UNKNOWN;
+    orientation_old = ORIENTATION_UNKNOWN;
     if (android_find_class_global("org/navitproject/navit/NavitSensors", &navitsensorsclass)) {
-        dbg(lvl_debug,"class found");
-        cid = (*jnienv)->GetMethodID(jnienv, navitsensorsclass, "<init>", "(Landroid/content/Context;I)V");
-        dbg(lvl_debug,"cid=%p",cid);
+        dbg(lvl_debug, "class found\n");
+        cid = (*jnienv)->GetMethodID(jnienv, navitsensorsclass, "<init>",
+                                     "(Landroid/content/Context;J)V");
+        dbg(lvl_debug, "cid=%p\n", cid);
         if (cid) {
-            cb=callback_new_1(callback_cast(android_sensors), nav);
-            navitsensors=(*jnienv)->NewObject(jnienv, navitsensorsclass, cid, android_application, cb);
-            dbg(lvl_debug,"object=%p",navitsensors);
-            if (navitsensors)
+            cb = callback_new_1(callback_cast(android_sensors), nav);
+            navitsensors = (*jnienv)->NewObject(jnienv, navitsensorsclass, cid, android_activity, cb);
+            dbg(lvl_debug, "object=%p\n", navitsensors);
+            if (navitsensors) {
                 navitsensors = (*jnienv)->NewGlobalRef(jnienv, navitsensors);
+            }
         }
     }
 #endif
-    pedestrian_data.nav=nav;
-    flags_graphics.type=attr_flags_graphics;
-    flags_graphics.u.num=10;
+    pedestrian_data.nav = nav;
+    flags_graphics.type = attr_flags_graphics;
+    flags_graphics.u.num = 10;
     navit_set_attr(nav, &flags_graphics);
     if (navit_get_attr(nav, attr_graphics, &graphics, NULL)) {
         struct attr attr;
-        struct callback *cb=callback_new_attr_1(callback_cast(pedestrian_graphics_resize),attr_resize,graphics.u.graphics);
+        struct callback *cb = callback_new_attr_1(callback_cast(pedestrian_graphics_resize),
+                              attr_resize, graphics.u.graphics);
         graphics_add_callback(graphics.u.graphics, cb);
-        cb=callback_new_attr_1(callback_cast(pedestrian_graphics_postdraw),attr_postdraw,graphics.u.graphics);
+        cb = callback_new_attr_1(callback_cast(pedestrian_graphics_postdraw), attr_postdraw, graphics.u.graphics);
         graphics_add_callback(graphics.u.graphics, cb);
-        attr.type=attr_use_camera;
-        attr.u.num=1;
+        attr.type = attr_use_camera;
+        attr.u.num = 1;
         graphics_set_attr(graphics.u.graphics, &attr);
     }
     osd_rocket_init(nav);
@@ -1249,7 +1294,7 @@ static void pedestrian_navit_init(struct navit *nav) {
 #ifndef HAVE_API_ANDROID
     pedestrian_setup_tilt(nav);
 #endif
-    trans=navit_get_trans(nav);
+    trans = navit_get_trans(nav);
     transform_set_pitch(trans, 90);
     transform_set_roll(trans, 0);
     transform_set_hog(trans, 2);
@@ -1259,34 +1304,32 @@ static void pedestrian_navit_init(struct navit *nav) {
         return;
     if (!route_get_attr(route.u.route, attr_map, &route_map, NULL))
         return;
-    dbg(lvl_debug,"enter 1");
+    dbg(lvl_debug, "enter 1\n");
 #if 0
     struct attr active;
     active.type=attr_active;
     active.u.num=0;
     if (!map_set_attr(route_map.u.map, &active))
         return;
-    dbg(lvl_debug,"enter 2");
+    dbg(lvl_debug,"enter 2\n");
 #endif
     if (!navit_get_attr(nav, attr_mapset, &mapset, NULL))
         return;
-    map.type=attr_map;
-    map.u.map=map_new(NULL, (struct attr*[]) {
+    map.type = attr_map;
+    map.u.map = map_new(NULL, (struct attr *[]) {
         &(struct attr) {
             attr_type, {"route_occluded"}
-        },
-        &(struct attr) {
+        }, &(struct attr) {
             attr_data, {""}
         },
         &(struct attr) {
             attr_description, {"Occluded Route"}
         },
         &(struct attr) {
-            attr_navit, {(void *)nav}
-        },
-        NULL
+            attr_navit, {(void *) nav}
+        }, NULL
     });
-    global_map=map.u.map;
+    global_map = map.u.map;
     mapset_add_attr(mapset.u.mapset, &map);
 
 #if 0
@@ -1295,11 +1338,11 @@ static void pedestrian_navit_init(struct navit *nav) {
 #endif
     transform_set_scale(trans, 16);
     navit_get_attr(nav, attr_layout, &initial_layout, NULL);
-    iter=navit_attr_iter_new();
-    while(navit_get_attr(nav, attr_layout, &attr, iter)) {
+    iter = navit_attr_iter_new();
+    while (navit_get_attr(nav, attr_layout, &attr, iter)) {
         if (!strcmp(attr.u.layout->name, "Route")) {
-            dbg(lvl_debug,"found %s",attr_to_name(attr.type));
-            main_layout=attr;
+            dbg(lvl_debug, "found %s", attr_to_name(attr.type));
+            main_layout = attr;
 #if 1
             navit_set_attr(nav, &attr);
 #endif
@@ -1309,8 +1352,8 @@ static void pedestrian_navit_init(struct navit *nav) {
     navit_attr_iter_destroy(iter);
     if (navit_get_attr(nav, attr_vehicle, &attr, NULL)) {
         struct attr cbattr;
-        cbattr.u.callback=callback_new_attr_0(callback_cast(pedestrian_log), attr_log_gpx);
-        cbattr.type=attr_callback;
+        cbattr.u.callback = callback_new_attr_0(callback_cast(pedestrian_log), attr_log_gpx);
+        cbattr.type = attr_callback;
         vehicle_add_attr(attr.u.vehicle, &cbattr);
 #ifdef DEMO
         cbattr.u.callback=callback_new_attr_2(callback_cast(vehicle_changed), attr_position_coord_geo, attr.u.vehicle, trans);
@@ -1322,37 +1365,41 @@ static void pedestrian_navit_init(struct navit *nav) {
 }
 
 static void pedestrian_navit(struct navit *nav, int add) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter\n");
     struct attr callback;
     if (add) {
-        callback.type=attr_callback;
-        callback.u.callback=callback_new_attr_0(callback_cast(pedestrian_navit_init), attr_navit);
+        callback.type = attr_callback;
+        callback.u.callback = callback_new_attr_0(callback_cast(pedestrian_navit_init), attr_navit);
         navit_add_attr(nav, &callback);
     }
 }
 
 void plugin_init(void) {
-    struct attr callback,navit;
+    struct attr callback, navit;
     struct attr_iter *iter;
 #ifdef HAVE_API_ANDROID
     jclass ActivityClass;
     jmethodID Activity_setRequestedOrientation;
 
-    if (!android_find_class_global("android/app/Activity", &ActivityClass))
-        dbg(lvl_error,"failed to get class android/app/Activity");
-    Activity_setRequestedOrientation = (*jnienv)->GetMethodID(jnienv, ActivityClass, "setRequestedOrientation", "(I)V");
-    if (Activity_setRequestedOrientation == NULL)
-        dbg(lvl_error,"failed to get method setRequestedOrientation from android/app/Activity");
+    if (!android_find_class_global("android/app/Activity", &ActivityClass)) {
+        dbg(lvl_error, "failed to get class android/app/Activity\n");
+    }
+    Activity_setRequestedOrientation = (*jnienv)->GetMethodID(jnienv, ActivityClass,
+                                       "setRequestedOrientation", "(I)V");
+    if (Activity_setRequestedOrientation == NULL) {
+        dbg(lvl_error, "failed to get method setRequestedOrientation from android/app/Activity\n");
+    }
     (*jnienv)->CallVoidMethod(jnienv, android_activity, Activity_setRequestedOrientation, 0);
 #endif
 
     plugin_register_category_osd("marker", osd_marker_new);
     plugin_register_category_map("route_occluded", map_route_occluded_new);
-    callback.type=attr_callback;
-    callback.u.callback=callback_new_attr_0(callback_cast(pedestrian_navit), attr_navit);
+    callback.type = attr_callback;
+    callback.u.callback = callback_new_attr_0(callback_cast(pedestrian_navit), attr_navit);
     config_add_attr(config, &callback);
-    iter=config_attr_iter_new();
-    while (config_get_attr(config, attr_navit, &navit, iter))
+    iter = config_attr_iter_new();
+    while (config_get_attr(config, attr_navit, &navit, iter)) {
         pedestrian_navit_init(navit.u.navit);
+    }
     config_attr_iter_destroy(iter);
 }
