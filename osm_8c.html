@@ -128,6 +128,9 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structturn__restriction.html">turn_restriction</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structprocess__turn__restrictions__setup__thread.html">process_turn_restrictions_setup_thread</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">worker thread private storage  <a href="structprocess__turn__restrictions__setup__thread.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -342,8 +345,15 @@ Functions</h2></td></tr>
 <tr class="separator:af92cd6f414b118cd441edc0b02b5642d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae65247890e81595e3d7f30d3287224e1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish</a> (<a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *tr, FILE *out)</td></tr>
 <tr class="separator:ae65247890e81595e3d7f30d3287224e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0fc87490548fdf145764c3c7dcfa827"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup</a> (FILE *in, struct <a class="el" href="structrelations.html">relations</a> *<a class="el" href="structrelations.html">relations</a>)</td></tr>
-<tr class="separator:af0fc87490548fdf145764c3c7dcfa827"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c228c5d781eabcd4a959efa95625972"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one</a> (struct <a class="el" href="structitem__bin.html">item_bin</a> *ib, struct <a class="el" href="structrelations.html">relations</a> *<a class="el" href="structrelations.html">relations</a>, struct <a class="el" href="structrelations__func.html">relations_func</a> *<a class="el" href="structrelations__func.html">relations_func</a>, <a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> **turn_restrictions)</td></tr>
+<tr class="memdesc:a0c228c5d781eabcd4a959efa95625972"><td class="mdescLeft">&#160;</td><td class="mdescRight">prepare one multipolygon relation for relattion processing  <a href="#a0c228c5d781eabcd4a959efa95625972">More...</a><br /></td></tr>
+<tr class="separator:a0c228c5d781eabcd4a959efa95625972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1baf1d127cf24d8ee5aa2634747e3037"><td class="memItemLeft" align="right" valign="top">static gpointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a1baf1d127cf24d8ee5aa2634747e3037">process_turn_restrictions_setup_worker</a> (gpointer <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
+<tr class="memdesc:a1baf1d127cf24d8ee5aa2634747e3037"><td class="mdescLeft">&#160;</td><td class="mdescRight">turn restrictions setup worker thread.  <a href="#a1baf1d127cf24d8ee5aa2634747e3037">More...</a><br /></td></tr>
+<tr class="separator:a1baf1d127cf24d8ee5aa2634747e3037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23734d6ed4806decc80e1a1e0c188f96"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup</a> (FILE *in, int <a class="el" href="maptool_8h.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a>, struct <a class="el" href="structrelations.html">relations</a> **<a class="el" href="structrelations.html">relations</a>)</td></tr>
+<tr class="memdesc:a23734d6ed4806decc80e1a1e0c188f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">prepare turn restriction way matching  <a href="#a23734d6ed4806decc80e1a1e0c188f96">More...</a><br /></td></tr>
+<tr class="separator:a23734d6ed4806decc80e1a1e0c188f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28d8c95e9b24f364eaf3e0918cbd620a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions</a> (FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)</td></tr>
 <tr class="separator:a28d8c95e9b24f364eaf3e0918cbd620a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa08a508268f9ede417757a8ace86756a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#aa08a508268f9ede417757a8ace86756a">node_ref_way</a> (<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a> <a class="el" href="structnode.html">node</a>)</td></tr>
@@ -1412,7 +1422,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="itembin_8c.html#a76d83b81ce893291b8c533a9658027d0">item_bin_get_attr()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#af51ab1fb0e5abc9d122d255405f34e71">item_bin_get_id()</a>, <a class="el" href="osm_8c.html#a9586dfd465a568368029a59c142ef717">itembin_warning()</a>, <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#af51ab1fb0e5abc9d122d255405f34e71">item_bin_get_id()</a>, <a class="el" href="osm_8c.html#a9586dfd465a568368029a59c142ef717">itembin_warning()</a>, <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one()</a>.</p>
 
 </div>
 </div>
@@ -2540,7 +2550,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="osm_8c.html#a5d4ceb7d8179a7cfd9e2016e3a531d2c">osm_logv()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#ad5e965ab883daa3eeb23f511349611f5">map_resolve_coords_and_split_at_intersections()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#a90da6063da34cfb4fa477c212ffe5b64">process_multipolygons_find_loops()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, <a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish()</a>, <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>, <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">process_way2poi()</a>, and <a class="el" href="osm_8c.html#a1234e27c9aeab2db84c70f1aacbc348c">relation_add_tag()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#ad5e965ab883daa3eeb23f511349611f5">map_resolve_coords_and_split_at_intersections()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#a90da6063da34cfb4fa477c212ffe5b64">process_multipolygons_find_loops()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, <a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish()</a>, <a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one()</a>, <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">process_way2poi()</a>, and <a class="el" href="osm_8c.html#a1234e27c9aeab2db84c70f1aacbc348c">relation_add_tag()</a>.</p>
 
 </div>
 </div>
@@ -3489,7 +3499,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structnode__item.html#af626daab130d540d2f24f1b056b320d4">node_item::c</a>, <a class="el" href="coord_8h.html#ab7fc727d53e80c018f1bea9a4ad5434b">coord_is_equal</a>, <a class="el" href="structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb">geom_poly_segment::first</a>, <a class="el" href="geom_8c.html#af0bdde59bf6ae67935fb34d8663be1e2">geom_poly_area()</a>, <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6da60415f97b0f0b4164c02285e75831805">geom_poly_segment_type_way_left_side</a>, <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6da03e8a914f00eb509645c05857a9f7ff7">geom_poly_segment_type_way_unknown</a>, <a class="el" href="geom_8c.html#a9765e9bf9f71f76c462ad7636ebab50d">geom_poly_segments_sort()</a>, <a class="el" href="structrelation__member.html#a59ba32ccc872fae1acb3e57b7e2a1914">relation_member::id</a>, <a class="el" href="itembin_8c.html#aac986b93a16020b8921791fe658000f1">item_bin_add_coord()</a>, <a class="el" href="itembin_8c.html#a317a9756ebee079560c5bd72ed93d699">item_bin_dump()</a>, <a class="el" href="itembin_8c.html#a76d83b81ce893291b8c533a9658027d0">item_bin_get_attr()</a>, <a class="el" href="osm_8c.html#a6c6426fc286879ed6b67ab8e8b4377bb">item_bin_get_relationid()</a>, <a class="el" href="osm_8c.html#aa9bc550768e007a2fa93cc8cc261c97d">item_bin_get_wayid()</a>, <a class="el" href="itembin_8c.html#af9e5b304ff31fd0c708aeb0783f21390">item_bin_init()</a>, <a class="el" href="itembin_8c.html#ab76b08e3020a8ee9c21690b6a54d97b5">item_bin_read()</a>, <a class="el" href="itembin_8c.html#ac6dc9dc518f687bc80fac1374ea4a4fa">item_bin_to_poly_segment()</a>, <a class="el" href="itembin_8c.html#ab7c2eef6e774cce27c823a2a1e7ae8a8">item_bin_write()</a>, <a class="el" href="structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4">geom_poly_segment::last</a>, <a class="el" href="types_8h.html#aa61075d0d6640f7dd9f42b322431e781">LONGLONG_FMT</a>, <a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="osm_8c.html#a7309101aafecb830704b6b345f5d99ae">parse_relation_member_string()</a>, <a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish()</a>, <a class="el" href="maptool_8h.html#ac146cefd76197cb3e7ac9e6e549e8bdc">process_turn_restrictions_old()</a>, <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="maptool_8h.html#a00aad0f42a95c877201a8a33f5dcfc7d">relations_destroy()</a>, <a class="el" href="maptool_8h.html#aaa84a5aa79b7f49621562fa6f5114d4a">relations_new()</a>, <a class="el" href="maptool_8h.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>, <a class="el" href="osm_8c.html#a7d30778054e77fa11253fc7ab5ef5ab4">search_relation_member()</a>, <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>, <a class="el" href="structrelation__member.html#a76e6739e778c697dc72776d9aebba538">relation_member::type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
+<p class="reference">References <a class="el" href="structnode__item.html#af626daab130d540d2f24f1b056b320d4">node_item::c</a>, <a class="el" href="coord_8h.html#ab7fc727d53e80c018f1bea9a4ad5434b">coord_is_equal</a>, <a class="el" href="structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb">geom_poly_segment::first</a>, <a class="el" href="geom_8c.html#af0bdde59bf6ae67935fb34d8663be1e2">geom_poly_area()</a>, <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6da60415f97b0f0b4164c02285e75831805">geom_poly_segment_type_way_left_side</a>, <a class="el" href="geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6da03e8a914f00eb509645c05857a9f7ff7">geom_poly_segment_type_way_unknown</a>, <a class="el" href="geom_8c.html#a9765e9bf9f71f76c462ad7636ebab50d">geom_poly_segments_sort()</a>, <a class="el" href="structrelation__member.html#a59ba32ccc872fae1acb3e57b7e2a1914">relation_member::id</a>, <a class="el" href="itembin_8c.html#aac986b93a16020b8921791fe658000f1">item_bin_add_coord()</a>, <a class="el" href="itembin_8c.html#a317a9756ebee079560c5bd72ed93d699">item_bin_dump()</a>, <a class="el" href="itembin_8c.html#a76d83b81ce893291b8c533a9658027d0">item_bin_get_attr()</a>, <a class="el" href="osm_8c.html#a6c6426fc286879ed6b67ab8e8b4377bb">item_bin_get_relationid()</a>, <a class="el" href="osm_8c.html#aa9bc550768e007a2fa93cc8cc261c97d">item_bin_get_wayid()</a>, <a class="el" href="itembin_8c.html#af9e5b304ff31fd0c708aeb0783f21390">item_bin_init()</a>, <a class="el" href="itembin_8c.html#ab76b08e3020a8ee9c21690b6a54d97b5">item_bin_read()</a>, <a class="el" href="itembin_8c.html#ac6dc9dc518f687bc80fac1374ea4a4fa">item_bin_to_poly_segment()</a>, <a class="el" href="itembin_8c.html#ab7c2eef6e774cce27c823a2a1e7ae8a8">item_bin_write()</a>, <a class="el" href="structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4">geom_poly_segment::last</a>, <a class="el" href="types_8h.html#aa61075d0d6640f7dd9f42b322431e781">LONGLONG_FMT</a>, <a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="osm_8c.html#a7309101aafecb830704b6b345f5d99ae">parse_relation_member_string()</a>, <a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish()</a>, <a class="el" href="maptool_8h.html#ac146cefd76197cb3e7ac9e6e549e8bdc">process_turn_restrictions_old()</a>, <a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup()</a>, <a class="el" href="maptool_8c.html#a38d375c2d3b60cdb921d11bb4de929d6">processed_relations</a>, <a class="el" href="maptool_8c.html#a52fab99336a5b9134dd8edf8e0e8cb12">processed_ways</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="maptool_8h.html#a00aad0f42a95c877201a8a33f5dcfc7d">relations_destroy()</a>, <a class="el" href="maptool_8h.html#aaa84a5aa79b7f49621562fa6f5114d4a">relations_new()</a>, <a class="el" href="maptool_8h.html#acc455824a6a57f2a6e76c173e316e080">relations_process_multi()</a>, <a class="el" href="osm_8c.html#a7d30778054e77fa11253fc7ab5ef5ab4">search_relation_member()</a>, <a class="el" href="maptool_8c.html#a2531437939a603936fa91d8f20351aa7">sig_alrm()</a>, <a class="el" href="maptool_8c.html#a117d0810aadeacd84b131785b864509e">sig_alrm_end()</a>, <a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a>, <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>, <a class="el" href="structrelation__member.html#a76e6739e778c697dc72776d9aebba538">relation_member::type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8c.html#a956a8a99c8a340e71337cd92aa7b8a08">osm_process_turn_restrictions()</a>.</p>
 
@@ -3569,7 +3579,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structturn__restriction.html#ae3e72569f58a1a3b5d244564152c0aa1">turn_restriction::c</a>, <a class="el" href="structturn__restriction.html#ad1cd2d5e224e00229b2a3b4e5a9aac9a">turn_restriction::c_count</a>, <a class="el" href="itembin_8c.html#aa176140af31dbaadb5e0eec65ed1cd8d">item_bin_add_attr_range()</a>, <a class="el" href="itembin_8c.html#aac986b93a16020b8921791fe658000f1">item_bin_add_coord()</a>, <a class="el" href="itembin_8c.html#af9e5b304ff31fd0c708aeb0783f21390">item_bin_init()</a>, <a class="el" href="itembin_8c.html#ab7c2eef6e774cce27c823a2a1e7ae8a8">item_bin_write()</a>, <a class="el" href="structturn__restriction.html#ac43c64c303be09b9867283051ca7e175">turn_restriction::order</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="maptool_8c.html#aed0a8a19fcd367d13f422c4b53a0b696">overlap</a>, <a class="el" href="osm_8c.html#af92cd6f414b118cd441edc0b02b5642d">process_turn_restrictions_dump_coord()</a>, <a class="el" href="osm_8c.html#aa955c39e1b51c60cc22b3dd3cdf8f16b">process_turn_restrictions_fromto()</a>, <a class="el" href="structturn__restriction.html#a71670535d824211b7ad675520ae04171">turn_restriction::r</a>, <a class="el" href="structturn__restriction.html#a6ee04429b6d1771813eb95b58ed907d5">turn_restriction::relid</a>, <a class="el" href="maptool_8h.html#affee5934cbc077e16c80b1403eef1de8">tile()</a>, <a class="el" href="itembin__buffer_8c.html#a017ab9d8d2bf3020dc216de34b88d9ae">tmp_item_bin</a>, and <a class="el" href="structturn__restriction.html#a313b8541e24fb97f875bc89ca4ed84db">turn_restriction::type</a>.</p>
+<p class="reference">References <a class="el" href="structturn__restriction.html#ae3e72569f58a1a3b5d244564152c0aa1">turn_restriction::c</a>, <a class="el" href="structturn__restriction.html#ad1cd2d5e224e00229b2a3b4e5a9aac9a">turn_restriction::c_count</a>, <a class="el" href="itembin_8c.html#aa176140af31dbaadb5e0eec65ed1cd8d">item_bin_add_attr_range()</a>, <a class="el" href="itembin_8c.html#aac986b93a16020b8921791fe658000f1">item_bin_add_coord()</a>, <a class="el" href="itembin_8c.html#af9e5b304ff31fd0c708aeb0783f21390">item_bin_init()</a>, <a class="el" href="itembin_8c.html#ab7c2eef6e774cce27c823a2a1e7ae8a8">item_bin_write()</a>, <a class="el" href="structturn__restriction.html#ac43c64c303be09b9867283051ca7e175">turn_restriction::order</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="maptool_8c.html#aed0a8a19fcd367d13f422c4b53a0b696">overlap</a>, <a class="el" href="osm_8c.html#af92cd6f414b118cd441edc0b02b5642d">process_turn_restrictions_dump_coord()</a>, <a class="el" href="osm_8c.html#aa955c39e1b51c60cc22b3dd3cdf8f16b">process_turn_restrictions_fromto()</a>, <a class="el" href="maptool_8c.html#a38d375c2d3b60cdb921d11bb4de929d6">processed_relations</a>, <a class="el" href="structturn__restriction.html#a71670535d824211b7ad675520ae04171">turn_restriction::r</a>, <a class="el" href="structturn__restriction.html#a6ee04429b6d1771813eb95b58ed907d5">turn_restriction::relid</a>, <a class="el" href="maptool_8h.html#affee5934cbc077e16c80b1403eef1de8">tile()</a>, <a class="el" href="itembin__buffer_8c.html#a017ab9d8d2bf3020dc216de34b88d9ae">tmp_item_bin</a>, and <a class="el" href="structturn__restriction.html#a313b8541e24fb97f875bc89ca4ed84db">turn_restriction::type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>.</p>
 
@@ -3669,12 +3679,12 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="maptool_8h.html#a2df3cece5bb4ddd9b58b670412135cd3">bbox_extend()</a>, <a class="el" href="structturn__restriction.html#ae3e72569f58a1a3b5d244564152c0aa1">turn_restriction::c</a>, <a class="el" href="structturn__restriction.html#ad1cd2d5e224e00229b2a3b4e5a9aac9a">turn_restriction::c_count</a>, <a class="el" href="structitem__bin.html#a3a82ee0325b7fd5862193ac5479c428d">item_bin::clen</a>, <a class="el" href="structrect.html#af3e8c03479c6bdd0723513ef5c6ff5aa">rect::h</a>, <a class="el" href="osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b">IS_REF</a>, <a class="el" href="maptool_8h.html#a3a4f7bf0f3f593dee249cf516d68f0e0">item_order_by_type()</a>, <a class="el" href="structturn__restriction.html#ac43c64c303be09b9867283051ca7e175">turn_restriction::order</a>, <a class="el" href="structturn__restriction.html#a71670535d824211b7ad675520ae04171">turn_restriction::r</a>, <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>, and <a class="el" href="structattr__mapping.html#ae0a7aaaec9f58f781465be79a5e2de8a">attr_mapping::type</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup()</a>.</p>
 
 </div>
 </div>
-<a id="af0fc87490548fdf145764c3c7dcfa827"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0fc87490548fdf145764c3c7dcfa827">&#9670;&nbsp;</a></span>process_turn_restrictions_setup()</h2>
+<a id="a23734d6ed4806decc80e1a1e0c188f96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23734d6ed4806decc80e1a1e0c188f96">&#9670;&nbsp;</a></span>process_turn_restrictions_setup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3683,7 +3693,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a>* process_turn_restrictions_setup </td>
+          <td class="memname">static <a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a>** process_turn_restrictions_setup </td>
           <td>(</td>
           <td class="paramtype">FILE *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -3691,7 +3701,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">struct <a class="el" href="structrelations.html">relations</a> *&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>thread_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structrelations.html">relations</a> **&#160;</td>
           <td class="paramname"><em>relations</em>&#160;</td>
         </tr>
         <tr>
@@ -3707,9 +3723,122 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structrelation__member.html#a59ba32ccc872fae1acb3e57b7e2a1914">relation_member::id</a>, <a class="el" href="osm_8c.html#a6c6426fc286879ed6b67ab8e8b4377bb">item_bin_get_relationid()</a>, <a class="el" href="structturn__restriction.html#ac43c64c303be09b9867283051ca7e175">turn_restriction::order</a>, <a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="osm_8c.html#abe54ab0e70bb350e9429ac5f4377c39d">process_turn_restrictions_member()</a>, <a class="el" href="structturn__restriction.html#a71670535d824211b7ad675520ae04171">turn_restriction::r</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="maptool_8h.html#a82df39d177b32b96c9685089921baa4aa4738810a50e218d40162b107b0c42e96">rel_member_node</a>, <a class="el" href="maptool_8h.html#a82df39d177b32b96c9685089921baa4aa9689ff057dd59b3cf0c74f57b085c185">rel_member_way</a>, <a class="el" href="maptool_8h.html#a1c57b0d6bc2021c47bbbc29186e7a237">relations_add_relation_member_entry()</a>, <a class="el" href="maptool_8h.html#a65b2e6db8d61a1e44ad5b8a93421638c">relations_func_new()</a>, <a class="el" href="structturn__restriction.html#a6ee04429b6d1771813eb95b58ed907d5">turn_restriction::relid</a>, <a class="el" href="osm_8c.html#a7d30778054e77fa11253fc7ab5ef5ab4">search_relation_member()</a>, <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>, <a class="el" href="structrelation__member.html#a76e6739e778c697dc72776d9aebba538">relation_member::type</a>, and <a class="el" href="structturn__restriction.html#a313b8541e24fb97f875bc89ca4ed84db">turn_restriction::type</a>.</p>
+<p>prepare turn restriction way matching </p>
+<p>This function reads all turn restriction relations and prepares relations structures for later way matching. Since this scales quite ugly, (O^3) i think, we use multiple threads creating their own hash each. This way none of the hashes get's that big, and we can utilize more cpu power.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>file containing the relations </td></tr>
+    <tr><td class="paramname">thread_count</td><td>number of threads to use </td></tr>
+    <tr><td class="paramname">relations</td><td>array of preallocated relations structures. One per thread.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array of GLists. One per thread containing the resulting structures. </dd></dl>
+
+<p class="reference">References <a class="el" href="itembin_8c.html#ac7e808b11bef4dbe15b45c4d0e970c3d">item_bin_dup()</a>, <a class="el" href="osm_8c.html#a42e6b75b1a230c40a1d4737511fc1633">killer</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#acb61fbe9bd89e98ce493880dc2447047">process_turn_restrictions_setup_thread::number</a>, <a class="el" href="osm_8c.html#abe54ab0e70bb350e9429ac5f4377c39d">process_turn_restrictions_member()</a>, <a class="el" href="osm_8c.html#a1baf1d127cf24d8ee5aa2634747e3037">process_turn_restrictions_setup_worker()</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#ae5e5a598fe65815ee9a303650a0e0996">process_turn_restrictions_setup_thread::queue</a>, <a class="el" href="itembin__buffer_8c.html#a113fc9635c7ee5979ef41ebff4a414bd">read_item()</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a1f66b13250edc5895481b28f018bde7a">process_turn_restrictions_setup_thread::relations</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a91036b0ce9148d8e78e2b42f95b04ba3">process_turn_restrictions_setup_thread::relations_func</a>, <a class="el" href="maptool_8h.html#a65b2e6db8d61a1e44ad5b8a93421638c">relations_func_new()</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#ada4173e30a165fe0bb76668f3aacbcb7">process_turn_restrictions_setup_thread::thread</a>, <a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a>, and <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a895697cf7b3d9b763719a2fad9b9103a">process_turn_restrictions_setup_thread::turn_restrictions</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>.</p>
+
+</div>
+</div>
+<a id="a0c228c5d781eabcd4a959efa95625972"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c228c5d781eabcd4a959efa95625972">&#9670;&nbsp;</a></span>process_turn_restrictions_setup_one()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void process_turn_restrictions_setup_one </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structitem__bin.html">item_bin</a> *&#160;</td>
+          <td class="paramname"><em>ib</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structrelations.html">relations</a> *&#160;</td>
+          <td class="paramname"><em>relations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structrelations__func.html">relations_func</a> *&#160;</td>
+          <td class="paramname"><em>relations_func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="navit_8h.html#a91f7dfaa0fe030ddf1780769c02c4231">GList</a> **&#160;</td>
+          <td class="paramname"><em>turn_restrictions</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>prepare one multipolygon relation for relattion processing </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ib</td><td>the relation </td></tr>
+    <tr><td class="paramname">relations</td><td>the relation processing structure </td></tr>
+    <tr><td class="paramname"><a class="el" href="structrelations__func.html">relations_func</a></td><td>function to use for the members </td></tr>
+    <tr><td class="paramname">turn_restrictions</td><td>write the resulting <a class="el" href="structturn__restriction.html">turn_restriction</a> to the list </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="structrelation__member.html#a59ba32ccc872fae1acb3e57b7e2a1914">relation_member::id</a>, <a class="el" href="osm_8c.html#a6c6426fc286879ed6b67ab8e8b4377bb">item_bin_get_relationid()</a>, <a class="el" href="structturn__restriction.html#ac43c64c303be09b9867283051ca7e175">turn_restriction::order</a>, <a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a>, <a class="el" href="osm_8c.html#a927fc254ca819a7f305c9dd23bc560b8">osm_warning()</a>, <a class="el" href="structturn__restriction.html#a71670535d824211b7ad675520ae04171">turn_restriction::r</a>, <a class="el" href="maptool_8h.html#a82df39d177b32b96c9685089921baa4aa4738810a50e218d40162b107b0c42e96">rel_member_node</a>, <a class="el" href="maptool_8h.html#a82df39d177b32b96c9685089921baa4aa9689ff057dd59b3cf0c74f57b085c185">rel_member_way</a>, <a class="el" href="maptool_8h.html#a1c57b0d6bc2021c47bbbc29186e7a237">relations_add_relation_member_entry()</a>, <a class="el" href="structturn__restriction.html#a6ee04429b6d1771813eb95b58ed907d5">turn_restriction::relid</a>, <a class="el" href="osm_8c.html#a7d30778054e77fa11253fc7ab5ef5ab4">search_relation_member()</a>, <a class="el" href="structitem__bin.html#a62ca855cd6422eb9a0af32552a7192c4">item_bin::type</a>, <a class="el" href="structrelation__member.html#a76e6739e778c697dc72776d9aebba538">relation_member::type</a>, and <a class="el" href="structturn__restriction.html#a313b8541e24fb97f875bc89ca4ed84db">turn_restriction::type</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a1baf1d127cf24d8ee5aa2634747e3037">process_turn_restrictions_setup_worker()</a>.</p>
+
+</div>
+</div>
+<a id="a1baf1d127cf24d8ee5aa2634747e3037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1baf1d127cf24d8ee5aa2634747e3037">&#9670;&nbsp;</a></span>process_turn_restrictions_setup_worker()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static gpointer process_turn_restrictions_setup_worker </td>
+          <td>(</td>
+          <td class="paramtype">gpointer&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>turn restrictions setup worker thread. </p>
+<p>This thread processes any item passed to it via async queue into it's local relations function. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>this threads local storage </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="osm_8c.html#a42e6b75b1a230c40a1d4737511fc1633">killer</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#acb61fbe9bd89e98ce493880dc2447047">process_turn_restrictions_setup_thread::number</a>, <a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one()</a>, <a class="el" href="maptool_8c.html#a38d375c2d3b60cdb921d11bb4de929d6">processed_relations</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#ae5e5a598fe65815ee9a303650a0e0996">process_turn_restrictions_setup_thread::queue</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a1f66b13250edc5895481b28f018bde7a">process_turn_restrictions_setup_thread::relations</a>, <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a91036b0ce9148d8e78e2b42f95b04ba3">process_turn_restrictions_setup_thread::relations_func</a>, and <a class="el" href="structprocess__turn__restrictions__setup__thread.html#a895697cf7b3d9b763719a2fad9b9103a">process_turn_restrictions_setup_thread::turn_restrictions</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup()</a>.</p>
 
 </div>
 </div>
@@ -4006,7 +4135,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="structitem__bin.html#a3a82ee0325b7fd5862193ac5479c428d">item_bin::clen</a>, <a class="el" href="pedestrian_8c.html#a7f0158669de514eb00dcf8d3a7408285">debug</a>, <a class="el" href="itembin_8c.html#a76d83b81ce893291b8c533a9658027d0">item_bin_get_attr()</a>, <a class="el" href="osm_8c.html#aa9bc550768e007a2fa93cc8cc261c97d">item_bin_get_wayid()</a>, <a class="el" href="itembin_8c.html#ab76b08e3020a8ee9c21690b6a54d97b5">item_bin_read()</a>, <a class="el" href="types_8h.html#aa61075d0d6640f7dd9f42b322431e781">LONGLONG_FMT</a>, <a class="el" href="garmin__img_8c.html#aed7ea92f45bd273dde380a45ddced592">offset</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="osm_8c.html#a7309101aafecb830704b6b345f5d99ae">parse_relation_member_string()</a>, <a class="el" href="structrelation__member.html#a5c9f6da7e6e3230be9bdf5519b20faeb">relation_member::role</a>, <a class="el" href="osm_8c.html#a193543ed350b7ec2138da6f3c447394c">way_hash</a>, <a class="el" href="osm_8c.html#a6aab18b17ba0b29f9024a55e05fde192">wayid</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="osm_8c.html#af5343664000da23c0890365caae416f1">process_multipolygons_setup_one()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one()</a>.</p>
 
 </div>
 </div>
@@ -4966,7 +5095,7 @@ Variables</h2></td></tr>
 
 <p>dummy memory location to pass a end condition to worker threads, as NULL cannot be passed. </p>
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#afd05ad0ece13c84b1533b24d8c4fa613">process_multipolygons_setup()</a>, and <a class="el" href="osm_8c.html#a0716c7cf2905eb6514dce355b1ee29d2">process_multipolygons_setup_worker()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#afd05ad0ece13c84b1533b24d8c4fa613">process_multipolygons_setup()</a>, <a class="el" href="osm_8c.html#a0716c7cf2905eb6514dce355b1ee29d2">process_multipolygons_setup_worker()</a>, <a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup()</a>, and <a class="el" href="osm_8c.html#a1baf1d127cf24d8ee5aa2634747e3037">process_turn_restrictions_setup_worker()</a>.</p>
 
 </div>
 </div>
@@ -5054,7 +5183,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, and <a class="el" href="osm_8c.html#a0c228c5d781eabcd4a959efa95625972">process_turn_restrictions_setup_one()</a>.</p>
 
 </div>
 </div>

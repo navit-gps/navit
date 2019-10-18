@@ -22,6 +22,7 @@ var searchData=
   ['population_5ftable',['population_table',['../structpopulation__table.html',1,'']]],
   ['process_5fmultipolygon_5fsetup_5fthread',['process_multipolygon_setup_thread',['../structprocess__multipolygon__setup__thread.html',1,'']]],
   ['process_5frelation_5fmember_5ffunc_5fpriv',['process_relation_member_func_priv',['../structprocess__relation__member__func__priv.html',1,'']]],
+  ['process_5fturn_5frestrictions_5fsetup_5fthread',['process_turn_restrictions_setup_thread',['../structprocess__turn__restrictions__setup__thread.html',1,'']]],
   ['profile_5foption',['profile_option',['../structprofile__option.html',1,'']]],
   ['projection_5fname',['projection_name',['../structprojection__name.html',1,'']]]
 ];

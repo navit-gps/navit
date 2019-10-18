@@ -81,6 +81,7 @@ $(document).ready(function(){initNavTree('itembin__buffer_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -92,6 +93,11 @@ $(document).ready(function(){initNavTree('itembin__buffer_8c.html','');});
 <code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a0112ac0739b6038cd31dccbfffeac13c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="itembin__buffer_8c.html#a0112ac0739b6038cd31dccbfffeac13c">ITEM_COUNT</a>&#160;&#160;&#160;1*1024*1024</td></tr>
+<tr class="separator:a0112ac0739b6038cd31dccbfffeac13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aeabefa4ad3b490c2534469c22760d675"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structnode__item.html">node_item</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="itembin__buffer_8c.html#aeabefa4ad3b490c2534469c22760d675">read_node_item</a> (FILE *in)</td></tr>
@@ -109,9 +115,24 @@ Variables</h2></td></tr>
 <tr class="separator:abf6eb89855d0b8df36a45d86f23e8a14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a017ab9d8d2bf3020dc216de34b88d9ae"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem__bin.html">item_bin</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="itembin__buffer_8c.html#a017ab9d8d2bf3020dc216de34b88d9ae">tmp_item_bin</a> =(struct <a class="el" href="structitem__bin.html">item_bin</a> *)(void *)<a class="el" href="itembin__buffer_8c.html#abf6eb89855d0b8df36a45d86f23e8a14">misc_item_buffer</a></td></tr>
 <tr class="separator:a017ab9d8d2bf3020dc216de34b88d9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a933b303f95bc928a505e69bdfcf3b8"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structnode__item.html">node_item</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="itembin__buffer_8c.html#a1a933b303f95bc928a505e69bdfcf3b8">tmp_node_item</a> =(struct <a class="el" href="structnode__item.html">node_item</a> *)(void *)<a class="el" href="itembin__buffer_8c.html#abf6eb89855d0b8df36a45d86f23e8a14">misc_item_buffer</a></td></tr>
-<tr class="separator:a1a933b303f95bc928a505e69bdfcf3b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a0112ac0739b6038cd31dccbfffeac13c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0112ac0739b6038cd31dccbfffeac13c">&#9670;&nbsp;</a></span>ITEM_COUNT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ITEM_COUNT&#160;&#160;&#160;1*1024*1024</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aeabefa4ad3b490c2534469c22760d675">read_node_item()</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a68c70420acd20c1c2b50ad89baa2ce75"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a68c70420acd20c1c2b50ad89baa2ce75">&#9670;&nbsp;</a></span>init_item()</h2>
@@ -153,7 +174,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="maptool_8c.html#a2e20cac612cf0dd1a1c260f95411d0ee">bytes_read</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="itembin_8c.html#ab76b08e3020a8ee9c21690b6a54d97b5">item_bin_read()</a>, <a class="el" href="structitem__bin.html#af3af4e011f1de5681669f934c4437f2e">item_bin::len</a>, and <a class="el" href="itembin__buffer_8c.html#abf6eb89855d0b8df36a45d86f23e8a14">misc_item_buffer</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aaf2e734c53675a43976af4c07ee72410">boundary_find_matches()</a>, <a class="el" href="ch_8c.html#a431f6303475f597ad228177a56dcea40">ch_copy_to_tiles()</a>, <a class="el" href="ch_8c.html#a33e4fb94fa05d4f398afa577b3908624">ch_generate_ddsg()</a>, <a class="el" href="maptool_2misc_8c.html#a71e82a6b58b12ccd1128bc3fba2286b6">dump()</a>, <a class="el" href="sourcesink_8c.html#aa823832e15d8b4fba8fb2701c941f356">file_reader_finish()</a>, <a class="el" href="osm_8c.html#ab178373e3be0ed68e2ac0cf1e44004d2">load_countries()</a>, <a class="el" href="osm_8c.html#ad5e965ab883daa3eeb23f511349611f5">map_resolve_coords_and_split_at_intersections()</a>, <a class="el" href="osm_8c.html#ab6841dafa85a370fd4be2c0b315782b0">osm_process_towns()</a>, <a class="el" href="maptool_2misc_8c.html#a94710339565517dc0ab71f348fafec91">phase34_process_file()</a>, <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="maptool_2misc_8c.html#a68bc069e595445eaa9e7c1b3e865b2a1">process_binfile()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#aa3f820c336ce3c6775f4f5b5430a2f20">process_house_number_interpolations_setup()</a>, <a class="el" href="osm_8c.html#afd05ad0ece13c84b1533b24d8c4fa613">process_multipolygons_setup()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, <a class="el" href="osm_8c.html#af0fc87490548fdf145764c3c7dcfa827">process_turn_restrictions_setup()</a>, <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">process_way2poi()</a>, <a class="el" href="maptool_8h.html#a1b43d0a2762a5f7e4217c58bfce84733">read_item_range()</a>, <a class="el" href="osm_8c.html#a27530aae490e62dfa4a0c400e9aec940">ref_ways()</a>, <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>, and <a class="el" href="osm_8c.html#a033642d7ca1d6718a03f595d926a81d9">resolve_ways()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aaf2e734c53675a43976af4c07ee72410">boundary_find_matches()</a>, <a class="el" href="ch_8c.html#a431f6303475f597ad228177a56dcea40">ch_copy_to_tiles()</a>, <a class="el" href="ch_8c.html#a33e4fb94fa05d4f398afa577b3908624">ch_generate_ddsg()</a>, <a class="el" href="maptool_2misc_8c.html#a71e82a6b58b12ccd1128bc3fba2286b6">dump()</a>, <a class="el" href="sourcesink_8c.html#aa823832e15d8b4fba8fb2701c941f356">file_reader_finish()</a>, <a class="el" href="osm_8c.html#ab178373e3be0ed68e2ac0cf1e44004d2">load_countries()</a>, <a class="el" href="osm_8c.html#ad5e965ab883daa3eeb23f511349611f5">map_resolve_coords_and_split_at_intersections()</a>, <a class="el" href="osm_8c.html#ab6841dafa85a370fd4be2c0b315782b0">osm_process_towns()</a>, <a class="el" href="maptool_2misc_8c.html#a94710339565517dc0ab71f348fafec91">phase34_process_file()</a>, <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="maptool_2misc_8c.html#a68bc069e595445eaa9e7c1b3e865b2a1">process_binfile()</a>, <a class="el" href="boundaries_8c.html#a921eb971be65d0dd53fce43af5cf1be5">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#aa3f820c336ce3c6775f4f5b5430a2f20">process_house_number_interpolations_setup()</a>, <a class="el" href="osm_8c.html#afd05ad0ece13c84b1533b24d8c4fa613">process_multipolygons_setup()</a>, <a class="el" href="osm_8c.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>, <a class="el" href="osm_8c.html#a23734d6ed4806decc80e1a1e0c188f96">process_turn_restrictions_setup()</a>, <a class="el" href="osm_8c.html#ab2e84ec5b3a40013eaff1a50f8bf67a6">process_way2poi()</a>, <a class="el" href="maptool_8h.html#a1b43d0a2762a5f7e4217c58bfce84733">read_item_range()</a>, <a class="el" href="osm_8c.html#a27530aae490e62dfa4a0c400e9aec940">ref_ways()</a>, <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>, <a class="el" href="osm__relations_8c.html#acc455824a6a57f2a6e76c173e316e080">relations_process_multi()</a>, and <a class="el" href="osm_8c.html#a033642d7ca1d6718a03f595d926a81d9">resolve_ways()</a>.</p>
 
 </div>
 </div>
@@ -211,9 +232,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="itembin__buffer_8c.html#a1a933b303f95bc928a505e69bdfcf3b8">tmp_node_item</a>.</p>
+<p class="reference">References <a class="el" href="itembin__buffer_8c.html#a0112ac0739b6038cd31dccbfffeac13c">ITEM_COUNT</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100">relations_process()</a>, and <a class="el" href="osm__relations_8c.html#acc455824a6a57f2a6e76c173e316e080">relations_process_multi()</a>.</p>
 
 </div>
 </div>
@@ -260,31 +281,6 @@ Variables</h2></td></tr>
 <p>An <a class="el" href="structitem__bin.html">item_bin</a> for temporary use. </p>
 
 <p class="reference">Referenced by <a class="el" href="osm_8c.html#a4a31d18c3a1965674d41a1324b76d681">osm_add_member()</a>, <a class="el" href="osm_8c.html#a93ce9e5a0e1e137acc70d3eefa21561e">osm_add_relation()</a>, <a class="el" href="osm_8c.html#a61f383198dffeaf864c0531244f05c3e">osm_end_relation()</a>, <a class="el" href="osm_8c.html#afd40c101308b03e40b6c6cf15b523dd2">osm_end_relation_multipolygon()</a>, <a class="el" href="boundaries_8c.html#a59ef7544d54f6bd5d7b4d5829b073e81">process_boundaries_finish()</a>, <a class="el" href="osm_8c.html#a9b4ab02256442cd8eea8b908a4cbafef">process_multipolygons_finish()</a>, <a class="el" href="osm_8c.html#ae65247890e81595e3d7f30d3287224e1">process_turn_restrictions_finish()</a>, and <a class="el" href="osm_8c.html#a1234e27c9aeab2db84c70f1aacbc348c">relation_add_tag()</a>.</p>
-
-</div>
-</div>
-<a id="a1a933b303f95bc928a505e69bdfcf3b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a933b303f95bc928a505e69bdfcf3b8">&#9670;&nbsp;</a></span>tmp_node_item</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="structnode__item.html">node_item</a>* tmp_node_item =(struct <a class="el" href="structnode__item.html">node_item</a> *)(void *)<a class="el" href="itembin__buffer_8c.html#abf6eb89855d0b8df36a45d86f23e8a14">misc_item_buffer</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>A <a class="el" href="structnode__item.html">node_item</a> for temporary use. </p>
-
-<p class="reference">Referenced by <a class="el" href="maptool_8h.html#aeabefa4ad3b490c2534469c22760d675">read_node_item()</a>.</p>
 
 </div>
 </div>

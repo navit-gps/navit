@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"structcommand__table.html":[2,0,48],
+"structcommand__table.html#a35ae2e637995ddfbb9c22fef5a7565dc":[2,0,48,0],
+"structcommand__table.html#aed401e816726cbd620b28d77ed4ac522":[2,0,48,1],
+"structcompass.html":[2,0,49],
 "structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069":[2,0,49,4],
 "structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,49,5],
 "structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19":[2,0,49,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "structelement.html#ab3f4c63a4e1748078fbf127f778b1474":[2,0,92,20],
 "structelement.html#ac1be4286ef670b00973a9d7bec9e48be":[2,0,92,13],
 "structelement.html#ac561e962bca3a8369172146c01be8517":[2,0,92,27],
-"structelement.html#ac5e252df6fb3f15d2a7f45b57f855cec":[2,0,92,16],
-"structelement.html#acc2cb6cf1ac90817c97e67e41f8e7ca3":[2,0,92,22],
-"structelement.html#acc618d178997357592c3cd0e8643a036":[2,0,92,12],
-"structelement.html#acd31824c69a5fd53df911d705c63f0ac":[2,0,92,30],
-"structelement.html#ad157e2bf31faa11ff3784b602ef9f88f":[2,0,92,11]
+"structelement.html#ac5e252df6fb3f15d2a7f45b57f855cec":[2,0,92,16]
 };

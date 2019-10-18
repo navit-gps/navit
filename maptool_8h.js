@@ -148,6 +148,7 @@ var maptool_8h =
     [ "relations_func_new", "maptool_8h.html#a65b2e6db8d61a1e44ad5b8a93421638c", null ],
     [ "relations_new", "maptool_8h.html#aaa84a5aa79b7f49621562fa6f5114d4a", null ],
     [ "relations_process", "maptool_8h.html#a804d28c2058ec4c12c96ef391d561100", null ],
+    [ "relations_process_multi", "maptool_8h.html#acc455824a6a57f2a6e76c173e316e080", null ],
     [ "remove_countryfiles", "maptool_8h.html#acf37df4f12b9a79bb7fcdd68ebd9456c", null ],
     [ "resolve_ways", "maptool_8h.html#a033642d7ca1d6718a03f595d926a81d9", null ],
     [ "save_buffer", "maptool_8h.html#aa7452743a76a8cad407e8a84a60e7ed2", null ],

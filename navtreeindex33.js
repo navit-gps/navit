@@ -1,5 +1,9 @@
 var NAVTREEINDEX33 =
 {
+"qml__map_8cpp.html":[3,0,6,3,8],
+"qml__map_8h.html":[3,0,6,3,9],
+"qml__map_8h_source.html":[3,0,6,3,9],
+"qml__poi_8cpp.html":[3,0,6,3,10],
 "qml__poi_8h.html":[3,0,6,3,11],
 "qml__poi_8h_source.html":[3,0,6,3,11],
 "qml__search_8cpp.html":[3,0,6,3,12],
@@ -245,9 +249,5 @@ var NAVTREEINDEX33 =
 "route_8c.html#ac6c2ea074996da9478ae0f04327d2253":[3,0,28,25],
 "route_8c.html#acad5a08b925ad1fa0429997b0febde9b":[3,0,28,116],
 "route_8c.html#acbc1b6d420056c3cff9e60e3227143f2":[3,0,28,41],
-"route_8c.html#acd539fe25796de904f57342b14dde071":[3,0,28,30],
-"route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689":[3,0,28,34],
-"route_8c.html#acf5630829e3459305171d52db6e24fe6":[3,0,28,18],
-"route_8c.html#acf8e0ef1e7a81568092a35d65b11beae":[3,0,28,22],
-"route_8c.html#ad1af52ce98f45c9d385cc818348e23ce":[3,0,28,71]
+"route_8c.html#acd539fe25796de904f57342b14dde071":[3,0,28,30]
 };

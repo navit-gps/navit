@@ -12,5 +12,6 @@ var osm__relations_8c =
     [ "relations_member_hash", "osm__relations_8c.html#a093d3598ea1380a1cc35e33a51ce3538", null ],
     [ "relations_member_new", "osm__relations_8c.html#afa40d99439f18422dac10af6414670ec", null ],
     [ "relations_new", "osm__relations_8c.html#aaa84a5aa79b7f49621562fa6f5114d4a", null ],
-    [ "relations_process", "osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100", null ]
+    [ "relations_process", "osm__relations_8c.html#a804d28c2058ec4c12c96ef391d561100", null ],
+    [ "relations_process_multi", "osm__relations_8c.html#acc455824a6a57f2a6e76c173e316e080", null ]
 ];

@@ -10,6 +10,6 @@ var searchData=
   ['qt5_5fespeak_5fmeth',['qt5_espeak_meth',['../qt5__espeak_8cpp.html#a8180449b72ecc9d8384cc5d286e4dc3d',1,'qt5_espeak.cpp']]],
   ['qt5_5ftimer',['qt5_timer',['../event__qt5_8cpp.html#a9316f6c0d352717985180b38509396c2',1,'event_qt5.cpp']]],
   ['quantifier',['quantifier',['../structtraffic__suppl__info.html#a9dfd7980c4ee9abf7d99e5035c0b13eb',1,'traffic_suppl_info::quantifier()'],['../structtraffic__event.html#ae2c185ddb0c5a4c985651227900222bd',1,'traffic_event::quantifier()']]],
-  ['queue',['queue',['../structprocess__multipolygon__setup__thread.html#ae59e0eecd5b2ce599ad1f6304e373954',1,'process_multipolygon_setup_thread']]],
+  ['queue',['queue',['../structprocess__multipolygon__setup__thread.html#ae59e0eecd5b2ce599ad1f6304e373954',1,'process_multipolygon_setup_thread::queue()'],['../structprocess__turn__restrictions__setup__thread.html#ae5e5a598fe65815ee9a303650a0e0996',1,'process_turn_restrictions_setup_thread::queue()']]],
   ['quit_5fevent_5floop',['quit_event_loop',['../event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783',1,'event_sdl.h']]]
 ];

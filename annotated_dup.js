@@ -300,6 +300,7 @@ var annotated_dup =
     [ "population_table", "structpopulation__table.html", "structpopulation__table" ],
     [ "process_multipolygon_setup_thread", "structprocess__multipolygon__setup__thread.html", "structprocess__multipolygon__setup__thread" ],
     [ "process_relation_member_func_priv", "structprocess__relation__member__func__priv.html", "structprocess__relation__member__func__priv" ],
+    [ "process_turn_restrictions_setup_thread", "structprocess__turn__restrictions__setup__thread.html", "structprocess__turn__restrictions__setup__thread" ],
     [ "profile_option", "structprofile__option.html", null ],
     [ "projection_name", "structprojection__name.html", "structprojection__name" ],
     [ "QNavitGeoReceiver", "classQNavitGeoReceiver.html", "classQNavitGeoReceiver" ],

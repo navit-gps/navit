@@ -310,6 +310,7 @@ var hierarchy =
     [ "population_table", "structpopulation__table.html", null ],
     [ "process_multipolygon_setup_thread", "structprocess__multipolygon__setup__thread.html", null ],
     [ "process_relation_member_func_priv", "structprocess__relation__member__func__priv.html", null ],
+    [ "process_turn_restrictions_setup_thread", "structprocess__turn__restrictions__setup__thread.html", null ],
     [ "profile_option", "structprofile__option.html", null ],
     [ "projection_name", "structprojection__name.html", null ],
     [ "QObject", null, [

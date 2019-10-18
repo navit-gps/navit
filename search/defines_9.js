@@ -28,6 +28,7 @@ var searchData=
   ['is_5fref',['IS_REF',['../osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b',1,'osm.c']]],
   ['item',['ITEM',['../item_8c.html#a6420a1c34a992e8a722a47d278dd7783',1,'ITEM():&#160;item.c'],['../item_8h.html#a6420a1c34a992e8a722a47d278dd7783',1,'ITEM():&#160;item.h'],['../item__def_8h.html#a6420a1c34a992e8a722a47d278dd7783',1,'ITEM():&#160;item_def.h']]],
   ['item2',['ITEM2',['../item_8c.html#a24d15da515f3431d5114956efe1cdc47',1,'ITEM2():&#160;item.c'],['../item_8h.html#a24d15da515f3431d5114956efe1cdc47',1,'ITEM2():&#160;item.h'],['../item__def_8h.html#a24d15da515f3431d5114956efe1cdc47',1,'ITEM2():&#160;item_def.h']]],
+  ['item_5fcount',['ITEM_COUNT',['../itembin__buffer_8c.html#a0112ac0739b6038cd31dccbfffeac13c',1,'itembin_buffer.c']]],
   ['item_5fhas_5ftext',['ITEM_HAS_TEXT',['../osd_8h.html#a8dcb3becfbd0a2a87d8f56e8e7535de4',1,'osd.h']]],
   ['item_5fid_5fargs',['ITEM_ID_ARGS',['../item_8h.html#a164d1145c8ea7df8adb35f782b02949f',1,'item.h']]],
   ['item_5fid_5ffmt',['ITEM_ID_FMT',['../item_8h.html#a933de3334c70a27fd070e4cc34866881',1,'item.h']]],
