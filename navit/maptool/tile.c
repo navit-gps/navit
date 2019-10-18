@@ -350,7 +350,7 @@ void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *r
          * item residing in the overlap area */
         buffer[0]='\0';
         tile(&r, info->suffix, buffer, max, 0, NULL);
-        /* it sometimes ahppens that objects falling into big tile using overlaps falls into way smaller
+        /* it sometimes happens that objects falling into big tile using overlaps falls into way smaller
          * one without overlaps. If this happens, there is no need to slice. Just put the item into the
          * tile found without overlap. */
         if(tile_len(buffer) < slice_trigger)
