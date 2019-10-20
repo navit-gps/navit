@@ -842,6 +842,7 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
             continue;
         }
         fprintf(stderr, "slice %d intersection with %s\n", sp.number, tilecode);
+        sp.buffer=tilecode;
         itembin_slice(&sp, &bbox);
 
         /* next tile */
