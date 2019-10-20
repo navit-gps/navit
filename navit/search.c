@@ -141,7 +141,7 @@ static char *search_fix_spaces(char *str) {
     char c,*s,*d,*ret=g_strdup(str);
 
     for (i = 0 ; i < len ; i++) {
-        if (ret[i] == ',' || ret[i] == ',' || ret[i] == '/')
+        if (ret[i] == ',' || ret[i] == '/')
             ret[i]=' ';
     }
     s=ret;
