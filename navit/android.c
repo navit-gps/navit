@@ -682,7 +682,8 @@ static void android_search_idle(struct android_search_priv *search_priv) {
 
 static void start_search(struct android_search_priv *search_priv, const char *search_string) {
     dbg(lvl_debug,"enter %s", search_string);
-    char *str=search_fix_spaces(search_string);
+    char tmp_search_string = *search_string; // This is allows us to avoid warnings about discarding const qualifier
+    char *str=search_fix_spaces(&tmp_search_string);
     search_priv->phrases = g_strsplit(str, " ", 0);
     //ret=search_address_town(ret, sl, phrases, NULL, partial, jni);
 
