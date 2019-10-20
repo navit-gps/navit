@@ -164,6 +164,67 @@ void relations_process(struct relations *rel, FILE *nodes, FILE *ways) {
     }
 }
 
+/*
+ * @brief The actual relations processing: Loop through raw data and process any relations members.
+ * This function reads through all nodes and ways passed in, and looks up each item in the
+ * relations collection. For each relation member found, its processing function is called.
+ * @param in rel relations collection storing pre-processed relations. Built using relations_add_relation_member_entry.
+ * @param in nodes file containing nodes in "coords.tmp" format
+ * @param in ways file containing items in item_bin format. This file may contain both nodes, ways, and relations in that format.
+ */
+void relations_process_multi(struct relations **rel, int count, FILE *nodes, FILE *ways) {
+    char buffer[128];
+    struct item_bin *ib=(struct item_bin *)buffer;
+    osmid *id;
+    struct coord *c=(struct coord *)(ib+1),cn= {0,0};
+    struct node_item *ni;
+    GList *l;
+
+    if(count <= 0)
+        return;
+
+    if (nodes) {
+        item_bin_init(ib, type_point_unkn);
+        item_bin_add_coord(ib, &cn, 1);
+        item_bin_add_attr_longlong(ib, attr_osm_nodeid, 0);
+        id=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+        while ((ni=read_node_item(nodes))) {
+            int i;
+            *id=ni->nd_id;
+            *c=ni->c;
+            for(i=0; i < count; i ++) {
+                l=g_hash_table_lookup(rel[i]->member_hash[0], id);
+                while (l) {
+                    struct relations_member *memb=l->data;
+                    memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
+                    l=g_list_next(l);
+                }
+            }
+        }
+    }
+    if (ways) {
+        while ((ib=read_item(ways))) {
+            int i;
+            for(i=0; i < count; i ++) {
+                l=NULL;
+                if(NULL!=(id=item_bin_get_attr(ib, attr_osm_nodeid, NULL)))
+                    l=g_hash_table_lookup(rel[i]->member_hash[0], id);
+                else if(NULL!=(id=item_bin_get_attr(ib, attr_osm_wayid, NULL)))
+                    l=g_hash_table_lookup(rel[i]->member_hash[1], id);
+                else if(NULL!=(id=item_bin_get_attr(ib, attr_osm_relationid, NULL)))
+                    l=g_hash_table_lookup(rel[i]->member_hash[2], id);
+                if(!l)
+                    l=rel[i]->default_members;
+                while (l) {
+                    struct relations_member *memb=l->data;
+                    memb->func->func(memb->func->func_priv, memb->relation_priv, ib, memb->member_priv);
+                    l=g_list_next(l);
+                }
+            }
+        }
+    }
+}
+
 static void relations_destroy_func(void *key, GList *l, void *data) {
     GList *ll=l;
     while (ll) {
@@ -179,6 +240,14 @@ void relations_destroy(struct relations *relations) {
     for (i = 0 ; i < 3 ; i++) {
         g_hash_table_foreach(relations->member_hash[i], (GHFunc)relations_destroy_func, NULL);
         g_hash_table_destroy(relations->member_hash[i]);
+    }
+    if(relations->default_members != NULL) {
+        GList *ll=relations->default_members;
+        while (ll) {
+            g_free(ll->data);
+            ll=g_list_next(ll);
+        }
+        g_list_free(relations->default_members);
     }
     g_free(relations);
 }

@@ -830,6 +830,8 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
             map_information_attrs[1].u.str=p->url;
         }
         index_init(zip_info, 1);
+        g_free(zipdir);
+        g_free(zipindex);
     }
     if (!g_strcmp0(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
         ch_assemble_map(suffix0,suffix,zip_info);
@@ -1125,5 +1127,7 @@ int main(int argc, char **argv) {
     }
     phase+=2;
     start_phase(&p,"done");
+    if(p.timestamp != NULL)
+        g_free(p.timestamp);
     return 0;
 }

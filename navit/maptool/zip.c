@@ -230,18 +230,28 @@ int zip_write_directory(struct zip_info *info) {
     zip_write_file_data(info, info->dir);
     if (info->zip64) {
         eoc64.zip64esize=sizeof(eoc64)-12;
+        eoc64.zip64ever=0x031e; /* UNIX, spec 3.0 */
+        eoc64.zip64eneed=0x002d; /* version 4.5 for zip64*/
         eoc64.zip64enum=info->zipnum;
         eoc64.zip64ecenn=info->zipnum;
         eoc64.zip64ecsz=info->dir_size;
         eoc64.zip64eofst=info->offset;
         zip_write(info, &eoc64, sizeof(eoc64));
         eocl.zip64lofst=info->offset+info->dir_size;
+        eocl.zip74lnum=1; /* we only have single disk archives. */
         zip_write(info, &eocl, sizeof(eocl));
+
+        /* force to use the 64 bit values */
+        eoc.zipenum=0xFFFF;
+        eoc.zipecenn=0xFFFF;
+        eoc.zipecsz=0xFFFFFFFF;
+        eoc.zipeofst=0xFFFFFFFF;
+    } else {
+        eoc.zipenum=info->zipnum;
+        eoc.zipecenn=info->zipnum;
+        eoc.zipecsz=info->dir_size;
+        eoc.zipeofst=info->offset;
     }
-    eoc.zipenum=info->zipnum;
-    eoc.zipecenn=info->zipnum;
-    eoc.zipecsz=info->dir_size;
-    eoc.zipeofst=info->offset;
     zip_write(info, &eoc, sizeof(eoc));
     sig_alrm(0);
 #ifndef _WIN32
