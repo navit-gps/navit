@@ -136,7 +136,9 @@ int search_list_level(enum attr_type attr_type) {
 }
 
 /**
- * @brief replaces ',' and '/' by spaces and removes spaces from both end of the string
+ * @brief Replaces ',' and '/' by ' ', deduplicates spaces within the string
+ *        and strips spaces from both ends of the string
+ *
  * @param pointer to the string to cleanup
  * @return pointer to the cleaned up string
  */
