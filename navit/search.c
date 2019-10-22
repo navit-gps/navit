@@ -135,7 +135,7 @@ int search_list_level(enum attr_type attr_type) {
     }
 }
 
-char *search_fix_spaces(char *str) {
+char *search_fix_spaces(const char *str) {
     int i;
     int len=strlen(str);
     char c,*s,*d,*ret=g_strdup(str);
