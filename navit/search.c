@@ -135,6 +135,11 @@ int search_list_level(enum attr_type attr_type) {
     }
 }
 
+/**
+ * @brief replaces ',' and '/' by spaces and removes spaces from both end of the string
+ * @param pointer to the string to cleanup
+ * @return pointer to the cleaned up string
+ */
 char *search_fix_spaces(const char *str) {
     int i;
     int len=strlen(str);
