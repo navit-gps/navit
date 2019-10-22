@@ -167,6 +167,9 @@ char *search_fix_spaces(const char *str) {
             len--;
         }
     } while (c);
+    // Make sure the string is terminated at current position even if nothing has been added to it.
+    // This case happen when you use a string containing only chars that will be discarded.
+    *d='\0';
     return ret;
 }
 
