@@ -16,11 +16,18 @@
         android:theme="@style/NavitTheme">
         <activity android:name="Navit"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
             android:configChanges="screenLayout|smallestScreenSize|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="geo"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
