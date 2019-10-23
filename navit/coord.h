@@ -113,13 +113,13 @@ struct coord_geo_cart {
 enum coord_format
 {
 	/**
-	* Degrees with absolute decimal places (positive or negative)
-	* ie -20.500000 -110.500000
-	*/
+	 * Degrees with absolute decimal places (positive or negative)
+	 * ie -20.500000 -110.500000
+	 */
 	DEGREES_DECIMAL_ABSOLUTE,
 
 	/**
-	 * Degrees with decimal places.
+	 * Degrees with decimal places (positive with heading)
 	 * ie 20.500000°N 110.500000°E
 	 */
 	DEGREES_DECIMAL,
