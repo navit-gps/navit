@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a078f0ac39c88f303c3f77e9883b299ee":[2,0,0,0,0,12,6],
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a173515344474c2e4e090be7eb61a549b":[2,0,0,0,0,12,3],
+"classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8186c2ed53d2e36a4d81c815c2b6d3d5":[2,0,0,0,0,12,4],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8a15f4ab361b127e536547ffb43ba2fc":[2,0,0,0,0,12,5],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a8c81467cadfe2caa78c9fc4e4032841b":[2,0,0,0,0,12,2],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#aa2d067e10eb93c771cbd990305933ed4":[2,0,0,0,0,12,1],
@@ -84,6 +87,14 @@ var NAVTREEINDEX7 =
 "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html#af18a29f1ab8155dd63898dd8191e46e6":[2,0,0,0,0,19,3],
 "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html":[2,0,0,0,0,19,0],
 "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html#a7452630d2d000dd4e23394bf9fb86b6c":[2,0,0,0,0,19,0,0],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html":[2,0,0,0,0,1,0],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a139991d135b49757052bb4af4513f301":[2,0,0,0,0,1,0,5],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a435148f0b7ec48ff508405c76e7d3a13":[2,0,0,0,0,1,0,4],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a4e33b083e1421c5a348b0cc2eaa98a3f":[2,0,0,0,0,1,0,6],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a5bb26f05ce06a69edfa6b6dda53f0197":[2,0,0,0,0,1,0,0],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#ad7d02da8a6efd182b429b9e78fa22f0d":[2,0,0,0,0,1,0,1],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#aed4b204561f7061b807098556a646ef5":[2,0,0,0,0,1,0,3],
+"classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#aff6917dd9901786ed6a61ac05f1d5ee8":[2,0,0,0,0,1,0,2],
 "classqt5__navit__timer.html":[2,0,306],
 "classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6":[2,0,306,5],
 "classqt5__navit__timer.html#a7bbda26f1ee764099c0484eb7f39addb":[2,0,306,0],
@@ -238,16 +249,5 @@ var NAVTREEINDEX7 =
 "common_8h.html#a163e453fe8679bcc95ff33b3a6775d8b":[3,0,2,1,2,13],
 "common_8h.html#a21c3f61fb17b0852a6a2c956c29908fe":[3,0,2,1,2,8],
 "common_8h.html#a27be840595df2389a37d090153319e2e":[3,0,2,1,2,3],
-"common_8h.html#a2b19e35a05b89f213fd4df40ad715341":[3,0,2,1,2,5],
-"common_8h.html#a321a9dadab68f7de5852bc9d93404e67":[3,0,2,1,2,12],
-"common_8h.html#a6bb1ff01fab2f8a8bb023f584a5aa272":[3,0,2,1,2,0],
-"common_8h.html#a732860c0a087a4e6e7d81928864f4afb":[3,0,2,1,2,9],
-"common_8h.html#a770ddde01fbc685d1e5d2790159142f2":[3,0,2,1,2,16],
-"common_8h.html#a79614554b509115989b07ae3659c69d7":[3,0,2,1,2,7],
-"common_8h.html#a7ad67bc2decc59dc3c5ef23ed5645fff":[3,0,2,1,2,10],
-"common_8h.html#a81a721734c495ad5d905cfc29d3b030f":[3,0,2,1,2,6],
-"common_8h.html#a8e45d2bca72c41bfdb2bdd69c11e51b9":[3,0,2,1,2,2],
-"common_8h.html#a931b4761df5d5e2e7cbf450fef1de350":[3,0,2,1,2,4],
-"common_8h.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26":[3,0,2,1,2,15],
-"common_8h.html#ac58c22aba451e9a8285798c2cb5930f2":[3,0,2,1,2,14]
+"common_8h.html#a2b19e35a05b89f213fd4df40ad715341":[3,0,2,1,2,5]
 };

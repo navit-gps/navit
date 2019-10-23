@@ -1,5 +1,16 @@
 var NAVTREEINDEX32 =
 {
+"osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361":[3,0,9,11,3],
+"osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d":[3,0,9,11,9],
+"osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02":[3,0,9,11,13],
+"osm__protobuf_8c.html#ae1023220557cc6a72a5e71b759d293a9":[3,0,9,11,2],
+"osm__protobuf_8c.html#af199a39319b90015d86f3c3ccccf42bc":[3,0,9,11,1],
+"osm__protobufdb_8c.html":[3,0,9,12],
+"osm__protobufdb_8c.html#a0a7c78917934bbdd19fbd1464a63fcc9":[3,0,9,12,22],
+"osm__protobufdb_8c.html#a13eda00dd5efd9440b0eaf5430b73e84":[3,0,9,12,29],
+"osm__protobufdb_8c.html#a13fdec16484ee8a4223016c2acdb91d7":[3,0,9,12,17],
+"osm__protobufdb_8c.html#a153191f65c77e5480de41f52d2ad2a28":[3,0,9,12,13],
+"osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604":[3,0,9,12,30],
 "osm__protobufdb_8c.html#a1ede8f4b3b56cac1fb5d5ef22bab56ab":[3,0,9,12,10],
 "osm__protobufdb_8c.html#a1f19561947b469c855ba3e13ef9f6505":[3,0,9,12,18],
 "osm__protobufdb_8c.html#a2abb2eca5228a2424e6fb5ec43154d28":[3,0,9,12,8],
@@ -238,16 +249,5 @@ var NAVTREEINDEX32 =
 "projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a02133eae2b9a5a58ec1bbf3072cdac0e":[3,0,115,1,0],
 "projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a7fac95e85079a3f4fec97458ce877db0":[3,0,115,1,3],
 "projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b":[3,0,115,1,2],
-"projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064":[3,0,115,1,1],
-"projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e":[3,0,115,1,4],
-"projection_8h.html#ab6bea86ce7e97569e9eedba942a880a2":[3,0,115,3],
-"projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019":[3,0,115,2],
-"projection_8h_source.html":[3,0,115],
-"proxy_8c.html":[3,0,6,3,4],
-"proxy_8c.html#acb1b7273c932f27de9355f80280892b9":[3,0,6,3,4,0],
-"qml_2proxy_8h.html":[3,0,6,2,5],
-"qml_2proxy_8h_source.html":[3,0,6,2,5],
-"qml__bookmark_8cpp.html":[3,0,6,3,6],
-"qml__bookmark_8h.html":[3,0,6,3,7],
-"qml__bookmark_8h_source.html":[3,0,6,3,7]
+"projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064":[3,0,115,1,1]
 };

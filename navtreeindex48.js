@@ -1,5 +1,16 @@
 var NAVTREEINDEX48 =
 {
+"structstopwatch.html#af2458daf83e6c963013a1c19dc5c85d7":[2,0,366,7],
+"structstreet__data.html":[2,0,367],
+"structstreet__data.html#a224c9e84d6d6d05fe9d2213919d1d22a":[2,0,367,3],
+"structstreet__data.html#a77bba18731b588a277c4d9cb33ba3d13":[2,0,367,2],
+"structstreet__data.html#a7d1b7d4f57b823532c9b7f7805780fad":[2,0,367,4],
+"structstreet__data.html#aa1320249fcb1425f71d076eacb1bdb47":[2,0,367,0],
+"structstreet__data.html#aae566cd82e377cec86f6c98672e1cf19":[2,0,367,1],
+"structstreet__destination.html":[2,0,368],
+"structstreet__destination.html#a2ca9fc57d48e7fcb948950a39c83de5b":[2,0,368,0],
+"structstreet__destination.html#a5c9315380ee206d0167f4a3b69cf2cdb":[2,0,368,2],
+"structstreet__destination.html#aee07bb798a6824a32093b80135c90906":[2,0,368,1],
 "structstreet__header.html":[2,0,369],
 "structstreet__header.html#a0ea1b0192664a8ea9fe172dd7aa0aa69":[2,0,369,0],
 "structstreet__header__type.html":[2,0,370],
@@ -238,16 +249,5 @@ var NAVTREEINDEX48 =
 "structtraffic__event.html#a2df1db151bd0db59365cc8d57dbba5d8":[2,0,398,3],
 "structtraffic__event.html#a300d7625cd12ae62b7aee15655c8371f":[2,0,398,6],
 "structtraffic__event.html#a43cb1586283a0efc2bef0272a7866f2b":[2,0,398,1],
-"structtraffic__event.html#aa507d11078d0f3758c18bbcbfec86e1b":[2,0,398,5],
-"structtraffic__event.html#ae2c185ddb0c5a4c985651227900222bd":[2,0,398,2],
-"structtraffic__event.html#afa0c8e120aaabe9934feb02498500723":[2,0,398,4],
-"structtraffic__location.html":[2,0,399],
-"structtraffic__location.html#a053740a149674e9f1e05a5fdbbd44812":[2,0,399,13],
-"structtraffic__location.html#a0875b73f5c83d04226775eb787a0ec54":[2,0,399,8],
-"structtraffic__location.html#a19c7aed828d8291e1c4cfb6bf364c641":[2,0,399,15],
-"structtraffic__location.html#a20da9602948e8cc5d0833b1f0d3d4d15":[2,0,399,14],
-"structtraffic__location.html#a239f812b9dae308402f74b8a16ac7dab":[2,0,399,0],
-"structtraffic__location.html#a276cf2abe461211a28a413e5ef4dad1a":[2,0,399,1],
-"structtraffic__location.html#a407a994447e7515567d5e8e3112b3336":[2,0,399,7],
-"structtraffic__location.html#a54aacfe21cd87aefd7e255494e52deac":[2,0,399,5]
+"structtraffic__event.html#aa507d11078d0f3758c18bbcbfec86e1b":[2,0,398,5]
 };

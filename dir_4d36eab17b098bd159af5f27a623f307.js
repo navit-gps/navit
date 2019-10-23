@@ -6,7 +6,8 @@ var dir_4d36eab17b098bd159af5f27a623f307 =
       [ "ItemFileNameComparator", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator.html", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator" ]
     ] ],
     [ "Navit.java", "Navit_8java.html", [
-      [ "Navit", "classorg_1_1navitproject_1_1navit_1_1Navit.html", "classorg_1_1navitproject_1_1navit_1_1Navit" ]
+      [ "Navit", "classorg_1_1navitproject_1_1navit_1_1Navit.html", "classorg_1_1navitproject_1_1navit_1_1Navit" ],
+      [ "StartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent" ]
     ] ],
     [ "NavitActivityResult.java", "NavitActivityResult_8java.html", [
       [ "NavitActivityResult", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult" ]

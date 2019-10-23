@@ -1,5 +1,6 @@
 var classorg_1_1navitproject_1_1navit_1_1Navit =
 [
+    [ "StartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent" ],
     [ "buildNotification", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ad7a0de2f8dd825cc79b5157fd62097ca", null ],
     [ "createNotificationChannel", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8f687856757ee7fd4d023e2db393a0c6", null ],
     [ "disableSuspend", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a4546df5524adc32952ad2ef55e467932", null ],
@@ -7,12 +8,14 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "extractRes", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aa2dad49dc0cb1fa820c948aef2f3568c", null ],
     [ "fullscreen", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6281ef3908ee038226097fda696176f7", null ],
     [ "hideNativeKeyboard", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ab6d1d09ee41af592a1f0421cea8a5eda", null ],
+    [ "invokeCallbackOnGeo", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a2dfb52ed0973acfee979217b7766bdf9", null ],
     [ "navitDestroy", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ab424c8d2631f01d002c8c759f49b6e18", null ],
     [ "navitMain", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a91f3b4c2d2f2fa2dbc367575a61f28a0", null ],
     [ "onActivityResult", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6cb530da592694ce0e2e6950e1737202", null ],
     [ "onCreate", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a4d846bcbfd21fb088f948c69f1ff601a", null ],
     [ "onCreateDialog", "classorg_1_1navitproject_1_1navit_1_1Navit.html#abfd5f22784cae532c39b9b10aead52d0", null ],
     [ "onDestroy", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a30b7dab0eb9f226eb47ba0c25edd24a2", null ],
+    [ "onNewIntent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a920fc3ec3a2cf983fbfaafd292448397", null ],
     [ "onOptionsItemSelected", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a99d00e14cfe679d45bd0425dc46bebc4", null ],
     [ "onPause", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a3b9aecfba5e600b15f7c719b980d5ca1", null ],
     [ "onPrepareDialog", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aece77c2c050bd60d8dbdbf860fb65a1e", null ],
@@ -48,7 +51,6 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "sMetrics", "classorg_1_1navitproject_1_1navit_1_1Navit.html#af768d1f6389a076b0a7e979f4211c8e8", null ],
     [ "sNavitDataDir", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6d97245de62eaefbdae4c90b4638ed18", null ],
     [ "sShowSoftKeyboardShowing", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8879933d08c4aafc5d816791fcffc47b", null ],
-    [ "sStartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a9db449b0306bb93c75fe10819ca04505", null ],
-    [ "sStartupIntentTimestamp", "classorg_1_1navitproject_1_1navit_1_1Navit.html#acc40e31afee784e28f608309c0bee4ec", null ],
+    [ "sStartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aee8bdabaa77c25d9c8c46042c3c00163", null ],
     [ "TAG", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a4bec7b68e44c48e14b6ccb0a801de2c8", null ]
 ];

@@ -1,5 +1,16 @@
 var NAVTREEINDEX44 =
 {
+"structmaptool__params.html#a98e56026140eb77302a65a27a347f843":[2,0,216,14],
+"structmaptool__params.html#a9c0c00ea762a07c3f666bf4fc4716c88":[2,0,216,12],
+"structmaptool__params.html#ab446733a3ad3305674124805b08e837f":[2,0,216,0],
+"structmaptool__params.html#abcff97734aaa5f3f2a422f29aec86b9d":[2,0,216,22],
+"structmaptool__params.html#acfbf27be4a887154c44001fb4f4b799c":[2,0,216,3],
+"structmaptool__params.html#ad34d8ca7da99189414c600150d2ac8b8":[2,0,216,10],
+"structmaptool__params.html#ad560c1737904315422fb5ba3b5516457":[2,0,216,13],
+"structmaptool__params.html#ae1e8c256c17c713f54a7333d900951e1":[2,0,216,24],
+"structmaptool__params.html#ae4bbc7c2706c32b67bbc947571331983":[2,0,216,11],
+"structmaptool__params.html#aea3d8125745f10e3b3788ae275f40ef2":[2,0,216,23],
+"structmaptool__params.html#aebba5f9002c705eb14cf2604ccdc71d8":[2,0,216,7],
 "structmaptool__params.html#af973b436b7914fd4d3712c7bb9909d66":[2,0,216,15],
 "structmaptool__params.html#aff1c4aa53c5815019ed996d81942ca94":[2,0,216,6],
 "structmaptype.html":[2,0,217],
@@ -238,16 +249,5 @@ var NAVTREEINDEX44 =
 "structnavit.html#ae04e7db0fe490ed1d24477db41fc27c2":[0,1,1,12],
 "structnavit.html#ae5088936f94b0a104e18e482c2d0a8d2":[0,1,1,16],
 "structnavit.html#ae635fe5f570a3ffbb1bfd9f294f56b0b":[0,1,1,9],
-"structnavit.html#aed5ec5eef631a961e3b848da56aa5b4c":[0,1,1,56],
-"structnavit.html#af08a26edebc44609dea3e44d6245142a":[0,1,1,23],
-"structnavit.html#af3cde5b1ee1f52d0a05bff62be907b26":[0,1,1,60],
-"structnavit.html#af5a821d2a02beda224952b163fb50e04":[0,1,1,50],
-"structnavit.html#af5fa12f2f5e227c5d8f0f6c3c3b53116":[0,1,1,52],
-"structnavitObject.html":[2,0,241],
-"structnavitObject.html#ad56c5f537766f52c2daf4cdbdef4d145":[2,0,241,0],
-"structnavit__binding__w32__msg.html":[2,0,237],
-"structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f":[2,0,237,1],
-"structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065":[2,0,237,2],
-"structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f":[2,0,237,0],
-"structnavit__object.html":[2,0,238]
+"structnavit.html#aed5ec5eef631a961e3b848da56aa5b4c":[0,1,1,56]
 };

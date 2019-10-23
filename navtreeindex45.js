@@ -1,5 +1,16 @@
 var NAVTREEINDEX45 =
 {
+"structnavit.html#af08a26edebc44609dea3e44d6245142a":[0,1,1,23],
+"structnavit.html#af3cde5b1ee1f52d0a05bff62be907b26":[0,1,1,60],
+"structnavit.html#af5a821d2a02beda224952b163fb50e04":[0,1,1,50],
+"structnavit.html#af5fa12f2f5e227c5d8f0f6c3c3b53116":[0,1,1,52],
+"structnavitObject.html":[2,0,241],
+"structnavitObject.html#ad56c5f537766f52c2daf4cdbdef4d145":[2,0,241,0],
+"structnavit__binding__w32__msg.html":[2,0,237],
+"structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f":[2,0,237,1],
+"structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065":[2,0,237,2],
+"structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f":[2,0,237,0],
+"structnavit__object.html":[2,0,238],
 "structnavit__vehicle.html":[0,1,0],
 "structnavit__vehicle.html#a1e1c2bc176fdfae124d7cb0723eaa7bc":[0,1,0,7],
 "structnavit__vehicle.html#a291cacdf916aabaaf6aa4b9082031de8":[0,1,0,2],
@@ -238,16 +249,5 @@ var NAVTREEINDEX45 =
 "structparsedata.html#a80adf87336cf82d88319d9b6621f7143":[2,0,282,5],
 "structparsedata.html#aa8d6e7257c7ee34d69f89d44fcee979f":[2,0,282,10],
 "structparsedata.html#ab8bfc5febe18661ff3c6326333a99954":[2,0,282,4],
-"structparsedata.html#abcca051f0b6eb590a761988deac9ede3":[2,0,282,0],
-"structparsedata.html#adf9ab0f5728c4a6b708ef2f922db16a0":[2,0,282,3],
-"structparsedata.html#aec92b056a2ff93437efaff1880aeafc2":[2,0,282,7],
-"structparsedata.html#af5a8f145440ff6d9ec60096d515cbfac":[2,0,282,2],
-"structpathattr.html":[2,0,283],
-"structpathattr.html#a3be73715e7e57a38df9b908e866fad68":[2,0,283,3],
-"structpathattr.html#a488e7439e0ac35b69093e0a94500cb51":[2,0,283,11],
-"structpathattr.html#a5c1d09eeccd9ee69b51b86b865b1ca2d":[2,0,283,5],
-"structpathattr.html#a63dd3cc95357c4dbd48d7a300ce35e22":[2,0,283,0],
-"structpathattr.html#a6bc9ca9f40362e744b47a20ea329e827":[2,0,283,10],
-"structpathattr.html#a6f3063a3e779917b2380fda596567823":[2,0,283,7],
-"structpathattr.html#a84e8305559d28a4713e6cc1b733335e1":[2,0,283,6]
+"structparsedata.html#abcca051f0b6eb590a761988deac9ede3":[2,0,282,0]
 };

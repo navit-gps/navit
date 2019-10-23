@@ -229,6 +229,7 @@ var searchData=
   ['startspeakingstring_3atourl_3a',['startSpeakingString:toURL:',['../interfaceVSSpeechSynthesizer.html#a2d03b5f2c89b542d18cb9e1ac99e8a82',1,'VSSpeechSynthesizer']]],
   ['startspeakingstring_3atourl_3awithlanguagecode_3a',['startSpeakingString:toURL:withLanguageCode:',['../interfaceVSSpeechSynthesizer.html#a63317dae43433dc32ddc9faa84023c7d',1,'VSSpeechSynthesizer']]],
   ['startthread',['startThread',['../speak_8c.html#ad53fdef86d3c1f8f3ed2bc5ed83d38c3',1,'speak.c']]],
+  ['startupintent',['StartupIntent',['../classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a5bb26f05ce06a69edfa6b6dda53f0197',1,'org::navitproject::navit::Navit::StartupIntent']]],
   ['status_5ffix2str',['status_fix2str',['../gui__gtk__statusbar_8c.html#a09fd4f97432f58bc6ff172d8efdfe2e4',1,'gui_gtk_statusbar.c']]],
   ['statusbar_5froute_5fupdate',['statusbar_route_update',['../gui__gtk__statusbar_8c.html#a798ad4510fcf2ee073cf71d5b859a549',1,'gui_gtk_statusbar.c']]],
   ['stop_5fthread',['stop_thread',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#ab8ec89fc35d3236496b202c23a4bc84c',1,'org::navitproject::navit::NavitMapDownloader']]],

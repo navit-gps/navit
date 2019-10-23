@@ -168,7 +168,7 @@ var searchData=
   ['toolbar_5fenable',['toolbar_enable',['../structgui__priv.html#ab80e3f2e033bff6a1818ccadd8bfede1',1,'gui_priv']]],
   ['top',['top',['../structpadding.html#a6182228cfd24804ecaf058ec715a5989',1,'padding']]],
   ['top_5frow',['top_row',['../structtable__data.html#aa4b3675a43a285f9b40e7a6ac5a60424',1,'table_data']]],
-  ['tostring',['toString',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html#a421a307256dd1026dcf470178f6b23d0',1,'org::navitproject::navit::FileBrowserActivity::Item']]],
+  ['tostring',['toString',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html#a421a307256dd1026dcf470178f6b23d0',1,'org.navitproject.navit.FileBrowserActivity.Item.toString()'],['../classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a435148f0b7ec48ff508405c76e7d3a13',1,'org.navitproject.navit.Navit.StartupIntent.toString()']]],
   ['total_5fsize',['total_size',['../structtile__head.html#ae056ad65df357142f8b291e7f282e36c',1,'tile_head']]],
   ['total_5fsize_5fused',['total_size_used',['../structtile__head.html#a684b382d746bf0bb4bcb306ffb9a305d',1,'tile_head']]],
   ['town',['town',['../structmap__rect__priv.html#a2b3406ff796a62f47958ad62820e2da3',1,'map_rect_priv::town()'],['../structsearch__list__result.html#ae0fe345fc0eff57a65cecc2dbbe39ffd',1,'search_list_result::town()']]],

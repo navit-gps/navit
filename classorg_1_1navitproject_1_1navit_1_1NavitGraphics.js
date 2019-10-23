@@ -19,7 +19,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics =
     [ "draw_text", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a21dbcb1c957a2a7c89862513671257ee", null ],
     [ "get_rect", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae09c7e46f036dbbb0df73b23c212dae9", null ],
     [ "getAllCountries", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ad5d434786d1d33fcb86c919b28d2f1ca", null ],
-    [ "getCoordForPoint", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0d392e8f17c88eb131d9f1512cf4bb76", null ],
+    [ "getCoordForPoint", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5ee717be206bcf9973d755a64750e62a", null ],
     [ "handleResize", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#adc8b705e3316bad3989a34df9eb2b61f", null ],
     [ "hasMenuButton", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af48fbcc4ebf9c5b32844065fb706948a", null ],
     [ "keypressCallback", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a2ddd243bce7fd9ab101877d46cfb1e56", null ],

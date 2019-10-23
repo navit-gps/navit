@@ -405,6 +405,7 @@ var hierarchy =
     [ "speech", "structspeech.html", null ],
     [ "speech_methods", "structspeech__methods.html", null ],
     [ "speech_priv", "structspeech__priv.html", null ],
+    [ "org.navitproject.navit.Navit.StartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html", null ],
     [ "statusbar_priv", "structstatusbar__priv.html", null ],
     [ "stopwatch", "structstopwatch.html", null ],
     [ "street_data", "structstreet__data.html", null ],

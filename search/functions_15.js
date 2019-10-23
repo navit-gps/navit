@@ -66,7 +66,7 @@ var searchData=
   ['tm_5frect_5fnew',['tm_rect_new',['../traffic_8c.html#a07d66850814efbe4eef01f12a3300aef',1,'traffic.c']]],
   ['tm_5ftype_5fset',['tm_type_set',['../traffic_8c.html#ad4c771198d369459ab4f3126042e7f63',1,'traffic.c']]],
   ['toast',['toast',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#afc2d40c368d53c2ecec8b98441f06fa8',1,'org::navitproject::navit::NavitMapDownloader']]],
-  ['tostring',['toString',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html#a421a307256dd1026dcf470178f6b23d0',1,'org::navitproject::navit::FileBrowserActivity::Item']]],
+  ['tostring',['toString',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html#a421a307256dd1026dcf470178f6b23d0',1,'org.navitproject.navit.FileBrowserActivity.Item.toString()'],['../classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html#a435148f0b7ec48ff508405c76e7d3a13',1,'org.navitproject.navit.Navit.StartupIntent.toString()']]],
   ['town_5fattr_5fget',['town_attr_get',['../town_8c.html#ad51681841ab743884a141fb074c07690',1,'town.c']]],
   ['town_5fattr_5frewind',['town_attr_rewind',['../town_8c.html#ab07714b3d409e20c7390327a7aa3c9c1',1,'town.c']]],
   ['town_5fcoord_5fget',['town_coord_get',['../town_8c.html#a4ddc018df7dfd4ee0791f0014b06705e',1,'town.c']]],

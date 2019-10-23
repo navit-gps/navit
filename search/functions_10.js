@@ -30,6 +30,7 @@ var searchData=
   ['onkeyup',['onKeyUp',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a55a97bcaf4a1f197a56335fdf23e06d6',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
   ['onlocationchanged',['onLocationChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html#a3d6ad3f78204e65353c9734c405c5796',1,'org::navitproject::navit::NavitVehicle::NavitLocationListener']]],
   ['onmenuitemclick',['onMenuItemClick',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a228f6f14f9631a499fd5965bee1c7282',1,'org::navitproject::navit::NavitGraphics::NavitView']]],
+  ['onnewintent',['onNewIntent',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a920fc3ec3a2cf983fbfaafd292448397',1,'org::navitproject::navit::Navit']]],
   ['onoptionsitemselected',['onOptionsItemSelected',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a99d00e14cfe679d45bd0425dc46bebc4',1,'org::navitproject::navit::Navit']]],
   ['onpause',['onPause',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a3b9aecfba5e600b15f7c719b980d5ca1',1,'org::navitproject::navit::Navit']]],
   ['onpostexecute',['onPostExecute',['../classorg_1_1navitproject_1_1navit_1_1NavitBackupTask.html#ab195e182da8385d57b22b397f38a9dc6',1,'org.navitproject.navit.NavitBackupTask.onPostExecute()'],['../classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a173515344474c2e4e090be7eb61a549b',1,'org.navitproject.navit.NavitRestoreTask.onPostExecute()']]],

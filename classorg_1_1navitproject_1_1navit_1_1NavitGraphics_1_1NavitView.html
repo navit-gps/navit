@@ -124,6 +124,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a86af6a3c40271cb74b36d5b35a216475"><td class="memItemLeft" align="right" valign="top">Intent&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a86af6a3c40271cb74b36d5b35a216475">getViewIntentForDisplayPoint</a> (int x, int y)</td></tr>
+<tr class="separator:a86af6a3c40271cb74b36d5b35a216475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2deb247d2419f5d76c4791f690353440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440">onCreateContextMenu</a> (ContextMenu <a class="el" href="structmenu.html">menu</a>)</td></tr>
 <tr class="separator:a2deb247d2419f5d76c4791f690353440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a487ff3fc96437514d2e3b8e03b04ed96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a487ff3fc96437514d2e3b8e03b04ed96">onDraw</a> (Canvas canvas)</td></tr>
@@ -148,6 +150,8 @@ Package Attributes</h2></td></tr>
 <tr class="separator:a2493e95a713f057a76679fa83b6c8eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a729dd9df82e748cb67e3eae9a6550a2f"><td class="memItemLeft" align="right" valign="top">PointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a729dd9df82e748cb67e3eae9a6550a2f">mPressedPosition</a> = null</td></tr>
 <tr class="separator:a729dd9df82e748cb67e3eae9a6550a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a1bcdf6061cb9ab35c6480f99f59ba0"><td class="memItemLeft" align="right" valign="top">Intent&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a9a1bcdf6061cb9ab35c6480f99f59ba0">mContextMenuMapViewIntent</a> = null</td></tr>
+<tr class="separator:a9a1bcdf6061cb9ab35c6480f99f59ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-static-attribs"></a>
 Static Package Attributes</h2></td></tr>
@@ -265,6 +269,55 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a86af6a3c40271cb74b36d5b35a216475"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86af6a3c40271cb74b36d5b35a216475">&#9670;&nbsp;</a></span>getViewIntentForDisplayPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Intent org.navitproject.navit.NavitGraphics.NavitView.getViewIntentForDisplayPoint </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create an intent for a view action of a point provided by its x and y position on the display.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>The x coordinates of the point on the display </td></tr>
+    <tr><td class="paramname">y</td><td>The y coordinates of the point on the display</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An intent to start to view the specified point on a third-party app on Android (can be null if a view action is not possible) </dd></dl>
+
+<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5ee717be206bcf9973d755a64750e62a">org.navitproject.navit.NavitGraphics.getCoordForPoint()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#af2e7c222c33c836b66caca50690f9d05">org.navitproject.navit.NavitAppConfig.getTstring()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440">org.navitproject.navit.NavitGraphics.NavitView.onCreateContextMenu()</a>.</p>
+
+</div>
+</div>
 <a id="ac5da0996e4911fe336c6ba07f9c8819c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5da0996e4911fe336c6ba07f9c8819c">&#9670;&nbsp;</a></span>isDrag()</h2>
 
@@ -346,7 +399,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0d392e8f17c88eb131d9f1512cf4bb76">org.navitproject.navit.NavitGraphics.getCoordForPoint()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#af2e7c222c33c836b66caca50690f9d05">org.navitproject.navit.NavitAppConfig.getTstring()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a729dd9df82e748cb67e3eae9a6550a2f">org.navitproject.navit.NavitGraphics.NavitView.mPressedPosition</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a8bb60e2923569676eafc0a7b4382b2d4">org.navitproject.navit.NavitGraphics.NavitView.NONE</a>.</p>
+<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5ee717be206bcf9973d755a64750e62a">org.navitproject.navit.NavitGraphics.getCoordForPoint()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#af2e7c222c33c836b66caca50690f9d05">org.navitproject.navit.NavitAppConfig.getTstring()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a86af6a3c40271cb74b36d5b35a216475">org.navitproject.navit.NavitGraphics.NavitView.getViewIntentForDisplayPoint()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a9a1bcdf6061cb9ab35c6480f99f59ba0">org.navitproject.navit.NavitGraphics.NavitView.mContextMenuMapViewIntent</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a729dd9df82e748cb67e3eae9a6550a2f">org.navitproject.navit.NavitGraphics.NavitView.mPressedPosition</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a8bb60e2923569676eafc0a7b4382b2d4">org.navitproject.navit.NavitGraphics.NavitView.NONE</a>.</p>
 
 </div>
 </div>
@@ -522,7 +575,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html#a7a6554a3481eec9593cbff78e15039d9">org.navitproject.navit.NavitGraphics.MsgType.CLB_SET_DISPLAY_DESTINATION</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0d392e8f17c88eb131d9f1512cf4bb76">org.navitproject.navit.NavitGraphics.getCoordForPoint()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a729dd9df82e748cb67e3eae9a6550a2f">org.navitproject.navit.NavitGraphics.NavitView.mPressedPosition</a>.</p>
+<p class="reference">References <a class="el" href="enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html#a7a6554a3481eec9593cbff78e15039d9">org.navitproject.navit.NavitGraphics.MsgType.CLB_SET_DISPLAY_DESTINATION</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a9a1bcdf6061cb9ab35c6480f99f59ba0">org.navitproject.navit.NavitGraphics.NavitView.mContextMenuMapViewIntent</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a729dd9df82e748cb67e3eae9a6550a2f">org.navitproject.navit.NavitGraphics.NavitView.mPressedPosition</a>.</p>
 
 </div>
 </div>
@@ -775,6 +828,30 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#ac5da0996e4911fe336c6ba07f9c8819c">org.navitproject.navit.NavitGraphics.NavitView.isDrag()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a34ec0a10d981557923074be536e10486">org.navitproject.navit.NavitGraphics.NavitView.onTouchEvent()</a>.</p>
+
+</div>
+</div>
+<a id="a9a1bcdf6061cb9ab35c6480f99f59ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a1bcdf6061cb9ab35c6480f99f59ba0">&#9670;&nbsp;</a></span>mContextMenuMapViewIntent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Intent org.navitproject.navit.NavitGraphics.NavitView.mContextMenuMapViewIntent = null</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a2deb247d2419f5d76c4791f690353440">org.navitproject.navit.NavitGraphics.NavitView.onCreateContextMenu()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a228f6f14f9631a499fd5965bee1c7282">org.navitproject.navit.NavitGraphics.NavitView.onMenuItemClick()</a>.</p>
 
 </div>
 </div>

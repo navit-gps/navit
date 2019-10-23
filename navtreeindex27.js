@@ -1,5 +1,16 @@
 var NAVTREEINDEX27 =
 {
+"linguistics_8c.html#a6a83e9500ba3a7da6e7bdc31b80c4263":[3,0,75,0],
+"linguistics_8c.html#a70f248f93f7c73aa6a68a863a2fb3333":[3,0,75,10],
+"linguistics_8c.html#ab99f7e787631a0b9da918c00cd928d01":[3,0,75,6],
+"linguistics_8c.html#abc2ffdce1c8ceb1703847e9f383f46d8":[3,0,75,5],
+"linguistics_8c.html#af811ff7e43a3a927e2416ffd96b872ce":[3,0,75,4],
+"linguistics_8c.html#af9e25b6b2083ef2ea914c813799e1ea4":[3,0,75,2],
+"linguistics_8h.html":[3,0,76],
+"linguistics_8h.html#a12c503bfb4c91f71c080e249c9fe4cd2":[3,0,76,3],
+"linguistics_8h.html#a19bab3f16faec378cf41dbc1a744c077":[3,0,76,8],
+"linguistics_8h.html#a553ba00d2303f9c278cd2bce25145f88":[3,0,76,7],
+"linguistics_8h.html#a5d6a74a496c4f75d747dec62ee8fc291":[3,0,76,4],
 "linguistics_8h.html#a6a83e9500ba3a7da6e7bdc31b80c4263":[3,0,76,2],
 "linguistics_8h.html#ab99f7e787631a0b9da918c00cd928d01":[3,0,76,6],
 "linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8":[3,0,76,1],
@@ -238,16 +249,5 @@ var NAVTREEINDEX27 =
 "mapextract_8php.html#a85cd3c16c5217eb496b2c5117a9d78d0":[3,0,12,2,28],
 "mapextract_8php.html#a87f6a936fcf7eaea258ef3329c5108ab":[3,0,12,2,0],
 "mapextract_8php.html#a8e21c9815eafac76a24cf96793e5c9ae":[3,0,12,2,1],
-"mapextract_8php.html#a9590b15215a21e9b42eb546aeef79704":[3,0,12,2,3],
-"mapextract_8php.html#a9a12b0fe76133355ac81fb3b6c38c76c":[3,0,12,2,20],
-"mapextract_8php.html#aab864f52504c2f3857e3db07e9b13faf":[3,0,12,2,25],
-"mapextract_8php.html#accea189fe12744a0768bb3ebb2cedb36":[3,0,12,2,29],
-"mapextract_8php.html#ae2353a41c5416e3d6504ae17c16e68ea":[3,0,12,2,4],
-"mapextract_8php.html#aec4de82415d7f05cb9748d12d3a95a87":[3,0,12,2,23],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,8],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,9],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,10],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,12],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,13],
-"mapextract_8php.html#af2ba74b6e890664dc4b1c9112a57da6b":[3,0,12,2,14]
+"mapextract_8php.html#a9590b15215a21e9b42eb546aeef79704":[3,0,12,2,3]
 };

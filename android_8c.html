@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('android_8c.html','');});
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
@@ -161,8 +162,8 @@ Functions</h2></td></tr>
 <tr class="separator:ad692882d62681538674602cb8632bf17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83086c7ef733cbac77c0fa77aaf44c7f"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jobjectArray JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a83086c7ef733cbac77c0fa77aaf44c7f">Java_org_navitproject_navit_NavitGraphics_getAllCountries</a> (JNIEnv *env, jclass thiz)</td></tr>
 <tr class="separator:a83086c7ef733cbac77c0fa77aaf44c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54c3450ff41f75b0b36b7994d9cb8c3d"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a54c3450ff41f75b0b36b7994d9cb8c3d">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint</a> (JNIEnv *env, jobject thiz, jint x, jint y, jboolean absolute_coord)</td></tr>
-<tr class="separator:a54c3450ff41f75b0b36b7994d9cb8c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad353ed3cb130cacd6bafbd577a8737e7"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jstring JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#ad353ed3cb130cacd6bafbd577a8737e7">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint</a> (JNIEnv *env, jobject thiz, jint x, jint y, jboolean absoluteCoord)</td></tr>
+<tr class="separator:ad353ed3cb130cacd6bafbd577a8737e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d983a4bb07240c3d1d429ca1c0feea5"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jint JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0d983a4bb07240c3d1d429ca1c0feea5">Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel</a> (JNIEnv *env, jclass thiz, jint channel, jstring str)</td></tr>
 <tr class="separator:a0d983a4bb07240c3d1d429ca1c0feea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55e6a400a09eb5a026bfa47d433450c7"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a55e6a400a09eb5a026bfa47d433450c7">postal_str</a> (struct <a class="el" href="structsearch__list__result.html">search_list_result</a> *res, int <a class="el" href="structlevel.html">level</a>)</td></tr>
@@ -840,8 +841,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a54c3450ff41f75b0b36b7994d9cb8c3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54c3450ff41f75b0b36b7994d9cb8c3d">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</h2>
+<a id="ad353ed3cb130cacd6bafbd577a8737e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad353ed3cb130cacd6bafbd577a8737e7">&#9670;&nbsp;</a></span>Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -874,7 +875,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">jboolean&#160;</td>
-          <td class="paramname"><em>absolute_coord</em>&#160;</td>
+          <td class="paramname"><em>absoluteCoord</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -884,7 +885,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">pcoord_format_absolute()</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="config___8c.html#a306b9a1c8876777587063b536050dd65">config_get()</a>, <a class="el" href="config___8c.html#a8094691848363321f9f7dfe55564cc05">config_get_attr()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structattr.html#a576c54eef88d68f04e82350dba0cb88c">attr::navit</a>, <a class="el" href="group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c">navit_get_trans()</a>, <a class="el" href="group__coord.html#ga326225758916c1a62619761e5319e3d6">pcoord_format_absolute()</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>
