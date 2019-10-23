@@ -2826,6 +2826,7 @@ static int process_multipolygons_find_loops(osmid relid, int in_count, struct it
         sequence_count = process_multipolygons_find_loop(in_count, parts, sequence,  used);
         if(sequence_count < 0) {
             done = 1;
+            g_free(sequence);
         } else if(sequence_count == 0) {
             osm_warning("relation",relid,0,"multipolygon: skipping non loop sequence\n");
             /* skip empty sequence */
@@ -3260,11 +3261,15 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
         if(ways)
             fseek(ways, 0,SEEK_SET);
         fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
+        /* we could use relations_process_multi here as well, but this would
+         * use way more memory. */
         relations_process(relations[i], coords, ways);
         fprintf(stderr,"process_multipolygons:finish (thread %d)\n", i);
         process_multipolygons_finish(multipolygons[i], out);
         relations_destroy(relations[i]);
     }
+    if(multipolygons != NULL)
+        g_free(multipolygons);
     g_free(relations);
     sig_alrm(0);
     sig_alrm_end();
@@ -3386,6 +3391,8 @@ static void process_turn_restrictions_finish(GList *tr, FILE *out) {
 
             }
         }
+        /* just for fun...*/
+        processed_relations ++;
         g_free(t->c[0]);
         g_free(t->c[1]);
         g_free(t->c[2]);
@@ -3395,60 +3402,64 @@ static void process_turn_restrictions_finish(GList *tr, FILE *out) {
     g_list_free(tr);
 }
 
-static GList *process_turn_restrictions_setup(FILE *in, struct relations *relations) {
+/**
+ * @brief prepare one multipolygon relation for relattion processing
+ *
+ * @param ib the relation
+ * @param relations the relation processing structure
+ * @param relations_func function to use for the members
+ * @param turn_restrictions write the resulting turn_restriction to the list
+ */
+static void process_turn_restrictions_setup_one(struct item_bin * ib, struct relations * relations,
+        struct relations_func * relations_func, GList ** turn_restrictions) {
     struct relation_member fromm,tom,viam,tmpm;
     long long relid;
-    struct item_bin *ib;
-    struct relations_func *relations_func;
     int min_count;
-    GList *turn_restrictions=NULL;
 
-    fseek(in, 0, SEEK_SET);
-    relations_func=relations_func_new(process_turn_restrictions_member, NULL);
-    while ((ib=read_item(in))) {
+    if(ib != NULL) {
         struct turn_restriction *turn_restriction;
         relid=item_bin_get_relationid(ib);
         min_count=0;
         if (!search_relation_member(ib, "from",&fromm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: from member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "from",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple from members\n");
-            continue;
+            return;
         }
         min_count=0;
         if (!search_relation_member(ib, "to",&tom,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: to member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "to",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple to members\n");
-            continue;
+            return;
         }
         min_count=0;
         if (!search_relation_member(ib, "via",&viam,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: via member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "via",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
-            continue;
+            return;
         }
         if (fromm.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for from member ");
             osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
-            continue;
+            return;
         }
         if (tom.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for to member ");
             osm_warning(osm_types[tom.type],tom.id,1,"\n");
-            continue;
+            return;
         }
         if (viam.type != rel_member_node && viam.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for via member ");
             osm_warning(osm_types[viam.type],viam.id,1,"\n");
-            continue;
+            return;
         }
         turn_restriction=g_new0(struct turn_restriction, 1);
         turn_restriction->relid=relid;
@@ -3458,19 +3469,165 @@ static GList *process_turn_restrictions_setup(FILE *in, struct relations *relati
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
-        turn_restrictions=g_list_append(turn_restrictions, turn_restriction);
+        *turn_restrictions=g_list_append(*turn_restrictions, turn_restriction);
     }
+}
+
+/**
+ * @brief worker thread private storage
+ */
+struct process_turn_restrictions_setup_thread {
+    int number;
+    GAsyncQueue * queue;
+    struct relations * relations;
+    struct relations_func * relations_func;
+    GList* turn_restrictions;
+    GThread * thread;
+};
+
+/**
+ * @brief turn restrictions setup worker thread.
+ *
+ * This thread processes any item passed to it via async queue into it's local relations
+ * function.
+ * @param data this threads local storage
+ */
+static gpointer process_turn_restrictions_setup_worker (gpointer data) {
+    struct item_bin * ib;
+    //long long relid;
+    struct process_turn_restrictions_setup_thread * me = (struct process_turn_restrictions_setup_thread*) data;
+    fprintf(stderr,"worker %d up\n", me->number);
+    while((ib=g_async_queue_pop (me->queue)) != &killer) {
+        processed_relations ++;
+        //relid=item_bin_get_relationid(ib);
+        //fprintf(stderr,"worker %d processing %lld\n", me->number, relid);
+        process_turn_restrictions_setup_one(ib, me->relations, me->relations_func, &(me->turn_restrictions));
+        /* done with that. Free the item_bin */
+        g_free(ib);
+    }
+    fprintf(stderr,"worker %d exit\n", me->number);
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+/**
+ * @brief prepare turn restriction way matching
+ *
+ * This function reads all turn restriction relations and prepares relations structures
+ * for later way matching. Since this scales quite ugly, (O^3) i think, we use multiple threads
+ * creating their own hash each. This way none of the hashes get's that big, and we can utilize
+ * more cpu power.
+ *
+ * @param in file containing the relations
+ * @param thread_count number of threads to use
+ * @param relations array of preallocated relations structures. One per thread.
+ *
+ * @returns array of GLists. One per thread containing the resulting structures.
+ */
+static GList ** process_turn_restrictions_setup(FILE *in, int thread_count, struct relations **relations) {
+    struct process_turn_restrictions_setup_thread *sthread;
+
+    struct item_bin *ib;
+    struct relations_func *relations_func;
+    int i;
+    GList **turn_restrictions=NULL;
+    /* allocate and reference async queue */
+    GAsyncQueue * ib_queue=g_async_queue_new ();
+    g_async_queue_ref(ib_queue);
+    /* allocate per thread storage */
+    sthread=g_malloc0(sizeof(struct process_turn_restrictions_setup_thread) * thread_count);
+
+    fseek(in, 0, SEEK_SET);
+    relations_func=relations_func_new(process_turn_restrictions_member, NULL);
+
+    /* start the threads */
+    for(i=0; i < thread_count; i ++) {
+        sthread[i].number = i;
+        sthread[i].queue = ib_queue;
+        sthread[i].relations_func = relations_func;
+        sthread[i].relations = relations[i];
+        sthread[i].turn_restrictions = NULL;
+        sthread[i].thread = g_thread_new ("process_turn_restrictions_setup_worker", process_turn_restrictions_setup_worker,
+                                          &(sthread[i]));
+    }
+
+    while ((ib=read_item(in))) {
+        /* get a duplicate of the returned item, as the one returned shares buffer */
+        struct item_bin * dup = item_bin_dup(ib);
+        //long long relid;
+        //relid=item_bin_get_relationid(dup);
+        //fprintf(stderr,"Pushing %lld\n", relid);
+        /* the dup's will be freed by the thread processing them*/
+        g_async_queue_push(ib_queue,dup);
+        /* limit queue size. This is ugly, but since GAsyncQueue doesn't support
+         * push to block when the queue reached a decent size, I help myself
+         * with this ugly hack */
+        while(g_async_queue_length(ib_queue) > 1000)
+            usleep(200);
+    }
+
+    /* stop iand join all remaining threads */
+    for(i = 0; i < thread_count; i ++)
+        g_async_queue_push(ib_queue,&killer);
+    for(i=0; i < thread_count; i ++)
+        g_thread_join(sthread[i].thread);
+
+    /* rescue the resulting glist */
+    turn_restrictions = g_malloc0(sizeof(GList *) * thread_count);
+    for(i =0; i < thread_count; i ++)
+        turn_restrictions[i]=sthread[i].turn_restrictions;
+
+    /* free the thread storage */
+    g_free(sthread);
+
+    /* release the queue */
+    g_async_queue_unref(ib_queue);
+
+    /* return the list of turn_restrictions */
     return turn_restrictions;
 }
 
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
-    struct relations *relations=relations_new();
-    GList *turn_restrictions;
+    /* thread count is from maptool.c as commandline parameter */
+    int i;
+    struct relations **relations;
+    GList **turn_restrictions = NULL;
+    sig_alrm(0);
+
+    relations = g_malloc0(sizeof(struct relations *) * thread_count);
+    for(i=0; i < thread_count; i ++)
+        relations[i] = relations_new();
     fseek(in, 0, SEEK_SET);
-    turn_restrictions=process_turn_restrictions_setup(in, relations);
-    relations_process(relations, coords, ways);
-    process_turn_restrictions_finish(turn_restrictions, out);
-    relations_destroy(relations);
+    fprintf(stderr,"process_turn_restrictions:setup (threads %d)\n", thread_count);
+    turn_restrictions=process_turn_restrictions_setup(in,thread_count,relations);
+    /* Here we get an array of resulting relations structures and resultin
+     * GLists.
+     * Of course we need to iterate the ways multiple times, but that's fast
+     * compared to hashing the relations structures
+     * This even saves a lot of main memory, as we can process every result from
+     * every thread at once completely. Since we know it's self containing
+     */
+    sig_alrm(0);
+    processed_relations=0;
+    processed_ways=0;
+    sig_alrm(0);
+    if(coords)
+        fseek(coords, 0,SEEK_SET);
+    if(ways)
+        fseek(ways, 0,SEEK_SET);
+    fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
+    relations_process_multi(relations, thread_count, coords, ways);
+    for( i=0; i < thread_count; i ++) {
+
+        fprintf(stderr,"process_turn_restrictions:finish (thread %d)\n", i);
+        process_turn_restrictions_finish(turn_restrictions[i], out);
+        relations_destroy(relations[i]);
+    }
+    if(turn_restrictions != NULL)
+        g_free(turn_restrictions);
+    g_free(relations);
+    sig_alrm(0);
+    sig_alrm_end();
 }
 #if 0
 void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
