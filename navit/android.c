@@ -11,6 +11,7 @@
 #include "callback.h"
 #include "country.h"
 #include "projection.h"
+#include "coord.h"
 #include "map.h"
 #include "mapset.h"
 #include "navit_nls.h"
@@ -321,7 +322,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllC
 
 
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env,
-        jobject thiz, jint x, jint y, jboolean absolute_coord) {
+        jobject thiz, jint x, jint y, jboolean absoluteCoord) {
 
     jstring return_string = NULL;
 
@@ -343,13 +344,13 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
     pc.pro = transform_get_projection(transform);
 
     char coord_str[32];
-    if (absolute_coord) {
+    if (absoluteCoord) {
         pcoord_format_absolute(&pc, coord_str, sizeof(coord_str), ",");
     } else {
         pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
     }
 
-    dbg(lvl_error,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
+    dbg(lvl_debug,"Display point x=%d y=%d is \"%s\"",x,y,coord_str);
     return_string = (*env)->NewStringUTF(env,coord_str);
 
     return return_string;
@@ -458,12 +459,13 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         pc.pro = transform_get_projection(transform);
 
         char coord_str[32];
-        //pcoord_format_short(&pc, coord_str, sizeof(coord_str), " ");
         pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
+
         dbg(lvl_debug,"Setting destination to %s",coord_str);
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
     }
+    break;
     case 3: {
         // navigate to geo position
         char *name;
@@ -478,14 +480,14 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         char *p;
         char *stopstring;
 
-        // lat
-        p = strtok(parse_str, "#");
+        // latitude
+        p = strtok (parse_str,"#");
         g.lat = strtof(p, &stopstring);
-        // lon
-        p = strtok(NULL, "#");
+        // longitude
+        p = strtok (NULL, "#");
         g.lng = strtof(p, &stopstring);
-        // description
-        name = strtok(NULL, "#");
+        // description/name of the place identified by lat and long
+        name = strtok (NULL, "#");
 
         dbg(lvl_debug, "lat=%f", g.lat);
         dbg(lvl_debug, "lng=%f", g.lng);
@@ -499,21 +501,20 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         pc.y = c.y;
         pc.pro = projection_mg;
         char coord_str[32];
-        if (!name || *name == '\0') {
+        if (!name || *name == '\0') {     /* When name is an empty string, use the geo coord instead */
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
             name = coord_str;
         }
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, name, 1);
-        break;
     }
+    break;
     default:
         dbg(lvl_error, "Unknown command: %d", channel);
     }
 
     return ret;
 }
-
 
 static char *postal_str(struct search_list_result *res, int level) {
     char *ret=NULL;
