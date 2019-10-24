@@ -356,8 +356,8 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
     return return_string;
 }
 
-JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel( JNIEnv* env, jclass thiz,
-        jint channel, jstring str) {
+JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel( JNIEnv* env,
+        jclass thiz, jint channel, jstring str) {
     struct attr attr;
     const char *s;
     jint ret = 0;
