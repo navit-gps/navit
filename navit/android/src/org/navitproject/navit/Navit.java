@@ -356,25 +356,20 @@ public class Navit extends Activity {
         showInfos();
 
         Intent startupIntent = new Intent(this.getIntent());
-        Log.d(TAG, "Recording intent " + startupIntent.toString());
-        //InputMethodManager sInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // DEBUG
-        // intent_data = "google.navigation:q=Wien Burggasse 27";
-        // intent_data = "google.navigation:q=48.25676,16.643";
-        // intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
-        // intent_data = "google.navigation:ll=48.25676,16.643";
-        // intent_data = "geo:48.25676,16.643";
-        if (startupIntent != null) {
-            Log.d(TAG, "Using startup intent " + startupIntent.toString());
-            String naviScheme = startupIntent.getScheme();
-            if (naviScheme != null) {
-                if (naviScheme.equals("google.navigation")) {
-                    parseNavigationURI(startupIntent.getData().getSchemeSpecificPart());
-                } else if (naviScheme.equals("geo")
-                        && startupIntent.getAction().equals("android.intent.action.VIEW")) {
-                    invokeCallbackOnGeo(startupIntent.getData().getSchemeSpecificPart(),
-                            NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
-                }
+        Log.d(TAG, "onCreate intent " + startupIntent.toString());
+        handleIntent(startupIntent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String naviScheme = intent.getScheme();
+        if (naviScheme != null) {
+            Log.d(TAG, "Using intent " + intent.toString());
+            if (naviScheme.equals("google.navigation")) {
+                parseNavigationURI(intent.getData().getSchemeSpecificPart());
+            } else if (naviScheme.equals("geo")
+                    && intent.getAction().equals("android.intent.action.VIEW")) {
+                invokeCallbackOnGeo(intent.getData().getSchemeSpecificPart(),
+                        NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
             }
         }
     }
@@ -444,16 +439,7 @@ public class Navit extends Activity {
     @Override
     public void onNewIntent(Intent intent) {
         Log.d(TAG, "onNewIntent");
-        String naviScheme = intent.getScheme();
-        if (naviScheme != null) {
-            if (naviScheme.equals("google.navigation")) {
-                parseNavigationURI(intent.getData().getSchemeSpecificPart());
-            } else if (naviScheme.equals("geo")
-                    && intent.getAction().equals("android.intent.action.VIEW")) {
-                invokeCallbackOnGeo(intent.getData().getSchemeSpecificPart(),
-                        NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
-            }
-        }
+        handleIntent(intent);
     }
 
     @Override

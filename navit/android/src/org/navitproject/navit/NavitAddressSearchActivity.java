@@ -85,8 +85,6 @@ public class NavitAddressSearchActivity extends Activity {
     private int mSearchResultsStreets = 0;
     private int mSearchResultsStreetsHn = 0;
     private long mSearchHandle = 0;
-
-    // TODO remember settings
     private static String sLastAddressSearchString = "";
     private static Boolean sLastAddressPartialMatch = false;
     private static String sLastCountry = "";
