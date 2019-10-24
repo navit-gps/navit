@@ -1,10 +1,11 @@
 There are much more options, see [[configuration]].
 
+***********
 Preparation
-===========
+***********
 Get a supported map package
 ---------------------------
-Navit can use different :doc:`maps` formats, including free :ref:`OpenStreetMap` data. In order to use one of these maps, download a map of your desired area and store it into a local folder (such as navit/maps or /usr/share/navit/maps).
+Navit can use different :doc:`maps` formats, including free `OpenStreetMap` data. In order to use one of these maps, download a map of your desired area and store it into a local folder (such as navit/maps or /usr/share/navit/maps).
 
 Install TTS
 -----------
@@ -28,8 +29,9 @@ Most GPS receiver will output the position in [[NMEA]] format, which can be used
 
 The output should give you steady NMEA position updates. You can feed this information into **gpsd** / **xgps** or **QLandkarte** to see a graphical representation of your position and to check whether the output corresponds to your current position.
 
-Configuring
-===========
+***************
+Getting started
+***************
 
 Currently Navit doesn't provide a graphical tool to change settings, so you have to do the changes manually using a texteditor.
 Please open your current **navit.xml** file and do the following steps:
@@ -43,7 +45,7 @@ On Navit's very first startup, it needs a **center** to look at on the map. By d
 
    <navit center="4808 N 1134 E" />
 
-See furthermore: [[Configuration]]
+See furthermore: :doc:`configuration/index`
 
 
 Setup GPS
@@ -52,9 +54,9 @@ Add the GPS connection
 
 .. code-block:: xml
 
-   <vehicle name="My" enabled="yes" source="file://dev/ttyS0"/ active="1"/>
+   <vehicle name="My" enabled="yes" source="file://dev/ttyS0" active="1"/>
 
-See furthermore: [[Configuration]]
+See furthermore: :doc:`configuration/index`
 
 
 Enable Map
