@@ -60,7 +60,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         updateMapsForLocation();
         setListAdapter(sAdapter);
         try {
-            setTitle(getFreeSpace() / 1024 / 1024 + "MB available");
+            setTitle(NavitUtils.getFreeSpace(Navit.sMapFilenamePath) / 1024 / 1024 + "MB available");
         } catch (Exception e) {
             Log.e(TAG, "Exception " + e.getClass().getName()
                     + " during getFreeSpace, reporting 'no sdcard present'");
@@ -73,10 +73,6 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
-    private long getFreeSpace() {
-        StatFs fsInfo = new StatFs(Navit.sMapFilenamePath);
-        return (long) fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
-    }
 
     private void updateDownloadedMaps() {
         sDownloadedMapsChilds.clear();
@@ -234,8 +230,8 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Log.d(TAG, "Delete Map");
-                        Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
-                                    NavitGraphics.MsgType.CLB_DELETE_MAP.ordinal());
+                        Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                                    NavitCallbackHandler.MsgType.CLB_DELETE_MAP.ordinal());
                         Bundle b = new Bundle();
                         b.putString("title", mapLocation);
                         msg.setData(b);

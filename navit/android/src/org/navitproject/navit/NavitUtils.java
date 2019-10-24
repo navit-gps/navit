@@ -1,5 +1,6 @@
 package org.navitproject.navit;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,6 +8,12 @@ import java.io.IOException;
 
 class NavitUtils {
 
+
+    static long getFreeSpace(String path) {
+
+        File file = new File(path);
+        return file.getUsableSpace();
+    }
 
     static void removeFileIfExists(String source) {
         File file = new File(source);

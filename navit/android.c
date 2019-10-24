@@ -365,34 +365,33 @@ JNIEXPORT jobject JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callb
     dbg(lvl_debug,"enter %d\n",command);
     config_get_attr(config_get(), attr_navit, &attr, NULL);
 
-    switch(command)
-    {
-        case 1:
-            // zoom in
-            navit_zoom_in_cursor(attr.u.navit, 2);
-            navit_draw(attr.u.navit);
-            break;
-        case 2:
-            // zoom out
-            navit_zoom_out_cursor(attr.u.navit, 2);
-            navit_draw(attr.u.navit);
-            break;
-        case 3:
-            // block
-            navit_block(attr.u.navit, 1);
-            break;
-        case 4:
-            // unblock
-            navit_block(attr.u.navit, 0);
-            break;
-        case 5:
-            // cancel route
-            navit_set_destination(attr.u.navit, NULL, NULL, 0);
-            navit_draw(attr.u.navit);
-            break;
-        default:
+    switch(command) {
+    case 1:
+        // zoom in
+        navit_zoom_in_cursor(attr.u.navit, 2);
+        navit_draw(attr.u.navit);
+        break;
+    case 2:
+        // zoom out
+        navit_zoom_out_cursor(attr.u.navit, 2);
+        navit_draw(attr.u.navit);
+        break;
+    case 3:
+        // block
+        navit_block(attr.u.navit, 1);
+        break;
+    case 4:
+        // unblock
+        navit_block(attr.u.navit, 0);
+        break;
+    case 5:
+        // cancel route
+        navit_set_destination(attr.u.navit, NULL, NULL, 0);
+        navit_draw(attr.u.navit);
+        break;
+    default:
         dbg(lvl_error, "Unknown command: %d", command);
-            break;
+        break;
     }
 }
 

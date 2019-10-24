@@ -73,84 +73,8 @@ import java.util.regex.Pattern;
 
 public class Navit extends Activity {
 
-    /**
-     * Nested class storing the intent that was sent to the main navit activity at startup.
-    **/
-    private class StartupIntent {
-        /**
-         * Constructor.
-         *
-         * @param intent The intent to store in this object
-        **/
-        public StartupIntent(Intent intent) {
-            mStartupIntent = intent;
-            mStartupIntentTimestamp = System.currentTimeMillis();
-        }
 
-        /**
-         * Check if the encapsulated intent still valid or too old.
-         *
-         * @return true if the encapsulated intent is recent enough
-        **/
-        public boolean isRecentEnough() {
-            if (mStartupIntent == null) {
-                return false;
-            }
-            /* We consider the intent is valid for 4s */
-            return (System.currentTimeMillis() <= getExpirationTimeMillis());
-        }
-
-        /**
-         * Compute the system time when the stored intent will become invalid.
-         *
-         * @return The system time for invalidation (in ms)
-        **/
-        private long getExpirationTimeMillis() {
-            if (mStartupIntent == null) {
-                return 0;
-            }
-            /* We give 4s to navit to process the intent */
-            return mStartupIntentTimestamp + 4000L;
-        }
-
-        /**
-         * Getter for the encapsulated intent.
-         *
-         * @return The encapsulated intent
-        **/
-        public Intent getIntent() {
-            return mStartupIntent;
-        }
-
-        /**
-         * Represent this object as a string.
-         *
-         * @return A string containing the summary of the data we store here
-        **/
-        public String toString() {
-            if (mStartupIntent == null) {
-                return "{null}";
-            } else {
-                String validForStr;
-                long remainingValidity = getExpirationTimeMillis() - System.currentTimeMillis();
-                if (remainingValidity < 0) {
-                    validForStr = "(expired since " + -remainingValidity + "ms)";
-                } else {
-                    validForStr = "(valid for " + remainingValidity + "ms)";
-                }
-                return "{ act=" + mStartupIntent.getAction() + " data=" + mStartupIntent.getDataString()
-                       + " " + validForStr + " }";
-            }
-        }
-
-        private Intent mStartupIntent;  /*!< The intent we store */
-        private long   mStartupIntentTimestamp; /*!< A timestamp (in ms) for when mStartupIntent was recorded */
-    }
-
-
-    public static DisplayMetrics       sMetrics;
     public static boolean              sShowSoftKeyboardShowing;
-    private static StartupIntent       sStartupIntent;
     private static final int           MY_PERMISSIONS_REQ_FINE_LOC     = 103;
     private static final int           NavitDownloaderSelectMap_id     = 967;
     private static final int           NavitAddressSearch_id           = 70;
@@ -287,7 +211,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Show the first start infoxbox (presentation of navit and link website for more info).
+     * Show the first start infobox (presentation of navit and link website for more info).
     **/
     private void showInfos() {
         SharedPreferences settings = getSharedPreferences(NavitAppConfig.NAVIT_PREFS, MODE_PRIVATE);
@@ -335,16 +259,11 @@ public class Navit extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        Log.d(TAG, "OnCreate");
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         windowSetup();
         mDialogs = new NavitDialogs(this);
-
-        /* Only store the startup intent, onResume() gets called all the time (e.g. when screenblanks, etc.) and
-           will process this intent later on if needed */
-        sStartupIntent = new StartupIntent(this.getIntent());
-        Log.d(TAG, "Recording intent " + sStartupIntent.toString());
 
         createNotificationChannel();
         buildNotification();
@@ -383,13 +302,13 @@ public class Navit extends Activity {
         navitDataShareDir.mkdirs();
 
         Display display = getWindowManager().getDefaultDisplay();
-        sMetrics = new DisplayMetrics();
-        display.getMetrics(sMetrics);
-        int densityDpi = (int)((sMetrics.density * 160) - .5f);
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int densityDpi = (int)((metrics.density * 160) - .5f);
         Log.d(TAG, "-> pixels x=" + display.getWidth() + " pixels y=" + display.getHeight());
         Log.d(TAG, "-> dpi=" + densityDpi);
-        Log.d(TAG, "-> density=" + sMetrics.density);
-        Log.d(TAG, "-> scaledDensity=" + sMetrics.scaledDensity);
+        Log.d(TAG, "-> density=" + metrics.density);
+        Log.d(TAG, "-> scaledDensity=" + metrics.scaledDensity);
 
         mActivityResults = new NavitActivityResult[16];
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -435,6 +354,29 @@ public class Navit extends Activity {
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(Build.VERSION.SDK));
         navitMain(navitLanguage, sNavitDataDir + "/bin/navit", sMapFilenamePath);
         showInfos();
+
+        Intent startupIntent = new Intent(this.getIntent());
+        Log.d(TAG, "Recording intent " + startupIntent.toString());
+        //InputMethodManager sInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        // DEBUG
+        // intent_data = "google.navigation:q=Wien Burggasse 27";
+        // intent_data = "google.navigation:q=48.25676,16.643";
+        // intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
+        // intent_data = "google.navigation:ll=48.25676,16.643";
+        // intent_data = "geo:48.25676,16.643";
+        if (startupIntent != null) {
+            Log.d(TAG, "Using startup intent " + startupIntent.toString());
+            String naviScheme = startupIntent.getScheme();
+            if (naviScheme != null) {
+                if (naviScheme.equals("google.navigation")) {
+                    parseNavigationURI(startupIntent.getData().getSchemeSpecificPart());
+                } else if (naviScheme.equals("geo")
+                        && startupIntent.getAction().equals("android.intent.action.VIEW")) {
+                    invokeCallbackOnGeo(startupIntent.getData().getSchemeSpecificPart(),
+                            NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
+                }
+            }
+        }
     }
 
     private void windowSetup() {
@@ -491,58 +433,41 @@ public class Navit extends Activity {
 
     public void onRestart() {
         super.onRestart();
-        Log.d(TAG, "OnRestart");
+        Log.d(TAG, "onRestart");
     }
 
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "OnStart");
+        Log.d(TAG, "onStart");
     }
 
     @Override
     public void onNewIntent(Intent intent) {
-        Log.d(TAG, "OnNewIntent");
-        sStartupIntent = new StartupIntent(intent);
-        Log.d(TAG, "Recording intent " + sStartupIntent.toString());
+        Log.d(TAG, "onNewIntent");
+        String naviScheme = intent.getScheme();
+        if (naviScheme != null) {
+            if (naviScheme.equals("google.navigation")) {
+                parseNavigationURI(intent.getData().getSchemeSpecificPart());
+            } else if (naviScheme.equals("geo")
+                    && intent.getAction().equals("android.intent.action.VIEW")) {
+                invokeCallbackOnGeo(intent.getData().getSchemeSpecificPart(),
+                        NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
+            }
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "OnResume");
-        //InputMethodManager sInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // DEBUG
-        // intent_data = "google.navigation:q=Wien Burggasse 27";
-        // intent_data = "google.navigation:q=48.25676,16.643";
-        // intent_data = "google.navigation:ll=48.25676,16.643&q=blabla-strasse";
-        // intent_data = "google.navigation:ll=48.25676,16.643";
-        // intent_data = "geo:48.25676,16.643";
-        if (sStartupIntent != null) {
-            Log.d(TAG, "Using stored startup intent " + sStartupIntent.toString());
-            if (sStartupIntent.isRecentEnough()) {
-                Intent startupIntent = sStartupIntent.getIntent();
-                String naviScheme = startupIntent.getScheme();
-                if (naviScheme != null) {
-                    if (naviScheme.equals("google.navigation")) {
-                        parseNavigationURI(startupIntent.getData().getSchemeSpecificPart());
-                    } else if (naviScheme.equals("geo")
-                               && startupIntent.getAction().equals("android.intent.action.VIEW")) {
-                        invokeCallbackOnGeo(startupIntent.getData().getSchemeSpecificPart(),
-                                            NavitGraphics.MsgType.CLB_SET_DESTINATION,
-                                            "");
-                    }
-                }
-            } else {
-                Log.e(TAG, "timestamp for startup intent expired! not using data");
-            }
-            sStartupIntent = null;
-        }
+        NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_UNBLOCK);
+        Log.d(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "OnPause");
+        NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_BLOCK);
+        Log.d(TAG, "onPause");
     }
 
     @Override
@@ -570,27 +495,27 @@ public class Navit extends Activity {
      * Invoke NavitGraphics.sCallbackHandler on a geographical position
      *
      * @param geoString A string containing the target geographical position with a format like "48.25676,16.643"
-     * @param msgType The type of message to send to the callback (see NavitGraphics.MsgType for possible values)
+     * @param msgType The type of message to send
      * @param name The name/label to associate to the geographical position
     **/
-    private void invokeCallbackOnGeo(String geoString, NavitGraphics.MsgType msgType, String name) {
+    private void invokeCallbackOnGeo(String geoString, NavitCallbackHandler.MsgType msgType, String name) {
         String[] geo = geoString.split(",");
         if (geo.length == 2) {
             try {
                 Bundle b = new Bundle();
-                Float lat = Float.valueOf(geo[0]);
-                Float lon = Float.valueOf(geo[1]);
+                float lat = Float.parseFloat(geo[0]);
+                float lon = Float.parseFloat(geo[1]);
                 b.putFloat("lat", lat);
                 b.putFloat("lon", lon);
                 b.putString("q", name);
-                Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
+                Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
                         msgType.ordinal());
 
                 msg.setData(b);
                 msg.sendToTarget();
                 Log.d(TAG, "target found (b): " + geoString);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                Log.e(TAG,"numberFormatException");
             }
         } else {
             Log.w(TAG, "Ignoring invalid geo string: " + geoString);
@@ -628,7 +553,7 @@ public class Navit extends Activity {
 
         if (geoString != null) {
             if (geoString.matches("^[+-]{0,1}\\d+(|\\.\\d*),[+-]{0,1}\\d+(|\\.\\d*)$")) {
-                invokeCallbackOnGeo(geoString, NavitGraphics.MsgType.CLB_SET_DESTINATION, address);
+                invokeCallbackOnGeo(geoString, NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, address);
             } else {
                 start_targetsearch_from_intent(geoString);
             }
@@ -683,15 +608,13 @@ public class Navit extends Activity {
         switch (id) {
             case 1 :
                 // zoom in
-                Message.obtain(NavitGraphics.sCallbackHandler,
-                        NavitGraphics.MsgType.CLB_ZOOM_IN.ordinal()).sendToTarget();
+                NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_ZOOM_IN);
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom in");
                 break;
             case 2 :
                 // zoom out
-                Message.obtain(NavitGraphics.sCallbackHandler,
-                        NavitGraphics.MsgType.CLB_ZOOM_OUT.ordinal()).sendToTarget();
+                NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_ZOOM_OUT);
                 // if we zoom, hide the bubble
                 Log.d(TAG, "onOptionsItemSelected -> zoom out");
                 break;
@@ -702,21 +625,22 @@ public class Navit extends Activity {
                 break;
             case 5 :
                 // toggle the normal POI layers and labels (to avoid double POIs)
-                Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
-                        NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
+                Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                        NavitCallbackHandler.MsgType.CLB_CALL_CMD.ordinal());
                 Bundle b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Symbols\");");
                 msg.setData(b);
                 msg.sendToTarget();
-
-                msg = Message.obtain(NavitGraphics.sCallbackHandler, NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                        NavitCallbackHandler.MsgType.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"POI Labels\");");
                 msg.setData(b);
                 msg.sendToTarget();
 
                 // toggle full POI icons on/off
-                msg = Message.obtain(NavitGraphics.sCallbackHandler, NavitGraphics.MsgType.CLB_CALL_CMD.ordinal());
+                msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                        NavitCallbackHandler.MsgType.CLB_CALL_CMD.ordinal());
                 b = new Bundle();
                 b.putString("cmd", "toggle_layer(\"Android-POI-Icons-full\");");
                 msg.setData(b);
@@ -768,7 +692,8 @@ public class Navit extends Activity {
         Log.d(TAG, "showNativeKeyboard");
         Configuration config = getResources().getConfiguration();
         if ((config.keyboard == Configuration.KEYBOARD_QWERTY)
-                && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO)) {
+                && (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO)
+                && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)) {
             /* physical keyboard present */
             return 0;
         }
@@ -777,7 +702,6 @@ public class Navit extends Activity {
         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
         .showSoftInput(getCurrentFocus(), InputMethodManager.SHOW_FORCED);
         sShowSoftKeyboardShowing = true;
-
         return 1;
     }
 
@@ -792,20 +716,6 @@ public class Navit extends Activity {
         sShowSoftKeyboardShowing = false;
     }
 
-
-    void setDestination(float latitude, float longitude, String address) {
-        Toast.makeText(getApplicationContext(), getTstring(R.string.address_search_set_destination) + "\n"
-                + address, Toast.LENGTH_LONG).show(); //TRANS
-
-        Bundle b = new Bundle();
-        b.putFloat("lat", latitude);
-        b.putFloat("lon", longitude);
-        b.putString("q", address);
-        Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
-                NavitGraphics.MsgType.CLB_SET_DESTINATION.ordinal());
-        msg.setData(b);
-        msg.sendToTarget();
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -823,8 +733,8 @@ public class Navit extends Activity {
                             getTstring(R.string.address_search_set_destination) + "\n" + destination.getString(("q")),
                             Toast.LENGTH_LONG).show(); //TRANS
 
-                    Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
-                            NavitGraphics.MsgType.CLB_SET_DESTINATION.ordinal());
+                    Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                            NavitCallbackHandler.MsgType.CLB_SET_DESTINATION.ordinal());
                     msg.setData(destination);
                     msg.sendToTarget();
                 }
@@ -887,7 +797,7 @@ public class Navit extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "OnDestroy");
+        Log.d(TAG, "onDestroy");
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         NavitVehicle.removeListeners(this);
@@ -897,7 +807,7 @@ public class Navit extends Activity {
 
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "OnStop");
+        Log.d(TAG, "onStop");
     }
 
 

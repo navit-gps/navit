@@ -20,7 +20,6 @@ import static org.navitproject.navit.NavitAppConfig.getTstring;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.StatFs;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -473,7 +472,6 @@ public class NavitMapDownloader extends Thread {
     private static final int UPDATE_PROGRESS_TIME_NS = 1000 * 1000000; // 1ns=1E-9s
     private static final int MAX_RETRIES = 5;
     private static final String TAG = "NavitMapDownLoader";
-    private final String mMapFilenamePath;
     private final OsmMapValues mMapValues;
     private final int mMapId;
     private Boolean mStopMe = false;
@@ -484,7 +482,6 @@ public class NavitMapDownloader extends Thread {
     NavitMapDownloader(int mapId) {
         this.mMapValues = osm_maps[mapId];
         this.mMapId = mapId;
-        this.mMapFilenamePath = Navit.sMapFilenamePath;
     }
 
     static NavitMap[] getAvailableMaps() {
@@ -539,7 +536,7 @@ public class NavitMapDownloader extends Thread {
 
         if (success || mStopMe) {
             NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                    mMapFilenamePath + mMapValues.mMapName + ".bin", null, -1, success ? 1 : 0, mMapId);
+                    Navit.sMapFilenamePath + mMapValues.mMapName + ".bin", null, -1, success ? 1 : 0, mMapId);
         }
     }
 
@@ -549,7 +546,7 @@ public class NavitMapDownloader extends Thread {
     }
 
     private boolean checkFreeSpace(long neededBytes) {
-        long freeSpace = getFreeSpace();
+        long freeSpace = NavitUtils.getFreeSpace(Navit.sMapFilenamePath);
 
         if (neededBytes <= 0) {
             neededBytes = MAP_WRITE_FILE_BUFFER;
@@ -575,8 +572,8 @@ public class NavitMapDownloader extends Thread {
         File finalOutputFile = getMapFile();
 
         if (finalOutputFile.exists()) {
-            Message msg = Message.obtain(NavitGraphics.sCallbackHandler,
-                        NavitGraphics.MsgType.CLB_DELETE_MAP.ordinal());
+            Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                        NavitCallbackHandler.MsgType.CLB_DELETE_MAP.ordinal());
             Bundle b = new Bundle();
             b.putString("title", finalOutputFile.getAbsolutePath());
             msg.setData(b);
@@ -649,7 +646,7 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getDestinationFile() {
-        File outputFile = new File(mMapFilenamePath, mMapValues.mMapName + ".tmp");
+        File outputFile = new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".tmp");
         outputFile.getParentFile().mkdir();
         return outputFile;
     }
@@ -691,14 +688,6 @@ public class NavitMapDownloader extends Thread {
         return url;
     }
 
-    private long getFreeSpace() {
-        try {
-            StatFs fsInfo = new StatFs(mMapFilenamePath);
-            return (long) fsInfo.getAvailableBlocks() * fsInfo.getBlockSize();
-        } catch (Exception e) {
-            return -1;
-        }
-    }
 
     private BufferedInputStream getInputStream(URLConnection c) {
         BufferedInputStream bif;
@@ -720,11 +709,11 @@ public class NavitMapDownloader extends Thread {
     }
 
     private File getMapFile() {
-        return new File(mMapFilenamePath, mMapValues.mMapName + ".bin");
+        return new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".bin");
     }
 
     private File getMapInfoFile() {
-        return new File(mMapFilenamePath, mMapValues.mMapName + ".tmp.info");
+        return new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".tmp.info");
     }
 
     private BufferedOutputStream getOutputStream(File outputFile, boolean resume) {

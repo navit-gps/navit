@@ -16,11 +16,11 @@ import java.io.ObjectOutputStream;
 
 public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
-    private Navit mActivity;
+    private final Navit mActivity;
 
     private ProgressDialog mDialog;
 
-    public NavitBackupTask(Navit context) {
+    NavitBackupTask(Navit context) {
         mActivity = context;
     }
 
