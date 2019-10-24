@@ -1,5 +1,6 @@
+###################
 Navit's User Manual
-===================
+###################
 
 This document is the official User Manual for `Navit`__,
 the OpenSource vector based navigation software.
@@ -29,6 +30,7 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 
     basic_configuration
     maps
+    configuration/index
 
 
 .. Indices and tables
