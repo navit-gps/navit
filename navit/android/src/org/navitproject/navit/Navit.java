@@ -477,7 +477,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Invoke CallbackHandler on a geographical position
+     * Invoke CallbackHandler on a geographical position.
      *
      * @param geoString A string containing the target geographical position with a format like "48.25676,16.643"
      * @param msgType The type of message to send
@@ -508,7 +508,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Parse google navigation URIs (usually starting with "google.navigation:") and take the appropriate actions
+     * Parse google navigation URIs (usually starting with "google.navigation:") and take the appropriate actions.
      *
      * @param schemeSpecificPart A string containing the URI scheme, for example "ll=48.25676,16.643&q=blabla-strasse"
     **/
