@@ -82,7 +82,6 @@ public class Navit extends Activity {
     private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      sMapFilenamePath;
-    static String                      sNavitDataDir;
     boolean                            mIsFullscreen;
     private NavitDialogs               mDialogs;
     private PowerManager.WakeLock      mWakeLock;
@@ -288,17 +287,17 @@ public class Navit extends Activity {
         Log.d(TAG, "Language " + lang);
 
         SharedPreferences prefs = getSharedPreferences(NavitAppConfig.NAVIT_PREFS,MODE_PRIVATE);
-        sNavitDataDir = getApplicationContext().getFilesDir().getPath();
+        String navitDataDir = getApplicationContext().getFilesDir().getPath();
         String candidateFileNamePath = getApplicationContext().getExternalFilesDir(null).toString();
         sMapFilenamePath = prefs.getString("filenamePath", candidateFileNamePath + '/');
-        Log.i(TAG,"NavitDataDir = " + sNavitDataDir);
+        Log.i(TAG,"NavitDataDir = " + navitDataDir);
         Log.i(TAG,"mapFilenamePath = " + sMapFilenamePath);
         // make sure the new path for the navitmap.bin file(s) exist!!
         File navitMapsDir = new File(sMapFilenamePath);
         navitMapsDir.mkdirs();
 
         // make sure the share dir exists
-        File navitDataShareDir = new File(sNavitDataDir + "/share");
+        File navitDataShareDir = new File(navitDataDir + "/share");
         navitDataShareDir.mkdirs();
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -315,7 +314,7 @@ public class Navit extends Activity {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,"navit:DoNotDimScreen");
 
-        if (!extractRes(langc, sNavitDataDir + "/locale/" + langc + "/LC_MESSAGES/navit.mo")) {
+        if (!extractRes(langc, navitDataDir + "/locale/" + langc + "/LC_MESSAGES/navit.mo")) {
             Log.e(TAG, "Failed to extract language resource " + langc);
         }
 
@@ -344,7 +343,7 @@ public class Navit extends Activity {
             String[] children = assetMgr.list("config/" + myDisplayDensity);
             for (String child : children) {
                 Log.d(TAG, "Processing config file '" + child + "' from assets");
-                if (!extractAsset("config/" + myDisplayDensity + "/" + child, sNavitDataDir + "/share/" + child)) {
+                if (!extractAsset("config/" + myDisplayDensity + "/" + child, navitDataDir + "/share/" + child)) {
                     Log.e(TAG, "Failed to extract asset config/" + myDisplayDensity + "/" + child);
                 }
             }
@@ -352,7 +351,7 @@ public class Navit extends Activity {
             Log.e(TAG, "Failed to access assets using AssetManager");
         }
         Log.d(TAG, "android.os.Build.VERSION.SDK_INT=" + Integer.valueOf(Build.VERSION.SDK));
-        navitMain(navitLanguage, sNavitDataDir + "/bin/navit", sMapFilenamePath);
+        navitMain(navitLanguage, navitDataDir + "/bin/navit", sMapFilenamePath);
         showInfos();
 
         Intent startupIntent = new Intent(this.getIntent());
@@ -478,7 +477,7 @@ public class Navit extends Activity {
     }
 
     /**
-     * Invoke NavitGraphics.sCallbackHandler on a geographical position
+     * Invoke CallbackHandler on a geographical position
      *
      * @param geoString A string containing the target geographical position with a format like "48.25676,16.643"
      * @param msgType The type of message to send
@@ -812,6 +811,7 @@ public class Navit extends Activity {
     }
 
 
+    @SuppressWarnings("unused")
     void disableSuspend() {
         mWakeLock.acquire();
         mWakeLock.release();
