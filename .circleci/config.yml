@@ -83,9 +83,6 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
-          name: Install Android SDK components
-          command: sdkmanager "cmake;3.6.4111459"
-      - run:
           name: Install ndk
           command: |
             echo y | sdkmanager --licenses
