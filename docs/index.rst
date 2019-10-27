@@ -21,14 +21,14 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 .. image:: navit.png
 
 .. toctree::
-    :hidden:
-    :glob:
-    :numbered:
-    :maxdepth: 2
-    :caption: Navit's user manual
+   :hidden:
+   :glob:
+   :numbered:
+   :maxdepth: 2
+   :caption: Navit's user manual
 
-    basic_configuration
-    maps
+   basic_configuration
+   maps
 
 
 .. Indices and tables
