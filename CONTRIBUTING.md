@@ -68,6 +68,12 @@ The [old wiki](https://wiki.navit-project.org/index.php) has been deprecated and
 To update or add documentation, create a pull request on github using a PR title starting by `update:doc:` and followed by a
 message explaining the change.
 
+You can use the following command from the root of the git repository clone to check the linting of the documentation (The last argument is the output directory so you might have to adjust that) if you have `sphinx-build` installed:
+
+```
+sphinx-build  -n -E -W --keep-going docs /tmp/navit/
+```
+
 ## See also
 
  * [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
