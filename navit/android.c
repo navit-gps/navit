@@ -681,35 +681,6 @@ static void android_search_idle(struct android_search_priv *search_priv) {
     dbg(lvl_info, "leave");
 }
 
-static char *search_fix_spaces(const char *str) {
-    int i;
-    int len=strlen(str);
-    char c,*s,*d,*ret=g_strdup(str);
-
-    for (i = 0 ; i < len ; i++) {
-        if (ret[i] == ',' || ret[i] == '/')
-            ret[i]=' ';
-    }
-    s=ret;
-    d=ret;
-    len=0;
-    do {
-        c=*s++;
-        if (c != ' ' || len != 0) {
-            *d++=c;
-            len++;
-        }
-        while (c == ' ' && *s == ' ')
-            s++;
-        if (c == ' ' && *s == '\0') {
-            d--;
-            len--;
-        }
-    } while (c);
-
-    return ret;
-}
-
 static void start_search(struct android_search_priv *search_priv, const char *search_string) {
     dbg(lvl_debug,"enter %s", search_string);
     char *str=search_fix_spaces(search_string);
