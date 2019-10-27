@@ -29,7 +29,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.StatFs;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
