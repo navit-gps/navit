@@ -41,6 +41,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.Log;
@@ -151,6 +152,9 @@ class NavitGraphics {
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
         PointF mPressedPosition = null;
+        // mContextMenuMapViewIntent is the ACTION_VIEW intent for a geo coordinates.
+        // it is used when clicking on view in the map contextual menu
+        Intent mContextMenuMapViewIntent = null;
 
         NavitView(Context context) {
             super(context);
@@ -197,6 +201,56 @@ class NavitGraphics {
             return insets;
         }
 
+        /**
+         * Create an intent for a view action of a point provided by its x and y position on the display.
+         *
+         * @param x The x coordinates of the point on the display
+         * @param y The y coordinates of the point on the display
+         *
+         * @return An intent to start to view the specified point on a third-party app on Android (can be null if a
+         *         view action is not possible)
+        **/
+        protected Intent getViewIntentForDisplayPoint(int x, int y) {
+            Intent result = null;
+
+            /* Check if there is at least one application that can process a geo intent... */
+            String selectedPointCoord = getCoordForPoint(x, y, true);
+            Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
+            Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+
+            List<Intent> customShareIntentList = new ArrayList<Intent>();
+            List<ResolveInfo> intentTargetAppList;
+            intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
+
+            String selfPackageName = this.getContext().getPackageName(); /* aka: "org.navitproject.navit" */
+
+            if (!intentTargetAppList.isEmpty()) {
+                for (ResolveInfo resolveInfo : intentTargetAppList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    Intent copiedIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    if (!packageName.equals(selfPackageName)) {
+                        Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
+                        copiedIntent.setPackage(packageName);
+                        copiedIntent.setClassName(
+                                resolveInfo.activityInfo.packageName,
+                                resolveInfo.activityInfo.name);
+                        customShareIntentList.add(copiedIntent);
+                    } else {
+                        Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
+                    }
+                }
+                if (customShareIntentList.size() > 0) {
+                    result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size() - 1),
+                            NavitAppConfig.getTstring(R.string.use_position_with));
+                    result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                            customShareIntentList.toArray(new Parcelable[customShareIntentList.size()]));
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + 1
+                               + " candidate apps) to view selected coord: " + selectedPointCoord);
+                }
+            }
+            return result;
+        }
+
         private static final int MENU_DRIVE_HERE = 1;
         private static final int MENU_VIEW = 2;
         private static final int MENU_CANCEL = 3;
@@ -208,39 +262,39 @@ class NavitGraphics {
             menu.setHeaderTitle(NavitAppConfig.getTstring(R.string.position_popup_title) + " " + clickCoord);
             menu.add(1, MENU_DRIVE_HERE, NONE, NavitAppConfig.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
-            Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int)mPressedPosition.x,
-                    (int)mPressedPosition.y, true));
-            Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-
-            PackageManager packageManager = this.getContext().getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
-            boolean isIntentSafe = (activities.size() > 0); // at least one candidate receiver
-            if (isIntentSafe) { // add view with external app option
-                menu.add(1, MENU_VIEW, NONE, NavitAppConfig.getTstring(R.string.position_popup_view))
-                        .setOnMenuItemClickListener(this);
+            mContextMenuMapViewIntent = getViewIntentForDisplayPoint((int)mPressedPosition.x, (int)mPressedPosition.y);
+            if (mContextMenuMapViewIntent != null) {
+                menu.add(1, MENU_VIEW, NONE,
+                         NavitAppConfig.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
-                Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed");
+                Log.w(TAG, "No application available to handle ACTION_VIEW intent, view option not displayed");
             }
-            menu.add(1, MENU_CANCEL, NONE, getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            menu.add(1, MENU_CANCEL, NONE,
+                     NavitAppConfig.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             int itemId = item.getItemId();
+            if (itemId != MENU_VIEW) {
+                /* Destroy any previous map view intent if the user didn't select the MENU_VIEW action */
+                mContextMenuMapViewIntent = null;
+            }
             if (itemId == MENU_DRIVE_HERE) {
                 Message msg = Message.obtain(sCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                         (int) mPressedPosition.x, (int) mPressedPosition.y);
                 msg.sendToTarget();
             } else if (itemId == MENU_VIEW) {
-                Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int) mPressedPosition.x,
-                        (int) mPressedPosition.y, true));
-                Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-                mContextMenuMapViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
-                    this.getContext().startActivity(mContextMenuMapViewIntent);
+                if (mContextMenuMapViewIntent != null) {
+                    mContextMenuMapViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
+                        this.getContext().startActivity(mContextMenuMapViewIntent);
+                    } else {
+                        Log.w(TAG, "View menu selected but intent is not handled by any application. Ignoring...");
+                    }
+                    mContextMenuMapViewIntent = null;   /* Destoy the intent once it has been used */
                 } else {
-                    Log.w(TAG, "ACTION_VIEW intent is not handled by any application, discarding...");
+                    Log.e(TAG, "User clicked on view on menu but intent was null. Discarding...");
                 }
             }
             return true;
@@ -669,7 +723,7 @@ class NavitGraphics {
 
     private native void motionCallback(long id, int x, int y);
 
-    private native String getCoordForPoint(int x, int y, boolean absolutCoord);
+    private native String getCoordForPoint(int x, int y, boolean absoluteCoord);
 
     static native String[][] getAllCountries();
 
