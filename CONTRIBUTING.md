@@ -3,8 +3,8 @@
 Welcome to Navit! We welcome contributions!
 
 If you are interested in contributing to the [Navit code repo](README.md)
-then checkout the [Wiki](https://wiki.navit-project.org/index.php/Main_Page)
-and our [ReadTheDocs space](https://navit.readthedocs.io)
+then checkout the [old Wiki](https://wiki.navit-project.org/index.php/Main_Page)
+and our [new wiki hosted on ReadTheDocs](https://navit.readthedocs.io)
 
 When pushing a pull request, please make sure you follow our:
 * [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
@@ -54,6 +54,19 @@ It might take some time until somebody reviews the pull request (maybe try to re
 If your changes are more complex, catch up new ideas, or still have some minor problems, it might be discussed and we might ask you to submit an updated version/adapt your changes.
 
 So that's it, you helped Navit to go one step forward. Thank you very much :)
+
+## Contributing on the documentation
+
+For the documentation we now use [readthedocs](https://navit.readthedocs.io/en/trunk/) pulled from the docs folder inside this repository<.
+
+We follow the [Documentation style guide from Sphinx](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html) (as readthedocs uses sphinx).
+With a small exception which is that we still use the `.rst` extension instead of the recommended `.txt` one for now.
+
+The [old wiki](https://wiki.navit-project.org/index.php) has been deprecated and is slowly being migrated to our
+[new wiki](https://navit.readthedocs.io/en/trunk/).
+
+To update or add documentation, create a pull request on github using a PR title starting by `update:doc:` and followed by a
+message explaining the change.
 
 ## See also
 
