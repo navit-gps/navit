@@ -6,6 +6,7 @@ var search_8h =
     [ "search_list_street", "structsearch__list__street.html", "structsearch__list__street" ],
     [ "search_list_house_number", "structsearch__list__house__number.html", "structsearch__list__house__number" ],
     [ "search_list_result", "structsearch__list__result.html", "structsearch__list__result" ],
+    [ "search_fix_spaces", "search_8h.html#a72f0815b040a048168f02c061ad5b526", null ],
     [ "search_init", "search_8h.html#ab1322a3b7078df70a4496ed4f77d2ff3", null ],
     [ "search_list_destroy", "search_8h.html#a861976756c5fc0c9b66a6eb91aa7e694", null ],
     [ "search_list_get_result", "search_8h.html#a23636fe9ca20de6d68d65848ba7a0a5e", null ],

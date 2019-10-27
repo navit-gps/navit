@@ -31,7 +31,6 @@ var android_8c =
     [ "Java_org_navitproject_navit_NavitWatch_watchCallback", "android_8c.html#a627a1e83d49073c1fb76f14d7b843305", null ],
     [ "JNI_OnLoad", "android_8c.html#aace042e91bf5a67da38b145c836c52b9", null ],
     [ "postal_str", "android_8c.html#a55e6a400a09eb5a026bfa47d433450c7", null ],
-    [ "search_fix_spaces", "android_8c.html#af0d9b7c2317cfead965f89571d8c0d94", null ],
     [ "start_search", "android_8c.html#a14854973c5a9c6e3b606deb26035cf73", null ],
     [ "town_str", "android_8c.html#a9eb88ac729576c851c5622a3091e87ff", null ],
     [ "android_activity", "android_8c.html#ab835292cb19f80d70d6c9f242630de09", null ],

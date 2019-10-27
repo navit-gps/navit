@@ -9,7 +9,7 @@ var search_8c =
     [ "search_by_address", "search_8c.html#a5b2b986a4acaf5c7d603ce7f925d80e2", null ],
     [ "search_by_address_attr", "search_8c.html#aa27043abee43d0ec956a1f42e5b2e448", null ],
     [ "search_by_address_compare", "search_8c.html#a5d78cfb07b68361ee9ca74f819a46d37", null ],
-    [ "search_fix_spaces", "search_8c.html#a4ff57d9bac9c362ad6d3efecb9912693", null ],
+    [ "search_fix_spaces", "search_8c.html#a72f0815b040a048168f02c061ad5b526", null ],
     [ "search_init", "search_8c.html#ab1322a3b7078df70a4496ed4f77d2ff3", null ],
     [ "search_item_hash_equal", "search_8c.html#a67df24a05c2bd1f8255144ac21ce51f0", null ],
     [ "search_item_hash_hash", "search_8c.html#aab8dc14625c35ef42937fed74109bd18", null ],

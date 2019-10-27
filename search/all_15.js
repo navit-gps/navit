@@ -87,7 +87,7 @@ var searchData=
   ['search_5fcoord_5fget',['search_coord_get',['../garmin_8c.html#a2bca3432d37b4d88ecb08d39a0ec9e48',1,'garmin.c']]],
   ['search_5fcountry',['search_country',['../structmap__rect__priv.html#a263b2883a141a68b25b693dee4156c32',1,'map_rect_priv']]],
   ['search_5fdata',['search_data',['../structmap__priv.html#a4e21d17921b5eb9d1fb73398726a94c6',1,'map_priv']]],
-  ['search_5ffix_5fspaces',['search_fix_spaces',['../android_8c.html#af0d9b7c2317cfead965f89571d8c0d94',1,'search_fix_spaces(const char *str):&#160;android.c'],['../search_8c.html#a4ff57d9bac9c362ad6d3efecb9912693',1,'search_fix_spaces(char *str):&#160;search.c']]],
+  ['search_5ffix_5fspaces',['search_fix_spaces',['../search_8c.html#a72f0815b040a048168f02c061ad5b526',1,'search_fix_spaces(const char *str):&#160;search.c'],['../search_8h.html#a72f0815b040a048168f02c061ad5b526',1,'search_fix_spaces(const char *str):&#160;search.c']]],
   ['search_5fhouse_5fnumber_5fcoordinate',['search_house_number_coordinate',['../search__houseno__interpol_8c.html#a7486e0f36eef36924a138a07fa2946b0',1,'search_house_number_coordinate(struct item *item, struct house_number_interpolation *inter):&#160;search_houseno_interpol.c'],['../search__houseno__interpol_8h.html#a7486e0f36eef36924a138a07fa2946b0',1,'search_house_number_coordinate(struct item *item, struct house_number_interpolation *inter):&#160;search_houseno_interpol.c']]],
   ['search_5fhouse_5fnumber_5finterpolation_5fsplit',['search_house_number_interpolation_split',['../search__houseno__interpol_8c.html#ab0f2b66111d4810fcf70331cb8ed984d',1,'search_houseno_interpol.c']]],
   ['search_5fhouseno_5finterpol_2ec',['search_houseno_interpol.c',['../search__houseno__interpol_8c.html',1,'']]],

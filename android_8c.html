@@ -178,8 +178,6 @@ Functions</h2></td></tr>
 <tr class="separator:af27bedcc294fb3b43e9b4fc6309cdc4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c5cd544cf01a9aa49abb5fe1ddc55b1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv)</td></tr>
 <tr class="separator:a4c5cd544cf01a9aa49abb5fe1ddc55b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0d9b7c2317cfead965f89571d8c0d94"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#af0d9b7c2317cfead965f89571d8c0d94">search_fix_spaces</a> (const char *str)</td></tr>
-<tr class="separator:af0d9b7c2317cfead965f89571d8c0d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14854973c5a9c6e3b606deb26035cf73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a14854973c5a9c6e3b606deb26035cf73">start_search</a> (struct <a class="el" href="structandroid__search__priv.html">android_search_priv</a> *search_priv, const char *search_string)</td></tr>
 <tr class="separator:a14854973c5a9c6e3b606deb26035cf73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb15b4ce3ffd0c45b348d56045a63c2"><td class="memItemLeft" align="right" valign="top">JNIEXPORT jlong JNICALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch</a> (JNIEnv *env, jobject thiz, jint partial, jstring <a class="el" href="structcountry.html">country</a>, jstring str)</td></tr>
@@ -1461,36 +1459,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af0d9b7c2317cfead965f89571d8c0d94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0d9b7c2317cfead965f89571d8c0d94">&#9670;&nbsp;</a></span>search_fix_spaces()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static char* search_fix_spaces </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>str</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a14854973c5a9c6e3b606deb26035cf73">start_search()</a>.</p>
-
-</div>
-</div>
 <a id="a14854973c5a9c6e3b606deb26035cf73"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a14854973c5a9c6e3b606deb26035cf73">&#9670;&nbsp;</a></span>start_search()</h2>
 
@@ -1525,7 +1493,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="event_8c.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>, <a class="el" href="structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1">android_search_priv::idle_clb</a>, <a class="el" href="structandroid__search__priv.html#a5e8c8824623d9132531c02a38a1d3afe">android_search_priv::idle_ev</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structandroid__search__priv.html#a1424ba474c65f12e2d8246d32077202b">android_search_priv::partial</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="android_8c.html#af0d9b7c2317cfead965f89571d8c0d94">search_fix_spaces()</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="android_8c.html#a4c5cd544cf01a9aa49abb5fe1ddc55b1">android_search_idle()</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#a1a1cf44a4c7208d4c8e747c197ffcc47">callback_new_1</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="event_8c.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>, <a class="el" href="structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1">android_search_priv::idle_clb</a>, <a class="el" href="structandroid__search__priv.html#a5e8c8824623d9132531c02a38a1d3afe">android_search_priv::idle_ev</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structandroid__search__priv.html#a1424ba474c65f12e2d8246d32077202b">android_search_priv::partial</a>, <a class="el" href="structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e">android_search_priv::phrases</a>, <a class="el" href="structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344">android_search_priv::search_attr</a>, <a class="el" href="search_8c.html#a72f0815b040a048168f02c061ad5b526">search_fix_spaces()</a>, <a class="el" href="structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc">android_search_priv::search_list</a>, <a class="el" href="search_8c.html#afaee5877caf5e62ee71d8e8c88c60680">search_list_search()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch()</a>.</p>
 

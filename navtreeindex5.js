@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classNGQProxyVehicle.html#a6190fe886f94215555c816bddc5500e9":[2,0,255,4],
 "classNGQProxyVehicle.html#aafc5a11c4f896b0574208726979fa819":[2,0,255,3],
 "classNGQStandardItemModel.html":[2,0,256],
 "classNGQStandardItemModel.html#a06e32ca2fd3cf48353adc1372a62776e":[2,0,256,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a3f74ddb2166631167a18eed86cd668cb":[2,0,0,0,0,3,21],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4138b0f525cc9ed2ee0af8e3ce0eaa0a":[2,0,0,0,0,3,19],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4938b8d2e020022acc5d39dcfcbafe81":[2,0,0,0,0,3,16],
-"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a544f74de6d901fdca210e29b888c9a3c":[2,0,0,0,0,3,23]
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a544f74de6d901fdca210e29b888c9a3c":[2,0,0,0,0,3,23],
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6b0f817575277d41c7f6553a320087c9":[2,0,0,0,0,3,26]
 };
