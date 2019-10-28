@@ -14,7 +14,7 @@ Navit follows the semantic versioning:
   replacement for the previous version (all data formats and interfaces are still
   supported); minor UI changes (such as moving individual menu items) are also
   allowed
-* X.y.z (major): at least one of the following:
+* `X.y.z` (major): at least one of the following:
   * Major new functionality (such as Augmented Reality, inertial navigation or
     support for live traffic services): de-facto standard for end-user apps
   * New user interface (such as moving from the old pulldown menu UI to the Internal
@@ -85,14 +85,14 @@ To get the list of all the unreleased commits, see:
 
 Release 0.5.2 had issues with the version not properly updated in the `CMakeLists.txt`. This release fixes that issue.
 
-## Changed
+### Changed
 
 * Update Sailfish spec for release 0.5.3. [Joseph Herlant]
 * Update Patch version for release 0.5.3. [Joseph Herlant]
 
 ## [v0.5.2] - 2018-08-30
 
-## Added
+### Added
 
 * Add:build:Make gradlew executable. [mvglasow]
 * Add:build:Ignore gradle artifacts. [mvglasow]
@@ -102,7 +102,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Add:build:Add cmake4eclipse artifacts to .gitignore (#594) [mvglasow]
 * Add Slovakia and Belgium to the maplist. [jandegr]
 
-## Changed
+### Changed
 
 * Update:doc:Update AUTHORS file. [Joseph Herlant]
 * Update in-tree espeak to espeak-1.48.04 (#624) [Stefan Wildemann]
@@ -133,7 +133,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Refactor:core:Improve documentation of route\_value\_seg() [mvglasow]
 * Update:release:Add more keywords for gitchangelog
 
-## Fixed
+### Fixed
 
 * Fix Android apk VersionCode  (#633) [jkoan]
 * Fix latlon2bookmark (#627) [jkoan]
@@ -177,7 +177,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Refactor:Android (#563) [jandegr]
 * Refactoring:Android:cleanup (#458) [jandegr]
 
-## Removed
+### Removed
 
 * Cleanup:osd&support\_espeak:get rid of unused-variables compilation warnings (#619) [Joseph Herlant]
 * Cleanup:scripts:removes deprecated usage of egrep (#616) [Joseph Herlant]
@@ -192,7 +192,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 
 ## [v0.5.1] - 2018-04-19
 
-## Added
+### Added
 
 * Adding question mark to icon for position pending (#423) [lains]
 * Add:icon:forbiden\_area (#331) [youte62]
@@ -275,7 +275,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Add:port\_android:OSD button and command to show Android menu. [mvglasow]
 * Adding a androix/x86 build script. [Pierre GRANDIN]
 
-## Changed
+### Changed
 
 * Update NavitVehicle.java. [jandegr]
 * Update NavitVehicle.java. [jandegr]
@@ -446,7 +446,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Update build\_android\_x86.sh. [jandegr]
 * Updated COPYRIGHT for 2016. [Pierre GRANDIN]
 
-## Fixed
+### Fixed
 
 * Contrib:New version for sailfish 0.5.1-r5 (#444) [Stefan Wildemann]
 * OSD:Make Image and Scale osd types obey osd\_configuration setting (trac:1202) (#439) [Robert Pohlink]
@@ -578,14 +578,14 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Osd: Make osd "Button" accept h and w props. [Stefan Wildemann]
 * Core:Crash in country\_search\_new Properly handle coutry search by attr\_country\_id to fix crash in internal gui when there's a gps fix and a map supporting attr\_country\_id such as Reiseplaner is active. Fixes #1337. [Michael Dankov]
 
-## Removed
+### Removed
 
 * Removed deprecated files and fixed a configuration example. [jkoan]
 * Cleanup old xpm icons (#292) [Johan Fitié]
 * Removed autotools lefotover (#204) [jandegr]
 * Cleanup. [jandegr]
 
-## Other
+### Other
 
 * Show min/max elevation and distance in height profile. [Timo]
 * Maptool: migrate strdup to g\_strdup. [Joseph Herlant]
