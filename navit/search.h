@@ -87,6 +87,7 @@ char *search_list_get_unique(struct search_list *this_, char *unique);
 struct search_list_result *search_list_get_result(struct search_list *this_);
 void search_list_destroy(struct search_list *this_);
 void search_init(void);
+char *search_fix_spaces(const char *str);
 /* end of prototypes */
 #ifdef __cplusplus
 }
