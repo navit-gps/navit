@@ -75,9 +75,9 @@ mkdir /tmp/navit
 sphinx-build -Dhtml_theme="sphinx_rtd_theme" -n -E -W --keep-going docs /tmp/navit/
 ```
 
-Now if you want to view how the result would look like you can run an http server on the directory you created the build
-(`/tmp/navit/` in the previously mentionned command) using: `python3 -m http.server 8000` and then call
-<http://localhost:8000> from your browser.
+Now if you want to view how the result would look like you can:
+ * open <file:///tmp/navit/index.html> in your favorite browser
+ * or if you prefer to run an http server on the directory you created the build in (`/tmp/navit/` in the previously mentionned command) you can do so using: `python3 -m http.server 8000` and then call <http://localhost:8000> from your browser.
 
 ## See also
 
