@@ -9,8 +9,8 @@ if(BUILD_MAPTOOL)
 
 	add_executable (maptool maptool.c)
 	add_library (maptool_core boundaries.c buffer.c ch.c coastline.c itembin.c
-		itembin_buffer.c misc.c osm.c osm_o5m.c osm_psql.c osm_relations.c
-	 	sourcesink.c tempfile.c tile.c zip.c osm_xml.c)
+		itembin_buffer.c itembin_slicer.c misc.c osm.c osm_o5m.c osm_psql.c
+		osm_relations.c sourcesink.c tempfile.c tile.c zip.c osm_xml.c)
 
 	if(NOT MSVC)
 		PROTOBUF_C_GENERATE_C (PROTO_SRCS PROTO_HDRS osmformat.proto)
