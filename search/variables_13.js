@@ -28,6 +28,7 @@ var searchData=
   ['ref_5fcount',['ref_count',['../structquadtree__item.html#ad902d5beeac8869dfe42b061f2a696e4',1,'quadtree_item::ref_count()'],['../structquadtree__node.html#ad1054907f11bd5fc2a2178244df7612c',1,'quadtree_node::ref_count()']]],
   ['ref_5fway',['ref_way',['../structnode__item.html#a3a87d515809028f91278e599cbe53aca',1,'node_item']]],
   ['refcount',['refcount',['../structitem__priv.html#af172cd6fcef29ebfb7212f89cff2cf9d',1,'item_priv']]],
+  ['reference',['reference',['../structslicerpolygon.html#a3ed734c4acceaf67c25ea7ac0e2ff75e',1,'slicerpolygon']]],
   ['referencecount',['referenceCount',['../structNavitObject.html#a94c7141f102978c1818c2ae11a4b92c6',1,'NavitObject']]],
   ['refresh_5fcallback',['refresh_callback',['../structmenu__data.html#a660cf2b35f94078885b4680e275de183',1,'menu_data']]],
   ['refresh_5fcond',['refresh_cond',['../structgui__priv_1_1html.html#a74a4313eeffeab4840899820ce9491a0',1,'gui_priv::html']]],

@@ -16,6 +16,8 @@ var searchData=
   ['selector',['selector',['../structselector.html',1,'']]],
   ['shmem_5fheader',['shmem_header',['../structshmem__header.html',1,'']]],
   ['size_5fweight_5flimit',['size_weight_limit',['../structsize__weight__limit.html',1,'']]],
+  ['slice_5fresult',['slice_result',['../structslice__result.html',1,'']]],
+  ['slicerpolygon',['slicerpolygon',['../structslicerpolygon.html',1,'']]],
   ['spawn_5fprocess_5finfo',['spawn_process_info',['../structspawn__process__info.html',1,'']]],
   ['speech',['speech',['../structspeech.html',1,'']]],
   ['speech_5fmethods',['speech_methods',['../structspeech__methods.html',1,'']]],

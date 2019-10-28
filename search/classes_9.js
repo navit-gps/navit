@@ -15,6 +15,7 @@ var searchData=
   ['item_5fname',['item_name',['../structitem__name.html',1,'']]],
   ['item_5fpriv',['item_priv',['../structitem__priv.html',1,'']]],
   ['item_5frange',['item_range',['../structitem__range.html',1,'']]],
+  ['itembin_5floop_5fcombiner_5fcontext',['itembin_loop_combiner_context',['../structitembin__loop__combiner__context.html',1,'']]],
   ['itemfilenamecomparator',['ItemFileNameComparator',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1ItemFileNameComparator.html',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['itemgra',['itemgra',['../structitemgra.html',1,'']]]
 ];

@@ -70,6 +70,7 @@ var searchData=
   ['ref_5fway',['ref_way',['../structnode__item.html#a3a87d515809028f91278e599cbe53aca',1,'node_item']]],
   ['ref_5fways',['ref_ways',['../maptool_8h.html#a27530aae490e62dfa4a0c400e9aec940',1,'ref_ways(FILE *in):&#160;osm.c'],['../osm_8c.html#a27530aae490e62dfa4a0c400e9aec940',1,'ref_ways(FILE *in):&#160;osm.c']]],
   ['refcount',['refcount',['../structitem__priv.html#af172cd6fcef29ebfb7212f89cff2cf9d',1,'item_priv']]],
+  ['reference',['reference',['../structslicerpolygon.html#a3ed734c4acceaf67c25ea7ac0e2ff75e',1,'slicerpolygon']]],
   ['referencecount',['referenceCount',['../structNavitObject.html#a94c7141f102978c1818c2ae11a4b92c6',1,'NavitObject']]],
   ['refresh_5faction',['refresh_action',['../gui__gtk__action_8c.html#a56421d333287750ffd034477725c7f2d',1,'gui_gtk_action.c']]],
   ['refresh_5fcallback',['refresh_callback',['../structmenu__data.html#a660cf2b35f94078885b4680e275de183',1,'menu_data']]],

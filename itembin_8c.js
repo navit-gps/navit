@@ -17,6 +17,7 @@ var itembin_8c =
     [ "item_bin_add_coord", "itembin_8c.html#aac986b93a16020b8921791fe658000f1", null ],
     [ "item_bin_add_coord_rect", "itembin_8c.html#acc795035c13d538ed2a8c1e57af96cfe", null ],
     [ "item_bin_add_coord_reverse", "itembin_8c.html#a61d8c7d7016225a56c65959f1af221d2", null ],
+    [ "item_bin_add_hole", "itembin_8c.html#acd6e054c58d6bf3bf352db24b1a24c94", null ],
     [ "item_bin_bbox", "itembin_8c.html#a269f1f28afe9056e206cfb762fab79ab", null ],
     [ "item_bin_copy_attr", "itembin_8c.html#a8b1b44728686e93eecb5fa6ab21ee181", null ],
     [ "item_bin_copy_coord", "itembin_8c.html#a77e4c141b749bfccfcd0640b2d5de406", null ],

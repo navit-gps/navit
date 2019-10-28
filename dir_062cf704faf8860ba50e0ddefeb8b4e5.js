@@ -6,6 +6,7 @@ var dir_062cf704faf8860ba50e0ddefeb8b4e5 =
     [ "coastline.c", "coastline_8c.html", "coastline_8c" ],
     [ "itembin.c", "itembin_8c.html", "itembin_8c" ],
     [ "itembin_buffer.c", "itembin__buffer_8c.html", "itembin__buffer_8c" ],
+    [ "itembin_slicer.c", "itembin__slicer_8c.html", "itembin__slicer_8c" ],
     [ "maptool.c", "maptool_8c.html", "maptool_8c" ],
     [ "maptool.h", "maptool_8h.html", "maptool_8h" ],
     [ "misc.c", "maptool_2misc_8c.html", "maptool_2misc_8c" ],

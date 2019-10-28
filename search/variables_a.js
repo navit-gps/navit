@@ -1,7 +1,7 @@
 var searchData=
 [
   ['i',['i',['../structosm__protobufdb__context.html#a65a776bea5bd75a2fb609467866e4bd7',1,'osm_protobufdb_context']]],
-  ['ib',['ib',['../structboundary.html#a6d09c78ae2828de5ee86cc0b00181476',1,'boundary']]],
+  ['ib',['ib',['../structslicerpolygon.html#a71a9ac2e24f5c0c332245ed724d429e5',1,'slicerpolygon::ib()'],['../structboundary.html#a6d09c78ae2828de5ee86cc0b00181476',1,'boundary::ib()']]],
   ['icon',['icon',['../structattr.html#a677755bcec25d20f4c312203a4f02f3e',1,'attr::icon()'],['../structselector.html#a4bdf1304bb49671f0a0cbf3c9fe0df9c',1,'selector::icon()'],['../structelement.html#a997e3a9a346f96ab007047ce6582a807',1,'element::icon()']]],
   ['icon_5fh',['icon_h',['../structlayout.html#a5327568c69317949f88138f95c776baa',1,'layout::icon_h()'],['../structnavigation__status.html#ab2f20310155762bc5fe97a2f4f7d32c5',1,'navigation_status::icon_h()'],['../structnav__next__turn.html#ad1463b47d3e54baf64b2f75ab7abe5e3',1,'nav_next_turn::icon_h()'],['../structgps__status.html#ac2b5153827d2d4d75155728615bd0773',1,'gps_status::icon_h()'],['../structvolume.html#a052d05a1342dea0589656322e675c73d',1,'volume::icon_h()']]],
   ['icon_5fl',['icon_l',['../structgui__config__settings.html#a5d9f4ff42a8adcedcf3ad59f381805ef',1,'gui_config_settings::icon_l()'],['../structgui__priv.html#ab581b7c39d6e9c2c169b81ac74cae4f8',1,'gui_priv::icon_l()']]],
@@ -64,7 +64,7 @@ var searchData=
   ['index',['index',['../structzip__info.html#a5951dbbbc9fc6e454e2e3c9990d86391',1,'zip_info::index()'],['../structj1850.html#a0b4378dbe71b3088188018e8faefb485',1,'j1850::index()']]],
   ['index_5fcd',['index_cd',['../structmap__priv.html#a7be645d0ed2b11a6ccb752163a991b36',1,'map_priv']]],
   ['index_5foffset',['index_offset',['../structmap__priv.html#a969d6c61614594c229d8b2764c4ddab2',1,'map_priv']]],
-  ['info',['info',['../structrgn__point.html#acd1ca5e6cd7fbc277013fa2640db67f5',1,'rgn_point::info()'],['../structrgn__poly.html#aef25c8060fa11a6524b316dd597a2b5f',1,'rgn_poly::info()'],['../garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1',1,'info():&#160;garmin_img.c']]],
+  ['info',['info',['../structrgn__point.html#acd1ca5e6cd7fbc277013fa2640db67f5',1,'rgn_point::info()'],['../structrgn__poly.html#aef25c8060fa11a6524b316dd597a2b5f',1,'rgn_poly::info()'],['../structslicerpolygon.html#a2c730b736184c3292581a05ba370221f',1,'slicerpolygon::info()'],['../garmin__img_8c.html#a5654e975d7f612c6751d950e8f410ce1',1,'info():&#160;garmin_img.c']]],
   ['init',['init',['../group__plugins.html#ga7239cfc6b8e8ef5454ba5ad3e9ef828a',1,'plugin::init()'],['../structobject__func.html#aaebbfc52918e057090fcae87bdec1a9a',1,'object_func::init()']]],
   ['init_5fstring_5findex',['init_string_index',['../structj1850.html#aa8e5c895fd4ca0dae2ead0e2c4e59cf8',1,'j1850']]],
   ['inner',['inner',['../structmultipolygon.html#a1ac69da1d2b2d60098c66c9e76d2bbe1',1,'multipolygon']]],
