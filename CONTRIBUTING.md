@@ -71,7 +71,7 @@ message explaining the change.
 You can use the following command from the root of the git repository clone to check the linting of the documentation (The last argument is the output directory so you might have to adjust that) if you have `sphinx-build` installed:
 
 ```
-sphinx-build  -n -E -W --keep-going docs /tmp/navit/
+sphinx-build -Dhtml_theme="sphinx_rtd_theme" -n -E -W --keep-going docs /tmp/navit/
 ```
 
 ## See also
