@@ -189,19 +189,19 @@ Downloads
 ---------
 
 In order to compile the win32 version of Navit, you need the following software development tools
- * GTK+ toolkit for win32 from `SourceForgeDownload: Glade/GTK+ <http://sourceforge.net/project/showfiles.php?group_id=98754>`_ (select gtk+-win32-devel)
+ * GTK+ toolkit for win32 from `SourceForgeDownload: Glade/GTK+ <http://sourceforge.net/project/showfiles.php?group_id=98754>` (select gtk+-win32-devel)
  * MinGW from `SourceForgeDownload: MinGW <http://sourceforge.net/project/showfiles.php?group_id=2435>`_ (select Automated MinGW installer)
- * MSYS from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=2496>`_
- * msysCORE from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=24963>`_
- * diffutils from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=24963>`_
- * autoconf from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`_
- * autogen from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`_
- * automake from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`_
- * gettext from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`_
- * libtool from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`_
- * libiconv from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/downloads/mingw/MinGW/libiconv>`_
+ * MSYS from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=2496>`
+ * msysCORE from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=24963>`
+ * diffutils from `SourceForgeDownload: MSYS Base System <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=24963>`
+ * autoconf from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`
+ * autogen from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`
+ * automake from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`
+ * gettext from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`
+ * libtool from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=67879>`
+ * libiconv from `SourceForgeDownload: MSYS Supplementary Tools <http://sourceforge.net/downloads/mingw/MinGW/libiconv>`
 
-Probably the easiest way to obtain and install all the MSYS packages is to follow the instructions `here <http://www.mingw.org/wiki/msys>`_
+Probably the easiest way to obtain and install all the MSYS packages is to follow the instructions `here <http://www.mingw.org/wiki/msys>`
 
 For speech support, one option is to use the "cmdline" speech type (refer to [[Configuration]]) and a utility such as a Windows port of `Say <http://krolik.net/wsvn/wsvn/public/Say%2B%2B/>`_
 

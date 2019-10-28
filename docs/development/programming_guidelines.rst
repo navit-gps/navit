@@ -89,7 +89,7 @@ use
 
     struct mystruct m={0,};
 
- * Use `/*` and `*/` for comments instead of `//`
+* Use `/*` and `*/` for comments instead of `//`
 
 .. note::
 

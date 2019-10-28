@@ -25,9 +25,9 @@ For Android
  * Download the Android `SDK <http://dl.google.com/android/android-sdk_r18-linux.tgz>` and `NDK <http://dl.google.com/android/ndk/android-ndk-r8-linux-x86.tar.bz2>`
  * Unzip the SDK and NDK to a directory of your choice. The following instructions assume that the SDK and NDK have been unzipped to `~/src`.
  * Ensure that the following paths are on your PATH environment variable:
-  `path-to-sdk/tools`
-  `path-to-sdk/platform-tools`
-  `path-to-ndk/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin`
+   `path-to-sdk/tools`
+   `path-to-sdk/platform-tools`
+   `path-to-ndk/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin`
  * On Ubuntu you can accomplish this using the following command (assuming the SDK and NDK have been unzipped to `~/src`):
 
 .. code-block:: bash
@@ -63,15 +63,15 @@ With cmake
     cd ~/src
     mkdir android-build
 
- * Optional: Add a `SOURCE_PATH` environment variable to your system, pointing to the directory in which you checked out a copy of Navit. You can leave out this step, but make sure you change `$SOURCE_PATH` in the next steps to the actual path of the directory.  `export SOURCE_PATH=~/src/navit`
- * Step into the build directory: `cd ~/src/android-build`
- * Run CMake (ensure that you're in the build directory when you do this!):
+* Optional: Add a `SOURCE_PATH` environment variable to your system, pointing to the directory in which you checked out a copy of Navit. You can leave out this step, but make sure you change `$SOURCE_PATH` in the next steps to the actual path of the directory.  `export SOURCE_PATH=~/src/navit`
+* Step into the build directory: `cd ~/src/android-build`
+* Run CMake (ensure that you're in the build directory when you do this!):
 
 .. code-block:: bash
 
     cmake -DCMAKE_TOOLCHAIN_FILE=$SOURCE_PATH/Toolchain/arm-eabi.cmake -DCACHE_SIZE="(20*1024*1024)" -DAVOID_FLOAT=1 -DANDROID_PERMISSIONS="CAMERA" -DANDROID_API_VERSION=8 -DXSLT_PROCESSOR=/usr/bin/saxonb-xslt $SOURCE_PATH
 
- * Build the apk package:
+* Build the apk package:
 
 .. code-block:: bash
 
@@ -137,7 +137,7 @@ So far, two issues have been observed with the build:
 
  * Building `vehicle/gpsd` and `map/garmin` fails on Android. As a workaround, edit `CMakeLists.txt` `, inserting the following two lines in the `if(ANDROID)` block (around line 710):
 
-.. code-block:: C
+.. code-block::
 
     set_with_reason(vehicle/gpsd "Android detected" FALSE)
     set_with_reason(map/garmin "Android detected" FALSE)
