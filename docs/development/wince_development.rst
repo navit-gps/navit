@@ -204,7 +204,7 @@ libpng
 libtiff
 ^^^^^^^
 
-.. code-block::
+::
 
  libtool: link: CURRENT `' must be a nonnegative integer
 
@@ -222,7 +222,7 @@ libtiff
 glib
 ^^^^
 
-.. code-block::
+::
 
  gatomic.c:570: Error: no such instruction: `swp %eax,%eax,[%esi]'
 

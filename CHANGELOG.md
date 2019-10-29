@@ -791,20 +791,20 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 
 ## [v0.5.0] - 2015-12-31
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-rc.2 to v0.5.0 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0)
 to view the corresponding changes.
 
 ## [v0.5.0-rc2] - 2015-09-02
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-rc.1...v0.5.0-rc.2)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-rc.1 to v0.5.0-rc.2 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-rc.1...v0.5.0-rc.2)
 to view the corresponding changes.
 
 ## [v0.5.0-rc1] - 2015-08-08
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-beta.1 to v0.5.0-rc.1 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
 to view the corresponding changes.
 
 [Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.3...HEAD
