@@ -231,7 +231,6 @@ void Backend::get_pois() {
                         item_coord_get_pro(item, &c, 1, pro) &&
                         coord_rect_contains(&sel->u.c_rect, &c)  &&
                         (idist=transform_distance(pro, &center, &c)) < dist) {
-
                     struct attr attr;
                     char * label;
                     char * icon = get_icon(this->nav, item);
@@ -564,7 +563,6 @@ void Backend::setSearchContext(QString text) {
     } else {
         dbg(lvl_error, "Unhandled search context '%s'", text.toUtf8().data());
     }
-
 }
 
 QString Backend::currentCountry() {
