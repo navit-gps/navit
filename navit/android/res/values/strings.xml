@@ -31,6 +31,7 @@
     <string name="position_popup_title">Position</string>
     <string name="position_popup_drive_here">Route to here</string>
     <string name="position_popup_view">View</string>
+    <string name="use_position_with">Use position with</string>
 
     <!-- MAP DOWNLOAD -->
     <string name="map_delete">Delete this map?</string>

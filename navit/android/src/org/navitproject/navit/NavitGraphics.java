@@ -19,14 +19,11 @@
 
 package org.navitproject.navit;
 
-import static org.navitproject.navit.NavitAppConfig.getTstring;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -39,7 +36,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewConfigurationCompat;
@@ -65,23 +61,22 @@ import java.util.List;
 class NavitGraphics {
     private static final String            TAG = "NavitGraphics";
     private static final long              TIME_FOR_LONG_PRESS = 300L;
+    private static boolean                 sInMap;
     private final NavitGraphics            mParentGraphics;
-    private final ArrayList<NavitGraphics> mOverlays = new ArrayList<>();
+    private final ArrayList<NavitGraphics> mOverlays;
     private int                            mBitmapWidth;
     private int                            mBitmapHeight;
     private int                            mPosX;
     private int                            mPosY;
     private int                            mPosWraparound;
     private int                            mOverlayDisabled;
-    private int                            mBgColor;
     private float                          mTrackballX;
     private float                          mTrackballY;
     private int                            mPaddingLeft;
     private int                            mPaddingRight;
     private int                            mPaddingTop;
     private int                            mPaddingBottom;
-    private View                           mView;
-    static final Handler                   sCallbackHandler = new CallBackHandler();
+    private NavitView                      mView;
     private SystemBarTintView              mLeftTintView;
     private SystemBarTintView              mRightTintView;
     private SystemBarTintView              mTopTintView;
@@ -90,12 +85,11 @@ class NavitGraphics {
     private RelativeLayout                 mRelativeLayout;
     private NavitCamera                    mCamera;
     private Navit                          mActivity;
-    private static boolean                 sInMap;
-    private boolean mTinting;
+    private boolean                        mTinting;
 
 
+    @SuppressWarnings("unused")
     void setBackgroundColor(int bgcolor) {
-        this.mBgColor = bgcolor;
         if (mLeftTintView != null) {
             mLeftTintView.setBackgroundColor(bgcolor);
         }
@@ -113,23 +107,7 @@ class NavitGraphics {
     private void setCamera(int useCamera) {
         if (useCamera != 0 && mCamera == null) {
             // mActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            addCamera();
-            addCameraView();
-        }
-    }
-
-    /**
-     * Adds a camera.
-     *
-     * <p>This method does not create the view for the camera. This must be done separately by calling
-     * {@link #addCameraView()}.</p>
-     */
-    private void addCamera() {
-        mCamera = new NavitCamera(mActivity);
-    }
-
-    private void addCameraView() {
-        if (mCamera != null) {
+            mCamera = new NavitCamera(mActivity);
             mRelativeLayout.addView(mCamera);
             mRelativeLayout.bringChildToFront(mView);
         }
@@ -167,16 +145,23 @@ class NavitGraphics {
         static final int  DRAG       = 1;
         static final int  ZOOM       = 2;
         static final int  PRESSED    = 3;
-
         PointF mPressedPosition = null;
+        // mContextMenuMapViewIntent is the ACTION_VIEW intent for a geo coordinates.
+        // it is used when clicking on view in the map contextual menu
+        Intent mContextMenuMapViewIntent = null;
 
         NavitView(Context context) {
             super(context);
+            // assumption usefull for the KitKat tinting only
+            sInMap = true;
+        }
+
+        boolean isDrag() {
+            return mTouchMode == DRAG;
         }
 
         public void onWindowFocusChanged(boolean hasWindowFocus) {
             Log.v(TAG,"onWindowFocusChanged = " + hasWindowFocus);
-            // beter aanroepen in Navit of appconfig ?
             if (Navit.sShowSoftKeyboardShowing && hasWindowFocus) {
                 InputMethodManager imm  = (InputMethodManager) mActivity
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -210,6 +195,56 @@ class NavitGraphics {
             return insets;
         }
 
+        /**
+         * Create an intent for a view action of a point provided by its x and y position on the display.
+         *
+         * @param x The x coordinates of the point on the display
+         * @param y The y coordinates of the point on the display
+         *
+         * @return An intent to start to view the specified point on a third-party app on Android (can be null if a
+         *         view action is not possible)
+        **/
+        Intent getViewIntentForDisplayPoint(int x, int y) {
+            Intent result = null;
+
+            /* Check if there is at least one application that can process a geo intent... */
+            String selectedPointCoord = getCoordForPoint(x, y, true);
+            Uri intentUri = Uri.parse("geo:" + selectedPointCoord);
+            Intent defaultShareIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+
+            List<Intent> customShareIntentList = new ArrayList<>();
+            List<ResolveInfo> intentTargetAppList;
+            intentTargetAppList = this.getContext().getPackageManager().queryIntentActivities(defaultShareIntent, 0);
+
+            String selfPackageName = this.getContext().getPackageName();
+
+            if (!intentTargetAppList.isEmpty()) {
+                for (ResolveInfo resolveInfo : intentTargetAppList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    Intent copiedIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    if (!packageName.equals(selfPackageName)) {
+                        Log.d(TAG, "Adding package \"" + packageName + "\" to app chooser");
+                        copiedIntent.setPackage(packageName);
+                        copiedIntent.setClassName(
+                                resolveInfo.activityInfo.packageName,
+                                resolveInfo.activityInfo.name);
+                        customShareIntentList.add(copiedIntent);
+                    } else {
+                        Log.d(TAG, "Excluding ourselves (package " + packageName + ") from intent targets");
+                    }
+                }
+                if (customShareIntentList.size() > 0) {
+                    result = Intent.createChooser(customShareIntentList.remove(customShareIntentList.size() - 1),
+                            NavitAppConfig.getTstring(R.string.use_position_with));
+                    result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                            customShareIntentList.toArray(new Intent[0]));
+                    Log.d(TAG, "Preparing action intent (" + customShareIntentList.size() + 1
+                               + " candidate apps) to view selected coord: " + selectedPointCoord);
+                }
+            }
+            return result;
+        }
+
         private static final int MENU_DRIVE_HERE = 1;
         private static final int MENU_VIEW = 2;
         private static final int MENU_CANCEL = 3;
@@ -221,40 +256,34 @@ class NavitGraphics {
             menu.setHeaderTitle(NavitAppConfig.getTstring(R.string.position_popup_title) + " " + clickCoord);
             menu.add(1, MENU_DRIVE_HERE, NONE, NavitAppConfig.getTstring(R.string.position_popup_drive_here))
                     .setOnMenuItemClickListener(this);
-            Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int)mPressedPosition.x,
-                    (int)mPressedPosition.y, true));
-            Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-
-            PackageManager packageManager = this.getContext().getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(mContextMenuMapViewIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
-            boolean isIntentSafe = (activities.size() > 0); // at least one candidate receiver
-            if (isIntentSafe) { // add view with external app option
-                menu.add(1, MENU_VIEW, NONE, NavitAppConfig.getTstring(R.string.position_popup_view))
-                        .setOnMenuItemClickListener(this);
+            mContextMenuMapViewIntent = getViewIntentForDisplayPoint((int)mPressedPosition.x, (int)mPressedPosition.y);
+            if (mContextMenuMapViewIntent != null) {
+                menu.add(1, MENU_VIEW, NONE,
+                         NavitAppConfig.getTstring(R.string.position_popup_view)).setOnMenuItemClickListener(this);
             } else {
-                Log.w(TAG, "No application available to handle ACTION_VIEW intent, option not displayed");
+                Log.w(TAG, "No application available to handle ACTION_VIEW intent, view option not displayed");
             }
-            menu.add(1, MENU_CANCEL, NONE, getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
+            menu.add(1, MENU_CANCEL, NONE,
+                     NavitAppConfig.getTstring(R.string.cancel)).setOnMenuItemClickListener(this);
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             int itemId = item.getItemId();
             if (itemId == MENU_DRIVE_HERE) {
-                Message msg = Message.obtain(sCallbackHandler, MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
+                Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
+                        NavitCallbackHandler.MsgType.CLB_SET_DISPLAY_DESTINATION.ordinal(),
                         (int) mPressedPosition.x, (int) mPressedPosition.y);
                 msg.sendToTarget();
             } else if (itemId == MENU_VIEW) {
-                Uri intentUri = Uri.parse("geo:" + getCoordForPoint((int) mPressedPosition.x,
-                        (int) mPressedPosition.y, true));
-                Intent mContextMenuMapViewIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                mContextMenuMapViewIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if (mContextMenuMapViewIntent.resolveActivity(this.getContext().getPackageManager()) != null) {
                     this.getContext().startActivity(mContextMenuMapViewIntent);
                 } else {
-                    Log.w(TAG, "ACTION_VIEW intent is not handled by any application, discarding...");
+                    Log.w(TAG, "View menu selected but intent is not handled by any application. Ignoring...");
                 }
             }
+            mContextMenuMapViewIntent = null;
             return true;
         }
 
@@ -278,8 +307,6 @@ class NavitGraphics {
         @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             Log.d(TAG, "onSizeChanged pixels x=" + w + " pixels y=" + h);
-            Log.v(TAG, "onSizeChanged density=" + Navit.sMetrics.density);
-            Log.v(TAG, "onSizeChanged scaledDensity=" + Navit.sMetrics.scaledDensity);
             super.onSizeChanged(w, h, oldw, oldh);
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mDrawCanvas = new Canvas(mDrawBitmap);
@@ -372,12 +399,12 @@ class NavitGraphics {
                 Log.v(TAG, "New scale = " + scale);
                 if (scale > 1.2) {
                     // zoom in
-                    callbackMessageChannel(1, "");
+                    NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_ZOOM_IN);
                     mOldDist = newDist;
                 } else if (scale < 0.8) {
                     mOldDist = newDist;
                     // zoom out
-                    callbackMessageChannel(2, "");
+                    NavitCallbackHandler.sendCommand(NavitCallbackHandler.CmdType.CMD_ZOOM_OUT);
                 }
             }
         }
@@ -548,19 +575,21 @@ class NavitGraphics {
 
         public SystemBarTintView(Context context) {
             super(context);
-            this.setBackgroundColor(mBgColor);
         }
 
     }
 
+    @SuppressWarnings("unused")
     NavitGraphics(final Activity navit, NavitGraphics parent, int x, int y, int w, int h,
-                         int wraparound, int useCamera) {
+                  int wraparound, int useCamera) {
         if (parent == null) {
+            mOverlays = new ArrayList<>();
             if (useCamera != 0) {
-                addCamera();
+                setCamera(useCamera);
             }
             setmActivity((Navit)navit);
         } else {
+            mOverlays = null;
             mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             mBitmapWidth = w;
             mBitmapHeight = h;
@@ -585,11 +614,9 @@ class NavitGraphics {
         mView.setFocusableInTouchMode(true);
         mView.setKeepScreenOn(true);
         mRelativeLayout = new RelativeLayout(mActivity);
-        addCameraView();
         mRelativeLayout.addView(mView);
         /* The navigational and status bar tinting code is meaningful only on API19+ */
         mTinting = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         if (mTinting) {
             mFrameLayout = new FrameLayout(mActivity);
             mFrameLayout.addView(mRelativeLayout);
@@ -608,69 +635,6 @@ class NavitGraphics {
         mView.requestFocus();
     }
 
-    enum MsgType {
-        CLB_ZOOM_IN, CLB_ZOOM_OUT, CLB_REDRAW, CLB_MOVE, CLB_BUTTON_UP, CLB_BUTTON_DOWN, CLB_SET_DESTINATION,
-        CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_COUNTRY_CHOOSER, CLB_LOAD_MAP, CLB_UNLOAD_MAP, CLB_DELETE_MAP
-    }
-
-    private static final MsgType[] msg_values = MsgType.values();
-
-    private static class CallBackHandler extends Handler {
-        public void handleMessage(Message msg) {
-            switch (msg_values[msg.what]) {
-                case CLB_ZOOM_IN:
-                    callbackMessageChannel(1, "");
-                    break;
-                case CLB_ZOOM_OUT:
-                    callbackMessageChannel(2, "");
-                    break;
-                case CLB_MOVE:
-                    //motionCallback(mMotionCallbackID, msg.getData().getInt("x"), msg.getData().getInt("y"));
-                    break;
-                case CLB_SET_DESTINATION:
-                    String lat = Float.toString(msg.getData().getFloat("lat"));
-                    String lon = Float.toString(msg.getData().getFloat("lon"));
-                    String q = msg.getData().getString(("q"));
-                    callbackMessageChannel(3, lat + "#" + lon + "#" + q);
-                    break;
-                case CLB_SET_DISPLAY_DESTINATION:
-                    int x = msg.arg1;
-                    int y = msg.arg2;
-                    callbackMessageChannel(4, "" + x + "#" + y);
-                    break;
-                case CLB_CALL_CMD:
-                    String cmd = msg.getData().getString(("cmd"));
-                    callbackMessageChannel(5, cmd);
-                    break;
-                case CLB_BUTTON_UP:
-                    //buttonCallback(mButtonCallbackID, 0, 1, msg.getData().getInt("x"), msg.getData().getInt("y"));
-                    break;
-                case CLB_BUTTON_DOWN:
-                    //buttonCallback(mButtonCallbackID, 1, 1, msg.getData().getInt("x"), msg.getData().getInt("y"));
-                    break;
-                case CLB_COUNTRY_CHOOSER:
-                    break;
-                case CLB_LOAD_MAP:
-                    callbackMessageChannel(6, msg.getData().getString(("title")));
-                    break;
-                case CLB_DELETE_MAP:
-                    //unload map before deleting it !!!
-                    callbackMessageChannel(7, msg.getData().getString(("title")));
-                    //remove commentlines below after testing
-                    //File toDelete = new File(msg.getData().getString(("title")));
-                    //toDelete.delete();
-                    NavitUtils.removeFileIfExists(msg.getData().getString(("title")));
-                    break;
-                case CLB_UNLOAD_MAP:
-                    callbackMessageChannel(7, msg.getData().getString(("title")));
-                    break;
-                case CLB_REDRAW:
-                default:
-                    Log.d(TAG, "Unhandled callback : " + msg_values[msg.what]);
-            }
-        }
-    }
-
 
     private native void sizeChangedCallback(long id, int x, int y);
 
@@ -678,13 +642,11 @@ class NavitGraphics {
 
     private native void keypressCallback(long id, String s);
 
-    private static native int callbackMessageChannel(int i, String s);
-
     private native void buttonCallback(long id, int pressed, int button, int x, int y);
 
     private native void motionCallback(long id, int x, int y);
 
-    private native String getCoordForPoint(int x, int y, boolean absolutCoord);
+    private native String getCoordForPoint(int x, int y, boolean absoluteCoord);
 
     static native String[][] getAllCountries();
 
@@ -774,8 +736,6 @@ class NavitGraphics {
          * All system bar sizes are device defaults and do not change with rotation, but we have
          * to figure out which ones apply.
          *
-         * Status bar visibility is as on API 20-22.
-         *
          * The navigation bar is shown on devices that report they have no physical menu button. This seems to
          * work even on devices that allow disabling the physical buttons (and use the navigation bar, in which
          * case they report no physical menu button is available; tested with a OnePlus One running CyanogenMod)
@@ -833,6 +793,7 @@ class NavitGraphics {
      *
      * <p>Note that this method is not aware of non-standard mechanisms on some customized builds of Android</p>
      */
+    @SuppressWarnings("unused")
     boolean hasMenuButton() {
         if (Build.VERSION.SDK_INT <= 10) {
             return true;
@@ -845,30 +806,36 @@ class NavitGraphics {
         }
     }
 
+    @SuppressWarnings("unused")
     void setSizeChangedCallback(long id) {
         mSizeChangedCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setPaddingChangedCallback(long id) {
         mPaddingChangedCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setButtonCallback(long id) {
         Log.v(TAG,"set Buttononcallback");
         mButtonCallbackID = id;
     }
 
+    @SuppressWarnings("unused")
     void setMotionCallback(long id) {
         mMotionCallbackID = id;
         Log.v(TAG,"set Motioncallback");
     }
 
+    @SuppressWarnings("unused")
     void setKeypressCallback(long id) {
         Log.v(TAG,"set Keypresscallback");
         mKeypressCallbackID = id;
     }
 
 
+    @SuppressWarnings("unused")
     protected void draw_polyline(Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
@@ -943,7 +910,8 @@ class NavitGraphics {
         mDrawCanvas.drawPath(path, paint);
     }
 
-    protected void draw_polygon(Paint paint, int[] c) {
+    @SuppressWarnings("unused")
+    protected void (Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
         paint.setStyle(Paint.Style.FILL);
@@ -958,6 +926,7 @@ class NavitGraphics {
         mDrawCanvas.drawPath(path, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_rectangle(Paint paint, int x, int y, int w, int h) {
         Rect r = new Rect(x, y, x + w, y + h);
         paint.setStyle(Paint.Style.FILL);
@@ -966,11 +935,13 @@ class NavitGraphics {
         mDrawCanvas.drawRect(r, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_circle(Paint paint, int x, int y, int r) {
         paint.setStyle(Paint.Style.STROKE);
         mDrawCanvas.drawCircle(x, y, r / 2, paint);
     }
 
+    @SuppressWarnings("unused")
     protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy, int bgcolor) {
         int oldcolor = paint.getColor();
         Path path = null;
@@ -1021,11 +992,6 @@ class NavitGraphics {
      * @param p2x and p2y   specifying the bottom left point, not yet used but kept
      *                      for compatibility with the linux port
      * @param bitmap    Bitmap object holding the image to draw
-     *
-     * TODO make it work with 4 points specified to make it work for 3D mapview, so it can be used
-     *      for small but very detailed maps as well as for large maps with very little detail but large
-     *      coverage.
-     * TODO make it work with rectangular tiles as well ?
      */
     protected void draw_image_warp(Paint paint, int count, int p0x, int p0y, int p1x, int p1y, int p2x, int p2y,
             Bitmap bitmap) {
@@ -1057,6 +1023,7 @@ class NavitGraphics {
     /* Used by the pedestrian plugin, draws without a mapbackground */
     private static final int DRAW_MODE_BEGIN_CLEAR = 2;
 
+    @SuppressWarnings("unused")
     protected void draw_mode(int mode) {
         if (mode == DRAW_MODE_END) {
             if (mParentGraphics == null) {
@@ -1071,18 +1038,18 @@ class NavitGraphics {
 
     }
 
+    @SuppressWarnings("unused")
     protected void draw_drag(int x, int y) {
         mPosX = x;
         mPosY = y;
     }
 
+    @SuppressWarnings("unused")
     protected void overlay_disable(int disable) {
         Log.v(TAG,"overlay_disable: " + disable + ", Parent: " + (mParentGraphics != null));
-        // assume we are NOT in map view mode!
-        // but this backfires when dragging the map
         if (mParentGraphics == null) {
             sInMap = (disable == 0);
-            workAroundForGuiInternal(sInMap);
+            workAroundForGuiInternal();
         }
         if (mOverlayDisabled != disable) {
             mOverlayDisabled = disable;
@@ -1092,30 +1059,23 @@ class NavitGraphics {
         }
     }
 
-    private void workAroundForGuiInternal(Boolean inMap) {
+    private void workAroundForGuiInternal() {
         if (!mTinting) {
             return;
         }
         Log.v(TAG,"workaround gui internal");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !inMap) {
-            mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !inMap) {
+        if (!sInMap && !mView.isDrag() && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
     }
 
+    @SuppressWarnings("unused")
     protected void overlay_resize(int x, int y, int w, int h, int wraparound) {
         mDrawBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mBitmapWidth = w;

@@ -1,5 +1,5 @@
 Display Options
----------------
+===============
 The Navit display is highly customisable and consists of the following components
 
 * Graphics driver (appropriate engine for your system, to draw everything)
@@ -31,9 +31,10 @@ They can be activated and configured as following:
 
 .. code-block:: xml
 
- <graphics type="gtk_drawing_area"/>
+	<graphics type="gtk_drawing_area" />
 
-As mentioned, it's usually best to leave this as whatever the default is within your :xml:`navit.xml`, and only mess around with it if you know what you are doing, or have been told to by one of the developers.
+
+As mentioned, it's usually best to leave this as whatever the default is within your `navit.xml`, and only mess around with it if you know what you are doing, or have been told to by one of the developers.
 
 Graphical User Interface
 ------------------------
@@ -56,11 +57,11 @@ There are some options available for the ``gui`` tag which are used by all the G
 * **pitch** - The pitch value to pitch the map to when selecting 3D mode from the menus.
 * **dimensions** - w="1024" h="600"
 
-The following example uses the :xml:`internal` GUI, and starts Navit up in fullscreen mode, and will pitch the map to 35 degrees when 3D mode is selected from the menu. Note that to start Navit in 3D mode by default, [[#Initial 3D pitch|change the :xml:`pitch` value in the :xml:`navit` tag]]:
+The following example uses the `internal` GUI, and starts Navit up in fullscreen mode, and will pitch the map to 35 degrees when 3D mode is selected from the menu. Note that to start Navit in 3D mode by default, [[#Initial 3D pitch|change the `pitch` value in the `navit` tag]]:
 
 .. code-block:: xml
 
- <gui type="internal" enabled="yes" fullscreen="1" pitch="35">
+	<gui type="internal" enabled="yes" fullscreen="1" pitch="35">
 
 Internal GUI
 ~~~~~~~~~~~~
@@ -68,7 +69,7 @@ The first GUI is embedded in Navit core and is primarily aimed at [[touchscreen]
 
 .. code-block:: xml
 
- <gui type="internal" enabled="yes">
+	<gui type="internal" enabled="yes">
 
 Options
 ^^^^^^^
@@ -84,7 +85,7 @@ An example ``gui`` tag using the previous options is shown below:
 
 .. code-block:: xml
 
- <gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64">
+	<gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64">
 
 More options are discussed on the [[Internal Gui]] and the [[Configuration/Full_list_of_options|full list of options]].
 
@@ -94,7 +95,7 @@ The second GUI is called **gtk**, and is most useful for those users who wish to
 
 .. code-block:: xml
 
- <gui type="gtk" enabled="yes" ... />
+  <gui type="gtk" enabled="yes" />
 
 
 Options
@@ -108,4 +109,4 @@ A number of options specific to the ``gtk`` GUI are available. These include:
 
 .. code-block:: xml
 
- <gui type="gtk" enabled="yes" menubar="1" toolbar="1" statusbar="1"/>
+	<gui type="gtk" enabled="yes" menubar="1" toolbar="1" statusbar="1"/>

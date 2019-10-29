@@ -616,7 +616,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         msgdata = (struct item_msg_priv *) msglist->data;
         if (msgdata->speed < speed)
             speed = msgdata->speed;
-        if (msgdata->delay < delay)
+        if (msgdata->delay > delay)
             delay = msgdata->delay;
         /* TODO attrs */
     }
@@ -3651,7 +3651,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     }
                     if (map_item) {
                         pitem->is_matched = 1;
-                        for (i = 1; i < ccnt; i++)
+                        for (i = 1; i < pitem->coord_count; i++)
                             pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
                         loc_len += pitem->length;
                     }
