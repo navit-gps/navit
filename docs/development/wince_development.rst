@@ -4,13 +4,13 @@ WinCE Development
 
 This is a tutorial for Navit on WinCE/WinMobile. If want just want to download a cab file see [[WinCE]].
 
-This page explains how to build Navit for WinCE/WinMobile with `cegcc <http://cegcc.sourceforge.net>`_.
+This page explains how to build Navit for WinCE/WinMobile with `cegcc <http://cegcc.sourceforge.net>`.
 
 In November 2009 versions compiled using arm-cegcc-gcc (both revision 1214 and release 0.59.1) had problems (threw exception_datatype_misalignment and caused access violations).
 
 Using the variant arm-mingw32ce of CeGCC 0.59.1 it was possible to build a working executable which can be debugged.
 
-The automatic builds from the subversion repository seem to use an adjusted? version arm-wince-mingw32ce (see `build logs <http://download.navit-project.org/logs/navit/wince/svn>`_).
+The automatic builds from the subversion repository seem to use an adjusted? version arm-wince-mingw32ce (see `build logs <http://download.navit-project.org/logs/navit/wince/svn>`).
 
 Building using arm-mingw32ce
 ============================
@@ -81,7 +81,7 @@ Building using arm-cegcc
 Building cegcc
 --------------
 
-Set the install path to where you want to install `cegcc <http://cegcc.sourceforge.net cegcc>`_:
+Set the install path to where you want to install `cegcc <http://cegcc.sourceforge.net cegcc>`:
 
 .. code-block:: bash
 
@@ -144,7 +144,7 @@ The current versions of these libs don't need many changes, but they all don't k
              | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
 
 zlib
-''''
+^^^^
 
 .. code-block:: bash
 
@@ -157,7 +157,7 @@ zlib
     make install
 
 libiconv
-''''''''
+^^^^^^^^
 
 
 .. code-block:: bash
@@ -171,7 +171,7 @@ libiconv
     make install
 
 gettext
-'''''''
+^^^^^^^
 
 workaround for `plural-eval.h:50: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'sigfpe_exit'`
 extend gettext-tools/src/plural-eval.h line 32 to `#if defined _MSC_VER || defined __MINGW32__ || defined __CEGCC__`
@@ -189,7 +189,7 @@ dito for gettext-tools/gnulib-lib/wait-process.c line 31
     make install
 
 libpng
-''''''
+^^^^^^
 
 .. code-block:: bash
 
@@ -202,9 +202,9 @@ libpng
     make install
 
 libtiff
-'''''''
+^^^^^^^
 
-.. code-block:: bash
+.. code-block::
 
  libtool: link: CURRENT `' must be a nonnegative integer
 
@@ -220,9 +220,9 @@ libtiff
     make install
 
 glib
-''''
+^^^^
 
-.. code-block:: bash
+.. code-block::
 
  gatomic.c:570: Error: no such instruction: `swp %eax,%eax,[%esi]'
 

@@ -49,7 +49,7 @@ You can also try the ebuild in the overlay : [sunrise overlay](http://www.gentoo
 based on the svn to have the latest version of navit.
 
 Debian / Ubuntu dependencies
--------------------
+----------------------------
 
 It compiles flawlessly on a Lenny (5.0) or later and on `Ubuntu 12.04 LTS` (Precise Pangolin) or later, once all dependencies installed.
 
@@ -59,23 +59,24 @@ Absolute minimum requirements:
 
 .. code-block:: bash
 
-    gcc cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin
+	gcc cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin
 
 Note that not all these packages are strictly required (for example, maptool can be built without installing GTK+),
 but this is the smallest practical set of packages if you want to run Navit.
- * Translations for the user interface: `gettext`
- * Maptool: `protobuf-c-compiler  libprotobuf-c-dev`
- * GTK+ is included in minimum requirements. `libimlib2-dev` is needed to enable draw_image_warp function which, in turn
-   allows to use raster maps as discussed in [track #1285](http://trac.navit-project.org/ticket/1285)
- * SDL: `libsdl-image1.2-dev libdevil-dev libglc-dev freeglut3-dev libxmu-dev libfribidi-dev`
- * OpenGL graphics: `libglc-dev freeglut3-dev libgl1-mesa-dev libxft-dev libglib2.0-dev libfreeimage-dev`
- * QT: `libqt4-dev` (This package will pull in all the required packages as dependencies.)
- * gpsd: `gpsd gpsd-clients libgps-dev` (optional, but certainly nice to have)
- * espeak: `espeak` (optional)
- * speechd: `libspeechd-dev` (optional, you are better off with using espeak)
- * dbus: `libdbus-glib-1-dev` (optional, you most likely don't need this.)
- * python: `python-dev` (optional, you most likely don't need this.)
- * saxon: `libsaxonb-java` (only required for android)
+
+  * Translations for the user interface: `gettext`
+  * Maptool: `protobuf-c-compiler  libprotobuf-c-dev`
+  * GTK+ is included in minimum requirements. `libimlib2-dev` is needed to enable draw_image_warp function which, in turn
+    allows to use raster maps as discussed in [track #1285](http://trac.navit-project.org/ticket/1285)
+  * SDL: `libsdl-image1.2-dev libdevil-dev libglc-dev freeglut3-dev libxmu-dev libfribidi-dev`
+  * OpenGL graphics: `libglc-dev freeglut3-dev libgl1-mesa-dev libxft-dev libglib2.0-dev libfreeimage-dev`
+  * QT: `libqt4-dev` (This package will pull in all the required packages as dependencies.)
+  * gpsd: `gpsd gpsd-clients libgps-dev` (optional, but certainly nice to have)
+  * espeak: `espeak` (optional)
+  * speechd: `libspeechd-dev` (optional, you are better off with using espeak)
+  * dbus: `libdbus-glib-1-dev` (optional, you most likely don't need this.)
+  * python: `python-dev` (optional, you most likely don't need this.)
+  * saxon: `libsaxonb-java` (only required for android)
 
 Everything in one command:
 

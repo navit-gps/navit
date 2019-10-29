@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -211,6 +211,7 @@ struct attr_bin * item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type
 struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
+void item_bin_add_hole(struct item_bin * ib, struct coord * coord, int ccount);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
 void item_bin_remove_attr(struct item_bin *ib, void *ptr);
 void item_bin_write(struct item_bin *ib, FILE *out);
@@ -231,6 +232,10 @@ struct item_bin *read_item(FILE *in);
 struct item_bin *read_item_range(FILE *in, int *min, int *max);
 struct item_bin *init_item(enum item_type type);
 extern struct item_bin *tmp_item_bin;
+
+/* itembin_slicer.c */
+void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *reference, char * buffer, int min);
+
 
 /* maptool.c */
 
@@ -422,6 +427,14 @@ int zip_get_zipnum(struct zip_info *info);
 void zip_set_zipnum(struct zip_info *info, int num);
 void zip_close(struct zip_info *info);
 void zip_destroy(struct zip_info *info);
+
+/* osm.c */
+int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+                                     int *** sequences,
+                                     int **direction);
+int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+                                    struct coord *  buffer);
+int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence);
 
 /* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to GHashTable's */
 struct maptool_force_64 {

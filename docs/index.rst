@@ -1,5 +1,6 @@
+###################
 Navit's User Manual
-===================
+###################
 
 This document is the official User Manual for `Navit`__,
 the OpenSource vector based navigation software.
@@ -21,14 +22,15 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 .. image:: navit.png
 
 .. toctree::
-    :hidden:
-    :glob:
-    :numbered:
-    :maxdepth: 2
-    :caption: Navit's user manual
+   :hidden:
+   :glob:
+   :numbered:
+   :maxdepth: 2
+   :caption: Navit's user manual
 
-    basic_configuration
-    maps
+   basic_configuration
+   maps
+   configuration/index
 
 
 .. Indices and tables
@@ -45,6 +47,7 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    :glob:
    :caption: Navit's developer documentation
 
+   development/changelog_wrapper
    development/programming_guidelines
    development/commit_guidelines
    development/linux_development
