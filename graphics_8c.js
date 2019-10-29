@@ -12,6 +12,7 @@ var graphics_8c =
     [ "draw_polyline_context", "structdraw__polyline__context.html", "structdraw__polyline__context" ],
     [ "wpoint", "structwpoint.html", "structwpoint" ],
     [ "displaylist_handle", "structdisplaylist__handle.html", "structdisplaylist__handle" ],
+    [ "ALLOCA_COORD_LIMIT", "graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2", null ],
     [ "HASH_SIZE", "graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95", null ],
     [ "clip_result", "graphics_8c.html#addcc850218c3d42c66cecf11d1414e70", [
       [ "CLIPRES_INVISIBLE", "graphics_8c.html#addcc850218c3d42c66cecf11d1414e70aca130ef3969cfef42f2a75163db40a89", null ],

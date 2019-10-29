@@ -37,6 +37,7 @@ var item_8h =
     [ "item_coord_is_node", "item_8h.html#afba64e56910719c067affad47d2df767", null ],
     [ "item_coord_rewind", "item_8h.html#a85c6c9f9f373337b634bfec5b2a626cd", null ],
     [ "item_coord_set", "item_8h.html#a3303e95f0c2dff01ab8dc3389e44a4ec", null ],
+    [ "item_coords_left", "item_8h.html#a4f9c8ed8f4e9d138313e918f4d9cda2d", null ],
     [ "item_create_hash", "item_8h.html#a977d38291fd40708b38a49cf28049459", null ],
     [ "item_destroy_hash", "item_8h.html#aff98971006a3131f5c6710bffec6b43e", null ],
     [ "item_dump_attr", "item_8h.html#a0bb3cafc74e38dbdefe65d285ae8aade", null ],

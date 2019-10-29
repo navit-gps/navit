@@ -116,6 +116,7 @@ var searchData=
   ['item_5fcoord_5fis_5fnode',['item_coord_is_node',['../structitem__methods.html#ab1ca673efa14710234cc8dd9b37f4331',1,'item_methods']]],
   ['item_5fcoord_5frewind',['item_coord_rewind',['../structitem__methods.html#a105ebcb60d49d7a09dbd60f474a3861e',1,'item_methods']]],
   ['item_5fcoord_5fset',['item_coord_set',['../structitem__methods.html#abd52ab471b70e90a24c8cf0599aa59fe',1,'item_methods']]],
+  ['item_5fcoords_5fleft',['item_coords_left',['../structitem__methods.html#a455a20503bbcf7a2969c07b557f56284',1,'item_methods']]],
   ['item_5fcount',['item_count',['../garmin__img_8c.html#a989b22f8aac43b2f5bcec1d96de0d32f',1,'garmin_img.c']]],
   ['item_5fdefault_5fflags_5fvalue',['item_default_flags_value',['../traffic_8c.html#ae192f7674614a331b96f169924a59d4a',1,'traffic.c']]],
   ['item_5ffree',['item_free',['../structquadtree__iter.html#ad9541c12a0a090740992a98839dd2a76',1,'quadtree_iter']]],

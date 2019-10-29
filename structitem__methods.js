@@ -7,5 +7,6 @@ var structitem__methods =
     [ "item_coord_is_node", "structitem__methods.html#ab1ca673efa14710234cc8dd9b37f4331", null ],
     [ "item_coord_rewind", "structitem__methods.html#a105ebcb60d49d7a09dbd60f474a3861e", null ],
     [ "item_coord_set", "structitem__methods.html#abd52ab471b70e90a24c8cf0599aa59fe", null ],
+    [ "item_coords_left", "structitem__methods.html#a455a20503bbcf7a2969c07b557f56284", null ],
     [ "item_type_set", "structitem__methods.html#a56d5cb25c442d5d4fcf07274a306ca69", null ]
 ];

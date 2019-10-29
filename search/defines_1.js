@@ -46,6 +46,7 @@ var searchData=
   ['af_5funpaved',['AF_UNPAVED',['../attr_8h.html#a5d09822bd68aeba182a78f23d368c3fb',1,'attr.h']]],
   ['al12',['al12',['../geodesic_8h.html#a3a27eef0e063984374fe80917c3d8587',1,'geodesic.h']]],
   ['al21',['al21',['../geodesic_8h.html#a1fab1f431a0877304f954a12abfab00d',1,'geodesic.h']]],
+  ['alloca_5fcoord_5flimit',['ALLOCA_COORD_LIMIT',['../graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2',1,'graphics.c']]],
   ['applicationframe',['applicationFrame',['../graphics__cocoa_8m.html#ab734d38a5aee1ccab2ef9c3613e277af',1,'graphics_cocoa.m']]],
   ['asind',['asind',['../sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7',1,'sunriset.h']]],
   ['astronomical_5ftwilight',['astronomical_twilight',['../sunriset_8h.html#add9e41b2709b3851d453aaa9aa0c662a',1,'sunriset.h']]],

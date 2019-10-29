@@ -18,6 +18,7 @@ var binfile_8c =
     [ "binfile_coord_left", "binfile_8c.html#a5e799e9ebaaf7f642e5ad42cdd5038cf", null ],
     [ "binfile_coord_rewind", "binfile_8c.html#a1a7c87a36120cbb578edfc1a675369b7", null ],
     [ "binfile_coord_set", "binfile_8c.html#a5ca94ecf4c25a3e89455d45128976658", null ],
+    [ "binfile_coords_left", "binfile_8c.html#a707f4ebeb2a2998ab71ded5cac808768", null ],
     [ "binfile_extract", "binfile_8c.html#a392ae1d1c227b9cd59c749c6eb150a13", null ],
     [ "binfile_get_index", "binfile_8c.html#a59245b14f209b3d51817b32390b1204f", null ],
     [ "binfile_hash_entry_equal", "binfile_8c.html#a931175ee74938bbccac6182795326f37", null ],

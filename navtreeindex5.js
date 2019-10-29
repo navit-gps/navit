@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classNGQProxyVehicle.html#a2eedd20d95b2024eb71ae10a734eb9d2":[2,0,256,0],
 "classNGQProxyVehicle.html#a41c6bbaf49cac5f564a2752497548756":[2,0,256,1],
 "classNGQProxyVehicle.html#a6190fe886f94215555c816bddc5500e9":[2,0,256,4],
 "classNGQProxyVehicle.html#aafc5a11c4f896b0574208726979fa819":[2,0,256,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4138b0f525cc9ed2ee0af8e3ce0eaa0a":[2,0,0,0,0,3,19],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a4938b8d2e020022acc5d39dcfcbafe81":[2,0,0,0,0,3,16],
 "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a544f74de6d901fdca210e29b888c9a3c":[2,0,0,0,0,3,23],
-"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6b0f817575277d41c7f6553a320087c9":[2,0,0,0,0,3,26],
-"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6dfb7ab51e346941748da59ede4d21f8":[2,0,0,0,0,3,7]
+"classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html#a6b0f817575277d41c7f6553a320087c9":[2,0,0,0,0,3,26]
 };

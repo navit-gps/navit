@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#aac368e8db01e973c902d4abfdca07f76":[2,0,0,0,0,12,0,4],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#abd2833ff3120b90cc77e07aa9918449e":[2,0,0,0,0,12,0,9],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html":[2,0,0,0,0,13],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html#a078f0ac39c88f303c3f77e9883b299ee":[2,0,0,0,0,13,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "common_8h.html#a321a9dadab68f7de5852bc9d93404e67":[3,0,2,1,2,12],
 "common_8h.html#a6bb1ff01fab2f8a8bb023f584a5aa272":[3,0,2,1,2,0],
 "common_8h.html#a732860c0a087a4e6e7d81928864f4afb":[3,0,2,1,2,9],
-"common_8h.html#a770ddde01fbc685d1e5d2790159142f2":[3,0,2,1,2,16],
-"common_8h.html#a79614554b509115989b07ae3659c69d7":[3,0,2,1,2,7]
+"common_8h.html#a770ddde01fbc685d1e5d2790159142f2":[3,0,2,1,2,16]
 };

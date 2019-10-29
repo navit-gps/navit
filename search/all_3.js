@@ -103,6 +103,7 @@ var searchData=
   ['al21',['al21',['../geodesic_8h.html#a1fab1f431a0877304f954a12abfab00d',1,'geodesic.h']]],
   ['align',['align',['../structodometer.html#ac055ecfa93276bc3231d044f4afcf702',1,'odometer::align()'],['../structosd__text.html#ae710da7d85a3dd062af700bba658bc53',1,'osd_text::align()']]],
   ['alloc',['Alloc',['../speak_8c.html#aa279b4ebb6707b7d3224cae69f2cc072',1,'speak.c']]],
+  ['alloca_5fcoord_5flimit',['ALLOCA_COORD_LIMIT',['../graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2',1,'graphics.c']]],
   ['allocate',['allocate',['../browserplugin_8c.html#a4699bb4a398d8a9e43bdfc3614a18f16',1,'browserplugin.c']]],
   ['allocate_5fnode_5fitem_5fin_5fbuffer',['allocate_node_item_in_buffer',['../osm_8c.html#a08beb6f898ae370f6a45f52b3d381f09',1,'osm.c']]],
   ['allocated',['allocated',['../structresult.html#a6777d099c9b2e32c56566766bfa4d562',1,'result']]],
