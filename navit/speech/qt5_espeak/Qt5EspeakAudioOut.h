@@ -46,6 +46,7 @@ signals:
     void call_resume(int state);
 
 protected:
+    /* None */
 
 private:
     /* internal buffer */
