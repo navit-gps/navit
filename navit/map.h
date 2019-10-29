@@ -89,8 +89,7 @@ struct map_methods {
 	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /**< Function to get the next item of a search on the map, ignored if `map_search_new` is NULL */
 	struct item *		(*map_rect_create_item)(struct map_rect_priv *mr, enum item_type type); /**< Function to create a new item in the map */
 	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr); /**< Function to get a map attribute, can be NULL */
-        int			(*map_set_attr)(struct map_priv *priv, struct attr *attr); /**< Function to set a map attribute, can be NULL */
-
+    int			(*map_set_attr)(struct map_priv *priv, struct attr *attr); /**< Function to set a map attribute, can be NULL */
 };
 
 /**

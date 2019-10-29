@@ -16,7 +16,6 @@ protected:
 	void dropIterFunc(struct attr_iter* iter) { vehicle_attr_iter_destroy(iter); };
 
 private:
-
 };
 
 #include "vehicleProxy.moc"
