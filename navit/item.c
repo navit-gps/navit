@@ -165,6 +165,22 @@ int item_coord_get(struct item *it, struct coord *c, int count) {
 }
 
 /**
+ * @brief Gets the number of coordinates left for this item
+ *
+ * This function returnes the number of coordinates left to get for this item. It does not
+ * change the "coordinates pointer".
+ *
+ * @param it The map item
+ * @returns The number of coordinates left. -1 if not supported by the actual map.
+ */
+int item_coords_left(struct item * it) {
+    if(!it->meth->item_coords_left) {
+        return (-1);
+    }
+    return it->meth->item_coords_left(it->priv_data);
+}
+
+/**
  * @brief Sets coordinates of an item
  *
  * This function supports different modes:
@@ -195,32 +211,61 @@ int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode
     return it->meth->item_coord_set(it->priv_data, c, count, mode);
 }
 
+/**
+ * @brief Get coordinates within selection
+ * This function returns the coordinates of an item if at least one coordinate of that item is inside the
+ * selection. If the given buffer is too small, it returns the buffer size if at least one coordinate
+ * intersects with the selection, otherwise it returnes 0
+ *
+ * If the return value equals count, the content of c is undefined.
+ *
+ * @param it requested item
+ * @param c preallocated buffer for the result
+ * @param count number of coordinates in c
+ * @param sel current map selection
+ * @return number of coordinates read to c, or count if out of space, or 0 if not intersecting, or <0 on read error.
+ */
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel) {
-    int i,ret=it->meth->item_coord_get(it->priv_data, c, count);
-    struct coord_rect r;
-    struct map_selection *curr;
-    if (ret <= 0 || !sel)
-        return ret;
-    r.lu=c[0];
-    r.rl=c[0];
-    for (i = 1 ; i < ret ; i++) {
-        if (r.lu.x > c[i].x)
-            r.lu.x=c[i].x;
-        if (r.rl.x < c[i].x)
-            r.rl.x=c[i].x;
-        if (r.rl.y > c[i].y)
-            r.rl.y=c[i].y;
-        if (r.lu.y < c[i].y)
-            r.lu.y=c[i].y;
-    }
-    curr=sel;
-    while (curr) {
-        struct coord_rect *sr=&curr->u.c_rect;
-        if (r.lu.x <= sr->rl.x && r.rl.x >= sr->lu.x &&
-                r.lu.y >= sr->rl.y && r.rl.y <= sr->lu.y)
+    int read;
+    do {
+        int i,ret=0;
+        struct coord_rect r;
+        struct map_selection *curr;
+
+        /* get coordinates from map */
+        read=item_coord_get(it, c, count);
+        /* remember the result of the first read */
+        if(ret == 0)
+            ret=read;
+        /* nothing read, or no selection. Default to "intersects" if no selection */
+        if (read <= 0 || !sel)
             return ret;
-        curr=curr->next;
-    }
+
+        /* calculate bbox of returned coordinates */
+        r.lu=c[0];
+        r.rl=c[0];
+        for (i = 1 ; i < read ; i++) {
+            if (r.lu.x > c[i].x)
+                r.lu.x=c[i].x;
+            if (r.rl.x < c[i].x)
+                r.rl.x=c[i].x;
+            if (r.rl.y > c[i].y)
+                r.rl.y=c[i].y;
+            if (r.lu.y < c[i].y)
+                r.lu.y=c[i].y;
+        }
+
+        /* check if bbox intersects with selection */
+        curr=sel;
+        while (curr) {
+            struct coord_rect *sr=&curr->u.c_rect;
+            if (r.lu.x <= sr->rl.x && r.rl.x >= sr->lu.x &&
+                    r.lu.y >= sr->rl.y && r.rl.y <= sr->lu.y)
+                return ret;
+            curr=curr->next;
+        }
+        /* if not already intersecting, and the buffer is too small, read the remaining coordinates */
+    } while ((count !=1) && (read == count));
     return 0;
 }
 
