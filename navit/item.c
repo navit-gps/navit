@@ -226,47 +226,54 @@ int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode
  * @return number of coordinates read to c, or count if out of space, or 0 if not intersecting, or <0 on read error.
  */
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel) {
-    int read;
-    do {
-        int i,ret=0;
-        struct coord_rect r;
+    int in_coords;
+    int ret = 0;
+    struct coord_rect bbox;
+    int intersects=0;
+
+    /* scan all coordinates. Even if buffer is too small */
+    while ((in_coords=item_coord_get(it, c, count)) > 0) {
+        int i;
         struct map_selection *curr;
-
-        /* get coordinates from map */
-        read=item_coord_get(it, c, count);
-        /* remember the result of the first read */
-        if(ret == 0)
-            ret=read;
-        /* nothing read, or no selection. Default to "intersects" if no selection */
-        if (read <= 0 || !sel)
-            return ret;
-
-        /* calculate bbox of returned coordinates */
-        r.lu=c[0];
-        r.rl=c[0];
-        for (i = 1 ; i < read ; i++) {
-            if (r.lu.x > c[i].x)
-                r.lu.x=c[i].x;
-            if (r.rl.x < c[i].x)
-                r.rl.x=c[i].x;
-            if (r.rl.y > c[i].y)
-                r.rl.y=c[i].y;
-            if (r.lu.y < c[i].y)
-                r.lu.y=c[i].y;
+        /* update ret */
+        if(ret == 0) {
+            ret=in_coords;
+            /* init bbox */
+            bbox.lu=c[0];
+            bbox.rl=c[0];
         }
 
-        /* check if bbox intersects with selection */
+        /* update bbox */
+        for (i = 0 ; i < in_coords ; i++) {
+            if (bbox.lu.x > c[i].x)
+                bbox.lu.x=c[i].x;
+            if (bbox.rl.x < c[i].x)
+                bbox.rl.x=c[i].x;
+            if (bbox.rl.y > c[i].y)
+                bbox.rl.y=c[i].y;
+            if (bbox.lu.y < c[i].y)
+                bbox.lu.y=c[i].y;
+        }
+        /* check if bbox intersects already with selection */
         curr=sel;
-        while (curr) {
+        while ((!intersects) && (curr)) {
             struct coord_rect *sr=&curr->u.c_rect;
-            if (r.lu.x <= sr->rl.x && r.rl.x >= sr->lu.x &&
-                    r.lu.y >= sr->rl.y && r.rl.y <= sr->lu.y)
-                return ret;
+            if (bbox.lu.x <= sr->rl.x && bbox.rl.x >= sr->lu.x &&
+                    bbox.lu.y >= sr->rl.y && bbox.rl.y <= sr->lu.y)
+                intersects=1;
             curr=curr->next;
         }
-        /* if not already intersecting, and the buffer is too small, read the remaining coordinates */
-    } while ((count !=1) && (read == count));
-    return 0;
+
+        /* abort on the special case to read only one coord. */
+        if(count == 1)
+            break;
+        /* we can abort if already intersecting. */
+        if(intersects)
+            break;
+    }
+    if(!intersects)
+        ret=0;
+    return ret;
 }
 
 /**
