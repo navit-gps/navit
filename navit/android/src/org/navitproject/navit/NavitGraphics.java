@@ -911,7 +911,7 @@ class NavitGraphics {
     }
 
     @SuppressWarnings("unused")
-    protected void (Paint paint, int[] c) {
+    protected void draw_polygon(Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
         paint.setARGB(c[1],c[2],c[3],c[4]);
         paint.setStyle(Paint.Style.FILL);
