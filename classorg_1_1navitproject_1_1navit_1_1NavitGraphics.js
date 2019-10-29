@@ -1,13 +1,10 @@
 var classorg_1_1navitproject_1_1navit_1_1NavitGraphics =
 [
-    [ "CallBackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler" ],
-    [ "MsgType", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType" ],
     [ "NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView" ],
     [ "SystemBarTintView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1SystemBarTintView.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1SystemBarTintView" ],
     [ "NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af325c2735e2baed55f3a1b74984219db", null ],
     [ "adjustSystemBarsTintingViews", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a5ecc6e86e20219b67248a6ab75565e13", null ],
     [ "buttonCallback", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac32e9f99c74d524451498715ed9b01b4", null ],
-    [ "callbackMessageChannel", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a1ba64eca434da93114fcb941dd4fc42a", null ],
     [ "draw_circle", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a78acbebf4d2771da8da5148bfb12cfcd", null ],
     [ "draw_drag", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a8c7efb7914e1067ccca34f87b020abda", null ],
     [ "draw_image", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af73f2348b7da78e8229ce52ddfbfa039", null ],
@@ -66,14 +63,12 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics =
     [ "mPosY", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ab4e84ec5b30dc55c94a31f9c72aac4c7", null ],
     [ "mRelativeLayout", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a40798beeca1895cd5d55079370fe5426", null ],
     [ "mRightTintView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aae20959c0043d3e1e82fc5365db4f241", null ],
-    [ "msg_values", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a732552f18a7346b8eb3dd941b702b935", null ],
     [ "mSizeChangedCallbackID", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a4147156f7b643f1ae4597895ad5d2acc", null ],
     [ "mTinting", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae8bd41fa5087bc25b8e79504d8456a65", null ],
     [ "mTopTintView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a82cfa100647efc88f3c6a097721a3a66", null ],
     [ "mTrackballX", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a4a2f9fdc82acd9ddb43df8ce82e60dc8", null ],
     [ "mTrackballY", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a65cc69525557e2d8eb737e1118bd9147", null ],
     [ "mView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a72548b2d8a33344cafff3929d14ad306", null ],
-    [ "sCallbackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a0efdf996656572d86283459145f5b2d5", null ],
     [ "sInMap", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a46d89502543d7b24e9f1b5fe759c5eb9", null ],
     [ "TAG", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a980451d2d6bbfe18664c017a2a6763cc", null ],
     [ "TIME_FOR_LONG_PRESS", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a9b1253b5fe41143e327d1c5c7b98fdb3", null ]

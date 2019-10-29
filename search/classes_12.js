@@ -22,7 +22,6 @@ var searchData=
   ['speech',['speech',['../structspeech.html',1,'']]],
   ['speech_5fmethods',['speech_methods',['../structspeech__methods.html',1,'']]],
   ['speech_5fpriv',['speech_priv',['../structspeech__priv.html',1,'']]],
-  ['startupintent',['StartupIntent',['../classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html',1,'org::navitproject::navit::Navit']]],
   ['statusbar_5fpriv',['statusbar_priv',['../structstatusbar__priv.html',1,'']]],
   ['stopwatch',['stopwatch',['../structstopwatch.html',1,'']]],
   ['street_5fdata',['street_data',['../structstreet__data.html',1,'']]],

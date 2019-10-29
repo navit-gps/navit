@@ -43,6 +43,7 @@ var hierarchy =
     [ "cJSON", "structcJSON.html", null ],
     [ "cJSON_Hooks", "structcJSON__Hooks.html", null ],
     [ "cmd_interface", "structcmd__interface.html", null ],
+    [ "org.navitproject.navit.NavitCallbackHandler.CmdType", "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1CmdType.html", null ],
     [ "coastline_tile", "structcoastline__tile.html", null ],
     [ "coastline_tile_data", "structcoastline__tile__data.html", null ],
     [ "color", "structcolor.html", null ],
@@ -230,7 +231,7 @@ var hierarchy =
     [ "message", "structmessage.html", null ],
     [ "messagelist", "structmessagelist.html", null ],
     [ "mouse_event_queue_element", "structmouse__event__queue__element.html", null ],
-    [ "org.navitproject.navit.NavitGraphics.MsgType", "enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html", null ],
+    [ "org.navitproject.navit.NavitCallbackHandler.MsgType", "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html", null ],
     [ "multipolygon", "structmultipolygon.html", null ],
     [ "nav_next_turn", "structnav__next__turn.html", null ],
     [ "nav_toggle_announcer", "structnav__toggle__announcer.html", null ],
@@ -249,6 +250,7 @@ var hierarchy =
       [ "org.navitproject.navit.NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", null ]
     ] ],
     [ "org.navitproject.navit.NavitAddressSearchActivity.NavitAddress", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity_1_1NavitAddress.html", null ],
+    [ "org.navitproject.navit.NavitCallbackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler.html", null ],
     [ "org.navitproject.navit.NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html", null ],
     [ "org.navitproject.navit.NavitMap", "classorg_1_1navitproject_1_1navit_1_1NavitMap.html", null ],
     [ "navitObject", "structnavitObject.html", null ],
@@ -408,7 +410,6 @@ var hierarchy =
     [ "speech", "structspeech.html", null ],
     [ "speech_methods", "structspeech__methods.html", null ],
     [ "speech_priv", "structspeech__priv.html", null ],
-    [ "org.navitproject.navit.Navit.StartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html", null ],
     [ "statusbar_priv", "structstatusbar__priv.html", null ],
     [ "stopwatch", "structstopwatch.html", null ],
     [ "street_data", "structstreet__data.html", null ],
@@ -533,8 +534,8 @@ var hierarchy =
       [ "org.navitproject.navit.NavitDownloadSelectMapActivity", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html", null ]
     ] ],
     [ "Handler", null, [
+      [ "org.navitproject.navit.NavitCallbackHandler.CallBackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1CallBackHandler.html", null ],
       [ "org.navitproject.navit.NavitDialogs", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html", null ],
-      [ "org.navitproject.navit.NavitGraphics.CallBackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1CallBackHandler.html", null ],
       [ "org.navitproject.navit.NavitTimeout.TimeoutHandler", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout_1_1TimeoutHandler.html", null ],
       [ "org.navitproject.navit.NavitWatch.WatchHandler", "classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html", null ]
     ] ],

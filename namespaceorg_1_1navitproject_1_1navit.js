@@ -6,6 +6,7 @@ var namespaceorg_1_1navitproject_1_1navit =
     [ "NavitAddressSearchActivity", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity" ],
     [ "NavitAppConfig", "classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html", "classorg_1_1navitproject_1_1navit_1_1NavitAppConfig" ],
     [ "NavitBackupTask", "classorg_1_1navitproject_1_1navit_1_1NavitBackupTask.html", "classorg_1_1navitproject_1_1navit_1_1NavitBackupTask" ],
+    [ "NavitCallbackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler" ],
     [ "NavitCamera", "classorg_1_1navitproject_1_1navit_1_1NavitCamera.html", "classorg_1_1navitproject_1_1navit_1_1NavitCamera" ],
     [ "NavitDialogs", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs" ],
     [ "NavitDownloadSelectMapActivity", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity" ],

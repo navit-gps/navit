@@ -31,6 +31,6 @@ var searchData=
   ['message',['message',['../structmessage.html',1,'']]],
   ['messagelist',['messagelist',['../structmessagelist.html',1,'']]],
   ['mouse_5fevent_5fqueue_5felement',['mouse_event_queue_element',['../structmouse__event__queue__element.html',1,'']]],
-  ['msgtype',['MsgType',['../enumorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1MsgType.html',1,'org::navitproject::navit::NavitGraphics']]],
+  ['msgtype',['MsgType',['../enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html',1,'org::navitproject::navit::NavitCallbackHandler']]],
   ['multipolygon',['multipolygon',['../structmultipolygon.html',1,'']]]
 ];

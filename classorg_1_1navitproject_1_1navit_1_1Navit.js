@@ -1,14 +1,14 @@
 var classorg_1_1navitproject_1_1navit_1_1Navit =
 [
-    [ "StartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent.html", "classorg_1_1navitproject_1_1navit_1_1Navit_1_1StartupIntent" ],
     [ "buildNotification", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ad7a0de2f8dd825cc79b5157fd62097ca", null ],
     [ "createNotificationChannel", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8f687856757ee7fd4d023e2db393a0c6", null ],
     [ "disableSuspend", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a4546df5524adc32952ad2ef55e467932", null ],
     [ "extractAsset", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a1a83ea2f9750647b8667dca44d608049", null ],
     [ "extractRes", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aa2dad49dc0cb1fa820c948aef2f3568c", null ],
     [ "fullscreen", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6281ef3908ee038226097fda696176f7", null ],
+    [ "handleIntent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a74a28b341b9e18d03c9570cc199f0e89", null ],
     [ "hideNativeKeyboard", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ab6d1d09ee41af592a1f0421cea8a5eda", null ],
-    [ "invokeCallbackOnGeo", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a2dfb52ed0973acfee979217b7766bdf9", null ],
+    [ "invokeCallbackOnGeo", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8666183f663540c5c02cf5359a1be49b", null ],
     [ "navitDestroy", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ab424c8d2631f01d002c8c759f49b6e18", null ],
     [ "navitMain", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a91f3b4c2d2f2fa2dbc367575a61f28a0", null ],
     [ "onActivityResult", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6cb530da592694ce0e2e6950e1737202", null ],
@@ -30,7 +30,6 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "resourceFileNeedsUpdate", "classorg_1_1navitproject_1_1navit_1_1Navit.html#af147e7a00cabe440bff600972d090f65", null ],
     [ "runOptionsItem", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ad76c1a37a5bcb6e709f14753316a1a4e", null ],
     [ "setActivityResult", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a1a128b4de052b7f8042cdb122e741fb4", null ],
-    [ "setDestination", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a7d1d1ba37c75b62fb46985d052017569", null ],
     [ "setMapLocation", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aeabf11dce6902123b980fcaf8903ffe7", null ],
     [ "showInfos", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a3470ffc298ae67aaf890e34ada53d366", null ],
     [ "showMenu", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a77cdf1c00f6c69aaa01f5c2988dd2a3d", null ],
@@ -48,9 +47,6 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "NavitDownloaderSelectMap_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a9d6a39fb68dcafd9255885a4fa37f61d", null ],
     [ "NavitSelectStorage_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ae0d970d580af3fe902b17912e65c745d", null ],
     [ "sMapFilenamePath", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a240b1d7c40ea6d3aaf692d2f937187f3", null ],
-    [ "sMetrics", "classorg_1_1navitproject_1_1navit_1_1Navit.html#af768d1f6389a076b0a7e979f4211c8e8", null ],
-    [ "sNavitDataDir", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6d97245de62eaefbdae4c90b4638ed18", null ],
     [ "sShowSoftKeyboardShowing", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a8879933d08c4aafc5d816791fcffc47b", null ],
-    [ "sStartupIntent", "classorg_1_1navitproject_1_1navit_1_1Navit.html#aee8bdabaa77c25d9c8c46042c3c00163", null ],
     [ "TAG", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a4bec7b68e44c48e14b6ccb0a801de2c8", null ]
 ];
