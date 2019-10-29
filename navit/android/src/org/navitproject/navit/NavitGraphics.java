@@ -868,13 +868,14 @@ class NavitGraphics {
 
     // One might ask why the coordinates for the holes are smashed all together in one int array. It's because
     // I have no clue at all how to properly do JNI with an array of int arrays instead.
-    protected void draw_polygon_with_holes(Paint paint, int stroke_width, int r, int g, int b, int a, int[] c, int[] ccount, int[] holes) {
-        paint.setStrokeWidth(stroke_width);
+    protected void draw_polygon_with_holes(Paint paint, int strokeWidth, int r, int g, int b, int a, int[] c,
+                                           int[] ccount, int[] holes) {
+        paint.setStrokeWidth(strokeWidth);
         paint.setARGB(a,r,g,b);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         //paint.setAntiAlias(true);
         // Check if we got at least three coordinates (3 values)
-        if(c.length < 6) {
+        if (c.length < 6) {
             return;
         }
 
@@ -888,20 +889,20 @@ class NavitGraphics {
         // close outer polygon
         path.close();
         // add holes if any
-        int coordinates_used = 0;
+        int coordinatesUsed = 0;
         // for every hole
-        for(int i = 0; i < ccount.length; i ++) {
+        for (int i = 0; i < ccount.length; i++) {
             // drop holes with less than 3 coordinates
-            if(ccount[i] > 6) {
-                path.moveTo(holes[coordinates_used + 0], holes[coordinates_used +1]);
-                for(int j = 2; j < ccount[i]; j += 2) {
-                    path.lineTo(holes[coordinates_used + j], holes[coordinates_used + j + 1]);
+            if (ccount[i] > 6) {
+                path.moveTo(holes[coordinatesUsed + 0], holes[coordinatesUsed + 1]);
+                for (int j = 2; j < ccount[i]; j += 2) {
+                    path.lineTo(holes[coordinatesUsed + j], holes[coordinatesUsed + j + 1]);
                 }
                 // close this hole
                 path.close();
             }
             //remeber the used coordinates for next hole
-            coordinates_used += ccount[i];
+            coordinatesUsed += ccount[i];
         }
 
         // Set fill rule
