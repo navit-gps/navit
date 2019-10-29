@@ -4152,7 +4152,7 @@ static void traffic_set_shared(struct traffic *this_) {
     dbg(lvl_debug, "enter");
 
     if (!this_->shared) {
-        iter = navit_attr_iter_new();
+        iter = navit_attr_iter_new(NULL);
         while (navit_get_attr(this_->navit, attr_traffic, &attr, iter)) {
             traffic = (struct traffic *) attr.u.navit_object;
             if (traffic->shared)

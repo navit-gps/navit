@@ -200,7 +200,7 @@ static void gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *funct
     struct attr_iter *iter;
     struct attr active_vehicle;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         navit_attr_iter_destroy(iter);
@@ -215,7 +215,7 @@ static void gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *funct
     gui_internal_widget_append(wb, w);
     if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
         active_vehicle.u.vehicle=NULL;
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         wl=gui_internal_button_new_with_callback(this, vattr.u.str,
@@ -278,7 +278,7 @@ static void gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function
     //w->spy=this->spacing*3;
     w = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
     gui_internal_widget_append(wb, w);
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     on.type=off.type=attr_active;
     on.u.num=1;
     off.u.num=0;
@@ -323,7 +323,7 @@ static void gui_internal_cmd2_setting_layout(struct gui_priv *this, char *functi
     wb=gui_internal_menu(this, _("Layout"));
     w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
     gui_internal_widget_append(wb, w);
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
         gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
                                           gravity_left|orientation_horizontal|flags_fill));

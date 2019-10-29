@@ -1304,13 +1304,14 @@ navit_object_ref(struct navit_object *obj) {
     return obj;
 }
 
-void navit_object_unref(struct navit_object *obj) {
+void* navit_object_unref(struct navit_object *obj) {
     if (obj) {
         obj->refcount--;
         dbg(lvl_debug,"refcount %s %p %d",attr_to_name(obj->func->type),obj,obj->refcount);
         if (obj->refcount <= 0 && obj->func && obj->func->destroy)
             obj->func->destroy(obj);
     }
+    return NULL;
 }
 
 struct attr_iter {

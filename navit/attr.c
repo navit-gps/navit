@@ -836,6 +836,10 @@ void attr_free(struct attr *attr) {
     g_free(attr);
 }
 
+void attr_free_g(struct attr *attr, void * unused) {
+    attr_free(attr);
+}
+
 void attr_dup_content(struct attr *src, struct attr *dst) {
     int size;
     dst->type=src->type;
