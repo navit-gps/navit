@@ -22,7 +22,7 @@ For Navit
 For Android
 ~~~~~~~~~~~
 
- * Download the Android `SDK <http://dl.google.com/android/android-sdk_r18-linux.tgz>` and `NDK <http://dl.google.com/android/ndk/android-ndk-r8-linux-x86.tar.bz2>`
+ * Download the Android `SDK <http://dl.google.com/android/android-sdk_r18-linux.tgz>`_ and `NDK <http://dl.google.com/android/ndk/android-ndk-r8-linux-x86.tar.bz2>`_
  * Unzip the SDK and NDK to a directory of your choice. The following instructions assume that the SDK and NDK have been unzipped to `~/src`.
  * Ensure that the following paths are on your PATH environment variable:
    `path-to-sdk/tools`
@@ -88,7 +88,7 @@ With cmake on Windows
 
  * install CMake 2.8 if you haven't already, add folder with exe to PATH
  * install MinGW or use MinGW included in the git windows folder (e.g. C:\msysgit\mingw\ ), add folder with exe to PATH
- * install saxon .NET version from <http://sourceforge.net/projects/saxon/files/Saxon-HE/9.3/SaxonHE9-3-0-4N-setup.exe/download>,
+ * install saxon .NET version from http://sourceforge.net/projects/saxon/files/Saxon-HE/9.3/SaxonHE9-3-0-4N-setup.exe/download,
  * rename `transform.exe` to `saxon.exe`, add folder with exe to PATH
  * create a build dir (i.e. `mkdir android-build`)
  * run from build dir ( replace `$SOURCE_PATH`):
@@ -135,19 +135,19 @@ Change to the Navit source dir and run `./gradlew build`.
 
 So far, two issues have been observed with the build:
 
+ * Bitmap resources are missing from the APK. A workaround is described `here <https://github.com/navit-gps/navit/pull/553#issuecomment-406881461>`_ integration of these steps into gradle is being worked on.
  * Building `vehicle/gpsd` and `map/garmin` fails on Android. As a workaround, edit `CMakeLists.txt` `, inserting the following two lines in the `if(ANDROID)` block (around line 710):
 
-.. code-block::
+.. code-block:: cmake
 
     set_with_reason(vehicle/gpsd "Android detected" FALSE)
     set_with_reason(map/garmin "Android detected" FALSE)
 
- * Bitmap resources are missing from the APK. A workaround is described `here <https://github.com/navit-gps/navit/pull/553#issuecomment-406881461>` — integration of these steps into gradle is being worked on.
 
 Testing an alternative build
 ============================
 
 If you want to try an alternative build (e.g. Jan's builds with alternative routing) you can do it by :
- * enable unsigned apk installation ( `example build <http://www.tomsguide.com/faq/id-2326514/download-install-android-apps-unidentified-developer.html>` )
- * installing an alternative apk (e.g. `an APK from CircleCI <https://circle-artifacts.com/gh/jandegr/navit/292/artifacts/0/tmp/circle-artifacts.MZk9Slb/navit-96b3160a2e51dffb54e3aa74c17ce3683c52828e-debug.apk>`)
- * you will probably need an alternative map to match the application requirements (such as `this one <https://circle-artifacts.com/gh/jandegr/navit/265/artifacts/0/tmp/circle-artifacts.WJkkT78/BNLFR.bin>`)
+ * enable unsigned apk installation ( `example build <http://www.tomsguide.com/faq/id-2326514/download-install-android-apps-unidentified-developer.html>`_ )
+ * installing an alternative apk (e.g. `an APK from CircleCI <https://circle-artifacts.com/gh/jandegr/navit/292/artifacts/0/tmp/circle-artifacts.MZk9Slb/navit-96b3160a2e51dffb54e3aa74c17ce3683c52828e-debug.apk>`_)
+ * you will probably need an alternative map to match the application requirements (such as `this one <https://circle-artifacts.com/gh/jandegr/navit/265/artifacts/0/tmp/circle-artifacts.WJkkT78/BNLFR.bin>`_)
