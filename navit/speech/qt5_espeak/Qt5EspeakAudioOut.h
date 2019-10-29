@@ -26,6 +26,7 @@
 #include <QObject>
 class Qt5EspeakAudioOut : public QObject {
     Q_OBJECT
+
 public:
     /* Instantiate this. Parameters are the sample rate to use,
    * and the category to sort this audio output to. Not all platforms
@@ -45,6 +46,7 @@ signals:
     void call_resume(int state);
 
 protected:
+
 private:
     /* internal buffer */
     QByteArray* data;
