@@ -3,12 +3,12 @@ apply from: "$project.rootDir/gradle/scripts/git-scm-version.gradle"
 apply plugin: 'checkstyle'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "org.navitproject.navit"
         minSdkVersion 10
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -17,7 +17,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DXSLTS=android', '-DANDROID=y', '-DSAMPLE_MAP=n'
+                arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n'
             }
         }
     }
@@ -74,9 +74,10 @@ android {
     applicationVariants.all { variant ->
         // create tasks to generate Javadocs
         task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+            source = android.sourceSets.main.java.srcDirs
             destinationDir = file("build/outputs/docs/javadoc/")
             title = rootProject.name
+            options.memberLevel = JavadocMemberLevel.PACKAGE
             verbose = true
             failOnError false
         }
