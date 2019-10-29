@@ -16,11 +16,11 @@ import java.io.ObjectOutputStream;
 
 public class NavitBackupTask extends AsyncTask<Void, Void, String> {
 
-    private Navit mActivity;
+    private final Navit mActivity;
 
     private ProgressDialog mDialog;
 
-    public NavitBackupTask(Navit context) {
+    NavitBackupTask(Navit context) {
         mActivity = context;
     }
 
@@ -80,11 +80,11 @@ public class NavitBackupTask extends AsyncTask<Void, Void, String> {
         ObjectOutputStream preferencesOOs = null;
         try {
             /* Backup Files in home */
-            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/bookmark.txt",
+            NavitUtils.copyFileIfExists(Navit.sMapFilenamePath + "/home/bookmark.txt",
                     backupDir.getPath() + "/bookmark.txt");
-            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/destination.txt",
+            NavitUtils.copyFileIfExists(Navit.sMapFilenamePath + "/home/destination.txt",
                     backupDir.getPath() + "/destination.txt");
-            NavitUtils.copyFileIfExists(Navit.sNavitDataDir + "/home/gui_internal.txt",
+            NavitUtils.copyFileIfExists(Navit.sMapFilenamePath + "/home/gui_internal.txt",
                     backupDir.getPath() + "/gui_internal.txt");
 
             /* Backup Shared Preferences */

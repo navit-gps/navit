@@ -85,8 +85,6 @@ public class NavitAddressSearchActivity extends Activity {
     private int mSearchResultsStreets = 0;
     private int mSearchResultsStreetsHn = 0;
     private long mSearchHandle = 0;
-
-    // TODO remember settings
     private static String sLastAddressSearchString = "";
     private static Boolean sLastAddressPartialMatch = false;
     private static String sLastCountry = "";
@@ -107,10 +105,9 @@ public class NavitAddressSearchActivity extends Activity {
         // We have all images stored as drawable_nodpi resources which allows native code to manipulate them
         // without interference with android builtin choosing and scaling system. But that makes us to
         // reinvent the wheel here to show an image in android native interface.
-        int[] flagIconSizes = {24,32,48,64,96};
-        int exactSize;
+        int[] flagIconSizes = {24, 32, 64, 96};
         int nearestSize;
-        exactSize = (int)(Navit.sMetrics.density * 24.0 - .5);
+        int exactSize = (int)(getResources().getDisplayMetrics().density * 24 - 0.5);
         nearestSize = flagIconSizes[0];
         for (int size: flagIconSizes) {
             nearestSize = size;
@@ -158,7 +155,6 @@ public class NavitAddressSearchActivity extends Activity {
         }
 
         mCountryButton = new ImageButton(this);
-
         setCountryButtonImage();
 
         mCountryButton.setOnClickListener(new OnClickListener() {

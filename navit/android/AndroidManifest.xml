@@ -10,14 +10,17 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:usesCleartextTraffic="true" android:label="@string/app_name"
+    <application
+        android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/navit_backup_rules"
         android:icon="@drawable/icon"
-        android:name=".NavitAppConfig"
-        android:theme="@style/NavitTheme">
+        android:name=".NavitAppConfig">
         <activity android:name="Navit"
             android:label="@string/app_name"
+            android:theme="@style/NavitTheme"
             android:launchMode="singleTask"
-            android:taskAffinity=""
             android:configChanges="screenLayout|smallestScreenSize|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

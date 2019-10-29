@@ -356,15 +356,16 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
     return return_string;
 }
 
-JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessageChannel( JNIEnv* env, jclass thiz,
-        jint channel, jstring str) {
+
+JNIEXPORT jobject JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callbackCmdChannel( JNIEnv* env,
+        jclass thiz, jint command) {
+
     struct attr attr;
     const char *s;
-    jint ret = 0;
-    dbg(lvl_debug,"enter %d %p",channel,str);
+    dbg(lvl_debug,"enter %d\n",command);
     config_get_attr(config_get(), attr_navit, &attr, NULL);
 
-    switch(channel) {
+    switch(command) {
     case 1:
         // zoom in
         navit_zoom_in_cursor(attr.u.navit, 2);
@@ -375,6 +376,34 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitGraphics_callbackMessage
         navit_zoom_out_cursor(attr.u.navit, 2);
         navit_draw(attr.u.navit);
         break;
+    case 3:
+        // block
+        navit_block(attr.u.navit, 1);
+        break;
+    case 4:
+        // unblock
+        navit_block(attr.u.navit, 0);
+        break;
+    case 5:
+        // cancel route
+        navit_set_destination(attr.u.navit, NULL, NULL, 0);
+        navit_draw(attr.u.navit);
+        break;
+    default:
+        dbg(lvl_error, "Unknown command: %d", command);
+        break;
+    }
+}
+
+JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callbackMessageChannel( JNIEnv* env,
+        jclass thiz, jint channel, jstring str) {
+    struct attr attr;
+    const char *s;
+    jint ret = 0;
+    dbg(lvl_debug,"enter %d %p",channel,str);
+    config_get_attr(config_get(), attr_navit, &attr, NULL);
+
+    switch(channel) {
     case 6: {// add a map to the current mapset, return 1 on success
         struct mapset *ms = navit_get_mapset(attr.u.navit);
         struct attr type, name, data, *attrs[4];
