@@ -53,6 +53,10 @@
 #include "event.h"
 #include "navit.h"
 
+/**
+ * @brief maximum amount of coordinates to allocate on stack using g_alloca
+ */
+#define ALLOCA_COORD_LIMIT 16384
 
 //##############################################################################################################
 //# Description:
@@ -1035,11 +1039,18 @@ void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode) {
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count) {
-    struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
+    struct point * p_scaled;
     int a;
+    if(count < ALLOCA_COORD_LIMIT)
+        p_scaled = g_alloca(sizeof (struct point)* count);
+    else
+        p_scaled = g_malloc(sizeof (struct point)* count);
+
     for(a=0; a < count; a ++)
         p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
     this_->meth.draw_lines(this_->priv, gc->priv, p_scaled, count);
+    if(count >= ALLOCA_COORD_LIMIT)
+        g_free(p_scaled);
 }
 
 /**
@@ -1052,8 +1063,13 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r) {
-    struct point *pnt=g_alloca(sizeof(struct point)*(r*4+64));
+    struct point *pnt;
     int i=0;
+    if((r*4+64) < ALLOCA_COORD_LIMIT)
+        pnt=g_alloca(sizeof(struct point)*(r*4+64));
+    else
+        pnt=g_malloc(sizeof(struct point)*(r*4+64));
+
     if(this_->meth.draw_circle) {
         struct point p_scaled;
         p_scaled = graphics_dpi_scale_point(this_,p);
@@ -1065,6 +1081,8 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
         i++;
         graphics_draw_lines(this_, gc, pnt, i);
     }
+    if((r*4+64) >= ALLOCA_COORD_LIMIT)
+        g_free(pnt);
 }
 
 /**
@@ -1091,11 +1109,18 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
     if (! gra->meth.draw_polygon) {
         return;
     } else {
-        struct point * pin_scaled =  g_alloca(sizeof (struct point)*count_in);
+        struct point * pin_scaled;
         int a;
+        if(count_in < ALLOCA_COORD_LIMIT)
+            pin_scaled =  g_alloca(sizeof (struct point)*count_in);
+        else
+            pin_scaled =  g_malloc(sizeof (struct point)*count_in);
+
         for(a=0; a < count_in; a ++)
             pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
         gra->meth.draw_polygon(gra->priv, gc->priv, pin_scaled, count_in);
+        if(count_in >= ALLOCA_COORD_LIMIT)
+            g_free(pin_scaled);
     }
 }
 
@@ -1120,17 +1145,16 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         graphics_draw_polygon(gra, gc, pin, count_in);
         return;
     } else {
-        int limit=10000;
         struct point * pin_scaled;
         struct point ** holes_scaled;
         int a;
         int b;
-        if(count_in < limit) {
+        if(count_in < ALLOCA_COORD_LIMIT) {
             pin_scaled = g_alloca(sizeof (struct point)*count_in);
         } else {
             pin_scaled = g_malloc(sizeof (struct point)*count_in);
         }
-        if(hole_count < limit) {
+        if(hole_count < ALLOCA_COORD_LIMIT) {
             holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
         } else {
             holes_scaled = g_malloc(sizeof (struct point *)*hole_count);
@@ -1148,21 +1172,25 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         /* free the hole arrays */
         for(b=0; b < hole_count; b ++)
             g_free(holes_scaled[b]);
-        if(count_in >= limit)
+        if(count_in >= ALLOCA_COORD_LIMIT)
             g_free(pin_scaled);
-        if(hole_count >= limit)
+        if(hole_count >= ALLOCA_COORD_LIMIT)
             g_free(holes_scaled);
     }
 }
 
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
                                      int r, int fill) {
-    struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
+    struct point *p;
     struct point pi0= {plu->x+r,plu->y+r};
     struct point pi1= {plu->x+w-r,plu->y+r};
     struct point pi2= {plu->x+w-r,plu->y+h-r};
     struct point pi3= {plu->x+r,plu->y+h-r};
     int i=0;
+    if((r*4+32) < ALLOCA_COORD_LIMIT)
+        p=g_alloca(sizeof(struct point)*(r*4+32));
+    else
+        p=g_malloc(sizeof(struct point)*(r*4+32));
 
     circle_to_points(&pi2, r*2, 0, -1, 258, p, &i, 1);
     circle_to_points(&pi1, r*2, 0, 255, 258, p, &i, 1);
@@ -1174,6 +1202,8 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
         graphics_draw_polygon(this_,gc,p,i);
     else
         graphics_draw_lines(this_,gc,p,i);
+    if((r*4+32) >= ALLOCA_COORD_LIMIT)
+        g_free(p);
 }
 
 
@@ -1243,11 +1273,18 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
 static void graphics_draw_image_warp(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count,
                                      struct graphics_image *img) {
     if(this_->meth.draw_image_warp) {
-        struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
+        struct point * p_scaled;
         int a;
+        if(count < ALLOCA_COORD_LIMIT)
+            p_scaled =  g_alloca(sizeof (struct point)*count);
+        else
+            p_scaled =  g_malloc(sizeof (struct point)*count);
+
         for(a=0; a < count; a ++)
             p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
         this_->meth.draw_image_warp(this_->priv, gc->priv, p_scaled, count, img->priv);
+        if(count >= ALLOCA_COORD_LIMIT)
+            g_free(p_scaled);
     } else {
         dbg(lvl_error,"draw_image_warp not supported by graphics driver");
     }
@@ -2009,7 +2046,10 @@ static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graph
         return;
     ctx.shape.l=0;
     ctx.shape.wi=0;
-    ctx.res=g_alloca(sizeof(struct point)*maxpoints);
+    if(maxpoints < ALLOCA_COORD_LIMIT)
+        ctx.res=g_alloca(sizeof(struct point)*maxpoints);
+    else
+        ctx.res=g_malloc(sizeof(struct point)*maxpoints);
     i=0;
     draw_init_ctx(&ctx, maxpoints);
     draw_shape(&ctx, pnt, *width++);
@@ -2029,6 +2069,8 @@ static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graph
     draw_end(&ctx,&pnt[count-1]);
     ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
     graphics_draw_polygon(gra, gc, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
+    if(maxpoints >= ALLOCA_COORD_LIMIT)
+        g_free(ctx.res);
 }
 
 
@@ -2128,13 +2170,21 @@ static int clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *cl
  */
 void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count,
                                     int *width, int poly) {
-    struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
-    int *w=g_alloca(sizeof(int)*(count+1));
+    struct point *points_to_draw;
+    int *w;
     struct wpoint segment_start,segment_end;
     int i,points_to_draw_cnt=0;
     int clip_result;
     int r_width, r_height;
     struct point_rect r=gra->r;
+
+    if(count < ALLOCA_COORD_LIMIT) {
+        points_to_draw=g_alloca(sizeof(struct point)*(count+1));
+        w=g_alloca(sizeof(int)*(count+1));
+    } else {
+        points_to_draw=g_malloc(sizeof(struct point)*(count+1));
+        w=g_malloc(sizeof(int)*(count+1));
+    }
 
     r_width=r.rl.x-r.lu.x;
     r_height=r.rl.y-r.lu.y;
@@ -2185,6 +2235,10 @@ void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc
                 }
             }
         }
+    }
+    if(count >= ALLOCA_COORD_LIMIT) {
+        g_free(points_to_draw);
+        g_free(w);
     }
 }
 
@@ -2239,11 +2293,9 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  */
 static void graphics_clip_polygon(struct point_rect * r, struct point * in, int count_in, struct point *out,
                                   int* count_out) {
-    /* set our self a limit for the in stack buffer. To not overflow stack */
-    const int limit=10000;
     /* get a temp buffer to store points after one direction clipping.
      * since we are clipping 4 directions, result is always in out at the end*/
-    struct point *temp=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+    struct point *temp;
     struct point *pout;
     struct point *pin;
     int edge;
@@ -2258,7 +2310,9 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
      * 1. the output buffer
      * 2. temp
      */
-    if (count_in >= limit) {
+    if (count_in < ALLOCA_COORD_LIMIT) {
+        temp=g_alloca(sizeof(struct point) * (count_in < ALLOCA_COORD_LIMIT ? count_in*8+1:0));
+    } else {
         /* too big. Allocate a buffer (slower) */
         temp=g_new(struct point, count_in*8+1);
     }
@@ -2319,7 +2373,7 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
     /* have clipped poly in out. And number of points now in *count_out */
 
     /* if we had to allocate the buffer, we need to free it */
-    if (count_in >= limit) {
+    if (count_in >= ALLOCA_COORD_LIMIT) {
         g_free(temp);
     }
     return;
@@ -2335,14 +2389,13 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
  */
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
-    int limit=10000;
     struct point *clipped;
     int count_out = count_in*8+1;
 
     /* prepare buffer */
-    if (count_in < limit) {
+    if (count_in < ALLOCA_COORD_LIMIT) {
         /* use on stack buffer */
-        clipped=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+        clipped=g_alloca(sizeof(struct point) * (count_in < ALLOCA_COORD_LIMIT ? count_in*8+1:0));
     } else {
         /* too big. allocate buffer (slower) */
         clipped=g_new(struct point, count_in*8+1);
@@ -2352,7 +2405,7 @@ void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc,
     graphics_draw_polygon(gra, gc, clipped, count_out);
 
     /* if we had to allocate buffer, free it */
-    if (count_in >= limit) {
+    if (count_in >= ALLOCA_COORD_LIMIT) {
         g_free(clipped);
     }
 }
@@ -2373,7 +2426,6 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
         int count_in, int hole_count, int* ccount, struct point **holes) {
     int i;
     struct point_rect r=gra->r;
-    int limit=10000;
     struct point *clipped;
     int total_count_in;
     int count_out;
@@ -2390,7 +2442,7 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     count_out = total_count_in*8+1+hole_count;
 
     /* prepare buffer for outer and all holes!*/
-    if (count_out < limit) {
+    if (count_out < ALLOCA_COORD_LIMIT) {
         /* use on stack buffer */
         clipped=g_alloca(sizeof(struct point) * count_out);
         /* no need to free on stack buffer */
@@ -2404,7 +2456,7 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     count_used=0;
 
     /* prepare arrays for new holes */
-    if(hole_count < limit) {
+    if(hole_count < ALLOCA_COORD_LIMIT) {
         found_ccount=g_alloca(sizeof(int)* hole_count);
         found_holes=g_alloca(sizeof(struct point*)* hole_count);
     } else {
@@ -2431,7 +2483,7 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     }
     /* call drawing function */
     graphics_draw_polygon_with_holes(gra, gc, clipped, count_out, found_hole_count, found_ccount, found_holes);
-    if(hole_count >= limit) {
+    if(hole_count >= ALLOCA_COORD_LIMIT) {
         g_free(found_ccount);
         g_free(found_holes);
     }
@@ -2763,12 +2815,20 @@ static inline void displayitem_draw_image (struct displayitem *di, struct displa
  * @brief dc The display_context to use to draw items
  */
 static void displayitem_draw(struct displayitem *di, struct layout *l, struct display_context *dc) {
-    int *width=g_alloca(sizeof(int)*dc->maxlen);
+    int *width;
     int limit=0;
-    struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
+    struct point *pa;
     struct graphics *gra=dc->gra;
     struct element *e=dc->e;
     int draw_underground=0;
+
+    if (dc->maxlen < ALLOCA_COORD_LIMIT) {
+        width=g_alloca(sizeof(int)*dc->maxlen);
+        pa=g_alloca(sizeof(struct point)*dc->maxlen);
+    } else {
+        width=g_malloc(sizeof(int)*dc->maxlen);
+        pa=g_malloc(sizeof(struct point)*dc->maxlen);
+    }
 
     while (di) {
         int count=di->count,mindist=dc->mindist;
@@ -2852,6 +2912,10 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
 
         di=di->next;
     }
+    if (dc->maxlen >= ALLOCA_COORD_LIMIT) {
+        g_free(width);
+        g_free(pa);
+    }
 }
 /**
  * FIXME
@@ -2888,8 +2952,15 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
     GList *es;
     struct display_context dc;
     int max_coord=32;
-    char *buffer=g_alloca(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
-    struct displayitem *di=(struct displayitem *)buffer;
+    char *buffer;
+    struct displayitem *di;
+    if (max_coord < ALLOCA_COORD_LIMIT) {
+        buffer=g_alloca(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
+    } else {
+        buffer=g_malloc(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
+    }
+    di=(struct displayitem *)buffer;
+
     es=itm->elements;
     di->item.type=type_none;
     di->item.id_hi=0;
@@ -2926,6 +2997,9 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
         displayitem_draw(di, NULL, &dc);
         display_context_free(&dc);
         es=g_list_next(es);
+    }
+    if (max_coord >= ALLOCA_COORD_LIMIT) {
+        g_free(buffer);
     }
 }
 
@@ -3061,9 +3135,19 @@ GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct poin
 static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     struct item *item;
     int count,max=displaylist->dc.maxlen,workload=0;
-    struct coord *ca=g_alloca(sizeof(struct coord)*max);
+    int used=0;
+    struct coord *ca;
     struct attr attr,attr2;
     enum projection pro;
+    int need_free=0;
+
+    if (max < ALLOCA_COORD_LIMIT) {
+        ca=g_alloca(sizeof(struct coord)*max);
+        need_free=0;
+    } else {
+        ca=g_malloc(sizeof(struct coord)*max);
+        need_free=1;
+    }
 
     if (displaylist->order != displaylist->order_hashed || displaylist->layout != displaylist->layout_hashed) {
         displaylist_update_hash(displaylist);
@@ -3095,24 +3179,59 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
                 int label_count=0;
                 char *labels[2];
                 struct hash_entry *entry;
+                int coords_left;
                 if (item == &busy_item) {
-                    if (displaylist->workload)
+                    if (displaylist->workload) {
+                        if (need_free) {
+                            g_free(ca);
+                        }
                         return;
-                    else
+                    } else
                         continue;
                 }
                 entry=get_hash_entry(displaylist, item->type);
                 if (!entry)
                     continue;
                 count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
+                /* abort if no coordinates within selection at all */
                 if (! count)
                     continue;
+                /* handle overflow */
+                if (count == max) {
+                    /* get required space */
+                    item_coord_rewind(item);
+                    coords_left=item_coords_left(item);
+                    /* increase to required space, or double space if we couldn't get required space */
+                    if(coords_left > 0) {
+                        displaylist->dc.maxlen=(coords_left+2);
+                    } else {
+                        displaylist->dc.maxlen=max*2;
+                    }
+                    dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT". Increase to %d", count,item_to_name(item->type),
+                        ITEM_ID_ARGS(*item), displaylist->dc.maxlen);
+                    /* remember the new maximum */
+                    max=displaylist->dc.maxlen;
+                    /* get more memory */
+                    if(need_free)
+                        g_free(ca);
+                    ca=g_malloc(sizeof(struct coord)*(displaylist->dc.maxlen));
+                    need_free=1;
+                    /* try again to get coordinates */
+                    item_coord_rewind(item);
+                    count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
+                    /* check if we got valid coordinates in second attempt. If not don't try to draw this at all */
+                    if(count <= 0) {
+                        continue;
+                    }
+                }
+                /* transform the coordinates */
                 if (displaylist->dc.pro != pro)
                     transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
-                if (count == max) {
-                    dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT"", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
-                    displaylist->dc.maxlen=max*2;
-                }
+
+                /* remember the peak coordinates actually used */
+                if(used < count)
+                    used=count;
+
                 if (item_is_custom_poi(*item)) {
                     if (item_attr_get(item, attr_icon_src, &attr2))
                         labels[1]=map_convert_string(displaylist->m, attr2.u.str);
@@ -3138,8 +3257,12 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
                 if (labels[1])
                     map_convert_free(labels[1]);
                 workload++;
-                if (workload == displaylist->workload)
+                if (workload == displaylist->workload) {
+                    if (need_free) {
+                        g_free(ca);
+                    }
                     return;
+                }
             }
             map_rect_destroy(displaylist->mr);
         }
@@ -3170,6 +3293,15 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     displaylist->msh=NULL;
     profile(1,"callback\n");
     callback_call_1(displaylist->cb, cancel);
+    /* check if we can shrink item buffer next time */
+    if((displaylist->dc.maxlen > ALLOCA_COORD_LIMIT) && (used < ALLOCA_COORD_LIMIT)) {
+        dbg(lvl_debug, "Shrink memory. %d actually used", used);
+        displaylist->dc.maxlen=ALLOCA_COORD_LIMIT;
+    }
+    /* clean up if required */
+    if (need_free) {
+        g_free(ca);
+    }
     profile(0,"end\n");
 }
 
@@ -3336,7 +3468,7 @@ void graphics_displaylist_close(struct displaylist_handle *dlh) {
 struct displaylist * graphics_displaylist_new(void) {
     struct displaylist *ret=g_new0(struct displaylist, 1);
 
-    ret->dc.maxlen=16384;
+    ret->dc.maxlen=ALLOCA_COORD_LIMIT;
 
     return ret;
 }
@@ -3503,18 +3635,28 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
 */
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p,
                                      int dist) {
-    struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+    int result;
+    struct point *pa;
     int count;
+    if (displaylist->dc.maxlen < ALLOCA_COORD_LIMIT) {
+        pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+    } else {
+        pa=g_malloc(sizeof(struct point)*displaylist->dc.maxlen);
+    }
 
     count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
 
     if (di->item.type < type_line) {
-        return within_dist_point(p, &pa[0], dist);
+        result =  within_dist_point(p, &pa[0], dist);
+    } else if (di->item.type < type_area) {
+        result =  within_dist_polyline(p, pa, count, dist, 0);
+    } else
+        result = within_dist_polygon(p, pa, count, dist);
+
+    if (displaylist->dc.maxlen >= ALLOCA_COORD_LIMIT) {
+        g_free(pa);
     }
-    if (di->item.type < type_area) {
-        return within_dist_polyline(p, pa, count, dist, 0);
-    }
-    return within_dist_polygon(p, pa, count, dist);
+    return result;
 }
 
 
