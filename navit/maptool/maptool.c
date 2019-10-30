@@ -255,7 +255,7 @@ static void add_plugin(char *path) {
 
     if (! plugins) {
         file_init();
-        plugins=plugins_new();
+        plugins=plugins_new(NULL, NULL);
     }
     pa_attr.u.str=path;
     pl_attr.u.plugins=plugins;

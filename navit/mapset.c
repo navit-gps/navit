@@ -74,7 +74,7 @@ struct mapset *mapset_dup(struct mapset *ms) {
 
 
 struct attr_iter *
-mapset_attr_iter_new(void) {
+mapset_attr_iter_new(void* unused) {
     return g_new0(struct attr_iter, 1);
 }
 
