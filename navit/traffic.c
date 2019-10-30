@@ -3408,7 +3408,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct map_rect * mr;
     struct item * map_item;
     int * default_flags;
-    int item_flags, segmented, maxspeed;
+    int item_flags, segmented, maxspeed=INT_MAX;
     struct coord map_c;
 
     /*
@@ -4152,7 +4152,7 @@ static void traffic_set_shared(struct traffic *this_) {
     dbg(lvl_debug, "enter");
 
     if (!this_->shared) {
-        iter = navit_attr_iter_new();
+        iter = navit_attr_iter_new(NULL);
         while (navit_get_attr(this_->navit, attr_traffic, &attr, iter)) {
             traffic = (struct traffic *) attr.u.navit_object;
             if (traffic->shared)
