@@ -935,7 +935,6 @@ endif(USE_NATIVE_LANGUAGE_SUPPORT)
 # make it possible to disable unit tests when not on network
 option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
 message(STATUS "Enable testing: ${ENABLE_UNIT_TESTS}")
-include(googletest.cmake)
 
 if(ENABLE_UNIT_TESTS)
 	include(ExternalProject)
