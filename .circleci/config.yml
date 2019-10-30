@@ -13,6 +13,9 @@ jobs:
       - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
+      - run:
+          name: Run CheckStyle Test
+          command: ./gradlew checkstyleMain
   build_linux:
     <<: *defaults
     steps:
@@ -96,9 +99,6 @@ jobs:
             ln -s navit/navit.dtd navit.dtd
             mkdir /home/circleci/code/test-results
             ./gradlew lint test
-      - run:
-          name: Run CheckStyle Test
-          command: ./gradlew checkstyleMain
       - run:
           name: Run Javadoc
           command: ./gradlew generateDebugJavadoc
