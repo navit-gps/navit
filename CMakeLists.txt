@@ -916,46 +916,53 @@ option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
 message(STATUS "Enable testing: ${ENABLE_UNIT_TESTS}")
 
 if(ENABLE_UNIT_TESTS)
-	include(ExternalProject)
-	ExternalProject_Add(
-		googletest
-		SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest-src"
-		BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest-build"
-		GIT_REPOSITORY https://github.com/google/googletest.git
-		GIT_TAG release-1.8.0
-		CONFIGURE_COMMAND ""
-		BUILD_COMMAND ""
-		INSTALL_COMMAND ""
-		TEST_COMMAND ""
-	)
-	execute_process(
-		COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-	)
-	execute_process(
-		COMMAND "${CMAKE_COMMAND}" --build .
-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-	)
-	add_subdirectory(
-		"${CMAKE_CURRENT_SOURCE_DIR}/googletest-src"
-		"${CMAKE_CURRENT_SOURCE_DIR}/googletest-build"
-	)
+	configure_file(cmake/googletest.cmake googletest-download/CMakeLists.txt)
+	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+		RESULT_VARIABLE result
+		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+	if(result)
+		message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+	endif()
+	execute_process(COMMAND ${CMAKE_COMMAND} --build .
+		RESULT_VARIABLE result
+		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+	if(result)
+		message(FATAL_ERROR "Build step for googletest failed: ${result}")
+	endif()
 
-  add_executable(unit_tests "")
+	# Prevent overriding the parent project's compiler/linker
+	# settings on Windows
+	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-  target_sources(
-    unit_tests
-    PRIVATE
-      calculator.cpp
-      main.cpp
-    )
+	# Add googletest directly to our build. This defines
+	# the gtest and gtest_main targets.
+	add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+		${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+		EXCLUDE_FROM_ALL)
 
-  target_link_libraries(
-    unit_tests
-    PRIVATE
-      calculator
-      gtest_main
-    )
+	# The gtest/gtest_main targets carry header search path
+	# dependencies automatically when using CMake 2.8.11 or
+	# later. Otherwise we have to add them here ourselves.
+	if (CMAKE_VERSION VERSION_LESS 2.8.11)
+		include_directories("${gtest_SOURCE_DIR}/include")
+	endif()
 
-  add_test(unit ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
+	# Now simply link against gtest or gtest_main as needed. Eg
+	add_executable(unit_tests "")
+
+	target_sources(
+		unit_tests
+		PRIVATE
+			search.cpp
+			main.cpp
+		)
+
+	target_link_libraries(
+		unit_tests
+		PRIVATE
+			navit
+			gtest_main
+		)
+
+	add_test(unit ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
 endif()
