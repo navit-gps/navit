@@ -74,11 +74,13 @@ static void sigsegv(int sig) {
 #include <unistd.h>
 static void sigsegv(int sig) {
     char buffer[256];
+    int retval;
     if (segv_level > 1)
         sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());
     else
         sprintf(buffer, "gdb -ex bt -ex detach -ex quit %s %d", gdb_program, getpid());
-    system(buffer);
+    retval = system(buffer);
+    fprintf(stderr, "calling gdb returned %d\n", retval);
     exit(1);
 }
 #endif

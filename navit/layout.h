@@ -135,7 +135,7 @@ struct polygon;
 struct polyline;
 struct text;
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
-struct attr_iter *layout_attr_iter_new(void);
+struct attr_iter *layout_attr_iter_new(void* unused);
 void layout_attr_iter_destroy(struct attr_iter *iter);
 int layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int layout_add_attr(struct layout *layout, struct attr *attr);

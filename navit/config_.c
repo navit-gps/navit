@@ -109,8 +109,8 @@ int config_remove_attr(struct config *this_, struct attr *attr) {
 }
 
 struct attr_iter *
-config_attr_iter_new() {
-    return navit_object_attr_iter_new();
+config_attr_iter_new(void * unused) {
+    return navit_object_attr_iter_new(unused);
 }
 
 void config_attr_iter_destroy(struct attr_iter *iter) {

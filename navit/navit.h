@@ -98,7 +98,7 @@ void navit_say(struct navit *this_, const char *text);
 void navit_speak(struct navit *this_);
 void navit_window_roadbook_destroy(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);
-void navit_init(struct navit *this_);
+int navit_init(struct navit *this_);
 void navit_zoom_to_rect(struct navit *this_, struct coord_rect *r);
 void navit_zoom_to_route(struct navit *this_, int orientation);
 void navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout);
@@ -110,7 +110,7 @@ struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_
 void navit_update_current_layout(struct navit *this_, struct layout *layout);
 int navit_add_attr(struct navit *this_, struct attr *attr);
 int navit_remove_attr(struct navit *this_, struct attr *attr);
-struct attr_iter *navit_attr_iter_new(void);
+struct attr_iter *navit_attr_iter_new(void * unused);
 void navit_attr_iter_destroy(struct attr_iter *iter);
 void navit_add_callback(struct navit *this_, struct callback *cb);
 void navit_remove_callback(struct navit *this_, struct callback *cb);

@@ -69,7 +69,7 @@ void Backend::get_maps() {
     struct attr_iter * iter;
     _maps.clear();
 
-    iter = navit_attr_iter_new();
+    iter = navit_attr_iter_new(NULL);
     on.type = off.type = attr_active;
     on.u.num = 1;
     off.u.num = 0;
@@ -106,7 +106,7 @@ void Backend::get_vehicles() {
     struct attr active_vehicle;
     _vehicles.clear();
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         navit_attr_iter_destroy(iter);
@@ -119,7 +119,7 @@ void Backend::get_vehicles() {
 
     if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
         active_vehicle.u.vehicle=NULL;
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         dbg(lvl_debug, "adding vehicle %s", vattr.u.str);
