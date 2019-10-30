@@ -909,3 +909,54 @@ add_subdirectory (man)
 if (USE_NATIVE_LANGUAGE_SUPPORT)
 	add_subdirectory (po)
 endif(USE_NATIVE_LANGUAGE_SUPPORT)
+
+# we will use the network to fetch Google Test sources
+# make it possible to disable unit tests when not on network
+option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
+message(STATUS "Enable testing: ${ENABLE_UNIT_TESTS}")
+include(googletest.cmake)
+
+if(ENABLE_UNIT_TESTS)
+	include(ExternalProject)
+	ExternalProject_Add(
+		googletest
+		SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest-src"
+		BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest-build"
+		GIT_REPOSITORY https://github.com/google/googletest.git
+		GIT_TAG release-1.8.0
+		CONFIGURE_COMMAND ""
+		BUILD_COMMAND ""
+		INSTALL_COMMAND ""
+		TEST_COMMAND ""
+	)
+	execute_process(
+		COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	)
+	execute_process(
+		COMMAND "${CMAKE_COMMAND}" --build .
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	)
+	add_subdirectory(
+		"${CMAKE_CURRENT_SOURCE_DIR}/googletest-src"
+		"${CMAKE_CURRENT_SOURCE_DIR}/googletest-build"
+	)
+
+  add_executable(unit_tests "")
+
+  target_sources(
+    unit_tests
+    PRIVATE
+      calculator.cpp
+      main.cpp
+    )
+
+  target_link_libraries(
+    unit_tests
+    PRIVATE
+      calculator
+      gtest_main
+    )
+
+  add_test(unit ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
+endif()
