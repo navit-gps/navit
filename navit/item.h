@@ -83,6 +83,7 @@ struct item_methods {
     int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
     int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
     int (*item_type_set)(void *priv_data, enum item_type type);
+    int (*item_coords_left)(void *priv_data);
 };
 
 struct item_id {
@@ -127,6 +128,7 @@ void item_create_hash(void);
 void item_destroy_hash(void);
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
+int item_coords_left(struct item * it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
