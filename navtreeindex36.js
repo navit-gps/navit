@@ -1,5 +1,9 @@
 var NAVTREEINDEX36 =
 {
+"struct__VIDEO__POWER__MANAGEMENT.html#a8581452edec1f719c78bccc7c7883e6f":[2,0,1,2],
+"struct__VIDEO__POWER__MANAGEMENT.html#accc91c88250d7d89539acd7da118a585":[2,0,1,0],
+"structaction__cb__data.html":[2,0,2],
+"structaction__cb__data.html#a9269ba06b8e843979a902b8fe46be138":[2,0,2,1],
 "structaction__cb__data.html#ac371555dfbeb05e8bfe368b7c7b9b11c":[2,0,2,0],
 "structandroid__search__priv.html":[2,0,3],
 "structandroid__search__priv.html#a008752eed997b1e830267fd9c180957e":[2,0,3,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX36 =
 "structcdf__speed.html#af58ad0161b35ec1a606ed333a716145c":[2,0,37,0],
 "structch__edge.html":[2,0,38],
 "structch__edge.html#a0dfb3b988ca4c85575cee8c56764177e":[2,0,38,1],
-"structch__edge.html#a20d21353cff2438f18aaa7cfe1c094b4":[2,0,38,0],
-"structch__edge.html#afbab763db5dc32011bd626f78e8e7879":[2,0,38,2],
-"structcircle.html":[2,0,39],
-"structcircle.html#a456f83f0a90cae69912e96e092d7b8c3":[2,0,39,1],
-"structcircle.html#a6808fdab287a92b678d6beef168fb6b5":[2,0,39,0]
+"structch__edge.html#a20d21353cff2438f18aaa7cfe1c094b4":[2,0,38,0]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"structch__edge.html#afbab763db5dc32011bd626f78e8e7879":[2,0,38,2],
+"structcircle.html":[2,0,39],
+"structcircle.html#a456f83f0a90cae69912e96e092d7b8c3":[2,0,39,1],
+"structcircle.html#a6808fdab287a92b678d6beef168fb6b5":[2,0,39,0],
 "structcircle.html#a800b8a4734fd9d613ac4d1833d7cb3b6":[2,0,39,2],
 "structcmd__interface.html":[2,0,42],
 "structcmd__interface.html#a2e4454c662f150b267f06b4a4ba89393":[2,0,42,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "structdraw__polyline__context.html#ad6fd2fc8e1e36847dd06c1235bf71edd":[2,0,87,1],
 "structdraw__polyline__context.html#ae1f7cff08311b67fda97d66fd72e85a0":[2,0,87,4],
 "structdraw__polyline__shape.html":[2,0,88],
-"structdraw__polyline__shape.html#a28c7a3dda105dd42d04ad9e67d0b5891":[2,0,88,3],
-"structdraw__polyline__shape.html#a40ee93f6c223af0b1bd68bdd50523363":[2,0,88,2],
-"structdraw__polyline__shape.html#a421fb220a9e3e57e7681505fce954903":[2,0,88,0],
-"structdraw__polyline__shape.html#a476cd9663e86506db5a966e8f860f4bf":[2,0,88,5],
-"structdraw__polyline__shape.html#a8b21f0d16a2bbe766c24ecbd4101f5ba":[2,0,88,1]
+"structdraw__polyline__shape.html#a28c7a3dda105dd42d04ad9e67d0b5891":[2,0,88,3]
 };

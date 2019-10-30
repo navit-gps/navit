@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a7c723f906e937881ad9e613a025302e9":[2,0,0,0,0,12,0,0],
+"classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a862afa1e16dc4fc0bae305aee9a6788d":[2,0,0,0,0,12,0,11],
+"classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#aab553839f38d55619c636cb554d07e23":[2,0,0,0,0,12,0,8],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#aac368e8db01e973c902d4abfdca07f76":[2,0,0,0,0,12,0,4],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#abd2833ff3120b90cc77e07aa9918449e":[2,0,0,0,0,12,0,9],
 "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html":[2,0,0,0,0,13],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "common_8h.html#a21c3f61fb17b0852a6a2c956c29908fe":[3,0,2,1,2,8],
 "common_8h.html#a27be840595df2389a37d090153319e2e":[3,0,2,1,2,3],
 "common_8h.html#a2b19e35a05b89f213fd4df40ad715341":[3,0,2,1,2,5],
-"common_8h.html#a321a9dadab68f7de5852bc9d93404e67":[3,0,2,1,2,12],
-"common_8h.html#a6bb1ff01fab2f8a8bb023f584a5aa272":[3,0,2,1,2,0],
-"common_8h.html#a732860c0a087a4e6e7d81928864f4afb":[3,0,2,1,2,9],
-"common_8h.html#a770ddde01fbc685d1e5d2790159142f2":[3,0,2,1,2,16]
+"common_8h.html#a321a9dadab68f7de5852bc9d93404e67":[3,0,2,1,2,12]
 };

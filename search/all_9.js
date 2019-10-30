@@ -17,6 +17,7 @@ var searchData=
   ['g2sprop',['g2sprop',['../structg2sprop.html',1,'g2sprop'],['../gpx2navit__txt_8h.html#a77fa53c9aa00643c25a7dea52ca3d67c',1,'g2sprop():&#160;gpx2navit_txt.h']]],
   ['g2sstats',['g2sstats',['../structg2sstats.html',1,'g2sstats'],['../gpx2navit__txt_8h.html#a459416878c47e910ea36a77fb1bd7b76',1,'g2sstats():&#160;gpx2navit_txt.h']]],
   ['g_5ffree_5ffunc',['g_free_func',['../debug_8h.html#a473ad2646fb4369e125569ef901da176',1,'debug.h']]],
+  ['g_5ffree_5fhelper',['g_free_helper',['../bookmarks_8c.html#a758860664ff8573544d78fb3b0fd26f9',1,'bookmarks.c']]],
   ['g_5fhash_5fto_5flist',['g_hash_to_list',['../util_8c.html#a096102c788a1aee9421c8636c5653b74',1,'g_hash_to_list(GHashTable *h):&#160;util.c'],['../util_8h.html#a096102c788a1aee9421c8636c5653b74',1,'g_hash_to_list(GHashTable *h):&#160;util.c']]],
   ['g_5fhash_5fto_5flist_5fkeys',['g_hash_to_list_keys',['../util_8c.html#a35df3792d7aa24483200c6ca6060744d',1,'g_hash_to_list_keys(GHashTable *h):&#160;util.c'],['../util_8h.html#a35df3792d7aa24483200c6ca6060744d',1,'g_hash_to_list_keys(GHashTable *h):&#160;util.c']]],
   ['g_5fhwnd',['g_hwnd',['../graphics__win32_8c.html#a803a83328c6891b81d6f47569ddc3ef0',1,'graphics_win32.c']]],

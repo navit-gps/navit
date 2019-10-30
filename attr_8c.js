@@ -12,6 +12,7 @@ var attr_8c =
     [ "attr_free", "attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691", null ],
     [ "attr_free_content", "attr_8c.html#ac21bc3cd794a65954582beadf770576f", null ],
     [ "attr_free_content_do", "attr_8c.html#a90e35220805a2093b077f050949ca238", null ],
+    [ "attr_free_g", "attr_8c.html#a9e58f30f08d4eb9ad3ee9d6baf371311", null ],
     [ "attr_from_line", "attr_8c.html#ae3ad97418331abb806502b2d5bf76579", null ],
     [ "attr_from_name", "attr_8c.html#aff0b5c6622268fda223cee4d1e8a26aa", null ],
     [ "attr_generic_add_attr", "attr_8c.html#a16f8181e76fc7339c0dde03da8b62e50", null ],

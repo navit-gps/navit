@@ -256,6 +256,7 @@ var searchData=
   ['route_5fhas_5fgraph',['route_has_graph',['../route_8c.html#a1e07a0865bb864ab1ad0f505810e47e0',1,'route_has_graph(struct route *this_):&#160;route.c'],['../route_8h.html#a1e07a0865bb864ab1ad0f505810e47e0',1,'route_has_graph(struct route *this_):&#160;route.c']]],
   ['route_5finfo_5fdistances',['route_info_distances',['../route_8c.html#a142da9408429645dbe697ef1c1c6a0e3',1,'route.c']]],
   ['route_5finfo_5ffree',['route_info_free',['../route_8c.html#a248081bb540de81b2fbbcbe2593dc29c',1,'route_info_free(struct route_info *inf):&#160;route.c'],['../route_8h.html#a248081bb540de81b2fbbcbe2593dc29c',1,'route_info_free(struct route_info *inf):&#160;route.c']]],
+  ['route_5finfo_5ffree_5fg',['route_info_free_g',['../route_8c.html#aeac1855e7ebe47efc6b38b5692c99ec6',1,'route.c']]],
   ['route_5finfo_5fstreet',['route_info_street',['../route_8c.html#af9fd5fc03a4e663ae683c73a7674b80c',1,'route_info_street(struct route_info *rinf):&#160;route.c'],['../route_8h.html#af9fd5fc03a4e663ae683c73a7674b80c',1,'route_info_street(struct route_info *rinf):&#160;route.c']]],
   ['route_5finit',['route_init',['../route_8c.html#a54777eb5e273c249f1fa36a69b0d2520',1,'route_init(void):&#160;route.c'],['../route_8h.html#a54777eb5e273c249f1fa36a69b0d2520',1,'route_init(void):&#160;route.c']]],
   ['route_5fmap_5fnew',['route_map_new',['../route_8c.html#a1ffe2cc184147bec53fe857f118cdee5',1,'route.c']]],

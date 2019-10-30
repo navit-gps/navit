@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"garmin__img_8c.html#af8a8cd2a222affed7360a31d4bcbcc15":[3,0,8,4,0,129],
+"garmin__img_8c.html#af9f9894688a47571a10da1d0d76ec7bf":[3,0,8,4,0,99],
+"garmin__img_8c.html#afd8d704fff636cf0234e92c1eade927c":[3,0,8,4,0,115],
 "gentypes_8c.html":[3,0,8,3,4],
 "gentypes_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,8,3,4,2],
 "gentypes_8c.html#a67e602c7b16a3ad76d80e670d0ee4a87":[3,0,8,3,4,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "gpx2navit__txt_8h.html#a1da7b736a569cd465186b4fb11ae7986":[3,0,14,0,0,7,33],
 "gpx2navit__txt_8h.html#a1ec047271b341162781a27e9ea608e51":[3,0,14,0,0,7,23],
 "gpx2navit__txt_8h.html#a21ead5f18e752f9a8f69498c30bc417f":[3,0,14,0,0,7,26],
-"gpx2navit__txt_8h.html#a27e26131fe3338942198a3fc65b1c8d3":[3,0,14,0,0,7,46],
-"gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733":[3,0,14,0,0,7,35],
-"gpx2navit__txt_8h.html#a30fad5f0ba6aab0762f0d225d5f5e29e":[3,0,14,0,0,7,44],
-"gpx2navit__txt_8h.html#a344a7a7e72d816c8ec622403af548f9c":[3,0,14,0,0,7,50]
+"gpx2navit__txt_8h.html#a27e26131fe3338942198a3fc65b1c8d3":[3,0,14,0,0,7,46]
 };

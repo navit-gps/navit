@@ -1,5 +1,8 @@
 var NAVTREEINDEX30 =
 {
+"namespaceorg_1_1navitproject.html":[2,0,0,0],
+"namespaceorg_1_1navitproject_1_1navit.html":[1,0,1,0,0],
+"namespaceorg_1_1navitproject_1_1navit.html":[2,0,0,0,0],
 "namespaces.html":[1,0],
 "namespacestartup.html":[1,0,2],
 "namespacetest.html":[1,0,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX30 =
 "osd__core_8c.html#a239eae2eb18a37c54c41361088cfa5e8":[3,0,10,0,0,64],
 "osd__core_8c.html#a24533a9337503f4b41e92cada0450235":[3,0,10,0,0,113],
 "osd__core_8c.html#a2d8822e815a47171f458b0bd738829ab":[3,0,10,0,0,54],
-"osd__core_8c.html#a2df18bc75d683c27c3c80205e7f2e60e":[3,0,10,0,0,96],
-"osd__core_8c.html#a2fbabc69afb9eb964b604ce49d4e0b60":[3,0,10,0,0,66],
-"osd__core_8c.html#a31508e7bce72fa26ea10c53396dccfc1":[3,0,10,0,0,60],
-"osd__core_8c.html#a3514a42388b0ba41998fd818ebb5f955":[3,0,10,0,0,79]
+"osd__core_8c.html#a2df18bc75d683c27c3c80205e7f2e60e":[3,0,10,0,0,96]
 };

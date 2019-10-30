@@ -308,7 +308,7 @@ var searchData=
   ['free_5ffilter_5fentry',['free_filter_entry',['../filter_8c.html#ab192a9ae2995586f9a23771ef886a9f7',1,'filter.c']]],
   ['free_5ffilters',['free_filters',['../filter_8c.html#a02b0de99c2f26db8058ec50dbfacc867',1,'filter.c']]],
   ['free_5ffn',['free_fn',['../structcJSON__Hooks.html#a53e4e91f1e224c1e78c5d1fff7039372',1,'cJSON_Hooks']]],
-  ['free_5fformer_5fdestination',['free_former_destination',['../bookmarks_8c.html#a76554dd1b272ef24aefbf38e227267d3',1,'bookmarks.c']]],
+  ['free_5fformer_5fdestination',['free_former_destination',['../bookmarks_8c.html#a5bd8e43fe8b2a3ed687f61420af00721',1,'bookmarks.c']]],
   ['free_5flist',['free_list',['../navigation_8c.html#a716b6a2fabc5949fd8e9cca04b57dd55',1,'free_list(struct street_destination *list):&#160;navigation.c'],['../speak_8c.html#a41c0f82577a3216c7a361f90009f91ed',1,'free_list(gpointer pointer, gpointer this):&#160;speak.c']]],
   ['freetype_5fmethods',['freetype_methods',['../structgraphics__priv.html#a4591b50c6d4c913051b2b4013841179a',1,'graphics_priv']]],
   ['from',['from',['../structxml__state.html#a14176666937ed1ff367304b33862eb31',1,'xml_state::from()'],['../structtraffic__location.html#af58502643623dfc7235ff4421c9824fa',1,'traffic_location::from()']]],

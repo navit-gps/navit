@@ -22,7 +22,7 @@ var layout_8h =
     [ "layer_set_attr", "layout_8h.html#a890cd750d04ca41c653a8c0b5050412a", null ],
     [ "layout_add_attr", "layout_8h.html#a659a097318232eac8e0687ff045ff92f", null ],
     [ "layout_attr_iter_destroy", "layout_8h.html#a26c1e94bc6d8276503b1689bb8201f22", null ],
-    [ "layout_attr_iter_new", "layout_8h.html#afb415aa73c1d7184e7eb6bc2576ed04c", null ],
+    [ "layout_attr_iter_new", "layout_8h.html#ac337e528fe7f7c13c9799235c8a7ae3a", null ],
     [ "layout_get_attr", "layout_8h.html#a4034d6180d53dd9c44756c7be22762d1", null ],
     [ "layout_get_cursor", "layout_8h.html#aa9636e95dbbdd04e8e665da3ee7744ad", null ],
     [ "layout_new", "layout_8h.html#a6ebe4a41a65c8e52fd0bac5cb45c8647", null ],

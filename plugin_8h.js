@@ -33,6 +33,6 @@ var plugin_8h =
     [ "plugin_set_lazy", "group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9", null ],
     [ "plugin_unload", "group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d", null ],
     [ "plugins_destroy", "group__plugins.html#gafa2ed379c854b20ec13846d3abf36a73", null ],
-    [ "plugins_init", "group__plugins.html#gada5ff5f7ec8e4da87f38db6a0cb4846c", null ],
-    [ "plugins_new", "group__plugins.html#ga71694854a00eccff1b8387f065789557", null ]
+    [ "plugins_init", "group__plugins.html#ga5c62f9df06a33d24aac62672053e0a73", null ],
+    [ "plugins_new", "group__plugins.html#gadf79082b8c3560d4058b0c64fc72981f", null ]
 ];

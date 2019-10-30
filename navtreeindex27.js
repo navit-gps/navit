@@ -1,5 +1,8 @@
 var NAVTREEINDEX27 =
 {
+"layout_8h.html#a634fe4cfcb350abaf0f43b6375b94773":[3,0,74,7],
+"layout_8h.html#a647e39f10090fb7d917b1c5aec50fc86":[3,0,74,6],
+"layout_8h.html#a659a097318232eac8e0687ff045ff92f":[3,0,74,20],
 "layout_8h.html#a6ebe4a41a65c8e52fd0bac5cb45c8647":[3,0,74,25],
 "layout_8h.html#a890cd750d04ca41c653a8c0b5050412a":[3,0,74,19],
 "layout_8h.html#a974e96cc3d5358bc410fda94e425eda0":[3,0,74,8],
@@ -9,12 +12,12 @@ var NAVTREEINDEX27 =
 "layout_8h.html#aabe6c545ed780e6b0257edee05f3a8e1":[3,0,74,9],
 "layout_8h.html#ab9fe03394484d32c45e732ecd3c2194b":[3,0,74,16],
 "layout_8h.html#abb3f3418909627bf020a3f93d89edac0":[3,0,74,10],
+"layout_8h.html#ac337e528fe7f7c13c9799235c8a7ae3a":[3,0,74,22],
 "layout_8h.html#acfe632b7f24b87a434b6fc43507ce559":[3,0,74,11],
 "layout_8h.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19":[3,0,74,27],
 "layout_8h.html#ad5a065b4b5282fa7e09bf95a79fffee7":[3,0,74,28],
 "layout_8h.html#ae2c70612fd0a1d106db684927921095a":[3,0,74,12],
 "layout_8h.html#aebd647f7c855d4e81a6a12b82e46949f":[3,0,74,15],
-"layout_8h.html#afb415aa73c1d7184e7eb6bc2576ed04c":[3,0,74,22],
 "layout_8h_source.html":[3,0,74],
 "linguistics_8c.html":[3,0,75],
 "linguistics_8c.html#a12c503bfb4c91f71c080e249c9fe4cd2":[3,0,75,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX27 =
 "map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5aa6700e615627f10309b34e022f0864e2":[3,0,84,1,25],
 "map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5ab9bb420eb3f1bc973ee4f0b183376e16":[3,0,8,5,2,23,26],
 "map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5ab9bb420eb3f1bc973ee4f0b183376e16":[3,0,84,1,26],
-"map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5aba22dfcc1c86d29648b2037ebb321a36":[3,0,8,5,2,23,36],
-"map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5aba22dfcc1c86d29648b2037ebb321a36":[3,0,84,1,36],
-"map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5ac27e6a9b466cd19d2fa7c4d09484143f":[3,0,8,5,2,23,32],
-"map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5ac27e6a9b466cd19d2fa7c4d09484143f":[3,0,84,1,32]
+"map__data_8h.html#a4c75bd0950ac7379b1b474e23947fde5aba22dfcc1c86d29648b2037ebb321a36":[3,0,8,5,2,23,36]
 };

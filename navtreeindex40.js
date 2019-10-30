@@ -1,5 +1,9 @@
 var NAVTREEINDEX40 =
 {
+"structgraphics__methods.html#ad8d75edc14b2b7c639ba2bb790998200":[2,0,141,15],
+"structgraphics__methods.html#aeaadf59cb53f92ec73824a40ae7fcec8":[2,0,141,4],
+"structgraphics__methods.html#aeefda8da69666cf991852707503d202a":[2,0,141,21],
+"structgraphics__methods.html#aff7b043beff85fc74104aef78ed530bb":[2,0,141,14],
 "structgraphics__opengl__platform.html":[2,0,142],
 "structgraphics__opengl__platform.html#a1e5c326d996cca119e8a997e7171865f":[2,0,142,3],
 "structgraphics__opengl__platform.html#a8061b0a967f0dfde63a14f1bf6eaf4ee":[2,0,142,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX40 =
 "structgui__internal__methods.html#a4d703fb31bd8a5de7673f91460a6b331":[2,0,153,1],
 "structgui__internal__methods.html#a8732a6ee4360ea0f5e9b4d1dd25a507a":[2,0,153,3],
 "structgui__internal__methods.html#aa9d683396587a89f6111632ac036d976":[2,0,153,0],
-"structgui__internal__methods.html#aad994995f5cf8d35d849ce51255e7758":[2,0,153,4],
-"structgui__internal__widget__methods.html":[2,0,154],
-"structgui__internal__widget__methods.html#a30c6a0e3c1cfbe41b96b0fc8a6b6a5af":[2,0,154,7],
-"structgui__internal__widget__methods.html#a4c6012ad7108b4d368211b4ac257561d":[2,0,154,8],
-"structgui__internal__widget__methods.html#a53849c16d12adba89a95552f509addac":[2,0,154,13]
+"structgui__internal__methods.html#aad994995f5cf8d35d849ce51255e7758":[2,0,153,4]
 };

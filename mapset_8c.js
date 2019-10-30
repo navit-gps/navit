@@ -5,7 +5,7 @@ var mapset_8c =
     [ "mapset_search", "structmapset__search.html", "structmapset__search" ],
     [ "mapset_add_attr", "mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790", null ],
     [ "mapset_attr_iter_destroy", "mapset_8c.html#a1dfe523f1ef32990ef3ff654798f7797", null ],
-    [ "mapset_attr_iter_new", "mapset_8c.html#a97f5a5b2fc7bae728f36bd77850b5cd4", null ],
+    [ "mapset_attr_iter_new", "mapset_8c.html#ac1a3084b1b2ccec0928dfd6f6f8852f6", null ],
     [ "mapset_close", "mapset_8c.html#aff7284837514c15ea5468463f9329435", null ],
     [ "mapset_destroy", "mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2", null ],
     [ "mapset_dup", "mapset_8c.html#ae26894cfa5449b004fb75375ce4e2b8a", null ],
