@@ -1072,8 +1072,13 @@ static void route_free_selection(struct map_selection *sel) {
 }
 
 
+/* for compatibility to GFunc */
+static void route_info_free_g(struct route_info *inf, void * unused) {
+    route_info_free(inf);
+}
+
 static void route_clear_destinations(struct route *this_) {
-    g_list_foreach(this_->destinations, (GFunc)route_info_free, NULL);
+    g_list_foreach(this_->destinations, (GFunc)route_info_free_g, NULL);
     g_list_free(this_->destinations);
     this_->destinations=NULL;
 }

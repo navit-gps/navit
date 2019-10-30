@@ -98,7 +98,7 @@ struct attr_iter {
 
 
 struct attr_iter *
-layout_attr_iter_new(void) {
+layout_attr_iter_new(void* unused) {
     return g_new0(struct attr_iter, 1);
 }
 
@@ -282,6 +282,7 @@ static int layer_set_attr_do(struct layer *l, struct attr *attr, int init) {
             dbg(lvl_error, "Ignoring reference to unknown layer '%s' in layer '%s'.", attr->u.str, l->name);
         }
         obj->func->iter_destroy(iter);
+        return 0;
     default:
         return 0;
     }
