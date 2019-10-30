@@ -350,7 +350,9 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     return gc;
 }
 
+#ifdef HAVE_FREEIMAGE
 static struct graphics_image_priv image_error;
+#endif
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
 #ifdef HAVE_FREEIMAGE

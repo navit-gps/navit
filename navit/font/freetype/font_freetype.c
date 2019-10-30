@@ -233,8 +233,12 @@ static struct font_freetype_text *font_freetype_text_new(char *text, struct font
 #else
             fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8, text, textlen, unicode_text);
 #endif
-        fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
-        // TODO: check return value
+        /* fribidi_log2vis seems to be deprecated, but I don't know what to replace it with */
+        if(fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL) == 0) {
+           dbg(lvl_error,"fribidi_log2vis error condition detected. Try to recover");
+           /* error condition. Continue withthe original unicode text instead */
+           memcpy(visual_unicode_text, unicode_text, sizeof(unicode_text));
+        }
 #ifdef FRIBIDIOLD
         fribidi_unicode_to_utf8(visual_unicode_text, unicode_len, visual_text);
 #else
