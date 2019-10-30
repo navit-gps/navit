@@ -1,0 +1,12 @@
+name: Go
+on: [push]
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@latest
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '1.12'
+      - run: ./gradlew checkstyleMain
