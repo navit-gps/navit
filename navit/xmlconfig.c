@@ -1319,7 +1319,7 @@ struct attr_iter {
 };
 
 struct attr_iter *
-navit_object_attr_iter_new(void) {
+navit_object_attr_iter_new(void * unused) {
     return g_new0(struct attr_iter, 1);
 }
 

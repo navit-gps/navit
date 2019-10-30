@@ -3408,7 +3408,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct map_rect * mr;
     struct item * map_item;
     int * default_flags;
-    int item_flags, segmented, maxspeed;
+    int item_flags, segmented, maxspeed=INT_MAX;
     struct coord map_c;
 
     /*

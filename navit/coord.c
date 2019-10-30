@@ -378,6 +378,10 @@ void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buf
             size_used+=g_snprintf(buffer+size_used,size-size_used,"%.0f°%.0f'%.0f\"%c",floor(lng_deg),floor(lng_min),
                                   round(lng_sec),lng_c);
         break;
+    /* compiler warned about those not being handled. What to do with them?*/
+    case DEGREES_DECIMAL_ABSOLUTE:
+    case DEGREES_DECIMAL:
+        break;
     }
 }
 

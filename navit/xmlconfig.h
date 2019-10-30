@@ -127,7 +127,7 @@ int navit_object_set_methods(void *in, int in_size, void *out, int out_size);
 struct navit_object *navit_object_new(struct attr **attrs, struct object_func *func, int size);
 struct navit_object *navit_object_ref(struct navit_object *obj);
 void* navit_object_unref(struct navit_object *obj);
-struct attr_iter * navit_object_attr_iter_new(void);
+struct attr_iter * navit_object_attr_iter_new(void * unused);
 void navit_object_attr_iter_destroy(struct attr_iter *iter);
 int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void navit_object_callbacks(struct navit_object *obj, struct attr *attr);
