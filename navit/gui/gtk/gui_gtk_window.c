@@ -413,7 +413,7 @@ static void gui_gtk_layouts_init(struct gui_priv *this) {
     int count=0;
     char *name;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
         name=g_strdup_printf("Layout %d", count++);
         data=g_new(struct action_cb_data, 1);
@@ -466,7 +466,7 @@ static void gui_gtk_vehicles_update(struct gui_priv *this) {
     g_list_free(this->vehicle_menuitems);
     this->vehicle_menuitems = NULL;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         name=g_strdup_printf("Vehicle %d", count++);
@@ -495,7 +495,7 @@ static void gui_gtk_maps_init(struct gui_priv *this) {
     int count=0;
     char *name, *label;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_map, &attr, iter)) {
         name=g_strdup_printf("Map %d", count++);
         if (! map_get_attr(attr.u.map, attr_type, &type, NULL))
