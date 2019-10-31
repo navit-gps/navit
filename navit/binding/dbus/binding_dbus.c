@@ -1167,7 +1167,7 @@ static DBusHandlerResult request_navit_set_layout(DBusConnection *connection, DB
     if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
         return dbus_error_invalid_parameter(connection, message);
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(navit, attr_layout, &attr, iter)) {
         if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
             navit_set_attr(navit, &attr);
@@ -1241,7 +1241,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
 
     dbus_message_iter_get_basic(&iter, &filename);
 
-    a_iter = navit_attr_iter_new();
+    a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(navit, attr_traffic, &attr, a_iter))
         traffic = (struct traffic *) attr.u.navit_object;
     navit_attr_iter_destroy(a_iter);
@@ -1357,7 +1357,7 @@ static DBusHandlerResult request_navit_traffic_inject(DBusConnection *connection
     dbus_message_iter_get_basic(&iter, &filename);
 
     attr = g_new0(struct attr, 1);
-    a_iter = navit_attr_iter_new();
+    a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(navit, attr_traffic, attr, a_iter))
         traffic = (struct traffic *) attr->u.navit_object;
     navit_attr_iter_destroy(a_iter);
@@ -1648,7 +1648,7 @@ static DBusHandlerResult request_navit_get_attr(DBusConnection *connection, DBus
 
 static DBusHandlerResult request_navit_attr_iter(DBusConnection *connection, DBusMessage *message) {
     DBusMessage *reply;
-    struct attr_iter *attr_iter=navit_attr_iter_new();
+    struct attr_iter *attr_iter=navit_attr_iter_new(NULL);
     char *opath=object_new("navit_attr_iter",attr_iter);
     reply = dbus_message_new_method_return(message);
     dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
