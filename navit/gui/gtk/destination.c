@@ -369,7 +369,7 @@ static void parse_xkbd_args (const char *cmd, char **argv) {
                     bufp = buf;
                     break;
                 }
-                /* fall through */
+            /* fall through */
             default:
                 *bufp++ = *p;
                 break;
@@ -402,8 +402,8 @@ static int spawn_xkbd (char *xkbd_path, char *xkbd_str) {
     size_t n;
 
     if(pipe (fd) < 0) {
-       dbg(lvl_error,"Unable to create pipe (%s). Do not try to spawn keyboard.", strerror(errno));
-       return 0;
+        dbg(lvl_error,"Unable to create pipe (%s). Do not try to spawn keyboard.", strerror(errno));
+        return 0;
     }
     kbd_pid = fork ();
     if (kbd_pid == 0) {
