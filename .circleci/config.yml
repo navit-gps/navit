@@ -4,12 +4,10 @@ defaults: &defaults
     - image: ubuntu:18.04
 jobs:
   sanity_check:
-    <<: *defaults
+    docker:
+      - image: navit/sanity_check:latest
     steps:
       - checkout
-      - run:
-          name: Setup requirements
-          command: bash scripts/setup_sanitycheck_requirements.sh
       - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
