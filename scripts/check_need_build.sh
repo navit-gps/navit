@@ -26,7 +26,7 @@ list_files_git_diff(){
 # @return: nothing (the input variable is modified according to the brief description)
 filtered_files_git_diff(){
     local -n _ret=$1
-    declare -a filters=('^docs/.*', '.*\.md$', '.*\.rst$')
+    declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$')
     declare -a file_list=()
     list_files_git_diff file_list
     for f in ${file_list[@]}; do
