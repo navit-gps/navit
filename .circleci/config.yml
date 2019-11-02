@@ -14,6 +14,10 @@ jobs:
       - run:
           name: Run CheckStyle Test
           command: ./gradlew checkstyleMain
+      - store_artifacts:
+          name: Store checkstyle report
+          path: navit/android/checkstyle
+          destination: reports
   build_linux:
     <<: *defaults
     steps:
@@ -119,10 +123,6 @@ jobs:
       - store_artifacts:
           name: Store Lint reports
           path: navit/android/build/reports
-          destination: reports
-      - store_artifacts:
-          name: Store checkstyle report
-          path: /home/circleci/code/navit/android/checkstyle
           destination: reports
       - store_test_results:
           path: test-results
