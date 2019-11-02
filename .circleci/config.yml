@@ -164,7 +164,7 @@ jobs:
     steps:
       - checkout
       - run: |
-          apt-get update && apt-get install -y git
+          apt-get update && apt-get install -y git-core
           if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the WinCE build environment
