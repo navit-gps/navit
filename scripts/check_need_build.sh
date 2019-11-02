@@ -13,21 +13,23 @@ declare -a file_list=$(git diff --name-only refs/remotes/origin/trunk)
 # If there is no diff that might just mean that you are on the trunk or master branch
 # so you just want to check the last commit. This way we still have that check more
 # or less working when pushing directly to trunk or when merging in master.
-if [[ -z "$files" ]]; then
+if [[ -z "$file_list" ]]; then
     file_list=$(git diff --name-only HEAD^)
 fi
 
 # This block filters out those don't match the pattern we use to exclude files that should not trigger a build.
-declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$')
+declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$' '.*') # WARNING! '.*' is here only for testing if the circleci command works. It should be removed before merge!
 for f in ${file_list[@]}; do
     for filter in "${filters[@]}" ; do
+        echo "checking $f with filter $filter"
         if [[ "$f" =~ $filter ]]; then
             # This removes the element from the element matching the filter
             file_list=(${file_list[@]/$f})
+            echo "filtering out $f"
             break
         fi
     done
 done
 
 # exits with a 0 if the list is empty
-[[ -z "${filte_list}" ]]
+[[ -z "${file_list}" ]]
