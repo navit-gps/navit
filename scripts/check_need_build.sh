@@ -4,10 +4,12 @@
 # The idea is also to build if the exit code is different from 0 as it means we cannot get a filtered list properly.  #
 # ################################################################################################################### #
 
-# This blockconstructs the list of files that differ from the trunk branch.
+# If we are on a tag, just exit 1 as we want to go on with the build
+git describe --exact-match --tags HEAD 2>&1 2>/dev/null && exit 1 || echo "Not on a tag, checking files diff"
+
+# This block constructs the list of files that differ from the trunk branch.
 # Note that if you are on the trunk or master branch it will return the files modified by the last commit.
 declare -a file_list=$(git diff --name-only refs/remotes/origin/trunk)
-
 # If there is no diff that might just mean that you are on the trunk or master branch
 # so you just want to check the last commit. This way we still have that check more
 # or less working when pushing directly to trunk or when merging in master.
