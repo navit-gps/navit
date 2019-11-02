@@ -18,7 +18,7 @@ if [[ -z "$files" ]]; then
 fi
 
 # This block filters out those don't match the pattern we use to exclude files that should not trigger a build.
-declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$' '.*') # WARNING! '.*' is here only for testing if the circleci command works. It should be removed before merge!
+declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$')
 for f in ${file_list[@]}; do
     for filter in "${filters[@]}" ; do
         if [[ "$f" =~ $filter ]]; then
