@@ -14,10 +14,17 @@ jobs:
       - run:
           name: Run CheckStyle Test
           command: ./gradlew checkstyleMain
+      - store_artifacts:
+          name: Store checkstyle report
+          path: navit/android/checkstyle
+          destination: reports
   build_linux:
     <<: *defaults
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Id
           command: cat /etc/*release
@@ -39,6 +46,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Install doxygen and other essentials
           command: apt-get update && apt-get -y install doxygen ca-certificates git rsync
@@ -54,6 +62,7 @@ jobs:
     machine: true
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: install docker
           command: circleci-install docker
@@ -75,6 +84,7 @@ jobs:
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Id
           command: cat /etc/*release
@@ -116,10 +126,6 @@ jobs:
           name: Store Lint reports
           path: navit/android/build/reports
           destination: reports
-      - store_artifacts:
-          name: Store checkstyle report
-          path: /home/circleci/code/navit/android/checkstyle
-          destination: reports
       - store_test_results:
           path: test-results
       - run:
@@ -131,6 +137,9 @@ jobs:
       - image: ubuntu:14.04
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the Windows build environment
           command: |
@@ -154,6 +163,9 @@ jobs:
       - image: navit/dockerfiles:wince
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git-core
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the WinCE build environment
           command: |
@@ -173,6 +185,7 @@ jobs:
       - image: navit/tomtom-ng
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Setup common requirements
           command: |
@@ -193,6 +206,7 @@ jobs:
       - image: navit/tomtom-ng
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Setup common requirements
           command: |
