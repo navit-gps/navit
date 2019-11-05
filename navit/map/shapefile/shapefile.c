@@ -171,7 +171,8 @@ static void longest_match_add_match(struct longest_match *lm, struct longest_mat
     lmi->match_idx[lmi->match_idx_count++]=idx;
 }
 
-static void longest_match_item_destroy(struct longest_match_list_item *lmi, long flags) {
+static void longest_match_item_destroy(struct longest_match_list_item *lmi, gpointer p_flags) {
+    long flags = (long) p_flags;
     if (!lmi)
         return;
     if (flags & 2) {
@@ -195,7 +196,8 @@ static struct longest_match_list *longest_match_list_new(struct longest_match *l
     return ret;
 }
 
-static void longest_match_list_destroy(struct longest_match_list *lml, long flags) {
+static void longest_match_list_destroy(struct longest_match_list *lml, gpointer p_flags) {
+    long flags = (long) p_flags;
     if (!lml)
         return;
     if (flags & 1) {

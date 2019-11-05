@@ -2326,7 +2326,7 @@ static void binmap_search_destroy(struct map_search_priv *ms) {
     if (ms->mr)
         map_rect_destroy_binfile(ms->mr);
     while(ms->boundaries) {
-        geom_poly_segment_destroy(ms->boundaries->data);
+        geom_poly_segment_destroy(ms->boundaries->data, NULL);
         ms->boundaries=g_list_delete_link(ms->boundaries,ms->boundaries);
     }
     g_free(ms);

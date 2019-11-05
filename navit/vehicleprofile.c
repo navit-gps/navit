@@ -182,7 +182,7 @@ static void vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpoin
 }
 
 static void vehicleprofile_update(struct vehicleprofile *this_) {
-    struct attr_iter *iter=vehicleprofile_attr_iter_new();
+    struct attr_iter *iter=vehicleprofile_attr_iter_new(NULL);
     struct attr profile_option;
     dbg(lvl_debug,"enter");
     vehicleprofile_clear(this_);
@@ -227,7 +227,7 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs) {
 }
 
 struct attr_iter *
-vehicleprofile_attr_iter_new(void) {
+vehicleprofile_attr_iter_new(void* unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 
@@ -276,8 +276,9 @@ char *vehicleprofile_get_name(struct vehicleprofile *this_) {
     return this_->name;
 }
 
-static void vehicleprofile_init(struct vehicleprofile *this_) {
+static int vehicleprofile_init(struct vehicleprofile *this_) {
     vehicleprofile_update(this_);
+    return 0;
 }
 
 struct object_func vehicleprofile_func = {

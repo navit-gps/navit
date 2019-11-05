@@ -42,6 +42,7 @@
 #include "plugin.h"
 #include "callback.h"
 #include "debug.h"
+#include "navit.h"
 
 /**
  * @brief Stores information about the plugin instance.
@@ -86,7 +87,7 @@ static void traffic_traff_android_on_feed_received(struct traffic_priv * this_, 
 
     dbg(lvl_debug, "enter");
     attr = g_new0(struct attr, 1);
-    a_iter = navit_attr_iter_new();
+    a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
         traffic = (struct traffic *) attr->u.navit_object;
     navit_attr_iter_destroy(a_iter);
