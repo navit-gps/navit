@@ -1,5 +1,6 @@
 var NAVTREEINDEX48 =
 {
+"structslicerpolygon.html#a28387b0d4862fd4242b4591ac20461d1":[2,0,363,2],
 "structslicerpolygon.html#a2c730b736184c3292581a05ba370221f":[2,0,363,12],
 "structslicerpolygon.html#a3ed734c4acceaf67c25ea7ac0e2ff75e":[2,0,363,15],
 "structslicerpolygon.html#a4955590c44ef65c5c2b2197b0d7742b1":[2,0,363,1],
@@ -52,8 +53,8 @@ var NAVTREEINDEX48 =
 "structstatusbar__priv.html#a22ab0f7420aba9d0821e51af230045b0":[2,0,368,0],
 "structstatusbar__priv.html#a35281bf0639e24edd50a89e3ac2b00fa":[2,0,368,4],
 "structstatusbar__priv.html#a421331a67e3afd3d6cdac8e1d92efb0f":[2,0,368,6],
-"structstatusbar__priv.html#a7efcaa1e768e4041f9549954f86b0280":[2,0,368,1],
 "structstatusbar__priv.html#a9363a05bdcf37f0b3be5bff04c80f189":[2,0,368,2],
+"structstatusbar__priv.html#a9a12604efdc83851c43e983ab121f5a7":[2,0,368,1],
 "structstatusbar__priv.html#aceef0e595b0d541b17ff280e927ce01a":[2,0,368,5],
 "structstopwatch.html":[2,0,369],
 "structstopwatch.html#a1cefd53374d6fbe4e65c1ae4f2e08259":[2,0,369,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX48 =
 "structtown__priv.html#a58cbc1381a2e25e2b2dd4c6ad8134702":[2,0,397,18],
 "structtown__priv.html#a6117d145fc4ad7ec15967e42fd2deec9":[2,0,397,1],
 "structtown__priv.html#a6d6b86f9cbd2d8a337d58b8cec99887c":[2,0,397,11],
-"structtown__priv.html#a787e094e56cefffe19d60981cdbd9969":[2,0,397,9],
-"structtown__priv.html#a80870a2ceb8f306d3fceee9555b72ba3":[2,0,397,10]
+"structtown__priv.html#a787e094e56cefffe19d60981cdbd9969":[2,0,397,9]
 };

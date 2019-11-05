@@ -179,8 +179,8 @@ Functions</h2></td></tr>
 <tr class="separator:a1b0fc963222ecb9ba22a8170851f40fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add9625e24118e08da6b5e7d31f4e5442"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#add9625e24118e08da6b5e7d31f4e5442">get_iter_name</a> (char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>)</td></tr>
 <tr class="separator:add9625e24118e08da6b5e7d31f4e5442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95ee0ad8e517b0c5c71a291e76cb2c1f"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>, char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*func)(void))</td></tr>
-<tr class="separator:a95ee0ad8e517b0c5c71a291e76cb2c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad557b4b0d59d59a23e318fd09f00e0e7"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>, char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*func)(void *))</td></tr>
+<tr class="separator:ad557b4b0d59d59a23e318fd09f00e0e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e225f9731aaebc1c4a0f244f4ec2203"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#a0e225f9731aaebc1c4a0f244f4ec2203">request_attr_iter_destroy</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>, char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, void(*func)(struct <a class="el" href="structattr__iter.html">attr_iter</a> *))</td></tr>
 <tr class="separator:a0e225f9731aaebc1c4a0f244f4ec2203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87b29e0cf31403f6e2e5b066eb194fc3"><td class="memItemLeft" align="right" valign="top">static DBusHandlerResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__dbus_8c.html#a87b29e0cf31403f6e2e5b066eb194fc3">request_destroy</a> (DBusConnection *<a class="el" href="binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766">connection</a>, DBusMessage *<a class="el" href="structmessage.html">message</a>, char *<a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, void(*func)(void *))</td></tr>
@@ -1340,7 +1340,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>, <a class="el" href="binding__dbus_8c.html#a0e225f9731aaebc1c4a0f244f4ec2203">request_attr_iter_destroy()</a>, and <a class="el" href="binding__dbus_8c.html#afd875da7f54452b8f37755ab0b4674cf">request_get_attr()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>, <a class="el" href="binding__dbus_8c.html#a0e225f9731aaebc1c4a0f244f4ec2203">request_attr_iter_destroy()</a>, and <a class="el" href="binding__dbus_8c.html#afd875da7f54452b8f37755ab0b4674cf">request_get_attr()</a>.</p>
 
 </div>
 </div>
@@ -1604,7 +1604,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="binding__dbus_8c.html#a2b01c07f9c9277a4aa472169796eb3d5">object_count</a>, <a class="el" href="binding__dbus_8c.html#a6cf420283db064a429023f32fcfc0a9a">object_hash</a>, <a class="el" href="binding__dbus_8c.html#a648e291bbe69efe1380dd3fa71ad4b97">object_hash_rev</a>, and <a class="el" href="binding__dbus_8c.html#a20d2e1cd667057de055ed14a9e19c2a8">object_path</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal()</a>, <a class="el" href="binding__dbus_8c.html#a0ece7c67fb5a339f5a03257dd91b13fe">dbus_main_navit()</a>, <a class="el" href="binding__dbus_8c.html#acda5b662e8456450a15d8df0cbc7a2d5">encode_attr()</a>, <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>, <a class="el" href="binding__dbus_8c.html#a1072bf371a908cce6e90f23f1d2dd1f1">request_callback_new()</a>, <a class="el" href="binding__dbus_8c.html#a0280bb7dcc5252326c89ad0ccc96528b">request_dup()</a>, <a class="el" href="binding__dbus_8c.html#a2482f3813dd32fb162bcd5eb4aa2bf81">request_navit_attr_iter()</a>, and <a class="el" href="binding__dbus_8c.html#a5ad5acde79eb759db464870568f9e628">request_search_list_new()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal()</a>, <a class="el" href="binding__dbus_8c.html#a0ece7c67fb5a339f5a03257dd91b13fe">dbus_main_navit()</a>, <a class="el" href="binding__dbus_8c.html#acda5b662e8456450a15d8df0cbc7a2d5">encode_attr()</a>, <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>, <a class="el" href="binding__dbus_8c.html#a1072bf371a908cce6e90f23f1d2dd1f1">request_callback_new()</a>, <a class="el" href="binding__dbus_8c.html#a0280bb7dcc5252326c89ad0ccc96528b">request_dup()</a>, <a class="el" href="binding__dbus_8c.html#a2482f3813dd32fb162bcd5eb4aa2bf81">request_navit_attr_iter()</a>, and <a class="el" href="binding__dbus_8c.html#a5ad5acde79eb759db464870568f9e628">request_search_list_new()</a>.</p>
 
 </div>
 </div>
@@ -1780,8 +1780,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a95ee0ad8e517b0c5c71a291e76cb2c1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95ee0ad8e517b0c5c71a291e76cb2c1f">&#9670;&nbsp;</a></span>request_attr_iter()</h2>
+<a id="ad557b4b0d59d59a23e318fd09f00e0e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad557b4b0d59d59a23e318fd09f00e0e7">&#9670;&nbsp;</a></span>request_attr_iter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1810,7 +1810,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*)(void)&#160;</td>
+          <td class="paramtype">struct <a class="el" href="structattr__iter.html">attr_iter</a> *(*)(void *)&#160;</td>
           <td class="paramname"><em>func</em>&#160;</td>
         </tr>
         <tr>
@@ -2082,7 +2082,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="config___8c.html#a54a8099bba4edfd2f8ae361a23327d28">config_attr_iter_new()</a>, and <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>.</p>
+<p class="reference">References <a class="el" href="config___8c.html#a54a8099bba4edfd2f8ae361a23327d28">config_attr_iter_new()</a>, and <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>.</p>
 
 </div>
 </div>
@@ -2674,7 +2674,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="mapset_8c.html#ac1a3084b1b2ccec0928dfd6f6f8852f6">mapset_attr_iter_new()</a>, and <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>.</p>
+<p class="reference">References <a class="el" href="mapset_8c.html#ac1a3084b1b2ccec0928dfd6f6f8852f6">mapset_attr_iter_new()</a>, and <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>.</p>
 
 </div>
 </div>
@@ -3904,7 +3904,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>, and <a class="el" href="roadprofile_8c.html#abfa3182bc8eda21e980478179b8952b4">roadprofile_attr_iter_new()</a>.</p>
+<p class="reference">References <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>, and <a class="el" href="roadprofile_8c.html#af118b4d0f75d90c8848a7dcd4c3094a4">roadprofile_attr_iter_new()</a>.</p>
 
 </div>
 </div>
@@ -4648,7 +4648,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="binding__dbus_8c.html#a95ee0ad8e517b0c5c71a291e76cb2c1f">request_attr_iter()</a>, and <a class="el" href="vehicleprofile_8c.html#a71d92a93babc5e95ef7f2cbe0035e219">vehicleprofile_attr_iter_new()</a>.</p>
+<p class="reference">References <a class="el" href="binding__dbus_8c.html#ad557b4b0d59d59a23e318fd09f00e0e7">request_attr_iter()</a>, and <a class="el" href="vehicleprofile_8c.html#aa634a6ede2bab4f9767ef9df9fd31147">vehicleprofile_attr_iter_new()</a>.</p>
 
 </div>
 </div>
@@ -4827,7 +4827,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;dbus_send_signal&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a>)},</div><div class="line">}</div><div class="ttc" id="command_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition:</b> command.h:32</div></div>
-<div class="ttc" id="binding__dbus_8c_html_abb52ad9fd21ec5490b101bf5eb3d995e"><div class="ttname"><a href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a></div><div class="ttdeci">static int dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2182</div></div>
+<div class="ttc" id="binding__dbus_8c_html_abb52ad9fd21ec5490b101bf5eb3d995e"><div class="ttname"><a href="binding__dbus_8c.html#abb52ad9fd21ec5490b101bf5eb3d995e">dbus_cmd_send_signal</a></div><div class="ttdeci">static int dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2183</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4888,7 +4888,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a>,</div><div class="line">    NULL</div><div class="line">}</div><div class="ttc" id="binding__dbus_8c_html_a1d6283232cad123a15c9dae03c160c3a"><div class="ttname"><a href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a></div><div class="ttdeci">static DBusHandlerResult navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2132</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    NULL,</div><div class="line">    <a class="code" href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a>,</div><div class="line">    NULL</div><div class="line">}</div><div class="ttc" id="binding__dbus_8c_html_a1d6283232cad123a15c9dae03c160c3a"><div class="ttname"><a href="binding__dbus_8c.html#a1d6283232cad123a15c9dae03c160c3a">navit_handler_func</a></div><div class="ttdeci">static DBusHandlerResult navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)</div><div class="ttdef"><b>Definition:</b> binding_dbus.c:2133</div></div>
 </div><!-- fragment -->
 </div>
 </div>

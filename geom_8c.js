@@ -13,7 +13,7 @@ var geom_8c =
     [ "geom_poly_intersection", "geom_8c.html#a96397fbb6f714aeb1fab06b28d8e4508", null ],
     [ "geom_poly_point_inside", "geom_8c.html#a83b4a75a2d554006053e3dcc8cef245a", null ],
     [ "geom_poly_segment_compatible", "geom_8c.html#aea5efc3e53159805d880dc44654b099f", null ],
-    [ "geom_poly_segment_destroy", "geom_8c.html#afd04d923233140476074f51dd494555e", null ],
+    [ "geom_poly_segment_destroy", "geom_8c.html#addb2ddabf4a4d746cbbacadf09423ea5", null ],
     [ "geom_poly_segments_insert", "geom_8c.html#a4255b43e23daee23c669d14e6f9d42a6", null ],
     [ "geom_poly_segments_point_inside", "geom_8c.html#a80c630f1e476578403f8b20232208ff3", null ],
     [ "geom_poly_segments_remove", "geom_8c.html#a69bb22e4d9e34cce80e0394c0646bc9a", null ],

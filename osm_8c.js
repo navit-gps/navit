@@ -58,6 +58,7 @@ var osm_8c =
     [ "dump_sequence", "osm_8c.html#a421e1372f89dcd1725bf67f09500f359", null ],
     [ "extend_buffer", "osm_8c.html#a468f57b8b2867be64a65def3e5e471d0", null ],
     [ "flush_nodes", "osm_8c.html#a9e537c7d63876ec943f9cd48300c3a4d", null ],
+    [ "g_free_helper", "osm_8c.html#a758860664ff8573544d78fb3b0fd26f9", null ],
     [ "index_country_add", "osm_8c.html#aa56fb4cd1506877d879624495ea870e4", null ],
     [ "is_loop", "osm_8c.html#ae9a4a51447af914635443f2417c8ab1a", null ],
     [ "item_bin_get_id", "osm_8c.html#af51ab1fb0e5abc9d122d255405f34e71", null ],

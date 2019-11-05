@@ -4,7 +4,7 @@ var vehicle_8c =
     [ "vehicle_add_attr", "vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe", null ],
     [ "vehicle_add_log", "vehicle_8c.html#a0ab50275418834c7c6a1b23e649564d1", null ],
     [ "vehicle_attr_iter_destroy", "vehicle_8c.html#a85f330e1ac6fbc2f998e9b5da61d4c4d", null ],
-    [ "vehicle_attr_iter_new", "vehicle_8c.html#a52ce7ae7fd33b02cd7edc3625ce4c179", null ],
+    [ "vehicle_attr_iter_new", "vehicle_8c.html#a980c992b6b248c6f57e48f8facebf562", null ],
     [ "vehicle_destroy", "vehicle_8c.html#aa90d6b5f10e041eb3e7d627040d716ef", null ],
     [ "vehicle_draw", "vehicle_8c.html#ab7af8b4062d6959019e6de3983cec79c", null ],
     [ "vehicle_draw_do", "vehicle_8c.html#ae8df605f95e2b8adc37cca09493ba4a8", null ],

@@ -42,7 +42,7 @@ var searchData=
   ['image_5fcache',['image_cache',['../font__freetype_8c.html#a9e76f2192d7914622d72442fba8a049d',1,'font_freetype.c']]],
   ['image_5fcache_5fhash',['image_cache_hash',['../structgraphics__priv.html#a5d9b9bd3c546fee27ff6487459964811',1,'graphics_priv::image_cache_hash()'],['../structgraphics.html#ade13a4358d6ae98cce31ad9434613ac8',1,'graphics::image_cache_hash()'],['../graphics__android_8c.html#a95b7c051e32404742682f976c7273e0b',1,'image_cache_hash():&#160;graphics_android.c']]],
   ['image_5fdestroy',['image_destroy',['../structgraphics__image__methods.html#a280889037789697663a52ecc6ce7f21f',1,'graphics_image_methods']]],
-  ['image_5ferror',['image_error',['../graphics__egl_8c.html#a53518012b83469bd1959d629fa42b07f',1,'image_error():&#160;graphics_egl.c'],['../graphics__opengl_8c.html#a53518012b83469bd1959d629fa42b07f',1,'image_error():&#160;graphics_opengl.c']]],
+  ['image_5ferror',['image_error',['../graphics__egl_8c.html#a53518012b83469bd1959d629fa42b07f',1,'graphics_egl.c']]],
   ['image_5ffree',['image_free',['../structgraphics__methods.html#a998227a551e12dd9954b490b1610b801',1,'graphics_methods']]],
   ['image_5fmethods',['image_methods',['../graphics__android_8c.html#a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2',1,'image_methods():&#160;graphics_android.c'],['../graphics__qt5_8cpp.html#a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2',1,'image_methods():&#160;graphics_qt5.cpp']]],
   ['image_5fnew',['image_new',['../structgraphics__methods.html#a45a45fa54825fea54ca33078d6164a3b',1,'graphics_methods::image_new()'],['../structgui__internal__widget__methods.html#a86f54fbae1f196d1faeca10774135dc4',1,'gui_internal_widget_methods::image_new()']]],

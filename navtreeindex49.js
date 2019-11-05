@@ -1,5 +1,6 @@
 var NAVTREEINDEX49 =
 {
+"structtown__priv.html#a80870a2ceb8f306d3fceee9555b72ba3":[2,0,397,10],
 "structtown__priv.html#aa4959a35f9b7da757a97e1ec91f91cbb":[2,0,397,15],
 "structtown__priv.html#ab68c6f9c8ab0e7f1e8b418a3ed5df74d":[2,0,397,12],
 "structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa":[2,0,397,5],
@@ -246,8 +247,7 @@ var NAVTREEINDEX49 =
 "structvehicle__methods.html#a41e7e645fa088f7fbce0705077a4b62c":[2,0,424,2],
 "structvehicle__methods.html#a501719479d64b5230d500cc6e0408df8":[2,0,424,1],
 "structvehicle__methods.html#a6f0edcabbd2447efe79c1efc1746bb6b":[2,0,424,0],
-"structvehicle__priv.html":[0,2,0,6,0],
 "structvehicle__priv.html":[0,2,0,3,0],
-"structvehicle__priv.html":[0,2,0,7,0],
-"structvehicle__priv.html":[0,2,0,2,1]
+"structvehicle__priv.html":[0,2,0,10,1],
+"structvehicle__priv.html":[0,2,0,6,0]
 };

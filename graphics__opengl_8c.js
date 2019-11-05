@@ -83,7 +83,6 @@ var graphics__opengl_8c =
     [ "graphics_methods", "graphics__opengl_8c.html#a9deff224ce3850c76ba8377ae7a73681", null ],
     [ "graphics_priv_root", "graphics__opengl_8c.html#aa7591edeaf276b3683df9871f203c700", null ],
     [ "hImageData", "graphics__opengl_8c.html#a0db6341733345936ef222c0b231a4ed2", null ],
-    [ "image_error", "graphics__opengl_8c.html#a53518012b83469bd1959d629fa42b07f", null ],
     [ "mouse_event_queue_begin_idx", "graphics__opengl_8c.html#ab3c68c87f57a2f279f99b6091e92de22", null ],
     [ "mouse_event_queue_end_idx", "graphics__opengl_8c.html#af5c85064b00dfe5618bb607c9988d390", null ],
     [ "mouse_event_queue_size", "graphics__opengl_8c.html#a889302fe88b3fd0e6169b1de2dd0e8d9", null ],

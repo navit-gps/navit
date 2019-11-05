@@ -48,7 +48,7 @@ var searchData=
   ['gmap',['gmap',['../structmap__rect__priv.html#a5a9fe6debe5bc6977d1775373852a6f1',1,'map_rect_priv']]],
   ['gps',['gps',['../structstatusbar__priv.html#a22ab0f7420aba9d0821e51af230045b0',1,'statusbar_priv::gps()'],['../group__vehicle-gpsd.html#gadd800616f447d9b4920e18064b928cd4',1,'vehicle_priv::gps()']]],
   ['gps_5ffix_5fchange',['GPS_FIX_CHANGE',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a880cf639bb6066feb3c4532f7b0a39c9',1,'org::navitproject::navit::NavitVehicle']]],
-  ['gps_5ftext',['gps_text',['../structstatusbar__priv.html#a7efcaa1e768e4041f9549954f86b0280',1,'statusbar_priv']]],
+  ['gps_5ftext',['gps_text',['../structstatusbar__priv.html#a9a12604efdc83851c43e983ab121f5a7',1,'statusbar_priv']]],
   ['gps_5ftype',['gps_type',['../structvehicle__priv.html#a3b661a391a9b79985576388b51ae65fd',1,'vehicle_priv']]],
   ['gpsd_5fquery',['gpsd_query',['../group__vehicle-gpsd.html#ga5b1f196399f0c70b421c3f57b1017199',1,'vehicle_priv']]],
   ['gpx_5fdesc',['gpx_desc',['../structvehicle.html#a38814bbbf05584a70b9e086dcbee46a4',1,'vehicle']]],

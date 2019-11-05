@@ -1,5 +1,6 @@
 var gui__internal__widget_8c =
 [
+    [ "g_free_helper", "gui__internal__widget_8c.html#a758860664ff8573544d78fb3b0fd26f9", null ],
     [ "gui_internal_background_render", "gui__internal__widget_8c.html#a1139ae84a015e3e388526a733dadff94", null ],
     [ "gui_internal_box_new", "gui__internal__widget_8c.html#ab21759441179bdbabb886f9e7e11cc27", null ],
     [ "gui_internal_box_new_with_label", "gui__internal__widget_8c.html#a8bed9d31c472839bcdd3bbf9bfd689d3", null ],
