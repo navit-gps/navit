@@ -33,7 +33,9 @@
 #include "projection.h"
 #include "navit_nls.h"
 #include "bookmarks.h"
-
+#ifndef _WIN32
+#include <errno.h>
+#endif
 #define COL_COUNT 8
 
 static struct search_param {
@@ -78,7 +80,6 @@ static void button_map(GtkWidget *widget, struct search_param *search) {
     GtkTreeViewColumn *focus_column;
     struct pcoord *point=NULL;	/* A pointer on the geographical position of the selected map point */
     GtkTreeIter iter;
-    char *label;
     GList* p;
 
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
@@ -368,6 +369,7 @@ static void parse_xkbd_args (const char *cmd, char **argv) {
                     bufp = buf;
                     break;
                 }
+            /* fall through */
             default:
                 *bufp++ = *p;
                 break;
@@ -399,7 +401,10 @@ static int spawn_xkbd (char *xkbd_path, char *xkbd_str) {
     int a = 0;
     size_t n;
 
-    pipe (fd);
+    if(pipe (fd) < 0) {
+        dbg(lvl_error,"Unable to create pipe (%s). Do not try to spawn keyboard.", strerror(errno));
+        return 0;
+    }
     kbd_pid = fork ();
     if (kbd_pid == 0) {
         close (fd[0]);
