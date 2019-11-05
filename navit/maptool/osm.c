@@ -2592,6 +2592,11 @@ static void process_associated_streets_setup(FILE *in, struct relations *relatio
     relations_add_relation_default_entry(relations, relations_func);
 }
 
+/* to adapt g_free to GFunc */
+static void g_free_helper(void * data, void * user_data) {
+    g_free(data);
+}
+
 void process_associated_streets(FILE *in, struct files_relation_processing *files_relproc) {
     struct relations *relations=relations_new();
     struct process_relation_member_func_priv fp= {NULL,NULL};
@@ -2618,7 +2623,7 @@ void process_associated_streets(FILE *in, struct files_relation_processing *file
     }
 
     relations_destroy(relations);
-    g_list_foreach(fp.allocations, (GFunc)free, NULL);
+    g_list_foreach(fp.allocations, (GFunc)g_free_helper, NULL);
     g_list_free(fp.allocations);
 }
 
@@ -2674,7 +2679,7 @@ void process_house_number_interpolations(FILE *in, struct files_relation_process
     }
 
     relations_destroy(relations);
-    g_list_foreach(fp.allocations, (GFunc)free, NULL);
+    g_list_foreach(fp.allocations, (GFunc)g_free_helper, NULL);
     g_list_free(fp.allocations);
 }
 

@@ -1641,6 +1641,7 @@ char *gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             *r++=p;
         }
@@ -1662,6 +1663,7 @@ static int gui_internal_match(const char *pattern, const char *string) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             if (*string++ != p)
                 return 0;
@@ -1705,7 +1707,7 @@ int gui_internal_set(char *remove, char *add) {
 
 
 static void gui_internal_window_closed(struct gui_priv *this) {
-    gui_internal_cmd2_quit(this, NULL, NULL, NULL, NULL);
+    gui_internal_cmd2_quit(this, NULL, NULL, NULL);
 }
 
 
@@ -1914,7 +1916,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
 
 static void save_vehicle_xml(struct vehicle *v) {
     struct attr attr;
-    struct attr_iter *iter=vehicle_attr_iter_new();
+    struct attr_iter *iter=vehicle_attr_iter_new(NULL);
     int childs=0;
     printf("<vehicle");
     while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
