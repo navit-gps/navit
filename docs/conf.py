@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
+extensions = [
+    'm2r',
+    'sphinx_rtd_theme',
+]
+
 source_suffix = '.rst'
 
 master_doc = 'index'

@@ -1,4 +1,5 @@
-==Vehicle Options==
+Vehicle Options
+===============
 It's important to understand the separate but linked Navit concepts of a **vehicle** and [[Vehicleprofile| **vehicleprofile**]] element. A vehicle defines the source of positional data (suchas a USB GPS device), and how to present that data to the user on the map, where the vehicleprofile defines all aspects of routing.
 
 A simple vehicle definition looks like this:
@@ -6,9 +7,7 @@ A simple vehicle definition looks like this:
 
 .. code-block:: xml
 
-<source lang="xml">
-  <vehicle name="My" enabled="yes" source="file://dev/ttyS0"/ active="1"/>
-</source>
+  <vehicle name="My" enabled="yes" source="file://dev/ttyS0" active="1"/>
 
 
 Here some of the available options:
@@ -25,7 +24,8 @@ Obsolete options:
 * **animate**: If set to 1, the cursor will be animated as a moving dotted line, to make it easier to see.
 -->
 
-===GPS===
+GPS
+---
 Most essential detail is the gps source, that need to be adapted to your local setup.
 
 
@@ -48,7 +48,7 @@ Linux:
 * source="file:/dev/ttyS0"	- serial GPS connected to the first serial port (you may need to add the correct baudrate eg.: freerunner source="file:/dev/ttySAC1" baudrate="9600")
 * source="gpsd_dbus:"           - via dbus, position reported by gpsd
 
-**Network based:**<br>
+**Network based:**
 If you want to connect multiple tools to your GPS, you need an multiplexer tool, as gpsd or gypsy.
 * source="gpsd://host[:port]"	 - gpsd://localhost, the default one, will try to connect to gpsd on localhost
 * source="socket:ipaddr:post"    - socket connection (expects nmea stream)
@@ -62,16 +62,15 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 * source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source.
 * source="null://" : no GPS at all
 
-===Logging tracks===
+Logging tracks
+--------------
 To record your trip , you can add a sub-instance "log" to the vehicle. It is possible to add multiple logs.
 
 
 .. code-block:: xml
 
-<source lang="xml">
  <log type="gpx" data="track_%Y%m%d%i.gpx" flush_size="1048576" flush_time="900" />
  <log type="nmea" data="track_%Y%m%d%i.nmea" flush_size="1048576" flush_time="900" />
-</source>
 
 
 This will give a log file named YearMonthDaySequencenumber.gpx/.nmea which will be kept in memory and flushed to disk when it is 1048576 bytes large or the oldest data is older than 900 seconds.
@@ -81,13 +80,13 @@ To display your track for more than one hour, you must use [[binfile]] to create
 
 .. code-block:: xml
 
-<source lang="xml">
  <log type="binfile" data="track.bin" flush_size="0"/>
-</source>
+
 
 For customizing what is stored, see [[GPX]]
 
-===Vehicleprofile===
+Vehicleprofile
+--------------
 [[Vehicleprofile | Profiles to add in the navit.xml]]
 <br/>
 <!-- this is tricky, here we need a step by step introduction-->
@@ -96,16 +95,14 @@ Defines the behaviour of the routing and are usually linked to a vehicle section
 
 .. code-block:: xml
 
-<source lang="xml">
-<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
-  <roadprofile item_types="path,track_ground" speed="12" route_weight="5">
-  </roadprofile>
-  <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" route_weight="15">
-  </roadprofile>
-  <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
-  <roadprofile item_types="ferry" speed="40" route_weight="40"/>
- </vehicleprofile>
-</source>
+  <vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
+    <roadprofile item_types="path,track_ground" speed="12" route_weight="5">
+    </roadprofile>
+    <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" route_weight="15">
+    </roadprofile>
+    <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
+    <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+  </vehicleprofile>
 
 For details on the flags, see [[Vehicle profile flags]].
 The speeds are in km/h.

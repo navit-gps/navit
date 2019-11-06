@@ -358,7 +358,12 @@ void main_init(const char *program) {
     if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo") || file_exists("version.h")) {
         char buffer[PATH_MAX];
         printf("%s",_("Running from source directory\n"));
-        getcwd(buffer, PATH_MAX);		/* libc of navit returns "dummy" */
+        if(getcwd(buffer, PATH_MAX)==NULL) { /*libc of navit returns "dummy" */
+            printf("%s",_("Error getting current path. use ./ \n"));
+            buffer[0]='.';
+            buffer[1]='/';
+            buffer[2]=0;
+        }
         setenv("NAVIT_PREFIX", buffer, 0);
         main_setup_environment(0);
     } else {

@@ -67,6 +67,7 @@ public class NavitVehicle {
                 sLocationManager.removeUpdates(sFastLocationListener);
                 mFastProvider = null;
             }
+            sLastLocation = location;
             vehicleCallback(mVehiclePcbid, location);
             vehicleCallback(mVehicleFcbid, 1);
         }

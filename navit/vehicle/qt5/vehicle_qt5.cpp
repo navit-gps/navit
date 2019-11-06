@@ -38,7 +38,7 @@ extern "C" {
 #include <time.h>
 
 #include "vehicle_qt5.h"
-//#include "vehicle_qt5.moc"
+// #include "vehicle_qt5.moc"
 #include <QDateTime>
 
 /**
@@ -75,7 +75,6 @@ void QNavitGeoReceiver::satellitesInViewUpdated(const QList<QGeoSatelliteInfo>& 
 }
 
 void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info) {
-
     /* ignore stale view */
     if (info.coordinate().isValid()) {
         if (info.timestamp().toUTC().secsTo(QDateTime::currentDateTimeUtc()) > 20) {
@@ -120,17 +119,17 @@ void QNavitGeoReceiver::positionUpdated(const QGeoPositionInfo& info) {
             dbg(lvl_debug, "Got valid altitude (alt %f)", info.coordinate().altitude());
             priv->height = info.coordinate().altitude();
         }
-        //dbg(lvl_debug, "Time %s", info.timestamp().toUTC().toString().toLatin1().data());
+        // dbg(lvl_debug, "Time %s", info.timestamp().toUTC().toString().toLatin1().data());
         priv->fix_time = info.timestamp().toUTC().toTime_t();
         callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-        if(priv->have_coords != attr_position_valid_valid) {
+        if (priv->have_coords != attr_position_valid_valid) {
             priv->have_coords = attr_position_valid_valid;
             callback_list_call_attr_0(priv->cbl, attr_position_valid);
         }
     } else {
         dbg(lvl_debug, "Got invalid coordinate");
         callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-        if(priv->have_coords != attr_position_valid_invalid) {
+        if (priv->have_coords != attr_position_valid_invalid) {
             priv->have_coords = attr_position_valid_invalid;
             callback_list_call_attr_0(priv->cbl, attr_position_valid);
         }
@@ -205,9 +204,9 @@ static int vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
                 priv->fix_time = 0;
                 return 0;
             }
-            //dbg(lvl_debug,"Fix Time: %s", priv->fixiso8601);
+            // dbg(lvl_debug,"Fix Time: %s", priv->fixiso8601);
         } else {
-            //dbg(lvl_debug,"Fix Time: 0");
+            // dbg(lvl_debug,"Fix Time: 0");
             return 0;
         }
         break;
@@ -239,7 +238,7 @@ static int vehicle_qt5_set_attr(struct vehicle_priv* priv, struct attr* attr) {
         break;
     case attr_position_coord_geo:
         priv->geo = *attr->u.coord_geo;
-        if(priv->have_coords != attr_position_valid_valid) {
+        if (priv->have_coords != attr_position_valid_valid) {
             priv->have_coords = attr_position_valid_valid;
             callback_list_call_attr_0(priv->cbl, attr_position_valid);
         }
@@ -282,7 +281,7 @@ static struct vehicle_priv* vehicle_qt5_new_qt5(struct vehicle_methods* meth,
     } else {
         dbg(lvl_debug, "Using %s", ret->source->sourceName().toLatin1().data());
         ret->receiver = new QNavitGeoReceiver(NULL, ret);
-        if(ret->satellites != NULL) {
+        if (ret->satellites != NULL) {
             ret->satellites->setUpdateInterval(1000);
             ret->satellites->startUpdates();
         }

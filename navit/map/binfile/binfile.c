@@ -454,6 +454,15 @@ static int binfile_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 /**
+ * @brief Get nuber of coords left for current item
+ *
+ * @param prv_data
+ */
+static int binfile_coords_left(void *priv_data) {
+    return binfile_coord_left(priv_data);
+}
+
+/**
  * @brief
  * @param
  * @return
@@ -829,6 +838,8 @@ static struct item_methods methods_binfile = {
     NULL,
     binfile_attr_set,
     binfile_coord_set,
+    NULL,
+    binfile_coords_left,
 };
 
 static void push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length) {
@@ -2315,7 +2326,7 @@ static void binmap_search_destroy(struct map_search_priv *ms) {
     if (ms->mr)
         map_rect_destroy_binfile(ms->mr);
     while(ms->boundaries) {
-        geom_poly_segment_destroy(ms->boundaries->data);
+        geom_poly_segment_destroy(ms->boundaries->data, NULL);
         ms->boundaries=g_list_delete_link(ms->boundaries,ms->boundaries);
     }
     g_free(ms);
