@@ -74,7 +74,7 @@ int roadprofile_remove_attr(struct roadprofile *this_, struct attr *attr) {
 }
 
 struct attr_iter *
-roadprofile_attr_iter_new(void) {
+roadprofile_attr_iter_new(void * unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 

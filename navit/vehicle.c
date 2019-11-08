@@ -185,7 +185,7 @@ void vehicle_destroy(struct vehicle *this_) {
  * Creates an attribute iterator to be used with vehicles
  */
 struct attr_iter *
-vehicle_attr_iter_new(void) {
+vehicle_attr_iter_new(void * unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 

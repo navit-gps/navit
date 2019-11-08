@@ -238,12 +238,13 @@ void attr_data_set(struct attr *attr, void *data);
 void attr_data_set_le(struct attr *attr, void *data);
 void attr_free_content(struct attr *attr);
 void attr_free(struct attr *attr);
+void attr_free_g(struct attr *attr, void * unused); /* to use as GFunc in glib context */
 void attr_dup_content(struct attr *src, struct attr *dst);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
 struct attr **attr_list_append(struct attr **attrs, struct attr *attr);
-int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
+int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret);
 int attr_types_contains(enum attr_type *types, enum attr_type type);
 int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);
 int attr_rel2real(int attrval, int whole, int treat_neg_as_rel);

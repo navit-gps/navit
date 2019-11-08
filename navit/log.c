@@ -47,7 +47,9 @@
 #include "debug.h"
 #include "xmlconfig.h"
 #include "log.h"
-
+#ifndef HAVE_API_WIN32_BASE
+#include <errno.h>
+#endif
 struct log_data {
     int len;
     int max_len;
@@ -239,7 +241,8 @@ static void log_flush(struct log *this_, enum log_flags flags) {
 #ifndef HAVE_API_WIN32_BASE
     if (flags & log_flag_truncate) {
         pos=ftell(this_->f);
-        ftruncate(fileno(this_->f), pos);
+        if(ftruncate(fileno(this_->f), pos) <0)
+            dbg(lvl_error,"Error on fruncate (%s)", strerror(errno));
     }
 #endif
     if (this_->trailer.len) {

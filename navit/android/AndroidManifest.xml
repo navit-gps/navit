@@ -10,17 +10,27 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:label="@string/app_name"
+    <application
+        android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/navit_backup_rules"
         android:icon="@drawable/icon"
-        android:name=".NavitAppConfig"
-        android:theme="@style/NavitBaseTheme">
+        android:name=".NavitAppConfig">
         <activity android:name="Navit"
             android:label="@string/app_name"
-            android:configChanges="locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
-            android:theme="@style/NavitTheme">
+            android:theme="@style/NavitTheme"
+            android:launchMode="singleTask"
+            android:configChanges="screenLayout|smallestScreenSize|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="geo"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -32,7 +42,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
         <activity android:name=".NavitDownloadSelectMapActivity"></activity>
-        <!-- <activity android:name=".NavitAddressResultListActivity"></activity> -->
         <activity
             android:name="FileBrowserActivity"
             android:label="File browser"

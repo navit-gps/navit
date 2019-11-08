@@ -1044,7 +1044,6 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     struct coord_geo g;
     struct pcoord pc;
     struct coord c;
-    char *coord;
 
     if (pc_in) {
         pc=*pc_in;
@@ -1067,9 +1066,9 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     wb=gui_internal_menu(this, name);
     w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
     gui_internal_widget_append(wb, w);
-    coord=gui_internal_coordinates(&pc, ' ');
-    gui_internal_widget_append(w, gui_internal_label_new(this, coord));
-    g_free(coord);
+    char coord_str[32];
+    pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
+    gui_internal_widget_append(w, gui_internal_label_new(this, coord_str));
     wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
     gui_internal_widget_append(w,wtable);
 
@@ -1642,6 +1641,7 @@ char *gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             *r++=p;
         }
@@ -1663,6 +1663,7 @@ static int gui_internal_match(const char *pattern, const char *string) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             if (*string++ != p)
                 return 0;
@@ -1706,7 +1707,7 @@ int gui_internal_set(char *remove, char *add) {
 
 
 static void gui_internal_window_closed(struct gui_priv *this) {
-    gui_internal_cmd2_quit(this, NULL, NULL, NULL, NULL);
+    gui_internal_cmd2_quit(this, NULL, NULL, NULL);
 }
 
 
@@ -1915,7 +1916,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
 
 static void save_vehicle_xml(struct vehicle *v) {
     struct attr attr;
-    struct attr_iter *iter=vehicle_attr_iter_new();
+    struct attr_iter *iter=vehicle_attr_iter_new(NULL);
     int childs=0;
     printf("<vehicle");
     while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {

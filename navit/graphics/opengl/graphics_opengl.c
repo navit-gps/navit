@@ -350,9 +350,12 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     return gc;
 }
 
+#ifdef HAVE_FREEIMAGE
 static struct graphics_image_priv image_error;
+#endif
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation) {
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
+        int *w, int *h, struct point *hot, int rotation) {
 #ifdef HAVE_FREEIMAGE
     FIBITMAP *image;
     RGBQUAD aPixel;
@@ -797,7 +800,8 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
     graphics_priv_root->dirty = 1;
 }
 
-static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p) {
+static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
+                              struct graphics_gc_priv *bg, int color, struct point *p) {
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
@@ -927,7 +931,8 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     }
 }
 
-static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+                      struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
             || (gr->parent && gr->parent->overlay_enabled
                 && !gr->overlay_enabled)) {
@@ -955,7 +960,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 }
 
 
-static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img) {
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
+                       struct graphics_image_priv *img) {
 #ifdef USE_OPENGLES
     draw_image_es(gr, p, img->w, img->h, img->data);
 #else
@@ -1159,7 +1165,8 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         this->platform=graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
                                                this->window_system_methods->get_window(this->window_system),
                                                &this->platform_methods);
-        this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do, motion_notify_do, NULL);
+        this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do,
+                motion_notify_do, NULL);
         resize_callback(this->width,this->height);
 #if 0
         glClearColor ( 0.4, 0.4, 0.4, 1);
@@ -1398,7 +1405,8 @@ static void motion_notify(int x, int y) {
 static gboolean graphics_opengl_idle(void *data) {
     static int opengl_init_ok = 0;
     if (!opengl_init_ok) {
-        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER (graphics_priv_root->width), GINT_TO_POINTER (graphics_priv_root->height));
+        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER (graphics_priv_root->width),
+                                  GINT_TO_POINTER (graphics_priv_root->height));
         opengl_init_ok = 1;
     } else {
 
@@ -1494,7 +1502,8 @@ static void glut_close(void) {
 }
 
 
-static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
     struct attr *attr;
 
     if (!event_request_system("glib", "graphics_opengl_new"))

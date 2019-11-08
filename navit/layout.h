@@ -37,6 +37,7 @@ struct element {
     enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
     struct color color;
     int text_size;
+    int oneway;
     union {
         struct element_point {
             char stub;
@@ -67,6 +68,9 @@ struct element {
         struct element_text {
             struct color background_color;
         } text;
+        struct element_arrows {
+            int width;
+        } arrows;
     } u;
     int coord_count;
     struct coord *coord;
@@ -105,6 +109,9 @@ struct layout {
     char* nightname;
     char *font;
     struct color color;
+    int underground_alpha;
+    int icon_w;
+    int icon_h;
     GList *layers;
     GList *cursors;
     int order_delta;
@@ -128,7 +135,7 @@ struct polygon;
 struct polyline;
 struct text;
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
-struct attr_iter *layout_attr_iter_new(void);
+struct attr_iter *layout_attr_iter_new(void* unused);
 void layout_attr_iter_destroy(struct attr_iter *iter);
 int layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int layout_add_attr(struct layout *layout, struct attr *attr);

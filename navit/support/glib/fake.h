@@ -6,6 +6,7 @@
 #include <pthread.h>
 #endif
 #include "debug.h"
+#include "gtypes.h"
 
 #define g_return_if_fail
 
@@ -20,6 +21,11 @@
 #  define g_private_new(xd) g_private_new_navit()
 #  define g_private_get(xd) pthread_getspecific(xd)
 #  define g_private_set(a,b) pthread_setspecific(a, b)
+
+pthread_mutex_t* g_mutex_new_navit(void);
+void g_get_current_time (GTimeVal *result);
+GPrivate g_private_new_navit ();
+
 #else
 # if HAVE_API_WIN32_BASE
 #  define GMutex CRITICAL_SECTION

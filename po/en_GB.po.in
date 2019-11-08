@@ -1,14 +1,16 @@
 # English (United Kingdom) translations for navit
-# Copyright (C) 2006-2018 The Navit Team
+# Copyright (C) 2006-2019 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Andi Chandler https://launchpad.net/~bing
+# Henk https://launchpad.net/~haboomsma
 # Jeff Bailes https://launchpad.net/~thepizzaking
 # Kaustav Das Modak https://launchpad.net/~kaustav-dasmodak
 # Matthew Gall https://launchpad.net/~matthewgall
 # Roadrunner IN https://launchpad.net/~online
 # Stephen Irons https://launchpad.net/~stephen-irons
 # half_monkey https://launchpad.net/~d-r-williams-01
+# ilovekiruna https://launchpad.net/~ilovekiruna
 # jan https://launchpad.net/~jandegr1
 # lopho https://launchpad.net/~lopho
 
@@ -16,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-06-19 22:44+0000\n"
-"Last-Translator: Andi Chandler <Unknown>\n"
+"PO-Revision-Date: 2019-10-02 22:49+0000\n"
+"Last-Translator: Matthew Gall <me@matthewgall.info>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1505,6 +1507,10 @@ msgstr "Wallis and Futuna"
 msgid "Samoa"
 msgstr "Samoa"
 
+#. 412
+msgid "Kosovo"
+msgstr "Kosovo"
+
 #. 887
 msgid "Yemen"
 msgstr "Yemen"
@@ -1783,11 +1789,11 @@ msgstr "Shopping"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr ""
+msgstr "Select a search radius from screen center in km"
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr ""
+msgstr "Select a search radius from screen center in miles"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1824,7 +1830,7 @@ msgid "Direction"
 msgstr "Direction"
 
 msgid "Distance"
-msgstr ""
+msgstr "Distance"
 
 msgid "Name"
 msgstr "Name"
@@ -2246,6 +2252,10 @@ msgstr "Yes"
 msgid "Cancel"
 msgstr "Cancel"
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr "Navit"
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "Navit started"
@@ -2317,6 +2327,10 @@ msgstr "Set map location"
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Route to here"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr "View"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"

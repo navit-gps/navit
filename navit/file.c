@@ -99,8 +99,8 @@ static void file_http_request(struct file *file, char *method, char *host, char 
     char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,
                                   NAVIT_VERSION,
                                   host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
-    write(file->fd, request, strlen(request));
-    dbg(lvl_debug,"%s",request);
+    int retval = write(file->fd, request, strlen(request));
+    dbg(lvl_debug,"%s returned %d",request, retval);
     file->requests++;
 }
 
