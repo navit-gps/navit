@@ -187,9 +187,10 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (minimal)
           command: |
@@ -208,9 +209,10 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (plugin)
           command: |
