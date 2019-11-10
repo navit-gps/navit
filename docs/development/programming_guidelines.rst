@@ -206,4 +206,8 @@ For the Java code we follow the Google coding conventions from Google Java Style
 This style is enforced by using Checkstyle. Its definition file can be found at the root of the repository:
 `checkstyle.xml <https://github.com/navit-gps/navit/blob/trunk/checkstyle.xml>`_
 
+.. note::
+
+  Checkstyle 8.25 minimum is required if you want to run checkstyle without using gradle.
+
 Please add yourself to the list of authors, if you make a significant change.
