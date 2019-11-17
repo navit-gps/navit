@@ -17,7 +17,7 @@ if(BUILD_MAPTOOL)
 		PROTOBUF_PROTOC_EXECUTABLE (PROTO_SRCS PROTO_HDRS fileformat.proto)
 		target_sources(maptool_core PRIVATE osm_protobuf.c osm_protobufdb.c
 			fileformat.pb-c.c osmformat.pb-c.c)
-		target_link_libraries(maptool_core ${PROTOBUF_C_LIBRARY})
+		target_link_libraries(maptool_core ${PROTOBUF_PROTOC_LIBRARIES})
 	endif(NOT MSVC)
 
 	if(NOT MSVC)
