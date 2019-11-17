@@ -693,13 +693,6 @@ if(CMAKE_SIZEOF_VOID_P LESS 8)
 	set_with_reason(BUILD_MAPTOOL "maptool works only on 64 bit architectures" FALSE)
 endif()
 
-if(BUILD_MAPTOOL)
-	find_package(Protobuf-c REQUIRED)
-	if(NOT PROTOBUF_C_FOUND)
-		set_with_reason(BUILD_MAPTOOL "PROTOBUF-C not found" FALSE)
-	endif()
-endif()
-
 set(LOCALEDIR "${LOCALE_DIR}")
 
 find_program(BZCAT NAMES bzcat)
