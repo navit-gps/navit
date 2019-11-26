@@ -68,7 +68,7 @@ android {
         }
 
         checkstyle {
-            toolVersion = '8.10'
+            toolVersion = '8.26'
         }
     }
     applicationVariants.all { variant ->
