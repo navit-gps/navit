@@ -1,5 +1,7 @@
 var NAVTREEINDEX36 =
 {
+"structXPMCOLORENTRY__TAG.html#a96a18a6f67c6230c07afdb5a4f1e4816":[2,0,442,1],
+"struct__VIDEO__POWER__MANAGEMENT.html":[2,0,1],
 "struct__VIDEO__POWER__MANAGEMENT.html#a43253ec73dd9843f8e72d6180a99c7bd":[2,0,1,1],
 "struct__VIDEO__POWER__MANAGEMENT.html#a8581452edec1f719c78bccc7c7883e6f":[2,0,1,2],
 "struct__VIDEO__POWER__MANAGEMENT.html#accc91c88250d7d89539acd7da118a585":[2,0,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX36 =
 "structcdf__speed.html":[2,0,37],
 "structcdf__speed.html#a6d5cfbd8d070a5800bfd54c9b72f8914":[2,0,37,2],
 "structcdf__speed.html#aee52710735b24b0ce9436b6121c171be":[2,0,37,1],
-"structcdf__speed.html#af58ad0161b35ec1a606ed333a716145c":[2,0,37,0],
-"structch__edge.html":[2,0,38],
-"structch__edge.html#a0dfb3b988ca4c85575cee8c56764177e":[2,0,38,1]
+"structcdf__speed.html#af58ad0161b35ec1a606ed333a716145c":[2,0,37,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX38 =
 {
+"structdraw__polyline__context.html#ae1f7cff08311b67fda97d66fd72e85a0":[2,0,87,4],
+"structdraw__polyline__shape.html":[2,0,88],
 "structdraw__polyline__shape.html#a28c7a3dda105dd42d04ad9e67d0b5891":[2,0,88,3],
 "structdraw__polyline__shape.html#a40ee93f6c223af0b1bd68bdd50523363":[2,0,88,2],
 "structdraw__polyline__shape.html#a421fb220a9e3e57e7681505fce954903":[2,0,88,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX38 =
 "structg2scolumns.html#a45b62173a57e5fe4a9a47c263818dbe3":[2,0,119,4],
 "structg2scolumns.html#a4b4829916932cc7944e77ec114707a95":[2,0,119,17],
 "structg2scolumns.html#a519c2360fe4052ed8127125a237902e7":[2,0,119,5],
-"structg2scolumns.html#a5f1032d218e9b478f12e06b6712645ba":[2,0,119,3],
-"structg2scolumns.html#a647b3ef1123296e34798c8196dbd7d3a":[2,0,119,9],
-"structg2scolumns.html#a7f4c449332bba0ea0bfef914df8ef66d":[2,0,119,23]
+"structg2scolumns.html#a5f1032d218e9b478f12e06b6712645ba":[2,0,119,3]
 };

@@ -15,6 +15,7 @@ var graphics__android_8c =
     [ "draw_lines", "graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37", null ],
     [ "draw_mode", "graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d", null ],
     [ "draw_polygon", "graphics__android_8c.html#a4308f07317bed279aab3980b62c74924", null ],
+    [ "draw_polygon_with_holes", "graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976", null ],
     [ "draw_rectangle", "graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969", null ],
     [ "draw_text", "graphics__android_8c.html#a363219636622f009489ec6fa937a18aa", null ],
     [ "event_android_add_idle", "graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2", null ],

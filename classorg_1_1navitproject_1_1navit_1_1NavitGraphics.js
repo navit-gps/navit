@@ -11,6 +11,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitGraphics =
     [ "draw_image_warp", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a898660f2551f64113fd5fb38e95c2b10", null ],
     [ "draw_mode", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a33eeae1e56377cbdee8ea6d70d6ae33a", null ],
     [ "draw_polygon", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aadade6c19b4a75519134663b976707fa", null ],
+    [ "draw_polygon_with_holes", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ad07222de41027200b41e33c7537dd31b", null ],
     [ "draw_polyline", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6add13365cbb039303f1513f8c211b45", null ],
     [ "draw_rectangle", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac3d4535460bb6d08bd97055c8b87dfcc", null ],
     [ "draw_text", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a21dbcb1c957a2a7c89862513671257ee", null ],

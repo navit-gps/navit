@@ -1,5 +1,7 @@
 var NAVTREEINDEX35 =
 {
+"setpath_8c.html#a7b2dd1237d8d67077b890640684a9e99":[3,0,14,0,0,12,6],
+"setpath_8c.html#ae0027a69657ca116c8fd412fccc7e71d":[3,0,14,0,0,12,2],
 "setpath_8c.html#af0340666eaebe35da5165ad74ac69293":[3,0,14,0,0,12,3],
 "setpath_8c.html#af7b6e8ca2c687ae0648bd64faedb5e5d":[3,0,14,0,0,12,0],
 "setwpt_8c.html":[3,0,14,0,0,13],
@@ -247,7 +249,5 @@ var NAVTREEINDEX35 =
 "structXPMCOLORENTRY__TAG.html":[2,0,442],
 "structXPMCOLORENTRY__TAG.html#a3e2c7bb03fa90e2ba97860ca022d886b":[2,0,442,2],
 "structXPMCOLORENTRY__TAG.html#a8360fec37ba3704f64de4c76328e41f9":[2,0,442,0],
-"structXPMCOLORENTRY__TAG.html#a9641c166b8d4781ec5a1375e15422f6f":[2,0,442,3],
-"structXPMCOLORENTRY__TAG.html#a96a18a6f67c6230c07afdb5a4f1e4816":[2,0,442,1],
-"struct__VIDEO__POWER__MANAGEMENT.html":[2,0,1]
+"structXPMCOLORENTRY__TAG.html#a9641c166b8d4781ec5a1375e15422f6f":[2,0,442,3]
 };

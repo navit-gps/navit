@@ -54,6 +54,7 @@ var searchData=
   ['navitgraphics_5fdraw_5fimage_5fwarp',['NavitGraphics_draw_image_warp',['../structgraphics__priv.html#ae970413a0a64240a861e539cd379dcae',1,'graphics_priv']]],
   ['navitgraphics_5fdraw_5fmode',['NavitGraphics_draw_mode',['../structgraphics__priv.html#ac901dddc07a0b29e46542350109460b4',1,'graphics_priv']]],
   ['navitgraphics_5fdraw_5fpolygon',['NavitGraphics_draw_polygon',['../structgraphics__priv.html#ae726258c7212f33e7b1485d2789e1d54',1,'graphics_priv']]],
+  ['navitgraphics_5fdraw_5fpolygon_5fwith_5fholes',['NavitGraphics_draw_polygon_with_holes',['../structgraphics__priv.html#af7d7a64029eea669c5e8c04e83bf90c0',1,'graphics_priv']]],
   ['navitgraphics_5fdraw_5fpolyline',['NavitGraphics_draw_polyline',['../structgraphics__priv.html#a7f6265e872b8610a2b23d45019ac897c',1,'graphics_priv']]],
   ['navitgraphics_5fdraw_5frectangle',['NavitGraphics_draw_rectangle',['../structgraphics__priv.html#a72ab45bf8bdd15f3c33e9e60b014dbcf',1,'graphics_priv']]],
   ['navitgraphics_5fdraw_5ftext',['NavitGraphics_draw_text',['../structgraphics__priv.html#a61b08b0d002b33c3d831bb1314f910fb',1,'graphics_priv']]],

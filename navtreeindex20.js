@@ -1,5 +1,7 @@
 var NAVTREEINDEX20 =
 {
+"group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330":[0,2,0,10,1,24],
+"group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330":[0,2,0,4,0,24],
 "group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330":[0,2,0,2,37],
 "group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330":[0,2,0,5,0,24],
 "group__vehicle-file.html#gae1cb0c0a959cc041a7e111f28a932330":[0,2,0,6,0,24],
@@ -68,9 +70,9 @@ var NAVTREEINDEX20 =
 "group__vehicle-file.html#gaf57268ae8641adb4ec87dccc06d8370c":[0,2,0,3,0,7],
 "group__vehicle-file.html#gaf89da12dff5a0fe18870b51772919f47":[3,0,16,2,0,11],
 "group__vehicle-file.html#gaf89da12dff5a0fe18870b51772919f47":[0,2,0,2,18],
-"group__vehicle-file.html#gafb3c16d492156e2bdc8042276029b9c9":[0,2,0,2,36],
 "group__vehicle-file.html#gafb3c16d492156e2bdc8042276029b9c9":[0,2,0,2,0,1],
 "group__vehicle-file.html#gafb3c16d492156e2bdc8042276029b9c9":[0,2,0,10,0,1],
+"group__vehicle-file.html#gafb3c16d492156e2bdc8042276029b9c9":[0,2,0,2,36],
 "group__vehicle-file.html#gafce5a84c807c693dd15198dc22ddaecc":[0,2,0,2,20],
 "group__vehicle-file.html#gafce5a84c807c693dd15198dc22ddaecc":[3,0,16,2,0,13],
 "group__vehicle-gpsd-dbus.html":[0,2,0,4],
@@ -140,10 +142,10 @@ var NAVTREEINDEX20 =
 "group__vehicle-gpsd-dbus.html#ga9bb8aae23b7506fcf355d261f15d9073":[0,2,0,4,17],
 "group__vehicle-gpsd-dbus.html#ga9eefb5e3f0562d4edc0565be697e7ea5":[3,0,16,4,0,6],
 "group__vehicle-gpsd-dbus.html#ga9eefb5e3f0562d4edc0565be697e7ea5":[0,2,0,4,6],
-"group__vehicle-gpsd-dbus.html#gaae991f1d19a1fb329f42151b23a9894f":[0,2,0,4,7],
 "group__vehicle-gpsd-dbus.html#gaae991f1d19a1fb329f42151b23a9894f":[3,0,16,4,0,7],
-"group__vehicle-gpsd-dbus.html#gaf32771cb9aaeabd419b06f53a8524906":[3,0,16,4,0,4],
+"group__vehicle-gpsd-dbus.html#gaae991f1d19a1fb329f42151b23a9894f":[0,2,0,4,7],
 "group__vehicle-gpsd-dbus.html#gaf32771cb9aaeabd419b06f53a8524906":[0,2,0,4,4],
+"group__vehicle-gpsd-dbus.html#gaf32771cb9aaeabd419b06f53a8524906":[3,0,16,4,0,4],
 "group__vehicle-gpsd.html":[0,2,0,3],
 "group__vehicle-gpsd.html#ga0172a77622e6381b4bea947e7358ffe0":[0,2,0,3,6],
 "group__vehicle-gpsd.html#ga0172a77622e6381b4bea947e7358ffe0":[3,0,16,3,0,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX20 =
 "group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,7,0,17],
 "group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,2,1,17],
 "group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,10,1,17],
-"group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,4,0,17],
-"group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,5,0,17],
-"group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,5,15]
+"group__vehicle-gypsy.html#ga28612008cd67d5e87df610503121f15e":[0,2,0,4,0,17]
 };

@@ -104,6 +104,8 @@ Data Structures</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6add13365cbb039303f1513f8c211b45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6add13365cbb039303f1513f8c211b45">draw_polyline</a> (Paint paint, int[] <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)</td></tr>
 <tr class="separator:a6add13365cbb039303f1513f8c211b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad07222de41027200b41e33c7537dd31b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ad07222de41027200b41e33c7537dd31b">draw_polygon_with_holes</a> (Paint paint, int strokeWidth, int r, int g, int b, int a, int[] <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, int[] ccount, int[] holes)</td></tr>
+<tr class="separator:ad07222de41027200b41e33c7537dd31b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadade6c19b4a75519134663b976707fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aadade6c19b4a75519134663b976707fa">draw_polygon</a> (Paint paint, int[] <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)</td></tr>
 <tr class="separator:aadade6c19b4a75519134663b976707fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d4535460bb6d08bd97055c8b87dfcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac3d4535460bb6d08bd97055c8b87dfcc">draw_rectangle</a> (Paint paint, int x, int y, int w, int h)</td></tr>
@@ -703,6 +705,86 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aa422a0eebc9aee0b095c777c1833450b">org.navitproject.navit.NavitGraphics.mDrawCanvas</a>.</p>
+
+</div>
+</div>
+<a id="ad07222de41027200b41e33c7537dd31b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad07222de41027200b41e33c7537dd31b">&#9670;&nbsp;</a></span>draw_polygon_with_holes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void org.navitproject.navit.NavitGraphics.draw_polygon_with_holes </td>
+          <td>(</td>
+          <td class="paramtype">Paint&#160;</td>
+          <td class="paramname"><em>paint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>strokeWidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int []&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int []&#160;</td>
+          <td class="paramname"><em>ccount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int []&#160;</td>
+          <td class="paramname"><em>holes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aa422a0eebc9aee0b095c777c1833450b">org.navitproject.navit.NavitGraphics.mDrawCanvas</a>.</p>
 
 </div>
 </div>
@@ -1859,7 +1941,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a78acbebf4d2771da8da5148bfb12cfcd">org.navitproject.navit.NavitGraphics.draw_circle()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af73f2348b7da78e8229ce52ddfbfa039">org.navitproject.navit.NavitGraphics.draw_image()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a898660f2551f64113fd5fb38e95c2b10">org.navitproject.navit.NavitGraphics.draw_image_warp()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aadade6c19b4a75519134663b976707fa">org.navitproject.navit.NavitGraphics.draw_polygon()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6add13365cbb039303f1513f8c211b45">org.navitproject.navit.NavitGraphics.draw_polyline()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac3d4535460bb6d08bd97055c8b87dfcc">org.navitproject.navit.NavitGraphics.draw_rectangle()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a21dbcb1c957a2a7c89862513671257ee">org.navitproject.navit.NavitGraphics.draw_text()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af325c2735e2baed55f3a1b74984219db">org.navitproject.navit.NavitGraphics.NavitGraphics()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a48a4391250dcbff876eda00abc800330">org.navitproject.navit.NavitGraphics.NavitView.onSizeChanged()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae5def54d4d8307773c8c1a0cf158bd31">org.navitproject.navit.NavitGraphics.overlay_resize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a78acbebf4d2771da8da5148bfb12cfcd">org.navitproject.navit.NavitGraphics.draw_circle()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af73f2348b7da78e8229ce52ddfbfa039">org.navitproject.navit.NavitGraphics.draw_image()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a898660f2551f64113fd5fb38e95c2b10">org.navitproject.navit.NavitGraphics.draw_image_warp()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#aadade6c19b4a75519134663b976707fa">org.navitproject.navit.NavitGraphics.draw_polygon()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ad07222de41027200b41e33c7537dd31b">org.navitproject.navit.NavitGraphics.draw_polygon_with_holes()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6add13365cbb039303f1513f8c211b45">org.navitproject.navit.NavitGraphics.draw_polyline()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ac3d4535460bb6d08bd97055c8b87dfcc">org.navitproject.navit.NavitGraphics.draw_rectangle()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a21dbcb1c957a2a7c89862513671257ee">org.navitproject.navit.NavitGraphics.draw_text()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#af325c2735e2baed55f3a1b74984219db">org.navitproject.navit.NavitGraphics.NavitGraphics()</a>, <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a48a4391250dcbff876eda00abc800330">org.navitproject.navit.NavitGraphics.NavitView.onSizeChanged()</a>, and <a class="el" href="classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#ae5def54d4d8307773c8c1a0cf158bd31">org.navitproject.navit.NavitGraphics.overlay_resize()</a>.</p>
 
 </div>
 </div>
