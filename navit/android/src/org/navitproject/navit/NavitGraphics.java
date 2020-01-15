@@ -866,6 +866,51 @@ class NavitGraphics {
         paint.setPathEffect(null);
     }
 
+    // One might ask why the coordinates for the holes are smashed all together in one int array. It's because
+    // I have no clue at all how to properly do JNI with an array of int arrays instead.
+    protected void draw_polygon_with_holes(Paint paint, int strokeWidth, int r, int g, int b, int a, int[] c,
+                                           int[] ccount, int[] holes) {
+        paint.setStrokeWidth(strokeWidth);
+        paint.setARGB(a,r,g,b);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        //paint.setAntiAlias(true);
+        // Check if we got at least three coordinates (3 values)
+        if (c.length < 6) {
+            return;
+        }
+
+        // create a new paint path
+        Path path = new Path();
+        // Add outer polygon to paint path
+        path.moveTo(c[0], c[1]);
+        for (int i = 2; i < c.length; i += 2) {
+            path.lineTo(c[i], c[i + 1]);
+        }
+        // close outer polygon
+        path.close();
+        // add holes if any
+        int coordinatesUsed = 0;
+        // for every hole
+        for (int i = 0; i < ccount.length; i++) {
+            // drop holes with less than 3 coordinates
+            if (ccount[i] > 6) {
+                path.moveTo(holes[coordinatesUsed + 0], holes[coordinatesUsed + 1]);
+                for (int j = 2; j < ccount[i]; j += 2) {
+                    path.lineTo(holes[coordinatesUsed + j], holes[coordinatesUsed + j + 1]);
+                }
+                // close this hole
+                path.close();
+            }
+            //remeber the used coordinates for next hole
+            coordinatesUsed += ccount[i];
+        }
+
+        // Set fill rule
+        path.setFillType(Path.FillType.EVEN_ODD);
+        // Draw it
+        mDrawCanvas.drawPath(path, paint);
+    }
+
     @SuppressWarnings("unused")
     protected void draw_polygon(Paint paint, int[] c) {
         paint.setStrokeWidth(c[0]);
