@@ -86,10 +86,10 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Install ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
           command: |
             sudo apt-get update
-            sudo apt-get install -y ant cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
       - run:
           name: Build for Android
           command: bash scripts/build_android.sh
