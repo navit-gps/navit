@@ -355,7 +355,8 @@ void main_init(const char *program) {
     setlocale(LC_NUMERIC,"C");
 #endif
 #if !defined _WIN32 && !defined _WIN32_WCE
-    if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo") || file_exists("version.h")) {
+    if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo")
+            || file_exists("THIS_IS_THE_NAVIT_WORKING_DIR")) {
         char buffer[PATH_MAX];
         printf("%s",_("Running from source directory\n"));
         if(getcwd(buffer, PATH_MAX)==NULL) { /*libc of navit returns "dummy" */

@@ -3,6 +3,8 @@ include_directories( "${PROJECT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/support")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/THIS_IS_THE_NAVIT_WORKING_DIR "\r\nThis File should never appear on binary distributions\r\n" )
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/THIS_IS_THE_NAVIT_WORKING_DIR "\r\nOnly Devs should ever see this file" )
 
 # navit core
 set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.c coord.c country.c data_window.c debug.c
