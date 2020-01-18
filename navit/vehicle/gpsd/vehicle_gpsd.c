@@ -177,7 +177,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
 #if GPSD_API_MAJOR_VERSION >= 9
         priv->fix_time = data->fix.time.tv_sec;
 #else
-         priv->fix_time = data->fix.time;
+        priv->fix_time = data->fix.time;
 #endif
         data->set &= ~TIME_SET;
     }
