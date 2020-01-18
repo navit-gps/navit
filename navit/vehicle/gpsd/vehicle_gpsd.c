@@ -174,7 +174,11 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~MODE_SET;
     }
     if (data->set & TIME_SET) {
+#if GPSD_API_MAJOR_VERSION >= 9
+        priv->fix_time = data->fix.time.tv_sec;
+#else
         priv->fix_time = data->fix.time;
+#endif
         data->set &= ~TIME_SET;
     }
 #ifdef HAVE_LIBGPS19
