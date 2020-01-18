@@ -40,7 +40,7 @@ struct graphics_priv {
               NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image,
               NavitGraphics_draw_image_warp, NavitGraphics_draw_mode, NavitGraphics_draw_drag,
               NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera,
-              NavitGraphics_setBackgroundColor;
+              NavitGraphics_setBackgroundColor, NavitGraphics_draw_polygon_with_holes;
 
     jclass PaintClass;
     jmethodID Paint_init,Paint_setStrokeWidth,Paint_setARGB;
@@ -295,6 +295,65 @@ static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, s
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
+static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count,
+                                     int hole_count, int* ccount, struct point **holes) {
+    int i;
+    /* need to get us some arrays for java */
+    int java_p_size;
+    jintArray java_p;
+    int java_ccount_size;
+    jintArray java_ccount;
+    int java_holes_size;
+    jintArray java_holes;
+
+    /* Don't even try to draw a polygon with less than 3 points */
+    if(count < 3)
+        return;
+
+    /* get java array for coordinates */
+    java_p_size=count*2;
+    java_p = (*jnienv)->NewIntArray(jnienv,java_p_size);
+    jint j_p[java_p_size];
+    for (i = 0 ; i < count ; i++) {
+        j_p[i*2]=p[i].x;
+        j_p[(i*2)+1]=p[i].y;
+    }
+
+    /* get java array for ccount */
+    java_ccount_size = hole_count;
+    java_ccount=(*jnienv)->NewIntArray(jnienv,java_ccount_size);
+    jint j_ccount[java_ccount_size];
+    /* get java array for hole coordinates */
+    java_holes_size = 0;
+    for(i=0; i < hole_count; i ++) {
+        java_holes_size += ccount[i] * 2;
+    }
+    java_holes=(*jnienv)->NewIntArray(jnienv,java_ccount_size);
+    /* copy over the holes to the jint array */
+    int j_holes_used=0;
+    jint j_holes[java_holes_size];
+    for(i=0; i < hole_count; i ++) {
+        int j;
+        j_ccount[i] = ccount[i] * 2;
+        for(j=0; j<ccount[i]; j ++) {
+            j_holes[j_holes_used + (j * 2)] = holes[i][j].x;
+            j_holes[j_holes_used + (j * 2) +1] = holes[i][j].y;
+        }
+        j_holes_used += j_ccount[i];
+    }
+    /* attach the arrays with their storage to the JVM */
+    (*jnienv)->SetIntArrayRegion(jnienv, java_p, 0, java_p_size, j_p);
+    (*jnienv)->SetIntArrayRegion(jnienv, java_ccount, 0, java_ccount_size, j_ccount);
+    (*jnienv)->SetIntArrayRegion(jnienv, java_holes, 0, java_holes_size, j_holes);
+    /* call the java function */
+    (*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polygon_with_holes, gc->gra->Paint,
+                              gc->linewidth, gc->r, gc->g, gc->b, gc->a, java_p, java_ccount, java_holes);
+    /* clean up */
+    (*jnienv)->DeleteLocalRef(jnienv, java_holes);
+    (*jnienv)->DeleteLocalRef(jnienv, java_ccount);
+    (*jnienv)->DeleteLocalRef(jnienv, java_p);
+}
+
 static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
     int arrsize=1+4+count*2;
     jint pc[arrsize];
@@ -475,6 +534,8 @@ static struct graphics_methods graphics_methods = {
     set_attr,
     show_native_keyboard,
     hide_native_keyboard,
+    NULL, /*get_dpi*/
+    draw_polygon_with_holes
 };
 
 static void resize_callback(struct graphics_priv *gra, int w, int h) {
@@ -671,6 +732,9 @@ static int graphics_android_init(struct graphics_priv *ret, struct graphics_priv
     if (!find_method(ret->NavitGraphicsClass, "draw_polyline", "(Landroid/graphics/Paint;[I)V",
                      &ret->NavitGraphics_draw_polyline))
         return 0;
+    if (!find_method(ret->NavitGraphicsClass, "draw_polygon_with_holes", "(Landroid/graphics/Paint;IIIII[I[I[I)V",
+                     &ret->NavitGraphics_draw_polygon_with_holes))
+        return 0;
     if (!find_method(ret->NavitGraphicsClass, "draw_polygon", "(Landroid/graphics/Paint;[I)V",
                      &ret->NavitGraphics_draw_polygon))
         return 0;
@@ -841,7 +905,7 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
              * the navit object (as the fact that graphics also handles input devices is not immedately obvious).
              */
             navit_object_set_attr((struct navit_object *) nav, attr);
-            dbg(lvl_debug, "attr_has_menu_button=%d", attr->u.num);
+            dbg(lvl_debug, "attr_has_menu_button=%ld", attr->u.num);
             g_free(attr);
         }
         ret->NavitGraphics_setBackgroundColor = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setBackgroundColor",
@@ -1083,7 +1147,7 @@ static struct event_priv *event_android_new(struct event_methods *meth) {
  * android returns a height of 1 px in the case of an onscreen keyboard just
  * to keep the logic to remove the keyboard from the screen afterwards working untill
  * the logic in native code is reviewed.
- * /
+ */
 /**
  * @brief Displays the native input method.
  *
