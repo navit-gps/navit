@@ -1338,7 +1338,7 @@ static void pedestrian_navit_init(struct navit *nav) {
 #endif
     transform_set_scale(trans, 16);
     navit_get_attr(nav, attr_layout, &initial_layout, NULL);
-    iter = navit_attr_iter_new();
+    iter = navit_attr_iter_new(NULL);
     while (navit_get_attr(nav, attr_layout, &attr, iter)) {
         if (!strcmp(attr.u.layout->name, "Route")) {
             dbg(lvl_debug, "found %s", attr_to_name(attr.type));
