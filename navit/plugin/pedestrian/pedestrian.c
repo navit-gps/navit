@@ -1397,7 +1397,7 @@ void plugin_init(void) {
     callback.type = attr_callback;
     callback.u.callback = callback_new_attr_0(callback_cast(pedestrian_navit), attr_navit);
     config_add_attr(config, &callback);
-    iter = config_attr_iter_new();
+    iter = config_attr_iter_new(NULL);
     while (config_get_attr(config, attr_navit, &navit, iter)) {
         pedestrian_navit_init(navit.u.navit);
     }
