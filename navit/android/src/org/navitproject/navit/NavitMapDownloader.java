@@ -718,17 +718,16 @@ public class NavitMapDownloader extends Thread {
         return new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".tmp.info");
     }
 
-    private BufferedOutputStream getOutputStream(File outputFile, boolean resume) {
-        BufferedOutputStream buf;
-        try {
-            buf = new BufferedOutputStream(new FileOutputStream(outputFile, resume),
-                    MAP_WRITE_FILE_BUFFER);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "Could not open output file for writing: " + e);
-            buf = null;
-        }
-        return buf;
-    }
+    private static BufferedOutputStream getOutputStream(File outputFile, boolean resume) {
+		BufferedOutputStream buf;
+		try {
+			buf = new BufferedOutputStream(new FileOutputStream(outputFile, resume), MAP_WRITE_FILE_BUFFER);
+		} catch (FileNotFoundException e) {
+			Log.e(TAG, "Could not open output file for writing: " + e);
+			buf = null;
+		}
+		return buf;
+	}
 
     private URLConnection initConnection(URL url) {
         HttpURLConnection c;
