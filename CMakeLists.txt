@@ -841,7 +841,6 @@ add_compiler_flag_if_available("-Wformat-security")
 add_compiler_flag_if_available("-Werror=format-security")
 add_compiler_flag_if_available("-fstack-protector-strong")
 add_compiler_flag_if_available("-D_FORTIFY_SOURCE=2")
-add_compiler_flag_if_available("-O2")
 
 if (EXTRA_DEFINES)
 	add_definitions("${EXTRA_DEFINES}")
