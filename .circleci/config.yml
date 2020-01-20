@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: ubuntu:18.04
+    - image: debian:latest
 jobs:
   sanity_check:
     docker:
