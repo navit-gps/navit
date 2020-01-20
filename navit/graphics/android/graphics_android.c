@@ -328,7 +328,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     for(i=0; i < hole_count; i ++) {
         java_holes_size += ccount[i] * 2;
     }
-    java_holes=(*jnienv)->NewIntArray(jnienv,java_ccount_size);
+    java_holes=(*jnienv)->NewIntArray(jnienv,java_holes_size);
     /* copy over the holes to the jint array */
     int j_holes_used=0;
     jint j_holes[java_holes_size];
