@@ -5,6 +5,7 @@ mkdir -p wince
 pushd wince
 #
 cmake \
+  -Dplugin/pedestrian=TRUE \
   -DTARGET_ARCH=arm-mingw32ce -DCMAKE_SYSTEM_NAME=WindowsCETest \
   -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw.cmake \
   -DXSLTS=windows,wince -DCACHE_SIZE=10485760 -Dsvg2png_scaling:STRING=16,32 \

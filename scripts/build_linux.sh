@@ -4,14 +4,17 @@ set -e
 COVERITY_VERSION="2017.07"
 BUILD_PATH="linux"
 
-cmake_opts="-Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n -Dgraphics/gtk_drawing_area:BOOL=TRUE"
-
 [ -d $BUILD_PATH ] || mkdir -p $BUILD_PATH
 pushd $BUILD_PATH
 
 # Build everything
-    echo "Building..."
-cmake ${cmake_opts} ../
+echo "Building..."
+cmake \
+    -Dgraphics/qt_qpainter:BOOL=FALSE -Dgui/qml:BOOL=FALSE \
+    -DSVG2PNG:BOOL=FALSE -DSAMPLE_MAP=n \
+    -Dgraphics/gtk_drawing_area:BOOL=TRUE \
+    -Dplugin/pedestrian=TRUE \
+    ../
 make -j $(nproc --all)
 make package
 
