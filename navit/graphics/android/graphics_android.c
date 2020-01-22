@@ -301,10 +301,13 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     /* need to get us some arrays for java */
     int java_p_size;
     jintArray java_p;
+    jint * j_p=NULL;
     int java_ccount_size;
     jintArray java_ccount;
+    jint * j_ccount=NULL;
     int java_holes_size;
     jintArray java_holes;
+    jint * j_holes=NULL;
 
     /* Don't even try to draw a polygon with less than 3 points */
     if(count < 3)
@@ -313,7 +316,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     /* get java array for coordinates */
     java_p_size=count*2;
     java_p = (*jnienv)->NewIntArray(jnienv,java_p_size);
-    jint j_p[java_p_size];
+    j_p = g_malloc(sizeof(jint) * java_p_size);
     for (i = 0 ; i < count ; i++) {
         j_p[i*2]=p[i].x;
         j_p[(i*2)+1]=p[i].y;
@@ -322,7 +325,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     /* get java array for ccount */
     java_ccount_size = hole_count;
     java_ccount=(*jnienv)->NewIntArray(jnienv,java_ccount_size);
-    jint j_ccount[java_ccount_size];
+    j_ccount=g_malloc(sizeof(jint) * java_ccount_size);
     /* get java array for hole coordinates */
     java_holes_size = 0;
     for(i=0; i < hole_count; i ++) {
@@ -331,7 +334,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     java_holes=(*jnienv)->NewIntArray(jnienv,java_holes_size);
     /* copy over the holes to the jint array */
     int j_holes_used=0;
-    jint j_holes[java_holes_size];
+    j_holes=g_malloc(sizeof(jint) * java_holes_size);
     for(i=0; i < hole_count; i ++) {
         int j;
         j_ccount[i] = ccount[i] * 2;
@@ -352,6 +355,9 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     (*jnienv)->DeleteLocalRef(jnienv, java_holes);
     (*jnienv)->DeleteLocalRef(jnienv, java_ccount);
     (*jnienv)->DeleteLocalRef(jnienv, java_p);
+    g_free(j_p);
+    g_free(j_ccount);
+    g_free(j_holes);
 }
 
 static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count) {
