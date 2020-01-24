@@ -327,7 +327,7 @@ static inline int is_clockwise (struct point * p, int count) {
 /* copy over vertexes to the jni array. Allows to reverse the polygon */
 static int add_vertex_to_java_array(struct point * p, int count, jint * j_p, int reverse) {
     int i;
-    if(reverse) {
+    if(reverse > 0) {
         for(i=0; i < count; i ++) {
             j_p[i*2]=p[(count -1) -i].x;
             j_p[i*2+1]=p[(count -1) -i].y;
@@ -372,7 +372,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     j_p = g_malloc(sizeof(jint) * java_p_size);
 
     /* add outer polygon to java array. Ensure it's clockwise */
-    add_vertex_to_java_array(p, count, j_p, !is_clockwise(p, count));
+    add_vertex_to_java_array(p, count, j_p, (is_clockwise(p, count) > 0)? 0: 1);
 
     /* get java array for ccount */
     java_ccount_size = hole_count;
@@ -392,8 +392,8 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
         /* remember this holes ccount */
         j_ccount[i] = ccount[i] * 2;
         /* add inner polygon. ensure its counter clockwise */
-        j_holes_used += add_vertex_to_java_array(holes[i], ccount[i], &(j_holes[j_holes_used]), is_clockwise(holes[i],
-                        ccount[i]));
+        j_holes_used += add_vertex_to_java_array(holes[i], ccount[i], &(j_holes[j_holes_used]), (is_clockwise(holes[i],
+                        ccount[i]) <= 0)? 0: 1);
     }
 
     /* attach the arrays with their storage to the JVM */
