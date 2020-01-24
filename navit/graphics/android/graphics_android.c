@@ -295,7 +295,7 @@ static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, s
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
-/* calculate the area a polygon cover in pixels.
+/* calculate the area a polygon covers in pixels.
  *
  * Bonus: Positive area indicates clockwise, negative counter clockwise
  */
@@ -341,6 +341,13 @@ static int add_vertex_to_java_array(struct point * p, int count, jint * j_p, int
     return count * 2;
 }
 
+/* prepare the java call to draw a polygon with holes. As Java drawing code assumes polygons are directed
+ * clockwise for outer and counter clockwise for inner, all polygons are checked and reversed if required.
+ * While the reversing does not add significant overhead, the calculating adds some overhead.
+ *
+ * TODO: Find a more performant way of doing this probably NOT requiring the java code to get the polygons
+ * directd.
+ */
 static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count,
                                      int hole_count, int* ccount, struct point **holes) {
     int i;
@@ -385,7 +392,7 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
         /* remember this holes ccount */
         j_ccount[i] = ccount[i] * 2;
         /* add inner polygon. ensure its counter clockwise */
-        j_joles_used += add_vertex_to_java_array(holes[i], ccount[i], &(j_holes[j_holes_used]), is_clockwise(holes[i],
+        j_holes_used += add_vertex_to_java_array(holes[i], ccount[i], &(j_holes[j_holes_used]), is_clockwise(holes[i],
                         ccount[i]));
     }
 
