@@ -295,6 +295,52 @@ static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, s
     (*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
+/* calculate the area a polygon cover in pixels.
+ *
+ * Bonus: Positive area indicates clockwise, negative counter clockwise
+ */
+static int polygon_area(struct point* p, int count) {
+    int area =0;
+    int i;
+
+    /* initialize j with the last point */
+    int j = count -1;
+
+    for(i=0; i < count; i ++) {
+        area += (p[j].x + p[i].x) * (p[j].y - p[i].y);
+        j = i; /* j is previous vertex to i */
+    }
+    return area/2;
+}
+
+/* returns if vertexes of given polygon are clockwise
+ *
+ * @returns: > o if clockwise, otherwise counter clockwise.
+ *
+ * Note: On self intersecting polygons, it will return if it is
+ * "mostly" clockwise. Be warned.
+ */
+static inline int is_clockwise (struct point * p, int count) {
+    return polygon_area(p, count);
+}
+
+/* copy over vertexes to the jni array. Allows to reverse the polygon */
+static int add_vertex_to_java_array(struct point * p, int count, jint * j_p, int reverse) {
+    int i;
+    if(reverse) {
+        for(i=0; i < count; i ++) {
+            j_p[i*2]=p[(count -1) -i].x;
+            j_p[i*2+1]=p[(count -1) -i].y;
+        }
+    } else {
+        for(i=0; i < count; i ++) {
+            j_p[i*2]=p[i].x;
+            j_p[i*2+1]=p[i].y;
+        }
+    }
+    return count * 2;
+}
+
 static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count,
                                      int hole_count, int* ccount, struct point **holes) {
     int i;
@@ -317,10 +363,9 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
     java_p_size=count*2;
     java_p = (*jnienv)->NewIntArray(jnienv,java_p_size);
     j_p = g_malloc(sizeof(jint) * java_p_size);
-    for (i = 0 ; i < count ; i++) {
-        j_p[i*2]=p[i].x;
-        j_p[(i*2)+1]=p[i].y;
-    }
+
+    /* add outer polygon to java array. Ensure it's clockwise */
+    add_vertex_to_java_array(p, count, j_p, !is_clockwise(p, count));
 
     /* get java array for ccount */
     java_ccount_size = hole_count;
@@ -332,18 +377,18 @@ static void draw_polygon_with_holes (struct graphics_priv *gra, struct graphics_
         java_holes_size += ccount[i] * 2;
     }
     java_holes=(*jnienv)->NewIntArray(jnienv,java_holes_size);
-    /* copy over the holes to the jint array */
-    int j_holes_used=0;
     j_holes=g_malloc(sizeof(jint) * java_holes_size);
+
+    /* copy over the holes to the jint coordinate array */
+    int j_holes_used=0;
     for(i=0; i < hole_count; i ++) {
-        int j;
+        /* remember this holes ccount */
         j_ccount[i] = ccount[i] * 2;
-        for(j=0; j<ccount[i]; j ++) {
-            j_holes[j_holes_used + (j * 2)] = holes[i][j].x;
-            j_holes[j_holes_used + (j * 2) +1] = holes[i][j].y;
-        }
-        j_holes_used += j_ccount[i];
+        /* add inner polygon. ensure its counter clockwise */
+        j_joles_used += add_vertex_to_java_array(holes[i], ccount[i], &(j_holes[j_holes_used]), is_clockwise(holes[i],
+                        ccount[i]));
     }
+
     /* attach the arrays with their storage to the JVM */
     (*jnienv)->SetIntArrayRegion(jnienv, java_p, 0, java_p_size, j_p);
     (*jnienv)->SetIntArrayRegion(jnienv, java_ccount, 0, java_ccount_size, j_ccount);
