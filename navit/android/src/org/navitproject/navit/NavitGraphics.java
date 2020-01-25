@@ -893,7 +893,7 @@ class NavitGraphics {
         // for every hole
         for (int i = 0; i < ccount.length; i++) {
             // drop holes with less than 3 coordinates
-            if (ccount[i] > 6) {
+            if (ccount[i] >= 6) {
                 path.moveTo(holes[coordinatesUsed + 0], holes[coordinatesUsed + 1]);
                 for (int j = 2; j < ccount[i]; j += 2) {
                     path.lineTo(holes[coordinatesUsed + j], holes[coordinatesUsed + j + 1]);
