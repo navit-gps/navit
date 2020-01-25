@@ -1,5 +1,8 @@
 var NAVTREEINDEX35 =
 {
+"setpath_8c.html#a30fad5f0ba6aab0762f0d225d5f5e29e":[3,0,14,0,0,12,5],
+"setpath_8c.html#a6435aabeb091ddef92297f254f8d7be7":[3,0,14,0,0,12,1],
+"setpath_8c.html#a6d74bfdcd0abdce0d1de8be72def0644":[3,0,14,0,0,12,4],
 "setpath_8c.html#a7b2dd1237d8d67077b890640684a9e99":[3,0,14,0,0,12,6],
 "setpath_8c.html#ae0027a69657ca116c8fd412fccc7e71d":[3,0,14,0,0,12,2],
 "setpath_8c.html#af0340666eaebe35da5165ad74ac69293":[3,0,14,0,0,12,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX35 =
 "structXPM2BMP__TAG.html#aeafbde7121157b8fd24ec10079c233de":[2,0,441,5],
 "structXPM2BMP__TAG.html#aeee64832822041c7eb5e6bdc591e0206":[2,0,441,0],
 "structXPM2BMP__TAG.html#af890374b474dc3ad7a3cb5be4f5385de":[2,0,441,10],
-"structXPMCOLORENTRY__TAG.html":[2,0,442],
-"structXPMCOLORENTRY__TAG.html#a3e2c7bb03fa90e2ba97860ca022d886b":[2,0,442,2],
-"structXPMCOLORENTRY__TAG.html#a8360fec37ba3704f64de4c76328e41f9":[2,0,442,0],
-"structXPMCOLORENTRY__TAG.html#a9641c166b8d4781ec5a1375e15422f6f":[2,0,442,3]
+"structXPMCOLORENTRY__TAG.html":[2,0,442]
 };

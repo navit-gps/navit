@@ -1,5 +1,8 @@
 var NAVTREEINDEX45 =
 {
+"structnavit.html#a60283b31e7b6645f23e3fd9057633573":[0,1,1,72],
+"structnavit.html#a60aaafe2e13f843da0c8df828533f872":[0,1,1,75],
+"structnavit.html#a6c6e0e1b9f166ab07b91d967138eb16d":[0,1,1,76],
 "structnavit.html#a711283c37c70835299be334cce344006":[0,1,1,20],
 "structnavit.html#a71157dbf21cdcbef959c0182ea795270":[0,1,1,55],
 "structnavit.html#a7189951ea51f5e38cb285892eb0cfedf":[0,1,1,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX45 =
 "structosd__text__item.html#a8a51793e1e0e88a9b3d3c17ecb95d9a7":[2,0,277,0],
 "structosd__text__item.html#a9ffa2b30dc457a646be95592c6552626":[2,0,277,5],
 "structosd__text__item.html#aa760b0bc0b130e5ae63c522bd8547b45":[2,0,277,7],
-"structosd__text__item.html#ab3b76b2860bb7f2f565ad0d37c6c83a1":[2,0,277,4],
-"structosd__text__item.html#adcf40c381613f1360f9fff92dee12118":[2,0,277,8],
-"structosm__protobufdb__context.html":[2,0,278],
-"structosm__protobufdb__context.html#a05006471e76910b137273bf68ef6fdb5":[2,0,278,14]
+"structosd__text__item.html#ab3b76b2860bb7f2f565ad0d37c6c83a1":[2,0,277,4]
 };

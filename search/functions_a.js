@@ -39,6 +39,7 @@ var searchData=
   ['invoke',['invoke',['../browserplugin_8c.html#a6efa1c54bb5be65d89b3b286ac07d3b7',1,'browserplugin.c']]],
   ['invokecallbackongeo',['invokeCallbackOnGeo',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a8666183f663540c5c02cf5359a1be49b',1,'org::navitproject::navit::Navit']]],
   ['invokedefault',['invokeDefault',['../browserplugin_8c.html#ae8b2db5722235e54ca653a06704779e0',1,'browserplugin.c']]],
+  ['is_5fclockwise',['is_clockwise',['../graphics__android_8c.html#a3075e0eb7a274213300a3a508e1fc1d0',1,'graphics_android.c']]],
   ['is_5fdouble',['is_double',['../command_8c.html#a517abfd39ecef120c2358a77d5aa8d50',1,'command.c']]],
   ['is_5finside',['is_inside',['../graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8',1,'graphics.c']]],
   ['is_5floop',['is_loop',['../osm_8c.html#ae9a4a51447af914635443f2417c8ab1a',1,'osm.c']]],

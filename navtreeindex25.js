@@ -1,5 +1,8 @@
 var NAVTREEINDEX25 =
 {
+"gui__internal__priv_8h.html#a376ed6facd12225c4293ef7f07affeea":[3,0,6,1,16,42],
+"gui__internal__priv_8h.html#a4b17969080bc271e2840706abbf3127c":[3,0,6,1,16,39],
+"gui__internal__priv_8h.html#a4fd955925a6330096a5fb006d07161ce":[3,0,6,1,16,18],
 "gui__internal__priv_8h.html#a53b6431af49ec8203c72046e0512fec4":[3,0,6,1,16,25],
 "gui__internal__priv_8h.html#a59c97cf2120fc8b016e2f24d5f8b2302":[3,0,6,1,16,8],
 "gui__internal__priv_8h.html#a66447a55da796ec3f8bdf5522b62c57f":[3,0,6,1,16,17],
@@ -246,8 +249,5 @@ var NAVTREEINDEX25 =
 "interfaceVSSpeechSynthesizer.html#aad7cf3a6957094ed41a7a07d2823743f":[2,0,429,7],
 "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html":[2,0,0,0,0,2],
 "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00":[2,0,0,0,0,2,0],
-"item_8c.html":[3,0,68],
-"item_8c.html#a049612b8c52acba4b3908b0f63503048":[3,0,68,35],
-"item_8c.html#a06f39817adf6b6fe25ff0d9ff9325505":[3,0,68,41],
-"item_8c.html#a088682cd8951907090cbf68b4c9e0f83":[3,0,68,10]
+"item_8c.html":[3,0,68]
 };

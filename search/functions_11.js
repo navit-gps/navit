@@ -109,6 +109,7 @@ var searchData=
   ['poly_5fget_5fbyid',['poly_get_byid',['../mg_8h.html#a3fe4e6633924780a3ae7a774732bfcbe',1,'poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item):&#160;poly.c'],['../poly_8c.html#a3fe4e6633924780a3ae7a774732bfcbe',1,'poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item):&#160;poly.c']]],
   ['poly_5fget_5fdata',['poly_get_data',['../poly_8c.html#a5778a87be02abab0147eefc9bd2a7d8a',1,'poly.c']]],
   ['poly_5fintersection',['poly_intersection',['../graphics_8c.html#aae5b20946f5f500c7003a981618d6702',1,'graphics.c']]],
+  ['polygon_5farea',['polygon_area',['../graphics__android_8c.html#aaf0c0d618824487d20d9ab29661099c5',1,'graphics_android.c']]],
   ['polygon_5fnew',['polygon_new',['../layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de',1,'polygon_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#a5e46226d681ad8ccb360c2f7907ff1de',1,'polygon_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['polyline_5fnew',['polyline_new',['../layout_8c.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19',1,'polyline_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19',1,'polyline_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['pop_5ftile',['pop_tile',['../binfile_8c.html#a2f4d7453ee35d0192c364fc80f71c0d8',1,'binfile.c']]],

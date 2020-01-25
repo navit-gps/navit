@@ -39,6 +39,7 @@ var searchData=
   ['add_5fplugin',['add_plugin',['../maptool_8c.html#a3d590868e4d633f28c728200a255b968',1,'maptool.c']]],
   ['add_5ftile_5fhash',['add_tile_hash',['../tile_8c.html#a52cb6505027bb0d6a6ddf5722a1aa0a6',1,'tile.c']]],
   ['add_5ftimeout',['add_timeout',['../structevent__methods.html#a78a56f5728c22e0f3cc34bf25d4a4607',1,'event_methods']]],
+  ['add_5fvertex_5fto_5fjava_5farray',['add_vertex_to_java_array',['../graphics__android_8c.html#ac281185dd98076e8553820809eb7275a',1,'graphics_android.c']]],
   ['add_5fwatch',['add_watch',['../structevent__methods.html#a39bed4312c004908d4bf58a650a846ec',1,'event_methods']]],
   ['addbookmark',['AddBookmark',['../classNGQProxyBookmarks.html#ae89e2ed52ab4fa233896207f5bacd0c1',1,'NGQProxyBookmarks']]],
   ['adddestination',['addDestination',['../classNGQProxyRoute.html#abd5b0881ad82ee0319d93d003ee94c78',1,'NGQProxyRoute']]],

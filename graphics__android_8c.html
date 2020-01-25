@@ -152,6 +152,12 @@ Functions</h2></td></tr>
 <tr class="separator:aaf44054328a729b2e4fed1052296aeb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad47e81e7e3f8d3cff3c963402f783e37"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gra, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
 <tr class="separator:ad47e81e7e3f8d3cff3c963402f783e37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf0c0d618824487d20d9ab29661099c5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#aaf0c0d618824487d20d9ab29661099c5">polygon_area</a> (struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
+<tr class="separator:aaf0c0d618824487d20d9ab29661099c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3075e0eb7a274213300a3a508e1fc1d0"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#a3075e0eb7a274213300a3a508e1fc1d0">is_clockwise</a> (struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
+<tr class="separator:a3075e0eb7a274213300a3a508e1fc1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac281185dd98076e8553820809eb7275a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#ac281185dd98076e8553820809eb7275a">add_vertex_to_java_array</a> (struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, jint *j_p, int reverse)</td></tr>
+<tr class="separator:ac281185dd98076e8553820809eb7275a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08c9054db14026c5f98bc1b949d75976"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gra, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count, int hole_count, int *ccount, struct <a class="el" href="structpoint.html">point</a> **holes)</td></tr>
 <tr class="separator:a08c9054db14026c5f98bc1b949d75976"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4308f07317bed279aab3980b62c74924"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon</a> (struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *gra, struct <a class="el" href="structgraphics__gc__priv.html">graphics_gc_priv</a> *gc, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, int count)</td></tr>
@@ -300,6 +306,58 @@ Variables</h2></td></tr>
 <tr class="separator:ad7db0ce8ce2af569f0787e517cfb346c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ac281185dd98076e8553820809eb7275a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac281185dd98076e8553820809eb7275a">&#9670;&nbsp;</a></span>add_vertex_to_java_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int add_vertex_to_java_array </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">jint *&#160;</td>
+          <td class="paramname"><em>j_p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>reverse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structgraphics__priv.html#a6cd543834dfabf7d5280075e1d6590c9">graphics_priv::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, and <a class="el" href="structgraphics__priv.html#ae918d544220f9d7300df03cedfa46570">graphics_priv::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes()</a>.</p>
+
+</div>
+</div>
 <a id="a758db79d3c2efab53a82169a999e147a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a758db79d3c2efab53a82169a999e147a">&#9670;&nbsp;</a></span>background_gc()</h2>
 
@@ -836,7 +894,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e">graphics_gc_priv::a</a>, <a class="el" href="structgraphics__gc__priv.html#a99cbf814f27d78d5f6b62e7759604862">graphics_gc_priv::b</a>, <a class="el" href="structgraphics__gc__priv.html#a328017653b147272f766bf5ca49ede7f">graphics_gc_priv::g</a>, <a class="el" href="structgraphics__gc__priv.html#ae736ac13db47ce16e5036d808b986f36">graphics_gc_priv::gra</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structgraphics__gc__priv.html#a21577886dd076e03e722d89fbb37f61b">graphics_gc_priv::linewidth</a>, <a class="el" href="structgraphics__priv.html#a027abf0e758a8e409528f902dcc0e316">graphics_priv::NavitGraphics</a>, <a class="el" href="structgraphics__priv.html#af7d7a64029eea669c5e8c04e83bf90c0">graphics_priv::NavitGraphics_draw_polygon_with_holes</a>, <a class="el" href="structgraphics__priv.html#a0abb0f3fb461da38203ce19d101f9ea2">graphics_priv::Paint</a>, <a class="el" href="structgraphics__gc__priv.html#a95783b6c4e4f64237421a66353fb0b09">graphics_gc_priv::r</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structgraphics__priv.html#a6cd543834dfabf7d5280075e1d6590c9">graphics_priv::x</a>, and <a class="el" href="structgraphics__priv.html#ae918d544220f9d7300df03cedfa46570">graphics_priv::y</a>.</p>
+<p class="reference">References <a class="el" href="structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e">graphics_gc_priv::a</a>, <a class="el" href="graphics__android_8c.html#ac281185dd98076e8553820809eb7275a">add_vertex_to_java_array()</a>, <a class="el" href="structgraphics__gc__priv.html#a99cbf814f27d78d5f6b62e7759604862">graphics_gc_priv::b</a>, <a class="el" href="structgraphics__gc__priv.html#a328017653b147272f766bf5ca49ede7f">graphics_gc_priv::g</a>, <a class="el" href="structgraphics__gc__priv.html#ae736ac13db47ce16e5036d808b986f36">graphics_gc_priv::gra</a>, <a class="el" href="graphics__android_8c.html#a3075e0eb7a274213300a3a508e1fc1d0">is_clockwise()</a>, <a class="el" href="android_8c.html#aa65e77e2c5c1dafdda5287a265f5c5ae">jnienv</a>, <a class="el" href="structgraphics__gc__priv.html#a21577886dd076e03e722d89fbb37f61b">graphics_gc_priv::linewidth</a>, <a class="el" href="structgraphics__priv.html#a027abf0e758a8e409528f902dcc0e316">graphics_priv::NavitGraphics</a>, <a class="el" href="structgraphics__priv.html#af7d7a64029eea669c5e8c04e83bf90c0">graphics_priv::NavitGraphics_draw_polygon_with_holes</a>, <a class="el" href="structgraphics__priv.html#a0abb0f3fb461da38203ce19d101f9ea2">graphics_priv::Paint</a>, and <a class="el" href="structgraphics__gc__priv.html#a95783b6c4e4f64237421a66353fb0b09">graphics_gc_priv::r</a>.</p>
 
 </div>
 </div>
@@ -2478,6 +2536,46 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3075e0eb7a274213300a3a508e1fc1d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3075e0eb7a274213300a3a508e1fc1d0">&#9670;&nbsp;</a></span>is_clockwise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int is_clockwise </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="graphics__android_8c.html#aaf0c0d618824487d20d9ab29661099c5">polygon_area()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes()</a>.</p>
+
+</div>
+</div>
 <a id="a89cb4853f272778bf198a42d71412350"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a89cb4853f272778bf198a42d71412350">&#9670;&nbsp;</a></span>keypress_callback()</h2>
 
@@ -2813,6 +2911,46 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aaf0c0d618824487d20d9ab29661099c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf0c0d618824487d20d9ab29661099c5">&#9670;&nbsp;</a></span>polygon_area()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int polygon_area </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="graphics__egl_8c.html#a74b604bbf95c89180a299de656bc50c6">area()</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structgraphics__priv.html#ae918d544220f9d7300df03cedfa46570">graphics_priv::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#a3075e0eb7a274213300a3a508e1fc1d0">is_clockwise()</a>.</p>
+
+</div>
+</div>
 <a id="aeae8987e336df8386927936a4e64bae7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeae8987e336df8386927936a4e64bae7">&#9670;&nbsp;</a></span>resize_callback()</h2>
 
@@ -2981,8 +3119,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    {<span class="stringliteral">&quot;map_download_dialog&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem</a>)},</div><div class="line">    {<span class="stringliteral">&quot;set_map_location&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem</a>)},</div><div class="line">    {<span class="stringliteral">&quot;backup_restore_dialog&quot;</span>,<a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem</a>)},</div><div class="line">    {<span class="stringliteral">&quot;menu&quot;</span>, <a class="code" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code" href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu</a>)},</div><div class="line">}</div><div class="ttc" id="command_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition:</b> command.h:32</div></div>
-<div class="ttc" id="graphics__android_8c_html_a9a56029aa0a551082e6e8c8dd352994c"><div class="ttname"><a href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu</a></div><div class="ttdeci">static void graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdoc">Shows the Android menu. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:822</div></div>
-<div class="ttc" id="graphics__android_8c_html_a78dbfa2f4b0bd6bdec10846d75e2a4ff"><div class="ttname"><a href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem</a></div><div class="ttdeci">static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdoc">Runs an item from the Android menu. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:797</div></div>
+<div class="ttc" id="graphics__android_8c_html_a9a56029aa0a551082e6e8c8dd352994c"><div class="ttname"><a href="graphics__android_8c.html#a9a56029aa0a551082e6e8c8dd352994c">graphics_android_cmd_menu</a></div><div class="ttdeci">static void graphics_android_cmd_menu(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdoc">Shows the Android menu. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:880</div></div>
+<div class="ttc" id="graphics__android_8c_html_a78dbfa2f4b0bd6bdec10846d75e2a4ff"><div class="ttname"><a href="graphics__android_8c.html#a78dbfa2f4b0bd6bdec10846d75e2a4ff">graphics_android_cmd_runMenuItem</a></div><div class="ttdeci">static void graphics_android_cmd_runMenuItem(struct graphics_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)</div><div class="ttdoc">Runs an item from the Android menu. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:855</div></div>
 </div><!-- fragment --><p>The command table. Each entry consists of an API function name and the callback function which implements this command. </p>
 
 </div>
@@ -3006,15 +3144,15 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__android_8c.html#a80d27fb35d1c6109116b0edb8ff207e4">event_android_main_loop_run</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#afd1c1e40ed69a2989df856f3bec65297">event_android_call_callback</a>,</div><div class="line">}</div><div class="ttc" id="graphics__android_8c_html_a4aeb2d5b73142c55bdd4271d9f79db44"><div class="ttname"><a href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle</a></div><div class="ttdeci">static void event_android_remove_idle(struct event_idle *ev)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1062</div></div>
-<div class="ttc" id="graphics__android_8c_html_a3ecc1db1a7a89670f7b7869a24668e06"><div class="ttname"><a href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout</a></div><div class="ttdeci">static struct event_timeout * event_android_add_timeout(int timeout, int multi, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1036</div></div>
-<div class="ttc" id="graphics__android_8c_html_a8a7f77d053d032e9ea8d50cbaf60ec13"><div class="ttname"><a href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch</a></div><div class="ttdeci">static void event_android_remove_watch(struct event_watch *ev)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1006</div></div>
-<div class="ttc" id="graphics__android_8c_html_ad2f2503138f9872d8e511ed7fe0edf2a"><div class="ttname"><a href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch</a></div><div class="ttdeci">static struct event_watch * event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:997</div></div>
-<div class="ttc" id="graphics__android_8c_html_ad5f9da243a7c542a1cb961cd3e8e948f"><div class="ttname"><a href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit</a></div><div class="ttdeci">static void event_android_main_loop_quit(void)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:957</div></div>
-<div class="ttc" id="graphics__android_8c_html_a80d27fb35d1c6109116b0edb8ff207e4"><div class="ttname"><a href="graphics__android_8c.html#a80d27fb35d1c6109116b0edb8ff207e4">event_android_main_loop_run</a></div><div class="ttdeci">static void event_android_main_loop_run(void)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:953</div></div>
-<div class="ttc" id="graphics__android_8c_html_afd1c1e40ed69a2989df856f3bec65297"><div class="ttname"><a href="graphics__android_8c.html#afd1c1e40ed69a2989df856f3bec65297">event_android_call_callback</a></div><div class="ttdeci">static void event_android_call_callback(struct callback_list *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1074</div></div>
-<div class="ttc" id="graphics__android_8c_html_abab234c77d47e9398a112fd42c3c41b2"><div class="ttname"><a href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle</a></div><div class="ttdeci">static struct event_idle * event_android_add_idle(int priority, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1049</div></div>
-<div class="ttc" id="graphics__android_8c_html_a8ab53c11b39158512d7942b7d214f882"><div class="ttname"><a href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout</a></div><div class="ttdeci">static void event_android_remove_timeout(struct event_timeout *priv)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1022</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__android_8c.html#a80d27fb35d1c6109116b0edb8ff207e4">event_android_main_loop_run</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#afd1c1e40ed69a2989df856f3bec65297">event_android_call_callback</a>,</div><div class="line">}</div><div class="ttc" id="graphics__android_8c_html_a4aeb2d5b73142c55bdd4271d9f79db44"><div class="ttname"><a href="graphics__android_8c.html#a4aeb2d5b73142c55bdd4271d9f79db44">event_android_remove_idle</a></div><div class="ttdeci">static void event_android_remove_idle(struct event_idle *ev)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1120</div></div>
+<div class="ttc" id="graphics__android_8c_html_a3ecc1db1a7a89670f7b7869a24668e06"><div class="ttname"><a href="graphics__android_8c.html#a3ecc1db1a7a89670f7b7869a24668e06">event_android_add_timeout</a></div><div class="ttdeci">static struct event_timeout * event_android_add_timeout(int timeout, int multi, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1094</div></div>
+<div class="ttc" id="graphics__android_8c_html_a8a7f77d053d032e9ea8d50cbaf60ec13"><div class="ttname"><a href="graphics__android_8c.html#a8a7f77d053d032e9ea8d50cbaf60ec13">event_android_remove_watch</a></div><div class="ttdeci">static void event_android_remove_watch(struct event_watch *ev)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1064</div></div>
+<div class="ttc" id="graphics__android_8c_html_ad2f2503138f9872d8e511ed7fe0edf2a"><div class="ttname"><a href="graphics__android_8c.html#ad2f2503138f9872d8e511ed7fe0edf2a">event_android_add_watch</a></div><div class="ttdeci">static struct event_watch * event_android_add_watch(int h, enum event_watch_cond cond, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1055</div></div>
+<div class="ttc" id="graphics__android_8c_html_ad5f9da243a7c542a1cb961cd3e8e948f"><div class="ttname"><a href="graphics__android_8c.html#ad5f9da243a7c542a1cb961cd3e8e948f">event_android_main_loop_quit</a></div><div class="ttdeci">static void event_android_main_loop_quit(void)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1015</div></div>
+<div class="ttc" id="graphics__android_8c_html_a80d27fb35d1c6109116b0edb8ff207e4"><div class="ttname"><a href="graphics__android_8c.html#a80d27fb35d1c6109116b0edb8ff207e4">event_android_main_loop_run</a></div><div class="ttdeci">static void event_android_main_loop_run(void)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1011</div></div>
+<div class="ttc" id="graphics__android_8c_html_afd1c1e40ed69a2989df856f3bec65297"><div class="ttname"><a href="graphics__android_8c.html#afd1c1e40ed69a2989df856f3bec65297">event_android_call_callback</a></div><div class="ttdeci">static void event_android_call_callback(struct callback_list *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1132</div></div>
+<div class="ttc" id="graphics__android_8c_html_abab234c77d47e9398a112fd42c3c41b2"><div class="ttname"><a href="graphics__android_8c.html#abab234c77d47e9398a112fd42c3c41b2">event_android_add_idle</a></div><div class="ttdeci">static struct event_idle * event_android_add_idle(int priority, struct callback *cb)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1107</div></div>
+<div class="ttc" id="graphics__android_8c_html_a8ab53c11b39158512d7942b7d214f882"><div class="ttname"><a href="graphics__android_8c.html#a8ab53c11b39158512d7942b7d214f882">event_android_remove_timeout</a></div><div class="ttdeci">static void event_android_remove_timeout(struct event_timeout *priv)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:1080</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#a9a1713f706ebf338d343a50e0a3c06ad">event_android_new()</a>.</p>
 
@@ -3093,29 +3231,29 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__android_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#af7ea1822bd6156661340311ea9b4777b">font_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#afea25d9f480111debc4c9fab1ef4c92c">image_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes</a></div><div class="line">}</div><div class="ttc" id="graphics__android_8c_html_a363219636622f009489ec6fa937a18aa"><div class="ttname"><a href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:391</div></div>
-<div class="ttc" id="graphics__android_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__android_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:437</div></div>
-<div class="ttc" id="graphics__android_8c_html_a765e71a00ffffe328373e02266f44927"><div class="ttname"><a href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle</a></div><div class="ttdeci">static void draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:385</div></div>
-<div class="ttc" id="graphics__android_8c_html_a1bf7be791273709511e14be6a5c6b849"><div class="ttname"><a href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard</a></div><div class="ttdeci">void hide_native_keyboard(struct graphics_keyboard *kbd)</div><div class="ttdoc">Hides the native input method and frees associated private data. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:1188</div></div>
-<div class="ttc" id="graphics__android_8c_html_a9c512b3c69845f218e8a7ac4f2de3542"><div class="ttname"><a href="graphics__android_8c.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a></div><div class="ttdeci">static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:458</div></div>
-<div class="ttc" id="graphics__android_8c_html_a3986a6cfd9fe31ec76ed0517ea9ca969"><div class="ttname"><a href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:379</div></div>
-<div class="ttc" id="graphics__android_8c_html_a08c9054db14026c5f98bc1b949d75976"><div class="ttname"><a href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes</a></div><div class="ttdeci">static void draw_polygon_with_holes(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count, int hole_count, int *ccount, struct point **holes)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:298</div></div>
-<div class="ttc" id="graphics__android_8c_html_a98101803546bc1f54ffdd6a030e4c94f"><div class="ttname"><a href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp</a></div><div class="ttdeci">static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:413</div></div>
-<div class="ttc" id="graphics__android_8c_html_a9900f7c2fb2ca487591fc186ed4f7f17"><div class="ttname"><a href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr</a></div><div class="ttdeci">static int set_attr(struct graphics_priv *gra, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:485</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    <a class="code" href="graphics__android_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#af7ea1822bd6156661340311ea9b4777b">font_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#afea25d9f480111debc4c9fab1ef4c92c">image_new</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard</a>,</div><div class="line">    <a class="code" href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard</a>,</div><div class="line">    NULL, </div><div class="line">    <a class="code" href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes</a></div><div class="line">}</div><div class="ttc" id="graphics__android_8c_html_a363219636622f009489ec6fa937a18aa"><div class="ttname"><a href="graphics__android_8c.html#a363219636622f009489ec6fa937a18aa">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:449</div></div>
+<div class="ttc" id="graphics__android_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__android_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:495</div></div>
+<div class="ttc" id="graphics__android_8c_html_a765e71a00ffffe328373e02266f44927"><div class="ttname"><a href="graphics__android_8c.html#a765e71a00ffffe328373e02266f44927">draw_circle</a></div><div class="ttdeci">static void draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:443</div></div>
+<div class="ttc" id="graphics__android_8c_html_a1bf7be791273709511e14be6a5c6b849"><div class="ttname"><a href="graphics__android_8c.html#a1bf7be791273709511e14be6a5c6b849">hide_native_keyboard</a></div><div class="ttdeci">void hide_native_keyboard(struct graphics_keyboard *kbd)</div><div class="ttdoc">Hides the native input method and frees associated private data. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:1246</div></div>
+<div class="ttc" id="graphics__android_8c_html_a9c512b3c69845f218e8a7ac4f2de3542"><div class="ttname"><a href="graphics__android_8c.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a></div><div class="ttdeci">static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:516</div></div>
+<div class="ttc" id="graphics__android_8c_html_a3986a6cfd9fe31ec76ed0517ea9ca969"><div class="ttname"><a href="graphics__android_8c.html#a3986a6cfd9fe31ec76ed0517ea9ca969">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:437</div></div>
+<div class="ttc" id="graphics__android_8c_html_a08c9054db14026c5f98bc1b949d75976"><div class="ttname"><a href="graphics__android_8c.html#a08c9054db14026c5f98bc1b949d75976">draw_polygon_with_holes</a></div><div class="ttdeci">static void draw_polygon_with_holes(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count, int hole_count, int *ccount, struct point **holes)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:351</div></div>
+<div class="ttc" id="graphics__android_8c_html_a98101803546bc1f54ffdd6a030e4c94f"><div class="ttname"><a href="graphics__android_8c.html#a98101803546bc1f54ffdd6a030e4c94f">draw_image_warp</a></div><div class="ttdeci">static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:471</div></div>
+<div class="ttc" id="graphics__android_8c_html_a9900f7c2fb2ca487591fc186ed4f7f17"><div class="ttname"><a href="graphics__android_8c.html#a9900f7c2fb2ca487591fc186ed4f7f17">set_attr</a></div><div class="ttdeci">static int set_attr(struct graphics_priv *gra, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:543</div></div>
 <div class="ttc" id="graphics__android_8c_html_ad47e81e7e3f8d3cff3c963402f783e37"><div class="ttname"><a href="graphics__android_8c.html#ad47e81e7e3f8d3cff3c963402f783e37">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:272</div></div>
-<div class="ttc" id="graphics__android_8c_html_abb0158dc9d288bcb4babd6764208adae"><div class="ttname"><a href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gra, int disable)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:476</div></div>
-<div class="ttc" id="graphics__android_8c_html_a961e91720b5386c6efd0ed86f038a86d"><div class="ttname"><a href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gra, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:440</div></div>
-<div class="ttc" id="graphics__android_8c_html_a4308f07317bed279aab3980b62c74924"><div class="ttname"><a href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:357</div></div>
-<div class="ttc" id="graphics__android_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdoc">Creates a new overlay. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:939</div></div>
+<div class="ttc" id="graphics__android_8c_html_abb0158dc9d288bcb4babd6764208adae"><div class="ttname"><a href="graphics__android_8c.html#abb0158dc9d288bcb4babd6764208adae">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gra, int disable)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:534</div></div>
+<div class="ttc" id="graphics__android_8c_html_a961e91720b5386c6efd0ed86f038a86d"><div class="ttname"><a href="graphics__android_8c.html#a961e91720b5386c6efd0ed86f038a86d">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gra, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:498</div></div>
+<div class="ttc" id="graphics__android_8c_html_a4308f07317bed279aab3980b62c74924"><div class="ttname"><a href="graphics__android_8c.html#a4308f07317bed279aab3980b62c74924">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:415</div></div>
+<div class="ttc" id="graphics__android_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdoc">Creates a new overlay. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:997</div></div>
 <div class="ttc" id="graphics__android_8c_html_afea25d9f480111debc4c9fab1ef4c92c"><div class="ttname"><a href="graphics__android_8c.html#afea25d9f480111debc4c9fab1ef4c92c">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:199</div></div>
-<div class="ttc" id="graphics__android_8c_html_aaf677a7e4d65ec223aee426c7a71fadd"><div class="ttname"><a href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gra, struct point *p)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:433</div></div>
-<div class="ttc" id="graphics__android_8c_html_ae4456740fdea7713830cce6af320e250"><div class="ttname"><a href="graphics__android_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:455</div></div>
+<div class="ttc" id="graphics__android_8c_html_aaf677a7e4d65ec223aee426c7a71fadd"><div class="ttname"><a href="graphics__android_8c.html#aaf677a7e4d65ec223aee426c7a71fadd">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gra, struct point *p)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:491</div></div>
+<div class="ttc" id="graphics__android_8c_html_ae4456740fdea7713830cce6af320e250"><div class="ttname"><a href="graphics__android_8c.html#ae4456740fdea7713830cce6af320e250">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:513</div></div>
 <div class="ttc" id="graphics__android_8c_html_af7ea1822bd6156661340311ea9b4777b"><div class="ttname"><a href="graphics__android_8c.html#af7ea1822bd6156661340311ea9b4777b">font_new</a></div><div class="ttdeci">static struct graphics_font_priv * font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font, int size, int flags)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:133</div></div>
-<div class="ttc" id="graphics__android_8c_html_ad57cb88d03824844c0f7200bd29f356e"><div class="ttname"><a href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:480</div></div>
-<div class="ttc" id="graphics__android_8c_html_a046e0a7ce82e6fde6c994b82b1494ac4"><div class="ttname"><a href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard</a></div><div class="ttdeci">int show_native_keyboard(struct graphics_keyboard *kbd)</div><div class="ttdoc">Displays the native input method. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:1169</div></div>
-<div class="ttc" id="graphics__android_8c_html_a903ba6d12141b8a2c00872bf61ea1827"><div class="ttname"><a href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:404</div></div>
+<div class="ttc" id="graphics__android_8c_html_ad57cb88d03824844c0f7200bd29f356e"><div class="ttname"><a href="graphics__android_8c.html#ad57cb88d03824844c0f7200bd29f356e">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:538</div></div>
+<div class="ttc" id="graphics__android_8c_html_a046e0a7ce82e6fde6c994b82b1494ac4"><div class="ttname"><a href="graphics__android_8c.html#a046e0a7ce82e6fde6c994b82b1494ac4">show_native_keyboard</a></div><div class="ttdeci">int show_native_keyboard(struct graphics_keyboard *kbd)</div><div class="ttdoc">Displays the native input method. </div><div class="ttdef"><b>Definition:</b> graphics_android.c:1227</div></div>
+<div class="ttc" id="graphics__android_8c_html_a903ba6d12141b8a2c00872bf61ea1827"><div class="ttname"><a href="graphics__android_8c.html#a903ba6d12141b8a2c00872bf61ea1827">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:462</div></div>
 <div class="ttc" id="graphics__android_8c_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__android_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:122</div></div>
-<div class="ttc" id="graphics__android_8c_html_a5c1c1c5610a843accdf2f97f90c29ab0"><div class="ttname"><a href="graphics__android_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, const char *type)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:447</div></div>
+<div class="ttc" id="graphics__android_8c_html_a5c1c1c5610a843accdf2f97f90c29ab0"><div class="ttname"><a href="graphics__android_8c.html#a5c1c1c5610a843accdf2f97f90c29ab0">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, const char *type)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:505</div></div>
 <div class="ttc" id="graphics__android_8c_html_ae911ae167e5a0b90dda7215392ed91c5"><div class="ttname"><a href="graphics__android_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition:</b> graphics_android.c:180</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__android_8c.html#aefe74f4f6bc2fb59923a933ac349f6b3">graphics_android_new()</a>, and <a class="el" href="graphics__android_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new()</a>.</p>

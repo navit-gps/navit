@@ -148,6 +148,7 @@ var searchData=
   ['is_5farc',['IS_ARC',['../shapefile_8c.html#ae8276d20b515bd95f82a666cce71d462',1,'shapefile.c']]],
   ['is_5fattr',['is_attr',['../structNavitObject.html#a436e63645d651987731027606f52ea41',1,'NavitObject']]],
   ['is_5fcancellation',['is_cancellation',['../structtraffic__message.html#a61857175748e0a05f00e17a358b432c6',1,'traffic_message']]],
+  ['is_5fclockwise',['is_clockwise',['../graphics__android_8c.html#a3075e0eb7a274213300a3a508e1fc1d0',1,'graphics_android.c']]],
   ['is_5fcomplex_5ft_5fjunction',['is_complex_t_junction',['../structnavigation__maneuver.html#af9aab10475c48ec899ecf3f53536ad62',1,'navigation_maneuver']]],
   ['is_5fdouble',['is_double',['../command_8c.html#a517abfd39ecef120c2358a77d5aa8d50',1,'command.c']]],
   ['is_5fforecast',['is_forecast',['../structtraffic__message.html#a8407ad12cda392036d21df9f057ab5e4',1,'traffic_message']]],

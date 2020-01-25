@@ -260,6 +260,7 @@ var searchData=
   ['poly_5fpriv',['poly_priv',['../structpoly__priv.html',1,'']]],
   ['poly_5franges',['poly_ranges',['../map_2mg_2map_8c.html#a5d8f79d03208a71a3b542fb445d263e0',1,'map.c']]],
   ['polygon',['polygon',['../structattr.html#afcd101aa3e134cb823191522281de025',1,'attr::polygon()'],['../structelement.html#acc2cb6cf1ac90817c97e67e41f8e7ca3',1,'element::polygon()'],['../structtree__header.html#af4e4b0791567e7aaa46983edb9c817b3',1,'tree_header::polygon()']]],
+  ['polygon_5farea',['polygon_area',['../graphics__android_8c.html#aaf0c0d618824487d20d9ab29661099c5',1,'graphics_android.c']]],
   ['polygon_5fnew',['polygon_new',['../layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de',1,'polygon_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#a5e46226d681ad8ccb360c2f7907ff1de',1,'polygon_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['polygons',['polygons',['../structgar2nav__conv.html#a6d68bd2da571082520269202a55996d8',1,'gar2nav_conv']]],
   ['polyline',['polyline',['../structattr.html#aa8f0b411f378c32c87e11b6d79a6ca71',1,'attr::polyline()'],['../structelement.html#a46e15e705dc6d15337c70c2af485f89d',1,'element::polyline()'],['../structtree__header.html#a4a733ec578ff50a93d62dcf17fd2d6f8',1,'tree_header::polyline()']]],
