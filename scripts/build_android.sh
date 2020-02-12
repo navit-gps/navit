@@ -17,7 +17,7 @@
 # If any of the build steps fails, this script aborts with an error immediately.
 
 echo Set up environment
-set - e
+set -e
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin
 export JVM_OPTS="-Xmx3200m"
 export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -28,7 +28,7 @@ export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryEr
 echo Run CMake
 test -z "$PKG_CONFIG_LIBDIR" && export PKG_CONFIG_LIBDIR=""     # Force cmake below to run ignore build host libraries when using pkgconfig.
 # Note: If you want to compile against specific target libraries that are searched using pkgconfig, please run this script with variable PKG_CONFIG_LIBDIR set to the appropriate path
-cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y || exit 1
+cmake ./ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DDISABLE_CXX=y || exit 1
 
 echo Process icons
 pushd navit/icons
