@@ -1,0 +1,11 @@
+Navit dla Android jest darmowym wolno źródłowym (GPL) systemem nawigacji samochodowej.
+Pokazuje Twoją pozycje na mapie (w trybie "z lotu ptaka" lub w 3D) na podstawie danych z odbiornika GPS, zawiera wbudowany dokładny algorytm wytyczający trasę, obsługę ekranów dotykowych, komendy głosowe oraz wyświetlanie "Użytecznych Miejsc" (POI).
+
+W przeciwieństwie do innych systemów nawigacji, mapy w Navit są na żywo generowane z danych wektorowych.
+Połączenie z internetem nie jest wymagane do pracy z Navit.
+
+Cechy:
+*) Nawigowanie do celu z Google Maps™
+*) praca bez połączenia z internetem
+*) komendy głosowe w wielu językach (ponad 20)
+*) aktualne mapy OpenStreetMaps

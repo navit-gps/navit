@@ -5,6 +5,15 @@ apply plugin: 'checkstyle'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    signingConfigs {
+        release {
+            // We can leave these in environment variables
+            storeFile file(System.getenv("KEYSTORE"))
+            keyAlias System.getenv("KEY_ALIAS")
+            storePassword System.getenv("STORE_PASS")
+            keyPassword System.getenv("KEY_PASS")
+        }
+    }
     defaultConfig {
         applicationId "org.navitproject.navit"
         minSdkVersion 10
@@ -25,6 +34,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     lintOptions {
