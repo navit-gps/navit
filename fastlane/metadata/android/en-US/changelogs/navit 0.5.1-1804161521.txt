@@ -1,0 +1,1 @@
+This release disables the bug report until we improve our privacy policy.

@@ -82,17 +82,19 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+      KEYSTORE: '/home/circleci/.keystore'
     steps:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+          name: Install requirements
+          command: scripts/setup_android.sh
       - run:
-          name: Build for Android
-          command: bash scripts/build_android.sh
+          name: Setup Keystore and Playstore Keys
+          command: scripts/setup_publish_keys.sh
+      - run:
+          name: Build and upload Android
+          command: fastlane circleci
       - run:
           name: Run Lint Test
           command: |

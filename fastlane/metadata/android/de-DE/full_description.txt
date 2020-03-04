@@ -1,0 +1,10 @@
+Navit für Android ist eine open source (GPL) Navigationsanwendung.
+Zum offline navigieren für Auto, Fahrrad oder zu Fuss.
+
+Navit zeichnet die Karte mit Vektorgrafik und kommt ohne Internetverbindung aus.
+
+Features:
+*) Aus google maps mit Navit zum Ziel navigieren
+*) komplett offline ohne Internetverbindung
+*) Sprachansage in verschiedenen Sprachen
+*) aktuelles OSM Kartenmaterial

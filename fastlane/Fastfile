@@ -1,0 +1,50 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+default_platform(:android)
+
+require 'git'
+
+def currentBranch()
+  branch = git_branch()
+  if !branch.to_s.empty?
+    return branch
+  end
+  git = Git.open(File.join(File.dirname(__FILE__), '../')) # git_branch() does not seem work on Windows, it will print error with path not found.
+  return git.current_branch
+end
+
+
+platform :android do
+  desc "Description of what the lane does"
+  lane :circleci do
+    # Here we can add other things that circleci should do
+    playstore
+  end
+  lane :playstore do
+    sh("cd ..;bash scripts/build_android.sh")
+    
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
+    isOnMasterBranch = currentBranch() == "master"
+    if !isOnMasterBranch
+      upload_to_play_store( track: 'beta', 
+      						json_key: 'key.json', 
+      						apk: 'navit/android/build/outputs/apk/release/android-release.apk',
+      						package_name: 'org.navitproject.navit'
+      					  )
+    else
+      puts "Not on master, no upload to google play"
+    end
+  end
+end
