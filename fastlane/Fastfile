@@ -37,7 +37,7 @@ platform :android do
       build_type: 'Release'
     )
     isOnMasterBranch = currentBranch() == "master"
-    if !isOnMasterBranch
+    if isOnMasterBranch
       upload_to_play_store( track: 'beta', 
       						json_key: 'key.json', 
       						apk: 'navit/android/build/outputs/apk/release/android-release.apk',
