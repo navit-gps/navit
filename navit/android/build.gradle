@@ -8,7 +8,7 @@ android {
     signingConfigs {
         release {
             // We can leave these in environment variables
-            storeFile file(System.getenv("KEYSTORE"))
+            storeFile file(System.getenv("KEYSTORE")  ?: "/store")
             keyAlias System.getenv("KEY_ALIAS")
             storePassword System.getenv("STORE_PASS")
             keyPassword System.getenv("KEY_PASS")
