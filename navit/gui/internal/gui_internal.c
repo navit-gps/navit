@@ -2893,6 +2893,11 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
     return 0;
 }
 
+static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
+    gui_internal_cmd2_show_geopos_options(this, c, description);
+    return 1;
+}
+
 static void gui_internal_disable_suspend(struct gui_priv *this) {
     if (this->win->disable_suspend)
         this->win->disable_suspend(this->win);
@@ -2904,12 +2909,13 @@ static void gui_internal_disable_suspend(struct gui_priv *this) {
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct gui_methods gui_internal_methods = {
-    NULL,
-    NULL,
+    NULL, // gui_internal_menubar_new
+    NULL, // gui_internal_popup_new
     gui_internal_set_graphics,
-    NULL,
-    NULL,
-    NULL,
+    NULL, // gui_internal_run_main_loop
+    NULL, // gui_internal_datawindow_new
+    NULL, // gui_internal_add_bookmark
+    gui_internal_show_coord_actions,
     gui_internal_disable_suspend,
     gui_internal_get_attr,
     gui_internal_add_attr,

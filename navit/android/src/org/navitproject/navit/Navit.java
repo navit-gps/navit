@@ -368,7 +368,7 @@ public class Navit extends Activity {
             } else if (naviScheme.equals("geo")
                     && intent.getAction().equals("android.intent.action.VIEW")) {
                 invokeCallbackOnGeo(intent.getData().getSchemeSpecificPart(),
-                        NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
+                        NavitCallbackHandler.MsgType.CLB_COORD_ACTIONS, "");
             }
         }
     }

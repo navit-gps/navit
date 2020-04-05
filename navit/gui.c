@@ -142,6 +142,17 @@ int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description) {
     return ret;
 }
 
+int gui_show_coord_actions(struct gui *gui, struct pcoord *c, char *description) {
+    int ret;
+    dbg(lvl_info,"enter");
+    if (! gui->meth.show_coord_actions)
+        return 0;
+    ret=gui->meth.show_coord_actions(gui->priv, c, description);
+
+    dbg(lvl_info,"ret=%d", ret);
+    return ret;
+}
+
 int gui_set_graphics(struct gui *this_, struct graphics *gra) {
     if (! this_->meth.set_graphics) {
         dbg(lvl_error, "cannot set graphics, method 'set_graphics' not available");

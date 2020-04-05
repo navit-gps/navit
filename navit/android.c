@@ -356,7 +356,6 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
     return return_string;
 }
 
-
 JNIEXPORT jobject JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callbackCmdChannel( JNIEnv* env,
         jclass thiz, jint command) {
 
@@ -493,29 +492,31 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         dbg(lvl_debug,"Setting destination to %s",coord_str);
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
+        ret = 1;
     }
     break;
-    case 3: {
-        // navigate to geo position
-        char *name;
+    case 8: /* Show contextual actions for a geo position */
+    case 3: /* Navigate to geo position */
+    {
         s = (*env)->GetStringUTFChars(env, str, NULL);
+        char *name;
         char parse_str[strlen(s) + 1];
         strcpy(parse_str, s);
         (*env)->ReleaseStringUTFChars(env, str, s);
         dbg(lvl_debug, "*****string=%s", s);
 
-        // set destination to (lat#lon#title)
+        /* Parse coordinates from argument string (lat#lon#title) */
         struct coord_geo g;
         char *p;
         char *stopstring;
 
-        // latitude
+        // extract latitude
         p = strtok (parse_str,"#");
         g.lat = strtof(p, &stopstring);
-        // longitude
+        // extract longitude
         p = strtok (NULL, "#");
         g.lng = strtof(p, &stopstring);
-        // description/name of the place identified by lat and long
+        // extract description/name of the place identified by lat and long (if any)
         name = strtok (NULL, "#");
 
         dbg(lvl_debug, "lat=%f", g.lat);
@@ -534,8 +535,14 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
             name = coord_str;
         }
-        // start navigation asynchronous
+        
+        if (channel == 8)
+            ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), c, "" /* description */);
+        if (ret)
+            break;
+        /* else fallback to default action navigate asynchrnous as when called with channel 3 */
         navit_set_destination(attr.u.navit, &pc, name, 1);
+        ret = 1;
     }
     break;
     default:
