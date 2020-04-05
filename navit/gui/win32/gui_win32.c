@@ -562,9 +562,10 @@ struct gui_methods win32_gui_methods = {
     NULL, // win32_gui_menubar_new,
     win32_gui_popup_new,
     win32_gui_set_graphics,
-    NULL,
+    NULL, // win32_gui_run_main_loop
     NULL, // win32_gui_datawindow_new,
     win32_gui_add_bookmark,
+    NULL, // win32_gui_show_coord_actions
 };
 
 

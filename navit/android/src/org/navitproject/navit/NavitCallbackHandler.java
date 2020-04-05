@@ -42,7 +42,19 @@ class NavitCallbackHandler {
 
 
     enum MsgType {
-        CLB_SET_DESTINATION, CLB_SET_DISPLAY_DESTINATION, CLB_CALL_CMD, CLB_LOAD_MAP, CLB_UNLOAD_MAP,
+        /* Set the current navigation destination to geographical coordinates */
+        CLB_SET_DESTINATION,
+        /* Set current navigation destination to a given position on the current graphical display */
+        CLB_SET_DISPLAY_DESTINATION,
+        /* Open a contextual menu with possible actions related to the provided geographical coordinates */
+        CLB_COORD_ACTIONS,
+        /* Call a custom internal command (like in the GUI scripts) */
+        CLB_CALL_CMD,
+        /* Load a map */
+        CLB_LOAD_MAP,
+        /* Unload a map */
+        CLB_UNLOAD_MAP,
+        /* Unload a map and delete it from the storage */
         CLB_DELETE_MAP
     }
 
@@ -50,12 +62,20 @@ class NavitCallbackHandler {
     static class CallBackHandler extends Handler {
         public void handleMessage(Message msg) {
             switch (msg_values[msg.what]) {
-                case CLB_SET_DESTINATION:
+                case CLB_SET_DESTINATION: {
                     String lat = Float.toString(msg.getData().getFloat("lat"));
                     String lon = Float.toString(msg.getData().getFloat("lon"));
                     String q = msg.getData().getString(("q"));
                     callbackMessageChannel(3, lat + "#" + lon + "#" + q);
-                    break;
+                }
+                break;
+                case CLB_COORD_ACTIONS: {
+                    String lat = Float.toString(msg.getData().getFloat("lat"));
+                    String lon = Float.toString(msg.getData().getFloat("lon"));
+                    String q = msg.getData().getString(("q"));
+                    callbackMessageChannel(8, lat + "#" + lon + "#" + q);
+                }
+                break;
                 case CLB_SET_DISPLAY_DESTINATION:
                     int x = msg.arg1;
                     int y = msg.arg2;
