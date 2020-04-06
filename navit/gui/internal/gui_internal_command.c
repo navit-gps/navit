@@ -1066,12 +1066,14 @@ void gui_internal_cmd2_show_geopos_actions(struct gui_priv *this, struct pcoord 
     const char *name=NULL;
 
     dbg(lvl_debug,"enter");
-    //~ if (!in || !in[0])
-        //~ dbg(lvl_error, "No arg");
-    //~ if (in[0] && ATTR_IS_STRING(in[0]->type)) {
-        //~ name=in[1]->u.str;
-        //~ dbg(lvl_error, "1st arg is string \"%s\"", name)
-    //~ }
+    /*
+    if (!in || !in[0])
+        dbg(lvl_error, "No arg");
+    if (in[0] && ATTR_IS_STRING(in[0]->type)) {
+        name=in[1]->u.str;
+        dbg(lvl_error, "1st arg is string \"%s\"", name)
+    }
+    */
 
     w.name = "Location from QR code";
     w.text = g_strdup("1.583471 15.340001");

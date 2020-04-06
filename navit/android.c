@@ -496,8 +496,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
     }
     break;
     case 8: /* Show contextual actions for a geo position */
-    case 3: /* Navigate to geo position */
-    {
+    case 3: { /* Navigate to geo position */
         s = (*env)->GetStringUTFChars(env, str, NULL);
         char *name;
         char parse_str[strlen(s) + 1];
@@ -535,7 +534,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
             name = coord_str;
         }
-        
+
         if (channel == 8)
             ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), c, "" /* description */);
         if (ret)
