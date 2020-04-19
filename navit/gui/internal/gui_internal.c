@@ -2894,7 +2894,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 }
 
 static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
-    gui_internal_cmd2_show_geopos_options(this, c, description);
+    gui_internal_cmd2_show_geopos_actions(this, c, description);
     return 1;
 }
 
