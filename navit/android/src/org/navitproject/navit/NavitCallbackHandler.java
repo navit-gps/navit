@@ -42,13 +42,20 @@ class NavitCallbackHandler {
 
 
     enum MsgType {
-        CLB_SET_DESTINATION, /* Set the current navigation destination to geographical coordinates */
-        CLB_SET_DISPLAY_DESTINATION, /* Set current navigation destination to a given position on the current graphical display */
-        CLB_COORD_ACTIONS, /* Open a contextual menu with possible actions related to the provided geographical coordinates */
-        CLB_CALL_CMD, /* Call a custom internal command (like in the GUI scripts) */
-        CLB_LOAD_MAP, /* Load a map */
-        CLB_UNLOAD_MAP, /* Unload a map */
-        CLB_DELETE_MAP /* Unload a map and delete it from the storage */
+        /* Set the current navigation destination to geographical coordinates */
+        CLB_SET_DESTINATION,
+        /* Set current navigation destination to a given position on the current graphical display */
+        CLB_SET_DISPLAY_DESTINATION,
+        /* Open a contextual menu with possible actions related to the provided geographical coordinates */
+        CLB_COORD_ACTIONS,
+        /* Call a custom internal command (like in the GUI scripts) */
+        CLB_CALL_CMD,
+        /* Load a map */
+        CLB_LOAD_MAP,
+        /* Unload a map */
+        CLB_UNLOAD_MAP,
+        /* Unload a map and delete it from the storage */
+        CLB_DELETE_MAP
     }
 
 
