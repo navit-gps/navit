@@ -535,8 +535,10 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
             name = coord_str;
         }
 
-        if (channel == 8)
+        if (channel == 8) {
+            graphics_overlay_disable(navit_get_graphics(attr.u.navit), 1); /* Disable OSD items before showing menu */
             ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), c, "" /* description */);
+        }
         if (ret)
             break;
         /* else fallback to default action navigate asynchrnous as when called with channel 3 */
