@@ -322,7 +322,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllC
 
 
 JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForPoint( JNIEnv* env,
-        jobject thiz, jint x, jint y, jboolean absoluteCoord) {
+        jclass thiz, jint x, jint y, jboolean absoluteCoord) {
 
     jstring return_string = NULL;
 
