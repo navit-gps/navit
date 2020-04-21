@@ -709,6 +709,15 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c) {
     gc->meth.gc_set_background(gc->priv, c);
 }
 
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
+void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img){
+    gc->meth.gc_set_texture(gc->priv, img->priv);
+}
 
 /**
  * FIXME
@@ -2675,6 +2684,7 @@ static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
 
 static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
         int count, struct displayitem_poly_holes * holes) {
+
     if((holes != NULL) && (holes->count > 0))
         graphics_draw_polygon_with_holes_clipped(gra, dc->gc, pa, count, holes->count, holes->ccount,
                 (struct point **)holes->coords);
@@ -2865,7 +2875,11 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
                 draw_underground=0;
             }
         }
-
+	/* Set texture if any 
+    struct graphics_image * texture = graphics_image_new_scaled(gra, "cave.svg" , 50, 50);
+    if(texture != NULL)
+        graphics_gc_set_texture(dc->gc, texture);
+	*/
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 
