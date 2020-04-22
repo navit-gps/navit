@@ -121,6 +121,7 @@ fi
 %{_datadir}/harbour-navit/navit_layout_car_simple.xml
 %{_datadir}/harbour-navit/navit_layout_th.xml
 %{_datadir}/harbour-navit/icons/
+%{_datadir}/harbour-navit/textures/
 %{_datadir}/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/harbour-navit/espeak-data/
 %{_datadir}/applications/harbour-navit.desktop

@@ -2580,6 +2580,34 @@ char *graphics_icon_path(const char *icon) {
     return ret;
 }
 
+char *graphics_texture_path(const char *texture) {
+    static char *navit_sharedir;
+    char *ret=NULL;
+    struct file_wordexp *wordexp=NULL;
+    dbg(lvl_debug,"enter %s",texture);
+    if (strchr(texture, '$')) {
+        wordexp=file_wordexp_new(texture);
+        if (file_wordexp_get_count(wordexp))
+            texture=file_wordexp_get_array(wordexp)[0];
+    }
+    if (strchr(texture,'/'))
+        ret=g_strdup(texture);
+    else {
+#ifdef HAVE_API_ANDROID
+//TODO: Fix path for textures on android. Leave the same as for icons for now
+//
+        ret=g_strdup_printf("res/drawable/%s",texture);
+#else
+        if (! navit_sharedir)
+            navit_sharedir = getenv("NAVIT_SHAREDIR");
+        ret=g_strdup_printf("%s/textures/%s", navit_sharedir, texture);
+#endif
+    }
+    if (wordexp)
+        file_wordexp_destroy(wordexp);
+    return ret;
+}
+
 static int limit_count(struct coord *c, int count) {
     int i;
     for (i = 1 ; i < count ; i++) {
@@ -2702,7 +2730,7 @@ static inline void displayitem_draw_polygon (struct display_context * dc, struct
     if((graphics_gc_has_texture(dc->gc)) && (dc->e->u.polygon.src != NULL)) {
         char * path;
         struct graphics_image * texture;
-        path=graphics_icon_path(dc->e->u.polygon.src);
+        path=graphics_texture_path(dc->e->u.polygon.src);
         texture = graphics_image_new_scaled_rotated(gra, path, dc->e->u.polygon.width, dc->e->u.polygon.height,
                   dc->e->u.polygon.rotation);
         g_free(path);
