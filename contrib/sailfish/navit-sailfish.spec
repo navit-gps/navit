@@ -82,6 +82,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DSHARE_DIR:PATH=share/harbour-navit \
        -DLOCALE_DIR:PATH=share/harbour-navit/locale \
        -DIMAGE_DIR:PATH=share/harbour-navit/icons \
+       -DTEXTURE_DIR:PATH=share/harbour-navit/textures \
        -DLIB_DIR:PATH=share/harbour-navit/lib \
        -DBUILD_MAPTOOL:BOOL=FALSE \
        -Dfont/freetype:BOOL=FALSE \
