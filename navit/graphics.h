@@ -255,6 +255,7 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
 void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n);
+gboolean graphics_gc_has_texture(struct graphics_gc *gc);
 struct graphics_image *graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h);
 struct graphics_image *graphics_image_new_scaled_rotated(struct graphics *gra, char *path, int w, int h, int rotate);
 struct graphics_image *graphics_image_new(struct graphics *gra, char *path);

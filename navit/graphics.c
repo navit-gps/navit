@@ -710,13 +710,27 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c) {
 }
 
 /**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
+ * Set textured background to current graphics context.
+ * @param gc Graphics context handle
+ * @param img Allocated image
+ * @returns void
+ * @author metalstrolch (04/2020)
 */
-void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img){
-    gc->meth.gc_set_texture(gc->priv, img->priv);
+void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img) {
+    if(graphics_gc_has_texture(gc))
+        gc->meth.gc_set_texture(gc->priv, img->priv);
+}
+
+/**
+ * Check if graphic context supports textured backgrounds
+ * @param gc Graphics context handle
+ * @returns true if supported otherwise false.
+ * @author metalstrolch (04/2020)
+*/
+gboolean graphics_gc_has_texture(struct graphics_gc *gc) {
+    if(gc->meth.gc_set_texture != NULL)
+        return TRUE;
+    return FALSE;
 }
 
 /**
@@ -913,7 +927,6 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
     struct file_wordexp *we;
     int i;
     char **paths;
-
     if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
         g_free(hash_key);
         dbg(lvl_debug,"Found cached image%sfor '%s'",this_?" ":" miss ",path);
@@ -2682,9 +2695,20 @@ static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
 }
 
 
-static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
-        int count, struct displayitem_poly_holes * holes) {
+static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra,
+        struct point * pa, int count, struct displayitem_poly_holes * holes) {
 
+    /* Set texture if any, and supported by graphics */
+    if((graphics_gc_has_texture(dc->gc)) && (dc->e->u.polygon.src != NULL)) {
+        char * path;
+        struct graphics_image * texture;
+        path=graphics_icon_path(dc->e->u.polygon.src);
+        texture = graphics_image_new_scaled_rotated(gra, path, dc->e->u.polygon.width, dc->e->u.polygon.height,
+                  dc->e->u.polygon.rotation);
+        g_free(path);
+        if(texture != NULL)
+            graphics_gc_set_texture(dc->gc, texture);
+    }
     if((holes != NULL) && (holes->count > 0))
         graphics_draw_polygon_with_holes_clipped(gra, dc->gc, pa, count, holes->count, holes->ccount,
                 (struct point **)holes->coords);
@@ -2875,11 +2899,6 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
                 draw_underground=0;
             }
         }
-	/* Set texture if any 
-    struct graphics_image * texture = graphics_image_new_scaled(gra, "cave.svg" , 50, 50);
-    if(texture != NULL)
-        graphics_gc_set_texture(dc->gc, texture);
-	*/
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 

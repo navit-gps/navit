@@ -271,20 +271,19 @@ static void gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
 void gc_set_texture (struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
     if(img == NULL) {
         //disable texture mode
-	gc->brush->setStyle(Qt::SolidPattern);
-    }
-    else {
+        gc->brush->setStyle(Qt::SolidPattern);
+    } else {
         //set and enable texture
-	//Use a new pixmap
-	QPixmap background(img->pixmap->size());
-	//Use fill color
-	background.fill(gc->brush->color());
-	//Get a painter
-	QPainter painter(&background);
-	//Blit the (transparent) image on pixmap.
+        //Use a new pixmap
+        QPixmap background(img->pixmap->size());
+        //Use fill color
+        background.fill(gc->brush->color());
+        //Get a painter
+        QPainter painter(&background);
+        //Blit the (transparent) image on pixmap.
         painter.drawPixmap(0, 0, *(img->pixmap));
-	//Set the texture to the brush.
-	gc->brush->setTexture(background);
+        //Set the texture to the brush.
+        gc->brush->setTexture(background);
     }
 }
 
