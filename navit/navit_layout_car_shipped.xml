@@ -455,6 +455,10 @@
 			<polyline color="#696969" width="3"/>
 			<polyline color="#ffffff" width="1" dash="5,5"/>
 		</itemgra>
+		<itemgra item_types="rail_narrow_gauge" order="6-">
+			<polyline color="#696969" width="3"/>
+			<polyline color="#ffffff" width="1" dash="4,4"/>
+		</itemgra>
 		<itemgra item_types="ferry" order="5-">
 			<polyline color="#000000" width="1" dash="10"/>
 		</itemgra>
