@@ -709,6 +709,29 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c) {
     gc->meth.gc_set_background(gc->priv, c);
 }
 
+/**
+ * Set textured background to current graphics context.
+ * @param gc Graphics context handle
+ * @param img Allocated image
+ * @returns void
+ * @author metalstrolch (04/2020)
+*/
+void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img) {
+    if(graphics_gc_has_texture(gc))
+        gc->meth.gc_set_texture(gc->priv, img->priv);
+}
+
+/**
+ * Check if graphic context supports textured backgrounds
+ * @param gc Graphics context handle
+ * @returns true if supported otherwise false.
+ * @author metalstrolch (04/2020)
+*/
+gboolean graphics_gc_has_texture(struct graphics_gc *gc) {
+    if(gc->meth.gc_set_texture != NULL)
+        return TRUE;
+    return FALSE;
+}
 
 /**
  * FIXME
@@ -904,7 +927,6 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
     struct file_wordexp *we;
     int i;
     char **paths;
-
     if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
         g_free(hash_key);
         dbg(lvl_debug,"Found cached image%sfor '%s'",this_?" ":" miss ",path);
@@ -2558,6 +2580,34 @@ char *graphics_icon_path(const char *icon) {
     return ret;
 }
 
+char *graphics_texture_path(const char *texture) {
+    static char *navit_sharedir;
+    char *ret=NULL;
+    struct file_wordexp *wordexp=NULL;
+    dbg(lvl_debug,"enter %s",texture);
+    if (strchr(texture, '$')) {
+        wordexp=file_wordexp_new(texture);
+        if (file_wordexp_get_count(wordexp))
+            texture=file_wordexp_get_array(wordexp)[0];
+    }
+    if (strchr(texture,'/'))
+        ret=g_strdup(texture);
+    else {
+#ifdef HAVE_API_ANDROID
+//TODO: Fix path for textures on android. Leave the same as for icons for now
+//
+        ret=g_strdup_printf("res/drawable/%s",texture);
+#else
+        if (! navit_sharedir)
+            navit_sharedir = getenv("NAVIT_SHAREDIR");
+        ret=g_strdup_printf("%s/textures/%s", navit_sharedir, texture);
+#endif
+    }
+    if (wordexp)
+        file_wordexp_destroy(wordexp);
+    return ret;
+}
+
 static int limit_count(struct coord *c, int count) {
     int i;
     for (i = 1 ; i < count ; i++) {
@@ -2673,8 +2723,20 @@ static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
 }
 
 
-static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
-        int count, struct displayitem_poly_holes * holes) {
+static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra,
+        struct point * pa, int count, struct displayitem_poly_holes * holes) {
+
+    /* Set texture if any, and supported by graphics */
+    if((graphics_gc_has_texture(dc->gc)) && (dc->e->u.polygon.src != NULL)) {
+        char * path;
+        struct graphics_image * texture;
+        path=graphics_texture_path(dc->e->u.polygon.src);
+        texture = graphics_image_new_scaled_rotated(gra, path, dc->e->u.polygon.width, dc->e->u.polygon.height,
+                  dc->e->u.polygon.rotation);
+        g_free(path);
+        if(texture != NULL)
+            graphics_gc_set_texture(dc->gc, texture);
+    }
     if((holes != NULL) && (holes->count > 0))
         graphics_draw_polygon_with_holes_clipped(gra, dc->gc, pa, count, holes->count, holes->ccount,
                 (struct point **)holes->coords);
@@ -2865,7 +2927,6 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
                 draw_underground=0;
             }
         }
-
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 

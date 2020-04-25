@@ -143,7 +143,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
-			<polygon color="#553f23"/>
+			<polygon color="#553f23" src="wetland.png" w="256" h="256"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_fell" order="10-">
@@ -219,7 +219,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_wood" order="0-">
-			<polygon color="#8ec78d"/>
+			<polygon color="#8ec78d" src="wood.png" w="256" h="256"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_greenhouse" order="10-">
@@ -264,7 +264,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_mud" order="0-">
-			<polygon color="#96ced4"/>
+			<polygon color="#96ced4" src="wetland.png" w="256" h="256"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="10">
@@ -422,7 +422,7 @@
 			<polygon color="#e3c6a6"/>
 		</itemgra>
 		<itemgra item_types="poly_cemetery" order="1-">
-			<polygon color="#bde3cb"/>
+			<polygon color="#bde3cb" src="cemetery.png" w="32" h="32"/>
 		</itemgra>
 		<itemgra item_types="poly_car_parking" order="1-">
 			<polygon color="#e7cf87"/>
