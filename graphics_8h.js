@@ -56,11 +56,13 @@ var graphics_8h =
     [ "graphics_font_new", "graphics_8h.html#a276e7f7638c678ed86a5d00e401642a6", null ],
     [ "graphics_free", "graphics_8h.html#aeb9cd324a994e1c1c40e1721eb7b669f", null ],
     [ "graphics_gc_destroy", "graphics_8h.html#a5723f6e26f07e836cf39ba3c426da779", null ],
+    [ "graphics_gc_has_texture", "graphics_8h.html#aee5869493c911c6d34960eae369dddf6", null ],
     [ "graphics_gc_new", "graphics_8h.html#a922588c7f73a70872a92e29b5cf45b83", null ],
     [ "graphics_gc_set_background", "graphics_8h.html#a88dd11bab57d40e63e45ce63a111f86f", null ],
     [ "graphics_gc_set_dashes", "graphics_8h.html#a6154dcfdd3fc09e7d6c9f72c73c661f1", null ],
     [ "graphics_gc_set_foreground", "graphics_8h.html#ac651bf3017237dc4233681517f77a178", null ],
     [ "graphics_gc_set_linewidth", "graphics_8h.html#a7763c3bb4b5a77666fa580ade99cedda", null ],
+    [ "graphics_gc_set_texture", "graphics_8h.html#affd607672d735d56db1852d6d87106b2", null ],
     [ "graphics_get_attr", "graphics_8h.html#a5cc054aa0f9a36abe31a8cbefd5c5e97", null ],
     [ "graphics_get_data", "graphics_8h.html#a1078b0b63913aabe459d72d795c2ed4a", null ],
     [ "graphics_get_dpi", "graphics_8h.html#a631792554824a53365270b720a15b474", null ],
@@ -82,5 +84,6 @@ var graphics_8h =
     [ "graphics_remove_selection", "graphics_8h.html#af40a584801730be67ac1f575a03ef084", null ],
     [ "graphics_set_attr", "graphics_8h.html#a2630c46e1c7758475ec776f2a3250914", null ],
     [ "graphics_set_rect", "graphics_8h.html#a23e7443d3205fd8cd61c4fe8589de8a6", null ],
-    [ "graphics_show_native_keyboard", "graphics_8h.html#aee7998ec26bb2b69bd536eaa2a6305d5", null ]
+    [ "graphics_show_native_keyboard", "graphics_8h.html#aee7998ec26bb2b69bd536eaa2a6305d5", null ],
+    [ "graphics_texture_path", "graphics_8h.html#ad01c2499e811f7a63475214ce70ba4ff", null ]
 ];

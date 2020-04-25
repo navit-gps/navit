@@ -20,6 +20,7 @@ var graphics__qt5_8cpp =
     [ "gc_set_dashes", "graphics__qt5_8cpp.html#ad776465bab5741fdc7886fb14234b379", null ],
     [ "gc_set_foreground", "graphics__qt5_8cpp.html#a9883b50b443c2aa7ca6b30f86ea9ee51", null ],
     [ "gc_set_linewidth", "graphics__qt5_8cpp.html#add7dfa8917652d28c056970edf329468", null ],
+    [ "gc_set_texture", "graphics__qt5_8cpp.html#a3dab917205421669fad7feac4fd069f2", null ],
     [ "get_data", "graphics__qt5_8cpp.html#a0c4bc53064703966a43841331ece6c69", null ],
     [ "get_dpi", "graphics__qt5_8cpp.html#ac6005266522242b1dca06e38e39ea71a", null ],
     [ "get_text_bbox", "graphics__qt5_8cpp.html#a9c512b3c69845f218e8a7ac4f2de3542", null ],

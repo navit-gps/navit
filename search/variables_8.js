@@ -16,6 +16,7 @@ var searchData=
   ['gc_5fset_5fdashes',['gc_set_dashes',['../structgraphics__gc__methods.html#a028f9cbf47c016a1a7106e3523373a49',1,'graphics_gc_methods']]],
   ['gc_5fset_5fforeground',['gc_set_foreground',['../structgraphics__gc__methods.html#a6ff6ca58bfc97593bbce5705dde79864',1,'graphics_gc_methods']]],
   ['gc_5fset_5flinewidth',['gc_set_linewidth',['../structgraphics__gc__methods.html#a7ebb6a916ca8f1153d0eb1d9a454fae1',1,'graphics_gc_methods']]],
+  ['gc_5fset_5ftexture',['gc_set_texture',['../structgraphics__gc__methods.html#a244c5b91c2cb8a01bf85f7ecd5796837',1,'graphics_gc_methods']]],
   ['gdb_5fprogram',['gdb_program',['../debug_8c.html#a2e2bcbc3b8f625329cc522fa29f7e60a',1,'debug.c']]],
   ['gender',['gender',['../structsuffix.html#a7211c140732fb96ed2908ab445b15ea8',1,'suffix']]],
   ['geo',['geo',['../group__vehicle-file.html#gad84849f1968fc52322edfb467f4b197b',1,'vehicle_priv']]],
