@@ -1164,6 +1164,10 @@ void osm_add_tag(char *k, char *v) {
     if (! g_strcmp0(k,"name")) {
         attr_strings_save(attr_string_label, v);
         level=5;
+    } else if (! g_strcmp0(k,"description")) {
+        /* try description if no name is there */
+        attr_strings_save(attr_string_label, v);
+        level=5;
     }
     if (! g_strcmp0(k,"addr:email")) {
         attr_strings_save(attr_string_email, v);
