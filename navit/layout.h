@@ -50,7 +50,13 @@ struct element {
             unsigned char dash_table[4];
         } polyline;
         struct element_polygon {
-            char stub;
+            /* for texture */
+            char *src;
+            int width;
+            int height;
+            int rotation;
+            int x;
+            int y;
         } polygon;
         struct element_circle {
             int width;

@@ -23,8 +23,21 @@
       </xsl:copy>
    </xsl:template>
 
-   <!-- Force all png icons to svg and add w and h if not exist -->
+   <!-- Force all png icons to svg -->
    <xsl:template match="icon">
+      <xsl:copy>
+         <xsl:apply-templates select="@*"/>
+         <xsl:if test="@src[substring(., string-length()-3)='.png']|@src[substring(., string-length()-3)='.xpm']">
+         <xsl:attribute name="src">
+            <xsl:value-of select="concat(substring(@src,1, string-length(@src)-3),'svg')"/>
+         </xsl:attribute>
+         </xsl:if>
+         <xsl:apply-templates select="node()"/>
+      </xsl:copy>
+   </xsl:template>
+
+   <!-- Force all png icons to svg -->
+   <xsl:template match="polygon">
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
          <xsl:if test="@src[substring(., string-length()-3)='.png']|@src[substring(., string-length()-3)='.xpm']">

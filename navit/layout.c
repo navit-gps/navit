@@ -499,10 +499,47 @@ static void element_set_circle_radius(struct element *e, struct attr **attrs) {
 struct polygon *
 polygon_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
-    e = g_new0(struct element, 1);
+    int add_size_to_e=0;
+    struct attr *src,*w,*h,*rotation,*x,*y;
+    /* search fot icon src first as this increases the required memory for e*/
+    src=attr_search(attrs, NULL, attr_src);
+    if (src != NULL) {
+        add_size_to_e += strlen(src->u.str)+1;
+    }
+
+    e = g_malloc0(sizeof(*e)+add_size_to_e);
     e->type=element_polygon;
     element_set_color(e, attrs);
     element_set_oneway(e, attrs);
+    e->u.polygon.src=NULL;
+
+    /* copy over image url if any, and probe icon parameters */
+    if (src != NULL) {
+        e->u.polygon.src=(char *)(e+1);
+        strcpy(e->u.polygon.src,src->u.str);
+        if ((w=attr_search(attrs, NULL, attr_w)))
+            e->u.polygon.width=w->u.num;
+        else
+            e->u.polygon.width=-1;
+
+        if ((h=attr_search(attrs, NULL, attr_h)))
+            e->u.polygon.height=h->u.num;
+        else
+            e->u.polygon.height=-1;
+
+        if ((x=attr_search(attrs, NULL, attr_x)))
+            e->u.polygon.x=x->u.num;
+        else
+            e->u.polygon.x=-1;
+
+        if ((y=attr_search(attrs, NULL, attr_y)))
+            e->u.polygon.y=y->u.num;
+        else
+            e->u.polygon.y=-1;
+
+        if ((rotation=attr_search(attrs, NULL, attr_rotation)))
+            e->u.polygon.rotation=rotation->u.num;
+    }
 
     return (struct polygon *)e;
 }
@@ -567,7 +604,6 @@ icon_new(struct attr *parent, struct attr **attrs) {
     src=attr_search(attrs, NULL, attr_src);
     if (! src)
         return NULL;
-
     e = g_malloc0(sizeof(*e)+strlen(src->u.str)+1);
     e->type=element_icon;
     e->u.icon.src=(char *)(e+1);
