@@ -2148,6 +2148,12 @@ void gui_internal_leave(struct gui_priv *this) {
     graphics_draw_mode(this->gra, draw_mode_end);
 }
 
+/**
+ * @brief Update the internal state of the internal GUI to store a specific point clicked on the display
+ *
+ * @param[in] this Our gui context
+ * @param[in] p The position of the point clicked on the display
+ */
 void gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     struct coord c;
     struct coord_geo g;
@@ -2169,6 +2175,11 @@ void gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     }
 }
 
+/**
+ * @brief Update the internal state of the internal GUI to store the current vehicle position
+ *
+ * @param[in] this Our gui context
+ */
 static void gui_internal_set_position_coord(struct gui_priv *this) {
     struct transformation *trans;
     struct attr attr,attrp;
@@ -2192,6 +2203,13 @@ void gui_internal_enter_setup(struct gui_priv *this) {
         gui_internal_set_position_coord(this);
 }
 
+/**
+ * @brief Display an internal GUI menu
+ *
+ * @param[in] this Our gui context
+ * @param ignore Whether the current triggering button press should be ignored by subsequent handlers (see navit_ignore_button())
+ * @param href The anchor of the HTML menu to display (or NULL to display the main menu)
+ */
 void gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href) {
     dbg(lvl_debug,"enter");
     gui_internal_enter(this, ignore);
@@ -2895,6 +2913,15 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
     return 0;
 }
 
+/**
+ * @brief Display an internal contextual menu for the specified geographical coordinates
+ *
+ * @param this The internal GUI instance
+ * @param[in] c The geographical coordinates to use
+ * @param[in] description A label to use for the geographical coordinates (ex: "Map Point")
+ *
+ * @return 0 on failure
+ */
 static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
     struct widget w;
     const char *name=NULL;
@@ -2910,7 +2937,14 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord 
     else
         w.name = w.text;
 
+    gui_internal_enter(this, 1);
+    gui_internal_set_click_coord(this, NULL);
+    gui_internal_enter_setup(this);
+
     gui_internal_cmd_position_do(this, c, NULL, &w, w.name ? w.name : w.text, 8|16|32|64|128);
+
+    gui_internal_menu_render(this);
+    gui_internal_leave(this);
 
     g_free(w.text);
 
