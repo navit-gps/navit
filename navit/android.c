@@ -534,7 +534,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
             name = NULL;
 
         if (channel == 8) {
-            //graphics_overlay_disable(navit_get_graphics(attr.u.navit), 1); /* Disable OSD items before showing menu */
+            graphics_overlay_disable(navit_get_graphics(attr.u.navit), 1); /* Disable OSD items before showing menu */
             ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
             /* If previous gui_show_coord_actions() call succeeded, then disable falling back to channel=3 block below */
             if (ret)
