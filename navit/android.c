@@ -530,18 +530,22 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         pc.y = c.y;
         pc.pro = projection_mg;
         char coord_str[32];
-        if (!name || *name == '\0') {     /* When name is an empty string, use the geo coord instead */
+        if (name && *name == '\0') /* Force name to NULL if no str1 has been provided */
+            name = NULL;
+
+        if (channel == 8) {
+            //graphics_overlay_disable(navit_get_graphics(attr.u.navit), 1); /* Disable OSD items before showing menu */
+            ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
+            /* If previous gui_show_coord_actions() call succeeded, then disable falling back to channel=3 block below */
+            if (ret)
+                break;
+            else
+                dbg(lvl_warning, "No contextual coord actions available, starting default action: navigate to destination");
+        }
+        if (!name) {     /* When name is an empty string, use the geo coord instead */
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
             name = coord_str;
         }
-
-        if (channel == 8) {
-            graphics_overlay_disable(navit_get_graphics(attr.u.navit), 1); /* Disable OSD items before showing menu */
-            ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), c, "" /* description */);
-        }
-        if (ret)
-            break;
-        /* else fallback to default action navigate asynchrnous as when called with channel 3 */
         navit_set_destination(attr.u.navit, &pc, name, 1);
         ret = 1;
     }

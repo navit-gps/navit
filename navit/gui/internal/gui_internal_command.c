@@ -1061,27 +1061,6 @@ error:
     return;
 }
 
-void gui_internal_cmd2_show_geopos_actions(struct gui_priv *this, struct pcoord *c, char *description) {
-    struct widget w;
-    const char *name=NULL;
-
-    dbg(lvl_debug,"enter");
-    /*
-    if (!in || !in[0])
-        dbg(lvl_error, "No arg");
-    if (in[0] && ATTR_IS_STRING(in[0]->type)) {
-        name=in[1]->u.str;
-        dbg(lvl_error, "1st arg is string \"%s\"", name)
-    }
-    */
-
-    w.name = "Location from QR code";
-    w.text = g_strdup("1.583471 15.340001");
-    pcoord_parse(w.text, projection_mg, &(w.c));
-    gui_internal_cmd_position(this, &w, (void*)8);
-    g_free(w.text);
-}
-
 static int gui_internal_cmd_img(struct gui_priv * this, char *function, struct attr **in, struct attr ***out) {
     char *str=g_strdup("<img"),*suffix=NULL,*onclick=g_strdup(""),*html;
 
@@ -1194,8 +1173,6 @@ static int gui_internal_cmd2(struct gui_priv *this, char *function, struct attr 
         gui_internal_cmd2_waypoints(this, function, in, out);
     else if(!strcmp(function, "about"))
         gui_internal_cmd2_about(this, function, in, out);
-    //else if(!strcmp(function, "geopos_actions"))
-    //	gui_internal_cmd2_show_geopos_actions(this, function, in, out);
 
     if(entering)
         graphics_draw_mode(this->gra, draw_mode_end);
@@ -1232,7 +1209,6 @@ static struct command_table commands[] = {
     {"waypoints",command_cast(gui_internal_cmd2)},
     {"write",command_cast(gui_internal_cmd_write)},
     {"about",command_cast(gui_internal_cmd2)},
-    //{"geopos_actions",command_cast(gui_internal_cmd2_show_geopos_actions)},
 #if HAS_IFADDRS
     {"network_info",command_cast(gui_internal_cmd2)},
 #endif

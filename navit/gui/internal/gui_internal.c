@@ -1022,6 +1022,8 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * @param wm The widget that points to this function as a callback
  * @param name The display name for the position
  * @param flags Flags specifying the operations available from the GUI
+ *
+ * @note Position input can be done either using pc_in or g_in (if both are provided, pc_in takes precedence)
  */
 /* meaning of the bits in "flags":
  * 1: "Streets"
@@ -2894,7 +2896,24 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 }
 
 static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
-    gui_internal_cmd2_show_geopos_actions(this, c, description);
+    struct widget w;
+    const char *name=NULL;
+
+    dbg(lvl_debug,"enter");
+
+    w.name = description;
+    w.text = g_malloc(32);
+    pcoord_format_degree_short(c, w.text, 32, " ");
+
+    if (description)
+        w.name = description;
+    else
+        w.name = w.text;
+
+    gui_internal_cmd_position_do(this, c, NULL, &w, w.name ? w.name : w.text, 8|16|32|64|128);
+
+    g_free(w.text);
+
     return 1;
 }
 
