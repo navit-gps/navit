@@ -1945,7 +1945,7 @@
 		<itemgra item_types="poi_wrecker" order="12-">
 			<icon src="wrecker.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_zoo" order="9-">
+		<itemgra item_types="poi_zoo" order="12-">
 			<icon src="zoo.png"/>
 		</itemgra>
 		<itemgra item_types="poi_picnic" order="12-">
