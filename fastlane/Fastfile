@@ -32,7 +32,6 @@ platform :android do
   lane :playstore do
     sh("cd ..;bash scripts/build_android.sh")
     isOnMasterBranch = currentBranch() == "master"
-    
     if isOnMasterBranch
       gradle(
         task: 'assemble',
@@ -45,8 +44,8 @@ platform :android do
       )
     end
     if isOnMasterBranch
-      upload_to_play_store( track: 'beta', 
-      						json_key: 'key.json', 
+      upload_to_play_store( track: 'beta',
+      						json_key: 'key.json',
       						apk: 'navit/android/build/outputs/apk/release/android-release.apk',
       						package_name: 'org.navitproject.navit'
       					  )
