@@ -1016,7 +1016,7 @@
 		<itemgra item_types="poi_firebrigade" order="12-">
 			<icon src="firebrigade.png"/>
 		</itemgra>
-		<itemgra item_types="poi_fish" order="9-">
+		<itemgra item_types="poi_fish" order="12-">
 			<icon src="fish.png"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="12-">
