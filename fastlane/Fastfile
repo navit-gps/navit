@@ -31,12 +31,19 @@ platform :android do
   end
   lane :playstore do
     sh("cd ..;bash scripts/build_android.sh")
-    
-    gradle(
-      task: 'assemble',
-      build_type: 'Release'
-    )
     isOnMasterBranch = currentBranch() == "master"
+    
+    if isOnMasterBranch
+      gradle(
+        task: 'assemble',
+        build_type: 'Release'
+      )
+    else
+      gradle(
+        task: 'assemble',
+        build_type: 'nonmaster'
+      )
+    end
     if isOnMasterBranch
       upload_to_play_store( track: 'beta', 
       						json_key: 'key.json', 
