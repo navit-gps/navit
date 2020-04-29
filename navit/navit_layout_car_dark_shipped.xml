@@ -1624,7 +1624,7 @@
 		<itemgra item_types="poi_wine" order="0-">
 			<icon src="wine.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_worship" order="0-">
+		<itemgra item_types="poi_worship" order="11-">
 			<icon src="worship.png"/>
 		</itemgra>
 		<itemgra item_types="poi_wrecker" order="0-">
