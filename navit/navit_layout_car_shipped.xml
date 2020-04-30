@@ -131,7 +131,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_camp_site" order="10-">
-			<polygon color="#339900"/>
+			<polygon color="#7dc552"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
