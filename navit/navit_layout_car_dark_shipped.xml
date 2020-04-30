@@ -276,6 +276,9 @@
 			<polygon color="#041a06"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_sport" order="10-">
+			<polygon color="#051c0d"/>
+		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
 			<polygon color="#081f0b"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
@@ -321,9 +324,6 @@
 		</itemgra>
 		<itemgra item_types="poly_airport" order="0-">
 			<polygon color="#002e00"/>
-		</itemgra>
-		<itemgra item_types="poly_sport" order="10-">
-			<polygon color="#051c0d"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_pitch" order="10-">
 			<polygon color="#0c220c"/>
