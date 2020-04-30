@@ -39,6 +39,7 @@ platform :android do
         build_type: 'Release'
       )
     else
+      UI.important "Found no open keyring. Cannot sign result. Probably not on navit-gps repo."
       gradle(
         task: 'assemble',
         build_type: 'Notsigned'
