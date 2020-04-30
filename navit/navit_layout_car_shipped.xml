@@ -362,6 +362,11 @@
 			<polygon color="#d7804a"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_dam" order="12-">
+			<polygon color="#adadad"/>
+			<polyline color="#444444"/>
+			<text text_size="5"/>
+		</itemgra>
 		<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 			<polygon color="#82c8ea"/>
 			<polyline color="#5096b8"/>
@@ -449,6 +454,10 @@
 		<itemgra item_types="rail" order="6-">
 			<polyline color="#696969" width="3"/>
 			<polyline color="#ffffff" width="1" dash="5,5"/>
+		</itemgra>
+		<itemgra item_types="rail_narrow_gauge" order="6-">
+			<polyline color="#696969" width="3"/>
+			<polyline color="#ffffff" width="1" dash="4,4"/>
 		</itemgra>
 		<itemgra item_types="ferry" order="5-">
 			<polyline color="#000000" width="1" dash="10"/>
@@ -1311,6 +1320,9 @@
 		<itemgra item_types="rail_tram" order="10-">
 			<polyline color="#606060" width="2"/>
 		</itemgra>
+		<itemgra item_types="cliff" order="12-">
+			<polyline color="#606060" width="1"/>
+		</itemgra>
 	</layer>
 	<layer name="labels">
 		<itemgra item_types="house_number" order="15-">
@@ -1569,6 +1581,9 @@
 		</itemgra>
 		<itemgra item_types="poi_attraction" order="11-">
 			<icon src="attraction.png"/>
+		</itemgra>
+		<itemgra item_types="poi_cave" order="11-">
+			<icon src="cave.png"/>
 		</itemgra>
 		<itemgra item_types="poi_cafe" order="12-">
 			<icon src="cafe.png"/>
@@ -2044,7 +2059,7 @@
 		</itemgra>
 	</layer>
 	<layer name="POI Labels">
-		<itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_car_sharing,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,poi_pub,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_atm,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_bahai,poi_buddhist,poi_hindu,poi_islamic,poi_jain,poi_jewish,poi_pagan,poi_pastafarian,poi_shinto,poi_sikh,poi_taoist,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_bicycle,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint,vehicle" order="14-">
+		<itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_car_sharing,poi_fuel,poi_shopping,poi_cave,poi_attraction,poi_cafe,poi_bar,poi_pub,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_atm,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_bahai,poi_buddhist,poi_hindu,poi_islamic,poi_jain,poi_jewish,poi_pagan,poi_pastafarian,poi_shinto,poi_sikh,poi_taoist,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_bicycle,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint,vehicle" order="14-">
 			<circle color="#606060" radius="0" width="0" text_size="10"/>
 		</itemgra>
 		<itemgra item_types="poi_custom0,poi_custom1,poi_custom2,poi_custom3,poi_custom4,poi_custom5,poi_custom6,poi_custom7,poi_custom8,poi_custom9,poi_customa,poi_customb,poi_customc,poi_customd,poi_custome,poi_customf" order="14-">
