@@ -32,19 +32,10 @@ platform :android do
   lane :playstore do
     sh("cd ..;bash scripts/build_android.sh")
     isOnMasterBranch = currentBranch() == "master"
-    #we can only sign if we got the key to unlock the keyring
-    if(File.file?('/home/circleci/.keystore'))
-      gradle(
-        task: 'assemble',
-        build_type: 'Release'
-      )
-    else
-      UI.important "Found no open keyring. Cannot sign result. Probably not on navit-gps repo."
-      gradle(
-        task: 'assemble',
-        build_type: 'Notsigned'
-      )
-    end
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
     if isOnMasterBranch
       upload_to_play_store( track: 'beta',
       						json_key: 'key.json',
