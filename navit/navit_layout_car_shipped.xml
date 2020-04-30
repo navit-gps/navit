@@ -131,7 +131,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_camp_site" order="10-">
-			<polygon color="#339900"/>
+			<polygon color="#7dc552"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
@@ -139,7 +139,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_golf_course" order="10-">
-			<polygon color="#419a22"/>
+			<polygon color="#6fbb59"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
@@ -259,6 +259,9 @@
 			<polygon color="#7cc334"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_sport" order="10-">
+			<polygon color="#a5dc72"/>
+		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
 			<polygon color="#fbed66"/>
 			<text text_size="5"/>
@@ -312,7 +315,7 @@
 			<polyline color="#dddddd" width="34"/>
 			<polygon color="#dddddd"/>
 		</itemgra>
-		<itemgra item_types="poly_sport,poly_sports_pitch" order="0-">
+		<itemgra item_types="poly_sports_pitch" order="10-">
 			<polygon color="#4af04f"/>
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
@@ -1361,7 +1364,7 @@
 		<itemgra item_types="town_label_1e4" order="6-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
-		<itemgra item_types="town_label_2e4,town_label_5e4" order="5-8">
+		<itemgra item_types="town_label_2e4,town_label_5e4" order="7-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
 		<itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="5-">
@@ -1744,7 +1747,7 @@
 		<itemgra item_types="poi_firebrigade" order="12-">
 			<icon src="firebrigade.png"/>
 		</itemgra>
-		<itemgra item_types="poi_fish" order="9-">
+		<itemgra item_types="poi_fish" order="12-">
 			<icon src="fish.xpm"/>
 		</itemgra>
 		<itemgra item_types="poi_forbidden_area" order="12-">
@@ -1954,13 +1957,13 @@
 		<itemgra item_types="poi_wine" order="12-">
 			<icon src="wine.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_worship" order="8-">
+		<itemgra item_types="poi_worship" order="11-">
 			<icon src="worship.png"/>
 		</itemgra>
 		<itemgra item_types="poi_wrecker" order="12-">
 			<icon src="wrecker.xpm"/>
 		</itemgra>
-		<itemgra item_types="poi_zoo" order="9-">
+		<itemgra item_types="poi_zoo" order="12-">
 			<icon src="zoo.png"/>
 		</itemgra>
 		<itemgra item_types="poi_picnic" order="12-">
