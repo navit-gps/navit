@@ -1352,7 +1352,7 @@
 		<itemgra item_types="town_label_1e4" order="6-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
-		<itemgra item_types="town_label_2e4,town_label_5e4" order="5-8">
+		<itemgra item_types="town_label_2e4,town_label_5e4" order="7-8">
 			<circle color="#000000" radius="3" text_size="10"/>
 		</itemgra>
 		<itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="5-">
