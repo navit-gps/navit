@@ -31,15 +31,14 @@ platform :android do
   end
   lane :playstore do
     sh("cd ..;bash scripts/build_android.sh")
-    
     gradle(
       task: 'assemble',
       build_type: 'Release'
     )
     isOnMasterBranch = currentBranch() == "master"
     if isOnMasterBranch
-      upload_to_play_store( track: 'beta', 
-      						json_key: 'key.json', 
+      upload_to_play_store( track: 'beta',
+      						json_key: 'key.json',
       						apk: 'navit/android/build/outputs/apk/release/android-release.apk',
       						package_name: 'org.navitproject.navit'
       					  )
