@@ -320,7 +320,7 @@
 			<polyline color="#55bb55"/>
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
-			<polygon color="#e6e6e6"/>
+			<polygon color="#dddddd"/>
 		</itemgra>
 		<itemgra item_types="poly_service" order="8-18">
 			<polygon color="#fefefe"/>
