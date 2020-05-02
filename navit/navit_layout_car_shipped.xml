@@ -454,6 +454,7 @@
 		</itemgra>
 		<itemgra item_types="poly_building" order="0-">
 			<polygon color="#aaaaaa"/>
+			<polyline color="#777777"/>
 		</itemgra>
 		<itemgra item_types="rail" order="6-">
 			<polyline color="#696969" width="3"/>
