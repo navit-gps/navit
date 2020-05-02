@@ -317,6 +317,7 @@
 		</itemgra>
 		<itemgra item_types="poly_sports_pitch" order="10-">
 			<polygon color="#88ee88"/>
+			<polyline color="#55bb55"/>
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
 			<polygon color="#e6e6e6"/>
