@@ -645,13 +645,13 @@
 			<polyline color="#800000" width="1" dash="7,15"/>
 		</itemgra>
 		<itemgra item_types="track_unpaved,track_ground,path,hiking,hiking_mountain,hiking_mountain_demanding,hiking_alpine,hiking_alpine_demanding,hiking_alpine_difficult" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#555555" width="1"/>
 		</itemgra>
 		<itemgra item_types="bridleway" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#666644" width="1"/>
 		</itemgra>
 		<itemgra item_types="cycleway" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#664466" width="1"/>
 		</itemgra>
 		<itemgra item_types="piste_downhill_novice" order="10-12">
 			<polyline color="#00A000" width="1"/>
