@@ -527,6 +527,7 @@ ITEM(forest_way_4)
 ITEM(former_itinerary)
 ITEM(former_itinerary_part)
 ITEM(cliff)
+ITEM(sports_track)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
