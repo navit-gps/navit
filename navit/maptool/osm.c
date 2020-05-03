@@ -787,6 +787,7 @@ static char *attrmap= {
     "w	waterway=riverbank	poly_water\n"
     "w	waterway=stream		water_stream\n"
     "w	waterway=dam		poly_dam\n"
+    "w	waterway=weir		poly_dam\n"
     "w	barrier=ditch	ditch\n"
     "w	barrier=hedge	hedge\n"
     "w	barrier=fence	fence\n"
