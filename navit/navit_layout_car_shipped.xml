@@ -175,7 +175,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_construction" order="10-">
-			<polyline color="#ff3333"/>
+			<polygon color="#cc776699"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_range" order="10-">
