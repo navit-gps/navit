@@ -80,7 +80,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_town" order="0-">
-			<polygon color="#191711"/>
+			<polygon color="#071912"/>
 		</itemgra>
 		<itemgra item_types="poly_naval_base" order="10-">
 			<polygon color="#03140f"/>
@@ -98,7 +98,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_attraction" order="10-">
-			<polygon color="#00150b"/>
+			<polygon color="#051714"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_theme_park" order="10-">
@@ -158,11 +158,11 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
-			<polygon color="#041303"/>
+			<polygon color="#041b0b"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_golf_course" order="10-">
-			<polygon color="#03180a"/>
+			<polygon color="#03190b"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
@@ -178,7 +178,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_brownfield" order="10-">
-			<polygon color="#05170f"/>
+			<polygon color="#06190f"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_heath" order="10-">
@@ -198,11 +198,11 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_construction" order="10-">
-			<polygon color="#070e02"/>
+			<polygon color="#060e0b99"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_range" order="10-">
-			<polygon color="#030d0a"/>
+			<polygon color="#04110d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_danger_area" order="10-">
@@ -214,7 +214,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_recreation_ground" order="10-">
-			<polygon color="#041500"/>
+			<polygon color="#041705"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_playground" order="10-">
@@ -258,11 +258,12 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_farm" order="0-">
-			<polygon color="#041a06"/>
+			<polygon color="#061d16"/>
+			<polyline color="#051912"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
-			<polygon color="#041a06"/>
+			<polygon color="#051d11"/>
 		</itemgra>
 		<itemgra item_types="poly_land" order="0-">
 			<polygon color="#011001"/>
@@ -273,18 +274,18 @@
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_park" order="0-">
-			<polygon color="#041a06"/>
+			<polygon color="#031909"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sport" order="10-">
 			<polygon color="#051c0d"/>
 		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
-			<polygon color="#081f0b"/>
+			<polygon color="#071d0d"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_mud" order="0-">
-			<polygon color="#02071d"/>
+			<polygon color="#051918"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="10">
@@ -326,10 +327,11 @@
 			<polygon color="#002e00"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_pitch" order="10-">
-			<polygon color="#0c220c"/>
+			<polygon color="#041d0f"/>
+			<polyline color="#021709"/>
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
-			<polygon color="#111111"/>
+			<polygon color="#061b18"/>
 		</itemgra>
 		<itemgra item_types="poly_service" order="8-18">
 			<polygon color="#1a1a1a"/>
@@ -431,10 +433,10 @@
 			<polygon color="#282424"/>
 		</itemgra>
 		<itemgra item_types="poly_cemetery" order="8-">
-			<polygon color="#041a06"/>
+			<polygon color="#061b16"/>
 		</itemgra>
 		<itemgra item_types="poly_car_parking" order="8-">
-			<polygon color="#1a170f"/>
+			<polygon color="#071b0d"/>
 		</itemgra>
 		<itemgra item_types="poly_artwork" order="10-">
 			<polygon color="#082015"/>
@@ -457,7 +459,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_building" order="8-">
-			<polygon color="#282424"/>
+			<polygon color="#051512"/>
+			<polyline color="#030e0d"/>
 		</itemgra>
 		<itemgra item_types="rail" order="6-8">
 			<polyline color="#282828" width="2"/>
@@ -547,13 +550,13 @@
 			<polyline color="#800000" width="1" dash="7,15"/>
 		</itemgra>
 		<itemgra item_types="track_unpaved" order="10-">
-			<polyline color="#000000" width="1"/>
+			<polyline color="#020a09" width="1"/>
 		</itemgra>
 		<itemgra item_types="bridleway" order="10-">
-			<polyline color="#1e0728" width="1"/>
+			<polyline color="#030c07" width="1"/>
 		</itemgra>
 		<itemgra item_types="cycleway" order="10-">
-			<polyline color="#1e0728" width="1"/>
+			<polyline color="#03080b" width="1"/>
 		</itemgra>
 		<itemgra item_types="piste_downhill_novice" order="10-12">
 			<polyline color="#00A000" width="1"/>
