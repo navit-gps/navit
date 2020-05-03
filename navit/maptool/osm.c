@@ -491,6 +491,7 @@ static char *attrmap= {
     "?	historic=memorial	poi_memorial\n"
     "?	historic=monument	poi_monument\n"
     "?	historic=ruins		poi_ruins\n"
+    "n	historic=archaeological_site	poi_archaeological_site\n"
 //	"?	historic=*		poi_ruins\n"
     "?	landuse=cemetery	poi_cemetery\n"
     "?	leisure=fishing		poi_fish\n"
