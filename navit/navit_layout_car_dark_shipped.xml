@@ -447,7 +447,7 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_track" order="10-">
-			<polygon color="#05110999"/>
+			<polygon color="#050b08"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_barracks" order="10-">
