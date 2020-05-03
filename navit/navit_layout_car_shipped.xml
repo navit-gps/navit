@@ -468,10 +468,10 @@
 			<polyline color="#000000" width="1" dash="10"/>
 		</itemgra>
 		<itemgra item_types="border_country" order="0-">
-			<polyline color="#b8434e" width="3" dash="10,5,2,5"/>
+			<polyline color="#b8434e" width="1" dash="10,5,2,5"/>
 		</itemgra>
 		<itemgra item_types="border_state" order="0-">
-			<polyline color="#808080" width="2"/>
+			<polyline color="#808080" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_university" order="8-">
 			<polygon color="#d68fb888"/>

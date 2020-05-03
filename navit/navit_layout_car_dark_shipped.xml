@@ -474,10 +474,10 @@
 			<polyline color="#113111" width="1" dash="10"/>
 		</itemgra>
 		<itemgra item_types="border_country" order="0-">
-			<polyline color="#050808" width="3" dash="10,5,2,5"/>
+			<polyline color="#0d0b41" width="1" dash="10,5,2,5"/>
 		</itemgra>
 		<itemgra item_types="border_state" order="0-">
-			<polyline color="#03100e" width="2"/>
+			<polyline color="#808080" width="1"/>
 		</itemgra>
 	</layer>
 	<layer name="heightlines">
