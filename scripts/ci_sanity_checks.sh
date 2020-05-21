@@ -24,13 +24,8 @@ check_diff(){
 }
 
 # List the files that are different from the trunk
-from=$(git rev-parse refs/remotes/origin/trunk)
-to=$(git rev-parse HEAD)
-interval=${from}..${to}
-[[ "${from}" == "${to}" ]] && interval=${to}
-
-for f in $(git diff --name-only ${interval} | sort -u); do
-    if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]]; then
+for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
+    if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
         echo "[DEBUG] Skipping file ${f} ..."
         continue
     fi
@@ -52,7 +47,7 @@ for f in $(git diff --name-only ${interval} | sort -u); do
             check_diff
         fi
 
-        if [[ "${f}" == "navit/navit_shipped.xml" ]]; then
+        if [[ "${f: -11}" == "shipped.xml" ]]; then
             echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
             xmllint --noout --dtdvalid navit/navit.dtd "$f"
             rc=$?

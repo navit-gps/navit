@@ -4,7 +4,7 @@
 set -e
 
 # install additional packages to build TT evitonment and navit
-apt-get install -y libglib2.0-dev git autogen autoconf libtool zip
+apt-get install -y libglib2.0-dev git autogen autoconf libtool zip xsltproc
 dpkg --add-architecture i386
 apt-get update
 apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386

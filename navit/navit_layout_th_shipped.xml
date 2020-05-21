@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="T@H" font="Liberation Sans">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="T@H" icon_w="22" icon_h="22" font="Liberation Sans">
 	<cursor w="26" h="26">
 		<itemgra>
 			<circle color="#0000ff" radius="24" width="2">

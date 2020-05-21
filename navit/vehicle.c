@@ -33,6 +33,7 @@
 #include <string.h>
 #include <glib.h>
 #include <time.h>
+#include <math.h> /* for sqrt from coord.h */
 #include "config.h"
 #include "debug.h"
 #include "coord.h"
@@ -69,6 +70,9 @@ struct vehicle {
     struct callback *animate_callback;
     struct event_timeout *animate_timer;
     struct point cursor_pnt;
+    int need_resize;
+    int real_w;
+    int real_h;
     struct graphics *gra;
     struct graphics_gc *bg;
     struct transformation *trans;
@@ -181,7 +185,7 @@ void vehicle_destroy(struct vehicle *this_) {
  * Creates an attribute iterator to be used with vehicles
  */
 struct attr_iter *
-vehicle_attr_iter_new(void) {
+vehicle_attr_iter_new(void * unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 
@@ -309,7 +313,8 @@ int vehicle_remove_attr(struct vehicle *this_, struct attr *attr) {
  * @author Ralph Sennhauser (10/2009)
  */
 void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) {
-    struct point sc;
+    dbg(lvl_debug,"enter this_=%p cursot=%p overwrit=%d, this_->cursor_fixed=%d, this_->gra=%p", this_, cursor, overwrite,
+        this_->cursor_fixed, this_->gra);
     if (this_->cursor_fixed && !overwrite)
         return;
     if (this_->animate_callback) {
@@ -322,26 +327,20 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
         this_->animate_callback=callback_new_2(callback_cast(vehicle_draw_do), this_, 0);
         this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
     }
+    /* we changed the cursor, so the overlay (if existing) may need a resize */
+    this_->need_resize=1;
+    this_->cursor=cursor;
 
-    if (cursor && this_->gra && this_->cursor) {
-        this_->cursor_pnt.x+=(this_->cursor->w - cursor->w)/2;
-        this_->cursor_pnt.y+=(this_->cursor->h - cursor->h)/2;
-        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 0);
-    }
-
-    if (cursor) {
-        sc.x=cursor->w/2;
-        sc.y=cursor->h/2;
-        if (!this_->cursor && this_->gra)
+    /* if the graphics was already created, but a NULL cursor was set, we need to disable
+     * otherwise stale overlay
+     */
+    if(this_->gra) {
+        if(this_->cursor)
             graphics_overlay_disable(this_->gra, 0);
-    } else {
-        sc.x=sc.y=0;
-        if (this_->cursor && this_->gra)
+        else
             graphics_overlay_disable(this_->gra, 1);
     }
-    transform_set_screen_center(this_->trans, &sc);
-
-    this_->cursor=cursor;
+    /* vehicle_draw will care for the graphics */
 }
 
 /**
@@ -354,6 +353,7 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
  * @param speed The speed of the vehicle.
  */
 void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
+    struct point sc;
     if (angle < 0)
         angle+=360;
     dbg(lvl_debug,"enter this=%p gra=%p pnt=%p dir=%d speed=%d", this_, gra, pnt, angle, speed);
@@ -363,11 +363,35 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
     this_->speed=speed;
     if (!this_->cursor)
         return;
-    this_->cursor_pnt.x-=this_->cursor->w/2;
-    this_->cursor_pnt.y-=this_->cursor->h/2;
+
+    if((this_->need_resize) || !(this_->gra)) {
+        /* recalculate real size of the required overlay */
+        navit_float radius;
+
+        /* get the radius of the out circle. Pythagoras greets */
+        radius = navit_sqrt((this_->cursor->w * this_->cursor->w) + (this_->cursor->h * this_->cursor->h));
+        /* since we rotate the rectangle around the center to indicate direction, the overlay needs to be at least the
+         * radius of the out circle big. The +1 compensates the rounding error.
+         */
+        this_->real_w = (int)radius +1;
+        this_->real_h = (int)radius +1;
+
+        /* set transform center to the middle of the cursor */
+        sc.x = this_->real_w/2;
+        sc.y = this_->real_h/2;
+        transform_set_screen_center(this_->trans, &sc);
+    }
+
+    /* move the cursor point from te center to the top left*/
+    this_->cursor_pnt.x-=(this_->real_w/2);
+    this_->cursor_pnt.y-=(this_->real_h/2);
+    dbg(lvl_debug,"real point %d,%d real size %d,%d", this_->cursor_pnt.x, this_->cursor_pnt.y, this_->real_w,
+        this_->real_h);
+
     if (!this_->gra) {
         struct color c;
-        this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->cursor->w, this_->cursor->h, 0);
+        this_->need_resize=0;
+        this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->real_w, this_->real_h, 0);
         if (this_->gra) {
             graphics_init(this_->gra);
             this_->bg=graphics_gc_new(this_->gra);
@@ -378,7 +402,12 @@ void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt
             graphics_gc_set_foreground(this_->bg, &c);
             graphics_background_gc(this_->gra, this_->bg);
         }
+    } else if (this_->need_resize) {
+        /* seems the cursor was changed. Need to resize */
+        this_->need_resize=0;
+        graphics_overlay_resize(this_->gra, &this_->cursor_pnt, this_->real_w, this_->real_h, 0);
     }
+
     vehicle_draw_do(this_);
 }
 
@@ -399,7 +428,6 @@ static void vehicle_set_default_name(struct vehicle *this_) {
         dbg(lvl_error, "Incomplete vehicle definition: missing attribute 'name'. Default name set.");
     }
 }
-
 
 static void vehicle_draw_do(struct vehicle *this_) {
     struct point p;
@@ -424,7 +452,8 @@ static void vehicle_draw_do(struct vehicle *this_) {
     graphics_draw_mode(this_->gra, draw_mode_begin);
     p.x=0;
     p.y=0;
-    graphics_draw_rectangle(this_->gra, this_->bg, &p, cursor->w, cursor->h);
+    /* clear old content by overwriting with an rectangle */
+    graphics_draw_rectangle(this_->gra, this_->bg, &p, this_->real_w, this_->real_h);
     attr=cursor->attrs;
     while (*attr) {
         if ((*attr)->type == attr_itemgra) {

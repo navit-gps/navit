@@ -1,22 +1,30 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: ubuntu:18.04
+    - image: debian:latest
 jobs:
   sanity_check:
-    <<: *defaults
+    docker:
+      - image: navit/sanity_check:latest
     steps:
       - checkout
       - run:
-          name: Setup requirements
-          command: bash scripts/setup_common_requirements.sh
-      - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
+      - run:
+          name: Run CheckStyle Test
+          command: ./gradlew checkstyleMain
+      - store_artifacts:
+          name: Store checkstyle report
+          path: navit/android/checkstyle
+          destination: reports
   build_linux:
     <<: *defaults
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Id
           command: cat /etc/*release
@@ -38,6 +46,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Install doxygen and other essentials
           command: apt-get update && apt-get -y install doxygen ca-certificates git rsync
@@ -53,6 +62,7 @@ jobs:
     machine: true
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: install docker
           command: circleci-install docker
@@ -61,38 +71,31 @@ jobs:
           command:  mkdir ../rpmbuild
       - run:
           name: run build
-          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=2.2.1.18 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:2.2.1.18-r1 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
       - store_artifacts:
           name: Store rpm
           path: ../rpmbuild/RPMS/
+          destination: rpmbuild
   build_android:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-29
+      - image: circleci/android:api-29-ndk
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+      KEYSTORE: '/home/circleci/.keystore'
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Id
-          command: cat /etc/*release
+          name: Install requirements
+          command: scripts/setup_android.sh
       - run:
-          name: Install cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+          name: Setup Keystore and Playstore Keys
+          command: scripts/setup_publish_keys.sh
       - run:
-          name: Install Android SDK components
-          command: sdkmanager "cmake;3.6.4111459"
-      - run:
-          name: Install ndk
-          command: |
-            echo y | sdkmanager --licenses
-            echo y | sdkmanager ndk-bundle
-      - run:
-          name: Build for Android
-          command: bash scripts/build_android.sh
+          name: Build and upload Android
+          command: fastlane circleci
       - run:
           name: Run Lint Test
           command: |
@@ -100,19 +103,12 @@ jobs:
             mkdir /home/circleci/code/test-results
             ./gradlew lint test
       - run:
-          name: Run CheckStyle Test
-          command: ./gradlew checkstyleMain
-      - run:
           name: Run Javadoc
           command: ./gradlew generateDebugJavadoc
       - store_artifacts:
           name: Store APK
           path: navit/android/build/outputs/apk
           destination: apk
-      - store_artifacts:
-          name: Store translations
-          path: po
-          destination: translations
       - store_artifacts:
           name: Store logs
           path: navit/android/build/outputs/logs
@@ -125,10 +121,6 @@ jobs:
           name: Store Lint reports
           path: navit/android/build/reports
           destination: reports
-      - store_artifacts:
-          name: Store checkstyle report
-          path: /home/circleci/code/navit/android/checkstyle
-          destination: reports
       - store_test_results:
           path: test-results
       - run:
@@ -140,6 +132,9 @@ jobs:
       - image: ubuntu:14.04
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the Windows build environment
           command: |
@@ -163,6 +158,9 @@ jobs:
       - image: navit/dockerfiles:wince
     steps:
       - checkout
+      - run: |
+          apt-get update && apt-get install -y git-core
+          if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the WinCE build environment
           command: |
@@ -182,10 +180,12 @@ jobs:
       - image: navit/tomtom-ng
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (minimal)
           command: |
@@ -202,10 +202,12 @@ jobs:
       - image: navit/tomtom-ng
     steps:
       - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: Setup common requirements
+          name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
       - run:
           name: Build for Tomtom (plugin)
           command: |

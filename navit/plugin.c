@@ -220,7 +220,7 @@ void plugin_destroy(struct plugin *pl) {
 }
 
 struct plugins *
-plugins_new(void) {
+plugins_new(struct attr * in, struct attr ** out) {
     struct plugins *ret=g_new0(struct plugins, 1);
     ret->hash=g_hash_table_new(g_str_hash, g_str_equal);
     pls=ret;
@@ -300,7 +300,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 #endif
 }
 
-void plugins_init(struct plugins *pls) {
+int plugins_init(struct plugins *pls) {
 #ifdef USE_PLUGINS
     struct plugin *pl;
     GList *l;
@@ -322,6 +322,7 @@ void plugins_init(struct plugins *pls) {
         dbg(lvl_error, "Warning: No plugins found. Is Navit installed correctly?");
     }
 #endif
+    return 0;
 }
 
 void plugins_destroy(struct plugins *pls) {

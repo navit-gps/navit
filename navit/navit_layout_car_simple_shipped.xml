@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-simple" color="#839ea9">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-simple" icon_w="22" icon_h="22" color="#839ea9">
 	<layer name="polygon">
 		<itemgra item_types="poly_town" order="8-">
 			<polygon color="#6b8091"/>

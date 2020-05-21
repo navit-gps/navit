@@ -14,7 +14,7 @@ Navit follows the semantic versioning:
   replacement for the previous version (all data formats and interfaces are still
   supported); minor UI changes (such as moving individual menu items) are also
   allowed
-* X.y.z (major): at least one of the following:
+* `X.y.z` (major): at least one of the following:
   * Major new functionality (such as Augmented Reality, inertial navigation or
     support for live traffic services): de-facto standard for end-user apps
   * New user interface (such as moving from the old pulldown menu UI to the Internal
@@ -27,22 +27,117 @@ Navit follows the semantic versioning:
 ## [Unreleased]
 
 To get the list of all the unreleased commits, see:
-https://github.com/navit-gps/navit/compare/v0.5.2...HEAD
+[Full Changelog](https://github.com/navit-gps/navit/compare/v0.5.4...HEAD)
 
-This changelog is generated from the list of commits on every releases.
+## [0.5.4] - 2020-01-18
+
+### Added
+
+- Android: Speech: Do not pronounce hyphens during textual directions [\#732](https://github.com/navit-gps/navit/issues/732)
+- Add support to display OSM multipolygons [\#398](https://github.com/navit-gps/navit/issues/398)
+- core:feature:multipolygon support [\#824](https://github.com/navit-gps/navit/pull/824) ([metalstrolch](https://github.com/metalstrolch))
+- Add/Android: Provide geo coordinates for clicked position in contextual menu [\#794](https://github.com/navit-gps/navit/pull/794) ([lains](https://github.com/lains))
+- Add:Gui/Internal: Adding missing escape modes and fixing generic html escape mode [\#785](https://github.com/navit-gps/navit/pull/785) ([lains](https://github.com/lains))
+- Refactor:GUI/GTK:Adding pointer and label when displaying POI on map [\#729](https://github.com/navit-gps/navit/pull/729) ([lains](https://github.com/lains))
+- enhancement:maptool:slice big polygons into smaller parts [\#906](https://github.com/navit-gps/navit/pull/906) ([metalstrolch](https://github.com/metalstrolch))
+- enhancement:maptool:improve processing speed and fix some memory holes [\#901](https://github.com/navit-gps/navit/pull/901) ([metalstrolch](https://github.com/metalstrolch))
+- feature:graphics/android: add polygons with holes support [\#889](https://github.com/navit-gps/navit/pull/889) ([metalstrolch](https://github.com/metalstrolch))
+- traffic:Improve startup performance [\#822](https://github.com/navit-gps/navit/pull/822) ([mvglasow](https://github.com/mvglasow))
+- feature:gui\_internal: include post code in town serch [\#818](https://github.com/navit-gps/navit/pull/818) ([metalstrolch](https://github.com/metalstrolch))
+- add:graphics:dpi scaling support [\#813](https://github.com/navit-gps/navit/pull/813) ([metalstrolch](https://github.com/metalstrolch))
+- Add/Android Supporting sending & receiving geo: intents [\#812](https://github.com/navit-gps/navit/pull/812) ([lains](https://github.com/lains))
+- enhancement:layout\_car:use transparency to draw some map features [\#879](https://github.com/navit-gps/navit/pull/879) ([metalstrolch](https://github.com/metalstrolch))
+- Add watch after reopen the gps file [\#872](https://github.com/navit-gps/navit/pull/872) ([gefin](https://github.com/gefin))
+- Add:graphics/windows: polygons with holes for windows CE [\#862](https://github.com/navit-gps/navit/pull/862) ([metalstrolch](https://github.com/metalstrolch))
+- Add:graphics/sdl: Polygon with holes support. [\#861](https://github.com/navit-gps/navit/pull/861) ([metalstrolch](https://github.com/metalstrolch))
+- Admin levels for additional countries [\#859](https://github.com/navit-gps/navit/pull/859) ([mvglasow](https://github.com/mvglasow))
+- countries:add:Kosovo [\#846](https://github.com/navit-gps/navit/pull/846) ([metalstrolch](https://github.com/metalstrolch))
+- Feature:Support USERPROFILE folder for Windows target [\#758](https://github.com/navit-gps/navit/pull/758) ([OLFDB](https://github.com/OLFDB))
+
+### Updated
+
+- Update:Android:Navit logo [\#943](https://github.com/navit-gps/navit/pull/943) ([lains](https://github.com/lains))
+- Update:Navit logo according to proposal in issue \#436 [\#724](https://github.com/navit-gps/navit/pull/724) ([lains](https://github.com/lains))
+- Update:i18n:Updated German \(Switzerland\) translation from launchpad [\#934](https://github.com/navit-gps/navit/pull/934) ([pgrandin](https://github.com/pgrandin))
+- Update:i18n:Updated Danish translation from launchpad [\#933](https://github.com/navit-gps/navit/pull/933) ([pgrandin](https://github.com/pgrandin))
+- Update:i18n:Updated Welsh translation from launchpad [\#932](https://github.com/navit-gps/navit/pull/932) ([pgrandin](https://github.com/pgrandin))
+- Update:i18n:Updated Kurdish \(Sorani\) translation from launchpad [\#931](https://github.com/navit-gps/navit/pull/931) ([pgrandin](https://github.com/pgrandin))
+- Update:i18n:Updated Swedish translation from launchpad [\#912](https://github.com/navit-gps/navit/pull/912) ([hoehnp](https://github.com/hoehnp))
+- Update:i18n:Updated English \(United Kingdom\) translation from launchpad [\#896](https://github.com/navit-gps/navit/pull/896) ([hoehnp](https://github.com/hoehnp))
+- Update:i18n:Updated German translation from launchpad [\#895](https://github.com/navit-gps/navit/pull/895) ([hoehnp](https://github.com/hoehnp))
+- cleanup:qt:Whitespaces and blank lines cleanup according to cpplint [\#930](https://github.com/navit-gps/navit/pull/930) ([aerostitch](https://github.com/aerostitch))
+- cleanup:search:Remove duplicate code for search\_fix\_spaces [\#917](https://github.com/navit-gps/navit/pull/917) ([aerostitch](https://github.com/aerostitch))
+- cleanup:search:Minor - Use fallthrough like the rest of the cases [\#886](https://github.com/navit-gps/navit/pull/886) ([aerostitch](https://github.com/aerostitch))
+- update: Navit logo for \(sailfish\) desktop [\#874](https://github.com/navit-gps/navit/pull/874) ([metalstrolch](https://github.com/metalstrolch))
+- Disable maptool if protobuf-c not found [\#797](https://github.com/navit-gps/navit/pull/797) ([metalstrolch](https://github.com/metalstrolch))
+
+### Fixed
+
+- Fix run when in build dir [\#957](https://github.com/navit-gps/navit/pull/957) ([jkoan](https://github.com/jkoan))
+- fix/enhancement:graphics/layout:get default icon size from layout + draw tunnels transparent + mark oneway streets [\#884](https://github.com/navit-gps/navit/pull/884) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:Speech:Android: Replace hyphens with white spaces when using android speech [\#761](https://github.com/navit-gps/navit/pull/761) ([lains](https://github.com/lains))
+- Android notification bar covers part of content [\#904](https://github.com/navit-gps/navit/issues/904)
+- Crash on start when reading traffic data [\#900](https://github.com/navit-gps/navit/issues/900)
+- Missing clipping for polygons with holes leads to slow rendering performance on Windows CE and SDL [\#869](https://github.com/navit-gps/navit/issues/869)
+- Bicycle routing is close to unusable outside built-up areas [\#844](https://github.com/navit-gps/navit/issues/844)
+- Wrong behaviour on Screen rotation or Windows resize [\#433](https://github.com/navit-gps/navit/issues/433)
+- fix:tomtom: Make sure the tomtom\_plugin and tomtom\_minimal contain navit.xml [\#875](https://github.com/navit-gps/navit/pull/875) ([gefin](https://github.com/gefin))
+- vehicle:fix: add compatibility for gpsd 3.20 [\#959](https://github.com/navit-gps/navit/pull/959) ([aerostitch](https://github.com/aerostitch))
+- fix:build:android:Fix android build on circleci [\#955](https://github.com/navit-gps/navit/pull/955) ([jkoan](https://github.com/jkoan))
+- fix:various:fix compiler warnings [\#940](https://github.com/navit-gps/navit/pull/940) ([metalstrolch](https://github.com/metalstrolch))
+- fix:all:fix compiler warnings [\#935](https://github.com/navit-gps/navit/pull/935) ([metalstrolch](https://github.com/metalstrolch))
+- fix:core:Don't flood stack on big map elements [\#928](https://github.com/navit-gps/navit/pull/928) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:Android:fixes [\#919](https://github.com/navit-gps/navit/pull/919) ([jandegr](https://github.com/jandegr))
+- fix:maptool:create valid zip64 central directory [\#915](https://github.com/navit-gps/navit/pull/915) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:traffic:Determine item delay correctly [\#903](https://github.com/navit-gps/navit/pull/903) ([mvglasow](https://github.com/mvglasow))
+- Fix:traffic:Use correct coord count for restored items, fixes \#900 [\#902](https://github.com/navit-gps/navit/pull/902) ([mvglasow](https://github.com/mvglasow))
+- fix:core:prevent stack overflow on drawing huge polygons [\#897](https://github.com/navit-gps/navit/pull/897) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:Android:system bars  [\#890](https://github.com/navit-gps/navit/pull/890) ([jandegr](https://github.com/jandegr))
+- fix:graphics/qt5; Allow to draw transparent polygons [\#878](https://github.com/navit-gps/navit/pull/878) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:android:64 bit and cleanup2 [\#877](https://github.com/navit-gps/navit/pull/877) ([jandegr](https://github.com/jandegr))
+- Fix:toolchain:Remove privileged operation from build script [\#839](https://github.com/navit-gps/navit/pull/839) ([mvglasow](https://github.com/mvglasow))
+- Fix:graphics/android:Fix crash on startup [\#838](https://github.com/navit-gps/navit/pull/838) ([mvglasow](https://github.com/mvglasow))
+- Fix:core: NULL pointer when calling iso8601\_to\_secs [\#837](https://github.com/navit-gps/navit/pull/837) ([gefin](https://github.com/gefin))
+- fix:core:add clipping to polygons with holes [\#870](https://github.com/navit-gps/navit/pull/870) ([metalstrolch](https://github.com/metalstrolch))
+- Fix:xml:Fix bike routing [\#850](https://github.com/navit-gps/navit/pull/850) ([mvglasow](https://github.com/mvglasow))
+- Fix: Fix pkgconfig detection, and multiple subsequent build for Android [\#833](https://github.com/navit-gps/navit/pull/833) ([lains](https://github.com/lains))
+- fix: vehicle: Increase layer for cursor for rotation [\#817](https://github.com/navit-gps/navit/pull/817) ([metalstrolch](https://github.com/metalstrolch))
+- fix:core: Correct default layout handling. [\#816](https://github.com/navit-gps/navit/pull/816) ([metalstrolch](https://github.com/metalstrolch))
+- fix: no redraw of map when stopping drag over osd\_speed\_warner, osd\_stopwatch and osd\_odometer [\#814](https://github.com/navit-gps/navit/pull/814) ([hoehnp](https://github.com/hoehnp))
+- Fixed typos [\#787](https://github.com/navit-gps/navit/pull/787) ([pgrandin](https://github.com/pgrandin))
+- Fix:core:Fix Warning in IDE for Items not found [\#778](https://github.com/navit-gps/navit/pull/778) ([jkoan](https://github.com/jkoan))
+- fix:graphics:Fix issue when try to close the SDL window ion non webos [\#775](https://github.com/navit-gps/navit/pull/775) ([jkoan](https://github.com/jkoan))
+- Fix:core:Fix item\_def.h when used whithout defined macros \(like in IDE\) [\#771](https://github.com/navit-gps/navit/pull/771) ([jkoan](https://github.com/jkoan))
+- Fix:port/Android:Create notification channel on API 26+ [\#756](https://github.com/navit-gps/navit/pull/756) ([mvglasow](https://github.com/mvglasow))
+- Refactoring:xml: Fix a typo of the OpenStreetMap name in the shipped XML [\#857](https://github.com/navit-gps/navit/pull/857) ([aerostitch](https://github.com/aerostitch))
+- qt5: Remove unnecessary moc includes. [\#798](https://github.com/navit-gps/navit/pull/798) ([metalstrolch](https://github.com/metalstrolch))
+
+### Other
+
+- We started to migrate the documentation from the old wiki to the docs folder to be displayed by readthedocs.
+- Add:graphics/windows: draw polygon with holes [\#855](https://github.com/navit-gps/navit/pull/855) ([metalstrolch](https://github.com/metalstrolch))
+- update building of sailfish OS to version 3.1.0.12 [\#843](https://github.com/navit-gps/navit/pull/843) ([hoehnp](https://github.com/hoehnp))
+- Reverting part of e7a70e9dc04b94b47fb7786aab4edfd25132c70f [\#835](https://github.com/navit-gps/navit/pull/835) ([lains](https://github.com/lains))
+- jandegr's fix for the windows builds issues [\#806](https://github.com/navit-gps/navit/pull/806) ([pgrandin](https://github.com/pgrandin))
+- Adding comments and const [\#788](https://github.com/navit-gps/navit/pull/788) ([lains](https://github.com/lains))
+- Sync bookmarks 2 [\#782](https://github.com/navit-gps/navit/pull/782) ([jkoan](https://github.com/jkoan))
+- Android: Do not reinitialize everything when the activity is recreated [\#754](https://github.com/navit-gps/navit/pull/754) ([mvglasow](https://github.com/mvglasow))
+- Refactoring:cmake:simplify version management [\#710](https://github.com/navit-gps/navit/pull/710) ([bignaux](https://github.com/bignaux))
+- Refactoring:mingw:simplify toolchain [\#659](https://github.com/navit-gps/navit/pull/659) ([bignaux](https://github.com/bignaux))
+- Refactoring:cmake:from 2.6 to 3.2 [\#651](https://github.com/navit-gps/navit/pull/651) ([bignaux](https://github.com/bignaux))
 
 ## [v0.5.3] - 2018-08-31
 
 Release 0.5.2 had issues with the version not properly updated in the `CMakeLists.txt`. This release fixes that issue.
 
-## Changed
+### Changed
 
 * Update Sailfish spec for release 0.5.3. [Joseph Herlant]
 * Update Patch version for release 0.5.3. [Joseph Herlant]
 
 ## [v0.5.2] - 2018-08-30
 
-## Added
+### Added
 
 * Add:build:Make gradlew executable. [mvglasow]
 * Add:build:Ignore gradle artifacts. [mvglasow]
@@ -52,7 +147,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Add:build:Add cmake4eclipse artifacts to .gitignore (#594) [mvglasow]
 * Add Slovakia and Belgium to the maplist. [jandegr]
 
-## Changed
+### Changed
 
 * Update:doc:Update AUTHORS file. [Joseph Herlant]
 * Update in-tree espeak to espeak-1.48.04 (#624) [Stefan Wildemann]
@@ -83,7 +178,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Refactor:core:Improve documentation of route\_value\_seg() [mvglasow]
 * Update:release:Add more keywords for gitchangelog
 
-## Fixed
+### Fixed
 
 * Fix Android apk VersionCode  (#633) [jkoan]
 * Fix latlon2bookmark (#627) [jkoan]
@@ -127,7 +222,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Refactor:Android (#563) [jandegr]
 * Refactoring:Android:cleanup (#458) [jandegr]
 
-## Removed
+### Removed
 
 * Cleanup:osd&support\_espeak:get rid of unused-variables compilation warnings (#619) [Joseph Herlant]
 * Cleanup:scripts:removes deprecated usage of egrep (#616) [Joseph Herlant]
@@ -142,10 +237,10 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 
 ## [v0.5.1] - 2018-04-19
 
-## Added
+### Added
 
 * Adding question mark to icon for position pending (#423) [lains]
-* Add:icon:forbiden\_area (#331) [youte62]
+* Add:icon:forbidden\_area (#331) [youte62]
 * Add:build:Add download center (#405) [jkoan]
 * Add:icon:danger\_area. [youte62]
 * Add:icon:carwash. [youte62]
@@ -225,7 +320,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Add:port\_android:OSD button and command to show Android menu. [mvglasow]
 * Adding a androix/x86 build script. [Pierre GRANDIN]
 
-## Changed
+### Changed
 
 * Update NavitVehicle.java. [jandegr]
 * Update NavitVehicle.java. [jandegr]
@@ -240,7 +335,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Update osm\_psql.c. [jandegr]
 * Update CMakeLists.txt. [jandegr]
 * Update:icon:update drinking\_water icon. [youte62]
-* Update:icon:update goverment\_building icon. [youte62]
+* Update:icon:update government\_building icon. [youte62]
 * Update:doc:Update changelog to follow semver rules (#355) [Joseph Herlant]
 * Change:android:always build apk release (#364) [Pierre GRANDIN]
 * Update:icon:bowling (#338) [youte62]
@@ -396,7 +491,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Update build\_android\_x86.sh. [jandegr]
 * Updated COPYRIGHT for 2016. [Pierre GRANDIN]
 
-## Fixed
+### Fixed
 
 * Contrib:New version for sailfish 0.5.1-r5 (#444) [Stefan Wildemann]
 * OSD:Make Image and Scale osd types obey osd\_configuration setting (trac:1202) (#439) [Robert Pohlink]
@@ -528,14 +623,14 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * Osd: Make osd "Button" accept h and w props. [Stefan Wildemann]
 * Core:Crash in country\_search\_new Properly handle coutry search by attr\_country\_id to fix crash in internal gui when there's a gps fix and a map supporting attr\_country\_id such as Reiseplaner is active. Fixes #1337. [Michael Dankov]
 
-## Removed
+### Removed
 
 * Removed deprecated files and fixed a configuration example. [jkoan]
 * Cleanup old xpm icons (#292) [Johan Fitié]
 * Removed autotools lefotover (#204) [jandegr]
 * Cleanup. [jandegr]
 
-## Other
+### Other
 
 * Show min/max elevation and distance in height profile. [Timo]
 * Maptool: migrate strdup to g\_strdup. [Joseph Herlant]
@@ -609,7 +704,7 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 * [POI] Improve Car dealer, Castle, Fountain, Hospital, Parking, Peak and Pharmacy icons (#288) [Johan Fitié]
 * [POI] Improve Drinking water, Fastfood, Theater, Information, Museum, Shop grocery, Taxi, Toilets and Townhall icons (#287) [Johan Fitié]
 * [POI] Improve Bar, Beer, Bus stop, Fountain, Level crossing, Library, Memorial, Post, Repair service, Shopping and Stadium icons (#286) [Johan Fitié]
-* [POI] Improve Bank, Bench, Police, School, Tower, Trafic signals, Viewpoint, Shop apparel and Worship icons (#285) [Johan Fitié]
+* [POI] Improve Bank, Bench, Police, School, Tower, Traffic signals, Viewpoint, Shop apparel and Worship icons (#285) [Johan Fitié]
 * [POI] Improve Fuel icon (#283) [Johan Fitié]
 * [POI] Improve Exit and Hotel icons (#282) [Johan Fitié]
 * [POI] Improve ATM, Fire brigade and Restaurant icons. [Johan Fitié]
@@ -741,23 +836,24 @@ Release 0.5.2 had issues with the version not properly updated in the `CMakeList
 
 ## [v0.5.0] - 2015-12-31
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-rc.2 to v0.5.0 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-rc.2...v0.5.0)
 to view the corresponding changes.
 
 ## [v0.5.0-rc2] - 2015-09-02
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-rc.1...v0.5.0-rc.2)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-rc.1 to v0.5.0-rc.2 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-rc.1...v0.5.0-rc.2)
 to view the corresponding changes.
 
 ## [v0.5.0-rc1] - 2015-08-08
 
-This release was done before the adoption of this changelog format. Click
-[here](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
+This release was done before the adoption of this changelog format. Use
+[this v0.5.0-beta.1 to v0.5.0-rc.1 comparison link](https://github.com/navit-gps/navit/compare/v0.5.0-beta.1...v0.5.0-rc.1)
 to view the corresponding changes.
 
-[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/navit-gps/navit/compare/v0.5.4...HEAD
+[v0.5.4]: https://github.com/navit-gps/navit/compare/v0.5.3...v0.5.4
 [v0.5.3]: https://github.com/navit-gps/navit/compare/v0.5.2...v0.5.3
 [v0.5.2]: https://github.com/navit-gps/navit/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/navit-gps/navit/compare/v0.5.0...v0.5.1

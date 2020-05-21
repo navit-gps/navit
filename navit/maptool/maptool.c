@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -52,6 +52,7 @@
 long long slice_size=SLIZE_SIZE_DEFAULT_GB*1024ll*1024*1024;
 int attr_debug_level=1;
 int ignore_unknown = 0;
+int thread_count=8; /* good default even on single cores */
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -254,7 +255,7 @@ static void add_plugin(char *path) {
 
     if (! plugins) {
         file_init();
-        plugins=plugins_new();
+        plugins=plugins_new(NULL, NULL);
     }
     pa_attr.u.str=path;
     pl_attr.u.plugins=plugins;
@@ -278,7 +279,8 @@ static void usage(void) {
     fprintf(f,"maptool --protobuf -i planet.osm.pbf planet.bin\n");
     fprintf(f,"Available switches:\n");
     fprintf(f,"-h (--help)                       : this screen\n");
-    fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression\n");
+    fprintf(f,"-3 (--32bit)                      : set zip 32 bit compression\n");
+    fprintf(f,"-6 (--64bit)                      : set zip 64 bit compression (default)\n");
     fprintf(f,"-a (--attr-debug-level)  <level>  : control which data is included in the debug attribute\n");
     fprintf(f,"-c (--dump-coordinates)           : dump coordinates after phase 1\n");
 #ifdef HAVE_POSTGRESQL
@@ -301,6 +303,7 @@ static void usage(void) {
             "-S (--slice-size) <size>          : limit memory to use for some large internal buffers, in bytes. Default is %dGB.\n",
             SLIZE_SIZE_DEFAULT_GB);
     fprintf(f,"-t (--timestamp) <y-m-dTh:m:s>    : Set zip timestamp\n");
+    fprintf(f,"-T (--threads) <count>            : Set number of threads (for some operations)\n");
     fprintf(f,
             "-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
     fprintf(f,"-W (--ways-only)                  : process only ways\n");
@@ -356,6 +359,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     int pos,c,i;
 
     static struct option long_options[] = {
+        {"32bit", 0, 0, '3'},
         {"64bit", 0, 0, '6'},
         {"attr-debug-level", 1, 0, 'a'},
         {"binfile", 0, 0, 'b'},
@@ -377,6 +381,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"protobuf", 0, 0, 'P'},
         {"start", 1, 0, 's'},
         {"timestamp", 1, 0, 't'},
+        {"threads", 1, 0, 'T'},
         {"input-file", 1, 0, 'i'},
         {"rule-file", 1, 0, 'r'},
         {"ignore-unknown", 0, 0, 'n'},
@@ -387,14 +392,17 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"index-size", 0, 0, 'x'},
         {0, 0, 0, 0}
     };
-    c = getopt_long (argc, argv, "6B:DEMNO:PS:Wa:bc"
+    c = getopt_long (argc, argv, "36B:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
                      "d:"
 #endif
-                     "e:hi:knm:p:r:s:t:wu:z:Ux:", long_options, option_index);
+                     "e:hi:knm:p:r:s:t:T:wu:z:Ux:", long_options, option_index);
     if (c == -1)
         return 1;
     switch (c) {
+    case '3':
+        p->zip64=0;
+        break;
     case '6':
         p->zip64=1;
         break;
@@ -493,6 +501,9 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     case 't':
         p->timestamp=optarg;
         break;
+    case 'T':
+        thread_count=atoi(optarg);
+        break;
     case 'w':
         dedupe_ways_hash=g_hash_table_new(NULL, NULL);
         break;
@@ -555,6 +566,7 @@ static void osm_read_input_data(struct maptool_params *p, char *suffix) {
         p->osm.towns=tempfile(suffix,"towns",1);
     }
     if (p->process_ways && p->process_nodes) {
+        p->osm.multipolygons=tempfile(suffix,"multipolygons",1);
         p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",1);
         p->osm.line2poi=tempfile(suffix,"line2poi",1);
         p->osm.poly2poi=tempfile(suffix,"poly2poi",1);
@@ -599,6 +611,8 @@ static void osm_read_input_data(struct maptool_params *p, char *suffix) {
         fclose(p->osm.nodes);
     if (p->osm.turn_restrictions)
         fclose(p->osm.turn_restrictions);
+    if (p->osm.multipolygons)
+        fclose(p->osm.multipolygons);
     if (p->osm.associated_streets)
         fclose(p->osm.associated_streets);
     if (p->osm.house_number_interpolations)
@@ -723,6 +737,26 @@ static void osm_process_turn_restrictions(struct maptool_params *p, char *suffix
         tempfile_unlink(suffix,"turn_restrictions");
 }
 
+static void osm_process_multipolygons(struct maptool_params *p, char *suffix) {
+    FILE *ways_split, *ways_split_index, *relations/*, *coords*/;
+    p->osm.multipolygons=tempfile(suffix,"multipolygons",0);
+    if(!p->osm.multipolygons)
+        return;
+    relations=tempfile(suffix,"multipolygons_out", 1);
+    /* no coords in multipolygons. */
+    //coords=fopen("coords.tmp", "rb");
+    ways_split=tempfile(suffix,"ways_split",0);
+    ways_split_index=tempfile(suffix,"ways_split_index",0);
+    process_multipolygons(p->osm.multipolygons,/*coords*/NULL,ways_split,ways_split_index,relations);
+    fclose(ways_split_index);
+    fclose(ways_split);
+    //fclose(coords);
+    fclose(relations);
+    fclose(p->osm.multipolygons);
+    if(!p->keep_tmpfiles)
+        tempfile_unlink(suffix,"multipolygons");
+}
+
 static void maptool_dump(struct maptool_params *p, char *suffix) {
     char *files[10];
     int i,files_count=0;
@@ -730,8 +764,10 @@ static void maptool_dump(struct maptool_params *p, char *suffix) {
         files[files_count++]="nodes";
     if (p->process_ways)
         files[files_count++]="ways_split";
-    if (p->process_relations)
+    if (p->process_relations) {
         files[files_count++]="relations";
+        files[files_count++]="multipolygons_out";
+    }
     for (i = 0 ; i < files_count ; i++) {
         FILE *f=tempfile(suffix,files[i],0);
         if (f) {
@@ -794,6 +830,8 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
             map_information_attrs[1].u.str=p->url;
         }
         index_init(zip_info, 1);
+        g_free(zipdir);
+        g_free(zipindex);
     }
     if (!g_strcmp0(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
         ch_assemble_map(suffix0,suffix,zip_info);
@@ -815,6 +853,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
     }
     if(!p->keep_tmpfiles) {
         tempfile_unlink(suffix,"relations");
+        tempfile_unlink(suffix,"multipolygons_out");
         tempfile_unlink(suffix,"nodes");
         tempfile_unlink(suffix,"ways_split");
         tempfile_unlink(suffix,"poly2poi_resolved");
@@ -822,6 +861,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         tempfile_unlink(suffix,"ways_split_ref");
         tempfile_unlink(suffix,"coastline");
         tempfile_unlink(suffix,"turn_restrictions");
+        tempfile_unlink(suffix,"multipolygons");
         tempfile_unlink(suffix,"graph");
         tempfile_unlink(suffix,"tilesdir");
         tempfile_unlink(suffix,"boundaries");
@@ -890,6 +930,7 @@ int main(int argc, char **argv) {
     linguistics_init();
 
     memset(&p, 0, sizeof(p));
+    p.zip64=1; /* default to 64 bit zip */
 #ifdef HAVE_ZLIB
     p.compression_level=9;
 #endif
@@ -1005,9 +1046,15 @@ int main(int argc, char **argv) {
         if (p.process_relations) {
             osm_process_turn_restrictions(&p, suffix);
         }
-        if(!p.keep_tmpfiles)
-            tempfile_unlink(suffix,"ways_split_index");
     }
+    if (start_phase(&p,"generating multipolygons")) {
+        if(p.process_relations) {
+            osm_process_multipolygons(&p, suffix);
+        }
+    }
+    if(!p.keep_tmpfiles)
+        tempfile_unlink(suffix,"ways_split_index");
+
     if (p.process_relations && p.process_ways && p.process_nodes
             && start_phase(&p,"processing associated street relations")) {
         struct files_relation_processing *files_relproc = files_relation_processing_new(p.osm.line2poi, suffix);
@@ -1044,6 +1091,8 @@ int main(int argc, char **argv) {
         exit(0);
     }
     if (p.process_relations) {
+        filenames[filename_count]="multipolygons_out";
+        referencenames[filename_count++]=NULL;
         filenames[filename_count]="relations";
         referencenames[filename_count++]=NULL;
         filenames[filename_count]="towns_poly";
@@ -1078,5 +1127,7 @@ int main(int argc, char **argv) {
     }
     phase+=2;
     start_phase(&p,"done");
+    if(p.timestamp != NULL)
+        g_free(p.timestamp);
     return 0;
 }

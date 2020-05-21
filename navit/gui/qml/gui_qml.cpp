@@ -97,7 +97,6 @@ class NGQMainWindow : public QX11EmbedWidget {
 class NGQMainWindow : public QWidget {
 #endif /* Q_WS_X11 */
 public:
-
 #ifdef Q_WS_X11
     NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QX11EmbedWidget(parent) {
 #else
