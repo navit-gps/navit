@@ -281,7 +281,7 @@ static struct gui_priv* gui_qt5_qml_new(struct navit* nav, struct gui_methods* m
     gui_priv->menu_on_map_click = 1;
 
     /* read config */
-    if ((attr = attr_search(attrs, NULL, attr_menu_on_map_click)))
+    if ((attr = attr_search(attrs, attr_menu_on_map_click)))
         gui_priv->menu_on_map_click = attr->u.num;
 
     /* remember navit internal handle */
