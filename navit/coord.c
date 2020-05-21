@@ -56,8 +56,8 @@ struct coord * coord_new(int x, int y) {
 
 struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs) {
     struct attr *x,*y;
-    x=attr_search(attrs, NULL, attr_x);
-    y=attr_search(attrs, NULL, attr_y);
+    x=attr_search(attrs, attr_x);
+    y=attr_search(attrs, attr_y);
     if (!x || !y)
         return NULL;
     return coord_new(x->u.num, y->u.num);

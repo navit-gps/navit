@@ -212,7 +212,7 @@ static int vehicle_qt5_position_attr_get(struct vehicle_priv* priv,
         break;
 
     case attr_active:
-        active = attr_search(priv->attrs, NULL, attr_active);
+        active = attr_search(priv->attrs, attr_active);
         if (active != NULL) {
             attr->u.num = active->u.num;
             return 1;

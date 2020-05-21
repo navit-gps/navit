@@ -2647,7 +2647,7 @@ static void binfile_check_version(struct map_priv *m) {
 
 static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
+    struct attr *data=attr_search(attrs, attr_data);
     struct attr *check_version,*flags,*url,*download_enabled;
     struct file_wordexp *wexp;
     char **wexp_data;
@@ -2664,16 +2664,16 @@ static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **
     m->id=++map_id;
     m->filename=g_strdup(wexp_data[0]);
     file_wordexp_destroy(wexp);
-    check_version=attr_search(attrs, NULL, attr_check_version);
+    check_version=attr_search(attrs, attr_check_version);
     if (check_version)
         m->check_version=check_version->u.num;
-    flags=attr_search(attrs, NULL, attr_flags);
+    flags=attr_search(attrs, attr_flags);
     if (flags)
         m->flags=flags->u.num;
-    url=attr_search(attrs, NULL, attr_url);
+    url=attr_search(attrs, attr_url);
     if (url)
         m->url=g_strdup(url->u.str);
-    download_enabled = attr_search(attrs, NULL, attr_update);
+    download_enabled = attr_search(attrs, attr_update);
     if (download_enabled)
         m->download_enabled=download_enabled->u.num;
 

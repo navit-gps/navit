@@ -34,7 +34,7 @@ struct script {
 };
 
 static void script_run(struct script *scr) {
-    struct attr *xml_text=attr_search(scr->attrs, NULL, attr_xml_text);
+    struct attr *xml_text=attr_search(scr->attrs, attr_xml_text);
     int error;
     if (!xml_text || !xml_text->u.str) {
         dbg(lvl_error,"no text");

@@ -369,7 +369,7 @@ log_new(struct attr * parent,struct attr **attrs) {
     dbg(lvl_debug,"enter");
     ret->func=&log_func;
     navit_object_ref((struct navit_object *)ret);
-    data=attr_search(attrs, NULL, attr_data);
+    data=attr_search(attrs, attr_data);
     if (! data)
         return NULL;
     filename=data->u.str;
@@ -382,19 +382,19 @@ log_new(struct attr * parent,struct attr **attrs) {
         ret->filename=g_strdup(filename);
     if (wexp)
         file_wordexp_destroy(wexp);
-    overwrite=attr_search(attrs, NULL, attr_overwrite);
+    overwrite=attr_search(attrs, attr_overwrite);
     if (overwrite)
         ret->overwrite=overwrite->u.num;
-    lazy=attr_search(attrs, NULL, attr_lazy);
+    lazy=attr_search(attrs, attr_lazy);
     if (lazy)
         ret->lazy=lazy->u.num;
-    mkdir=attr_search(attrs, NULL, attr_mkdir);
+    mkdir=attr_search(attrs, attr_mkdir);
     if (mkdir)
         ret->mkdir=mkdir->u.num;
-    flush_size=attr_search(attrs, NULL, attr_flush_size);
+    flush_size=attr_search(attrs, attr_flush_size);
     if (flush_size)
         ret->flush_size=flush_size->u.num;
-    flush_time=attr_search(attrs, NULL, attr_flush_time);
+    flush_time=attr_search(attrs, attr_flush_time);
     if (flush_time)
         ret->flush_time=flush_time->u.num;
     if (ret->flush_time) {

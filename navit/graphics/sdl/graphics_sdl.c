@@ -437,7 +437,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
                 x_lw_adj = round((float)lw/2.0);
                 y_lw_adj = 0;
             } else {
-                angle = (M_PI/2.0) - atan(abs(dx)/abs(dy));
+                angle = (M_PI/2.0) - atan(abs((int)dx)/abs((int)dy));
                 x_lw_adj = round(sin(angle)*(float)lw/2.0);
                 y_lw_adj = round(cos(angle)*(float)lw/2.0);
                 if((x_lw_adj < 0) || (y_lw_adj < 0)) {
@@ -1359,17 +1359,17 @@ static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics
     this->video_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
 #endif
 
-    if ((attr=attr_search(attrs, NULL, attr_w)))
+    if ((attr=attr_search(attrs, attr_w)))
         w=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_h)))
+    if ((attr=attr_search(attrs, attr_h)))
         h=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_bpp)))
+    if ((attr=attr_search(attrs, attr_bpp)))
         this->video_bpp=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_flags))) {
+    if ((attr=attr_search(attrs, attr_flags))) {
         if (attr->u.num & 1)
             this->video_flags = SDL_SWSURFACE;
     }
-    if ((attr=attr_search(attrs, NULL, attr_frame))) {
+    if ((attr=attr_search(attrs, attr_frame))) {
         if(!attr->u.num)
             this->video_flags |= SDL_NOFRAME;
     }
@@ -1428,7 +1428,7 @@ static struct graphics_priv *graphics_sdl_new(struct navit *nav, struct graphics
     this->overlay_enable = 1;
 
     this->aa = 1;
-    if((attr=attr_search(attrs, NULL, attr_antialias)))
+    if((attr=attr_search(attrs, attr_antialias)))
         this->aa = attr->u.num;
 
     this->resize_callback_initial=1;

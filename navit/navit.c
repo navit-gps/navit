@@ -767,7 +767,7 @@ static void navit_autozoom(struct navit *this_, struct coord *center, int speed,
         new_scale = (double)distance / w * 16;
     }
 
-    if (abs(new_scale - scale) < 2) {
+    if (abs((int)new_scale - (int)scale) < 2) {
         return; // Smoothing
     }
     if (new_scale > this_->autozoom_max)

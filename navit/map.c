@@ -92,7 +92,7 @@ struct map *
 map_new(struct attr *parent, struct attr **attrs) {
     struct map *m;
     struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl);
-    struct attr *type=attr_search(attrs, NULL, attr_type);
+    struct attr *type=attr_search(attrs, attr_type);
 
     if (! type) {
         dbg(lvl_error,"missing type");
