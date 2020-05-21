@@ -1143,7 +1143,7 @@ static struct map_priv *tracking_map_new(struct map_methods *meth, struct attr *
     struct map_priv *ret;
     struct attr *tracking_attr;
 
-    tracking_attr=attr_search(attrs, NULL, attr_trackingo);
+    tracking_attr=attr_search(attrs, attr_trackingo);
     if (! tracking_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

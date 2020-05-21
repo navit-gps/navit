@@ -931,7 +931,7 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
     ret->padding->right = 0;
     ret->padding->bottom = 0;
     /* attr_background_color is the background color for system bars (API 17+ only) */
-    if ((attr=attr_search(attrs, NULL, attr_background_color))) {
+    if ((attr=attr_search(attrs, attr_background_color))) {
         ret->bgcolor = (attr->u.color->a / 0x101) << 24
                        | (attr->u.color->r / 0x101) << 16
                        | (attr->u.color->g / 0x101) << 8
@@ -942,10 +942,10 @@ static struct graphics_priv *graphics_android_new(struct navit *nav, struct grap
         /* default is the same as for OSD */
         ret->bgcolor = 0xa0000000;
     }
-    if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
+    if ((attr=attr_search(attrs, attr_use_camera))) {
         use_camera=attr->u.num;
     }
-    if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+    if ((attr=attr_search(attrs, attr_callback_list))) {
         command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), ret);
     }
     image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);

@@ -137,12 +137,12 @@ static struct vehicle_priv *vehicle_iphone_new(struct vehicle_methods
     ret->cbl = cbl;
     ret->interval=1000;
     ret->config_speed=40;
-    if ((speed=attr_search(attrs, NULL, attr_speed))) {
+    if ((speed=attr_search(attrs, attr_speed))) {
         ret->config_speed=speed->u.num;
     }
-    if ((interval=attr_search(attrs, NULL, attr_interval)))
+    if ((interval=attr_search(attrs, attr_interval)))
         ret->interval=interval->u.num;
-    if ((position_coord_geo=attr_search(attrs, NULL, attr_position_coord_geo))) {
+    if ((position_coord_geo=attr_search(attrs, attr_position_coord_geo))) {
         ret->geo=*(position_coord_geo->u.coord_geo);
         ret->position_set=1;
         dbg(lvl_debug,"position_set %f %f", ret->geo.lat, ret->geo.lng);
