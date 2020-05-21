@@ -23,7 +23,7 @@
 #include <math.h>
 #include <locale.h>
 #include <gdk/gdkkeysyms.h>
-#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
 #include <gtk/gtk.h>
@@ -60,17 +60,17 @@
 #define KEY_RIGHT HILDON_HARDKEY_RIGHT
 #else
 #ifndef GDK_Book
-#define GDK_Book XF86XK_Book
+#define GDK_KEY_Book XF86XK_Book
 #endif
 #ifndef GDK_Calendar
-#define GDK_Calendar XF86XK_Calendar
+#define GDK_KEY_Calendar XF86XK_Calendar
 #endif
-#define KEY_ZOOM_IN GDK_Book
-#define KEY_ZOOM_OUT GDK_Calendar
-#define KEY_UP GDK_Up
-#define KEY_DOWN GDK_Down
-#define KEY_LEFT GDK_Left
-#define KEY_RIGHT GDK_Right
+#define KEY_ZOOM_IN GDK_KEY_Book
+#define KEY_ZOOM_OUT GDK_KEY_Calendar
+#define KEY_UP GDK_KEY_Up
+#define KEY_DOWN GDK_KEY_Down
+#define KEY_LEFT GDK_KEY_Left
+#define KEY_RIGHT GDK_KEY_Right
 #endif
 
 GdkPixbuf *geticon(const char *name);
@@ -88,7 +88,7 @@ static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv 
     dbg(lvl_debug,"keypress 0x%x", event->keyval);
     transform_get_size(navit_get_trans(this->nav), &w, &h);
     switch (event->keyval) {
-    case GDK_KP_Enter:
+    case GDK_KEY_KP_Enter:
         gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
         break;
     case KEY_UP:

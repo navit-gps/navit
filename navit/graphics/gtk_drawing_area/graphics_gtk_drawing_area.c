@@ -27,7 +27,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <cairo.h>
 #include <locale.h> /* For WIN32 */
-#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
 #ifdef HAVE_IMLIB2
@@ -51,11 +51,11 @@
 #include "navit.h"
 #include <errno.h>
 
-#ifndef GDK_Book
-#define GDK_Book XF86XK_Book
+#ifndef GDK_KEY_Book
+#define GDK_KEY_Book XF86XK_Book
 #endif
-#ifndef GDK_Calendar
-#define GDK_Calendar XF86XK_Calendar
+#ifndef GDK_KEY_Calendar
+#define GDK_KEY_Calendar XF86XK_Calendar
 #endif
 
 
@@ -735,62 +735,62 @@ static gint keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) 
     key[len]='\0';
 
     switch (event->keyval) {
-    case GDK_Up:
+    case GDK_KEY_Up:
         key[0]=NAVIT_KEY_UP;
         key[1]='\0';
         break;
-    case GDK_Down:
+    case GDK_KEY_Down:
         key[0]=NAVIT_KEY_DOWN;
         key[1]='\0';
         break;
-    case GDK_Left:
+    case GDK_KEY_Left:
         key[0]=NAVIT_KEY_LEFT;
         key[1]='\0';
         break;
-    case GDK_Right:
+    case GDK_KEY_Right:
         key[0]=NAVIT_KEY_RIGHT;
         key[1]='\0';
         break;
-    case GDK_BackSpace:
+    case GDK_KEY_BackSpace:
         key[0]=NAVIT_KEY_BACKSPACE;
         key[1]='\0';
         break;
-    case GDK_Tab:
+    case GDK_KEY_Tab:
         key[0]='\t';
         key[1]='\0';
         break;
-    case GDK_Delete:
+    case GDK_KEY_Delete:
         key[0]=NAVIT_KEY_DELETE;
         key[1]='\0';
         break;
-    case GDK_Escape:
+    case GDK_KEY_Escape:
         key[0]=NAVIT_KEY_BACK;
         key[1]='\0';
         break;
-    case GDK_Return:
-    case GDK_KP_Enter:
+    case GDK_KEY_Return:
+    case GDK_KEY_KP_Enter:
         key[0]=NAVIT_KEY_RETURN;
         key[1]='\0';
         break;
-    case GDK_Book:
+    case GDK_KEY_Book:
 #ifdef USE_HILDON
-    case GDK_F7:
+    case GDK_KEY_F7:
 #endif
         key[0]=NAVIT_KEY_ZOOM_IN;
         key[1]='\0';
         break;
-    case GDK_Calendar:
+    case GDK_KEY_Calendar:
 #ifdef USE_HILDON
-    case GDK_F8:
+    case GDK_KEY_F8:
 #endif
         key[0]=NAVIT_KEY_ZOOM_OUT;
         key[1]='\0';
         break;
-    case GDK_Page_Up:
+    case GDK_KEY_Page_Up:
         key[0]=NAVIT_KEY_PAGE_UP;
         key[1]='\0';
         break;
-    case GDK_Page_Down:
+    case GDK_KEY_Page_Down:
         key[0]=NAVIT_KEY_PAGE_DOWN;
         key[1]='\0';
         break;
