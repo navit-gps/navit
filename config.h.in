@@ -32,7 +32,7 @@
 
 #cmakedefine USE_ROUTING 1
 
-#cmakedefine HAVE_GTK2 1
+#cmakedefine HAVE_GTK3 1
 
 #cmakedefine HAVE_FONTCONFIG 1
 

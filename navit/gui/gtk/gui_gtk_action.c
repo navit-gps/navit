@@ -593,7 +593,7 @@ static struct menu_priv *gui_gtk_ui_new (struct gui_priv *this, struct menu_meth
     ret->gui=this;
 
     widget=gtk_ui_manager_get_widget(this->ui_manager, path);
-    GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(widget, FALSE);
     if (widget_ret)
         *widget_ret=widget;
     if (! popup) {

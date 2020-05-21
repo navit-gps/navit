@@ -207,7 +207,7 @@ static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra) {
     graphics=graphics_get_data(gra, "gtk_widget");
     if (! graphics)
         return 1;
-    GTK_WIDGET_SET_FLAGS (graphics, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(graphics, TRUE);
     gtk_widget_set_sensitive(graphics, TRUE);
     g_signal_connect(G_OBJECT(graphics), "key-press-event", G_CALLBACK(keypress), this);
     gtk_box_pack_end(GTK_BOX(this->vbox), graphics, TRUE, TRUE, 0);
@@ -264,7 +264,7 @@ static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *de
     gtk_box_pack_start(GTK_BOX(hbox), button_cancel, TRUE, TRUE, 10);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE, 10);
     gtk_widget_show_all(gui->dialog_win);
-    GTK_WIDGET_SET_FLAGS (button_ok, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default(button_ok, TRUE);
     gtk_widget_grab_default(button_ok);
     g_signal_connect_swapped (G_OBJECT (button_cancel), "clicked", G_CALLBACK (gtk_widget_destroy),
                               G_OBJECT (gui->dialog_win));
@@ -725,14 +725,14 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     gui_gtk_ui_init(this);
     if (this->menubar_enable) {
         widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/MenuBar");
-        GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+        gtk_widget_set_can_focus(widget, FALSE);
         gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
         gtk_widget_show (widget);
         this->menubar=widget;
     }
     if (this->toolbar_enable) {
         widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/ToolBar");
-        GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+        gtk_widget_set_can_focus(widget, FALSE);
         gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
         gtk_widget_show (widget);
     }
@@ -764,7 +764,6 @@ static char **gtk_argv= {NULL};
 
 void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
-    gtk_set_locale();
 #ifdef HAVE_API_WIN32
     setlocale(LC_NUMERIC,"C");
 #endif

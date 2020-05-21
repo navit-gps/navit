@@ -612,9 +612,10 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end) {
+	GdkWindow * gdk_window = gtk_widget_get_window(gr->widget);
         // Just invalidate the whole window. We could only the invalidate the area of
         // graphics_priv, but that is probably not significantly faster.
-        gdk_window_invalidate_rect(gr->widget->window, NULL, TRUE);
+        gdk_window_invalidate_rect(gdk_window, NULL, TRUE);
     }
 }
 
@@ -622,13 +623,17 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
 
 static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data) {
     struct graphics_priv *gra=user_data;
+    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
+
     if (! gra->visible)
         return TRUE;
 #ifndef _WIN32
-    dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(widget->window));
+    GdkWindow * gdk_window = gtk_widget_get_window(widget);
+    dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(gdk_window));
 #endif
-    gra->width=widget->allocation.width;
-    gra->height=widget->allocation.height;
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation);
+    gra->width = allocation->width;
+    gra->height = allocation->height;
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
     if (gra->cairo)
         cairo_destroy(gra->cairo);
@@ -643,12 +648,13 @@ static gint expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_dat
     struct graphics_priv *gra=user_data;
     struct graphics_gc_priv *background_gc=gra->background_gc;
     struct graphics_priv *overlay;
+    GdkWindow * gdk_window = gtk_widget_get_window(widget);
 
     gra->visible=1;
     if (! gra->cairo)
         configure(widget, NULL, user_data);
 
-    cairo_t *cairo=gdk_cairo_create(widget->window);
+    cairo_t *cairo = gdk_cairo_create(gdk_window);
     if (gra->p.x || gra->p.y) {
         set_drawing_color(cairo, background_gc->c);
         cairo_paint(cairo);
@@ -853,9 +859,10 @@ static void overlay_disable(struct graphics_priv *gr, int disabled) {
     if (!gr->overlay_disabled != !disabled) {
         gr->overlay_disabled=disabled;
         if (gr->parent) {
+	    GdkWindow * gdk_window = gtk_widget_get_window(gr->parent->widget);
             GdkRectangle r;
             overlay_rect(gr->parent, gr, &r);
-            gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
+            gdk_window_invalidate_rect(gdk_window, &r, TRUE);
         }
     }
 }
@@ -916,7 +923,7 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
     else
         this->win = gtk_plug_new(xid);
     if (!gtk_widget_get_parent(this->widget))
-        gtk_widget_ref(this->widget);
+        g_object_ref(this->widget);
     gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
     dbg(lvl_debug,"h= %i, w= %i",this->win_h, this->win_w);
     gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
@@ -927,7 +934,7 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
     else
         gtk_container_add(GTK_CONTAINER(this->win), this->widget);
     gtk_widget_show_all(this->win);
-    GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(this->widget, TRUE);
     gtk_widget_set_sensitive(this->widget, TRUE);
     gtk_widget_grab_focus(this->widget);
     g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
@@ -1015,8 +1022,15 @@ static void *get_data(struct graphics_priv *this, char const *type) {
     if (!strcmp(type,"gtk_widget"))
         return this->widget;
 #ifndef _WIN32
-    if (!strcmp(type,"xwindow_id"))
-        return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
+    if (!strcmp(type,"xwindow_id")) {
+	if (this->win) {
+		GdkWindow * gdk_window = gtk_widget_get_window(this->win);
+		return (void *)GDK_WINDOW_XID(gdk_window);
+	}
+
+	GdkWindow * gdk_window = gtk_widget_get_window(this->widget);
+	return (void *)GDK_WINDOW_XID(gdk_window);
+    }
 #endif
     if (!strcmp(type,"window")) {
         char *cp = getenv("NAVIT_XID");
@@ -1157,7 +1171,6 @@ static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, st
 
 void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
-    gtk_set_locale();
 #ifdef HAVE_API_WIN32
     setlocale(LC_NUMERIC, "C"); /* WIN32 gtk resets LC_NUMERIC */
 #endif
