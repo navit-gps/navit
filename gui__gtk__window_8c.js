@@ -2,8 +2,8 @@ var gui__gtk__window_8c =
 [
     [ "action_cb_data", "structaction__cb__data.html", "structaction__cb__data" ],
     [ "gui_menu_info", "structgui__menu__info.html", "structgui__menu__info" ],
-    [ "GDK_Book", "gui__gtk__window_8c.html#a2104097a583814accce5d66d3ad7085c", null ],
-    [ "GDK_Calendar", "gui__gtk__window_8c.html#a09266f4aba0e2512c5cf5e96b0fcd568", null ],
+    [ "GDK_KEY_Book", "gui__gtk__window_8c.html#acfa01164d7234b3ede54654422316536", null ],
+    [ "GDK_KEY_Calendar", "gui__gtk__window_8c.html#a0dcb7c540ff0c09edc99b9209910fdc7", null ],
     [ "KEY_DOWN", "gui__gtk__window_8c.html#a203163bc0189184a1de6ca8d1e53c6bf", null ],
     [ "KEY_LEFT", "gui__gtk__window_8c.html#af4d1b8a2912354646c74cf36c69f8223", null ],
     [ "KEY_RIGHT", "gui__gtk__window_8c.html#a004194639b9ad76cea01d9e93716d4d6", null ],
