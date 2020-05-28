@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structdiv__flags__map.html#acb4a6eb65ae19a790144656068568070":[2,0,83,2],
 "structdraw__info.html":[2,0,86],
 "structdraw__info.html#a37b0cc1eb7b4ca1e4532365d2221cdb4":[2,0,86,0],
 "structdraw__info.html#a412943ba3f46523b778258c29de8e1f8":[2,0,86,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structg2sattr.html#ad554ee4e11493bbccfdc3ed07f67892b":[2,0,118,12],
 "structg2sattr.html#add7af586c41e70662cfee93b716a4859":[2,0,118,15],
 "structg2sattr.html#ae91f8dd96191585a7dbfa1aaf30df8c4":[2,0,118,18],
-"structg2sattr.html#afbd0ac5aebe48ec6fd63174afac0160e":[2,0,118,11],
-"structg2sattr.html#afbf9b4612ae18be890973bedcb660413":[2,0,118,14]
+"structg2sattr.html#afbd0ac5aebe48ec6fd63174afac0160e":[2,0,118,11]
 };

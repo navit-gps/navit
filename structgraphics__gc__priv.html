@@ -155,6 +155,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a5f9bf90c42f872c64191bbe9410614e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f3a42a70ee2563838d54022faa46a8f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__gc__priv.html#a9f3a42a70ee2563838d54022faa46a8f">offset</a></td></tr>
 <tr class="separator:a9f3a42a70ee2563838d54022faa46a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7d6c5ba84e97999496d6ef741059fc"><td class="memItemLeft" align="right" valign="top">cairo_surface_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__gc__priv.html#a1e7d6c5ba84e97999496d6ef741059fc">texture</a></td></tr>
+<tr class="separator:a1e7d6c5ba84e97999496d6ef741059fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a595a37790c006a08b5bde0e8e7f60896"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__gc__priv.html#a595a37790c006a08b5bde0e8e7f60896">dummy</a></td></tr>
 <tr class="separator:a595a37790c006a08b5bde0e8e7f60896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86caeecca189e1f4b0b9aee7f34ccb67"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__priv.html">graphics_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraphics__gc__priv.html#a86caeecca189e1f4b0b9aee7f34ccb67">graphics_priv</a></td></tr>
@@ -435,7 +437,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="graphics__qt__qpainter_8cpp.html#a758db79d3c2efab53a82169a999e147a">background_gc()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a827829e380d7029891688fa69cbabfbc">display_text_draw()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6">expose()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground()</a>, <a class="el" href="graphics__egl_8c.html#af1a67ef8e88c3688f32a4fc7de7f7efd">process_triangles()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#a73bfbbcd62d853c868830b81ae959efc">set_stroke_params_from_gc()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics__qt__qpainter_8cpp.html#a758db79d3c2efab53a82169a999e147a">background_gc()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a827829e380d7029891688fa69cbabfbc">display_text_draw()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a81c15c4b9ad32c9b4b598d48f1afa6a6">expose()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture()</a>, <a class="el" href="graphics__egl_8c.html#af1a67ef8e88c3688f32a4fc7de7f7efd">process_triangles()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#a73bfbbcd62d853c868830b81ae959efc">set_stroke_params_from_gc()</a>.</p>
 
 </div>
 </div>
@@ -1006,6 +1008,22 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="graphics__cocoa_8m.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines()</a>, <a class="el" href="graphics__cocoa_8m.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__cocoa_8m.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle()</a>, <a class="el" href="graphics__cocoa_8m.html#a6585029b964eeceb550f0e4d0dab9286">draw_text()</a>, and <a class="el" href="graphics__cocoa_8m.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground()</a>.</p>
+
+</div>
+</div>
+<a id="a1e7d6c5ba84e97999496d6ef741059fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e7d6c5ba84e97999496d6ef741059fc">&#9670;&nbsp;</a></span>texture</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cairo_surface_t* graphics_gc_priv::texture</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="graphics__egl_8c.html#a9e70e948f5f852bc4a53705159ddb20a">draw_image_es()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy()</a>, <a class="el" href="graphics__gtk__drawing__area_8c.html#ae911ae167e5a0b90dda7215392ed91c5">gc_new()</a>, and <a class="el" href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture()</a>.</p>
 
 </div>
 </div>

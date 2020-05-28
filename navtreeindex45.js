@@ -1,5 +1,7 @@
 var NAVTREEINDEX45 =
 {
+"structnavit.html#a23e9c1444c80d7b50944a6cef2caebe6":[0,1,1,32],
+"structnavit.html#a3731ef073c86447da5e1ef43fa674c22":[0,1,1,5],
 "structnavit.html#a3d07966626e81ba32c709d1358c51255":[0,1,1,2],
 "structnavit.html#a41e039860ded30639c34ffb642f5db41":[0,1,1,47],
 "structnavit.html#a44c7dd3681ee9a6baa45ba53fbea9f4f":[0,1,1,68],
@@ -247,7 +249,5 @@ var NAVTREEINDEX45 =
 "structosd__text.html#a2917d3b5e2886dc7d3597b2d6c4fce35":[2,0,276,2],
 "structosd__text.html#a5cd60c19927214b01c78f3deaab6ccce":[2,0,276,3],
 "structosd__text.html#a60a20abb8b0ad041ebb027c7090ba09c":[2,0,276,4],
-"structosd__text.html#a791ef98a3efb9b804d60b2d425690553":[2,0,276,0],
-"structosd__text.html#ae710da7d85a3dd062af700bba658bc53":[2,0,276,1],
-"structosd__text__item.html":[2,0,277]
+"structosd__text.html#a791ef98a3efb9b804d60b2d425690553":[2,0,276,0]
 };

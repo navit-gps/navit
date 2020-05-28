@@ -29,6 +29,7 @@ var graphics__gtk__drawing__area_8c =
     [ "gc_set_dashes", "graphics__gtk__drawing__area_8c.html#ad776465bab5741fdc7886fb14234b379", null ],
     [ "gc_set_foreground", "graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51", null ],
     [ "gc_set_linewidth", "graphics__gtk__drawing__area_8c.html#add7dfa8917652d28c056970edf329468", null ],
+    [ "gc_set_texture", "graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700", null ],
     [ "get_data", "graphics__gtk__drawing__area_8c.html#a00810ac2c7209e149e278ba6458b7cd3", null ],
     [ "get_data_window", "graphics__gtk__drawing__area_8c.html#a74a4c3502599677307eba052c0fcd2be", null ],
     [ "get_dpi", "graphics__gtk__drawing__area_8c.html#ac6005266522242b1dca06e38e39ea71a", null ],

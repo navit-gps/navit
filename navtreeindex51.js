@@ -1,5 +1,7 @@
 var NAVTREEINDEX51 =
 {
+"structwidget.html#a19013f05a0b891e32c8bf9b08f56d6fb":[2,0,430,15],
+"structwidget.html#a1d9c74dd1431715669667d58f6eda3d3":[2,0,430,26],
 "structwidget.html#a200ed341e0ad4b347af0077fa0c54340":[2,0,430,1],
 "structwidget.html#a2138b16a163c4f9137eee534947c565a":[2,0,430,34],
 "structwidget.html#a2d07ed3b871a37fdb8b87111e1f6f0f3":[2,0,430,24],
@@ -247,7 +249,5 @@ var NAVTREEINDEX51 =
 "sunriset_8h.html#afe252bf3434d2105c0d2f13caf9e3568":[3,0,132,11],
 "sunriset_8h_source.html":[3,0,132],
 "tell__navit_8c.html":[3,0,2,2,2],
-"tell__navit_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,2,2,2,1],
-"tell__navit_8c.html#aa1187b70998f73cdb598833d6afaa30a":[3,0,2,2,2,3],
-"tell__navit_8c.html#ae4349ff695c2b3e4caf3cebbd1b95f78":[3,0,2,2,2,0]
+"tell__navit_8c.html#a3c04138a5bfe5d72780bb7e82a18e627":[3,0,2,2,2,1]
 };

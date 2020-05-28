@@ -51,6 +51,7 @@ var structgraphics__gc__priv =
     [ "pen", "structgraphics__gc__priv.html#aeba5d639a5c73b432ca90db389d07cc4", null ],
     [ "r", "structgraphics__gc__priv.html#a95783b6c4e4f64237421a66353fb0b09", null ],
     [ "rgba", "structgraphics__gc__priv.html#a4e1a8a16d21254d1cafae2d166e9e2b1", null ],
+    [ "texture", "structgraphics__gc__priv.html#a1e7d6c5ba84e97999496d6ef741059fc", null ],
     [ "w", "structgraphics__gc__priv.html#a1c0bda9e524411e29cef424796f91023", null ],
     [ "width", "structgraphics__gc__priv.html#aaddb31df074a637a299aee4b549f9c92", null ]
 ];

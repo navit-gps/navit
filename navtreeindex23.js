@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"gui_2win32_2resources_2resource_8h_source.html":[3,0,6,4,0,0],
 "gui_8c.html":[3,0,66],
 "gui_8c.html#a1fea13a149f111aef85b5560181a6ead":[3,0,66,1],
 "gui_8c.html#a24beb14a860411b9e85b2d1358a5e9f9":[3,0,66,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "gui__internal_8h.html":[3,0,6,1,1],
 "gui__internal_8h.html#a011442fa571647f6171d9bbd66c505a5":[3,0,6,1,1,3],
 "gui__internal_8h.html#a04be6591ef29ae7689c2684ec069a4e3":[3,0,6,1,1,11],
-"gui__internal_8h.html#a3cbc19f6405b5b7c13f2f2ce517ce73d":[3,0,6,1,1,6],
-"gui__internal_8h.html#a48767bfed9b842904dce255cdb3a0f01":[3,0,6,1,1,12]
+"gui__internal_8h.html#a3cbc19f6405b5b7c13f2f2ce517ce73d":[3,0,6,1,1,6]
 };
