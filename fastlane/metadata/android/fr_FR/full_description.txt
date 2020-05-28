@@ -1,9 +1,9 @@
 Navit pour Android est une système de navigation open source (GPL).
 Navit montre votre position sur une carte (en vue aérienne ou en 3D)  en utilisant le GPS, l'application calcule la meilleure route vers votre destination et vous permet d'utiliser des Points d'intérêt (POI).
- 
+
 Contrairement à des autres systèmes de navigation, Navit génère ses cartes dynamiquement à partir de données vectorielles.
 Navit fonctionne parfaitement en mode déconnecté. Navit respecte votre vie privée et ne traque pas vos déplacements.
- 
+
 Fonctionnalités:
 *) Naviguez vers un point depuis google maps
 *) Fonctionne en mode déconnecté
