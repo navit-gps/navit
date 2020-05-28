@@ -27,7 +27,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <cairo.h>
 #include <locale.h> /* For WIN32 */
-#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
 #ifdef HAVE_IMLIB2
@@ -51,11 +51,11 @@
 #include "navit.h"
 #include <errno.h>
 
-#ifndef GDK_Book
-#define GDK_Book XF86XK_Book
+#ifndef GDK_KEY_Book
+#define GDK_KEY_Book XF86XK_Book
 #endif
-#ifndef GDK_Calendar
-#define GDK_Calendar XF86XK_Calendar
+#ifndef GDK_KEY_Calendar
+#define GDK_KEY_Calendar XF86XK_Calendar
 #endif
 
 
@@ -98,6 +98,7 @@ struct graphics_gc_priv {
     double *dashes;
     int ndashes;
     double offset;
+    cairo_surface_t *texture;
 };
 
 struct graphics_image_priv {
@@ -108,6 +109,12 @@ struct graphics_image_priv {
     void *image;
 #endif
 };
+
+static void set_drawing_color(cairo_t *cairo, struct color c) {
+    double col_max = 1<<COLOR_BITDEPTH;
+    cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
+}
+
 
 static void graphics_destroy(struct graphics_priv *gr) {
     dbg(lvl_debug,"enter parent %p",gr->parent);
@@ -125,6 +132,8 @@ static void graphics_destroy(struct graphics_priv *gr) {
 }
 
 static void gc_destroy(struct graphics_gc_priv *gc) {
+    if(gc->texture != NULL)
+        cairo_surface_destroy (gc->texture);
     g_free(gc);
 }
 
@@ -154,12 +163,43 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
+static void gc_set_texture (struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
+    cairo_surface_t *surface;
+    cairo_t *cr;
+
+    //If called twice, clean up
+    if(gc->texture != NULL)
+        cairo_surface_destroy (gc->texture);
+    gc->texture = NULL;
+
+    //build fill pattern
+    if((img != NULL) && (img->pixbuf !=NULL)) {
+
+        // create a new surface same size as the image
+        surface = cairo_image_surface_create (gdk_pixbuf_get_has_alpha (img->pixbuf) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24,
+                                              gdk_pixbuf_get_height(img->pixbuf), gdk_pixbuf_get_width(img->pixbuf));
+        //run cairo on it
+        cr = cairo_create (surface);
+        //paint background
+        set_drawing_color(cr, gc->c);
+        cairo_rectangle(cr, 0, 0, gdk_pixbuf_get_height(img->pixbuf), gdk_pixbuf_get_width(img->pixbuf));
+        cairo_fill(cr);
+        //paint image on top
+        gdk_cairo_set_source_pixbuf(cr, img->pixbuf, 0, 0);
+        cairo_paint(cr);
+        //destroy the cairo context, but keep the surface.
+        cairo_destroy(cr);
+        gc->texture=surface;
+    }
+}
+
 static struct graphics_gc_methods gc_methods = {
     gc_destroy,
     gc_set_linewidth,
     gc_set_dashes,
     gc_set_foreground,
     gc_set_background,
+    gc_set_texture,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
@@ -176,6 +216,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     gc->dashes=NULL;
     gc->ndashes=0;
     gc->offset=0;
+    gc->texture=NULL;
 
     return gc;
 }
@@ -261,11 +302,6 @@ static void image_free(struct graphics_priv *gr, struct graphics_image_priv *pri
     g_free(priv);
 }
 
-static void set_drawing_color(cairo_t *cairo, struct color c) {
-    double col_max = 1<<COLOR_BITDEPTH;
-    cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
-}
-
 static void set_stroke_params_from_gc(cairo_t *cairo, struct graphics_gc_priv *gc) {
     set_drawing_color(cairo, gc->c);
     cairo_set_dash(cairo, gc->dashes, gc->ndashes, gc->offset);
@@ -287,6 +323,10 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
     set_drawing_color(gr->cairo, gc->c);
+    if(gc->texture != NULL) {
+        cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
+        cairo_pattern_set_extend(cairo_get_source(gr->cairo), CAIRO_EXTEND_REPEAT);
+    }
     cairo_move_to(gr->cairo, p[0].x, p[0].y);
     for (i=1; i<count; i++) {
         cairo_line_to(gr->cairo, p[i].x, p[i].y);
@@ -300,6 +340,10 @@ static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_g
     int j;
     cairo_fill_rule_t old_rule;
     set_drawing_color(gr->cairo, gc->c);
+    if(gc->texture != NULL) {
+        cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
+        cairo_pattern_set_extend(cairo_get_source(gr->cairo), CAIRO_EXTEND_REPEAT);
+    }
     /* remember current fill rule */
     old_rule = cairo_get_fill_rule (gr->cairo);
     /* set fill rule */
@@ -735,62 +779,62 @@ static gint keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) 
     key[len]='\0';
 
     switch (event->keyval) {
-    case GDK_Up:
+    case GDK_KEY_Up:
         key[0]=NAVIT_KEY_UP;
         key[1]='\0';
         break;
-    case GDK_Down:
+    case GDK_KEY_Down:
         key[0]=NAVIT_KEY_DOWN;
         key[1]='\0';
         break;
-    case GDK_Left:
+    case GDK_KEY_Left:
         key[0]=NAVIT_KEY_LEFT;
         key[1]='\0';
         break;
-    case GDK_Right:
+    case GDK_KEY_Right:
         key[0]=NAVIT_KEY_RIGHT;
         key[1]='\0';
         break;
-    case GDK_BackSpace:
+    case GDK_KEY_BackSpace:
         key[0]=NAVIT_KEY_BACKSPACE;
         key[1]='\0';
         break;
-    case GDK_Tab:
+    case GDK_KEY_Tab:
         key[0]='\t';
         key[1]='\0';
         break;
-    case GDK_Delete:
+    case GDK_KEY_Delete:
         key[0]=NAVIT_KEY_DELETE;
         key[1]='\0';
         break;
-    case GDK_Escape:
+    case GDK_KEY_Escape:
         key[0]=NAVIT_KEY_BACK;
         key[1]='\0';
         break;
-    case GDK_Return:
-    case GDK_KP_Enter:
+    case GDK_KEY_Return:
+    case GDK_KEY_KP_Enter:
         key[0]=NAVIT_KEY_RETURN;
         key[1]='\0';
         break;
-    case GDK_Book:
+    case GDK_KEY_Book:
 #ifdef USE_HILDON
-    case GDK_F7:
+    case GDK_KEY_F7:
 #endif
         key[0]=NAVIT_KEY_ZOOM_IN;
         key[1]='\0';
         break;
-    case GDK_Calendar:
+    case GDK_KEY_Calendar:
 #ifdef USE_HILDON
-    case GDK_F8:
+    case GDK_KEY_F8:
 #endif
         key[0]=NAVIT_KEY_ZOOM_OUT;
         key[1]='\0';
         break;
-    case GDK_Page_Up:
+    case GDK_KEY_Page_Up:
         key[0]=NAVIT_KEY_PAGE_UP;
         key[1]='\0';
         break;
-    case GDK_Page_Down:
+    case GDK_KEY_Page_Down:
         key[0]=NAVIT_KEY_PAGE_DOWN;
         key[1]='\0';
         break;
