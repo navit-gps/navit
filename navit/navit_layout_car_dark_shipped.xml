@@ -378,6 +378,9 @@
 			<polygon color="#010321"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_swimming_pool" order="10-">
+			<polygon color="#010321"/>
+		</itemgra>
 		<itemgra item_types="water_line" order="0-">
 			<polyline color="#010321" width="1"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
