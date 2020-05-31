@@ -35,10 +35,14 @@
 			<polygon color="#7cc334"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_water" order="0-">
+		<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
 			<polygon color="#82c8ea"/>
 			<polyline color="#5096b8"/>
 			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_swimming_pool" order="10-">
+			<polygon color="#82c8ea"/>
+			<polyline color="#5096b8"/>
 		</itemgra>
 		<itemgra item_types="poly_land" order="0-">
 			<polygon color="#ffefb7"/>

@@ -727,6 +727,7 @@ static char *attrmap= {
     "w	leisure=track,type=multipolygon		poly_sports_track\n"
     "w	leisure=track		sports_track\n"
     "w	leisure=water_park	poly_water_park\n"
+    "w	leisure=swimming_pool	poly_swimming_pool\n"
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
     "w	military=danger_area	poly_danger_area\n"
