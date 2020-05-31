@@ -720,6 +720,7 @@ static char *attrmap= {
     "w	leisure=park		poly_park\n"
     "w	leisure=pitch		poly_sports_pitch\n"
     "w	leisure=playground	poly_playground\n"
+    "w	leisure=sports_centre,building=1	poly_building\n"
     "w	leisure=sports_centre	poly_sport\n"
     "w	leisure=stadium		poly_sports_stadium\n"
     "w	leisure=track,area=1		poly_sports_track\n"
