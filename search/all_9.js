@@ -207,7 +207,7 @@ var searchData=
   ['getmapinfofile',['getMapInfoFile',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a0eb85b69005fdd0808e782d9bf8e3e9b',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['getmaps',['getMaps',['../classBackend.html#ad8ae59f1ce00c997d9f4efb780e49a9b',1,'Backend']]],
   ['getmercator',['getmercator',['../classmapExtract.html#a8c1d42b17730fcf3bc2186fad1c16730',1,'mapExtract\getmercator()'],['../mapextract_8php.html#a8e21c9815eafac76a24cf96793e5c9ae',1,'getmercator():&#160;mapextract.php']]],
-  ['getoutputstream',['getOutputStream',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a19f99106970949ff18862954fcfac3a7',1,'org::navitproject::navit::NavitMapDownloader']]],
+  ['getoutputstream',['getOutputStream',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a65bf01dc2e09c6aaa78ff14ff6625df3',1,'org::navitproject::navit::NavitMapDownloader']]],
   ['getpoi',['getPOI',['../classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8',1,'NGQPoint']]],
   ['getpois',['getPois',['../classBackend.html#a180a2bb35a4341cc30f673385304e3a1',1,'Backend']]],
   ['getposition',['getPosition',['../classNGQProxyNavit.html#ac0ede82de47bdb5f74f09017158e78d3',1,'NGQProxyNavit']]],
