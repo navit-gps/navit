@@ -78,7 +78,7 @@ struct graphics_font_priv {
 
 struct graphics_gc_priv {
     struct graphics_priv *gr;
-    int dashed[4];
+    unsigned int *dashed;
     int is_dashed;
     struct color fg;
     struct color bg;
@@ -92,7 +92,7 @@ struct graphics_image_priv {
     int w,h;
     char *data;
     struct graphics_image_priv *graphics_image_priv_proxy;
-    struct graphics_image_methods *graphics_image_methods;
+    struct graphics_image_methods *graphics_image_methods_proxy;
 };
 
 static void svg_debug_graphics_destroy(struct graphics_priv *gr) {
@@ -118,6 +118,7 @@ static void svg_debug_font_destroy(struct graphics_font_priv *this) {
     if(this->graphics_font_proxy.meth.font_destroy){
 	this->graphics_font_proxy.meth.font_destroy(this->graphics_font_proxy.priv);
     }
+    g_free(this);
 }
 
 static struct graphics_font_priv *svg_debug_font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
@@ -145,6 +146,10 @@ void svg_debug_get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv
 }
 
 static void svg_debug_gc_destroy(struct graphics_gc_priv *gc) {
+    if(gc->graphics_gc_methods_proxy->gc_destroy){
+        gc->graphics_gc_methods_proxy->gc_destroy(gc->graphics_gc_priv_proxy);
+    }
+    g_free(gc->graphics_gc_methods_proxy);
     g_free(gc);
 }
 
@@ -157,14 +162,14 @@ static void svg_debug_gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
 }
 
 static void svg_debug_gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
-    if(n <= 4){
-	for (int i = 0; i < 4; ++i) {
-	    gc->dashed[i]=dash_list[i];
-	}
-    }
+    //if(n <= 4){
+	//for (int i = 0; i < 4; ++i) {
+	//    gc->dashed[i]=dash_list[i];
+    //}
+    gc->dashed=dash_list;
     gc->is_dashed=TRUE;
     if(gc->graphics_gc_methods_proxy->gc_set_dashes){
-	gc->graphics_gc_methods_proxy->gc_set_dashes(gc->graphics_gc_priv_proxy,w,offset,dash_list,n);
+        gc->graphics_gc_methods_proxy->gc_set_dashes(gc->graphics_gc_priv_proxy,w,offset,dash_list,n);
     }
 }
 
@@ -220,12 +225,14 @@ static struct graphics_gc_priv *svg_debug_gc_new(struct graphics_priv *gr, struc
 
 void svg_debug_image_destroy(struct graphics_image_priv *img);
 void svg_debug_image_destroy(struct graphics_image_priv *img) {
-    g_free(img->graphics_image_methods);
-    g_free(img->graphics_image_priv_proxy);
+    dbg(lvl_debug,"enter image_destroy");
     g_free(img->data);
-    if(img->graphics_image_methods->image_destroy){
-	img->graphics_image_methods->image_destroy(img->graphics_image_priv_proxy);
+    if(img->graphics_image_methods_proxy->image_destroy){
+	img->graphics_image_methods_proxy->image_destroy(img->graphics_image_priv_proxy);
     }
+    g_free(img->data);
+    g_free(img->graphics_image_methods_proxy);
+    g_free(img->graphics_image_priv_proxy);
     g_free(img);
 }
 
@@ -237,57 +244,62 @@ static struct graphics_image_priv *svg_debug_image_new(struct graphics_priv *gr,
         int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *image_priv;
     struct graphics_image_methods *graphics_image_methods;
-    char *base64_data_url;
-    char *base64_encoded_image;
-    char *image_mime_type;
+    char *base64_data_url = NULL;
+    char *base64_encoded_image = NULL;
+    char *image_mime_type = NULL;
+    char *contents = NULL;
     char fileext[3] = "";
-    char *contents;
     gsize img_size;
+
     image_priv = g_new0(struct graphics_image_priv, 1);
     graphics_image_methods = g_new0(struct graphics_image_methods, 1);
     *meth=image_methods;
     const char *data_url_template= "data:%s;base64,%s";
 
     if(g_file_get_contents(path,&contents,&img_size,NULL)){
-	dbg(lvl_debug,"image_new loaded %s",path);
+        dbg(lvl_debug,"image_new loaded %s",path);
 
-	strtolower(fileext,&path[(strlen(path)-3)]);
-	if(strcmp(fileext, "png")){
-	    image_mime_type="image/png";
-	} else if (strcmp(fileext, "jpg")) {
-	    image_mime_type="image/jpeg";
-	} else if (strcmp(fileext, "gif")) {
-	    image_mime_type="image/gif";
-	} else {
-	    image_mime_type="application/octet-stream";
-	}
-	base64_encoded_image=g_base64_encode((guchar*)contents,img_size);
+        strtolower(fileext,&path[(strlen(path)-3)]);
+        if(strcmp(fileext, "png")){
+            image_mime_type="image/png";
+        } else if (strcmp(fileext, "jpg")) {
+            image_mime_type="image/jpeg";
+        } else if (strcmp(fileext, "gif")) {
+            image_mime_type="image/gif";
+        } else {
+            image_mime_type="application/octet-stream";
+        }
+        base64_encoded_image=g_base64_encode((guchar*)contents,img_size);
 
-	base64_data_url=g_malloc0(strlen(base64_encoded_image)+strlen(data_url_template)+strlen(image_mime_type)+1);
-	sprintf(base64_data_url,data_url_template,image_mime_type,base64_encoded_image);
-	g_free(base64_encoded_image);
-	//g_free()
+        base64_data_url=g_malloc0(strlen(base64_encoded_image)+strlen(data_url_template)+strlen(image_mime_type)+1);
+        sprintf(base64_data_url,data_url_template,image_mime_type,base64_encoded_image);
+        g_free(base64_encoded_image);
 
-	image_priv->data=base64_data_url;
-	g_free(contents);
-	image_priv->h=*h;
-	image_priv->w=*w;
+        image_priv->data=base64_data_url;
+        g_free(contents);
+        image_priv->h=*h;
+        image_priv->w=*w;
     } else {
-	dbg(lvl_error,"image_new failed to load %s",path);
-	image_priv->data="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
-	image_priv->h=1;
-	image_priv->w=1;
+        dbg(lvl_error,"image_new failed to load %s",path);
+        image_priv->data="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+        image_priv->h=1;
+        image_priv->w=1;
     }
     if(gr->proxy_graphics_methods->image_new){
-	image_priv->graphics_image_priv_proxy=
-	    gr->proxy_graphics_methods->image_new(
-		gr->proxy_priv,graphics_image_methods,path,w,h,hot,rotation
+        image_priv->graphics_image_priv_proxy=
+                gr->proxy_graphics_methods->image_new(
+                        gr->proxy_priv,graphics_image_methods,path,w,h,hot,rotation
 	    );
-	image_priv->graphics_image_methods=graphics_image_methods;
+        image_priv->graphics_image_methods_proxy=graphics_image_methods;
     }
     if(image_priv->graphics_image_priv_proxy){
-	return image_priv;
+        return image_priv;
     }
+    if(base64_data_url != NULL){
+        g_free(base64_data_url);
+    }
+    g_free(graphics_image_methods);
+    g_free(image_priv);
     return NULL;
 }
 
@@ -301,15 +313,15 @@ static void svg_debug_draw_lines(struct graphics_priv *gr, struct graphics_gc_pr
 
     fprintf(gr->outfile,line_template_start,"");
     for (int i = 0; i < count; i++) {
-	fprintf(gr->outfile,coord_template,p[i].x,p[i].y);
+        fprintf(gr->outfile,coord_template,p[i].x,p[i].y);
     }
 
     if (gc->is_dashed) {
-	fprintf(gr->outfile,dashed_template_start,"");
-	for (int i = 0; i < 4; i++) {
-	    fprintf(gr->outfile,dashed_dasharray,gc->dashed[i]);
-	}
-	fprintf(gr->outfile,dashed_template_end,"");
+        fprintf(gr->outfile,dashed_template_start,"");
+        for (int i = 0; i < 4; i++) {
+            fprintf(gr->outfile,dashed_dasharray,gc->dashed[i]);
+        }
+        fprintf(gr->outfile,dashed_template_end,"");
     }
 
     fprintf(gr->outfile,line_template_end,gc->fg.r,gc->fg.g,gc->fg.b,gc->linewidth);
@@ -396,23 +408,24 @@ static void svg_debug_draw_mode(struct graphics_priv *gr, enum draw_mode_num mod
     char filename[255];
     switch (mode) {
     case draw_mode_begin:
-	if(gr->outfile){
-	    fprintf(gr->outfile,svg_end_template,"");
-	    fclose(gr->outfile);
-	    gr->frame+=1;
-	}
-	sprintf(filename, "%s/svg_debug_frame_%u.svg", gr->outputdir, gr->frame);
-	gr->outfile = fopen(filename, "w");
-	fprintf(gr->outfile,svg_start_template,gr->height,gr->width);
+        if(gr->outfile){
+            dbg(lvl_debug,"Finished drawing %s/svg_debug_after_frame_%u.svg",gr->outputdir, gr->frame)
+            fprintf(gr->outfile,svg_end_template,"");
+            fclose(gr->outfile);
+            gr->frame+=1;
+        }
+        sprintf(filename, "%s/svg_debug_frame_%u.svg", gr->outputdir, gr->frame);
+        gr->outfile = fopen(filename, "w");
+        fprintf(gr->outfile,svg_start_template,gr->height,gr->width);
         break;
     case draw_mode_end:
-	fprintf(gr->outfile,svg_end_template,"");
-	fclose(gr->outfile);
-	gr->frame+=1;
-	sprintf(filename, "%s/svg_debug_after_frame_%u.svg", gr->outputdir, gr->frame);
-	gr->outfile = fopen(filename, "w");
-	fprintf(gr->outfile,svg_start_template,gr->height,gr->width);
-	// we need a additional file for drawings without previous begin?
+        dbg(lvl_debug,"Finished drawing %s/svg_debug_after_frame_%u.svg",gr->outputdir, gr->frame)
+        fprintf(gr->outfile,svg_end_template,"");
+        fclose(gr->outfile);
+        gr->frame+=1;
+        sprintf(filename, "%s/svg_debug_after_frame_%u.svg", gr->outputdir, gr->frame);
+        gr->outfile = fopen(filename, "w");
+        fprintf(gr->outfile,svg_start_template,gr->height,gr->width);
         break;
     default:
         break;
@@ -484,10 +497,17 @@ static void *svg_debug_get_data(struct graphics_priv *this, char const *type) {
     return NULL;
 }
 
-static void svg_debug_image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
-    if(gr->proxy_graphics_methods->image_free){
-	gr->proxy_graphics_methods->image_free(gr->proxy_priv,priv->graphics_image_priv_proxy);
+static void svg_debug_image_free(struct graphics_priv *gr, struct graphics_image_priv *img) {
+    dbg(lvl_debug,"enter image_free");
+    if(img->graphics_image_methods_proxy->image_destroy){
+        img->graphics_image_methods_proxy->image_destroy(img->graphics_image_priv_proxy);
     }
+    if(gr->proxy_graphics_methods->image_free){
+        gr->proxy_graphics_methods->image_free(gr->proxy_priv,img->graphics_image_priv_proxy);
+    }
+    g_free(img->graphics_image_methods_proxy);
+    g_free(img->data);
+    g_free(img);
 }
 
 
