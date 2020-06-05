@@ -491,6 +491,7 @@ static char *attrmap= {
     "?	historic=memorial	poi_memorial\n"
     "?	historic=monument	poi_monument\n"
     "?	historic=ruins		poi_ruins\n"
+    "n	historic=archaeological_site	poi_archaeological_site\n"
 //	"?	historic=*		poi_ruins\n"
     "?	landuse=cemetery	poi_cemetery\n"
     "?	leisure=fishing		poi_fish\n"
@@ -543,7 +544,7 @@ static char *attrmap= {
     "?	shop=photo		poi_shop_photo\n"
     "?	shop=shoes		poi_shop_shoes\n"
     "?	shop=supermarket	poi_shopping\n"
-    "?      shop=mall               poi_mall\n"
+    "?	shop=mall               poi_mall\n"
     "?	sport=10pin		poi_bowling\n"
     "?	sport=baseball		poi_baseball\n"
     "?	sport=basketball	poi_basketball\n"
@@ -568,6 +569,7 @@ static char *attrmap= {
     "?	tourism=theme_park	poi_resort\n"
     "?	tourism=viewpoint	poi_viewpoint\n"
     "?	tourism=zoo		poi_zoo\n"
+    "n	natural=cave_entrance      poi_cave\n"
     "n	traffic_sign=city_limit	traffic_sign_city_limit\n"
     "n	highway=speed_camera	tec_common\n"
     "w	*=*			street_unkn\n"
@@ -718,10 +720,15 @@ static char *attrmap= {
     "w	leisure=park		poly_park\n"
     "w	leisure=pitch		poly_sports_pitch\n"
     "w	leisure=playground	poly_playground\n"
+    "w	leisure=sports_centre,building=1	poly_building\n"
     "w	leisure=sports_centre	poly_sport\n"
     "w	leisure=stadium		poly_sports_stadium\n"
-    "w	leisure=track		poly_sports_track\n"
+    "w	leisure=track,area=1		poly_sports_track\n"
+    "w	leisure=track,area=0		sports_track\n"
+    "w	leisure=track,type=multipolygon		poly_sports_track\n"
+    "w	leisure=track		sports_track\n"
     "w	leisure=water_park	poly_water_park\n"
+    "w	leisure=swimming_pool	poly_swimming_pool\n"
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
     "w	military=danger_area	poly_danger_area\n"
@@ -743,6 +750,7 @@ static char *attrmap= {
     "w	natural=water		poly_water\n"
     "w	natural=wetland		poly_mud\n"
     "w	natural=wood		poly_wood\n"
+    "w	natural=cliff		cliff\n"
     "w	piste:type=downhill,piste:difficulty=advanced		piste_downhill_advanced\n"
     "w	piste:type=downhill,piste:difficulty=easy		piste_downhill_easy\n"
     "w	piste:type=downhill,piste:difficulty=expert		piste_downhill_expert\n"
@@ -784,6 +792,8 @@ static char *attrmap= {
     "w	waterway=river		water_river\n"
     "w	waterway=riverbank	poly_water\n"
     "w	waterway=stream		water_stream\n"
+    "w	waterway=dam		poly_dam\n"
+    "w	waterway=weir		poly_dam\n"
     "w	barrier=ditch	ditch\n"
     "w	barrier=hedge	hedge\n"
     "w	barrier=fence	fence\n"
@@ -1159,6 +1169,10 @@ void osm_add_tag(char *k, char *v) {
     if (! g_strcmp0(k,"note"))
         level=5;
     if (! g_strcmp0(k,"name")) {
+        attr_strings_save(attr_string_label, v);
+        level=5;
+    } else if (! g_strcmp0(k,"description")) {
+        /* try description if no name is there */
         attr_strings_save(attr_string_label, v);
         level=5;
     }
