@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build Navit Doc
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    paths:
+    - 'docs/**'
+  pull_request:
+    paths:
+    - 'docs/**'
+
+defaults: 
+    runs-on: ubuntu-latest
+    container:
+      image: debian:latest
+jobs:
+  check_spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install curl
+        run: apt-get update && apt-get -y install curl
+      - name: Install misspell
+        run: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - name: Check docs folder for misspells
+        run: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                #exit 1
+              fi
