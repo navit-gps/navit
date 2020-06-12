@@ -158,6 +158,10 @@
 			<polygon color="#ddcc88"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_park" order="0-">
+			<polygon color="#77cc55"/>
+			<text text_size="5"/>
+		</itemgra>
 		<itemgra item_types="poly_heath" order="10-">
 			<polygon color="#d6d99f"/>
 			<text text_size="5"/>
@@ -218,10 +222,6 @@
 			<polygon color="#797548"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_wood" order="0-">
-			<polygon color="#8ec78d" src="wood.png" w="100" h="100"/>
-			<text text_size="5"/>
-		</itemgra>
 		<itemgra item_types="poly_greenhouse" order="10-">
 			<polygon color="#f9e8cb"/>
 			<text text_size="5"/>
@@ -255,8 +255,8 @@
 			<polygon color="#c8d7ab" src="scrub.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_park" order="0-">
-			<polygon color="#77cc55"/>
+		<itemgra item_types="poly_wood" order="0-">
+			<polygon color="#8ec78d" src="wood.png" w="100" h="100"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sport" order="10-">
