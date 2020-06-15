@@ -678,6 +678,10 @@ static char *attrmap= {
     "w	highway=unsurfaced			track_gravelled\n"
     "w	highway=steps				steps\n"
     "w	historic=archaeological_site	poly_archaeological_site\n"
+    /* Albeit historic=archaeological_site should not be used on ways (only on areas) according to OSM wiki,
+     * it is at least done so for the Limes in germany. Luckily we can sort the Limes out as it has it's own
+     * tag scheme.*/
+    "w	historic=archaeological_site,site_type=fortification,fortification_type=limes	archaeological_site\n"
     "w	historic=battlefield	poly_battlefield\n"
     "w	historic=ruins		poly_ruins\n"
     "w	historic=town_gate	poly_building\n"
