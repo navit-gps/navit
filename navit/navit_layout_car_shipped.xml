@@ -189,10 +189,6 @@
 			<polygon color="#998877"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_danger_area" order="10-">
-			<polygon color="#f2ba1b"/>
-			<text text_size="5"/>
-		</itemgra>
 		<itemgra item_types="poly_common" order="10-">
 			<polygon color="#7bab36"/>
 			<text text_size="5"/>
@@ -517,6 +513,11 @@
 			<polygon color="#ecd3cf66" src="diagonal-stripes-gray.png" w="16" h="16"/>
 			<polyline color="#969696b5" width="1"/>
 			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_danger_area" order="8-">
+				<polygon color="#f2ba1b33" src="diagonal-stripes.png" w="16" h="16"/>
+				<polyline color="#ff0000b5"/>
+				<text text_size="5"/>
 		</itemgra>
 	</layer>
 	<layer name="heightlines">
