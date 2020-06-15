@@ -268,6 +268,9 @@
 			<polyline color="#051912"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_cemetery" order="8-">
+			<polygon color="#061b16"/>
+		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
 			<polygon color="#051d11"/>
 		</itemgra>
@@ -434,9 +437,6 @@
 		</itemgra>
 		<itemgra item_types="poly_terminal" order="7-">
 			<polygon color="#282424"/>
-		</itemgra>
-		<itemgra item_types="poly_cemetery" order="8-">
-			<polygon color="#061b16"/>
 		</itemgra>
 		<itemgra item_types="poly_car_parking" order="8-">
 			<polygon color="#071b0d"/>
