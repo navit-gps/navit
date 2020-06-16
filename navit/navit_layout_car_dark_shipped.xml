@@ -100,6 +100,10 @@
 			<polygon color="#071f1a"/>
 			<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_zoo" order="10-">
+			<polygon color="#061811"/>
+			<text text_size="5"/>
+		</itemgra>
 		<itemgra item_types="poly_attraction" order="10-">
 			<polygon color="#051714"/>
 			<text text_size="5"/>
@@ -110,10 +114,6 @@
 		</itemgra>
 		<itemgra item_types="poly_water_park" order="10-">
 			<polygon color="#041915"/>
-			<text text_size="5"/>
-		</itemgra>
-		<itemgra item_types="poly_zoo" order="10-">
-			<polygon color="#061811"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_depot" order="10-">
