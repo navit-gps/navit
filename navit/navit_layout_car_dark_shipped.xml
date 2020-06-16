@@ -224,10 +224,6 @@
 			<polygon color="#041705"/>
 			<text text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_playground" order="10-">
-			<polygon color="#05190d"/>
-			<text text_size="5"/>
-		</itemgra>
 		<itemgra item_types="poly_sport" order="10-">
 			<polygon color="#051c0d"/>
 		</itemgra>
@@ -271,8 +267,15 @@
 		<itemgra item_types="poly_cemetery" order="8-">
 			<polygon color="#061b16"/>
 		</itemgra>
+		<itemgra item_types="poly_car_parking" order="8-">
+			<polygon color="#071b0d"/>
+		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
 			<polygon color="#051d11"/>
+		</itemgra>
+		<itemgra item_types="poly_playground" order="10-">
+			<polygon color="#05190d"/>
+			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_land" order="0-">
 			<polygon color="#011001"/>
@@ -437,9 +440,6 @@
 		</itemgra>
 		<itemgra item_types="poly_terminal" order="7-">
 			<polygon color="#282424"/>
-		</itemgra>
-		<itemgra item_types="poly_car_parking" order="8-">
-			<polygon color="#071b0d"/>
 		</itemgra>
 		<itemgra item_types="poly_artwork" order="10-">
 			<polygon color="#082015"/>
