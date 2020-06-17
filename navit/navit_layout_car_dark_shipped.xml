@@ -67,7 +67,8 @@
 		</itemgra>
 	</cursor>
 	<layer name="polygons">
-		<!-- Colors based on Car layout; R/34 G/8 B/9 -->
+		<!-- Colors based on car_shipped layout; R/34 G/8 B/9 -->
+		<!-- Use navit_layout_car_convertrgbfordark.sh script for color conversion -->
 		<itemgra item_types="image" order="0-">
 			<image/>
 		</itemgra>
