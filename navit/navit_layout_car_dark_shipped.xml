@@ -67,7 +67,8 @@
 		</itemgra>
 	</cursor>
 	<layer name="polygons">
-		<!-- Colors based on Car layout; R/34 G/8 B/9 -->
+		<!-- Colors based on car_shipped layout; R/34 G/8 B/9 -->
+		<!-- Use navit_layout_car_convertrgbfordark.sh script for color conversion -->
 		<itemgra item_types="image" order="0-">
 			<image/>
 		</itemgra>
@@ -84,6 +85,7 @@
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
 			<polygon color="#061b18"/>
+			<polyline color="#051714"/>
 		</itemgra>
 		<itemgra item_types="poly_naval_base" order="10-">
 			<polygon color="#03140f"/>
@@ -157,7 +159,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_camp_site" order="10-">
-			<polygon color="#041909"/>
+			<polygon color="#031b0d"/>
+			<polyline color="#021709"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
@@ -165,7 +168,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_golf_course" order="10-">
-			<polygon color="#03190b"/>
+			<polygon color="#031b0f"/>
+			<polyline color="#02170b"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
@@ -185,11 +189,13 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_park" order="0-">
-			<polygon color="#031909"/>
+			<polygon color="#041b0d"/>
+			<polyline color="#031709"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_heath" order="10-">
 			<polygon color="#061c11"/>
+			<polyline color="#05170d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_scree" order="10-">
@@ -226,6 +232,7 @@
 		</itemgra>
 		<itemgra item_types="poly_sport" order="10-">
 			<polygon color="#051c0d"/>
+			<polyline color="#041709"/>
 		</itemgra>
 		<itemgra item_types="poly_fishing" order="10-">
 			<polygon color="#030700"/>
@@ -244,7 +251,8 @@
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_picnic_site" order="10-">
-			<polygon color="#030f07"/>
+			<polygon color="#061b11"/>
+			<polyline color="#05170d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_greenhouse" order="10-">
@@ -253,6 +261,7 @@
 		</itemgra>
 		<itemgra item_types="poly_orchard" order="10-">
 			<polygon color="#041b10"/>
+			<polyline color="#03170d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_plantnursery" order="10-">
@@ -269,12 +278,15 @@
 		</itemgra>
 		<itemgra item_types="poly_car_parking" order="8-">
 			<polygon color="#071b0d"/>
+			<polyline color="#061709"/>
 		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
 			<polygon color="#051d11"/>
+			<polyline color="#031810"/>
 		</itemgra>
 		<itemgra item_types="poly_playground" order="10-">
-			<polygon color="#05190d"/>
+			<polygon color="#061d11"/>
+			<polyline color="#05190d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_land" order="0-">
@@ -283,14 +295,17 @@
 		</itemgra>
 		<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
 			<polygon color="#041a06"/>
+			<polyline color="#05170f"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_wood" order="0-">
-			<polygon color="#041a06"/>
+			<polygon color="#04170f"/>
+			<polyline color="#03130b"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
 			<polygon color="#071d0d"/>
+			<polyline color="#061909"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_mud" order="0-">
