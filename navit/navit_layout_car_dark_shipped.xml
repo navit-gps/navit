@@ -281,6 +281,7 @@
 		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
 			<polygon color="#051d11"/>
+			<polyline color="#031810"/>
 		</itemgra>
 		<itemgra item_types="poly_playground" order="10-">
 			<polygon color="#061d11"/>
