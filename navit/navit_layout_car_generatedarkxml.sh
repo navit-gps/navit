@@ -67,6 +67,8 @@ do
      l=$(echo $l | sed "s/#$coll/#$cold/")           # Replace color
     fi
 
+    l=$(echo $l | sed "s/<text/<text color=\"#55c4bd\" background_color=\"#000000\"/") # Add text color
+
     echo $l >> $ofd # (Modified) line from light input file to dark output file
 
    fi
