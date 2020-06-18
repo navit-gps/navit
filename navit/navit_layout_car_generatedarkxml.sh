@@ -61,13 +61,13 @@ do
 
     if [[ $l =~ .*color=\"#[0-9a-fA-F]{6}.* ]]; then # Contains rgb(a) color
      coll=$(echo $l | cut -d# -f2 | cut -c-6)        # Get rgb color and convert
-     cold=$(printf '%02x' $(echo $(printf "%d" 0x${coll:0:2})/16+16 | bc))
+     cold=$(     printf '%02x' $(echo $(printf "%d" 0x${coll:0:2})/16+16 | bc))
      cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:2:2})/10+14 | bc))
-     cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:4:2})/8+12 | bc))
+     cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:4:2})/8+12  | bc))
      l=$(echo $l | sed "s/#$coll/#$cold/")           # Replace color
     fi
 
-    l=$(echo $l | sed "s/<text/<text color=\"#55c4bd\" background_color=\"#000000\"/") # Add text color
+    l=$(echo $l | sed "s/<text /<text color=\"#55c4bd\" background_color=\"#000000\" /") # Add text color
 
     echo $l >> $ofd # (Modified) line from light input file to dark output file
 
