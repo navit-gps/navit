@@ -246,7 +246,7 @@ var searchData=
   ['osm_5fcount_5freferences',['osm_count_references',['../maptool_8c.html#a0fe4352dda41b14a61340f04c4957620',1,'maptool.c']]],
   ['osm_5fend_5fnode',['osm_end_node',['../maptool_8h.html#af9890c520ad82b151ce671543bca08e5',1,'osm_end_node(struct maptool_osm *osm):&#160;osm.c'],['../osm_8c.html#af9890c520ad82b151ce671543bca08e5',1,'osm_end_node(struct maptool_osm *osm):&#160;osm.c']]],
   ['osm_5fend_5frelation',['osm_end_relation',['../maptool_8h.html#a61f383198dffeaf864c0531244f05c3e',1,'osm_end_relation(struct maptool_osm *osm):&#160;osm.c'],['../osm_8c.html#a61f383198dffeaf864c0531244f05c3e',1,'osm_end_relation(struct maptool_osm *osm):&#160;osm.c']]],
-  ['osm_5fend_5frelation_5fmultipolygon',['osm_end_relation_multipolygon',['../osm_8c.html#afd40c101308b03e40b6c6cf15b523dd2',1,'osm.c']]],
+  ['osm_5fend_5frelation_5fmultipolygon',['osm_end_relation_multipolygon',['../osm_8c.html#a875eab0dca4a940a55d883eeeb2ede2c',1,'osm.c']]],
   ['osm_5fend_5fway',['osm_end_way',['../maptool_8h.html#a0bed289058f53c984abdc01b4693795f',1,'osm_end_way(struct maptool_osm *osm):&#160;osm.c'],['../osm_8c.html#a0bed289058f53c984abdc01b4693795f',1,'osm_end_way(struct maptool_osm *osm):&#160;osm.c']]],
   ['osm_5finfo',['osm_info',['../maptool_8h.html#a8561bc661b1a9ca430b5d2b917c00a83',1,'osm_info(char *type, osmid id, int cont, char *fmt,...):&#160;osm.c'],['../osm_8c.html#a8561bc661b1a9ca430b5d2b917c00a83',1,'osm_info(char *type, osmid id, int cont, char *fmt,...):&#160;osm.c']]],
   ['osm_5finit',['osm_init',['../maptool_8h.html#ace76a2327c426a000c1950e33bfa4e5b',1,'osm_init(FILE *):&#160;osm.c'],['../osm_8c.html#a9d857b84eef4a86d4e03c79495bbf921',1,'osm_init(FILE *rule_file):&#160;osm.c']]],

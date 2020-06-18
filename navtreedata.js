@@ -70,7 +70,7 @@ var NAVTREEINDEX =
 "maptool_8h.html#a68bc069e595445eaa9e7c1b3e865b2a1",
 "mg_8h.html#ae00c31406ba3d60afe043ca6e9bacba3",
 "osd__core_8c.html#a0efbcc8c6d0c34bb37ee5223fc6ec036",
-"osm_8c.html#adf28989ec05c8f0ed16066c3aa2435f3",
+"osm_8c.html#adc79db9a0ef1dcae523c7db09196aedf",
 "popup_8c.html#a31a02701201e0dfe6c7b85331268a7d3",
 "route_8c.html#a48ca63f73dc68ceefad68cc7da18630d",
 "search__houseno__interpol_8h.html#a9842ff5e284083d4915e96bdcba039e4",

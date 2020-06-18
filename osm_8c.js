@@ -82,7 +82,7 @@ var osm_8c =
     [ "osm_add_way", "osm_8c.html#a85a9827ff7a954ff558761c1e5d5e970", null ],
     [ "osm_end_node", "osm_8c.html#af9890c520ad82b151ce671543bca08e5", null ],
     [ "osm_end_relation", "osm_8c.html#a61f383198dffeaf864c0531244f05c3e", null ],
-    [ "osm_end_relation_multipolygon", "osm_8c.html#afd40c101308b03e40b6c6cf15b523dd2", null ],
+    [ "osm_end_relation_multipolygon", "osm_8c.html#a875eab0dca4a940a55d883eeeb2ede2c", null ],
     [ "osm_end_way", "osm_8c.html#a0bed289058f53c984abdc01b4693795f", null ],
     [ "osm_info", "osm_8c.html#a8561bc661b1a9ca430b5d2b917c00a83", null ],
     [ "osm_init", "osm_8c.html#a9d857b84eef4a86d4e03c79495bbf921", null ],
