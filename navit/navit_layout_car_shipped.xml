@@ -67,6 +67,12 @@
 		</itemgra>
 	</cursor>
 	<layer name="polygons">
+                <!--
+                      After modifying the polygons layer in this file, run the
+                      navit_layout_car_generatedarkxml.sh script to
+                      automatically update the layer in
+                      navit_layout_car_dark_shipped.xml.
+                -->
 		<itemgra item_types="image" order="0-">
 			<image/>
 		</itemgra>
