@@ -1639,40 +1639,63 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
-static inline void osm_end_relation_multipolygon (struct maptool_osm * osm, enum item_type* type) {
+static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
     if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
-        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, type, 1)) {
-            tmp_item_bin->type = *type;
+        int count;
+        enum item_type types[10];
+        /* This is a multipolygon relation which is no boundary. Lets check what it is */
+        count = attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types) / (sizeof(enum item_type)));
+        if(count > 0) {
+            int a;
+            /* got some type(s). Duplicate the multipolygon if more than one type. That's the only
+             * way right now to deal with things tagged multiple things without loosing something.
+             */
+            if (count >= 10) {
+                fprintf(stderr,"relation id "OSMID_FMT"\n",osmid_attr_value);
+                dbg_assert(count < 10);
+                count = 10;
+            }
+            //fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            for(a=0; a < count ; a++) {
+                /* no need to clone the item in memory. We just write it out multiple times */
+                if(a==1) {
+                    /*add duplicate tag if 2nd type. The tag stays for all subsequent writes */
+                    item_bin_add_attr_int(tmp_item_bin, attr_duplicate, 1);
+                }
+                tmp_item_bin->type = types[a];
+                item_bin_write(tmp_item_bin, osm->multipolygons);
+            }
         } else {
-            *type=type_none;
+            /* Don't know what this is. Keep it, as it could have been preprocessed by e.g. turn restriction
+             * code before
+             */
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            item_bin_write(tmp_item_bin, osm->multipolygons);
         }
-        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
-        item_bin_write(tmp_item_bin, osm->multipolygons);
     } else {
-        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, type, 1)) {
-            tmp_item_bin->type=*type;
+        enum item_type type;
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+            tmp_item_bin->type=type;
         } else {
-            *type=type_none;
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
         }
         if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-                && (boundary || *type!=type_none)) {
+                && (boundary || type!=type_none)) {
             item_bin_write(tmp_item_bin, osm->boundaries);
         }
     }
 }
 
 void osm_end_relation(struct maptool_osm *osm) {
-    enum item_type type;
-
     in_relation=0;
     /* sets tmp_item_bin type and other fields */
-    osm_end_relation_multipolygon (osm, &type);
+    osm_end_relation_multipolygon (osm);
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
@@ -3209,7 +3232,6 @@ static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct r
     GList **multipolygons=NULL;
     /* allocate and reference async queue */
     GAsyncQueue * ib_queue=g_async_queue_new ();
-    g_async_queue_ref(ib_queue);
     /* allocate per thread storage */
     sthread=g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
 
@@ -3565,7 +3587,6 @@ static GList ** process_turn_restrictions_setup(FILE *in, int thread_count, stru
     GList **turn_restrictions=NULL;
     /* allocate and reference async queue */
     GAsyncQueue * ib_queue=g_async_queue_new ();
-    g_async_queue_ref(ib_queue);
     /* allocate per thread storage */
     sthread=g_malloc0(sizeof(struct process_turn_restrictions_setup_thread) * thread_count);
 
