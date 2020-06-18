@@ -23,7 +23,7 @@ inpolygons=false
 getpolygons=false
 
 # Read dark input file
-while read l
+while read -r l
 do
 
  # Check to see if inside polygons layer - open tag
@@ -44,7 +44,7 @@ do
   inpolygons=false  # Now used for light input file
 
   # Insert data from light input file
-  while read l
+  while read -r l
   do
 
    # Check to see if inside polygons layer
