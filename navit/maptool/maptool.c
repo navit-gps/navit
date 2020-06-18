@@ -879,6 +879,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         zip_write_index(zip_info);
         zip_write_directory(zip_info);
         zip_close(zip_info);
+        zip_destroy(zip_info);
         if (!p->keep_tmpfiles) {
             remove_countryfiles();
             tempfile_unlink("index","");
