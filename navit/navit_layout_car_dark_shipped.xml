@@ -71,463 +71,463 @@
 			<image/>
 		</itemgra>
 		<itemgra item_types="poly_glacier" order="10-">
-			<polygon color="#1d2529"/><!-- ddecec to 1d2529 -->
+			<polygon color="#1d2529"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_town" order="0-">
-			<polygon color="#1f2221"/><!-- ffccaa to 1f2221 -->
-			<polyline color="#1e201c"/><!-- ebb481 to 1e201c -->
+			<polygon color="#1f2221"/>
+			<polyline color="#1e201c"/>
 		</itemgra>
 		<itemgra item_types="poly_industry,poly_place" order="0-">
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
-			<polyline color="#1b2023"/><!-- bbbbbb to 1b2023 -->
+			<polygon color="#1d2427"/>
+			<polyline color="#1b2023"/>
 		</itemgra>
 		<itemgra item_types="poly_naval_base" order="10-">
-			<polygon color="#161d1e"/><!-- 6a9993 to 161d1e -->
+			<polygon color="#161d1e"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_college" order="10-">
-			<polygon color="#1f262a"/><!-- f4f4f4 to 1f262a -->
+			<polygon color="#1f262a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_attraction" order="10-">
-			<polygon color="#1a2023"/><!-- aabbbb to 1a2023 -->
+			<polygon color="#1a2023"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_depot" order="10-">
-			<polygon color="#1c1f1f"/><!-- c2b098 to 1c1f1f -->
+			<polygon color="#1c1f1f"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_railway" order="10-">
-			<polygon color="#1b2024"/><!-- b3b9c5 to 1b2024 -->
+			<polygon color="#1b2024"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_port" order="10-">
-			<polygon color="#181b20"/><!-- 8188a0 to 181b20 -->
+			<polygon color="#181b20"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marina" order="10-">
-			<polygon color="#1a2126"/><!-- aac4d2 to 1a2126 -->
+			<polygon color="#1a2126"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_commercial" order="10-">
-			<polygon color="#1e2526"/><!-- eaeed3 to 1e2526 -->
+			<polygon color="#1e2526"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_retail" order="10-">
-			<polygon color="#1d201e"/><!-- d6b690 to 1d201e -->
+			<polygon color="#1d201e"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_plaza" order="10-">
-			<polygon color="#1c2123"/><!-- cac4bc to 1c2123 -->
+			<polygon color="#1c2123"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_battlefield" order="10-">
-			<polygon color="#13140f"/><!-- 373d1c to 13140f -->
+			<polygon color="#13140f"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_archaeological_site" order="10-">
-			<polygon color="#1d2222"/><!-- d9cfb6 to 1d2222 -->
+			<polygon color="#1d2222"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_ruins" order="10-">
-			<polygon color="#1d2222"/><!-- d9cfb6 to 1d2222 -->
+			<polygon color="#1d2222"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_camp_site" order="10-">
-			<polygon color="#17241a"/><!-- 77dd77 to 17241a -->
-			<polyline color="#152016"/><!-- 55bb55 to 152016 -->
+			<polygon color="#17241a"/>
+			<polyline color="#152016"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_caravan_site" order="10-">
-			<polygon color="#182418"/><!-- 88dd66 to 182418 -->
+			<polygon color="#182418"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_golf_course" order="10-">
-			<polygon color="#16241d"/><!-- 66dd88 to 16241d -->
-			<polyline color="#142018"/><!-- 44bb66 to 142018 -->
+			<polygon color="#16241d"/>
+			<polyline color="#142018"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_marsh" order="10-">
-			<polygon color="#151410" src="wetland.png" w="50" h="50"/><!-- 553f23 to 151410 -->
+			<polygon color="#151410" src="wetland.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_fell" order="10-">
-			<polygon color="#1b2019"/><!-- bbb56b to 1b2019 -->
+			<polygon color="#1b2019"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_greenfield" order="10-">
-			<polygon color="#1f2529"/><!-- f1eee8 to 1f2529 -->
+			<polygon color="#1f2529"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_brownfield" order="10-">
-			<polygon color="#1d221d"/><!-- ddcc88 to 1d221d -->
+			<polygon color="#1d221d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_park" order="0-">
-			<polygon color="#19241a"/><!-- 99dd77 to 19241a -->
-			<polyline color="#172016"/><!-- 77bb55 to 172016 -->
+			<polygon color="#19241a"/>
+			<polyline color="#172016"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_heath" order="10-">
-			<polygon color="#1d231f"/><!-- d6d99f to 1d231f -->
-			<polyline color="#1b201a"/><!-- bbbb77 to 1b201a -->
+			<polygon color="#1d231f"/>
+			<polyline color="#1b201a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_scree" order="10-">
-			<polygon color="#1e2427"/><!-- eee5dc to 1e2427 -->
+			<polygon color="#1e2427"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_quarry" order="10-">
-			<polygon color="#1c2124" src="quarry.png" w="50" h="50"/><!-- c5c3c3 to 1c2124 -->
+			<polygon color="#1c2124" src="quarry.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_landfill" order="10-">
-			<polygon color="#191d1e"/><!-- 999893 to 191d1e -->
+			<polygon color="#191d1e"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_construction" order="10-">
-			<polygon color="#1c191899"/><!-- cc7766 to 1c1918 -->
+			<polygon color="#1c191899"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_range" order="10-">
-			<polygon color="#191b1a"/><!-- 998877 to 191b1a -->
+			<polygon color="#191b1a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_common" order="10-">
-			<polygon color="#171f12"/><!-- 7bab36 to 171f12 -->
+			<polygon color="#171f12"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_recreation_ground" order="10-">
-			<polygon color="#182012"/><!-- 88bb33 to 182012 -->
+			<polygon color="#182012"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sport" order="10-">
-			<polygon color="#1a241a"/><!-- a5dc72 to 1a241a -->
-			<polyline color="#182016"/><!-- 88bb55 to 182016 -->
+			<polygon color="#1a241a"/>
+			<polyline color="#182016"/>
 		</itemgra>
 		<itemgra item_types="poly_fishing" order="10-">
-			<polygon color="#17130c"/><!-- 713907 to 17130c -->
+			<polygon color="#17130c"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_allotments" order="10-">
-			<polygon color="#1e2222"/><!-- eecfb3 to 1e2222 -->
+			<polygon color="#1e2222"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_garden" order="10-">
-			<polygon color="#1c2521"/><!-- cfeca8 to 1c2521 -->
+			<polygon color="#1c2521"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_village_green" order="10-">
-			<polygon color="#191f14"/><!-- 93ac47 to 191f14 -->
+			<polygon color="#191f14"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_picnic_site" order="10-">
-			<polygon color="#1d241f"/><!-- dddd99 to 1d241f -->
-			<polyline color="#1b201a"/><!-- bbbb77 to 1b201a -->
+			<polygon color="#1d241f"/>
+			<polyline color="#1b201a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_greenhouse" order="10-">
-			<polygon color="#1f2525"/><!-- f9e8cb to 1f2525 -->
+			<polygon color="#1f2525"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_orchard" order="10-">
-			<polygon color="#19241e"/><!-- 9edc90 to 19241e -->
-			<polyline color="#17201a"/><!-- 77bb77 to 17201a -->
+			<polygon color="#19241e"/>
+			<polyline color="#17201a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_plantnursery" order="10-">
-			<polygon color="#1a2420"/><!-- addea2 to 1a2420 -->
+			<polygon color="#1a2420"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_farm" order="0-">
-			<polygon color="#1d2525"/><!-- ddeecc to 1d2525 -->
-			<polyline color="#1b2221"/><!-- bbccaa to 1b2221 -->
+			<polygon color="#1d2525"/>
+			<polyline color="#1b2221"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_cemetery" order="1-">
-			<polygon color="#1c2425" src="cemetery.png" w="32" h="32"/><!-- ccddcc to 1c2425 -->
+			<polygon color="#1c2425" src="cemetery.png" w="32" h="32"/>
 		</itemgra>
 		<itemgra item_types="poly_car_parking" order="1-">
-			<polygon color="#1e241a"/><!-- eedd77 to 1e241a -->
-			<polyline color="#1c2016"/><!-- ccbb55 to 1c2016 -->
+			<polygon color="#1e241a"/>
+			<polyline color="#1c2016"/>
 		</itemgra>
 		<itemgra item_types="poly_meadow" order="0-">
-			<polygon color="#1b251f"/><!-- bbee99 to 1b251f -->
-			<polyline color="#17211e"/><!-- 79c691 to 17211e -->
+			<polygon color="#1b251f"/>
+			<polyline color="#17211e"/>
 		</itemgra>
 		<itemgra item_types="poly_playground" order="10-">
-			<polygon color="#1c251f"/><!-- ccee99 to 1c251f -->
-			<polyline color="#1a221a"/><!-- aacc77 to 1a221a -->
+			<polygon color="#1c251f"/>
+			<polyline color="#1a221a"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_water_tiled" order="0-">
-			<polygon color="#182229"/><!-- 82c8ea to 182229 -->
+			<polygon color="#182229"/>
 		</itemgra>
 		<itemgra item_types="poly_land" order="0-">
-			<polygon color="#1f2522"/><!-- ffefb7 to 1f2522 -->
-			<polyline color="#1f2522"/><!-- ffefb7 to 1f2522 -->
+			<polygon color="#1f2522"/>
+			<polyline color="#1f2522"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_flats,poly_scrub,poly_marine,plantation,tundra" order="9-">
-			<polygon color="#1c2321" src="scrub.png" w="50" h="50"/><!-- c8d7ab to 1c2321 -->
-			<polyline color="#1a201d"/><!-- aabb88 to 1a201d -->
+			<polygon color="#1c2321" src="scrub.png" w="50" h="50"/>
+			<polyline color="#1a201d"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_wood" order="0-">
-			<polygon color="#18201d" src="wood.png" w="100" h="100"/><!-- 88bb88 to 18201d -->
-			<polyline color="#161d18"/><!-- 669966 to 161d18 -->
+			<polygon color="#18201d" src="wood.png" w="100" h="100"/>
+			<polyline color="#161d18"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_beach" order="0-">
-			<polygon color="#1e251a"/><!-- eeee77 to 1e251a -->
-			<polyline color="#1c2216"/><!-- cccc55 to 1c2216 -->
+			<polygon color="#1e251a"/>
+			<polyline color="#1c2216"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_mud" order="0-">
-			<polygon color="#1a2227" src="wetland.png" w="50" h="50"/><!-- aaccdd to 1a2227 -->
+			<polygon color="#1a2227" src="wetland.png" w="50" h="50"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="10">
-			<polyline color="#1d2326" width="3"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="1"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="3"/>
+			<polyline color="#1d2427" width="1"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="11">
-			<polyline color="#1d2326" width="5"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="3"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="5"/>
+			<polyline color="#1d2427" width="3"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="12">
-			<polyline color="#1d2326" width="8"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="6"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="8"/>
+			<polyline color="#1d2427" width="6"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="13">
-			<polyline color="#1d2326" width="9"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="7"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="9"/>
+			<polyline color="#1d2427" width="7"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="14">
-			<polyline color="#1d2326" width="13"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="9"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="13"/>
+			<polyline color="#1d2427" width="9"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="15">
-			<polyline color="#1d2326" width="18"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="14"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="18"/>
+			<polyline color="#1d2427" width="14"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="16">
-			<polyline color="#1d2326" width="21"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="17"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="21"/>
+			<polyline color="#1d2427" width="17"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="17">
-			<polyline color="#1d2326" width="25"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="21"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="25"/>
+			<polyline color="#1d2427" width="21"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_pedestrian" order="18">
-			<polyline color="#1d2326" width="40"/><!-- d2d2d2 to 1d2326 -->
-			<polyline color="#1d2427" width="34"/><!-- dddddd to 1d2427 -->
-			<polygon color="#1d2427"/><!-- dddddd to 1d2427 -->
+			<polyline color="#1d2326" width="40"/>
+			<polyline color="#1d2427" width="34"/>
+			<polygon color="#1d2427"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_pitch" order="10-">
-			<polygon color="#18251d"/><!-- 88ee88 to 18251d -->
-			<polyline color="#152016"/><!-- 55bb55 to 152016 -->
+			<polygon color="#18251d"/>
+			<polyline color="#152016"/>
 		</itemgra>
 		<itemgra item_types="poly_service" order="8-18">
-			<polygon color="#1f272b"/><!-- fefefe to 1f272b -->
-			<polyline color="#1d2326" width="1"/><!-- d2d2d2 to 1d2326 -->
+			<polygon color="#1f272b"/>
+			<polyline color="#1d2326" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_street_1" order="8-13">
-			<polygon color="#1f272b"/><!-- ffffff to 1f272b -->
-			<polyline color="#1d2326" width="1"/><!-- d2d2d2 to 1d2326 -->
+			<polygon color="#1f272b"/>
+			<polyline color="#1d2326" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_street_1" order="14-16">
-			<polygon color="#1f272b"/><!-- ffffff to 1f272b -->
-			<polyline color="#1d2326" width="2"/><!-- d2d2d2 to 1d2326 -->
+			<polygon color="#1f272b"/>
+			<polyline color="#1d2326" width="2"/>
 		</itemgra>
 		<itemgra item_types="poly_street_1" order="17-18">
-			<polygon color="#1f272b"/><!-- ffffff to 1f272b -->
-			<polyline color="#1d2326" width="3"/><!-- d2d2d2 to 1d2326 -->
+			<polygon color="#1f272b"/>
+			<polyline color="#1d2326" width="3"/>
 		</itemgra>
 		<itemgra item_types="poly_street_2" order="7-12">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1c2124" width="1"/><!-- c0c0c0 to 1c2124 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1c2124" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_street_2" order="13-16">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1c2124" width="2"/><!-- c0c0c0 to 1c2124 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1c2124" width="2"/>
 		</itemgra>
 		<itemgra item_types="poly_street_2" order="17-18">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1c2124" width="3"/><!-- c0c0c0 to 1c2124 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1c2124" width="3"/>
 		</itemgra>
 		<itemgra item_types="poly_street_3" order="7-11">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1a1e20" width="1"/><!-- a0a0a0 to 1a1e20 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1a1e20" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_street_3" order="12-15">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1a1e20" width="2"/><!-- a0a0a0 to 1a1e20 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1a1e20" width="2"/>
 		</itemgra>
 		<itemgra item_types="poly_street_3" order="16-18">
-			<polygon color="#1f270c"/><!-- ffff00 to 1f270c -->
-			<polyline color="#1a1e20" width="3"/><!-- a0a0a0 to 1a1e20 -->
+			<polygon color="#1f270c"/>
+			<polyline color="#1a1e20" width="3"/>
 		</itemgra>
 		<itemgra item_types="poly_saltpond" order="10-">
-			<polygon color="#1d1a15"/><!-- d7804a to 1d1a15 -->
+			<polygon color="#1d1a15"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_dam" order="12-">
-			<polygon color="#1a1f21"/><!-- adadad to 1a1f21 -->
-			<polyline color="#141414"/><!-- 444444 to 141414 -->
+			<polygon color="#1a1f21"/>
+			<polyline color="#141414"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="0-">
-			<polygon color="#182229"/><!-- 82c8ea to 182229 -->
-			<polyline color="#151d23"/><!-- 5096b8 to 151d23 -->
+			<polygon color="#182229"/>
+			<polyline color="#151d23"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_swimming_pool" order="10-">
-			<polygon color="#182229"/><!-- 82c8ea to 182229 -->
-			<polyline color="#151d23"/><!-- 5096b8 to 151d23 -->
+			<polygon color="#182229"/>
+			<polyline color="#151d23"/>
 		</itemgra>
 		<itemgra item_types="water_line" order="0-">
-			<polyline color="#151d23" width="1"/><!-- 5096b8 to 151d23 -->
+			<polyline color="#151d23" width="1"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="water_river" order="4-5">
-			<polyline color="#182229" width="1"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="1"/>
 		</itemgra>
 		<itemgra item_types="water_river" order="6">
-			<polyline color="#182229" width="2"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="2"/>
 		</itemgra>
 		<itemgra item_types="water_river" order="7">
-			<polyline color="#182229" width="3"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="3"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="water_river" order="8-9">
-			<polyline color="#182229" width="4"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="4"/>
 			<text text_size="7"/>
 		</itemgra>
 		<itemgra item_types="water_river" order="10-">
-			<polyline color="#182229" width="4"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="4"/>
 			<text text_size="10"/>
 		</itemgra>
 		<itemgra item_types="water_canal" order="6">
-			<polyline color="#182229" width="1"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="1"/>
 		</itemgra>
 		<itemgra item_types="water_canal" order="7">
-			<polyline color="#182229" width="2"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="2"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="water_canal" order="8-9">
-			<polyline color="#182229" width="3"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="3"/>
 			<text text_size="7"/>
 		</itemgra>
 		<itemgra item_types="water_canal" order="10-">
-			<polyline color="#182229" width="3"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="3"/>
 			<text text_size="10"/>
 		</itemgra>
 		<itemgra item_types="water_stream" order="8-9">
-			<polyline color="#182229" width="1"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="1"/>
 		</itemgra>
 		<itemgra item_types="water_stream" order="10-">
-			<polyline color="#182229" width="2"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="2"/>
 			<text text_size="7"/>
 		</itemgra>
 		<itemgra item_types="water_drain" order="10-">
-			<polyline color="#182229" width="1"/><!-- 82c8ea to 182229 -->
+			<polyline color="#182229" width="1"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_apron" order="0-">
-			<polygon color="#1d2226"/><!-- d0d0d0 to 1d2226 -->
+			<polygon color="#1d2226"/>
 		</itemgra>
 		<itemgra item_types="poly_terminal" order="7-">
-			<polygon color="#1e2120"/><!-- e3c6a6 to 1e2120 -->
+			<polygon color="#1e2120"/>
 		</itemgra>
 		<itemgra item_types="poly_artwork" order="10-">
-			<polygon color="#1f2724"/><!-- fefbc5 to 1f2724 -->
+			<polygon color="#1f2724"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_stadium" order="10-">
-			<polygon color="#162017"/><!-- 6eb85d to 162017 -->
+			<polygon color="#162017"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_sports_track" order="10-">
-			<polygon color="#1b1615"/><!-- b6554e to 1b1615 -->
+			<polygon color="#1b1615"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="sports_track" order="10-">
-			<polyline color="#1b1615" width="1"/><!-- b6554e to 1b1615 -->
+			<polyline color="#1b1615" width="1"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_garages" order="10-">
-			<polygon color="#1d2425"/><!-- deddcc to 1d2425 -->
+			<polygon color="#1d2425"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_building" order="0-">
-			<polygon color="#1a1f21"/><!-- aaaaaa to 1a1f21 -->
-			<polyline color="#17191a"/><!-- 777777 to 17191a -->
+			<polygon color="#1a1f21"/>
+			<polyline color="#17191a"/>
 		</itemgra>
 		<itemgra item_types="rail" order="6-">
-			<polyline color="#161819" width="3"/><!-- 696969 to 161819 -->
-			<polyline color="#1f272b" width="1" dash="5,5"/><!-- ffffff to 1f272b -->
+			<polyline color="#161819" width="3"/>
+			<polyline color="#1f272b" width="1" dash="5,5"/>
 		</itemgra>
 		<itemgra item_types="rail_narrow_gauge" order="6-">
-			<polyline color="#161819" width="3"/><!-- 696969 to 161819 -->
-			<polyline color="#1f272b" width="1" dash="4,4"/><!-- ffffff to 1f272b -->
+			<polyline color="#161819" width="3"/>
+			<polyline color="#1f272b" width="1" dash="4,4"/>
 		</itemgra>
 		<itemgra item_types="ferry" order="5-">
-			<polyline color="#100e0c" width="1" dash="10"/><!-- 000000 to 100e0c -->
+			<polyline color="#100e0c" width="1" dash="10"/>
 		</itemgra>
 		<itemgra item_types="border_country" order="0-">
-			<polyline color="#1b1415" width="1" dash="10,5,2,5"/><!-- b8434e to 1b1415 -->
+			<polyline color="#1b1415" width="1" dash="10,5,2,5"/>
 		</itemgra>
 		<itemgra item_types="border_state" order="0-">
-			<polyline color="#181a1c" width="1"/><!-- 808080 to 181a1c -->
+			<polyline color="#181a1c" width="1"/>
 		</itemgra>
 		<itemgra item_types="poly_university" order="8-">
-			<polygon color="#1d1c2388"/><!-- d68fb8 to 1d1c23 -->
-			<polyline color="#180f1688"/><!-- 881155 to 180f16 -->
+			<polygon color="#1d1c2388"/>
+			<polyline color="#180f1688"/>
 		</itemgra>
 		<itemgra item_types="poly_barracks" order="10-">
-			<polygon color="#1b1e20aa"/><!-- b6a6a6 to 1b1e20 -->
+			<polygon color="#1b1e20aa"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_zoo" order="10-">
-			<polyline color="#1c202099" width="10"/><!-- ccbda5 to 1c2020 -->
+			<polyline color="#1c202099" width="10"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_nature_reserve" order="10-">
-			<polyline color="#1c242466" width="10"/><!-- cedec6 to 1c2424 -->
+			<polyline color="#1c242466" width="10"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_theme_park" order="10-">
-			<polyline color="#101e1999" width="10"/><!-- 01a36c to 101e19 -->
+			<polyline color="#101e1999" width="10"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_water_park" order="10-">
-			<polyline color="#18212599" width="10"/><!-- 8cc1c8 to 182125 -->
+			<polyline color="#18212599" width="10"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_military_zone" order="9-">
-			<polygon color="#1a1e2044"/><!-- a0a0a0 to 1a1e20 -->
+			<polygon color="#1a1e2044"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_airport" order="0-">
-			<polygon color="#1a1e2066"/><!-- a0a0a0 to 1a1e20 -->
+			<polygon color="#1a1e2066"/>
 		</itemgra>
 		<itemgra item_types="poly_airfield" order="10-">
-			<polygon color="#1e232566"/><!-- ecd3cf to 1e2325 -->
+			<polygon color="#1e232566"/>
 			<text text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_danger_area" order="8-">
-				<polygon color="#1f200f33" src="diagonal-stripes.png" w="16" h="16"/><!-- f2ba1b to 1f200f -->
-				<polyline color="#1f0e0cb5"/><!-- ff0000 to 1f0e0c -->
+				<polygon color="#1f200f33" src="diagonal-stripes.png" w="16" h="16"/>
+				<polyline color="#1f0e0cb5"/>
 				<text text_size="5"/>
 		</itemgra>
 	</layer>

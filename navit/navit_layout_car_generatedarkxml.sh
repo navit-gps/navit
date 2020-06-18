@@ -65,7 +65,6 @@ do
      cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:2:2})/10+14 | bc)) # gg
      cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:4:2})/8+12 | bc))  # bb
      l=$(echo $l | sed "s/#$coll/#$cold/")           # Replace color
-     l="$l<!-- $coll to $cold -->"                   # Add comment
     fi
 
     echo $l >> $ofd # (Modified) line from light input file to dark output file
