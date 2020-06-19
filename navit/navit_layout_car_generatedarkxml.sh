@@ -53,12 +53,12 @@ do
    while read -r l
    do
 
-    # Check to see if inside layer
+    # Check to see if inside layer - open tag
     if [[ $l =~ .*\<layer\ name=\"$layer\"\>.* ]]; then
-
      inlayer=true
     fi
 
+    # Check to see if inside layer - close tag
     if [[ $l =~ .*\</layer\>.* ]]; then
      inlayer=false
     fi
