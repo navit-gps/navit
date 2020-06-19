@@ -15,7 +15,7 @@ ifd=navit_layout_car_dark_shipped.xml
 ofd=$ifd.new
 
 # Iterate over all layers in dark input file
-cat $ifd | grep \<layer\ name=\" | cut -d\" -f2 | while read -r layer
+grep \<layer\ name=\" $ifd | cut -d\" -f2 | while read -r layer
 do
 
  echo $layer
