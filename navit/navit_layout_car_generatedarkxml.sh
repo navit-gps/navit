@@ -15,7 +15,7 @@ ifd=navit_layout_car_dark_shipped.xml
 ofd=$ifd.new
 
 # Iterate over all layers in dark input file
-cat $ifd | grep \<layer | cut -d\" -f2 | while read layer
+cat $ifd | grep \<layer\ name=\" | cut -d\" -f2 | while read -r layer
 do
 
  echo $layer
@@ -34,7 +34,6 @@ do
 
   # Check to see if inside layer - open tag
   if [[ $l =~ .*\<layer\ name=\"$layer\"\>.* ]]; then
-
    inlayer=true
    getlayer=true
   fi
@@ -77,6 +76,7 @@ do
      fi
 
      # Misc. modifications
+     l=$(echo $l | sed -r "s/_bk\./_wh\./") # Black to white icons
      l=$(echo $l | sed -r "s/(<text )/\1color=\"#55c4bd\" background_color=\"#000000\" /") # Add text color
      l=$(echo $l | sed -r "s/(<circle color=\"#[0-9a-fA-F]{6,8}\" )/\1background_color=\"#000000\" /") # Add circle bg color
 
