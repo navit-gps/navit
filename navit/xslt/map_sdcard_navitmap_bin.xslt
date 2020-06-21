@@ -3,6 +3,6 @@
 	<xsl:template match="/config/navit/mapset/xi:include">
 		<maps type="binfile" data="$NAVIT_USER_DATADIR/*.bin" />
 		<xsl:text>&#x0A;                        </xsl:text>
-		<maps type="binfile" data="/sdcard/Download/*.bin" />
+		<maps type="binfile" data="/sdcard/Download/osm_bbox_*.bin" />
 	</xsl:template>
 </xsl:transform>
