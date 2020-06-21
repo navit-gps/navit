@@ -66,16 +66,15 @@
 			</polyline>
 		</itemgra>
 	</cursor>
+	<!--
+		After modifying the layers in navit_layout_car_shipped.xml,
+		run the navit_layout_car_generatedarkxml.sh script to
+		automatically update the layers in
+		navit_layout_car_dark_shipped.xml. Do not modify the layers in
+		navit_layout_car_dark_shipped.xml directly, as changes will be
+		lost when the script is run.
+	-->
 	<layer name="polygons">
-                <!--
-                      After modifying the polygons layer in
-                      navit_layout_car_shipped.xml, run the
-                      navit_layout_car_generatedarkxml.sh script to
-                      automatically update the polygons layer in
-                      navit_layout_car_dark_shipped.xml. Do not modify the
-                      polygons layer in navit_layout_car_dark_shipped.xml
-                      directly, as changes will be lost when the script is run.
-                -->
 		<itemgra item_types="image" order="0-">
 			<image/>
 		</itemgra>
