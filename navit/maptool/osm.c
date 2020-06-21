@@ -581,6 +581,9 @@ static char *attrmap= {
     "w	aerialway=chair_lift	lift_chair\n"
     "w	aerialway=drag_lift	lift_drag\n"
     "w	aeroway=aerodrome	poly_airport\n"
+    /* airport wins over military landuse and specifier if given */
+    "w	aeroway=aerodrome,landuse=military	poly_airfield\n"
+    "w	aeroway=aerodrome,landuse=military,military=*	poly_airfield\n"
     "w	aeroway=apron		poly_apron\n"
     "w	aeroway=runway		aeroway_runway\n"
     "w	aeroway=taxiway		aeroway_taxiway\n"
@@ -675,6 +678,10 @@ static char *attrmap= {
     "w	highway=unsurfaced			track_gravelled\n"
     "w	highway=steps				steps\n"
     "w	historic=archaeological_site	poly_archaeological_site\n"
+    /* Albeit historic=archaeological_site should not be used on ways (only on areas) according to OSM wiki,
+     * it is at least done so for the Limes in germany. Luckily we can sort the Limes out as it has it's own
+     * tag scheme.*/
+    "w	historic=archaeological_site,site_type=fortification,fortification_type=limes	archaeological_site\n"
     "w	historic=battlefield	poly_battlefield\n"
     "w	historic=ruins		poly_ruins\n"
     "w	historic=town_gate	poly_building\n"
@@ -692,7 +699,15 @@ static char *attrmap= {
     "w	landuse=greenfield	poly_greenfield\n"
     "w	landuse=industrial	poly_industry\n"
     "w	landuse=landfill	poly_landfill\n"
+    /* landuse=military plus military tag */
     "w	landuse=military	poly_military\n"
+    "w	landuse=military,military=*	poly_military\n"
+    "w	landuse=military,military=airfield	poly_airfield\n"
+    "w	landuse=military,military=barracks	poly_barracks\n"
+    "w	landuse=military,military=danger_area	poly_danger_area\n"
+    "w	landuse=military,military=naval_base	poly_naval_base\n"
+    "w	landuse=military,military=range		poly_range\n"
+    "w	landuse=military,military=training_area		poly_military_zone\n"
     "w	landuse=meadow		poly_meadow\n"
     "w	landuse=plaza		poly_plaza\n"
     "w	landuse=quarry		poly_quarry\n"
@@ -729,11 +744,13 @@ static char *attrmap= {
     "w	leisure=track		sports_track\n"
     "w	leisure=water_park	poly_water_park\n"
     "w	leisure=swimming_pool	poly_swimming_pool\n"
+    /* military tag without further info */
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
     "w	military=danger_area	poly_danger_area\n"
     "w	military=naval_base	poly_naval_base\n"
     "w	military=range		poly_range\n"
+    "w	military=training_area		poly_military_zone\n"
     "w	natural=beach		poly_beach\n"
     "w	natural=coastline	water_line\n"
     "w	natural=fell		poly_fell\n"

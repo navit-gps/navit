@@ -477,6 +477,10 @@
 			<polygon color="#1d2425"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
+		<itemgra item_types="archaeological_site" order="8-">
+			<polyline color="#1d2222" width="3"/>
+			<text color="#55c4bd" background_color="#000000" text_size="8"/>
+		</itemgra>
 		<itemgra item_types="poly_building" order="0-">
 			<polygon color="#1a1f21"/>
 			<polyline color="#17191a"/>
@@ -522,15 +526,17 @@
 			<polyline color="#18212599" width="10"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
-		<itemgra item_types="poly_military_zone" order="9-">
-			<polygon color="#1a1e2044"/>
+		<itemgra item_types="poly_military_zone,poly_military" order="9-">
+			<polygon color="#1a1e2044" src="diagonal-stripes-gray.png" w="16" h="16"/>
+			<polyline color="#191d1eb5" width="1"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_airport" order="0-">
 			<polygon color="#1a1e2066"/>
 		</itemgra>
 		<itemgra item_types="poly_airfield" order="10-">
-			<polygon color="#1e232566"/>
+			<polygon color="#1e232566" src="diagonal-stripes-gray.png" w="16" h="16"/>
+			<polyline color="#191d1eb5" width="1"/>
 			<text color="#55c4bd" background_color="#000000" text_size="5"/>
 		</itemgra>
 		<itemgra item_types="poly_danger_area" order="8-">
