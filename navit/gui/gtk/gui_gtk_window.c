@@ -27,6 +27,7 @@
 #include <X11/XF86keysym.h>
 #endif
 #include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include "config.h"
 #include "item.h"
 #include "xmlconfig.h"

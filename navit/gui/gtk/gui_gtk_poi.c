@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include "gui_gtk_poi.h"
 #include "popup.h"
 #include "debug.h"
@@ -384,7 +385,9 @@ void gtk_gui_poi(struct navit *nav) {
         search->label_distance = gtk_label_new(_("Select a search radius from screen center in miles"));
     }
 
-    search->entry_distance=gtk_entry_new_with_max_length(2);
+    //search->entry_distance=gtk_entry_new_with_max_length(2);
+    search->entry_distance=gtk_entry_new();
+    gtk_entry_set_max_length(GTK_ENTRY(search->entry_distance),2);
     gtk_entry_set_text(GTK_ENTRY(search->entry_distance),"10");
 
     search->treeview_cat=gtk_tree_view_new();
