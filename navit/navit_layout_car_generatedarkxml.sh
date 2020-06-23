@@ -87,7 +87,7 @@ do
      # Misc. modifications
      l=$(echo $l | sed -r "s/_bk\./_wh\./") # Black to white icons
      l=$(echo $l | sed -r "s/(<text )/\1color=\"#55c4bd\" background_color=\"#000000\" /") # Add text color
-     l=$(echo $l | sed -r "s/(<circle color=\"#[0-9a-fA-F]{6,8}\" )/\1background_color=\"#000000\" /") # Add circle bg color
+     l=$(echo $l | sed -r "s/(<circle color=\"#[0-9a-fA-F]{6,8}\" )/\1background_color=\"#55c4bd\" /") # Add circle bg color
 
      echo $l >> $ofd # Modified line from light input file to dark output file
 
