@@ -69,9 +69,18 @@ do
      # Modify color
      if [[ $l =~ .*color=\"#[0-9a-fA-F]{6}.* ]]; then # Contains rgb(a) color
       coll=$(echo $l | cut -d# -f2 | cut -c-6)        # Get rgb color and convert
-      cold=$(     printf '%02x' $(echo $(printf "%d" 0x${coll:0:2})/16+16 | bc))
-      cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:2:2})/10+14 | bc))
-      cold=$cold$(printf '%02x' $(echo $(printf "%d" 0x${coll:4:2})/8+12  | bc))
+      # Get color values in decimal
+      cr=$(echo $(printf "%d" 0x${coll:0:2}))
+      cg=$(echo $(printf "%d" 0x${coll:2:2}))
+      cb=$(echo $(printf "%d" 0x${coll:4:2}))
+      # Modify color values
+      crn=$(echo $cr/16+$cg/32+$cb/32+16 | bc)
+      cgn=$(echo $cr/24+$cg/12+$cb/24+14 | bc)
+      cbn=$(echo $cr/16+$cg/16+$cb/ 8+12 | bc)
+      # Convert new color values to hex
+      cold=$(     printf '%02x' $crn)
+      cold=$cold$(printf '%02x' $cgn)
+      cold=$cold$(printf '%02x' $cbn)
       l=$(echo $l | sed "s/#$coll/#$cold/")           # Replace color
      fi
 
