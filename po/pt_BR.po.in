@@ -2370,7 +2370,7 @@ msgid ""
 "Sorry, we currently do not support maps this large on Android, please select "
 "a smaller one."
 msgstr ""
-"Desculpe, atualmente não suportamos mapas acima do 4/16GiB no Android, "
+"Desculpe, atualmente não suportamos mapas acima do 3.8/16GiB no Android, "
 "selecione um menor."
 
 #. Android resource: @strings/map_no_fix

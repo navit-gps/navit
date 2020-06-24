@@ -2033,7 +2033,7 @@ msgstr "下載地圖"
 msgid ""
 "Sorry, we currently do not support maps this large on Android, please select "
 "a smaller one."
-msgstr "抱歉, 我們現今於安卓系統上不支援大於4/16GiB的圖資, 請另選一個較小的."
+msgstr "抱歉, 我們現今於安卓系統上不支援大於3.8/16GiB的圖資, 請另選一個較小的."
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"

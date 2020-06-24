@@ -2410,7 +2410,7 @@ msgid ""
 "a smaller one."
 msgstr ""
 "Entschuldigung. Derzeit untestützen wir auf Android keine Karten die größer "
-"als 4/16GiB sind. Bitte wählen Sie eine kleinere Karte aus."
+"als 3.8/16GiB sind. Bitte wählen Sie eine kleinere Karte aus."
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
