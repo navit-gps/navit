@@ -200,7 +200,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             // check if download larger than 4 GiB
             double maxsz = Math.pow(2, 32);
             if (Double.parseDouble(android.os.Build.VERSION.RELEASE.replaceAll("(\\d+[.]\\d+)(.*)","$1")) >= 7) {
-               // check if download larger than 16 GiB on Nougat and up
+                // check if download larger than 16 GiB on Nougat and up
                 maxsz = Math.pow(2, 34);
             }
             if (NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= maxsz) {
