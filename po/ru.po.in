@@ -2070,7 +2070,7 @@ msgid ""
 "Sorry, we currently do not support maps above 16GiB on Android, please select "
 "a smaller one."
 msgstr ""
-"К сожалению, карты свыше 3.8 Гб не поддерживаются в Android версии. Выберите "
+"К сожалению, карты свыше 16GiB не поддерживаются в Android версии. Выберите "
 "другую карту."
 
 #. Android resource: @strings/position_popup_drive_here
