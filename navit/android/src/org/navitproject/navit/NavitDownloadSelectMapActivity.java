@@ -199,7 +199,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             int mi = Integer.parseInt(mapIndex);
             // default map download size limit is 3.8 GiB
             double maxsz = Math.pow(2, 32) * 0.95;
-            if (Double.parseDouble(android.os.Build.VERSION.RELEASE.replaceAll("(\\d+)(.*)", "$1")) >= 7) {
+            if (Integer.parseInt(android.os.Build.VERSION.RELEASE.replaceAll("(\\d+)(.*)", "$1")) >= 7) {
                 // map download size limit is 16 GiB on Nougat and up
                 maxsz = Math.pow(2, 34);
             }
