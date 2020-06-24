@@ -197,7 +197,8 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         String mapIndex = child.get("map_index");
         if (mapIndex != null) {
             int mi = Integer.parseInt(mapIndex);
-            if (NavitMapDownloader.osm_maps[mi].mEstSizeBytes / 1024 / 1024 / 950 >= 4) {
+            // check if download larger than 16 GiB
+            if (NavitMapDownloader.osm_maps[mi].mEstSizeBytes > 17179869184) {
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         getTstring(R.string.map_download_oversize),
                         -1, 0, 0);

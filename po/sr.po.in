@@ -2349,7 +2349,7 @@ msgstr "Нема довољно расположивог простора"
 
 #. Android resource: @strings/map_download_oversize
 msgid ""
-"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"Sorry, we currently do not support maps above 16GiB on Android, please select "
 "a smaller one."
 msgstr ""
 

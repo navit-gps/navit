@@ -2858,7 +2858,7 @@ msgstr "Uno o más permisos rechazados"
 #~ "una ubicación del mapa diferente."
 
 #~ msgid ""
-#~ "Sorry, we currently do not support maps above 3.8G on Android, please select "
+#~ "Sorry, we currently do not support maps above 16GiB on Android, please select "
 #~ "a smaller one."
 #~ msgstr ""
 #~ "Lo sentimos, actualmente no permitimos mapas por encima de 3,8 G en Android, "

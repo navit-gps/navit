@@ -42,7 +42,7 @@
     <string name="map_download_download_error">Error downloading map.</string>
     <string name="map_download_download_aborted">Map download aborted</string>
     <string name="map_download_not_enough_free_space">Not enough free space</string>
-    <string name="map_download_oversize">Sorry, we currently do not support maps above 3.8G on Android, please select a smaller one.</string>
+    <string name="map_download_oversize">Sorry, we currently do not support maps above 16GiB on Android, please select a smaller one.</string>
     <string name="map_no_fix">No location. Reopen after location fix.</string>
     <string name="maps_for_current_location">Maps containing current location</string>
     <string name="maps_installed">Installed maps</string>
