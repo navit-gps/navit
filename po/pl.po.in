@@ -2056,10 +2056,10 @@ msgid "Downloaded maps"
 msgstr "Pobrane Mapy"
 
 msgid ""
-"Sorry, we currently do not support maps above 16GiB on Android, please select "
+"Sorry, we currently do not support maps this large on Android, please select "
 "a smaller one."
 msgstr ""
-"Przepraszamy, aktualnie nie wspieramy map większych niż 16GiB na Androidzie, "
+"Przepraszamy, aktualnie nie wspieramy map większych niż 4/16GiB na Androidzie, "
 "proszę wybrać mniejszą."
 
 #. Android resource: @strings/position_popup_drive_here
