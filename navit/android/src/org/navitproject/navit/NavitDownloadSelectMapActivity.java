@@ -198,7 +198,8 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         if (mapIndex != null) {
             int osver = Integer.parseInt("0" + android.os.Build.VERSION.RELEASE.replaceAll("[^0-9]*([0-9]*).*", "$1"));
             int mi = Integer.parseInt(mapIndex);
-            if (osver < 7 && NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= Math.pow(2,32) * 0.95) {
+            // limit map download size to 3.8GiB on Android versions before Nougat
+            if (osver < 7 && NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= Math.pow(2, 32) * 0.95) {
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         getTstring(R.string.map_download_oversize),
                         -1, 0, 0);
