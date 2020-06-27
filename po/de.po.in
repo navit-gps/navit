@@ -2406,11 +2406,11 @@ msgstr "Nicht genug freier Speicher"
 
 #. Android resource: @strings/map_download_oversize
 msgid ""
-"Sorry, we currently do not support maps this large on Android, please select "
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
 "Entschuldigung. Derzeit untestützen wir auf Android keine Karten die größer "
-"als 3.8/16GiB sind. Bitte wählen Sie eine kleinere Karte aus."
+"als 3,8Gigabyte sind. Bitte wählen Sie eine kleinere Karte aus."
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."

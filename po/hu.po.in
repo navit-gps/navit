@@ -2054,10 +2054,10 @@ msgid "Downloaded maps"
 msgstr "Letöltött térképek"
 
 msgid ""
-"Sorry, we currently do not support maps this large on Android, please select "
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
-"Jelenleg Androidon a 3.8/16GiB-nál nagyobb térképek nem támogatottak, kérem "
+"Jelenleg Androidon a 3.8GB-nál nagyobb térképek nem támogatottak, kérem "
 "válasszon egy kisebbet."
 
 #. Android resource: @strings/position_popup_drive_here
