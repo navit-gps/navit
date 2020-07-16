@@ -65,7 +65,19 @@ struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_popup_new(struct gui *gui);
 struct datawindow *gui_datawindow_new(struct gui *gui, const char *name, struct callback *click, struct callback *close);
 int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description);
-int gui_show_coord_actions(struct gui *this_,  struct pcoord *c, char *description);
+/**
+ * @brief Show an action menu related to specific geographical coordinates
+ *
+ * @param[in] this_ The gui context
+ * @param[in] c A pointer to the geographical coordinates data
+ * @param[in] description An (optional) string to use as a label for the geographical coordinates
+ *
+ * @return !=0 if the action menu GUI can be displayed
+ *
+ * @warning To probe whether the action menu GUI is supported for the current GUI, just run this function with NULL pointers in c.
+ *          This will not open any GUI menu but rather return -1 if the action menu supported.
+ */
+int gui_show_coord_actions(struct gui *this_, const struct pcoord *c, const char *description);
 int gui_set_graphics(struct gui *this_, struct graphics *gra);
 void gui_disable_suspend(struct gui *this_);
 int gui_has_main_loop(struct gui *this_);
