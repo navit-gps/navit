@@ -142,7 +142,7 @@ int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description) {
     return ret;
 }
 
-int gui_show_coord_actions(struct gui *gui, struct pcoord *c, char *description) {
+int gui_show_coord_actions(struct gui *gui, const struct pcoord *c, const char *description) {
     int ret;
     dbg(lvl_info,"enter");
     if (! gui->meth.show_coord_actions)

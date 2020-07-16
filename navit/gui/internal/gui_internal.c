@@ -2920,13 +2920,17 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
  * @param[in] c The geographical coordinates to use
  * @param[in] description A label to use for the geographical coordinates (ex: "Map Point")
  *
- * @return 0 on failure
+ * @return 0 on failure, 1 on success, -1 if argument c is NULL
  */
-static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description) {
     struct widget w;
     const char *name=NULL;
 
     dbg(lvl_debug,"enter");
+
+    if (!c) { /* Probe mode */
+        return -1;
+    }
 
     w.name = description;
     w.text = g_malloc(32);

@@ -21,6 +21,7 @@
 #include "search.h"
 #include "start_real.h"
 #include "track.h"
+#include "gui.h"
 
 JNIEnv *jnienv;
 jobject *android_activity = NULL;
@@ -525,7 +526,11 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         struct coord c;
         transform_from_geo(projection_mg, &g, &c);
 
-        struct pcoord pc;
+        static struct pcoord pc;
+        static char *new_coord_name;
+        if (new_coord_name)
+            g_free(new_coord_name);
+        new_coord_name = g_strdup(name);
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = projection_mg;
@@ -534,12 +539,12 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
             name = NULL;
 
         if (channel == 8) {
-            ret = gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
-            /* If previous gui_show_coord_actions() call succeeded, then disable falling back to channel=3 block below */
-            if (ret)
-                break;
-            else
-                dbg(lvl_warning, "No contextual coord actions available, starting default action: navigate to destination");
+            if (gui_show_coord_actions(navit_get_gui(attr.u.navit), NULL, NULL) == -1) {
+                event_add_timeout(250, 0, callback_new_3(callback_cast(gui_show_coord_actions), navit_get_gui(attr.u.navit), &pc, new_coord_name));
+                break;	/* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected */
+            }
+            /* If previous gui_show_coord_actions() probe failed, then fall back to channel=3 block below */
+            dbg(lvl_warning, "No contextual coord actions available, starting default action: navigate to destination");
         }
         if (!name) {     /* When name is an empty string, use the geo coord instead */
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
