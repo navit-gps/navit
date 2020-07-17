@@ -528,6 +528,7 @@ ITEM(former_itinerary)
 ITEM(former_itinerary_part)
 ITEM(cliff)
 ITEM(sports_track)
+ITEM(archaeological_site)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
