@@ -540,7 +540,8 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
 
         if (channel == 8) {
             if (gui_show_coord_actions(navit_get_gui(attr.u.navit), NULL, NULL) == -1) {
-                event_add_timeout(250, 0, callback_new_3(callback_cast(gui_show_coord_actions), navit_get_gui(attr.u.navit), &pc, new_coord_name));
+                event_add_timeout(250, 0, callback_new_3(callback_cast(gui_show_coord_actions), navit_get_gui(attr.u.navit), &pc,
+                                  new_coord_name));
                 break;	/* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected */
             }
             /* If previous gui_show_coord_actions() probe failed, then fall back to channel=3 block below */
