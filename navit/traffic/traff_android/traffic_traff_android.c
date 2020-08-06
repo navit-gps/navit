@@ -54,7 +54,22 @@ struct traffic_priv {
     jobject NavitTraff;         /**< An instance of `NavitTraff` */
 };
 
+void traffic_traff_android_destroy(struct traffic_priv * this_);
 struct traffic_message ** traffic_traff_android_get_messages(struct traffic_priv * this_);
+
+/**
+ * @brief Destructor.
+ */
+void traffic_traff_android_destroy(struct traffic_priv * this_) {
+    jmethodID cid;
+
+    cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "close", "()V");
+    if (cid == NULL) {
+        dbg(lvl_error,"no method found");
+        return; /* exception thrown */
+    }
+    (*jnienv)->CallVoidMethod(jnienv, this_->NavitTraff, cid);
+}
 
 /**
  * @brief Returns an empty traffic report.
@@ -70,6 +85,7 @@ struct traffic_message ** traffic_traff_android_get_messages(struct traffic_priv
  */
 static struct traffic_methods traffic_traff_android_meth = {
     traffic_traff_android_get_messages,
+    traffic_traff_android_destroy,
 };
 
 

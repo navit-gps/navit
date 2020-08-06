@@ -4626,7 +4626,6 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
         navit_object_destroy((struct navit_object *) this_);
         return NULL;
     }
-    navit_object_ref((struct navit_object *) this_);
     dbg(lvl_debug,"return %p", this_);
 
     // TODO do this once and cycle through all plugins
@@ -5800,7 +5799,6 @@ struct map * traffic_get_map(struct traffic *this_) {
         attrs[4] = NULL;
 
         this_->shared->map = map_new(NULL, attrs);
-        navit_object_ref((struct navit_object *) this_->shared->map);
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
@@ -5938,6 +5936,13 @@ void traffic_set_route(struct traffic *this_, struct route *rt) {
     this_->shared->rt = rt;
 }
 
+void traffic_destroy(struct traffic *this_) {
+    if (this_->meth.destroy)
+        this_->meth.destroy(this_->priv);
+    attr_list_free(this_->attrs);
+    g_free(this_);
+}
+
 struct object_func traffic_func = {
     attr_traffic,
     (object_func_new)traffic_new,
@@ -5948,7 +5953,7 @@ struct object_func traffic_func = {
     (object_func_add_attr)navit_object_add_attr,
     (object_func_remove_attr)navit_object_remove_attr,
     (object_func_init)NULL,
-    (object_func_destroy)navit_object_destroy,
+    (object_func_destroy)traffic_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,

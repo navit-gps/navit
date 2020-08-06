@@ -239,6 +239,7 @@ struct traffic_message_priv;
  */
 struct traffic_methods {
 	struct traffic_message **(* get_messages)(struct traffic_priv * this_); /**< Retrieves new messages from the traffic plugin */
+	void (*destroy)(struct traffic_priv * this_);                   /**< Destructor for the traffic plugin */
 };
 
 /**
@@ -988,6 +989,11 @@ void traffic_set_mapset(struct traffic *this_, struct mapset *ms);
  * This sets the route which may get notified by the traffic plugin if traffic distortions change.
  */
 void traffic_set_route(struct traffic *this_, struct route *rt);
+
+/**
+ * @brief Destructor.
+ */
+void traffic_destroy(struct traffic *this_);
 
 /* end of prototypes */
 #ifdef __cplusplus

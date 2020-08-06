@@ -154,6 +154,7 @@ struct traffic_message ** traffic_dummy_get_messages(struct traffic_priv * this_
  */
 static struct traffic_methods traffic_dummy_meth = {
     traffic_dummy_get_messages,
+    NULL,
 };
 
 /**

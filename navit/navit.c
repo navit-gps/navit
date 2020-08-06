@@ -3685,7 +3685,36 @@ int navit_get_blocked(struct navit *this_) {
 
 void navit_destroy(struct navit *this_) {
     dbg(lvl_debug,"enter %p",this_);
+    GList *mapsets;
+    struct map * map;
+    struct attr attr;
     graphics_draw_cancel(this_->gra, this_->displaylist);
+
+    mapsets = this_->mapsets;
+    while (mapsets) {
+        GList *maps = NULL;
+        struct mapset_handle *msh;
+        msh = mapset_open(mapsets->data);
+        while (msh && (map = mapset_next(msh, 0))) {
+            /* Add traffic map (identified by the `attr_traffic` attribute) to list of maps to remove */
+            if (map_get_attr(map, attr_traffic, &attr, NULL))
+                maps = g_list_append(maps, map);
+        }
+        mapset_close(msh);
+
+        /* Remove traffic maps, if any */
+        while (maps) {
+            attr.type = attr_map;
+            attr.u.map = maps->data;
+            mapset_remove_attr(this_->mapsets, &attr);
+            attr_free_content(&attr);
+            maps = g_list_next(maps);
+        }
+        if (maps)
+            g_list_free(maps);
+        mapsets = g_list_next(mapsets);
+    }
+
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
     attr_list_free(this_->attrs);
 
