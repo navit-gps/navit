@@ -681,6 +681,10 @@ attr_generic_prepend_attr(struct attr **attrs, struct attr *attr) {
  *
  * If `attrs` does not contain `attr`, this function is a no-op.
  *
+ * Attributes are matched based on their `type` and `u.data` members, thus `attr` can be a shallow copy
+ * of the attribute, and can match multiple attributes in the list. The `attr` argument itself is not
+ * changed.
+ *
  * @param attrs The attribute list
  * @param attr The attribute to remove from the list
  *

@@ -1691,6 +1691,22 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         navit_draw(this_);
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link navit_get_destination_count(struct navit *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * If the Navit instance does not have a route, the result is 0.
+ *
+ * @param this_ The Navit instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
     if(!this_->route)
         return 0;
@@ -1698,6 +1714,12 @@ int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
 
 }
 
+/**
+ * @brief Get the destinations count for the route
+ *
+ * @param this The Navit instance
+ * @return destination count for the route, or 0 if the Navit instance has no route
+ */
 int navit_get_destination_count(struct navit *this_) {
     if(!this_->route)
         return 0;

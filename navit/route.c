@@ -1129,6 +1129,20 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
     profile(0,"end");
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link route_get_destination_count(struct route *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * @param this The route instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int route_get_destinations(struct route *this, struct pcoord *pc, int count) {
     int ret=0;
     GList *l=this->destinations;
