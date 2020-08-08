@@ -1120,18 +1120,18 @@ static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, st
     this->nav = nav;
     this->widget=draw;
     this->win_w=792;
-    if ((attr=attr_search(attrs, NULL, attr_w)))
+    if ((attr=attr_search(attrs, attr_w)))
         this->win_w=attr->u.num;
     this->win_h=547;
-    if ((attr=attr_search(attrs, NULL, attr_h)))
+    if ((attr=attr_search(attrs, attr_h)))
         this->win_h=attr->u.num;
     this->timeout=100;
-    if ((attr=attr_search(attrs, NULL, attr_timeout)))
+    if ((attr=attr_search(attrs, attr_timeout)))
         this->timeout=attr->u.num;
     this->delay=0;
-    if ((attr=attr_search(attrs, NULL, attr_delay)))
+    if ((attr=attr_search(attrs, attr_delay)))
         this->delay=attr->u.num;
-    if ((attr=attr_search(attrs, NULL, attr_window_title)))
+    if ((attr=attr_search(attrs, attr_window_title)))
         this->window_title=g_strdup(attr->u.str);
     else
         this->window_title=g_strdup("Navit");

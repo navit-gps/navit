@@ -385,7 +385,7 @@ static struct speech_priv *espeak_new(struct speech_methods *meth, struct attr *
     struct attr *language;
     char *lang_str=NULL;
 
-    path=attr_search(attrs, NULL, attr_path);
+    path=attr_search(attrs, attr_path);
     if (path)
         strcpy(path_home,path->u.str);
     else
@@ -396,7 +396,7 @@ static struct speech_priv *espeak_new(struct speech_methods *meth, struct attr *
         return NULL;
     }
 
-    language=attr_search(attrs, NULL, attr_language);
+    language=attr_search(attrs, attr_language);
     if ( language ) {
         lang_str=g_strdup(language->u.str);
     } else {

@@ -110,7 +110,7 @@ static int file_request_do(struct file *file, struct attr **options, int connect
 
     if (!options)
         return 0;
-    attr=attr_search(options, NULL, attr_url);
+    attr=attr_search(options, attr_url);
     if (!attr)
         return 0;
     name=attr->u.str;
@@ -125,11 +125,11 @@ static int file_request_do(struct file *file, struct attr **options, int connect
         char *method="GET";
         char *header=NULL;
         int persistent=0;
-        if ((attr=attr_search(options, NULL, attr_http_method)) && attr->u.str)
+        if ((attr=attr_search(options, attr_http_method)) && attr->u.str)
             method=attr->u.str;
-        if ((attr=attr_search(options, NULL, attr_http_header)) && attr->u.str)
+        if ((attr=attr_search(options, attr_http_header)) && attr->u.str)
             header=attr->u.str;
-        if ((attr=attr_search(options, NULL, attr_persistent)))
+        if ((attr=attr_search(options, attr_persistent)))
             persistent=attr->u.num;
         if (path)
             host[path-name-7]='\0';
@@ -184,14 +184,14 @@ file_create(char *name, struct attr **options) {
     struct attr *attr;
     int open_flags=O_LARGEFILE|O_BINARY;
 
-    if (options && (attr=attr_search(options, NULL, attr_url))) {
+    if (options && (attr=attr_search(options, attr_url))) {
 #ifdef HAVE_SOCKET
         file_request_do(file, options, 1);
 #endif
     } else {
-        if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num) {
+        if (options && (attr=attr_search(options, attr_readwrite)) && attr->u.num) {
             open_flags |= O_RDWR;
-            if ((attr=attr_search(options, NULL, attr_create)) && attr->u.num)
+            if ((attr=attr_search(options, attr_create)) && attr->u.num)
                 open_flags |= O_CREAT|O_TRUNC;
         } else
             open_flags |= O_RDONLY;
@@ -210,7 +210,7 @@ file_create(char *name, struct attr **options) {
         file->name_id = (long)atom(name);
     }
 #ifdef CACHE_SIZE
-    if (!options || !(attr=attr_search(options, NULL, attr_cache)) || attr->u.num)
+    if (!options || !(attr=attr_search(options, attr_cache)) || attr->u.num)
         file->cache=1;
 #endif
     dbg_assert(file != NULL);

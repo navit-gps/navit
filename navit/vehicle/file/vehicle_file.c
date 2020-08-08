@@ -951,7 +951,7 @@ static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods
 
     dbg(lvl_debug, "enter");
 
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     if(source == NULL) {
         dbg(lvl_error,"Missing source attribute");
         return NULL;
@@ -965,13 +965,13 @@ static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods
     ret->baudrate=B4800;
     ret->fixtime[0] = '\0';
     ret->ev_fix_timeout = NULL;
-    state_file=attr_search(attrs, NULL, attr_state_file);
+    state_file=attr_search(attrs, attr_state_file);
     if (state_file)
         ret->statefile=g_strdup(state_file->u.str);
-    time = attr_search(attrs, NULL, attr_time);
+    time = attr_search(attrs, attr_time);
     if (time)
         ret->time=time->u.num;
-    baudrate = attr_search(attrs, NULL, attr_baudrate);
+    baudrate = attr_search(attrs, attr_baudrate);
     if (baudrate) {
         switch (baudrate->u.num) {
         case 4800:
@@ -1000,11 +1000,11 @@ static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods
 #endif
         }
     }
-    checksum_ignore = attr_search(attrs, NULL, attr_checksum_ignore);
+    checksum_ignore = attr_search(attrs, attr_checksum_ignore);
     if (checksum_ignore)
         ret->checksum_ignore=checksum_ignore->u.num;
     ret->attrs = attrs;
-    on_eof = attr_search(attrs, NULL, attr_on_eof);
+    on_eof = attr_search(attrs, attr_on_eof);
     if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "stop"))
         ret->on_eof=1;
     if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "exit"))

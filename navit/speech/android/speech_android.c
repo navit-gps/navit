@@ -99,7 +99,7 @@ static struct speech_priv *speech_android_new(struct speech_methods *meth, struc
         g_free(this);
         this=NULL;
     }
-    if ((flags = attr_search(attrs, NULL, attr_flags)))
+    if ((flags = attr_search(attrs, attr_flags)))
         this->flags=flags->u.num;
 
     return this;

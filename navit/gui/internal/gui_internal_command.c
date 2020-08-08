@@ -1216,7 +1216,7 @@ static struct command_table commands[] = {
 
 void gui_internal_command_init(struct gui_priv *this, struct attr **attrs) {
     struct attr *attr;
-    if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+    if ((attr=attr_search(attrs, attr_callback_list))) {
         command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
     }
 }

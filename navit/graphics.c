@@ -337,7 +337,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
             struct callback_list *cbl);
 
-    if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+    if (! (type_attr=attr_search(attrs, attr_type))) {
         dbg(lvl_error,"Graphics plugin type is not set.");
         return NULL;
     }
@@ -364,8 +364,8 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
     /*get dpi */
-    virtual_dpi_attr=attr_search(attrs, NULL, attr_virtual_dpi);
-    real_dpi_attr=attr_search(attrs, NULL, attr_real_dpi);
+    virtual_dpi_attr=attr_search(attrs, attr_virtual_dpi);
+    real_dpi_attr=attr_search(attrs, attr_real_dpi);
     if(virtual_dpi_attr != NULL) {
         navit_float virtual_dpi, real_dpi=0;
         virtual_dpi=virtual_dpi_attr->u.num;
