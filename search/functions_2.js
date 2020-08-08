@@ -87,7 +87,7 @@ var searchData=
   ['attr_5frel2real',['attr_rel2real',['../attr_8c.html#a189026867469157eb1e4603684fdce8a',1,'attr_rel2real(int attrval, int whole, int treat_neg_as_rel):&#160;attr.c'],['../attr_8h.html#a189026867469157eb1e4603684fdce8a',1,'attr_rel2real(int attrval, int whole, int treat_neg_as_rel):&#160;attr.c']]],
   ['attr_5fresolve',['attr_resolve',['../shapefile_8c.html#a23f200cccf81170e9279d7d54f540489',1,'shapefile.c']]],
   ['attr_5frewind',['attr_rewind',['../garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c',1,'garmin.c']]],
-  ['attr_5fsearch',['attr_search',['../attr_8c.html#ac035ca982c873e6e15f3edebcb6b62fd',1,'attr_search(struct attr **attrs, struct attr *last, enum attr_type attr):&#160;attr.c'],['../attr_8h.html#ac035ca982c873e6e15f3edebcb6b62fd',1,'attr_search(struct attr **attrs, struct attr *last, enum attr_type attr):&#160;attr.c']]],
+  ['attr_5fsearch',['attr_search',['../attr_8c.html#ac6577d49e590de0f9012c729a315c7cc',1,'attr_search(struct attr **attrs, enum attr_type attr):&#160;attr.c'],['../attr_8h.html#ac6577d49e590de0f9012c729a315c7cc',1,'attr_search(struct attr **attrs, enum attr_type attr):&#160;attr.c']]],
   ['attr_5fstrings_5fclear',['attr_strings_clear',['../osm_8c.html#ad95352618b96bc6dcd95e059b4f3648f',1,'osm.c']]],
   ['attr_5fstrings_5fsave',['attr_strings_save',['../osm_8c.html#ab876d55b224b932e85684499a5229757',1,'osm.c']]],
   ['attr_5fto_5fname',['attr_to_name',['../attr_8c.html#ae13d70b1ff7bbf7abf2586f15590f253',1,'attr_to_name(enum attr_type attr):&#160;attr.c'],['../attr_8h.html#ae13d70b1ff7bbf7abf2586f15590f253',1,'attr_to_name(enum attr_type attr):&#160;attr.c']]],

@@ -270,9 +270,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa0ebda0950efd7e0f64fecf36ae5c462"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#aa0ebda0950efd7e0f64fecf36ae5c462">attr_to_text</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structmap.html">map</a> *<a class="el" href="structmap.html">map</a>, int pretty)</td></tr>
 <tr class="memdesc:aa0ebda0950efd7e0f64fecf36ae5c462"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an attribute to a string that can be displayed.  <a href="#aa0ebda0950efd7e0f64fecf36ae5c462">More...</a><br /></td></tr>
 <tr class="separator:aa0ebda0950efd7e0f64fecf36ae5c462"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac035ca982c873e6e15f3edebcb6b62fd"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#ac035ca982c873e6e15f3edebcb6b62fd">attr_search</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structattr.html">attr</a> *last, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="structattr.html">attr</a>)</td></tr>
-<tr class="memdesc:ac035ca982c873e6e15f3edebcb6b62fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for an attribute of a given type.  <a href="#ac035ca982c873e6e15f3edebcb6b62fd">More...</a><br /></td></tr>
-<tr class="separator:ac035ca982c873e6e15f3edebcb6b62fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6577d49e590de0f9012c729a315c7cc"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structattr.html">attr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#ac6577d49e590de0f9012c729a315c7cc">attr_search</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:ac6577d49e590de0f9012c729a315c7cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for an attribute of a given type.  <a href="#ac6577d49e590de0f9012c729a315c7cc">More...</a><br /></td></tr>
+<tr class="separator:ac6577d49e590de0f9012c729a315c7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf6574ad1a34ce7251c34d2ea903c076"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="attr_8h.html#adf6574ad1a34ce7251c34d2ea903c076">attr_generic_get_attr</a> (struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structattr.html">attr</a> **def_attrs, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
 <tr class="memdesc:adf6574ad1a34ce7251c34d2ea903c076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic get function.  <a href="#adf6574ad1a34ce7251c34d2ea903c076">More...</a><br /></td></tr>
 <tr class="separator:adf6574ad1a34ce7251c34d2ea903c076"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2293,8 +2293,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac035ca982c873e6e15f3edebcb6b62fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac035ca982c873e6e15f3edebcb6b62fd">&#9670;&nbsp;</a></span>attr_search()</h2>
+<a id="ac6577d49e590de0f9012c729a315c7cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6577d49e590de0f9012c729a315c7cc">&#9670;&nbsp;</a></span>attr_search()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2304,12 +2304,6 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
           <td class="paramname"><em>attrs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
-          <td class="paramname"><em>last</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2330,7 +2324,6 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">attrs</td><td>Points to the array of attribute pointers to be searched </td></tr>
-    <tr><td class="paramname">last</td><td>Not used </td></tr>
     <tr><td class="paramname">attr_type</td><td>The attribute type to search for. Generic types (such as attr_any or attr_any_xml) are NOT supported. </td></tr>
   </table>
   </dd>
