@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -197,7 +198,9 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         String mapIndex = child.get("map_index");
         if (mapIndex != null) {
             int mi = Integer.parseInt(mapIndex);
-            if (NavitMapDownloader.osm_maps[mi].mEstSizeBytes / 1024 / 1024 / 950 >= 4) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
+                    && NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= Math.pow(2, 32) * 0.95) {
+                // limit map download size to 3.8GiB on Android versions before Nougat
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         getTstring(R.string.map_download_oversize),
                         -1, 0, 0);
