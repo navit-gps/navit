@@ -873,16 +873,16 @@ static struct map_priv *gmap_new(struct map_methods *meth, struct attr **attrs, 
     struct gar_config cfg;
     int debugmask = 0;
 
-    data=attr_search(attrs, NULL, attr_data);
+    data=attr_search(attrs, attr_data);
     if (! data)
         return NULL;
-    debug=attr_search(attrs, NULL, attr_debug);
+    debug=attr_search(attrs, attr_debug);
     if (debug) {
         dl = atoi(debug->u.str);
         if (!dl)
             dl = 1;
     }
-    flags=attr_search(attrs, NULL, attr_flags);
+    flags=attr_search(attrs, attr_flags);
     if (flags) {
         debugmask = flags->u.num;
     }

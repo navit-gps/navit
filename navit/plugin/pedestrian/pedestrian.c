@@ -940,7 +940,7 @@ static struct map_priv *map_route_occluded_new(struct map_methods *meth, struct 
     struct map_priv *ret;
     struct attr *navit;
     dbg(lvl_debug, "enter\n");
-    navit = attr_search(attrs, NULL, attr_navit);
+    navit = attr_search(attrs, attr_navit);
     if (!navit) {
         return NULL;
     }

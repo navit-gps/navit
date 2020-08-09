@@ -491,6 +491,7 @@ static char *attrmap= {
     "?	historic=memorial	poi_memorial\n"
     "?	historic=monument	poi_monument\n"
     "?	historic=ruins		poi_ruins\n"
+    "n	historic=archaeological_site	poi_archaeological_site\n"
 //	"?	historic=*		poi_ruins\n"
     "?	landuse=cemetery	poi_cemetery\n"
     "?	leisure=fishing		poi_fish\n"
@@ -580,6 +581,9 @@ static char *attrmap= {
     "w	aerialway=chair_lift	lift_chair\n"
     "w	aerialway=drag_lift	lift_drag\n"
     "w	aeroway=aerodrome	poly_airport\n"
+    /* airport wins over military landuse and specifier if given */
+    "w	aeroway=aerodrome,landuse=military	poly_airfield\n"
+    "w	aeroway=aerodrome,landuse=military,military=*	poly_airfield\n"
     "w	aeroway=apron		poly_apron\n"
     "w	aeroway=runway		aeroway_runway\n"
     "w	aeroway=taxiway		aeroway_taxiway\n"
@@ -674,6 +678,10 @@ static char *attrmap= {
     "w	highway=unsurfaced			track_gravelled\n"
     "w	highway=steps				steps\n"
     "w	historic=archaeological_site	poly_archaeological_site\n"
+    /* Albeit historic=archaeological_site should not be used on ways (only on areas) according to OSM wiki,
+     * it is at least done so for the Limes in germany. Luckily we can sort the Limes out as it has it's own
+     * tag scheme.*/
+    "w	historic=archaeological_site,site_type=fortification,fortification_type=limes	archaeological_site\n"
     "w	historic=battlefield	poly_battlefield\n"
     "w	historic=ruins		poly_ruins\n"
     "w	historic=town_gate	poly_building\n"
@@ -691,7 +699,15 @@ static char *attrmap= {
     "w	landuse=greenfield	poly_greenfield\n"
     "w	landuse=industrial	poly_industry\n"
     "w	landuse=landfill	poly_landfill\n"
+    /* landuse=military plus military tag */
     "w	landuse=military	poly_military\n"
+    "w	landuse=military,military=*	poly_military\n"
+    "w	landuse=military,military=airfield	poly_airfield\n"
+    "w	landuse=military,military=barracks	poly_barracks\n"
+    "w	landuse=military,military=danger_area	poly_danger_area\n"
+    "w	landuse=military,military=naval_base	poly_naval_base\n"
+    "w	landuse=military,military=range		poly_range\n"
+    "w	landuse=military,military=training_area		poly_military_zone\n"
     "w	landuse=meadow		poly_meadow\n"
     "w	landuse=plaza		poly_plaza\n"
     "w	landuse=quarry		poly_quarry\n"
@@ -719,15 +735,22 @@ static char *attrmap= {
     "w	leisure=park		poly_park\n"
     "w	leisure=pitch		poly_sports_pitch\n"
     "w	leisure=playground	poly_playground\n"
+    "w	leisure=sports_centre,building=1	poly_building\n"
     "w	leisure=sports_centre	poly_sport\n"
     "w	leisure=stadium		poly_sports_stadium\n"
-    "w	leisure=track		poly_sports_track\n"
+    "w	leisure=track,area=1		poly_sports_track\n"
+    "w	leisure=track,area=0		sports_track\n"
+    "w	leisure=track,type=multipolygon		poly_sports_track\n"
+    "w	leisure=track		sports_track\n"
     "w	leisure=water_park	poly_water_park\n"
+    "w	leisure=swimming_pool	poly_swimming_pool\n"
+    /* military tag without further info */
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
     "w	military=danger_area	poly_danger_area\n"
     "w	military=naval_base	poly_naval_base\n"
     "w	military=range		poly_range\n"
+    "w	military=training_area		poly_military_zone\n"
     "w	natural=beach		poly_beach\n"
     "w	natural=coastline	water_line\n"
     "w	natural=fell		poly_fell\n"
@@ -1633,40 +1656,63 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
-static inline void osm_end_relation_multipolygon (struct maptool_osm * osm, enum item_type* type) {
+static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
     if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
-        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, type, 1)) {
-            tmp_item_bin->type = *type;
+        int count;
+        enum item_type types[10];
+        /* This is a multipolygon relation which is no boundary. Lets check what it is */
+        count = attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types) / (sizeof(enum item_type)));
+        if(count > 0) {
+            int a;
+            /* got some type(s). Duplicate the multipolygon if more than one type. That's the only
+             * way right now to deal with things tagged multiple things without loosing something.
+             */
+            if (count >= 10) {
+                fprintf(stderr,"relation id "OSMID_FMT"\n",osmid_attr_value);
+                dbg_assert(count < 10);
+                count = 10;
+            }
+            //fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            for(a=0; a < count ; a++) {
+                /* no need to clone the item in memory. We just write it out multiple times */
+                if(a==1) {
+                    /*add duplicate tag if 2nd type. The tag stays for all subsequent writes */
+                    item_bin_add_attr_int(tmp_item_bin, attr_duplicate, 1);
+                }
+                tmp_item_bin->type = types[a];
+                item_bin_write(tmp_item_bin, osm->multipolygons);
+            }
         } else {
-            *type=type_none;
+            /* Don't know what this is. Keep it, as it could have been preprocessed by e.g. turn restriction
+             * code before
+             */
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            item_bin_write(tmp_item_bin, osm->multipolygons);
         }
-        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
-        item_bin_write(tmp_item_bin, osm->multipolygons);
     } else {
-        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, type, 1)) {
-            tmp_item_bin->type=*type;
+        enum item_type type;
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+            tmp_item_bin->type=type;
         } else {
-            *type=type_none;
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
         }
         if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-                && (boundary || *type!=type_none)) {
+                && (boundary || type!=type_none)) {
             item_bin_write(tmp_item_bin, osm->boundaries);
         }
     }
 }
 
 void osm_end_relation(struct maptool_osm *osm) {
-    enum item_type type;
-
     in_relation=0;
     /* sets tmp_item_bin type and other fields */
-    osm_end_relation_multipolygon (osm, &type);
+    osm_end_relation_multipolygon (osm);
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
@@ -3203,7 +3249,6 @@ static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct r
     GList **multipolygons=NULL;
     /* allocate and reference async queue */
     GAsyncQueue * ib_queue=g_async_queue_new ();
-    g_async_queue_ref(ib_queue);
     /* allocate per thread storage */
     sthread=g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
 
@@ -3559,7 +3604,6 @@ static GList ** process_turn_restrictions_setup(FILE *in, int thread_count, stru
     GList **turn_restrictions=NULL;
     /* allocate and reference async queue */
     GAsyncQueue * ib_queue=g_async_queue_new ();
-    g_async_queue_ref(ib_queue);
     /* allocate per thread storage */
     sthread=g_malloc0(sizeof(struct process_turn_restrictions_setup_thread) * thread_count);
 

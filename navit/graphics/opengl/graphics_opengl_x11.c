@@ -46,7 +46,8 @@ static void *graphics_opengl_get_window(struct graphics_opengl_window_system *x1
     return (void *)x11->window;
 }
 
-static void graphics_opengl_set_callbacks(struct graphics_opengl_window_system *x11, void *data, void *resize, void *button, void *motion, void *keypress) {
+static void graphics_opengl_set_callbacks(struct graphics_opengl_window_system *x11, void *data, void *resize,
+        void *button, void *motion, void *keypress) {
     x11->data=data;
     x11->resize=resize;
     x11->button=button;
@@ -104,7 +105,8 @@ static void graphics_opengl_x11_watch(struct graphics_opengl_window_system *x11)
 }
 
 struct graphics_opengl_window_system *
-graphics_opengl_x11_new(void *displayname, int w, int h, int depth, struct graphics_opengl_window_system_methods **methods) {
+graphics_opengl_x11_new(void *displayname, int w, int h, int depth,
+                        struct graphics_opengl_window_system_methods **methods) {
     struct graphics_opengl_window_system *ret=g_new0(struct graphics_opengl_window_system, 1);
     XSetWindowAttributes attributes;
     unsigned long valuemask;
