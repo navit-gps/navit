@@ -637,10 +637,11 @@ void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofi
             !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
             !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
             !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
-        dbg(lvl_error,"failed to get position data %d %d %d",
+        dbg(lvl_error,"failed to get position data speed:%d direction:%d coord:%d time:%d",
             vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL),
             vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL),
-            vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL));
+            vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL),
+            vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
         return;
     }
     if (tr->tunnel_extrapolation) {
