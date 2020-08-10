@@ -17,7 +17,6 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <config.h>
 #include <gps.h>
 #include <string.h>
 #include <glib.h>
@@ -166,7 +165,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~SATELLITE_SET;
     }
     if (data->set & STATUS_SET) {
+#if GPSD_API_MAJOR_VERSION >= 10
+        priv->status = data->fix.status;
+#else
         priv->status = data->status;
+#endif // GPSD_API_MAJOR_VERSION >= 9
+
         data->set &= ~STATUS_SET;
     }
     if (data->set & MODE_SET) {
