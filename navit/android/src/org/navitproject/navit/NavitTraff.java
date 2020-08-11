@@ -72,7 +72,7 @@ public class NavitTraff extends BroadcastReceiver {
 
     private final Context context;
 
-    /** Active subscriptions (key is the subscription ID, value is the package ID) */
+    /** Active subscriptions (key is the subscription ID, value is the package ID). */
     private Map<String, String> subscriptions = new HashMap<String, String>();
 
     /**
@@ -250,7 +250,7 @@ public class NavitTraff extends BroadcastReceiver {
     /**
      * @brief Fetches messages from a content provider.
      *
-     * @param context
+     * @param context The context to use for the content resolver
      * @param uri The content provider URI
      */
     private void fetchMessages(Context context, Uri uri) {
@@ -296,7 +296,7 @@ public class NavitTraff extends BroadcastReceiver {
      * @param action The intent action.
      * @param data The intent data (for TraFF, this is the content provider URI), or null
      * @param extras The extras for the intent
-     * @param packageName The package name for the intent recipient, or null to deliver the intent to all matching receivers
+     * @param packageName The package name for the recipient, or null to deliver the intent to all matching receivers
      * @param receiverPermission A permission which the recipient must hold, or null if not required
      * @param resultReceiver A BroadcastReceiver which will receive the result for the intent
      */
@@ -318,7 +318,7 @@ public class NavitTraff extends BroadcastReceiver {
                 if (extras != null)
                     outIntent.putExtras(extras);
                 outIntent.setComponent(cn);
-                context.sendOrderedBroadcast (outIntent,
+                context.sendOrderedBroadcast(outIntent,
                         receiverPermission,
                         resultReceiver,
                         null, // scheduler,
