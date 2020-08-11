@@ -939,6 +939,17 @@ struct map_selection *route_selection;
 
 /**
  * @brief Returns a single map selection
+ *
+ * The boundaries of the selection are determined as follows: First a rectangle spanning `c1` and `c2` is
+ * built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension
+ * (height or width) is determined and multiplied with the percentage specified by `rel`. The resulting
+ * amount of padding is added to each edge. After that, the amount specified by `abs` is added to each edge.
+ *
+ * @param order Map order (deepest tile level) to select
+ * @param c1 First coordinate
+ * @param c2 Second coordinate
+ * @param rel Relative padding to add to the selection rectangle, in percent
+ * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
