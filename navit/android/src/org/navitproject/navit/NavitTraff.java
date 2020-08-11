@@ -276,18 +276,18 @@ public class NavitTraff extends BroadcastReceiver {
 
     /**
      * Sends a TraFF intent to a source.  This encapsulates most of the low-level Android handling.
-     * <p>
-     * If the recipient specified in {@code packageName} declares multiple receivers for the intent in its
+     *
+     * <p>If the recipient specified in {@code packageName} declares multiple receivers for the intent in its
      * manifest, a separate intent will be delivered to each of them. The intent will not be delivered to
      * receivers registered at runtime.
-     * <p>
-     * All intents are sent as explicit ordered broadcasts. This means two things:
-     * <p>
-     * Any app which declares a matching receiver in its manifest will be woken up to process the intent.
+     *
+     * <p>All intents are sent as explicit ordered broadcasts. This means two things:
+     *
+     * <p>Any app which declares a matching receiver in its manifest will be woken up to process the intent.
      * This works even with certain Android 7 builds which restrict intent delivery to apps which are not
      * currently running.
-     * <p>
-     * It is safe for the recipient to unconditionally set result data. If the recipient does not set result
+     *
+     * <p>It is safe for the recipient to unconditionally set result data. If the recipient does not set result
      * data, the result will have a result code of {@link #RESULT_INTERNAL_ERROR}, no data and no extras.
      *
      * @param context The context
