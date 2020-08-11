@@ -116,14 +116,13 @@ public class NavitTraff extends BroadcastReceiver {
         this.context.registerReceiver(this, traffFilter07);
         this.context.registerReceiver(this, traffFilter08);
 
-        /* Broadcast a poll intent */
+        /* Broadcast a poll intent to all TraFF 0.7-only receivers */
         Intent outIntent = new Intent(ACTION_TRAFF_POLL);
         PackageManager pm = this.context.getPackageManager();
         List<ResolveInfo> receivers07 = pm.queryBroadcastReceivers(outIntent, 0);
-        /* receivers with TraFF 0.8 support */
         List<ResolveInfo> receivers08 = pm.queryBroadcastReceivers(new Intent(ACTION_TRAFF_GET_CAPABILITIES), 0);
         if (receivers07 != null) {
-            /* get receivers which support only TraFF 0.7 */
+            /* get receivers which support only TraFF 0.7 and poll them */
             if (receivers08 != null)
                 receivers07.removeAll(receivers08);
             for (ResolveInfo receiver : receivers07) {
@@ -132,16 +131,6 @@ public class NavitTraff extends BroadcastReceiver {
                 outIntent = new Intent(ACTION_TRAFF_POLL);
                 outIntent.setComponent(cn);
                 this.context.sendBroadcast(outIntent, Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-        }
-        if (receivers08 != null) {
-            for (ResolveInfo receiver : receivers08) {
-                Bundle extras = new Bundle();
-                extras.putString(EXTRA_PACKAGE, context.getPackageName());
-                extras.putString(EXTRA_FILTER_LIST, "<filter_list><filter bbox=\"-90.0000 -180.0000 90.0000 180.0000\"/></filter_list>");
-                sendTraffIntent(context, ACTION_TRAFF_SUBSCRIBE, null, extras,
-                        receiver.activityInfo.applicationInfo.packageName,
-                        Manifest.permission.ACCESS_COARSE_LOCATION, this);
             }
         }
     }
@@ -154,6 +143,40 @@ public class NavitTraff extends BroadcastReceiver {
                     Manifest.permission.ACCESS_COARSE_LOCATION, this);
         }
         this.context.unregisterReceiver(this);
+    }
+
+    void onFilterUpdate(String filterList) {
+        /* change existing subscriptions */
+        for (Map.Entry<String, String> entry : subscriptions.entrySet()) {
+            Bundle extras = new Bundle();
+            extras.putString(EXTRA_SUBSCRIPTION_ID, entry.getKey());
+            extras.putString(EXTRA_FILTER_LIST, filterList);
+            sendTraffIntent(context, ACTION_TRAFF_SUBSCRIPTION_CHANGE, null, extras,
+                    entry.getValue(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION, this);
+        }
+
+        /* set up missing subscriptions */
+        PackageManager pm = this.context.getPackageManager();
+        List<ResolveInfo> receivers = pm.queryBroadcastReceivers(new Intent(ACTION_TRAFF_GET_CAPABILITIES), 0);
+        if (receivers != null) {
+            /* filter out receivers to which we are already subscribed */
+            Iterator<ResolveInfo> iter = receivers.iterator();
+            while (iter.hasNext()) {
+                ResolveInfo receiver = iter.next();
+                if (subscriptions.containsValue(receiver.activityInfo.applicationInfo.packageName))
+                    iter.remove();
+            }
+
+            for (ResolveInfo receiver : receivers) {
+                Bundle extras = new Bundle();
+                extras.putString(EXTRA_PACKAGE, context.getPackageName());
+                extras.putString(EXTRA_FILTER_LIST, filterList);
+                sendTraffIntent(context, ACTION_TRAFF_SUBSCRIBE, null, extras,
+                        receiver.activityInfo.applicationInfo.packageName,
+                        Manifest.permission.ACCESS_COARSE_LOCATION, this);
+            }
+        }
     }
 
     @Override

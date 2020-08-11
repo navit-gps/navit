@@ -1062,7 +1062,7 @@ struct map_selection * route_get_selection(struct route * this_) {
  *
  * @param sel Start of the list to be destroyed
  */
-static void route_free_selection(struct map_selection *sel) {
+void route_free_selection(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next=sel->next;
