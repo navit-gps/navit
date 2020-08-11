@@ -249,7 +249,7 @@ public class NavitTraff extends BroadcastReceiver {
 
     /**
      * @brief Fetches messages from a content provider.
-     * 
+     *
      * @param context
      * @param uri The content provider URI
      */
@@ -276,22 +276,22 @@ public class NavitTraff extends BroadcastReceiver {
 
     /**
      * @brief Sends a TraFF intent to a source.
-     * 
+     *
      * This encapsulates most of the low-level Android handling.
-     * 
+     *
      * If the recipient specified in {@code packageName} declares multiple receivers for the intent in its
      * manifest, a separate intent will be delivered to each of them. The intent will not be delivered to
      * receivers registered at runtime.
-     * 
+     *
      * All intents are sent as explicit ordered broadcasts. This means two things:
-     * 
+     *
      * Any app which declares a matching receiver in its manifest will be woken up to process the intent.
      * This works even with certain Android 7 builds which restrict intent delivery to apps which are not
      * currently running.
-     * 
+     *
      * It is safe for the recipient to unconditionally set result data. If the recipient does not set result
      * data, the result will have a result code of {@link #RESULT_INTERNAL_ERROR}, no data and no extras.
-     * 
+     *
      * @param context The context
      * @param action The intent action.
      * @param data The intent data (for TraFF, this is the content provider URI), or null

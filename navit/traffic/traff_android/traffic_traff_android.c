@@ -177,7 +177,7 @@ static void traffic_traff_android_set_selection(struct traffic_priv * this_) {
         transform_to_geo(projection_mg, &this_->position_rect->lu, &lu);
         transform_to_geo(projection_mg, &this_->position_rect->rl, &rl);
         filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                rl.lat, lu.lng, lu.lat, rl.lng);
+                                         rl.lat, lu.lng, lu.lat, rl.lng);
     }
     for (struct map_selection * sel = this_->route_map_sel; sel; sel = sel->next) {
         transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
@@ -185,10 +185,10 @@ static void traffic_traff_android_set_selection(struct traffic_priv * this_) {
         min_road_class = order_to_min_road_class(sel->order);
         if (!min_road_class)
             filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                    rl.lat, lu.lng, lu.lat, rl.lng);
+                                             rl.lat, lu.lng, lu.lat, rl.lng);
         else
             filter_list = g_strconcat_printf(filter_list, "    <filter min_road_class=\"%s\" bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                    min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
+                                             min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
     }
     /* the trailing \0 is required for NewStringUTF */
     filter_list = g_strconcat_printf(filter_list, "</filter_list>\0");
@@ -242,7 +242,8 @@ static void traffic_traff_android_status_callback(struct traffic_priv * this_, i
  * @param navit The Navit instance
  * @param vehicle The vehicle which delivered the position update and from which the position can be queried
  */
-static void traffic_traff_android_position_callback(struct traffic_priv * this_, struct navit *navit, struct vehicle *vehicle) {
+static void traffic_traff_android_position_callback(struct traffic_priv * this_, struct navit *navit,
+        struct vehicle *vehicle) {
     struct attr attr;
     struct coord c;
     struct coord_rect cr;
@@ -297,12 +298,12 @@ static int traffic_traff_android_init(struct traffic_priv * this_) {
 
     /* register callbacks for position and destination changes */
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_android_position_callback),
-            attr_position_coord_geo, this_));
+                       attr_position_coord_geo, this_));
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_android_destination_callback),
-            attr_destination, this_));
+                       attr_destination, this_));
     if ((navigation = navit_get_navigation(this_->nav)))
         navigation_register_callback(navigation, attr_nav_status,
-                callback_new_attr_1(callback_cast(traffic_traff_android_status_callback), attr_nav_status, this_));
+                                     callback_new_attr_1(callback_cast(traffic_traff_android_status_callback), attr_nav_status, this_));
 
     return 1;
 }
