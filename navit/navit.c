@@ -3727,7 +3727,7 @@ void navit_destroy(struct navit *this_) {
         while (maps) {
             attr.type = attr_map;
             attr.u.map = maps->data;
-            mapset_remove_attr(this_->mapsets, &attr);
+            mapset_remove_attr(mapsets->data, &attr);
             attr_free_content(&attr);
             maps = g_list_next(maps);
         }
