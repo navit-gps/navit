@@ -49,9 +49,7 @@ struct vehicle_priv {
     double height;
     struct coord_geo geo;
     int accuracy;
-    struct tm time;
     char* time_str;
-    char *timep;
     GClueSimple *simple;
 };
 GClueClient *client = NULL;
@@ -86,11 +84,11 @@ static void print_location(GClueSimple *simple,
     if(altitude != -G_MAXDOUBLE) {
         priv->height=altitude;
     }
-    speed = gclue_location_get_altitude(location);
+    speed = gclue_location_get_speed(location);
     if(speed != -G_MAXDOUBLE) {
         priv->speed=speed;
     }
-    direction = gclue_location_get_altitude(location);
+    direction = gclue_location_get_heading(location);
     if(direction != -G_MAXDOUBLE) {
         priv->direction=direction;
     }
@@ -217,7 +215,6 @@ static struct vehicle_priv *vehicle_geoclue_new(struct vehicle_methods *meth,
 
     ret = (struct vehicle_priv*)g_new0(struct vehicle_priv, 1);
     ret->cbl = cbl;
-    ret->time.tm_year=0;
     gclue_simple_new("navit",
                      GCLUE_ACCURACY_LEVEL_EXACT,
                      NULL,
