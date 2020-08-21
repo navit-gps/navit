@@ -45,6 +45,7 @@ extern "C" {
 #include <QFont>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 #include <QScreen>
 #include <QSvgRenderer>
