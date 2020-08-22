@@ -406,7 +406,7 @@ int write_aux_tiles(struct zip_info *zip_info);
 int create_tile_hash(void);
 void write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out);
 void merge_tiles(struct tile_info *info);
-struct attr map_information_attrs[32];
+extern struct attr map_information_attrs[32];
 void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 

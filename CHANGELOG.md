@@ -14,7 +14,7 @@ Navit follows the semantic versioning:
   replacement for the previous version (all data formats and interfaces are still
   supported); minor UI changes (such as moving individual menu items) are also
   allowed
-* `X.y.z` (major): at least one of the following:
+* X.y.z (major): at least one of the following:
   * Major new functionality (such as Augmented Reality, inertial navigation or
     support for live traffic services): de-facto standard for end-user apps
   * New user interface (such as moving from the old pulldown menu UI to the Internal
@@ -28,6 +28,71 @@ Navit follows the semantic versioning:
 
 To get the list of all the unreleased commits, see:
 [Full Changelog](https://github.com/navit-gps/navit/compare/v0.5.4...HEAD)
+
+
+## [0.5.5] - 2020-08-08
+
+## Added
+
+* Add poly\_swimming\_pool. [Stefan Wildemann]
+* Add:maptool:enhance leisure=track handling and add poi\_archeaological\_site (#1005) [Stefan Wildemann]
+* Add:graphics:gtk\_drawing\_area:textured polygons (#1004) [Stefan Wildemann]
+* Add:maptool:add waterway=weir as poly\_dam to map. [Stefan Wildemann]
+* Add:layout:add textures for quarry and scrub. (#997) [Stefan Wildemann]
+* Add:Core:Add mapfeatures (#990) [Stefan Wildemann]
+* Add:Core+Graphics+Qt5:Add support for textured polygons (#989) [Stefan Wildemann]
+* Add:build:Android build and signing. Also add fastlane for metadata. Set execute on scripts/\*.sh. [jkoan]
+* Add:cmake: add compilation flags to harden the security of navit (#969) [Joseph Herlant]
+
+## Changed
+
+* Change:core:Remove unused argument from attr\_search. [jkoan]
+* Change\_layout:Make sure park, meadow, scrub, and wood render in correct order (#1017) [Johan Fitié]
+* Change:style:Reformated style to match gradle. [jkoan]
+* Change:core:Reformat all files for ci check (even those i havent touched) [jkoan]
+* Change:fastlane:Remove tailing whitespaces from files. [jkoan]
+* Change:android:build:Fix empty Variable handling. [jkoan]
+* Change:metadata:Rename Title to "Navit" only because everybody knows that its for Android when found within F-Droid or Google Play store. [jkoan]
+
+## Fixed
+
+* Android:Remove old, confusing AndroidManifest.xml. [jkoan]
+* Android:Readd android:sharedUserId to allow for Updates. [jkoan]
+* Readme:Fixed broken link #914 (#1031) [Benjamin Davies]
+* Maptool:better map aerodroms and military areas (#1022) [Stefan Wildemann]
+* Maptool:Duplicte multipolygons if required (#1019) [Stefan Wildemann]
+* Layout:Order Parking (can be covered by Meadow, Wood) and Playground (can cover Meadow) (#1023) [Johan Fitié]
+* Build:android: Don't sign apk if no valid keyring is available. [Stefan Wildemann]
+* Icons:Update svgz files to be valid for librsvg \> 2.47 (#991) [jkoan]
+* POI/poly/labels:Small visual improvements to POI order, poly colors, and labels (#993) [Johan Fitié]
+* Android:build:Check if Variables are filled before useing them to avoid errors. [jkoan]
+* Metadata:Move Screenshots with German text to German translation. [jkoan]
+* Metadata:Rename directorys to prepare for Translations. [jkoan]
+* Build:versioncode needs to use 24h format. [jkoan]
+* Build:Only master, not all others :D booleans. [jkoan]
+* Gui:qml:Fix format string. [jkoan]
+* Gui:qml:Add missing NULL to vehicle\_attr\_iter\_new. [jkoan]
+* Change:Disable CXX on the the build\_script as well. [jkoan]
+* Android:build:css is the other way around, so enable the disable. [jkoan]
+* Build:Fdroid buildenviroment has no CXX and failes doue to this/CXX not needed anyway. [jkoan]
+* Graphics/android: polygons with hole drawing (#973) [Stefan Wildemann]
+* Plugins: too few arguments to functions navit\_attr\_iter\_new and config\_attr\_iter\_new (#966) [Joseph Herlant]
+* Port/android:Use new icon for notification (#963) [mvglasow]
+
+## Other
+
+* Android: Activate downloaded maps automatically (#1027) [Johan Fitié]
+* Improvement:layout:car-dark Improve Car-Dark layout colors (#1028) [Johan Fitié]
+* Improvement:layout: Improve Car Dark layout colors, bring all layers up to date with Car Light, automate changes in all layers with script (#1026) [Johan Fitié]
+* Improve:layout Improve Car Dark layout polygon colors, bring up to date with Car Light polys, automate changes with script (#1025) [Johan Fitié]
+* Improvement:layout: Small color tweaks and added polylines (#1024) [Johan Fitié]
+* Enhancement:layout\_car:Add stripes to danger\_area (#1020) [Stefan Wildemann]
+* Make sure industry, sport, meadow, scrub, and cemetery render in correct order (#1021) [Johan Fitié]
+* Refactor Member Ignoring Method smell in NavitMapDownloader class. [emaiannone]
+* Treat sports\_centres as building if building=yes. [Stefan Wildemann]
+* Refactoring:GTK: use GDK\_KEY for keys instead of GDK\_ [David Heidelberg]
+* Improve layout (#1002) [Johan Fitié]
+* Use debian:latest in the CI to get more up-to-date tools (#971) [Joseph Herlant]
 
 ## [0.5.4] - 2020-01-18
 

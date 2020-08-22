@@ -17,7 +17,6 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <config.h>
 #include <gps.h>
 #include <string.h>
 #include <glib.h>
@@ -166,7 +165,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~SATELLITE_SET;
     }
     if (data->set & STATUS_SET) {
+#if GPSD_API_MAJOR_VERSION >= 10
+        priv->status = data->fix.status;
+#else
         priv->status = data->status;
+#endif // GPSD_API_MAJOR_VERSION >= 9
+
         data->set &= ~STATUS_SET;
     }
     if (data->set & MODE_SET) {
@@ -414,7 +418,7 @@ static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
     }
     break;
     case attr_active:
-        active = attr_search(priv->attrs,NULL,attr_active);
+        active = attr_search(priv->attrs,attr_active);
         if(active != NULL) {
             attr->u.num=active->u.num;
             return 1;
@@ -440,20 +444,20 @@ static struct vehicle_priv *vehicle_gpsd_new_gpsd(struct vehicle_methods
     struct attr *source, *query, *retry_int;
 
     dbg(lvl_debug, "enter");
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     ret = g_new0(struct vehicle_priv, 1);
 #if GPSD_API_MAJOR_VERSION >= 5
     ret->gps = g_new0(struct gps_data_t, 1);
 #endif
     ret->source = g_strdup(source->u.str);
-    query = attr_search(attrs, NULL, attr_gpsd_query);
+    query = attr_search(attrs, attr_gpsd_query);
     if (query) {
         ret->gpsd_query = g_strconcat(query->u.str, "\n", NULL);
     } else {
         ret->gpsd_query = g_strdup("w+x\n");
     }
     dbg(lvl_debug,"Format string for gpsd_query: %s",ret->gpsd_query);
-    retry_int = attr_search(attrs, NULL, attr_retry_interval);
+    retry_int = attr_search(attrs, attr_retry_interval);
     if (retry_int) {
         ret->retry_interval = retry_int->u.num;
         if (ret->retry_interval < MIN_RETRY_INTERVAL) {

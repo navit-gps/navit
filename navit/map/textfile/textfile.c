@@ -328,10 +328,10 @@ static struct map_methods map_methods_textfile = {
 
 static struct map_priv *map_new_textfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
-    struct attr *charset=attr_search(attrs, NULL, attr_charset);
-    struct attr *flags=attr_search(attrs, NULL, attr_flags);
-    struct attr *no_warn=attr_search(attrs, NULL, attr_no_warning_if_map_file_missing);
+    struct attr *data=attr_search(attrs, attr_data);
+    struct attr *charset=attr_search(attrs, attr_charset);
+    struct attr *flags=attr_search(attrs, attr_flags);
+    struct attr *no_warn=attr_search(attrs, attr_no_warning_if_map_file_missing);
     struct file_wordexp *wexp;
     int len,is_pipe=0;
     char *wdata;

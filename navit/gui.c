@@ -40,7 +40,7 @@ gui_new(struct attr *parent, struct attr **attrs) {
     struct attr *type_attr;
     struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui);
     struct attr cbl;
-    if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+    if (! (type_attr=attr_search(attrs, attr_type))) {
         return NULL;
     }
 

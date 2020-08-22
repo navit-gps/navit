@@ -407,34 +407,34 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
     navit_ignore_graphics_events(this_->nav, 1);
 
     this_->fullscreen = 0; //NO by default
-    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
+    if( (attr=attr_search(attrs,attr_fullscreen)))
         this_->fullscreen=attr->u.num;
     this_->menu_on_map_click = 1; //YES by default;
-    if( (attr=attr_search(attrs,NULL,attr_menu_on_map_click)))
+    if( (attr=attr_search(attrs,attr_menu_on_map_click)))
         this_->menu_on_map_click=attr->u.num;
     this_->signal_on_map_click = 0; //YES by default;
-    if( (attr=attr_search(attrs,NULL,attr_signal_on_map_click)))
+    if( (attr=attr_search(attrs,attr_signal_on_map_click)))
         this_->signal_on_map_click=attr->u.num;
     this_->radius = 10; //Default value
-    if( (attr=attr_search(attrs,NULL,attr_radius)))
+    if( (attr=attr_search(attrs,attr_radius)))
         this_->radius=attr->u.num;
     this_->pitch = 20; //Default value
-    if( (attr=attr_search(attrs,NULL,attr_pitch)))
+    if( (attr=attr_search(attrs,attr_pitch)))
         this_->pitch=attr->u.num;
     this_->lazy = 1; //YES by default
-    if( (attr=attr_search(attrs,NULL,attr_lazy)))
+    if( (attr=attr_search(attrs,attr_lazy)))
         this_->lazy=attr->u.num;
     this_->w=800; //Default value
-    if( (attr=attr_search(attrs,NULL,attr_width)))
+    if( (attr=attr_search(attrs,attr_width)))
         this_->w=attr->u.num;
     this_->h=600; //Default value
-    if( (attr=attr_search(attrs,NULL,attr_height)))
+    if( (attr=attr_search(attrs,attr_height)))
         this_->h=attr->u.num;
-    if( (attr=attr_search(attrs,NULL,attr_source)))
+    if( (attr=attr_search(attrs,attr_source)))
         this_->source=attr->u.str;
-    if( (attr=attr_search(attrs,NULL,attr_skin)))
+    if( (attr=attr_search(attrs,attr_skin)))
         this_->skin=attr->u.str;
-    if( (attr=attr_search(attrs,NULL,attr_icon_src)))
+    if( (attr=attr_search(attrs,attr_icon_src)))
         this_->icon_src=attr->u.str;
 
     if ( this_->source==NULL ) {
@@ -447,7 +447,7 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
         this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/icons/",NULL);
     }
 
-    if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+    if ((attr=attr_search(attrs, attr_callback_list))) {
         command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this_);
     }
 

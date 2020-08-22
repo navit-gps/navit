@@ -160,13 +160,13 @@ struct debug *
 debug_new(struct attr *parent, struct attr **attrs) {
     struct attr *name,*dbg_level_attr,*level_attr;
     dbg_level level;
-    name=attr_search(attrs, NULL, attr_name);
-    dbg_level_attr=attr_search(attrs, NULL, attr_dbg_level);
-    level_attr=attr_search(attrs, NULL, attr_level);
+    name=attr_search(attrs, attr_name);
+    dbg_level_attr=attr_search(attrs, attr_dbg_level);
+    level_attr=attr_search(attrs, attr_level);
     level = parse_dbg_level(dbg_level_attr,level_attr);
 #ifdef HAVE_SOCKET
     if (!name && level==lvl_unset) {
-        struct attr *socket_attr=attr_search(attrs, NULL, attr_socket);
+        struct attr *socket_attr=attr_search(attrs, attr_socket);
         char *p,*s;
         if (!socket_attr)
             return NULL;

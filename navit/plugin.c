@@ -243,17 +243,17 @@ plugin_new(struct attr *parent, struct attr **attrs) {
     if (parent)
         pls=parent->u.plugins;
 
-    if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
+    if (! (path_attr=attr_search(attrs, attr_path))) {
         dbg(lvl_error,"missing path");
         return NULL;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_active))) {
+    if ( (attr=attr_search(attrs, attr_active))) {
         active=attr->u.num;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_lazy))) {
+    if ( (attr=attr_search(attrs, attr_lazy))) {
         lazy=attr->u.num;
     }
-    if ( (attr=attr_search(attrs, NULL, attr_ondemand))) {
+    if ( (attr=attr_search(attrs, attr_ondemand))) {
         ondemand=attr->u.num;
     }
     dbg(lvl_debug, "path=\"%s\", active=%d, lazy=%d, ondemand=%d",path_attr->u.str, active, lazy, ondemand);
