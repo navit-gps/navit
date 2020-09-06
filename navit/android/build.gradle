@@ -11,7 +11,7 @@ android {
             storeFile file(System.getenv("KEYSTORE")  ?: "/store")
             keyAlias System.getenv("KEY_ALIAS")
             storePassword System.getenv("STORE_PASS")
-            keyPassword System.getenv("KEY_PASS")
+            keyPassword System.getenv("STORE_PASS")
         }
     }
     defaultConfig {
