@@ -145,11 +145,13 @@ void QNavitQuick_2::mapMove(int originX, int originY, int destinationX, int dest
 void QNavitQuick_2::zoomIn(int zoomLevel){
     if(m_navitInstance){
         navit_zoom_in(m_navitInstance->getNavit(), zoomLevel, nullptr);
+        updateZoomLevel();
     }
 }
 void QNavitQuick_2::zoomOut(int zoomLevel){    
     if(m_navitInstance){
         navit_zoom_out(m_navitInstance->getNavit(), zoomLevel, nullptr);
+        updateZoomLevel();
     }
 }
 
@@ -159,6 +161,7 @@ void QNavitQuick_2::zoomInToPoint(int zoomLevel, int x, int y){
         p.x = x;
         p.y = y;
         navit_zoom_in(m_navitInstance->getNavit(), zoomLevel, &p);
+        updateZoomLevel();
     }
 }
 
@@ -168,12 +171,14 @@ void QNavitQuick_2::zoomOutFromPoint(int zoomLevel, int x, int y){
         p.x = x;
         p.y = y;
         navit_zoom_out(m_navitInstance->getNavit(), zoomLevel, &p);
+        updateZoomLevel();
     }
 }
 
 void QNavitQuick_2::zoomToRoute(){
     if(m_navitInstance){
         navit_zoom_to_route(m_navitInstance->getNavit(), 1);
+        updateZoomLevel();
     }
 }
 
@@ -237,56 +242,12 @@ void QNavitQuick_2::setOrientation(int orientation){
     }
 }
 
-pcoord QNavitQuick_2::positionToCoordinates (int x, int y) {
-
-    struct point p;
-    p.x = x;
-    p.y = y;
-    struct coord co;
-    struct pcoord c;
-    struct transformation * trans;
-    if(m_navitInstance){
-
-        trans = navit_get_trans(m_navitInstance->getNavit());
-        c.pro = transform_get_projection(trans);
-        transform_reverse(trans, &p, &co);
-
-        c.x = co.x;
-        c.y = co.y;
-    }
-    return c;
-}
-
-void QNavitQuick_2::setDestination(int x, int y){
-    if(m_navitInstance){
-        struct pcoord c = positionToCoordinates(x,y);
-
-        navit_set_destination(m_navitInstance->getNavit(), &c, /*QString("%1 %2").arg(lng, lat).toUtf8().data()*/"test", 1);
-    }
-}
-
-void QNavitQuick_2::setPosition(int x, int y){
-    if(m_navitInstance){
-
-        struct pcoord c = positionToCoordinates(x,y);
-
-        navit_set_position(m_navitInstance->getNavit(), &c);
-    }
-}
-
-void QNavitQuick_2::centerOnVehicle(){
-    if(m_navitInstance){
-
-        navit_set_center_cursor_draw(m_navitInstance->getNavit());
-    }
-}
-
 void QNavitQuick_2::addBookmark(QString label, int x, int y){
     if(m_navitInstance){
-
         struct attr attr;
-        struct pcoord c = positionToCoordinates(x,y);
+        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance, x ,y);
         navit_get_attr(m_navitInstance->getNavit(), attr_bookmarks, &attr, nullptr);
+
         bookmarks_add_bookmark(attr.u.bookmarks, &c, label.toUtf8().data());
     }
 }
@@ -306,4 +267,38 @@ void QNavitQuick_2::setNavitInstance(NavitInstance *navit){
     m_followVehicle = getNavitNumProperty(attr_follow_cursor);
     m_orientation = getNavitNumProperty(attr_orientation);
     emit propertiesChanged();
+}
+
+QString QNavitQuick_2::getAddress(int x, int y){
+    coord c = NavitHelper::positionToCoord(m_navitInstance, x, y);
+    return NavitHelper::getAddress(m_navitInstance, c);
+}
+
+QVariantMap QNavitQuick_2::positionToCoordinates(int x, int y){
+    QVariantMap ret;
+    if(m_navitInstance){
+        struct coord c = NavitHelper::positionToCoord(m_navitInstance, x ,y);
+        ret.insert("x", c.x);
+        ret.insert("y", c.y);
+    }
+    return ret;
+}
+
+void QNavitQuick_2::centerOnPosition(){
+    if(m_navitInstance){
+        navit_set_center_cursor_draw(m_navitInstance->getNavit());
+    }
+}
+
+void QNavitQuick_2::updateZoomLevel(){
+    struct transformation * trans = navit_get_trans(m_navitInstance->getNavit());
+    long scale = transform_get_scale(trans);
+
+    int i = 0;
+    while(scale >> i){
+        i++;
+    }
+
+    m_zoomLevel = 19 - i;
+    emit zoomLevelChanged();
 }

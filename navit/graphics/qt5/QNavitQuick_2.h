@@ -34,6 +34,7 @@ extern "C" {
 
 #include "graphics_qt5.h"
 #include "navitinstance.h"
+#include "navithelper.h"
 
 class QNavitQuick_2 : public QQuickPaintedItem {
     Q_OBJECT
@@ -41,7 +42,8 @@ class QNavitQuick_2 : public QQuickPaintedItem {
     Q_PROPERTY(int  pitch           MEMBER m_pitch          WRITE setPitch          NOTIFY propertiesChanged)
     Q_PROPERTY(bool autoZoom        MEMBER m_autoZoom       WRITE setAutozoom       NOTIFY propertiesChanged)
     Q_PROPERTY(bool followVehicle   MEMBER m_followVehicle  WRITE setFollowVehicle  NOTIFY propertiesChanged)
-    Q_PROPERTY(int orientation      MEMBER m_orientation    WRITE setOrientation    NOTIFY propertiesChanged)
+    Q_PROPERTY(int  orientation     MEMBER m_orientation    WRITE setOrientation    NOTIFY propertiesChanged)
+    Q_PROPERTY(long zoomLevel       READ   getZoomLevel                             NOTIFY zoomLevelChanged)
     Q_PROPERTY(NavitInstance *navit READ   navitInstance    WRITE setNavitInstance)
 
 public:
@@ -54,10 +56,10 @@ public:
     Q_INVOKABLE void zoomOutFromPoint(int zoomLevel, int x, int y);
     Q_INVOKABLE void zoomToRoute();
     Q_INVOKABLE void mapMove(int originX, int originY, int destinationX, int destinationY);
-    Q_INVOKABLE void setDestination(int x, int y);
-    Q_INVOKABLE void setPosition(int x, int y);
-    Q_INVOKABLE void centerOnVehicle();
     Q_INVOKABLE void addBookmark(QString label, int x, int y);
+    Q_INVOKABLE QVariantMap positionToCoordinates(int x, int y);
+    Q_INVOKABLE QString getAddress(int x, int y);
+    Q_INVOKABLE void centerOnPosition();
 
     void setNorthing(bool northing);
     void setPitch(int pitch);
@@ -66,6 +68,9 @@ public:
     void setOrientation(int orientation);
     NavitInstance *navitInstance();
     void setNavitInstance(NavitInstance *navit);
+    int getZoomLevel() {
+        return m_zoomLevel;
+    }
 protected:
     virtual void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
 
@@ -79,12 +84,15 @@ private:
     void setNavitNumProperty(enum attr_type type, int value);
     int getNavitNumProperty(enum attr_type type);
     NavitInstance *m_navitInstance;
-    pcoord positionToCoordinates (int x, int y);
+    long m_zoomLevel = 0;
+
+    void updateZoomLevel();
 signals:
     void mouseLeftButtonClicked();
     void mouseRightButtonClicked();
     void pressAndHold(QMouseEvent* mouse);
     void propertiesChanged();
+    void zoomLevelChanged();
 };
 
 #endif

@@ -1,0 +1,3 @@
+module Navit.Graphics
+classname QNavitQuick
+classname QNavitQuick_2
