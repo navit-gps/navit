@@ -3,6 +3,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import Navit 1.0
 import Navit.Graphics 2.0
+import Navit.Route 1.0
 
 Item {
     id: __root
@@ -10,14 +11,64 @@ Item {
     property string prevState: ""
     height: parent.height
 
+    QtObject {
+        id:navigation
+
+        property int previous_pitch : 0
+        property int previous_zoom : 0
+        function routeOverview() {
+            previous_pitch = navit1.pitch;
+            __root.state = "routeOverview"
+            navit1.pitch = 0;
+            navit1.followVehicle = 0;
+            navit1.zoomToRoute();
+            navit1.zoomOut(2);
+        }
+
+        function startNavigation() {
+            __root.state = ""
+            __root.prevState = ""
+            mapNavigationBar.state = "navigationState"
+
+            navit1.pitch = 45;
+            navit1.followVehicle = 1
+            navit1.autoZoom = true
+            navit1.centerOnPosition()
+        }
+
+        function cancelNavigation() {
+            __root.state = __root.prevState
+            __root.prevState = ""
+            navit1.followVehicle = 1;
+        }
+    }
+
+    NavitRoute {
+        id:navitRoute
+        navit: Navit
+        onDestinationAdded: {
+            navigation.routeOverview();
+        }
+        onNavigationFinished: {
+            mapNavigationBar.state = ""
+        }
+    }
+
     NavitMap {
         id: navit1
-        anchors.left: searchDrawer.right
+        //        anchors.left: searchDrawer.right
+
         anchors.leftMargin: 0
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width
         navit:Navit
+    }
+
+    Text {
+        x: 25
+        y: 25
+        text: "Zoom Level : " + navit1.zoomLevel
     }
 
     onStateChanged: {
@@ -39,11 +90,15 @@ Item {
         onClicked: {
             switch(mouse.button){
             case Qt.LeftButton :
-                mapControls.showControls()
+                if(__root.state == ""){
+                    mapControls.showControls()
+                }
                 break;
             case Qt.RightButton  :
+                navit1.followVehicle = 0
                 pinpointPopup.mouseY = mouse.y
                 pinpointPopup.mouseX = mouse.x
+                pinpointPopup.address = navit1.getAddress(mouse.x, mouse.y)
                 pinpointPopup.open()
                 break;
             }
@@ -55,7 +110,7 @@ Item {
         }
 
         onPositionChanged: {
-            mapControls.showControls()
+            mapControls.restartTimer()
             hasMoved = true
             if(mouse.modifiers === Qt.ShiftModifier){
                 var pitch = Math.floor((originY - mouse.y) / 10);
@@ -72,6 +127,7 @@ Item {
                 navit1.orientation = orientation % 360
 
             } else {
+                navit1.followVehicle = 0
                 navit1.mapMove(originX, originY, mouse.x, mouse.y);
                 originX = mouse.x
                 originY = mouse.y
@@ -85,8 +141,10 @@ Item {
         }
         onPressAndHold: {
             if(!hasMoved){
+                navit1.followVehicle = 0
                 pinpointPopup.mouseY = mouse.y
                 pinpointPopup.mouseX = mouse.x
+                pinpointPopup.address = navit1.getAddress(mouse.x, mouse.y)
                 pinpointPopup.open()
             }
         }
@@ -112,7 +170,7 @@ Item {
         orientation: navit1.orientation
         autoZoom: navit1.autoZoom
         onDimensionClicked: {
-            showControls()
+            restartTimer()
             if(navit1.pitch != 0) {
                 navit1.pitch = 0
             } else {
@@ -120,16 +178,16 @@ Item {
             }
         }
         onZoomInClicked: {
-            showControls()
+            restartTimer()
             navit1.zoomIn(2)
         }
         onZoomOutClicked: {
-            showControls()
+            restartTimer()
             navit1.zoomOut(2)
 
         }
         onZoomModeClicked: {
-            showControls()
+            restartTimer()
             navit1.autoZoom = !navit1.autoZoom
         }
         onCompassClicked: {
@@ -143,6 +201,9 @@ Item {
             }
             mapControlsTimer.restart()
         }
+        function restartTimer() {
+            mapControlsTimer.restart()
+        }
     }
 
 
@@ -154,6 +215,11 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottomMargin: parent.height * 0.05
         anchors.bottom: parent.bottom
+
+        timeLeft: navitRoute.timeLeft
+        distanceLeft: navitRoute.distance
+        arrivalTime: navitRoute.arrivalTime
+
         onSearchButtonClicked: {
             __root.state = "searchDrawerOpen"
             searchDrawer.open()
@@ -174,19 +240,59 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
 
+        timeLeft: navitRoute.timeLeft
+        distanceLeft: navitRoute.distance
+        arrivalTime: navitRoute.arrivalTime
         onCancelButtonClicked: {
-            __root.state = __root.prevState
+            navigation.cancelNavigation();
         }
         onRouteDetailsClicked: {
         }
         onStartButtonClicked: {
-            __root.state = ""
-            mapNavigationBar.state = "navigationState"
-            __root.prevState = ""
-            navit1.centerOnVehicle()
-            navit1.followVehicle = true
-            navit1.autoZoom = true
+            navigation.startNavigation();
         }
+    }
+
+    Item {
+        id: recenterButton
+        width: parent.width > parent.height ? parent.height * 0.1 : parent.width * 0.1
+        height: width
+        x: navit1.followVehicle? parent.width : parent.width - ((parent.width * 0.025) + (mapNavigationBar.height / 2)) - (width / 2)
+        anchors.verticalCenter: parent.verticalCenter
+        Behavior on x {
+            NumberAnimation { duration: 200 }
+        }
+
+        Rectangle {
+            id: rectangle1
+            color: "#ffffff"
+            radius: width/2
+            border.width: 1
+            anchors.fill: parent
+        }
+
+        Image {
+            id: image
+            width: parent.width * 0.8
+            height: width
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/themes/Levy/assets/ionicons/md-locate.svg"
+            fillMode: Image.PreserveAspectFit
+            mipmap: true
+        }
+
+        MouseArea {
+            id: mouseArea1
+            width: 71
+            anchors.fill: parent
+            onClicked: {
+                navit1.followVehicle = 1
+                navit1.autoZoom = true
+                navit1.centerOnPosition()
+            }
+        }
+
     }
 
     Rectangle {
@@ -232,29 +338,21 @@ Item {
         onMenuItemClicked: {
             switch (action) {
             case "setDestination":
-                navit1.setDestination(mouseX, mouseY)
-                navit1.pitch = 0;
-                __root.state = "routeOverview"
-                navit1.zoomToRoute();
-                navit1.zoomOut(2);
+                navitRoute.setDestination(pinpointPopup.address, mouseX, mouseY)
                 break;
-            case "setWaypoint":
+            case "addStop":
+                navitRoute.addStop(pinpointPopup.address, mouseX, mouseY, 0)
                 break;
             case "setPosition":
-                navit1.setPosition(mouseX, mouseY)
-                console.log("Setting position")
+                navitRoute.setPosition(mouseX, mouseY)
                 break;
             case "bookmark":
-                navit1.addBookmark("asasdad", mouseX, mouseY);
-                console.log("Adding bookmark")
+                navit1.addBookmark(pinpointPopup.address, mouseX, mouseY);
                 break;
             case "pois":
                 break;
             }
             pinpointPopup.close()
-        }
-        onOpened: {
-//            coordinates = navit1.positionToCoordinates(mouseX, mouseY)
         }
     }
 
@@ -275,10 +373,6 @@ Item {
             __root.state = ""
             __root.prevState = ""
         }
-        onRouteOverview: {
-            __root.prevState = __root.state
-            __root.state = "routeOverview"
-        }
     }
 
     MenuDrawer {
@@ -289,19 +383,19 @@ Item {
         height: parent.height
         visible: false
         onCloseMenu : {
-            __root.state = __root.prevState
-            __root.prevState = ""
+            navigation.cancelNavigation()
         }
         onRouteOverview : {
-            __root.state = __root.prevState
-            __root.prevState = ""
-            navit1.zoomToRoute()
+            navigation.routeOverview()
         }
         onCancelRoute : {
             __root.state = ""
             mapNavigationBar.state = ""
+            navitRoute.cancelNavigation();
         }
     }
+
+
 
 
     states: [
@@ -324,23 +418,22 @@ Item {
 
             PropertyChanges {
                 target: rectangle
-                visible: false
-            }
-
-            PropertyChanges {
-                target: rectangle
-                color: parent.width > parent.height ? "#00000000" : "#a6000000"
-                visible: parent.width < parent.height
+                //                color: parent.width > parent.height ? "#00000000" : "#a6000000"
+                //                visible: parent.width < parent.height
+                color: "#a6000000"
+                visible: true
             }
 
             PropertyChanges {
                 target: mouseArea4
-                enabled: parent.width < parent.height
+                //                enabled: true
+                enabled: false
             }
 
             PropertyChanges {
                 target: navit1
-                width: parent.width > parent.height ? parent.width - searchDrawer.width : parent.width
+                //width: parent.width > parent.height ? parent.width - searchDrawer.width : parent.width
+
             }
         },
         State {
@@ -552,9 +645,29 @@ Item {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*##^## Designer {
     D{i:0;height:720;width:1280}D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}
-D{i:6;anchors_height:100;anchors_width:100}D{i:8;anchors_y:109}D{i:7;anchors_height:100;anchors_width:100}
-D{i:9;anchors_y:109}D{i:21;anchors_height:200;anchors_width:200}D{i:23;anchors_height:200;anchors_width:200}
+D{i:6;anchors_height:100;anchors_width:100}D{i:7;anchors_height:100;anchors_width:100}
+D{i:8;anchors_y:109}D{i:10;anchors_height:200;anchors_width:200}D{i:11;anchors_height:100;anchors_width:100}
+D{i:12;anchors_height:100;anchors_width:100;anchors_y:109}D{i:9;anchors_y:109}D{i:13;anchors_y:109}
+D{i:22;anchors_height:200;anchors_width:200}D{i:23;anchors_height:200;anchors_width:200}
+D{i:24;anchors_height:200;anchors_width:200}D{i:26;anchors_height:200;anchors_width:200}
+D{i:27;anchors_height:200;anchors_width:200}D{i:25;anchors_height:200;anchors_width:200}
 }
  ##^##*/

@@ -1,8 +1,135 @@
 #include "navitpoimodel.h"
 
+POISearchWorker::POISearchWorker (NavitInstance * navit) :
+    m_navitInstance(navit),
+    m_running(false), m_mutex(){
+
+}
+POISearchWorker::~POISearchWorker (){
+    qDebug() << "Deleting POISearchWorker";
+}
+void POISearchWorker::setParameters(QString filter, int screenX, int screenY, int distance){
+    m_filter = filter;
+    m_screenX = screenX;
+    m_screenY = screenY;
+    m_distance = distance;
+}
+void POISearchWorker::run()
+{
+    struct point p;
+    struct transformation * trans;
+
+    struct map_selection * sel, * selm;
+    struct coord c, center;
+    struct pcoord pcenter;
+    struct mapset_handle * h;
+    struct map * m;
+    struct map_rect * mr;
+    struct item * item;
+
+    enum projection pro;
+    int idist = 0;
+
+    if(m_screenX < 0) {
+        m_screenX = navit_get_width(m_navitInstance->getNavit()) / 2;
+        m_screenY = navit_get_height(m_navitInstance->getNavit()) / 2;
+    }
+
+    p.x = m_screenX;
+    p.y = m_screenY;
+
+    trans = navit_get_trans(m_navitInstance->getNavit());
+    pro = transform_get_projection(trans);
+    transform_reverse(trans, &p, &center);
+
+    pcenter.x = center.x;
+    pcenter.y = center.y;
+    pcenter.pro = pro;
+
+    int distanceSel =  m_distance * transform_scale(abs(center.y) + m_distance * 1.5);
+    qDebug() << "distanceSel : " << distanceSel;
+    sel = map_selection_rect_new(&(pcenter), distanceSel, 18);
+
+    dbg(lvl_debug, "screenX : %d screenY : %d center is at %x, %x", m_screenX, m_screenY, center.x, center.y);
+
+    h = mapset_open(navit_get_mapset(m_navitInstance->getNavit()));
+    m_mutex.lock();
+    m_running = true;
+    while ((m = mapset_next(h, 1)) && m_running) {
+        selm = map_selection_dup_pro(sel, pro, map_projection(m));
+        mr = map_rect_new(m, selm);
+        dbg(lvl_debug, "mr=%p", mr);
+        if (mr) {
+            //            QMutexLocker locker(&m_mutex);
+
+            while ((item = map_rect_get_item(mr)) && m_running) {
+                if(!m_filter.isEmpty() && m_filter != item_to_name(item->type)){
+                    continue;
+                }
+
+                if ( item_is_poi(*item) &&
+                     item_coord_get_pro(item, &c, 1, pro) &&
+                     coord_rect_contains(&sel->u.c_rect, &c) &&
+                     (idist = transform_distance(pro, &center, &c))/* < m_distance*/) {
+
+                    item_attr_rewind(item);
+                    struct attr attr;
+                    char * name;
+                    char * icon = get_icon(m_navitInstance->getNavit(), item);
+
+                    if (item_attr_get(item, attr_label, &attr)) {
+                        name = map_convert_string(item->map, attr.u.str);
+
+                        QString address = NavitHelper::getAddress(m_navitInstance, c,"");
+                        QString label = QString("%0, %1").arg(name).arg(address);
+                        QVariantMap coords;
+                        coords.insert("x", c.x);
+                        coords.insert("y", c.y);
+                        coords.insert("pro", pro);
+                        QVariantMap poi;
+                        poi.insert("name", name);
+                        poi.insert("type", item_to_name(item->type));
+                        poi.insert("distance", idist);
+                        poi.insert("icon", icon);
+                        poi.insert("coords", coords);
+                        poi.insert("address", address);
+                        poi.insert("label", label);
+                        emit gotSearchResult(poi);
+                    }
+                }
+            }
+            map_rect_destroy(mr);
+        }
+        map_selection_destroy(selm);
+    }
+
+    map_selection_destroy(sel);
+    mapset_close(h);
+    m_mutex.unlock();
+}
+void POISearchWorker::stop() {
+    qDebug() << "Stopping worker";
+    m_running = false;
+    m_mutex.lock();
+    m_mutex.unlock();
+    qDebug() << "Worker stopped";
+}
+
 NavitPOIModel::NavitPOIModel(QObject *parent)
 {
+}
 
+NavitPOIModel::~NavitPOIModel(){
+    if(m_poiWorker){
+        delete m_poiWorker;
+    }
+}
+
+void NavitPOIModel::setNavit(NavitInstance * navit){
+    m_navitInstance = navit;
+    m_poiWorker = new POISearchWorker(m_navitInstance);
+    m_poiWorker->setAutoDelete(false);
+    connect(m_poiWorker, &POISearchWorker::gotSearchResult, this, &NavitPOIModel::receiveSearchResult);
 }
 
 QHash<int, QByteArray> NavitPOIModel::roleNames() const{
@@ -11,8 +138,9 @@ QHash<int, QByteArray> NavitPOIModel::roleNames() const{
     roles[TypeRole] = "type";
     roles[DistanceRole] = "distance";
     roles[IconRole] = "icon";
-    roles[CoordinatesRole] = "coordinates";
+    roles[CoordinatesRole] = "coords";
     roles[AddressRole] = "address";
+    roles[LabelRole] = "label";
     return roles;
 }
 
@@ -34,6 +162,8 @@ QVariant NavitPOIModel::data(const QModelIndex & index, int role) const {
         return poi->value("coords");
     if (role == AddressRole)
         return poi->value("address");
+    if (role == LabelRole)
+        return poi->value("label");
 
     return QVariant();
 }
@@ -89,104 +219,106 @@ QString NavitPOIModel::getAddressString(struct item *item, int prependPostal) {
 
     return address.join(" ");
 }
-static void format_dist(int dist, char *distbuf) {
-    if (dist > 10000)
-        sprintf(distbuf,"%d ", dist/1000);
-    else if (dist>0)
-        sprintf(distbuf,"%d.%d ", dist/1000, (dist%1000)/100);
-}
-void NavitPOIModel::search(double lng, double lat, QString filter){
-    if(m_navitInstance){
-        struct coord d;
-        struct coord_geo g;
 
-        struct pcoord new_center;
-        new_center.pro = transform_get_projection(navit_get_trans(m_navitInstance->getNavit()));
+void NavitPOIModel::search(QString filter, int screenX, int screenY, int distance){
+    if(m_poiWorker){
+        m_poiWorker->blockSignals(true);
+        m_poiWorker->stop();
+        qDebug() << "clearing pois";
 
-        g.lng = lng;
-        g.lat = lat;
-        transform_from_geo(new_center.pro, &g, &d);
-        new_center.x = d.x;
-        new_center.y = d.y;
-
-        struct map_selection * sel, * selm;
-        struct coord c, center;
-        struct mapset_handle * h;
-        struct map * m;
-        struct map_rect * mr;
-        struct item * item;
-        int idist;
-        int dist;
-        dist = 10000;
-        sel = map_selection_rect_new(&(new_center), dist * transform_scale(abs(new_center.y) + dist * 1.5), 18);
-
+        beginResetModel();
         m_pois.clear();
         m_poiTypes.clear();
+        endResetModel();
 
-        dbg(lvl_debug, "center is at %x, %x", center.x, center.y);
+        m_poiWorker->setParameters(filter, screenX, screenY, distance);
 
-        h = mapset_open(navit_get_mapset(m_navitInstance->getNavit()));
-        while ((m = mapset_next(h, 1))) {
-            selm = map_selection_dup_pro(sel, new_center.pro, map_projection(m));
-            mr = map_rect_new(m, selm);
-            dbg(lvl_debug, "mr=%p", mr);
-            if (mr) {
-                while ((item = map_rect_get_item(mr))) {
-                    if(!filter.isEmpty() && filter != item_to_name(item->type)){
-                        continue;
-                    }
-                    if ( item_is_poi(*item) &&
-                         item_coord_get_pro(item, &c, 1, new_center.pro) &&
-                         coord_rect_contains(&sel->u.c_rect, &c)  &&
-                         (idist=transform_distance(new_center.pro, &center, &c)) < dist) {
+        m_poiWorker->blockSignals(false);
+        QThreadPool::globalInstance()->start(m_poiWorker);
+    }
+}
+//void NavitPOIModel::receiveSearchResult(QVariantMap poi){
+//    qDebug() << "\t" << poi.value("name").toString();
 
-                        struct attr attr;
-                        char * label;
-                        char * icon = get_icon(m_navitInstance->getNavit(), item);
-                        struct pcoord item_coord;
-                        item_coord.pro = transform_get_projection(navit_get_trans(m_navitInstance->getNavit()));
-                        item_coord.x = c.x;
-                        item_coord.y = c.y;
 
-                        idist = transform_distance(new_center.pro, &center, &c);
-                        if (item_attr_get(item, attr_label, &attr)) {
-                            label = map_convert_string(item->map, attr.u.str);
+//    //                            if(!m_poiTypes.contains(item_to_name(item->type))){
+//    //                                m_poiTypes << item_to_name(item->type);
+//    //                            }
 
-                            if (icon) {
+////    QVariantMap tmpPoi(poi);
+//    int poiDist = poi.value("distM").toInt();
+////    tmpPoi.insert("distance", NavitHelper::formatDist(poiDist));
+//    if(m_pois.size() == 0){
+//        beginInsertRows(QModelIndex(), 0, 0);
+//        m_pois.append(poi);
+//        endInsertRows();
+//    }
+//    for(int i = 0; i < m_pois.length(); i++){
+//        int listDist = m_pois.at(i).value("distance").toInt();
+//        if(poiDist >= listDist ){
+//            continue;
+//        }
+//        beginInsertRows(QModelIndex(), i, i);
+//        m_pois.append(poi);
+//        endInsertRows();
+//    }
+//}
+void NavitPOIModel::receiveSearchResult(QVariantMap poi){
+    modelMutex.lock();
+//    qDebug() << "\t" << poi.value("name").toString() << "\t" << poi.value("distance").toInt();
 
-                                if(!m_poiTypes.contains(item_to_name(item->type))){
-                                    m_poiTypes << item_to_name(item->type);
-                                }
-                                char distStr[32]="";
-                                format_dist(idist, distStr);
 
-                                qDebug () << distStr;
-                                QString address = getAddressString(item,0);
+    //                            if(!m_poiTypes.contains(item_to_name(item->type))){
+    //                                m_poiTypes << item_to_name(item->type);
+    //                            }
 
-                                QVariantMap coords;
-                                coords.insert("x", item_coord.x);
-                                coords.insert("y", item_coord.y);
-                                coords.insert("pro", item_coord.pro);
-                                QVariantMap poi;
-                                poi.insert("name", label);
-                                poi.insert("type", item_to_name(item->type));
-                                poi.insert("distance", idist);
-                                poi.insert("icon", icon);
-                                poi.insert("coords", coords);
-                                poi.insert("address", address);
-
-                                beginInsertRows(QModelIndex(), rowCount(), rowCount());
-                                m_pois.append(poi);
-                                endInsertRows();
-                            }
-                        }
-                    }
-                }
-                map_rect_destroy(mr);
-            }
-            map_selection_destroy(selm);
+    int index = 0;
+    int poiDist = poi.value("distance").toInt();
+    for(; index < m_pois.length(); index++){
+        int itemDist = m_pois.at(index).value("distance").toInt();
+        if(poiDist < itemDist){
+            break;
         }
-        map_selection_destroy(sel);
-        mapset_close(h);
+    }
+
+    beginInsertRows(QModelIndex(), index, index);
+    m_pois.insert(index, poi);
+    endInsertRows();
+    modelMutex.unlock();
+}
+
+void NavitPOIModel::setAsDestination(int index){
+    if(m_pois.size() > index){
+        NavitHelper::setDestination(m_navitInstance,
+                                    m_pois[index]["label"].toString(),
+                                    m_pois[index]["coords"].toMap()["x"].toInt(),
+                                    m_pois[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitPOIModel::setAsPosition(int index){
+    if(m_pois.size() > index){
+        NavitHelper::setPosition(m_navitInstance,
+                                 m_pois[index]["coords"].toMap()["x"].toInt(),
+                                 m_pois[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitPOIModel::addAsBookmark(int index){
+    if(m_pois.size() > index){
+        NavitHelper::addBookmark(m_navitInstance,
+                                 m_pois[index]["label"].toString(),
+                                 m_pois[index]["coords"].toMap()["x"].toInt(),
+                                 m_pois[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitPOIModel::addStop(int index,  int position){
+    if(m_pois.size() > index){
+        NavitHelper::addStop(m_navitInstance,
+                             position,
+                                    m_pois[index]["label"].toString(),
+                                    m_pois[index]["coords"].toMap()["x"].toInt(),
+                                    m_pois[index]["coords"].toMap()["y"].toInt());
     }
 }

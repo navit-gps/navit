@@ -5,6 +5,9 @@ Item {
     id: __root
     signal searchButtonClicked()
     signal menuButtonClicked()
+    property alias timeLeft: timeLeft.text
+    property alias distanceLeft: distanceLeft.text
+    property alias arrivalTime: arrivingTime.text
 
     Rectangle {
         id: leftButton

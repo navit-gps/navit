@@ -6,26 +6,35 @@ import "icons.js" as Icons
 
 Item {
     id: __root
-    signal resultClicked()
-    property alias model: listView.model
+    signal itemClicked (var index)
+    property alias results : listView.model
+    property int boxRadius : 10
+    clip: true
+
+    Rectangle {
+        id: rectangle
+        color: "#ffffff"
+        anchors.fill: parent
+        radius: boxRadius
+    }
 
     ListView {
         id: listView
+        clip: true
         anchors.fill: parent
+        anchors.topMargin: parent.height * 0.05
+        anchors.bottomMargin: parent.height * 0.05
+        anchors.leftMargin: parent.width * 0.05
+        anchors.rightMargin: parent.width * 0.05
         delegate: Item {
             id: element
-            x: 5
             height: 80
-            MouseArea {
-                anchors.fill: parent
-                onClicked: __root.resultClicked()
-            }
+            width: parent.width
 
             Text {
                 id: element1
                 text: name
                 font.pointSize: 12
-                anchors.verticalCenterOffset: -height/2
                 anchors.left: distanceText.right
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -39,21 +48,52 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.top: element1.bottom
                 anchors.left: distanceText.right
-                font.bold: true
+                font.bold: false
             }
 
             Text {
                 id: distanceText
-                text: distance
-                font.pixelSize: parent.height * 0.8
+                width: height * 2
+                height: parent.height * 0.8
+                text: (distance/1000).toFixed(1)
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                font.pixelSize: height * 0.8
                 anchors.top: parent.top
                 anchors.topMargin: 0
+            }
+
+            Text {
+                id: awayText
+                text: qsTr("kilometers away")
+                anchors.horizontalCenter: distanceText.horizontalCenter
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.top: distanceText.bottom
                 anchors.bottom: parent.bottom
+                font.pixelSize: 12
+            }
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                onClicked: {
+                    __root.itemClicked(index)
+                }
+
+                Rectangle {
+                    color: "#33cb0b0b"
+                    anchors.fill: parent
+                }
             }
 
         }
     }
 
+
 }
+
+
+
+

@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 import Navit 1.0
 import Navit.POI 1.0
 import Navit.Recents 1.0
+import Navit.Search 1.0
 
 Item {
     id: __root
@@ -12,7 +13,6 @@ Item {
     signal openSearch()
     signal closeSearch()
     signal closeDrawer()
-    signal routeOverview()
 
     function open() {
         stackView.clear()
@@ -30,6 +30,11 @@ Item {
         } else if(state == ""){
             stackView.pop()
         }
+    }
+
+    NavitSearchModel {
+        id: searchModel
+        navit: Navit
     }
 
     Rectangle {
@@ -60,7 +65,6 @@ Item {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-
                 POIs {
                     id: pois
                     height: __root.width > __root.height ? parent.height * 0.25 : parent.width * 0.25
@@ -73,8 +77,11 @@ Item {
                             return;
                         }
 
-                        navitPoiModel.search(__root.lng, __root.lat, action)
-                        stackView.push(searchResultsComponents,{model:navitPoiModel})
+                        console.log(action + " pois clicked");
+
+                        navitPoiModel.search(action)
+
+                        stackView.push(searchResultsComponents,{results:navitPoiModel})
                         __root.state = "poiView"
                     }
                 }
@@ -132,8 +139,9 @@ Item {
                 Item {
                     id: searchWrapper
                     height: parent.height
+                    anchors.top: parent.top
+                    anchors.topMargin: 0
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
                     clip: true
                     width: parent.width
 
@@ -194,9 +202,11 @@ Item {
                             onPressed: {
                                 __root.state = "searchOpen"
                                 __root.openSearch()
+                                stackView.push(searchResultsComponents,{results:searchModel})
                             }
                             onTextChanged: {
-                                backend.updateSearch(text)
+//                                backend.updateSearch(text)
+                                searchModel.search2(text)
                             }
                         }
 
@@ -284,7 +294,6 @@ Item {
                             height: parent.height * 0.8
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-                            anchors.verticalCenter: parent.verticalCenter
                             source: "assets/ionicons/md-arrow-back.svg"
                             sourceSize.width: width
                             sourceSize.height: height
@@ -296,6 +305,7 @@ Item {
                             onClicked: {
                                 __root.state = ""
                                 __root.closeSearch()
+                                console.log("Back button clicked");
                             }
                         }
                     }
@@ -307,7 +317,6 @@ Item {
                         radius: height / 2
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         Image {
                             id: image4
@@ -330,16 +339,116 @@ Item {
                         }
                     }
                 }
+
+                Item {
+                    id: element2
+                    width: parent.width
+                    visible: false
+                    anchors.topMargin: parent.height * 0.2
+                    anchors.top: searchWrapper.bottom
+                    anchors.bottom: parent.bottom
+
+                    Rectangle {
+                        id: leftBlob
+                        width: height
+                        height: parent.height
+                        color: "#ffffff"
+                        radius: height/2
+                    }
+
+                    Rectangle {
+                        id: rightBlob
+                        width: height
+                        height: parent.height
+                        color: "#ffffff"
+                        radius: height/2
+                        anchors.rightMargin: -width/2
+                        anchors.right: breadcrumbs.right
+                    }
+
+                    RowLayout {
+                        id: breadcrumbs
+                        width: parent.width - parent.height
+                        anchors.leftMargin: leftBlob.width / 2
+                        anchors.left: leftBlob.left
+                        anchors.bottom: parent.bottom
+                        anchors.top: parent.top
+                        spacing: 0
+
+                        Rectangle {
+                            id: rectangle1
+                            color: "#ffffff"
+                            visible: true
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+
+                            Text {
+                                id: element3
+                                text: qsTr("Country")
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.verticalCenter: parent.verticalCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Rectangle {
+                            id: rectangle2
+                            color: "#ffffff"
+                            visible: true
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+
+                            Text {
+                                id: element4
+                                text: qsTr("Town")
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.verticalCenter: parent.verticalCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Rectangle {
+                            id: rectangle4
+                            color: "#ffffff"
+                            visible: false
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+
+                            Text {
+                                id: element5
+                                text: qsTr("Street")
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.verticalCenter: parent.verticalCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Rectangle {
+                            id: rectangle3
+                            color: "#ffffff"
+                            visible: false
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+
+                            Text {
+                                id: element6
+                                text: qsTr("House")
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.verticalCenter: parent.verticalCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                    }
+
+
+                }
             }
 
         }
     }
     NavitPOIModel {
         id:navitPoiModel
-        navit: Navit
-    }
-    NavitRecentsModel {
-        id:navitRecentsModel
         navit: Navit
     }
 
@@ -355,7 +464,14 @@ Item {
     Component{
         id:searchResultsComponents
         SearchDrawerSearchResults {
-            onResultClicked: __root.routeOverview()
+            onItemClicked: {
+                if(__root.state == "poiView"){
+                    navitPoiModel.setAsDestination(index)
+                } else if(__root.state == "searchOpen"){
+                    search.clear()
+                    searchModel.select(index)
+                }
+            }
         }
     }
     states: [
@@ -382,6 +498,24 @@ Item {
                 target: pois
                 height: 0
                 visible: false
+            }
+
+            PropertyChanges {
+                target: searchWrapper
+                height: parent.height /2
+            }
+
+            PropertyChanges {
+            }
+
+            PropertyChanges {
+                target: headerContainer
+                height: __root.width > __root.height ? parent.height * 0.2 : parent.width * 0.2
+            }
+
+            PropertyChanges {
+                target: element2
+                visible: true
             }
         },
         State {
@@ -433,8 +567,16 @@ Item {
 
 
 
+
+
+
+
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:720;width:1000}D{i:2;anchors_height:200;anchors_width:200}
-D{i:37;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:38;anchors_height:200;anchors_width:200}
+    D{i:0;autoSize:true;height:720;width:1000}D{i:15;anchors_height:132.24}D{i:40;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:42;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:44;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:38;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:2;anchors_height:200;anchors_width:200}
+D{i:49;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:50;anchors_height:200;anchors_width:200}
 }
  ##^##*/

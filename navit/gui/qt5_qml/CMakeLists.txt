@@ -6,5 +6,5 @@ set(CMAKE_AUTOMOC ON)
 qt5_add_resources(GUI_QT5_QML_QRC "gui_qt5_qml.qrc")
 
 module_add_library(gui_qt5_qml gui_qt5_qml.cpp ${GUI_QT5_QML_QRC}
-        navitpoimodel.cpp navitrecentsmodel.cpp navitfavouritesmodel.cpp proxy.c)
+        navitpoimodel.cpp navitrecentsmodel.cpp navitfavouritesmodel.cpp navitsearchmodel.cpp navithelper.cpp navitroute.cpp proxy.c)
 

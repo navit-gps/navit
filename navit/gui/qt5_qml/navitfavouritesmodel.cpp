@@ -6,10 +6,8 @@ NavitFavouritesModel::NavitFavouritesModel(QObject *parent)
 }
 QHash<int, QByteArray> NavitFavouritesModel::roleNames() const{
     QHash<int, QByteArray> roles;
-    roles[NameRole] = "name";
-    roles[CoordXRole] = "coordX";
-    roles[CoordYRole] = "coordY";
-    roles[CoordProjectionRole] = "coordProjection";
+    roles[LabelRole] = "label";
+    roles[CoordinatesRole] = "coords";
     return roles;
 }
 
@@ -19,14 +17,10 @@ QVariant NavitFavouritesModel::data(const QModelIndex & index, int role) const {
 
     const QVariantMap *poi = &m_favourites.at(index.row());
 
-    if (role == NameRole)
-        return poi->value("name");
-    if (role == CoordXRole)
-        return poi->value("coordX");
-    if (role == CoordYRole)
-        return poi->value("coordY");
-    if (role == CoordProjectionRole)
-        return poi->value("coordProjection");
+    if (role == LabelRole)
+        return poi->value("label");
+    if (role == CoordinatesRole)
+        return poi->value("coords");
 
     return QVariant();
 }
@@ -69,34 +63,34 @@ void NavitFavouritesModel::update() {
         struct navigation * nav = nullptr;
         struct item *item;
         struct coord c;
-        struct pcoord pc;
+        enum projection projection;
 
         m_favourites.clear();
 
-        pc.pro = transform_get_projection(navit_get_trans(m_navitInstance->getNavit()));
+        projection = transform_get_projection(navit_get_trans(m_navitInstance->getNavit()));
 
         if(navit_get_attr(m_navitInstance->getNavit(), attr_bookmarks, &mattr, nullptr) ) {
             bookmarks_item_rewind(mattr.u.bookmarks);
             while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
                 if (!item_attr_get(item, attr_label, &attr)) continue;
-                qDebug() << c.x << " : " << c.y;
+                //                qDebug() << c.x << " : " << c.y;
 
                 if (item_coord_get(item, &c, 1)) {
-                    pc.x = c.x;
-                    pc.y = c.y;
-                    qDebug() << attr.u.str << c.x << " : " << c.y;
+                    QVariantMap coords;
+                    coords.insert("x", c.x);
+                    coords.insert("y", c.y);
+                    coords.insert("pro", projection);
+
                     QVariantMap recentItem;
-                    recentItem.insert("coordX",pc.x);
-                    recentItem.insert("coordY",pc.y);
-                    recentItem.insert("coordProjection",pc.pro);
-                    recentItem.insert("name",attr.u.str);
+                    recentItem.insert("coords",coords);
+                    recentItem.insert("label",attr.u.str);
 
                     beginInsertRows(QModelIndex(), rowCount(), rowCount());
                     m_favourites.append(recentItem);
                     endInsertRows();
                 }
             }
-            qDebug() << m_favourites;
+            //            qDebug() << m_favourites;
         }
     }
 }
@@ -130,18 +124,40 @@ void NavitFavouritesModel::showFavourites(){
                 }
             }
         }
-        bm_count=i;
+    }
+}
+void NavitFavouritesModel::setAsDestination(int index){
+    if(m_favourites.size() > index){
+        NavitHelper::setDestination(m_navitInstance,
+                                    m_favourites[index]["label"].toString(),
+                                    m_favourites[index]["coords"].toMap()["x"].toInt(),
+                                    m_favourites[index]["coords"].toMap()["y"].toInt());
+    }
+}
 
-        if (bm_count>0) {
-            navit_set_destinations(m_navitInstance->getNavit(), pc, bm_count, "test_", 1);
-//            if (this->flags & 512) {
-                struct attr follow;
-                follow.type=attr_follow;
-                follow.u.num=180;
-//                navit_set_attr(this->nav, &this->osd_configuration);
-                navit_set_attr(m_navitInstance->getNavit(), &follow);
-                navit_zoom_to_route(m_navitInstance->getNavit(), 0);
-//            }
-        }
+void NavitFavouritesModel::setAsPosition(int index){
+    if(m_favourites.size() > index){
+        NavitHelper::setPosition(m_navitInstance,
+                                 m_favourites[index]["coords"].toMap()["x"].toInt(),
+                                 m_favourites[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitFavouritesModel::addAsBookmark(int index){
+    if(m_favourites.size() > index){
+        NavitHelper::addBookmark(m_navitInstance,
+                                 m_favourites[index]["label"].toString(),
+                                 m_favourites[index]["coords"].toMap()["x"].toInt(),
+                                 m_favourites[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitFavouritesModel::addStop(int index,  int position){
+    if(m_favourites.size() > index){
+        NavitHelper::addStop(m_navitInstance,
+                             position,
+                                    m_favourites[index]["label"].toString(),
+                                    m_favourites[index]["coords"].toMap()["x"].toInt(),
+                                    m_favourites[index]["coords"].toMap()["y"].toInt());
     }
 }

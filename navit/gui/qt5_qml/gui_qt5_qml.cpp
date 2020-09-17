@@ -62,6 +62,8 @@ extern "C" {
 #include "navitpoimodel.h"
 #include "navitrecentsmodel.h"
 #include "navitfavouritesmodel.h"
+#include "navitsearchmodel.h"
+#include "navitroute.h"
 
 struct gui_priv {
     /* navit internal handle */
@@ -228,6 +230,8 @@ static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* 
     qmlRegisterType<NavitPOIModel>("Navit.POI", 1, 0, "NavitPOIModel");
     qmlRegisterType<NavitRecentsModel>("Navit.Recents", 1, 0, "NavitRecentsModel");
     qmlRegisterType<NavitFavouritesModel>("Navit.Favourites", 1, 0, "NavitFavouritesModel");
+    qmlRegisterType<NavitSearchModel>("Navit.Search", 1, 0, "NavitSearchModel");
+    qmlRegisterType<NavitRoute>("Navit.Route", 1, 0, "NavitRoute");
 
     /* find the loader component */
     gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject*>("navit_loader");

@@ -946,5 +946,8 @@
         <file>themes/Levy/assets/corner-arrow.svg</file>
         <file>themes/Levy/assets/destination-view.png</file>
         <file>themes/Levy/icons.js</file>
+        <file>themes/Levy/SearchDrawerRecentsList.qml</file>
+        <file>themes/Levy/SearchDrawerFavouritesList.qml</file>
+        <file>themes/Levy/SearchDrawerContextMenu.qml</file>
     </qresource>
 </RCC>
