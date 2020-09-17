@@ -19,6 +19,6 @@ Window {
         property alias y: window.y
         property alias width: window.width
         property alias height: window.height
-        property alias modality : window.modality
+//        property alias modality : window.modality
     }
 }

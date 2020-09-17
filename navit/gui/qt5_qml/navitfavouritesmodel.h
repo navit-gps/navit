@@ -3,7 +3,6 @@
 
 #include <QAbstractItemModel>
 #include <QDebug>
-#include "navitinstance.h"
 
 #include <glib.h>
 extern "C" {
@@ -25,16 +24,17 @@ extern "C" {
 #include "proxy.h"
 }
 
+#include "navitinstance.h"
+#include "navithelper.h"
+
 class NavitFavouritesModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(NavitInstance * navit MEMBER m_navitInstance WRITE setNavit)
 public:
     enum FavouriteModelRoles {
-        NameRole = Qt::UserRole + 1,
-        CoordXRole,
-        CoordYRole,
-        CoordProjectionRole
+        LabelRole = Qt::UserRole + 1,
+        CoordinatesRole
     };
 
     NavitFavouritesModel(QObject *parent = 0);
@@ -52,6 +52,10 @@ public:
     void setNavit(NavitInstance * navit);
 
     Q_INVOKABLE void showFavourites();
+    Q_INVOKABLE void setAsDestination(int index);
+    Q_INVOKABLE void setAsPosition(int index);
+    Q_INVOKABLE void addAsBookmark(int index);
+    Q_INVOKABLE void addStop(int index,  int position);
 private:
     QList<QVariantMap> m_favourites;
     NavitInstance *m_navitInstance = nullptr;

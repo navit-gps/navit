@@ -4,6 +4,7 @@
 #include <QAbstractItemModel>
 #include <QDebug>
 #include "navitinstance.h"
+#include "navithelper.h"
 
 #include <glib.h>
 extern "C" {
@@ -32,10 +33,7 @@ class NavitRecentsModel : public QAbstractItemModel
 
 public:
     enum RecentsModelRoles {
-        NameRole = Qt::UserRole + 1,
-        CoordXRole,
-        CoordYRole,
-        CoordProjectionRole
+        LabelRole = Qt::UserRole + 1
     };
 
     explicit NavitRecentsModel(QObject *parent = 0);
@@ -50,6 +48,12 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     void setNavit(NavitInstance * navit);
+
+    Q_INVOKABLE void setAsDestination(int index);
+    Q_INVOKABLE void setAsPosition(int index);
+    Q_INVOKABLE void addAsBookmark(int index);
+    Q_INVOKABLE void addStop(int index,  int position);
+    Q_INVOKABLE void remove(int index);
 private:
     QList<QVariantMap> m_recents;
     NavitInstance *m_navitInstance = nullptr;

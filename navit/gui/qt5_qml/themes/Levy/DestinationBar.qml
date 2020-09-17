@@ -8,6 +8,10 @@ Item {
     signal routeDetailsClicked()
     signal cancelButtonClicked()
 
+    property alias timeLeft: timeLeft.text
+    property alias distanceLeft: distanceLeft.text
+    property alias arrivalTime: arrivingTime.text
+
     Rectangle{
         id: buttonsBackground
         height: parent.height

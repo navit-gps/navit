@@ -8,6 +8,7 @@ Popup {
     id:__root
     property string verticalPosition: "top"
     property string horizontalPosition: "left"
+    property alias address: address.text
     property int xOffset: __root.horizontalPosition == "left"? __root.width * 0.1 : 0
     property int yOffset: __root.verticalPosition == "top"? __root.width * 0.1 : 0
     signal menuItemClicked (var action)
@@ -78,73 +79,111 @@ Popup {
         }
     }
 
-    ColumnLayout {
-        id: menuItems
+    Item{
+        id:menuWrapper
         x: __root.xOffset
         y: __root.yOffset
         width: parent.width - __root.width * 0.1
         height: parent.height - __root.width * 0.1
-        Repeater {
-            id: menuElementsRepeater
-            model: ListModel {
-                ListElement {
-                    name: "Set as destination"
-                    action: "setDestination"
-                }
-                ListElement {
-                    name: "Visit before.."
-                    action: "setWaypoint"
-                }
-                ListElement {
-                    name: "Set as position"
-                    action: "setPosition"
-                }
-                ListElement {
-                    name: "Add as bookmark"
-                    action: "bookmark"
-                }
-                ListElement {
-                    name: "POIs"
-                    action: "pois"
-                }
+        Rectangle {
+            id: rectangle
+            height: parent.height * 0.2
+            color: "#a2a2a2"
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            anchors.right: parent.right
+
+            Text {
+                id: address
+                text: qsTr("Address")
+                font.pixelSize: parent.height * 0.2
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.fill: parent
             }
-            Item {
-                id: element
-                Layout.fillHeight: true
-                Layout.fillWidth: true
+        }
 
-                Text {
-                    id:nameText
-                    text: name
-                    fontSizeMode: Text.Fit
-                    font.pixelSize: (menuItems.height / menuElementsRepeater.count) * 0.45
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.bold: true
-                }
+        ColumnLayout {
+            id: menuItems
+            anchors.top: rectangle.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
 
-                Rectangle {
-                    visible: menuElementsRepeater.count !== index + 1
-                    height: 1
-                    color: "#000000"
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.right: parent.right
+            Repeater {
+                id: menuElementsRepeater
+                model: ListModel {
+                    ListElement {
+                        name: "Set as destination"
+                        action: "setDestination"
+                    }
+                    ListElement {
+                        name: "Visit before.."
+                        action: "addStop"
+                    }
+                    ListElement {
+                        name: "Set as position"
+                        action: "setPosition"
+                    }
+                    ListElement {
+                        name: "Add as bookmark"
+                        action: "bookmark"
+                    }
+                    ListElement {
+                        name: "POIs"
+                        action: "pois"
+                    }
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        __root.menuItemClicked(action)
+                Item {
+                    id: element
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    Text {
+                        id:nameText
+                        text: name
+                        fontSizeMode: Text.Fit
+                        font.pixelSize: (menuItems.height / menuElementsRepeater.count) * 0.45
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.bold: true
+                    }
+
+                    Rectangle {
+                        visible: menuElementsRepeater.count !== index + 1
+                        height: 1
+                        color: "#000000"
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        anchors.right: parent.right
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            __root.menuItemClicked(action)
+                        }
                     }
                 }
             }
+
+
         }
+
     }
 }
 
 
 
+
+
+
+
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:720;width:1280}D{i:2;anchors_width:80}D{i:1;anchors_height:200;anchors_width:200}
+    D{i:0;autoSize:true;height:720;width:1280}D{i:7;anchors_width:200;anchors_x:0;anchors_y:0}
+D{i:2;anchors_width:80}D{i:1;anchors_height:200;anchors_width:200}
 }
  ##^##*/

@@ -1,16 +1,8 @@
-#ifndef NAVITPOIMODEL_H
-#define NAVITPOIMODEL_H
+#ifndef NAVITSEARCHMODEL_H
+#define NAVITSEARCHMODEL_H
 
 #include <QAbstractItemModel>
 #include <QDebug>
-#include <QThreadPool>
-#include <QRunnable>
-#include <QMutex>
-#include <QMap>
-#include <QVariant>
-#include <QJsonDocument>
-#include <QJsonObject>
-
 #include "navitinstance.h"
 #include "navithelper.h"
 
@@ -28,50 +20,36 @@ extern "C" {
 #include "transform.h"
 
 #include "mapset.h"
+#include "callback.h"
 #include "search.h"
+#include "country.h"
+#include "track.h"
 
-#include "proxy.h"
 }
 
-
-class POISearchWorker : public QObject, public QRunnable
-{
-    Q_OBJECT
-public:
-    POISearchWorker (NavitInstance * navit);
-    ~POISearchWorker ();
-    void setParameters(QString filter, int screenX, int screenY, int distance);
-    void run() override;
-    void stop();
-signals:
-    void gotSearchResult(QVariantMap poi);
-private:
-    NavitInstance * m_navitInstance;
-    bool m_running;
-    QMutex m_mutex;
-    QString m_filter;
-    int m_screenX;
-    int m_screenY;
-    int m_distance;
-};
-
-class NavitPOIModel : public QAbstractItemModel
+class NavitSearchModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(NavitInstance * navit MEMBER m_navitInstance WRITE setNavit)
 public:
-    enum POIModelRoles {
-        NameRole = Qt::UserRole + 1,
-        TypeRole,
-        DistanceRole,
+    enum RecentsModelRoles {
+        LabelRole = Qt::UserRole + 1,
+        NameRole,
         IconRole,
-        CoordinatesRole,
         AddressRole,
-        LabelRole
+        DistanceRole
     };
 
-    NavitPOIModel(QObject *parent = 0);
-    ~NavitPOIModel() override;
+    enum SearchField {
+        SearchCountry,
+        SearchTown,
+        SearchStreet,
+        SearchHouse
+    };
+
+    Q_ENUMS(SearchField)
+
+    explicit NavitSearchModel(QObject *parent = 0);
     int rowCount(const QModelIndex & parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex & index, int role) const override;
@@ -82,22 +60,37 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_INVOKABLE void search(QString filter, int screenX = -1, int screenY = -1, int distance = 15000);
+    void setNavit(NavitInstance * navit);
 
     Q_INVOKABLE void setAsDestination(int index);
     Q_INVOKABLE void setAsPosition(int index);
     Q_INVOKABLE void addAsBookmark(int index);
     Q_INVOKABLE void addStop(int index,  int position);
-    void setNavit(NavitInstance * navit);
-private slots:
-    void receiveSearchResult(QVariantMap poi);
+    Q_INVOKABLE void remove(int index);
+    Q_INVOKABLE void select(int index);
+    Q_INVOKABLE void search(QString queryText);
+    Q_INVOKABLE void search2(QString queryText);
+    void search_list_set_default_country();
+    static void idle_cb(NavitSearchModel * searchModel);
+    void handleSearchResult();
+
 private:
-    QList<QVariantMap> m_pois;
     NavitInstance *m_navitInstance = nullptr;
-    QStringList m_poiTypes;
-    QString getAddressString(struct item *item, int prependPostal);
-    POISearchWorker *m_poiWorker;
-    QMutex modelMutex;
+    QList<QVariantMap> m_searchResults;
+    QString m_country = "United Kingdom";
+
+    struct callback * m_idle_cb;
+    struct event_idle * m_event_idle;
+
+    struct search_list *m_searchResultList;
+
+    char *m_country_iso2;
+    enum attr_type m_search_type;
+    void update();
+
+    void idle_start();
+    void idle_end();
+    void setDefaultCountry();
 };
 
-#endif // NAVITPOIMODEL_H
+#endif // NAVITSEARCHMODEL_H

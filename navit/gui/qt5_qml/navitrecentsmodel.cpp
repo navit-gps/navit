@@ -4,12 +4,10 @@ NavitRecentsModel::NavitRecentsModel(QObject *parent)
 {
 
 }
+
 QHash<int, QByteArray> NavitRecentsModel::roleNames() const{
     QHash<int, QByteArray> roles;
-    roles[NameRole] = "name";
-    roles[CoordXRole] = "coordX";
-    roles[CoordYRole] = "coordY";
-    roles[CoordProjectionRole] = "coordProjection";
+    roles[LabelRole] = "label";
     return roles;
 }
 
@@ -19,15 +17,8 @@ QVariant NavitRecentsModel::data(const QModelIndex & index, int role) const {
 
     const QVariantMap *poi = &m_recents.at(index.row());
 
-    if (role == NameRole)
-        return poi->value("name");
-    if (role == CoordXRole)
-        return poi->value("coordX");
-    if (role == CoordYRole)
-        return poi->value("coordY");
-    if (role == CoordProjectionRole)
-        return poi->value("coordProjection");
-
+    if (role == LabelRole)
+        return poi->value("label");
     return QVariant();
 }
 
@@ -90,11 +81,15 @@ void NavitRecentsModel::update() {
             label_full=attr.u.str;
 
             if (item_coord_get(item, &c, 1)) {
+                QVariantMap coords;
+                coords.insert("x", c.x);
+                coords.insert("y", c.y);
+                coords.insert("pro", projection);
+
                 QVariantMap recentItem;
-                recentItem.insert("coordX",c.x);
-                recentItem.insert("coordY",c.y);
-                recentItem.insert("coordProjection",projection);
-                recentItem.insert("name",label_full);
+                recentItem.insert("coords",coords);
+                recentItem.insert("label",label_full);
+//                qDebug() << label_full;
 
                 beginInsertRows(QModelIndex(), rowCount(), rowCount());
                 m_recents.append(recentItem);
@@ -102,5 +97,49 @@ void NavitRecentsModel::update() {
             }
         }
         map_rect_destroy(mr_formerdests);
+    }
+}
+
+void NavitRecentsModel::setAsDestination(int index){
+    if(m_recents.size() > index){
+        NavitHelper::setDestination(m_navitInstance,
+                                    m_recents[index]["label"].toString(),
+                                    m_recents[index]["coords"].toMap()["x"].toInt(),
+                                    m_recents[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitRecentsModel::addStop(int index,  int position){
+    if(m_recents.size() > index){
+        NavitHelper::addStop(m_navitInstance,
+                             position,
+                                    m_recents[index]["label"].toString(),
+                                    m_recents[index]["coords"].toMap()["x"].toInt(),
+                                    m_recents[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitRecentsModel::setAsPosition(int index){
+    if(m_recents.size() > index){
+        NavitHelper::setPosition(m_navitInstance,
+                                 m_recents[index]["coords"].toMap()["x"].toInt(),
+                                 m_recents[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitRecentsModel::addAsBookmark(int index){
+    if(m_recents.size() > index){
+        NavitHelper::addBookmark(m_navitInstance,
+                                 m_recents[index]["label"].toString(),
+                                 m_recents[index]["coords"].toMap()["x"].toInt(),
+                                 m_recents[index]["coords"].toMap()["y"].toInt());
+    }
+}
+
+void NavitRecentsModel::remove(int index) {
+    if(index < m_recents.size()){
+        beginRemoveRows(QModelIndex(), index, index);
+        m_recents.removeAt(index);
+        endInsertRows();
     }
 }
