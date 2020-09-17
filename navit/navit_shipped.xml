@@ -19,6 +19,8 @@
 	<debug name="global" dbg_level="error"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
+	<debug name="navit" dbg_level="warning"/>
+
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
 	<debug name="profile:navit:do_draw" dbg_level="debug"/>
 	-->
@@ -27,6 +29,9 @@
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
 
+	<!-- <debug name="gui_qt5_qml" dbg_level="debug"/> -->
+	<!-- <debug name="graphics_qt5" dbg_level="debug"/> -->
+	<!-- <debug name="event_qt5" dbg_level="debug"/> -->
 	<!--
 	center= defines which map location Navit will show after first start.
 	It will only be used for the first start; subsequent starts will remember the
@@ -35,14 +40,12 @@
 	For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
 	-->
 	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
-		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. On windows systems, use win32 -->
-		<graphics type="gtk_drawing_area"/>
 		<!--
 		The following line let you select which graphical user interface you'd like to use.
 		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
 		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag
 		-->
-		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
+		<graphics type="qt5"/>
 		<!--
 		In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
 		Here's an example for a freerunner:
@@ -53,7 +56,8 @@
 		The action that appears on map click is configurable with the attribute "on_map_click".
 		To get the previous behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
 		-->
-		<gui type="internal" enabled="yes"><![CDATA[
+		<gui type="qt5_qml" enabled="yes" />
+		<gui type="internal" enabled="no"><![CDATA[
 			<html>
 				<a name='Main Menu'><text>Main menu</text>
 					<a href='#Actions'><img src='gui_actions'>Actions</img></a>
@@ -189,7 +193,7 @@ Waypoint</text></img>
 		<traffic type="null"/>
 
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
-		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
+		<vehicle name="Local GPS" profilename="car" enabled="no" source="gpsd://localhost" gpsd_query="w+xj">
 		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->
 		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1"
 				source="serial:COM4 baudrate=4800 parity=N data=8 stop=1" > -->
@@ -201,7 +205,7 @@ Waypoint</text></img>
 		<!-- For SDL, you should add follow="1" to have the view centered on your position -->
 		<!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
 
-		<vehicle name="Demo" profilename="car" enabled="no" source="demo://"/>
+		<vehicle name="Demo" profilename="car" enabled="yes" active="1" source="demo://"/>
 
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>

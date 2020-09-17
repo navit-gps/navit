@@ -1117,8 +1117,8 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
         this->reached_destinations_count=0;
         route_status.u.num=route_status_no_destination;
     }
-    callback_list_call_attr_1(this->cbl2, attr_destination, this);
     route_set_attr(this, &route_status);
+    callback_list_call_attr_1(this->cbl2, attr_destination, this);
     profile(1,"find_nearest_street");
 
     /* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */

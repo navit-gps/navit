@@ -524,7 +524,7 @@
 		</itemgra>
 		<!-- amenity=parking -->
 		<itemgra item_types="poi_car_parking" order="14-">
-			<icon src="parking.png"/>
+			<icon src="assets/osmic/transport/parking-car-14.svg"/>
 		</itemgra>
 		<!-- amenity=police -->
 		<itemgra item_types="poi_police" order="14-">
