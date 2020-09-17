@@ -148,10 +148,10 @@ int main_real(int argc, char * const* argv) {
                 print_usage();
                 exit(2);
                 break;
-            case '?':
-                fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
-                print_usage();
-                exit(3);
+//            case '?':
+//                fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
+//                print_usage();
+//                exit(3);
 #endif
             }
         }
