@@ -32,7 +32,7 @@ class NavitSearchModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(NavitInstance * navit MEMBER m_navitInstance WRITE setNavit)
 public:
-    enum RecentsModelRoles {
+    enum SearchModelRoles {
         LabelRole = Qt::UserRole + 1,
         NameRole,
         IconRole,

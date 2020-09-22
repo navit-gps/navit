@@ -1,6 +1,11 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
+import Navit 1.0
+import Navit.Layouts 1.0
+import Navit.Layers 1.0
+import Navit.Vehicles 1.0
+import Navit.Maps 1.0
 
 Item {
     id: __root
@@ -14,6 +19,15 @@ Item {
             stackView.push(searchResultsComponents)
         } else {
             stackView.pop()
+        }
+    }
+    onCloseMenu: {
+        close()
+    }
+
+    function close(){
+        while(menuStack.depth > 1){
+            menuStack.pop();
         }
     }
 
@@ -32,6 +46,7 @@ Item {
         case "heightProfile":
             break;
         case "mapRules":
+            menuStack.push(menuListView, {"menuName": name, "model":mapRules})
             break;
         case "display":
             menuStack.push(menuListView, {"menuName": name, "model":menuDisplaySettingsModel})
@@ -39,6 +54,34 @@ Item {
         case "settings":
             menuStack.push(menuListView, {"menuName": name, "model":menuSettingsModel})
             break;
+        case "layouts":
+            menuStack.push(menuListView, {"menuName": name, "model":layoutsModel})
+            break;
+        case "setLayout":
+            layoutsModel.setLayout(name);
+            menuStack.pop();
+            break;
+        case "layers":
+            menuStack.push(menuListView, {"menuName": name, "model":layersModel})
+            break;
+        case "toggleLayer":
+            layersModel.toggleLayer(name);
+            break;
+        case "vehicles":
+            vehiclesModel.update();
+            menuStack.push(menuListView, {"menuName": name, "model":vehiclesModel});
+            break;
+        case "setVehicle":
+            vehiclesModel.setVehicle(name);
+            menuStack.pop();
+            break;
+        case "maps":
+            mapsModel.update();
+            menuStack.push(menuListView, {"menuName": name, "model":mapsModel});
+            break;
+        case "toggleMap":
+            mapsModel.toggleMap(name);
+        break;
         }
     }
 
@@ -189,11 +232,11 @@ Item {
             imageUrl: ""
         }
 
-        ListElement {
-            name: "Height Profile"
-            action: "heightProfile"
-            imageUrl: ""
-        }
+//        ListElement {
+//            name: "Height Profile"
+//            action: "heightProfile"
+//            imageUrl: ""
+//        }
 
         ListElement {
             name: "Map Rules"
@@ -212,19 +255,61 @@ Item {
             imageUrl: "qrc:/themes/Levy/assets/ionicons/md-settings.svg"
         }
     }
+    ListModel {
+        id:mapRules
+        ListElement {
+            name: "Lock on Road"
+            action: ""
+            imageUrl: ""
+        }
+        ListElement {
+            name: "Northing"
+            action: ""
+            imageUrl: ""
+        }
+        ListElement {
+            name: "Map follows Vehicle"
+            action: ""
+            imageUrl: ""
+        }
+        ListElement {
+            name: "Plan with Waypoints"
+            action: ""
+            imageUrl: ""
+        }
+    }
+    NavitLayouts {
+        id:layoutsModel
+        navit:Navit
+    }
+
+    NavitLayers {
+        id:layersModel
+        layout:layoutsModel
+    }
+
+    NavitVehicles {
+        id:vehiclesModel
+        navit:Navit
+    }
+
+    NavitMaps {
+        id:mapsModel
+        navit:Navit
+    }
 
     ListModel {
         id:menuSettingsModel
 
         ListElement {
             name: "Maps"
-            action: ""
+            action: "maps"
             imageUrl: ""
         }
 
         ListElement {
             name: "Vehicle"
-            action: ""
+            action: "vehicles"
             imageUrl: ""
         }
     }
@@ -233,7 +318,7 @@ Item {
         id:menuDisplaySettingsModel
         ListElement {
             name: "Layout"
-            action: ""
+            action: "layouts"
             imageUrl: ""
         }
 
@@ -245,7 +330,7 @@ Item {
 
         ListElement {
             name: "Layers"
-            action: ""
+            action: "layers"
             imageUrl: ""
         }
     }

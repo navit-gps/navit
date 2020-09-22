@@ -305,6 +305,10 @@ Item {
             id: mouseArea
             anchors.fill: parent
             onClicked: {
+                if(__root.state == "menuDrawerOpen"){
+                    menuDrawer.close()
+                }
+
                 __root.state = ""
             }
         }
