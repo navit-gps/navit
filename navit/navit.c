@@ -782,6 +782,31 @@ static void navit_autozoom(struct navit *this_, struct coord *center, int speed,
  * Change the current zoom level, zooming closer to the ground
  *
  * @param navit The navit instance
+ * @param level The zoom level between 0-18
+ * @param p The invariant point (if set to NULL, default to center)
+ * @returns nothing
+ */
+
+void navit_zoom_level(struct navit *this_, int level, struct point *p){
+    if(level > 18){
+        level = 18;
+    }
+    if (level < 0){
+        level = 0;
+    }
+
+    long scale=2<<level;
+
+    if(this_->autozoom_active) {
+        this_->autozoom_paused = 10;
+    }
+    navit_scale(this_, scale, p, 1);
+}
+
+/**
+ * Change the current zoom level, zooming closer to the ground
+ *
+ * @param navit The navit instance
  * @param factor The zoom factor, usually 2
  * @param p The invariant point (if set to NULL, default to center)
  * @returns nothing

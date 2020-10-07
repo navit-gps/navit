@@ -70,6 +70,7 @@ void navit_ignore_graphics_events(struct navit *this_, int ignore);
 void navit_set_timeout(struct navit *this_);
 int navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback);
 void navit_handle_motion(struct navit *this_, struct point *p);
+void navit_zoom_level(struct navit *this_, int level, struct point *p);
 void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
 void navit_zoom_in_cursor(struct navit *this_, int factor);
