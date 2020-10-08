@@ -1,6 +1,6 @@
 #include "navitroute.h"
 
-NavitRoute::NavitRoute()
+NavitRoute::NavitRoute() : m_status(Invalid)
 {
 
 }
@@ -51,12 +51,10 @@ void NavitRoute::setNavit(NavitInstance * navit){
     navit_add_callback(m_navitInstance->getNavit(),cb);
     navit_add_callback(m_navitInstance->getNavit(),cb2);
 
-    struct navit * tst = navit->getNavit();
-
+    statusUpdate();
 }
 
 void NavitRoute::routeUpdate(){
-//    listIcons(m_navitInstance);
     struct map * map = nullptr;
     struct map_rect * mr = nullptr;
     struct navigation * nav = nullptr;
@@ -114,14 +112,58 @@ void NavitRoute::routeUpdate(){
         emit propertiesChanged();
     }
     map_rect_destroy(mr);
+
+    statusUpdate();
 }
 
+QString NavitRoute::getLastDestination(struct pcoord *pc) {
+    if(m_navitInstance){
+        struct map *formerdests;
+        struct map_rect *mr_formerdests;
+        struct item *item;
+        struct attr attr;
+
+        if(!navit_get_attr(m_navitInstance->getNavit(), attr_former_destination_map, &attr, nullptr))
+            return "";
+
+        formerdests=attr.u.map;
+        if(!formerdests)
+            return "";
+
+        mr_formerdests=map_rect_new(formerdests, nullptr);
+        if(!mr_formerdests)
+            return "";
+
+        pc->pro = map_projection(formerdests);
+
+        QString ret;
+        while ((item=map_rect_get_item(mr_formerdests))) {
+            struct coord c;
+            if (item->type!=type_former_destination) continue;
+            if (!item_attr_get(item, attr_label, &attr)) continue;
+
+            if (item_coord_get(item, &c, 1)) {
+                pc->x = c.x;
+                pc->y = c.y;
+                ret=attr.u.str;
+            }
+        }
+        map_rect_destroy(mr_formerdests);
+        return ret;
+    }
+}
 void NavitRoute::destinationUpdate(){
     struct route * route = navit_get_route(m_navitInstance->getNavit());
     int destCount = route_get_destination_count(route);
 
+    statusUpdate();
+
     if(destCount > m_destCount){
-        emit destinationAdded();
+        QString destination = getLastDestination(&m_lastDestinationCoord);
+
+        navit_set_center(m_navitInstance->getNavit(), &m_lastDestinationCoord, 1);
+        navit_zoom_level(m_navitInstance->getNavit(), 4, nullptr);
+        emit destinationAdded(destination);
     } else if (destCount < m_destCount) {
         emit destinationRemoved();
     }
@@ -129,6 +171,20 @@ void NavitRoute::destinationUpdate(){
         emit navigationFinished();
     }
     m_destCount = destCount;
+}
+
+void NavitRoute::statusUpdate(){
+    struct navigation * nav = nullptr;
+    nav = navit_get_navigation(m_navitInstance->getNavit());
+    if(!nav) {
+        return;
+    }
+    struct attr attr;
+    navigation_get_attr(nav, attr_nav_status, &attr,nullptr);
+    if(m_status != attr.u.num){
+        m_status = static_cast<Status>(attr.u.num);
+        emit statusChanged();
+    }
 }
 void NavitRoute::routeCallbackHandler(NavitRoute * navitRoute){
     navitRoute->routeUpdate();

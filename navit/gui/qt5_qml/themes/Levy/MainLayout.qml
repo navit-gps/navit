@@ -28,7 +28,7 @@ Item {
         function startNavigation() {
             __root.state = ""
             __root.prevState = ""
-            mapNavigationBar.state = "navigationState"
+            mapNavigationBar.setNavigationState()
 
             navit1.pitch = 45;
             navit1.followVehicle = 1
@@ -51,7 +51,16 @@ Item {
             destinationDetailsBar.address = destination;
         }
         onNavigationFinished: {
-            mapNavigationBar.state = ""
+            console.log("onNavigationFinished");
+            mapNavigationBar.setNormalState()
+        }
+        onStatusChanged: {
+            console.log(status)
+            NavitRoute.Navigating
+            if(status === NavitRoute.Recalculating || status === NavitRoute.Navigating ){
+                console.log("showing navigation state")
+                mapNavigationBar.setNavigationState()
+            }
         }
     }
 
@@ -265,7 +274,19 @@ Item {
             __root.state = "routeOverviewPOIs";
             searchDrawer.searchPOIs("");
         }
-    }    Item {
+    }
+
+    RouteCalculating {
+        id: routeCalculating
+        width: parent.width * 0.4
+        height: parent.height * 0.05
+        anchors.topMargin: parent.height * 0.05
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        visible: (navitRoute.status === NavitRoute.Calculating || navitRoute.status === NavitRoute.Recalculating )
+    }
+
+    Item {
         id: recenterButton
         width: parent.width > parent.height ? parent.height * 0.1 : parent.width * 0.1
         height: width
@@ -306,6 +327,8 @@ Item {
         }
 
     }
+
+
 
     Rectangle {
         id: overlay
@@ -405,7 +428,7 @@ Item {
         }
         onCancelRoute : {
             __root.state = ""
-            mapNavigationBar.state = ""
+            mapNavigationBar.setNormalState()
             navitRoute.cancelNavigation();
         }
     }
@@ -696,41 +719,13 @@ Item {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*##^## Designer {
     D{i:0;height:720;width:1280}D{i:24;anchors_height:200;anchors_width:200}D{i:25;anchors_height:200;anchors_width:200}
 D{i:26;anchors_height:200;anchors_width:200}D{i:27;anchors_height:200;anchors_width:200}
 D{i:23;anchors_height:200;anchors_width:200}D{i:29;anchors_height:200;anchors_width:200}
 D{i:28;anchors_height:200;anchors_width:200}D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}
 D{i:6;anchors_height:100;anchors_width:100}D{i:7;anchors_height:100;anchors_width:100}
-D{i:8;anchors_y:109}D{i:10;anchors_height:200;anchors_width:200}D{i:11;anchors_height:100;anchors_width:100}
-D{i:12;anchors_height:100;anchors_width:100;anchors_y:109}D{i:9;anchors_y:109}D{i:13;anchors_y:109}
-D{i:22;anchors_height:200;anchors_width:200}D{i:23;anchors_height:200;anchors_width:200}
-D{i:24;anchors_height:200;anchors_width:200}D{i:26;anchors_height:200;anchors_width:200}
-D{i:27;anchors_height:200;anchors_width:200}D{i:25;anchors_height:200;anchors_width:200}
+D{i:8;anchors_y:109}D{i:9;anchors_y:109}D{i:13;anchors_height:100;anchors_width:100}
+D{i:14;anchors_height:100;anchors_width:100;anchors_y:109}D{i:15;anchors_y:109}D{i:12;anchors_height:200;anchors_width:200}
 }
  ##^##*/

@@ -41,6 +41,7 @@ class NavitRoute : public QObject
     Q_PROPERTY(QString         distance    READ   getDistance     NOTIFY propertiesChanged)
     Q_PROPERTY(QString         timeLeft    READ   getTimeLeft     NOTIFY propertiesChanged)
     Q_PROPERTY(QString         arrivalTime READ   getArrivalTime  NOTIFY propertiesChanged)
+    Q_PROPERTY(Status          status      READ   getStatus       NOTIFY statusChanged)
 public:
     NavitRoute();
     void setNavit(NavitInstance * navit);
@@ -48,23 +49,43 @@ public:
     static void destinationCallbackHandler(NavitRoute * navitRoute);
     void routeUpdate();
     void destinationUpdate();
-    Q_INVOKABLE void setDestination(QString label, int x, int y);
-    Q_INVOKABLE void setPosition(int x, int y);
-    Q_INVOKABLE void addStop(QString label, int x, int y, int position);
-    Q_INVOKABLE void cancelNavigation();
+    void statusUpdate();
+
+    enum Status {
+        Invalid = status_invalid,
+        NoRoute = status_no_route,
+        Idle = status_no_destination,
+        Calculating = status_calculating,
+        Recalculating = status_recalculating,
+        Navigating = status_routing
+    };
+
+    Q_ENUMS(Status)
 signals:
     void propertiesChanged();
-    void destinationAdded();
+    void destinationAdded(QString destination);
     void destinationRemoved();
     void navigationFinished();
+    void statusChanged();
+public slots:
+    void setDestination(QString label, int x, int y);
+    void setPosition(int x, int y);
+    void addStop(QString label, int x, int y, int position);
+    void cancelNavigation();
+
 private:
     NavitInstance *m_navitInstance = nullptr;
     QStringList m_directions;
     QString m_distance;
     QString m_timeLeft;
     QString m_arrivalTime;
+    Status m_status;
+
+    QString m_lastDestination;
+    struct pcoord m_lastDestinationCoord;
     int m_destCount;
 
+    QString getLastDestination(pcoord *pc);
     QStringList getDirections() {
         return m_directions;
     }
@@ -76,6 +97,9 @@ private:
     }
     QString getArrivalTime() {
         return m_arrivalTime;
+    }
+    Status getStatus(){
+        return m_status;
     }
 };
 

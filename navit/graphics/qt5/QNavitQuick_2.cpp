@@ -213,7 +213,6 @@ void QNavitQuick_2::setPitch(int pitch){
         setNavitNumProperty(attr_pitch, pitch);
         m_pitch = pitch;
         emit propertiesChanged();
-        qDebug() << pitch;
     }
 }
 

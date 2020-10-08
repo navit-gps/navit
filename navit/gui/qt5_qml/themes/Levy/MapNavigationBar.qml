@@ -9,6 +9,13 @@ Item {
     property alias distanceLeft: distanceLeft.text
     property alias arrivalTime: arrivingTime.text
 
+    function setNavigationState(){
+        __root.state = "navigationState"
+    }
+    function setNormalState(){
+        __root.state = ""
+    }
+
     Rectangle {
         id: leftButton
         width: height
@@ -226,16 +233,3 @@ Item {
     ]
 
 }
-
-
-
-
-
-
-
-/*##^## Designer {
-    D{i:0;autoSize:true;height:100;width:1000}D{i:2;anchors_height:200}D{i:4;anchors_height:200}
-D{i:3;anchors_height:200;anchors_x:20}D{i:6;anchors_x:24;anchors_y:37}D{i:7;anchors_height:100;anchors_width:100}
-D{i:9;anchors_height:200}D{i:14;anchors_height:100;anchors_width:100}D{i:8;anchors_height:200}
-}
- ##^##*/
