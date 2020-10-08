@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QDebug>
+#include <QThread>
 #include <QThreadPool>
 #include <QRunnable>
 #include <QMutex>
@@ -34,21 +35,17 @@ extern "C" {
 }
 
 
-class POISearchWorker : public QObject, public QRunnable
+class POISearchWorker : public QThread
 {
     Q_OBJECT
 public:
-    POISearchWorker (NavitInstance * navit);
+    POISearchWorker (NavitInstance * navit, QString filter, int screenX, int screenY, int distance);
     ~POISearchWorker ();
-    void setParameters(QString filter, int screenX, int screenY, int distance);
     void run() override;
-    void stop();
 signals:
     void gotSearchResult(QVariantMap poi);
 private:
     NavitInstance * m_navitInstance;
-    bool m_running;
-    QMutex m_mutex;
     QString m_filter;
     int m_screenX;
     int m_screenY;
@@ -81,14 +78,14 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    Q_INVOKABLE void search(QString filter, int screenX = -1, int screenY = -1, int distance = 15000);
-
-    Q_INVOKABLE void setAsDestination(int index);
-    Q_INVOKABLE void setAsPosition(int index);
-    Q_INVOKABLE void addAsBookmark(int index);
-    Q_INVOKABLE void addStop(int index,  int position);
+public slots:
+    void search(QString filter, int screenX = -1, int screenY = -1, int distance = 15000);
+    void setAsDestination(int index);
+    void setAsPosition(int index);
+    void addAsBookmark(int index);
+    void addStop(int index,  int position);
     void setNavit(NavitInstance * navit);
+    void reset();
 private slots:
     void receiveSearchResult(QVariantMap poi);
 private:
@@ -96,7 +93,8 @@ private:
     NavitInstance *m_navitInstance = nullptr;
     QStringList m_poiTypes;
     QString getAddressString(struct item *item, int prependPostal);
-    POISearchWorker *m_poiWorker;
+    void stopWorker(bool clearModel = false);
+    POISearchWorker *m_poiWorker = nullptr;
     QMutex modelMutex;
 };
 

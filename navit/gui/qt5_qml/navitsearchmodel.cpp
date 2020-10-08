@@ -2,8 +2,141 @@
 
 #include "event.h"
 
+SearchWorker::SearchWorker (NavitInstance * navit, search_list *searchResultList, QString searchQuery, enum attr_type search_type) :
+    m_navitInstance(navit),
+    m_searchResultList(searchResultList),
+    m_searchQuery(searchQuery),
+    m_search_type(search_type){
+
+}
+
+void SearchWorker::run()
+{
+    if(m_searchQuery == "" && m_search_type != attr_house_number)
+        return;
+
+    struct search_list_result *res;
+
+    struct attr attr;
+    QString label;
+    QString icon;
+
+    QByteArray qry2 = m_searchQuery.toLocal8Bit();
+    attr.u.str = static_cast<char *>(malloc(qry2.size() + 1));
+    memcpy ( attr.u.str, qry2.data(), qry2.size() + 1 );
+    attr.type = static_cast<enum attr_type>(m_search_type);
+
+    search_list_search(m_searchResultList, &attr, 1);
+
+    int i=0;
+    while((res=search_list_get_result(m_searchResultList))) {
+        SearchResult result;
+        QStringList addressString;
+        Address address;
+
+        if (res->country) {
+            label = QString(res->country->name);
+            icon = res->country->flag;
+            addressString.append(label);
+            address.country = label;
+        }
+
+        if (res->town) {
+            QString district = "";
+            label = res->town->common.town_name;
+            if(res->town->common.district_name){
+                district =  QString(" (%1)").arg(res->town->common.district_name);
+                label.append(district);
+            }
+
+            icon = "icons/bigcity.png";
+
+            if (res->town->common.postal_mask)
+                addressString.append(res->town->common.postal_mask);
+            else if (res->town->common.postal)
+                addressString.append(res->town->common.postal);
+
+            struct attr state_attr;
+            if(attr_generic_get_attr(res->town->common.attrs,nullptr,attr_state_name,&state_attr,nullptr)){
+                addressString.append(state_attr.u.str);
+            }
+
+            if(res->town->common.county_name){
+                addressString.append(res->town->common.county_name);
+
+            }
+            struct attr municipality_attr;
+            if(attr_generic_get_attr(res->town->common.attrs,nullptr,attr_municipality_name,&municipality_attr,nullptr)){
+                addressString.append(municipality_attr.u.str);
+            }
+
+            addressString.append(label);
+
+            address.town = label;
+        }
+
+        if (res->street) {
+            label = QString(res->street->name);
+            icon = "icons/smallcity.png";
+            addressString.append(label);
+
+            if (res->street->common.postal_mask)
+                addressString.append(res->street->common.postal_mask);
+            else if (res->street->common.postal)
+                addressString.append(res->street->common.postal);
+
+            address.street = label;
+        }
+
+        if (res->house_number) {
+            QString houseNumber = QString(res->house_number->house_number);
+            icon = "icons/smallcity.png";
+            address.house = label;
+
+            QStringList fullAddress;
+            for(int i=addressString.size();i-->0;)
+            {
+                fullAddress << addressString[i];
+            }
+            label = QString("%0 %1").arg(houseNumber,fullAddress.join(", "));
+            addressString.clear();
+        }
+
+        if(m_search_type != attr_country_all){
+            memcpy(&result.coords, res->c, sizeof result.coords);
+        }
+        QStringList reverseAddrStr;
+        while(!addressString.isEmpty()){
+            reverseAddrStr << addressString.takeLast();
+        }
+
+        result.index = i;
+        result.label = label;
+        result.icon = icon;
+        result.address = address;
+        result.addressString = reverseAddrStr.join(", ");
+        result.distance = "0";
+        i++;
+        emit gotSearchResult(result);
+
+        if ( QThread::currentThread()->isInterruptionRequested() ) {
+            break;
+        }
+    }
+}
+
 NavitSearchModel::NavitSearchModel(QObject *parent)
 {
+    connect(this, &NavitSearchModel::searchQueryChanged, this, &NavitSearchModel::search);
+    qRegisterMetaType<SearchResult>("SearchResult");
+}
+NavitSearchModel::~NavitSearchModel()
+{
+    qDebug() << "Deleting NavitSearchModel";
+    if(m_searchWorker){
+        qDebug() << "Deleting m_searchWorker";
+        delete m_searchWorker;
+    }
 }
 
 
@@ -22,18 +155,18 @@ QVariant NavitSearchModel::data(const QModelIndex & index, int role) const {
     if (index.row() < 0 || index.row() >= m_searchResults.count())
         return QVariant();
 
-    const QVariantMap *poi = &m_searchResults.at(index.row());
+    const SearchResult *poi = &m_searchResults.at(index.row());
 
     if (role == LabelRole)
-        return poi->value("label");
+        return poi->label;
     else if (role == NameRole)
-        return poi->value("label");
+        return poi->label;
     else if (role == IconRole)
-        return poi->value("icon");
+        return poi->icon;
     else if (role == AddressRole)
-        return poi->value("address");
+        return poi->addressString;
     else if (role == DistanceRole)
-        return poi->value("distance");
+        return poi->distance;
     return QVariant();
 }
 
@@ -69,159 +202,81 @@ void NavitSearchModel::setNavit(NavitInstance * navit){
     m_searchResultList=search_list_new(ms);
     search_list_set_default_country();
 
-    m_search_type = attr_town_or_district_name;
+    changeSearchType(SearchTown);
 }
 
-void NavitSearchModel::handleSearchResult(){
-    struct search_list_result *res;
-
-    res=search_list_get_result(m_searchResultList);
-    if (!res) {
-        idle_end();
-        return;
-    }
-
-
-    QVariantMap result;
-    QString label;
-    QString icon;
-    QStringList address;
-
-    if (res->country) {
-        label = g_strdup(res->country->name);
-        icon = res->country->flag;
-        address.append(label);
-    }
-
-    if (res->town) {
-        label = g_strdup(res->town->common.town_name);
-        icon = "icons/bigcity.png";
-        address.append(label);
-    }
-
-    if (res->street) {
-        label = g_strdup(res->street->name);
-        icon = "icons/smallcity.png";
-        address.append(label);
-    }
-
-
-    qDebug() << label;
-
-    result.insert("label", label);
-    result.insert("icon", icon);
-
-    result.insert("address", address.join(", "));
-    result.insert("distance", 1);
-
+void NavitSearchModel::receiveSearchResult(SearchResult result){
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_searchResults.append(result);
     endInsertRows();
-
-    qDebug() << result["label"];
-
 }
-void NavitSearchModel::idle_cb(NavitSearchModel * searchModel){
-    searchModel->handleSearchResult();
-}
-
-void NavitSearchModel::idle_start(){
-    m_idle_cb = callback_new_1(callback_cast(idle_cb), this);
-    m_event_idle = event_add_idle(50,m_idle_cb);
-    callback_call_0(m_idle_cb);
-}
-
-void NavitSearchModel::idle_end(){
-    if (m_event_idle != nullptr) {
-        event_remove_idle(m_event_idle);
-        m_event_idle=nullptr;
-    }
-    if (m_idle_cb != nullptr) {
-        callback_destroy(m_idle_cb);
-        m_idle_cb=nullptr;
-    }
-}
-
-void NavitSearchModel::search2(QString queryText){
-    struct search_list_result *res;
-
-    struct attr attr;
-    QString label;
-    QString icon;
-
-
-    if(!m_search_type){
-        m_search_type = attr_country_all;
-    }
-
-    attr.u.str = queryText.toUtf8().data();
-    attr.type = m_search_type;
-
-    search_list_search(m_searchResultList, &attr, 1);
-    int count = 0;
-
+void NavitSearchModel::changeSearchType(enum SearchType searchType, bool restoreQuery){
     beginResetModel();
     m_searchResults.clear();
     endResetModel();
 
-    while((res=search_list_get_result(m_searchResultList))) {
+    m_search_type = searchType;
+    emit searchTypeChanged();
 
-        QVariantMap result;
-        QStringList address;
-
-        if (res->country) {
-            label = g_strdup(res->country->name);
-            icon = res->country->flag;
-            address.append(label);
-        }
-
-        if (res->town) {
-            label = g_strdup(res->town->common.town_name);
-            icon = "icons/bigcity.png";
-            address.append(label);
-        }
-
-        if (res->street) {
-            label = g_strdup(res->street->name);
-            icon = "icons/smallcity.png";
-            address.append(label);
-        }
-
-
-
-        result.insert("label", label);
-        result.insert("icon", icon);
-        result.insert("address", address.join(", "));
-
-        beginInsertRows(QModelIndex(), rowCount(), rowCount());
-        m_searchResults.append(result);
-        endInsertRows();
-
-        if (count ++ > 50) {
+    if(restoreQuery){
+        switch(m_search_type){
+        case SearchCountry:
+            m_searchQuery = m_searchQueryCountry;
+            m_searchQueryTown = "";
+            m_searchQueryStreet = "";
+            m_address.address.country = "";
+            m_address.address.town = "";
+            m_address.address.street = "";
+            m_address.address.house = "";
+            break;
+        case SearchTown:
+            m_searchQuery = m_searchQueryTown;
+            m_searchQueryStreet = "";
+            m_address.address.town = "";
+            m_address.address.street = "";
+            m_address.address.house = "";
+            break;
+        case SearchStreet:
+            m_searchQuery = m_searchQueryStreet;
+            m_address.address.street = "";
+            m_address.address.house = "";
+            break;
+        case SearchHouse:
+            m_address.address.house = "";
             break;
         }
-        qDebug() << icon << label;
+
+        emit searchQueryChanged();
+        emit addressChanged();
     }
 }
 
-void NavitSearchModel::search(QString queryText){
-    if(queryText == ""){
+enum NavitSearchModel::SearchType NavitSearchModel::getSearchType(){
+    return m_search_type;
+}
+
+void NavitSearchModel::stopSearchWorker(bool clearModel){
+    if(m_searchWorker != nullptr){
+        m_searchWorker->requestInterruption();
+        m_searchWorker->wait();
+        m_searchWorker = nullptr;
+    }
+    if(clearModel){
+        beginResetModel();
+        m_searchResults.clear();
+        endResetModel();
+    }
+}
+
+void NavitSearchModel::search(){
+    stopSearchWorker(true);
+    if(m_searchQuery == "" && m_search_type != SearchHouse){
         return;
     }
-    struct attr attr;
 
-    idle_end();
-
-    beginResetModel();
-    m_searchResults.clear();
-    endResetModel();
-
-    attr.u.str = queryText.toLocal8Bit().data();
-    attr.type = m_search_type;
-
-    qDebug () << "searching : " << queryText.toLocal8Bit().data();
-    search_list_search(m_searchResultList, &attr, 1);
-    idle_start();
+    m_searchWorker = new SearchWorker(m_navitInstance, m_searchResultList,m_searchQuery, static_cast<enum attr_type>(m_search_type));
+    connect(m_searchWorker, &SearchWorker::gotSearchResult, this, &NavitSearchModel::receiveSearchResult);
+    m_searchWorker->start();
 }
 
 void NavitSearchModel::search_list_set_default_country() {
@@ -262,75 +317,203 @@ void NavitSearchModel::search_list_set_default_country() {
             while((res=search_list_get_result(m_searchResultList)));
         }
     }
-    search_list_select(m_searchResultList, attr_country_all, 0, 0);
+//    search_list_select(m_searchResultList, attr_country_all, 0, 0);
+
+    m_address.address.country = search_attr.u.str;
+    emit addressChanged();
+
+    m_search_type = SearchTown;
+    searchTypeChanged();
 }
 
 
 void NavitSearchModel::select(int index){
-    qDebug() << "Select : " << index;
+    enum attr_type type;
+    type = static_cast<enum attr_type>(m_search_type);
 
-    beginResetModel();
-    m_searchResults.clear();
-    endResetModel();
+    search_list_select(m_searchResultList, type, 0, 0);
+    search_list_select(m_searchResultList, type, index + 1, 1);
 
-    search_list_select(m_searchResultList, m_search_type, 0, 0);
-    search_list_select(m_searchResultList, m_search_type, index, 1);
+    SearchResult result =  m_searchResults.at(index);
+
+    m_address.address = result.address;
+    m_address.coords = result.coords;
+    m_address.addressString = result.addressString;
+    m_address.label = result.label;
+
+    emit addressChanged();
 
     switch(m_search_type){
-    case attr_country_all:
-        m_search_type = attr_town_or_district_name;
+    case SearchCountry:
+        changeSearchType(SearchTown, false);
+        m_searchQueryCountry = m_searchQuery;
         break;
-    case attr_town_or_district_name:
-        m_search_type = attr_street_name;
+    case SearchTown:
+        changeSearchType(SearchStreet, false);
+        m_searchQueryTown = m_searchQuery;
         break;
-    case attr_street_name:
-        m_search_type = attr_house_number;
+    case SearchStreet:
+        changeSearchType(SearchHouse, false);
+        m_searchQueryStreet = m_searchQuery;
         break;
-    case attr_house_number:
+    case SearchHouse:
+        setAsDestination(index);
+        reset();
         break;
     }
+    m_searchQuery = "";
+    emit searchQueryChanged();
 }
 
 void NavitSearchModel::setAsDestination(int index){
-    //    if(m_recents.size() > index){
-    //        NavitHelper::setDestination(m_navitInstance,
-    //                                    m_recents[index]["label"].toString(),
-    //                                    m_recents[index]["coords"].toMap()["x"].toInt(),
-    //                                    m_recents[index]["coords"].toMap()["y"].toInt());
-    //    }
+    if(m_searchResults.size() > index){
+        stopSearchWorker();
+        qDebug() << "Setting destination : " << m_searchResults[index].addressString;
+        NavitHelper::setDestination(m_navitInstance,
+                                    m_searchResults[index].addressString,
+                                    m_searchResults[index].coords.x,
+                                    m_searchResults[index].coords.y);
+        stopSearchWorker(true);
+    }
 }
 
 void NavitSearchModel::addStop(int index,  int position){
-    //    if(m_recents.size() > index){
-    //        NavitHelper::addStop(m_navitInstance,
-    //                             position,
-    //                                    m_recents[index]["label"].toString(),
-    //                                    m_recents[index]["coords"].toMap()["x"].toInt(),
-    //                                    m_recents[index]["coords"].toMap()["y"].toInt());
-    //    }
+    if(m_searchResults.size() > index){
+        stopSearchWorker();
+        NavitHelper::addStop(m_navitInstance,
+                             position,
+                             m_searchResults[index].addressString,
+                             m_searchResults[index].coords.x,
+                             m_searchResults[index].coords.y);
+        stopSearchWorker(true);
+    }
 }
 
 void NavitSearchModel::setAsPosition(int index){
-    //    if(m_recents.size() > index){
-    //        NavitHelper::setPosition(m_navitInstance,
-    //                                 m_recents[index]["coords"].toMap()["x"].toInt(),
-    //                                 m_recents[index]["coords"].toMap()["y"].toInt());
-    //    }
+    if(m_searchResults.size() > index){
+        stopSearchWorker();
+        NavitHelper::setPosition(m_navitInstance,
+                                 m_searchResults[index].coords.x,
+                                 m_searchResults[index].coords.y);
+        stopSearchWorker(true);
+    }
 }
 
 void NavitSearchModel::addAsBookmark(int index){
-    //    if(m_recents.size() > index){
-    //        NavitHelper::addBookmark(m_navitInstance,
-    //                                 m_recents[index]["label"].toString(),
-    //                                 m_recents[index]["coords"].toMap()["x"].toInt(),
-    //                                 m_recents[index]["coords"].toMap()["y"].toInt());
-    //    }
+    if(m_searchResults.size() > index){
+        stopSearchWorker();
+        NavitHelper::addBookmark(m_navitInstance,
+                                 m_searchResults[index].addressString,
+                                 m_searchResults[index].coords.x,
+                                 m_searchResults[index].coords.y);
+        stopSearchWorker(true);
+    }
 }
-
+void NavitSearchModel::setAddressAsDestination(){
+    stopSearchWorker();
+    NavitHelper::setDestination(m_navitInstance,
+                                m_address.addressString,
+                                m_address.coords.x,
+                                m_address.coords.y);
+    stopSearchWorker(true);
+}
+void NavitSearchModel::setAddressAsPosition(){
+    stopSearchWorker();
+    NavitHelper::setPosition(m_navitInstance,
+                             m_address.coords.x,
+                             m_address.coords.y);
+    stopSearchWorker(true);
+}
+void NavitSearchModel::addAddressAsBookmark(){
+    stopSearchWorker();
+    NavitHelper::addBookmark(m_navitInstance,
+                             m_address.addressString,
+                             m_address.coords.x,
+                             m_address.coords.y);
+    stopSearchWorker(true);
+}
+void NavitSearchModel::addAddressStop(int position){
+    stopSearchWorker();
+    NavitHelper::addStop(m_navitInstance,
+                         position,
+                         m_address.addressString,
+                         m_address.coords.x,
+                         m_address.coords.y);
+    stopSearchWorker(true);
+}
 void NavitSearchModel::remove(int index) {
     //    if(index < m_recents.size()){
     //        beginRemoveRows(QModelIndex(), index, index);
     //        m_recents.removeAt(index);
     //        endInsertRows();
     //    }
+}
+void NavitSearchModel::viewAddressOnMap(){
+    viewOnMap(m_address);
+}
+void NavitSearchModel::viewResultOnMap(int index){
+    SearchResult result =  m_searchResults.at(index);
+    viewOnMap(result);
+}
+
+void NavitSearchModel::viewOnMap(SearchResult pointMap) {
+    QList<SearchResult> resultToMap;
+    resultToMap << pointMap;
+    searchResultsToMap(resultToMap);
+
+    struct pcoord pc;
+    pc.x = pointMap.coords.x;
+    pc.y = pointMap.coords.y;
+    pc.pro = pointMap.coords.pro;
+
+    navit_set_center(m_navitInstance->getNavit(), &pc, 1);
+}
+
+void NavitSearchModel::searchResultsToMap(QList<SearchResult> results){
+    GList* list = nullptr;
+    GList* p = nullptr;
+    int results_map_population = 0;
+    struct attr a;
+
+    for (int i = 0; i < results.size(); ++i) {
+        SearchResult result = results.at(i);
+
+        struct lcoord coords;
+        coords.c.x=result.coords.x;
+        coords.c.y=result.coords.y;
+        coords.label=strdup(result.addressString.toLocal8Bit());
+        list = g_list_prepend(list, &coords);
+        qDebug() << QString("Adding %1 to the map x : %2 y : %3").arg(coords.label).arg(coords.c.x).arg(coords.c.y);
+    }
+
+    results_map_population = navit_populate_search_results_map(m_navitInstance->getNavit(), list, nullptr);
+
+    if (list) {
+        for(p=list; p; p=g_list_next(p)) {
+            if (((struct lcoord *)(p->data))->label)
+                g_free(((struct lcoord *)(p->data))->label);
+        }
+    }
+    g_list_free(list);
+    if(!results_map_population)
+        return;
+
+    a.type=attr_orientation;
+    a.u.num=0;
+    navit_set_attr(m_navitInstance->getNavit(),&a);	/* Set orientation to North */
+}
+
+void NavitSearchModel::reset(){
+    stopSearchWorker(true);
+
+    m_search_type = SearchTown;
+    searchTypeChanged();
+
+    m_searchQuery = "";
+    searchQueryChanged();
+
+    m_address = SearchResult();
+    addressChanged();
+
+    search_list_set_default_country();
 }

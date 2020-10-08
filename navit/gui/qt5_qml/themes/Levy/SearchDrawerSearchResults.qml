@@ -7,6 +7,7 @@ import "icons.js" as Icons
 Item {
     id: __root
     signal itemClicked (var index)
+    signal itemRightClicked (var index)
     property alias results : listView.model
     property int boxRadius : 10
     clip: true
@@ -26,6 +27,7 @@ Item {
         anchors.bottomMargin: parent.height * 0.05
         anchors.leftMargin: parent.width * 0.05
         anchors.rightMargin: parent.width * 0.05
+        currentIndex: -1
         delegate: Item {
             id: element
             height: 80
@@ -78,16 +80,29 @@ Item {
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: {
-                    __root.itemClicked(index)
+                    if(mouse.button === Qt.LeftButton){
+                        __root.itemClicked(index)
+                    }
+                    if(mouse.button === Qt.RightButton){
+                        __root.itemRightClicked(index)
+                    }
                 }
-
-                Rectangle {
-                    color: "#33cb0b0b"
-                    anchors.fill: parent
+                onEntered: {
+                    listView.currentIndex = index
+                }
+                onPressed: {
+                    listView.currentIndex = index
+                }
+                onReleased: {
+                    listView.currentIndex = -1
                 }
             }
 
+        }
+        highlight: Rectangle {
+            color: "lightsteelblue"
         }
     }
 

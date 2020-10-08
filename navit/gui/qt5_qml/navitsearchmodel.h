@@ -3,6 +3,11 @@
 
 #include <QAbstractItemModel>
 #include <QDebug>
+#include <QThread>
+#include <QThreadPool>
+#include <QRunnable>
+#include <QMutex>
+
 #include "navitinstance.h"
 #include "navithelper.h"
 
@@ -25,12 +30,55 @@ extern "C" {
 #include "country.h"
 #include "track.h"
 
+#include "graphics.h"
 }
+
+Q_DECLARE_METATYPE(struct item *)
+
+struct Address{
+    QString country;
+    QString town;
+    QString street;
+    QString house;
+};
+struct SearchResult{
+    int index;
+    QString distance;
+    QString addressString;
+    QString icon;
+    QString label;
+    struct pcoord coords;
+    struct Address address;
+};
+
+Q_DECLARE_METATYPE(SearchResult)
+
+class SearchWorker : public QThread
+{
+    Q_OBJECT
+public:
+    SearchWorker (NavitInstance * navit, struct search_list *searchResultList, QString searchQuery, enum attr_type search_type);
+    void run() override;
+signals:
+    void gotSearchResult(SearchResult result);
+private:
+    NavitInstance * m_navitInstance;
+    struct search_list *m_searchResultList;
+    QString m_searchQuery;
+    enum attr_type m_search_type;
+};
 
 class NavitSearchModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(NavitInstance * navit MEMBER m_navitInstance WRITE setNavit)
+    Q_PROPERTY(SearchType currentSearchType READ getSearchType WRITE changeSearchType NOTIFY searchTypeChanged)
+    Q_PROPERTY(QString searchQuery MEMBER m_searchQuery NOTIFY searchQueryChanged)
+    Q_PROPERTY(QString country READ getCountry NOTIFY addressChanged)
+    Q_PROPERTY(QString town READ getTown NOTIFY addressChanged)
+    Q_PROPERTY(QString street READ getStreet NOTIFY addressChanged)
+    Q_PROPERTY(QString house READ getHouse NOTIFY addressChanged)
+
 public:
     enum SearchModelRoles {
         LabelRole = Qt::UserRole + 1,
@@ -40,16 +88,16 @@ public:
         DistanceRole
     };
 
-    enum SearchField {
-        SearchCountry,
-        SearchTown,
-        SearchStreet,
-        SearchHouse
+    enum SearchType {
+        SearchCountry = attr_country_all,
+        SearchTown = attr_town_or_district_name,//attr_town_or_district_name or attr_town_postal
+        SearchStreet = attr_street_name,
+        SearchHouse = attr_house_number
     };
 
-    Q_ENUMS(SearchField)
-
+    Q_ENUMS(SearchType)
     explicit NavitSearchModel(QObject *parent = 0);
+    ~NavitSearchModel ();
     int rowCount(const QModelIndex & parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex & index, int role) const override;
@@ -61,36 +109,71 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     void setNavit(NavitInstance * navit);
-
-    Q_INVOKABLE void setAsDestination(int index);
-    Q_INVOKABLE void setAsPosition(int index);
-    Q_INVOKABLE void addAsBookmark(int index);
-    Q_INVOKABLE void addStop(int index,  int position);
-    Q_INVOKABLE void remove(int index);
-    Q_INVOKABLE void select(int index);
-    Q_INVOKABLE void search(QString queryText);
-    Q_INVOKABLE void search2(QString queryText);
     void search_list_set_default_country();
-    static void idle_cb(NavitSearchModel * searchModel);
-    void handleSearchResult();
-
+public slots:
+    void setAsDestination(int index);
+    void setAsPosition(int index);
+    void addAsBookmark(int index);
+    void addStop(int index,  int position);
+    void setAddressAsDestination();
+    void setAddressAsPosition();
+    void addAddressAsBookmark();
+    void addAddressStop(int position);
+    void viewAddressOnMap();
+    void viewResultOnMap(int index);
+    void remove(int index);
+    void select(int index);
+    void search();
+    void reset();
+signals:
+    void searchTypeChanged();
+    void searchQueryChanged();
+    void addressChanged();
+private slots:
+    void receiveSearchResult(SearchResult result);
 private:
     NavitInstance *m_navitInstance = nullptr;
-    QList<QVariantMap> m_searchResults;
-    QString m_country = "United Kingdom";
 
-    struct callback * m_idle_cb;
-    struct event_idle * m_event_idle;
+    QList<SearchResult> m_searchResults;
+
+    QString m_country = "United Kingdom";
 
     struct search_list *m_searchResultList;
 
     char *m_country_iso2;
-    enum attr_type m_search_type;
-    void update();
 
-    void idle_start();
-    void idle_end();
+    enum SearchType m_search_type;
+
+    QString m_searchQuery;
+    QString m_searchQueryCountry;
+    QString m_searchQueryTown;
+    QString m_searchQueryStreet;
+
+    SearchResult m_address;
+
+    SearchWorker *m_searchWorker = nullptr;
+
+    void update();
+    void stopSearchWorker(bool clearModel = false);
     void setDefaultCountry();
+    void changeSearchType(enum SearchType searchType, bool restoreQuery = true);
+    void searchResultsToMap(QList<SearchResult> results);
+    enum SearchType getSearchType();
+
+    void viewOnMap(SearchResult pointMap);
+
+    QString getCountry(){
+        return m_address.address.country;
+    }
+    QString getTown(){
+        return m_address.address.town;
+    }
+    QString getStreet(){
+        return m_address.address.street;
+    }
+    QString getHouse(){
+        return m_address.address.house;
+    }
 };
 
 #endif // NAVITSEARCHMODEL_H

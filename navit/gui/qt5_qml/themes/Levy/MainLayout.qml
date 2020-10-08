@@ -21,7 +21,7 @@ Item {
             __root.state = "routeOverview"
             navit1.pitch = 0;
             navit1.followVehicle = 0;
-            navit1.zoomToRoute();
+//            navit1.zoomToRoute();
             navit1.zoomOut(2);
         }
 
@@ -56,8 +56,6 @@ Item {
 
     NavitMap {
         id: navit1
-        //        anchors.left: searchDrawer.right
-
         anchors.leftMargin: 0
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -215,20 +213,19 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottomMargin: parent.height * 0.05
         anchors.bottom: parent.bottom
-
         timeLeft: navitRoute.timeLeft
         distanceLeft: navitRoute.distance
         arrivalTime: navitRoute.arrivalTime
 
         onSearchButtonClicked: {
             __root.state = "searchDrawerOpen"
-            searchDrawer.open()
         }
         onMenuButtonClicked: {
             __root.prevState = __root.state
             __root.state = "menuDrawerOpen"
         }
     }
+
 
 
     DestinationBar {
@@ -296,7 +293,7 @@ Item {
     }
 
     Rectangle {
-        id: rectangle
+        id: overlay
         color: "#00000000"
         visible: false
         anchors.fill: navit1
@@ -304,11 +301,10 @@ Item {
         MouseArea {
             id: mouseArea
             anchors.fill: parent
+            preventStealing: true
             onClicked: {
-                if(__root.state == "menuDrawerOpen"){
-                    menuDrawer.close()
-                }
-
+                menuDrawer.close()
+                searchDrawer.close()
                 __root.state = ""
             }
         }
@@ -402,6 +398,8 @@ Item {
 
 
 
+
+
     states: [
         State {
             name: "mapControlsVisible"
@@ -421,7 +419,7 @@ Item {
             }
 
             PropertyChanges {
-                target: rectangle
+                target: overlay
                 //                color: parent.width > parent.height ? "#00000000" : "#a6000000"
                 //                visible: parent.width < parent.height
                 color: "#a6000000"
@@ -450,7 +448,7 @@ Item {
             }
 
             PropertyChanges {
-                target: rectangle
+                target: overlay
                 color: "#a6000000"
                 visible: true
             }
@@ -471,7 +469,7 @@ Item {
             //            }
 
             PropertyChanges {
-                target: rectangle
+                target: overlay
                 color: "#00000000"
                 visible: false
             }
@@ -502,7 +500,7 @@ Item {
             }
 
             PropertyChanges {
-                target: rectangle
+                target: overlay
                 color: "#a6000000"
                 visible: true
             }
@@ -510,6 +508,43 @@ Item {
             PropertyChanges {
                 target: mouseArea4
                 enabled: false
+            }
+        },
+        State {
+            name: "routeOverviewPOIs"
+            PropertyChanges {
+                target: overlay
+                color: "#00000000"
+                visible: true
+            }
+
+            PropertyChanges {
+                target: destinationBar
+                width: parent.width > parent.height ? parent.height : parent.width
+                visible: true
+            }
+
+            PropertyChanges {
+                target: mapNavigationBar
+                width: 0
+            }
+
+            PropertyChanges {
+                target: mapControls
+                x: (parent.width * 0.025) + (mapNavigationBar.height / 2) - (width / 2)
+                state: "routeOverview"
+            }
+
+            PropertyChanges {
+                target: destinationDetailsBar
+                width: parent.width > parent.height ? parent.height : parent.width
+                visible: true
+            }
+
+            PropertyChanges {
+                target: searchDrawer
+                x: 0
+                visible: true
             }
         }
     ]
@@ -525,13 +560,13 @@ Item {
                 value: true
             }
             PropertyAction {
-                target:rectangle
+                target:overlay
                 property: "visible"
                 value: true
             }
             ParallelAnimation{
                 ColorAnimation {
-                    target:rectangle
+                    target:overlay
                 }
                 NumberAnimation {
                     property: "x";
@@ -666,7 +701,10 @@ Item {
 
 
 /*##^## Designer {
-    D{i:0;height:720;width:1280}D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}
+    D{i:0;height:720;width:1280}D{i:24;anchors_height:200;anchors_width:200}D{i:25;anchors_height:200;anchors_width:200}
+D{i:26;anchors_height:200;anchors_width:200}D{i:27;anchors_height:200;anchors_width:200}
+D{i:23;anchors_height:200;anchors_width:200}D{i:29;anchors_height:200;anchors_width:200}
+D{i:28;anchors_height:200;anchors_width:200}D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}
 D{i:6;anchors_height:100;anchors_width:100}D{i:7;anchors_height:100;anchors_width:100}
 D{i:8;anchors_y:109}D{i:10;anchors_height:200;anchors_width:200}D{i:11;anchors_height:100;anchors_width:100}
 D{i:12;anchors_height:100;anchors_width:100;anchors_y:109}D{i:9;anchors_y:109}D{i:13;anchors_y:109}

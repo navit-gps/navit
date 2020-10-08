@@ -14,14 +14,27 @@ Item {
     signal closeSearch()
     signal closeDrawer()
 
-    function open() {
+    function close(){
         stackView.clear()
         stackView.push(mainComponent)
-        state = ""
+        searchModel.reset()
+        navitPoiModel.reset()
+        __root.state = ""
     }
 
-    Component.onCompleted: {
-        //        backend.setSearchContext("town")
+    onCloseSearch: {
+        close()
+    }
+
+    onCloseDrawer: {
+        close()
+    }
+
+    function searchPOIs(filter){
+        navitPoiModel.search(filter)
+
+        stackView.push(searchResultsComponents,{results:navitPoiModel})
+        __root.state = "poiView"
     }
 
     onStateChanged: {
@@ -76,13 +89,7 @@ Item {
                         if(action === "others"){
                             return;
                         }
-
-                        console.log(action + " pois clicked");
-
-                        navitPoiModel.search(action)
-
-                        stackView.push(searchResultsComponents,{results:navitPoiModel})
-                        __root.state = "poiView"
+                        __root.searchPOIs(action);
                     }
                 }
 
@@ -168,7 +175,6 @@ Item {
                             id: mouseArea
                             anchors.fill: parent
                             onClicked: {
-                                __root.state = ""
                                 __root.closeSearch()
                             }
                         }
@@ -199,14 +205,16 @@ Item {
                             anchors.leftMargin: parent.height/4
                             anchors.left: parent.left
                             background: Item { }
+                            text:searchModel.searchQuery
                             onPressed: {
                                 __root.state = "searchOpen"
                                 __root.openSearch()
                                 stackView.push(searchResultsComponents,{results:searchModel})
                             }
-                            onTextChanged: {
-//                                backend.updateSearch(text)
-                                searchModel.search2(text)
+                            Binding{
+                                target: searchModel
+                                property: "searchQuery"
+                                value: search.text
                             }
                         }
 
@@ -248,7 +256,6 @@ Item {
                             id: mouseArea1
                             anchors.fill: parent
                             onClicked: {
-                                __root.state = ""
                                 __root.closeDrawer()
                             }
                         }
@@ -303,9 +310,7 @@ Item {
                             id: mouseArea2
                             anchors.fill: parent
                             onClicked: {
-                                __root.state = ""
                                 __root.closeSearch()
-                                console.log("Back button clicked");
                             }
                         }
                     }
@@ -333,118 +338,156 @@ Item {
                             id: mouseArea3
                             anchors.fill: parent
                             onClicked: {
-                                __root.state = ""
                                 __root.closeDrawer()
                             }
                         }
                     }
                 }
-
-                Item {
-                    id: element2
+                Item{
+                    id:addressWrapper
                     width: parent.width
                     visible: false
                     anchors.topMargin: parent.height * 0.2
                     anchors.top: searchWrapper.bottom
                     anchors.bottom: parent.bottom
-
-                    Rectangle {
-                        id: leftBlob
-                        width: height
-                        height: parent.height
-                        color: "#ffffff"
-                        radius: height/2
-                    }
-
-                    Rectangle {
-                        id: rightBlob
-                        width: height
-                        height: parent.height
-                        color: "#ffffff"
-                        radius: height/2
-                        anchors.rightMargin: -width/2
-                        anchors.right: breadcrumbs.right
-                    }
-
-                    RowLayout {
+                    SearchDrawerBreadcrumbs {
                         id: breadcrumbs
-                        width: parent.width - parent.height
-                        anchors.leftMargin: leftBlob.width / 2
-                        anchors.left: leftBlob.left
+                        anchors.rightMargin: 13
+                        anchors.right: viewAddress.left
                         anchors.bottom: parent.bottom
+                        anchors.left: parent.left
                         anchors.top: parent.top
-                        spacing: 0
+                        country: searchModel.country
+                        town: searchModel.town
+                        street: searchModel.street
+                        house: searchModel.house
+                        onCountryClicked: {
+                            searchModel.currentSearchType = NavitSearchModel.SearchCountry
+                        }
+                        onTownClicked: {
+                            searchModel.currentSearchType = NavitSearchModel.SearchTown
+                        }
+                        onStreetClicked: {
+                            searchModel.currentSearchType = NavitSearchModel.SearchStreet
+                        }
+                        onHouseClicked: {
+
+                        }
+                    }
+                    Item {
+                        id: viewAddress
+                        width: height
+                        anchors.rightMargin: width / 2
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: addressMenu.left
+                        anchors.leftMargin: 0
+                        anchors.topMargin: 0
+                        visible: searchModel.town
+
+                        Rectangle {
+                            color: "#ffffff"
+                            radius: height/2
+                            anchors.fill: parent
+
+                            Image {
+                                width: height
+                                height: parent.height * 0.75
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.verticalCenter: parent.verticalCenter
+                                source: "assets/ionicons/md-arrow-forward.svg"
+                                fillMode: Image.PreserveAspectFit
+                                mipmap: true
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                __root.closeDrawer()
+                                searchModel.setAddressAsDestination();
+                            }
+                        }
+                    }
+                    Item {
+                        id: addressMenu
+                        width: height
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+                        anchors.leftMargin: 0
+                        anchors.topMargin: 0
 
                         Rectangle {
                             id: rectangle1
                             color: "#ffffff"
-                            visible: true
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
+                            radius: height/2
+                            anchors.fill: parent
 
-                            Text {
-                                id: element3
-                                text: qsTr("Country")
+                            Image {
+                                id: image
+                                width: height
+                                height: parent.height * 0.75
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
-                                font.pixelSize: 12
+                                source: "qrc:/themes/Levy/assets/ionicons/md-more.svg"
+                                fillMode: Image.PreserveAspectFit
+                                mipmap: true
                             }
                         }
 
-                        Rectangle {
-                            id: rectangle2
-                            color: "#ffffff"
-                            visible: true
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                if (mouse.button === Qt.LeftButton)
+                                    contextMenu.popup()
+                            }
+                            onPressAndHold: {
+                                if (mouse.source === Qt.MouseEventNotSynthesized)
+                                    contextMenu.popup()
+                            }
+                            SearchDrawerContextMenu {
+                                id: contextMenu
+                                onItemClicked: {
+                                    switch(action){
+                                    case "addBookmark":
+                                        searchModel.addAddressAsBookmark()
+//                                        __root.closeDrawer()
+                                        break;
+                                    case "pois":
+//                                        navitPoiModel.search(filter)
 
-                            Text {
-                                id: element4
-                                text: qsTr("Town")
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.verticalCenter: parent.verticalCenter
-                                font.pixelSize: 12
+//                                        stackView.push(searchResultsComponents,{results:navitPoiModel})
+//                                        __root.state = "poiView"
+                                        return;
+                                    case "setPosition":
+                                        searchModel.setAddressAsPosition()
+                                        __root.closeDrawer()
+                                        break;
+                                    case "addStop":
+                                        searchModel.addAddressStop(0)
+                                        __root.closeDrawer()
+                                        break;
+                                    case "setDestination":
+                                        searchModel.setAddressAsDestination()
+                                        __root.closeDrawer()
+                                        break;
+                                    case "view":
+                                        searchModel.viewAddressOnMap()
+                                        __root.closeDrawer()
+                                        break;
+                                    case "showResults":
+                                        searchModel.viewAddressOnMap()
+                                        break;
+                                    }
+                                    __root.closeDrawer()
+                                }
                             }
                         }
-
-                        Rectangle {
-                            id: rectangle4
-                            color: "#ffffff"
-                            visible: false
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-
-                            Text {
-                                id: element5
-                                text: qsTr("Street")
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.verticalCenter: parent.verticalCenter
-                                font.pixelSize: 12
-                            }
-                        }
-
-                        Rectangle {
-                            id: rectangle3
-                            color: "#ffffff"
-                            visible: false
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-
-                            Text {
-                                id: element6
-                                text: qsTr("House")
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.verticalCenter: parent.verticalCenter
-                                font.pixelSize: 12
-                            }
-                        }
-
                     }
-
 
                 }
             }
-
         }
     }
     NavitPOIModel {
@@ -468,9 +511,11 @@ Item {
                 if(__root.state == "poiView"){
                     navitPoiModel.setAsDestination(index)
                 } else if(__root.state == "searchOpen"){
-                    search.clear()
                     searchModel.select(index)
                 }
+            }
+            onItemRightClicked: {
+                searchModel.viewResultOnMap(index)
             }
         }
     }
@@ -514,9 +559,14 @@ Item {
             }
 
             PropertyChanges {
-                target: element2
+                target: addressWrapper
                 visible: true
             }
+
+            PropertyChanges {
+                target: addressMenu
+            }
+
         },
         State {
             name: "poiView"
@@ -573,10 +623,31 @@ Item {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:720;width:1000}D{i:15;anchors_height:132.24}D{i:40;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
-D{i:42;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:44;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
-D{i:38;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:2;anchors_height:200;anchors_width:200}
-D{i:49;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:50;anchors_height:200;anchors_width:200}
+    D{i:0;autoSize:true;height:720;width:1000}D{i:55;anchors_height:200;anchors_width:200}
+D{i:56;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:57;anchors_height:200;anchors_width:200;anchors_x:"-591";anchors_y:"-25"}
+D{i:58;anchors_height:200;anchors_width:200;anchors_x:"-591";anchors_y:"-25"}D{i:59;anchors_height:200;anchors_width:200}
+D{i:60;anchors_height:200;anchors_width:200}D{i:61;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}
+D{i:62;anchors_height:200;anchors_width:200}D{i:54;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}
+D{i:65;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}D{i:66;anchors_height:200;anchors_width:200;anchors_x:"-591";anchors_y:"-25"}
+D{i:67;anchors_height:200;anchors_width:200}D{i:38;anchors_height:100;anchors_width:100;anchors_x:"-591";anchors_y:"-25"}
+D{i:41;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:40;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:43;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:42;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:39;anchors_height:"-13.224000000000004";anchors_width:100;anchors_x:"-591";anchors_y:"-25"}
+D{i:15;anchors_height:132.24}D{i:2;anchors_height:200;anchors_width:200}D{i:49;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:51;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:50;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
+D{i:53;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}D{i:52;anchors_height:200;anchors_width:200;anchors_x:"-205";anchors_y:0}
 }
  ##^##*/

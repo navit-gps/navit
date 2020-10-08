@@ -50,7 +50,7 @@ ListView {
             }
             SearchDrawerContextMenu {
                 id: contextMenu
-                addBookmarkVisible: false
+                addBookmark: false
                 onItemClicked: {
                     switch(action){
                     case "addBookmark":

@@ -105,6 +105,8 @@ Item {
                     Text {
                         color: "#ffffff"
                         text: qsTr("Cancel")
+                        anchors.leftMargin: parent.width*0.05
+                        anchors.rightMargin: parent.width*0.05
                         font.pixelSize: __root.height / 4
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
@@ -117,56 +119,6 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: __root.cancelButtonClicked()
-                    }
-                }
-
-                Item {
-                    id: routDetailsButtonWrapper
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    Rectangle {
-                        color: "#232121"
-                        anchors.fill: parent
-                    }
-
-                    Rectangle {
-                        width: 1
-                        color: "#000000"
-                        anchors.leftMargin: 0
-                        anchors.topMargin: 0
-                        anchors.bottom: parent.bottom
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                    }
-
-
-                    Rectangle {
-                        width: 1
-                        color: "#000000"
-                        anchors.topMargin: 0
-                        anchors.bottom: parent.bottom
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                    }
-
-
-                    Text {
-                        color: "#ffffff"
-                        text: qsTr("Route Details")
-                        font.pixelSize: __root.height / 4
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        horizontalAlignment: Text.AlignHCenter
-                        wrapMode: Text.WordWrap
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: __root.routeDetailsClicked()
                     }
                 }
 
@@ -251,8 +203,13 @@ Item {
 
 }
 
+
+
+
+
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:120;width:1200}D{i:61;anchors_width:240}D{i:59;anchors_x:0;anchors_y:0}
-D{i:82;anchors_width:240}D{i:80;anchors_y:0}
+    D{i:0;autoSize:true;height:120;width:1200}
 }
  ##^##*/
