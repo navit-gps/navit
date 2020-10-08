@@ -950,5 +950,6 @@
         <file>themes/Levy/SearchDrawerFavouritesList.qml</file>
         <file>themes/Levy/SearchDrawerContextMenu.qml</file>
         <file>themes/Levy/SearchDrawerBreadcrumbs.qml</file>
+        <file>themes/Levy/DestinationDetailsBar.qml</file>
     </qresource>
 </RCC>

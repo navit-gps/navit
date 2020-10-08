@@ -48,6 +48,7 @@ Item {
         navit: Navit
         onDestinationAdded: {
             navigation.routeOverview();
+            destinationDetailsBar.address = destination;
         }
         onNavigationFinished: {
             mapNavigationBar.state = ""
@@ -250,7 +251,21 @@ Item {
         }
     }
 
-    Item {
+    DestinationDetailsBar {
+        id: destinationDetailsBar
+        height: parent.width > parent.height ?  parent.height * 0.2 : parent.width * 0.3
+        anchors.topMargin: parent.height * 0.05
+        //        visible: false
+        clip: true
+        anchors.top: routeCalculating.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 0
+        visible: false
+        onPoisClicked: {
+            __root.state = "routeOverviewPOIs";
+            searchDrawer.searchPOIs("");
+        }
+    }    Item {
         id: recenterButton
         width: parent.width > parent.height ? parent.height * 0.1 : parent.width * 0.1
         height: width
@@ -488,6 +503,12 @@ Item {
                 target: mapControls
                 x: (parent.width * 0.025) + (mapNavigationBar.height / 2) - (width / 2)
                 state: "routeOverview"
+            }
+
+            PropertyChanges {
+                target: destinationDetailsBar
+                width: parent.width > parent.height ? parent.height : parent.width
+                visible: true
             }
         },
         State {
