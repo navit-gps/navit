@@ -89,10 +89,9 @@ void NavitRecentsModel::update() {
                 QVariantMap recentItem;
                 recentItem.insert("coords",coords);
                 recentItem.insert("label",label_full);
-//                qDebug() << label_full;
 
-                beginInsertRows(QModelIndex(), rowCount(), rowCount());
-                m_recents.append(recentItem);
+                beginInsertRows(QModelIndex(), 0, 0);
+                m_recents.prepend(recentItem);
                 endInsertRows();
             }
         }
