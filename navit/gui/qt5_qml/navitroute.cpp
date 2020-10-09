@@ -51,6 +51,16 @@ void NavitRoute::setNavit(NavitInstance * navit){
     navit_add_callback(m_navitInstance->getNavit(),cb);
     navit_add_callback(m_navitInstance->getNavit(),cb2);
 
+
+    struct attr route_attr;
+
+    if (navit_get_attr(m_navitInstance->getNavit(),attr_route,&route_attr,nullptr)) {
+        struct attr callback;
+        callback.type=attr_callback;
+        callback.u.callback=callback_new_attr_1(callback_cast(NavitRoute::statusCallbackHandler), attr_route_status, this);
+        route_add_attr(route_attr.u.route, &callback);
+    }
+
     statusUpdate();
 }
 
@@ -112,8 +122,6 @@ void NavitRoute::routeUpdate(){
         emit propertiesChanged();
     }
     map_rect_destroy(mr);
-
-    statusUpdate();
 }
 
 QString NavitRoute::getLastDestination(struct pcoord *pc) {
@@ -156,8 +164,6 @@ void NavitRoute::destinationUpdate(){
     struct route * route = navit_get_route(m_navitInstance->getNavit());
     int destCount = route_get_destination_count(route);
 
-    statusUpdate();
-
     if(destCount > m_destCount){
         QString destination = getLastDestination(&m_lastDestinationCoord);
 
@@ -183,6 +189,7 @@ void NavitRoute::statusUpdate(){
     navigation_get_attr(nav, attr_nav_status, &attr,nullptr);
     if(m_status != attr.u.num){
         m_status = static_cast<Status>(attr.u.num);
+        qDebug() << "status : " << nav_status_to_text(attr.u.num);
         emit statusChanged();
     }
 }
@@ -193,6 +200,9 @@ void NavitRoute::destinationCallbackHandler(NavitRoute * navitRoute){
     navitRoute->destinationUpdate();
 }
 
+void NavitRoute::statusCallbackHandler(NavitRoute * navitRoute){
+    navitRoute->statusUpdate();
+}
 void NavitRoute::cancelNavigation(){
     if(m_navitInstance){
         navit_set_destination(m_navitInstance->getNavit(), nullptr, nullptr, 0);

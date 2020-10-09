@@ -47,6 +47,7 @@ public:
     void setNavit(NavitInstance * navit);
     static void routeCallbackHandler(NavitRoute * navitRoute);
     static void destinationCallbackHandler(NavitRoute * navitRoute);
+    static void statusCallbackHandler(NavitRoute * navitRoute);
     void routeUpdate();
     void destinationUpdate();
     void statusUpdate();
