@@ -169,7 +169,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         priv->status = data->fix.status;
 #else
         priv->status = data->status;
-#endif // GPSD_API_MAJOR_VERSION >= 9
+#endif // GPSD_API_MAJOR_VERSION >= 10
 
         data->set &= ~STATUS_SET;
     }
