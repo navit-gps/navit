@@ -170,10 +170,6 @@ static void svg_debug_gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
 
 static void svg_debug_gc_set_dashes(struct graphics_gc_priv *gc, int w,
                                     int offset, unsigned char *dash_list, int n) {
-    //if(n <= 4){
-    //for (int i = 0; i < 4; ++i) {
-    //    gc->dashed[i]=dash_list[i];
-    //}
     gc->dashed = dash_list;
     gc->is_dashed = TRUE;
     if (gc->graphics_gc_methods_proxy->gc_set_dashes) {
@@ -336,13 +332,15 @@ static void svg_debug_draw_lines(struct graphics_priv *gr,
         "\" style=\"fill:none;stroke:rgb(%i,%i,%i);stroke-width:%i\" />\n";
 
     fprintf(gr->outfile, line_template_start, "");
-    for (int i = 0; i < count; i++) {
+    int i;
+    for (i = 0; i < count; i++) {
         fprintf(gr->outfile, coord_template, p[i].x, p[i].y);
     }
 
     if (gc->is_dashed) {
         fprintf(gr->outfile, dashed_template_start, "");
-        for (int i = 0; i < 4; i++) {
+        int i;
+        for (i = 0; i < 4; i++) {
             fprintf(gr->outfile, dashed_dasharray, gc->dashed[i]);
         }
         fprintf(gr->outfile, dashed_template_end, "");
@@ -364,7 +362,8 @@ static void svg_debug_draw_polygon(struct graphics_priv *gr,
     const char *polygon_template_start = "<polygon points=\"%s";
     const char *polygon_template_end = "\" style=\"fill:rgb(%i,%i,%i)\" />\n";
     fprintf(gr->outfile, polygon_template_start, "");
-    for (int i = 0; i < count; i++) {
+    int i;
+    for (i = 0; i < count; i++) {
         fprintf(gr->outfile, coord_template, p[i].x, p[i].y);
     }
     fprintf(gr->outfile, polygon_template_end, gc->fg.r, gc->fg.g, gc->fg.b);
