@@ -579,19 +579,19 @@ static struct graphics_priv *graphics_svg_debug_new(struct navit *nav, struct gr
 
     // Read configuration
     this->width = 32;
-    if ((attr = attr_search(attrs, NULL, attr_w)))
+    if ((attr = attr_search(attrs, attr_w)))
         this->width = attr->u.num;
     this->height = 32;
-    if ((attr = attr_search(attrs, NULL, attr_h)))
+    if ((attr = attr_search(attrs, attr_h)))
         this->height = attr->u.num;
 
     this->outputdir = g_get_tmp_dir();
-    if ((attr = attr_search(attrs, NULL, attr_outputdir)))
+    if ((attr = attr_search(attrs, attr_outputdir)))
         this->outputdir = attr->u.str;
 
-    // Get prlugin to proxy
+    // Get plugin to proxy
     proxy_gra=NULL;
-    if ((attr = attr_search(attrs, NULL, attr_name))) {
+    if ((attr = attr_search(attrs, attr_name))) {
 	if(attr->u.str[0] != '\0'){
 	    proxy_gra=plugin_get_category_graphics(attr->u.str);
 	}
