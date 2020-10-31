@@ -2907,7 +2907,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
          *  return meters
          */
         if (format &&
-            (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
+                (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
             return (format_float_0(*attr->u.numd * FEET_PER_METER) );
         }
         return (format_float_0(*attr->u.numd) );
