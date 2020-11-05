@@ -18,6 +18,9 @@
  */
 
 
+#ifndef NAVIT_VEHICLEPROFILE_H
+#define NAVIT_VEHICLEPROFILE_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -68,4 +71,6 @@ struct roadprofile * vehicleprofile_get_roadprofile(struct vehicleprofile *this_
 char * vehicleprofile_get_name(struct vehicleprofile *this_);
 #ifdef __cplusplus
 }
+#endif
+
 #endif
