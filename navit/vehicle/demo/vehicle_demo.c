@@ -199,7 +199,8 @@ static void vehicle_demo_timer(struct vehicle_priv *priv) {
     struct map_rect *mr=NULL;
     struct item *item=NULL;
 
-    len = (priv->config_speed * priv->interval / 1000)/ 3.6;
+//    len = (priv->config_speed * priv->interval / 1000)/ 3.6;
+    len = (int)(((double)priv->config_speed * 3.6) * ((double)priv->interval / 1000.00));
     dbg(lvl_debug, "###### Entering simulation loop");
     if (!priv->config_speed)
         return;
@@ -217,12 +218,24 @@ static void vehicle_demo_timer(struct vehicle_priv *priv) {
         item=map_rect_get_item(mr);
     while(item && item->type!=type_street_route)
         item=map_rect_get_item(mr);
+
+    if(!item && priv->speed!=0){
+        dbg(lvl_warning, "Routing finished setting speed to 0");
+        priv->speed=0;
+        callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+    }
+
     if (item && item_coord_get(item, &pos, 1)) {
         priv->position_set=0;
         dbg(lvl_debug, "current pos=0x%x,0x%x", pos.x, pos.y);
         dbg(lvl_debug, "last pos=0x%x,0x%x", priv->last.x, priv->last.y);
         if (priv->last.x == pos.x && priv->last.y == pos.y) {
             dbg(lvl_warning, "endless loop");
+            if(priv->speed!=0){
+                dbg(lvl_warning, "Routing finished, but we're still stuck(?), setting speed to 0");
+                priv->speed=0;
+                callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+            }
         }
         priv->last = pos;
         while (item && priv->config_speed) {
