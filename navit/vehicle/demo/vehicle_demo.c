@@ -199,8 +199,7 @@ static void vehicle_demo_timer(struct vehicle_priv *priv) {
     struct map_rect *mr=NULL;
     struct item *item=NULL;
 
-//    len = (priv->config_speed * priv->interval / 1000)/ 3.6;
-    len = (int)(((double)priv->config_speed * 3.6) * ((double)priv->interval / 1000.00));
+    len = (priv->config_speed * priv->interval / 1000)/ 3.6;
     dbg(lvl_debug, "###### Entering simulation loop");
     if (!priv->config_speed)
         return;
