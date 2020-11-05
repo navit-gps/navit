@@ -21,7 +21,7 @@ Item {
             __root.state = "routeOverview"
             navit1.pitch = 0;
             navit1.followVehicle = 0;
-//            navit1.zoomToRoute();
+            navit1.zoomToRoute();
             navit1.zoomOut(2);
         }
 
@@ -30,7 +30,7 @@ Item {
             __root.prevState = ""
             mapNavigationBar.setNavigationState()
 
-            navit1.pitch = 45;
+//            navit1.pitch = 45;
             navit1.followVehicle = 1
             navit1.autoZoom = true
             navit1.centerOnPosition()
@@ -170,8 +170,8 @@ Item {
         id: mapControls
         x: -width
         width: parent.width > parent.height ? parent.height * 0.1 : parent.width * 0.1
-        spacing: height * 0.02
         anchors.topMargin: parent.height * 0.05
+        spacing: height * 0.02
         anchors.top: parent.top
         anchors.bottom: mapNavigationBar.top
         pitch: navit1.pitch
@@ -214,7 +214,6 @@ Item {
         }
     }
 
-
     MapNavigationBar {
         id: mapNavigationBar
         width: parent.width * 0.95 //parent.width > parent.height ? parent.width * 0.9 : parent.width
@@ -236,7 +235,39 @@ Item {
         }
     }
 
+    Rectangle {
+        id: currentStreet
+        width: currenStreetText.width * 1.3
+        height: parent.height * 0.05
+        color: "#ffffff"
+        radius: height/2
+        anchors.verticalCenter: destinationBar.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        border.width: 1
 
+        Text {
+            id: currenStreetText
+            text: navitRoute.currentStreet
+            anchors.horizontalCenter: parent.horizontalCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: 24
+        }
+    }
+
+    Instructions {
+        id: instructions
+        height: parent.height * 0.15
+        visible: mapNavigationBar.state=="navigationState"
+        anchors.rightMargin: parent.width * 0.025
+        anchors.right: parent.right
+        transformOrigin: Item.Right
+        anchors.topMargin: parent.height * 0.025
+        anchors.top: parent.top
+        icon: navitRoute.nextTurnIcon
+        distance: navitRoute.nextTurnDistance
+        street: navitRoute.nextTurn
+    }
 
     DestinationBar {
         id: destinationBar
@@ -262,7 +293,7 @@ Item {
 
     DestinationDetailsBar {
         id: destinationDetailsBar
-        height: parent.width > parent.height ?  parent.height * 0.2 : parent.width * 0.3
+        height: parent.width > parent.height ?  parent.height * 0.15 : parent.width * 0.25
         anchors.topMargin: parent.height * 0.05
         //        visible: false
         clip: true
@@ -276,14 +307,27 @@ Item {
         }
     }
 
-    RouteCalculating {
+    Rectangle {
         id: routeCalculating
-        width: parent.width * 0.4
+        width: calculatingText.width + height
         height: parent.height * 0.05
         anchors.topMargin: parent.height * 0.05
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         visible: (navitRoute.status === NavitRoute.Calculating || navitRoute.status === NavitRoute.Recalculating )
+
+        color: "#ffffff"
+        radius: height/2
+        border.width: 1
+
+        Text {
+            id: calculatingText
+            text: qsTr("Calculating Route...")
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 24
+        }
     }
 
     Item {
@@ -325,10 +369,19 @@ Item {
                 navit1.centerOnPosition()
             }
         }
-
     }
 
-
+    SpeedGauge {
+        id: speedGauge
+        x: parent.width - ((parent.width * 0.025) + (mapNavigationBar.height / 2)) - (width / 2)
+        width: parent.width > parent.height ? parent.height * 0.1 : parent.width * 0.1
+        height: parent.width > parent.height ?  parent.height * 0.15 : parent.width * 0.2
+        anchors.verticalCenterOffset: parent.height/4 - height/2
+        anchors.verticalCenter: parent.verticalCenter
+        speed: navitRoute.speed
+        speedLimit: navitRoute.speedLimit
+        speedUnit: "km/h"
+    }
 
     Rectangle {
         id: overlay
@@ -432,11 +485,6 @@ Item {
             navitRoute.cancelNavigation();
         }
     }
-
-
-
-
-
 
     states: [
         State {
@@ -715,17 +763,17 @@ Item {
     ]
 }
 
-
-
-
-
 /*##^## Designer {
-    D{i:0;height:720;width:1280}D{i:24;anchors_height:200;anchors_width:200}D{i:25;anchors_height:200;anchors_width:200}
-D{i:26;anchors_height:200;anchors_width:200}D{i:27;anchors_height:200;anchors_width:200}
-D{i:23;anchors_height:200;anchors_width:200}D{i:29;anchors_height:200;anchors_width:200}
-D{i:28;anchors_height:200;anchors_width:200}D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}
-D{i:6;anchors_height:100;anchors_width:100}D{i:7;anchors_height:100;anchors_width:100}
-D{i:8;anchors_y:109}D{i:9;anchors_y:109}D{i:13;anchors_height:100;anchors_width:100}
-D{i:14;anchors_height:100;anchors_width:100;anchors_y:109}D{i:15;anchors_y:109}D{i:12;anchors_height:200;anchors_width:200}
+    D{i:0;height:720;width:1280}D{i:27;anchors_height:200;anchors_width:200}D{i:26;anchors_height:200;anchors_width:200}
+D{i:29;anchors_height:200;anchors_width:200}D{i:30;anchors_height:200;anchors_width:200}
+D{i:31;anchors_height:200;anchors_width:200}D{i:32;anchors_height:200;anchors_width:200}
+D{i:28;anchors_height:200;anchors_width:200}D{i:34;anchors_height:200;anchors_width:200}
+D{i:35;anchors_height:200;anchors_width:200}D{i:33;anchors_height:200;anchors_width:200}
+D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}D{i:6;anchors_height:100;anchors_width:100}
+D{i:7;anchors_height:100;anchors_width:100}D{i:8;anchors_y:109}D{i:10;anchors_height:100;anchors_width:100;anchors_y:109}
+D{i:9;anchors_height:100;anchors_width:100;anchors_y:109}D{i:11;anchors_height:100;anchors_width:100;anchors_y:109}
+D{i:12;anchors_y:109}D{i:15;anchors_height:100;anchors_width:100}D{i:14;anchors_height:200;anchors_width:200}
+D{i:17;anchors_y:109}D{i:18;anchors_y:10}D{i:19;anchors_y:10}D{i:16;anchors_height:100;anchors_width:100;anchors_y:109}
+D{i:25;anchors_height:200;anchors_width:200}
 }
  ##^##*/

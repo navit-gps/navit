@@ -10,7 +10,7 @@ Item {
     signal addBookmarkClicked()
     Rectangle{
         id: buttonsBackground
-        height: parent.height * 0.45
+        height: parent.height * 0.65
         anchors.right: parent.right
         anchors.left: parent.left
         border.width: 1
@@ -30,84 +30,81 @@ Item {
         }
     }
 
-    ColumnLayout {
+
+    RowLayout {
         id: rowLayout
-        height: parent.height * 0.45
+        height: parent.height * 0.25
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.leftMargin: 0
         spacing: 0
-
-        RowLayout {
+        Rectangle {
+            color: "#ffffff"
+            radius: height/2
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Rectangle {
-                height: parent.height*0.8
-                color: "#ffffff"
-                radius: height/2
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                border.width: 1
+            border.width: 1
 
-                Text {
-                    text: qsTr("Route Overview")
-                    font.pointSize: 16
-                    fontSizeMode: Text.HorizontalFit
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: __root.routeOverviewClicked()
-                }
+            Text {
+                text: qsTr("Route Overview")
+                font.pointSize: 16
+                fontSizeMode: Text.HorizontalFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
-
-            Rectangle {
-                height: parent.height*0.8
-                color: "#ffffff"
-                radius: height/2
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                border.width: 1
-                Text {
-                    text: qsTr("POIs")
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: 16
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    fontSizeMode: Text.HorizontalFit
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: __root.poisClicked()
-                }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: __root.routeOverviewClicked()
             }
+        }
 
-            Rectangle {
-                id: rectangle
-                height: parent.height*0.8
-                color: "#ffffff"
-                radius: height/2
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                border.width: 1
+        Rectangle {
+            id: rectangle1
+            color: "#ffffff"
+            radius: height/2
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            border.width: 1
+            Text {
+                text: qsTr("POIs")
+                anchors.verticalCenter: parent.verticalCenter
+                font.pointSize: 16
+                anchors.horizontalCenter: parent.horizontalCenter
+                fontSizeMode: Text.HorizontalFit
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: __root.poisClicked()
+            }
+        }
 
-                Text {
-                    text: qsTr("Add as Bookmark")
-                    fontSizeMode: Text.HorizontalFit
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    font.pointSize: 16
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: __root.addBookmarkClicked()
-                }
+        Rectangle {
+            id: rectangle
+            color: "#ffffff"
+            radius: height/2
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            border.width: 1
+
+            Text {
+                text: qsTr("Add as Bookmark")
+                fontSizeMode: Text.HorizontalFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 16
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: __root.addBookmarkClicked()
             }
         }
     }
 }
+
+
+
+
 
 
 

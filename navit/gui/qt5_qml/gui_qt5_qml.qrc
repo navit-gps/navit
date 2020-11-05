@@ -951,6 +951,7 @@
         <file>themes/Levy/SearchDrawerContextMenu.qml</file>
         <file>themes/Levy/SearchDrawerBreadcrumbs.qml</file>
         <file>themes/Levy/DestinationDetailsBar.qml</file>
-        <file>themes/Levy/RouteCalculating.qml</file>
+        <file>themes/Levy/SpeedGauge.qml</file>
+        <file>themes/Levy/Instructions.qml</file>
     </qresource>
 </RCC>
