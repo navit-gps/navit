@@ -218,6 +218,7 @@ void QNavitQuick_2::setPitch(int pitch){
 
 void QNavitQuick_2::setFollowVehicle(bool followVehicle){
     if(followVehicle != m_followVehicle){
+        setNavitNumProperty(attr_follow, 1000);
         setNavitNumProperty(attr_follow_cursor, followVehicle);
         m_followVehicle = followVehicle;
         emit propertiesChanged();
@@ -226,6 +227,7 @@ void QNavitQuick_2::setFollowVehicle(bool followVehicle){
 
 void QNavitQuick_2::setAutozoom(bool autoZoom){
     if(autoZoom != m_autoZoom){
+        setNavitNumProperty(attr_autozoom, 1);
         setNavitNumProperty(attr_autozoom_active, (int)autoZoom);
         m_autoZoom = autoZoom;
         emit propertiesChanged();

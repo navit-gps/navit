@@ -1025,6 +1025,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     navit_app = internal_app;
 #else
     navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
+    navit_app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
 #if HAVE_FREETYPE
