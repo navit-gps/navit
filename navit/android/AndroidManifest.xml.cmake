@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application android:label="@string/app_name"
-                 android:icon="@drawable/icon"
+                 android:icon="@mipmap/ic_laucher"
                  android:name=".NavitAppConfig"
                  android:theme="@style/NavitBaseTheme">
         <activity android:name="Navit"
