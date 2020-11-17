@@ -565,7 +565,7 @@ static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct at
                     size_rem-=subsize+1;
                     i++;
                 }
-                mr->attrs[i].type=type_none;
+                mr->attrs[i].type=attr_none;
                 mr->attrs[i].u.data=NULL;
                 attr->u.attrs=mr->attrs;
             } else {
