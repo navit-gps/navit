@@ -158,7 +158,7 @@ static void result_free(struct result *res) {
         attr_free_content(&res->attr);
         res->allocated=0;
     } else {
-        res->attr.type=type_none;
+        res->attr.type=attr_none;
         res->attr.u.data=NULL;
     }
 }
