@@ -1058,7 +1058,8 @@ struct map_selection * route_get_selection(struct route * this_) {
     int i = 0;
     GList *tmp;
 
-    c[i++] = this_->pos->c;
+    if (this_->pos)
+        c[i++] = this_->pos->c;
     tmp = this_->destinations;
     while (tmp) {
         struct route_info *dst = tmp->data;
