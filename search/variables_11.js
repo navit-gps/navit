@@ -168,6 +168,8 @@ var searchData=
   ['protobuf',['protobuf',['../structmaptool__params.html#a142a6ad43191e0d07dfd9298b3e5244f',1,'maptool_params']]],
   ['protobufdb',['protobufdb',['../structmaptool__params.html#a8db99fe56a16a740ae27a65505f5282d',1,'maptool_params']]],
   ['protobufdb_5foperation',['protobufdb_operation',['../structmaptool__params.html#a8540a3acc750f95a9de7e73985782eb9',1,'maptool_params']]],
+  ['proxy_5fgraphics_5fmethods',['proxy_graphics_methods',['../structgraphics__priv.html#aadf9caab5e14e78ac4366bd63ca47e1f',1,'graphics_priv']]],
+  ['proxy_5fpriv',['proxy_priv',['../structgraphics__priv.html#a7fa41890c461c71230385c491f20cab8',1,'graphics_priv']]],
   ['psshape',['psShape',['../structmap__rect__priv.html#a9fd34ee4a2b69879555d1eef08015647',1,'map_rect_priv']]],
   ['pxpm',['pxpm',['../structgraphics__image__priv.html#a9ff0175029a59a08a7ee367a34d4cd54',1,'graphics_image_priv']]]
 ];

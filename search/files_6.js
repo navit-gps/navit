@@ -32,6 +32,7 @@ var searchData=
   ['graphics_5fqt_5fqpainter_2eh',['graphics_qt_qpainter.h',['../graphics__qt__qpainter_8h.html',1,'']]],
   ['graphics_5fsdl_2ec',['graphics_sdl.c',['../graphics__sdl_8c.html',1,'']]],
   ['graphics_5fsdl_2eh',['graphics_sdl.h',['../graphics__sdl_8h.html',1,'']]],
+  ['graphics_5fsvg_5fdebug_2ec',['graphics_svg_debug.c',['../graphics__svg__debug_8c.html',1,'']]],
   ['graphics_5fwin32_2ec',['graphics_win32.c',['../graphics__win32_8c.html',1,'']]],
   ['graphics_5fwin32_2eh',['graphics_win32.h',['../graphics__win32_8h.html',1,'']]],
   ['gtkext_2eh',['gtkext.h',['../gtkext_8h.html',1,'']]],
