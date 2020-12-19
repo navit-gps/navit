@@ -5,6 +5,7 @@ var searchData=
   ['vehicle_5fandroid_2ec',['vehicle_android.c',['../vehicle__android_8c.html',1,'']]],
   ['vehicle_5fdemo_2ec',['vehicle_demo.c',['../vehicle__demo_8c.html',1,'']]],
   ['vehicle_5ffile_2ec',['vehicle_file.c',['../vehicle__file_8c.html',1,'']]],
+  ['vehicle_5fgeoclue_2ec',['vehicle_geoclue.c',['../vehicle__geoclue_8c.html',1,'']]],
   ['vehicle_5fgpsd_2ec',['vehicle_gpsd.c',['../vehicle__gpsd_8c.html',1,'']]],
   ['vehicle_5fgpsd_5fdbus_2ec',['vehicle_gpsd_dbus.c',['../vehicle__gpsd__dbus_8c.html',1,'']]],
   ['vehicle_5fgypsy_2ec',['vehicle_gypsy.c',['../vehicle__gypsy_8c.html',1,'']]],

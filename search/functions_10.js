@@ -11,6 +11,8 @@ var searchData=
   ['object_5fget_5ffrom_5fmessage_5farg',['object_get_from_message_arg',['../binding__dbus_8c.html#a1263f3bbf1f8a619e983c02a550be212',1,'binding_dbus.c']]],
   ['object_5fnew',['object_new',['../binding__dbus_8c.html#ae5004b94d134c98ffd9648b9ae27223d',1,'binding_dbus.c']]],
   ['ocean_5ftile',['ocean_tile',['../coastline_8c.html#a8aa0bfc7a3ec2e8995694d2e845d1513',1,'coastline.c']]],
+  ['on_5fclient_5factive_5fnotify',['on_client_active_notify',['../group__vehicle-gypsy.html#ga0032c450014361ac8fe9498ef51423c7',1,'vehicle_geoclue.c']]],
+  ['on_5fsimple_5fready',['on_simple_ready',['../group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e',1,'vehicle_geoclue.c']]],
   ['onaccuracychanged',['onAccuracyChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html#a4821526e553f7ce0355678695be991d4',1,'org::navitproject::navit::NavitSensors']]],
   ['onactivityresult',['onActivityResult',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a6cb530da592694ce0e2e6950e1737202',1,'org.navitproject.navit.Navit.onActivityResult()'],['../interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00',1,'org.navitproject.navit.NavitActivityResult.onActivityResult()'],['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html#a53375d1c4b645297b803d77b235a2f52',1,'org.navitproject.navit.NavitSpeech2.onActivityResult()']]],
   ['onapplywindowinsets',['onApplyWindowInsets',['../classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html#a6fe221d756efa9b48f922a519cad84b2',1,'org::navitproject::navit::NavitGraphics::NavitView']]],

@@ -1,11 +1,13 @@
 var group__vehicle_gpsd =
 [
     [ "vehicle_priv", "structvehicle__priv.html", [
+      [ "accuracy", "group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63", null ],
       [ "address", "group__vehicle-gpsd-dbus.html#ga058586e665d875c82e96d3af0f968cbb", null ],
       [ "altitude", "group__vehicle-gpsd-dbus.html#ga27c3adf619ddf41e7b02ca5e642397c4", null ],
       [ "attrs", "group__vehicle-file.html#gae9ffa769dcf35e12d180b1d8e9067310", null ],
       [ "baudrate", "group__vehicle-file.html#gac6a3231e3367ee1dd9b9505997ce0b4a", null ],
       [ "baudrate", "group__vehicle-wince.html#ga3f09656289a3e4510e33b808877296dd", null ],
+      [ "bla", "group__vehicle-gypsy.html#ga1bf478714cd27bb55ac03dad09f20b1d", null ],
       [ "BthSetMode", "group__vehicle-wince.html#ga28e7e91dbf420a2df4709ea4100b9720", null ],
       [ "buffer", "group__vehicle-file.html#ga11b388631e7d9c451f1287deacaab3d7", null ],
       [ "buffer_pos", "group__vehicle-file.html#gaf57268ae8641adb4ec87dccc06d8370c", null ],
@@ -54,6 +56,7 @@ var group__vehicle_gpsd =
       [ "interval", "group__vehicle-iphone.html#ga3e5c188914c0e05452af81047321cc21", null ],
       [ "is_running", "group__vehicle-wince.html#ga8b84a64c706e8636ea80a272d9da0c23", null ],
       [ "last", "group__vehicle-iphone.html#gacef78dd9523fb2188dca428954ec3daa", null ],
+      [ "location", "group__vehicle-gypsy.html#ga0527c2f8787bc5c3144a2618bba04d32", null ],
       [ "Location_getAccuracy", "structvehicle__priv.html#a16204bc1954f9a5f8ec34e0cdabd1cfb", null ],
       [ "Location_getAltitude", "structvehicle__priv.html#a73a472d935698545e5bf478f14be242d", null ],
       [ "Location_getBearing", "structvehicle__priv.html#a5d5569759abe0ea7ed65d5101a7ff137", null ],
@@ -99,6 +102,7 @@ var group__vehicle_gpsd =
       [ "sats_used", "group__vehicle-file.html#gacaefff1b97ccc6fd75a94c89700fab94", null ],
       [ "sats_visible", "group__vehicle-file.html#ga8b4aacc937cf703e1f6545306dfccd14", null ],
       [ "scb", "structvehicle__priv.html#ab9b025e10c32c8efd3a994f446cbd588", null ],
+      [ "simple", "group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04", null ],
       [ "source", "structvehicle__priv.html#af268e33040721b1a25e39061e5738f62", null ],
       [ "source", "group__vehicle-file.html#ga9847b71967f0e1daf55c9585c07a91f7", null ],
       [ "speed", "group__vehicle-file.html#ga6b84269fed74ae3ee462db9265821c13", null ],
@@ -110,6 +114,7 @@ var group__vehicle_gpsd =
       [ "thread_up", "group__vehicle-wince.html#ga8d434b683a0ed48936b994bbe24285f8", null ],
       [ "time", "group__vehicle-gpsd-dbus.html#ga402c8461944db16af57cea83c3af07fe", null ],
       [ "time", "group__vehicle-file.html#gab28c7d6156659004ff115441fe16383b", null ],
+      [ "time_str", "group__vehicle-gypsy.html#ga7d6381d7493e1aba1f0869a91dc39e27", null ],
       [ "timeout_cb", "structvehicle__priv.html#a1f9a2a88a768d4e474843d9b14bba884", null ],
       [ "timep", "structvehicle__priv.html#acd21a93863c1af2b2a7837e646c6ca4b", null ],
       [ "timer", "group__vehicle-iphone.html#gad684ee647186b8e3297a7a093a0683b0", null ],

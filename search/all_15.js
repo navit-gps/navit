@@ -376,6 +376,7 @@ var searchData=
   ['signature_5fname',['signature_name',['../structdbus__method.html#ac155f87f9530d006312d0b16fd879c0f',1,'dbus_method']]],
   ['signs',['signS',['../geod__for_8c.html#a60d68b1d4fa08c3a41a3235f7fd58798',1,'geod_for.c']]],
   ['sigsegv',['sigsegv',['../debug_8c.html#a0dacb339d5f1830ece2a10bc31b1246e',1,'debug.c']]],
+  ['simple',['simple',['../group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04',1,'vehicle_priv']]],
   ['sina12',['sina12',['../geod__for_8c.html#a6a60277ae368415c4d76473359794844',1,'geod_for.c']]],
   ['sind',['sind',['../sunriset_8h.html#ad0827f80a4727ba1e433b37a59b61571',1,'sunriset.h']]],
   ['sink',['sink',['../structcoastline__tile__data.html#ad83bf48ffe3875657e8406e7ec995939',1,'coastline_tile_data']]],

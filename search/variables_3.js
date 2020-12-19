@@ -41,6 +41,7 @@ var searchData=
   ['bitstream_5finfo',['bitstream_info',['../structrgn__poly.html#ac1bbabf8ac97a0154354732a0b6d5f90',1,'rgn_poly::bitstream_info()'],['../garmin__img_8c.html#a6506c393060d825c27d921fab652a766',1,'bitstream_info():&#160;garmin_img.c']]],
   ['bitstream_5flen',['bitstream_len',['../structrgn__poly.html#ad2dd7544781d1d95adcc408a42a1c478',1,'rgn_poly::bitstream_len()'],['../garmin__img_8c.html#ab6250f82286bfdbb1cbb15f26876d258',1,'bitstream_len():&#160;garmin_img.c']]],
   ['bl',['bl',['../structwidget.html#acb4abc24fb9d12aefed03b858aa947bb',1,'widget']]],
+  ['bla',['bla',['../group__vehicle-gypsy.html#ga1bf478714cd27bb55ac03dad09f20b1d',1,'vehicle_priv']]],
   ['black',['black',['../structosd__speed__warner.html#abc0a4cc9c3736d73a4d513d3c00e4983',1,'osd_speed_warner::black()'],['../structosd__scale.html#aa5eb89038e38c080a457ebe62814f264',1,'osd_scale::black()']]],
   ['block',['block',['../structstreet__name__index.html#abcce246c045ec628d6793cf05767ef9c',1,'street_name_index::block()'],['../street_8c.html#a6f5f3480b66f3cc414fd0d6dfcf54046',1,'block():&#160;street.c']]],
   ['block_5factive_5fcount',['block_active_count',['../block_8c.html#aedd8db709c3145be2119bfef262e2510',1,'block_active_count():&#160;block.c'],['../map_2mg_2map_8c.html#aedd8db709c3145be2119bfef262e2510',1,'block_active_count():&#160;block.c']]],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>navit: Vehicle gypsy</title>
+<title>navit: Vehicle GeoClue</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,11 +86,11 @@ $(document).ready(function(){initNavTree('group__vehicle-gypsy.html','');});
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">Vehicle gypsy<div class="ingroups"><a class="el" href="group__plugins.html">Plugins</a> &raquo; <a class="el" href="group__vehicle-plugins.html">vehicle plugins</a></div></div>  </div>
+<div class="title">Vehicle GeoClue<div class="ingroups"><a class="el" href="group__plugins.html">Plugins</a> &raquo; <a class="el" href="group__vehicle-plugins.html">vehicle plugins</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>The Vehicle to gain position data from gypsy. gypsy uses dbus signals  Tim Niemeyer <a href="#" onclick="location.href='mai'+'lto:'+'red'+'do'+'g@m'+'as'+'ter'+'sw'+'ord'+'.d'+'e'; return false;">reddo<span style="display: none;">.nosp@m.</span>g@ma<span style="display: none;">.nosp@m.</span>sters<span style="display: none;">.nosp@m.</span>word<span style="display: none;">.nosp@m.</span>.de</a>  
+<p>The Vehicle to gain position data from GeoClue.  jkoan.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -107,6 +107,24 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga83a497cf220cbcf234bd0282bb9d6d95"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga83a497cf220cbcf234bd0282bb9d6d95">vehicle_geoclue_destroy</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv)</td></tr>
+<tr class="memdesc:ga83a497cf220cbcf234bd0282bb9d6d95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the geoclue_vehicle.  <a href="#ga83a497cf220cbcf234bd0282bb9d6d95">More...</a><br /></td></tr>
+<tr class="separator:ga83a497cf220cbcf234bd0282bb9d6d95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7730e4dce1c75c046a97fb8bcc748855"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga7730e4dce1c75c046a97fb8bcc748855">print_location</a> (GClueSimple *simple, GParamSpec *pspec, gpointer user_data)</td></tr>
+<tr class="separator:ga7730e4dce1c75c046a97fb8bcc748855"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0032c450014361ac8fe9498ef51423c7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga0032c450014361ac8fe9498ef51423c7">on_client_active_notify</a> (GClueClient *<a class="el" href="group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb">client</a>, GParamSpec *pspec, gpointer user_data)</td></tr>
+<tr class="separator:ga0032c450014361ac8fe9498ef51423c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga405d63f91a71ecb6e25891ace3560b9e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready</a> (GObject *source_object, GAsyncResult *res, gpointer user_data)</td></tr>
+<tr class="separator:ga405d63f91a71ecb6e25891ace3560b9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga56aaef0db7f35a074b58ed7e315c37cd"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga56aaef0db7f35a074b58ed7e315c37cd">vehicle_geoclue_position_attr_get</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
+<tr class="memdesc:ga56aaef0db7f35a074b58ed7e315c37cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide the outside with information.  <a href="#ga56aaef0db7f35a074b58ed7e315c37cd">More...</a><br /></td></tr>
+<tr class="separator:ga56aaef0db7f35a074b58ed7e315c37cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab26ddbe6cc80c808779163cd2f4c82e6"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gab26ddbe6cc80c808779163cd2f4c82e6">vehicle_geoclue_new</a> (struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *meth, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memdesc:gab26ddbe6cc80c808779163cd2f4c82e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create geoclue_vehicle.  <a href="#gab26ddbe6cc80c808779163cd2f4c82e6">More...</a><br /></td></tr>
+<tr class="separator:gab26ddbe6cc80c808779163cd2f4c82e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
+<tr class="memdesc:ga1eaae939034896b436dffbf5e93c0da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">register vehicle_geoclue  <a href="#ga1eaae939034896b436dffbf5e93c0da1">More...</a><br /></td></tr>
+<tr class="separator:ga1eaae939034896b436dffbf5e93c0da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaca1dd86f7ce02caa387d9775c99570e4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gaca1dd86f7ce02caa387d9775c99570e4">vehicle_gypsy_fixstatus_changed</a> (GypsyDevice *device, gint fixstatus, gpointer userdata)</td></tr>
 <tr class="memdesc:gaca1dd86f7ce02caa387d9775c99570e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the fixstatus has changed, this function get called.  <a href="#gaca1dd86f7ce02caa387d9775c99570e4">More...</a><br /></td></tr>
 <tr class="separator:gaca1dd86f7ce02caa387d9775c99570e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,12 +155,23 @@ Functions</h2></td></tr>
 <tr class="memitem:gad1c188e5fb343bcd97d26af524e7d9c0"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy</a> (struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *meth, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="memdesc:gad1c188e5fb343bcd97d26af524e7d9c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create gypsy_vehicle.  <a href="#gad1c188e5fb343bcd97d26af524e7d9c0">More...</a><br /></td></tr>
 <tr class="separator:gad1c188e5fb343bcd97d26af524e7d9c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
-<tr class="memdesc:ga1eaae939034896b436dffbf5e93c0da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">register vehicle_gypsy  <a href="#ga1eaae939034896b436dffbf5e93c0da1">More...</a><br /></td></tr>
-<tr class="separator:ga1eaae939034896b436dffbf5e93c0da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:ga0527c2f8787bc5c3144a2618bba04d32"><td class="memItemLeft" align="right" valign="top">GClueLocation *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga0527c2f8787bc5c3144a2618bba04d32">vehicle_priv::location</a></td></tr>
+<tr class="separator:ga0527c2f8787bc5c3144a2618bba04d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bf478714cd27bb55ac03dad09f20b1d"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga1bf478714cd27bb55ac03dad09f20b1d">vehicle_priv::bla</a></td></tr>
+<tr class="separator:ga1bf478714cd27bb55ac03dad09f20b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa19bacad80a9b570b5cc2d8dab8d9c63"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63">vehicle_priv::accuracy</a></td></tr>
+<tr class="separator:gaa19bacad80a9b570b5cc2d8dab8d9c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7d6381d7493e1aba1f0869a91dc39e27"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga7d6381d7493e1aba1f0869a91dc39e27">vehicle_priv::time_str</a></td></tr>
+<tr class="separator:ga7d6381d7493e1aba1f0869a91dc39e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae8879929462808d925d7dad800dd7b04"><td class="memItemLeft" align="right" valign="top">GClueSimple *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04">vehicle_priv::simple</a></td></tr>
+<tr class="separator:gae8879929462808d925d7dad800dd7b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb7151c0cc61c892c7731a2d5067bfeb"><td class="memItemLeft" align="right" valign="top">GClueClient *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb">client</a> = NULL</td></tr>
+<tr class="separator:gafb7151c0cc61c892c7731a2d5067bfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1498207c0a3cb6feee952e4714bb4a0b"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga1498207c0a3cb6feee952e4714bb4a0b">vehicle_geoclue_methods</a></td></tr>
+<tr class="separator:ga1498207c0a3cb6feee952e4714bb4a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaef3cf1d023d4a01be98419b7f61cd577"><td class="memItemLeft" align="right" valign="top">GypsyControl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#gaef3cf1d023d4a01be98419b7f61cd577">vehicle_priv::control</a></td></tr>
 <tr class="separator:gaef3cf1d023d4a01be98419b7f61cd577"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga77c39f5f45c2ea3a75840b7f4d6f0697"><td class="memItemLeft" align="right" valign="top">GypsyPosition *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__vehicle-gypsy.html#ga77c39f5f45c2ea3a75840b7f4d6f0697">vehicle_priv::position</a></td></tr>
@@ -165,8 +194,11 @@ Variables</h2></td></tr>
 <tr class="separator:ga4f99f64998830f4c9620e5aafb36e38e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The Vehicle to gain position data from gypsy. gypsy uses dbus signals  Tim Niemeyer <a href="#" onclick="location.href='mai'+'lto:'+'red'+'do'+'g@m'+'as'+'ter'+'sw'+'ord'+'.d'+'e'; return false;">reddo<span style="display: none;">.nosp@m.</span>g@ma<span style="display: none;">.nosp@m.</span>sters<span style="display: none;">.nosp@m.</span>word<span style="display: none;">.nosp@m.</span>.de</a> </p>
-<dl class="section date"><dt>Date</dt><dd>2008-2009 </dd></dl>
+<p>The Vehicle to gain position data from GeoClue.  jkoan. </p>
+<p>The Vehicle to gain position data from gypsy. gypsy uses dbus signals  Tim Niemeyer <a href="#" onclick="location.href='mai'+'lto:'+'red'+'do'+'g@m'+'as'+'ter'+'sw'+'ord'+'.d'+'e'; return false;">reddo<span style="display: none;">.nosp@m.</span>g@ma<span style="display: none;">.nosp@m.</span>sters<span style="display: none;">.nosp@m.</span>word<span style="display: none;">.nosp@m.</span>.de</a></p>
+<dl class="section date"><dt>Date</dt><dd>2020</dd>
+<dd>
+2008-2009 </dd></dl>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="gaf2126f2e32b98f667bbaa13cef032686"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf2126f2e32b98f667bbaa13cef032686">&#9670;&nbsp;</a></span>DEFAULT_RETRY_INTERVAL</h2>
@@ -201,6 +233,96 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga0032c450014361ac8fe9498ef51423c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0032c450014361ac8fe9498ef51423c7">&#9670;&nbsp;</a></span>on_client_active_notify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void on_client_active_notify </td>
+          <td>(</td>
+          <td class="paramtype">GClueClient *&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GParamSpec *&#160;</td>
+          <td class="paramname"><em>pspec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpointer&#160;</td>
+          <td class="paramname"><em>user_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready()</a>.</p>
+
+</div>
+</div>
+<a id="ga405d63f91a71ecb6e25891ace3560b9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga405d63f91a71ecb6e25891ace3560b9e">&#9670;&nbsp;</a></span>on_simple_ready()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void on_simple_ready </td>
+          <td>(</td>
+          <td class="paramtype">GObject *&#160;</td>
+          <td class="paramname"><em>source_object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GAsyncResult *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpointer&#160;</td>
+          <td class="paramname"><em>user_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb">client</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="garmin__img_8c.html#a2ecc49066a3a7cc32866fdf53805dd1d">exit</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="group__vehicle-gypsy.html#ga0032c450014361ac8fe9498ef51423c7">on_client_active_notify()</a>, <a class="el" href="group__vehicle-gypsy.html#ga7730e4dce1c75c046a97fb8bcc748855">print_location()</a>, and <a class="el" href="group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04">vehicle_priv::simple</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#gab26ddbe6cc80c808779163cd2f4c82e6">vehicle_geoclue_new()</a>.</p>
+
+</div>
+</div>
 <a id="ga1eaae939034896b436dffbf5e93c0da1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1eaae939034896b436dffbf5e93c0da1">&#9670;&nbsp;</a></span>plugin_init()</h2>
 
@@ -217,11 +339,206 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>register vehicle_gypsy </p>
-<p>The plugin entry point.</p>
+<p>register vehicle_geoclue </p>
+<p>register vehicle_gypsy</p>
 <dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
 
-<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, and <a class="el" href="group__vehicle-gypsy.html#gad1c188e5fb343bcd97d26af524e7d9c0">vehicle_gypsy_new_gypsy()</a>.</p>
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, and <a class="el" href="group__vehicle-gypsy.html#gab26ddbe6cc80c808779163cd2f4c82e6">vehicle_geoclue_new()</a>.</p>
+
+</div>
+</div>
+<a id="ga7730e4dce1c75c046a97fb8bcc748855"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7730e4dce1c75c046a97fb8bcc748855">&#9670;&nbsp;</a></span>print_location()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void print_location </td>
+          <td>(</td>
+          <td class="paramtype">GClueSimple *&#160;</td>
+          <td class="paramname"><em>simple</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GParamSpec *&#160;</td>
+          <td class="paramname"><em>pspec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpointer&#160;</td>
+          <td class="paramname"><em>user_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63">vehicle_priv::accuracy</a>, <a class="el" href="group__vehicle-gpsd-dbus.html#ga27c3adf619ddf41e7b02ca5e642397c4">vehicle_priv::altitude</a>, <a class="el" href="callback_8h.html#a34b73107b42d822d5595bf2162f1c11a">callback_list_call_attr_0</a>, <a class="el" href="group__vehicle-file.html#gac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="group__vehicle-file.html#ga21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="group__vehicle-file.html#gad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="group__vehicle-file.html#ga24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="group__vehicle-gypsy.html#ga0527c2f8787bc5c3144a2618bba04d32">vehicle_priv::location</a>, <a class="el" href="group__vehicle-file.html#ga6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, and <a class="el" href="group__vehicle-gypsy.html#ga7d6381d7493e1aba1f0869a91dc39e27">vehicle_priv::time_str</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready()</a>.</p>
+
+</div>
+</div>
+<a id="ga83a497cf220cbcf234bd0282bb9d6d95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga83a497cf220cbcf234bd0282bb9d6d95">&#9670;&nbsp;</a></span>vehicle_geoclue_destroy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void vehicle_geoclue_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Free the geoclue_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
+
+<p class="reference">References <a class="el" href="group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb">client</a>, and <a class="el" href="group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04">vehicle_priv::simple</a>.</p>
+
+</div>
+</div>
+<a id="gab26ddbe6cc80c808779163cd2f4c82e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab26ddbe6cc80c808779163cd2f4c82e6">&#9670;&nbsp;</a></span>vehicle_geoclue_new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a>* vehicle_geoclue_new </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> *&#160;</td>
+          <td class="paramname"><em>meth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcallback__list.html">callback_list</a> *&#160;</td>
+          <td class="paramname"><em>cbl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create geoclue_vehicle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meth[out]</td><td>Methodes supported by geoclue Plugin </td></tr>
+    <tr><td class="paramname">cbl[in]</td><td>Callback List reference </td></tr>
+    <tr><td class="paramname">attrs</td><td>Configuration attributes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structvehicle__priv.html">vehicle_priv</a> The newly created Vehicle priv </dd></dl>
+
+<p class="reference">References <a class="el" href="group__vehicle-file.html#gac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready()</a>, and <a class="el" href="group__vehicle-gypsy.html#ga1498207c0a3cb6feee952e4714bb4a0b">vehicle_geoclue_methods</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
+
+</div>
+</div>
+<a id="ga56aaef0db7f35a074b58ed7e315c37cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga56aaef0db7f35a074b58ed7e315c37cd">&#9670;&nbsp;</a></span>vehicle_geoclue_position_attr_get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int vehicle_geoclue_position_attr_get </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *&#160;</td>
+          <td class="paramname"><em>priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provide the outside with information. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">priv</td><td></td></tr>
+    <tr><td class="paramname">type</td><td>TODO: What can this be? </td></tr>
+    <tr><td class="paramname">attr</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true/false </dd></dl>
+
+<p class="reference">References <a class="el" href="group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63">vehicle_priv::accuracy</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="group__vehicle-file.html#ga21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="group__vehicle-file.html#gad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="group__vehicle-file.html#ga24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="group__vehicle-file.html#ga6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="group__vehicle-gypsy.html#ga7d6381d7493e1aba1f0869a91dc39e27">vehicle_priv::time_str</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 </div>
 </div>
@@ -498,9 +815,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structvehicle__priv.html">vehicle_priv</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="group__vehicle-file.html#gae9ffa769dcf35e12d180b1d8e9067310">vehicle_priv::attrs</a>, <a class="el" href="group__vehicle-file.html#gac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="namespaceeval.html#aa257ff3ca5d343d5e2723f993ecd4420">eval::conn</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="group__vehicle-gypsy.html#gaf2126f2e32b98f667bbaa13cef032686">DEFAULT_RETRY_INTERVAL</a>, <a class="el" href="group__vehicle-gypsy.html#gab0fa82f5eb4e8b4b56e6426bca1946e7">vehicle_priv::have_cords</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="group__vehicle-gypsy.html#gae2c24a758f0feeafbadddb894784d430">MIN_RETRY_INTERVAL</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="group__vehicle-gypsy.html#gac44d6c954bf29bec4ab088e60fda709e">vehicle_priv::path</a>, <a class="el" href="group__vehicle-gpsd.html#gabe05855028e4bdfa1454eedba20e5fcd">vehicle_priv::retry_interval</a>, <a class="el" href="group__vehicle-file.html#ga9847b71967f0e1daf55c9585c07a91f7">vehicle_priv::source</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="group__vehicle-gypsy.html#ga4f99f64998830f4c9620e5aafb36e38e">vehicle_gypsy_methods</a>, and <a class="el" href="group__vehicle-gypsy.html#gae1b3bba396d10c4264db14d0d8aa4f0e">vehicle_gypsy_open()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="group__vehicle-file.html#gae9ffa769dcf35e12d180b1d8e9067310">vehicle_priv::attrs</a>, <a class="el" href="group__vehicle-file.html#gac3c348720e206fd4f832570048756830">vehicle_priv::cbl</a>, <a class="el" href="namespaceeval.html#aa257ff3ca5d343d5e2723f993ecd4420">eval::conn</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="group__vehicle-gypsy.html#gaf2126f2e32b98f667bbaa13cef032686">DEFAULT_RETRY_INTERVAL</a>, <a class="el" href="group__vehicle-gypsy.html#gab0fa82f5eb4e8b4b56e6426bca1946e7">vehicle_priv::have_cords</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="group__vehicle-gypsy.html#gae2c24a758f0feeafbadddb894784d430">MIN_RETRY_INTERVAL</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="group__vehicle-gypsy.html#gac44d6c954bf29bec4ab088e60fda709e">vehicle_priv::path</a>, <a class="el" href="plugin_8h.html#a19f69f75502fe229ad256d5f485c352e">plugin_init</a>, <a class="el" href="group__vehicle-gpsd.html#gabe05855028e4bdfa1454eedba20e5fcd">vehicle_priv::retry_interval</a>, <a class="el" href="group__vehicle-file.html#ga9847b71967f0e1daf55c9585c07a91f7">vehicle_priv::source</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>, <a class="el" href="group__vehicle-gypsy.html#ga4f99f64998830f4c9620e5aafb36e38e">vehicle_gypsy_methods</a>, and <a class="el" href="group__vehicle-gypsy.html#gae1b3bba396d10c4264db14d0d8aa4f0e">vehicle_gypsy_open()</a>.</p>
 
 </div>
 </div>
@@ -785,6 +1100,52 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="gaa19bacad80a9b570b5cc2d8dab8d9c63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa19bacad80a9b570b5cc2d8dab8d9c63">&#9670;&nbsp;</a></span>accuracy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int vehicle_priv::accuracy</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga7730e4dce1c75c046a97fb8bcc748855">print_location()</a>, and <a class="el" href="group__vehicle-gypsy.html#ga56aaef0db7f35a074b58ed7e315c37cd">vehicle_geoclue_position_attr_get()</a>.</p>
+
+</div>
+</div>
+<a id="ga1bf478714cd27bb55ac03dad09f20b1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bf478714cd27bb55ac03dad09f20b1d">&#9670;&nbsp;</a></span>bla</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* vehicle_priv::bla</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="gafb7151c0cc61c892c7731a2d5067bfeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafb7151c0cc61c892c7731a2d5067bfeb">&#9670;&nbsp;</a></span>client</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GClueClient* client = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready()</a>, and <a class="el" href="group__vehicle-gypsy.html#ga83a497cf220cbcf234bd0282bb9d6d95">vehicle_geoclue_destroy()</a>.</p>
+
+</div>
+</div>
 <a id="gaef3cf1d023d4a01be98419b7f61cd577"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaef3cf1d023d4a01be98419b7f61cd577">&#9670;&nbsp;</a></span>control</h2>
 
@@ -849,6 +1210,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ga0527c2f8787bc5c3144a2618bba04d32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0527c2f8787bc5c3144a2618bba04d32">&#9670;&nbsp;</a></span>location</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GClueLocation* vehicle_priv::location</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga7730e4dce1c75c046a97fb8bcc748855">print_location()</a>.</p>
+
+</div>
+</div>
 <a id="gac44d6c954bf29bec4ab088e60fda709e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac44d6c954bf29bec4ab088e60fda709e">&#9670;&nbsp;</a></span>path</h2>
 
@@ -910,6 +1287,56 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga59865c66da1965a7db3e587583eb7eb1">vehicle_gypsy_close()</a>, and <a class="el" href="group__vehicle-gypsy.html#gae4e3a01dd25066d4eba995c4e8c36596">vehicle_gypsy_try_open()</a>.</p>
+
+</div>
+</div>
+<a id="gae8879929462808d925d7dad800dd7b04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae8879929462808d925d7dad800dd7b04">&#9670;&nbsp;</a></span>simple</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GClueSimple* vehicle_priv::simple</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga405d63f91a71ecb6e25891ace3560b9e">on_simple_ready()</a>, and <a class="el" href="group__vehicle-gypsy.html#ga83a497cf220cbcf234bd0282bb9d6d95">vehicle_geoclue_destroy()</a>.</p>
+
+</div>
+</div>
+<a id="ga7d6381d7493e1aba1f0869a91dc39e27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7d6381d7493e1aba1f0869a91dc39e27">&#9670;&nbsp;</a></span>time_str</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* vehicle_priv::time_str</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#ga7730e4dce1c75c046a97fb8bcc748855">print_location()</a>, and <a class="el" href="group__vehicle-gypsy.html#ga56aaef0db7f35a074b58ed7e315c37cd">vehicle_geoclue_position_attr_get()</a>.</p>
+
+</div>
+</div>
+<a id="ga1498207c0a3cb6feee952e4714bb4a0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1498207c0a3cb6feee952e4714bb4a0b">&#9670;&nbsp;</a></span>vehicle_geoclue_methods</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structvehicle__methods.html">vehicle_methods</a> vehicle_geoclue_methods</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div><div class="line">    .destroy           = <a class="code" href="group__vehicle-gypsy.html#ga83a497cf220cbcf234bd0282bb9d6d95">vehicle_geoclue_destroy</a>,</div><div class="line">    .position_attr_get = <a class="code" href="group__vehicle-gypsy.html#ga56aaef0db7f35a074b58ed7e315c37cd">vehicle_geoclue_position_attr_get</a>,</div><div class="line">}</div><div class="ttc" id="group__vehicle-gypsy_html_ga56aaef0db7f35a074b58ed7e315c37cd"><div class="ttname"><a href="group__vehicle-gypsy.html#ga56aaef0db7f35a074b58ed7e315c37cd">vehicle_geoclue_position_attr_get</a></div><div class="ttdeci">static int vehicle_geoclue_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdoc">Provide the outside with information. </div><div class="ttdef"><b>Definition:</b> vehicle_geoclue.c:162</div></div>
+<div class="ttc" id="group__vehicle-gypsy_html_ga83a497cf220cbcf234bd0282bb9d6d95"><div class="ttname"><a href="group__vehicle-gypsy.html#ga83a497cf220cbcf234bd0282bb9d6d95">vehicle_geoclue_destroy</a></div><div class="ttdeci">static void vehicle_geoclue_destroy(struct vehicle_priv *priv)</div><div class="ttdoc">Free the geoclue_vehicle. </div><div class="ttdef"><b>Definition:</b> vehicle_geoclue.c:63</div></div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="group__vehicle-gypsy.html#gab26ddbe6cc80c808779163cd2f4c82e6">vehicle_geoclue_new()</a>.</p>
 
 </div>
 </div>

@@ -75,6 +75,7 @@ var searchData=
   ['click',['click',['../structdatawindow__priv.html#a7e84fd9b6eb4ec03eeb8480acf8eafbc',1,'datawindow_priv']]],
   ['click_5fcb',['click_cb',['../structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9',1,'compass::click_cb()'],['../structodometer.html#aabc26afeb2af4f2942f82d313ba6cc0d',1,'odometer::click_cb()'],['../structstopwatch.html#aaec564d133e23c1be3e9ac07900efceb',1,'stopwatch::click_cb()'],['../structosd__speed__warner.html#a083422050037fce7f1fa309334c9fc56',1,'osd_speed_warner::click_cb()'],['../structvolume.html#ac192555c68c9b2fe3784f7f1e0340167',1,'volume::click_cb()'],['../structj1850.html#a0b73d5e8d58b9030ce9e33aaedc9cb96',1,'j1850::click_cb()']]],
   ['click_5fcoord_5fgeo',['click_coord_geo',['../structgui__priv.html#a725280352ff86727211ac3a01f145152',1,'gui_priv']]],
+  ['client',['client',['../group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb',1,'vehicle_geoclue.c']]],
   ['clipboard',['clipboard',['../structbookmarks.html#a2a44e8a8d13f347d65af5ea80a7637aa',1,'bookmarks']]],
   ['clipped_5fcoord',['clipped_coord',['../structz__clip__result.html#a8587074ae8345599aa5d8afa78fd3730',1,'z_clip_result']]],
   ['close',['close',['../structdatawindow__priv.html#aa7e450c6576acbb161ab1792f279b15b',1,'datawindow_priv']]],

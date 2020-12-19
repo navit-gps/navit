@@ -6,6 +6,7 @@ var searchData=
   ['abbrev',['abbrev',['../structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111',1,'suffix']]],
   ['acceleration',['acceleration',['../structodometer.html#a178b5ddfa794546222faf1ffcae0840a',1,'odometer']]],
   ['accesskey',['accesskey',['../structosd__item.html#aa2aa130e997367683b71b96ec3492b2e',1,'osd_item']]],
+  ['accuracy',['accuracy',['../group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63',1,'vehicle_priv']]],
   ['action',['action',['../structgraphics__priv.html#a2fd63a3262530cd774c3d1065d0c31b7',1,'graphics_priv::action()'],['../structmenu__priv.html#a18bd65653a11b48ca9a9c93655943467',1,'menu_priv::action()'],['../structgui__menu__info.html#a6818f74a9d303ac48af52d6aa0269ec4',1,'gui_menu_info::action()'],['../structnavit.html#a88624c592097452a54a027cffc2b505f',1,'navit::action()']]],
   ['action_5ftraff_5ffeed',['ACTION_TRAFF_FEED',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#afd3b325f31920c7ffb1004c4b35e979e',1,'org::navitproject::navit::NavitTraff']]],
   ['action_5ftraff_5fpoll',['ACTION_TRAFF_POLL',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a25eea325888a3ef7b01fc4a78eec1ebf',1,'org::navitproject::navit::NavitTraff']]],

@@ -139,6 +139,7 @@ var searchData=
   ['signature',['signature',['../structdbus__method.html#a997d76fa51869bfec815fa52d42ebbc4',1,'dbus_method::signature()'],['../structimg__header.html#ae62595b2f3c471c445e82ce2888d5089',1,'img_header::signature()'],['../garmin__img_8c.html#a76f9d15e734cf78ef23d88b8bc6bc1fc',1,'signature():&#160;garmin_img.c']]],
   ['signature_5fname',['signature_name',['../structdbus__method.html#ac155f87f9530d006312d0b16fd879c0f',1,'dbus_method']]],
   ['signs',['signS',['../geod__for_8c.html#a60d68b1d4fa08c3a41a3235f7fd58798',1,'geod_for.c']]],
+  ['simple',['simple',['../group__vehicle-gypsy.html#gae8879929462808d925d7dad800dd7b04',1,'vehicle_priv']]],
   ['sina12',['sina12',['../geod__for_8c.html#a6a60277ae368415c4d76473359794844',1,'geod_for.c']]],
   ['sink',['sink',['../structcoastline__tile__data.html#ad83bf48ffe3875657e8406e7ec995939',1,'coastline_tile_data']]],
   ['sink_5ffuncs',['sink_funcs',['../structitem__bin__sink.html#a87a4ca219674b1e218d37016dc51f4b4',1,'item_bin_sink']]],

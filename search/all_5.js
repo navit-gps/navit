@@ -271,6 +271,7 @@ var searchData=
   ['click_5fcb',['click_cb',['../structcompass.html#adffd85b4d7e8169563cd80287c0b8dc9',1,'compass::click_cb()'],['../structodometer.html#aabc26afeb2af4f2942f82d313ba6cc0d',1,'odometer::click_cb()'],['../structstopwatch.html#aaec564d133e23c1be3e9ac07900efceb',1,'stopwatch::click_cb()'],['../structosd__speed__warner.html#a083422050037fce7f1fa309334c9fc56',1,'osd_speed_warner::click_cb()'],['../structvolume.html#ac192555c68c9b2fe3784f7f1e0340167',1,'volume::click_cb()'],['../structj1850.html#a0b73d5e8d58b9030ce9e33aaedc9cb96',1,'j1850::click_cb()']]],
   ['click_5fcoord_5fgeo',['click_coord_geo',['../structgui__priv.html#a725280352ff86727211ac3a01f145152',1,'gui_priv']]],
   ['click_5fnotify',['click_notify',['../graphics__opengl_8c.html#af9e2a244f9b2456b64bbdcf8e4397c98',1,'graphics_opengl.c']]],
+  ['client',['client',['../group__vehicle-gypsy.html#gafb7151c0cc61c892c7731a2d5067bfeb',1,'vehicle_geoclue.c']]],
   ['clip_5faccept',['CLIP_ACCEPT',['../raster_8c.html#a004c35133422cb574c41bb114d4592c6',1,'raster.c']]],
   ['clip_5fbottom_5fedge',['CLIP_BOTTOM_EDGE',['../raster_8c.html#ae4fa529c5f9a39310b98769cdb007c2d',1,'raster.c']]],
   ['clip_5finside',['CLIP_INSIDE',['../raster_8c.html#a3f497d83ed5f593a5bc56c2ba7e13f5b',1,'raster.c']]],

@@ -19,6 +19,7 @@ var searchData=
   ['vehicle_5ffile_5fmethods',['vehicle_file_methods',['../group__vehicle-file.html#ga14d5d5a77dbe93b94d0120cac8d14fa9',1,'vehicle_file.c']]],
   ['vehicle_5ffile_5fsat_5fmethods',['vehicle_file_sat_methods',['../group__vehicle-file.html#ga3e9186d458ac83eccdbdbe3041ffaaab',1,'vehicle_file.c']]],
   ['vehicle_5ffunc',['vehicle_func',['../vehicle_8c.html#a74992576db530f3756a0ae02b2b3583c',1,'vehicle.c']]],
+  ['vehicle_5fgeoclue_5fmethods',['vehicle_geoclue_methods',['../group__vehicle-gypsy.html#ga1498207c0a3cb6feee952e4714bb4a0b',1,'vehicle_geoclue.c']]],
   ['vehicle_5fgpsd_5fdbus_5fprefix',['vehicle_gpsd_dbus_prefix',['../group__vehicle-gpsd-dbus.html#ga66cf5ae935f34db6b1f4a2d107c649cc',1,'vehicle_gpsd_dbus.c']]],
   ['vehicle_5fgpsd_5fmethods',['vehicle_gpsd_methods',['../group__vehicle-gpsd.html#ga9bb8aae23b7506fcf355d261f15d9073',1,'vehicle_gpsd_methods():&#160;vehicle_gpsd.c'],['../group__vehicle-gpsd-dbus.html#ga9bb8aae23b7506fcf355d261f15d9073',1,'vehicle_gpsd_methods():&#160;vehicle_gpsd_dbus.c']]],
   ['vehicle_5fgroup',['vehicle_group',['../structgui__priv.html#aeef3d4d9db7de260afb90a1e8efe052f',1,'gui_priv']]],

@@ -5,7 +5,7 @@ var searchData=
   ['vehicle_20file',['Vehicle File',['../group__vehicle-file.html',1,'']]],
   ['vehicle_20gpsd',['Vehicle Gpsd',['../group__vehicle-gpsd.html',1,'']]],
   ['vehicle_20gpsd_20dbus',['Vehicle Gpsd DBus',['../group__vehicle-gpsd-dbus.html',1,'']]],
-  ['vehicle_20gypsy',['Vehicle gypsy',['../group__vehicle-gypsy.html',1,'']]],
+  ['vehicle_20geoclue',['Vehicle GeoClue',['../group__vehicle-gypsy.html',1,'']]],
   ['vehicle_20iphone',['Vehicle iPhone',['../group__vehicle-iphone.html',1,'']]],
   ['vehicle_20null',['Vehicle Null',['../group__vehicle-null.html',1,'']]],
   ['vehicle_20plugins',['vehicle plugins',['../group__vehicle-plugins.html',1,'']]],

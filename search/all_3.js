@@ -12,6 +12,7 @@ var searchData=
   ['acceleration',['acceleration',['../structodometer.html#a178b5ddfa794546222faf1ffcae0840a',1,'odometer']]],
   ['access_5fvalue',['access_value',['../osm_8c.html#a1c31997b4d6ff879d9d805e730182e0e',1,'osm.c']]],
   ['accesskey',['accesskey',['../structosd__item.html#aa2aa130e997367683b71b96ec3492b2e',1,'osd_item']]],
+  ['accuracy',['accuracy',['../group__vehicle-gypsy.html#gaa19bacad80a9b570b5cc2d8dab8d9c63',1,'vehicle_priv']]],
   ['acosd',['acosd',['../sunriset_8h.html#ab6ba8c99d207e527579b6953498682a7',1,'sunriset.h']]],
   ['action',['action',['../structgraphics__priv.html#a2fd63a3262530cd774c3d1065d0c31b7',1,'graphics_priv::action()'],['../structmenu__priv.html#a18bd65653a11b48ca9a9c93655943467',1,'menu_priv::action()'],['../structgui__menu__info.html#a6818f74a9d303ac48af52d6aa0269ec4',1,'gui_menu_info::action()'],['../structnavit.html#a88624c592097452a54a027cffc2b505f',1,'navit::action()']]],
   ['action_5fcb_5fdata',['action_cb_data',['../structaction__cb__data.html',1,'']]],
