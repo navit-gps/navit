@@ -3183,17 +3183,12 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
  * add any routing information to the route graph - this has to be done via the route_graph_flood()
  * function.
  *
- * The function does not create a graph covering the whole map, but only covering the rectangle
- * between c1 and c2.
- *
  * @param ms The mapset to build the route graph from
- * @param c The coordinates of the destination or next waypoint
- * @param c1 Corner 1 of the rectangle to use from the map
- * @param c2 Corner 2 of the rectangle to use from the map
+ * @param c An array of coordinates for the current position, waypoints (if any) and destination
+ * @param count Number of coordinates in `c`
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
-// FIXME documentation does not match argument list
 static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
         int async,
         struct vehicleprofile *profile) {
