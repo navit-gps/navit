@@ -252,10 +252,11 @@ public class NavitTraff extends BroadcastReceiver {
                     Log.e(this.getClass().getSimpleName(), "subscription failed: no package name");
                     return;
                 } else if (data == null) {
-                    Log.d(this.getClass().getSimpleName(),
-                            String.format("subscription to %s successful, ID: %s, messages will be retrieved with the next poll operation",
+                    Log.w(this.getClass().getSimpleName(),
+                            String.format("subscription to %s successful (ID: %s) but no content URI was supplied. "
+                                    + "This is an issue with the source and may result in delayed message retrieval.",
                                     packageName, subscriptionId));
-                    // FIXME poll for messages
+                    subscriptions.put(subscriptionId, packageName);
                     return;
                 }
                 Log.d(TAG, "subscription to " + packageName + " successful, ID: " + subscriptionId);
@@ -283,10 +284,10 @@ public class NavitTraff extends BroadcastReceiver {
                             "subscription change failed: no subscription ID returned, URI " + data);
                     return;
                 } else if (data == null) {
-                    Log.d(this.getClass().getSimpleName(),
-                            String.format("subscription change for %s successful, the next poll will retrieve all messages",
+                    Log.w(this.getClass().getSimpleName(),
+                            String.format("subscription change for %s successful but no content URI was supplied. "
+                                    + "This is an issue with the source and may result in delayed message retrieval.",
                                     subscriptionId));
-                    // FIXME poll for messages
                     return;
                 } else if (!subscriptions.containsKey(subscriptionId)) {
                     Log.e(this.getClass().getSimpleName(),
