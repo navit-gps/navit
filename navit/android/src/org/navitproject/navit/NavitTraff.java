@@ -280,8 +280,10 @@ public class NavitTraff extends BroadcastReceiver {
                 String data = this.getResultData();
                 String subscriptionId = extras.getString(EXTRA_SUBSCRIPTION_ID);
                 if (subscriptionId == null) {
-                    Log.e(this.getClass().getSimpleName(),
-                            "subscription change failed: no subscription ID returned, URI " + data);
+                    Log.w(this.getClass().getSimpleName(),
+                            "subscription change successful but the source did not specify the subscription ID. "
+                                    + "This is an issue with the source and may result in delayed message retrieval. "
+                                    + "URI: " + data);
                     return;
                 } else if (data == null) {
                     Log.w(this.getClass().getSimpleName(),
