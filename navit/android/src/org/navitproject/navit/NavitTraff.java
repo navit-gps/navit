@@ -54,6 +54,16 @@ public class NavitTraff extends BroadcastReceiver {
     private static final String ACTION_TRAFF_UNSUBSCRIBE = "org.traffxml.traff.UNSUBSCRIBE";
     private static final String COLUMN_DATA = "data";
     private static final String CONTENT_SCHEMA = "content";
+    private static final String[] ERROR_STRINGS = {
+            "unknown (0)",
+            "invalid request (1)",
+            "subscription rejected by the source (2)",
+            "requested area not covered (3)",
+            "requested area partially covered (4)",
+            "subscription ID not recognized by the source (5)",
+            "unknown (6)",
+            "source reported an internal error (7)"
+    };
     private static final String EXTRA_CAPABILITIES = "capabilities";
     private static final String EXTRA_FEED = "feed";
     private static final String EXTRA_FILTER_LIST = "filter_list";
@@ -148,6 +158,7 @@ public class NavitTraff extends BroadcastReceiver {
     void onFilterUpdate(String filterList) {
         /* change existing subscriptions */
         for (Map.Entry<String, String> entry : subscriptions.entrySet()) {
+            Log.d(TAG, String.format("changing subscription %s (%s)", entry.getKey(), entry.getValue()));
             Bundle extras = new Bundle();
             extras.putString(EXTRA_SUBSCRIPTION_ID, entry.getKey());
             extras.putString(EXTRA_FILTER_LIST, filterList);
@@ -169,6 +180,7 @@ public class NavitTraff extends BroadcastReceiver {
             }
 
             for (ResolveInfo receiver : receivers) {
+                Log.d(TAG, "subscribing to " + receiver.activityInfo.applicationInfo.packageName);
                 Bundle extras = new Bundle();
                 extras.putString(EXTRA_PACKAGE, context.getPackageName());
                 extras.putString(EXTRA_FILTER_LIST, filterList);
@@ -195,6 +207,8 @@ public class NavitTraff extends BroadcastReceiver {
                          * Note: if EXTRA_PACKAGE is not set, sendTraffIntent() sends the request to every
                          * manifest-declared receiver which handles the request.
                          */
+                        Log.d(TAG, String.format("got a feed from %s for unknown subscription %s, URI %s; unsubscribing",
+                                intent.getStringExtra(EXTRA_PACKAGE), subscriptionId, uri));
                         Bundle extras = new Bundle();
                         extras.putString(EXTRA_SUBSCRIPTION_ID, subscriptionId);
                         sendTraffIntent(context, ACTION_TRAFF_UNSUBSCRIBE, null, extras,
@@ -216,24 +230,70 @@ public class NavitTraff extends BroadcastReceiver {
                     }
                 } // uri != null
             } else if (intent.getAction().equals(ACTION_TRAFF_SUBSCRIBE)) {
-                if (this.getResultCode() != RESULT_OK)
+                if (this.getResultCode() != RESULT_OK) {
+                    Bundle extras = this.getResultExtras(true);
+                    if (extras != null)
+                        Log.e(this.getClass().getSimpleName(), String.format("subscription to %s failed, %s",
+                                extras.getString(EXTRA_PACKAGE), formatTraffError(this.getResultCode())));
+                    else
+                        Log.e(this.getClass().getSimpleName(), String.format("subscription failed, %s",
+                                formatTraffError(this.getResultCode())));
                     return;
+                }
                 Bundle extras = this.getResultExtras(true);
                 String data = this.getResultData();
                 String packageName = extras.getString(EXTRA_PACKAGE);
                 String subscriptionId = extras.getString(EXTRA_SUBSCRIPTION_ID);
-                if ((data == null) || (packageName == null) || (subscriptionId == null))
+                if (subscriptionId == null) {
+                    Log.e(this.getClass().getSimpleName(),
+                            String.format("subscription to %s failed: no subscription ID returned", packageName));
                     return;
+                } else if (packageName == null) {
+                    Log.e(this.getClass().getSimpleName(), "subscription failed: no package name");
+                    return;
+                } else if (data == null) {
+                    Log.d(this.getClass().getSimpleName(),
+                            String.format("subscription to %s successful, ID: %s, messages will be retrieved with the next poll operation",
+                                    packageName, subscriptionId));
+                    // FIXME poll for messages
+                    return;
+                }
+                Log.d(TAG, "subscription to " + packageName + " successful, ID: " + subscriptionId);
                 subscriptions.put(subscriptionId, packageName);
                 fetchMessages(context, Uri.parse(data));
             } else if (intent.getAction().equals(ACTION_TRAFF_SUBSCRIPTION_CHANGE)) {
-                if (this.getResultCode() != RESULT_OK)
+                if (this.getResultCode() != RESULT_OK) {
+                    Bundle extras = this.getResultExtras(true);
+                    if (extras != null)
+                        Log.e(this.getClass().getSimpleName(),
+                                String.format("subscription change for %s failed: %s",
+                                        extras.getString(EXTRA_SUBSCRIPTION_ID),
+                                        formatTraffError(this.getResultCode())));
+                    else
+                        Log.e(this.getClass().getSimpleName(),
+                                String.format("subscription change failed: %s",
+                                        formatTraffError(this.getResultCode())));
                     return;
+                }
                 Bundle extras = this.getResultExtras(true);
                 String data = this.getResultData();
                 String subscriptionId = extras.getString(EXTRA_SUBSCRIPTION_ID);
-                if ((data == null) || (subscriptionId == null) || (!subscriptions.containsKey(subscriptionId)))
+                if (subscriptionId == null) {
+                    Log.e(this.getClass().getSimpleName(),
+                            "subscription change failed: no subscription ID returned, URI " + data);
                     return;
+                } else if (data == null) {
+                    Log.d(this.getClass().getSimpleName(),
+                            String.format("subscription change for %s successful, the next poll will retrieve all messages",
+                                    subscriptionId));
+                    // FIXME poll for messages
+                    return;
+                } else if (!subscriptions.containsKey(subscriptionId)) {
+                    Log.e(this.getClass().getSimpleName(),
+                            "subscription change failed: unknown subscription ID " + subscriptionId);
+                    return;
+                }
+                Log.d(TAG, "subscription change for " + subscriptionId + " successful");
                 fetchMessages(context, Uri.parse(data));
             } else if (intent.getAction().equals(ACTION_TRAFF_UNSUBSCRIBE)) {
                 /*
@@ -324,5 +384,12 @@ public class NavitTraff extends BroadcastReceiver {
                         null, // initialData,
                         null);
             }
+    }
+
+    private static String formatTraffError(int code) {
+        if ((code < 0) || (code >= ERROR_STRINGS.length))
+            return String.format("unknown (%d)", code);
+        else
+            return ERROR_STRINGS[code];
     }
 }
