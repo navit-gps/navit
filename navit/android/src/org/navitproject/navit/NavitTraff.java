@@ -207,7 +207,8 @@ public class NavitTraff extends BroadcastReceiver {
                          * Note: if EXTRA_PACKAGE is not set, sendTraffIntent() sends the request to every
                          * manifest-declared receiver which handles the request.
                          */
-                        Log.d(TAG, String.format("got a feed from %s for unknown subscription %s, URI %s; unsubscribing",
+                        Log.d(TAG,
+                                String.format("got a feed from %s for unknown subscription %s, URI %s; unsubscribing",
                                 intent.getStringExtra(EXTRA_PACKAGE), subscriptionId, uri));
                         Bundle extras = new Bundle();
                         extras.putString(EXTRA_SUBSCRIPTION_ID, subscriptionId);
