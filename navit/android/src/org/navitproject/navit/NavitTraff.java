@@ -199,7 +199,7 @@ public class NavitTraff extends BroadcastReceiver {
                 if (uri != null) {
                     /* 0.8 feed */
                     String subscriptionId = intent.getStringExtra(EXTRA_SUBSCRIPTION_ID);
-                    if (subscriptions.containsValue(subscriptionId))
+                    if (subscriptions.containsKey(subscriptionId))
                         fetchMessages(context, uri);
                     else {
                         /*
