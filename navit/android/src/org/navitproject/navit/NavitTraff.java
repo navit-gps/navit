@@ -47,6 +47,7 @@ import java.util.Map;
 public class NavitTraff extends BroadcastReceiver {
 
     private static final String ACTION_TRAFF_GET_CAPABILITIES = "org.traffxml.traff.GET_CAPABILITIES";
+    private static final String ACTION_TRAFF_HEARTBEAT = "org.traffxml.traff.HEARTBEAT";
     private static final String ACTION_TRAFF_FEED = "org.traffxml.traff.FEED";
     private static final String ACTION_TRAFF_POLL = "org.traffxml.traff.POLL";
     private static final String ACTION_TRAFF_SUBSCRIBE = "org.traffxml.traff.SUBSCRIBE";
@@ -307,6 +308,28 @@ public class NavitTraff extends BroadcastReceiver {
                  * nothing to do here: either the subscription isn’t in the list, or we are about to shut
                  * down and the whole list is about to get discarded.
                  */
+            } else if (intent.getAction().equals(ACTION_TRAFF_HEARTBEAT)) {
+                String subscriptionId = intent.getStringExtra(EXTRA_SUBSCRIPTION_ID);
+                if (subscriptions.containsKey(subscriptionId)) {
+                    Log.d(TAG,
+                            String.format("got a heartbeat from %s for subscription %s; sending result",
+                            intent.getStringExtra(EXTRA_PACKAGE), subscriptionId));
+                    this.setResult(RESULT_OK, null, null);
+                } else {
+                    /*
+                     * If we don’t recognize the subscription, skip reply and unsubscribe.
+                     * Note: if EXTRA_PACKAGE is not set, sendTraffIntent() sends the request to every
+                     * manifest-declared receiver which handles the request.
+                     */
+                    Log.d(TAG,
+                            String.format("got a heartbeat from %s for unknown subscription %s; unsubscribing",
+                            intent.getStringExtra(EXTRA_PACKAGE), subscriptionId));
+                    Bundle extras = new Bundle();
+                    extras.putString(EXTRA_SUBSCRIPTION_ID, subscriptionId);
+                    sendTraffIntent(context, ACTION_TRAFF_UNSUBSCRIBE, null, extras,
+                            intent.getStringExtra(EXTRA_PACKAGE),
+                            Manifest.permission.ACCESS_COARSE_LOCATION, this);
+                }
             } // intent.getAction()
         } // intent != null
     }
