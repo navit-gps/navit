@@ -277,7 +277,7 @@ public class NavitTraff extends BroadcastReceiver {
                                         formatTraffError(this.getResultCode())));
                     return;
                 }
-                Bundle extras = this.getResultExtras(true);
+                Bundle extras = intent.getExtras();
                 String data = this.getResultData();
                 String subscriptionId = extras.getString(EXTRA_SUBSCRIPTION_ID);
                 if (subscriptionId == null) {
