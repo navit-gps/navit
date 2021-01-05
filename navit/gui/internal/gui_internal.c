@@ -2526,7 +2526,7 @@ static void gui_internal_setup(struct gui_priv *this) {
     char *gui_file;
     int size;
 
-    if (this->background)
+    if (this->background) /* When this->background is non NULL, we know we have already been initialized (thus already went through gui_internal_setup() previously) */
         return;
     this->background=graphics_gc_new(gra);
     this->background2=graphics_gc_new(gra);
@@ -2550,6 +2550,10 @@ static void gui_internal_setup(struct gui_priv *this) {
         g_free(buffer);
     }
     g_free(gui_file);
+    if (this->deferred_exec_at_init) {
+        event_add_timeout(5, 0, this->deferred_exec_at_init);
+        this->deferred_exec_at_init = NULL; /* Unregister deferred exec, it will be run as an asynchronous callback */
+    }
 }
 
 /**
@@ -2914,17 +2918,45 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 }
 
 /**
+ * @brief A structure containing the context (arguments) to run gui_internal_show_coord()
+**/
+struct gui_internal_show_coord_args {
+    const char *description;    /*!< The label to use for the geographical coordinates (ex: "Map Point") */
+    struct pcoord coord;  /*!< The geographical coordinates to use */
+};
+
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description); /* Forward declaration */
+
+/**
+ * @brief Takes a context (as a pointer to a gui_internal_show_coord_args structure) and run gui_internal_show_coord_actions() with these arguments
+ *
+ * This function is used as a callback to invoke gui_internal_show_coord_actions() asynchronously
+ *
+ * @note We will also take care of deallocating all dynamic memory in this context struct)
+**/
+static void gui_internal_deferred_show_coord_actions(struct gui_priv *this, const struct gui_internal_show_coord_args *context) {
+    if (!context)
+        return;
+    
+    gui_internal_show_coord_actions(this, &(context->coord), context->description);
+    /* Context is not needed anymore, it is up to us to free all its allocated memory */
+    if (context->description)
+        g_free(context->description);
+    
+    g_free(context);
+}
+
+/**
  * @brief Display an internal contextual menu for the specified geographical coordinates
  *
  * @param this The internal GUI instance
- * @param[in] c The geographical coordinates to use
- * @param[in] description A label to use for the geographical coordinates (ex: "Map Point")
+ * @param[in] c The geographical coordinates to use (or NULL if we just want to probe that this feature is supported without actually displaing the menu)
+ * @param[in] description A label to use for the geographical coordinates (ex: "Map Point"), or NULL if no specific label has been chosen. In that case, we will use the geographical coordinates as a label
  *
  * @return 0 on failure, 1 on success, -1 if argument c is NULL
  */
 static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description) {
     struct widget w;
-    const char *name=NULL;
 
     dbg(lvl_debug,"enter");
 
@@ -2932,7 +2964,21 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
         return -1;
     }
 
-    w.name = description;
+    if (!this->background) {
+        dbg(lvl_warning, "Internal GUI not yet initialized at invokation, actions queued for future execution");
+        struct gui_internal_show_coord_args *deferred_show_coord_actions_context = g_malloc(sizeof(struct gui_internal_show_coord_args));
+        if (description)
+            deferred_show_coord_actions_context->description = g_strdup(description);
+        else
+            deferred_show_coord_actions_context->description = NULL;
+
+        deferred_show_coord_actions_context->coord = *c;
+
+        struct callback *gui_internal_show_coord_actions_callback = callback_new_2(callback_cast(gui_internal_deferred_show_coord_actions), this, deferred_show_coord_actions_context);
+        this->deferred_exec_at_init = gui_internal_show_coord_actions_callback; /* Plan execution of this callback when internal GUI will be initialized */
+        return 1;
+    }
+
     w.text = g_malloc(32);
     pcoord_format_degree_short(c, w.text, 32, " ");
 

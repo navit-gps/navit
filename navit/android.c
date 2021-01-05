@@ -527,10 +527,6 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         transform_from_geo(projection_mg, &g, &c);
 
         static struct pcoord pc;
-        static char *new_coord_name;
-        if (new_coord_name)
-            g_free(new_coord_name);
-        new_coord_name = g_strdup(name);
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = projection_mg;
@@ -540,8 +536,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
 
         if (channel == 8) {
             if (gui_show_coord_actions(navit_get_gui(attr.u.navit), NULL, NULL) == -1) {
-                event_add_timeout(250, 0, callback_new_3(callback_cast(gui_show_coord_actions), navit_get_gui(attr.u.navit), &pc,
-                                  new_coord_name));
+                gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
                 break;	/* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected */
             }
             /* If previous gui_show_coord_actions() probe failed, then fall back to channel=3 block below */
