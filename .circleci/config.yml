@@ -224,9 +224,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install git
-          command: apt-get update && apt-get -y install ca-certificates git
-      - run:
           name: configure ssh git
           command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - add_ssh_keys:
