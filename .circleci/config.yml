@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: cimg/base:2020.01
+    - image: debian:latest
 jobs:
   sanity_check:
     docker:
@@ -219,7 +219,8 @@ jobs:
           command: |
             bash scripts/update_download_center.sh
   merge_trunk_in_master:
-    <<: *defaults
+    docker:
+      - image: cimg/base:2020.01
     steps:
       - checkout
       - run:
