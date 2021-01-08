@@ -2937,12 +2937,12 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
 static void gui_internal_deferred_show_coord_actions(struct gui_priv *this, const struct gui_internal_show_coord_args *context) {
     if (!context)
         return;
-    
+
     gui_internal_show_coord_actions(this, &(context->coord), context->description);
     /* Context is not needed anymore, it is up to us to free all its allocated memory */
     if (context->description)
         g_free(context->description);
-    
+
     g_free(context);
 }
 
