@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: debian:latest
+    - image: cimg/base:2020.01
 jobs:
   sanity_check:
     docker:
