@@ -2925,7 +2925,8 @@ struct gui_internal_show_coord_args {
     struct pcoord coord;  /*!< The geographical coordinates to use */
 };
 
-static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description); /* Forward declaration */
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c,
+        const char *description); /* Forward declaration */
 
 /**
  * @brief Takes a context (as a pointer to a gui_internal_show_coord_args structure) and run gui_internal_show_coord_actions() with these arguments
@@ -2934,7 +2935,8 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
  *
  * @note We will also take care of deallocating all dynamic memory in this context struct)
 **/
-static void gui_internal_deferred_show_coord_actions(struct gui_priv *this, const struct gui_internal_show_coord_args *context) {
+static void gui_internal_deferred_show_coord_actions(struct gui_priv *this,
+        const struct gui_internal_show_coord_args *context) {
     if (!context)
         return;
 
@@ -2966,7 +2968,8 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
 
     if (!this->background) {
         dbg(lvl_warning, "Internal GUI not yet initialized at invokation, actions queued for future execution");
-        struct gui_internal_show_coord_args *deferred_show_coord_actions_context = g_malloc(sizeof(struct gui_internal_show_coord_args));
+        struct gui_internal_show_coord_args *deferred_show_coord_actions_context = g_malloc(sizeof(
+                    struct gui_internal_show_coord_args));
         if (description)
             deferred_show_coord_actions_context->description = g_strdup(description);
         else
@@ -2974,8 +2977,10 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
 
         deferred_show_coord_actions_context->coord = *c;
 
-        struct callback *gui_internal_show_coord_actions_callback = callback_new_2(callback_cast(gui_internal_deferred_show_coord_actions), this, deferred_show_coord_actions_context);
-        this->deferred_exec_at_init = gui_internal_show_coord_actions_callback; /* Plan execution of this callback when internal GUI will be initialized */
+        struct callback *gui_internal_show_coord_actions_callback = callback_new_2(callback_cast(
+                    gui_internal_deferred_show_coord_actions), this, deferred_show_coord_actions_context);
+        this->deferred_exec_at_init =
+            gui_internal_show_coord_actions_callback; /* Plan execution of this callback when internal GUI will be initialized */
         return 1;
     }
 
