@@ -27,7 +27,7 @@ Navit follows the semantic versioning:
 ## [Unreleased]
 
 To get the list of all the unreleased commits, see:
-[Full Changelog](https://github.com/navit-gps/navit/compare/v0.5.4...HEAD)
+[Full Changelog](https://github.com/navit-gps/navit/compare/v0.5.5...HEAD)
 
 
 ## [0.5.5] - 2020-08-08
