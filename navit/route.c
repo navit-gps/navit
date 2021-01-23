@@ -4058,7 +4058,7 @@ static struct map_priv *route_map_new_helper(struct map_methods *meth, struct at
     struct map_priv *ret;
     struct attr *route_attr;
 
-    route_attr=attr_search(attrs, NULL, attr_route);
+    route_attr=attr_search(attrs, attr_route);
     if (! route_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

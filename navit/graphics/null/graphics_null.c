@@ -211,7 +211,7 @@ static struct graphics_priv *graphics_null_new(struct navit *nav, struct graphic
     struct attr *event_loop_system = NULL;
     *meth=graphics_methods;
 
-    event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
+    event_loop_system = attr_search(attrs, attr_event_loop_system);
 
     if (event_loop_system && event_loop_system->u.str) {
         dbg(lvl_debug, "event_system is %s", event_loop_system->u.str);

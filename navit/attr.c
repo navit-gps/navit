@@ -498,13 +498,12 @@ char *attr_to_text(struct attr *attr, struct map *map, int pretty) {
  * attribute type and returns the first match.
  *
  * @param attrs Points to the array of attribute pointers to be searched
- * @param last Not used
  * @param attr_type The attribute type to search for. Generic types (such as
  * attr_any or attr_any_xml) are NOT supported.
  * @return Pointer to the first matching attribute, or NULL if no match was found.
  */
 struct attr *
-attr_search(struct attr **attrs, struct attr *last, enum attr_type attr) {
+attr_search(struct attr **attrs, enum attr_type attr) {
     dbg(lvl_info, "enter attrs=%p", attrs);
     while (*attrs) {
         dbg(lvl_debug,"*attrs=%p", *attrs);

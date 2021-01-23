@@ -1337,7 +1337,7 @@ static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image
 
     /* expand images to bit-depth 8 (only applicable for grayscale images) */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8)
-        png_set_gray_1_2_4_to_8(png_ptr);
+        png_set_expand_gray_1_2_4_to_8(png_ptr);
 
     /* Expand grayscale to rgb */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
@@ -1745,19 +1745,19 @@ static struct graphics_priv* graphics_win32_new( struct navit *nav, struct graph
     this_=graphics_win32_new_helper(meth);
     this_->nav=nav;
     this_->frame=1;
-    if ((attr=attr_search(attrs, NULL, attr_frame)))
+    if ((attr=attr_search(attrs, attr_frame)))
         this_->frame=attr->u.num;
     this_->x=0;
-    if ((attr=attr_search(attrs, NULL, attr_x)))
+    if ((attr=attr_search(attrs, attr_x)))
         this_->x=attr->u.num;
     this_->y=0;
-    if ((attr=attr_search(attrs, NULL, attr_y)))
+    if ((attr=attr_search(attrs, attr_y)))
         this_->y=attr->u.num;
     this_->width=792;
-    if ((attr=attr_search(attrs, NULL, attr_w)))
+    if ((attr=attr_search(attrs, attr_w)))
         this_->width=attr->u.num;
     this_->height=547;
-    if ((attr=attr_search(attrs, NULL, attr_h)))
+    if ((attr=attr_search(attrs, attr_h)))
         this_->height=attr->u.num;
     this_->overlays = NULL;
     this_->cbl=cbl;

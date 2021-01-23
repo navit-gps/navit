@@ -211,7 +211,7 @@ struct vehicleprofile *
 vehicleprofile_new(struct attr *parent, struct attr **attrs) {
     struct vehicleprofile *this_;
     struct attr **attr, *type_attr;
-    if (! (type_attr=attr_search(attrs, NULL, attr_name))) {
+    if (! (type_attr=attr_search(attrs, attr_name))) {
         return NULL;
     }
     this_=g_new0(struct vehicleprofile, 1);

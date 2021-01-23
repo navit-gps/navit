@@ -40,13 +40,13 @@ maps_new(struct attr *parent, struct attr **attrs) {
     }
     dbg(lvl_debug,"enter");
     attrs_dup=attr_list_dup(attrs);
-    data=attr_search(attrs_dup, NULL, attr_data);
+    data=attr_search(attrs_dup, attr_data);
     if (data) {
         struct file_wordexp *wexp=file_wordexp_new(data->u.str);
         int i,count=file_wordexp_get_count(wexp);
         char **array=file_wordexp_get_array(wexp);
         struct attr *name;
-        struct attr *name_provided = attr_search(attrs_dup, NULL, attr_name);
+        struct attr *name_provided = attr_search(attrs_dup, attr_name);
 
         // if no name was provided, fill the name with the location
         if (!name_provided) {
@@ -54,7 +54,7 @@ maps_new(struct attr *parent, struct attr **attrs) {
             name_tmp.type = attr_name;
             name_tmp.u.str="NULL";
             attrs_dup=attr_generic_add_attr(attrs_dup, &name_tmp);
-            name = attr_search(attrs_dup, NULL, attr_name);
+            name = attr_search(attrs_dup, attr_name);
         }
 
         for (i = 0 ; i < count ; i++) {

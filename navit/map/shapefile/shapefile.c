@@ -590,10 +590,10 @@ static struct map_methods map_methods_shapefile = {
 
 static struct map_priv *map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
-    struct attr *charset=attr_search(attrs, NULL, attr_charset);
-    struct attr *projectionname=attr_search(attrs, NULL, attr_projectionname);
-    struct attr *flags=attr_search(attrs, NULL, attr_flags);
+    struct attr *data=attr_search(attrs, attr_data);
+    struct attr *charset=attr_search(attrs, attr_charset);
+    struct attr *projectionname=attr_search(attrs, attr_projectionname);
+    struct attr *flags=attr_search(attrs, attr_flags);
     struct file_wordexp *wexp;
     char *wdata;
     char **wexp_data;

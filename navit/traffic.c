@@ -426,12 +426,12 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
         return 0;
     /* FIXME this will break if multiple attributes of the same type are present and have different values */
     for (attrs = l->attrs; attrs; attrs++) {
-        attr = attr_search(r->attrs, NULL, (*attrs)->type);
+        attr = attr_search(r->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
     for (attrs = r->attrs; attrs; attrs++) {
-        attr = attr_search(l->attrs, NULL, (*attrs)->type);
+        attr = attr_search(l->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
@@ -633,7 +633,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
      * resulting in a cost of 90 s for the segment.
      */
     if (speed < INT_MAX) {
-        attr = attr_search(priv_data->attrs, NULL, attr_maxspeed);
+        attr = attr_search(priv_data->attrs, attr_maxspeed);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_maxspeed;
@@ -650,12 +650,12 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
             attr->u.num = speed;
         }
     } else {
-        while ((attr = attr_search(priv_data->attrs, NULL, attr_maxspeed)))
+        while ((attr = attr_search(priv_data->attrs, attr_maxspeed)))
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
     }
 
     if (delay) {
-        attr = attr_search(priv_data->attrs, NULL, attr_delay);
+        attr = attr_search(priv_data->attrs, attr_delay);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_delay;
@@ -673,7 +673,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         }
     } else {
         while (1) {
-            attr = attr_search(priv_data->attrs, NULL, attr_delay);
+            attr = attr_search(priv_data->attrs, attr_delay);
             if (!attr)
                 break;
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
@@ -4597,7 +4597,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
                                         struct attr **attrs, struct callback_list *cbl);
     struct attr *attr;
 
-    attr = attr_search(attrs, NULL, attr_type);
+    attr = attr_search(attrs, attr_type);
     if (!attr) {
         dbg(lvl_error, "type missing");
         return NULL;
@@ -5756,7 +5756,7 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
     struct map_priv *ret;
     struct attr *traffic_attr;
 
-    traffic_attr = attr_search(attrs, NULL, attr_traffic);
+    traffic_attr = attr_search(attrs, attr_traffic);
     if (!traffic_attr) {
         dbg(lvl_error, "attr_traffic not found!");
         return NULL;

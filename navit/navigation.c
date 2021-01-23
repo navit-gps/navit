@@ -793,13 +793,13 @@ navigation_new(struct attr *parent, struct attr **attrs) {
         }
     }
 
-    if ((attr=attr_search(attrs, NULL, attr_tell_street_name))) {
+    if ((attr=attr_search(attrs, attr_tell_street_name))) {
         ret->tell_street_name = attr->u.num;
     }
-    if ((attr=attr_search(attrs, NULL, attr_delay))) {
+    if ((attr=attr_search(attrs, attr_delay))) {
         ret->delay = attr->u.num;
     }
-    if ((attr=attr_search(attrs, NULL, attr_flags))) {
+    if ((attr=attr_search(attrs, attr_flags))) {
         ret->flags = attr->u.num;
     }
     return ret;
@@ -4294,7 +4294,7 @@ static struct map_priv *navigation_map_new(struct map_methods *meth, struct attr
     struct map_priv *ret;
     struct attr *navigation_attr;
 
-    navigation_attr=attr_search(attrs, NULL, attr_navigation);
+    navigation_attr=attr_search(attrs, attr_navigation);
     if (! navigation_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

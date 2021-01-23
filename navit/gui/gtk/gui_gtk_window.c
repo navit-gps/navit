@@ -688,19 +688,19 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     this=g_new0(struct gui_priv, 1);
     this->nav=nav;
 
-    attr = attr_search(attrs, NULL, attr_menubar);
+    attr = attr_search(attrs, attr_menubar);
     if (attr) {
         this->menubar_enable=attr->u.num;
     } else {
         this->menubar_enable=1;
     }
-    attr=attr_search(attrs, NULL, attr_toolbar);
+    attr=attr_search(attrs, attr_toolbar);
     if (attr) {
         this->toolbar_enable=attr->u.num;
     } else {
         this->toolbar_enable=1;
     }
-    attr=attr_search(attrs, NULL, attr_statusbar);
+    attr=attr_search(attrs, attr_statusbar);
     if (attr) {
         this->statusbar_enable=attr->u.num;
     } else {
@@ -747,7 +747,7 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
 
     navit_add_callback(nav, callback_new_attr_1(callback_cast(gui_gtk_init), attr_navit, this));
 
-    if ((attr=attr_search(attrs, NULL, attr_fullscreen)))
+    if ((attr=attr_search(attrs, attr_fullscreen)))
         fullscreen=attr->u.num;
 
     if (fullscreen) {
