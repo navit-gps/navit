@@ -3848,7 +3848,7 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
     if (!this_->is_cancellation) {
         if (!this_->expiration_time && !this_->end_time) {
             dbg(lvl_debug, "%s: not a cancellation, but neither expiration_time nor end_time supplied",
-                    this_->id);
+                this_->id);
             return 0;
         }
         if (!this_->location) {
@@ -3868,7 +3868,7 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
                 has_valid_events |= traffic_event_is_valid(this_->events[i]);
         if (!has_valid_events) {
             dbg(lvl_debug, "%s: not a cancellation, but all events (%d in total) are invalid",
-                    this_->id, this_->event_count);
+                this_->id, this_->event_count);
             return 0;
         }
     }
@@ -4947,8 +4947,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             /* TODO preserve unknown (and thus invalid) events if they have maxspeed set */
             if (!traffic_event_is_valid(event)) {
                 dbg(lvl_debug, "invalid or unknown event %s/%s detected, skipping",
-                        traffic_xml_get_attr("class", el->names, el->values),
-                        traffic_xml_get_attr("type", el->names, el->values));
+                    traffic_xml_get_attr("class", el->names, el->values),
+                    traffic_xml_get_attr("type", el->names, el->values));
                 traffic_event_destroy(event);
             } else
                 state->events = g_list_append(state->events, event);
