@@ -220,8 +220,14 @@ public class NavitTraff extends BroadcastReceiver {
                 } else {
                     /* 0.7 feed */
                     String packageName = intent.getStringExtra(EXTRA_PACKAGE);
-                    /* if the feed comes from a TraFF 0.8+ source and we are subscribed, skip it */
-                    // TODO what if we don’t have a subscription yet? First subscribe, then poll (still no guarantee)
+                    /*
+                     * If the feed comes from a TraFF 0.8+ source and we are subscribed, skip it.
+                     * As a side effect of the current implementation, if a “bilingual” TraFF 0.7/0.8
+                     * source sends a broadcast feed before we have subscribed to it, we would process
+                     * the whole feed first, and then subscribe to a subset of that data.
+                     * If that turns out to be an issue, we would need to detect TraFF 0.8-capable
+                     * sources and discard broadcast feeds from them.
+                     */
                     if ((packageName != null) && subscriptions.containsValue(packageName))
                         return;
                     String feed = intent.getStringExtra(EXTRA_FEED);
