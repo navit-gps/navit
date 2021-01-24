@@ -3842,31 +3842,33 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "receive_time or update_time not supplied");
+        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
         if (!this_->expiration_time && !this_->end_time) {
-            dbg(lvl_debug, "not a cancellation, but neither expiration_time nor end_time supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but neither expiration_time nor end_time supplied",
+                    this_->id);
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "not a cancellation, but no location supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "not a cancellation, but location is invalid");
+            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "not a cancellation, but no events supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
             if (this_->events[i])
                 has_valid_events |= traffic_event_is_valid(this_->events[i]);
         if (!has_valid_events) {
-            dbg(lvl_debug, "not a cancellation, but all events (%d in total) are invalid", this_->event_count);
+            dbg(lvl_debug, "%s: not a cancellation, but all events (%d in total) are invalid",
+                    this_->id, this_->event_count);
             return 0;
         }
     }
@@ -4887,7 +4889,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           count,
                                           (struct traffic_event **) children);
             if (!traffic_message_is_valid(message)) {
-                dbg(lvl_error, "malformed message detected, skipping");
+                dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
