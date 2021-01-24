@@ -4946,7 +4946,9 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->si = NULL;
             /* TODO preserve unknown (and thus invalid) events if they have maxspeed set */
             if (!traffic_event_is_valid(event)) {
-                dbg(lvl_debug, "invalid or unknown event detected, skipping");
+                dbg(lvl_debug, "invalid or unknown event %s/%s detected, skipping",
+                        traffic_xml_get_attr("class", el->names, el->values),
+                        traffic_xml_get_attr("type", el->names, el->values));
                 traffic_event_destroy(event);
             } else
                 state->events = g_list_append(state->events, event);
