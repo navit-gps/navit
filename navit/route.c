@@ -939,6 +939,17 @@ struct map_selection *route_selection;
 
 /**
  * @brief Returns a single map selection
+ *
+ * The boundaries of the selection are determined as follows: First a rectangle spanning `c1` and `c2` is
+ * built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension
+ * (height or width) is determined and multiplied with the percentage specified by `rel`. The resulting
+ * amount of padding is added to each edge. After that, the amount specified by `abs` is added to each edge.
+ *
+ * @param order Map order (deepest tile level) to select
+ * @param c1 First coordinate
+ * @param c2 Second coordinate
+ * @param rel Relative padding to add to the selection rectangle, in percent
+ * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
@@ -1063,7 +1074,7 @@ struct map_selection * route_get_selection(struct route * this_) {
  *
  * @param sel Start of the list to be destroyed
  */
-static void route_free_selection(struct map_selection *sel) {
+void route_free_selection(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next=sel->next;
@@ -1130,6 +1141,20 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
     profile(0,"end");
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link route_get_destination_count(struct route *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * @param this The route instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int route_get_destinations(struct route *this, struct pcoord *pc, int count) {
     int ret=0;
     GList *l=this->destinations;

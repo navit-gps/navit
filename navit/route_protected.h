@@ -160,6 +160,7 @@ struct route_graph {
 /* prototypes */
 struct route_graph * route_get_graph(struct route *this_);
 struct map_selection * route_get_selection(struct route * this_);
+void route_free_selection(struct map_selection *sel);
 void route_add_traffic_distortion(struct route *this_, struct item *item);
 void route_remove_traffic_distortion(struct route *this_, struct item *item);
 void route_change_traffic_distortion(struct route *this_, struct item *item);

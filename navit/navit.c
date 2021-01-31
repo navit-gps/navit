@@ -1613,8 +1613,6 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
     }
     g_free(destination_file);
 
-    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
-
     if (this_->route) {
         struct attr attr;
         int dstcount;
@@ -1637,10 +1635,12 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
             g_free(pc);
             g_free(destination_file);
         }
-
-        if (this_->ready == 3 && !(this_->flags & 4))
-            navit_draw(this_);
     }
+
+    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+
+    if (this_->route && this_->ready == 3 && !(this_->flags & 4))
+        navit_draw(this_);
 }
 
 /**
@@ -1683,15 +1683,30 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         g_free(destination_file);
     } else
         this_->destination_valid=0;
-    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
-    if (this_->route) {
+    if (this_->route)
         route_set_destinations(this_->route, c, count, async);
 
-        if (this_->ready == 3)
-            navit_draw(this_);
-    }
+    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+    if (this_->route && this_->ready == 3)
+        navit_draw(this_);
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link navit_get_destination_count(struct navit *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * If the Navit instance does not have a route, the result is 0.
+ *
+ * @param this_ The Navit instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
     if(!this_->route)
         return 0;
@@ -1699,6 +1714,12 @@ int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
 
 }
 
+/**
+ * @brief Get the destinations count for the route
+ *
+ * @param this The Navit instance
+ * @return destination count for the route, or 0 if the Navit instance has no route
+ */
 int navit_get_destination_count(struct navit *this_) {
     if(!this_->route)
         return 0;
@@ -3685,7 +3706,36 @@ int navit_get_blocked(struct navit *this_) {
 
 void navit_destroy(struct navit *this_) {
     dbg(lvl_debug,"enter %p",this_);
+    GList *mapsets;
+    struct map * map;
+    struct attr attr;
     graphics_draw_cancel(this_->gra, this_->displaylist);
+
+    mapsets = this_->mapsets;
+    while (mapsets) {
+        GList *maps = NULL;
+        struct mapset_handle *msh;
+        msh = mapset_open(mapsets->data);
+        while (msh && (map = mapset_next(msh, 0))) {
+            /* Add traffic map (identified by the `attr_traffic` attribute) to list of maps to remove */
+            if (map_get_attr(map, attr_traffic, &attr, NULL))
+                maps = g_list_append(maps, map);
+        }
+        mapset_close(msh);
+
+        /* Remove traffic maps, if any */
+        while (maps) {
+            attr.type = attr_map;
+            attr.u.map = maps->data;
+            mapset_remove_attr(mapsets->data, &attr);
+            attr_free_content(&attr);
+            maps = g_list_next(maps);
+        }
+        if (maps)
+            g_list_free(maps);
+        mapsets = g_list_next(mapsets);
+    }
+
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
     attr_list_free(this_->attrs);
 
