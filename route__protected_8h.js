@@ -12,6 +12,7 @@ var route__protected_8h =
     [ "RSD_MAXSPEED", "route__protected_8h.html#ae3ec9a2172bb385ab6deda0260d01f0c", null ],
     [ "route_add_traffic_distortion", "route__protected_8h.html#aba6e9105109a8101259a8ee149b568c9", null ],
     [ "route_change_traffic_distortion", "route__protected_8h.html#a1ea80e9a5f85a7c53f2d3ab6055bbc19", null ],
+    [ "route_free_selection", "route__protected_8h.html#a1b4ed4bbef21c85a46b09df5e3278af7", null ],
     [ "route_get_graph", "route__protected_8h.html#ac1e48a7cca4fc2ef591fc3f20d7837c7", null ],
     [ "route_get_selection", "route__protected_8h.html#ae33151a12d43376844654ccfcfb72888", null ],
     [ "route_graph_add_point", "route__protected_8h.html#a061079967bbc666657df78bd29aba6e5", null ],

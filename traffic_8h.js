@@ -7,6 +7,7 @@ var traffic_8h =
     [ "traffic_suppl_info", "structtraffic__suppl__info.html", "structtraffic__suppl__info" ],
     [ "traffic_event", "structtraffic__event.html", "structtraffic__event" ],
     [ "traffic_message", "structtraffic__message.html", "structtraffic__message" ],
+    [ "order_to_min_road_class", "traffic_8h.html#ae9ca36a0d6a0a851c0be47c4087f7159", null ],
     [ "event_class", "traffic_8h.html#a43c5c21548610e8c60b7830393f0dc46", [
       [ "event_class_invalid", "traffic_8h.html#a43c5c21548610e8c60b7830393f0dc46a79b5b0ffb7472c910a8914169c7b2b46", null ],
       [ "event_class_congestion", "traffic_8h.html#a43c5c21548610e8c60b7830393f0dc46a3b44279fac584962dbb14ee7063fb6c8", null ],
@@ -126,6 +127,7 @@ var traffic_8h =
     [ "si_class_to_string", "traffic_8h.html#a1b8675351a0defd0ab1639ae86d80771", null ],
     [ "si_type_new", "traffic_8h.html#ab506d1c4c45e86051bd2e08e9b5fcaaf", null ],
     [ "si_type_to_string", "traffic_8h.html#abe1928a2b460fbc13ba7704c7d5d9e1a", null ],
+    [ "traffic_destroy", "traffic_8h.html#af9109a12ab8420b4e10f3a118284be74", null ],
     [ "traffic_event_add_suppl_info", "traffic_8h.html#acc7e38b7318af75cc7f39576f047b2a8", null ],
     [ "traffic_event_destroy", "traffic_8h.html#a38fad0c104961dcb2eb81ac3ce78d9af", null ],
     [ "traffic_event_get_suppl_info", "traffic_8h.html#acac6e3000ea57178efdfffe37470772a", null ],

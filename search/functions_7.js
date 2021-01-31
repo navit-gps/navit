@@ -2,6 +2,7 @@ var searchData=
 [
   ['face_5frequester',['face_requester',['../font__freetype_8c.html#adf2b252c802e3e338486eeb568f9f88b',1,'font_freetype.c']]],
   ['failtowriteattrrep',['failToWriteAttrRep',['../gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733',1,'failToWriteAttrRep(int iShape, int col, char *file, int line):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#a29b4907543ad84078a98a49afff18733',1,'failToWriteAttrRep(int iShape, int col, char *file, int line):&#160;misc.c']]],
+  ['fetchmessages',['fetchMessages',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aa23edbdc55df62ac6675ba23de496f3b',1,'org::navitproject::navit::NavitTraff']]],
   ['fh_5fcascading_5fcut',['fh_cascading_cut',['../fib_8c.html#accde52ab18dae6e92c753646407d4001',1,'fh_cascading_cut(struct fibheap *h, struct fibheap_el *y):&#160;fib.c'],['../fibpriv_8h.html#a805932fd43074fd1be133799b038a450',1,'fh_cascading_cut(struct fibheap *, struct fibheap_el *):&#160;fibpriv.h']]],
   ['fh_5fcheckcons',['fh_checkcons',['../fib_8c.html#a3cb89053d1601115a35e8afea08807b0',1,'fh_checkcons(struct fibheap *h):&#160;fib.c'],['../fibpriv_8h.html#a3cb89053d1601115a35e8afea08807b0',1,'fh_checkcons(struct fibheap *h):&#160;fibpriv.h']]],
   ['fh_5fcompare',['fh_compare',['../fib_8c.html#a23a828a7b4d2f315fbc4e452ba76e679',1,'fh_compare(struct fibheap *h, struct fibheap_el *a, struct fibheap_el *b):&#160;fib.c'],['../fibpriv_8h.html#a23a828a7b4d2f315fbc4e452ba76e679',1,'fh_compare(struct fibheap *h, struct fibheap_el *a, struct fibheap_el *b):&#160;fibpriv.h']]],
@@ -123,6 +124,7 @@ var searchData=
   ['format_5fspeed',['format_speed',['../osd__core_8c.html#a048f90976bc0dfeaf113835e2e92e595',1,'osd_core.c']]],
   ['format_5ftime',['format_time',['../osd__core_8c.html#a43bcc984b8251493bac9a9353ab9c087',1,'osd_core.c']]],
   ['formatbytes',['formatBytes',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a277b67e18394454ed47370987b8311e6',1,'org::navitproject::navit::FileBrowserActivity']]],
+  ['formattrafferror',['formatTraffError',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#aea9f3848367d0f145d86d21904fc8f74',1,'org::navitproject::navit::NavitTraff']]],
   ['fowler',['fowler',['../graphics_8c.html#a324b733e46f8b60cf352267177370c7b',1,'graphics.c']]],
   ['free',['Free',['../speak_8c.html#a2b9bb176fa6405b0237f05cb6d5dc3e6',1,'speak.c']]],
   ['free_5fboundaries',['free_boundaries',['../boundaries_8c.html#abe6626591d964245fd1fcd1d78eeb039',1,'free_boundaries(GList *bl):&#160;boundaries.c'],['../maptool_8h.html#a95eb61ab878d5cfec63a248452f133a5',1,'free_boundaries(GList *l):&#160;boundaries.c']]],

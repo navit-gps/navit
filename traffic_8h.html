@@ -82,6 +82,7 @@ $(document).ready(function(){initNavTree('traffic_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -117,6 +118,12 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__message.html">traffic_message</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A traffic message.  <a href="structtraffic__message.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ae9ca36a0d6a0a851c0be47c4087f7159"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic_8h.html#ae9ca36a0d6a0a851c0be47c4087f7159">order_to_min_road_class</a>(x)&#160;&#160;&#160;(x &lt;= 8 ? &quot;PRIMARY&quot; : x &lt;= 10 ? &quot;SECONDARY&quot; : x &lt;= 12 ? &quot;TERTIARY&quot; : NULL)</td></tr>
+<tr class="memdesc:ae9ca36a0d6a0a851c0be47c4087f7159"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translates a Navit tile order to a minimum road class as used in TraFF.  <a href="#ae9ca36a0d6a0a851c0be47c4087f7159">More...</a><br /></td></tr>
+<tr class="separator:ae9ca36a0d6a0a851c0be47c4087f7159"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -387,6 +394,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af490a6f053971e1ec4dd0cc7f0c5f3ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic_8h.html#af490a6f053971e1ec4dd0cc7f0c5f3ed">traffic_set_route</a> (struct <a class="el" href="structtraffic.html">traffic</a> *this_, struct <a class="el" href="structroute.html">route</a> *rt)</td></tr>
 <tr class="memdesc:af490a6f053971e1ec4dd0cc7f0c5f3ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the route for the traffic plugin.  <a href="#af490a6f053971e1ec4dd0cc7f0c5f3ed">More...</a><br /></td></tr>
 <tr class="separator:af490a6f053971e1ec4dd0cc7f0c5f3ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9109a12ab8420b4e10f3a118284be74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic_8h.html#af9109a12ab8420b4e10f3a118284be74">traffic_destroy</a> (struct <a class="el" href="structtraffic.html">traffic</a> *this_)</td></tr>
+<tr class="memdesc:af9109a12ab8420b4e10f3a118284be74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#af9109a12ab8420b4e10f3a118284be74">More...</a><br /></td></tr>
+<tr class="separator:af9109a12ab8420b4e10f3a118284be74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains exported code for traffic.c, the traffic module. </p>
@@ -401,7 +411,33 @@ Functions</h2></td></tr>
 <p>Traffic messages and related structures are considered immutable once created (when information changes, the old message is replaced with a new one). For this reason, there are very few data manipulation methods. Those that exist are intended for the creation of new messages rather than for extensive manipulation.</p>
 <p>As a rule, responsibility for freeing up any <code>traffic_*</code> instances normally lies with the traffic plugin, which frees messages as they expire or are replaced. Since this also frees all child data structures, traffic backends will seldom need to call any of the destructors. The only case in which this would be necessary is if a backend has instantiated an object which is not going to be used (i.e. attached to a parent object or, in the case of <code><a class="el" href="structtraffic__message.html" title="A traffic message. ">traffic_message</a></code>, reported to the traffic plugin: these need to be freed up manually by calling the destructor of the topmost object in the hierarchy.</p>
 <p>Any other references passed in functions (including pointer arrays and <code>quantifier</code> instances) must be freed up by the caller. This is safe to do as soon as the function returns. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ae9ca36a0d6a0a851c0be47c4087f7159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9ca36a0d6a0a851c0be47c4087f7159">&#9670;&nbsp;</a></span>order_to_min_road_class</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define order_to_min_road_class</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;(x &lt;= 8 ? &quot;PRIMARY&quot; : x &lt;= 10 ? &quot;SECONDARY&quot; : x &lt;= 12 ? &quot;TERTIARY&quot; : NULL)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Translates a Navit tile order to a minimum road class as used in TraFF. </p>
+<p>This can be used to translate a map selection into a TraFF filter.</p>
+<p>The tile order is the lowest tile level in which an object of a certain type can be placed (higher numbers correspond to lower levels). Currently, 8 is the maximum order for <code>highway_city</code>, <code>highway_land</code> and <code>street_n_lanes</code>, equivalent to <code>MOTORWAY</code> and <code>TRUNK</code>. 10 is the maximum order for <code>street_4_city</code> and <code>street_4_land</code> (<code>SECONDARY</code>), 12 for <code>street_3_city</code> and <code>street_3_land</code> (<code>TERTIARY</code>). All others can be placed in any tile level.</p>
+<p>This macro returns <code>PRIMARY</code>, <code>SECONDARY</code> and <code>TERTIARY</code> for the three bins above these cut-off orders, corresponding to one level below the lowest road class we expect to find there. (Not considering that low-level roads can be placed into higher-level tiles if they cross a tile boundary of the next lower level.) Below the lowest cut-off order, the macro returns NULL. </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a43c5c21548610e8c60b7830393f0dc46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43c5c21548610e8c60b7830393f0dc46">&#9670;&nbsp;</a></span>event_class</h2>
 
@@ -1121,6 +1157,28 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af9109a12ab8420b4e10f3a118284be74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9109a12ab8420b4e10f3a118284be74">&#9670;&nbsp;</a></span>traffic_destroy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void traffic_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structtraffic.html">traffic</a> *&#160;</td>
+          <td class="paramname"><em>this_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destructor. </p>
+
+<p class="reference">References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>, <a class="el" href="structtraffic__methods.html#a584a619c857a17592633c84b1ba6d3fe">traffic_methods::destroy</a>, <a class="el" href="structtraffic.html#abae695e154a960c69985d2caa84063f9">traffic::meth</a>, and <a class="el" href="structtraffic.html#aa3c3ec6409647642eb5b03ab267286a2">traffic::priv</a>.</p>
+
+</div>
+</div>
 <a id="acc7e38b7318af75cc7f39576f047b2a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc7e38b7318af75cc7f39576f047b2a8">&#9670;&nbsp;</a></span>traffic_event_add_suppl_info()</h2>
 
@@ -1379,7 +1437,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The traffic map </dd></dl>
 
-<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#aa2eb347f5b5f786023d4cebf9bfad2e8">callback_new_2</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="event_8c.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>, <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="structtraffic.html#a38056316f84e09d1b4fd1b28459ecd6d">traffic::idle_cb</a>, <a class="el" href="structtraffic.html#a21b2e5ed354c50cde8b22e007bc1a437">traffic::idle_ev</a>, <a class="el" href="structtraffic__shared__priv.html#a9b04e50bb4dccd1e0bec3209a2671641">traffic_shared_priv::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="structtraffic__shared__priv.html#a96c3016adb5810a83f5ac7f7744b5bd4">traffic_shared_priv::message_queue</a>, <a class="el" href="structtraffic__shared__priv.html#af8c196119d2acba8216c5c794e006db7">traffic_shared_priv::messages</a>, <a class="el" href="group__navit.html#gabe423e46a78a0085c11e2a69a65a336d">navit_get_user_data_directory()</a>, <a class="el" href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref()</a>, <a class="el" href="traffic_8c.html#accb3eb8cd182e0c566dd2f68a88aeefe">PROCESS_MESSAGES_NO_DUMP_STORE</a>, <a class="el" href="structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2">traffic::shared</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#a7d47f66e026978deb924275dcda16283">attr::traffic</a>, <a class="el" href="traffic_8c.html#a637d07da49a4a3dd084ef7652612adc7">traffic_get_messages_from_xml_file()</a>, <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#aa2eb347f5b5f786023d4cebf9bfad2e8">callback_new_2</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="event_8c.html#ae85ae57bf22615a22a497090995be9a5">event_add_idle()</a>, <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="structtraffic.html#a38056316f84e09d1b4fd1b28459ecd6d">traffic::idle_cb</a>, <a class="el" href="structtraffic.html#a21b2e5ed354c50cde8b22e007bc1a437">traffic::idle_ev</a>, <a class="el" href="structtraffic__shared__priv.html#a9b04e50bb4dccd1e0bec3209a2671641">traffic_shared_priv::map</a>, <a class="el" href="map_8c.html#a9a8864bcc7e1f687fe52c38b36bcad63">map_new()</a>, <a class="el" href="structtraffic__shared__priv.html#a96c3016adb5810a83f5ac7f7744b5bd4">traffic_shared_priv::message_queue</a>, <a class="el" href="structtraffic__shared__priv.html#af8c196119d2acba8216c5c794e006db7">traffic_shared_priv::messages</a>, <a class="el" href="group__navit.html#gabe423e46a78a0085c11e2a69a65a336d">navit_get_user_data_directory()</a>, <a class="el" href="traffic_8c.html#accb3eb8cd182e0c566dd2f68a88aeefe">PROCESS_MESSAGES_NO_DUMP_STORE</a>, <a class="el" href="structtraffic.html#aaca44dd4cbeb45e9f739ed5155d707c2">traffic::shared</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#a7d47f66e026978deb924275dcda16283">attr::traffic</a>, <a class="el" href="traffic_8c.html#a637d07da49a4a3dd084ef7652612adc7">traffic_get_messages_from_xml_file()</a>, <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, and <a class="el" href="structattr.html#a682d33096ece5ad806426918c15c4b10">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>.</p>
 

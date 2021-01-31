@@ -98,6 +98,12 @@ Data Fields</h2></td></tr>
 <tr class="separator:a64a0f4d91e33560c1e9a7c0251b4fffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a848844f2d0d1f73326e09603514a3bd9"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcallback.html">callback</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#a848844f2d0d1f73326e09603514a3bd9">cbid</a></td></tr>
 <tr class="separator:a848844f2d0d1f73326e09603514a3bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad52be724ee4a4aa3a2c01c91507166d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#ad52be724ee4a4aa3a2c01c91507166d5">position_valid</a></td></tr>
+<tr class="separator:ad52be724ee4a4aa3a2c01c91507166d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a857231be29725a1a17ad96da0980eead"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord__rect.html">coord_rect</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#a857231be29725a1a17ad96da0980eead">position_rect</a></td></tr>
+<tr class="separator:a857231be29725a1a17ad96da0980eead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa37ef6040c02a544c132a527bbae857"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__selection.html">map_selection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#aaa37ef6040c02a544c132a527bbae857">route_map_sel</a></td></tr>
+<tr class="separator:aaa37ef6040c02a544c132a527bbae857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af69831d3f5756d758f67d53377240d31"><td class="memItemLeft" align="right" valign="top">jclass&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#af69831d3f5756d758f67d53377240d31">NavitTraffClass</a></td></tr>
 <tr class="separator:af69831d3f5756d758f67d53377240d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9319e83194e79a5f2ed8f468f2b11e72"><td class="memItemLeft" align="right" valign="top">jobject&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__priv.html#a9319e83194e79a5f2ed8f468f2b11e72">NavitTraff</a></td></tr>
@@ -136,7 +142,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The navit instance </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#af2deba99c543a0b5ed64de8e45695b01">traffic_traff_android_new()</a>, and <a class="el" href="traffic__traff__android_8c.html#a1234449874ef17abd54520bbd15a37be">traffic_traff_android_on_feed_received()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, <a class="el" href="traffic__traff__android_8c.html#af2deba99c543a0b5ed64de8e45695b01">traffic_traff_android_new()</a>, <a class="el" href="traffic__traff__android_8c.html#a1234449874ef17abd54520bbd15a37be">traffic_traff_android_on_feed_received()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
 
 </div>
 </div>
@@ -153,7 +159,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>An instance of <code>NavitTraff</code> </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a137a7ce111f8a0f5b8f3a44ab469fff0">traffic_traff_android_destroy()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
 
 </div>
 </div>
@@ -170,7 +176,41 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The <code>NavitTraff</code> class </p>
 
-<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a137a7ce111f8a0f5b8f3a44ab469fff0">traffic_traff_android_destroy()</a>, <a class="el" href="traffic__traff__android_8c.html#a670614a0eff2137df657ae9512308c6a">traffic_traff_android_init()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
+
+</div>
+</div>
+<a id="a857231be29725a1a17ad96da0980eead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a857231be29725a1a17ad96da0980eead">&#9670;&nbsp;</a></span>position_rect</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcoord__rect.html">coord_rect</a>* traffic_priv::position_rect</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Rectangle around last known vehicle position (in <code>projection_mg</code>) </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a137a7ce111f8a0f5b8f3a44ab469fff0">traffic_traff_android_destroy()</a>, <a class="el" href="traffic__traff__android_8c.html#af2deba99c543a0b5ed64de8e45695b01">traffic_traff_android_new()</a>, <a class="el" href="traffic__traff__android_8c.html#a67a227bb07a646d9d0bf81cc8ff10960">traffic_traff_android_position_callback()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
+
+</div>
+</div>
+<a id="ad52be724ee4a4aa3a2c01c91507166d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad52be724ee4a4aa3a2c01c91507166d5">&#9670;&nbsp;</a></span>position_valid</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int traffic_priv::position_valid</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether Navit currently has a valid position </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#af2deba99c543a0b5ed64de8e45695b01">traffic_traff_android_new()</a>, and <a class="el" href="traffic__traff__android_8c.html#a06d8c2f09d784261711b7c06b97c2a26">traffic_traff_android_status_callback()</a>.</p>
 
 </div>
 </div>
@@ -188,6 +228,23 @@ Data Fields</h2></td></tr>
 <p>How many reports have been requested </p>
 
 <p class="reference">Referenced by <a class="el" href="traffic__dummy_8c.html#a4113d4a9c06d3b00aea6cbcdaea0635b">traffic_dummy_get_messages()</a>.</p>
+
+</div>
+</div>
+<a id="aaa37ef6040c02a544c132a527bbae857"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa37ef6040c02a544c132a527bbae857">&#9670;&nbsp;</a></span>route_map_sel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structmap__selection.html">map_selection</a>* traffic_priv::route_map_sel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Map selection for the current route </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic__traff__android_8c.html#a137a7ce111f8a0f5b8f3a44ab469fff0">traffic_traff_android_destroy()</a>, <a class="el" href="traffic__traff__android_8c.html#af2deba99c543a0b5ed64de8e45695b01">traffic_traff_android_new()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
 
 </div>
 </div>

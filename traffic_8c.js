@@ -68,6 +68,7 @@ var traffic_8c =
     [ "tm_rect_destroy", "traffic_8c.html#a0ae3fc888ea91d3a612f98b82d09f6fd", null ],
     [ "tm_rect_new", "traffic_8c.html#a07d66850814efbe4eef01f12a3300aef", null ],
     [ "tm_type_set", "traffic_8c.html#ad4c771198d369459ab4f3126042e7f63", null ],
+    [ "traffic_destroy", "traffic_8c.html#af9109a12ab8420b4e10f3a118284be74", null ],
     [ "traffic_dump_messages_to_xml", "traffic_8c.html#a51d708950844b6929f22363c5906b8e6", null ],
     [ "traffic_event_add_suppl_info", "traffic_8c.html#acc7e38b7318af75cc7f39576f047b2a8", null ],
     [ "traffic_event_destroy", "traffic_8c.html#a38fad0c104961dcb2eb81ac3ce78d9af", null ],

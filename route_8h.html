@@ -170,6 +170,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a72a72ba653784a692bb599af0a3d71c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the destination of a route.  <a href="#a72a72ba653784a692bb599af0a3d71c8">More...</a><br /></td></tr>
 <tr class="separator:a72a72ba653784a692bb599af0a3d71c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac35e5ef3acc31f5e43449d1ad9f6ddbe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8h.html#ac35e5ef3acc31f5e43449d1ad9f6ddbe">route_get_destinations</a> (struct <a class="el" href="structroute.html">route</a> *this_, struct <a class="el" href="structpcoord.html">pcoord</a> *pc, int count)</td></tr>
+<tr class="memdesc:ac35e5ef3acc31f5e43449d1ad9f6ddbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves destinations from the route.  <a href="#ac35e5ef3acc31f5e43449d1ad9f6ddbe">More...</a><br /></td></tr>
 <tr class="separator:ac35e5ef3acc31f5e43449d1ad9f6ddbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e2255ace92ab344940a03c6f60969cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8h.html#a4e2255ace92ab344940a03c6f60969cf">route_get_destination_count</a> (struct <a class="el" href="structroute.html">route</a> *this_)</td></tr>
 <tr class="memdesc:a4e2255ace92ab344940a03c6f60969cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destinations count for the route.  <a href="#a4e2255ace92ab344940a03c6f60969cf">More...</a><br /></td></tr>
@@ -699,7 +700,7 @@ Functions</h2></td></tr>
           <td class="memname">int route_get_destinations </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structroute.html">route</a> *&#160;</td>
-          <td class="paramname"><em>this_</em>, </td>
+          <td class="paramname"><em>this</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -720,6 +721,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves destinations from the route. </p>
+<p>Prior to calling this method, you may want to retrieve the number of destinations by calling <a class="el" href="route_8h.html#a4e2255ace92ab344940a03c6f60969cf">route_get_destination_count(struct route *)</a> and assigning a buffer of sufficient capacity.</p>
+<p>If the return value equals <code>count</code>, the buffer was either just large enough or too small to hold the entire list of destinations; there is no way to tell from the result which is the case.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">this</td><td>The route instance </td></tr>
+    <tr><td class="paramname">pc</td><td>Pointer to an array of projected coordinates which will receive the destination coordinates </td></tr>
+    <tr><td class="paramname">count</td><td>Capacity of <code>pc</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of destinations stored in <code>pc</code>, never greater than <code>count</code> </dd></dl>
 
 <p class="reference">References <a class="el" href="structroute__info.html#a08424350941a8de98ed325aa5ec6ee88">route_info::c</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
@@ -1167,6 +1181,17 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a single map selection. </p>
+<p>The boundaries of the selection are determined as follows: First a rectangle spanning <code>c1</code> and <code>c2</code> is built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension (height or width) is determined and multiplied with the percentage specified by <code>rel</code>. The resulting amount of padding is added to each edge. After that, the amount specified by <code>abs</code> is added to each edge.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">order</td><td>Map order (deepest tile level) to select </td></tr>
+    <tr><td class="paramname">c1</td><td>First coordinate </td></tr>
+    <tr><td class="paramname">c2</td><td>Second coordinate </td></tr>
+    <tr><td class="paramname">rel</td><td>Relative padding to add to the selection rectangle, in percent </td></tr>
+    <tr><td class="paramname">abs</td><td>Absolute padding to add to the selection rectangle </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="reference">References <a class="el" href="structmap__selection.html#ae00c4fb58fffa37688d33f864310a7b5">map_selection::c_rect</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structitem__range.html#a4e9187008185d424680ccbd7e029dd19">item_range::max</a>, <a class="el" href="structmap__selection.html#a1c83ff016741893133014d58cfc38e25">map_selection::next</a>, <a class="el" href="structmap__selection.html#a1983d9d4a5df17d7a8d70fc7a7f1d9bf">map_selection::order</a>, <a class="el" href="structmap__selection.html#a9b160a76565e6f18e27042d4f06feeaa">map_selection::range</a>, <a class="el" href="structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7">coord_rect::rl</a>, <a class="el" href="item_8h.html#aec7ed308d7bf84da6a2012b02207a822">route_item_first</a>, <a class="el" href="item_8h.html#a385bcf44c2e29e93b6ea337616e5931d">route_item_last</a>, <a class="el" href="structmap__selection.html#a0f7fd983dfb06bf8aba44c212bc8a78f">map_selection::u</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
 

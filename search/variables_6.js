@@ -51,6 +51,7 @@ var searchData=
   ['ep',['ep',['../cJSON_8c.html#a00793ba086b417bb3d75ab79af8c83fb',1,'cJSON.c']]],
   ['err',['err',['../structfile__wordexp.html#a724a0a78754b8d5604b3df8f1a21f843',1,'file_wordexp']]],
   ['error',['error',['../structcontext.html#a025e00ec212b64248fe1d41ae1006811',1,'context::error()'],['../structcommand__saved.html#ae852c00c18a2e9837c86a5e57abcb11d',1,'command_saved::error()'],['../structo5m.html#a0a4753743d1e1ec92696d7474b0a74a3',1,'o5m::error()'],['../structxmlstate.html#a9d03b2abd62f7ed16887a09233cb03e4',1,'xmlstate::error()']]],
+  ['error_5fstrings',['ERROR_STRINGS',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a613fa388ce2d420943bbad0cdce96a6d',1,'org::navitproject::navit::NavitTraff']]],
   ['errormode',['errormode',['../tell__navit_8c.html#af7c778465a6d361eb08624fc65e07a1e',1,'tell_navit.c']]],
   ['espeak_5fmeth',['espeak_meth',['../speak_8c.html#a1a0c3e69d3bcfabf08f77c945d567cb7',1,'speak.c']]],
   ['espeak_5fok',['espeak_ok',['../structspeech__priv.html#a67006f4f26282dd6d45956333deb8f85',1,'speech_priv']]],
@@ -77,6 +78,10 @@ var searchData=
   ['experimental_5ffeature_5fdescription',['experimental_feature_description',['../maptool_8c.html#a713314f11517dd29053c8836a25ca149',1,'maptool.c']]],
   ['expiration_5ftime',['expiration_time',['../structtraffic__message.html#a388d0e294c1b6d43ea51ad7c496191cc',1,'traffic_message']]],
   ['expr',['expr',['../structcontext.html#ab66b5433dda6a542658b29a42f10a8a6',1,'context']]],
+  ['extra_5fcapabilities',['EXTRA_CAPABILITIES',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a398e01d120c4dd7f7a94583a2ecd8141',1,'org::navitproject::navit::NavitTraff']]],
   ['extra_5ffeed',['EXTRA_FEED',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#af22de65a437c82ef166b4a8db82b07e4',1,'org::navitproject::navit::NavitTraff']]],
+  ['extra_5ffilter_5flist',['EXTRA_FILTER_LIST',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a0866c1c9d827fe6ff9b1d355644aa24a',1,'org::navitproject::navit::NavitTraff']]],
+  ['extra_5fpackage',['EXTRA_PACKAGE',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a149d58be75422e17074366c2ac358adc',1,'org::navitproject::navit::NavitTraff']]],
+  ['extra_5fsubscription_5fid',['EXTRA_SUBSCRIPTION_ID',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a0d316842cd96cdcc66c3d03c24edbc3e',1,'org::navitproject::navit::NavitTraff']]],
   ['extrapolating',['extrapolating',['../structcdf__data.html#aff6ef40cf8d524028fd490870761e36c',1,'cdf_data']]]
 ];

@@ -4,6 +4,7 @@ var searchData=
   ['o_5flargefile',['O_LARGEFILE',['../navit__lfs_8h.html#a1126309aa58e7c99553c7f6be1bc7348',1,'navit_lfs.h']]],
   ['obj_5fhead',['Obj_HEAD',['../binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272',1,'Obj_HEAD():&#160;binding_python.c'],['../common_8h.html#a6bb1ff01fab2f8a8bb023f584a5aa272',1,'Obj_HEAD():&#160;common.h']]],
   ['onef',['onef',['../geodesic_8h.html#a93ddffb2da5fb46787c0fc85315cf617',1,'geodesic.h']]],
+  ['order_5fto_5fmin_5froad_5fclass',['order_to_min_road_class',['../traffic_8h.html#ae9ca36a0d6a0a851c0be47c4087f7159',1,'traffic.h']]],
   ['orientation_5fflat',['ORIENTATION_FLAT',['../pedestrian_8c.html#a72f2f661d00fcac6af9f6b43a2e8f294',1,'pedestrian.c']]],
   ['orientation_5flandscape',['ORIENTATION_LANDSCAPE',['../pedestrian_8c.html#accc06995e9834c793d2cc9e96ded0560',1,'pedestrian.c']]],
   ['orientation_5fportrait',['ORIENTATION_PORTRAIT',['../pedestrian_8c.html#a0f166aa542c69097847cfc189cd48057',1,'pedestrian.c']]],

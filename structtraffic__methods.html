@@ -96,11 +96,30 @@ $(document).ready(function(){initNavTree('structtraffic__methods.html','');});
 Data Fields</h2></td></tr>
 <tr class="memitem:a7b9471a0194d92b4737e80b06d43fd1a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structtraffic__message.html">traffic_message</a> **(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__methods.html#a7b9471a0194d92b4737e80b06d43fd1a">get_messages</a> )(struct <a class="el" href="structtraffic__priv.html">traffic_priv</a> *this_)</td></tr>
 <tr class="separator:a7b9471a0194d92b4737e80b06d43fd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584a619c857a17592633c84b1ba6d3fe"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtraffic__methods.html#a584a619c857a17592633c84b1ba6d3fe">destroy</a> )(struct <a class="el" href="structtraffic__priv.html">traffic_priv</a> *this_)</td></tr>
+<tr class="separator:a584a619c857a17592633c84b1ba6d3fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Holds all functions a traffic plugin has to implement to be usable. </p>
 <p>This structure holds pointers to a traffic plugin's functions which navit's core will call to communicate with the plugin. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
+<a id="a584a619c857a17592633c84b1ba6d3fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a584a619c857a17592633c84b1ba6d3fe">&#9670;&nbsp;</a></span>destroy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* traffic_methods::destroy) (struct <a class="el" href="structtraffic__priv.html">traffic_priv</a> *this_)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Destructor for the traffic plugin </p>
+
+<p class="reference">Referenced by <a class="el" href="traffic_8h.html#af9109a12ab8420b4e10f3a118284be74">traffic_destroy()</a>.</p>
+
+</div>
+</div>
 <a id="a7b9471a0194d92b4737e80b06d43fd1a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b9471a0194d92b4737e80b06d43fd1a">&#9670;&nbsp;</a></span>get_messages</h2>
 

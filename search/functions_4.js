@@ -122,6 +122,7 @@ var searchData=
   ['clipcode',['clipcode',['../geom_8c.html#adf96429deb545e3c2e3ae079610398c7',1,'geom.c']]],
   ['clipencode',['clipEncode',['../raster_8c.html#ab0bad92332c913ba8a89e931d64d29e3',1,'raster.c']]],
   ['clipline',['clipLine',['../raster_8c.html#adde86cdd216c6c68a0db79ab5cf83134',1,'raster.c']]],
+  ['close',['close',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a4f664b9318cc19a6583c96b5cc29a072',1,'org::navitproject::navit::NavitTraff']]],
   ['close_5fpolygon',['close_polygon',['../coastline_8c.html#a7b63cdff68c986fd08429c16a4d202fe',1,'coastline.c']]],
   ['closeevent',['closeEvent',['../classRenderArea.html#a53d92e423c7bc49f54ac91d1a1f6632f',1,'RenderArea::closeEvent()'],['../classNGQMainWindow.html#ab4d059b212a3a570dfbd8e0c902959dc',1,'NGQMainWindow::closeEvent()']]],
   ['closeparsedata',['closeParsedata',['../gpx2navit__txt_8h.html#ab98a41aff9d6acdef651c74c3a761b7a',1,'closeParsedata(parsedata *pdata):&#160;misc.c'],['../tools_2gpx2navit__txt_2src_2misc_8c.html#ab98a41aff9d6acdef651c74c3a761b7a',1,'closeParsedata(parsedata *pdata):&#160;misc.c']]],

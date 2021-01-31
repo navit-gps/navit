@@ -131,6 +131,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae33151a12d43376844654ccfcfb72888"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__selection.html">map_selection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route__protected_8h.html#ae33151a12d43376844654ccfcfb72888">route_get_selection</a> (struct <a class="el" href="structroute.html">route</a> *this_)</td></tr>
 <tr class="memdesc:ae33151a12d43376844654ccfcfb72888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the map selection for the route.  <a href="#ae33151a12d43376844654ccfcfb72888">More...</a><br /></td></tr>
 <tr class="separator:ae33151a12d43376844654ccfcfb72888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b4ed4bbef21c85a46b09df5e3278af7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route__protected_8h.html#a1b4ed4bbef21c85a46b09df5e3278af7">route_free_selection</a> (struct <a class="el" href="structmap__selection.html">map_selection</a> *sel)</td></tr>
+<tr class="memdesc:a1b4ed4bbef21c85a46b09df5e3278af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a list of map selections.  <a href="#a1b4ed4bbef21c85a46b09df5e3278af7">More...</a><br /></td></tr>
+<tr class="separator:a1b4ed4bbef21c85a46b09df5e3278af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba6e9105109a8101259a8ee149b568c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route__protected_8h.html#aba6e9105109a8101259a8ee149b568c9">route_add_traffic_distortion</a> (struct <a class="el" href="structroute.html">route</a> *this_, struct <a class="el" href="structitem.html">item</a> *<a class="el" href="structitem.html">item</a>)</td></tr>
 <tr class="memdesc:aba6e9105109a8101259a8ee149b568c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a traffic distortion item to the route.  <a href="#aba6e9105109a8101259a8ee149b568c9">More...</a><br /></td></tr>
 <tr class="separator:aba6e9105109a8101259a8ee149b568c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +330,36 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1b4ed4bbef21c85a46b09df5e3278af7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b4ed4bbef21c85a46b09df5e3278af7">&#9670;&nbsp;</a></span>route_free_selection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void route_free_selection </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structmap__selection.html">map_selection</a> *&#160;</td>
+          <td class="paramname"><em>sel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroys a list of map selections. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sel</td><td>Start of the list to be destroyed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="structmap__selection.html#a1c83ff016741893133014d58cfc38e25">map_selection::next</a>, and <a class="el" href="garmin__img_8c.html#a72b26dfab473b56b23271050c385bcf7">next</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="route__protected_8h.html#afac418991fad3b6c2afababe04818b0a">route_graph_build_done()</a>, <a class="el" href="traffic__traff__android_8c.html#a137a7ce111f8a0f5b8f3a44ab469fff0">traffic_traff_android_destroy()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
+
+</div>
+</div>
 <a id="ac1e48a7cca4fc2ef591fc3f20d7837c7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac1e48a7cca4fc2ef591fc3f20d7837c7">&#9670;&nbsp;</a></span>route_get_graph()</h2>
 
@@ -370,7 +403,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structroute__info.html#a08424350941a8de98ed325aa5ec6ee88">route_info::c</a>, <a class="el" href="structroute.html#a19d1594ee18b1887a8904915d319f089">route::destinations</a>, <a class="el" href="structroute.html#a052d5b83336fae1672ce9514d386fb9e">route::pos</a>, <a class="el" href="route_8c.html#a557995336bd1165095f6bf6a04c53a67">route_calc_selection()</a>, and <a class="el" href="structroute.html#a0bdbb423178c93cc7d2930ae04804983">route::vehicleprofile</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="traffic_8c.html#a2af340f35e762b690a01a36f9522111f">traffic_process_messages_int()</a>, and <a class="el" href="traffic__traff__android_8c.html#ac09c3d446ad714508934089ec5e0212a">traffic_traff_android_set_selection()</a>.</p>
 
 </div>
 </div>
@@ -555,7 +588,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="structroute__graph.html#aec58763cd3c3fc228f6163729cb658a1">route_graph::busy</a>, <a class="el" href="callback_8h.html#ad5f34eb337d3f6b98394b5aa02388e1a">callback_call_0</a>, <a class="el" href="callback_8c.html#a00702c701fa5313aace16c0299536dd3">callback_destroy()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structroute__graph.html#a7ae5448f094980f1727484312d366619">route_graph::done_cb</a>, <a class="el" href="event_8c.html#a958d2087511a68e1f0a150e76a5713e6">event_remove_idle()</a>, <a class="el" href="structroute__graph.html#aece3ed03ea64579a695890f8f9928d7c">route_graph::h</a>, <a class="el" href="structroute__graph.html#a624be91df267d7b100b86a0298e6f9e7">route_graph::idle_cb</a>, <a class="el" href="structroute__graph.html#ad09c527a69149fe25000b6fd4eaa8f81">route_graph::idle_ev</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="structroute__graph.html#a59d7174a8c5f408a78e372dc93968901">route_graph::mr</a>, <a class="el" href="route_8c.html#a90b8dab2b1a4846e3a34f1c3c3c555f1">route_free_selection()</a>, <a class="el" href="route_8c.html#ad3c3d4343c39056e23eafeb8b7d6b80a">route_graph_process_restrictions()</a>, and <a class="el" href="structroute__graph.html#a760dfcf1f660b1dea4e07c50cdb38a4b">route_graph::sel</a>.</p>
+<p class="reference">References <a class="el" href="structroute__graph.html#aec58763cd3c3fc228f6163729cb658a1">route_graph::busy</a>, <a class="el" href="callback_8h.html#ad5f34eb337d3f6b98394b5aa02388e1a">callback_call_0</a>, <a class="el" href="callback_8c.html#a00702c701fa5313aace16c0299536dd3">callback_destroy()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structroute__graph.html#a7ae5448f094980f1727484312d366619">route_graph::done_cb</a>, <a class="el" href="event_8c.html#a958d2087511a68e1f0a150e76a5713e6">event_remove_idle()</a>, <a class="el" href="structroute__graph.html#aece3ed03ea64579a695890f8f9928d7c">route_graph::h</a>, <a class="el" href="structroute__graph.html#a624be91df267d7b100b86a0298e6f9e7">route_graph::idle_cb</a>, <a class="el" href="structroute__graph.html#ad09c527a69149fe25000b6fd4eaa8f81">route_graph::idle_ev</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="mapset_8c.html#aff7284837514c15ea5468463f9329435">mapset_close()</a>, <a class="el" href="structroute__graph.html#a59d7174a8c5f408a78e372dc93968901">route_graph::mr</a>, <a class="el" href="route_8c.html#a1b4ed4bbef21c85a46b09df5e3278af7">route_free_selection()</a>, <a class="el" href="route_8c.html#ad3c3d4343c39056e23eafeb8b7d6b80a">route_graph_process_restrictions()</a>, and <a class="el" href="structroute__graph.html#a760dfcf1f660b1dea4e07c50cdb38a4b">route_graph::sel</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="route_8c.html#adf1f443c8565ca061759d8b0a519bd96">route_graph_build()</a>, <a class="el" href="route_8c.html#af4ad986c4d197cffe6d7a0e1e3211463">route_graph_build_idle()</a>, <a class="el" href="route_8c.html#aa0802993c262658b993204e154e0aa36">route_graph_destroy()</a>, <a class="el" href="traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91">traffic_location_get_matching_points()</a>, and <a class="el" href="traffic_8c.html#a8839fcaf3bca9ac83fbb058bf4cba12b">traffic_location_populate_route_graph()</a>.</p>
 

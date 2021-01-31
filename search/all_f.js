@@ -475,6 +475,7 @@ var searchData=
   ['mg_5fcountry_5fto_5fisonum',['mg_country_to_isonum',['../map_2mg_2map_8c.html#a46a8acb3bd263fe0d635eeb556a49a24',1,'mg_country_to_isonum(int country):&#160;map.c'],['../mg_8h.html#a46a8acb3bd263fe0d635eeb556a49a24',1,'mg_country_to_isonum(int country):&#160;map.c']]],
   ['micon',['mIcon',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html#a1d0ef68c89644ef73cc2c0e334f0b80c',1,'org::navitproject::navit::FileBrowserActivity::Item']]],
   ['middle',['middle',['../structch__edge.html#a0dfb3b988ca4c85575cee8c56764177e',1,'ch_edge']]],
+  ['mime_5ftype_5ftraff',['MIME_TYPE_TRAFF',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#ab8b5ebdd5522cceb8a65fb53344e142a',1,'org::navitproject::navit::NavitTraff']]],
   ['min',['min',['../structrange.html#a7903a4aaa15ca2155e8e04b242bbddcc',1,'range::min()'],['../structtile__parameter.html#a1e0c744e2acc69343e0ad88a2a1a41c6',1,'tile_parameter::min()']]],
   ['min4',['min4',['../transform_8c.html#a40e6294521dd73742e045c8936f132e2',1,'transform.c']]],
   ['min_5fdist',['min_dist',['../structroute__guard.html#aabca41cbc96795deb5829a605aad8192',1,'route_guard']]],

@@ -262,6 +262,7 @@ var searchData=
   ['subpoly_5fnum',['subpoly_num',['../structpoly__priv.html#abfe3df809826b317df9908c3d3fc32e6',1,'poly_priv']]],
   ['subpoly_5fnum_5fall',['subpoly_num_all',['../structpoly__priv.html#a3eeb922bcae10da74bf4687618eb8670',1,'poly_priv']]],
   ['subpoly_5fstart',['subpoly_start',['../structpoly__priv.html#ae45c822f2532f60538dbc2af25a51315',1,'poly_priv']]],
+  ['subscriptions',['subscriptions',['../classorg_1_1navitproject_1_1navit_1_1NavitTraff.html#a0f7739ac597765a73c391bb53a615b5d',1,'org::navitproject::navit::NavitTraff']]],
   ['subtype',['subtype',['../structrgn__point.html#a4d83b8d240b30434f049713aa13a0618',1,'rgn_point::subtype()'],['../garmin__img_8c.html#a2f03aca647bb8b2300b9975150e75dfb',1,'subtype():&#160;garmin_img.c']]],
   ['suffix',['suffix',['../structhousenumber.html#a0cc611d4e403857d87b83eb726c8e642',1,'housenumber::suffix()'],['../structtile__info.html#aa8bea9e8b0c38340f8b4f54f65b58f84',1,'tile_info::suffix()'],['../maptool_8h.html#a5a1a4937f25d3a2b1f2134598cff69b3',1,'suffix():&#160;maptool.h']]],
   ['suffixes',['suffixes',['../navigation_8c.html#aa565aae0c1fb0952c6ac477f449f7549',1,'navigation.c']]],

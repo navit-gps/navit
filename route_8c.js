@@ -33,7 +33,7 @@ var route_8c =
     [ "route_dup", "route_8c.html#acd539fe25796de904f57342b14dde071", null ],
     [ "route_extract_segment_from_path", "route_8c.html#a796b824a70a622f9af49563335a898f6", null ],
     [ "route_find_nearest_street", "route_8c.html#a1ffe6ed74a9a862b97a9258553399640", null ],
-    [ "route_free_selection", "route_8c.html#a90b8dab2b1a4846e3a34f1c3c3c555f1", null ],
+    [ "route_free_selection", "route_8c.html#a1b4ed4bbef21c85a46b09df5e3278af7", null ],
     [ "route_get_attr", "route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689", null ],
     [ "route_get_coord_dist", "route_8c.html#a03a2c87fe7268b8a6aef10b431813a27", null ],
     [ "route_get_destination_count", "route_8c.html#a36e3ba74f3e6a105e761d34aa6cb54ad", null ],
