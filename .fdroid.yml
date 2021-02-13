@@ -1,0 +1,54 @@
+Categories:
+  - Navigation
+License: GPL-2.0-only
+WebSite: https://www.navit-project.org/
+SourceCode: https://github.com/navit-gps/navit
+IssueTracker: http://trac.navit-project.org
+Translation: https://translations.launchpad.net/navit/trunk/+pots/navit
+Changelog: https://github.com/navit-gps/navit/blob/HEAD/CHANGELOG.md#changelog
+
+AutoName: Navit
+Description: |-
+    Its modular design is capable of using vector maps of various formats for
+    routing and rendering of the displayed map. It’s even possible to use multiple
+    maps at a time. While Navit supports all major platforms, there is a fork
+    specializing on an easy-to-use, Android-only solution:
+    https://f-droid.org/packages/com.zoffcc.applications.zanavi.
+
+    The routing engine not only calculates an optimal route to your destination, but
+    also generates directions and even speaks to you.
+
+    Navit currently speaks 27 languages. You can help translating via the web-based
+    <a href="http://translations.launchpad.net/navit/trunk/+pots/navit">translation page</a>.
+
+RepoType: git
+Repo: https://github.com/navit-gps/navit
+
+Builds:
+  - versionName: generated_at_build_time
+    versionCode: 42
+    # since we generate version codes on the fly, we never know them at commit time
+    # therefore we use dummy values and skip the version check
+    novcheck: yes
+    commit: HEAD
+    gradle:
+      - yes
+    output: build/outputs/apk/release/navit-release.apk
+    rm:
+      - navit/support/espeak/espeak-data/*
+    prebuild:
+      - echo '<project name="Navit"><target name="clean"/></project>' > build.xml
+      # ndk is needed because of CI limitations and can be removed once the CI image comes with NDK 20
+      - $$SDK$$/tools/bin/sdkmanager "cmake;3.6.4111459" "ndk;20.0.5594570" > /dev/null
+      - sed -i -e '/gradlew/d' scripts/build_android.sh
+    build: scripts/build_android.sh
+    # disable for now because of CI limitations
+    #ndk: r20b
+
+MaintainerNotes: |-
+    Found JAR file at navit/android/libs/TTS_library_stub.jar, removed as of v0.5.3-442-g96d9c41.
+    NDK r12b is the minimum required as of v0.5.3, later versions may work but are untested.
+
+AutoUpdateMode: Version %v
+UpdateCheckMode: HTTP
+UpdateCheckData: https://download.navit-project.org/api/version.json|"version_code":.*"(.*)"|.|"version_name":.*\"(.*)\",
