@@ -45,9 +45,7 @@
 #include "osd.h"
 #include "route.h"
 #include "search.h"
-#include "callback.h"
 #include "gui.h"
-#include "layout.h"
 #include "roadprofile.h"
 #include "util.h"
 #include "transform.h"
@@ -628,13 +626,13 @@ static char *get_iter_name(char *type) {
 }
 
 static DBusHandlerResult request_attr_iter(DBusConnection *connection, DBusMessage *message, char *type,
-        struct attr_iter *(*func)(void)) {
+        struct attr_iter *(*func)(void*)) {
     DBusMessage *reply;
     char *iter_name;
     char *opath;
     struct attr_iter *attr_iter;
 
-    attr_iter=(*func)();
+    attr_iter=(*func)(NULL);
     iter_name=get_iter_name(type);
     opath=object_new(iter_name,attr_iter);
     g_free(iter_name);
@@ -835,7 +833,7 @@ static DBusHandlerResult request_config_get_attr(DBusConnection *connection, DBu
 }
 
 static DBusHandlerResult request_config_attr_iter(DBusConnection *connection, DBusMessage *message) {
-    return request_attr_iter(connection, message, "config", (struct attr_iter * (*)(void))config_attr_iter_new);
+    return request_attr_iter(connection, message, "config", (struct attr_iter * (*)(void*))config_attr_iter_new);
 }
 
 static DBusHandlerResult request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
@@ -943,7 +941,7 @@ static DBusHandlerResult request_map_dump(DBusConnection *connection, DBusMessag
 /* mapset */
 
 static DBusHandlerResult request_mapset_attr_iter(DBusConnection *connection, DBusMessage *message) {
-    return request_attr_iter(connection, message, "mapset", (struct attr_iter * (*)(void))mapset_attr_iter_new);
+    return request_attr_iter(connection, message, "mapset", (struct attr_iter * (*)(void*))mapset_attr_iter_new);
 }
 
 static DBusHandlerResult request_mapset_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
@@ -988,7 +986,7 @@ static DBusHandlerResult request_roadprofile_set_attr(DBusConnection *connection
 }
 
 static DBusHandlerResult request_roadprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
-    return request_attr_iter(connection, message, "roadprofile", (struct attr_iter * (*)(void))roadprofile_attr_iter_new);
+    return request_attr_iter(connection, message, "roadprofile", (struct attr_iter * (*)(void*))roadprofile_attr_iter_new);
 }
 
 static DBusHandlerResult request_roadprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {
@@ -1169,7 +1167,7 @@ static DBusHandlerResult request_navit_set_layout(DBusConnection *connection, DB
     if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
         return dbus_error_invalid_parameter(connection, message);
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(navit, attr_layout, &attr, iter)) {
         if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
             navit_set_attr(navit, &attr);
@@ -1234,6 +1232,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
                    "     xmlns='http://www.topografix.com/GPX/1/1'\n"
                    "     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n";
     char *trailer = "</gpx>\n";
+    memset(&c_last, 0, sizeof(c_last));
 
     navit = object_get_from_message(message, "navit");
     if (! navit)
@@ -1243,7 +1242,7 @@ static DBusHandlerResult request_navit_traffic_export_gpx(DBusConnection *connec
 
     dbus_message_iter_get_basic(&iter, &filename);
 
-    a_iter = navit_attr_iter_new();
+    a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(navit, attr_traffic, &attr, a_iter))
         traffic = (struct traffic *) attr.u.navit_object;
     navit_attr_iter_destroy(a_iter);
@@ -1359,7 +1358,7 @@ static DBusHandlerResult request_navit_traffic_inject(DBusConnection *connection
     dbus_message_iter_get_basic(&iter, &filename);
 
     attr = g_new0(struct attr, 1);
-    a_iter = navit_attr_iter_new();
+    a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(navit, attr_traffic, attr, a_iter))
         traffic = (struct traffic *) attr->u.navit_object;
     navit_attr_iter_destroy(a_iter);
@@ -1650,7 +1649,7 @@ static DBusHandlerResult request_navit_get_attr(DBusConnection *connection, DBus
 
 static DBusHandlerResult request_navit_attr_iter(DBusConnection *connection, DBusMessage *message) {
     DBusMessage *reply;
-    struct attr_iter *attr_iter=navit_attr_iter_new();
+    struct attr_iter *attr_iter=navit_attr_iter_new(NULL);
     char *opath=object_new("navit_attr_iter",attr_iter);
     reply = dbus_message_new_method_return(message);
     dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
@@ -1957,7 +1956,7 @@ static DBusHandlerResult request_vehicleprofile_set_attr(DBusConnection *connect
 
 static DBusHandlerResult request_vehicleprofile_attr_iter(DBusConnection *connection, DBusMessage *message) {
     return request_attr_iter(connection, message, "vehicleprofile",
-                             (struct attr_iter * (*)(void))vehicleprofile_attr_iter_new);
+                             (struct attr_iter * (*)(void*))vehicleprofile_attr_iter_new);
 }
 
 static DBusHandlerResult request_vehicleprofile_attr_iter_destroy(DBusConnection *connection, DBusMessage *message) {

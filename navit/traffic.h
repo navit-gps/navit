@@ -58,6 +58,24 @@ extern "C" {
 #endif
 
 /**
+ * @brief Translates a Navit tile order to a minimum road class as used in TraFF.
+ *
+ * This can be used to translate a map selection into a TraFF filter.
+ *
+ * The tile order is the lowest tile level in which an object of a certain type can be placed (higher numbers
+ * correspond to lower levels). Currently, 8 is the maximum order for `highway_city`, `highway_land` and
+ * `street_n_lanes`, equivalent to `MOTORWAY` and `TRUNK`. 10 is the maximum order for `street_4_city` and
+ * `street_4_land` (`SECONDARY`), 12 for `street_3_city` and `street_3_land` (`TERTIARY`). All others can
+ * be placed in any tile level.
+ *
+ * This macro returns `PRIMARY`, `SECONDARY` and `TERTIARY` for the three bins above these cut-off orders,
+ * corresponding to one level below the lowest road class we expect to find there. (Not considering that
+ * low-level roads can be placed into higher-level tiles if they cross a tile boundary of the next lower
+ * level.) Below the lowest cut-off order, the macro returns NULL.
+ */
+#define order_to_min_road_class(x) (x <= 8 ? "PRIMARY" : x <= 10 ? "SECONDARY" : x <= 12 ? "TERTIARY" : NULL)
+
+/**
  * @brief Classes for events.
  */
 /* If additional event classes are introduced, traffic_event_is_valid() must be adapted to recognize them. */
@@ -226,6 +244,7 @@ enum si_type {
 	si_vehicle_with_trailer,      /*!< For vehicles with trailers only (TODO currently not supported) */
 };
 
+struct traffic;
 struct traffic_priv;
 struct traffic_location_priv;
 struct traffic_message_priv;
@@ -238,6 +257,7 @@ struct traffic_message_priv;
  */
 struct traffic_methods {
 	struct traffic_message **(* get_messages)(struct traffic_priv * this_); /**< Retrieves new messages from the traffic plugin */
+	void (*destroy)(struct traffic_priv * this_);                   /**< Destructor for the traffic plugin */
 };
 
 /**
@@ -987,6 +1007,11 @@ void traffic_set_mapset(struct traffic *this_, struct mapset *ms);
  * This sets the route which may get notified by the traffic plugin if traffic distortions change.
  */
 void traffic_set_route(struct traffic *this_, struct route *rt);
+
+/**
+ * @brief Destructor.
+ */
+void traffic_destroy(struct traffic *this_);
 
 /* end of prototypes */
 #ifdef __cplusplus

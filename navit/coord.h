@@ -36,6 +36,18 @@ struct coord {
 	int y; /*!< Y-Value */
 };
 
+/**
+ * @brief An integer mercator coordinate packed with a text label
+ *
+ * This structure holds information about an item (coordinates & label) on a map. This can be
+ * used in a list as group of points to display as search results on a map.
+ * It is used to structure input data for function navit_populate_search_results_map()
+ */
+struct lcoord {
+    struct coord c;	/*!< The coordinates for this item */
+    char *label;	/*!< A label to associate to this item */
+};
+
 /*! A integer mercator coordinate carrying its projection */
 struct pcoord {
 	enum projection pro;
@@ -53,7 +65,7 @@ struct coord_rect {
 /**
  * On platforms where we are trying to avoid floats, sometimes we can't.
  * It is better on these platforms to use single precision floating points
- * over double percision ones since performance is much better.
+ * over double precision ones since performance is much better.
  */
 typedef float navit_float;
 #define navit_sin(x) sinf(x)
@@ -101,21 +113,34 @@ struct coord_geo_cart {
 enum coord_format
 {
 	/**
-	 * Degrees with decimal places.
-	 * Ie 20.5000 N 110.5000 E
+	 * Degrees with absolute decimal places (positive or negative)
+	 * ie -20.500000 -110.500000
+	 */
+	DEGREES_DECIMAL_ABSOLUTE,
+
+	/**
+	 * Degrees with decimal places (positive with heading)
+	 * ie 20.500000°N 110.500000°E
 	 */
 	DEGREES_DECIMAL,
 
 	/**
 	 * Degrees and minutes.
-	 * ie 20 30.00 N 110 30.00 E
+	 * ie 20°30.0000' N 110°30.0000' E
 	 */
 	DEGREES_MINUTES,
+
 	/**
 	 * Degrees, minutes and seconds.
-	 * ie 20 30 30.00 N 110 30 30 E
+	 * ie 20°30'30.00" N 110°30'30.00" E
 	 */
-	DEGREES_MINUTES_SECONDS
+	DEGREES_MINUTES_SECONDS,
+
+	/**
+	 * Degrees, minutes and seconds, brief
+	 * ie 20°30'30"N 110°30'30"E
+	 */
+	DEGREES_MINUTES_SECONDS_BRIEF
 };
 
 enum projection;
@@ -133,7 +158,12 @@ void coord_rect_destroy(struct coord_rect *r);
 int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2);
 int coord_rect_contains(struct coord_rect *r, struct coord *c);
 void coord_rect_extend(struct coord_rect *r, struct coord *c);
-void coord_format(float lat,float lng, enum coord_format, char * buffer, int size);
+void coord_format_with_sep(float lat,float lng, enum coord_format fmt, char *buffer, int size, const char *sep);
+void coord_format(float lat,float lng, enum coord_format fmt, char *buffer, int size);
+void coord_geo_format_short(const struct coord_geo *gc, char *buffer, int size, char *sep);
+void pcoord_format_degree_short(const struct pcoord *pc, char *buffer, int size, char *sep);
+void pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, char *sep);
+char *coordinates_geo(const struct coord_geo *gc, char sep);
 
 /* prototypes */
 enum coord_format;

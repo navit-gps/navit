@@ -76,17 +76,24 @@
 /** Flag to indicate the message store should not be exported */
 #define PROCESS_MESSAGES_NO_DUMP_STORE 1 << 1
 
-/** The lowest order of items to consider */
-#define ROUTE_ORDER 18
+/** The lowest order of items to consider (always the default order for the next-lower road type) */
+#define ROUTE_ORDER(x) (((x == type_highway_land) || (x == type_highway_city) || (x == type_street_n_lanes)) \
+        ? 10 : ((x == type_street_4_land) || (x == type_street_4_city)) ? 12 : 18)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, absolute distance */
-#define ROUTE_RECT_DIST_ABS 1000
+#define ROUTE_RECT_DIST_ABS(x) ((x == location_fuzziness_low_res) ? 1000 : 100)
 
 /** The buffer zone around the enclosing rectangle used in route calculations, relative to rect size */
-#define ROUTE_RECT_DIST_REL 0
+#define ROUTE_RECT_DIST_REL(x) 0
+
+/** Maximum textfile line size */
+#define TEXTFILE_LINE_SIZE 512
 
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
+
+/** Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
+int item_default_flags_value = AF_ALL;
 
 /**
  * @brief Private data shared between all traffic instances.
@@ -95,6 +102,9 @@ struct traffic_shared_priv {
     GList * messages;           /**< Currently active messages */
     GList * message_queue;      /**< Queued messages, waiting to be processed */
     // TODO messages by ID?                 In a later phase…
+    struct mapset *ms;          /**< The mapset used for routing */
+    struct route *rt;           /**< The route to notify of traffic changes */
+    struct map *map;            /**< The traffic map, in which traffic distortions are stored */
 };
 
 /**
@@ -112,12 +122,10 @@ struct traffic {
     struct event_timeout * timeout; /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;    /**< Idle callback to process new messages */
     struct event_idle *idle_ev;  /**< The pointer to the idle event */
-    struct mapset *ms;           /**< The mapset used for routing */
-    struct route *rt;            /**< The route to notify of traffic changes */
-    struct map *map;             /**< The traffic map, in which traffic distortions are stored */
 };
 
 struct traffic_location_priv {
+    char * txt_data;                   /*!< Persisted location data in txtfile map format. */
     struct coord_geo * sw;             /*!< Southwestern corner of rectangle enclosing all points.
 	                                    *   Calculated by Navit from the points of the location. */
     struct coord_geo * ne;             /*!< Northeastern corner of rectangle enclosing all points.
@@ -135,6 +143,7 @@ struct traffic_message_priv {
  */
 struct map_priv {
     GList * items;              /**< The map items */
+    struct traffic_shared_priv *shared; /**< Private data shared between all instances */
     // TODO items by start/end coordinates? In a later phase…
 };
 
@@ -176,6 +185,21 @@ struct item_priv {
     unsigned int
     next_coord;    /**< The index of the next coordinate of `item` to be returned by the `item_coord_get` method */
     struct route *rt;           /**< The route to which the item has been added */
+};
+
+/**
+ * @brief Parsed data for a cached item
+ */
+struct parsed_item {
+    enum item_type type;        /**< The item type */
+    int id_hi;                  /**< The high-order part of the identifier */
+    int id_lo;                  /**< The low-order part of the identifier */
+    int flags;                  /**< Access and other flags for the item */
+    struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
+    struct coord *coords;       /**< The coordinates for the item */
+    int coord_count;            /**< The number of elements in `coords` */
+    int length;                 /**< The length of the segment in meters */
+    int is_matched;             /**< Whether any of the maps has a matching item */
 };
 
 /**
@@ -232,6 +256,7 @@ struct xml_state {
     struct traffic_point * not_via;     /**< A point NOT between `from` and `to`. Required on ring roads
 	                                     *   unless `via` is used; cannot be used together with `at`. */
     struct traffic_location * location; /**< The location to which the next message refers. */
+    char * location_txt_data;           /**< Persisted location data in txtfile map format. */
     GList * si;                         /**< Supplementary information items for the next event. */
     GList * events;                     /**< The events for the next message. */
 };
@@ -249,6 +274,8 @@ struct xml_element {
     char * text;                 /**< Character data (NULL-terminated) */
 };
 
+static struct map_methods traffic_map_meth;
+
 static struct seg_data * seg_data_new(void);
 static struct item * tm_add_item(struct map *map, enum item_type type, int id_hi, int id_lo,
                                  int flags, struct attr **attrs, struct coord *c, int count, char * id);
@@ -265,14 +292,18 @@ static int tm_coord_get(void *priv_data, struct coord *c, int count);
 static void tm_attr_rewind(void *priv_data);
 static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr);
 static int tm_type_set(void *priv_data, enum item_type type);
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection);
 static struct route_graph * traffic_location_get_route_graph(struct traffic_location * this_,
         struct mapset * ms);
 static int traffic_location_match_attributes(struct traffic_location * this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message * this_, struct mapset * ms, struct seg_data * data,
                                         struct map *map, struct route * route);
+static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms,
+        struct map *map, struct route * route);
 static void traffic_location_populate_route_graph(struct traffic_location * this_, struct route_graph * rg,
         struct mapset * ms);
-static void traffic_dump_messages_to_xml(struct traffic * this_);
+static void traffic_location_set_enclosing_rect(struct traffic_location * this_, struct coord_geo ** coords);
+static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared);
 static void traffic_loop(struct traffic * this_);
 static struct traffic * traffic_new(struct attr *parent, struct attr **attrs);
 static int traffic_process_messages_int(struct traffic * this_, int flags);
@@ -280,6 +311,8 @@ static void traffic_message_dump_to_stderr(struct traffic_message * this_);
 static struct seg_data * traffic_message_parse_events(struct traffic_message * this_);
 static struct route_graph_point * traffic_route_flood_graph(struct route_graph * rg, struct seg_data * data,
         struct coord * c_start, struct coord * c_dst, struct route_graph_point * start_existing);
+static void traffic_message_remove_item_data(struct traffic_message * old, struct traffic_message * new,
+        struct route * route);
 
 static struct item_methods methods_traffic_item = {
     tm_coord_rewind,
@@ -321,6 +354,18 @@ static int boolean_new(const char * string, int deflt) {
     if (!g_ascii_strcasecmp(string, "no") || !g_ascii_strcasecmp(string, "false") || ((string[0] == '0') && !atoi(string)))
         return 0;
     return deflt;
+}
+
+/**
+ * @brief Destructor for `struct parsed_item`
+ *
+ * This frees up the `struct parsed_item` and all associated data. The pointer passed to this function will
+ * be invalid after it returns.
+ */
+static void parsed_item_destroy(struct parsed_item * this_) {
+    g_free(this_->coords);
+    attr_list_free(this_->attrs);
+    g_free(this_);
 }
 
 /**
@@ -381,12 +426,12 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
         return 0;
     /* FIXME this will break if multiple attributes of the same type are present and have different values */
     for (attrs = l->attrs; attrs; attrs++) {
-        attr = attr_search(r->attrs, NULL, (*attrs)->type);
+        attr = attr_search(r->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
     for (attrs = r->attrs; attrs; attrs++) {
-        attr = attr_search(l->attrs, NULL, (*attrs)->type);
+        attr = attr_search(l->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
@@ -405,7 +450,7 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
  * @param msgid The message ID
  * @param speed The maximum speed for the segment (`INT_MAX` if none given)
  * @param delay The delay for the segment, in tenths of seconds (0 for none)
- * @param attrs Additional attributes specified by the message
+ * @param attrs Additional attributes specified by the message, can be NULL
  * @param route The route affected by the changes
  *
  * @return true if data was changed, false if not
@@ -571,7 +616,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         msgdata = (struct item_msg_priv *) msglist->data;
         if (msgdata->speed < speed)
             speed = msgdata->speed;
-        if (msgdata->delay < delay)
+        if (msgdata->delay > delay)
             delay = msgdata->delay;
         /* TODO attrs */
     }
@@ -588,7 +633,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
      * resulting in a cost of 90 s for the segment.
      */
     if (speed < INT_MAX) {
-        attr = attr_search(priv_data->attrs, NULL, attr_maxspeed);
+        attr = attr_search(priv_data->attrs, attr_maxspeed);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_maxspeed;
@@ -605,12 +650,12 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
             attr->u.num = speed;
         }
     } else {
-        while ((attr = attr_search(priv_data->attrs, NULL, attr_maxspeed)))
+        while ((attr = attr_search(priv_data->attrs, attr_maxspeed)))
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
     }
 
     if (delay) {
-        attr = attr_search(priv_data->attrs, NULL, attr_delay);
+        attr = attr_search(priv_data->attrs, attr_delay);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_delay;
@@ -628,7 +673,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         }
     } else {
         while (1) {
-            attr = attr_search(priv_data->attrs, NULL, attr_delay);
+            attr = attr_search(priv_data->attrs, attr_delay);
             if (!attr)
                 break;
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
@@ -723,6 +768,43 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
     return ret;
 }
 
+/**
+ * @brief Dumps an item to a file in textfile format.
+ *
+ * All data passed to this method is safe to free after the method returns, and doing so is the
+ * responsibility of the caller.
+ *
+ * @param item The item
+ * @param f The file to write to
+ */
+static void tm_item_dump_to_file(struct item * item, FILE * f) {
+    struct item_priv * ip = (struct item_priv *) item->priv_data;
+    struct attr **attrs = ip->attrs;
+    struct coord *c = ip->coords;
+    int i;
+    char * attr_text;
+
+    fprintf(f, "type=%s", item_to_name(item->type));
+    fprintf(f, " id=0x%x,0x%x", item->id_hi, item->id_lo);
+    while (*attrs) {
+        if ((*attrs)->type == attr_flags) {
+            /* special handling for flags */
+            fprintf(f, " flags=0x%x", (unsigned int)(*attrs)->u.num);
+        } else {
+            attr_text = attr_to_text(*attrs, NULL, 0);
+            /* FIXME this may not work properly for all attribute types */
+            fprintf(f, " %s=%s", attr_to_name((*attrs)->type), attr_text);
+            g_free(attr_text);
+        }
+        attrs++;
+    }
+    fprintf(f, "\n");
+
+    for (i = 0; i < ip->coord_count; i++) {
+        fprintf(f,"0x%x 0x%x\n", c[i].x, c[i].y);
+    }
+}
+
 #ifdef TRAFFIC_DEBUG
 /**
  * @brief Dumps an item to a textfile map.
@@ -749,19 +831,7 @@ static void tm_dump_item_to_textfile(struct item * item) {
     if (dist_filename) {
         FILE *map = fopen(dist_filename,"a");
         if (map) {
-            fprintf(map, "type=%s", item_to_name(item->type));
-            while (*attrs) {
-                attr_text = attr_to_text(*attrs, NULL, 0);
-                /* FIXME this may not work properly for all attribute types */
-                fprintf(map, " %s=%s", attr_to_name((*attrs)->type), attr_text);
-                g_free(attr_text);
-                attrs++;
-            }
-            fprintf(map, "\n");
-
-            for (i = 0; i < ip->coord_count; i++) {
-                fprintf(map,"0x%x 0x%x\n", c[i].x, c[i].y);
-            }
+            tm_item_dump_to_file(item, map);
             fclose(map);
         } else {
             dbg(lvl_error,"could not open file for distortions !!");
@@ -867,11 +937,62 @@ static void tm_destroy(struct map_priv *priv) {
  */
 static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_selection *sel) {
     struct map_rect_priv * mr;
+
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Map selection for current message, current map rect selection */
+    struct map_selection * msg_sel, * rect_sel;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
+    /* Whether new segments have been added */
+    int dirty = 0;
+
     dbg(lvl_debug,"enter");
     mr=g_new0(struct map_rect_priv, 1);
     mr->mpriv = priv;
     mr->next_item = priv->items;
     /* all other pointers are initially NULL */
+
+    /* lazy location matching */
+    if (sel != NULL)
+        /* TODO experimental: if no selection is passed, do not resolve any locations */
+        for (msgiter = priv->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+            message = (struct traffic_message *) msgiter->data;
+            if (message->priv->items == NULL) {
+                traffic_location_set_enclosing_rect(message->location, NULL);
+                msg_sel = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                for (rect_sel = sel; rect_sel; rect_sel = rect_sel->next)
+                    if (coord_rect_overlap(&(msg_sel->u.c_rect), &(rect_sel->u.c_rect))) {
+                        /* TODO do this in an idle loop, not here */
+                        /* lazy cache restore */
+                        if (message->location->priv->txt_data) {
+                            dbg(lvl_debug, "location has txt_data, trying to restore");
+                            traffic_message_restore_segments(message, priv->shared->ms,
+                                                             priv->shared->map, priv->shared->rt);
+                        } else {
+                            dbg(lvl_debug, "location has no txt_data, nothing to restore");
+                        }
+                        /* if cache restore yielded no items, expand from scratch */
+                        if (message->priv->items == NULL) {
+                            data = traffic_message_parse_events(message);
+                            traffic_message_add_segments(message, priv->shared->ms, data, priv->shared->map, priv->shared->rt);
+                            g_free(data);
+                        }
+                        dirty = 1;
+                        break;
+                    }
+                map_selection_destroy(msg_sel);
+            }
+        }
+    if (dirty)
+        /* dump message store if new messages have been received */
+        traffic_dump_messages_to_xml(priv->shared);
     return mr;
 }
 
@@ -951,6 +1072,27 @@ static struct item * tm_rect_create_item(struct map_rect_priv *mr, enum item_typ
     map_priv->items = g_list_append(map_priv->items, ret);
 
     return ret;
+}
+
+
+/**
+ * @brief Gets an attribute from the traffic map
+ *
+ * This only supports the `attr_traffic` attribute, which is currently only used for the purpose of
+ * identifying the map as a traffic map. Note, however, that for now the attribute will have a null pointer.
+ *
+ * @param map_priv Private data of the traffic map
+ * @param type The type of the attribute to be read
+ * @param attr Pointer to an attrib-structure where the attribute should be written to
+ * @return True if the attribute type was found, false if not
+ */
+static int tm_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
+    if (attr_type == attr_traffic) {
+        attr->type = attr_traffic;
+        attr->u.traffic = NULL;
+        return 1;
+    } else
+        return 0;
 }
 
 /**
@@ -1072,7 +1214,7 @@ static struct map_methods traffic_map_meth = {
     NULL,             /* map_search_destroy: Destroy a map search struct, ignored if `map_search_new` is NULL */
     NULL,             /* map_search_get_item: Get the next item of a search on the map */
     tm_rect_create_item, /* map_rect_create_item: Create a new item in the map */
-    NULL,             /* map_get_attr */
+    tm_get_attr,      /* map_get_attr */
     NULL,             /* map_set_attr */
 };
 
@@ -1704,6 +1846,27 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
 }
 
 /**
+ * @brief Obtains a map selection for the traffic location.
+ *
+ * The map selection is a rectangle around the points of the traffic location, with some extra padding as
+ * specified in `ROUTE_RECT_DIST_REL` and `ROUTE_RECT_DIST_ABS`, with a map order specified in `ROUTE_ORDER`.
+ *
+ * @param this_ The traffic location
+ * @param projection The projection to be used by coordinates of the selection (should correspond to the
+ * projection of the target map)
+ *
+ * @return A map selection
+ */
+static struct map_selection * traffic_location_get_rect(struct traffic_location * this_, enum projection projection) {
+    /* Corners of the enclosing rectangle, in Mercator coordinates */
+    struct coord c1, c2;
+    transform_from_geo(projection, this_->priv->sw, &c1);
+    transform_from_geo(projection, this_->priv->ne, &c2);
+    return route_rect(ROUTE_ORDER(this_->road_type), &c1, &c2, ROUTE_RECT_DIST_REL(this_->fuzziness),
+                      ROUTE_RECT_DIST_ABS(this_->fuzziness));
+}
+
+/**
  * @brief Opens a map rectangle around the end points of the traffic location.
  *
  * Prior to calling this function, the caller must ensure `rg->m` points to the map to be used, and the enclosing
@@ -1716,13 +1879,7 @@ static void traffic_location_set_enclosing_rect(struct traffic_location * this_,
  */
 static struct map_rect * traffic_location_open_map_rect(struct traffic_location * this_, struct route_graph * rg) {
     /* Corners of the enclosing rectangle, in Mercator coordinates */
-    struct coord c1, c2;
-
-    transform_from_geo(map_projection(rg->m), this_->priv->sw, &c1);
-    transform_from_geo(map_projection(rg->m), this_->priv->ne, &c2);
-
-    rg->sel = route_rect(ROUTE_ORDER, &c1, &c2, ROUTE_RECT_DIST_REL, ROUTE_RECT_DIST_ABS);
-
+    rg->sel = traffic_location_get_rect(this_, map_projection(rg->m));
     if (!rg->sel)
         return NULL;
     rg->mr = map_rect_new(rg->m, rg->sel);
@@ -1763,9 +1920,6 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     /* Whether the current item is segmented */
     int segmented;
 
-    /* Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
-    int default_flags_value = AF_ALL;
-
     /* Default flags assumed for the current item type */
     int *default_flags;
 
@@ -1780,6 +1934,9 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
@@ -1787,6 +1944,23 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                 route_graph_add_turn_restriction(rg, item);
             else if ((item->type < route_item_first) || (item->type > route_item_last))
                 continue;
+            /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+            if ((this_->road_type == type_highway_land) || (this_->road_type == type_highway_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp))
+                    continue;
+            } else if (this_->road_type == type_street_n_lanes) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city))
+                    continue;
+            } else if ((this_->road_type == type_street_4_land) || (this_->road_type == type_street_4_city)) {
+                if ((item->type != type_highway_land) && (item->type != type_highway_city) &&
+                        (item->type != type_street_n_lanes) && (item->type != type_ramp) &&
+                        (item->type != type_street_4_land) && (item->type != type_street_4_city) &&
+                        (item->type != type_street_3_land) && (item->type != type_street_3_city))
+                    continue;
+            }
             if (item_get_default_flags(item->type)) {
 
                 item_coord_rewind(item);
@@ -1800,7 +1974,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                     segmented = 0;
 
                     if (!(default_flags = item_get_default_flags(item->type)))
-                        default_flags = &default_flags_value;
+                        default_flags = &item_default_flags_value;
                     if (item_attr_get(item, attr_flags, &attr)) {
                         data.flags = attr.u.num;
                         segmented = (data.flags & AF_SEGMENTED);
@@ -2442,6 +2616,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     /* The point from the location to match */
     struct traffic_point * trpoint = NULL;
 
+    /* Map attribute (currently not evaluated) */
+    struct attr attr;
+
     /* The item being processed */
     struct item *item;
 
@@ -2467,6 +2644,9 @@ static GList * traffic_location_get_matching_points(struct traffic_location * th
     rg->h = mapset_open(ms);
 
     while ((rg->m = mapset_next(rg->h, 2))) {
+        /* Skip traffic map (identified by the `attr_traffic` attribute) */
+        if (map_get_attr(rg->m, attr_traffic, &attr, NULL))
+            continue;
         if (!traffic_location_open_map_rect(this_, rg))
             continue;
         while ((item = map_rect_get_item(rg->mr))) {
@@ -2569,6 +2749,105 @@ static int route_graph_point_is_endpoint_candidate(struct route_graph_point *thi
 }
 
 /**
+ * @brief Gets the speed for a traffic distortion item.
+ *
+ * @param item The road item to which the traffic distortion refers (not the traffic distortion item)
+ * @param data Segment data
+ * @param item_maxspeed Speed limit for the item, `INT_MAX` if none
+ */
+static int traffic_get_item_speed(struct item * item, struct seg_data * data, int item_maxspeed) {
+    /* Speed calculated in various ways */
+    int maxspeed, speed, penalized_speed, factor_speed;
+
+    speed = data->speed;
+    if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
+        if (item_maxspeed != INT_MAX) {
+            maxspeed = item_maxspeed;
+        } else {
+            switch (item->type) {
+            case type_highway_land:
+            case type_street_n_lanes:
+                maxspeed = 100;
+                break;
+            case type_highway_city:
+            case type_street_4_land:
+                maxspeed = 80;
+                break;
+            case type_street_3_land:
+                maxspeed = 70;
+                break;
+            case type_street_2_land:
+                maxspeed = 65;
+                break;
+            case type_street_1_land:
+                maxspeed = 60;
+                break;
+            case type_street_4_city:
+                maxspeed = 50;
+                break;
+            case type_ramp:
+            case type_street_3_city:
+            case type_street_unkn:
+                maxspeed = 40;
+                break;
+            case type_street_2_city:
+            case type_track_paved:
+                maxspeed = 30;
+                break;
+            case type_track:
+            case type_cycleway:
+                maxspeed = 20;
+                break;
+            case type_roundabout:
+            case type_street_1_city:
+            case type_street_0:
+            case type_living_street:
+            case type_street_service:
+            case type_street_parking_lane:
+            case type_path:
+            case type_track_ground:
+            case type_track_gravelled:
+            case type_track_unpaved:
+            case type_track_grass:
+            case type_bridleway:
+                maxspeed = 10;
+                break;
+            case type_street_pedestrian:
+            case type_footway:
+            case type_steps:
+                maxspeed = 5;
+                break;
+            default:
+                maxspeed = 50;
+            }
+        }
+        penalized_speed = maxspeed - data->speed_penalty;
+        if (penalized_speed < 5)
+            penalized_speed = 5;
+        factor_speed = maxspeed * data->speed_factor / 100;
+        if (speed > penalized_speed)
+            speed = penalized_speed;
+        if (speed > factor_speed)
+            speed = factor_speed;
+    }
+    return speed;
+}
+
+/**
+ * @brief Gets the delay for a traffic distortion item
+ *
+ * @param delay Total delay for all items associated with the same message and direction
+ * @param item_len Length of the current item
+ * @param len Combined length of all items associated with the same message and direction
+ */
+static int traffic_get_item_delay(int delay, int item_len, int len) {
+    if (delay)
+        return delay * item_len / len;
+    else
+        return delay;
+}
+
+/**
  * @brief Generates segments affected by a traffic message.
  *
  * This translates the approximate coordinates in the `from`, `at`, `to`, `via` and `not_via` members of
@@ -2622,8 +2901,8 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
     /* Coordinates of matched segment, sorted */
     struct coord *cd, *cs;
 
-    /* Speed calculated in various ways */
-    int maxspeed, speed, penalized_speed, factor_speed;
+    /* Speed for the current segment */
+    int speed;
 
     /* Delay for the current segment */
     int delay;
@@ -3025,82 +3304,10 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
             cs = g_new0(struct coord, ccnt);
             cd = cs;
 
-            speed = data->speed;
-            if ((data->speed != INT_MAX) || data->speed_penalty || (data->speed_factor != 100)) {
-                if (s->data.flags & AF_SPEED_LIMIT) {
-                    maxspeed = RSD_MAXSPEED(&s->data);
-                } else {
-                    switch (s->data.item.type) {
-                    case type_highway_land:
-                    case type_street_n_lanes:
-                        maxspeed = 100;
-                        break;
-                    case type_highway_city:
-                    case type_street_4_land:
-                        maxspeed = 80;
-                        break;
-                    case type_street_3_land:
-                        maxspeed = 70;
-                        break;
-                    case type_street_2_land:
-                        maxspeed = 65;
-                        break;
-                    case type_street_1_land:
-                        maxspeed = 60;
-                        break;
-                    case type_street_4_city:
-                        maxspeed = 50;
-                        break;
-                    case type_ramp:
-                    case type_street_3_city:
-                    case type_street_unkn:
-                        maxspeed = 40;
-                        break;
-                    case type_street_2_city:
-                    case type_track_paved:
-                        maxspeed = 30;
-                        break;
-                    case type_track:
-                    case type_cycleway:
-                        maxspeed = 20;
-                        break;
-                    case type_roundabout:
-                    case type_street_1_city:
-                    case type_street_0:
-                    case type_living_street:
-                    case type_street_service:
-                    case type_street_parking_lane:
-                    case type_path:
-                    case type_track_ground:
-                    case type_track_gravelled:
-                    case type_track_unpaved:
-                    case type_track_grass:
-                    case type_bridleway:
-                        maxspeed = 10;
-                        break;
-                    case type_street_pedestrian:
-                    case type_footway:
-                    case type_steps:
-                        maxspeed = 5;
-                        break;
-                    default:
-                        maxspeed = 50;
-                    }
-                }
-                penalized_speed = maxspeed - data->speed_penalty;
-                if (penalized_speed < 5)
-                    penalized_speed = 5;
-                factor_speed = maxspeed * data->speed_factor / 100;
-                if (speed > penalized_speed)
-                    speed = penalized_speed;
-                if (speed > factor_speed)
-                    speed = factor_speed;
-            }
+            speed = traffic_get_item_speed(&(s->data.item), data,
+                                           (s->data.flags & AF_SPEED_LIMIT) ? RSD_MAXSPEED(&s->data) : INT_MAX);
 
-            if (data->delay)
-                delay = data->delay * s->data.len / len;
-            else
-                delay = data->delay;
+            delay = traffic_get_item_delay(data->delay, s->data.len, len);
 
             for (i = 0; i < ccnt; i++) {
                 *cd++ = *c++;
@@ -3149,6 +3356,366 @@ static int traffic_message_add_segments(struct traffic_message * this_, struct m
 
     dbg(lvl_debug, "*****checkpoint ADD-6");
     return 1;
+}
+
+/**
+ * @brief Restores segments associated with a traffic message from cached data.
+ *
+ * This reads textfile map data and compares it to data in the current map set. If one or more items
+ * (identified by their ID) are no longer present in the map, or their coordinates no longer match, the
+ * cached data is discarded and the location needs to be expanded into a set of segments as for a new
+ * message. Otherwise the cached segments are added to the traffic map.
+ *
+ * While this operation does require extensive examination of map data, it is still less expensive than
+ * expanding the location from scratch, as the most expensive operation in the latter is routing between the
+ * points involved.
+ *
+ * @param this_ The traffic message
+ * @param ms The mapset to use for matching
+ * @param data Data for the segments to be added to the map, in textfile format
+ * @param map The traffic map
+ * @param route The route affected by the changes
+ *
+ * @return `true` if the locations were matched successfully, `false` if there was a failure.
+ */
+static int traffic_message_restore_segments(struct traffic_message * this_, struct mapset * ms,
+        struct map *map, struct route * route) {
+    /* Textfile data: pointers to current and next line, copy and length of current line */
+    char * data_curr = this_->location->priv->txt_data, * data_next, * line = NULL;
+    int len;
+
+    /* Iterator */
+    int i;
+
+    /* Data for attribute parsing */
+    int pos;
+    char name[TEXTFILE_LINE_SIZE];
+    char value[TEXTFILE_LINE_SIZE];
+
+    /* Item data */
+    enum item_type type;
+    int id_hi;
+    int id_lo;
+    int flags;
+    struct attr * attrs[TEXTFILE_LINE_SIZE / 4];
+    int acnt;
+
+    /* For map matching */
+    struct mapset_handle *msh;
+    struct map * m;
+    struct attr attr;
+    struct map_selection * msel;
+    struct map_rect * mr;
+    struct item * map_item;
+    int * default_flags;
+    int item_flags, segmented, maxspeed=INT_MAX;
+    struct coord map_c;
+
+    /*
+     * Coordinate count for matched segment
+     * (-1 if we are expecting item type and attributes in the next line rather than coordinates)
+     */
+    int ccnt = -1;
+
+    /* Coordinates of matched segment and pointer into it, order as read from map */
+    struct coord ca[2048];
+
+    /* Newly added item */
+    struct parsed_item * pitem;
+    struct item * item;
+
+    /* Location length */
+    int loc_len = 0;
+
+    /* List of parsed items */
+    GList * items = NULL, * curr_item;
+
+    /* Whether all items are matched by a map item */
+    int is_matched;
+
+    struct seg_data * seg_data;
+
+    dbg(lvl_debug, "*****checkpoint RESTORE-1, txt_data:\n%s", this_->location->priv->txt_data);
+    traffic_location_set_enclosing_rect(this_->location, NULL);
+
+    while (1) {
+        if (data_curr) {
+            data_next = strchr(data_curr, 0x0a);
+            len = data_next ? (data_next - data_curr) : strlen(data_curr);
+            line = g_new0(char, len + 1);
+            strncpy(line, data_curr, len);
+            dbg(lvl_debug, "*****checkpoint RESTORE-2, line: %s", line);
+        }
+        if (line && (ccnt < 0)) {
+            /* first line with item type and attributes */
+            dbg(lvl_debug, "*****checkpoint RESTORE-3, item/attribute line");
+            pos = 0;
+            type = type_none;
+            id_hi = -1;
+            id_lo = -1;
+            acnt = 0;
+            while (attr_from_line(line, NULL, &pos, value, name)) {
+                dbg(lvl_debug, "*****checkpoint RESTORE-4, parsing %s=%s", name, value);
+                ccnt = 0;
+                if (!strcmp(name, "type")) {
+                    /* item type */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing type: %s", value);
+                    type = item_from_name(value);
+                } else if (!strcmp(name, "id")) {
+                    /* item ID */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing ID: %s", value);
+                    sscanf(value, "%i,%i", &id_hi, &id_lo);
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.2, ID is 0x%x,0x%x", id_hi, id_lo);
+                } else if (!strcmp(name, "flags")) {
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing flags: %s", value);
+                    char *tail;
+                    if (value[0] == '0' && value[1] == 'x')
+                        flags = strtoul(value, &tail, 0);
+                    else
+                        flags = strtol(value, &tail, 0);
+                    if (*tail) {
+                        dbg(lvl_warning, "Incorrect value '%s' for attribute '%s': expected a number, assuming 0x%x. \n", value, name, flags);
+                    }
+                } else {
+                    /* generic attribute */
+                    dbg(lvl_debug, "*****checkpoint RESTORE-4.1, parsing attribute %s=%s", name, value);
+                    attrs[acnt] = attr_new_from_text(name, value);
+                    if (attrs[acnt])
+                        acnt++;
+                }
+            }
+            if (ccnt < 0) {
+                /* empty line, ignore */
+                dbg(lvl_debug, "*****checkpoint RESTORE-4, skipping empty line");
+            }
+            attrs[acnt] = NULL;
+            g_free(line);
+            line = NULL;
+            if (data_next)
+                data_curr = data_next + 1;
+            else {
+                data_curr = NULL;
+                // TODO abort (last item is invalid as it has no coords)
+            }
+        } else if (line && coord_parse(line, projection_mg, &ca[ccnt])) {
+            /* add coordinates until we hit a line without */
+            ccnt++;
+            g_free(line);
+            line = NULL;
+            if (data_next)
+                data_curr = data_next + 1;
+            else
+                data_curr = NULL;
+        } else {
+            /* end of coordinates, find matching item */
+            if (line) {
+                g_free(line);
+                line = NULL;
+            }
+            if (ccnt < 1) {
+                /* not a complete item, possibly trailing empty line */
+                dbg(lvl_debug, "*****checkpoint RESTORE-5, skipping incomplete item (possibly trailing empty line)");
+                break;
+            }
+
+            pitem = g_new0(struct parsed_item, 1);
+            pitem->id_hi = id_hi;
+            pitem->id_lo = id_lo;
+            pitem->type = type;
+            pitem->flags = flags;
+            pitem->coords = g_new0(struct coord, ccnt);
+            for (i = 0; i < ccnt; i++)
+                pitem->coords[i] = ca[i];
+            pitem->coord_count = ccnt;
+            pitem->attrs = attr_list_dup(attrs);
+            for (i = 0; attrs[i]; i++) {
+                g_free(attrs[i]);
+                attrs[i] = NULL;
+            }
+            items = g_list_append(items, pitem);
+
+            if (!data_curr)
+                /* no more data to process, finish up */
+                break;
+
+            ccnt = -1;
+        }
+    } /* while 1 */
+
+    /*
+     * Walk through mapset and look for a routable item with a matching ID and geometry.
+     * If no match is found, the map data has changed since we generated the cached segments and we
+     * need to recreate the data. In this case, stop processing segments immediately and drop any
+     * segments restored so far.
+     */
+    if (items) {
+        dbg(lvl_debug, "*****checkpoint RESTORE-6, comparing items to map data");
+        msh = mapset_open(ms);
+        map_item = NULL;
+
+        while (!map_item && (m = mapset_next(msh, 2))) {
+            /* Skip traffic map (identified by the `attr_traffic` attribute) */
+            if (map_get_attr(m, attr_traffic, &attr, NULL))
+                continue;
+
+            msel = traffic_location_get_rect(this_->location, map_projection(m));
+            if (!msel)
+                continue;
+            mr = map_rect_new(m, msel);
+            if (!mr) {
+                map_selection_destroy(msel);
+                msel = NULL;
+                continue;
+            }
+            /*
+             * Iterate through items in the map.
+             */
+            while ((map_item = map_rect_get_item(mr))) {
+                /* If item is not routable, continue */
+                if ((map_item->type < route_item_first) || (map_item->type > route_item_last))
+                    continue;
+                /* If road class is motorway, trunk or primary, ignore roads more than one level below */
+                if ((this_->location->road_type == type_highway_land) || (this_->location->road_type == type_highway_city)) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp))
+                        continue;
+                } else if (this_->location->road_type == type_street_n_lanes) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                            (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city))
+                        continue;
+                } else if ((this_->location->road_type == type_street_4_land) || (this_->location->road_type == type_street_4_city)) {
+                    if ((map_item->type != type_highway_land) && (map_item->type != type_highway_city) &&
+                            (map_item->type != type_street_n_lanes) && (map_item->type != type_ramp) &&
+                            (map_item->type != type_street_4_land) && (map_item->type != type_street_4_city) &&
+                            (map_item->type != type_street_3_land) && (map_item->type != type_street_3_city))
+                        continue;
+                }
+                /* Look for a matching item in the cache */
+                for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+                    pitem = (struct parsed_item *) curr_item->data;
+
+                    /* Skip already-matched items */
+                    if (pitem->is_matched)
+                        continue;
+                    /* If IDs do not match, continue */
+                    if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
+                        continue;
+                    dbg(lvl_debug, "*****checkpoint RESTORE-6.0, comparing item 0x%x, 0x%x to map data",
+                        pitem->id_hi, pitem->id_lo);
+                    /* Get flags (access and other) for the item */
+                    if (!(default_flags = item_get_default_flags(map_item->type)))
+                        default_flags = &item_default_flags_value;
+                    if (item_attr_get(map_item, attr_flags, &attr)) {
+                        item_flags = attr.u.num;
+                        segmented = (item_flags & AF_SEGMENTED);
+                    } else {
+                        item_flags = *default_flags;
+                        segmented = 0;
+                    }
+                    /* Get maxspeed, if any */
+                    if ((item_flags & AF_SPEED_LIMIT) && (item_attr_get(map_item, attr_maxspeed, &attr)))
+                        maxspeed = attr.u.num;
+                    else
+                        maxspeed = INT_MAX;
+                    /* Compare coordinates */
+                    item_coord_rewind(map_item);
+                    if (!segmented) {
+                        for (i = 0; i < pitem->coord_count; i++) {
+                            if (!item_coord_get(map_item, &map_c, 1)) {
+                                /* map item has fewer coordinates than cached item */
+                                dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has fewer coordinates than cached item",
+                                    pitem->id_hi, pitem->id_lo);
+                                map_item = NULL;
+                                break;
+                            }
+                            if ((map_c.x != pitem->coords[i].x) || (map_c.y != pitem->coords[i].y)) {
+                                /* coordinate mismatch between map item and cached item */
+                                dbg(lvl_debug, "*****checkpoint RESTORE-6.1, coordinate #%d for item 0x%x, 0x%x does not match",
+                                    i, pitem->id_hi, pitem->id_lo);
+                                map_item = NULL;
+                                break;
+                            }
+                        }
+                        if (map_item && item_coord_get(map_item, &map_c, 1)) {
+                            /* map item has more coordinates than cached item */
+                            dbg(lvl_debug, "*****checkpoint RESTORE-6.1, item 0x%x, 0x%x has more coordinates than cached item",
+                                pitem->id_hi, pitem->id_lo);
+                            map_item = NULL;
+                            continue;
+                        }
+                    } else {
+                        /* TODO implement comparison for segmented items */
+                        dbg(lvl_debug, "*****checkpoint RESTORE-6.1, restoring segmented items is not supported yet");
+                        map_item = NULL;
+                    }
+                    if (map_item) {
+                        pitem->is_matched = 1;
+                        for (i = 1; i < pitem->coord_count; i++)
+                            pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
+                        loc_len += pitem->length;
+                    }
+                }
+            }
+
+            map_selection_destroy(msel);
+            msel = NULL;
+            map_rect_destroy(mr);
+            mr = NULL;
+        }
+        mapset_close(msh);
+        msh = NULL;
+    } else {
+        dbg(lvl_debug, "*****checkpoint RESTORE-6, no items to compare");
+    }
+
+    /* No items = no match; else examine each item */
+    is_matched = !!items;
+    for (curr_item = items; is_matched && curr_item; curr_item = g_list_next(curr_item)) {
+        pitem = (struct parsed_item *) curr_item->data;
+        if (!pitem->is_matched) {
+            dbg(lvl_debug, "*****checkpoint RESTORE-6.2, item 0x%x, 0x%x is unmatched",
+                pitem->id_hi, pitem->id_lo);
+            is_matched = 0;
+        }
+    }
+
+    if (is_matched) {
+        dbg(lvl_debug, "*****checkpoint RESTORE-7, restoring items for message %s from cache", this_->id);
+        seg_data = traffic_message_parse_events(this_);
+        this_->priv->items = g_new0(struct item *, g_list_length(items) + 1);
+        i = 0;
+        for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+            pitem = (struct parsed_item *) curr_item->data;
+            item = tm_add_item(map, pitem->type, pitem->id_hi, pitem->id_lo, pitem->flags, pitem->attrs,
+                               pitem->coords, pitem->coord_count, this_->id);
+            parsed_item_destroy(pitem);
+            tm_item_add_message_data(item, this_->id,
+                                     traffic_get_item_speed(item, seg_data, maxspeed),
+                                     traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
+                                     NULL, route);
+            this_->priv->items[i] = item;
+            i++;
+        }
+        g_list_free(items);
+        items = NULL;
+        g_free(seg_data);
+    } else {
+        dbg(lvl_debug, "*****checkpoint RESTORE-7, items for message %s need to be regenerated", this_->id);
+    }
+
+    /* clean up */
+    for (curr_item = items; curr_item; curr_item = g_list_next(curr_item)) {
+        pitem = (struct parsed_item *) curr_item->data;
+        parsed_item_destroy(pitem);
+    }
+    if (this_->location->priv->txt_data) {
+        g_free(this_->location->priv->txt_data);
+        this_->location->priv->txt_data = NULL;
+    }
+
+    dbg(lvl_debug, "*****checkpoint RESTORE-8, done");
+    return is_matched;
 }
 
 /**
@@ -3275,31 +3842,33 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "receive_time or update_time not supplied");
+        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
         if (!this_->expiration_time && !this_->end_time) {
-            dbg(lvl_debug, "not a cancellation, but neither expiration_time nor end_time supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but neither expiration_time nor end_time supplied",
+                this_->id);
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "not a cancellation, but no location supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "not a cancellation, but location is invalid");
+            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "not a cancellation, but no events supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
             if (this_->events[i])
                 has_valid_events |= traffic_event_is_valid(this_->events[i]);
         if (!has_valid_events) {
-            dbg(lvl_debug, "not a cancellation, but all events (%d in total) are invalid", this_->event_count);
+            dbg(lvl_debug, "%s: not a cancellation, but all events (%d in total) are invalid",
+                this_->id, this_->event_count);
             return 0;
         }
     }
@@ -3585,7 +4154,7 @@ static void traffic_set_shared(struct traffic *this_) {
     dbg(lvl_debug, "enter");
 
     if (!this_->shared) {
-        iter = navit_attr_iter_new();
+        iter = navit_attr_iter_new(NULL);
         while (navit_get_attr(this_->navit, attr_traffic, &attr, iter)) {
             traffic = (struct traffic *) attr.u.navit_object;
             if (traffic->shared)
@@ -3602,7 +4171,7 @@ static void traffic_set_shared(struct traffic *this_) {
 /**
  * @brief Dumps all currently active traffic messages to an XML file.
  */
-static void traffic_dump_messages_to_xml(struct traffic * this_) {
+static void traffic_dump_messages_to_xml(struct traffic_shared_priv * shared) {
     /* add the configuration directory to the name of the file to use */
     char *traffic_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
                                        "/traffic.xml", NULL);
@@ -3612,12 +4181,13 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
     char * point_names[5] = {"from", "at", "via", "not_via", "to"};
     struct traffic_point * points[5];
     int i, j;
+    struct item ** curr;
 
     if (traffic_filename) {
         FILE *f = fopen(traffic_filename,"w");
         if (f) {
             fprintf(f, "<navit_messages>\n");
-            for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+            for (msgiter = shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
                 message = (struct traffic_message *) msgiter->data;
                 points[0] = message->location->from;
                 points[1] = message->location->at;
@@ -3686,6 +4256,15 @@ static void traffic_dump_messages_to_xml(struct traffic * this_) {
                         fprintf(f, "%+f %+f", points[i]->coord.lat, points[i]->coord.lng);
                         fprintf(f, "</%s>\n", point_names[i]);
                     }
+
+                if (message->priv->items) {
+                    fprintf(f, "      <navit_items>\n");
+                    for (curr = message->priv->items; *curr; curr++) {
+                        tm_item_dump_to_file(*curr, f);
+                    }
+                    fprintf(f, "      </navit_items>\n");
+                } else if (message->location->priv->txt_data)
+                    fprintf(f, "      <navit_items>%s</navit_items>\n", message->location->priv->txt_data);
 
                 fprintf(f, "    </location>\n");
 
@@ -3782,6 +4361,12 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
     struct traffic_location * swap_location;
     struct item ** swap_items;
 
+    /* Holds queried attributes */
+    struct attr attr;
+
+    /* Map selections for the location and the route, and iterator */
+    struct map_selection * loc_ms, * rt_ms, * ms_iter;
+
     /* Time elapsed since start */
     double msec = 0;
 
@@ -3836,8 +4421,40 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     swap_candidate->priv->items = swap_items;
                 } else {
                     dbg(lvl_debug, "*****checkpoint PROCESS-4, need to find matching segments");
-                    /* else find matching segments from scratch */
-                    traffic_message_add_segments(message, this_->ms, data, this_->map, this_->rt);
+                    if (route_get_attr(this_->shared->rt, attr_route_status, &attr, NULL)
+                            && route_get_pos(this_->shared->rt)
+                            && ((attr.u.num & route_status_destination_set))) {
+                        traffic_location_set_enclosing_rect(message->location, NULL);
+                        loc_ms = traffic_location_get_rect(message->location, traffic_map_meth.pro);
+                        rt_ms = route_get_selection(this_->shared->rt);
+                        for (ms_iter = rt_ms; ms_iter; ms_iter = ms_iter->next)
+                            if (coord_rect_overlap(&(loc_ms->u.c_rect), &(ms_iter->u.c_rect))) {
+                                /*
+                                 * If we have cached segments, restore them.
+                                 */
+                                if (message->location->priv->txt_data) {
+                                    dbg(lvl_debug, "location has txt_data, trying to restore segments");
+                                    traffic_message_restore_segments(message, this_->shared->ms,
+                                                                     this_->shared->map, this_->shared->rt);
+                                } else {
+                                    dbg(lvl_debug, "location has no txt_data, nothing to restore");
+                                }
+                                /*
+                                 * We need to find matching segments from scratch.
+                                 * This needs to happen immediately if we have a route and the location is within its map
+                                 * selection, as the message might have an effect on the route. Otherwise this operation
+                                 * is deferred until a rectangle overlapping with the location is queried.
+                                 */
+                                if (!message->priv->items) {
+                                    /* TODO do this in an idle loop, not here */
+                                    traffic_message_add_segments(message, this_->shared->ms, data,
+                                                                 this_->shared->map, this_->shared->rt);
+                                    break;
+                                    map_selection_destroy(loc_ms);
+                                    map_selection_destroy(rt_ms);
+                                }
+                            }
+                    }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
 
@@ -3856,7 +4473,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                    traffic_message_remove_item_data(stored_msg, message, this_->rt);
+                    traffic_message_remove_item_data(stored_msg, message, this_->shared->rt);
                     traffic_message_destroy(stored_msg);
                 }
 
@@ -3908,7 +4525,7 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
                 if (stored_msg->priv->items)
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
-                traffic_message_remove_item_data(stored_msg, NULL, this_->rt);
+                traffic_message_remove_item_data(stored_msg, NULL, this_->shared->rt);
                 traffic_message_destroy(stored_msg);
             }
 
@@ -3925,11 +4542,11 @@ static int traffic_process_messages_int(struct traffic * this_, int flags) {
 #endif
 
         /* dump message store if new messages have been received */
-        traffic_dump_messages_to_xml(this_);
+        traffic_dump_messages_to_xml(this_->shared);
     }
 
     /* TODO see comment on route_recalculate_partial about thread-safety */
-    route_recalculate_partial(this_->rt);
+    route_recalculate_partial(this_->shared->rt);
 
     /* trigger redraw if segments have changed */
     if ((ret & MESSAGE_UPDATE_SEGMENTS) && (navit_get_ready(this_->navit) == 3))
@@ -3982,7 +4599,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
                                         struct attr **attrs, struct callback_list *cbl);
     struct attr *attr;
 
-    attr = attr_search(attrs, NULL, attr_type);
+    attr = attr_search(attrs, attr_type);
     if (!attr) {
         dbg(lvl_error, "type missing");
         return NULL;
@@ -4011,14 +4628,11 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
         navit_object_destroy((struct navit_object *) this_);
         return NULL;
     }
-    navit_object_ref((struct navit_object *) this_);
     dbg(lvl_debug,"return %p", this_);
 
     // TODO do this once and cycle through all plugins
     this_->callback = callback_new_1(callback_cast(traffic_loop), this_);
     this_->timeout = event_add_timeout(1000, 1, this_->callback); // TODO make interval configurable
-
-    this_->map = NULL;
 
     if (!this_->shared)
         traffic_set_shared(this_);
@@ -4153,7 +4767,8 @@ static int traffic_xml_is_tagstack_valid(struct xml_state * state) {
                  || !g_ascii_strcasecmp(el->tag_name, "to")
                  || !g_ascii_strcasecmp(el->tag_name, "at")
                  || !g_ascii_strcasecmp(el->tag_name, "via")
-                 || !g_ascii_strcasecmp(el->tag_name, "not_via"))
+                 || !g_ascii_strcasecmp(el->tag_name, "not_via")
+                 || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
         else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "event"));
@@ -4212,6 +4827,7 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
      * event: Everything handled in end callback
      * merge: No attributes, everything handled in children's callbacks
      * from, to, at, via, not_via: Everything handled in end callback
+     * navit_items: Everything handled in end callback
      */
 }
 
@@ -4273,7 +4889,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           count,
                                           (struct traffic_event **) children);
             if (!traffic_message_is_valid(message)) {
-                dbg(lvl_error, "malformed message detected, skipping");
+                dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -4303,6 +4919,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->at = NULL;
             state->via = NULL;
             state->not_via = NULL;
+            state->location->priv->txt_data = state->location_txt_data;
+            state->location_txt_data = NULL;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "event")) {
             count = g_list_length(state->si);
             if (count) {
@@ -4328,7 +4946,9 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->si = NULL;
             /* TODO preserve unknown (and thus invalid) events if they have maxspeed set */
             if (!traffic_event_is_valid(event)) {
-                dbg(lvl_debug, "invalid or unknown event detected, skipping");
+                dbg(lvl_debug, "invalid or unknown event %s/%s detected, skipping",
+                    traffic_xml_get_attr("class", el->names, el->values),
+                    traffic_xml_get_attr("type", el->names, el->values));
                 traffic_event_destroy(event);
             } else
                 state->events = g_list_append(state->events, event);
@@ -4342,6 +4962,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             point = &state->via;
         } else if (!g_ascii_strcasecmp((char *) tag_name, "not_via")) {
             point = &state->not_via;
+        } else if (!g_ascii_strcasecmp((char *) tag_name, "navit_items")) {
+            state->location_txt_data = g_strdup(el->text);
         }
 
         /*
@@ -4372,6 +4994,8 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
         traffic_xml_element_destroy(el);
         state->tagstack = g_list_remove(state->tagstack, state->tagstack->data);
     }
+    if (!state->is_valid)
+        state->is_valid = traffic_xml_is_tagstack_valid(state);
     state->is_opened = 0;
 }
 
@@ -4917,6 +5541,8 @@ void traffic_location_destroy(struct traffic_location * this_) {
         g_free(this_->road_ref);
     if (this_->tmc_table)
         g_free(this_->tmc_table);
+    if (this_->priv->txt_data)
+        g_free(this_->priv->txt_data);
     if (this_->priv->sw)
         g_free(this_->priv->sw);
     if (this_->priv->ne)
@@ -5132,9 +5758,17 @@ struct item ** traffic_message_get_items(struct traffic_message * this_) {
  */
 static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret;
+    struct attr *traffic_attr;
+
+    traffic_attr = attr_search(attrs, attr_traffic);
+    if (!traffic_attr) {
+        dbg(lvl_error, "attr_traffic not found!");
+        return NULL;
+    }
 
     ret = g_new0(struct map_priv, 1);
     *meth = traffic_map_meth;
+    ret->shared = traffic_attr->u.traffic->shared;
 
     return ret;
 }
@@ -5145,44 +5779,30 @@ void traffic_init(void) {
 }
 
 struct map * traffic_get_map(struct traffic *this_) {
-    struct attr_iter *iter;
-    struct attr *attr;
-    struct traffic * traffic;
     char * filename;
     struct traffic_message ** messages;
     struct traffic_message ** cur_msg;
 
-    if (!this_->map) {
-        /* see if any of the other instances has already created a map */
-        attr = g_new0(struct attr, 1);
-        iter = navit_attr_iter_new();
-        while (navit_get_attr(this_->navit, attr_traffic, attr, iter)) {
-            traffic = (struct traffic *) attr->u.navit_object;
-            if (traffic->map)
-                this_->map = traffic->map;
-        }
-        navit_attr_iter_destroy(iter);
-        g_free(attr);
-    }
-
-    if (!this_->map) {
+    if (!this_->shared->map) {
         /* no map yet, create a new one */
-        struct attr *attrs[4];
-        struct attr a_type,data,a_description;
+        struct attr *attrs[5];
+        struct attr a_type,data,a_description,a_traffic;
         a_type.type = attr_type;
         a_type.u.str = "traffic";
         data.type = attr_data;
         data.u.str = "";
         a_description.type = attr_description;
         a_description.u.str = "Traffic";
+        a_traffic.type = attr_traffic;
+        a_traffic.u.traffic = this_;
 
         attrs[0] = &a_type;
         attrs[1] = &data;
         attrs[2] = &a_description;
-        attrs[3] = NULL;
+        attrs[3] = &a_traffic;
+        attrs[4] = NULL;
 
-        this_->map = map_new(NULL, attrs);
-        navit_object_ref((struct navit_object *) this_->map);
+        this_->shared->map = map_new(NULL, attrs);
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
@@ -5203,7 +5823,7 @@ struct map * traffic_get_map(struct traffic *this_) {
         }
     }
 
-    return this_->map;
+    return this_->shared->map;
 }
 
 /**
@@ -5270,6 +5890,24 @@ struct traffic_message ** traffic_get_stored_messages(struct traffic *this_) {
     struct traffic_message ** out = ret;
     GList * in = this_->shared->messages;
 
+    /* Iterator over active messages */
+    GList * msgiter;
+
+    /* Current message */
+    struct traffic_message * message;
+
+    /* Attributes for traffic distortions generated from the current traffic message */
+    struct seg_data * data;
+
+    /* Ensure all locations are fully resolved */
+    for (msgiter = this_->shared->messages; msgiter; msgiter = g_list_next(msgiter)) {
+        message = (struct traffic_message *) msgiter->data;
+        if (message->priv->items == NULL) {
+            data = traffic_message_parse_events(message);
+            traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map, this_->shared->rt);
+            g_free(data);
+        }
+    }
     while (in) {
         *out = (struct traffic_message *) in->data;
         in = g_list_next(in);
@@ -5295,11 +5933,18 @@ void traffic_process_messages(struct traffic * this_, struct traffic_message ** 
 }
 
 void traffic_set_mapset(struct traffic *this_, struct mapset *ms) {
-    this_->ms = ms;
+    this_->shared->ms = ms;
 }
 
 void traffic_set_route(struct traffic *this_, struct route *rt) {
-    this_->rt = rt;
+    this_->shared->rt = rt;
+}
+
+void traffic_destroy(struct traffic *this_) {
+    if (this_->meth.destroy)
+        this_->meth.destroy(this_->priv);
+    attr_list_free(this_->attrs);
+    g_free(this_);
 }
 
 struct object_func traffic_func = {
@@ -5312,7 +5957,7 @@ struct object_func traffic_func = {
     (object_func_add_attr)navit_object_add_attr,
     (object_func_remove_attr)navit_object_remove_attr,
     (object_func_init)NULL,
-    (object_func_destroy)navit_object_destroy,
+    (object_func_destroy)traffic_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,

@@ -43,6 +43,7 @@
 #include "util.h"
 #include "types.h"
 #include "xmlconfig.h"
+#include "layout.h"
 
 struct attr_name {
     enum attr_type attr;
@@ -471,6 +472,9 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     if (type == attr_nav_status) {
         return nav_status_to_text(attr->u.num);
     }
+    if (type == attr_poly_hole) {
+        return g_strdup_printf("count=%d", attr->u.poly_hole->coord_count);
+    }
     return g_strdup_printf("(no text[%s])", attr_to_name(type));
 }
 
@@ -494,13 +498,12 @@ char *attr_to_text(struct attr *attr, struct map *map, int pretty) {
  * attribute type and returns the first match.
  *
  * @param attrs Points to the array of attribute pointers to be searched
- * @param last Not used
  * @param attr_type The attribute type to search for. Generic types (such as
  * attr_any or attr_any_xml) are NOT supported.
  * @return Pointer to the first matching attribute, or NULL if no match was found.
  */
 struct attr *
-attr_search(struct attr **attrs, struct attr *last, enum attr_type attr) {
+attr_search(struct attr **attrs, enum attr_type attr) {
     dbg(lvl_info, "enter attrs=%p", attrs);
     while (*attrs) {
         dbg(lvl_debug,"*attrs=%p", *attrs);
@@ -677,6 +680,10 @@ attr_generic_prepend_attr(struct attr **attrs, struct attr *attr) {
  *
  * If `attrs` does not contain `attr`, this function is a no-op.
  *
+ * Attributes are matched based on their `type` and `u.data` members, thus `attr` can be a shallow copy
+ * of the attribute, and can match multiple attributes in the list. The `attr` argument itself is not
+ * changed.
+ *
  * @param attrs The attribute list
  * @param attr The attribute to remove from the list
  *
@@ -770,6 +777,9 @@ int attr_data_size(struct attr *attr) {
         while (attr->u.attr_types[i++] != attr_none);
         return i*sizeof(enum attr_type);
     }
+    if (attr->type == attr_poly_hole) {
+        return (sizeof(attr->u.poly_hole->coord_count) + (attr->u.poly_hole->coord_count * sizeof(*attr->u.poly_hole->coord)));
+    }
     dbg(lvl_error,"size for %s unknown", attr_to_name(attr->type));
     return 0;
 }
@@ -827,6 +837,10 @@ void attr_free_content(struct attr *attr) {
 void attr_free(struct attr *attr) {
     attr_free_content_do(attr);
     g_free(attr);
+}
+
+void attr_free_g(struct attr *attr, void * unused) {
+    attr_free(attr);
 }
 
 void attr_dup_content(struct attr *src, struct attr *dst) {
@@ -905,9 +919,34 @@ attr_list_dup(struct attr **attrs) {
     return ret;
 }
 
-int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret) {
-    int len=0,quoted;
-    char *p,*e,*n;
+/**
+ * @brief Retrieves an attribute from a line in textfile format.
+ *
+ * If `name` is NULL, this function returns the first attribute found; otherwise it looks for an attribute
+ * named `name`.
+ *
+ * If `pos` is specified, it acts as an offset pointer: Any data in `line` before `*pos` will be skipped.
+ * When the function returns, the value pointed to by `pos` will be incremented by the number of characters
+ * parsed. This can be used to iteratively retrieve all attributes: declare a local variable, set it to zero,
+ * then iteratively call this function with a pointer to the same variable until it returns false.
+ *
+ * `val_ret` must be allocated (and later freed) by the caller, and have sufficient capacity to hold the
+ * parsed value including the terminating NULL character. The minimum safe size is
+ * `strlen(line) - strlen(name) - *pos` (assuming zero for NULL pointers).
+ *
+ * @param[in] line The line to parse, must be non-NULL and pointing to a NUL terminated string
+ * @param[in] name The name of the attribute to retrieve; can be NULL (see description)
+ * @param[in,out] pos As input, if pointer is non-NULL, this argument contains the character index inside @p line from which to start the search (see description)
+ * @param[out] val_ret Points to a buffer which will receive the value as text
+ * @param[out] name_ret Points to a buffer which will receive the actual name of the attribute found in the line, if NULL this argument won't be used. Note that the buffer provided here should be long enough to contain the attribute name + a terminating NUL character
+ *
+ * @return true if successful, false in case of failure
+ */
+int attr_from_line(const char *line, const char *name, int *pos, char *val_ret, char *name_ret) {
+    int len=0,quoted,escaped;
+    const char *p;
+    char *e;
+    const char *n;
 
     dbg(lvl_debug,"get_tag %s from %s", name, line);
     if (name)
@@ -928,15 +967,23 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
             return 0;
         p=e+1;
         quoted=0;
+        escaped=0;
         while (*p) {
             if (*p == ' ' && !quoted)
                 break;
             if (*p == '"')
                 quoted=1-quoted;
+            if (*p == '\\') {	/* Next character is escaped */
+                escaped++;
+                if (*(p+1))	/* Make sure the string is not terminating just after this escape character */
+                    p++;	/* if the string continues, skip the next character, whatever is is (space, double-quote or backslash) */
+                else
+                    dbg(lvl_warning, "Trailing backslash in input string \"%s\"", line);
+            }
             p++;
         }
-        if (name == NULL || (e-n == len && !strncmp(n, name, len))) {
-            if (name_ret) {
+        if (name == NULL || (e-n == len && strncmp(n, name, len)==0)) {	/* We matched the searched attribute name */
+            if (name_ret) {	/* If instructed to, store the actual name into the string pointed by name_ret */
                 len=e-n;
                 strncpy(name_ret, n, len);
                 name_ret[len]='\0';
@@ -947,8 +994,13 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
                 e++;
                 len-=2;
             }
-            strncpy(val_ret, e, len);
-            val_ret[len]='\0';
+            /* Note: in the strncpy* calls below, we give a max size_t argument exactly matching the string lengh we want to copy within the source string e, so no terminating NUL char will be appended */
+            if (escaped)
+                strncpy_unescape(val_ret, e, len-escaped);	/* Unescape if necessary */
+            else
+                strncpy(val_ret, e, len);
+            /* Because no NUL terminating char was copied over, we manually append it here to terminate the C-string properly, just after the copied string */
+            val_ret[len-escaped]='\0';
             if (pos)
                 *pos=p-line;
             return 1;

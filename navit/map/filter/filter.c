@@ -124,12 +124,14 @@ static enum item_type filter_type(struct map_priv *m, struct item *item) {
     return item->type;
 }
 
-static void free_filter_entry(struct filter_entry *filter) {
+/* user_data is for compatibility with GFunc */
+static void free_filter_entry(struct filter_entry *filter, void * user_data) {
     g_free(filter->cond_str);
     g_free(filter);
 }
 
-static void free_filter(struct filter *filter) {
+/* user_data is for compatibility with GFunc */
+static void free_filter(struct filter *filter, void * user_data) {
     g_list_foreach(filter->old, (GFunc)free_filter_entry, NULL);
     g_list_free(filter->old);
     filter->old=NULL;
@@ -352,7 +354,7 @@ static struct map_methods map_methods_filter = {
 
 static struct map_priv *map_filter_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m=NULL;
-    struct attr **parent_attrs,type,*subtype=attr_search(attrs, NULL, attr_subtype),*filter=attr_search(attrs, NULL,
+    struct attr **parent_attrs,type,*subtype=attr_search(attrs, attr_subtype),*filter=attr_search(attrs,
             attr_filter);
     struct map *map;
     int i,j;

@@ -38,7 +38,7 @@ speech_new(struct attr *parent, struct attr **attrs) {
     struct speech_priv *(*speech_new)(struct speech_methods *meth, struct attr **attrs, struct attr *parent);
     struct attr *attr;
 
-    attr=attr_search(attrs, NULL, attr_type);
+    attr=attr_search(attrs, attr_type);
     if (! attr) {
         dbg(lvl_error,"type missing");
         return NULL;

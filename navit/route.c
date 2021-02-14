@@ -939,6 +939,17 @@ struct map_selection *route_selection;
 
 /**
  * @brief Returns a single map selection
+ *
+ * The boundaries of the selection are determined as follows: First a rectangle spanning `c1` and `c2` is
+ * built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension
+ * (height or width) is determined and multiplied with the percentage specified by `rel`. The resulting
+ * amount of padding is added to each edge. After that, the amount specified by `abs` is added to each edge.
+ *
+ * @param order Map order (deepest tile level) to select
+ * @param c1 First coordinate
+ * @param c2 Second coordinate
+ * @param rel Relative padding to add to the selection rectangle, in percent
+ * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
@@ -1040,11 +1051,30 @@ static struct map_selection *route_calc_selection(struct coord *c, int count, st
 }
 
 /**
+ * @brief Retrieves the map selection for the route.
+ */
+struct map_selection * route_get_selection(struct route * this_) {
+    struct coord *c = g_alloca(sizeof(struct coord) * (1 + g_list_length(this_->destinations)));
+    int i = 0;
+    GList *tmp;
+
+    if (this_->pos)
+        c[i++] = this_->pos->c;
+    tmp = this_->destinations;
+    while (tmp) {
+        struct route_info *dst = tmp->data;
+        c[i++] = dst->c;
+        tmp = g_list_next(tmp);
+    }
+    return route_calc_selection(c, i, this_->vehicleprofile);
+}
+
+/**
  * @brief Destroys a list of map selections
  *
  * @param sel Start of the list to be destroyed
  */
-static void route_free_selection(struct map_selection *sel) {
+void route_free_selection(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next=sel->next;
@@ -1054,8 +1084,13 @@ static void route_free_selection(struct map_selection *sel) {
 }
 
 
+/* for compatibility to GFunc */
+static void route_info_free_g(struct route_info *inf, void * unused) {
+    route_info_free(inf);
+}
+
 static void route_clear_destinations(struct route *this_) {
-    g_list_foreach(this_->destinations, (GFunc)route_info_free, NULL);
+    g_list_foreach(this_->destinations, (GFunc)route_info_free_g, NULL);
     g_list_free(this_->destinations);
     this_->destinations=NULL;
 }
@@ -1106,6 +1141,20 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
     profile(0,"end");
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link route_get_destination_count(struct route *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * @param this The route instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int route_get_destinations(struct route *this, struct pcoord *pc, int count) {
     int ret=0;
     GList *l=this->destinations;
@@ -3134,17 +3183,12 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
  * add any routing information to the route graph - this has to be done via the route_graph_flood()
  * function.
  *
- * The function does not create a graph covering the whole map, but only covering the rectangle
- * between c1 and c2.
- *
  * @param ms The mapset to build the route graph from
- * @param c The coordinates of the destination or next waypoint
- * @param c1 Corner 1 of the rectangle to use from the map
- * @param c2 Corner 2 of the rectangle to use from the map
+ * @param c An array of coordinates for the current position, waypoints (if any) and destination
+ * @param count Number of coordinates in `c`
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
-// FIXME documentation does not match argument list
 static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
         int async,
         struct vehicleprofile *profile) {
@@ -4014,7 +4058,7 @@ static struct map_priv *route_map_new_helper(struct map_methods *meth, struct at
     struct map_priv *ret;
     struct attr *route_attr;
 
-    route_attr=attr_search(attrs, NULL, attr_route);
+    route_attr=attr_search(attrs, attr_route);
     if (! route_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

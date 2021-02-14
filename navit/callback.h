@@ -30,6 +30,7 @@ extern "C" {
 enum attr_type;
 struct callback;
 struct callback_list;
+typedef void (*callback_patch) (struct callback_list *l, enum attr_type type, int pcount, void **p, void * context);
 struct callback_list *callback_list_new(void);
 struct callback *callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p);
 struct callback *callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...);
@@ -41,6 +42,7 @@ void callback_list_add(struct callback_list *l, struct callback *cb);
 struct callback *callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p);
 void callback_list_remove(struct callback_list *l, struct callback *cb);
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
+void callback_list_add_patch_function (struct callback_list *l, callback_patch patch, void * context);
 void callback_call(struct callback *cb, int pcount, void **p);
 void callback_call_args(struct callback *cb, int count, ...);
 void callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p);

@@ -15,7 +15,6 @@
 #include "gui_internal_search.h"
 #include "gui_internal_menu.h"
 
-extern char *version;
 
 /**
  * @brief Utility function to check if a menu widget is adapted to the display size or needs resizing (if so, the widget dimensions will be set to match those of the display
@@ -486,7 +485,7 @@ gui_internal_top_bar(struct gui_priv *this) {
         l=g_list_next(l);
     }
     if (this->flags & 32) {
-        char *version_text=g_strdup_printf("Navit %s",version);
+        char *version_text=g_strdup_printf("Navit %s",NAVIT_VERSION);
         wcn=gui_internal_label_new(this, version_text);
         g_free(version_text);
         wcn->flags=gravity_right_center|flags_expand;

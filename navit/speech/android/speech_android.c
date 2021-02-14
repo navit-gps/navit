@@ -36,7 +36,14 @@ struct speech_priv {
 static int speech_android_say(struct speech_priv *this, const char *text) {
     char *str=g_strdup(text);
     jstring string;
-    int i;
+    char *tok = str;
+
+    /* Replace hyphens with white spaces, or some Android speech SDK will pronounce "hyphen" */
+    while (*tok) {
+        if (*tok=='-')
+            *tok=' ';
+        tok++;
+    }
 
     string = (*jnienv)->NewStringUTF(jnienv, str);
     dbg(lvl_debug,"enter %s",str);
@@ -87,14 +94,12 @@ static struct speech_priv *speech_android_new(struct speech_methods *meth, struc
     struct attr *flags;
     *meth=speech_android_meth;
     this=g_new0(struct speech_priv,1);
-    if (android_version < 4)
-        this->flags=3;
     if (!speech_android_init(this)) {
         dbg(lvl_error,"Failed to init speech %p",this->NavitSpeechClass);
         g_free(this);
         this=NULL;
     }
-    if ((flags = attr_search(attrs, NULL, attr_flags)))
+    if ((flags = attr_search(attrs, attr_flags)))
         this->flags=flags->u.num;
 
     return this;

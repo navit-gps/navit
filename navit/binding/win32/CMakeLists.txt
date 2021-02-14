@@ -1,5 +1,5 @@
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
-	ADD_DEPENDENCIES(support_glib intl_cmake)
+	ADD_DEPENDENCIES(support_glib support_gettext_intl)
 endif()
 
 module_add_library(binding_win32 binding_win32.c)

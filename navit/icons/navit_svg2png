@@ -19,7 +19,7 @@ svgtopng()
 		$svgtopng --width=$1 --height=$2 --output $4 $3
 		;;
 	*inkscape)
-		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$BUILDDIR/$4 $3
+		$svgtopng --export-width=$1 --export-height=$2 --export-type=png --export-filename=$4 $3
 		;;
 	*convert)
 		$svgtopng -alpha on -background none $3 -resize $1x$2 $4

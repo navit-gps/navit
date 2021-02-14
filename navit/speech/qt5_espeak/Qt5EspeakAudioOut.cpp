@@ -87,6 +87,10 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState) {
         buffer->seek(0);
         dbg(lvl_debug, "Size %d", data->size());
         break;
+// Sailfish's QT version doesn't have this. Doesn't do anything either.
+//    case QAudio::InterruptedState:
+    default:
+        break;
     }
 }
 

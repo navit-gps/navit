@@ -23,7 +23,7 @@
 #include <math.h>
 #include <locale.h>
 #include <gdk/gdkkeysyms.h>
-#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
 #include <gtk/gtk.h>
@@ -60,18 +60,20 @@
 #define KEY_RIGHT HILDON_HARDKEY_RIGHT
 #else
 #ifndef GDK_Book
-#define GDK_Book XF86XK_Book
+#define GDK_KEY_Book XF86XK_Book
 #endif
 #ifndef GDK_Calendar
-#define GDK_Calendar XF86XK_Calendar
+#define GDK_KEY_Calendar XF86XK_Calendar
 #endif
-#define KEY_ZOOM_IN GDK_Book
-#define KEY_ZOOM_OUT GDK_Calendar
-#define KEY_UP GDK_Up
-#define KEY_DOWN GDK_Down
-#define KEY_LEFT GDK_Left
-#define KEY_RIGHT GDK_Right
+#define KEY_ZOOM_IN GDK_KEY_Book
+#define KEY_ZOOM_OUT GDK_KEY_Calendar
+#define KEY_UP GDK_KEY_Up
+#define KEY_DOWN GDK_KEY_Down
+#define KEY_LEFT GDK_KEY_Left
+#define KEY_RIGHT GDK_KEY_Right
 #endif
+
+GdkPixbuf *geticon(const char *name);
 
 static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this) {
     int w,h;
@@ -86,7 +88,7 @@ static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv 
     dbg(lvl_debug,"keypress 0x%x", event->keyval);
     transform_get_size(navit_get_trans(this->nav), &w, &h);
     switch (event->keyval) {
-    case GDK_KP_Enter:
+    case GDK_KEY_KP_Enter:
         gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
         break;
     case KEY_UP:
@@ -323,6 +325,7 @@ static void gui_gtk_action_activate(GtkAction *action, struct action_cb_data *da
     if(data->attr.type == attr_destination) {
         char * label;
         g_object_get(G_OBJECT(action), "label", &label,NULL);
+        navit_populate_search_results_map(data->gui->nav, NULL, NULL); 	/* Remove any highlighted point on the map */
         navit_set_destination(data->gui->nav, data->attr.u.pcoord, label, 1);
         g_free(label);
     }
@@ -410,7 +413,7 @@ static void gui_gtk_layouts_init(struct gui_priv *this) {
     int count=0;
     char *name;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
         name=g_strdup_printf("Layout %d", count++);
         data=g_new(struct action_cb_data, 1);
@@ -463,7 +466,7 @@ static void gui_gtk_vehicles_update(struct gui_priv *this) {
     g_list_free(this->vehicle_menuitems);
     this->vehicle_menuitems = NULL;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
         name=g_strdup_printf("Vehicle %d", count++);
@@ -492,7 +495,7 @@ static void gui_gtk_maps_init(struct gui_priv *this) {
     int count=0;
     char *name, *label;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while(navit_get_attr(this->nav, attr_map, &attr, iter)) {
         name=g_strdup_printf("Map %d", count++);
         if (! map_get_attr(attr.u.map, attr_type, &type, NULL))
@@ -685,19 +688,19 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     this=g_new0(struct gui_priv, 1);
     this->nav=nav;
 
-    attr = attr_search(attrs, NULL, attr_menubar);
+    attr = attr_search(attrs, attr_menubar);
     if (attr) {
         this->menubar_enable=attr->u.num;
     } else {
         this->menubar_enable=1;
     }
-    attr=attr_search(attrs, NULL, attr_toolbar);
+    attr=attr_search(attrs, attr_toolbar);
     if (attr) {
         this->toolbar_enable=attr->u.num;
     } else {
         this->toolbar_enable=1;
     }
-    attr=attr_search(attrs, NULL, attr_statusbar);
+    attr=attr_search(attrs, attr_statusbar);
     if (attr) {
         this->statusbar_enable=attr->u.num;
     } else {
@@ -716,6 +719,7 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     this->vbox = gtk_vbox_new(FALSE, 0);
     gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
     gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+    gtk_window_set_default_icon(geticon("navit_plain_bk.png"));
     gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
     gtk_widget_realize(this->win);
     gui_gtk_ui_init(this);
@@ -743,7 +747,7 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
 
     navit_add_callback(nav, callback_new_attr_1(callback_cast(gui_gtk_init), attr_navit, this));
 
-    if ((attr=attr_search(attrs, NULL, attr_fullscreen)))
+    if ((attr=attr_search(attrs, attr_fullscreen)))
         fullscreen=attr->u.num;
 
     if (fullscreen) {

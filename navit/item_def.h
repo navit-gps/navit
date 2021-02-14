@@ -18,6 +18,13 @@
  */
 
 /* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */
+#ifndef ITEM
+#define ITEM(x) extern ##x;
+#endif
+#ifndef ITEM2
+#define ITEM2(x,y) extern ##y;
+#endif
+
 ITEM2(0x00000000,none)
 ITEM2(0x00000001,point_unspecified)
 ITEM(town_streets)
@@ -358,6 +365,8 @@ ITEM(nav_exit_left)
 ITEM(nav_exit_right)
 ITEM(nav_keep_left)
 ITEM(nav_keep_right)
+ITEM(poi_cave)
+ITEM(poi_archaeological_site)
 ITEM2(0x7fffffe0,poi_customg)
 ITEM(poi_customh)
 ITEM(poi_customi)
@@ -517,6 +526,9 @@ ITEM(forest_way_3)
 ITEM(forest_way_4)
 ITEM(former_itinerary)
 ITEM(former_itinerary_part)
+ITEM(cliff)
+ITEM(sports_track)
+ITEM(archaeological_site)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
@@ -628,4 +640,6 @@ ITEM(poly_orchard)
 ITEM(poly_plantnursery)
 ITEM(poly_port)
 ITEM(poly_saltpond)
+ITEM(poly_dam)
+ITEM(poly_swimming_pool)
 ITEM2(0xffffffff,last)

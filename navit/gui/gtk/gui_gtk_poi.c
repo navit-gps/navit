@@ -37,6 +37,11 @@
 
 #include "navigation.h"         /* for FEET_PER_METER and other conversion factors. */
 
+GdkPixbuf *geticon(const char *name);
+
+/**
+ * @brief Context passed around POI search function
+ */
 static struct gtk_poi_search {
     GtkWidget *entry_distance;
     GtkWidget *label_distance;
@@ -51,13 +56,22 @@ static struct gtk_poi_search {
     struct navit *nav;
 } gtk_poi_search;
 
-static GdkPixbuf *geticon(const char *name) {
+/**
+ * @brief Get a pixbuf representing an icon for the catalog
+ *
+ * @param name The name of the icon to use (eg: "pharmacy.png"
+ * @return A pixbuf containing this icon of NULL if the icon could not be loaded
+ */
+GdkPixbuf *geticon(const char *name) {
     GdkPixbuf *icon=NULL;
     GError *error=NULL;
-    icon=gdk_pixbuf_new_from_file(graphics_icon_path(name),&error);
+    char *filename = graphics_icon_path(name);
+    icon=gdk_pixbuf_new_from_file(filename,&error);
     if (error) {
         dbg(lvl_error, "failed to load icon '%s': %s", name, error->message);
+        icon=NULL;
     }
+    g_free(filename);
     return icon;
 }
 
@@ -217,7 +231,14 @@ static void treeview_poi_reload(GtkWidget *widget, struct gtk_poi_search *search
     gtk_tree_view_set_model(GTK_TREE_VIEW (search->treeview_poi), model_poi(search));
 }
 
-/** Set the selected POI as destination. */
+/**
+ * @brief Callback invoked when 'Destination' is clicked in a POI contextual window
+ *
+ * Set the selected POI as destination
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -241,6 +262,7 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
     sprintf(buffer, _("POI %s. %s"), category, label);
+    navit_populate_search_results_map(search->nav, NULL, NULL); 	/* Remove any highlighted point on the map */
 
     struct pcoord dest;
     dest.x=lat;
@@ -250,28 +272,58 @@ static void button_destination_clicked(GtkWidget *widget, struct gtk_poi_search 
     dbg(lvl_debug,_("Set destination to %ld, %ld "),lat,lon);
 }
 
-/* Show the POI's position in the map. */
+/**
+ * @brief Callback invoked when 'Map' is clicked in a POI contextual window
+ *
+ * Show the POI's position in the map
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_map_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
     GtkTreeIter iter;
     long int lat,lon;
+    char *label;
+    GList* p;
 
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview_poi), &path, &focus_column);
     if(!path) return;
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(search->store_poi_sorted), &iter, path)) return;
+    gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 2, &label, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
 
-    struct pcoord dest;
-    dest.x=lat;
-    dest.y=lon;
-    dest.pro=1;
-    navit_set_center(search->nav, &dest,1);
+    struct pcoord point;	/* The geographical position of the selected POI point */
+    point.x=lat;
+    point.y=lon;
+    point.pro=1;
+    GList* list = NULL;
+    struct lcoord *result = g_new0(struct lcoord, 1);
+    result->c.x=lat;
+    result->c.y=lon;
+    result->label=g_strdup(label);
+    list = g_list_prepend(list, result);
+    navit_populate_search_results_map(search->nav, list, NULL);
+    /* Parse the GList starting at list and free all payloads before freeing the list itself */
+    for(p=list; p; p=g_list_next(p)) {
+        if (((struct lcoord *)(p->data))->label)
+            g_free(((struct lcoord *)(p->data))->label);
+    }
+    g_list_free(list);
+    navit_set_center(search->nav, &point,1);
     dbg(lvl_debug,_("Set map to %ld, %ld "),lat,lon);
 }
 
-/** Set POI as the first "visit before". */
+/**
+ * @brief Callback invoked when 'Visit before' is clicked in a POI contextual window
+ *
+ * Set POI as a waypoint to visit before an existing destination
+ *
+ * @param widget The widget that has been clicked
+ * @param search A pointer to private data containing the POI search context
+ */
 static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *search) {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -284,6 +336,7 @@ static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *searc
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 3, &lat, -1);
     gtk_tree_model_get(GTK_TREE_MODEL(search->store_poi_sorted), &iter, 4, &lon, -1);
     dbg(lvl_debug,_("Set next visit to %ld, %ld "),lat,lon);
+    navit_populate_search_results_map(search->nav, NULL, NULL);	/* Remove any highlighted point on the map */
 
     struct pcoord dest;
     dest.x=lat;
@@ -292,7 +345,11 @@ static void button_visit_clicked(GtkWidget *widget, struct gtk_poi_search *searc
     popup_set_visitbefore(search->nav,&dest,0);
 }
 
-/** Create UI and connect objects to functions. */
+/**
+ * @brief Create the POI search UI window and connect objects to functions
+ *
+ * @param nav The navit instance
+ */
 void gtk_gui_poi(struct navit *nav) {
     GtkWidget *window2,*vbox, *keyboard, *table;
     GtkWidget *label_category, *label_poi;
@@ -302,6 +359,7 @@ void gtk_gui_poi(struct navit *nav) {
     struct gtk_poi_search *search=&gtk_poi_search;
     search->nav=nav;
 
+    navit_populate_search_results_map(search->nav, NULL, NULL);	/* Remove any highlighted point on the map */
     window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window2),_("POI search"));
     gtk_window_set_wmclass (GTK_WINDOW (window2), "navit", "Navit");

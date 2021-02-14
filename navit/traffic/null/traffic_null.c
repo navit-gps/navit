@@ -65,6 +65,7 @@ struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_)
  */
 static struct traffic_methods traffic_null_meth = {
     traffic_null_get_messages,
+    NULL,
 };
 
 /**

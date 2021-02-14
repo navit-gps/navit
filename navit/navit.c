@@ -198,13 +198,12 @@ static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
 static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir);
 static void navit_set_cursors(struct navit *this_);
-static void navit_cmd_zoom_to_route(struct navit *this);
-static void navit_cmd_set_center_cursor(struct navit *this_);
-static void navit_cmd_announcer_toggle(struct navit *this_);
+static int navit_cmd_zoom_to_route(struct navit *this, char *function, struct attr **in, struct attr ***out);
+static int navit_cmd_set_center_cursor(struct navit *this_, char *function, struct attr **in, struct attr ***out);
+static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
-static void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out,
-        int valid);
+static int navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 struct object_func navit_func;
 
 struct navit *global_navit;
@@ -213,6 +212,13 @@ void navit_add_mapset(struct navit *this_, struct mapset *ms) {
     this_->mapsets = g_list_append(this_->mapsets, ms);
 }
 
+/**
+ * @brief Get the current mapset
+ *
+ * @param this_ The navit instance
+ *
+ * @return A pointer to the current mapset
+ */
 struct mapset *
 navit_get_mapset(struct navit *this_) {
     if(this_->mapsets) {
@@ -221,6 +227,131 @@ navit_get_mapset(struct navit *this_) {
         dbg(lvl_error,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml");
     }
     return NULL;
+}
+
+/**
+ * @brief Get the search result map (and create it if it does not exist)
+ *
+ * @param this_ The navit instance
+ *
+ * @return A pointer to the map named "search_results" or NULL if there wasa failure
+ */
+struct map *navit_get_search_results_map(struct navit *this_) {
+
+    struct mapset *ms;
+    struct map *map;
+
+    ms=navit_get_mapset(this_);
+
+    if(!ms)
+        return NULL;
+
+    map=mapset_get_map_by_name(ms, "search_results");
+    if(!map) {
+        struct attr *attrs[10], attrmap;
+        enum attr_type types[]= {attr_position_longitude,attr_position_latitude,attr_label,attr_none};
+        int i;
+
+        attrs[0]=g_new0(struct attr,1);
+        attrs[0]->type=attr_type;
+        attrs[0]->u.str="csv";
+
+        attrs[1]=g_new0(struct attr,1);
+        attrs[1]->type=attr_name;
+        attrs[1]->u.str="search_results";
+
+        attrs[2]=g_new0(struct attr,1);
+        attrs[2]->type=attr_charset;
+        attrs[2]->u.str="utf-8";
+
+        attrs[3]=g_new0(struct attr,1);
+        attrs[3]->type=attr_item_type;
+        attrs[3]->u.num=type_found_item;
+
+        attrs[4]=g_new0(struct attr,1);
+        attrs[4]->type=attr_attr_types;
+        attrs[4]->u.attr_types=types;
+        attrs[5]=NULL;
+
+        attrmap.type=attr_map;
+        map=attrmap.u.map=map_new(NULL,attrs);
+        if(map)
+            mapset_add_attr(ms,&attrmap);
+
+        for(i=0; attrs[i]; i++)
+            g_free(attrs[i]);
+    }
+    return map;
+}
+
+/**
+ * @brief Populate a map containing one or more search result points
+ *
+ * These search results will be displayed as an overlay on the top of the geographic map.
+ *
+ * @warning Each call to this function will replace currently displayed results, it will not add to them
+ *
+ * @param this_ The navit instance
+ * @param search_results A GList storing {@code struct lcoord} elements to display on the result map
+ *                       If this argument in NULL, all existing results will be removed from the map
+ * @param[in,out] coord_rect An optional rectangular zone that will be extended to contain all result points
+ *                           or NULL if no zone needs to be computed
+ * @return The number of results actually added to the map
+ */
+int navit_populate_search_results_map(struct navit *this_, GList *search_results, struct coord_rect *r) {
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    GList *curr_result = search_results;
+    int count;
+    char *name_label;
+
+    map = navit_get_search_results_map(this_);
+    if(!map)
+        return 0;
+
+    mr = map_rect_new(map, NULL);
+
+    if(!mr)
+        return 0;
+
+    /* Clean the map */
+    while((item = map_rect_get_item(mr))!=NULL) {
+        item_type_set(item,type_none);
+    }
+
+    if(!search_results) {
+        map_rect_destroy(mr);
+        dbg(lvl_warning,"NULL result table - only map clean up is done.");
+        return 0;
+    }
+
+    /* Populate the map with search results*/
+    for(curr_result = search_results, count=0; curr_result; curr_result=g_list_next(curr_result)) {
+        struct lcoord *point = curr_result->data;
+        struct item* it;
+        if(point->label==NULL)
+            continue;
+        dbg(lvl_info,"%s",point->label);
+        it=map_rect_create_item(mr,type_found_item);
+        if(it) {
+            struct attr a;
+            item_coord_set(it, &(point->c), 1, change_mode_modify);
+            a.type=attr_label;
+            name_label = g_strdup(point->label);
+            square_shape_str(name_label);
+            a.u.str=name_label;
+            item_attr_set(it, &a, change_mode_modify);
+            if (r) {
+                if(!count++)
+                    r->lu=r->rl=point->c;
+                else
+                    coord_rect_extend(r,&(point->c));
+            }
+        }
+    }
+    map_rect_destroy(mr);
+    return count;
 }
 
 struct tracking *
@@ -636,7 +767,7 @@ static void navit_autozoom(struct navit *this_, struct coord *center, int speed,
         new_scale = (double)distance / w * 16;
     }
 
-    if (abs(new_scale - scale) < 2) {
+    if (abs((int)new_scale - (int)scale) < 2) {
         return; // Smoothing
     }
     if (new_scale > this_->autozoom_max)
@@ -698,22 +829,22 @@ void navit_zoom_out_cursor(struct navit *this_, int factor) {
     } else
         navit_zoom_out(this_, 2, NULL);
 }
-
-static int navit_cmd_zoom_in(struct navit *this_) {
+static int navit_cmd_zoom_in(struct navit *this_, char *cmd, struct attr **in, struct attr ***out) {
 
     navit_zoom_in_cursor(this_, 2);
     return 0;
 }
 
-static int navit_cmd_zoom_out(struct navit *this_) {
+static int navit_cmd_zoom_out(struct navit *this_, char *cmd, struct attr **in, struct attr ***out) {
     navit_zoom_out_cursor(this_, 2);
     return 0;
 }
 
 
-static void navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str)
         navit_say(this, in[0]->u.str);
+    return 0;
 }
 
 static GHashTable *cmd_int_var_hash = NULL;
@@ -726,11 +857,9 @@ static GHashTable *cmd_attr_var_hash = NULL;
  * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] is the key string, in[1] is the integer value to store
  * @param out output attributes, unused
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                  int *valid) {
+static int navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     char*key;
     struct attr*val;
     if(!cmd_int_var_hash) {
@@ -744,6 +873,7 @@ static void navit_cmd_set_int_var(struct navit *this, char *function, struct att
         key = g_strdup(in[0]->u.str);
         g_hash_table_insert(cmd_int_var_hash, key, val);
     }
+    return 0;
 }
 
 
@@ -754,11 +884,9 @@ static void navit_cmd_set_int_var(struct navit *this, char *function, struct att
  * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] is the key string, in[1] is the attr* value to store
  * @param out output attributes, unused
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid) {
+static int navit_cmd_set_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     char*key;
     struct attr*val;
     if(!cmd_attr_var_hash) {
@@ -773,6 +901,7 @@ static void navit_cmd_set_attr_var(struct navit *this, char *function, struct at
     } else {
         dbg(lvl_warning, "Wrong parameters for set_attr_var() command function");
     }
+    return 0;
 }
 
 
@@ -785,10 +914,9 @@ static void navit_cmd_set_attr_var(struct navit *this, char *function, struct at
  * @param in input attribute in[0] is the name of the layer
  * @param out output unused
  * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid) {
+static int navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         if(this->layout_current && this->layout_current->layers) {
             GList* layers = this->layout_current->layers;
@@ -797,12 +925,13 @@ static void navit_cmd_toggle_layer(struct navit *this, char *function, struct at
                 if(l && !strcmp(l->name,in[0]->u.str) ) {
                     l->active ^= 1;
                     navit_draw(this);
-                    return;
+                    return 0;
                 }
                 layers=g_list_next(layers);
             }
         }
     }
+    return 0;
 }
 
 /**
@@ -812,11 +941,9 @@ static void navit_cmd_toggle_layer(struct navit *this, char *function, struct at
  * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the name of the map
  * @param out output attribute, 0 on error or the id of the created item on success
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                       int *valid) {
+static int navit_cmd_map_add_curr_pos(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr **list = g_new0(struct attr *,2);
     struct attr*val = g_new0(struct attr,1);
     struct mapset* ms;
@@ -841,12 +968,12 @@ static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struc
 
         if(!(ms=navit_get_mapset(this))) {
             dbg(lvl_error, "Command function map_add_curr_pos(): there is no active mapset");
-            return;
+            return 0;
         }
 
         if((item_type = item_from_name(in[1]->u.str))==type_none) {
             dbg(lvl_error, "Command function map_add_curr_pos(): unknown item type");
-            return;
+            return 0;
         }
 
         curr_map = mapset_get_map_by_name(ms, in[0]->u.str);
@@ -854,7 +981,7 @@ static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struc
         //no map with the given name found
         if( ! curr_map) {
             dbg(lvl_error, "Command function map_add_curr_pos(): map not found");
-            return;
+            return 0;
         }
 
         if(this->vehicle && this->vehicle->vehicle ) {
@@ -863,11 +990,11 @@ static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struc
                 transform_from_geo(projection_mg, pos_attr.u.coord_geo, &curr_coord);
             } else {
                 dbg(lvl_error, "Command function map_add_curr_pos(): vehicle position is not accessible");
-                return;
+                return 0;
             }
         } else {
             dbg(lvl_error, "Command function map_add_curr_pos(): no vehicle");
-            return;
+            return 0;
         }
 
         sel.next=NULL;
@@ -893,6 +1020,7 @@ static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struc
         }
         map_rect_destroy(mr);
     }
+    return 0;
 }
 
 /**
@@ -902,11 +1030,9 @@ static void navit_cmd_map_add_curr_pos(struct navit *this, char *function, struc
  * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] - name of the map  ; in[1] - item  ; in[2] - attr name ; in[3] - attr value
  * @param out output attribute, 0 on error, 1 on success
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                        int *valid) {
+static int navit_cmd_map_item_set_attr(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     if (
         in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str  &&//map name
         in[1] && ATTR_IS_ITEM(in[1]->type)   && in[2]->u.item &&//item
@@ -937,7 +1063,7 @@ static void navit_cmd_map_item_set_attr(struct navit *this, char *function, stru
         curr_map = mapset_get_map_by_name(ms, in[0]->u.str);
 
         if( ! curr_map) {
-            return;
+            return 0;
         }
 
         mr=map_rect_new(curr_map,NULL);
@@ -958,6 +1084,7 @@ static void navit_cmd_map_item_set_attr(struct navit *this, char *function, stru
         dbg(lvl_debug,"Command function item_set_attr(): attr val cond:  %d",(in[3] && ATTR_IS_STRING(in[3]->type)
                 && in[3]->u.str)?1:0);
     }
+    return 0;
 }
 
 /**
@@ -967,11 +1094,9 @@ static void navit_cmd_map_item_set_attr(struct navit *this, char *function, stru
  * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the key string
  * @param out output attribute, the attr for the given key string if exists or NULL
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid) {
+static int navit_cmd_get_attr_var(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr **list = g_new0(struct attr *,2);
     list[1] = NULL;
     *out = list;
@@ -980,7 +1105,7 @@ static void navit_cmd_get_attr_var(struct navit *this, char *function, struct at
         val->type   = attr_type_item_begin;
         val->u.item = NULL;
         list[0]     = val;
-        return;
+        return 0;
     }
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         struct attr*ret = g_hash_table_lookup(cmd_attr_var_hash, in[0]->u.str);
@@ -993,6 +1118,7 @@ static void navit_cmd_get_attr_var(struct navit *this, char *function, struct at
             list[0]   = val;
         }
     }
+    return 0;
 }
 
 
@@ -1003,11 +1129,9 @@ static void navit_cmd_get_attr_var(struct navit *this, char *function, struct at
  * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the key string
  * @param out output attribute, the value for the given key string if exists or 0
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                  int *valid) {
+static int navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr **list = g_new0(struct attr *,2);
     list[1] = NULL;
     *out = list;
@@ -1016,7 +1140,7 @@ static void navit_cmd_get_int_var(struct navit *this, char *function, struct att
         val->type   = attr_type_int_begin;
         val->u.num  = 0;
         list[0]     = val;
-        return;
+        return 0;
     }
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         struct attr*ret = g_hash_table_lookup(cmd_int_var_hash, in[0]->u.str);
@@ -1029,6 +1153,7 @@ static void navit_cmd_get_int_var(struct navit *this, char *function, struct att
             list[0]   = val;
         }
     }
+    return 0;
 }
 
 GList *cmd_int_var_stack = NULL;
@@ -1040,15 +1165,15 @@ GList *cmd_int_var_stack = NULL;
  * @param function unused (needed to match command function signature)
  * @param in input attribute in[0] is the integer attibute to push
  * @param out output attributes, unused
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     if (in && in[0] && ATTR_IS_NUMERIC(in[0]->type)) {
         struct attr*val = g_new(struct attr,1);
         attr_dup_content(in[0],val);
         cmd_int_var_stack = g_list_prepend(cmd_int_var_stack, val);
     }
+    return 0;
 }
 
 /**
@@ -1058,10 +1183,9 @@ static void navit_cmd_push_int(struct navit *this, char *function, struct attr *
  * @param function unused (needed to match command function signature)
  * @param in input attributes unused
  * @param out output attribute, the value popped if stack isn't empty or 0
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr **list = g_new0(struct attr *,2);
     if(!cmd_int_var_stack) {
         struct attr*val = g_new0(struct attr,1);
@@ -1074,6 +1198,7 @@ static void navit_cmd_pop_int(struct navit *this, char *function, struct attr **
     }
     list[1] = NULL;
     *out = list;
+    return 0;
 }
 
 /**
@@ -1083,11 +1208,9 @@ static void navit_cmd_pop_int(struct navit *this, char *function, struct attr **
  * @param function unused (needed to match command function signature)
  * @param in input attributes unused
  * @param out output attribute, the size of stack
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                     int *valid) {
+static int navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr **list;
     struct attr *attr  = g_new0(struct attr,1);
     attr->type  = attr_type_int_begin;
@@ -1101,6 +1224,7 @@ static void navit_cmd_int_stack_size(struct navit *this, char *function, struct 
     list[1] = NULL;
     *out = list;
     cmd_int_var_stack = g_list_remove_link(cmd_int_var_stack,cmd_int_var_stack);
+    return 0;
 }
 
 static struct attr ** navit_get_coord(struct navit *this, struct attr **in, struct pcoord *pc) {
@@ -1136,63 +1260,64 @@ static struct attr ** navit_get_coord(struct navit *this, struct attr **in, stru
     return in;
 }
 
-static void navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                      int *valid) {
+static int navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct pcoord pc;
     char *description=NULL;
     in=navit_get_coord(this, in, &pc);
     if (!in)
-        return;
+        return 0;
     if (in[0] && ATTR_IS_STRING(in[0]->type))
         description=in[0]->u.str;
     navit_set_destination(this, &pc, description, 1);
+    return 0;
 }
 
 
-static void navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in,
-        struct attr ***out,
-        int *valid) {
+static int navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in,
+        struct attr ***out) {
     navit_remove_waypoint(this);
+    return 0;
 }
 
 
-static void navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in,
-        struct attr ***out,
-        int *valid) {
+static int navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in,
+        struct attr ***out) {
     navit_remove_nth_waypoint(this, navit_get_destination_count(this)-1);
+    return 0;
 }
 
 
-static void navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_set_center(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct pcoord pc;
     int set_timeout=0;
     in=navit_get_coord(this, in, &pc);
     if (!in)
-        return;
+        return 0;
     if(in[0] && ATTR_IS_INT(in[0]->type))
         set_timeout=in[0]->u.num!=0;
     navit_set_center(this, &pc, set_timeout);
+    return 0;
 }
 
 
-static void navit_cmd_set_position(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid) {
+static int navit_cmd_set_position(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct pcoord pc;
     in=navit_get_coord(this, in, &pc);
     if (!in)
-        return;
+        return 0;
     navit_set_position(this, &pc);
+    return 0;
 }
 
 
-static void navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                      int *valid) {
+static int navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr attr;
     attr.type=attr_type_string_begin;
     attr.u.str="Fix me";
     if (out) {
         *out=attr_generic_add_attr(*out, &attr);
     }
+    return 0;
 }
 
 /**
@@ -1202,10 +1327,9 @@ static void navit_cmd_fmt_coordinates(struct navit *this, char *function, struct
  * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] - separator, in[1..] - attributes to join
  * @param out output attribute joined attribute as string
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_strjoin(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     struct attr attr;
     gchar *ret, *sep;
     int i;
@@ -1228,6 +1352,7 @@ static void navit_cmd_strjoin(struct navit *this, char *function, struct attr **
         }
         g_free(ret);
     }
+    return 0;
 }
 
 /**
@@ -1237,10 +1362,9 @@ static void navit_cmd_strjoin(struct navit *this, char *function, struct attr **
  * @param function unused (needed to match command function signature)
  * @param in input attributes in[0] - name of executable, in[1..] - parameters
  * @param out output attribute unused
- * @param valid unused
- * @returns nothing
+ * @returns 0
  */
-static void navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+static int navit_cmd_spawn(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     int i,j, nparms, nvalid;
     char ** argv=NULL;
     struct spawn_process_info *pi;
@@ -1286,6 +1410,7 @@ static void navit_cmd_spawn(struct navit *this, char *function, struct attr **in
             g_free(argv[i]);
         g_free(argv);
     }
+    return 0;
 }
 
 
@@ -1488,8 +1613,6 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
     }
     g_free(destination_file);
 
-    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
-
     if (this_->route) {
         struct attr attr;
         int dstcount;
@@ -1512,10 +1635,12 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
             g_free(pc);
             g_free(destination_file);
         }
-
-        if (this_->ready == 3 && !(this_->flags & 4))
-            navit_draw(this_);
     }
+
+    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+
+    if (this_->route && this_->ready == 3 && !(this_->flags & 4))
+        navit_draw(this_);
 }
 
 /**
@@ -1558,15 +1683,30 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         g_free(destination_file);
     } else
         this_->destination_valid=0;
-    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
-    if (this_->route) {
+    if (this_->route)
         route_set_destinations(this_->route, c, count, async);
 
-        if (this_->ready == 3)
-            navit_draw(this_);
-    }
+    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+    if (this_->route && this_->ready == 3)
+        navit_draw(this_);
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link navit_get_destination_count(struct navit *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * If the Navit instance does not have a route, the result is 0.
+ *
+ * @param this_ The Navit instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
     if(!this_->route)
         return 0;
@@ -1574,6 +1714,12 @@ int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count) {
 
 }
 
+/**
+ * @brief Get the destinations count for the route
+ *
+ * @param this The Navit instance
+ * @return destination count for the route, or 0 if the Navit instance has no route
+ */
 int navit_get_destination_count(struct navit *this_) {
     if(!this_->route)
         return 0;
@@ -1755,12 +1901,12 @@ void navit_say(struct navit *this_, const char *text) {
  * @brief Toggles the navigation announcer for navit
  * @param this_ The navit object
  */
-static void navit_cmd_announcer_toggle(struct navit *this_) {
+static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out) {
     struct attr attr, speechattr;
 
     // search for the speech attribute
     if(!navit_get_attr(this_, attr_speech, &speechattr, NULL))
-        return;
+        return 0;
     // find out if the corresponding attribute attr_active has been set
     if(speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
         // flip it then...
@@ -1773,10 +1919,11 @@ static void navit_cmd_announcer_toggle(struct navit *this_) {
 
     // apply the new state
     if(!speech_set_attr(speechattr.u.speech, &attr))
-        return;
+        return 0;
 
     // announce that the speech attribute has changed
     callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
+    return 0;
 }
 
 void navit_speak(struct navit *this_) {
@@ -1926,7 +2073,7 @@ void navit_window_roadbook_new(struct navit *this_) {
     navit_window_roadbook_update(this_);
 }
 
-void navit_init(struct navit *this_) {
+int navit_init(struct navit *this_) {
     struct mapset *ms;
     struct map *map;
     int callback;
@@ -2003,7 +2150,7 @@ void navit_init(struct navit *this_) {
         }
 
         attr = g_new0(struct attr, 1);
-        iter = navit_attr_iter_new();
+        iter = navit_attr_iter_new(NULL);
         map = NULL;
         while (navit_get_attr(this_, attr_traffic, attr, iter)) {
             traffic = (struct traffic *) attr->u.navit_object;
@@ -2081,6 +2228,7 @@ void navit_init(struct navit *this_) {
         navit_draw_async(this_, 1);
     if (callback)
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
+    return 0;
 }
 
 void navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
@@ -2148,8 +2296,9 @@ void navit_zoom_to_route(struct navit *this_, int orientation) {
     navit_zoom_to_rect(this_, &r);
 }
 
-static void navit_cmd_zoom_to_route(struct navit *this) {
+static int navit_cmd_zoom_to_route(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     navit_zoom_to_route(this, 0);
+    return 0;
 }
 
 
@@ -2318,6 +2467,9 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
     struct point pn;
     struct navit_vehicle *nv=this_->vehicle;
     struct attr attr;
+    if (!nv || !nv->vehicle) {
+        return;
+    }
     if (vehicle_get_attr(nv->vehicle, attr_position_valid, &attr, NULL) && (attr.u.num == attr_position_valid_invalid))
         return;
     navit_get_cursor_pnt(this_, &pn, keep_orientation, &dir);
@@ -2349,8 +2501,9 @@ static void navit_set_center_cursor_draw(struct navit *this_) {
  *
  *@param this_ The navit object
  */
-static void navit_cmd_set_center_cursor(struct navit *this_) {
+static int navit_cmd_set_center_cursor(struct navit *this_, char *function, struct attr **in, struct attr ***out) {
     navit_set_center_cursor_draw(this_);
+    return 0;
 }
 
 void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout) {
@@ -2419,6 +2572,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout:
         if(!attr->u.layout)
             return 0;
+        dbg(lvl_debug,"setting attr_layout to %s", attr->u.layout->name);
         if(this_->layout_current!=attr->u.layout) {
             navit_update_current_layout(this_, attr->u.layout);
             graphics_font_destroy_all(this_->gra);
@@ -2431,6 +2585,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     case attr_layout_name:
         if(!attr->u.str)
             return 0;
+        dbg(lvl_debug,"setting attr_layout_name to %s", attr->u.str);
         l=this_->layouts;
         while (l) {
             lay=l->data;
@@ -2814,7 +2969,7 @@ struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_
 
     if (!layout_name)
         return NULL;
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
     while (navit_get_attr(this_, attr_layout, &layout_attr, iter)) {
         if (strcmp(layout_attr.u.layout->name, layout_name) == 0) {
             result = layout_attr.u.layout;
@@ -2868,9 +3023,27 @@ static int navit_add_log(struct navit *this_, struct log *log) {
 
 static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
+    int is_default=0;
+    int is_active=0;
     this_->layouts = g_list_append(this_->layouts, layout);
+    /** check if we want to immediately activate this layout.
+     * Unfortunately we have concurring conditions about when to activate
+     * a layout:
+     * - A layout could bear the "active" property
+     * - A layout's name could match this_->default_layout_name
+     * This cannot be fully resolved, as we cannot predict the future, so
+     * lets set the last parsed layout active, which either matches default_layout_name or
+     * bears the "active" tag, or is the first layout ever parsed.
+     */
+    if((layout->name != NULL) && (this_->default_layout_name != NULL)) {
+        if (strcmp(layout->name, this_->default_layout_name) == 0)
+            is_default = 1;
+    }
     layout_get_attr(layout, attr_active, &active, NULL);
-    if(active.u.num || !this_->layout_current) {
+    if(active.u.num)
+        is_active = 1;
+    dbg(lvl_debug, "add layout '%s' is_default %d, is_active %d", layout->name, is_default, is_active);
+    if(is_default || is_active || !this_->layout_current) {
         this_->layout_current=layout;
         return 1;
     }
@@ -2957,7 +3130,7 @@ int navit_remove_attr(struct navit *this_, struct attr *attr) {
 }
 
 struct attr_iter *
-navit_attr_iter_new(void) {
+navit_attr_iter_new(void * unused) {
     return g_new0(struct attr_iter, 1);
 }
 
@@ -3374,7 +3547,6 @@ void navit_layout_switch(struct navit *n) {
  * @param function unused
  * @param in input attributes in[0], a string, see usage below
  * @param out output attribute unused
- * @param valid unused
  *
  *
  * usage :
@@ -3388,20 +3560,19 @@ void navit_layout_switch(struct navit *n) {
  * the version of the active layout (day/night/undefined)
  */
 static
-void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out,
-                                       int valid) {
+int navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr *** out) {
 
     if (!(in && in[0] && ATTR_IS_STRING(in[0]->type))) {
-        return;
+        return 0;
     }
 
     dbg(lvl_debug," called with mode =%s",in[0]->u.str);
 
     if (!this_->layout_current)
-        return;
+        return 0;
 
     if (!this_->vehicle)
-        return;
+        return 0;
 
     if (!strcmp(in[0]->u.str,"manual")) {
         this_->auto_switch = FALSE;
@@ -3430,7 +3601,7 @@ void navit_cmd_switch_layout_day_night(struct navit *this_, char *function, stru
     }
 
     dbg(lvl_debug,"auto = %i",this_->auto_switch);
-    return;
+    return 0;
 }
 
 int navit_set_vehicle_by_name(struct navit *n,const char *name) {
@@ -3438,7 +3609,7 @@ int navit_set_vehicle_by_name(struct navit *n,const char *name) {
     struct attr_iter *iter;
     struct attr vehicle_attr, name_attr;
 
-    iter=navit_attr_iter_new();
+    iter=navit_attr_iter_new(NULL);
 
     while (navit_get_attr(n,attr_vehicle,&vehicle_attr,iter)) {
         v=vehicle_attr.u.vehicle;
@@ -3535,7 +3706,36 @@ int navit_get_blocked(struct navit *this_) {
 
 void navit_destroy(struct navit *this_) {
     dbg(lvl_debug,"enter %p",this_);
+    GList *mapsets;
+    struct map * map;
+    struct attr attr;
     graphics_draw_cancel(this_->gra, this_->displaylist);
+
+    mapsets = this_->mapsets;
+    while (mapsets) {
+        GList *maps = NULL;
+        struct mapset_handle *msh;
+        msh = mapset_open(mapsets->data);
+        while (msh && (map = mapset_next(msh, 0))) {
+            /* Add traffic map (identified by the `attr_traffic` attribute) to list of maps to remove */
+            if (map_get_attr(map, attr_traffic, &attr, NULL))
+                maps = g_list_append(maps, map);
+        }
+        mapset_close(msh);
+
+        /* Remove traffic maps, if any */
+        while (maps) {
+            attr.type = attr_map;
+            attr.u.map = maps->data;
+            mapset_remove_attr(mapsets->data, &attr);
+            attr_free_content(&attr);
+            maps = g_list_next(maps);
+        }
+        if (maps)
+            g_list_free(maps);
+        mapsets = g_list_next(mapsets);
+    }
+
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
     attr_list_free(this_->attrs);
 
@@ -3548,7 +3748,7 @@ void navit_destroy(struct navit *this_) {
         cmd_attr_var_hash=NULL;
     }
     if(cmd_int_var_stack) {
-        g_list_foreach(cmd_int_var_stack, (GFunc)attr_free, NULL);
+        g_list_foreach(cmd_int_var_stack, (GFunc)attr_free_g, NULL);
         g_list_free(cmd_int_var_stack);
         cmd_int_var_stack=NULL;
     }

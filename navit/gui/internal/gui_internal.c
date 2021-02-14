@@ -895,125 +895,6 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
 }
 
 /**
- * @brief Get the search result map (and create it if it does not exist)
- *
- * @param this The GUI context
- *
- * @return A pointer to the map named "search_results" or NULL if there wasa failure
- */
-static struct map *get_search_results_map(struct gui_priv *this) {
-
-    struct mapset *ms;
-    struct map *map;
-
-    ms=navit_get_mapset(this->nav);
-
-    if(!ms)
-        return NULL;
-
-    map=mapset_get_map_by_name(ms, "search_results");
-    if(!map) {
-        struct attr *attrs[10], attrmap;
-        enum attr_type types[]= {attr_position_longitude,attr_position_latitude,attr_label,attr_none};
-        int i;
-
-        attrs[0]=g_new0(struct attr,1);
-        attrs[0]->type=attr_type;
-        attrs[0]->u.str="csv";
-
-        attrs[1]=g_new0(struct attr,1);
-        attrs[1]->type=attr_name;
-        attrs[1]->u.str="search_results";
-
-        attrs[2]=g_new0(struct attr,1);
-        attrs[2]->type=attr_charset;
-        attrs[2]->u.str="utf-8";
-
-        attrs[3]=g_new0(struct attr,1);
-        attrs[3]->type=attr_item_type;
-        attrs[3]->u.num=type_found_item;
-
-        attrs[4]=g_new0(struct attr,1);
-        attrs[4]->type=attr_attr_types;
-        attrs[4]->u.attr_types=types;
-        attrs[5]=NULL;
-
-        attrmap.type=attr_map;
-        map=attrmap.u.map=map_new(NULL,attrs);
-        if(map)
-            mapset_add_attr(ms,&attrmap);
-
-        for(i=0; attrs[i]; i++)
-            g_free(attrs[i]);
-    }
-    return map;
-}
-
-/**
- * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
- *
- * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
- */
-static void square_shape_str(char *s) {
-    char *c;
-    char *last_break;
-    unsigned int max_cols = 0;
-    unsigned int cur_cols = 0;
-    unsigned int max_rows = 0;
-    unsigned int surface;
-    unsigned int target_cols;
-
-    if (!s)
-        return;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
-            if (max_cols < cur_cols)
-                max_cols = cur_cols;
-            cur_cols = 0;
-            max_rows++;
-        } else
-            cur_cols++;
-    }
-    if (max_cols < cur_cols)
-        max_cols = cur_cols;
-    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
-        max_rows++;
-    /* Give twice more room for rows (hence the factor 2 below)
-     * This will render as a rectangular shape, taking more horizontal space than vertical */
-    surface = max_rows * 2 * max_cols;
-    target_cols = uint_sqrt(surface);
-
-    if (target_cols < max_cols)
-        target_cols = max_cols;
-
-    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
-    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
-        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
-
-    cur_cols = 0;
-    last_break = NULL;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
-            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
-                if (last_break) {
-                    *last_break =
-                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-                    cur_cols = c-last_break;
-                }
-            }
-            last_break = c;	/* Record this position as a candidate to insert a line break */
-        }
-        cur_cols++;
-    }
-    if (cur_cols>=target_cols && last_break) {
-        *last_break =
-            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-    }
-
-    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
-}
-
-/**
  * @brief Create a map rect highlighting one of multiple points provided in argument @data and displayed using
  *        the style type_found_item (name for each point will also be displayed aside)
  *
@@ -1024,28 +905,10 @@ static void square_shape_str(char *s) {
  */
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r) {
     struct widget *w;
-    struct map *map;
-    struct map_rect *mr;
-    struct item *item;
-    GList *l;
+    GList *l;	/* Cursor in the list of widgets */
+    GList* list = NULL;	/* List we will create to store the points to add to the result map */
     struct attr a;
-    int count;
-    char *name_label;
-
-    map = get_search_results_map(this);
-    if(!map)
-        return;
-
-
-    mr = map_rect_new(map, NULL);
-
-    if(!mr)
-        return;
-
-    /* Clean the map */
-    while((item = map_rect_get_item(mr))!=NULL) {
-        item_type_set(item,type_none);
-    }
+    GList* p;
 
     this->results_map_population=0;
 
@@ -1053,43 +916,33 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
     for(w=table; w && w->type!=widget_table; w=w->parent);
 
     if(!w) {
-        map_rect_destroy(mr);
         dbg(lvl_warning,"Can't find the results table - only map clean up is done.");
-        return;
-    }
-
-    /* Populate the map with search results*/
-    for(l=w->children, count=0; l; l=g_list_next(l)) {
-        struct widget *wr=l->data;
-        if(wr->type==widget_table_row) {
-            struct widget *wi=wr->children->data;
-            struct item* it;
-            if(wi->name==NULL)
-                continue;
-            dbg(lvl_info,"%s",wi->name);
-            it=map_rect_create_item(mr,type_found_item);
-            if(it) {
-                struct coord c;
-                struct attr a;
-                c.x=wi->c.x;
-                c.y=wi->c.y;
-                item_coord_set(it, &c, 1, change_mode_modify);
-                a.type=attr_label;
-                name_label = g_strdup(wi->name);
-                square_shape_str(name_label);
-                a.u.str=name_label;
-                item_attr_set(it, &a, change_mode_modify);
-                if (r) {
-                    if(!count++)
-                        r->lu=r->rl=c;
-                    else
-                        coord_rect_extend(r,&c);
-                }
+    } else {
+        /* Create a GList containing all search results */
+        for(l=w->children; l; l=g_list_next(l)) {
+            struct widget *wr=l->data;
+            if(wr->type==widget_table_row) {
+                struct widget *wi=wr->children->data;
+                if(wi->name==NULL)
+                    continue;
+                struct lcoord *result = g_new0(struct lcoord, 1);
+                result->c.x=wi->c.x;
+                result->c.y=wi->c.y;
+                result->label=g_strdup(wi->name);
+                list = g_list_prepend(list, result);
             }
         }
     }
-    map_rect_destroy(mr);
-    if(!count)
+    this->results_map_population=navit_populate_search_results_map(this->nav, list, r);
+    /* Parse the GList starting at list and free all payloads before freeing the list itself */
+    if (list) {
+        for(p=list; p; p=g_list_next(p)) {
+            if (((struct lcoord *)(p->data))->label)
+                g_free(((struct lcoord *)(p->data))->label);
+        }
+    }
+    g_list_free(list);
+    if(!this->results_map_population)
         return;
     a.type=attr_orientation;
     a.u.num=0;
@@ -1098,7 +951,6 @@ static void gui_internal_prepare_search_results_map(struct gui_priv *this, struc
         navit_zoom_to_rect(this->nav,r);
         gui_internal_prune_menu(this, NULL);
     }
-    this->results_map_population=count;
 }
 
 /**
@@ -1192,7 +1044,6 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     struct coord_geo g;
     struct pcoord pc;
     struct coord c;
-    char *coord;
 
     if (pc_in) {
         pc=*pc_in;
@@ -1215,9 +1066,9 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
     wb=gui_internal_menu(this, name);
     w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
     gui_internal_widget_append(wb, w);
-    coord=gui_internal_coordinates(&pc, ' ');
-    gui_internal_widget_append(w, gui_internal_label_new(this, coord));
-    g_free(coord);
+    char coord_str[32];
+    pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
+    gui_internal_widget_append(w, gui_internal_label_new(this, coord_str));
     wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
     gui_internal_widget_append(w,wtable);
 
@@ -1790,6 +1641,7 @@ char *gui_internal_cmd_match_expand(char *pattern, struct attr **in) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             *r++=p;
         }
@@ -1811,6 +1663,7 @@ static int gui_internal_match(const char *pattern, const char *string) {
             break;
         case '\\':
             p=*pattern++;
+        /* fall through */
         default:
             if (*string++ != p)
                 return 0;
@@ -1854,7 +1707,7 @@ int gui_internal_set(char *remove, char *add) {
 
 
 static void gui_internal_window_closed(struct gui_priv *this) {
-    gui_internal_cmd2_quit(this, NULL, NULL, NULL, NULL);
+    gui_internal_cmd2_quit(this, NULL, NULL, NULL);
 }
 
 
@@ -2063,7 +1916,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
 
 static void save_vehicle_xml(struct vehicle *v) {
     struct attr attr;
-    struct attr_iter *iter=vehicle_attr_iter_new();
+    struct attr_iter *iter=vehicle_attr_iter_new(NULL);
     int childs=0;
     printf("<vehicle");
     while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
@@ -2154,7 +2007,7 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
 #endif
 
     // Figure out the profile name
-    attr = attr_search(profile->attrs, NULL, attr_name);
+    attr = attr_search(profile->attrs, attr_name);
     if (!attr) {
         dbg(lvl_error, "Adding vehicle profile failed. attr==NULL");
         return;
@@ -3330,101 +3183,101 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
     this->self.type=attr_gui;
     this->self.u.gui=gui;
 
-    if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
+    if ((attr=attr_search(attrs, attr_menu_on_map_click)))
         this->menu_on_map_click=attr->u.num;
     else
         this->menu_on_map_click=1;
 
-    if ((attr=attr_search(attrs, NULL, attr_on_map_click)))
+    if ((attr=attr_search(attrs, attr_on_map_click)))
         this->on_map_click=g_strdup(attr->u.str);
 
-    if ((attr=attr_search(attrs, NULL, attr_signal_on_map_click)))
+    if ((attr=attr_search(attrs, attr_signal_on_map_click)))
         this->signal_on_map_click=attr->u.num;
     gui_internal_command_init(this, attrs);
 
-    if( (attr=attr_search(attrs,NULL,attr_font_size))) {
+    if( (attr=attr_search(attrs,attr_font_size))) {
         this->config.font_size=attr->u.num;
     } else {
         this->config.font_size=-1;
     }
-    if( (attr=attr_search(attrs,NULL,attr_icon_xs))) {
+    if( (attr=attr_search(attrs,attr_icon_xs))) {
         this->config.icon_xs=attr->u.num;
     } else {
         this->config.icon_xs=-1;
     }
-    if( (attr=attr_search(attrs,NULL,attr_icon_l))) {
+    if( (attr=attr_search(attrs,attr_icon_l))) {
         this->config.icon_l=attr->u.num;
     } else {
         this->config.icon_l=-1;
     }
-    if( (attr=attr_search(attrs,NULL,attr_icon_s))) {
+    if( (attr=attr_search(attrs,attr_icon_s))) {
         this->config.icon_s=attr->u.num;
     } else {
         this->config.icon_s=-1;
     }
-    if( (attr=attr_search(attrs,NULL,attr_spacing))) {
+    if( (attr=attr_search(attrs,attr_spacing))) {
         this->config.spacing=attr->u.num;
     } else {
         this->config.spacing=-1;
     }
-    if( (attr=attr_search(attrs,NULL,attr_gui_speech))) {
+    if( (attr=attr_search(attrs,attr_gui_speech))) {
         this->speech=attr->u.num;
     }
-    if( (attr=attr_search(attrs,NULL,attr_keyboard)))
+    if( (attr=attr_search(attrs,attr_keyboard)))
         this->keyboard=attr->u.num;
     else
         this->keyboard=1;
 
-    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
+    if( (attr=attr_search(attrs,attr_fullscreen)))
         this->fullscreen=attr->u.num;
 
-    if( (attr=attr_search(attrs,NULL,attr_flags)))
+    if( (attr=attr_search(attrs,attr_flags)))
         this->flags=attr->u.num;
-    if( (attr=attr_search(attrs,NULL,attr_background_color)))
+    if( (attr=attr_search(attrs,attr_background_color)))
         this->background_color=*attr->u.color;
     else
         this->background_color=color_black;
-    if( (attr=attr_search(attrs,NULL,attr_background_color2)))
+    if( (attr=attr_search(attrs,attr_background_color2)))
         this->background2_color=*attr->u.color;
     else
         this->background2_color=back2_color;
-    if( (attr=attr_search(attrs,NULL,attr_text_color)))
+    if( (attr=attr_search(attrs,attr_text_color)))
         this->text_foreground_color=*attr->u.color;
     else
         this->text_foreground_color=color_white;
-    if( (attr=attr_search(attrs,NULL,attr_text_background)))
+    if( (attr=attr_search(attrs,attr_text_background)))
         this->text_background_color=*attr->u.color;
     else
         this->text_background_color=color_black;
-    if( (attr=attr_search(attrs,NULL,attr_columns)))
+    if( (attr=attr_search(attrs,attr_columns)))
         this->cols=attr->u.num;
-    if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
+    if( (attr=attr_search(attrs,attr_osd_configuration)))
         this->osd_configuration=*attr;
 
-    if( (attr=attr_search(attrs,NULL,attr_pitch)))
+    if( (attr=attr_search(attrs,attr_pitch)))
         this->pitch=attr->u.num;
     else
         this->pitch=20;
-    if( (attr=attr_search(attrs,NULL,attr_flags_town)))
+    if( (attr=attr_search(attrs,attr_flags_town)))
         this->flags_town=attr->u.num;
     else
         this->flags_town=-1;
-    if( (attr=attr_search(attrs,NULL,attr_flags_street)))
+    if( (attr=attr_search(attrs,attr_flags_street)))
         this->flags_street=attr->u.num;
     else
         this->flags_street=-1;
-    if( (attr=attr_search(attrs,NULL,attr_flags_house_number)))
+    if( (attr=attr_search(attrs,attr_flags_house_number)))
         this->flags_house_number=attr->u.num;
     else
         this->flags_house_number=-1;
-    if( (attr=attr_search(attrs,NULL,attr_radius)))
+    if( (attr=attr_search(attrs,attr_radius)))
         this->radius=attr->u.num;
     else
         this->radius=10;
-    if( (attr=attr_search(attrs,NULL,attr_font)))
+    if( (attr=attr_search(attrs,attr_font)))
         this->font_name=g_strdup(attr->u.str);
 
-    if((attr=attr_search(attrs, NULL, attr_hide_impossible_next_keys)))
+    if((attr=attr_search(attrs, attr_hide_impossible_next_keys)))
         this->hide_keys = attr->u.num;
     else
         this->hide_keys = 0;

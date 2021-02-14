@@ -1,0 +1,11 @@
+Navit is een opensource (GPL) navigatiesysteem voor gebruik in de auto,
+op de fiets, te voet ....
+
+In tegenstelling tot andere navigatiesystemen maakt Navit dynamisch zijn kaarten aan van offline vector data.
+Bijgevolg kan Navit volledig offline functioneren.
+
+Features
+*) Zoek een punt op google maps en navigeer er naar met Navit.
+*) werkt offline
+*) gesproken instructies, inclusief Nederlands
+*) gratis OSM kaarten en regelmatige updates via de mapserver

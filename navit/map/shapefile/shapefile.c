@@ -171,7 +171,8 @@ static void longest_match_add_match(struct longest_match *lm, struct longest_mat
     lmi->match_idx[lmi->match_idx_count++]=idx;
 }
 
-static void longest_match_item_destroy(struct longest_match_list_item *lmi, long flags) {
+static void longest_match_item_destroy(struct longest_match_list_item *lmi, gpointer p_flags) {
+    long flags = (long) p_flags;
     if (!lmi)
         return;
     if (flags & 2) {
@@ -195,7 +196,8 @@ static struct longest_match_list *longest_match_list_new(struct longest_match *l
     return ret;
 }
 
-static void longest_match_list_destroy(struct longest_match_list *lml, long flags) {
+static void longest_match_list_destroy(struct longest_match_list *lml, gpointer p_flags) {
+    long flags = (long) p_flags;
     if (!lml)
         return;
     if (flags & 1) {
@@ -588,10 +590,10 @@ static struct map_methods map_methods_shapefile = {
 
 static struct map_priv *map_new_shapefile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
-    struct attr *charset=attr_search(attrs, NULL, attr_charset);
-    struct attr *projectionname=attr_search(attrs, NULL, attr_projectionname);
-    struct attr *flags=attr_search(attrs, NULL, attr_flags);
+    struct attr *data=attr_search(attrs, attr_data);
+    struct attr *charset=attr_search(attrs, attr_charset);
+    struct attr *projectionname=attr_search(attrs, attr_projectionname);
+    struct attr *flags=attr_search(attrs, attr_flags);
     struct file_wordexp *wexp;
     char *wdata;
     char **wexp_data;

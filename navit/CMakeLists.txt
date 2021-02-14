@@ -3,6 +3,8 @@ include_directories( "${PROJECT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/support")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/THIS_IS_THE_NAVIT_WORKING_DIR "\r\nThis File should never appear on binary distributions\r\n" )
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/THIS_IS_THE_NAVIT_WORKING_DIR "\r\nOnly Devs should ever see this file" )
 
 # navit core
 set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.c coord.c country.c data_window.c debug.c
@@ -100,22 +102,15 @@ if (SHARED_LIBNAVIT)
 else(SHARED_LIBNAVIT)
 	add_library (${NAVIT_LIBNAME} STATIC ${NAVIT_SRC} )
 endif(SHARED_LIBNAVIT)
+
 if(NOT MSVC)
 	SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 endif(NOT MSVC)
-target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} )
+target_link_libraries(${NAVIT_LIBNAME} ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} )
 set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
 	set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
 endif()
-
-ADD_CUSTOM_TARGET(
-	git_version
-	${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
-	-D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
-	-D NAME="GIT_VERSION"
-	-P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
-	)
 
 add_custom_command(
 	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/navit.dtd"
@@ -216,7 +211,6 @@ else()
 	add_custom_target( navit_config_xml ALL DEPENDS ${XMLCFG_OUTPUT_LIST})
 endif()
 
-ADD_DEPENDENCIES(${NAVIT_LIBNAME} git_version)
 if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
 	ADD_DEPENDENCIES(support_glib support_gettext_intl)
 endif()
@@ -224,6 +218,7 @@ endif()
 
 add_subdirectory (maptool)
 add_subdirectory (icons)
+add_subdirectory (textures)
 add_subdirectory (maps)
 if(ANDROID)
 	add_subdirectory (android)

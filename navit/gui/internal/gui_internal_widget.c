@@ -1187,6 +1187,10 @@ static GList *gui_internal_compute_table_dimensions(struct gui_priv * this,struc
     return column_desc;
 }
 
+/* to adapt g_free to GFunc */
+static void g_free_helper(void * data, void * user_data) {
+    g_free(data);
+}
 
 /**
  * @brief Computes the height and width for the table.
@@ -1248,7 +1252,7 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w) {
     /*
      * Deallocate column descriptions.
      */
-    g_list_foreach(column_data,(GFunc)g_free,NULL);
+    g_list_foreach(column_data,(GFunc)g_free_helper,NULL);
     g_list_free(column_data);
 }
 
@@ -1477,7 +1481,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w) {
     /*
      * Deallocate column descriptions.
      */
-    g_list_foreach(column_desc,(GFunc)g_free,NULL);
+    g_list_foreach(column_desc,(GFunc)g_free_helper,NULL);
     g_list_free(column_desc);
 }
 

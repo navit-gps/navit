@@ -114,6 +114,129 @@ static void strtrim(char *s) {
 }
 
 /**
+ * @brief Escape special characters from a string
+ *
+ * @param mode The escape mode that needs to be enabled (see enum escape_mode)
+ * @param in The string to escape
+ *
+ * @return The escaped string
+ *
+ * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes
+ * @warning The returned string has been allocated and g_free() must thus be called on this string
+ */
+char *str_escape(enum escape_mode mode, const char *in) {
+    int len=mode & escape_mode_string ? 2:0;	/* Add 2 characters to the length of the buffer if quoting is enabled */
+    char *dst,*out;
+    const char *src=in;
+    static const char *quot="&quot;";
+    static const char *apos="&apos;";
+    static const char *amp="&amp;";
+    static const char *lt="&lt;";
+    static const char *gt="&gt;";
+
+    dbg(lvl_debug, "Will escape string=\"%s\", escape mode %d", in, mode);
+    while (*src) {
+        if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
+            len++;
+        if (*src == '"' && mode == escape_mode_html_quote)
+            len+=strlen(quot);
+        else if (*src == '\'' && mode == escape_mode_html_apos)
+            len+=strlen(apos);
+        else if (*src == '&' && mode == escape_mode_html_amp)
+            len+=strlen(amp);
+        else if (*src == '<' && mode == escape_mode_html_lt)
+            len+=strlen(lt);
+        else if (*src == '>' && mode == escape_mode_html_gt)
+            len+=strlen(gt);
+        else
+            len++;
+        src++;
+    }
+    src=in;
+    out=dst=g_malloc(len+1); /* +1 character for NUL termination */
+
+    /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
+    if (mode & escape_mode_string)
+        *dst++='"';
+
+    while (*src) {
+        if (mode & escape_mode_html) {	/* In html escape mode, only process HTML escape sequence, not backslashes or quotes */
+            if (*src == '"' && (mode & escape_mode_html_quote)) {
+                strcpy(dst,quot);
+                src++;
+                dst+=strlen(quot);
+            } else if (*src == '\'' && (mode & escape_mode_html_apos)) {
+                strcpy(dst,apos);
+                src++;
+                dst+=strlen(apos);
+            } else if (*src == '&' && (mode & escape_mode_html_amp)) {
+                strcpy(dst,amp);
+                src++;
+                dst+=strlen(amp);
+            } else if (*src == '<' && (mode & escape_mode_html_lt)) {
+                strcpy(dst,lt);
+                src++;
+                dst+=strlen(lt);
+            } else if (*src == '>' && (mode & escape_mode_html_gt)) {
+                strcpy(dst,gt);
+                src++;
+                dst+=strlen(gt);
+            } else
+                *dst++=*src++;
+        } else {
+            if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
+                *dst++='\\';
+            }
+            *dst++=*src++;
+        }
+    }
+
+    /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
+    if (mode & escape_mode_string)
+        *dst++='"';
+
+    *dst++='\0';
+    dbg(lvl_debug, "Result of escaped string=\"%s\"", out);
+    return out;
+}
+
+/**
+ * @brief Copy a string from @p src to @p dest, unescaping characters
+ *
+ * @note Escaped characters are "\\\\" (double backslash) resulting in '\\' (single backslash)
+ *       and "\\\"" (backslash followed by double quote), resulting in '"' (double quote)
+ *       but we will escape any other character, for example "\\ " will result in ' ' (space)
+ *       This is the reverse of function str_escape, except that we assume (and only support) unescaping mode escape_mode_quote here
+ *
+ * @param[out] dest The location where to store the unescaped string
+ * @param[in] src The source string to copy (and to unescape)
+ * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.
+ *
+ * @return A pointer to the destination string @p dest
+ */
+char *strncpy_unescape(char *dest, const char *src, size_t n) {
+    char *dest_ptr;	/* A pointer to the currently parsed character inside string dest */
+
+    for (dest_ptr=dest; (dest_ptr-dest) < n && (*src != '\0'); src++, dest_ptr++) {
+        if (*src == '\\') {
+            src++;
+        }
+        *dest_ptr = *src;
+        if (*dest_ptr == '\0') {
+            /* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+            return dest;
+        }
+    }
+    if ((dest_ptr-dest) < n)
+        *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
+    else {
+        // strncpy_unescape will return a non NUL-terminated string. Trouble ahead if this is not handled properly
+    }
+
+    return dest;
+}
+
+/**
  * @brief Parser states for `parse_for_systematic_comparison()`.
  */
 enum parse_state {
@@ -356,6 +479,19 @@ GList *g_hash_to_list_keys(GHashTable *h) {
     return ret;
 }
 
+/**
+ * @brief Appends a formatted string and appends it to an existing one.
+ *
+ * Usage is similar to the familiar C functions that take a format string and a variable argument list.
+ *
+ * Return value is a concatenation of `buffer` (unless it is NULL) and `fmt`, with the remaining arguments
+ * inserted into `fmt`.
+ *
+ * @param buffer An existing string, can be null and will be freed by this function
+ * @param fmt A format string (will not be altered)
+ *
+ * @return A newly allocated string, see description. The caller is responsible for freeing the returned string.
+ */
 gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
     gchar *str,*ret;
     va_list ap;
@@ -528,6 +664,70 @@ char * newSysString(const char *toconvert) {
 }
 #endif
 #endif
+
+/**
+ * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
+ *
+ * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
+ */
+void square_shape_str(char *s) {
+    char *c;
+    char *last_break;
+    unsigned int max_cols = 0;
+    unsigned int cur_cols = 0;
+    unsigned int max_rows = 0;
+    unsigned int surface;
+    unsigned int target_cols;
+
+    if (!s)
+        return;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (max_cols < cur_cols)
+                max_cols = cur_cols;
+            cur_cols = 0;
+            max_rows++;
+        } else
+            cur_cols++;
+    }
+    if (max_cols < cur_cols)
+        max_cols = cur_cols;
+    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+        max_rows++;
+    /* Give twice more room for rows (hence the factor 2 below)
+     * This will render as a rectangular shape, taking more horizontal space than vertical */
+    surface = max_rows * 2 * max_cols;
+    target_cols = uint_sqrt(surface);
+
+    if (target_cols < max_cols)
+        target_cols = max_cols;
+
+    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
+    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
+        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+
+    cur_cols = 0;
+    last_break = NULL;
+    for (c=s; *c!='\0'; c++) {
+        if (*c==' ') {
+            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+                if (last_break) {
+                    *last_break =
+                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+                    cur_cols = c-last_break;
+                }
+            }
+            last_break = c;	/* Record this position as a candidate to insert a line break */
+        }
+        cur_cols++;
+    }
+    if (cur_cols>=target_cols && last_break) {
+        *last_break =
+            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+    }
+
+    dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
+}
 
 #if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
 /**

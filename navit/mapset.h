@@ -35,7 +35,7 @@ struct mapset_handle;
 struct mapset_search;
 struct mapset *mapset_new(struct attr *parent, struct attr **attrs);
 struct mapset *mapset_dup(struct mapset *ms);
-struct attr_iter *mapset_attr_iter_new(void);
+struct attr_iter *mapset_attr_iter_new(void * unused);
 void mapset_attr_iter_destroy(struct attr_iter *iter);
 int mapset_add_attr(struct mapset *ms, struct attr *attr);
 int mapset_remove_attr(struct mapset *ms, struct attr *attr);

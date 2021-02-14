@@ -68,26 +68,27 @@ extern int default_flags[];
 struct coord;
 
 enum change_mode {
-	change_mode_delete,
-	change_mode_modify,
-	change_mode_append,
-	change_mode_prepend,
+    change_mode_delete,
+    change_mode_modify,
+    change_mode_append,
+    change_mode_prepend,
 };
 
 struct item_methods {
-	void (*item_coord_rewind)(void *priv_data);
-	int (*item_coord_get)(void *priv_data, struct coord *c, int count);
-	void (*item_attr_rewind)(void *priv_data);
-	int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
-	int (*item_coord_is_node)(void *priv_data);
-	int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
-	int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
-	int (*item_type_set)(void *priv_data, enum item_type type);
+    void (*item_coord_rewind)(void *priv_data);
+    int (*item_coord_get)(void *priv_data, struct coord *c, int count);
+    void (*item_attr_rewind)(void *priv_data);
+    int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
+    int (*item_coord_is_node)(void *priv_data);
+    int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
+    int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
+    int (*item_type_set)(void *priv_data, enum item_type type);
+    int (*item_coords_left)(void *priv_data);
 };
 
 struct item_id {
-	int id_hi;
-	int id_lo;
+    int id_hi;
+    int id_lo;
 };
 
 #define ITEM_ID_FMT "(0x%x,0x%x)"
@@ -97,16 +98,16 @@ struct item_id {
  * Represents an object on a map, such as a POI, a building, a way or a boundary.
  */
 struct item {
-	enum item_type type; /**< Type of the item.*/
-	int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
-	int id_lo; /**< Second part of the ID of the item.*/
-	struct map *map; /**< The map this items belongs to.*/
-	struct item_methods *meth; /**< Methods to manipulate this item.*/
-	void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
+    enum item_type type; /**< Type of the item.*/
+    int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
+    int id_lo; /**< Second part of the ID of the item.*/
+    struct map *map; /**< The map this items belongs to.*/
+    struct item_methods *meth; /**< Methods to manipulate this item.*/
+    void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
 };
 
 extern struct item_range {
-	enum item_type min,max;
+    enum item_type min,max;
 } item_range_all;
 
 extern struct item busy_item;
@@ -127,6 +128,7 @@ void item_create_hash(void);
 void item_destroy_hash(void);
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
+int item_coords_left(struct item * it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
