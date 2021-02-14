@@ -3504,6 +3504,27 @@ void navit_layout_switch(struct navit *n) {
                 && valid_attr.u.num==attr_position_valid_invalid) {
             return; //No valid fix yet
         }
+
+        int *streetflags = tracking_get_current_flags(n->tracking);
+
+        if (streetflags != NULL) {
+
+            dbg(lvl_debug,"streetflags: %i", *streetflags);
+
+            // We are in  a tunnel and we have a nightlayout -> switch to nightlayout
+            if ((*streetflags & AF_UNDERGROUND) && l->nightname) {
+                navit_set_layout_by_name(n, l->nightname);
+                dbg(lvl_debug, "tunnel nightlayout");
+                return;
+            } else if (*streetflags & AF_UNDERGROUND) {
+                // We are already in nightmode, no matter of the sun
+                return;
+            }
+
+        } else {
+            dbg(lvl_debug,"streetflags are NULL");
+        }
+
         if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
             //No position - no sun
             return;
