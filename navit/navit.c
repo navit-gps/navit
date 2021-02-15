@@ -3472,6 +3472,7 @@ void navit_layout_switch(struct navit *n) {
     int year, month, day;
     int after_sunrise = FALSE;
     int after_sunset = FALSE;
+    int *streetflags = tracking_get_current_flags(n->tracking);
 
     if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
         return; //No layout - nothing to switch
@@ -3505,24 +3506,20 @@ void navit_layout_switch(struct navit *n) {
             return; //No valid fix yet
         }
 
-        int *streetflags = tracking_get_current_flags(n->tracking);
-
         if (streetflags != NULL) {
 
-            dbg(lvl_debug,"streetflags: %i", *streetflags);
+            dbg(lvl_debug, "streetflags: %i", *streetflags);
 
-            // We are in  a tunnel and we have a nightlayout -> switch to nightlayout
-            if ((*streetflags & AF_UNDERGROUND) && l->nightname) {
-                navit_set_layout_by_name(n, l->nightname);
-                dbg(lvl_debug, "tunnel nightlayout");
-                return;
-            } else if (*streetflags & AF_UNDERGROUND) {
+            if (*streetflags & AF_UNDERGROUND) {
+                // We are in a tunnel and if we have a nightlayout -> switch to nightlayout
+                if (l->nightname) {
+                    navit_set_layout_by_name(n, l->nightname);
+                    dbg(lvl_debug, "tunnel nightlayout");
+                    return;
+                } else {
                 // We are already in nightmode, no matter of the sun
                 return;
             }
-
-        } else {
-            dbg(lvl_debug,"streetflags are NULL");
         }
 
         if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
