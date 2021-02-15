@@ -3505,9 +3505,14 @@ void navit_layout_switch(struct navit *n) {
                 && valid_attr.u.num==attr_position_valid_invalid) {
             return; //No valid fix yet
         }
+	
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
+            //No position - no sun
+            return;
+        }
 
         if (streetflags != NULL) {
-
+	
             dbg(lvl_debug, "streetflags: %i", *streetflags);
 
             if (*streetflags & AF_UNDERGROUND) {
@@ -3517,15 +3522,12 @@ void navit_layout_switch(struct navit *n) {
                     dbg(lvl_debug, "tunnel nightlayout");
                     return;
                 } else {
-                // We are already in nightmode, no matter of the sun
-                return;
-            }
+                    // We are already in nightmode, no matter of the sun
+                    return;
+                }
+             }
         }
-
-        if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
-            //No position - no sun
-            return;
-        }
+	
         //We calculate sunrise anyway, cause it is needed both for day and for night
         if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
             dbg(lvl_debug,"near the pole sun never rises/sets, so we should never switch profiles");
