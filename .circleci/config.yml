@@ -107,19 +107,19 @@ jobs:
           command: ./gradlew generateDebugJavadoc
       - store_artifacts:
           name: Store APK
-          path: navit/android/build/outputs/apk
+          path: build/outputs/apk
           destination: apk
       - store_artifacts:
           name: Store logs
-          path: navit/android/build/outputs/logs
+          path: build/outputs/logs
           destination: logs
       - store_artifacts:
           name: Store Javadoc
-          path: navit/android/build/outputs/docs/javadoc
+          path: build/outputs/docs/javadoc
           destination: doc
       - store_artifacts:
           name: Store Lint reports
-          path: navit/android/build/reports
+          path: build/reports
           destination: reports
       - store_test_results:
           path: test-results

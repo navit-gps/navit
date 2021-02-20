@@ -117,6 +117,9 @@ android {
         }
     }
     applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "navit-${variant.buildType.name}.apk"
+        }
         // create tasks to generate Javadocs
         task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
             source = android.sourceSets.main.java.srcDirs
