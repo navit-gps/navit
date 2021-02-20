@@ -82,8 +82,8 @@ android {
             java.srcDirs = ["navit/android/src"]
             resources.srcDirs = ["navit/android/src"]
             renderscript.srcDirs = ["navit/android/src"]
-            res.srcDirs = ["navit/android/res"]
-            assets.srcDirs = ["navit/android/assets"]
+            res.srcDirs = ["navit/android/res", "android-builddir/android/res"]
+            assets.srcDirs = ["navit/android/assets", "android-builddir/android/assets"]
             }
     }
     externalNativeBuild {
