@@ -66,36 +66,36 @@
 #endif
 
 
-    struct graphics_priv {
-        GdkEventButton button_event;
-        int button_timeout;
-        GtkWidget *widget;
-        GtkWidget *win;
-        struct window window;
-        cairo_t *cairo;
-        struct point p;
-        int width;
-        int height;
-        int win_w;
-        int win_h;
-        int visible;
-        int overlay_disabled;
-        int overlay_autodisabled;
-        int wraparound;
-        struct graphics_priv *parent;
-        struct graphics_priv *overlays;
-        struct graphics_priv *next;
-        struct graphics_gc_priv *background_gc;
-        struct callback_list *cbl;
-        struct font_freetype_methods freetype_methods;
-        struct navit *nav;
-        int pid;
-        struct timeval button_press[8];
-        struct timeval button_release[8];
-        int timeout;
-        int delay;
-        char *window_title;
-    };
+struct graphics_priv {
+    GdkEventButton button_event;
+    int button_timeout;
+    GtkWidget *widget;
+    GtkWidget *win;
+    struct window window;
+    cairo_t *cairo;
+    struct point p;
+    int width;
+    int height;
+    int win_w;
+    int win_h;
+    int visible;
+    int overlay_disabled;
+    int overlay_autodisabled;
+    int wraparound;
+    struct graphics_priv *parent;
+    struct graphics_priv *overlays;
+    struct graphics_priv *next;
+    struct graphics_gc_priv *background_gc;
+    struct callback_list *cbl;
+    struct font_freetype_methods freetype_methods;
+    struct navit *nav;
+    int pid;
+    struct timeval button_press[8];
+    struct timeval button_release[8];
+    int timeout;
+    int delay;
+    char *window_title;
+};
 
 
 struct graphics_gc_priv {
