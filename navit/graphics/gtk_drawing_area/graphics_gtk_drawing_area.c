@@ -25,17 +25,24 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+
 #include <cairo.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(APPLE)
 #include <X11/XF86keysym.h>
+#endif
 #endif
 #ifdef HAVE_IMLIB2
 #include <Imlib2.h>
 #endif
 
 #ifndef _WIN32
+if !defined(APPLE)
 #include <gdk/gdkx.h>
+#else
+#include <gdk/gdkquartz.h>
+#endif
 #endif
 #include "event.h"
 #include "debug.h"
@@ -59,36 +66,36 @@
 #endif
 
 
-struct graphics_priv {
-    GdkEventButton button_event;
-    int button_timeout;
-    GtkWidget *widget;
-    GtkWidget *win;
-    struct window window;
-    cairo_t *cairo;
-    struct point p;
-    int width;
-    int height;
-    int win_w;
-    int win_h;
-    int visible;
-    int overlay_disabled;
-    int overlay_autodisabled;
-    int wraparound;
-    struct graphics_priv *parent;
-    struct graphics_priv *overlays;
-    struct graphics_priv *next;
-    struct graphics_gc_priv *background_gc;
-    struct callback_list *cbl;
-    struct font_freetype_methods freetype_methods;
-    struct navit *nav;
-    int pid;
-    struct timeval button_press[8];
-    struct timeval button_release[8];
-    int timeout;
-    int delay;
-    char *window_title;
-};
+    struct graphics_priv {
+        GdkEventButton button_event;
+        int button_timeout;
+        GtkWidget *widget;
+        GtkWidget *win;
+        struct window window;
+        cairo_t *cairo;
+        struct point p;
+        int width;
+        int height;
+        int win_w;
+        int win_h;
+        int visible;
+        int overlay_disabled;
+        int overlay_autodisabled;
+        int wraparound;
+        struct graphics_priv *parent;
+        struct graphics_priv *overlays;
+        struct graphics_priv *next;
+        struct graphics_gc_priv *background_gc;
+        struct callback_list *cbl;
+        struct font_freetype_methods freetype_methods;
+        struct navit *nav;
+        int pid;
+        struct timeval button_press[8];
+        struct timeval button_release[8];
+        int timeout;
+        int delay;
+        char *window_title;
+    };
 
 
 struct graphics_gc_priv {
@@ -625,6 +632,9 @@ static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer us
     if (! gra->visible)
         return TRUE;
 #ifndef _WIN32
+#if defined(APPLE)
+    dbg(lvl_debug,"window=%lu", GDK_WINDOW(widget->window));
+#else
     dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(widget->window));
 #endif
     gra->width=widget->allocation.width;
@@ -1016,7 +1026,11 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type,"xwindow_id"))
+#if defined(APPLE)
+        return (void *)GDK_WINDOW(this->win ? this->win->window : this->widget->window);
+#else
         return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
+#endif
 #endif
     if (!strcmp(type,"window")) {
         char *cp = getenv("NAVIT_XID");

@@ -79,6 +79,7 @@ typedef double GLdouble;
 #define USE_FLOAT 1
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+#  define APIENTRY
 #else
 #include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
 #endif
