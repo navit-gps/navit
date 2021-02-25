@@ -29,7 +29,7 @@
 #include <cairo.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
-#if !defined(APPLE)
+#if !defined(__APPLE__)
 #include <X11/XF86keysym.h>
 #endif
 #endif
@@ -38,7 +38,7 @@
 #endif
 
 #ifndef _WIN32
-if !defined(APPLE)
+#if !defined(__APPLE__)
 #include <gdk/gdkx.h>
 #else
 #include <gdk/gdkquartz.h>
@@ -632,10 +632,11 @@ static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer us
     if (! gra->visible)
         return TRUE;
 #ifndef _WIN32
-#if defined(APPLE)
+#if defined(__APPLE__)
     dbg(lvl_debug,"window=%lu", GDK_WINDOW(widget->window));
 #else
     dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(widget->window));
+#endif
 #endif
     gra->width=widget->allocation.width;
     gra->height=widget->allocation.height;
@@ -1026,7 +1027,7 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type,"xwindow_id"))
-#if defined(APPLE)
+#if defined(__APPLE__)
         return (void *)GDK_WINDOW(this->win ? this->win->window : this->widget->window);
 #else
         return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
