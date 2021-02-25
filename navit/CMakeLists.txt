@@ -101,7 +101,7 @@ if(NOT ANDROID)
 #set_target_properties(navit PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 		add_dependencies(navit navit_config_xml_resource)
 		add_dependencies(navit images_resource)
-		add_dependencies(navit locale_resource)	
+		add_dependencies(navit locale_resource)
 	endif()
 endif()
 
@@ -262,7 +262,7 @@ WRITE_FILE("cmake_plugin_settings.txt"
 	"set(LIB_DIR \"${LIB_DIR}\" CACHE STRING init)\n"
 	"set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\" CACHE STRING init)\n"
 	)
-	
+
 if(APPLE)
 add_custom_command(TARGET navit POST_BUILD
 #    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/graphics
@@ -285,4 +285,4 @@ add_custom_command(TARGET navit POST_BUILD
  	${CMAKE_CURRENT_BINARY_DIR}/maps ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/maps
 
 )
-endif()      
+endif()
