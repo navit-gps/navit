@@ -1,6 +1,6 @@
 # Use this script to build navit on a Mac 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install glib gtk+ gettext libpng protobuf-c cmake librsvg
+brew install glib gtk+ gettext libpng protobuf-c cmake librsvg imagemagick
 
 #TODO: this needs to be adapted for the PR: git clone https://github.com/navit/navit.git
 git clone https://github.com/OLFDB/navit.git
@@ -18,3 +18,5 @@ make -j
 make
 make install
 make install
+open /usr/local/bin/navit.app
+
