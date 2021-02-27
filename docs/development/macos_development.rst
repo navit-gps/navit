@@ -4,10 +4,6 @@ MacOS Development
 
 Here are some notes about running navit under Apple Mac OSX.
 
-================================================================================================================================
-WARNING: These instructions are currently unmaintained. Please feel free to submit a PR if you manage to build navit on Mac OSX.
-================================================================================================================================
-
 What you will need
 ==================
 
@@ -23,8 +19,8 @@ The steps to create the environment and build are explained below:
 
 If you already have macports, or fink installed create a new user account on your Mac and use that for building navit.
 
- * Create a new user navituser with admin privileges and restart your machine.
- * Install `homebrew <https://brew.sh/index_de>`
+* Create a new user navituser with admin privileges and restart your machine.
+* Install `homebrew <https://brew.sh/index_de>`
  
 .. code-block:: bash
  
@@ -90,9 +86,9 @@ Change the command to say -v <voicename> if you would like a non standard voice 
 Using xcode
 ===========
 
-============================================================================================================================
-WARNING: These instructions are currently outdated. Please feel free to submit a PR if you manage to build navit on Mac OSX.
-============================================================================================================================
+========================================================================================================================================
+WARNING: These instructions are currently outdated. Please feel free to submit a PR if you manage to build navit on Mac OSX using Xcode.
+========================================================================================================================================
 
 Download one of the `Git sources <https://github.com/navit-gps/navit>`_ that don't contain autogen.sh.
 
