@@ -288,6 +288,8 @@ add_custom_command(TARGET navit POST_BUILD
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
  	${CMAKE_CURRENT_BINARY_DIR}/maps ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/maps
-
+	
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_BINARY_DIR}/navit.app /usr/local/bin/
 )
 endif()
