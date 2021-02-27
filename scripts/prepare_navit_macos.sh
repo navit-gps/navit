@@ -1,4 +1,4 @@
-# Use this script to build navit on a Mac 
+# Use this script to build navit on a Mac
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install glib gtk+ gettext libpng protobuf-c cmake librsvg imagemagick gpsd
 
