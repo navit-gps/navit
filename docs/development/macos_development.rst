@@ -30,7 +30,7 @@ If you already have macports, or fink installed create a new user account on you
  
  $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-Install glib, gtk+, libpng, protobuf-c, cmake, librsvg
+Install glib, gtk+, libpng, protobuf-c, cmake, librsvg, imagemagick, gpsd
 
 .. code-block:: bash
 
