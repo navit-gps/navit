@@ -14,7 +14,6 @@ git fetch
 mkdir build
 cd build
 cmake -Dbinding/python=false ../
-make -j
 make
 make install
 make install
