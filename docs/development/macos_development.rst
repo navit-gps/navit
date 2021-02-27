@@ -11,78 +11,84 @@ WARNING: These instructions are currently unmaintained. Please feel free to subm
 What you will need
 ==================
 
-You need Xcode Tools and MacPorts in order to install navit.
+You need Xcode Tools and homebrew in order to install navit.
 
-MacPorts developers suggest to install Xcode Tools from http://developer.apple.com/tools/xcode/ and not from the Mac OSX install disk.
-See `Mac-How <http://www.mac-how.net/>`_
+For convinience there is the script prepare_navit_macos.sh available under the navit/scripts directory.
 
-Make sure you don't have fink installed on your system, it can confuse MacPorts package building and installation.
+The dedicated steps are explaind below:
 
- * GTK Gui: You should only need gtk2 and glib2 via macPorts
- * SDL Gui: Untested yet.
+If you already have macports, or fink installed create a new user account on your Mac and use that for building navit.
+
+ * Create a new user navituser with admin privileges and restart your machine.
+ * Install `homebrew <https://brew.sh/index_de>`
+ 
+.. code-block:: bash
+ 
+ $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+Install glib, gtk+, libpng, protobuf-c, cmake, librsvg
+
+.. code-block:: bash
+
+ $ brew install glib, gtk+, libpng, protobuf-c, cmake, librsvg
+ 
+What is working
+===============
+* internal Gui: 	Working, but problems with window refresh
+* GTK Gui: Untested yet.
+* SDL Gui: Untested yet.
 
 Installation instruction
 ========================
 
-Download Xcode Tools from http://developer.apple.com/tools/xcode/ and install it with X11 SDK
-
-Download and Install MacPorts from http://www.macports.org/, or update your version
+Get the navit sources:
 
 .. code-block:: bash
 
-    sudo port -d selfupdate
+$ git clone https://github.com/navit-gps/navit.git
 
-Open up a terminal
+Change directory to ./navit and create a folder build
+.. code-block:: bash
+$ cd navit
+$ mkdir build
+$ cd build
 
-make sure your PATH variables has `/opt/local/bin` and `/opt/local/sbin` in it:
+Configure your build using cmake:
 
 .. code-block:: bash
 
-    echo $PATH
+$ cmake -Dbinding/python=false ../
 
+type `make` to build NavIt, and `sudo make install` to install it. Run `sudo make install` twice to have all libraries inside the app bundle
 
-Install automake, wget, libtool, gpsd (if you want gps support), gtk2 and glib2 (for gkt GUI) with
+$ make
 
-.. code-block:: bash
+$ sudo make install
 
-    sudo port install automake wget gpsd gtk2 glib2 libtool
+$ sudo make install
 
-Download navit or checkout it from Git
-
-.. code-block:: bash
-
-    git clone git@github.com:navit-gps/navit.git
-
-You may also need a header file to handle endian issues (for PPC only)
-
-.. code-block:: bash
-
-    wget https://navit.svn.sourceforge.net/svnroot/navit/tags/R0_1_0/navit/projs/CodeBlocks/Win32Extra/byteswap.h
-
-If you want to install navit along the MacPorts packages, you need to use the /opt/local directory as prefix:
-
-.. code-block:: bash
-
-  ./autogen.sh && ./configure --prefix=/opt/local --disable-binding-python
-
-type `make` to build NavIt, and `sudo make install` to install it.
 
 Then, you may edit and adapt your `navit.xml` file. The XML maptype is not supported, however normal Navit binfile works perfectly.
 
 Speech
 ======
 
-If you want (spoken) directions, get espeak from http://espeak.sourceforge.net, install as advised and use the following snippet in your navit.xml:
+If you want (spoken) directions, use the following snippet in your navit.xml:
 
 .. code-block:: xml
 
-           <speech type="cmdline" data="speak -vde+f4 '%s'"/>
+           <speech type="cmdline" data="say '%s'"/>
 
-This will tell speak to use a female (f) german (de) voice.
+This will use the native say command. You can list all available voices by typing say -v ? in a terminal.
+Change the command to say -v <voicename> if you would like a non standard voice to be used. New voices can be added in system preferences->keyboard->dictation
 
 
 Using xcode
 ===========
+
+============================================================================================================================
+WARNING: These instructions are currently outdated. Please feel free to submit a PR if you manage to build navit on Mac OSX.
+============================================================================================================================
 
 Download one of the `Git sources <https://github.com/navit-gps/navit>`_ that don't contain autogen.sh.
 
