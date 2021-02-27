@@ -30,7 +30,7 @@ Install glib, gtk+, libpng, protobuf-c, cmake, librsvg, imagemagick, gpsd
 
 .. code-block:: bash
 
- $ brew install glib, gtk+, libpng, protobuf-c, cmake, librsvg
+ $ brew install glib gtk+ libpng protobuf-c cmake librsvg gpsd
  
 What is working
 ===============
