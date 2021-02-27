@@ -273,7 +273,10 @@ add_custom_command(TARGET navit POST_BUILD
  	/usr/local/lib/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/navit
+ 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share
+ 	
+ 	COMMAND ${CMAKE_COMMAND} -E copy_directory
+ 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/locale ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/locale
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
  	${CMAKE_CURRENT_BINARY_DIR}/icons ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/icons
