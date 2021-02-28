@@ -13,61 +13,13 @@ For convinience there is the script prepare_navit_macos.sh available under the n
 
 .. code-block:: bash
 
- $ curl https://raw.githubusercontent.com/OLFDB/navit/macosbuild/scripts/prepare_navit_macos.sh  -o prepare_navit_macos.sh 
+ $ curl https://raw.githubusercontent.com/OLFDB/navit/macosbuild/scripts/prepare_navit_macos.sh  -o prepare_navit_macos.sh
 
-The steps to create the environment and build are explained below:
-
-If you already have macports, or fink installed create a new user account on your Mac and use that for building navit.
-
-* Create a new user navituser with admin privileges and restart your machine.
-* Install `homebrew <https://brew.sh/index_de>`
- 
-.. code-block:: bash
- 
- $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-Install glib, gtk+, libpng, protobuf-c, cmake, librsvg, imagemagick, gpsd
-
-.. code-block:: bash
-
- $ brew install glib gtk+ libpng protobuf-c cmake librsvg gpsd
- 
 What is working
 ===============
 * internal Gui: 	Working, but problems with window refresh
 * GTK Gui: Working.
 * SDL Gui: Untested yet.
-
-Installation instruction
-========================
-
-Get the navit sources:
-
-.. code-block:: bash
-
-$ git clone https://github.com/navit-gps/navit.git
-
-Change directory to ./navit and create a folder build
-
-.. code-block:: bash
-
-$ cd navit
-$ mkdir build
-$ cd build
-
-Configure your build using cmake:
-
-.. code-block:: bash
-
-$ cmake ../contrib/macos/
-
-type `make` to build NavIt, and `sudo make install` to install it. Run `sudo make install` twice to have all libraries inside the app bundle
-
-$ make install
-
-Then you may edit and adapt your `navit.xml` file.
-
-You'll find the navit.xml in ~/.navit folder
 
 GPSD
 ====
@@ -75,10 +27,6 @@ GPSD
 You have to add the GPS receiver device to gpsd:
 
 GPSD_SOCKET="/usr/local/var/gpsd.sock" /usr/local/opt/gpsd/sbin/gpsdctl add /dev/tty.usbserial-XYZ
-
-.. code-block:: bash
-
-You should put that command into your ~/bashrc 
 
 Speech
 ======
