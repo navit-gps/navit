@@ -35,7 +35,7 @@ Install glib, gtk+, libpng, protobuf-c, cmake, librsvg, imagemagick, gpsd
 What is working
 ===============
 * internal Gui: 	Working, but problems with window refresh
-* GTK Gui: Untested yet.
+* GTK Gui: Working.
 * SDL Gui: Untested yet.
 
 Installation instruction
@@ -48,7 +48,9 @@ Get the navit sources:
 $ git clone https://github.com/navit-gps/navit.git
 
 Change directory to ./navit and create a folder build
+
 .. code-block:: bash
+
 $ cd navit
 $ mkdir build
 $ cd build
@@ -57,7 +59,7 @@ Configure your build using cmake:
 
 .. code-block:: bash
 
-$ cmake -Dbinding/python=false ../
+$ cmake ../contrib/macos/
 
 type `make` to build NavIt, and `sudo make install` to install it. Run `sudo make install` twice to have all libraries inside the app bundle
 

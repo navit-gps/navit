@@ -13,9 +13,5 @@ git fetch
 
 mkdir build
 cd build
-cmake -Dbinding/python=false ../
-make
-make install
-make install
+cmake ../contrib/macos/
 open /usr/local/bin/navit.app
-
