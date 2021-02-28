@@ -6,10 +6,6 @@ ExternalProject_Add(navit CMAKE_ARGS
 		-Dbinding/python=false  SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../)
 
 add_custom_target(TARGET macosbundle POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/graphics
-#    COMMAND ${CMAKE_COMMAND} -E copy
-#    ${CMAKE_CURRENT_BINARY_DIR}/graphics/gtk_drawing_area/.libs/libgraphics_gtk_drawing_area.so ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/graphics
-
 	COMMAND ${CMAKE_COMMAND} -E make_directory /usr/local/lib/navit
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory

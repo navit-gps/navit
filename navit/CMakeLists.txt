@@ -262,34 +262,3 @@ WRITE_FILE("cmake_plugin_settings.txt"
 	"set(LIB_DIR \"${LIB_DIR}\" CACHE STRING init)\n"
 	"set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\" CACHE STRING init)\n"
 	)
-
-if(APPLE)
-add_custom_command(TARGET navit POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/graphics
-#    COMMAND ${CMAKE_COMMAND} -E copy
-#    ${CMAKE_CURRENT_BINARY_DIR}/graphics/gtk_drawing_area/.libs/libgraphics_gtk_drawing_area.so ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/graphics
-
-	COMMAND ${CMAKE_COMMAND} -E make_directory /usr/local/lib/navit
-
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	/usr/local/lib/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources
-
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share
- 	
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/locale ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/locale
-
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/icons ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/icons
-
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/textures ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/textures
-
- 	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/maps ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/maps
-	
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_BINARY_DIR}/navit.app /usr/local/bin/
-)
-endif()
