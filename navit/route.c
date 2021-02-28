@@ -2300,10 +2300,13 @@ static void route_graph_set_traffic_distortion(struct route_graph *this, struct 
 /**
  * @brief Adds a traffic distortion item to the route graph
  *
+ * If `update` is true, the end points of the traffic distortion will have their cost recalculated. Set this to true
+ * for a partial recalculation of an existing route, false when initially building the route graph.
+ *
  * @param this The route graph to add to
  * @param profile The vehicle profile to use for cost calculations
  * @param item The item to add, must be of {@code type_traffic_distortion}
- * @param update Whether to update the point (true for LPA*, false for Dijkstra)
+ * @param update Whether to update the end points
  */
 static void route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
         struct item *item, int update) {
@@ -2700,10 +2703,8 @@ static int route_graph_is_path_computed(struct route_graph *this_) {
  * After recalculation, the route path is updated.
  *
  * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
- * the algorithm used for the initial routing:
- * \li The `value` of a node represents the cost to reach the destination and thus decreases along the route
- * (eliminating the need for recalculations as the vehicle moves within the route graph)
- * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, the basis of the main routing
+ * the old routing algorithm:
+ * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, formerly the basis of the routing
  * algorithm, and makes our keys one-dimensional)
  * \li Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this
  * may change in the future).

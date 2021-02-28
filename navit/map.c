@@ -52,11 +52,6 @@
 #include "country.h"
 #include "xmlconfig.h"
 
-/**
- * @brief Holds information about a map
- *
- * This structure holds information about a map.
- */
 struct map {
     NAVIT_OBJECT
     struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
@@ -64,11 +59,6 @@ struct map {
     struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
 };
 
-/**
- * @brief Describes a rectangular extract of a map
- *
- * This structure describes a rectangular extract of a map.
- */
 struct map_rect {
     struct map *m;				/**< The map this extract is from */
     struct map_rect_priv *priv; /**< Private data of this map rect, only known to the map plugin */
@@ -375,12 +365,6 @@ void map_rect_destroy(struct map_rect *mr) {
     }
 }
 
-/**
- * @brief Holds information about a search on a map
- *
- * This structure holds information about a search performed on a map. This can be
- * used as "handle" to retrieve items from a search.
- */
 struct map_search {
     struct map *m;
     struct attr search_attr;
