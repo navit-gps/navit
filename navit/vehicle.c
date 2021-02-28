@@ -43,7 +43,7 @@
 #include "plugin.h"
 #include "transform.h"
 #include "util.h"
-#include "event.h"
+#include "navit/event.h"
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"

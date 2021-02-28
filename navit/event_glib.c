@@ -18,7 +18,7 @@
  */
 
 #include <glib.h>
-#include "event.h"
+#include "navit/event.h"
 #include "event_glib.h"
 #include "debug.h"
 #include "callback.h"

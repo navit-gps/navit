@@ -49,7 +49,7 @@
 #include "roadprofile.h"
 #include "util.h"
 #include "transform.h"
-#include "event.h"
+#include "navit/event.h"
 #include "traffic.h"
 
 static DBusConnection *connection;

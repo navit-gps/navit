@@ -28,7 +28,7 @@
 #include "item.h"
 #include "xmlconfig.h"
 #include "plugin.h"
-#include "event.h"
+#include "navit/event.h"
 #include "debug.h"
 #include "callback.h"
 #include "android.h"

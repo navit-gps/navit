@@ -34,7 +34,7 @@
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
-#include "event.h"
+#include "navit/event.h"
 #include "debug.h"
 #include "callback.h"
 #include "keys.h"

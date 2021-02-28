@@ -46,7 +46,7 @@
 #include "coord.h"
 #include "route.h"
 #include "navigation.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "navit_nls.h"
 #include "util.h"

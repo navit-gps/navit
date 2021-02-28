@@ -44,7 +44,7 @@
 #include <gdk/gdkquartz.h>
 #endif
 #endif
-#include "event.h"
+#include "navit/event.h" /* in case espeak is enabled the system finds the wrong event.h without navit/ prefix */
 #include "debug.h"
 #include "point.h"
 #include "graphics.h"
@@ -1127,7 +1127,7 @@ static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, st
     GtkWidget *draw;
     struct attr *attr;
 
-    if (! event_request_system("glib","graphics_gtk_drawing_area_new"))
+    if (event_request_system((const char *)"glib",(const char *)"graphics_gtk_drawing_area_new")==0)
         return NULL;
 
     draw=gtk_drawing_area_new();

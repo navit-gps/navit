@@ -38,7 +38,7 @@
 #include "plugin.h"
 #include "coord.h"
 #include "item.h"
-#include "event.h"
+#include "navit/event.h"
 #include "vehicle.h"
 #include "file.h"
 #ifdef HAVE_SOCKET

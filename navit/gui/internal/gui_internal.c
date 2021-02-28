@@ -68,7 +68,7 @@
 #include "track.h"
 #include "country.h"
 #include "config.h"
-#include "event.h"
+#include "navit/event.h"
 #include "navit_nls.h"
 #include "navigation.h"
 #include "gui_internal.h"

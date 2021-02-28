@@ -28,7 +28,7 @@ extern "C" {
 #include "callback.h"
 #include "color.h"
 #include "debug.h"
-#include "event.h"
+#include "navit/event.h"
 
 #include "point.h" /* needs to be before graphics.h */
 

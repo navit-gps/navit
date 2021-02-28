@@ -35,7 +35,7 @@
 #include "projection.h"
 #include "map.h"
 #include "navit.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "speech.h"
 #include "vehicleprofile.h"

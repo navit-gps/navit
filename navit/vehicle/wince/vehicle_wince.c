@@ -34,7 +34,7 @@
 #include "plugin.h"
 #include "coord.h"
 #include "item.h"
-#include "event.h"
+#include "navit/event.h"
 #include "vehicle.h"
 #include <windows.h>
 #include <windowsx.h>

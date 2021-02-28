@@ -48,7 +48,7 @@
 #include "debug.h"
 
 #include "fifo.h"
-#include "event.h"
+#include "navit/event.h"
 #include "wave.h"
 
 #define double(x) ((double)(x))
