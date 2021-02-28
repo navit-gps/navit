@@ -87,6 +87,9 @@ $(document).ready(function(){initNavTree('structitem.html','');});
 </div><!--header-->
 <div class="contents">
 
+<p>Represents an object on a map.  
+ <a href="structitem.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="item_8h_source.html">item.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -105,7 +108,10 @@ Data Fields</h2></td></tr>
 <tr class="separator:a2f4abb10408f4c6f272e7f19f6701c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents an object on a map, such as a POI, a building, a way or a boundary. </p>
+<div class="textblock"><p>Represents an object on a map. </p>
+<p>An item holds the data for an individual item on a map, including its coordinates and various attributes. The item type specifies what the map item refers to, such as a POI, a building, a way or a boundary. There are also special item types used internally, such as the various kinds of turn instructions. Item types are internally represented as numbers.</p>
+<p>Outside map implementations, items are generally retrieved from map rectangles, and their methods are implemented by the respective map driver. Items retrieved from a map rectangle are generally short-lived: a previously retrieved item should be considered invalid when a new item is retrieved from the same map rectangle, or after its map rectangle has been destroyed. After that, functions may segfault or return invalid data, and even the item itself may have been deallocated.</p>
+<p>Actual behavior may differ between map implementations, but do not rely on any behavior not covered by the above interface contract. Exceptions apply, of course, for code that is limited to working with items from one particular map (typically inside a map implementation). </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a id="a193c3e2ec0076325a4f3139f9d33e06e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a193c3e2ec0076325a4f3139f9d33e06e">&#9670;&nbsp;</a></span>id_hi</h2>

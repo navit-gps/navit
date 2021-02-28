@@ -110,8 +110,9 @@ Data Fields</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Used to select data from a map. </p>
-<p>This struct is used to select data from a map. This one the one hand builds a rectangle on the map and on the other hand selects an order for items of each layer. Note that passing NULL instead of a pointer to such a struct often means "get me everything".</p>
-<p>It's possible to link multiple selections in a linked list, see below. </p>
+<p>A map selection is a map query, used to select data from a map. It builds a coordinate rectangle on the map and selects a range of item types to query the map for.</p>
+<p>Multiple rectangular areas and/or non-contiguous ranges of item types can be specified by concatenating multiple map selections in a linked list.</p>
+<p>Note that passing NULL instead of a pointer to such a struct often means "get me everything". </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a id="ae00c4fb58fffa37688d33f864310a7b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae00c4fb58fffa37688d33f864310a7b5">&#9670;&nbsp;</a></span>c_rect</h2>

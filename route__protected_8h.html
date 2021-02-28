@@ -808,9 +808,8 @@ Functions</h2></td></tr>
 <p>This tends to be faster than full recalculation, as only a subset of all points in the graph needs to be evaluated.</p>
 <p>If segment costs have changed (as is the case with traffic distortions), all affected segments must have been added to, removed from or updated in the route graph before this method is called.</p>
 <p>After recalculation, the route path is updated.</p>
-<p>The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with the algorithm used for the initial routing: </p><ul>
-<li>The <code>value</code> of a node represents the cost to reach the destination and thus decreases along the route (eliminating the need for recalculations as the vehicle moves within the route graph) </li>
-<li>The heuristic is always assumed to be zero (which would turn A* into Dijkstra, the basis of the main routing algorithm, and makes our keys one-dimensional) </li>
+<p>The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with the old routing algorithm: </p><ul>
+<li>The heuristic is always assumed to be zero (which would turn A* into Dijkstra, formerly the basis of the routing algorithm, and makes our keys one-dimensional) </li>
 <li>Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this may change in the future).</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
