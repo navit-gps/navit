@@ -15,4 +15,5 @@ git fetch
 mkdir build
 cd build
 cmake ../contrib/macos/
+make install
 open /usr/local/bin/navit.app
