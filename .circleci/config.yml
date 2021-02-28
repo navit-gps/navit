@@ -5,7 +5,7 @@ defaults: &defaults
 jobs:
   sanity_check:
     docker:
-      - image: navit/sanity_check:latest
+      - image: circleci/android:api-29-ndk
     steps:
       - checkout
       - run:
