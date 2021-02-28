@@ -3,30 +3,30 @@ project(macosbundle C)
 
 include(ExternalProject)
 ExternalProject_Add(navit CMAKE_ARGS
-		-Dbinding/python=false  SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../)
-
-add_custom_target(TARGET macosbundle POST_BUILD
+		-Dbinding/python=false  SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../)
+ExternalProject_Get_Property(navit BINARY_DIR)
+add_custom_target(bundle ALL
 	COMMAND ${CMAKE_COMMAND} -E make_directory /usr/local/lib/navit
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	/usr/local/lib/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources
+ 	/usr/local/lib/navit ${BINARY_DIR}/navit.app/Contents/Resources
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/navit ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share
+ 	${BINARY_DIR}/navit/resources/share/navit ${BINARY_DIR}/navit.app/Contents/Resources/share
  	
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/resources/share/locale ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/locale
+ 	${BINARY_DIR}/navit//resources/share/locale ${BINARY_DIR}/navit.app/Contents/Resources/share/locale
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/icons ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/icons
+ 	${BINARY_DIR}/navit/icons ${BINARY_DIR}/navit.app/Contents/Resources/share/icons
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/textures ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/textures
+ 	${BINARY_DIR}/navit/textures ${BINARY_DIR}/navit.app/Contents/Resources/share/textures
 
  	COMMAND ${CMAKE_COMMAND} -E copy_directory
- 	${CMAKE_CURRENT_BINARY_DIR}/maps ${CMAKE_CURRENT_BINARY_DIR}/navit.app/Contents/Resources/share/maps
+ 	${BINARY_DIR}/navit/maps ${BINARY_DIR}/navit.app/Contents/Resources/share/maps
 	
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_CURRENT_BINARY_DIR}/navit.app /usr/local/bin/
+    ${BINARY_DIR}/navit.app /usr/local/bin/
 )
 
