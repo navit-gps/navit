@@ -9,10 +9,9 @@ What you will need
 
 You need Xcode Tools and homebrew in order to install navit.
 
-.. sidebar:: ⚠️ Warning:
-========================
+.. code-block:: bash ⚠️ Warning:
 
-   If you have macports or fink installed create and use a new user account to build navit.
+If you have macports or fink installed create and use a new user account to build navit.
 
 For convinience there is the script prepare_navit_macos.sh available under the navit/scripts directory.
 
