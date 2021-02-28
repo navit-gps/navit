@@ -63,14 +63,22 @@ $ cmake ../contrib/macos/
 
 type `make` to build NavIt, and `sudo make install` to install it. Run `sudo make install` twice to have all libraries inside the app bundle
 
-$ make
+$ make install
 
-$ sudo make install
+Then you may edit and adapt your `navit.xml` file.
 
-$ sudo make install
+You'll find the navit.xml in ~/.navit folder
 
+GPSD
+====
 
-Then, you may edit and adapt your `navit.xml` file. The XML maptype is not supported, however normal Navit binfile works perfectly.
+You have to add the GPS receiver device to gpsd:
+
+GPSD_SOCKET="/usr/local/var/gpsd.sock" /usr/local/opt/gpsd/sbin/gpsdctl add /dev/tty.usbserial-XYZ
+
+.. code-block:: bash
+
+You should put that command into your ~/bashrc 
 
 Speech
 ======
