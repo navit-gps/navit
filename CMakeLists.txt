@@ -163,6 +163,12 @@ INCLUDE (CheckLibraryExists)
 INCLUDE (CheckFunctionExists)
 INCLUDE (CheckSymbolExists)
 
+if(ANDROID)
+	set(ENV{PKG_CONFIG_DIR} "")
+	set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+	set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+endif(ANDROID)
+
 ################################
 #  pkg-config based detection  #
 ################################
