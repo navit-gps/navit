@@ -180,6 +180,9 @@ struct navit {
     int waypoints_flag;
     struct coord_geo center;
     int auto_switch; /*auto switching between day/night layout enabled ?*/
+    int tunnel_nightlayout; /* switch to nightlayout if we are in a tunnel? */
+    char* layout_before_tunnel;
+    int sunrise_degrees;
 };
 
 struct gui *main_loop_gui;
@@ -1484,6 +1487,9 @@ navit_new(struct attr *parent, struct attr **attrs) {
     this_->radius = 30;
     this_->border = 16;
     this_->auto_switch = TRUE;
+    this_->tunnel_nightlayout = FALSE;
+    this_->layout_before_tunnel = "";
+    this_->sunrise_degrees = -5;
 
     transform_from_geo(pro, &g, &co);
     center.x=co.x;
@@ -2731,6 +2737,18 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         attr_updated=(this_->waypoints_flag != !!attr->u.num);
         this_->waypoints_flag=!!attr->u.num;
         break;
+    case attr_tunnel_nightlayout:
+        attr_updated = (this_->tunnel_nightlayout != !!attr->u.num);
+        this_->tunnel_nightlayout = !!attr->u.num;
+        break;
+    case attr_layout_daynightauto:
+        attr_updated = (this_->auto_switch != !!attr->u.num);
+        this_->auto_switch = !!attr->u.num;
+        break;
+    case attr_sunrise_degrees:
+        attr_updated = (this_->sunrise_degrees != attr->u.num);
+        this_->sunrise_degrees = attr->u.num;
+        break;
     default:
         dbg(lvl_debug, "calling generic setter method for attribute type %s", attr_to_name(attr->type))
         return navit_object_set_attr((struct navit_object *) this_, attr);
@@ -2945,6 +2963,15 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
         break;
     case attr_waypoints_flag:
         attr->u.num=this_->waypoints_flag;
+        break;
+    case attr_tunnel_nightlayout:
+        attr->u.num=this_->tunnel_nightlayout;
+        break;
+    case attr_layout_daynightauto:
+        attr->u.num=this_->auto_switch;
+        break;
+    case attr_sunrise_degrees:
+        attr->u.num=this_->sunrise_degrees;
         break;
     default:
         dbg(lvl_debug, "calling generic getter method for attribute type %s", attr_to_name(type))
@@ -3494,25 +3521,39 @@ void navit_layout_switch(struct navit *n) {
         if (n->auto_switch == FALSE)
             return;
 
-        if (n->tracking->tunnel) {
-            // We are in a tunnel and if we have a nightlayout -> switch to nightlayout
-            if (l->nightname) {
-                navit_set_layout_by_name(n, l->nightname);
-                dbg(lvl_debug, "tunnel -> nightlayout");
+        if (n->tunnel_nightlayout) {
+
+            if (n->tracking->tunnel) {
+
+                // store the current layout name
+                if(!strcmp(n->layout_before_tunnel, ""))
+                    n->layout_before_tunnel = n->layout_current->name;
+
+                // We are in a tunnel and if we have a nightlayout -> switch to nightlayout
+                if (l->nightname) {
+                    navit_set_layout_by_name(n, l->nightname);
+                    dbg(lvl_debug, "tunnel -> nightlayout");
+                }
+
                 return;
+
             } else {
-                // We are already in nightmode, no matter of the sun
-                return;
+
+                if (l->dayname) {
+
+                    if (!strcmp(l->dayname, n->layout_before_tunnel)) {
+                        // restore previous layout
+                        navit_set_layout_by_name(n, l->dayname);
+                        dbg(lvl_debug, "tunnel end -> daylayout");
+                    }
+
+                    // We were in nightlayout before the tunnel, keep it
+                    n->layout_before_tunnel="";
+                    return;
+
+                }
             }
-        } else {
-            if (l->dayname) {
-                navit_set_layout_by_name(n, l->dayname);
-                dbg(lvl_debug, "tunnel end -> daylayout");
-                return;
-            } else {
-                // We are already in nightmode, no matter of the sun
-                return;
-            }
+
         }
 
         if (currTs-(n->prevTs)<60) {
@@ -3533,7 +3574,8 @@ void navit_layout_switch(struct navit *n) {
         }
 
         //We calculate sunrise anyway, cause it is needed both for day and for night
-        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
+        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,n->sunrise_degrees,1,&trise,
+                         &tset)!=0) {
             dbg(lvl_debug,"near the pole sun never rises/sets, so we should never switch profiles");
             dbg(lvl_debug,"trise: %u:%u",HOURS(trise),MINUTES(trise));
             dbg(lvl_debug,"tset: %u:%u",HOURS(tset),MINUTES(tset));
@@ -3548,6 +3590,8 @@ void navit_layout_switch(struct navit *n) {
         if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
             after_sunrise = TRUE;
         }
+
+        dbg(lvl_error, "%i    %i     %d", HOURS(tset)*60, MINUTES(tset), (currTs%86400)/60);
 
         if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
                 ((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
