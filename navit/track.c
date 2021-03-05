@@ -61,66 +61,6 @@ struct cdf_speed {
     time_t time;
 };
 
-/**
- * @brief Contains data for the CDF
- *
- * This structure holds all data needed by the
- * cumulative displacement filter.
- */
-struct cdf_data {
-    int extrapolating;
-    int available;
-    int first_pos;
-    int poscount;
-    int hist_size;
-    struct cdf_speed *speed_hist;
-    struct pcoord *pos_hist;
-    int *dir_hist;
-    double last_dist;
-    struct pcoord last_out;
-    int last_dir;
-};
-
-struct tracking {
-    NAVIT_OBJECT
-    struct callback_list *callback_list;
-    struct mapset *ms;
-    struct route *rt;
-    struct map *map;
-    struct vehicle *vehicle;
-    struct vehicleprofile *vehicleprofile;
-    struct coord last_updated;
-    struct tracking_line *lines;
-    struct tracking_line *curr_line;
-    int pos;
-    struct coord curr[2], curr_in, curr_out;
-    int curr_angle;
-    struct coord last[2], last_in, last_out;
-    struct cdf_data cdf;
-    struct attr *attr;
-    int valid;
-    int time;
-    double direction, direction_matched;
-    double speed;
-    int coord_geo_valid;
-    struct coord_geo coord_geo;
-    enum projection pro;
-    int street_direction;
-    int no_gps;
-    int tunnel;
-    int angle_pref;
-    int connected_pref;
-    int nostop_pref;
-    int offroad_limit_pref;
-    int route_pref;
-    int overspeed_pref;
-    int overspeed_percent_pref;
-    int tunnel_extrapolation;
-};
-
-
-
-
 static void tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
     cdf->extrapolating = 0;
     cdf->available = 0;

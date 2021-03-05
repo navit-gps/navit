@@ -3494,6 +3494,27 @@ void navit_layout_switch(struct navit *n) {
         if (n->auto_switch == FALSE)
             return;
 
+        if (n->tracking->tunnel) {
+            // We are in a tunnel and if we have a nightlayout -> switch to nightlayout
+            if (l->nightname) {
+                navit_set_layout_by_name(n, l->nightname);
+                dbg(lvl_debug, "tunnel -> nightlayout");
+                return;
+            } else {
+                // We are already in nightmode, no matter of the sun
+                return;
+            }
+        } else {
+            if (l->dayname) {
+                navit_set_layout_by_name(n, l->dayname);
+                dbg(lvl_debug, "tunnel end -> daylayout");
+                return;
+            } else {
+                // We are already in nightmode, no matter of the sun
+                return;
+            }
+        }
+
         if (currTs-(n->prevTs)<60) {
             //We've have to wait a little
             return;
@@ -3509,23 +3530,6 @@ void navit_layout_switch(struct navit *n) {
         if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
             //No position - no sun
             return;
-        }
-
-        if (streetflags != NULL) {
-
-            dbg(lvl_debug, "streetflags: %i", *streetflags);
-
-            if (*streetflags & AF_UNDERGROUND) {
-                // We are in a tunnel and if we have a nightlayout -> switch to nightlayout
-                if (l->nightname) {
-                    navit_set_layout_by_name(n, l->nightname);
-                    dbg(lvl_debug, "tunnel nightlayout");
-                    return;
-                } else {
-                    // We are already in nightmode, no matter of the sun
-                    return;
-                }
-            }
         }
 
         //We calculate sunrise anyway, cause it is needed both for day and for night
