@@ -236,6 +236,7 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     priv->gps = gps_open(source + 7, port);
     if(!priv->gps) {
 #endif
+        priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
         dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source,
             priv->retry_interval);
         g_free(source);
@@ -285,10 +286,8 @@ static void vehicle_gpsd_open(struct vehicle_priv *priv) {
     dbg(lvl_debug,"gpsbt_start: completed");
 #endif
     priv->retry_timer2=NULL;
-    if (vehicle_gpsd_try_open(priv)) {
-        priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
+    if (vehicle_gpsd_try_open(priv))
         priv->retry_timer2=event_add_timeout(priv->retry_interval*1000, 1, priv->cbt);
-    }
 }
 
 static void vehicle_gpsd_close(struct vehicle_priv *priv) {
