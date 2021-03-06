@@ -37,7 +37,6 @@ Builds:
     rm:
       - navit/support/espeak/espeak-data/*
     prebuild:
-      - echo '<project name="Navit"><target name="clean"/></project>' > build.xml
       # ndk is needed because of CI limitations and can be removed once the CI image comes with NDK 20
       - $$SDK$$/tools/bin/sdkmanager "cmake;3.6.4111459" "ndk;20.0.5594570" > /dev/null
       - sed -i -e '/gradlew/d' scripts/build_android.sh
