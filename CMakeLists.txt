@@ -564,6 +564,8 @@ add_module(speech/iphone "Default" FALSE)
 add_module(traffic/dummy "Default" TRUE)
 add_module(traffic/null "Default" TRUE)
 add_module(traffic/traff_android "Default" FALSE)
+# FIXME disable traff_http on platforms without multithreading support or where the event system is not thread-safe
+add_module(traffic/traff_http "Default" TRUE)
 add_module(vehicle/android "Default" FALSE)
 add_module(vehicle/iphone "Default" FALSE)
 add_module(vehicle/wince "Default" FALSE)
