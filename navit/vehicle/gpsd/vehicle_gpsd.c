@@ -313,10 +313,11 @@ static void vehicle_gpsd_close(struct vehicle_priv *priv) {
     }
     if (priv->gps) {
         gps_close(priv->gps);
-#if GPSD_API_MAJOR_VERSION >= 5
-        g_free(priv->gps);
-#endif
-        priv->gps = NULL;
+//if we release the gps object a reconnect is no longer working.
+//#if GPSD_API_MAJOR_VERSION >= 5
+//        g_free(priv->gps);
+//#endif
+//        priv->gps = NULL;
     }
 #ifdef HAVE_GPSBT
     err = gpsbt_stop(&priv->context);
