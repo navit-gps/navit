@@ -95,7 +95,22 @@ struct item_id {
 #define ITEM_ID_ARGS(x) (x).id_hi,(x).id_lo
 
 /**
- * Represents an object on a map, such as a POI, a building, a way or a boundary.
+ * @brief Represents an object on a map.
+ *
+ * An item holds the data for an individual item on a map, including its coordinates and various attributes. The item
+ * type specifies what the map item refers to, such as a POI, a building, a way or a boundary. There are also special
+ * item types used internally, such as the various kinds of turn instructions. Item types are internally represented as
+ * numbers.
+ *
+ * Outside map implementations, items are generally retrieved from map rectangles, and their methods are implemented by
+ * the respective map driver. Items retrieved from a map rectangle are generally short-lived: a previously retrieved
+ * item should be considered invalid when a new item is retrieved from the same map rectangle, or after its map
+ * rectangle has been destroyed. After that, functions may segfault or return invalid data, and even the item itself
+ * may have been deallocated.
+ *
+ * Actual behavior may differ between map implementations, but do not rely on any behavior not covered by the above
+ * interface contract. Exceptions apply, of course, for code that is limited to working with items from one particular
+ * map (typically inside a map implementation).
  */
 struct item {
     enum item_type type; /**< Type of the item.*/
@@ -110,6 +125,12 @@ extern struct item_range {
     enum item_type min,max;
 } item_range_all;
 
+/**
+ * @brief An item indicating that the map driver is busy fetching more items.
+ *
+ * This is a “magic” item which may be returned by one of the query methods of a map driver. Receiving this item means
+ * that the map driver is currently busy fetching more items, and they can be retrieved at a later point in time.
+ */
 extern struct item busy_item;
 
 /* prototypes */
