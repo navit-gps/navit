@@ -85,6 +85,8 @@ struct traffic_priv {
     thread * worker_thread;     /**< Worker thread for network communication */
     int interval;               /**< Poll interval for the source, in msec */
     char * source;              /**< URL of the TraFF service */
+    GList * queue;              /**< Queue of requests to be processed by the worker thread */
+    thread_lock * queue_lock;   /**< Lock for the request queue */
 };
 
 void traffic_traff_http_destroy(struct traffic_priv * this_);
@@ -94,7 +96,14 @@ struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * 
  * @brief Destructor.
  */
 void traffic_traff_http_destroy(struct traffic_priv * this_) {
-    /* TODO unsubscribe from active subscription */
+    /* TODO unsubscribe from active subscription
+     * Or, instead of all this, tell the worker thread to clean up, i.e.:
+     * - acquire the queue lock
+     * - discard all pending requests
+     * - unsubscribe if currently subscribed
+     * - destroy the queue lock
+     * - exit
+     */
 
     if (this_->position_rect)
         g_free(this_->position_rect);
@@ -102,6 +111,11 @@ void traffic_traff_http_destroy(struct traffic_priv * this_) {
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
     this_->route_map_sel = NULL;
+
+    /* TODO clear queue */
+    // FIXME do we need to acquire the lock first?
+    thread_lock_destroy(this_->queue_lock);
+    this_->queue_lock = NULL;
 }
 
 /**
@@ -380,6 +394,8 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
         } else
             ret->source = attr->u.str;
     }
+    ret->queue = NULL;
+    ret->queue_lock = thread_lock_new();
     *meth = traffic_traff_http_meth;
 
     traffic_traff_http_init(ret);
