@@ -35,7 +35,7 @@ echo "Setting up all Variables"
 UUID=${RANDOM}-${RANDOM}-${RANDOM}-${RANDOM}
 TMP_DIR=$(mktemp -d)
 CIRCLECI_API_BASE="https://circleci.com/api/v1.1/"
-NAVIT_DOWNLOAD_CENTER_REPO="git@github.com:OLFDB/download-center"
+NAVIT_DOWNLOAD_CENTER_REPO="git@github.com:navit-gps/download-center"
 
 # To keep it generic
 CVS_TYPE="github"
