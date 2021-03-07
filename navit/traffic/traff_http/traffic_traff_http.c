@@ -314,9 +314,24 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
      *
      * Thread-safe and OK to use: glib, android
      * Functions missing, won’t work: null, opengl
-     * Probably not thread-safe: win32, qt_qpainter, qt5
+     * Probably not thread-safe: win32, qt (for qt_qpainter), qt5
      * Not sure: cocoa, sdl
      */
+    if (!strcmp("null", event_system()) || !strcmp("opengl", event_system())) {
+        /* null and opengl do not implement functions we require */
+        dbg(lvl_error, "event system %s is incomplete, preventing the traff_http plugin from working",
+            event_system());
+        return 0;
+    } else if (strcmp("glib", event_system()) && strcmp("android", event_system())) {
+        /*
+         * glib and android are known to be thread-safe
+         * win32, qt (from qt_painter) and qt5 are not thread-safe and cannot be used
+         * cocoa and sdl need in-depth verification
+         */
+        dbg(lvl_error, "event system %s is not thread-safe and cannot be used with the traff_http plugin",
+            event_system());
+        return 0;
+    }
     /* TODO anything else to do here? */
 
     /* register callbacks for position and destination changes */
