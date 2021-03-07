@@ -36,11 +36,6 @@
 #include "map.h"
 #include "xmlconfig.h"
 
-/**
- * @brief A mapset
- *
- * This structure holds a complete mapset
- */
 struct mapset {
     NAVIT_OBJECT
     GList *maps; /**< Linked list of all the maps in the mapset */
