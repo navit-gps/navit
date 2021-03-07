@@ -54,6 +54,13 @@
 #include "util.h"
 
 /**
+ * @brief Default poll interval, in msec.
+ *
+ * Unless `attr_interval` is set, this interval will be used. 600000 msec = 10 minutes.
+ */
+#define DEFAULT_INTERVAL 600000
+
+/**
  * @brief Minimum area around the current position for which to retrieve traffic updates.
  *
  * 100000 is equivalent to around 50 km on each side of the current position. The actual subscription area
@@ -77,6 +84,7 @@ struct traffic_priv {
     struct coord_rect * position_rect; /**< Rectangle around last known vehicle position (in `projection_mg`) */
     struct map_selection * route_map_sel; /**< Map selection for the current route */
     thread * worker_thread;     /**< Worker thread for network communication */
+    int interval;               /**< Poll interval for the source, in msec */
 };
 
 void traffic_traff_http_destroy(struct traffic_priv * this_);
@@ -339,6 +347,7 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
 static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct traffic_methods *meth,
         struct attr **attrs, struct callback_list *cbl) {
     struct traffic_priv *ret;
+    struct attr * attr;
 
     dbg(lvl_debug, "enter");
 
@@ -348,6 +357,12 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
     ret->position_rect = NULL;
     ret->route_map_sel = NULL;
     /* worker_thread will be set when we initialize */
+    attr = attr_search(attrs, attr_interval);
+    if (!attr)
+        ret->interval = DEFAULT_INTERVAL;
+    else
+        ret->interval = attr->u.num;
+    // TODO set URL
     /* TODO populate members, if any */
     *meth = traffic_traff_http_meth;
 
