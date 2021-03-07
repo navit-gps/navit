@@ -3489,7 +3489,6 @@ navit_get_displaylist(struct navit *this_) {
     return this_->displaylist;
 }
 
-/*todo : make it switch to nightlayout when we are in a tunnel */
 void navit_layout_switch(struct navit *n) {
 
     int currTs=0;
