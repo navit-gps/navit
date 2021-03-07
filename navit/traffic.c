@@ -4601,8 +4601,8 @@ static void traffic_loop(struct traffic *this_) {
  */
 static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
     struct traffic *this_;
-    struct traffic_priv *(*traffic_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
-                                        struct callback_list *cbl);
+    struct traffic_priv *(*traffic_priv_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
+                                             struct callback_list *cbl);
     struct attr *attr;
 
     attr = attr_search(attrs, attr_type);
@@ -4611,9 +4611,9 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
     dbg(lvl_debug, "type='%s'", attr->u.str);
-    traffic_new = plugin_get_category_traffic(attr->u.str);
-    dbg(lvl_debug, "new=%p", traffic_new);
-    if (!traffic_new) {
+    traffic_priv_new = plugin_get_category_traffic(attr->u.str);
+    dbg(lvl_debug, "new=%p", traffic_priv_new);
+    if (!traffic_priv_new) {
         dbg(lvl_error, "wrong type '%s'", attr->u.str);
         return NULL;
     }
@@ -4626,7 +4626,7 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
 
-    this_->priv = traffic_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
+    this_->priv = traffic_priv_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
     dbg(lvl_debug, "get_messages=%p", this_->meth.get_messages);
     dbg(lvl_debug, "priv=%p", this_->priv);
     if (!this_->priv) {
