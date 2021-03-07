@@ -3499,7 +3499,7 @@ void navit_layout_switch(struct navit *n) {
     int year, month, day;
     int after_sunrise = FALSE;
     int after_sunset = FALSE;
-    int *streetflags = tracking_get_current_flags(n->tracking);
+    int tunnel = tracking_get_current_tunnel(n->tracking);
 
     if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
         return; //No layout - nothing to switch
@@ -3522,9 +3522,7 @@ void navit_layout_switch(struct navit *n) {
             return;
 
         if (n->tunnel_nightlayout) {
-
-            if (n->tracking->tunnel) {
-
+            if (tunnel) {
                 // store the current layout name
                 if(!strcmp(n->layout_before_tunnel, ""))
                     n->layout_before_tunnel = n->layout_current->name;
@@ -3534,13 +3532,10 @@ void navit_layout_switch(struct navit *n) {
                     navit_set_layout_by_name(n, l->nightname);
                     dbg(lvl_debug, "tunnel -> nightlayout");
                 }
-
                 return;
 
             } else {
-
                 if (l->dayname) {
-
                     if (!strcmp(l->dayname, n->layout_before_tunnel)) {
                         // restore previous layout
                         navit_set_layout_by_name(n, l->dayname);
@@ -3550,10 +3545,8 @@ void navit_layout_switch(struct navit *n) {
                     // We were in nightlayout before the tunnel, keep it
                     n->layout_before_tunnel="";
                     return;
-
                 }
             }
-
         }
 
         if (currTs-(n->prevTs)<60) {
