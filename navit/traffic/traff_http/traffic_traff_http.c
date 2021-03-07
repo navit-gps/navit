@@ -134,9 +134,8 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_) {
     /* TODO to post a feed (char * feed) to the main thread:
      *
     struct callback ** cb = g_new0(struct callback *, 1);
-    struct event_timeout ** task = g_new0(struct event_timeout *, 1);
-    *cb = callback_new_4(callback_cast(traffic_traff_http_test), this_, feed, cb, task);
-    *task = event_add_timeout(1, 0, *cb);
+    *cb = callback_new_3(callback_cast(traffic_traff_http_test), this_, feed, cb);
+    event_add_timeout(1, 0, *cb);
      *
      */
 }
@@ -152,10 +151,9 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_) {
  * @param this_ Private data for the module instance
  * @param feed Feed data in string form
  * @param cb Pointer to the callback used to call this function
- * @param ev Pointer to the event which called `cb`
  */
 static void traffic_traff_http_on_feed_received(struct traffic_priv * this_, char * feed,
-                                                struct callback ** cb, struct event_timeout ** ev) {
+                                                struct callback ** cb) {
     struct attr * attr;
     struct attr_iter * a_iter;
     struct traffic * traffic = NULL;
@@ -169,8 +167,6 @@ static void traffic_traff_http_on_feed_received(struct traffic_priv * this_, cha
     navit_attr_iter_destroy(a_iter);
     g_free(attr);
 
-    event_remove_timeout(*ev);
-    g_free(ev);
     callback_destroy(*cb);
     g_free(cb);
 
