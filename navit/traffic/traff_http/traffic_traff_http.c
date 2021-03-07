@@ -137,25 +137,6 @@ static struct traffic_methods traffic_traff_http_meth = {
 
 
 /**
- * @brief Main function for the worker thread.
- *
- * The worker thread handles all network I/O and, if a feed has been received, notifies the main thread
- * by adding a callback to its message loop.
- */
-static gpointer traffic_traff_http_worker_thread_main(gpointer this_) {
-    // TODO loop to send enqueued requests (if any) or poll and process the result
-
-    /* TODO to post a feed (char * feed) to the main thread:
-     *
-    struct callback ** cb = g_new0(struct callback *, 1);
-    *cb = callback_new_3(callback_cast(traffic_traff_http_test), this_, feed, cb);
-    event_add_timeout(1, 0, *cb);
-     *
-     */
-}
-
-
-/**
  * @brief Called when a new TraFF feed is received.
  *
  * The worker thread posts this function to run on the main thread by registering a timeout event `*ev`
@@ -196,6 +177,25 @@ static void traffic_traff_http_on_feed_received(struct traffic_priv * this_, cha
         traffic_process_messages(traffic, messages);
         g_free(messages);
     }
+}
+
+
+/**
+ * @brief Main function for the worker thread.
+ *
+ * The worker thread handles all network I/O and, if a feed has been received, notifies the main thread
+ * by adding a callback to its message loop.
+ */
+static gpointer traffic_traff_http_worker_thread_main(gpointer this_) {
+    // TODO loop to send enqueued requests (if any) or poll and process the result
+
+    /* TODO to post a feed (char * feed) to the main thread:
+     *
+    struct callback ** cb = g_new0(struct callback *, 1);
+    *cb = callback_new_3(callback_cast(traffic_traff_http_on_feed_received), this_, feed, cb);
+    event_add_timeout(1, 0, *cb);
+     *
+     */
 }
 
 
