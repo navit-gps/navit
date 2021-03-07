@@ -87,6 +87,8 @@ struct traffic_priv {
     char * source;              /**< URL of the TraFF service */
     GList * queue;              /**< Queue of requests to be processed by the worker thread */
     thread_lock * queue_lock;   /**< Lock for the request queue */
+    char * subscription_id;     /**< Subscription ID */
+    int exiting;                /**< Whether the plugin is shutting down */
 };
 
 void traffic_traff_http_destroy(struct traffic_priv * this_);
@@ -96,26 +98,14 @@ struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * 
  * @brief Destructor.
  */
 void traffic_traff_http_destroy(struct traffic_priv * this_) {
-    /* TODO unsubscribe from active subscription
-     * Or, instead of all this, tell the worker thread to clean up, i.e.:
-     * - acquire the queue lock
-     * - discard all pending requests
-     * - unsubscribe if currently subscribed
-     * - destroy the queue lock
-     * - exit
-     */
-
+    /* tell the worker thread to clean up and exit */
+    this_->exiting = 1;
     if (this_->position_rect)
         g_free(this_->position_rect);
     this_->position_rect = NULL;
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
     this_->route_map_sel = NULL;
-
-    /* TODO clear queue */
-    // FIXME do we need to acquire the lock first?
-    thread_lock_destroy(this_->queue_lock);
-    this_->queue_lock = NULL;
 }
 
 /**
@@ -185,9 +175,62 @@ static void traffic_traff_http_on_feed_received(struct traffic_priv * this_, cha
  *
  * The worker thread handles all network I/O and, if a feed has been received, notifies the main thread
  * by adding a callback to its message loop.
+ *
+ * @param this_gpointer Pointer to the `struct traffic_priv` for the plugin instance
  */
-static gpointer traffic_traff_http_worker_thread_main(gpointer this_) {
-    // TODO loop to send enqueued requests (if any) or poll and process the result
+static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
+    struct traffic_priv * this_ = (struct traffic_priv *) this_gpointer;
+
+    /* Whether the current run of the loop should poll the source */
+    int poll;
+
+    /* Data for the request, if any */
+    char * request;
+    while (1) {
+        /* by default, poll the source every time the loop runs, unless we’re exiting */
+        poll = !this_->exiting;
+
+        /* if we’re exiting, clean up and exit */
+        if (this_->exiting) {
+            dbg(lvl_error, "shutting down");
+
+            while (this_->queue) {
+                request = this_->queue->data;
+                dbg(lvl_error, "discarding request: \n%s", request);
+                this_->queue = g_list_remove(this_->queue, request);
+                g_free(request);
+            }
+
+            thread_lock_destroy(this_->queue_lock);
+            this_->queue_lock = NULL;
+
+            // TODO unsubscribe if we are subscribed
+
+            break;
+        }
+
+        /* check if we have any pending requests */
+        thread_lock_acquire_write(this_->queue_lock);
+        while (this_->queue) {
+            /* process queue, suppress subsequent poll if necessary (usually upon getting a feed) */
+            request = this_->queue->data;
+            dbg(lvl_error, "got request: \n%s", request);
+            // TODO send request, process results, post feed (if any)
+            this_->queue = g_list_remove(this_->queue, request);
+            g_free(request);
+        }
+        thread_lock_release_write(this_->queue_lock);
+
+        if (this_->subscription_id && poll) {
+            /* poll */
+            dbg(lvl_error, "need to poll the source");
+            // TODO poll and post feed, or handle error
+        }
+
+        /* finally, sleep until the next poll is due */
+        // TODO can we wake a sleeping thread?
+        thread_sleep(this_->interval);
+    }
 
     /* TODO to post a feed (char * feed) to the main thread:
      *
@@ -236,8 +279,10 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
                                              min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
     }
     filter_list = g_strconcat_printf(filter_list, "</filter_list>");
-    // TODO NavitTraffClass, "onFilterUpdate" equivalent (change subscription or subscribe)
-    g_free(filter_list);
+    thread_lock_acquire_write(this_->queue_lock);
+    this_->queue = g_list_append(this_->queue, filter_list);
+    thread_lock_release_write(this_->queue_lock);
+    // TODO wake worker thread
 }
 
 
@@ -396,6 +441,8 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
     }
     ret->queue = NULL;
     ret->queue_lock = thread_lock_new();
+    ret->subscription_id = NULL;
+    ret->exiting = 0;
     *meth = traffic_traff_http_meth;
 
     traffic_traff_http_init(ret);
