@@ -93,8 +93,12 @@ void event_remove_watch(struct event_watch *ev) {
 /**
  * @brief Adds an event which will fire when the specified timeout expires.
  *
- * After a one-shot event has fired, or in order to stop a multi-shot event from firing again, it must
- * be removed by calling `event_remove_timeout()`.
+ * A one-shot event (`multi = 0`) will fire only once, and the result will be invalid after that.
+ * (The event system implementation must clean up the return value of this function after the event
+ * fires; if it does not, that is a bug in the event system implementation.)
+ *
+ * A multi-shot event (`multi = 1`) will fire repeatedly until removed by calling
+ * {@link event_remove_timeout(struct event_timeout *)}.
  *
  * @param timeout Timeout in msec
  * @param multi Whether the event should fire repeatedly (at the interval specified by `timeout`)
@@ -109,6 +113,10 @@ struct event_timeout *event_add_timeout(int timeout, int multi, struct callback 
 
 /**
  * @brief Removes a previously added timeout event.
+ *
+ * Doing so will prevent a multi-shot timeout event from firing another time.
+ *
+ * Do not call this operation on a single-shot event, as it will result in errors.
  *
  * @param ev The event, as returned by `event_add_timeout()`
  */
