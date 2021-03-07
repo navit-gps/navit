@@ -25,7 +25,6 @@
  * This plugin receives TraFF feeds from a TraFF HTTP server, either on the local device or on a
  * remote system.
  */
-// TODO get URI (attr_data?) and poll interval (attr_interval) from attributes
 
 #include <string.h>
 #include <time.h>
@@ -85,6 +84,7 @@ struct traffic_priv {
     struct map_selection * route_map_sel; /**< Map selection for the current route */
     thread * worker_thread;     /**< Worker thread for network communication */
     int interval;               /**< Poll interval for the source, in msec */
+    char * source;              /**< URL of the TraFF service */
 };
 
 void traffic_traff_http_destroy(struct traffic_priv * this_);
@@ -373,12 +373,17 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
     ret->route_map_sel = NULL;
     /* worker_thread will be set when we initialize */
     attr = attr_search(attrs, attr_interval);
-    if (!attr)
-        ret->interval = DEFAULT_INTERVAL;
-    else
+    if (attr)
         ret->interval = attr->u.num;
-    // TODO set URL
-    /* TODO populate members, if any */
+    else
+        ret->interval = DEFAULT_INTERVAL;
+    attr = attr_search(attrs, attr_source);
+    if (attr) {
+        if (strncmp(attr->u.str, "http://", 7) && strncmp(attr->u.str, "https://", 8)) {
+            dbg(lvl_error, "source must be an HTTP(S) URI: %s", attr->u.str);
+        } else
+            ret->source = attr->u.str;
+    }
     *meth = traffic_traff_http_meth;
 
     traffic_traff_http_init(ret);
