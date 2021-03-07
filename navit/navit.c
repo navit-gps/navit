@@ -3583,8 +3583,6 @@ void navit_layout_switch(struct navit *n) {
             after_sunrise = TRUE;
         }
 
-        dbg(lvl_error, "%i    %i     %d", HOURS(tset)*60, MINUTES(tset), (currTs%86400)/60);
-
         if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
                 ((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
             after_sunset = TRUE;
