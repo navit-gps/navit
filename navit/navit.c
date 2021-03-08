@@ -3543,7 +3543,6 @@ void navit_layout_switch(struct navit *n) {
 
                     // We were in nightlayout before the tunnel, keep it
                     n->layout_before_tunnel="";
-                    return;
                 }
             }
         }
