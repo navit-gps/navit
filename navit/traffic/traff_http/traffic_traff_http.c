@@ -26,12 +26,16 @@
  * remote system.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #ifdef _POSIX_C_SOURCE
 #include <sys/types.h>
 #endif
+
+#include <curl/curl.h>
 #include "thread.h"
 #include "glib_slice.h"
 #include "config.h"
@@ -91,6 +95,14 @@ struct traffic_priv {
     int exiting;                /**< Whether the plugin is shutting down */
 };
 
+/**
+ * @brief Stores HTTP response data.
+ */
+struct curl_result {
+    char *data;                 /**< Result data */
+    size_t size;                /**< Size of data stored in `memory` */
+};
+
 void traffic_traff_http_destroy(struct traffic_priv * this_);
 struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * this_);
 
@@ -124,6 +136,90 @@ static struct traffic_methods traffic_traff_http_meth = {
     traffic_traff_http_get_messages,
     traffic_traff_http_destroy,
 };
+
+
+/**
+ * @brief Callback function to process HTTP response data.
+ *
+ * `userp` must point to a `struct MemoryStruct`, which will receive the result data. Data will be
+ * null-terminated when this function returns. Data may be received in chunks, with this function called
+ * multiple times.
+ *
+ * @param contents Points to a chunk of result data
+ * @param size Number of characters in `contents`
+ * @param nmemb Number of bytes per character
+ * @param userp Points to the buffer structure as passed in `CURLOPT_WRITEDATA`
+ *
+ * @return Number of bytes stored, or 0 if an error occurred
+ */
+static size_t curl_result_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+    size_t realsize = size * nmemb;
+    struct curl_result *mem = (struct curl_result *)userp;
+
+    char *ptr = g_realloc(mem->data, mem->size + realsize + 1);
+    if (ptr == NULL) {
+        /* out of memory! */
+        dbg(lvl_error, "not enough memory (realloc returned NULL)");
+        return 0;
+    }
+
+    mem->data = ptr;
+    memcpy(&(mem->data[mem->size]), contents, realsize);
+    mem->size += realsize;
+    mem->data[mem->size] = 0;
+
+    return realsize;
+}
+
+
+/**
+ * @brief Sends an HTTP request and returns the result.
+ *
+ * @param url The URL to request
+ * @param postdata Data to be sent as part of the HTTP POST operation
+ *
+ * @result Pointer to a `struct curl_result` representing the data returned. The caller is responsible
+ * for freeing up both the struct and the memory pointed to by its `data` member.
+ */
+static struct curl_result * curl_post(char * url, char * data) {
+    struct curl_result * ret;
+    CURL *curl_handle;
+    CURLcode curl_res;
+
+    curl_handle = curl_easy_init();
+    if (curl_handle) {
+        ret = g_new0(struct curl_result, 1);
+        ret->data = g_malloc0(1);
+        ret->size = 0;
+
+        curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+
+        curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, data);
+
+        /* provide a callback and buffer for result data */
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, curl_result_callback);
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)ret);
+
+        // FIXME provide a meaningful user agent
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+        /* follow redirects */
+        curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+
+        curl_res = curl_easy_perform(curl_handle);
+        curl_easy_cleanup(curl_handle);
+        if (curl_res == CURLE_OK) {
+            return ret;
+        } else {
+            dbg(lvl_error, "curl status: %s", curl_easy_strerror(curl_res));
+            g_free(ret->data);
+            g_free(ret);
+        }
+    } else {
+        dbg(lvl_error, "curl initialization failed");
+    }
+    return NULL;
+}
 
 
 /**
@@ -457,6 +553,7 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
  */
 void plugin_init(void) {
     dbg(lvl_debug, "enter");
+    curl_global_init(CURL_GLOBAL_ALL);
 
     plugin_register_category_traffic("traff_http", traffic_traff_http_new);
 }
