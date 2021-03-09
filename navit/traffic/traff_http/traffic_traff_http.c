@@ -282,6 +282,9 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 
     /* Data for the request, if any */
     char * request;
+
+    /* Result for the request */
+    struct curl_result * chunk;
     while (1) {
         /* by default, poll the source every time the loop runs, unless we’re exiting */
         poll = !this_->exiting;
@@ -300,7 +303,15 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             thread_lock_destroy(this_->queue_lock);
             this_->queue_lock = NULL;
 
-            // TODO unsubscribe if we are subscribed
+            /* unsubscribe if we are subscribed */
+            if (this_->subscription_id) {
+                request = g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
+                chunk = curl_post(this_->source, request);
+                if (chunk) {
+                    g_free(chunk->data);
+                    g_free(chunk);
+                }
+            }
 
             break;
         }
@@ -319,8 +330,13 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 
         if (this_->subscription_id && poll) {
             /* poll */
-            dbg(lvl_error, "need to poll the source");
-            // TODO poll and post feed, or handle error
+            request = g_strdup_printf("<request operation='POLL' subscription_id='%s'/>", this_->subscription_id);
+            chunk = curl_post(this_->source, request);
+            if (chunk) {
+                // TODO post feed or handle TraFF error
+                g_free(chunk->data);
+                g_free(chunk);
+            }
         }
 
         /* finally, sleep until the next poll is due */
