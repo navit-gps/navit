@@ -320,9 +320,19 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
         thread_lock_acquire_write(this_->queue_lock);
         while (this_->queue) {
             /* process queue, suppress subsequent poll if necessary (usually upon getting a feed) */
+            if (this_->subscription_id)
+                request = g_strdup_printf("<request operation='CHANGE' subscription_id='%s'>\n%s\n</request>",
+                        this_->subscription_id, this_->queue->data);
+            else
+                request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", this_->queue->data);
+            dbg(lvl_error, "sending request: \n%s", request);
+            chunk = curl_post(this_->source, request);
+            if (chunk) {
+                g_free(chunk->data);
+                g_free(chunk);
+            }
+            // TODO process results, post feed (if any)
             request = this_->queue->data;
-            dbg(lvl_error, "got request: \n%s", request);
-            // TODO send request, process results, post feed (if any)
             this_->queue = g_list_remove(this_->queue, request);
             g_free(request);
         }
