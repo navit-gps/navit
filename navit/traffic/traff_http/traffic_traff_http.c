@@ -231,39 +231,54 @@ static struct curl_result * curl_post(char * url, char * data) {
  * function runs.
  *
  * @param this_ Private data for the module instance
- * @param feed Feed data in string form
+ * @param messages Parsed messages
  * @param cb Pointer to the callback used to call this function
  */
-static void traffic_traff_http_on_feed_received(struct traffic_priv * this_, char * feed,
+static void traffic_traff_http_on_feed_received(struct traffic * traffic,
+                                                struct traffic_message ** messages,
                                                 struct callback ** cb) {
-    struct attr * attr;
-    struct attr_iter * a_iter;
-    struct traffic * traffic = NULL;
-    struct traffic_message ** messages;
-
     dbg(lvl_debug, "enter");
-    attr = g_new0(struct attr, 1);
-    a_iter = navit_attr_iter_new(NULL);
-    if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
-        traffic = (struct traffic *) attr->u.navit_object;
-    navit_attr_iter_destroy(a_iter);
-    g_free(attr);
-
     callback_destroy(*cb);
     g_free(cb);
 
-    if (!traffic) {
-        dbg(lvl_error, "failed to obtain traffic instance");
-        return;
-    }
+    traffic_process_messages(traffic, messages);
+    g_free(messages);
+}
 
-    dbg(lvl_debug, "processing traffic feed:\n%s", feed);
-    messages = traffic_get_messages_from_xml_string(traffic, feed);
-    if (messages) {
-        dbg(lvl_debug, "got messages from feed, processing");
-        traffic_process_messages(traffic, messages);
-        g_free(messages);
+/**
+ * @brief Processes a TraFF response.
+ *
+ * This runs on the worker thread. If messages are received, they are posted to the main thread for
+ * processing.
+ *
+ * @param this_ The plugin instance
+ * @param response The parsed response
+ *
+ * @return True if messages were received, false if not
+ */
+static int traffic_traff_http_process_response(struct traffic_priv * this_,
+                                           struct traffic_response * response) {
+    int ret = 0;
+    struct callback ** cb;
+    if (!strcmp(response->status, "OK") || !strcmp(response->status, "PARTIALLY_COVERED")) {
+        if (response->subscription_id) {
+            this_->subscription_id = response->subscription_id;
+        }
+        // TODO subscription timeout
+        if (response->messages && *(response->messages)) {
+            dbg(lvl_debug, "response contains messages, posting traffic feed");
+            cb = g_new0(struct callback *, 1);
+            *cb = callback_new_3(callback_cast(traffic_traff_http_on_feed_received), this_->traffic,
+                                 response->messages, cb);
+            event_add_timeout(1, 0, *cb);
+        }
+        ret = !!(response->messages);
+        g_free(response->status);
+        g_free(response);
+    } else {
+        dbg(lvl_error, "TraFF request failed with status %s", response->status);
     }
+    return ret;
 }
 
 
@@ -289,6 +304,10 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 
     /* Result for the request */
     struct curl_result * chunk;
+
+    /* Decoded response */
+    struct traffic_response * response;
+
     while (1) {
         /* by default, poll the source every time the loop runs, unless we’re exiting */
         poll = !this_->exiting;
@@ -297,6 +316,7 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
         if (this_->exiting) {
             dbg(lvl_error, "shutting down");
 
+            /* no need for the lock as the main thread is no longer placing requests at this point */
             while (this_->queue) {
                 request = this_->queue->data;
                 dbg(lvl_error, "discarding request: \n%s", request);
@@ -337,10 +357,12 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             dbg(lvl_error, "sending request: \n%s", request);
             chunk = curl_post(this_->source, request);
             if (chunk) {
+                response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
                 g_free(chunk->data);
                 g_free(chunk);
+                // TODO repeat if subscription unknown
+                poll &= !traffic_traff_http_process_response(this_, response);
             }
-            // TODO process results; if we got a feed, post it and suppress poll
             g_free(request);
             g_free(rdata);
 
@@ -354,9 +376,11 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             request = g_strdup_printf("<request operation='POLL' subscription_id='%s'/>", this_->subscription_id);
             chunk = curl_post(this_->source, request);
             if (chunk) {
-                // TODO post feed or handle TraFF error
+                response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
                 g_free(chunk->data);
                 g_free(chunk);
+                // TODO handle unknown subscription
+                traffic_traff_http_process_response(this_, response);
             }
         }
 
@@ -364,14 +388,6 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
         // TODO can we wake a sleeping thread?
         thread_sleep(this_->interval);
     }
-
-    /* TODO to post a feed (char * feed) to the main thread:
-     *
-    struct callback ** cb = g_new0(struct callback *, 1);
-    *cb = callback_new_3(callback_cast(traffic_traff_http_on_feed_received), this_, feed, cb);
-    event_add_timeout(1, 0, *cb);
-     *
-     */
 }
 
 
