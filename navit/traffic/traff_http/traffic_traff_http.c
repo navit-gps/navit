@@ -280,6 +280,9 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
     /* Whether the current run of the loop should poll the source */
     int poll;
 
+    /* Partial request data (from queue), if any */
+    char * rdata;
+
     /* Data for the request, if any */
     char * request;
 
@@ -319,22 +322,29 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
         /* check if we have any pending requests */
         thread_lock_acquire_write(this_->queue_lock);
         while (this_->queue) {
-            /* process queue, suppress subsequent poll if necessary (usually upon getting a feed) */
+            /* get data, remove entry and release the lock for the duration of the network request */
+            rdata = this_->queue->data;
+            this_->queue = g_list_remove(this_->queue, rdata);
+            thread_lock_release_write(this_->queue_lock);
+
+            /* send the request and process its results */
             if (this_->subscription_id)
                 request = g_strdup_printf("<request operation='CHANGE' subscription_id='%s'>\n%s\n</request>",
-                        this_->subscription_id, this_->queue->data);
+                        this_->subscription_id, rdata);
             else
-                request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", this_->queue->data);
+                request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", rdata);
             dbg(lvl_error, "sending request: \n%s", request);
             chunk = curl_post(this_->source, request);
             if (chunk) {
                 g_free(chunk->data);
                 g_free(chunk);
             }
-            // TODO process results, post feed (if any)
-            request = this_->queue->data;
-            this_->queue = g_list_remove(this_->queue, request);
+            // TODO process results; if we got a feed, post it and suppress poll
             g_free(request);
+            g_free(rdata);
+
+            /* reacquire the lock so the loop condition is protected */
+            thread_lock_acquire_write(this_->queue_lock);
         }
         thread_lock_release_write(this_->queue_lock);
 
