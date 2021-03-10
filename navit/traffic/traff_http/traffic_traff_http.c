@@ -83,6 +83,7 @@
  */
 struct traffic_priv {
     struct navit * nav;         /**< The navit instance */
+    struct traffic * traffic;   /**< The traffic instance */
     int position_valid;         /**< Whether Navit currently has a valid position */
     struct coord_rect * position_rect; /**< Rectangle around last known vehicle position (in `projection_mg`) */
     struct map_selection * route_map_sel; /**< Map selection for the current route */
@@ -419,6 +420,34 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
 
 
 /**
+ * @brief Callback for the traffic attribute
+ *
+ * This is needed because the traffic instance is not available until our constructor and init methods
+ * have returned. To finish initialization, i.e. obtain a reference to the traffic instance and launch
+ * the worker thread (which needs that instance), we register a callback when the attribute changes.
+ * This happens only once at startup.
+ *
+ * @param this_ The instance which will handle the update
+ */
+static void traffic_traff_http_traffic_callback(struct traffic_priv * this_) {
+    struct attr * attr;
+    struct attr_iter * a_iter;
+
+    attr = g_new0(struct attr, 1);
+    a_iter = navit_attr_iter_new(NULL);
+    if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
+        this_->traffic = (struct traffic *) attr->u.navit_object;
+    navit_attr_iter_destroy(a_iter);
+    g_free(attr);
+
+    if (this_->traffic && !this_->worker_thread) {
+        dbg(lvl_debug, "traffic module fully initialized, starting worker thread");
+        this_->worker_thread = thread_new(traffic_traff_http_worker_thread_main, this_, TRAFF_HTTP_WORKER_THREAD_NAME);
+    }
+}
+
+
+/**
  * @brief Callback for destination changes
  *
  * @param this_ The instance which will handle the destination update
@@ -494,7 +523,6 @@ static void traffic_traff_http_position_callback(struct traffic_priv * this_, st
  */
 static int traffic_traff_http_init(struct traffic_priv * this_) {
     struct route * route;
-    struct attr attr;
     struct navigation * navigation;
 
     /* TODO verify event system, accept if thread-safe, warn if functions are missing, else exit
@@ -521,6 +549,10 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
     }
     /* TODO anything else to do here? */
 
+    /* register callback for traffic module so we can finish setting up */
+    navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_traffic_callback),
+            attr_traffic, this_));
+
     /* register callbacks for position and destination changes */
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_position_callback),
                        attr_position_coord_geo, this_));
@@ -529,8 +561,6 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
     if ((navigation = navit_get_navigation(this_->nav)))
         navigation_register_callback(navigation, attr_nav_status,
                                      callback_new_attr_1(callback_cast(traffic_traff_http_status_callback), attr_nav_status, this_));
-
-    this_->worker_thread = thread_new(traffic_traff_http_worker_thread_main, this_, TRAFF_HTTP_WORKER_THREAD_NAME);
 
     return 1;
 }
@@ -555,6 +585,7 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
 
     ret = g_new0(struct traffic_priv, 1);
     ret->nav = nav;
+    ret->traffic = NULL;
     ret->position_valid = 0;
     ret->position_rect = NULL;
     ret->route_map_sel = NULL;
