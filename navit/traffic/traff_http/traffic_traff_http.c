@@ -142,7 +142,7 @@ static struct traffic_methods traffic_traff_http_meth = {
 /**
  * @brief Callback function to process HTTP response data.
  *
- * `userp` must point to a `struct MemoryStruct`, which will receive the result data. Data will be
+ * `userp` must point to a `struct curl_result`, which will receive the result data. Data will be
  * null-terminated when this function returns. Data may be received in chunks, with this function called
  * multiple times.
  *
