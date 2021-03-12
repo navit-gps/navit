@@ -77,6 +77,10 @@ extern "C" {
 #define thread pthread_t
 #define thread_lock pthread_rwlock_t
 #define thread_id pthread_t
+
+struct thread_event_pthread;
+
+#define thread_event struct thread_event_pthread
 #else
 #define thread int
 #define thread_lock int
@@ -142,6 +146,67 @@ int thread_join(thread * this_);
  * If Navit was built without thread support, this function will return 0.
  */
 thread_id thread_get_id(void);
+
+/**
+ * @brief Creates a new event.
+ *
+ * An event is a construct which a thread can signal or wait to be signaled, i.e. block until then.
+ *
+ * The caller is responsible for freeing up the event with `thread_event_destroy()` when it is no longer
+ * needed.
+ *
+ * If Navit was built without thread support, this is a no-op and NULL will be returned.
+ */
+thread_event *thread_event_new(void);
+
+/**
+ * @brief Frees all resources associated with the event.
+ *
+ * If Navit was built without thread support, this is a no-op. If `this_` is NULL on a platform with thread support,
+ * the behavior is undefined.
+ */
+void thread_event_destroy(thread_event *this_);
+
+/**
+ * @brief Signals an event.
+ *
+ * If another thread is waiting for the event, signaling it will cause it to wake up.
+ *
+ * If there are multiple waiting threads, only one of them will get woken up. Such usage is strongly
+ * discouraged, as behavior is not well-defined and may differ across platforms.
+ *
+ * If Navit was built without thread support, this is a no-op. If `this_` is NULL on a platform with thread support,
+ * the behavior is undefined.
+ */
+void thread_event_signal(thread_event *this_);
+
+/**
+ * @brief Resets the signaled state of an event
+ *
+ * Depending on the implementation, the event may remain in signaled state if the receiving thread is
+ * not waiting for it at the time it is signaled, causing a subsequent call to
+ * {@link thread_event_wait(thread_event *, long)} to return without blocking. If this is undesired, the
+ * caller can call this method after completing any processing in response to the event to ensure the
+ * event is no longer in signaled state. (Care must be taken that the condition signaled by this event
+ * has not recurred by the time this method is called.)
+ *
+ * On platforms which automatically reset the event even if no thread is currently waiting, this is a
+ * no-op.
+ */
+void thread_event_reset(thread_event *this_);
+
+/**
+ * @brief Blocks the current thread until an event is signaled, or the timeout elapses.
+ *
+ * If called with a zero timeout, this call will return immediately, whether or not the event is
+ * currently in signaled state. A negative timeout denotes infinity, i.e. the call will never time out.
+ *
+ * @param msec Timeout in milliseconds
+ *
+ * If Navit was built without thread support, this is a no-op. If `this_` is NULL on a platform with thread support,
+ * the behavior is undefined.
+ */
+void thread_event_wait(thread_event *this_, long msec);
 
 /**
  * @brief Creates a new lock.
