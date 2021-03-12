@@ -92,6 +92,7 @@ struct traffic_priv {
     char * source;              /**< URL of the TraFF service */
     GList * queue;              /**< Queue of requests to be processed by the worker thread */
     thread_lock * queue_lock;   /**< Lock for the request queue */
+    thread_event * queue_event; /**< Event that is signaled when a request is posted to the queue */
     char * subscription_id;     /**< Subscription ID */
     int exiting;                /**< Whether the plugin is shutting down */
 };
@@ -113,6 +114,7 @@ struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * 
 void traffic_traff_http_destroy(struct traffic_priv * this_) {
     /* tell the worker thread to clean up and exit */
     this_->exiting = 1;
+    thread_event_signal(this_->queue_event);
     if (this_->position_rect)
         g_free(this_->position_rect);
     this_->position_rect = NULL;
@@ -324,6 +326,8 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
                 g_free(request);
             }
 
+            thread_event_destroy(this_->queue_event);
+            this_->queue_event = NULL;
             thread_lock_destroy(this_->queue_lock);
             this_->queue_lock = NULL;
 
@@ -369,6 +373,8 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             /* reacquire the lock so the loop condition is protected */
             thread_lock_acquire_write(this_->queue_lock);
         }
+        /* the queue is empty, ensure the event is unset before releasing the lock */
+        thread_event_reset(this_->queue_event);
         thread_lock_release_write(this_->queue_lock);
 
         if (this_->subscription_id && poll) {
@@ -384,9 +390,8 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             }
         }
 
-        /* finally, sleep until the next poll is due */
-        // TODO can we wake a sleeping thread?
-        thread_sleep(this_->interval);
+        /* finally, sleep until the next poll is due or we receive a new request */
+        thread_event_wait(this_->queue_event, this_->interval);
     }
 }
 
@@ -430,8 +435,8 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     filter_list = g_strconcat_printf(filter_list, "</filter_list>");
     thread_lock_acquire_write(this_->queue_lock);
     this_->queue = g_list_append(this_->queue, filter_list);
+    thread_event_signal(this_->queue_event);
     thread_lock_release_write(this_->queue_lock);
-    // TODO wake worker thread
 }
 
 
@@ -620,6 +625,7 @@ static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct tr
     }
     ret->queue = NULL;
     ret->queue_lock = thread_lock_new();
+    ret->queue_event = thread_event_new();
     ret->subscription_id = NULL;
     ret->exiting = 0;
     *meth = traffic_traff_http_meth;
