@@ -43,6 +43,14 @@ struct thread_main_data {
 };
 
 /**
+ * @brief Encapsulates the data structures for a pthread condition.
+ */
+struct thread_event_pthread {
+    pthread_cond_t *cond;
+    pthread_mutex_t *mutex;
+};
+
+/**
  * @brief A wrapper around the main thread function.
  *
  * This wraps the implementation-neutral main function into a function with the signature expected by the POSIX thread
@@ -213,6 +221,84 @@ thread_id thread_get_id(void) {
     return pthread_self();
 #else
     return 0;
+#endif
+}
+
+thread_event *thread_event_new(void) {
+#if HAVE_POSIX_THREADS
+    thread_event *ret = g_new0(thread_event, 1);
+    ret->cond = g_new0(pthread_cond_t, 1);
+    pthread_cond_init(ret->cond, NULL);
+    ret->mutex = g_new0(pthread_mutex_t, 1);
+    pthread_mutex_init(ret->mutex, NULL);
+    return ret;
+#else
+    // TODO Win32 CreateEvent (auto-reset?)
+    return 0;
+#endif
+}
+
+void thread_event_destroy(thread_event *this_) {
+#if HAVE_POSIX_THREADS
+    pthread_cond_destroy(this_->cond);
+    g_free(this_->cond);
+    pthread_mutex_destroy(this_->mutex);
+    g_free(this_->mutex);
+    g_free(this_);
+#else
+    // TODO Win32?
+    return;
+#endif
+}
+
+void thread_event_signal(thread_event *this_) {
+#if HAVE_POSIX_THREADS
+    pthread_mutex_lock(this_->mutex);
+    /*
+     * Using pthread_cond_signal as it wakes just one thread, similar to an auto-reset event on WinAPI
+     * (pthread_cond_broadcast would wake all waiting threads).
+     */
+    pthread_cond_signal(this_->cond);
+    pthread_mutex_unlock(this_->mutex);
+#else
+    // TODO Win32: SetEvent
+    return;
+#endif
+}
+
+void thread_event_reset(thread_event *this_) {
+#if HAVE_POSIX_THREADS
+    return;
+#else
+    // TODO Win32: ResetEvent
+    return;
+#endif
+}
+
+void thread_event_wait(thread_event *this_, long msec) {
+#if HAVE_POSIX_THREADS
+    struct timeval tp;
+    struct timespec ts;
+    pthread_mutex_lock(this_->mutex);
+    if (msec < 0)
+        pthread_cond_wait(this_->cond, this_->mutex);
+    else {
+        gettimeofday(&tp, NULL);
+        /* if msec is 1 s or more, add integer part to tv_sec */
+        ts.tv_sec = tp.tv_sec + floor(msec / 1000);
+        /* for now, these are really µsec, not nsec, to prevent overflow */
+        ts.tv_nsec = tp.tv_usec + (msec % 1000) * 1000000;
+        /* if tv_nsec is 1s or more, move integer second part to tv_sec */
+        ts.tv_sec += floor(ts.tv_nsec / 1000000);
+        ts.tv_nsec %= 1000000;
+        /* and finally, convert µsec to nsec */
+        ts.tv_nsec *= 1000;
+
+        pthread_cond_timedwait(this_->cond, this_->mutex, &ts);
+    }
+    pthread_mutex_unlock(this_->mutex);
+#else
+    return;
 #endif
 }
 
