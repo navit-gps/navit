@@ -147,7 +147,10 @@ char * thread_format_error(int error) {
 #endif
 
 #if HAVE_NAVIT_THREADS
-/* If thread_new() is called on a single-threaded platform, the build will fail. */
+/*
+ * Wrapping the function in a conditional causes the build to fail if thread_new() is called on a
+ * platform without thread support.
+ */
 thread *thread_new(int (*main)(void *), void * data, char * name) {
 #if HAVE_POSIX_THREADS
     int err;
