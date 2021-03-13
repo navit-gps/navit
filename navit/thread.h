@@ -21,8 +21,8 @@
  *
  * @brief Thread abstraction layer for Navit.
  *
- * This file provides a cross-platform thread API for Navit. It is not necessarily feature-complete—if Navit doesn’t
- * need a certain feature, it will not be included.
+ * This file provides a cross-platform thread API for Navit. It is not necessarily feature-complete—it includes only
+ * those features which Navit uses or has used at some point.
  *
  * It is permitted (and even desirable) to include this header file on platforms which have no support for threads:
  * this will set the `HAVE_NAVIT_THREADS` constant to 0, allowing for the use of preprocessor conditionals to write
@@ -38,11 +38,11 @@
  * On the other hand, operations such as attempting to spawn a new thread will cause a compiler error in a
  * single-threaded environment, as there is no appropriate “translation” for this operation (the developer would have
  * to choose an appropriate way of running the code on the main thread, possibly with further refactoring to avoid
- * locking up the program, thus attempting to spawn a thread is an error).
+ * locking up the program), thus attempting to spawn a thread is an error.
  *
  * Types defined in this header are intended to be used as pointers. Constructor functions allocate memory and return
- * pointers, and other functions expect pointers as well. On platforms without thread support, types defined here map
- * to `void` and cannot be instantiated directly.
+ * pointers, and other functions expect pointers as well. On platforms without thread support, types defined here may
+ * map to a type which cannot be instantiated directly, e.g. `void`.
  *
  * Deadlocks are currently not taken into account. Depending on the lower layer, threads involved in a deadlock may
  * either lock up forever, or log an error and use the locked resource anyway (resulting in inconsistencies later on).
