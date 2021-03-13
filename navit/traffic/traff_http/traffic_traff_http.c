@@ -319,7 +319,6 @@ static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 
         /* if we’re exiting, clean up and exit */
         if (this_->exiting) {
-            dbg(lvl_error, "shutting down");
 
             /* no need for the lock as the main thread is no longer placing requests at this point */
             while (this_->queue) {
