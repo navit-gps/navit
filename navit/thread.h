@@ -85,6 +85,7 @@ struct thread_event_pthread;
 #define thread int
 #define thread_lock int
 #define thread_id int
+#define thread_event int
 #endif
 
 /**
