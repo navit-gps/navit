@@ -121,6 +121,9 @@ void traffic_traff_http_destroy(struct traffic_priv * this_) {
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
     this_->route_map_sel = NULL;
+    dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
+    thread_join(this_->worker_thread);
+    dbg(lvl_debug, "worker thread terminated");
 }
 
 /**
