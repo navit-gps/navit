@@ -215,6 +215,7 @@ int thread_join(thread * this_) {
     }
     return (int) ret;
 #else
+    // TODO Win32 WaitForSingleObject(thread)
     return -1;
 #endif
 }
@@ -236,7 +237,7 @@ thread_event *thread_event_new(void) {
     pthread_mutex_init(ret->mutex, NULL);
     return ret;
 #else
-    // TODO Win32 CreateEvent (auto-reset?)
+    // TODO Win32 CreateEvent (auto-reset)
     return 0;
 #endif
 }
@@ -301,6 +302,7 @@ void thread_event_wait(thread_event *this_, long msec) {
     }
     pthread_mutex_unlock(this_->mutex);
 #else
+    // TODO Win32 WaitForSingleObject(event, msec)
     return;
 #endif
 }
@@ -316,6 +318,7 @@ thread_lock *thread_lock_new(void) {
     }
     return ret;
 #else
+    // TODO Win32 CreateMutex (SRWLock requires 6.0+)
     return NULL;
 #endif
 }
