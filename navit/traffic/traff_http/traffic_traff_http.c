@@ -407,6 +407,7 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     struct route * route;
     struct coord_geo lu, rl;
     gchar *filter_list;
+    struct map_selection * sel;
     gchar *min_road_class;
 
     if (this_->route_map_sel)
@@ -423,7 +424,7 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
         filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
                                          rl.lat, lu.lng, lu.lat, rl.lng);
     }
-    for (struct map_selection * sel = this_->route_map_sel; sel; sel = sel->next) {
+    for (sel = this_->route_map_sel; sel; sel = sel->next) {
         transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
         transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
         min_road_class = order_to_min_road_class(sel->order);
