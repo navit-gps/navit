@@ -192,9 +192,9 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
 #endif
     return ret;
 #elif HAVE_API_WIN32
-    DWORD err;
     thread * ret = g_new0(thread, 1);
     struct thread_main_data * main_data = g_new0(struct thread_main_data, 1);
+    DWORD err;
     main_data->main = main;
     main_data->data = data;
     ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID) main_data, 0, NULL);
@@ -217,7 +217,7 @@ void thread_destroy(thread* this_) {
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this)) {
+    if (!CloseHandle (*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, thread=%p", err, this_);
     }
@@ -258,8 +258,10 @@ int thread_join(thread * this_) {
     return (int) ret;
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
         dbg(lvl_error, "error %d, thread=%p", err, this_);
         return -1;
     }
@@ -289,6 +291,7 @@ thread_event *thread_event_new(void) {
     return ret;
 #elif HAVE_API_WIN32
     thread_event *ret = g_new0(thread_event, 1);
+    DWORD err;
     *ret = CreateEventW(NULL, FALSE, FALSE, NULL);
     if (!*ret) {
         err = GetLastError();
@@ -311,7 +314,7 @@ void thread_event_destroy(thread_event *this_) {
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this)) {
+    if (!CloseHandle (*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, event=%p", err, this_);
     }
@@ -371,9 +374,11 @@ void thread_event_wait(thread_event *this_, long msec) {
     pthread_mutex_unlock(this_->mutex);
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
-        dbg(lvl_error, "error %d %s, event=%p", err, thread_format_error(err), this_);
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, event=%p", err, this_);
     }
 #else
     return;
@@ -391,13 +396,14 @@ thread_lock *thread_lock_new(void) {
     }
     return ret;
 #elif HAVE_API_WIN32
+    thread_lock * ret = g_new0(thread_lock, 1);
+    DWORD err;
     /*
      * On Windows, locks are implemented as mutexes since locks (SRWLock) were not introduced until
      * Windows Vista (NT 6.0). If we ever drop support for versions older than that, this implementation
      * can (and in that case, should) be changed to use SRWLock instead. Until then, obtaining a lock on
      * Windows will always be an exclusive operation, i.e. multiple concurrent readers are not allowed.
      */
-    thread_lock * ret = g_new0(thread_lock, 1);
     // FIXME should we hold the mutex initially (indicated by second arg)?
     *ret = CreateMutex(NULL, FALSE, NULL);
     if (!*ret) {
@@ -420,7 +426,7 @@ void thread_lock_destroy(thread_lock *this_) {
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this)) {
+    if (!CloseHandle (*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, lock=%p", err, this_);
     }
@@ -437,12 +443,13 @@ void thread_lock_acquire_read(thread_lock *this_) {
     }
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
-        dbg(lvl_error, "error %d, thread=%p", err, this_);
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, lock=%p", err, this_);
         abort();
     }
-    return 0;
 #endif
 }
 
@@ -456,9 +463,11 @@ int thread_lock_try_read(thread_lock *this_) {
     return 1;
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
-        dbg(lvl_error, "error %d, thread=%p", err, this_);
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, lock=%p", err, this_);
         return 0;
     }
     return 1;
@@ -488,12 +497,13 @@ void thread_lock_acquire_write(thread_lock *this_) {
     }
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
-        dbg(lvl_error, "error %d, thread=%p", err, this_);
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, lock=%p", err, this_);
         abort();
     }
-    return 0;
 #endif
 }
 
@@ -507,9 +517,11 @@ int thread_lock_try_write(thread_lock *this_) {
     return 1;
 #elif HAVE_API_WIN32
     DWORD res;
+    DWORD err;
     res = WaitForSingleObject(*this_, INFINITE);
-    if (res = WAIT_FAILED) {
-        dbg(lvl_error, "error %d, thread=%p", err, this_);
+    if (res == WAIT_FAILED) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, lock=%p", err, this_);
         return 0;
     }
     return 1;
