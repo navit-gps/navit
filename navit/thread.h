@@ -63,8 +63,13 @@ extern "C" {
 #include "config.h"
 
 #ifdef HAVE_API_WIN32_BASE
+#undef HAVE_POSIX_THREADS
+#ifdef HAVE_API_WIN32
+#define HAVE_NAVIT_THREADS 1
+#else
 #undef HAVE_NAVIT_THREADS
 #warning "threads are not supported on this platform, building a single-threaded version"
+#endif
 #include <windows.h>
 #else
 #define HAVE_POSIX_THREADS 1
@@ -73,7 +78,8 @@ extern "C" {
 #endif
 
 
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
+
 #define thread pthread_t
 #define thread_lock pthread_rwlock_t
 #define thread_id pthread_t
@@ -81,11 +87,21 @@ extern "C" {
 struct thread_event_pthread;
 
 #define thread_event struct thread_event_pthread
+
+#elif HAVE_API_WIN32
+
+#define thread HANDLE
+#define thread_lock HANDLE
+#define thread_id DWORD
+#define thread_event HANDLE
+
 #else
+
 #define thread int
 #define thread_lock int
 #define thread_id int
 #define thread_event int
+
 #endif
 
 /**
@@ -134,6 +150,8 @@ void thread_exit(int result);
 
 /**
  * @brief Joins a thread, i.e. blocks until the thread has finished.
+ *
+ * On some platforms, the return value will always be 0 unless an error was encountered.
  *
  * If Navit was built without thread support, this function will return -1 immediately.
  *
@@ -264,6 +282,10 @@ void thread_lock_destroy(thread_lock *this_);
  * If another thread is currently holding the same lock for writing, the calling thread will block until the lock can
  * be acquired. If lock acquisition fails for any reason (including a deadlock), the process will abort.
  *
+ * On Windows, locks are implemented as mutexes for reasons of backward compatibility. This makes read locks behave
+ * exactly like write locks, i.e. only one thread can hold a given lock even for reading. This behavior may change
+ * in the future if support for versions prior to Vista is dropped.
+ *
  * If Navit was built without thread support, this is a no-op.
  */
 void thread_lock_acquire_read(thread_lock *this_);
@@ -275,6 +297,10 @@ void thread_lock_acquire_read(thread_lock *this_);
  * `thread_lock_acquire_read()`. If acquiring the lock fails for whatever reason, it never blocks but returns FALSE
  * immediately. The caller must evaluate the return value. If the result was FALSE, indicating the lock was not
  * obtained, it needs to recover from the situation and refrain from operations which the lock protects.
+ *
+ * On Windows, locks are implemented as mutexes for reasons of backward compatibility. This makes read locks behave
+ * exactly like write locks, i.e. only one thread can hold a given lock even for reading. This behavior may change
+ * in the future if support for versions prior to Vista is dropped.
  *
  * If Navit was built without thread support, this is a no-op and the result will always be TRUE.
  */

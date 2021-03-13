@@ -33,7 +33,6 @@
 #endif
 #include "debug.h"
 
-#if HAVE_POSIX_THREADS
 /**
  * @brief Describes the main function for a thread.
  */
@@ -41,6 +40,8 @@ struct thread_main_data {
     int (*main)(void *);       /**< The thread’s main function. */
     void * data;               /**< The argument for the function. */
 };
+
+#ifdef HAVE_POSIX_THREADS
 
 /**
  * @brief Encapsulates the data structures for a pthread condition.
@@ -61,6 +62,7 @@ struct thread_event_pthread {
 static void *thread_main_wrapper(void * data) {
     struct thread_main_data * main_data = (struct thread_main_data *) data;
     void * ret = (void *) (main_data->main(main_data->data));
+    // FIXME free up `data`
     return ret;
 }
 
@@ -144,6 +146,23 @@ char * thread_format_error(int error) {
         return "unknown";
     }
 }
+
+#elif HAVE_API_WIN32
+
+/**
+ * @brief A wrapper around the main thread function.
+ *
+ * This wraps the implementation-neutral main function into a function with the signature expected by WinAPI.
+ *
+ * @param data Pointer to a `struct thread_main_data` encapsulating the main function and its argument.
+ */
+static DWORD WINAPI *thread_main_wrapper(_In_ LPVOID data) {
+    struct thread_main_data * main_data = (struct thread_main_data *) data;
+    DWORD ret = (DWORD) (main_data->main(main_data->data));
+    // FIXME free up `data`
+    return ret;
+}
+
 #endif
 
 #if HAVE_NAVIT_THREADS
@@ -152,7 +171,7 @@ char * thread_format_error(int error) {
  * platform without thread support.
  */
 thread *thread_new(int (*main)(void *), void * data, char * name) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err;
     thread * ret = g_new0(thread, 1);
     struct thread_main_data * main_data = g_new0(struct thread_main_data, 1);
@@ -172,6 +191,20 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
     }
 #endif
     return ret;
+#elif HAVE_API_WIN32
+    DWORD err;
+    thread * ret = g_new0(thread, 1);
+    struct thread_main_data * main_data = g_new0(struct thread_main_data, 1);
+    main_data->main = main;
+    main_data->data = data;
+    ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID) main_data, 0, NULL);
+    if (!*ret) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, thread=%p", err, ret);
+        g_free(ret);
+        return NULL;
+    }
+    return ret;
 #else
     dbg(lvl_error, "call to thread_new() on a platform without thread support");
     return NULL;
@@ -180,7 +213,14 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
 #endif
 
 void thread_destroy(thread* this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
+    g_free(this_);
+#elif HAVE_API_WIN32
+    DWORD err;
+    if (!CloseHandle (*this)) {
+        err = GetLastError();
+        dbg(lvl_warning, "error %d, thread=%p", err, this_);
+    }
     g_free(this_);
 #endif
 }
@@ -198,15 +238,17 @@ void thread_sleep(long msec) {
 }
 
 void thread_exit(int result) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     pthread_exit((void *) result);
+#elif HAVE_API_WIN32
+    ExitThread((DWORD) result);
 #else
     return;
 #endif
 }
 
 int thread_join(thread * this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     void * ret;
     int err = pthread_join(*this_, &ret);
     if (err) {
@@ -214,49 +256,73 @@ int thread_join(thread * this_) {
         return -1;
     }
     return (int) ret;
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d, thread=%p", err, this_);
+        return -1;
+    }
+    return 0;
 #else
-    // TODO Win32 WaitForSingleObject(thread)
     return -1;
 #endif
 }
 
 thread_id thread_get_id(void) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     return pthread_self();
+#elif HAVE_API_WIN32
+    return GetCurrentThreadId();
 #else
     return 0;
 #endif
 }
 
 thread_event *thread_event_new(void) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     thread_event *ret = g_new0(thread_event, 1);
     ret->cond = g_new0(pthread_cond_t, 1);
     pthread_cond_init(ret->cond, NULL);
     ret->mutex = g_new0(pthread_mutex_t, 1);
     pthread_mutex_init(ret->mutex, NULL);
     return ret;
+#elif HAVE_API_WIN32
+    thread_event *ret = g_new0(thread_event, 1);
+    *ret = CreateEventW(NULL, FALSE, FALSE, NULL);
+    if (!*ret) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, thread=%p", err, ret);
+        g_free(ret);
+        return NULL;
+    }
+    return ret;
 #else
-    // TODO Win32 CreateEvent (auto-reset)
-    return 0;
+    return NULL;
 #endif
 }
 
 void thread_event_destroy(thread_event *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     pthread_cond_destroy(this_->cond);
     g_free(this_->cond);
     pthread_mutex_destroy(this_->mutex);
     g_free(this_->mutex);
     g_free(this_);
+#elif HAVE_API_WIN32
+    DWORD err;
+    if (!CloseHandle (*this)) {
+        err = GetLastError();
+        dbg(lvl_warning, "error %d, event=%p", err, this_);
+    }
+    g_free(this_);
 #else
-    // TODO Win32?
     return;
 #endif
 }
 
 void thread_event_signal(thread_event *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     pthread_mutex_lock(this_->mutex);
     /*
      * Using pthread_cond_signal as it wakes just one thread, similar to an auto-reset event on WinAPI
@@ -264,23 +330,25 @@ void thread_event_signal(thread_event *this_) {
      */
     pthread_cond_signal(this_->cond);
     pthread_mutex_unlock(this_->mutex);
+#elif HAVE_API_WIN32
+    SetEvent(*this_);
 #else
-    // TODO Win32: SetEvent
     return;
 #endif
 }
 
 void thread_event_reset(thread_event *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     return;
+#elif HAVE_API_WIN32
+    ResetEvent(*this_);
 #else
-    // TODO Win32: ResetEvent
     return;
 #endif
 }
 
 void thread_event_wait(thread_event *this_, long msec) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     struct timeval tp;
     struct timespec ts;
     pthread_mutex_lock(this_->mutex);
@@ -301,14 +369,19 @@ void thread_event_wait(thread_event *this_, long msec) {
         pthread_cond_timedwait(this_->cond, this_->mutex, &ts);
     }
     pthread_mutex_unlock(this_->mutex);
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d %s, event=%p", err, thread_format_error(err), this_);
+    }
 #else
-    // TODO Win32 WaitForSingleObject(event, msec)
     return;
 #endif
 }
 
 thread_lock *thread_lock_new(void) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     thread_lock *ret = g_new0(thread_lock, 1);
     int err = pthread_rwlock_init(ret, NULL);
     if (err) {
@@ -317,36 +390,75 @@ thread_lock *thread_lock_new(void) {
         return NULL;
     }
     return ret;
+#elif HAVE_API_WIN32
+    /*
+     * On Windows, locks are implemented as mutexes since locks (SRWLock) were not introduced until
+     * Windows Vista (NT 6.0). If we ever drop support for versions older than that, this implementation
+     * can (and in that case, should) be changed to use SRWLock instead. Until then, obtaining a lock on
+     * Windows will always be an exclusive operation, i.e. multiple concurrent readers are not allowed.
+     */
+    thread_lock * ret = g_new0(thread_lock, 1);
+    // FIXME should we hold the mutex initially (indicated by second arg)?
+    *ret = CreateMutex(NULL, FALSE, NULL);
+    if (!*ret) {
+        err = GetLastError();
+        dbg(lvl_error, "error %d, thread=%p", err, ret);
+        g_free(ret);
+        return NULL;
+    }
+    return ret;
 #else
-    // TODO Win32 CreateMutex (SRWLock requires 6.0+)
     return NULL;
 #endif
 }
 
 void thread_lock_destroy(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_destroy(this_);
     if (err)
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+    g_free(this_);
+#elif HAVE_API_WIN32
+    DWORD err;
+    if (!CloseHandle (*this)) {
+        err = GetLastError();
+        dbg(lvl_warning, "error %d, lock=%p", err, this_);
+    }
     g_free(this_);
 #endif
 }
 
 void thread_lock_acquire_read(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_rdlock(this_);
     if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
         abort();
     }
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d, thread=%p", err, this_);
+        abort();
+    }
+    return 0;
 #endif
 }
 
 int thread_lock_try_read(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_tryrdlock(this_);
     if (err) {
         dbg(lvl_debug, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        return 0;
+    }
+    return 1;
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d, thread=%p", err, this_);
         return 0;
     }
     return 1;
@@ -356,30 +468,48 @@ int thread_lock_try_read(thread_lock *this_) {
 }
 
 void thread_lock_release_read(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
     if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
         abort();
     }
+#elif HAVE_API_WIN32
+    ReleaseMutex(*this_);
 #endif
 }
 
 void thread_lock_acquire_write(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_wrlock(this_);
     if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
         abort();
     }
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d, thread=%p", err, this_);
+        abort();
+    }
+    return 0;
 #endif
 }
 
 int thread_lock_try_write(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_trywrlock(this_);
     if (err) {
         dbg(lvl_debug, "error %d %s, lock=%p", err, thread_format_error(err), this_);
+        return 0;
+    }
+    return 1;
+#elif HAVE_API_WIN32
+    DWORD res;
+    res = WaitForSingleObject(*this_, INFINITE);
+    if (res = WAIT_FAILED) {
+        dbg(lvl_error, "error %d, thread=%p", err, this_);
         return 0;
     }
     return 1;
@@ -389,11 +519,13 @@ int thread_lock_try_write(thread_lock *this_) {
 }
 
 void thread_lock_release_write(thread_lock *this_) {
-#if HAVE_POSIX_THREADS
+#ifdef HAVE_POSIX_THREADS
     int err = pthread_rwlock_unlock(this_);
     if (err) {
         dbg(lvl_error, "error %d %s, lock=%p", err, thread_format_error(err), this_);
         abort();
     }
+#elif HAVE_API_WIN32
+    ReleaseMutex(*this_);
 #endif
 }
