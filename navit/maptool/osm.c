@@ -4226,4 +4226,3 @@ void osm_init(FILE* rule_file) {
     build_attrmap(rule_file);
     build_countrytable();
 }
-
