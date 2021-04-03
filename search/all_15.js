@@ -685,6 +685,7 @@ var searchData=
   ['sun_5fra_5fdec',['sun_RA_dec',['../sunriset_8c.html#a9910e866c15e5dd400c1856a95d454cc',1,'sun_RA_dec(double d, double *RA, double *dec, double *r):&#160;sunriset.c'],['../sunriset_8h.html#a9910e866c15e5dd400c1856a95d454cc',1,'sun_RA_dec(double d, double *RA, double *dec, double *r):&#160;sunriset.c']]],
   ['sun_5frise_5fset',['sun_rise_set',['../sunriset_8h.html#a2636008bf742109698546b22b41b2de4',1,'sunriset.h']]],
   ['sunpos',['sunpos',['../sunriset_8c.html#a0d26e7e0c51fdb377cad6ac7c2ba68b8',1,'sunpos(double d, double *lon, double *r):&#160;sunriset.c'],['../sunriset_8h.html#a0d26e7e0c51fdb377cad6ac7c2ba68b8',1,'sunpos(double d, double *lon, double *r):&#160;sunriset.c']]],
+  ['sunrise_5fdegrees',['sunrise_degrees',['../structnavit.html#ab0497bcd21a81ee8afff766c975ab0b0',1,'navit']]],
   ['sunriset_2ec',['sunriset.c',['../sunriset_8c.html',1,'']]],
   ['sunriset_2eh',['sunriset.h',['../sunriset_8h.html',1,'']]],
   ['surfacechanged',['surfaceChanged',['../classorg_1_1navitproject_1_1navit_1_1NavitCamera.html#a9a75c983f9ca7f25385aafa93de957dd',1,'org::navitproject::navit::NavitCamera']]],

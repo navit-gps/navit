@@ -124,6 +124,7 @@ var searchData=
   ['ts',['ts',['../structimg__header.html#a9a159f9d9b138b1e68258fde972b61f7',1,'img_header::ts()'],['../structfile__header.html#a7f06fb44ff96cc32c7c0f19116266a98',1,'file_header::ts()'],['../structmap__rect__priv.html#a0ec981f21fdbb8ca5278d22ab3b046df',1,'map_rect_priv::ts()'],['../garmin__img_8c.html#a37c974d4977f0dec584df789e65ad4d2',1,'ts():&#160;garmin_img.c']]],
   ['tunnel',['tunnel',['../structtracking.html#a954aab51cbf161df875aece319cfdc11',1,'tracking']]],
   ['tunnel_5fextrapolation',['tunnel_extrapolation',['../structtracking.html#ac66bc0546a43dfa3a4255b36c3135100',1,'tracking']]],
+  ['tunnel_5fnightlayout',['tunnel_nightlayout',['../structnavit.html#ae32a5f5695ef3b9d594d77ad4af6ad23',1,'navit']]],
   ['turn_5f2_5flimit',['turn_2_limit',['../navigation_8c.html#a22780171bb97e4bdd516bf4e3ce03be4',1,'navigation.c']]],
   ['turn_5faround',['turn_around',['../structnavigation.html#af93cd687786b33cfa9e1dd884a6008ce',1,'navigation']]],
   ['turn_5faround_5fcount',['turn_around_count',['../structnavigation.html#acb5c9893541faf86ba66f9d389f17e61',1,'navigation']]],

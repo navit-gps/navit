@@ -84,17 +84,17 @@ var NAVTREEINDEX =
 "structj1850.html#a46cf3a1eee02a95f0d17108125e1baf8",
 "structmap__rect__priv.html#a29dd3eaab277ca1f88a6e80b138d7642",
 "structmenu__priv.html#a79316e021ccc46e8b8ad793bb3372c20",
-"structo5m.html#a657419804f360b5795d34ce592c1f9a1",
-"structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5",
-"structroute__guard.html#ac435e00bf5022c1eeaf98f00b8537d25",
-"structstreet__name.html#a969c46c452b1cdfe3cb41dad80dba9fa",
-"structtraffic__message.html",
+"structo5m.html#a1d2517bd3dbc106916646038d1b72021",
+"structpoi__param.html#afae856177f8237dd1475eefbc561b78e",
+"structroute__guard.html#a86cb46643b5c790558fe8d3c11bbede2",
+"structstreet__name.html#a5a991b5c830ffd0097f86d3a15df48f6",
+"structtraffic__location__priv.html#a157660738b33d46b7900d86d9b69137d",
 "structvehicle__priv.html#a35663bd80dce1f9337fa7e64a3639f62",
-"structxmlstate.html",
-"tools_2gpx2navit__txt_2src_2misc_8c.html#abfad51901cc4a177805f94cfc9817d85",
-"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea117619f8184b9c25d19d49439d9dd2e8",
-"transform_8h.html#a5a40f38ebfbe5adacd7450e6bace9a29",
-"vehicleprofile_8c.html"
+"structxmldocument.html#aeead274bfda8a64c0041eaa894f55ec8",
+"tools_2gpx2navit__txt_2src_2misc_8c.html#aa19f31815a8c98ab09aa143e0ea7bcf1",
+"traffic_8h.html#a3b6a019b6bf324006a3492b1d39b0887",
+"transform_8h.html#a429351cbffb0701a9ffb7afae6c0ad6e",
+"vehicle__webos_8h.html#ab443291f38f4e9adb72793f1f3ba01d5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

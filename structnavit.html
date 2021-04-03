@@ -245,6 +245,12 @@ Data Fields</h2></td></tr>
 <tr class="separator:aa8285a332f1066d4419a7e061623fa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d07966626e81ba32c709d1358c51255"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavit.html#a3d07966626e81ba32c709d1358c51255">auto_switch</a></td></tr>
 <tr class="separator:a3d07966626e81ba32c709d1358c51255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae32a5f5695ef3b9d594d77ad4af6ad23"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavit.html#ae32a5f5695ef3b9d594d77ad4af6ad23">tunnel_nightlayout</a></td></tr>
+<tr class="separator:ae32a5f5695ef3b9d594d77ad4af6ad23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a071db83d7f0ff5ea35b5db4c55fde2ef"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavit.html#a071db83d7f0ff5ea35b5db4c55fde2ef">layout_before_tunnel</a></td></tr>
+<tr class="separator:a071db83d7f0ff5ea35b5db4c55fde2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0497bcd21a81ee8afff766c975ab0b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnavit.html#ab0497bcd21a81ee8afff766c975ab0b0">sunrise_degrees</a></td></tr>
+<tr class="separator:ab0497bcd21a81ee8afff766c975ab0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a88624c592097452a54a027cffc2b505f"></a>
@@ -289,7 +295,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="group__navit.html#ga4c005a664c91f5d1b34e186aa9334543">navit_cmd_switch_layout_day_night()</a>, and <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__navit.html#ga4c005a664c91f5d1b34e186aa9334543">navit_cmd_switch_layout_day_night()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>, and <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>.</p>
 
 </div>
 </div>
@@ -773,6 +779,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a071db83d7f0ff5ea35b5db4c55fde2ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a071db83d7f0ff5ea35b5db4c55fde2ef">&#9670;&nbsp;</a></span>layout_before_tunnel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* navit::layout_before_tunnel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>.</p>
+
+</div>
+</div>
 <a id="a185f8f28bf6a8f514ea2ff5d1d0199d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a185f8f28bf6a8f514ea2ff5d1d0199d4">&#9670;&nbsp;</a></span>layout_current</h2>
 
@@ -786,7 +808,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>The current layout theme used to display the map </p>
 
-<p class="reference">Referenced by <a class="el" href="group__navit.html#ga036a3c34bd0f6ca87297beaad595780d">navit_add_layout()</a>, <a class="el" href="group__navit.html#ga4c005a664c91f5d1b34e186aa9334543">navit_cmd_switch_layout_day_night()</a>, <a class="el" href="group__navit.html#gac2cfaeb1c9b6275b3a4d498119f68a44">navit_draw_async()</a>, <a class="el" href="group__navit.html#gadd67f2fa0bd7550835b3dc747af1e9e8">navit_draw_displaylist()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gaea79c049fda4ecdf1e9b69b7762d7ae4">navit_motion_timeout()</a>, <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>, <a class="el" href="group__navit.html#ga45fbbc47df1cff214a70bb3291e8d35f">navit_set_cursors()</a>, and <a class="el" href="group__navit.html#ga0391fed47033d87ed3283cc3a0e9098f">navit_update_current_layout()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__navit.html#ga036a3c34bd0f6ca87297beaad595780d">navit_add_layout()</a>, <a class="el" href="group__navit.html#ga4c005a664c91f5d1b34e186aa9334543">navit_cmd_switch_layout_day_night()</a>, <a class="el" href="group__navit.html#gac2cfaeb1c9b6275b3a4d498119f68a44">navit_draw_async()</a>, <a class="el" href="group__navit.html#gadd67f2fa0bd7550835b3dc747af1e9e8">navit_draw_displaylist()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>, <a class="el" href="group__navit.html#gaea79c049fda4ecdf1e9b69b7762d7ae4">navit_motion_timeout()</a>, <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>, <a class="el" href="group__navit.html#ga45fbbc47df1cff214a70bb3291e8d35f">navit_set_cursors()</a>, and <a class="el" href="group__navit.html#ga0391fed47033d87ed3283cc3a0e9098f">navit_update_current_layout()</a>.</p>
 
 </div>
 </div>
@@ -1222,6 +1244,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="ab0497bcd21a81ee8afff766c975ab0b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0497bcd21a81ee8afff766c975ab0b0">&#9670;&nbsp;</a></span>sunrise_degrees</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int navit::sunrise_degrees</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>, and <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>.</p>
+
+</div>
+</div>
 <a id="a4923bfd5b81506ba43bdb5199c90e36f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4923bfd5b81506ba43bdb5199c90e36f">&#9670;&nbsp;</a></span>textfile_debug_log</h2>
 
@@ -1250,7 +1288,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd">navit_add_attr()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga4a66afab120876acfa376045fd299981">navit_get_cursor_pnt()</a>, <a class="el" href="group__navit.html#gab9ca6028a998544c53b7d4997727480f">navit_get_tracking()</a>, <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>, and <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd">navit_add_attr()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga4a66afab120876acfa376045fd299981">navit_get_cursor_pnt()</a>, <a class="el" href="group__navit.html#gab9ca6028a998544c53b7d4997727480f">navit_get_tracking()</a>, <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>, <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>, and <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>.</p>
 
 </div>
 </div>
@@ -1299,6 +1337,22 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="group__navit.html#ga1a842a840ace68489b512e3260138556">navit_handle_button()</a>, <a class="el" href="group__navit.html#ga421ca2b0238ea44a6599bd7a4a7d812a">navit_predraw()</a>, <a class="el" href="group__navit.html#ga893a3e02e3fa6c5b4ec32fd15cd5d7ec">navit_vehicle_draw()</a>, and <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>.</p>
+
+</div>
+</div>
+<a id="ae32a5f5695ef3b9d594d77ad4af6ad23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae32a5f5695ef3b9d594d77ad4af6ad23">&#9670;&nbsp;</a></span>tunnel_nightlayout</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int navit::tunnel_nightlayout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>, and <a class="el" href="group__navit.html#ga568dddffddd423644ac71dd4cf9a2c51">navit_set_attr_do()</a>.</p>
 
 </div>
 </div>

@@ -268,6 +268,7 @@ var searchData=
   ['suffixes',['suffixes',['../navigation_8c.html#aa565aae0c1fb0952c6ac477f449f7549',1,'navigation.c']]],
   ['sum_5fdist',['sum_dist',['../structodometer.html#a4e8dd31e1c6f777d486ccb7038811e6a',1,'odometer']]],
   ['sum_5ftime',['sum_time',['../structodometer.html#ae3fb4b87bde88e9cc8d5c06d0666589b',1,'odometer::sum_time()'],['../structstopwatch.html#af2458daf83e6c963013a1c19dc5c85d7',1,'stopwatch::sum_time()']]],
+  ['sunrise_5fdegrees',['sunrise_degrees',['../structnavit.html#ab0497bcd21a81ee8afff766c975ab0b0',1,'navit']]],
   ['sw',['sw',['../structtraffic__location__priv.html#a33d0c1e7522a9035b50d4dfa6d6bea4b',1,'traffic_location_priv']]],
   ['swap_5fbuffers',['swap_buffers',['../structgraphics__opengl__platform__methods.html#a96678d73696011d5142f35bda58869b2',1,'graphics_opengl_platform_methods']]],
   ['switcherwidget',['switcherWidget',['../structgui__priv.html#a798878a65b5638bba209c3f7442e1e20',1,'gui_priv']]],
