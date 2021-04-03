@@ -166,7 +166,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~SATELLITE_SET;
     }
     if (data->set & STATUS_SET) {
+#if GPSD_API_MAJOR_VERSION >= 10
+        priv->status = data->fix.status;
+#else
         priv->status = data->status;
+#endif // GPSD_API_MAJOR_VERSION >= 10
+
         data->set &= ~STATUS_SET;
     }
     if (data->set & MODE_SET) {
@@ -231,6 +236,7 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     priv->gps = gps_open(source + 7, port);
     if(!priv->gps) {
 #endif
+        priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
         dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source,
             priv->retry_interval);
         g_free(source);
@@ -307,10 +313,11 @@ static void vehicle_gpsd_close(struct vehicle_priv *priv) {
     }
     if (priv->gps) {
         gps_close(priv->gps);
-#if GPSD_API_MAJOR_VERSION >= 5
-        g_free(priv->gps);
-#endif
-        priv->gps = NULL;
+//if we release the gps object a reconnect is no longer working.
+//#if GPSD_API_MAJOR_VERSION >= 5
+//        g_free(priv->gps);
+//#endif
+//        priv->gps = NULL;
     }
 #ifdef HAVE_GPSBT
     err = gpsbt_stop(&priv->context);
