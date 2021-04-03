@@ -825,6 +825,92 @@ static char *attrmap= {
     "w	barrier=city_wall	city_wall\n"
 };
 
+// Conversion to meters internally, choose multiplier as required. 1 is return value is in meters
+static int convert_length_unit_to_integer(char* value, int multiplier) {
+    int result = 0;
+    char* ptri = strstr(value, "'");     //inch value id
+    char* ptrf = strstr(value, "\"");    //feet value id
+    char* ptrm = strstr(value, "m");     //meter value id
+
+    // Hardening:
+    if(!value)
+        return 0;
+
+    //Need to have both else erroneous values like <7"0> will crash
+    if(ptrf && !ptri)
+        return 0;
+
+    fprintf(stderr,"unit length conversion value: %s, multiplier: %i\n", value, multiplier);
+
+    if(ptrm) { // We have metric unit and need to remove the "m"
+        ptrm--;
+        ptrm="\0";
+        result = (int)(atof(value) * multiplier);
+        fprintf(stderr,"unit length conversion converted value metric: %i\n", result);
+        return result;
+    }
+
+    // We have an imperial value or meter without unit identifier
+    if(ptrf) {
+        *ptrf="\0"; // remove inch value identifier and calculate inches
+        result=(int)(atof(++ptri)*2.54);
+        fprintf(stderr,"unit length conversion converted value inches: %i\n", result);
+    }
+
+    if(ptri) { // We have an imperial value and need to add feet
+        ptri--;
+        *ptri="\0";
+        result+=(int)(atof(value) * 0.3048 * multiplier);
+        fprintf(stderr,"unit length conversion converted value inches + feet: %i\n", result);
+        return result;
+    }
+
+    // We have meters without unit id
+    result=(int)(atof(value) * multiplier);
+    fprintf(stderr,"unit length conversion converted value meters no unit id: %i\n", result);
+
+
+    return result;
+}
+
+
+// Conversion to metric tons internally, choose multiplier as required. 1 is return value is in metric tons
+static int convert_weight_unit_to_integer(char* value, int multiplier) {
+    int result = 0;
+    char* ptrst = strstr(value, "st");      //short ton value id
+    char* ptrlt = strstr(value, "lt");      //long ton value id
+    char* ptrlbs = strstr(value, "lbs");    //pund mass value id
+    char* ptrcwt = strstr(value, "cwt");    //long hundredweight value id
+
+    // Hardening:
+    if(!value)
+        return 0;
+
+    fprintf(stderr,"unit weight conversion value: %s, multiplier: %i\n", value, multiplier);
+
+    if(ptrst) {
+            result=(int)(atof(value) * 0.9071847 * multiplier);
+            fprintf(stderr,"unit weight conversion converted value from short tons: %i\n", result);
+    }
+
+    if(ptrlt) {
+            result=(int)(atof(value) * 1.016047 * multiplier);
+            fprintf(stderr,"unit weight conversion converted value from long tons: %i\n", result);
+        }
+
+    if(ptrlbs) {
+            result=(int)(atof(value) * 0.00045359237  * multiplier);
+            fprintf(stderr,"unit weight conversion converted value from pound mass: %i\n", result);
+        }
+
+    if(ptrcwt) {
+            result=(int)(atof(value) * 50.80 * multiplier);
+            fprintf(stderr,"unit weight conversion converted value from long hundredweight: %i\n", result);
+    }
+
+    return result;
+}
+
 static void build_attrmap_line(char *line) {
     char *t=NULL,*kvl=NULL,*i=NULL,*p,*kv;
     struct attr_mapping *attr_mapping=g_malloc0(sizeof(struct attr_mapping));
@@ -1120,35 +1206,35 @@ void osm_add_tag(char *k, char *v) {
         level=5;
     }
     if (!g_strcmp0(k, "maxheight")) {
-        maxheight_attr_value = (int)(atof(v)*100);
+        maxheight_attr_value = convert_length_unit_to_integer(v, 100);
 
         if (maxheight_attr_value)
             flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
         level = 5;
     }
     if (!g_strcmp0(k, "maxlength")) {
-        maxlength_attr_value = (int)(atof(v)*100);
+        maxlength_attr_value = convert_length_unit_to_integer(v, 100);
 
         if (maxlength_attr_value)
             flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
         level = 5;
     }
     if (!g_strcmp0(k, "maxwidth")) {
-        maxwidth_attr_value = (int)(atof(v)*100);
+        maxwidth_attr_value = convert_length_unit_to_integer(v, 100);
 
         if (maxwidth_attr_value)
             flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
         level = 5;
     }
     if (!g_strcmp0(k, "maxweight")) {
-        maxweight_attr_value = (int)(atof(v)*1000);
+        maxweight_attr_value = convert_weight_unit_to_integer(v, 1000);
 
         if (maxweight_attr_value)
             flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
         level = 5;
     }
     if (!g_strcmp0(k, "maxaxleload")) {
-        maxaxleload_attr_value = (int)(atof(v)*1000);
+        maxaxleload_attr_value = convert_weight_unit_to_integer(v, 1000);
 
         if (maxaxleload_attr_value)
             flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
