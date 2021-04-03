@@ -602,7 +602,7 @@ static char *attrmap= {
     "w	boundary=civil		border_civil\n"
     "w	boundary=national_park	border_national_park\n"
     "w	boundary=political	border_political\n"
-    "w	boundary=low_emission_zone	low_emission_zone\n"
+    "w	boundary=low_emission_zone	poly_low_emission_zone\n"
     "w	building=*		poly_building\n"
     "w	contour_ext=elevation_major	height_line_1\n"
     "w	contour_ext=elevation_medium	height_line_2\n"
@@ -1754,6 +1754,7 @@ void osm_add_way(osmid id) {
 char relation_type[BUFFER_SIZE];
 char iso_code[BUFFER_SIZE];
 int boundary;
+int multipolygon;
 
 void osm_add_relation(osmid id) {
     osmid_attr_value=id;
@@ -1763,6 +1764,7 @@ void osm_add_relation(osmid id) {
     relation_type[0]='\0';
     iso_code[0]='\0';
     boundary=0;
+    multipolygon=0;
     item_bin_init(tmp_item_bin, type_none);
     item_bin_add_attr_longlong(tmp_item_bin, attr_osm_relationid, osmid_attr_value);
 }
@@ -1799,7 +1801,7 @@ country_from_iso2(char *iso) {
 }
 
 static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
-    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+    if(multipolygon) {
         int count;
         enum item_type types[10];
         /* This is a multipolygon relation which is no boundary. Lets check what it is */
@@ -1881,6 +1883,8 @@ static void relation_add_tag(char *k, char *v) {
     int add_tag=1;
     if (!g_strcmp0(k,"type")) {
         g_strlcpy(relation_type, v, sizeof(relation_type));
+        if(!g_strcmp0(relation_type, "multipolygon"))
+            multipolygon=1;
         add_tag=0;
     } else if (!g_strcmp0(k,"restriction")) {
         if (!strncmp(v,"no_",3)) {
@@ -1895,8 +1899,11 @@ static void relation_add_tag(char *k, char *v) {
         }
     } else if (!g_strcmp0(k,"boundary")) {
         //fprintf(stderr,"access_value %s\n",v);
-        if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code") ) {
+        if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code")) {
             boundary=1;
+        }
+        if (!g_strcmp0(v,"low_emission_zone") || !g_strcmp0(v,"national_park")) {
+            multipolygon=1;
         }
     } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
@@ -2014,9 +2021,9 @@ void osm_end_way(struct maptool_osm *osm) {
         if (maxheight_attr_value)
             item_bin_add_attr_int(item_bin, attr_vehicle_height, maxheight_attr_value);
         if (maxweight_attr_value)
-                    item_bin_add_attr_int(item_bin, attr_vehicle_weight, maxweight_attr_value);
+            item_bin_add_attr_int(item_bin, attr_vehicle_weight, maxweight_attr_value);
         if (maxaxleload_attr_value)
-                   item_bin_add_attr_int(item_bin, attr_vehicle_axle_weight, maxaxleload_attr_value);
+            item_bin_add_attr_int(item_bin, attr_vehicle_axle_weight, maxaxleload_attr_value);
         if(i>0)
             item_bin_add_attr_int(item_bin, attr_duplicate, 1);
         item_bin_write(item_bin,osm->ways);
