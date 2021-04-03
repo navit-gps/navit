@@ -25,6 +25,9 @@
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ATTLIST navit drag_bitmap CDATA #IMPLIED>
 <!ATTLIST navit default_layout CDATA #IMPLIED>
+<!ATTLIST navit tunnel_nightlayout CDATA #IMPLIED>
+<!ATTLIST navit nightlayout_auto CDATA #IMPLIED>
+<!ATTLIST navit sunrise_degrees CDATA #IMPLIED>
 <!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
