@@ -53,11 +53,11 @@ static struct item_bin item;
 
 
 int maxspeed_attr_value;
-double maxheight_attr_value;
-double maxlength_attr_value;
-double maxwidth_attr_value;
-double maxweight_attr_value;           //actual weight
-double maxaxleload_attr_value;       //axle weight
+int maxheight_attr_value;
+int maxlength_attr_value;
+int maxwidth_attr_value;
+int maxweight_attr_value;           //actual weight
+int maxaxleload_attr_value;       //axle weight
 
 char debug_attr_buffer[BUFFER_SIZE];
 
@@ -1652,6 +1652,7 @@ void osm_add_way(osmid id) {
     maxheight_attr_value=0;
     maxlength_attr_value=0;
     maxwidth_attr_value=0;
+    maxaxleload_attr_value=0;
     flags_attr_value = 0;
     memset(flags, 0, sizeof(flags));
     memset(flagsa, 0, sizeof(flagsa));
