@@ -1807,7 +1807,7 @@ static void relation_add_tag(char *k, char *v) {
             osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
         }
     } else if (!g_strcmp0(k,"boundary")) {
-        fprintf(stderr,"access_value %s\n",v);
+        //fprintf(stderr,"access_value %s\n",v);
         if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code") || !g_strcmp0(v,"low_emission_zone")) {
             boundary=1;
         }
