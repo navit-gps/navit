@@ -53,6 +53,11 @@ static struct item_bin item;
 
 
 int maxspeed_attr_value;
+double maxheight_attr_value;
+double maxlength_attr_value;
+double maxwidth_attr_value;
+double maxweight_attr_value;           //actual weight
+double maxaxleload_attr_value;       //axle weight
 
 char debug_attr_buffer[BUFFER_SIZE];
 
@@ -597,6 +602,7 @@ static char *attrmap= {
     "w	boundary=civil		border_civil\n"
     "w	boundary=national_park	border_national_park\n"
     "w	boundary=political	border_political\n"
+    "?  boundary=low_emission_zone  low_emission_zone\n"
     "w	building=*		poly_building\n"
     "w	contour_ext=elevation_major	height_line_1\n"
     "w	contour_ext=elevation_medium	height_line_2\n"
@@ -1022,6 +1028,7 @@ static int node_is_tagged;
 static void relation_add_tag(char *k, char *v);
 
 static int access_value(char *v) {
+    //fprintf(stderr,"access_value %s\n",v);
     if (!g_strcmp0(v,"1"))
         return 1;
     if (!g_strcmp0(v,"yes"))
@@ -1046,12 +1053,21 @@ static int access_value(char *v) {
         return 2;
     if (!g_strcmp0(v,"destination"))
         return 2;
+    if (!g_strcmp0(v,"customer"))
+        return 2;
+    if (!g_strcmp0(v,"customers"))
+        return 2;
+    if (!g_strcmp0(v,"tenant"))
+        return 2;
+    if (!g_strcmp0(v,"permit"))
+        return 2;
     return 3;
 }
 
 static void osm_update_attr_present(char *k, char *v);
 
 void osm_add_tag(char *k, char *v) {
+    //fprintf(stderr,"tag_value %s\n",k);
     int level=2;
     if (in_relation) {
         relation_add_tag(k,v);
@@ -1102,6 +1118,41 @@ void osm_add_tag(char *k, char *v) {
         if (maxspeed_attr_value)
             flags[0] |= AF_SPEED_LIMIT;
         level=5;
+    }
+    if (!g_strcmp0(k, "maxheight")) {
+        maxheight_attr_value = (int)(atof(v)*100);
+
+        if (maxheight_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxlength")) {
+        maxlength_attr_value = (int)(atof(v)*100);
+
+        if (maxlength_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxwidth")) {
+        maxwidth_attr_value = (int)(atof(v)*100);
+
+        if (maxwidth_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxweight")) {
+        maxweight_attr_value = (int)(atof(v)*1000);
+
+        if (maxweight_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxaxleload")) {
+        maxaxleload_attr_value = (int)(atof(v)*1000);
+
+        if (maxaxleload_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
     }
     if (! g_strcmp0(k,"toll")) {
         if (!g_strcmp0(v,"1")) {
@@ -1597,6 +1648,10 @@ void osm_add_way(osmid id) {
     item.type=type_street_unkn;
     debug_attr_buffer[0]='\0';
     maxspeed_attr_value=0;
+    maxweight_attr_value=0;
+    maxheight_attr_value=0;
+    maxlength_attr_value=0;
+    maxwidth_attr_value=0;
     flags_attr_value = 0;
     memset(flags, 0, sizeof(flags));
     memset(flagsa, 0, sizeof(flagsa));
@@ -1735,6 +1790,7 @@ void osm_add_member(enum relation_member_type type, osmid ref, char *role) {
 }
 
 static void relation_add_tag(char *k, char *v) {
+    //fprintf(stderr,"access_value %s\n",k);
     int add_tag=1;
     if (!g_strcmp0(k,"type")) {
         g_strlcpy(relation_type, v, sizeof(relation_type));
@@ -1751,7 +1807,8 @@ static void relation_add_tag(char *k, char *v) {
             osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
         }
     } else if (!g_strcmp0(k,"boundary")) {
-        if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code")) {
+        fprintf(stderr,"access_value %s\n",v);
+        if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code") || !g_strcmp0(v,"low_emission_zone")) {
             boundary=1;
         }
     } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
@@ -1863,6 +1920,16 @@ void osm_end_way(struct maptool_osm *osm) {
             item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
         if (maxspeed_attr_value)
             item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+        if (maxlength_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_length, maxlength_attr_value);
+        if (maxwidth_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_width, maxwidth_attr_value);
+        if (maxheight_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_height, maxheight_attr_value);
+        if (maxweight_attr_value)
+                    item_bin_add_attr_int(item_bin, attr_vehicle_weight, maxweight_attr_value);
+        if (maxaxleload_attr_value)
+                   item_bin_add_attr_int(item_bin, attr_vehicle_axle_weight, maxaxleload_attr_value);
         if(i>0)
             item_bin_add_attr_int(item_bin, attr_duplicate, 1);
         item_bin_write(item_bin,osm->ways);
@@ -2194,6 +2261,7 @@ static void osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly) {
                     void *a;
                     item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
                     a=osm_tag_value(b->ib, "name");
+                    fprintf(stderr,"tag_value %s\n",a);
                     if(a)
                         item_bin_add_attr_string(ib,attr_label,a);
                     a=osm_tag_value(b->ib, "osm_relationid");
