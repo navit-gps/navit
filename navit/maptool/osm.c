@@ -840,13 +840,13 @@ static int convert_length_unit_to_integer(char* value, int multiplier) {
     if(ptrf && !ptri)
         return 0;
 
-    fprintf(stderr,"unit length conversion value: %s, multiplier: %i\n", value, multiplier);
+    //fprintf(stderr,"unit length conversion value: %s, multiplier: %i\n", value, multiplier);
 
     if(ptrm) { // We have metric unit and need to remove the "m"
         ptrm--;
         ptrm="\0";
         result = (int)(atof(value) * multiplier);
-        fprintf(stderr,"unit length conversion converted value metric: %i\n", result);
+        //fprintf(stderr,"unit length conversion converted value metric: %i\n", result);
         return result;
     }
 
@@ -854,20 +854,20 @@ static int convert_length_unit_to_integer(char* value, int multiplier) {
     if(ptrf) {
         *ptrf="\0"; // remove inch value identifier and calculate inches
         result=(int)(atof(++ptri)*2.54);
-        fprintf(stderr,"unit length conversion converted value inches: %i\n", result);
+        //fprintf(stderr,"unit length conversion converted value inches: %i\n", result);
     }
 
     if(ptri) { // We have an imperial value and need to add feet
         ptri--;
         *ptri="\0";
         result+=(int)(atof(value) * 0.3048 * multiplier);
-        fprintf(stderr,"unit length conversion converted value inches + feet: %i\n", result);
+        //fprintf(stderr,"unit length conversion converted value inches + feet: %i\n", result);
         return result;
     }
 
     // We have meters without unit id
     result=(int)(atof(value) * multiplier);
-    fprintf(stderr,"unit length conversion converted value meters no unit id: %i\n", result);
+    //fprintf(stderr,"unit length conversion converted value meters no unit id: %i\n", result);
 
 
     return result;
@@ -886,27 +886,31 @@ static int convert_weight_unit_to_integer(char* value, int multiplier) {
     if(!value)
         return 0;
 
-    fprintf(stderr,"unit weight conversion value: %s, multiplier: %i\n", value, multiplier);
+    //fprintf(stderr,"unit weight conversion value: %s, multiplier: %i\n", value, multiplier);
 
     if(ptrst) {
             result=(int)(atof(value) * 0.9071847 * multiplier);
-            fprintf(stderr,"unit weight conversion converted value from short tons: %i\n", result);
+            //fprintf(stderr,"unit weight conversion converted value from short tons: %i\n", result);
     }
 
     if(ptrlt) {
             result=(int)(atof(value) * 1.016047 * multiplier);
-            fprintf(stderr,"unit weight conversion converted value from long tons: %i\n", result);
+            //fprintf(stderr,"unit weight conversion converted value from long tons: %i\n", result);
         }
 
     if(ptrlbs) {
             result=(int)(atof(value) * 0.00045359237  * multiplier);
-            fprintf(stderr,"unit weight conversion converted value from pound mass: %i\n", result);
+            //fprintf(stderr,"unit weight conversion converted value from pound mass: %i\n", result);
         }
 
     if(ptrcwt) {
             result=(int)(atof(value) * 50.80 * multiplier);
-            fprintf(stderr,"unit weight conversion converted value from long hundredweight: %i\n", result);
+            //fprintf(stderr,"unit weight conversion converted value from long hundredweight: %i\n", result);
     }
+    
+    // We have metric tons without unit id
+    result=(int)(atof(value) * multiplier);
+    //fprintf(stderr,"unit weight conversion converted value from metric tons no unit id: %i\n", result);
 
     return result;
 }
