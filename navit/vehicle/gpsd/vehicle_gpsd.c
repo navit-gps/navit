@@ -26,6 +26,7 @@
 #include <gpsbt.h>
 #include <errno.h>
 #endif
+#include "config.h"
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
@@ -208,9 +209,10 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~LATLON_SET;
     }
     // If data->fix.speed is NAN, then the drawing gets jumpy.
-    if (! isnan(data->fix.speed) && priv->fix_type > 0) {
-        callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-    }
+    //if (! isnan(data->fix.speed) && priv->fix_type > 0) {
+
+    callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+
     dbg(lvl_info,"speed ok");
 }
 

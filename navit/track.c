@@ -119,8 +119,6 @@ struct tracking {
 };
 
 
-
-
 static void tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
     cdf->extrapolating = 0;
     cdf->available = 0;
@@ -398,6 +396,10 @@ int *tracking_get_current_flags(struct tracking *_this) {
     if (! _this->curr_line || ! _this->curr_line->street)
         return NULL;
     return &_this->curr_line->street->flags;
+}
+
+int tracking_get_current_tunnel(struct tracking *_this) {
+    return _this->tunnel;
 }
 
 static void tracking_get_angles(struct tracking_line *tl) {
@@ -853,6 +855,7 @@ tracking_new(struct attr *parent, struct attr **attrs) {
     this->offroad_limit_pref=5000;
     this->route_pref=300;
     this->callback_list=callback_list_new();
+    this->tunnel=0;
 
 
     if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {
