@@ -867,8 +867,9 @@ static int convert_length_unit_to_integer(char* value, int multiplier) {
 
     // We have meters without unit id
     result=(int)(atof(value) * multiplier);
-    //fprintf(stderr,"unit length conversion converted value meters no unit id: %i\n", result);
-
+    
+    if(result == 0)
+        fprintf(stderr,"Warning -- Item: %li unit length conversion converted value meters no unit id: %i value was %s\n", getcurrentid(), result, value);
 
     return result;
 }
@@ -910,8 +911,10 @@ static int convert_weight_unit_to_integer(char* value, int multiplier) {
     
     // We have metric tons without unit id
     result=(int)(atof(value) * multiplier);
-    //fprintf(stderr,"unit weight conversion converted value from metric tons no unit id: %i\n", result);
-
+    
+    if(result == 0)
+        fprintf(stderr,"Warning -- Item %li: unit weight conversion converted value from metric tons: %i value was %s\n", getcurrentid(), result, value);
+    
     return result;
 }
 
