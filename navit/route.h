@@ -68,6 +68,9 @@ struct street_data {
 	int count;			/**< Number of coordinates this street has */
 	int flags;
 	int maxspeed;		/**< Maximum speed allowed on this street. */
+	int maxspeed_conditional;
+	int maxspeed_conditional_fwd;
+	int maxspeed_conditional_bwd;
 	struct coord c[0];	/**< Pointer to the coordinates of this street.
 						 *   DO NOT INSERT FIELDS AFTER THIS. */
 };
@@ -130,6 +133,7 @@ void route_attr_iter_destroy(struct attr_iter *iter);
 int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void route_init(void);
 void route_destroy(struct route *this_);
+int route_get_conditional_speed(struct route_segment_data *over, struct vehicleprofile *profile, enum attr_type type);
 /* end of prototypes */
 #ifdef __cplusplus
 }
