@@ -3689,11 +3689,11 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             pitem = (struct parsed_item *) curr_item->data;
             item = tm_add_item(map, pitem->type, pitem->id_hi, pitem->id_lo, pitem->flags, pitem->attrs,
                                pitem->coords, pitem->coord_count, this_->id);
-            parsed_item_destroy(pitem);
             tm_item_add_message_data(item, this_->id,
                                      traffic_get_item_speed(item, seg_data, maxspeed),
                                      traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
                                      NULL, route);
+            parsed_item_destroy(pitem);
             this_->priv->items[i] = item;
             i++;
         }
