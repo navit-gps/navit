@@ -954,10 +954,6 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
     int dirty = 0;
 
     dbg(lvl_debug,"enter");
-    mr=g_new0(struct map_rect_priv, 1);
-    mr->mpriv = priv;
-    mr->next_item = priv->items;
-    /* all other pointers are initially NULL */
 
     /* lazy location matching */
     if (sel != NULL)
@@ -990,6 +986,12 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                 map_selection_destroy(msg_sel);
             }
         }
+
+    mr=g_new0(struct map_rect_priv, 1);
+    mr->mpriv = priv;
+    mr->next_item = priv->items;
+    /* all other pointers are initially NULL */
+
     if (dirty)
         /* dump message store if new messages have been received */
         traffic_dump_messages_to_xml(priv->shared);
