@@ -2335,10 +2335,12 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
         e_pnt=route_graph_add_point(this,&l);
         s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             data.flags |= AF_SPEED_LIMIT;
             data.maxspeed=maxspeed_attr.u.num;
         }
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
