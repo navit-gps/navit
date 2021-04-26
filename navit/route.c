@@ -1609,11 +1609,7 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param len The length of this segment
- * @param item The item that is represented by this segment
- * @param flags Flags for this segment
- * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
- * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
+ * @param data The segment data
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
