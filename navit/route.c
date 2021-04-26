@@ -2550,37 +2550,45 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     if (item_coord_get(item, &l, 1)) {
         if (!(default_flags = item_get_default_flags(item->type)))
             default_flags = &default_flags_value;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
             segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
 
+        item_attr_rewind(item);
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
         if (data.flags & AF_DANGEROUS_GOODS) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
             else
                 data.flags &= ~AF_DANGEROUS_GOODS;
         }
         if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_width, &attr))
                 data.size_weight.width=attr.u.num;
             else
                 data.size_weight.width=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_height, &attr))
                 data.size_weight.height=attr.u.num;
             else
                 data.size_weight.height=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_length, &attr))
                 data.size_weight.length=attr.u.num;
             else
                 data.size_weight.length=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_weight, &attr))
                 data.size_weight.weight=attr.u.num;
             else
                 data.size_weight.weight=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
                 data.size_weight.axle_weight=attr.u.num;
             else

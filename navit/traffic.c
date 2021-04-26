@@ -731,6 +731,7 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
         if (attr_generic_get_attr(attrs, NULL, attr_flags, &wanted_flags_attr, NULL)) {
             if (!item_attr_get(curr, attr_flags, &curr_flags_attr))
                 continue;
+            item_attr_rewind(curr);
             if ((wanted_flags_attr.u.num & AF_ALL) != (curr_flags_attr.u.num & AF_ALL))
                 continue;
             continue;
@@ -1381,6 +1382,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
     /* road_ref */
     if (this_->road_ref) {
         maxscore += 400;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_street_name_systematic, &attr))
             score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->road_ref, attr.u.str))) / MAX_MISMATCH;
     }
@@ -1388,6 +1390,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
     /* road_name */
     if (this_->road_name) {
         maxscore += 200;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_street_name, &attr)) {
             // TODO crude comparison in need of refinement
             if (!strcmp(this_->road_name, attr.u.str))
@@ -1432,12 +1435,14 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
     /* junction_ref */
     if (this_->junction_ref) {
         maxscore += 400;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_ref, &attr))
             score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->junction_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* junction_name */
     if (this_->junction_name) {
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_label, &attr)) {
             maxscore += 400;
             // TODO crude comparison in need of refinement
@@ -1562,6 +1567,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_start_match = 1;
             }
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_street_name_systematic, &attr))
                 start_ref = g_strdup(attr.u.str);
         }
@@ -1578,6 +1584,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_end_match = 1;
             }
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_street_name_systematic, &attr))
                 end_ref = g_strdup(attr.u.str);
         }
@@ -1622,6 +1629,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (end_name)
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
+            item_attr_rewind(item);
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
                 if (start_ref)
                     route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
@@ -1647,6 +1655,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (end_name)
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
+            item_attr_rewind(item);
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
                 if (start_ref)
                     route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
@@ -1983,6 +1992,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                     } else
                         data.flags = *default_flags;
 
+                    item_attr_rewind(item);
                     if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
                         data.maxspeed = attr.u.num;
 
@@ -3616,6 +3626,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         segmented = 0;
                     }
                     /* Get maxspeed, if any */
+                    item_attr_rewind(map_item);
                     if ((item_flags & AF_SPEED_LIMIT) && (item_attr_get(map_item, attr_maxspeed, &attr)))
                         maxspeed = attr.u.num;
                     else
