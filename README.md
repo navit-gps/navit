@@ -58,7 +58,7 @@ are known to work:
  (see http://wiki.navit-project.org/index.php/OpenStreetMap)
 
 - Grosser Reiseplaner and compliant maps: full support
- (see http://wiki.navit-project.org/index.php/European_maps)
+ (see http://wiki.navit-project.org/index.php/Marco_Polo_Grosser_Reiseplaner)
 
 - Garmin maps: display, routing, search is being worked on
  (see http://wiki.navit-project.org/index.php/Garmin_maps)

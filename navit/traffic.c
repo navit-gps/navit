@@ -426,12 +426,12 @@ static int seg_data_equals(struct seg_data * l, struct seg_data * r) {
         return 0;
     /* FIXME this will break if multiple attributes of the same type are present and have different values */
     for (attrs = l->attrs; attrs; attrs++) {
-        attr = attr_search(r->attrs, NULL, (*attrs)->type);
+        attr = attr_search(r->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
     for (attrs = r->attrs; attrs; attrs++) {
-        attr = attr_search(l->attrs, NULL, (*attrs)->type);
+        attr = attr_search(l->attrs, (*attrs)->type);
         if (!attr || (attr->u.data != (*attrs)->u.data))
             return 0;
     }
@@ -616,7 +616,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         msgdata = (struct item_msg_priv *) msglist->data;
         if (msgdata->speed < speed)
             speed = msgdata->speed;
-        if (msgdata->delay < delay)
+        if (msgdata->delay > delay)
             delay = msgdata->delay;
         /* TODO attrs */
     }
@@ -633,7 +633,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
      * resulting in a cost of 90 s for the segment.
      */
     if (speed < INT_MAX) {
-        attr = attr_search(priv_data->attrs, NULL, attr_maxspeed);
+        attr = attr_search(priv_data->attrs, attr_maxspeed);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_maxspeed;
@@ -650,12 +650,12 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
             attr->u.num = speed;
         }
     } else {
-        while ((attr = attr_search(priv_data->attrs, NULL, attr_maxspeed)))
+        while ((attr = attr_search(priv_data->attrs, attr_maxspeed)))
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
     }
 
     if (delay) {
-        attr = attr_search(priv_data->attrs, NULL, attr_delay);
+        attr = attr_search(priv_data->attrs, attr_delay);
         if (!attr) {
             attr = g_new0(struct attr, 1);
             attr->type = attr_delay;
@@ -673,7 +673,7 @@ static void tm_item_update_attrs(struct item * item, struct route * route) {
         }
     } else {
         while (1) {
-            attr = attr_search(priv_data->attrs, NULL, attr_delay);
+            attr = attr_search(priv_data->attrs, attr_delay);
             if (!attr)
                 break;
             priv_data->attrs = attr_generic_remove_attr(priv_data->attrs, attr);
@@ -3408,7 +3408,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct map_rect * mr;
     struct item * map_item;
     int * default_flags;
-    int item_flags, segmented, maxspeed;
+    int item_flags, segmented, maxspeed=INT_MAX;
     struct coord map_c;
 
     /*
@@ -3651,7 +3651,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                     }
                     if (map_item) {
                         pitem->is_matched = 1;
-                        for (i = 1; i < ccnt; i++)
+                        for (i = 1; i < pitem->coord_count; i++)
                             pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
                         loc_len += pitem->length;
                     }
@@ -3842,31 +3842,33 @@ static int traffic_message_is_valid(struct traffic_message * this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "receive_time or update_time not supplied");
+        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
         if (!this_->expiration_time && !this_->end_time) {
-            dbg(lvl_debug, "not a cancellation, but neither expiration_time nor end_time supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but neither expiration_time nor end_time supplied",
+                this_->id);
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "not a cancellation, but no location supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "not a cancellation, but location is invalid");
+            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "not a cancellation, but no events supplied");
+            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
             if (this_->events[i])
                 has_valid_events |= traffic_event_is_valid(this_->events[i]);
         if (!has_valid_events) {
-            dbg(lvl_debug, "not a cancellation, but all events (%d in total) are invalid", this_->event_count);
+            dbg(lvl_debug, "%s: not a cancellation, but all events (%d in total) are invalid",
+                this_->id, this_->event_count);
             return 0;
         }
     }
@@ -4152,7 +4154,7 @@ static void traffic_set_shared(struct traffic *this_) {
     dbg(lvl_debug, "enter");
 
     if (!this_->shared) {
-        iter = navit_attr_iter_new();
+        iter = navit_attr_iter_new(NULL);
         while (navit_get_attr(this_->navit, attr_traffic, &attr, iter)) {
             traffic = (struct traffic *) attr.u.navit_object;
             if (traffic->shared)
@@ -4597,7 +4599,7 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
                                         struct attr **attrs, struct callback_list *cbl);
     struct attr *attr;
 
-    attr = attr_search(attrs, NULL, attr_type);
+    attr = attr_search(attrs, attr_type);
     if (!attr) {
         dbg(lvl_error, "type missing");
         return NULL;
@@ -4626,7 +4628,6 @@ static struct traffic * traffic_new(struct attr *parent, struct attr **attrs) {
         navit_object_destroy((struct navit_object *) this_);
         return NULL;
     }
-    navit_object_ref((struct navit_object *) this_);
     dbg(lvl_debug,"return %p", this_);
 
     // TODO do this once and cycle through all plugins
@@ -4888,7 +4889,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           count,
                                           (struct traffic_event **) children);
             if (!traffic_message_is_valid(message)) {
-                dbg(lvl_error, "malformed message detected, skipping");
+                dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -4945,7 +4946,9 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
             state->si = NULL;
             /* TODO preserve unknown (and thus invalid) events if they have maxspeed set */
             if (!traffic_event_is_valid(event)) {
-                dbg(lvl_debug, "invalid or unknown event detected, skipping");
+                dbg(lvl_debug, "invalid or unknown event %s/%s detected, skipping",
+                    traffic_xml_get_attr("class", el->names, el->values),
+                    traffic_xml_get_attr("type", el->names, el->values));
                 traffic_event_destroy(event);
             } else
                 state->events = g_list_append(state->events, event);
@@ -5757,7 +5760,7 @@ static struct map_priv * traffic_map_new(struct map_methods *meth, struct attr *
     struct map_priv *ret;
     struct attr *traffic_attr;
 
-    traffic_attr = attr_search(attrs, NULL, attr_traffic);
+    traffic_attr = attr_search(attrs, attr_traffic);
     if (!traffic_attr) {
         dbg(lvl_error, "attr_traffic not found!");
         return NULL;
@@ -5800,7 +5803,6 @@ struct map * traffic_get_map(struct traffic *this_) {
         attrs[4] = NULL;
 
         this_->shared->map = map_new(NULL, attrs);
-        navit_object_ref((struct navit_object *) this_->shared->map);
 
         /* populate map with previously stored messages */
         filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/traffic.xml", NULL);
@@ -5938,6 +5940,13 @@ void traffic_set_route(struct traffic *this_, struct route *rt) {
     this_->shared->rt = rt;
 }
 
+void traffic_destroy(struct traffic *this_) {
+    if (this_->meth.destroy)
+        this_->meth.destroy(this_->priv);
+    attr_list_free(this_->attrs);
+    g_free(this_);
+}
+
 struct object_func traffic_func = {
     attr_traffic,
     (object_func_new)traffic_new,
@@ -5948,7 +5957,7 @@ struct object_func traffic_func = {
     (object_func_add_attr)navit_object_add_attr,
     (object_func_remove_attr)navit_object_remove_attr,
     (object_func_init)NULL,
-    (object_func_destroy)navit_object_destroy,
+    (object_func_destroy)traffic_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,

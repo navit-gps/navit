@@ -233,14 +233,13 @@ static int vehicle_android_init(struct vehicle_priv *ret) {
     if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
         return 0;
     dbg(lvl_debug,"at 3");
-    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;III)V");
+    cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;JJJ)V");
     if (cid == NULL) {
         dbg(lvl_error,"no method found");
         return 0; /* exception thrown */
     }
-    dbg(lvl_debug, "at 4 android_application=%p", android_application);
-    ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_application,
-                                           (int) ret->pcb, (int) ret->scb, (int) ret->fcb);
+    ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity,
+                                           (jlong) ret->pcb, (jlong) ret->scb, (jlong) ret->fcb);
     dbg(lvl_debug,"result=%p",ret->NavitVehicle);
     if (!ret->NavitVehicle)
         return 0;

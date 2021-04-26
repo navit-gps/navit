@@ -158,7 +158,7 @@ static void result_free(struct result *res) {
         attr_free_content(&res->attr);
         res->allocated=0;
     } else {
-        res->attr.type=type_none;
+        res->attr.type=attr_none;
         res->attr.u.data=NULL;
     }
 }
@@ -1223,7 +1223,7 @@ static void command_evaluate_to(struct attr *attr, const char *expr, struct cont
 }
 
 enum attr_type command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret) {
-    struct result res={{0,},};
+    struct result res= {{0,},};
     struct context ctx;
     command_evaluate_to(attr, expr, &ctx, &res);
     if (ctx.error)
@@ -1501,7 +1501,8 @@ void command_interpreter(struct attr *attr) {
 }
 #endif
 
-static void command_table_call(struct command_table *table, int count, void *data, char *command, struct attr **in, struct attr ***out, int *valid) {
+static void command_table_call(struct command_table *table, int count, void *data, char *command, struct attr **in,
+                               struct attr ***out, int *valid) {
     int i;
     for (i = 0 ; i < count ; i++) {
         if (!strcmp(command,table->command)) {

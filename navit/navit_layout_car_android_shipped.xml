@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-Android" color="#fef9ee" font="Liberation Sans">
+<layout xmlns:xi="http://www.w3.org/2001/XInclude" name="Car-Android" color="#fef9ee" icon_w="22" icon_h="22" font="Liberation Sans">
 	<cursor w="57" h="57">
 		<itemgra speed_range="-2">
 			<polyline color="#00BC00" radius="0" width="4">
@@ -57,10 +57,14 @@
 		<itemgra item_types="poly_water_tiled">
 			<polygon color="#82c8ea"/>
 		</itemgra>
-		<itemgra item_types="poly_water" order="10-">
+		<itemgra item_types="poly_water,poly_basin,poly_reservoir" order="10-">
 			<polygon color="#82c8ea"/>
 			<polyline color="#5096b8"/>
 			<text text_size="5"/>
+		</itemgra>
+		<itemgra item_types="poly_swimming_pool" order="10-">
+			<polygon color="#82c8ea"/>
+			<polyline color="#5096b8"/>
 		</itemgra>
 		<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="14-">
 			<polygon color="#a0a0a0"/>

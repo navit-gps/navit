@@ -114,7 +114,7 @@ struct map_priv {
     struct route *route;
 };
 
-int debug_route=0;
+int debug_route=1;
 
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
@@ -939,6 +939,17 @@ struct map_selection *route_selection;
 
 /**
  * @brief Returns a single map selection
+ *
+ * The boundaries of the selection are determined as follows: First a rectangle spanning `c1` and `c2` is
+ * built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension
+ * (height or width) is determined and multiplied with the percentage specified by `rel`. The resulting
+ * amount of padding is added to each edge. After that, the amount specified by `abs` is added to each edge.
+ *
+ * @param order Map order (deepest tile level) to select
+ * @param c1 First coordinate
+ * @param c2 Second coordinate
+ * @param rel Relative padding to add to the selection rectangle, in percent
+ * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
@@ -1047,7 +1058,8 @@ struct map_selection * route_get_selection(struct route * this_) {
     int i = 0;
     GList *tmp;
 
-    c[i++] = this_->pos->c;
+    if (this_->pos)
+        c[i++] = this_->pos->c;
     tmp = this_->destinations;
     while (tmp) {
         struct route_info *dst = tmp->data;
@@ -1062,7 +1074,7 @@ struct map_selection * route_get_selection(struct route * this_) {
  *
  * @param sel Start of the list to be destroyed
  */
-static void route_free_selection(struct map_selection *sel) {
+void route_free_selection(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next=sel->next;
@@ -1072,8 +1084,13 @@ static void route_free_selection(struct map_selection *sel) {
 }
 
 
+/* for compatibility to GFunc */
+static void route_info_free_g(struct route_info *inf, void * unused) {
+    route_info_free(inf);
+}
+
 static void route_clear_destinations(struct route *this_) {
-    g_list_foreach(this_->destinations, (GFunc)route_info_free, NULL);
+    g_list_foreach(this_->destinations, (GFunc)route_info_free_g, NULL);
     g_list_free(this_->destinations);
     this_->destinations=NULL;
 }
@@ -1124,6 +1141,20 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
     profile(0,"end");
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link route_get_destination_count(struct route *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * @param this The route instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int route_get_destinations(struct route *this, struct pcoord *pc, int count) {
     int ret=0;
     GList *l=this->destinations;
@@ -1503,10 +1534,36 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
 
     ptr = ((unsigned char*)seg) + sizeof(struct route_segment_data);
 
-    if (seg->flags & AF_SPEED_LIMIT) {
+     if (seg->flags & AF_SPEED_LIMIT) {
         if (type == attr_maxspeed)
             return (void*)ptr;
         ptr += sizeof(int);
+    }
+    if (seg->flags & AF_CONDITIONAL_SPEED_LIMIT) {
+        if (type == attr_maxspeed_conditional_speed)
+            return (void*) ptr;
+        ptr += sizeof(int);
+        if (type == attr_maxspeed_conditional_condition) {
+            dbg(lvl_error, "condition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            return (void*) ptr;
+        }
+        ptr += sizeof(char*);
+        if (type == attr_maxspeed_fwd_conditional_speed)
+            return (void*) ptr;
+        ptr += sizeof(int);
+        if (type == attr_maxspeed_fwd_conditional_condition) {
+            dbg(lvl_error, "fwdcondition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            return (void*) ptr;
+        }
+        ptr += sizeof(char*);
+        if (type == attr_maxspeed_bwd_conditional_speed)
+            return (void*) ptr;
+        ptr += sizeof(int);
+        if (type == attr_maxspeed_bwd_conditional_condition) {
+            dbg(lvl_error, "fwdcondition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            return (void*) ptr;
+        }
+        ptr += sizeof(char*);
     }
     if (seg->flags & AF_SEGMENTED) {
         if (type == attr_offset)
@@ -1514,7 +1571,7 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
         ptr += sizeof(int);
     }
     if (seg->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
-        if (type == attr_vehicle_width)
+        if (type == attr_vehicle_width) //TODO: What about weight, length?
             return (void*)ptr;
         ptr += sizeof(struct size_weight_limit);
     }
@@ -1536,6 +1593,14 @@ static int route_segment_data_size(int flags) {
     int ret=sizeof(struct route_segment_data);
     if (flags & AF_SPEED_LIMIT)
         ret+=sizeof(int);
+    if (flags & AF_CONDITIONAL_SPEED_LIMIT){
+            ret+=sizeof(int);       //cond speed
+            ret+=sizeof(char*);     //condition
+            ret+=sizeof(int);       //fwd_cond speed
+            ret+=sizeof(char*);     //cond condition
+            ret+=sizeof(int);       //bwd_cond speed
+            ret+=sizeof(char*);     //cond condition
+    }
     if (flags & AF_SEGMENTED)
         ret+=sizeof(int);
     if (flags & AF_SIZE_OR_WEIGHT_LIMIT)
@@ -1588,6 +1653,8 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
     struct route_graph_segment *s;
     int size;
+    unsigned char *condition, *fwdcondition, *bwdcondition;
+    unsigned char *ptr;
 
     size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(data->flags);
     s = g_slice_alloc0(size);
@@ -1609,6 +1676,32 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
 
     if (data->flags & AF_SPEED_LIMIT)
         RSD_MAXSPEED(&s->data)=data->maxspeed;
+    if (data->flags & AF_CONDITIONAL_SPEED_LIMIT){
+        RSD_MAXCONDSPEED(&s->data) = data->maxspeedcond;
+        if (data->condition) {
+            condition = g_strdup(data->condition); //malloc(strlen(data->condition)+1);
+            //strcpy(condition, data->condition);
+            RSD_MAXCONDSPEEDCOND(&s->data)=condition;
+        }else {
+            RSD_MAXCONDSPEED(&s->data) = 0;
+        }
+        RSD_MAXCONDSPEEDFWD(&s->data) = data->maxspeedcondfwd;
+        if (data->fwdcondition) {
+            fwdcondition = g_strdup(data->fwdcondition); //malloc(strlen(data->fwdcondition)+1);
+            //strcpy(fwdcondition, data->fwdcondition);
+            RSD_MAXCONDSPEEDFWDCOND(&s->data) = fwdcondition;
+        } else {
+            RSD_MAXCONDSPEEDFWDCOND(&s->data) = 0;
+        }
+        RSD_MAXCONDSPEEDBWD(&s->data) = data->maxspeedcondbwd;
+        if (data->bwdcondition) {
+            bwdcondition = g_strdup(data->bwdcondition); //malloc(strlen(data->bwdcondition)+1);
+            //strcpy(bwdcondition, data->bwdcondition);
+            RSD_MAXCONDSPEEDBWDCOND(&s->data) = bwdcondition;
+        }else {
+            RSD_MAXCONDSPEEDBWD(&s->data) = 0;
+        }
+    }
     if (data->flags & AF_SEGMENTED)
         RSD_OFFSET(&s->data)=data->offset;
     if (data->flags & AF_SIZE_OR_WEIGHT_LIMIT)
@@ -1865,6 +1958,104 @@ static void route_graph_destroy(struct route_graph *this) {
     }
 }
 
+int route_evaluate_condition(struct vehicleprofile *profile, char *condition, int speed) {
+
+    if(!condition)
+        return 0;
+
+    int weight = profile->weight;
+    int cnt=1, tempweight=0;
+
+    char temp[strlen(condition)+1];
+    char *temp1, *temp2;
+
+    //(weight>3.5), 30 @ (12:00-18:00)
+
+    if(strtok(strcpy(temp, condition), ";")) {
+        while(strtok(NULL,";")) {
+            cnt++;
+        }
+        dbg(lvl_error, "Found %i conditions", cnt);
+    }
+
+    if (strstr(condition, "wet") || strstr(condition, "(wet)")) {
+        return 0; //We don't know if it's wet
+    }
+
+    if (strstr(condition, "hgv")) {
+        if (weight > 3500)
+            return speed;
+    }
+
+    if (strstr(condition, "weight>")) {
+        //weight condition
+        speed = atoi(strtok(strcpy(temp, condition), ">"));  //store the speed value
+        tempweight = atoi(strtok(NULL, ">"));
+
+        if(tempweight <= weight) {
+            dbg(lvl_error, "Weight condition met: %i < vehicle weight %i - speed:", tempweight, weight, speed);
+            return speed;
+        }
+    }
+//
+//
+
+    return 0;
+}
+
+int route_get_conditional_speed(struct route_segment_data *over, struct vehicleprofile *profile, enum attr_type type) {
+    int ret = 0;
+    int speed;
+    char *ptr;
+    struct attr maxspeed_cond_attr, maxspeed_fwd_cond_attr, maxspeed_bwd_cond_attr;
+    char *condition;
+
+    dbg(lvl_error, "Get conditional speed limit for attr_type: %s",
+                type == attr_maxspeed_conditional_speed ? "attr_maxspeed_conditional_speed" :
+                type == attr_maxspeed_fwd_conditional_speed ? "attr_maxspeed_fwd_conditional_speed" :
+                type == attr_maxspeed_bwd_conditional_speed ?
+                            "attr_maxspeed_bwd_conditional_speed" : "UNKNOWN ATTRIBUTE USED");
+
+    switch (type) {
+
+    case attr_maxspeed_conditional_speed:
+        if ((speed = RSD_MAXCONDSPEED(over)) >0) {
+            if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_conditional_condition)) != NULL) {
+
+                ret = route_evaluate_condition(profile, ptr, speed);
+            }
+        }
+        break;
+    case attr_maxspeed_fwd_conditional_speed:
+        if ((speed = RSD_MAXCONDSPEEDFWD(over)) >0) {
+            if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_fwd_conditional_condition)) != NULL) {
+
+                ret = route_evaluate_condition(profile, ptr, speed);
+            }
+        }
+        break;
+    case attr_maxspeed_bwd_conditional_speed:
+        if ((speed = RSD_MAXCONDSPEED(over)) >0) {
+            if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_bwd_conditional_condition)) != NULL) {
+
+                ret = route_evaluate_condition(profile, ptr, speed);
+            }
+        }
+        break;
+
+    default:
+        return ret;
+    }
+
+    //get all relevant data from the vehicleprofile
+
+    //parse the condition
+
+    //check if the condition is relevant for the current profile
+
+    return ret;
+}
+
 /**
  * @brief Returns the estimated speed on a segment, or 0 for an impassable segment
  *
@@ -1901,8 +2092,20 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
             maxspeed=RSD_MAXSPEED(over);
             if (profile->maxspeed_handling == maxspeed_enforce)
                 speed=maxspeed;
-        } else
+        } else if (over->flags & AF_CONDITIONAL_SPEED_LIMIT) {
+            if (RSD_MAXCONDSPEED(over)!=-1)
+                maxspeed = route_get_conditional_speed(over, profile, attr_maxspeed_conditional_speed);
+            if ((RSD_MAXCONDSPEEDFWD(over)!=-1) && (RSD_MAXCONDSPEEDFWD(over) < maxspeed))
+                maxspeed = RSD_MAXCONDSPEEDFWD(over);
+            if (maxspeed == -1)
+                maxspeed = speed;
+            else {
+                if (profile->maxspeed_handling == maxspeed_enforce)
+                    speed = maxspeed;
+            }
+        } else {
             maxspeed=INT_MAX;
+        }
         if (dist && maxspeed > dist->maxspeed)
             maxspeed=dist->maxspeed;
         if (maxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || maxspeed < speed))
@@ -2506,6 +2709,12 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     data.flags=0;
     data.offset=1;
     data.maxspeed=-1;
+    data.maxspeedcond=-1;
+    data.maxspeedcondfwd=-1;
+    data.maxspeedcondbwd=-1;
+    data.condition=0;
+    data.fwdcondition=0;
+    data.bwdcondition=0;
     data.item=item;
 
     roadp = vehicleprofile_get_roadprofile(profile, item->type);
@@ -2523,9 +2732,22 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
             segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
-
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_conditional_speed, &attr)))
+                   data.maxspeedcond = attr.u.num;
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_conditional_condition, &attr)))
+                   data.condition = attr.u.str;
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_fwd_conditional_speed, &attr)))
+                   data.maxspeedcondfwd = attr.u.num;
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_fwd_conditional_condition, &attr))) {
+                          data.fwdcondition = attr.u.str;
+                          dbg(lvl_error,"fwdcondition set to %i -> %s", data.fwdcondition, data.fwdcondition);
+        }
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_bwd_conditional_speed, &attr)))
+                   data.maxspeedcondbwd = attr.u.num;
+        if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_bwd_conditional_condition, &attr)))
+                          data.bwdcondition = attr.u.str;
         if (data.flags & AF_DANGEROUS_GOODS) {
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
@@ -2993,13 +3215,27 @@ static void route_graph_clone_segment(struct route_graph *this, struct route_gra
     data.flags=s->data.flags|flags;
     data.len=s->data.len+1;
     data.maxspeed=-1;
+    data.maxspeedcond=-1;
+    data.maxspeedcondfwd=-1;
+    data.maxspeedcondbwd=-1;
+    data.condition=0;
+    data.fwdcondition = 0;
+    data.bwdcondition = 0;
     data.dangerous_goods=0;
     data.score = s->data.score;
     if (s->data.flags & AF_SPEED_LIMIT)
         data.maxspeed=RSD_MAXSPEED(&s->data);
+    if (s->data.flags & AF_CONDITIONAL_SPEED_LIMIT) {
+       data.maxspeedcond=RSD_MAXCONDSPEEDCOND(&s->data);
+       data.condition=RSD_MAXCONDSPEEDCOND(&s->data);
+       data.maxspeedcondfwd=RSD_MAXCONDSPEEDFWD(&s->data);
+       data.fwdcondition=RSD_MAXCONDSPEEDFWDCOND(&s->data);
+       data.maxspeedcondbwd=RSD_MAXCONDSPEEDBWD(&s->data);
+       data.bwdcondition = RSD_MAXCONDSPEEDBWDCOND(&s->data);
+    }
     if (s->data.flags & AF_SEGMENTED)
         data.offset=RSD_OFFSET(&s->data);
-    dbg(lvl_debug,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)",start,start->c.x,start->c.y, end, end->c.x,
+    dbg(lvl_error,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)",start,start->c.x,start->c.y, end, end->c.x,
         end->c.y);
     route_graph_add_segment(this, start, end, &data);
 }
@@ -3152,17 +3388,12 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
  * add any routing information to the route graph - this has to be done via the route_graph_flood()
  * function.
  *
- * The function does not create a graph covering the whole map, but only covering the rectangle
- * between c1 and c2.
- *
  * @param ms The mapset to build the route graph from
- * @param c The coordinates of the destination or next waypoint
- * @param c1 Corner 1 of the rectangle to use from the map
- * @param c2 Corner 2 of the rectangle to use from the map
+ * @param c An array of coordinates for the current position, waypoints (if any) and destination
+ * @param count Number of coordinates in `c`
  * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
-// FIXME documentation does not match argument list
 static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
         int async,
         struct vehicleprofile *profile) {
@@ -3228,6 +3459,7 @@ static void route_graph_update(struct route *this, struct callback *cb, int asyn
     }
 }
 
+
 /**
  * @brief Gets street data for an item
  *
@@ -3238,7 +3470,7 @@ struct street_data *
 street_get_data (struct item *item) {
     int count=0,*flags;
     struct street_data *ret = NULL, *ret1;
-    struct attr flags_attr, maxspeed_attr;
+    struct attr flags_attr, maxspeed_attr, maxspeed_cond_attr, maxspeed_fwd_cond_attr, maxspeed_bwd_cond_attr;
     const int step = 128;
     int c;
 
@@ -3273,6 +3505,32 @@ street_get_data (struct item *item) {
     if (ret->flags & AF_SPEED_LIMIT) {
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             ret->maxspeed = maxspeed_attr.u.num;
+        }
+    }
+
+    if (ret->flags & AF_CONDITIONAL_SPEED_LIMIT) {
+        if ((ret->maxspeed_conditional=item_attr_get(item, attr_maxspeed_conditional_speed, &maxspeed_cond_attr))) {
+            // Is there a condition?
+            if (maxspeed_cond_attr.u.num) {
+                // if there is no condition set the speed to 0 to ignore it
+                if (!item_attr_get(item, attr_maxspeed_conditional_condition, &maxspeed_cond_attr)) {
+                        ret->maxspeed_conditional = 0;
+                }
+            }
+        }
+        if (item_attr_get(item, attr_maxspeed_fwd_conditional_speed, &maxspeed_fwd_cond_attr)) {
+            if ((ret->maxspeed_conditional_fwd=maxspeed_fwd_cond_attr.u.num)) {
+                if (!item_attr_get(item, attr_maxspeed_fwd_conditional_condition, &maxspeed_fwd_cond_attr)) {
+                        ret->maxspeed_conditional_fwd = 0;
+                }
+            }
+        }
+        if ((ret->maxspeed_conditional_bwd=item_attr_get(item, attr_maxspeed_bwd_conditional_speed, &maxspeed_bwd_cond_attr))) {
+            if (maxspeed_bwd_cond_attr.u.num) {
+                if (!item_attr_get(item, attr_maxspeed_bwd_conditional_condition, &maxspeed_bwd_cond_attr)) {
+                        ret->maxspeed_conditional_bwd = 0;
+                }
+            }
         }
     }
 
@@ -3464,9 +3722,36 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         }
         return 0;
     case attr_maxspeed:
-        mr->attr_next = attr_street_item;
+        mr->attr_next = attr_maxspeed_conditional_speed;
         if (seg && (seg->data->flags & AF_SPEED_LIMIT)) {
             attr->u.num=RSD_MAXSPEED(seg->data);
+
+        } else {
+            return 0;
+        }
+        return 1;
+    case attr_maxspeed_conditional_speed:
+        mr->attr_next = attr_maxspeed_fwd_conditional_speed;
+        if (seg && (seg->data->flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->u.num=RSD_MAXCONDSPEED(seg->data);
+
+        } else {
+            return 0;
+        }
+        return 1;
+    case attr_maxspeed_fwd_conditional_speed:
+        mr->attr_next = attr_maxspeed_bwd_conditional_speed;
+        if (seg && (seg->data->flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->u.num=RSD_MAXCONDSPEEDFWD(seg->data);
+
+        } else {
+            return 0;
+        }
+        return 1;
+    case attr_maxspeed_bwd_conditional_speed:
+        mr->attr_next = attr_street_item;
+        if (seg && (seg->data->flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->u.num=RSD_MAXCONDSPEEDBWD(seg->data);
 
         } else {
             return 0;
@@ -3604,7 +3889,7 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         }
         return 0;
     case attr_maxspeed:
-        mr->attr_next = attr_label;
+        mr->attr_next = attr_maxspeed_conditional_speed;
         if (mr->item.type != type_rg_segment)
             return 0;
         if (seg && (seg->data.flags & AF_SPEED_LIMIT)) {
@@ -3614,6 +3899,39 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         } else {
             return 0;
         }
+    case attr_maxspeed_conditional_speed:
+        mr->attr_next = attr_maxspeed_fwd_conditional_speed;
+        if (mr->item.type != type_rg_segment)
+            return 0;
+        if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->type = attr_maxspeed_conditional_speed;
+            attr->u.num=RSD_MAXCONDSPEED(&seg->data);
+            return 1;
+        } else {
+            return 0;
+        }
+    case attr_maxspeed_fwd_conditional_speed:
+            mr->attr_next = attr_maxspeed_bwd_conditional_speed;
+            if (mr->item.type != type_rg_segment)
+                return 0;
+            if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+                attr->type = attr_maxspeed_fwd_conditional_speed;
+                attr->u.num=RSD_MAXCONDSPEEDFWD(&seg->data);
+                return 1;
+            } else {
+                return 0;
+            }
+    case attr_maxspeed_bwd_conditional_speed:
+            mr->attr_next = attr_label;
+            if (mr->item.type != type_rg_segment)
+                return 0;
+            if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+                attr->type = attr_maxspeed_bwd_conditional_speed;
+                attr->u.num=RSD_MAXCONDSPEEDBWD(&seg->data);
+                return 1;
+            } else {
+                return 0;
+            }
     case attr_label:
         mr->attr_next=attr_street_item;
         attr->type = attr_label;
@@ -4032,7 +4350,7 @@ static struct map_priv *route_map_new_helper(struct map_methods *meth, struct at
     struct map_priv *ret;
     struct attr *route_attr;
 
-    route_attr=attr_search(attrs, NULL, attr_route);
+    route_attr=attr_search(attrs, attr_route);
     if (! route_attr)
         return NULL;
     ret=g_new0(struct map_priv, 1);

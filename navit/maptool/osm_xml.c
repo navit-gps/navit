@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -25,6 +25,12 @@
 #include <unistd.h>
 #endif
 #include "maptool.h"
+
+long long int currentid;
+
+long long int getcurrentid() {
+    return currentid;
+}
 
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size) {
     int len=strlen(attribute);
@@ -110,6 +116,7 @@ static int parse_node(char *p) {
     if (!osm_xml_get_attribute(p, "lon", lon_buffer, BUFFER_SIZE))
         return 0;
     osm_add_node(atoll(id_buffer), atof(lat_buffer), atof(lon_buffer));
+    currentid = atoll(id_buffer);
     return 1;
 }
 
@@ -119,6 +126,7 @@ static int parse_way(char *p) {
     if (!osm_xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
         return 0;
     osm_add_way(atoll(id_buffer));
+    currentid = atoll(id_buffer);
     return 1;
 }
 
@@ -127,6 +135,7 @@ static int parse_relation(char *p) {
     if (!osm_xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
         return 0;
     osm_add_relation(atoll(id_buffer));
+    currentid = atoll(id_buffer);
     return 1;
 }
 

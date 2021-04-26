@@ -320,6 +320,7 @@ static void gui_internal_html_end(xml_context *dummy, const char *tag_name, void
         switch (html->tag) {
         case html_tag_div:
             this->html_container=html->container;
+        /* fall through */
         case html_tag_img:
         case html_tag_input:
             gui_internal_widget_append(this->html_container, html->w);

@@ -108,7 +108,7 @@ static void popup_traffic_distortion_delay(struct item *item, int delay) {
 static void popup_set_destination(struct navit *nav, struct pcoord *pc) {
     struct coord c;
     struct coord_geo g;
-    char buffer[1024];
+    char buffer[1024 +10]; /* +10 for "Map Point "*/
     char buffer_geo[1024];
     c.x = pc->x;
     c.y = pc->y;
@@ -141,7 +141,7 @@ static void popup_set_bookmark(struct navit *nav, struct pcoord *pc) {
     struct attr attr;
     struct coord c;
     struct coord_geo g;
-    char buffer[1024];
+    char buffer[1024 + 10]; /* + 10 for "Map Point " */
     char buffer_geo[1024];
     c.x = pc->x;
     c.y = pc->y;

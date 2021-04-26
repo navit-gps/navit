@@ -40,6 +40,12 @@ extern "C" {
 #define RP_TURN_RESTRICTION_RESOLVED 4
 
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
+#define RSD_MAXCONDSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_conditional_speed))
+#define RSD_MAXCONDSPEEDFWD(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_fwd_conditional_speed))
+#define RSD_MAXCONDSPEEDBWD(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_bwd_conditional_speed))
+#define RSD_MAXCONDSPEEDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_conditional_condition))
+#define RSD_MAXCONDSPEEDFWDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_fwd_conditional_condition))
+#define RSD_MAXCONDSPEEDBWDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_bwd_conditional_condition))
 
 /**
  * @brief A point in the route graph
@@ -111,6 +117,15 @@ struct route_graph_segment_data {
 	int len;                              /**< The length of this segment */
 	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
 	                                       *   -1 if not known */
+	int maxspeedcond;                         /**< The maximum conditional speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* condition;
+	int maxspeedcondfwd;                         /**< The maximum conditional forward speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* fwdcondition;
+	int maxspeedcondbwd;                         /**< The maximum conditional backward speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* bwdcondition;
 	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
 	int score;                            /**< Used by the traffic module to give preference to some
@@ -160,6 +175,7 @@ struct route_graph {
 /* prototypes */
 struct route_graph * route_get_graph(struct route *this_);
 struct map_selection * route_get_selection(struct route * this_);
+void route_free_selection(struct map_selection *sel);
 void route_add_traffic_distortion(struct route *this_, struct item *item);
 void route_remove_traffic_distortion(struct route *this_, struct item *item);
 void route_change_traffic_distortion(struct route *this_, struct item *item);

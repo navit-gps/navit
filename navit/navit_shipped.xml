@@ -37,6 +37,21 @@
 	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. On windows systems, use win32 -->
 		<graphics type="gtk_drawing_area"/>
+
+		<!--
+		To debug the graphics plugin in question it is possible to proxy it with svg_debug
+		This way every frame will be written as a svg file. In addition to this the real graphics plugin will
+		be called. To configure this, set type to svg_debug and the name attribute to the proxied plugin.
+		Parameters are past to the proxied plugin as well. But resize callbacks currently only passed to the proxied
+		plugin, and not handled by svg_debug, so resizing the window will not update the width and height of the resulting
+		scg file. But all calls will still be recorded and written to the file, so you will see those drawing when opening
+		the svg in an editor like inkscape.
+		Example:
+		-->
+		<!--
+		<graphics type="svg_debug" name="sdl2" window_title="Alternative attributes as passed to proxied plugin" w="1000" h="1000" />
+		 -->
+
 		<!--
 		The following line let you select which graphical user interface you'd like to use.
 		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
@@ -352,12 +367,15 @@ Waypoint</text></img>
                                vehicle_length= 70    feet,  2134 cm
                                vehicle_weight= 80000 lbs,  36287 kg
                           vehicle_axle_weight= 34000 lbs,  15422 kg
+
+		  uturns during routing
+			To prohibit a uturn set turn_around_penalty and turn_around_penalty2. The higher the value the less it will occur.
                 -->
 
                 <vehicleprofile name="Truck" flags="0x200000" flags_forward_mask="0x200002" flags_reverse_mask="0x200001" maxspeed_handling="1" route_mode="0" static_speed="5"
  static_distance="25"
                                 vehicle_width="274" vehicle_height="411" vehicle_length="2134"
-                                vehicle_weight="36287" vehicle_axle_weight="15422">
+                                vehicle_weight="36287" vehicle_axle_weight="15422" turn_around_penalty="10000" turn_around_penalty2="10000">
                         <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="5" />
                         <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20"/>
                         <roadprofile item_types="street_3_city" speed="30" route_weight="30"/>

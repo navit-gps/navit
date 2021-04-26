@@ -30,7 +30,7 @@ struct announcement *
 announcement_new(struct attr *parent, struct attr **attrs) {
     struct announcement *this_;
     struct attr *type_attr;
-    if (! (type_attr=attr_search(attrs, NULL, attr_name))) {
+    if (! (type_attr=attr_search(attrs, attr_name))) {
         return NULL;
     }
     this_=g_new0(struct announcement, 1);

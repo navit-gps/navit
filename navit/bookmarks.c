@@ -364,7 +364,7 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
 
 #ifdef FlushFileBuffers
     FlushFileBuffers(f)
-#endif FlushFileBuffers
+#endif
 
     fclose(f);
 
@@ -378,7 +378,7 @@ static int bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit
     unlink(this_->bookmark_file);
 #ifdef _POSIX
     sync();
-#endif _POSIX
+#endif
     result=(rename(this_->working_file,this_->bookmark_file)==0);
     if (!result) {
         navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
@@ -421,7 +421,8 @@ void bookmarks_set_center_from_file(struct bookmarks *this_, char *file) {
     f = fopen(file, "r");
     if (! f)
         return;
-    getline(&line, &line_size, f);
+    if(getline(&line, &line_size, f) < 0)
+        dbg(lvl_error, "Error on getline (%s)", strerror(errno));
     fclose(f);
     if (line) {
         center = transform_center(this_->trans);
@@ -631,9 +632,15 @@ struct former_destination {
     GList* c;
 };
 
-static void free_former_destination(struct former_destination* former_destination) {
+/* to adapt g_free to GFunc */
+static void g_free_helper(void * data, void*user_data) {
+    g_free(data);
+}
+
+/* unused parameter is for GFunc compatibility */
+static void free_former_destination(struct former_destination* former_destination, void * unused) {
     g_free(former_destination->description);
-    g_list_foreach(former_destination->c, (GFunc)g_free, NULL);
+    g_list_foreach(former_destination->c, (GFunc)g_free_helper, NULL);
     g_list_free(former_destination->c);
     g_free(former_destination);
 }
@@ -693,7 +700,7 @@ static GList* find_destination_in_list(struct former_destination* dest_to_remove
         curr_dest = curr_el->data;
         if (destination_equal(dest_to_remove, curr_dest, remove_found?0:1)) {
             if(remove_found) {
-                free_former_destination(curr_dest);
+                free_former_destination(curr_dest, NULL);
                 curr_el = g_list_remove(curr_el, curr_dest);
                 continue;
             } else {

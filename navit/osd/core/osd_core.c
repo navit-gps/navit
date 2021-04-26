@@ -8,13 +8,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301, USA.
+ * Boston, MA 02110-1301, USA.
  */
 
 #include "config.h"
@@ -82,8 +82,7 @@ struct odometer;
 
 int set_std_osd_attr(struct osd_priv *priv, struct attr*the_attr);
 static void osd_odometer_reset(struct osd_priv_common *opc, int flags);
-static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid);
+static int osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out);
 static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v);
 static struct osd_text_item * oti_new(struct osd_text_item * parent);
 int osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr);
@@ -451,7 +450,7 @@ static void osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav)
         while ((map=mapset_next(msh, 1))) {
             struct attr attr;
             if(map_get_attr(map, attr_name, &attr, NULL)) {
-                if( ! strcmp(this->map_name, attr.u.str) ) {
+                if(!strcmp(this->map_name, attr.u.str) ) {
                     mr=map_rect_new(map, NULL);
                     if (mr) {
                         while ((item=map_rect_get_item(mr))) {
@@ -515,34 +514,34 @@ static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_method
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
 
-    attr = attr_search(attrs, NULL, attr_min_dist);
+    attr = attr_search(attrs, attr_min_dist);
     if (attr) {
         this->min_dist = attr->u.num;
     } else
         this->min_dist = 30;	//default tolerance is 30m
 
-    attr = attr_search(attrs, NULL, attr_max_dist);
+    attr = attr_search(attrs, attr_max_dist);
     if (attr) {
         this->max_dist = attr->u.num;
     } else
         this->max_dist = 500;	//default
 
-    attr = attr_search(attrs, NULL, attr_item_name);
+    attr = attr_search(attrs, attr_item_name);
     if (attr) {
         this->item_name = g_strdup(attr->u.str);
     } else
         this->item_name = NULL;
 
-    attr = attr_search(attrs, NULL, attr_map_name);
+    attr = attr_search(attrs, attr_map_name);
     if (attr) {
         this->map_name = g_strdup(attr->u.str);
     } else
         this->map_name = NULL;
 
-    attr = attr_search(attrs, NULL, attr_update_period);
+    attr = attr_search(attrs, attr_update_period);
     this->update_period=attr ? attr->u.num : 10;
 
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
 
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_init), attr_graphics_ready, opc));
@@ -583,8 +582,7 @@ struct odometer {
     double acceleration;
 };
 
-static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out,
-                                   int *valid) {
+static int osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
         GList* list = odometer_list;
         while(list) {
@@ -595,6 +593,7 @@ static void osd_cmd_odometer_reset(struct navit *this, char *function, struct at
             list = g_list_next(list);
         }
     }
+    return 0;
 }
 
 static char* str_replace(char*output, char*input, char*pattern, char*replacement) {
@@ -741,7 +740,7 @@ static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_
     }
 
     while (*last) {
-        if (! g_ascii_isspace(*last)) {
+        if (!g_ascii_isspace(*last)) {
             lines++;
             break;
         }
@@ -767,6 +766,7 @@ static void draw_aligned_osd_text(char *buffer, int align, struct osd_item *osd_
         if (do_draw) {
             osd_std_resize(osd_item);
         }
+    /* fall through */
     default:
         p.y=(osd_item->h-lines*(height+yspacing)-yspacing)/2;
     }
@@ -830,7 +830,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
     int secs;
     int imperial=0;
 
-    char buffer [256+1]="";
+    char buffer[256+1]="";
     char buffer2[256+1]="";
 
     if(nav) {
@@ -903,7 +903,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
         time_buffer = g_strdup_printf("%02d:%02d:%02d",hours,mins,secs);
     }
 
-    buffer [0] = 0;
+    buffer[0] = 0;
     buffer2[0] = 0;
     if(this->text) {
         str_replace(buffer,this->text,"${avg_spd}",spd_buffer);
@@ -1069,45 +1069,45 @@ static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *
     this->last_coord.x    = -1;
     this->last_coord.y    = -1;
 
-    attr = attr_search(attrs, NULL, attr_label);
+    attr = attr_search(attrs, attr_label);
     //FIXME find some way to free text!!!!
     if (attr) {
         this->text = g_strdup(attr->u.str);
     } else
         this->text = NULL;
 
-    attr = attr_search(attrs, NULL, attr_name);
+    attr = attr_search(attrs, attr_name);
     //FIXME find some way to free text!!!!
     if (attr) {
         this->name = g_strdup(attr->u.str);
     } else
         this->name = NULL;
 
-    attr = attr_search(attrs, NULL, attr_disable_reset);
+    attr = attr_search(attrs, attr_disable_reset);
     if (attr)
         this->bDisableReset = attr->u.num;
     else
         this->bDisableReset = 0;
 
-    attr = attr_search(attrs, NULL, attr_autostart);
+    attr = attr_search(attrs, attr_autostart);
     if (attr)
         this->bAutoStart = attr->u.num;
     else
         this->bAutoStart = 0;
-    attr = attr_search(attrs, NULL, attr_autosave_period);
+    attr = attr_search(attrs, attr_autosave_period);
     if (attr)
         this->autosave_period = attr->u.num;
     else
         this->autosave_period = -1;  //disabled by default
 
-    attr = attr_search(attrs, NULL, attr_align);
+    attr = attr_search(attrs, attr_align);
     if (attr)
         this->align=attr->u.num;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
-    attr = attr_search(attrs, NULL, attr_idle_color);
+    attr = attr_search(attrs, attr_idle_color);
     this->idle_color=attr ? *attr->u.color : orange_color; // text idle_color defaults to orange
 
     this->last_coord.x = -1;
@@ -1278,13 +1278,13 @@ static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_meth
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
 
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
 
-    attr = attr_search(attrs, NULL, attr_update_period);
+    attr = attr_search(attrs, attr_update_period);
     this->update_period=attr ? attr->u.num : 5; //default update period is 5 seconds
 
-    attr = attr_search(attrs, NULL, attr_command);
+    attr = attr_search(attrs, attr_command);
     this->command = attr ? g_strdup(attr->u.str) : g_strdup("");
 
     if(b_commandtable_added == 0) {
@@ -1436,11 +1436,11 @@ static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods 
     this->last_click_time = 0;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
-    attr = attr_search(attrs, NULL, attr_idle_color);
+    attr = attr_search(attrs, attr_idle_color);
     this->idle_color=attr ? *attr->u.color : orange_color; // text idle_color defaults to orange
-    attr = attr_search(attrs, NULL, attr_disable_reset);
+    attr = attr_search(attrs, attr_disable_reset);
     if (attr)
         this->bDisableReset = attr->u.num;
     else
@@ -1550,12 +1550,12 @@ static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *m
     opc->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
     meth->set_attr = set_std_osd_attr;
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
-    attr = attr_search(attrs, NULL, attr_destination_dir_color);
+    attr = attr_search(attrs, attr_destination_dir_color);
     this->destination_dir_color=attr ? *attr->u.color :
                                 green_color; /* Pick destination color from configuration, default to green if unspecified */
-    attr = attr_search(attrs, NULL, attr_north_color);
+    attr = attr_search(attrs, attr_north_color);
     this->north_color=attr ? *attr->u.color :
                       red_color; /* Pick north handle color from configuration, default to red if unspecified */
 
@@ -1595,7 +1595,7 @@ static void osd_button_adjust_sizes(struct osd_priv_common *opc, struct graphics
         opc->osd_item.h=img->height;
 }
 
-static void osd_button_draw(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_button_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle * unused) {
     struct osd_button *this = (struct osd_button *)opc->data;
 
     // FIXME: Do we need this check?
@@ -1680,7 +1680,7 @@ static void osd_button_init(struct osd_priv_common *opc, struct navit *nav) {
     }
     navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_std_click), attr_button,
                        &opc->osd_item));
-    osd_button_draw(opc,nav);
+    osd_button_draw(opc,nav, NULL);
 }
 
 static char *osd_button_icon_path(struct osd_button *this_, char *src) {
@@ -1715,7 +1715,8 @@ int osd_button_set_attr(struct osd_priv_common *opc, struct attr* attr) {
         if(navit_get_blocked(nav)&1)
             return 1;
 
-        osd_button_draw(opc,nav);
+        osd_button_draw(opc,nav,NULL);
+
         navit_draw(opc->osd_item.navit);
         return 1;
     }
@@ -1740,7 +1741,7 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
     meth->set_attr = set_std_osd_attr;
     opc->spec_set_attr_func = osd_button_set_attr;
 
-    attr=attr_search(attrs, NULL, attr_use_overlay);
+    attr=attr_search(attrs, attr_use_overlay);
     if (attr)
         this->use_overlay=attr->u.num;
 
@@ -1750,12 +1751,12 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
         dbg(lvl_error, "no command");
         goto error;
     }
-    attr = attr_search(attrs, NULL, attr_src_dir);
+    attr = attr_search(attrs, attr_src_dir);
     if (attr)
         this->src_dir=graphics_icon_path(attr->u.str);
     else
         this->src_dir=NULL;
-    attr = attr_search(attrs, NULL, attr_src);
+    attr = attr_search(attrs, attr_src);
     if (!attr) {
         dbg(lvl_error, "no src");
         goto error;
@@ -1806,7 +1807,7 @@ static void osd_image_init(struct osd_priv_common *opc, struct navit *nav) {
         opc->osd_item.graphic_bg=graphics_gc_new(opc->osd_item.gr);
         graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
     }
-    osd_button_draw(opc,nav);
+    osd_button_draw(opc,nav,NULL);
 }
 
 static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *meth,
@@ -1824,14 +1825,14 @@ static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *met
     meth->set_attr = set_std_osd_attr;
     opc->spec_set_attr_func = osd_button_set_attr;
 
-    attr=attr_search(attrs, NULL, attr_use_overlay);
+    attr=attr_search(attrs, attr_use_overlay);
     if (attr)
         this->use_overlay=attr->u.num;
 
 
     osd_set_std_attr(attrs, &opc->osd_item, this->use_overlay ? TRANSPARENT_BG:(TRANSPARENT_BG|DISABLE_OVERLAY));
 
-    attr = attr_search(attrs, NULL, attr_src);
+    attr = attr_search(attrs, attr_src);
     if (!attr) {
         dbg(lvl_error, "no src");
         goto error;
@@ -2018,15 +2019,15 @@ static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_
     this->icon_h = -1;
     this->last_status = status_invalid;
 
-    attr = attr_search(attrs, NULL, attr_icon_w);
+    attr = attr_search(attrs, attr_icon_w);
     if (attr)
         this->icon_w = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_h);
+    attr = attr_search(attrs, attr_icon_h);
     if (attr)
         this->icon_h = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_src);
+    attr = attr_search(attrs, attr_icon_src);
     if (attr) {
         struct file_wordexp *we;
         char **array;
@@ -2164,15 +2165,15 @@ static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_meth
     this->active = -1;
     this->level  = 0;
 
-    attr = attr_search(attrs, NULL, attr_icon_w);
+    attr = attr_search(attrs, attr_icon_w);
     if (attr)
         this->icon_w = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_h);
+    attr = attr_search(attrs, attr_icon_h);
     if (attr)
         this->icon_h = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_src);
+    attr = attr_search(attrs, attr_icon_src);
     if (attr) {
         struct file_wordexp *we;
         char **array;
@@ -2184,7 +2185,7 @@ static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_meth
         this->icon_src = graphics_icon_path("%s_wh.svg");
     }
 
-    attr = attr_search(attrs, NULL, attr_level);
+    attr = attr_search(attrs, attr_level);
     if (attr)
         this->level=attr->u.num;
 
@@ -2286,7 +2287,7 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
 
     this->last_state = -1;
 
-    attr = attr_search(attrs, NULL, attr_icon_src);
+    attr = attr_search(attrs, attr_icon_src);
     if (attr) {
         struct file_wordexp *we;
         char **array;
@@ -2472,11 +2473,11 @@ static void osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit,
         }
 
         if(this_->text) {
-            char buffer [256]="";
+            char buffer[256]="";
             char buffer2[256]="";
             char dir_str[16];
             char spd_str[16];
-            buffer [0] = 0;
+            buffer[0] = 0;
             buffer2[0] = 0;
 
             osd_fill_with_bgcolor(&opc->osd_item);
@@ -2561,25 +2562,25 @@ static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods 
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
-    attr = attr_search(attrs, NULL, attr_idle_color);
+    attr = attr_search(attrs, attr_idle_color);
     this->idle_color=attr ? *attr->u.color : default_color; // text idle_color defaults to orange
 
-    attr = attr_search(attrs, NULL, attr_label);
+    attr = attr_search(attrs, attr_label);
     if (attr) {
         this->text = g_strdup(attr->u.str);
     } else
         this->text = NULL;
 
-    attr = attr_search(attrs, NULL, attr_announce_on);
+    attr = attr_search(attrs, attr_announce_on);
     if (attr) {
         this->announce_on = attr->u.num;
     } else {
         this->announce_on = 1;    //announce by default
     }
 
-    attr = attr_search(attrs, NULL, attr_flags);
+    attr = attr_search(attrs, attr_flags);
     if (attr) {
         this->flags = attr->u.num;
     } else {
@@ -2603,7 +2604,7 @@ struct osd_speed_warner {
     int announce_on;
     enum osd_speed_warner_eAnnounceState announce_state;
     int bTextOnly;
-    struct graphics_image *img_active,*img_passive,*img_off;
+    struct graphics_image *img_active,*img_passive,*img_off, *img_current;
     char* label_str;
     int timeout;
     int wait_before_warn;
@@ -2691,10 +2692,11 @@ static void osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *nav
                 img = this->img_active;
             }
         } else {
-            osd_color = this-> grey;
+            osd_color = this->grey;
             img = this->img_off;
             this->announce_state = eNoWarn;
         }
+        this->img_current = img;
     } else {
         //when tracking is not available display grey
         osd_color = this->grey;
@@ -2819,33 +2821,33 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
     opc->osd_item.meth.draw = osd_draw_cast(osd_speed_warner_draw);
     meth->set_attr = set_std_osd_attr;
 
-    attr = attr_search(attrs, NULL, attr_speed_exceed_limit_offset);
+    attr = attr_search(attrs, attr_speed_exceed_limit_offset);
     if (attr) {
         this->speed_exceed_limit_offset = attr->u.num;
     } else
         this->speed_exceed_limit_offset = 15;    //by default 15 km/h
 
-    attr = attr_search(attrs, NULL, attr_speed_exceed_limit_percent);
+    attr = attr_search(attrs, attr_speed_exceed_limit_percent);
     if (attr) {
         this->speed_exceed_limit_percent = attr->u.num;
     } else
         this->speed_exceed_limit_percent = 10;    //by default factor of 1.1
 
     this->bTextOnly = 0;	//by default display graphics also
-    attr = attr_search(attrs, NULL, attr_label);
+    attr = attr_search(attrs, attr_label);
     if (attr) {
         this->label_str = g_strdup(attr->u.str);
         if (!strcmp("text_only",attr->u.str)) {
             this->bTextOnly = 1;
         }
     }
-    attr = attr_search(attrs, NULL, attr_timeout);
+    attr = attr_search(attrs, attr_timeout);
     if (attr)
         this->timeout = attr->u.num;
     else
         this->timeout = 10;    // 10s timeout by default
 
-    attr = attr_search(attrs, NULL, attr_announce_on);
+    attr = attr_search(attrs, attr_announce_on);
     if (attr)
         this->announce_on = attr->u.num;
     else
@@ -2853,6 +2855,260 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, opc));
+    return (struct osd_priv *) opc;
+}
+
+static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
+    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
+
+    struct point p,bbox[4],c;
+    char text[16]="";
+    char *condition="";
+
+    struct tracking *tracking = NULL;
+    struct graphics_gc *osd_color=this->grey;
+    struct graphics_image *img = this->img_off;
+
+
+    osd_fill_with_bgcolor(&opc->osd_item);
+    c.x=0;
+    c.y=opc->osd_item.h/2 + 10;
+    p.x=opc->osd_item.w/2;
+    p.y=opc->osd_item.h/4;
+
+    if (navit) {
+        tracking = navit_get_tracking(navit);
+    }
+    if (tracking  && this->active ) {
+
+        struct attr maxspeed_attr,speed_attr,imperial_attr, maxspeed_cond_attr;
+        int *flags;
+        double routespeed = -1;
+        double tracking_speed = -1;
+        int osm_data = 0;
+        struct item *item;
+        int imperial=0;
+
+        item=tracking_get_current_item(tracking);
+
+        if(navit) {
+            if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
+                imperial=imperial_attr.u.num;
+        }
+
+        flags=tracking_get_current_flags(tracking);
+        if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed_conditional_speed, &maxspeed_attr, NULL)) {
+//            tracking_get_attr(tracking, attr_maxspeed_conditional_condition, &maxspeed_cond_attr, NULL);
+            routespeed = maxspeed_attr.u.num;
+            if(tracking_get_attr(tracking, attr_maxspeed_conditional_condition, &maxspeed_cond_attr, NULL))
+                condition = g_strdup(maxspeed_cond_attr.u.str);
+            osm_data = 1;
+        }
+        if (routespeed == -1) {
+            struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
+            struct roadprofile *rprof=NULL;
+            if (prof && item)
+                rprof=vehicleprofile_get_roadprofile(prof, item->type);
+            if (rprof) {
+                if(rprof->maxspeed!=0)
+                    routespeed=rprof->maxspeed;
+            }
+        }
+        tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
+        tracking_speed = *speed_attr.u.numd;
+        if( -1 != tracking_speed && -1 != routespeed ) {
+            char*routespeed_str = format_speed(routespeed,"","value",imperial);
+            g_snprintf(text,16,"%s%s",osm_data ? "" : "~",routespeed_str);
+            g_free(routespeed_str);
+            if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
+                    (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
+                if(this->announce_state==eNoWarn && this->announce_on) {
+                    if(this->wait_before_warn>0) {
+                        this->wait_before_warn--;
+                    } else {
+                        this->announce_state=eWarningTold; //warning told
+                        navit_say(navit,_("Please decrease your speed"));
+                    }
+                }
+            } else {
+                /* reset speed warning */
+                this->wait_before_warn = this->timeout;
+            }
+            if( tracking_speed <= routespeed ) {
+                this->announce_state=eNoWarn; //no warning
+                osd_color = this->green;
+                img = this->img_passive;
+            } else {
+                osd_color = this->red;
+                img = this->img_active;
+            }
+        } else {
+            osd_color = this->grey;
+            img = this->img_off;
+            this->announce_state = eNoWarn;
+        }
+        this->img_current = img;
+    } else {
+        //when tracking is not available display grey
+        osd_color = this->grey;
+        img = this->img_off;
+        this->announce_state = eNoWarn;
+    }
+    if(this->img_active && this->img_passive && this->img_off) {
+        struct point p;
+        p.x=(opc->osd_item.w-img->width)/4;
+        p.y=(opc->osd_item.h-img->height)/2;
+        graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
+    } else if(0==this->bTextOnly) {
+        graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d-(this->width * 2) );
+    }
+    graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
+    p.x=(opc->osd_item.w-bbox[2].x)/2;
+    p.y=(opc->osd_item.h+bbox[2].y)/2.5;
+    graphics_draw_text(opc->osd_item.gr, osd_color, NULL, opc->osd_item.font, text, &p, 0x10000, 0);
+    graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.fontcond, text, 0x10000, 0, bbox, 0);
+    //Condition
+    graphics_draw_text(opc->osd_item.gr, osd_color, NULL, opc->osd_item.fontcond, condition, &c, 0x10000, 0);
+    graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+}
+
+static void osd_cond_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button,
+                                   struct point *p) {
+    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
+
+    struct point bp = opc->osd_item.p;
+    osd_wrap_point(&bp, nav);
+    if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + opc->osd_item.w || p->y > bp.y + opc->osd_item.h
+            || !opc->osd_item.configured ) && !opc->osd_item.pressed)
+        return;
+    if (button != 1)
+        return;
+    if (!!pressed == !!opc->osd_item.pressed)
+        return;
+
+    if (navit_ignore_button(nav))
+        return;
+    opc->osd_item.pressed=pressed;
+    if (pressed) {
+        this->active = !this->active;
+        osd_cond_speed_warner_draw(opc, nav, NULL);
+    }
+}
+
+
+static void osd_cond_speed_warner_init(struct osd_priv_common *opc, struct navit *nav) {
+    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
+
+    struct color red_color= {0xffff,0,0,0xffff};
+    struct color green_color= {0,0xffff,0,0xffff};
+    struct color grey_color= {0x8888,0x8888,0x8888,0x8888};
+    struct color black_color= {0x1111,0x1111,0x1111,0x9999};
+
+    osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
+    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_cond_speed_warner_draw), attr_position_coord_geo, opc));
+    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_cond_speed_warner_click), attr_button, opc));
+
+    this->d=opc->osd_item.w/2;
+    if (opc->osd_item.h < this->d)
+        this->d=opc->osd_item.h;
+    this->width=this->d/10;
+    this->wait_before_warn = this->timeout;
+    if(this->label_str && !strncmp("images:",this->label_str,7)) {
+        char *tok1=NULL, *tok2=NULL, *tok3=NULL;
+        strtok(this->label_str,":");
+        tok1 = strtok(NULL,":");
+        if(tok1) {
+            tok2 = strtok(NULL,":");
+        }
+        if(tok1 && tok2) {
+            tok3 = strtok(NULL,":");
+        }
+        if(tok1 && tok2 && tok3) {
+            tok1 = graphics_icon_path(tok1);
+            tok2 = graphics_icon_path(tok2);
+            tok3 = graphics_icon_path(tok3);
+            this->img_active  = graphics_image_new(opc->osd_item.gr, tok1);
+            this->img_passive = graphics_image_new(opc->osd_item.gr, tok2);
+            this->img_off     = graphics_image_new(opc->osd_item.gr, tok3);
+            g_free(tok1);
+            g_free(tok2);
+            g_free(tok3);
+        }
+    }
+
+    g_free(this->label_str);
+    this->label_str = NULL;
+
+    graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->d/2-2 /*-this->width*/ );
+
+    this->red=graphics_gc_new(opc->osd_item.gr);
+    graphics_gc_set_foreground(this->red, &red_color);
+    graphics_gc_set_linewidth(this->red, this->width);
+
+    this->green=graphics_gc_new(opc->osd_item.gr);
+    graphics_gc_set_foreground(this->green, &green_color);
+    graphics_gc_set_linewidth(this->green, this->width-2);
+
+    this->grey=graphics_gc_new(opc->osd_item.gr);
+    graphics_gc_set_foreground(this->grey, &grey_color);
+    graphics_gc_set_linewidth(this->grey, this->width);
+
+    this->black=graphics_gc_new(opc->osd_item.gr);
+    graphics_gc_set_foreground(this->black, &black_color);
+    graphics_gc_set_linewidth(this->black, this->width);
+
+    osd_cond_speed_warner_draw(opc, nav, NULL);
+}
+
+static struct osd_priv *osd_cond_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
+    struct osd_speed_warner *this=g_new0(struct osd_speed_warner, 1);
+    struct osd_priv_common *opc = g_new0(struct osd_priv_common,1);
+    struct attr *attr;
+
+    opc->data = (void*)this;
+    opc->osd_item.rel_x=-160;
+    opc->osd_item.rel_y=120;
+    opc->osd_item.rel_w=120;
+    opc->osd_item.rel_h=160;
+    opc->osd_item.navit = nav;
+    this->active=-1;
+    opc->osd_item.meth.draw = osd_draw_cast(osd_cond_speed_warner_draw);
+    meth->set_attr = set_std_osd_attr;
+
+    attr = attr_search(attrs, attr_speed_exceed_limit_offset);
+    if (attr) {
+        this->speed_exceed_limit_offset = attr->u.num;
+    } else
+        this->speed_exceed_limit_offset = 15;    //by default 15 km/h
+
+    attr = attr_search(attrs, attr_speed_exceed_limit_percent);
+    if (attr) {
+        this->speed_exceed_limit_percent = attr->u.num;
+    } else
+        this->speed_exceed_limit_percent = 10;    //by default factor of 1.1
+
+    this->bTextOnly = 0;    //by default display graphics also
+    attr = attr_search(attrs, attr_label);
+    if (attr) {
+        this->label_str = g_strdup(attr->u.str);
+        if (!strcmp("text_only",attr->u.str)) {
+            this->bTextOnly = 1;
+        }
+    }
+    attr = attr_search(attrs, attr_timeout);
+    if (attr)
+        this->timeout = attr->u.num;
+    else
+        this->timeout = 10;    // 10s timeout by default
+
+    attr = attr_search(attrs, attr_announce_on);
+    if (attr)
+        this->announce_on = attr->u.num;
+    else
+        this->announce_on = 1;    //announce by default
+
+    osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
+    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_cond_speed_warner_init), attr_graphics_ready, opc));
     return (struct osd_priv *) opc;
 }
 
@@ -2897,6 +3153,19 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
     case attr_position_speed:
         return format_speed(*attr->u.numd,"",format,imperial);
     case attr_position_height:
+        /**
+         * johnk 8/13/2020
+         * if format is "feet" then return feet
+         *   else
+         *       if format is "imperial"
+         *           return meters or feet as controlled by "imperial"
+         *  return meters
+         */
+        if (format &&
+                (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
+            return (format_float_0(*attr->u.numd * FEET_PER_METER) );
+        }
+        return (format_float_0(*attr->u.numd) );
     case attr_position_direction:
         return format_float_0(*attr->u.numd);
     case attr_position_magnetic_direction:
@@ -2965,7 +3234,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
         if (!strcmp(format,"value") || !strcmp(format,"unit")) {
             char *ret,*tmp=format_distance(attr->u.num," ",imperial);
             char *pos=strchr(tmp,' ');
-            if (! pos)
+            if (!pos)
                 return tmp;
             *pos++='\0';
             if (!strcmp(format,"value"))
@@ -2974,13 +3243,14 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
             g_free(tmp);
             return ret;
         }
+        break;
     case attr_position_time_iso8601:
         if ((!format) || (!strcmp(format,"iso8601"))) {
             break;
         } else {
             if (strstr(format, "local;") == format) {
                 textt = iso8601_to_secs(attr->u.str);
-                memcpy ((void *) &tm, (void *) localtime(&textt), sizeof(tm));
+                memcpy((void *) &tm, (void *) localtime(&textt), sizeof(tm));
                 strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
             } else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2) && (strchr("+-", format[0]))) {
                 if (strchr("-", format[0])) {
@@ -2988,7 +3258,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                 } else {
                     textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
                 }
-                memcpy ((void *) &tm, (void *) gmtime(&textt), sizeof(tm));
+                memcpy((void *) &tm, (void *) gmtime(&textt), sizeof(tm));
                 strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
             } else {
                 sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday), &(tm.tm_hour), &(tm.tm_min),
@@ -3212,7 +3482,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
             }
 
             while (*last) {
-                if (! g_ascii_isspace(*last)) {
+                if (!g_ascii_isspace(*last)) {
                     lines++;
                     break;
                 }
@@ -3238,6 +3508,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
                 if (do_draw) {
                     osd_std_resize(&opc->osd_item);
                 }
+            /* fall through */
             default:
                 p.y=(opc->osd_item.h-lines*(height+yspacing)-yspacing)/2;
             }
@@ -3333,7 +3604,7 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
         }
 
         end=strstr(start,"}");
-        if (! end)
+        if (!end)
             break;
 
         *end++='\0';
@@ -3453,12 +3724,12 @@ static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth
     this->active = -1;
     this->last = NULL;
 
-    attr = attr_search(attrs, NULL, attr_label);
+    attr = attr_search(attrs, attr_label);
     if (attr)
         this->text = g_strdup(attr->u.str);
     else
         this->text = NULL;
-    attr = attr_search(attrs, NULL, attr_align);
+    attr = attr_search(attrs, attr_align);
     if (attr)
         this->align=attr->u.num;
 
@@ -3522,7 +3793,7 @@ static void osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit
             if (gr_image) {
                 p.x = (opc->osd_item.w - gr_image->width) / 2;
                 p.y = (opc->osd_item.h - gr_image->height) / 2;
-                graphics_draw_image(opc->osd_item.gr, opc->osd_item.  graphic_fg, &p, gr_image);
+                graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_fg, &p, gr_image);
                 graphics_image_free(opc->osd_item.gr, gr_image);
             }
             g_free(image);
@@ -3563,15 +3834,15 @@ static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods
     this->active = -1;
     this->strength = -2;
 
-    attr = attr_search(attrs, NULL, attr_icon_w);
+    attr = attr_search(attrs, attr_icon_w);
     if (attr)
         this->icon_w = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_h);
+    attr = attr_search(attrs, attr_icon_h);
     if (attr)
         this->icon_h = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_src);
+    attr = attr_search(attrs, attr_icon_src);
     if (attr) {
         struct file_wordexp *we;
         char **array;
@@ -3594,7 +3865,7 @@ struct volume {
     struct callback *click_cb;
 };
 
-static void osd_volume_draw(struct osd_priv_common *opc, struct navit *navit) {
+static void osd_volume_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle * unused) {
     struct volume *this = (struct volume *)opc->data;
 
     struct point p;
@@ -3608,7 +3879,7 @@ static void osd_volume_draw(struct osd_priv_common *opc, struct navit *navit) {
         if (gr_image) {
             p.x = (opc->osd_item.w - gr_image->width) / 2;
             p.y = (opc->osd_item.h - gr_image->height) / 2;
-            graphics_draw_image(opc->osd_item.gr, opc->osd_item.  graphic_fg, &p, gr_image);
+            graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_fg, &p, gr_image);
             graphics_image_free(opc->osd_item.gr, gr_image);
         }
         g_free(image);
@@ -3633,15 +3904,15 @@ static void osd_volume_click(struct osd_priv_common *opc, struct navit *nav, int
             this->strength=0;
         if (this->strength > 5)
             this->strength=5;
-        osd_volume_draw(opc, nav);
+        osd_volume_draw(opc, nav, NULL);
     }
 }
 static void osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
     struct volume *this = (struct volume *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_volume_click), attr_button, opc));
-    osd_volume_draw(opc, nav);
+    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast(osd_volume_click), attr_button, opc));
+    osd_volume_draw(opc, nav, NULL);
 }
 
 static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *meth,
@@ -3667,15 +3938,15 @@ static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *me
     this->active = -1;
     this->strength = -1;
 
-    attr = attr_search(attrs, NULL, attr_icon_w);
+    attr = attr_search(attrs, attr_icon_w);
     if (attr)
         this->icon_w = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_h);
+    attr = attr_search(attrs, attr_icon_h);
     if (attr)
         this->icon_h = attr->u.num;
 
-    attr = attr_search(attrs, NULL, attr_icon_src);
+    attr = attr_search(attrs, attr_icon_src);
     if (attr) {
         struct file_wordexp *we;
         char **array;
@@ -3709,7 +3980,7 @@ static int round_to_nice_value(double value) {
     return mantissa*nearest_power_of10;
 }
 
-static void osd_scale_draw(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_scale_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *unused) {
     struct osd_scale *this = (struct osd_scale *)opc->data;
 
     struct point item_pos,scale_line_start,scale_line_end;
@@ -3808,7 +4079,7 @@ static void osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
 
     graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, opc, nav));
     if (navit_get_ready(nav) == 3)
-        osd_scale_draw(opc, nav);
+        osd_scale_draw(opc, nav, NULL);
 }
 
 static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *meth,
@@ -3824,7 +4095,7 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
 
     osd_set_std_attr(attrs, &opc->osd_item, TRANSPARENT_BG | ITEM_HAS_TEXT);
 
-    navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_scale_init), attr_graphics_ready,
+    navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast(osd_scale_init), attr_graphics_ready,
                        opc));
 
     return (struct osd_priv *) opc;
@@ -3888,17 +4159,17 @@ static void osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
     struct color red= {0xffff,0x0,0x0,0xffff};
 
     this->nav=nav;
-    if (! navit_get_attr(nav, attr_graphics, &attr, NULL))
+    if (!navit_get_attr(nav, attr_graphics, &attr, NULL))
         return;
     gra=attr.u.graphics;
     graphics_add_callback(gra, callback_new_attr_1(callback_cast(osd_auxmap_draw), attr_postdraw, opc));
-    if (! navit_get_attr(nav, attr_transformation, &attr, NULL))
+    if (!navit_get_attr(nav, attr_transformation, &attr, NULL))
         return;
     this->ntrans=attr.u.transformation;
-    if (! navit_get_attr(nav, attr_displaylist, &attr, NULL))
+    if (!navit_get_attr(nav, attr_displaylist, &attr, NULL) )
         return;
     this->displaylist=attr.u.displaylist;
-    if (! navit_get_attr(nav, attr_layout, &attr, NULL))
+    if (!navit_get_attr(nav, attr_layout, &attr, NULL))
         return;
     this->layout=attr.u.layout;
     osd_set_std_graphic(nav, &opc->osd_item, NULL);
@@ -3942,6 +4213,7 @@ void plugin_init(void) {
     plugin_register_category_osd("button", osd_button_new);
     plugin_register_category_osd("toggle_announcer", osd_nav_toggle_announcer_new);
     plugin_register_category_osd("speed_warner", osd_speed_warner_new);
+    plugin_register_category_osd("cond_speed_warner", osd_cond_speed_warner_new);
     plugin_register_category_osd("speed_cam", osd_speed_cam_new);
     plugin_register_category_osd("text", osd_text_new);
     plugin_register_category_osd("gps_status", osd_gps_status_new);

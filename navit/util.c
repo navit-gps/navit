@@ -479,6 +479,19 @@ GList *g_hash_to_list_keys(GHashTable *h) {
     return ret;
 }
 
+/**
+ * @brief Appends a formatted string and appends it to an existing one.
+ *
+ * Usage is similar to the familiar C functions that take a format string and a variable argument list.
+ *
+ * Return value is a concatenation of `buffer` (unless it is NULL) and `fmt`, with the remaining arguments
+ * inserted into `fmt`.
+ *
+ * @param buffer An existing string, can be null and will be freed by this function
+ * @param fmt A format string (will not be altered)
+ *
+ * @return A newly allocated string, see description. The caller is responsible for freeing the returned string.
+ */
 gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
     gchar *str,*ret;
     va_list ap;

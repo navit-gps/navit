@@ -384,7 +384,7 @@ static int vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
             return 0;
     }
     case attr_active:
-        active = attr_search(priv->attrs,NULL,attr_active);
+        active = attr_search(priv->attrs,attr_active);
         if(active != NULL && active->u.num == 1)
             return 1;
         else
@@ -423,10 +423,10 @@ static struct vehicle_priv *vehicle_gypsy_new_gypsy(struct vehicle_methods *meth
     dbus_uint32_t serial,pid=getpid();
     struct attr *destination,*path,*interface,*method;
 
-    destination=attr_search(attrs, NULL, attr_dbus_destination);
-    path=attr_search(attrs, NULL, attr_dbus_path);
-    interface=attr_search(attrs, NULL, attr_dbus_interface);
-    method=attr_search(attrs, NULL, attr_dbus_method);
+    destination=attr_search(attrs, attr_dbus_destination);
+    path=attr_search(attrs, attr_dbus_path);
+    interface=attr_search(attrs, attr_dbus_interface);
+    method=attr_search(attrs, attr_dbus_method);
     if (destination && path && interface && method) {
         conn=dbus_bus_get(DBUS_BUS_SESSION, NULL);
         if (conn) {
@@ -441,12 +441,12 @@ static struct vehicle_priv *vehicle_gypsy_new_gypsy(struct vehicle_methods *meth
     }
 #endif
     dbg(lvl_debug, "enter");
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     ret = g_new0(struct vehicle_priv, 1);
     ret->have_cords = 0;
     ret->source = g_strdup(source->u.str);
     ret->attrs = attrs;
-    retry_int = attr_search(attrs, NULL, attr_retry_interval);
+    retry_int = attr_search(attrs, attr_retry_interval);
     if (retry_int) {
         ret->retry_interval = retry_int->u.num;
         if (ret->retry_interval < MIN_RETRY_INTERVAL) {

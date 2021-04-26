@@ -2887,7 +2887,7 @@ if(option_ssml) parag=1;
 			// Unless it's a hyphen or apostrophe (which is used by TranslateClause() )
 			if(IsBracket(c1))
 			{
-				c1 = 0xe000 + '(';   // Unicode private useage area.  So TranslateRules() knows the bracket name has been spoken
+				c1 = 0xe000 + '(';   // Unicode private usage area.  So TranslateRules() knows the bracket name has been spoken
 			}
 			else
 			if(c1 != '-')
