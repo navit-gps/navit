@@ -239,6 +239,7 @@ find_package(Gettext)
 find_package(PNG)
 find_package(PythonLibs)
 find_package(Threads)
+set(LIBXML2_LIBRARY "-llibxml2")
 find_package(LibXml2)
 
 #Qt detection
