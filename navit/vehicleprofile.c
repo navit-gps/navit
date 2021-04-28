@@ -32,9 +32,6 @@
 #include <libxml/tree.h>
 
 #define DIMENSIONSFILE "dimensions.txt"
-/* The error code set by various library functions.  */
-extern int *__errno_location (void) __THROW __attribute_const__;
-# define errno (*__errno_location ())
 
 static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     dbg(lvl_debug,"%s:%ld", attr_to_name(attr->type), attr->u.num);
