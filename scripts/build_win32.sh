@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 apt-get update && apt-get install -y mingw-w64 mingw-w64-tools  \
-  default-jdk nsis libsaxonb-java curl libxml2-dev libxml2
+  default-jdk nsis libsaxonb-java curl libxml2-dev libxml2	
 
 mkdir win32
 pushd win32
