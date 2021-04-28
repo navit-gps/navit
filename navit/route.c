@@ -114,7 +114,7 @@ struct map_priv {
     struct route *route;
 };
 
-int debug_route=1;
+int debug_route=0;
 
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
@@ -1544,6 +1544,8 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
             return (void*) ptr;
         ptr += sizeof(int);
         if (type == attr_maxspeed_conditional_condition) {
+            if(*ptr==96)
+            dbg(lvl_error, "condition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
             dbg(lvl_error, "condition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
             return (void*) ptr;
         }
@@ -1978,7 +1980,7 @@ int route_evaluate_condition(struct vehicleprofile *profile, char *condition, in
         dbg(lvl_error, "Found %i conditions", cnt);
     }
 
-    if (strstr(condition, "wet") || strstr(condition, "(wet)")) {
+    if (strstr(condition, "wet")) {
         return 0; //We don't know if it's wet
     }
 
@@ -2083,7 +2085,7 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
     struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-    int speed,maxspeed;
+    int speed,maxspeed,maxspeedtemp;
     if (!roadprofile || !roadprofile->route_weight)
         return 0;
     speed=roadprofile->route_weight;
@@ -2094,7 +2096,9 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
                 speed=maxspeed;
         } else if (over->flags & AF_CONDITIONAL_SPEED_LIMIT) {
             if (RSD_MAXCONDSPEED(over)!=-1)
-                maxspeed = route_get_conditional_speed(over, profile, attr_maxspeed_conditional_speed);
+                maxspeedtemp = route_get_conditional_speed(over, profile, attr_maxspeed_conditional_speed);
+            if(maxspeedtemp>0) //check broken conditions
+                maxspeed=maxspeedtemp;
             if ((RSD_MAXCONDSPEEDFWD(over)!=-1) && (RSD_MAXCONDSPEEDFWD(over) < maxspeed))
                 maxspeed = RSD_MAXCONDSPEEDFWD(over);
             if (maxspeed == -1)

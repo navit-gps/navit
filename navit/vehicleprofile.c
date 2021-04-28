@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <glib.h>
 #include <string.h>
 #include "debug.h"
@@ -26,6 +27,14 @@
 #include "roadprofile.h"
 #include "vehicleprofile.h"
 #include "callback.h"
+#include "navit.h"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
+#define DIMENSIONSFILE "dimensions.txt"
+/* The error code set by various library functions.  */
+extern int *__errno_location (void) __THROW __attribute_const__;
+# define errno (*__errno_location ())
 
 static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     dbg(lvl_debug,"%s:%ld", attr_to_name(attr->type), attr->u.num);
@@ -196,6 +205,8 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
         if (active.u.num)
             vehicleprofile_apply_attrs(this_, profile_option.u.navit_object, 1);
     }
+    //vehicleprofile_store_dimensions(this_);
+    vehicleprofile_read_dimensions(this_);
     vehicleprofile_attr_iter_destroy(iter);
     dbg(lvl_debug,"result l %d w %d h %d wg %d awg %d pen %d",this_->length,this_->width,this_->height,this_->weight,
         this_->axle_weight,this_->through_traffic_penalty);
@@ -204,6 +215,186 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
         this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 
+}
+
+int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
+
+    xmlDoc *document;
+    xmlNode *root, *dimensions, *dimension, *node, *new_node;
+
+    char *filename;
+    int profilefound = 0;
+    int profilewritten = 0;
+    struct attr attr;
+    char weight[7] = "0";
+    char axle_weight[7] = "0";
+    char length[7] = "0";
+    char width[7] = "0";
+    char height[7] = "0";
+
+    if (profile->weight < 1000000) {
+        sprintf(weight, "%i", profile->weight);
+    }
+
+    if (profile->axle_weight < 1000000) {
+        sprintf(axle_weight, "%i", profile->axle_weight);
+    }
+
+    if (profile->length < 1000000) {
+        sprintf(length, "%i", profile->length);
+    }
+
+    if (profile->width < 1000000) {
+        sprintf(width, "%i", profile->width);
+    }
+
+    if (profile->height < 1000000) {
+        sprintf(height, "%i", profile->height);
+    }
+
+    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
+
+    document = xmlReadFile(filename, NULL, 0);
+
+    if(!document) {
+        document = xmlNewDoc(BAD_CAST "1.0");
+        root = xmlNewNode(NULL, BAD_CAST "dimensions");
+        xmlDocSetRootElement(document, root);
+    } else {
+
+    root = xmlDocGetRootElement(document);
+    dimensions = root;
+
+    dimension = dimensions->children->next;
+
+    new_node = xmlNewNode(0, "dimension");
+
+    xmlNewChild(new_node, NULL, BAD_CAST "name", BAD_CAST profile->name);
+    xmlNewChild(new_node, NULL, BAD_CAST "weight", BAD_CAST weight);
+    xmlNewChild(new_node, NULL, BAD_CAST "axle_weight", BAD_CAST axle_weight);
+    xmlNewChild(new_node, NULL, BAD_CAST "length", BAD_CAST length);
+    xmlNewChild(new_node, NULL, BAD_CAST "width", BAD_CAST width);
+    xmlNewChild(new_node, NULL, BAD_CAST "height", BAD_CAST height);
+
+    for (node = dimension; node; node = node->next->next) {
+        profilefound = 0;
+        if (!strcmp(node->children->name, "name"))
+            if (!strcmp(node->children->children->content, profile->name)) {
+                profilefound = 1;
+            }
+        if (profilefound) {
+            //set profile values to file
+            fprintf(stdout, "\t<%s> -> %s\n", node->children->name, node->children->children->content);
+            xmlReplaceNode(node, new_node);
+            profilewritten = 1;
+            break;
+        }
+    }
+
+    }
+
+    if (!profilewritten) {
+        //add new data
+
+        new_node = xmlNewChild(root, NULL, BAD_CAST "dimension", BAD_CAST "");
+
+        xmlNewChild(new_node, NULL, BAD_CAST "name", BAD_CAST profile->name);
+        xmlNewChild(new_node, NULL, BAD_CAST "weight", BAD_CAST weight);
+        xmlNewChild(new_node, NULL, BAD_CAST "axle_weight", BAD_CAST axle_weight);
+        xmlNewChild(new_node, NULL, BAD_CAST "length", BAD_CAST length);
+        xmlNewChild(new_node, NULL, BAD_CAST "width", BAD_CAST width);
+        xmlNewChild(new_node, NULL, BAD_CAST "height", BAD_CAST height);
+    }
+        /*
+         * Dumping document to stdio or file
+         */
+        xmlSaveFormatFileEnc(filename, document, "UTF-8", 0);
+
+        /*free the document */
+        xmlFreeDoc(document);
+
+        /*
+         *Free the global variables that may
+         *have been allocated by the parser.
+         */
+        xmlCleanupParser();
+
+}
+
+int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
+
+    xmlDoc *document;
+    xmlNode *root, *dimensions, *dimension, *node, *profilenode;
+
+    char *filename;
+    int profilefound = 0;
+    struct attr attr;
+    char weight[7]="0";
+    char axle_weight[7]="0";
+    char length[7]="0";
+    char width[7]="0";
+    char height[7]="0";
+
+    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
+
+    document = xmlReadFile(filename, NULL, 0);
+    root = xmlDocGetRootElement(document);
+    dimensions = root;
+
+    //No content in file, create it
+    if(dimensions==0) {
+        vehicleprofile_store_dimensions(profile);
+        document = xmlReadFile(filename, NULL, 0);
+            root = xmlDocGetRootElement(document);
+            dimensions = root;
+    }
+
+    dimension = dimensions->children;
+
+    for (node = dimension; node; node = node->next) {
+        profilefound = 0;
+        if (!strcmp(node->name, "dimension")) {
+            if (!strcmp(node->children->name, "name")) {
+                if (!strcmp(node->children->children->content, profile->name)) {
+                    fprintf(stdout, "<%s>\n", node->children->children->content);
+                    profilefound = 1;
+                }
+            if (profilefound) {
+                for (profilenode = node->children->next; profilenode; profilenode = profilenode->next) {
+                    //set profile values from file
+                    fprintf(stdout, "\t<%s> -> %s\n", profilenode->name, profilenode->children->content);
+                    if (!strcmp(profilenode->name, "weight")) {
+                        attr.type = attr_vehicle_weight;
+                        attr.u.num = atoi(profilenode->children->content);
+                        vehicleprofile_set_attr(profile, &attr);
+                    }
+                    if (!strcmp(profilenode->name, "axle_weight")) {
+                        attr.type = attr_vehicle_axle_weight;
+                        attr.u.num = atoi(profilenode->children->content);
+                        vehicleprofile_set_attr(profile, &attr);
+                    }
+                    if (!strcmp(profilenode->name, "length")) {
+                        attr.type = attr_vehicle_length;
+                        attr.u.num = atoi(profilenode->children->content);
+                        vehicleprofile_set_attr(profile, &attr);
+                    }
+                    if (!strcmp(profilenode->name, "width")) {
+                        attr.type = attr_vehicle_width;
+                        attr.u.num = atoi(profilenode->children->content);
+                        vehicleprofile_set_attr(profile, &attr);
+                    }
+                    if (!strcmp(profilenode->name, "height")) {
+                        attr.type = attr_vehicle_height;
+                        attr.u.num = atoi(profilenode->children->content);
+                        vehicleprofile_set_attr(profile, &attr);
+                    }
+                }
+            }
+        }
+        }
+    }
+
+    return 1;
 }
 
 
@@ -238,7 +429,13 @@ void vehicleprofile_attr_iter_destroy(struct attr_iter *iter) {
 
 int vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr,
                             struct attr_iter *iter) {
-    return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+    if(this_) {
+        return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+    }
+    else {
+        dbg(lvl_error,"vehicleprofile_get_attr vehicleprofile is NULL");
+        return 0;
+    }
 }
 
 int vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr) {

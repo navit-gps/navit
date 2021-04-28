@@ -238,6 +238,7 @@ find_package(Gettext)
 find_package(PNG)
 find_package(PythonLibs)
 find_package(Threads)
+find_package(LibXml2)
 
 #Qt detection
 if (NOT DISABLE_QT)
@@ -491,6 +492,11 @@ endif(LIBGARMIN_FOUND)
 
 if(PYTHONLIBS_FOUND)
 	set_with_reason(binding/python "python libraries [${PYTHONLIBS_VERSION_STRING}] found" TRUE ${PYTHON_LIBRARIES})
+endif()
+
+if(LIBXML2_FOUND)
+	include_directories(${LIBXML2_INCLUDE_DIRS})
+		set_with_reason(binding/libxml2 "libxml2 library [${LIBXML2_VERSION_STRING}] found" TRUE ${LIBXML2_LDFLAGS})
 endif()
 
 if (HAVE_LIBSPEECHD)

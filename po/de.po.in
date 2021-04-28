@@ -3185,3 +3185,27 @@ msgstr "Französisch-Guayana"
 #, c-format
 #~ msgid "Set next visit to %ld, %ld \n"
 #~ msgstr "Setze nächsten Besuch auf %ld, %ld \n"
+
+#, c-format
+#~ msgid "Change Dimensions for: %s"
+#~ msgstr "Ändere die Abmessungen für: %s"
+
+#, c-format
+#~ msgid "Total Weight: %li"
+#~ msgstr "Gesamtgewicht: %li"
+
+#, c-format
+#~ msgid "Axle Weight: %li"
+#~ msgstr "Achslast: %li"
+
+#, c-format
+#~ msgid "Length: %li"
+#~ msgstr "Länge: %li"
+
+#, c-format
+#~ msgid "Width: %li"
+#~ msgstr "Breite: %li"
+
+#, c-format
+#~ msgid "Height: %li"
+#~ msgstr "Höhe: %li"

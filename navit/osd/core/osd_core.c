@@ -2858,6 +2858,24 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
     return (struct osd_priv *) opc;
 }
 
+static char* cleanCondition(char* condition) {
+    char *ptrcond;
+    while (ptrcond = strstr(condition, ")")) {
+        *ptrcond = 32;
+    }
+    while (ptrcond = strstr(condition, "(")) {
+        *ptrcond = 32;
+    }
+    while(*condition==32) { //remove leading whitespace TODO: do it in maptool
+            condition++;
+    }
+    while(*(condition+strlen(condition)-1)==32) { //remove trailing whitespace TODO: do it in maptool
+        *(condition+strlen(condition)-1)=0;
+    }
+
+    return condition;
+}
+
 static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
@@ -2867,12 +2885,13 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
 
     struct tracking *tracking = NULL;
     struct graphics_gc *osd_color=this->grey;
+    struct graphics_gc *osd_colorcond=this->black;
     struct graphics_image *img = this->img_off;
 
 
     osd_fill_with_bgcolor(&opc->osd_item);
     c.x=0;
-    c.y=opc->osd_item.h/2 + 10;
+    c.y=opc->osd_item.h/2 + 15;
     p.x=opc->osd_item.w/2;
     p.y=opc->osd_item.h/4;
 
@@ -2903,6 +2922,8 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
             if(tracking_get_attr(tracking, attr_maxspeed_conditional_condition, &maxspeed_cond_attr, NULL))
                 condition = g_strdup(maxspeed_cond_attr.u.str);
             osm_data = 1;
+        } else {
+            return; //Don't display when no conditional speedlimit is active
         }
         if (routespeed == -1) {
             struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
@@ -2960,17 +2981,62 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
         p.y=(opc->osd_item.h-img->height)/2;
         graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
     } else if(0==this->bTextOnly) {
-        graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d-(this->width * 2) );
+        graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d / 1.33 );
     }
     graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
     p.x=(opc->osd_item.w-bbox[2].x)/2;
     p.y=(opc->osd_item.h+bbox[2].y)/2.5;
     graphics_draw_text(opc->osd_item.gr, osd_color, NULL, opc->osd_item.font, text, &p, 0x10000, 0);
-    graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.fontcond, text, 0x10000, 0, bbox, 0);
+
     //Condition
-    graphics_draw_text(opc->osd_item.gr, osd_color, NULL, opc->osd_item.fontcond, condition, &c, 0x10000, 0);
+    char *ptr = strtok(condition, ";");
+    char *ptrcond;
+    ptrcond = condition;
+    int cnt = 1;
+
+    if (ptr) {
+        if (strlen(ptrcond) > 15) {
+            ptr = strtok(condition, ",");
+            while (ptr != NULL) {
+                ptr = strtok(NULL, ",");
+                cnt++;
+            }
+        } else {
+            while (ptr != NULL) {
+                ptr = strtok(NULL, ";");
+                if (ptr)
+                    cnt++;
+            }
+        }
+    } else { //Try SPACE
+        ptr = strtok(condition, " ");
+        while (ptr != NULL) {
+
+            ptr = strtok(NULL, " ");
+            cnt++;
+        }
+    }
+
+    graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.fontcond, ptrcond, 0x10000, 0, bbox, 0);
+    c.y=abs((opc->osd_item.h/3)*2);
+
+    while (cnt>0 && condition) {
+
+        if(ptrcond){
+            ptrcond = cleanCondition(ptrcond);
+            graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.fontcond, ptrcond, 0x10000, 0, bbox, 0);
+            c.x=(opc->osd_item.w-bbox[2].x)/2;
+            graphics_draw_text(opc->osd_item.gr, osd_colorcond, NULL, opc->osd_item.fontcond, ptrcond, &c, 0x10000, 0);
+        }
+
+        ptrcond+=strlen(ptrcond)+1;
+        c.y+=abs(bbox[2].y)+5;
+        cnt--;
+    }
+
     graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
+
 
 static void osd_cond_speed_warner_click(struct osd_priv_common *opc, struct navit *nav, int pressed, int button,
                                    struct point *p) {
@@ -2995,7 +3061,6 @@ static void osd_cond_speed_warner_click(struct osd_priv_common *opc, struct navi
     }
 }
 
-
 static void osd_cond_speed_warner_init(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
@@ -3011,7 +3076,7 @@ static void osd_cond_speed_warner_init(struct osd_priv_common *opc, struct navit
     this->d=opc->osd_item.w/2;
     if (opc->osd_item.h < this->d)
         this->d=opc->osd_item.h;
-    this->width=this->d/10;
+    this->width=this->d/20;
     this->wait_before_warn = this->timeout;
     if(this->label_str && !strncmp("images:",this->label_str,7)) {
         char *tok1=NULL, *tok2=NULL, *tok3=NULL;

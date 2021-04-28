@@ -89,7 +89,7 @@
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
 #include "gui_internal_keyboard.h"
-
+#include "gui_internal_vehicle_dimension.h"
 
 /**
  * Indexes into the config_profiles array.
@@ -1890,6 +1890,59 @@ static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget
     gui_internal_menu_render(this);
 }
 
+static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, struct widget *wm, void *data) {
+    struct widget *w,*wd, *wdweight, *wdaxleweight, *wdlength, *wdwidth, *wdheight;
+    struct attr attr;
+    struct vehicleprofile *v=data;
+    char str[50];
+    wd=gui_internal_menu(this, _("Change Dimensions"));
+    gui_internal_menu_data(this)->redisplay=gui_internal_cmd_show_vehicle_dimensions;
+    gui_internal_menu_data(this)->redisplay_widget=wm;
+    w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+    gui_internal_widget_append(wd, w);
+
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_weight, &attr, NULL);
+    sprintf(str, _("Total Weight: %li"), attr.u.num);
+    wdweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_weight, NULL);
+    gui_internal_widget_append(w, wdweight);
+
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_axle_weight, &attr, NULL);
+    sprintf(str, _("Axle Weight: %li"), attr.u.num);
+    wdaxleweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_axle_weight, NULL);
+    gui_internal_widget_append(w, wdaxleweight);
+
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_length, &attr, NULL);
+    sprintf(str, _("Length: %li"), attr.u.num);
+    wdlength = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_length, NULL);
+    gui_internal_widget_append(w, wdlength);
+
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_width, &attr, NULL);
+    sprintf(str, _("Width: %li"), attr.u.num);
+    wdwidth = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_width, NULL);
+    gui_internal_widget_append(w, wdwidth);
+
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_height, &attr, NULL);
+    sprintf(str, _("Height: %li"), attr.u.num);
+    wdheight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_height, NULL);
+    gui_internal_widget_append(w, wdheight);
+
+    gui_internal_menu_render(this);
+}
 /**
  * A container to hold the selected vehicle and the desired profile in
  * one data item.
@@ -2048,6 +2101,7 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
     struct widget *w,*wb,*row;
     struct attr attr;
     struct vehicleprofile *profile = NULL;
+    struct vehicleprofile *active_profile = NULL;
     GList *profiles;
 
     wb=gui_internal_menu(this, name);
@@ -2081,6 +2135,18 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
                                            image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
                                            gui_internal_cmd_show_nmea_data, v));
     }
+
+    // If we have weight set
+    active_profile = navit_get_vehicleprofile(this->nav);
+
+    //if (vehicleprofile_get_attr(active_profile, attr_vehicle_weight, &attr, NULL)) {
+            gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
+                                              gravity_left|orientation_horizontal|flags_fill));
+            gui_internal_widget_append(row,
+                                       gui_internal_button_new_with_callback(this, _(g_strdup_printf(_("Change Dimensions for: %s"), _(active_profile->name))),
+                                               image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+                                               gui_internal_cmd_show_vehicle_dimensions, active_profile));
+        //}
 
     // Add all the possible vehicle profiles to the menu
     profiles = navit_get_vehicleprofiles(this->nav);
