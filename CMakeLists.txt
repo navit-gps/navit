@@ -3,11 +3,7 @@ cmake_minimum_required(VERSION 3.2)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
 message(STATUS "Building with CMake V${CMAKE_VERSION}")
-if (DISABLE_CXX)
-	project(navit C)
-else(DISABLE_CXX)
-	project(navit C CXX)
-endif(DISABLE_CXX)
+project(navit C CXX)
 
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
 if(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$")
@@ -19,7 +15,7 @@ endif(NOT DISABLE_CXX)
 
 set(NAVIT_VERSION_MAJOR "0")
 set(NAVIT_VERSION_MINOR "5")
-set(NAVIT_VERSION_PATCH "6")
+set(NAVIT_VERSION_PATCH "5")
 if(ANDROID)
     set(PACKAGE_VERSION "${NAVIT_VERSION_MAJOR}.${NAVIT_VERSION_MINOR}.${NAVIT_VERSION_PATCH}.${ANDROID_ABI}")
 else(ANDROID)
@@ -159,12 +155,6 @@ INCLUDE (CheckLibraryExists)
 INCLUDE (CheckFunctionExists)
 INCLUDE (CheckSymbolExists)
 
-if(ANDROID)
-	set(ENV{PKG_CONFIG_DIR} "")
-	set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
-	set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
-endif(ANDROID)
-
 ################################
 #  pkg-config based detection  #
 ################################
@@ -214,8 +204,7 @@ if(PKG_CONFIG_FOUND)
 	pkg_check_modules ( GeoClue libgeoclue-2.0 )
 	if(GeoClue_FOUND)
 		include_directories(${GeoClue_INCLUDE_DIRS})
-		set_with_reason(vehicle/geoclue "libgeoclue found" TRUE
-			${GeoClue_LIBRARIES})
+		set_with_reason(vehicle/geoclue "libgeoclue found" TRUE ${GeoClue_INCLUDE_DIRS})
 	endif(GeoClue_FOUND)
 else(PKG_CONFIG_FOUND)
     set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
@@ -239,8 +228,6 @@ find_package(Gettext)
 find_package(PNG)
 find_package(PythonLibs)
 find_package(Threads)
-set(LIBXML2_LIBRARY "-llibxml2")
-find_package(LibXml2)
 
 #Qt detection
 if (NOT DISABLE_QT)
@@ -494,11 +481,6 @@ endif(LIBGARMIN_FOUND)
 
 if(PYTHONLIBS_FOUND)
 	set_with_reason(binding/python "python libraries [${PYTHONLIBS_VERSION_STRING}] found" TRUE ${PYTHON_LIBRARIES})
-endif()
-
-if(LIBXML2_FOUND)
-	include_directories(${LIBXML2_INCLUDE_DIRS})
-		set_with_reason(binding/libxml2 "libxml2 library [${LIBXML2_VERSION_STRING}] found" TRUE ${LIBXML2_LDFLAGS})
 endif()
 
 if (HAVE_LIBSPEECHD)

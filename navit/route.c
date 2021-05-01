@@ -1545,8 +1545,8 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
         ptr += sizeof(int);
         if (type == attr_maxspeed_conditional_condition) {
             if(*ptr==96)
-            dbg(lvl_error, "condition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
-            dbg(lvl_error, "condition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            dbg(lvl_error, "condition: -> %s %i %x", ptr, *ptr, (char ) *ptr);
+            dbg(lvl_error, "condition: -> %s %i %x", ptr, *ptr, (char ) *ptr);
             return (void*) ptr;
         }
         ptr += sizeof(char*);
@@ -1645,7 +1645,11 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param data The segment data
+ * @param len The length of this segment
+ * @param item The item that is represented by this segment
+ * @param flags Flags for this segment
+ * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
+ * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
@@ -2019,7 +2023,6 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
     case attr_maxspeed_conditional_speed:
         if ((speed = RSD_MAXCONDSPEED(over)) >0) {
             if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_conditional_condition)) != NULL) {
-
                 ret = route_evaluate_condition(profile, ptr, speed);
             }
         }
@@ -2027,7 +2030,6 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
     case attr_maxspeed_fwd_conditional_speed:
         if ((speed = RSD_MAXCONDSPEEDFWD(over)) >0) {
             if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_fwd_conditional_condition)) != NULL) {
-
                 ret = route_evaluate_condition(profile, ptr, speed);
             }
         }
@@ -2035,7 +2037,6 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
     case attr_maxspeed_bwd_conditional_speed:
         if ((speed = RSD_MAXCONDSPEED(over)) >0) {
             if ((ptr = route_segment_data_field_pos(over, attr_maxspeed_bwd_conditional_condition)) != NULL) {
-
                 ret = route_evaluate_condition(profile, ptr, speed);
             }
         }
@@ -2504,12 +2505,10 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
         e_pnt=route_graph_add_point(this,&l);
         s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         e_pnt->flags |= RP_TRAFFIC_DISTORTION;
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             data.flags |= AF_SPEED_LIMIT;
             data.maxspeed=maxspeed_attr.u.num;
         }
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
@@ -2729,7 +2728,6 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     if (item_coord_get(item, &l, 1)) {
         if (!(default_flags = item_get_default_flags(item->type)))
             default_flags = &default_flags_value;
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
             segmented = (data.flags & AF_SEGMENTED);
@@ -2752,34 +2750,28 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_bwd_conditional_condition, &attr)))
                           data.bwdcondition = attr.u.str;
         if (data.flags & AF_DANGEROUS_GOODS) {
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
             else
                 data.flags &= ~AF_DANGEROUS_GOODS;
         }
         if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_width, &attr))
                 data.size_weight.width=attr.u.num;
             else
                 data.size_weight.width=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_height, &attr))
                 data.size_weight.height=attr.u.num;
             else
                 data.size_weight.height=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_length, &attr))
                 data.size_weight.length=attr.u.num;
             else
                 data.size_weight.length=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_weight, &attr))
                 data.size_weight.weight=attr.u.num;
             else
                 data.size_weight.weight=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
                 data.size_weight.axle_weight=attr.u.num;
             else

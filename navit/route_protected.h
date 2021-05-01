@@ -192,6 +192,7 @@ void route_graph_free_segments(struct route_graph *this);
 void route_graph_build_done(struct route_graph *rg, int cancel);
 void route_recalculate_partial(struct route *this_);
 void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_type type);
+int route_get_conditional_speed(struct route_segment_data *over, struct vehicleprofile *profile, enum attr_type type);
 /* end of prototypes */
 #ifdef __cplusplus
 }
