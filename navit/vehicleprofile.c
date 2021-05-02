@@ -348,6 +348,7 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
     FILE *document;
     char line[250];
     char *value;
+    int profilefound=0;
 
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
 
@@ -363,6 +364,7 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
             if (value) {
                 if (!strcmp(value, profile->name)) {
                     free(value);
+                    profilefound=1;
                     value = getTagValue(line, "weight");
                     if (value) {
                         attr.type = attr_vehicle_weight;
@@ -403,6 +405,14 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
                 }
             }
         }
+
+        fclose(document);
+
+        if(!profilefound) {
+            //if the profile is not in the dimension.txt yet add it
+            vehicleprofile_store_dimensions(profile);
+        }
+
     }
 
     return 1;
