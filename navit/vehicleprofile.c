@@ -337,7 +337,10 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
 
     fclose(document);
     fclose(newdocument);
+
+#ifndef _WIN32
     remove(newdocument);
+#endif
 
     return 1;
 }
