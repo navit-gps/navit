@@ -267,7 +267,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char height[30] = "0";
     FILE *document, *newdocument;
     char line[250];
-    char *ptr_valstart, *ptr_valend, content, *tmpfilename;
+    char value, content, *tmpfilename;
 
     if (profile->weight < 1000000) {
         sprintf(weight, "<weight>%i</weight>", profile->weight);
@@ -299,50 +299,44 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         return 0;
 
     while (fgets(line, sizeof(line), document)) {
-        ptr_valstart = strstr(line, "<name>") + 6;
-        if (ptr_valstart) {
-            ptr_valend = strstr(line, "</name>");
-            if (ptr_valend) {
-
-                *ptr_valend = 0;
-                if (!strcmp(ptr_valstart, profile->name)) {
-                    profilefound = 1;
-                    fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length,
-                            width, height);
-                } else {
-                    *ptr_valend = '<';
-                    fprintf(newdocument, "%s", line);
-                }
+        value = getTagValue(line, "name");
+        if (value) {
+            if (!strcmp(value, profile->name)) {
+                profilefound = 1;
+                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length,
+                        width, height);
+            } else {
+                fprintf(newdocument, "%s", line);
             }
         }
     }
 
-    if (!profilefound) {
-        fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length, width, height);
-    }
+if (!profilefound) {
+    fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length, width, height);
+}
 
-    rewind(newdocument);
-    fclose(document);
-    document = fopen(filename, "w+");
+rewind(newdocument);
+fclose(document);
+document = fopen(filename, "w+");
 
-    if (document == 0)
-        return 0;
+if (document == 0)
+    return 0;
 
+content = fgetc(newdocument);
+
+while (content != EOF) {
+    fputc(content, document);
     content = fgetc(newdocument);
+}
 
-    while (content != EOF) {
-        fputc(content, document);
-        content = fgetc(newdocument);
-    }
-
-    fclose(document);
-    fclose(newdocument);
+fclose(document);
+fclose(newdocument);
 
 #ifndef WIN32
-    remove(tmpfilename);
+remove(tmpfilename);
 #endif
 
-    return 1;
+return 1;
 }
 
 int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
