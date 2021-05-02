@@ -240,7 +240,6 @@ char* getTagValue(char *xmlstring, char *tag) {
     closetag[strlen(closetag)] = '>';
     closetag[strlen(closetag)+1] = 0;
 
-
     ptr_valstart = strstr(xmlstring, opentag) + strlen(opentag);
     if (ptr_valstart) {
         ptr_valend = strstr(xmlstring, closetag);
@@ -267,7 +266,8 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char height[30] = "0";
     FILE *document, *newdocument;
     char line[250];
-    char value, content, *tmpfilename;
+    char *value, *tmpfilename;
+    int content;
 
     if (profile->weight < 1000000) {
         sprintf(weight, "<weight>%i</weight>", profile->weight);
@@ -315,9 +315,11 @@ if (!profilefound) {
     fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length, width, height);
 }
 
-rewind(newdocument);
+fclose(newdocument);
 fclose(document);
+
 document = fopen(filename, "w+");
+newdocument = fopen(tmpfilename, "r");
 
 if (document == 0)
     return 0;
