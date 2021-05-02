@@ -338,9 +338,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     fclose(document);
     fclose(newdocument);
 
-#ifndef _WIN32
-    remove(newdocument);
-#endif
+    remove(tmpfilename);
 
     return 1;
 }
@@ -348,16 +346,10 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
 int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
 
     char *filename;
-    int profilefound = 0;
     struct attr attr;
-    char weight[30] = "0";
-    char axle_weight[40] = "0";
-    char length[30] = "0";
-    char width[30] = "0";
-    char height[30] = "0";
     FILE *document;
     char line[250];
-    char *ptr_valstart, *ptr_valend, content, *value;
+    char *value;
 
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
 
