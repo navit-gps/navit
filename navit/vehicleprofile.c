@@ -30,6 +30,7 @@
 #include "navit.h"
 
 #define DIMENSIONSFILE "dimensions.txt"
+#define TEMPFILE "tempfile.txt"
 
 /* The error code set by various library functions.  */
 //extern int *__errno_location (void) __THROW __attribute_const__;
@@ -145,9 +146,9 @@ static void vehicleprofile_apply_roadprofile(struct vehicleprofile *this_, struc
             /* Maptool won't place any access flags for roads which don't have default access flags set. Warn user. */
             if (!item_get_default_flags(*types))
                 dbg(lvl_error,
-                            "On '%s' roads used in '%s' vehicleprofile access restrictions are ignored. You might even be directed to drive in wrong direction on a one-way road. "
-                                        "Please define default access flags for above road type to item.c and rebuild the map.\n",
-                            item_to_name(*types), this_->name);
+                    "On '%s' roads used in '%s' vehicleprofile access restrictions are ignored. You might even be directed to drive in wrong direction on a one-way road. "
+                    "Please define default access flags for above road type to item.c and rebuild the map.\n",
+                    item_to_name(*types), this_->name);
             oldrp = g_hash_table_lookup(this_->roadprofile_hash, (void*) (long) (*types));
             if (is_option && oldrp) {
                 struct navit_object *newrp;
@@ -186,7 +187,7 @@ static void vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navi
 static void vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data) {
     struct roadprofile *rp = value;
     dbg(lvl_debug, "type %s avg %d weight %d max %d", item_to_name((int )(long )key), rp->speed, rp->route_weight,
-                rp->maxspeed);
+        rp->maxspeed);
 }
 
 static void vehicleprofile_update(struct vehicleprofile *this_) {
@@ -208,10 +209,10 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
     vehicleprofile_read_dimensions(this_);
     vehicleprofile_attr_iter_destroy(iter);
     dbg(lvl_debug, "result l %d w %d h %d wg %d awg %d pen %d", this_->length, this_->width, this_->height,
-                this_->weight, this_->axle_weight, this_->through_traffic_penalty);
+        this_->weight, this_->axle_weight, this_->through_traffic_penalty);
     dbg(lvl_debug, "m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d", this_->mode,
-                this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling,
-                this_->static_speed, this_->static_distance, this_->dangerous_goods);
+        this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling,
+        this_->static_speed, this_->static_distance, this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 
 }
@@ -266,7 +267,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char height[30] = "0";
     FILE *document, *newdocument;
     char line[250];
-    char *ptr_valstart, *ptr_valend, content;
+    char *ptr_valstart, *ptr_valend, content, *tmpfilename;
 
     if (profile->weight < 1000000) {
         sprintf(weight, "<weight>%i</weight>", profile->weight);
@@ -289,17 +290,15 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     }
 
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
+    tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE);
 
     document = fopen(filename, "a+");
-    newdocument = tmpfile();
+    newdocument = fopen(tmpfilename, "w+");
 
     if (document == 0 || newdocument == 0)
         return 0;
 
     while (fgets(line, sizeof(line), document)) {
-        printf("%s\n", line);
-//        search name of profile
-//        if found write new line to newdocument else write line to new document
         ptr_valstart = strstr(line, "<name>") + 6;
         if (ptr_valstart) {
             ptr_valend = strstr(line, "</name>");
@@ -308,11 +307,9 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
                 *ptr_valend = 0;
                 if (!strcmp(ptr_valstart, profile->name)) {
                     profilefound = 1;
-                    //profilename found
                     fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length,
-                                width, height);
+                            width, height);
                 } else {
-                    //not found copy this line to newdocument
                     *ptr_valend = '<';
                     fprintf(newdocument, "%s", line);
                 }
@@ -340,6 +337,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
 
     fclose(document);
     fclose(newdocument);
+    remove(newdocument);
 
     return 1;
 }
@@ -418,7 +416,7 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
 }
 
 struct vehicleprofile*
-vehicleprofile_new(struct attr *parent, struct attr **attrs) {
+    vehicleprofile_new(struct attr *parent, struct attr **attrs) {
     struct vehicleprofile *this_;
     struct attr **attr, *type_attr;
     if (!(type_attr = attr_search(attrs, attr_name))) {
@@ -437,7 +435,7 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs) {
 }
 
 struct attr_iter*
-vehicleprofile_attr_iter_new(void *unused) {
+    vehicleprofile_attr_iter_new(void *unused) {
     return (struct attr_iter*) g_new0(void*, 1);
 }
 
@@ -446,7 +444,7 @@ void vehicleprofile_attr_iter_destroy(struct attr_iter *iter) {
 }
 
 int vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr,
-            struct attr_iter *iter) {
+                            struct attr_iter *iter) {
     if (this_) {
         return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
     } else {
@@ -482,7 +480,7 @@ int vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr) 
 }
 
 struct roadprofile*
-vehicleprofile_get_roadprofile(struct vehicleprofile *this_, enum item_type type) {
+    vehicleprofile_get_roadprofile(struct vehicleprofile *this_, enum item_type type) {
     return g_hash_table_lookup(this_->roadprofile_hash, (void*) (long) type);
 }
 
@@ -496,8 +494,8 @@ static int vehicleprofile_init(struct vehicleprofile *this_) {
 }
 
 struct object_func vehicleprofile_func = { attr_vehicleprofile, (object_func_new) vehicleprofile_new,
-        (object_func_get_attr) vehicleprofile_get_attr, (object_func_iter_new) vehicleprofile_attr_iter_new,
-        (object_func_iter_destroy) vehicleprofile_attr_iter_destroy, (object_func_set_attr) vehicleprofile_set_attr,
-        (object_func_add_attr) vehicleprofile_add_attr, (object_func_remove_attr) vehicleprofile_remove_attr,
-        (object_func_init) vehicleprofile_init, (object_func_destroy) NULL, (object_func_dup) NULL,
-        (object_func_ref) navit_object_ref, (object_func_unref) navit_object_unref, };
+            (object_func_get_attr) vehicleprofile_get_attr, (object_func_iter_new) vehicleprofile_attr_iter_new,
+            (object_func_iter_destroy) vehicleprofile_attr_iter_destroy, (object_func_set_attr) vehicleprofile_set_attr,
+            (object_func_add_attr) vehicleprofile_add_attr, (object_func_remove_attr) vehicleprofile_remove_attr,
+            (object_func_init) vehicleprofile_init, (object_func_destroy) NULL, (object_func_dup) NULL,
+            (object_func_ref) navit_object_ref, (object_func_unref) navit_object_unref, };
