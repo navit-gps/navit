@@ -20,9 +20,12 @@
 #ifndef NAVIT_TRACK_H
 #define NAVIT_TRACK_H
 #include <time.h>
+#include "xmlconfig.h"
+#include "coord.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /* prototypes */
 enum attr_type;
 enum projection;
@@ -45,6 +48,7 @@ struct street_data *tracking_get_street_data(struct tracking *tr);
 int tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr, struct attr_iter *attr_iter);
 struct item *tracking_get_current_item(struct tracking *_this);
 int *tracking_get_current_flags(struct tracking *_this);
+int tracking_get_current_tunnel(struct tracking *_this);
 void tracking_flush(struct tracking *tr);
 void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro);
 int tracking_set_attr(struct tracking *tr, struct attr *attr);
