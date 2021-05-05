@@ -198,7 +198,7 @@ struct parsed_item {
     struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
     struct coord *coords;       /**< The coordinates for the item */
     int coord_count;            /**< The number of elements in `coords` */
-    int length;                 /**< The length of the segment in meters */
+    int delay;                  /**< Delay in deciseconds */
     int is_matched;             /**< Whether any of the maps has a matching item */
 };
 
@@ -3436,9 +3436,6 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct parsed_item * pitem;
     struct item * item;
 
-    /* Location length */
-    int loc_len = 0;
-
     /* List of parsed items */
     GList * items = NULL, * curr_item;
 
@@ -3541,6 +3538,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             pitem->coord_count = ccnt;
             pitem->attrs = attr_list_dup(attrs);
             for (i = 0; attrs[i]; i++) {
+                if (attrs[i]->type == attr_delay)
+                    pitem->delay = attrs[i]->u.num;
                 g_free(attrs[i]);
                 attrs[i] = NULL;
             }
@@ -3662,12 +3661,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         dbg(lvl_debug, "*****checkpoint RESTORE-6.1, restoring segmented items is not supported yet");
                         map_item = NULL;
                     }
-                    if (map_item) {
+                    if (map_item)
                         pitem->is_matched = 1;
-                        for (i = 1; i < pitem->coord_count; i++)
-                            pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
-                        loc_len += pitem->length;
-                    }
                 }
             }
 
@@ -3704,8 +3699,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                                pitem->coords, pitem->coord_count, this_->id);
             tm_item_add_message_data(item, this_->id,
                                      traffic_get_item_speed(item, seg_data, maxspeed),
-                                     traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
-                                     NULL, route);
+                                     pitem->delay, NULL, route);
             parsed_item_destroy(pitem);
             this_->priv->items[i] = item;
             i++;
