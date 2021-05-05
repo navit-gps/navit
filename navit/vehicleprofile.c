@@ -234,13 +234,13 @@ char* getTagValue(char *xmlstring, char *tag) {
     opentag[0] = '<';
     strcpy(&opentag[1], tag);
     opentag[strlen(opentag)] = '>';
-    opentag[strlen(opentag)+1] = 0;
+    opentag[sizeof(opentag)-1] = 0;
 
     closetag[0] = '<';
     closetag[1] = '/';
     strcpy(&closetag[2], tag);
     closetag[strlen(closetag)] = '>';
-    closetag[strlen(closetag)+1] = 0;
+    closetag[sizeof(closetag)-1] = 0;
 
     ptr_valstart = strstr(xmlstring, opentag) + strlen(opentag);
     if (ptr_valstart) {
@@ -291,8 +291,8 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         sprintf(height, "<height>%i</height>", profile->height);
     }
 
-    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
-    tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE);
+    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE, NULL);
+    tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE, NULL);
 
     document = fopen(filename, "r");
     newdocument = fopen(tmpfilename, "w+");
@@ -332,6 +332,9 @@ fclose(document);
 document = fopen(filename, "w+");
 newdocument = fopen(tmpfilename, "r");
 
+g_free(filename);
+g_free(tmpfilename);
+
 if (document == 0)
     return 0;
 
@@ -361,9 +364,11 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
     char *value;
     int profilefound=0;
 
-    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
+    filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE, NULL);
 
     document = fopen(filename, "r");
+
+    g_free(filename);
 
     if (document == 0) {   //first startup of this version. Need to create the dimensions file.
         vehicleprofile_store_dimensions(profile);
