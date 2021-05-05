@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
@@ -28,6 +29,7 @@
 #include "vehicleprofile.h"
 #include "callback.h"
 #include "navit.h"
+
 
 #define DIMENSIONSFILE "dimensions.txt"
 #define TEMPFILE "tempfile.txt"
@@ -266,7 +268,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char height[30] = "0";
     FILE *document, *newdocument;
     char line[250];
-    char *value, *tmpfilename;
+    char *value, *tmpfilename, *test;
     int content;
 
     if (profile->weight < 1000000) {
@@ -292,27 +294,36 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE);
     tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE);
 
-    document = fopen(filename, "a+");
+    document = fopen(filename, "r");
     newdocument = fopen(tmpfilename, "w+");
+
+    // Create new file if it doesn't exist. Workaround for Android as fgets will always return NULL when mode a, a+ is used
+    if (document == 0) {
+        document = fopen(filename, "a");
+        fclose(document);
+        document = fopen(filename, "r");
+    }
 
     if (document == 0 || newdocument == 0)
         return 0;
 
-    while (fgets(line, sizeof(line), document)) {
+    test=fgets(line, (int)sizeof(line), document);
+    while (test) {
         value = getTagValue(line, "name");
         if (value) {
             if (!strcmp(value, profile->name)) {
                 profilefound = 1;
-                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length,
+                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length,
                         width, height);
             } else {
                 fprintf(newdocument, "%s", line);
             }
         }
+        test=fgets(line, (int)sizeof(line), document);
     }
 
 if (!profilefound) {
-    fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\n", profile->name, weight, axle_weight, length, width, height);
+    fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length, width, height);
 }
 
 fclose(newdocument);
