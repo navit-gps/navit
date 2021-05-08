@@ -443,7 +443,7 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
 
     if (item->flags & ITEM_HAS_TEXT) {
         item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size, 1);
-        item->fontcond = graphics_named_font_new(item->gr, item->font_name, item->font_size / 1.5, 1);
+        item->fontcond = graphics_named_font_new(item->gr, item->font_name, item->font_size * 0.7, 1);
         item->graphic_fg_text = graphics_gc_new(item->gr);
         graphics_gc_set_foreground(item->graphic_fg_text, &item->text_color);
     }
