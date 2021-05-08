@@ -2882,7 +2882,7 @@ static char* cleanCondition(char* condition) {
 static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
 
-    struct point p,bbox[4],c;
+    struct point p,bbox[4],c, pc;
     char text[16]="";
     char *condition="";
 
@@ -2978,24 +2978,15 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
         img = this->img_off;
         this->announce_state = eNoWarn;
     }
-    if(this->img_active && this->img_passive && this->img_off) {
-        struct point p;
-        p.x=(opc->osd_item.w-bbox[2].x)/2;
-        p.y=(opc->osd_item.h+bbox[2].y)/2.5;
-        graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
-    } else if(0==this->bTextOnly) {
-        graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d / 1.33 );
-    }
 
-    if(this->img_active && this->img_passive && this->img_off) {
-        struct point p;
+    if(this->img_active && this->img_passive && this->img_off && this->img_condition) {
         p.x=(opc->osd_item.w-img->width)/2;
         p.y=0;
         graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
 
-        p.x=(opc->osd_item.w-this->img_condition->width)/2;
-        p.y=img->height + 5;
-        graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, this->img_condition);
+        pc.x=5;
+        pc.y=img->height + 5;
+        graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &pc, this->active>0?this->img_condition:this->img_off);
 
     } else if(0==this->bTextOnly) {
         graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d-this->width*2 );
@@ -3052,112 +3043,6 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
     }
 
     graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
-
-
-    //    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
-    //
-    //       struct point p,bbox[4];
-    //       char text[16]="";
-    //
-    //       struct tracking *tracking = NULL;
-    //       struct graphics_gc *osd_color=this->grey;
-    //       struct graphics_image *img = this->img_off;
-    //
-    //
-    //       osd_fill_with_bgcolor(&opc->osd_item);
-    //       p.x=opc->osd_item.w/2-this->d/4;
-    //       p.y=opc->osd_item.h/2-this->d/4;
-    //       p.x=opc->osd_item.w/2;
-    //       p.y=opc->osd_item.h/2;
-    //
-    //       if (navit) {
-    //           tracking = navit_get_tracking(navit);
-    //       }
-    //       if (tracking  && this->active ) {
-    //
-    //           struct attr maxspeed_attr,speed_attr,imperial_attr;
-    //           int *flags;
-    //           double routespeed = -1;
-    //           double tracking_speed = -1;
-    //           int osm_data = 0;
-    //           struct item *item;
-    //           int imperial=0;
-    //
-    //           item=tracking_get_current_item(tracking);
-    //
-    //           if(navit) {
-    //               if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
-    //                   imperial=imperial_attr.u.num;
-    //           }
-    //
-    //           flags=tracking_get_current_flags(tracking);
-    //           if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
-    //               routespeed = maxspeed_attr.u.num;
-    //               osm_data = 1;
-    //           }
-    //           if (routespeed == -1) {
-    //               struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
-    //               struct roadprofile *rprof=NULL;
-    //               if (prof && item)
-    //                   rprof=vehicleprofile_get_roadprofile(prof, item->type);
-    //               if (rprof) {
-    //                   if(rprof->maxspeed!=0)
-    //                       routespeed=rprof->maxspeed;
-    //               }
-    //           }
-    //           tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
-    //           tracking_speed = *speed_attr.u.numd;
-    //           if( -1 != tracking_speed && -1 != routespeed ) {
-    //               char*routespeed_str = format_speed(routespeed,"","value",imperial);
-    //               g_snprintf(text,16,"%s%s",osm_data ? "" : "~",routespeed_str);
-    //               g_free(routespeed_str);
-    //               if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
-    //                       (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
-    //                   if(this->announce_state==eNoWarn && this->announce_on) {
-    //                       if(this->wait_before_warn>0) {
-    //                           this->wait_before_warn--;
-    //                       } else {
-    //                           this->announce_state=eWarningTold; //warning told
-    //                           navit_say(navit,_("Please decrease your speed"));
-    //                       }
-    //                   }
-    //               } else {
-    //                   /* reset speed warning */
-    //                   this->wait_before_warn = this->timeout;
-    //               }
-    //               if( tracking_speed <= routespeed ) {
-    //                   this->announce_state=eNoWarn; //no warning
-    //                   osd_color = this->green;
-    //                   img = this->img_passive;
-    //               } else {
-    //                   osd_color = this->red;
-    //                   img = this->img_active;
-    //               }
-    //           } else {
-    //               osd_color = this->grey;
-    //               img = this->img_off;
-    //               this->announce_state = eNoWarn;
-    //           }
-    //           this->img_current = img;
-    //       } else {
-    //           //when tracking is not available display grey
-    //           osd_color = this->grey;
-    //           img = this->img_off;
-    //           this->announce_state = eNoWarn;
-    //       }
-    //       if(this->img_active && this->img_passive && this->img_off) {
-    //           struct point p;
-    //           p.x=(opc->osd_item.w-img->width)/2;
-    //           p.y=(opc->osd_item.h-img->height)/2;
-    //           graphics_draw_image(opc->osd_item.gr, opc->osd_item.graphic_bg, &p, img);
-    //       } else if(0==this->bTextOnly) {
-    //           graphics_draw_circle(opc->osd_item.gr, osd_color, &p, this->d-this->width*2 );
-    //       }
-    //       graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
-    //       p.x=(opc->osd_item.w-bbox[2].x)/2;
-    //       p.y=(opc->osd_item.h+bbox[2].y)/2-bbox[2].y;
-    //       graphics_draw_text(opc->osd_item.gr, osd_color, NULL, opc->osd_item.font, text, &p, 0x10000, 0);
-    //       graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
 
@@ -3202,6 +3087,8 @@ static void osd_cond_speed_warner_init(struct osd_priv_common *opc, struct navit
     this->width=this->d/20;
     this->wait_before_warn = this->timeout;
 
+    this->active=1;
+
     if(this->label_str && !strncmp("images:",this->label_str,7)) {
         char *tok1=NULL, *tok2=NULL, *tok3=NULL, *tok4=NULL;
         strtok(this->label_str,":");
@@ -3223,7 +3110,7 @@ static void osd_cond_speed_warner_init(struct osd_priv_common *opc, struct navit
             this->img_active  = graphics_image_new(opc->osd_item.gr, tok1);
             this->img_passive = graphics_image_new(opc->osd_item.gr, tok2);
             this->img_off     = graphics_image_new(opc->osd_item.gr, tok3);
-            this->img_condition = graphics_image_new(opc->osd_item.gr, tok4);
+            this->img_condition = graphics_image_new_scaled_rotated(opc->osd_item.gr, tok4, 120, 66, 0);
             g_free(tok1);
             g_free(tok2);
             g_free(tok3);
