@@ -27,19 +27,17 @@
 
 struct map_priv {
 	int id;
-	struct quadtree_node* tree_root;
+	struct quadtree_node* tree_root; /**< Root of the quadtree from which items can be retrieved by their coordinates */
 	int flags;
-	GHashTable*qitem_hash;
-	char* filename;
-	/*need to write map file on exit*/
-	int dirty;
-	int attr_cnt;
-	enum attr_type *attr_types;
-	int next_item_idx;
-	enum item_type item_type;
-	/*list of quadtree items that have no coord set yet ()*/
-	GList* new_items;
-	char *charset;
+	GHashTable*qitem_hash;           /**< Hash table to retrieve items by their ID */
+	char* filename;                  /**< Name of the file in which the map is stored */
+	int dirty;                       /**< Need to write map file on exit */
+	int attr_cnt;                    /**< Number of elements in `attr_types` */
+	enum attr_type *attr_types;      /**< Array of attribute types supported by this map */
+	int next_item_idx;               /**< Zero-based index (`id_lo`) for the next item to be added */
+	enum item_type item_type;        /**< Item type stored in this map */
+	GList* new_items;                /**< List of quadtree items that have no coord set yet */
+	char *charset;                   /**< Identifier for the character set of this map */
 };
 
 struct map_rect_priv {

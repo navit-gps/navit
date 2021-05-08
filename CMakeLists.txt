@@ -19,7 +19,7 @@ endif(NOT DISABLE_CXX)
 
 set(NAVIT_VERSION_MAJOR "0")
 set(NAVIT_VERSION_MINOR "5")
-set(NAVIT_VERSION_PATCH "5")
+set(NAVIT_VERSION_PATCH "6")
 if(ANDROID)
     set(PACKAGE_VERSION "${NAVIT_VERSION_MAJOR}.${NAVIT_VERSION_MINOR}.${NAVIT_VERSION_PATCH}.${ANDROID_ABI}")
 else(ANDROID)
@@ -159,6 +159,12 @@ INCLUDE (CheckLibraryExists)
 INCLUDE (CheckFunctionExists)
 INCLUDE (CheckSymbolExists)
 
+if(ANDROID)
+	set(ENV{PKG_CONFIG_DIR} "")
+	set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+	set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+endif(ANDROID)
+
 ################################
 #  pkg-config based detection  #
 ################################
@@ -208,7 +214,8 @@ if(PKG_CONFIG_FOUND)
 	pkg_check_modules ( GeoClue libgeoclue-2.0 )
 	if(GeoClue_FOUND)
 		include_directories(${GeoClue_INCLUDE_DIRS})
-		set_with_reason(vehicle/geoclue "libgeoclue found" TRUE ${GeoClue_INCLUDE_DIRS})
+		set_with_reason(vehicle/geoclue "libgeoclue found" TRUE
+			${GeoClue_LIBRARIES})
 	endif(GeoClue_FOUND)
 else(PKG_CONFIG_FOUND)
     set_with_reason(support/glib "Glib not found" TRUE ${INTL_LIBS})
