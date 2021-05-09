@@ -1870,6 +1870,12 @@ msgstr "Richtung"
 msgid "Distance"
 msgstr "Distanz"
 
+msgid "Distance:"
+msgstr "Distanz:"
+
+msgid "Vertical Meters:"
+msgstr "Höhenmeter:"
+
 msgid "Name"
 msgstr "Bezeichnung"
 
