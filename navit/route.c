@@ -2862,6 +2862,7 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     double len=0;
 #endif
     int segmented = 0;
+    int i = 0;
     struct roadprofile *roadp;
     int default_flags_value = AF_ALL;
     int *default_flags;
@@ -2881,6 +2882,7 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     data.fwdcondition=0;
     data.bwdcondition=0;
     data.item=item;
+
 
     roadp = vehicleprofile_get_roadprofile(profile, item->type);
 
@@ -2908,7 +2910,7 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
         this->lezs->next=lez;
         this->lezs->nlezs++;
 
-        for (int i=0; i<co_cnt;i++) {
+        for (i=0; i<co_cnt;i++) {
             item_coord_get(item, &lez->coord[i], 1);
             dbg(lvl_error,"%i", i);
         }
