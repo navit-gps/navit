@@ -17,6 +17,8 @@ void gui_internal_cmd_change_vehicle_dimensions_axle_weight(struct gui_priv *thi
 void gui_internal_cmd_change_vehicle_dimensions_length(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_change_vehicle_dimensions_width(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_change_vehicle_dimensions_height(struct gui_priv *this, struct widget *wm, void *data);
+void gui_internal_cmd_change_vehicle_dimensions_hazmat(struct gui_priv *this, struct widget *wm, void *data);
+void gui_internal_cmd_change_vehicle_dimensions_emissionclass(struct gui_priv *this, struct widget *wm, void *data);
 /* end of prototypes */
 
 

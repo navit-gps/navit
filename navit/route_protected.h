@@ -87,6 +87,7 @@ struct route_segment_data {
 	int len;                             /**< Length of this segment, in meters */
 	int score;                           /**< Used by the traffic module to give preference to some
 	                                      *   segments over others */
+	int inside_lez;
 	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
 				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
 				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
@@ -130,6 +131,8 @@ struct route_graph_segment_data {
 	int dangerous_goods;
 	int score;                            /**< Used by the traffic module to give preference to some
 	                                       *   segments over others */
+	int sp_inside_lez;                    /** 1 if the start point of the segment is inside a low emission zone*/
+	int ep_inside_lez;                    /** 1 if the end point of the segment is inside a low emission zone*/
 };
 
 /**
@@ -147,6 +150,22 @@ struct route_graph_segment {
 	struct route_graph_point *end;			/**< Pointer to the point this segment ends at. */
 	struct route_segment_data data;			/**< The segment data */
 };
+
+struct route_graph_lez {
+    struct coord *next;    /**< Pointer to the next coordinate */
+    unsigned ncoords;       /**< How many coordinates does this lez poly have? */
+    struct coord coord[0];      /**< Pointer to the coords coordinates of this lez */
+    /* WARNING: There will be coordinates following here, so do not create new fields after c! */
+};
+
+struct route_graph_lezs {
+    struct route_graph_lez *next;    /**< Pointer to the next lez */
+    unsigned nlezs;          /**< How many lezs do we have? */
+    struct route_graph_lez lez[0];     /**< Pointer to the lez structure */
+    /* WARNING: There will be lezs following here, so do not create new fields after c! */
+};
+
+
 
 /**
  * @brief A complete route graph
@@ -169,6 +188,8 @@ struct route_graph {
 	struct fibheap *heap;                       /**< Priority queue for points to be expanded */
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
+    struct route_graph_lezs *lezs; /* low emission zones */
+    int request_update;
 };
 
 

@@ -99,6 +99,9 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_turn_around_penalty2:
         this_->turn_around_penalty2 = attr->u.num;
         break;
+    case attr_vehicle_emission_class:
+        this_->emissionclass = attr->u.num;
+        break;
     default:
         break;
     }
@@ -135,6 +138,7 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->weight = -1;
     this_->axle_weight = -1;
     this_->through_traffic_penalty = 9000;
+    this_->emissionclass = -1;
     vehicleprofile_free_hash(this_);
     this_->roadprofile_hash = g_hash_table_new(NULL, NULL);
 }
@@ -266,6 +270,8 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char length[30] = "0";
     char width[30] = "0";
     char height[30] = "0";
+    char hazmat[37] = "0";
+    char emissionclass[34] = "0";
     FILE *document, *newdocument;
     char line[250];
     char *value, *tmpfilename, *test;
@@ -291,6 +297,14 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         sprintf(height, "<height>%i</height>", profile->height);
     }
 
+    if (profile->dangerous_goods < 2) {
+        sprintf(hazmat, "<dangerous_goods>%i</dangerous_goods>", profile->dangerous_goods);
+    }
+
+    if (profile->emissionclass < EMISSION_CLASS_MAX) {
+        sprintf(emissionclass, "<emissionclass>%i</emissionclass>", profile->emissionclass);
+    }
+
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE, NULL);
     tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE, NULL);
 
@@ -313,8 +327,8 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         if (value) {
             if (!strcmp(value, profile->name)) {
                 profilefound = 1;
-                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length,
-                        width, height);
+                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length,
+                        width, height, hazmat, emissionclass);
             } else {
                 fprintf(newdocument, "%s", line);
             }
@@ -322,37 +336,37 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         test=fgets(line, (int)sizeof(line), document);
     }
 
-if (!profilefound) {
-    fprintf(newdocument, "<name>%s</name>%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length, width, height);
-}
+    if (!profilefound) {
+        fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length, width, height, hazmat, emissionclass);
+    }
 
-fclose(newdocument);
-fclose(document);
+    fclose(newdocument);
+    fclose(document);
 
-document = fopen(filename, "w+");
-newdocument = fopen(tmpfilename, "r");
+    document = fopen(filename, "w+");
+    newdocument = fopen(tmpfilename, "r");
 
-g_free(filename);
-g_free(tmpfilename);
+    g_free(filename);
+    g_free(tmpfilename);
 
-if (document == 0)
-    return 0;
+    if (document == 0)
+        return 0;
 
-content = fgetc(newdocument);
-
-while (content != EOF) {
-    fputc(content, document);
     content = fgetc(newdocument);
-}
 
-fclose(document);
-fclose(newdocument);
+    while (content != EOF) {
+        fputc(content, document);
+        content = fgetc(newdocument);
+    }
+
+    fclose(document);
+    fclose(newdocument);
 
 #ifndef WIN32
-remove(tmpfilename);
+    remove(tmpfilename);
 #endif
 
-return 1;
+    return 1;
 }
 
 int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
@@ -412,6 +426,20 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
                     value = getTagValue(line, "height");
                     if (value) {
                         attr.type = attr_vehicle_height;
+                        attr.u.num = atoi(value);
+                        vehicleprofile_set_attr(profile, &attr);
+                        free(value);
+                    }
+                    value = getTagValue(line, "dangerous_goods");
+                    if (value) {
+                        attr.type = attr_vehicle_dangerous_goods;
+                        attr.u.num = atoi(value);
+                        vehicleprofile_set_attr(profile, &attr);
+                        free(value);
+                    }
+                    value = getTagValue(line, "emissionclass");
+                    if (value) {
+                        attr.type = attr_vehicle_emission_class;
                         attr.u.num = atoi(value);
                         vehicleprofile_set_attr(profile, &attr);
                         free(value);

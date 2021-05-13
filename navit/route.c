@@ -114,7 +114,7 @@ struct map_priv {
     struct route *route;
 };
 
-int debug_route=0;
+int debug_route=1;
 
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
@@ -134,8 +134,8 @@ int debug_route=0;
  */
 struct route_traffic_distortion {
     int maxspeed;					/**< Maximum speed possible in km/h. Use {@code INT_MAX} to
-									     leave the speed unchanged, or 0 to mark the segment as
-									     impassable. */
+    					     leave the speed unchanged, or 0 to mark the segment as
+    					     impassable. */
     int delay;					/**< Delay in tenths of seconds (0 for no delay) */
 };
 
@@ -148,8 +148,8 @@ struct route_path_segment {
     struct route_path_segment *next;	/**< Pointer to the next segment in the path */
     struct route_segment_data *data;	/**< The segment data */
     int direction;						/**< Order in which the coordinates are ordered. >0 means "First
-										 *  coordinate of the segment is the first coordinate of the item", <=0
-										 *  means reverse. */
+    						 *  coordinate of the segment is the first coordinate of the item", <=0
+    						 *  means reverse. */
     unsigned ncoords;					/**< How many coordinates does this segment have? */
     struct coord c[0];					/**< Pointer to the ncoords coordinates of this segment */
     /* WARNING: There will be coordinates following here, so do not create new fields after c! */
@@ -186,7 +186,7 @@ struct route_path {
     int path_time;						/**< Time to pass the path */
     int path_len;						/**< Length of the path */
     struct route_path_segment *path;			/**< The first segment in the path, i.e. the segment one should
-												 *  drive in next */
+    								 *  drive in next */
     struct route_path_segment *path_last;		/**< The last segment in the path */
     /* XXX: path_hash is not necessery now */
     struct item_hash *path_hash;				/**< A hashtable of all the items represented by this route's segements */
@@ -243,25 +243,163 @@ struct attr_iter {
 };
 
 static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms,
-        struct pcoord *c);
+                    struct pcoord *c);
 static void route_graph_update(struct route *this, struct callback *cb, int async);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos,
-        struct route_info *dst, struct vehicleprofile *profile);
+                    struct route_info *dst, struct vehicleprofile *profile);
 static void route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
-                          struct route_traffic_distortion *dist);
+                          struct route_traffic_distortion *dist, int dir);
 static void route_graph_compute_shortest_path(struct route_graph * graph, struct vehicleprofile * profile,
         struct callback *cb);
 static int route_graph_is_path_computed(struct route_graph *this_);
 static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd,
-        struct route_graph_segment *last);
+                    struct route_graph_segment *last);
 static int route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from,
                            struct route_graph_segment *over,
                            int dir);
 static void route_graph_init(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile);
 static void route_graph_reset(struct route_graph *this);
+static int are_intersecting(
+    int v1x1, int v1y1, int v1x2, int v1y2,
+    int v2x1, int v2y1, int v2x2, int v2y2
+);
+int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res);
+
+/**
+ * @brief finds the intersection point of 2 lines
+ *
+ * @param coord a1, a2, b1, b2 : coords of the start and
+ * end of the first and the second line
+ * @param coord res, will become the coords of the intersection if found
+ * @return : TRUE if intersection found, otherwise FALSE
+ */
+int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
+    int n, a, b;
+    int adx=a2->x-a1->x;
+    int ady=a2->y-a1->y;
+    int bdx=b2->x-b1->x;
+    int bdy=b2->y-b1->y;
+    n = bdy * adx - bdx * ady;
+    a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
+    b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
+    if (n < 0) {
+        n = -n;
+        a = -a;
+        b = -b;
+    }
+    if (a < 0 || b < 0)
+        return FALSE;
+    if (a > n || b > n)
+        return FALSE;
+    if (n == 0) {
+        dbg(lvl_error,"a=%d b=%d n=%d", a, b, n);
+        dbg(lvl_error,"a1=0x%x,0x%x ad %d,%d", a1->x, a1->y, adx, ady);
+        dbg(lvl_error,"b1=0x%x,0x%x bd %d,%d", b1->x, b1->y, bdx, bdy);
+        dbg(lvl_error,"No intersection found, lines assumed parallel ?");
+        return FALSE;
+    }
+    res->x = a1->x + a * adx / n;
+    res->y = a1->y + a * ady / n;
+    return TRUE;
+}
+
+
+//#define NO 0
+//#define YES 1
+//#define COLLINEAR 2
+
+static int is_inside_lez(struct coord *coords, int number, struct coord point1, struct coord point2) {
+    // Test the ray against all sides
+    int intersection = 0;
+    int i;
+    struct coord min, max, dummy;
+
+//    min.x=coords[0].x;
+//    min.y=coords[0].y;
+//    max.x=0;
+//    max.y=0;
+//
+//    //get min/max for x and y of the coords
+//    for (int i = 0; i < number; i++) {
+//        //min
+//        if(coords[i].x<min.x)
+//            min.x=coords[i].x;
+//    }
+
+    //count intersections. odd=inside, even=outside
+    for (i = 0; i < (number-1); i++) {
+
+//        if((are_intersecting(coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y, min.x-1, point1.y, point1.x, point1.y)&1==1?1:0)) {
+//            intersections=1;
+//        }
+
+        if(line_intersection_lez(&coords[i], &coords[i+1],  &point1, &point2, &dummy))
+            intersection=1;
+        //intersections+=are_intersecting(coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y, min.x-1, point2.y, point2.x, point2.y);
+    }
+
+    return intersection;
+}
+
+//static int are_intersecting(
+//    int v1x1, int v1y1, int v1x2, int v1y2,
+//    int v2x1, int v2y1, int v2x2, int v2y2
+//) {
+//    int d1, d2;
+//    int a1, a2, b1, b2, c1, c2;
+//
+//    // Convert vector 1 to a line (line 1) of infinite length.
+//    // We want the line in linear equation standard form: A*x + B*y + C = 0
+//    // See: http://en.wikipedia.org/wiki/Linear_equation
+//    a1 = v1y2 - v1y1;
+//    b1 = v1x1 - v1x2;
+//    c1 = (v1x2 * v1y1) - (v1x1 * v1y2);
+//
+//    // Every point (x,y), that solves the equation above, is on the line,
+//    // every point that does not solve it, is not. The equation will have a
+//    // positive result if it is on one side of the line and a negative one
+//    // if is on the other side of it. We insert (x1,y1) and (x2,y2) of vector
+//    // 2 into the equation above.
+//    d1 = (a1 * v2x1) + (b1 * v2y1) + c1;
+//    d2 = (a1 * v2x2) + (b1 * v2y2) + c1;
+//
+//    // If d1 and d2 both have the same sign, they are both on the same side
+//    // of our line 1 and in that case no intersection is possible. Careful,
+//    // 0 is a special case, that's why we don't test ">=" and "<=",
+//    // but "<" and ">".
+//    if (d1 > 0 && d2 > 0) return NO;
+//    if (d1 < 0 && d2 < 0) return NO;
+//
+//    // The fact that vector 2 intersected the infinite line 1 above doesn't
+//    // mean it also intersects the vector 1. Vector 1 is only a subset of that
+//    // infinite line 1, so it may have intersected that line before the vector
+//    // started or after it ended. To know for sure, we have to repeat the
+//    // the same test the other way round. We start by calculating the
+//    // infinite line 2 in linear equation standard form.
+//    a2 = v2y2 - v2y1;
+//    b2 = v2x1 - v2x2;
+//    c2 = (v2x2 * v2y1) - (v2x1 * v2y2);
+//
+//    // Calculate d1 and d2 again, this time using points of vector 1.
+//    d1 = (a2 * v1x1) + (b2 * v1y1) + c2;
+//    d2 = (a2 * v1x2) + (b2 * v1y2) + c2;
+//
+//    // Again, if both have the same sign (and neither one is 0),
+//    // no intersection is possible.
+//    if (d1 > 0 && d2 > 0) return NO;
+//    if (d1 < 0 && d2 < 0) return NO;
+//
+//    // If we get here, only two possibilities are left. Either the two
+//    // vectors intersect in exactly one point or they are collinear, which
+//    // means they intersect in any number of points from zero to infinite.
+//    if ((a1 * b2) - (a2 * b1) == 0.0f) return COLLINEAR;
+//
+//    // If they are not collinear, they must intersect in exactly one point.
+//    return YES;
+//}
 
 
 /**
@@ -312,7 +450,7 @@ static struct route_graph_point_iterator rp_iterator_new(struct route_graph_poin
  * @return The next segment or NULL if there are no more segments
  */
 static struct route_graph_segment
-*rp_iterator_next(struct route_graph_point_iterator *it) {
+    *rp_iterator_next(struct route_graph_point_iterator *it) {
     struct route_graph_segment *ret;
 
     ret = it->next;
@@ -410,7 +548,7 @@ static void route_path_destroy(struct route_path *this, int recurse) {
  * @return The newly created route
  */
 struct route *
-route_new(struct attr *parent, struct attr **attrs) {
+    route_new(struct attr *parent, struct attr **attrs) {
     struct route *this=g_new0(struct route, 1);
     struct attr dest_attr;
 
@@ -434,7 +572,7 @@ route_new(struct attr *parent, struct attr **attrs) {
  */
 
 struct route *
-route_dup(struct route *orig) {
+    route_dup(struct route *orig) {
     struct route *this=g_new0(struct route, 1);
     this->func=&route_func;
     navit_object_ref((struct navit_object *)this);
@@ -556,7 +694,7 @@ void route_set_profile(struct route *this, struct vehicleprofile *prof) {
  * @return The mapset of the route passed
  */
 struct mapset *
-route_get_mapset(struct route *this) {
+    route_get_mapset(struct route *this) {
     return this->ms;
 }
 
@@ -567,7 +705,7 @@ route_get_mapset(struct route *this) {
  * @return The position within the route passed
  */
 struct route_info *
-route_get_pos(struct route *this) {
+    route_get_pos(struct route *this) {
     return this->pos;
 }
 
@@ -578,7 +716,7 @@ route_get_pos(struct route *this) {
  * @return The destination of the route passed
  */
 struct route_info *
-route_get_dst(struct route *this) {
+    route_get_dst(struct route *this) {
     struct route_info *dst=NULL;
 
     if (this->destinations)
@@ -733,7 +871,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
         int path_time=0,path_len=0;
         while (seg) {
             /* FIXME */
-            int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
+            int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL, seg->direction);
             if (seg_time == INT_MAX) {
                 dbg(lvl_debug,"error");
             } else
@@ -952,7 +1090,7 @@ struct map_selection *route_selection;
  * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
-route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
+    route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
     int dx,dy,sx=1,sy=1,d,m;
     struct map_selection *sel=g_new(struct map_selection, 1);
     if (!sel) {
@@ -998,7 +1136,7 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
  * @brief Appends a map selection to the selection list. Selection list may be NULL.
  */
 static struct map_selection *route_rect_add(struct map_selection *sel, int order, struct coord *c1, struct coord *c2,
-        int rel, int abs) {
+            int rel, int abs) {
     struct map_selection *ret;
     ret=route_rect(order, c1, c2, rel, abs);
     ret->next=sel;
@@ -1325,7 +1463,7 @@ void route_remove_waypoint(struct route *this) {
  * @return The point at the specified coordinates or NULL if not found
  */
 struct route_graph_point *route_graph_get_point_next(struct route_graph *this, struct coord *c,
-        struct route_graph_point *last) {
+            struct route_graph_point *last) {
     struct route_graph_point *p;
     int seen=0,hashval=HASHCOORD(c);
     p=this->hash[hashval];
@@ -1534,7 +1672,7 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
 
     ptr = ((unsigned char*)seg) + sizeof(struct route_segment_data);
 
-     if (seg->flags & AF_SPEED_LIMIT) {
+    if (seg->flags & AF_SPEED_LIMIT) {
         if (type == attr_maxspeed)
             return (void*)ptr;
         ptr += sizeof(int);
@@ -1544,9 +1682,7 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
             return (void*) ptr;
         ptr += sizeof(int);
         if (type == attr_maxspeed_conditional_condition) {
-            if(*ptr==96)
-            dbg(lvl_error, "condition: -> %s %i %x", ptr, *ptr, (char ) *ptr);
-            dbg(lvl_error, "condition: -> %s %i %x", ptr, *ptr, (char ) *ptr);
+            dbg(lvl_debug, "condition: -> %s %i %x", ptr, *ptr, (char) *ptr);
             return (void*) ptr;
         }
         ptr += sizeof(char*);
@@ -1554,7 +1690,7 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
             return (void*) ptr;
         ptr += sizeof(int);
         if (type == attr_maxspeed_fwd_conditional_condition) {
-            dbg(lvl_error, "fwdcondition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            dbg(lvl_debug, "fwdcondition: -> %s %i %x", ptr, *ptr, (char) *ptr);
             return (void*) ptr;
         }
         ptr += sizeof(char*);
@@ -1562,7 +1698,7 @@ void * route_segment_data_field_pos(struct route_segment_data *seg, enum attr_ty
             return (void*) ptr;
         ptr += sizeof(int);
         if (type == attr_maxspeed_bwd_conditional_condition) {
-            dbg(lvl_error, "fwdcondition: -> %s %li %x", ptr, *ptr, (char ) *ptr);
+            dbg(lvl_debug, "bwdcondition: -> %s %i %x", ptr, *ptr, (char) *ptr);
             return (void*) ptr;
         }
         ptr += sizeof(char*);
@@ -1596,12 +1732,12 @@ static int route_segment_data_size(int flags) {
     if (flags & AF_SPEED_LIMIT)
         ret+=sizeof(int);
     if (flags & AF_CONDITIONAL_SPEED_LIMIT){
-            ret+=sizeof(int);       //cond speed
-            ret+=sizeof(char*);     //condition
-            ret+=sizeof(int);       //fwd_cond speed
-            ret+=sizeof(char*);     //cond condition
-            ret+=sizeof(int);       //bwd_cond speed
-            ret+=sizeof(char*);     //cond condition
+        ret+=sizeof(int);       //cond speed
+        ret+=sizeof(char*);     //condition
+        ret+=sizeof(int);       //fwd_cond speed
+        ret+=sizeof(char*);     //cond condition
+        ret+=sizeof(int);       //bwd_cond speed
+        ret+=sizeof(char*);     //cond condition
     }
     if (flags & AF_SEGMENTED)
         ret+=sizeof(int);
@@ -1655,8 +1791,10 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
     struct route_graph_segment *s;
     int size;
-    unsigned char *condition, *fwdcondition, *bwdcondition;
-    unsigned char *ptr;
+    gchar *condition, *fwdcondition, *bwdcondition;
+    struct coord res;
+
+    //dbg(lvl_error,"add seg %s", item_to_name(data->item->type));
 
     size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(data->flags);
     s = g_slice_alloc0(size);
@@ -1676,32 +1814,59 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
     s->data.flags=data->flags;
     s->data.score = data->score;
 
+    struct attr attr;
+
+    //check lez
+    if(this->lezs) {
+        if(this->lezs->next) {
+//            int i;
+//            //c -> point, res -> point of intersection
+//            for (i = 0 ; i < ((this->lezs->next->ncoords) - 1); i++) {
+//                if(line_intersection(this->lezs->next->coord+i,this->lezs->next->coord+i+1, &start->c, &end->c, &res)) {
+//                    s->data.inside_lez=1;
+//                    dbg(lvl_error,"INTERSECTION WITH LEZ!");
+//                }
+//            }
+            //check if &l    lez
+            int inside=is_inside_lez(&this->lezs->next->coord[0], this->lezs->next->ncoords, start->c, end->c);
+            //inside+=is_inside_lez(&this->lezs->next->coord[0], this->lezs->next->ncoords, start->c);
+            if(inside) {
+
+                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
+                dbg(lvl_error,"INSIDE LEZ");
+                s->data.inside_lez=1;
+            } else {
+                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
+                dbg(lvl_error,"NOT INSIDE LEZ");
+                s->data.inside_lez=0;
+            }
+
+        }
+    }
+
     if (data->flags & AF_SPEED_LIMIT)
         RSD_MAXSPEED(&s->data)=data->maxspeed;
     if (data->flags & AF_CONDITIONAL_SPEED_LIMIT){
         RSD_MAXCONDSPEED(&s->data) = data->maxspeedcond;
         if (data->condition) {
-            condition = g_strdup(data->condition); //malloc(strlen(data->condition)+1);
-            //strcpy(condition, data->condition);
-            RSD_MAXCONDSPEEDCOND(&s->data)=condition;
+            condition = g_strdup(data->condition);
+            RSD_MAXCONDSPEEDCOND(&s->data) = (unsigned char *)condition;
         }else {
-            RSD_MAXCONDSPEED(&s->data) = 0;
+            RSD_MAXCONDSPEEDCOND(&s->data) = 0;
         }
         RSD_MAXCONDSPEEDFWD(&s->data) = data->maxspeedcondfwd;
         if (data->fwdcondition) {
-            fwdcondition = g_strdup(data->fwdcondition); //malloc(strlen(data->fwdcondition)+1);
-            //strcpy(fwdcondition, data->fwdcondition);
-            RSD_MAXCONDSPEEDFWDCOND(&s->data) = fwdcondition;
+            fwdcondition = g_strdup(data->fwdcondition);
+            RSD_MAXCONDSPEEDFWDCOND(&s->data) = (unsigned char *)fwdcondition;
         } else {
             RSD_MAXCONDSPEEDFWDCOND(&s->data) = 0;
         }
         RSD_MAXCONDSPEEDBWD(&s->data) = data->maxspeedcondbwd;
         if (data->bwdcondition) {
-            bwdcondition = g_strdup(data->bwdcondition); //malloc(strlen(data->bwdcondition)+1);
-            //strcpy(bwdcondition, data->bwdcondition);
-            RSD_MAXCONDSPEEDBWDCOND(&s->data) = bwdcondition;
+            bwdcondition = g_strdup(data->bwdcondition);
+            RSD_MAXCONDSPEEDBWDCOND(&s->data) = (unsigned char *)bwdcondition;
         }else {
-            RSD_MAXCONDSPEEDBWD(&s->data) = 0;
+            RSD_MAXCONDSPEEDBWDCOND(&s->data) = 0;
         }
     }
     if (data->flags & AF_SEGMENTED)
@@ -1726,7 +1891,7 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
  * @return The segment removed
  */
 static struct route_path_segment *route_extract_segment_from_path(struct route_path *path, struct item *item,
-        int offset) {
+            int offset) {
     int soffset;
     struct route_path_segment *sp = NULL, *s;
     s = path->path;
@@ -1969,7 +2134,6 @@ int route_evaluate_condition(struct vehicleprofile *profile, char *condition, in
     int cnt=1, tempweight=0;
 
     char temp[strlen(condition)+1];
-    char *temp1, *temp2;
 
     //(weight>3.5), 30 @ (12:00-18:00)
 
@@ -1977,7 +2141,7 @@ int route_evaluate_condition(struct vehicleprofile *profile, char *condition, in
         while(strtok(NULL,";")) {
             cnt++;
         }
-        dbg(lvl_error, "Found %i conditions", cnt);
+        dbg(lvl_debug, "Found %i conditions", cnt);
     }
 
     if (strstr(condition, "wet")) {
@@ -1995,12 +2159,12 @@ int route_evaluate_condition(struct vehicleprofile *profile, char *condition, in
         tempweight = atoi(strtok(NULL, ">"));
 
         if(tempweight <= weight) {
-            dbg(lvl_error, "Weight condition met: %i < vehicle weight %i - speed:", tempweight, weight, speed);
+            dbg(lvl_debug, "Weight condition met: %i < vehicle weight %i - speed: %i", tempweight, weight, speed);
             return speed;
         }
     }
-//
-//
+    //
+    //
 
     return 0;
 }
@@ -2009,14 +2173,12 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
     int ret = 0;
     int speed;
     char *ptr;
-    struct attr maxspeed_cond_attr, maxspeed_fwd_cond_attr, maxspeed_bwd_cond_attr;
-    char *condition;
 
-    dbg(lvl_error, "Get conditional speed limit for attr_type: %s",
-                type == attr_maxspeed_conditional_speed ? "attr_maxspeed_conditional_speed" :
-                type == attr_maxspeed_fwd_conditional_speed ? "attr_maxspeed_fwd_conditional_speed" :
-                type == attr_maxspeed_bwd_conditional_speed ?
-                            "attr_maxspeed_bwd_conditional_speed" : "UNKNOWN ATTRIBUTE USED");
+    dbg(lvl_debug, "Get conditional speed limit for attr_type: %s",
+        type == attr_maxspeed_conditional_speed ? "attr_maxspeed_conditional_speed" :
+        type == attr_maxspeed_fwd_conditional_speed ? "attr_maxspeed_fwd_conditional_speed" :
+        type == attr_maxspeed_bwd_conditional_speed ?
+        "attr_maxspeed_bwd_conditional_speed" : "UNKNOWN ATTRIBUTE USED");
 
     switch (type) {
 
@@ -2046,12 +2208,6 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
         return ret;
     }
 
-    //get all relevant data from the vehicleprofile
-
-    //parse the condition
-
-    //check if the condition is relevant for the current profile
-
     return ret;
 }
 
@@ -2080,9 +2236,9 @@ int route_get_conditional_speed(struct route_segment_data *over, struct vehiclep
  * @return The estimated speed in km/h, or 0 if the segment is impassable
  */
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
-                           struct route_traffic_distortion *dist) {
+                           struct route_traffic_distortion *dist, int dir) {
     struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-    int speed,maxspeed,maxspeedtemp;
+    int speed,maxspeed=-1,maxspeedtemp=-1;
     if (!roadprofile || !roadprofile->route_weight)
         return 0;
     speed=roadprofile->route_weight;
@@ -2096,8 +2252,10 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
                 maxspeedtemp = route_get_conditional_speed(over, profile, attr_maxspeed_conditional_speed);
             if(maxspeedtemp>0) //check broken conditions
                 maxspeed=maxspeedtemp;
-            if ((RSD_MAXCONDSPEEDFWD(over)!=-1) && (RSD_MAXCONDSPEEDFWD(over) < maxspeed))
+            if ((RSD_MAXCONDSPEEDFWD(over)!=-1) && (RSD_MAXCONDSPEEDFWD(over) < maxspeed) && dir>0)
                 maxspeed = RSD_MAXCONDSPEEDFWD(over);
+            if ((RSD_MAXCONDSPEEDBWD(over)!=-1) && (RSD_MAXCONDSPEEDBWD(over) < maxspeed) && dir<0)
+                            maxspeed = RSD_MAXCONDSPEEDBWD(over);
             if (maxspeed == -1)
                 maxspeed = speed;
             else {
@@ -2146,8 +2304,8 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
  */
 
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
-                          struct route_traffic_distortion *dist) {
-    int speed=route_seg_speed(profile, over, dist);
+                          struct route_traffic_distortion *dist, int dir) {
+    int speed=route_seg_speed(profile, over, dist, dir);
     if (!speed)
         return INT_MAX;
     return over->len*36/speed+(dist ? dist->delay : 0);
@@ -2266,16 +2424,20 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
     if (over->data.item.type == type_traffic_distortion)
         return INT_MAX;
     if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) &&
-            route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
+        route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
         /* we have a traffic distortion */
         distp=&dist;
     }
-    ret=route_time_seg(profile, &over->data, distp);
+    ret=route_time_seg(profile, &over->data, distp, dir);
     if (ret == INT_MAX)
         return ret;
     if (!route_through_traffic_allowed(profile, over) && from && from->seg
-            && route_through_traffic_allowed(profile, from->seg))
+        && route_through_traffic_allowed(profile, from->seg))
         ret+=profile->through_traffic_penalty;
+    if (over->data.inside_lez) { // Don't allow lez
+        dbg(lvl_error, "inside lez !!!");
+        ret = INT_MAX;
+    }
     return ret;
 }
 
@@ -2700,13 +2862,16 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     double len=0;
 #endif
     int segmented = 0;
+    int i = 0;
     struct roadprofile *roadp;
     int default_flags_value = AF_ALL;
     int *default_flags;
+    int co_cnt;
     struct route_graph_point *s_pnt,*e_pnt; /* Start and end point */
-    struct coord c,l; /* Current and previous point */
+    struct coord c,l,le; /* Current and previous point */
     struct attr attr;
     struct route_graph_segment_data data;
+    struct route_graph_lez *lez;
     data.flags=0;
     data.offset=1;
     data.maxspeed=-1;
@@ -2718,7 +2883,39 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     data.bwdcondition=0;
     data.item=item;
 
+
     roadp = vehicleprofile_get_roadprofile(profile, item->type);
+
+    // if we have a lez polygon, create a data structure with all the coordinates to be checked later against
+    // start and end point of a segment to be inside the lez polygon
+
+    if(!strcmp(item_to_name(item->type), "poly_low_emission_zone")) {
+
+        this->request_update=1; //lez has been found on the map. Need to update the route as streets may have been added before lez was added.
+
+        item_coord_rewind(item);
+        co_cnt=item_coords_left(item);
+
+        //we need co_cnt coords in the lez data
+        lez=malloc(sizeof(struct route_graph_lez) + co_cnt * sizeof(struct coord));
+        lez->next=lez->coord; // set next to point to first coordinate
+        lez->ncoords=co_cnt;  // store cnt of coordinates
+
+        if(!this->lezs) {
+            this->lezs=malloc(sizeof(struct route_graph_lezs));
+            this->lezs->nlezs=0;
+        }
+
+        //add the new lez to the lezs structure
+        this->lezs->next=lez;
+        this->lezs->nlezs++;
+
+        for (i=0; i<co_cnt;i++) {
+            item_coord_get(item, &lez->coord[i], 1);
+            dbg(lvl_error,"%i", i);
+        }
+    }
+
     if (!roadp) {
         /* Don't include any roads that don't have a road profile in our vehicle profile */
         return;
@@ -2736,19 +2933,18 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_conditional_speed, &attr)))
-                   data.maxspeedcond = attr.u.num;
+            data.maxspeedcond = attr.u.num;
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_conditional_condition, &attr)))
-                   data.condition = attr.u.str;
+            data.condition = attr.u.str;
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_fwd_conditional_speed, &attr)))
-                   data.maxspeedcondfwd = attr.u.num;
+            data.maxspeedcondfwd = attr.u.num;
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_fwd_conditional_condition, &attr))) {
-                          data.fwdcondition = attr.u.str;
-                          dbg(lvl_error,"fwdcondition set to %i -> %s", data.fwdcondition, data.fwdcondition);
+            data.fwdcondition = attr.u.str;
         }
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_bwd_conditional_speed, &attr)))
-                   data.maxspeedcondbwd = attr.u.num;
+            data.maxspeedcondbwd = attr.u.num;
         if ((data.flags & AF_CONDITIONAL_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed_bwd_conditional_condition, &attr)))
-                          data.bwdcondition = attr.u.str;
+            data.bwdcondition = attr.u.str;
         if (data.flags & AF_DANGEROUS_GOODS) {
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
@@ -2830,7 +3026,7 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
  * @return The route graph segment, or {@code NULL} if none was found.
  */
 static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd,
-        struct route_graph_segment *last) {
+            struct route_graph_segment *last) {
     struct route_graph_point *start=NULL;
     struct route_graph_segment *s;
     int seen=0;
@@ -2947,7 +3143,7 @@ void route_recalculate_partial(struct route *this_) {
  * @return The new path
  */
 static struct route_path *route_path_new_offroad(struct route_graph *this, struct route_info *pos,
-        struct route_info *dst) {
+            struct route_info *dst) {
     struct route_path *ret;
 
     ret=g_new0(struct route_path, 1);
@@ -2970,7 +3166,7 @@ static struct route_path *route_path_new_offroad(struct route_graph *this, struc
  * @return The coordinate where the user will be in that distance
  */
 struct coord
-route_get_coord_dist(struct route *this_, int dist) {
+    route_get_coord_dist(struct route *this_, int dist) {
     int d,l,i,len;
     int dx,dy;
     double frac;
@@ -3029,8 +3225,8 @@ route_get_coord_dist(struct route *this_, int dist) {
  * @return The new route path
  */
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos,
-        struct route_info *dst,
-        struct vehicleprofile *profile) {
+                    struct route_info *dst,
+            struct vehicleprofile *profile) {
     struct route_graph_segment *s=NULL,*s1=NULL,*s2=NULL; /* candidate segments for cheapest path */
     struct route_graph_point *start; /* point at which the next segment starts, i.e. up to which the path is complete */
     struct route_info *posinfo, *dstinfo; /* same as pos and dst, but NULL if not part of current segment */
@@ -3169,8 +3365,8 @@ static int is_turn_allowed(struct route_graph_point *p, struct route_graph_segme
     tmp1=p->end;
     while (tmp1) {
         if (tmp1->start->c.x == prev->c.x && tmp1->start->c.y == prev->c.y &&
-                (tmp1->data.item.type == type_street_turn_restriction_no ||
-                 tmp1->data.item.type == type_street_turn_restriction_only)) {
+            (tmp1->data.item.type == type_street_turn_restriction_no ||
+             tmp1->data.item.type == type_street_turn_restriction_only)) {
             tmp2=p->start;
             dbg(lvl_debug,"found %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p",item_to_name(tmp1->data.item.type),
                 tmp1->data.item.id_hi,tmp1->data.item.id_lo,tmp1->start->c.x,tmp1->start->c.y,tmp1->end->c.x,tmp1->end->c.y,tmp1->start,
@@ -3188,7 +3384,7 @@ static int is_turn_allowed(struct route_graph_point *p, struct route_graph_segme
                 dbg(lvl_debug,"%s tmp2->end=%p next=%p",item_to_name(tmp1->data.item.type),tmp2->end,next);
             }
             if (tmp1->data.item.type == type_street_turn_restriction_no && tmp2 && tmp2->end->c.x == next->c.x
-                    && tmp2->end->c.y == next->c.y) {
+                && tmp2->end->c.y == next->c.y) {
                 dbg(lvl_debug,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (no)",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,
                     next->c.y);
                 return 0;
@@ -3224,19 +3420,33 @@ static void route_graph_clone_segment(struct route_graph *this, struct route_gra
     data.bwdcondition = 0;
     data.dangerous_goods=0;
     data.score = s->data.score;
+
     if (s->data.flags & AF_SPEED_LIMIT)
         data.maxspeed=RSD_MAXSPEED(&s->data);
     if (s->data.flags & AF_CONDITIONAL_SPEED_LIMIT) {
-       data.maxspeedcond=RSD_MAXCONDSPEEDCOND(&s->data);
-       data.condition=RSD_MAXCONDSPEEDCOND(&s->data);
-       data.maxspeedcondfwd=RSD_MAXCONDSPEEDFWD(&s->data);
-       data.fwdcondition=RSD_MAXCONDSPEEDFWDCOND(&s->data);
-       data.maxspeedcondbwd=RSD_MAXCONDSPEEDBWD(&s->data);
-       data.bwdcondition = RSD_MAXCONDSPEEDBWDCOND(&s->data);
+        data.maxspeedcond=RSD_MAXCONDSPEED(&s->data);
+        if((char*)RSD_MAXCONDSPEEDCOND(&s->data)!=0xffffffffffffffff)
+            data.condition=(char*)RSD_MAXCONDSPEEDCOND(&s->data);
+        data.maxspeedcondfwd=RSD_MAXCONDSPEEDFWD(&s->data);
+        if((char*)RSD_MAXCONDSPEEDFWDCOND(&s->data)!=0xffffffffffffffff)
+            data.fwdcondition=(char*)RSD_MAXCONDSPEEDFWDCOND(&s->data);
+        data.maxspeedcondbwd=RSD_MAXCONDSPEEDBWD(&s->data);
+        if((char*)RSD_MAXCONDSPEEDBWDCOND(&s->data)!=0xffffffffffffffff)
+            data.bwdcondition = (char*)RSD_MAXCONDSPEEDBWDCOND(&s->data);
+        dbg(lvl_debug,"maxspeedcond: %i", data.maxspeedcond);
+        if(data.condition)
+        dbg(lvl_debug,"maxspeedcond condition: %s", data.condition);
+        dbg(lvl_debug,"maxspeedfwdcond: %i", data.maxspeedcondfwd);
+        if(data.fwdcondition < 0xFFFFFF)
+        dbg(lvl_debug,"maxspeedfwd condition: %s", data.fwdcondition);
+        dbg(lvl_debug,"maxspeedbwdcond: %i", data.maxspeedcondbwd);
+        if(data.bwdcondition < 0xFFFFFF)
+        dbg(lvl_debug,"maxspeedbwd condition: %s", data.bwdcondition);
+
     }
     if (s->data.flags & AF_SEGMENTED)
         data.offset=RSD_OFFSET(&s->data);
-    dbg(lvl_error,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)",start,start->c.x,start->c.y, end, end->c.x,
+    dbg(lvl_debug,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)",start,start->c.x,start->c.y, end, end->c.x,
         end->c.y);
     route_graph_add_segment(this, start, end, &data);
 }
@@ -3270,8 +3480,8 @@ static void route_graph_process_restriction_segment(struct route_graph *this, st
     tmp=p->start;
     while (tmp) {
         if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
-                tmp->data.item.type != type_street_turn_restriction_only &&
-                !(tmp->data.flags & AF_ONEWAYREV) && is_turn_allowed(p, s, tmp)) {
+            tmp->data.item.type != type_street_turn_restriction_only &&
+            !(tmp->data.flags & AF_ONEWAYREV) && is_turn_allowed(p, s, tmp)) {
             route_graph_clone_segment(this, tmp, pn, tmp->end, AF_ONEWAY);
             dbg(lvl_debug,"To start %s",item_to_name(tmp->data.item.type));
         }
@@ -3280,8 +3490,8 @@ static void route_graph_process_restriction_segment(struct route_graph *this, st
     tmp=p->end;
     while (tmp) {
         if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
-                tmp->data.item.type != type_street_turn_restriction_only &&
-                !(tmp->data.flags & AF_ONEWAY) && is_turn_allowed(p, s, tmp)) {
+            tmp->data.item.type != type_street_turn_restriction_only &&
+            !(tmp->data.flags & AF_ONEWAY) && is_turn_allowed(p, s, tmp)) {
             route_graph_clone_segment(this, tmp, tmp->start, pn, AF_ONEWAYREV);
             dbg(lvl_debug,"To end %s",item_to_name(tmp->data.item.type));
         }
@@ -3295,14 +3505,14 @@ static void route_graph_process_restriction_point(struct route_graph *this, stru
     dbg(lvl_debug,"node 0x%x,0x%x",p->c.x,p->c.y);
     while (tmp) {
         if (tmp->data.item.type != type_street_turn_restriction_no &&
-                tmp->data.item.type != type_street_turn_restriction_only)
+            tmp->data.item.type != type_street_turn_restriction_only)
             route_graph_process_restriction_segment(this, p, tmp, 1);
         tmp=tmp->start_next;
     }
     tmp=p->end;
     while (tmp) {
         if (tmp->data.item.type != type_street_turn_restriction_no &&
-                tmp->data.item.type != type_street_turn_restriction_only)
+            tmp->data.item.type != type_street_turn_restriction_only)
             route_graph_process_restriction_segment(this, p, tmp, -1);
         tmp=tmp->end_next;
     }
@@ -3362,6 +3572,8 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
     int count=1000;
     struct item *item;
 
+    rg->request_update=0;
+
     while (count > 0) {
         for (;;) {
             item=map_rect_get_item(rg->mr);
@@ -3372,6 +3584,7 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
                 return;
             }
         }
+
         if (item->type == type_traffic_distortion)
             route_graph_add_traffic_distortion(rg, profile, item, 0);
         else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
@@ -3379,6 +3592,11 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
         else
             route_graph_add_street(rg, item, profile);
         count--;
+    }
+
+    if(rg->request_update) {
+        rg->request_update=0;
+        route_graph_build_idle(rg, profile);
     }
 }
 
@@ -3396,8 +3614,8 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
  * @return The new route graph.
  */
 static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
-        int async,
-        struct vehicleprofile *profile) {
+                    int async,
+            struct vehicleprofile *profile) {
     struct route_graph *ret=g_new0(struct route_graph, 1);
 
     dbg(lvl_debug,"enter");
@@ -3468,7 +3686,7 @@ static void route_graph_update(struct route *this, struct callback *cb, int asyn
  * @return Street data for the item
  */
 struct street_data *
-street_get_data (struct item *item) {
+    street_get_data (struct item *item) {
     int count=0,*flags;
     struct street_data *ret = NULL, *ret1;
     struct attr flags_attr, maxspeed_attr, maxspeed_cond_attr, maxspeed_fwd_cond_attr, maxspeed_bwd_cond_attr;
@@ -3515,21 +3733,21 @@ street_get_data (struct item *item) {
             if (maxspeed_cond_attr.u.num) {
                 // if there is no condition set the speed to 0 to ignore it
                 if (!item_attr_get(item, attr_maxspeed_conditional_condition, &maxspeed_cond_attr)) {
-                        ret->maxspeed_conditional = 0;
+                    ret->maxspeed_conditional = 0;
                 }
             }
         }
         if (item_attr_get(item, attr_maxspeed_fwd_conditional_speed, &maxspeed_fwd_cond_attr)) {
             if ((ret->maxspeed_conditional_fwd=maxspeed_fwd_cond_attr.u.num)) {
                 if (!item_attr_get(item, attr_maxspeed_fwd_conditional_condition, &maxspeed_fwd_cond_attr)) {
-                        ret->maxspeed_conditional_fwd = 0;
+                    ret->maxspeed_conditional_fwd = 0;
                 }
             }
         }
         if ((ret->maxspeed_conditional_bwd=item_attr_get(item, attr_maxspeed_bwd_conditional_speed, &maxspeed_bwd_cond_attr))) {
             if (maxspeed_bwd_cond_attr.u.num) {
                 if (!item_attr_get(item, attr_maxspeed_bwd_conditional_condition, &maxspeed_bwd_cond_attr)) {
-                        ret->maxspeed_conditional_bwd = 0;
+                    ret->maxspeed_conditional_bwd = 0;
                 }
             }
         }
@@ -3545,7 +3763,7 @@ street_get_data (struct item *item) {
  * @return The copied street data
  */
 struct street_data *
-street_data_dup(struct street_data *orig) {
+    street_data_dup(struct street_data *orig) {
     struct street_data *ret;
     int size=sizeof(struct street_data)+orig->count*sizeof(struct coord);
 
@@ -3572,7 +3790,7 @@ void street_data_free(struct street_data *sd) {
  * @return The nearest street
  */
 static struct route_info *route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms,
-        struct pcoord *pc) {
+            struct pcoord *pc) {
     struct route_info *ret=NULL;
     int max_dist=1000;
     struct map_selection *sel;
@@ -3615,8 +3833,8 @@ static struct route_info *route_find_nearest_street(struct vehicleprofile *vehic
                     continue;
                 dist=transform_distance_polyline_sq(sd->c, sd->count, &c, &lp, &pos);
                 if (dist < mindist && (
-                            (sd->flags & vehicleprofile->flags_forward_mask) == vehicleprofile->flags ||
-                            (sd->flags & vehicleprofile->flags_reverse_mask) == vehicleprofile->flags)) {
+                        (sd->flags & vehicleprofile->flags_forward_mask) == vehicleprofile->flags ||
+                        (sd->flags & vehicleprofile->flags_reverse_mask) == vehicleprofile->flags)) {
                     mindist = dist;
                     if (ret->street) {
                         street_data_free(ret->street);
@@ -3671,7 +3889,7 @@ void route_info_free(struct route_info *inf) {
  * @return Street data for the route info
  */
 struct street_data *
-route_info_street(struct route_info *rinf) {
+    route_info_street(struct route_info *rinf) {
     return rinf->street;
 }
 
@@ -3788,7 +4006,7 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
          * to be used anywhere */
         mr->attr_next=attr_speed;
         if (seg)
-            attr->u.num=route_time_seg(route->vehicleprofile, seg->data, NULL);
+            attr->u.num=route_time_seg(route->vehicleprofile, seg->data, NULL, seg->direction);
         else
             return 0;
         return 1;
@@ -3797,7 +4015,7 @@ static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
          * to be used anywhere */
         mr->attr_next=attr_label;
         if (seg)
-            attr->u.num=route_seg_speed(route->vehicleprofile, seg->data, NULL);
+            attr->u.num=route_seg_speed(route->vehicleprofile, seg->data, NULL, seg->direction);
         else
             return 0;
         return 1;
@@ -3831,7 +4049,7 @@ static int rm_coord_get(void *priv_data, struct coord *c, int count) {
     if (pro == projection_none)
         return 0;
     if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse || mr->item.type == type_route_end
-            || mr->item.type == type_waypoint ) {
+        || mr->item.type == type_waypoint ) {
         if (! count || mr->last_coord)
             return 0;
         mr->last_coord=1;
@@ -3863,11 +4081,11 @@ static int rm_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 static struct item_methods methods_route_item = {
-    rm_coord_rewind,
-    rm_coord_get,
-    rm_attr_rewind,
-    rm_attr_get,
-};
+            rm_coord_rewind,
+            rm_coord_get,
+            rm_attr_rewind,
+            rm_attr_get,
+        };
 
 static void rp_attr_rewind(void *priv_data) {
     struct map_rect_priv *mr = priv_data;
@@ -3912,27 +4130,27 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
             return 0;
         }
     case attr_maxspeed_fwd_conditional_speed:
-            mr->attr_next = attr_maxspeed_bwd_conditional_speed;
-            if (mr->item.type != type_rg_segment)
-                return 0;
-            if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
-                attr->type = attr_maxspeed_fwd_conditional_speed;
-                attr->u.num=RSD_MAXCONDSPEEDFWD(&seg->data);
-                return 1;
-            } else {
-                return 0;
-            }
+        mr->attr_next = attr_maxspeed_bwd_conditional_speed;
+        if (mr->item.type != type_rg_segment)
+            return 0;
+        if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->type = attr_maxspeed_fwd_conditional_speed;
+            attr->u.num=RSD_MAXCONDSPEEDFWD(&seg->data);
+            return 1;
+        } else {
+            return 0;
+        }
     case attr_maxspeed_bwd_conditional_speed:
-            mr->attr_next = attr_label;
-            if (mr->item.type != type_rg_segment)
-                return 0;
-            if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
-                attr->type = attr_maxspeed_bwd_conditional_speed;
-                attr->u.num=RSD_MAXCONDSPEEDBWD(&seg->data);
-                return 1;
-            } else {
-                return 0;
-            }
+        mr->attr_next = attr_label;
+        if (mr->item.type != type_rg_segment)
+            return 0;
+        if (seg && (seg->data.flags & AF_CONDITIONAL_SPEED_LIMIT)) {
+            attr->type = attr_maxspeed_bwd_conditional_speed;
+            attr->u.num=RSD_MAXCONDSPEEDBWD(&seg->data);
+            return 1;
+        } else {
+            return 0;
+        }
     case attr_label:
         mr->attr_next=attr_street_item;
         attr->type = attr_label;
@@ -3945,8 +4163,8 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
                 mr->str=g_strdup("-");
         } else {
             int len=seg->data.len;
-            int speed=route_seg_speed(route->vehicleprofile, &seg->data, NULL);
-            int time=route_time_seg(route->vehicleprofile, &seg->data, NULL);
+            int speed=route_seg_speed(route->vehicleprofile, &seg->data, NULL, 0);
+            int time=route_time_seg(route->vehicleprofile, &seg->data, NULL, 0);
             if (speed)
                 mr->str=g_strdup_printf("%dm %dkm/h %d.%ds",len,speed,time/10,time%10);
             else if (len)
@@ -3998,28 +4216,28 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         mr->str=NULL;
         switch (mr->item.type) {
         case type_rg_point: {
-            struct route_graph_segment *tmp;
-            int start=0;
-            int end=0;
-            tmp=p->start;
-            while (tmp) {
-                start++;
-                tmp=tmp->start_next;
+                struct route_graph_segment *tmp;
+                int start=0;
+                int end=0;
+                tmp=p->start;
+                while (tmp) {
+                    start++;
+                    tmp=tmp->start_next;
+                }
+                tmp=p->end;
+                while (tmp) {
+                    end++;
+                    tmp=tmp->end_next;
+                }
+                mr->str=g_strdup_printf("%d %d %p (0x%x,0x%x)", start, end, p, p->c.x, p->c.y);
+                attr->u.str = mr->str;
             }
-            tmp=p->end;
-            while (tmp) {
-                end++;
-                tmp=tmp->end_next;
-            }
-            mr->str=g_strdup_printf("%d %d %p (0x%x,0x%x)", start, end, p, p->c.x, p->c.y);
-            attr->u.str = mr->str;
-        }
-        return 1;
+            return 1;
         case type_rg_segment:
             if (! seg)
                 return 0;
             mr->str=g_strdup_printf("len %d time %d start %p end %p",seg->data.len, route_time_seg(route->vehicleprofile,
-                                    &seg->data, NULL), seg->start, seg->end);
+                                    &seg->data, NULL, 0), seg->start, seg->end);
             attr->u.str = mr->str;
             return 1;
             break;
@@ -4090,11 +4308,11 @@ static int rp_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 static struct item_methods methods_point_item = {
-    rm_coord_rewind,
-    rp_coord_get,
-    rp_attr_rewind,
-    rp_attr_get,
-};
+            rm_coord_rewind,
+            rp_coord_get,
+            rp_attr_rewind,
+            rp_attr_get,
+        };
 
 static void rp_destroy(struct map_priv *priv) {
     g_free(priv);
@@ -4164,7 +4382,7 @@ static void rm_rect_destroy(struct map_rect_priv *mr) {
     if (mr->path) {
         mr->path->in_use--;
         if (mr->path->update_required && (mr->path->in_use==1)
-                && (mr->mpriv->route->route_status & ~route_status_destination_set))
+            && (mr->mpriv->route->route_status & ~route_status_destination_set))
             route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
         else if (!mr->path->in_use)
             g_free(mr->path);
@@ -4260,13 +4478,13 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
             id=route->pos;
             break;
         }
-    /* FALLTHRU */
+        /* FALLTHRU */
 
     case type_route_start:
     case type_route_start_reverse:
         mr->seg=NULL;
         mr->dest=mr->mpriv->route->destinations;
-    /* FALLTHRU */
+        /* FALLTHRU */
     default:
         if (mr->item.type == type_waypoint)
             mr->dest=g_list_next(mr->dest);
@@ -4303,7 +4521,7 @@ static struct item *rm_get_item(struct map_rect_priv *mr) {
         id=&(mr->mpriv->route->destinations);
         if (mr->mpriv->route->destinations)
             break;
-    /* FALLTHRU */
+        /* FALLTHRU */
     case type_route_end:
         return NULL;
     }
@@ -4322,30 +4540,30 @@ static struct item *rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id
 }
 
 static struct map_methods route_meth = {
-    projection_mg,
-    "utf-8",
-    rm_destroy,
-    rm_rect_new,
-    rm_rect_destroy,
-    rm_get_item,
-    rm_get_item_byid,
-    NULL,
-    NULL,
-    NULL,
-};
+                                           projection_mg,
+                                           "utf-8",
+                                           rm_destroy,
+                                           rm_rect_new,
+                                           rm_rect_destroy,
+                                           rm_get_item,
+                                           rm_get_item_byid,
+                                           NULL,
+                                           NULL,
+                                           NULL,
+                                       };
 
 static struct map_methods route_graph_meth = {
-    projection_mg,
-    "utf-8",
-    rp_destroy,
-    rp_rect_new,
-    rm_rect_destroy,
-    rp_get_item,
-    rp_get_item_byid,
-    NULL,
-    NULL,
-    NULL,
-};
+            projection_mg,
+            "utf-8",
+            rp_destroy,
+            rp_rect_new,
+            rm_rect_destroy,
+            rp_get_item,
+            rp_get_item_byid,
+            NULL,
+            NULL,
+            NULL,
+        };
 
 static struct map_priv *route_map_new_helper(struct map_methods *meth, struct attr **attrs, int graph) {
     struct map_priv *ret;
@@ -4433,7 +4651,7 @@ void route_change_traffic_distortion(struct route *this_, struct item *item) {
  * @return A new map containing the route path
  */
 struct map *
-route_get_map(struct route *this_) {
+    route_get_map(struct route *this_) {
     return route_get_map_helper(this_, &this_->map, "route","Route");
 }
 
@@ -4449,7 +4667,7 @@ route_get_map(struct route *this_) {
  * @return A new map containing the route graph
  */
 struct map *
-route_get_graph_map(struct route *this_) {
+    route_get_graph_map(struct route *this_) {
     return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
 }
 
@@ -4634,7 +4852,7 @@ int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, 
 }
 
 struct attr_iter *
-route_attr_iter_new(void) {
+    route_attr_iter_new(void) {
     return g_new0(struct attr_iter, 1);
 }
 
@@ -4659,17 +4877,17 @@ void route_destroy(struct route *this_) {
 }
 
 struct object_func route_func = {
-    attr_route,
-    (object_func_new)route_new,
-    (object_func_get_attr)route_get_attr,
-    (object_func_iter_new)NULL,
-    (object_func_iter_destroy)NULL,
-    (object_func_set_attr)route_set_attr,
-    (object_func_add_attr)route_add_attr,
-    (object_func_remove_attr)route_remove_attr,
-    (object_func_init)NULL,
-    (object_func_destroy)route_destroy,
-    (object_func_dup)route_dup,
-    (object_func_ref)navit_object_ref,
-    (object_func_unref)navit_object_unref,
-};
+                                    attr_route,
+                                    (object_func_new)route_new,
+                                    (object_func_get_attr)route_get_attr,
+                                    (object_func_iter_new)NULL,
+                                    (object_func_iter_destroy)NULL,
+                                    (object_func_set_attr)route_set_attr,
+                                    (object_func_add_attr)route_add_attr,
+                                    (object_func_remove_attr)route_remove_attr,
+                                    (object_func_init)NULL,
+                                    (object_func_destroy)route_destroy,
+                                    (object_func_dup)route_dup,
+                                    (object_func_ref)navit_object_ref,
+                                    (object_func_unref)navit_object_unref,
+                                };
