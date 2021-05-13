@@ -134,6 +134,7 @@ void route_attr_iter_destroy(struct attr_iter *iter);
 int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void route_init(void);
 void route_destroy(struct route *this_);
+int route_evaluate_condition(struct vehicleprofile *profile, char *condition, int speed);
 
 /* end of prototypes */
 #ifdef __cplusplus

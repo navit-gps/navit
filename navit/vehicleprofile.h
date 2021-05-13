@@ -31,6 +31,23 @@ enum maxspeed_handling {
     maxspeed_ignore = 2,		/*!< Ignore maxspeed of segment, always use {@code route_weight} of road profile */
 };
 
+enum emissionclass {
+    //Truck
+    Euro_0,
+    Euro_1,
+    Euro_2,
+    Euro_3,
+    Euro_4,
+    Euro_5,
+    Euro_6,
+    //Car, use label colors and Euro_6d_TEMP for now
+    Cat_RED,
+    Cat_YLW,
+    Cat_GRN,
+    Euro_6d_TEMP,
+    EMISSION_CLASS_MAX,
+};
+
 
 struct vehicleprofile {
     NAVIT_OBJECT
@@ -54,6 +71,7 @@ struct vehicleprofile {
     struct attr active_callback;
     int turn_around_penalty;		/**< Penalty when turning around */
     int turn_around_penalty2;		/**< Penalty when turning around, for planned turn arounds */
+    int emissionclass;
 };
 
 struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs);
@@ -71,6 +89,7 @@ struct roadprofile * vehicleprofile_get_roadprofile(struct vehicleprofile *this_
 char * vehicleprofile_get_name(struct vehicleprofile *this_);
 int vehicleprofile_store_dimensions(struct vehicleprofile *profile);
 int vehicleprofile_read_dimensions(struct vehicleprofile *profile);
+char* getTagValue(char *xmlstring, char *tag);
 
 #ifdef __cplusplus
 }
