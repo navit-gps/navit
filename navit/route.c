@@ -266,7 +266,7 @@ static int are_intersecting(
     int v1x1, int v1y1, int v1x2, int v1y2,
     int v2x1, int v2y1, int v2x2, int v2y2
 );
-int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res);
+int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res);
 
 /**
  * @brief finds the intersection point of 2 lines
@@ -276,7 +276,7 @@ int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, str
  * @param coord res, will become the coords of the intersection if found
  * @return : TRUE if intersection found, otherwise FALSE
  */
-int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
+int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
     int n, a, b;
     int adx=a2->x-a1->x;
     int ady=a2->y-a1->y;
@@ -336,7 +336,7 @@ static int is_inside_lez(struct coord *coords, int number, struct coord point1, 
 //            intersections=1;
 //        }
 
-        if(line_intersection(&coords[i], &coords[i+1],  &point1, &point2, &dummy))
+        if(line_intersection_lez(&coords[i], &coords[i+1],  &point1, &point2, &dummy))
             intersection=1;
         //intersections+=are_intersecting(coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y, min.x-1, point2.y, point2.x, point2.y);
     }
@@ -1832,11 +1832,11 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
             //inside+=is_inside_lez(&this->lezs->next->coord[0], this->lezs->next->ncoords, start->c);
             if(inside) {
 
-                dbg(lvl_error,"IS INSIDE: %li", data->item->type);
+                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
                 dbg(lvl_error,"INSIDE LEZ");
                 s->data.inside_lez=1;
             } else {
-                dbg(lvl_error,"IS INSIDE: %li", data->item->type);
+                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
                 dbg(lvl_error,"NOT INSIDE LEZ");
                 s->data.inside_lez=0;
             }
