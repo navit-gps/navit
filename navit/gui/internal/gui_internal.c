@@ -2034,9 +2034,12 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
         dbg(lvl_error, "Unable to set the vehicle's profile name");
     }
 
-    navit_set_vehicleprofile_name(this->nav,profilename);
+    navit_set_vehicleprofile_name(this->nav, profilename);
 
     save_vehicle_xml(v);
+
+    //save in gui_internal.txt
+    gui_internal_set("navit.vehicleprofile=*", g_strdup_printf("navit.vehicleprofile=navit.vehicleprofile[@name==\"%s\"]", profilename));
 
     // Notify Navit that the routing should be re-done if this is the
     // active vehicle.
@@ -2049,7 +2052,6 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 
     vehicle.type=attr_vehicle;
     navit_set_attr(this->nav, &vehicle);
-
 
     gui_internal_prune_menu_count(this, 1, 0);
     gui_internal_menu_vehicle_settings(this, v, vehicle_name);
@@ -2070,6 +2072,7 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
     char *label = NULL;
     int active;
     struct vehicle_and_profilename *context = NULL;
+    struct vehicleprofile *current_profile;
 
 #ifdef ONLY_FOR_TRANSLATION
     char *translations[] = {_n("car"), _n("bike"), _n("pedestrian")};
@@ -2084,11 +2087,13 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
     name = attr->u.str;
 
     // Determine whether the profile is the active one
-    if (vehicle_get_attr(v, attr_profilename, &profile_attr, NULL))
+    current_profile = navit_get_vehicleprofile(this->nav);
+    if (vehicleprofile_get_attr(current_profile, attr_name, &profile_attr, NULL))
         active_profile = profile_attr.u.str;
+
     active = active_profile != NULL && !strcmp(name, active_profile);
 
-    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
+    dbg(lvl_error, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
 
     // Build a translatable label.
     if(active) {
@@ -3072,7 +3077,7 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
  * @param coord res, will become the coords of the intersection if found
  * @return : TRUE if intersection found, otherwise FALSE
  */
-int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
+int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
     int n, a, b;
     int adx=a2->x-a1->x;
     int ady=a2->y-a1->y;
