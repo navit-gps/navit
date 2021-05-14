@@ -243,14 +243,14 @@ static int command_object_get_attr(struct context *ctx, struct attr *object, enu
     struct attr dup;
     struct object_func *func=object_func_lookup(object->type);
     if (!object->u.data || !func || !func->get_attr) {
-        dbg(lvl_warning, "cannot retrieve attributes from %s (%p), func=%p", attr_to_name(object->type), object->u.data, func)
+        dbg(lvl_error, "cannot retrieve attributes from %s (%p), func=%p", attr_to_name(object->type), object->u.data, func)
         return 0;
     }
     r=func->get_attr(object->u.data, attr_type, &dup, NULL);
     if(r)
         attr_dup_content(&dup,ret);
     else
-        dbg(lvl_warning, "%s (%p) has no attribute %s", attr_to_name(object->type), object->u.data, attr_to_name(attr_type))
+        dbg(lvl_error, "%s (%p) has no attribute %s", attr_to_name(object->type), object->u.data, attr_to_name(attr_type))
         return r;
 }
 
@@ -302,11 +302,11 @@ static void command_get_attr(struct context *ctx, struct result *res) {
     *res=tmp;
     res->allocated=1;
     if (result) {
-        dbg(lvl_debug, "successfully retrieved '%s' from '%s'", attr_to_name(attr_type), attr_to_name(parent_type));
+        dbg(lvl_error, "successfully retrieved '%s' from '%s'", attr_to_name(attr_type), attr_to_name(parent_type));
         res->var=res->attrn;
         res->varlen=res->attrnlen;
     } else {
-        dbg(lvl_warning, "could not retrieve '%s' from '%s'", attr_to_name(attr_type), attr_to_name(parent_type));
+        dbg(lvl_error, "could not retrieve '%s' from '%s'", attr_to_name(attr_type), attr_to_name(parent_type));
         result_free(res);
         res->attr.type=attr_none;
         res->var=NULL;
@@ -1743,7 +1743,7 @@ static int command_register_callbacks(struct command_saved *cs) {
  *
  * @param command The command string
  * @param attr The context attribute for the saved command
- * @param cb The callback to call whenver the command is re-evaluated
+ * @param cb The callback to call whenever the command is re-evaluated
  * @param async Whether the saved command should be flagged as asynchronous, causing it to be evaluated
  * in an idle callback
  */
