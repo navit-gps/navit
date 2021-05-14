@@ -2093,7 +2093,7 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
 
     active = active_profile != NULL && !strcmp(name, active_profile);
 
-    dbg(lvl_error, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
+    dbg(lvl_debug, "Adding vehicle profile %s, active=%s/%i", name, active_profile, active);
 
     // Build a translatable label.
     if(active) {
@@ -3077,7 +3077,7 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
  * @param coord res, will become the coords of the intersection if found
  * @return : TRUE if intersection found, otherwise FALSE
  */
-int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
+int line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
     int n, a, b;
     int adx=a2->x-a1->x;
     int ady=a2->y-a1->y;
