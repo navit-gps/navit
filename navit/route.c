@@ -114,7 +114,7 @@ struct map_priv {
     struct route *route;
 };
 
-int debug_route=1;
+int debug_route=0;
 
 
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
@@ -2436,7 +2436,7 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
         ret+=profile->through_traffic_penalty;
     if (over->data.inside_lez) { // Don't allow lez
         dbg(lvl_error, "inside lez !!!");
-        ret = INT_MAX;
+        //ret = INT_MAX; TODO: enable when detection is fixed
     }
     return ret;
 }

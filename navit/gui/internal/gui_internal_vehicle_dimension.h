@@ -19,6 +19,7 @@ void gui_internal_cmd_change_vehicle_dimensions_width(struct gui_priv *this, str
 void gui_internal_cmd_change_vehicle_dimensions_height(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_change_vehicle_dimensions_hazmat(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_change_vehicle_dimensions_emissionclass(struct gui_priv *this, struct widget *wm, void *data);
+void gui_internal_add_emissionclass(struct gui_priv *this, struct widget *parent, char *data);
 /* end of prototypes */
 
 

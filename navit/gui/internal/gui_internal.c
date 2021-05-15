@@ -413,286 +413,269 @@ void gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark)
     }
 }
 
-
-
-
-
 void gui_internal_back(struct gui_priv *this, struct widget *w, void *data) {
     gui_internal_prune_menu_count(this, 1, 1);
 }
 
 void gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data) {
                                 gui_internal_prune_menu(this, wm->data);
-                            }
+}
 
+void gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data) {
+    struct widget *w = this->root.children->data;
+    if (w && w->menu_data && w->menu_data->href && !strcmp(w->menu_data->href, "#Main Menu"))
+        gui_internal_prune_menu(this, w);
+    else
+        gui_internal_html_main_menu(this);
+}
 
+struct widget*
+gui_internal_time_help(struct gui_priv *this) {
+    struct widget *w, *wc, *wcn;
+    char timestr[64];
+    struct tm *tm;
+    time_t timep;
 
-                            void gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data) {
-                                struct widget *w=this->root.children->data;
-                                if (w && w->menu_data && w->menu_data->href && !strcmp(w->menu_data->href,"#Main Menu"))
-                                    gui_internal_prune_menu(this, w);
-                                else
-                                    gui_internal_html_main_menu(this);
-                            }
+    w = gui_internal_box_new(this, gravity_right_center | orientation_horizontal | flags_fill);
+    w->bl = this->spacing;
+    w->spx = this->spacing;
+    w->spx = 10;
+    w->bl = 10;
+    w->br = 10;
+    w->bt = 6;
+    w->bb = 6;
+    if (this->flags & 64) {
+        wc = gui_internal_box_new(this, gravity_right_top | orientation_vertical | flags_fill);
+        wc->bl = 10;
+        wc->br = 20;
+        wc->bt = 6;
+        wc->bb = 6;
+        timep = time(NULL);
+        tm = localtime(&timep);
+        strftime(timestr, 64, "%H:%M %d.%m.%Y", tm);
+        wcn = gui_internal_label_new(this, timestr);
+        gui_internal_widget_append(wc, wcn);
+        gui_internal_widget_append(w, wc);
+    }
+    if (this->flags & 128) {
+        wcn = gui_internal_button_new_with_callback(this, _("Help"), image_new_l(this, "gui_help"),
+                    gravity_center | orientation_vertical | flags_fill, NULL, NULL);
+        gui_internal_widget_append(w, wcn);
+    }
+    return w;
+}
 
+/**
+ * Applies the configuration values to this based on the settings
+ * specified in the configuration file (this->config) and
+ * the most appropriate default profile based on screen resolution.
+ *
+ * This function should be run after this->root is setup and could
+ * be rerun after the window is resized.
+ *
+ * @author Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
+ */
+void gui_internal_apply_config(struct gui_priv *this) {
+    struct gui_config_settings *current_config = 0;
 
-                            struct widget *
-                                gui_internal_time_help(struct gui_priv *this) {
-                                struct widget *w,*wc,*wcn;
-                                char timestr[64];
-                                struct tm *tm;
-                                time_t timep;
+    dbg(lvl_debug, "w=%d h=%d", this->root.w, this->root.h);
+    /*
+     * Select default values from profile based on the screen.
+     */
+    if ((this->root.w > 320 || this->root.h > 320) && this->root.w > 240 && this->root.h > 240) {
+        if ((this->root.w > 640 || this->root.h > 640) && this->root.w > 480 && this->root.h > 480) {
+            current_config = &config_profiles[LARGE_PROFILE];
+        } else {
+            current_config = &config_profiles[MEDIUM_PROFILE];
+        }
+    } else {
+        current_config = &config_profiles[SMALL_PROFILE];
+    }
 
-                                w=gui_internal_box_new(this, gravity_right_center|orientation_horizontal|flags_fill);
-                                w->bl=this->spacing;
-                                w->spx=this->spacing;
-                                w->spx=10;
-                                w->bl=10;
-                                w->br=10;
-                                w->bt=6;
-                                w->bb=6;
-                                if (this->flags & 64) {
-                                    wc=gui_internal_box_new(this, gravity_right_top|orientation_vertical|flags_fill);
-                                    wc->bl=10;
-                                    wc->br=20;
-                                    wc->bt=6;
-                                    wc->bb=6;
-                                    timep=time(NULL);
-                                    tm=localtime(&timep);
-                                    strftime(timestr, 64, "%H:%M %d.%m.%Y", tm);
-                                    wcn=gui_internal_label_new(this, timestr);
-                                    gui_internal_widget_append(wc, wcn);
-                                    gui_internal_widget_append(w, wc);
-                                }
-                                if (this->flags & 128) {
-                                    wcn=gui_internal_button_new_with_callback(this, _("Help"), image_new_l(this, "gui_help"),
-                                            gravity_center|orientation_vertical|flags_fill, NULL, NULL);
-                                    gui_internal_widget_append(w, wcn);
-                                }
-                                return w;
-                            }
+    /*
+     * Apply override values from config file
+     */
+    if (this->config.font_size == -1) {
+        this->font_size = current_config->font_size;
+    } else {
+        this->font_size = this->config.font_size;
+    }
 
+    if (this->config.icon_xs == -1) {
+        this->icon_xs = current_config->icon_xs;
+    } else {
+        this->icon_xs = this->config.icon_xs;
+    }
 
-                            /**
-                             * Applies the configuration values to this based on the settings
-                             * specified in the configuration file (this->config) and
-                             * the most appropriate default profile based on screen resolution.
-                             *
-                             * This function should be run after this->root is setup and could
-                             * be rerun after the window is resized.
-                             *
-                             * @author Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
-                             */
-                            void gui_internal_apply_config(struct gui_priv *this) {
-                                struct gui_config_settings *  current_config=0;
+    if (this->config.icon_s == -1) {
+        this->icon_s = current_config->icon_s;
+    } else {
+        this->icon_s = this->config.icon_s;
+    }
+    if (this->config.icon_l == -1) {
+        this->icon_l = current_config->icon_l;
+    } else {
+        this->icon_l = this->config.icon_l;
+    }
+    if (this->config.spacing == -1) {
+        this->spacing = current_config->spacing;
+    } else {
+        this->spacing = this->config.spacing;
+        dbg(lvl_info, "Overriding default spacing %d with value %d provided in config file", current_config->spacing,
+                    this->config.spacing);
+    }
+    if (!this->fonts[0]) {
+        int i, sizes[] = { 100, 66, 50 };
+        for (i = 0; i < 3; i++) {
+            if (this->font_name)
+                this->fonts[i] = graphics_named_font_new(this->gra, this->font_name, this->font_size * sizes[i] / 100,
+                            1);
+            else
+                this->fonts[i] = graphics_font_new(this->gra, this->font_size * sizes[i] / 100, 1);
+        }
+    }
 
-                                dbg(lvl_debug,"w=%d h=%d", this->root.w, this->root.h);
-                                /*
-                                 * Select default values from profile based on the screen.
-                                 */
-                                if((this->root.w > 320 || this->root.h > 320) && this->root.w > 240 && this->root.h > 240) {
-                                    if((this->root.w > 640 || this->root.h > 640) && this->root.w > 480 && this->root.h > 480 ) {
-                                        current_config = &config_profiles[LARGE_PROFILE];
-                                    } else {
-                                        current_config = &config_profiles[MEDIUM_PROFILE];
-                                    }
-                                } else {
-                                    current_config = &config_profiles[SMALL_PROFILE];
-                                }
+}
 
-                                /*
-                                 * Apply override values from config file
-                                 */
-                                if(this->config.font_size == -1 ) {
-                                    this->font_size = current_config->font_size;
-                                } else {
-                                    this->font_size = this->config.font_size;
-                                }
+static void gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data) {
+    char *name = data;
+    dbg(lvl_info, "c=%d:0x%x,0x%x", wm->c.pro, wm->c.x, wm->c.y);
+    navit_set_destination(this->nav, &wm->c, name, 1);
+    if (this->flags & 512) {
+        struct attr follow;
+        follow.type = attr_follow;
+        follow.u.num = 180;
+        navit_set_attr(this->nav, &this->osd_configuration);
+        navit_set_attr(this->nav, &follow);
+        navit_zoom_to_route(this->nav, 0);
+    }
+    gui_internal_prune_menu(this, NULL);
+}
 
-                                if(this->config.icon_xs == -1 ) {
-                                    this->icon_xs = current_config->icon_xs;
-                                } else {
-                                    this->icon_xs = this->config.icon_xs;
-                                }
+static void gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm, void *data) {
+    char *name = data;
+    int dstcount = navit_get_destination_count(this->nav) + 1;
+    int pos, i;
+    struct pcoord *dst = g_alloca(dstcount * sizeof(struct pcoord));
+    dstcount = navit_get_destinations(this->nav, dst, dstcount);
 
-                                if(this->config.icon_s == -1 ) {
-                                    this->icon_s = current_config->icon_s;
-                                } else {
-                                    this->icon_s = this->config.icon_s;
-                                }
-                                if(this->config.icon_l == -1 ) {
-                                    this->icon_l = current_config->icon_l;
-                                } else {
-                                    this->icon_l = this->config.icon_l;
-                                }
-                                if(this->config.spacing == -1 ) {
-                                    this->spacing = current_config->spacing;
-                                } else {
-                                    this->spacing = this->config.spacing;
-                                    dbg(lvl_info, "Overriding default spacing %d with value %d provided in config file", current_config->spacing,
-                                        this->config.spacing);
-                                }
-                                if (!this->fonts[0]) {
-                                    int i,sizes[]= {100,66,50};
-                                    for (i = 0 ; i < 3 ; i++) {
-                                        if (this->font_name)
-                                            this->fonts[i]=graphics_named_font_new(this->gra,this->font_name,this->font_size*sizes[i]/100,1);
-                                        else
-                                            this->fonts[i]=graphics_font_new(this->gra,this->font_size*sizes[i]/100,1);
-                                    }
-                                }
+    pos = dstcount - wm->datai;
+    if (pos < 0)
+        pos = 0;
 
-                            }
+    for (i = dstcount; i > pos; i--)
+        dst[i] = dst[i - 1];
 
+    dst[pos] = wm->c;
+    navit_add_destination_description(this->nav, &wm->c, (char*) data);
+    navit_set_destinations(this->nav, dst, dstcount + 1, name, 1);
+    gui_internal_prune_menu(this, NULL);
+}
 
+/*
+ * @brief Displays a waypoint list to the user.
+ *
+ * This display a waypoint list to the user. When the user chooses an item from the list, the callback
+ * function passed as {@code cmd} will be called.
+ *
+ * Widget passed as wm parameter of the called cmd function will have item set to user chosen waypoint item. Its data will be set
+ *  to zero-based chosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
+ *  waypoint coordinates will be copied to wm->c.
+ *
+ * @param this gui context
+ * @param title Menu title
+ * @param hint Text to display above the waypoint list describing the action to be performed, can be NULL
+ * @param wm_ The called widget pointer. Can be NULL.
+ * @param cmd Callback function which will be called on item selection
+ * @param data data argument to be passed to the callback function
+ */
+void gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_,
+            void (*cmd)(struct gui_priv *priv, struct widget *widget, void *data), void *data) {
+    struct widget *wb, *w, *wtable, *row, *wc;
+    struct map *map;
+    struct map_rect *mr;
+    struct item *item;
+    char *text;
+    int i;
+    int dstcount = navit_get_destination_count(this->nav) + 1;
 
+    map = route_get_map(navit_get_route(this->nav));
+    if (!map)
+        return;
+    mr = map_rect_new(map, NULL);
+    if (!mr)
+        return;
 
+    wb = gui_internal_menu(this, title);
+    w = gui_internal_box_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill);
+    gui_internal_widget_append(wb, w);
+    if (hint)
+        gui_internal_widget_append(w, gui_internal_label_new(this, hint));
+    wtable = gui_internal_widget_table_new(this, gravity_left_top | flags_fill | flags_expand | orientation_vertical,
+                1);
+    gui_internal_widget_append(w, wtable);
 
-                            static void gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data) {
-                                char *name=data;
-                                dbg(lvl_info,"c=%d:0x%x,0x%x", wm->c.pro, wm->c.x, wm->c.y);
-                                navit_set_destination(this->nav, &wm->c, name, 1);
-                                if (this->flags & 512) {
-                                    struct attr follow;
-                                    follow.type=attr_follow;
-                                    follow.u.num=180;
-                                    navit_set_attr(this->nav, &this->osd_configuration);
-                                    navit_set_attr(this->nav, &follow);
-                                    navit_zoom_to_route(this->nav, 0);
-                                }
-                                gui_internal_prune_menu(this, NULL);
-                            }
+    i = 0;
+    while ((item = map_rect_get_item(mr)) != NULL) {
+        struct attr attr;
+        if (item->type != type_waypoint && item->type != type_route_end)
+            continue;
+        if (item_attr_get(item, attr_label, &attr)) {
+            text = g_strdup_printf(_("Waypoint %s"), map_convert_string_tmp(item->map, attr.u.str));
+        } else
+            continue;
+        gui_internal_widget_append(wtable,
+                    row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
+        gui_internal_widget_append(row,
+                    wc = gui_internal_button_new_with_callback(this, text, image_new_xs(this, "gui_active"),
+                                gravity_left_center | orientation_horizontal | flags_fill, cmd, data));
+        wc->item = *item;
+        if (wm_)
+            wc->c = wm_->c;
+        else {
+            struct coord c;
+            item_coord_get(item, &c, 1);
+            wc->c.x = c.x;
+            wc->c.y = c.y;
+            wc->c.pro = map_projection(item->map);
+        }
+        i++;
+        wc->datai = dstcount - i;
+        g_free(text);
+    }
+    map_rect_destroy(mr);
+    gui_internal_menu_render(this);
+}
 
-                            static void gui_internal_cmd_insert_destination_do(struct gui_priv *this, struct widget *wm, void *data) {
-                                char *name=data;
-                                int dstcount=navit_get_destination_count(this->nav)+1;
-                                int pos,i;
-                                struct pcoord *dst=g_alloca(dstcount*sizeof(struct pcoord));
-                                dstcount=navit_get_destinations(this->nav,dst,dstcount);
+static void gui_internal_cmd_insert_destination(struct gui_priv *this, struct widget *wm, void *data) {
+    gui_internal_select_waypoint(this, data, _("Select waypoint to insert the new one before"), wm,
+                gui_internal_cmd_insert_destination_do, data);
+}
 
-                                pos=dstcount-wm->datai;
-                                if(pos<0)
-                                    pos=0;
+static void gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data) {
+    struct attr v;
+    if (data) {
+        v.type = attr_vehicle;
+        v.u.vehicle = NULL;
+        navit_set_attr(this->nav, &v);
+    }
+    navit_set_position(this->nav, &wm->c);
+    gui_internal_prune_menu(this, NULL);
+}
 
-                                for(i=dstcount; i>pos; i--)
-                                    dst[i]=dst[i-1];
+/**
+ * @brief Generic notification function for Editable widgets to call Another widget notification function when Enter is pressed in editable field.
+ * The Editable widget should have data member pointing to the Another widget.
+ */
+void gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data) {
+    if (wm->reason == gui_internal_reason_keypress_finish && data) {
+        struct widget *w = data;
+        if (w->func)
+            w->func(this, w, w->data);
+    }
+}
 
-                                dst[pos]=wm->c;
-                                navit_add_destination_description(this->nav,&wm->c,(char*)data);
-                                navit_set_destinations(this->nav,dst,dstcount+1,name,1);
-                                gui_internal_prune_menu(this, NULL);
-                            }
-
-                            /*
-                             * @brief Displays a waypoint list to the user.
-                             *
-                             * This display a waypoint list to the user. When the user chooses an item from the list, the callback
-                             * function passed as {@code cmd} will be called.
-                             *
-                             * Widget passed as wm parameter of the called cmd function will have item set to user chosen waypoint item. Its data will be set
-                             *  to zero-based chosen waypoint number, counting from the route end. Coordinates to wm->c will be copied from wm_->c if wm_ is not null. Otherwise,
-                             *  waypoint coordinates will be copied to wm->c.
-                             *
-                             * @param this gui context
-                             * @param title Menu title
-                             * @param hint Text to display above the waypoint list describing the action to be performed, can be NULL
-                             * @param wm_ The called widget pointer. Can be NULL.
-                             * @param cmd Callback function which will be called on item selection
-                             * @param data data argument to be passed to the callback function
-                             */
-                            void gui_internal_select_waypoint(struct gui_priv *this, const char *title, const char *hint, struct widget *wm_,
-                                                              void(*cmd)(struct gui_priv *priv, struct widget *widget, void *data),void *data) {
-                                struct widget *wb,*w,*wtable,*row,*wc;
-                                struct map *map;
-                                struct map_rect *mr;
-                                struct item *item;
-                                char *text;
-                                int i;
-                                int dstcount=navit_get_destination_count(this->nav)+1;
-
-                                map=route_get_map(navit_get_route(this->nav));
-                                if(!map)
-                                    return;
-                                mr = map_rect_new(map, NULL);
-                                if(!mr)
-                                    return;
-
-                                wb=gui_internal_menu(this, title);
-                                w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-                                gui_internal_widget_append(wb, w);
-                                if(hint)
-                                    gui_internal_widget_append(w, gui_internal_label_new(this, hint));
-                                wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
-                                gui_internal_widget_append(w,wtable);
-
-                                i=0;
-                                while((item = map_rect_get_item(mr))!=NULL) {
-                                    struct attr attr;
-                                    if(item->type!=type_waypoint && item->type!=type_route_end)
-                                        continue;
-                                    if (item_attr_get(item, attr_label, &attr)) {
-                                        text=g_strdup_printf(_("Waypoint %s"), map_convert_string_tmp(item->map, attr.u.str));
-                                    } else
-                                        continue;
-                                    gui_internal_widget_append(wtable,row=gui_internal_widget_table_row_new(this,
-                                                                          gravity_left|orientation_horizontal|flags_fill));
-                                    gui_internal_widget_append(row,	wc=gui_internal_button_new_with_callback(this, text,
-                                                                       image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-                                                                       cmd, data));
-                                    wc->item=*item;
-                                    if(wm_)
-                                        wc->c=wm_->c;
-                                    else {
-                                        struct coord c;
-                                        item_coord_get(item,&c,1);
-                                        wc->c.x=c.x;
-                                        wc->c.y=c.y;
-                                        wc->c.pro=map_projection(item->map);
-                                    }
-                                    i++;
-                                    wc->datai=dstcount-i;
-                                    g_free(text);
-                                }
-                                map_rect_destroy(mr);
-                                gui_internal_menu_render(this);
-                            }
-
-                            static void gui_internal_cmd_insert_destination(struct gui_priv *this, struct widget *wm, void *data) {
-                                gui_internal_select_waypoint(this, data, _("Select waypoint to insert the new one before"), wm,
-                                                             gui_internal_cmd_insert_destination_do, data);
-                            }
-
-
-
-                            static void gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data) {
-                                struct attr v;
-                                if(data) {
-                                    v.type=attr_vehicle;
-                                    v.u.vehicle=NULL;
-                                    navit_set_attr(this->nav, &v);
-                                }
-                                navit_set_position(this->nav, &wm->c);
-                                gui_internal_prune_menu(this, NULL);
-                            }
-
-
-
-
-
-
-                            /**
-                             * @brief Generic notification function for Editable widgets to call Another widget notification function when Enter is pressed in editable field.
-                             * The Editable widget should have data member pointing to the Another widget.
-                             */
-                            void gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data) {
-                                if (wm->reason==gui_internal_reason_keypress_finish && data) {
-                                    struct widget *w=data;
-                                    if(w->func)
-                                        w->func(this, w, w->data);
-                                }
-                            }
-
-                            struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
+struct widget* gui_internal_keyboard(struct gui_priv *this, int mode);
 
 
 struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang);
@@ -1891,11 +1874,11 @@ static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget
 }
 
 static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, struct widget *wm, void *data) {
-    struct widget *w,*wd, *wdweight, *wdaxleweight, *wdlength, *wdwidth, *wdheight;
+    struct widget *w,*wd, *wdweight, *wdaxleweight, *wdlength, *wdwidth, *wdheight, *wdhazmat, *wdemissionclass;
     struct attr attr;
     struct vehicleprofile *v=data;
     char str[50];
-    wd=gui_internal_menu(this, _("Change Dimensions"));
+    wd=gui_internal_menu(this, _("Change settings"));
     gui_internal_menu_data(this)->redisplay=gui_internal_cmd_show_vehicle_dimensions;
     gui_internal_menu_data(this)->redisplay_widget=wm;
     w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
@@ -1904,7 +1887,7 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_weight, &attr, NULL);
     sprintf(str, _("Total Weight: %li"), attr.u.num);
-    wdweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    wdweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                gravity_left_center | orientation_horizontal | flags_fill,
                gui_internal_cmd_change_vehicle_dimensions_weight, NULL);
     gui_internal_widget_append(w, wdweight);
@@ -1912,7 +1895,7 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_axle_weight, &attr, NULL);
     sprintf(str, _("Axle Weight: %li"), attr.u.num);
-    wdaxleweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    wdaxleweight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                    gravity_left_center | orientation_horizontal | flags_fill,
                    gui_internal_cmd_change_vehicle_dimensions_axle_weight, NULL);
     gui_internal_widget_append(w, wdaxleweight);
@@ -1920,7 +1903,7 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_length, &attr, NULL);
     sprintf(str, _("Length: %li"), attr.u.num);
-    wdlength = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    wdlength = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                gravity_left_center | orientation_horizontal | flags_fill,
                gui_internal_cmd_change_vehicle_dimensions_length, NULL);
     gui_internal_widget_append(w, wdlength);
@@ -1928,7 +1911,7 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_width, &attr, NULL);
     sprintf(str, _("Width: %li"), attr.u.num);
-    wdwidth = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    wdwidth = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
               gravity_left_center | orientation_horizontal | flags_fill,
               gui_internal_cmd_change_vehicle_dimensions_width, NULL);
     gui_internal_widget_append(w, wdwidth);
@@ -1936,26 +1919,26 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_height, &attr, NULL);
     sprintf(str, _("Height: %li"), attr.u.num);
-    wdheight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    wdheight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                gravity_left_center | orientation_horizontal | flags_fill,
                gui_internal_cmd_change_vehicle_dimensions_height, NULL);
     gui_internal_widget_append(w, wdheight);
 
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_dangerous_goods, &attr, NULL);
-    sprintf(str, _("Hazmat: %li"), attr.u.num);
-    wdheight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    sprintf(str, _("Hazardous materials: %s"), attr.u.num==1?_("Yes"):_("No"));
+    wdhazmat = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                gravity_left_center | orientation_horizontal | flags_fill,
-               gui_internal_cmd_change_vehicle_dimensions_hazmat, NULL);
-    gui_internal_widget_append(w, wdheight);
+               gui_internal_cmd_change_vehicle_dimensions_hazmat, v);
+    gui_internal_widget_append(w, wdhazmat);
 
     attr.u.num = 0;
     vehicleprofile_get_attr(v, attr_vehicle_emission_class, &attr, NULL);
-    sprintf(str, _("Emission Class: %li"), attr.u.num);
-    wdheight = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_active"),
+    sprintf(str, _("Emission Class: %s"), ectxt.classes[attr.u.num]);
+    wdemissionclass = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
                gravity_left_center | orientation_horizontal | flags_fill,
-               gui_internal_cmd_change_vehicle_dimensions_emissionclass, NULL);
-    gui_internal_widget_append(w, wdheight);
+               gui_internal_cmd_change_vehicle_dimensions_emissionclass, v);
+    gui_internal_widget_append(w, wdemissionclass);
 
     gui_internal_menu_render(this);
 }
@@ -2164,8 +2147,8 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
     gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
                                       gravity_left|orientation_horizontal|flags_fill));
     gui_internal_widget_append(row,
-                               gui_internal_button_new_with_callback(this, _(g_strdup_printf(_("Change Dimensions for: %s"), _(active_profile->name))),
-                                                                     image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+                               gui_internal_button_new_with_callback(this, _(g_strdup_printf(_("Change settings for: %s"), _(active_profile->name))),
+                                                                     image_new_xs(this, "gui_tools"), gravity_left_center|orientation_horizontal|flags_fill,
                                                                      gui_internal_cmd_show_vehicle_dimensions, active_profile));
     //}
 

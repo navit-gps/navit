@@ -48,6 +48,22 @@ enum emissionclass {
     EMISSION_CLASS_MAX,
 };
 
+static struct emissionclasstxt {
+  char  *classes[EMISSION_CLASS_MAX];
+} ectxt = {
+            "Euro 0",
+            "Euro 1",
+            "Euro 2",
+            "Euro 3",
+            "Euro 4",
+            "Euro 5",
+            "Euro 6",
+            "Red Label",
+            "Yellow Label",
+            "Green Label",
+            "Euro 6d temp"
+};
+
 
 struct vehicleprofile {
     NAVIT_OBJECT
