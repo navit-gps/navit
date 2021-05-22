@@ -60,10 +60,10 @@
 #define KEY_LEFT HILDON_HARDKEY_LEFT
 #define KEY_RIGHT HILDON_HARDKEY_RIGHT
 #else
-#ifndef GDK_Book
+#ifndef GDK_KEY_Book
 #define GDK_KEY_Book XF86XK_Book
 #endif
-#ifndef GDK_Calendar
+#ifndef GDK_KEY_Calendar
 #define GDK_KEY_Calendar XF86XK_Calendar
 #endif
 #define KEY_ZOOM_IN GDK_KEY_Book
@@ -247,10 +247,9 @@ static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *de
 
     gui->dialog_coord=*c;
     gui->dialog_win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    vbox=gtk_vbox_new(FALSE, 0);
+    vbox=gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (gui->dialog_win), vbox);
     gtk_window_set_title(GTK_WINDOW(gui->dialog_win),_("Add Bookmark"));
-    gtk_window_set_wmclass (GTK_WINDOW (gui->dialog_win), "navit", "Navit");
     gtk_window_set_transient_for(GTK_WINDOW(gui->dialog_win), GTK_WINDOW(gui->win));
     gtk_window_set_modal(GTK_WINDOW(gui->dialog_win), TRUE);
     label=gtk_label_new(_("Name"));
