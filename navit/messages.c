@@ -21,7 +21,7 @@
 #include <time.h>
 #include "messages.h"
 #include "callback.h"
-#include "event.h"
+#include "navit/event.h"
 #include "attr.h"
 
 struct messagelist {

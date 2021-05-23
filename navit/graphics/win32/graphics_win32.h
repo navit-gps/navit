@@ -5,7 +5,7 @@
 #include "coord.h"
 #include "point.h"
 #include "graphics.h"
-#include "event.h"
+#include "navit/event.h"
 
 #ifdef UNICODE
 #include <wchar.h>

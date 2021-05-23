@@ -13,7 +13,7 @@
 #include "debug.h"
 #include "callback.h"
 #include "command.h"
-#include "event.h"
+#include "navit/event.h"
 #include "navit_nls.h"
 
 /*

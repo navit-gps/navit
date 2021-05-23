@@ -11,7 +11,7 @@
 #include "SDL.h"
 #include "debug.h"
 #include "callback.h"
-#include "event.h"
+#include "navit/event.h"
 #include "cJSON.h"
 #include "vehicle_webos.h"
 #include "bluetooth.h"

@@ -2,7 +2,7 @@
 #include <X11/Xutil.h>
 #include <glib.h>
 #include "debug.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "graphics_opengl.h"
 

@@ -16,7 +16,7 @@
 #include "navit.h"
 #include "types.h"
 #include "navit_nls.h"
-#include "event.h"
+#include "navit/event.h"
 #include "search.h"
 #include "country.h"
 #include "track.h"

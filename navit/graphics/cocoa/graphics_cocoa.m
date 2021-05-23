@@ -6,7 +6,7 @@
 #include "point.h"
 #include "window.h"
 #include "graphics.h"
-#include "event.h"
+#include "navit/event.h"
 #include "item.h"
 #include "callback.h"
 #include "color.h"

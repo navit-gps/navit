@@ -26,6 +26,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef __APPLE__
+#define _POSIX_C_SOURCE 200809L
+#endif
+
 #ifdef _POSIX_C_SOURCE
 #include <unistd.h>
 #include <sys/types.h>
@@ -1030,7 +1034,7 @@ static char* spawn_process_compose_cmdline(char **argv) {
 }
 #endif
 
-#ifdef _POSIX_C_SOURCE
+#if defined(_POSIX_C_SOURCE) || defined(__APPLE__)
 
 #if 0 /* def _POSIX_THREADS */
 #define spawn_process_sigmask(how,set,old) pthread_sigmask(how,set,old)
@@ -1053,7 +1057,7 @@ GList *spawn_process_children=NULL;
 struct spawn_process_info*
 spawn_process(char **argv) {
     struct spawn_process_info*r=g_new(struct spawn_process_info,1);
-#ifdef _POSIX_C_SOURCE
+#if defined(_POSIX_C_SOURCE) || defined(__APPLE__)
     {
         pid_t pid;
 
@@ -1296,3 +1300,7 @@ void get_compass_direction(char *buffer, int angle, int mode) {
         break;
     }
 }
+
+#ifdef __APPLE__
+#undef _POSIX_C_SOURCE
+#endif

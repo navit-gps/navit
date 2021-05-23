@@ -34,7 +34,7 @@
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
-#include "event.h"
+#include "navit/event.h"
 #include "debug.h"
 #include "callback.h"
 #include "keys.h"
@@ -79,6 +79,7 @@ typedef double GLdouble;
 #define USE_FLOAT 1
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+#  define APIENTRY
 #else
 #include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
 #endif

@@ -25,19 +25,26 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+
 #include <cairo.h>
 #include <locale.h> /* For WIN32 */
 #if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
+#if !defined(__APPLE__)
 #include <X11/XF86keysym.h>
+#endif
 #endif
 #ifdef HAVE_IMLIB2
 #include <Imlib2.h>
 #endif
 
 #ifndef _WIN32
+#if !defined(__APPLE__)
 #include <gdk/gdkx.h>
+#else
+#include <gdk/gdkquartz.h>
 #endif
-#include "event.h"
+#endif
+#include "navit/event.h" /* in case espeak is enabled the system finds the wrong event.h without navit/ prefix */
 #include "debug.h"
 #include "point.h"
 #include "graphics.h"
@@ -625,7 +632,11 @@ static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer us
     if (! gra->visible)
         return TRUE;
 #ifndef _WIN32
+#if defined(__APPLE__)
+    dbg(lvl_debug,"window=%lu", GDK_WINDOW(widget->window));
+#else
     dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(widget->window));
+#endif
 #endif
     gra->width=widget->allocation.width;
     gra->height=widget->allocation.height;
@@ -1016,7 +1027,11 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type,"xwindow_id"))
+#if defined(__APPLE__)
+        return (void *)GDK_WINDOW(this->win ? this->win->window : this->widget->window);
+#else
         return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
+#endif
 #endif
     if (!strcmp(type,"window")) {
         char *cp = getenv("NAVIT_XID");
@@ -1112,7 +1127,7 @@ static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, st
     GtkWidget *draw;
     struct attr *attr;
 
-    if (! event_request_system("glib","graphics_gtk_drawing_area_new"))
+    if (event_request_system((const char *)"glib",(const char *)"graphics_gtk_drawing_area_new")==0)
         return NULL;
 
     draw=gtk_drawing_area_new();

@@ -58,7 +58,7 @@
 #include "layout.h"
 #include "log.h"
 #include "attr.h"
-#include "event.h"
+#include "navit/event.h"
 #include "file.h"
 #include "profile.h"
 #include "command.h"

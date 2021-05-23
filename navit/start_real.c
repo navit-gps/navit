@@ -34,7 +34,7 @@
 #include "navigation.h"
 #include "track.h"
 #include "debug.h"
-#include "event.h"
+#include "navit/event.h"
 #include "event_glib.h"
 #include "xmlconfig.h"
 #include "file.h"

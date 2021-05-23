@@ -55,7 +55,7 @@
 #include "roadprofile.h"
 #include "osd.h"
 #include "speech.h"
-#include "event.h"
+#include "navit/event.h"
 #include "mapset.h"
 #include "util.h"
 

@@ -30,7 +30,7 @@
 #include "transform.h"
 #include "plugin.h"
 #include "vehicle.h"
-#include "event.h"
+#include "navit/event.h"
 #include "corelocation.h"
 
 /**

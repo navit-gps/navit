@@ -50,7 +50,7 @@
 #include "graphics.h"
 #include "color.h"
 #include "navit.h"
-#include "event.h"
+#include "navit/event.h"
 #include "debug.h"
 #include "callback.h"
 #include "util.h"

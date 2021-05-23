@@ -48,7 +48,7 @@
 #include "traffic.h"
 #include "plugin.h"
 #include "fib.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "vehicleprofile.h"
 #include "debug.h"

@@ -7,7 +7,7 @@
 #include "config_.h"
 #include "command.h"
 #include "debug.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "country.h"
 #include "projection.h"

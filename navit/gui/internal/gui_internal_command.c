@@ -16,7 +16,7 @@
 #include "command.h"
 #include "attr.h"
 #include "xmlconfig.h"
-#include "event.h"
+#include "navit/event.h"
 #include "config_.h"
 #include "map.h"
 #include "mapset.h"

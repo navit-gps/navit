@@ -103,7 +103,7 @@
 #include "transform.h"
 #include "plugin.h"
 #include "fib.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
