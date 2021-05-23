@@ -161,6 +161,8 @@ ATTR(vehicle_weight)
 ATTR(vehicle_axle_weight)
 ATTR(vehicle_emission_class)
 ATTR(vehicle_dangerous_goods)
+ATTR(vehicle_is_selected)
+ATTR(vehicle_lez_allowed)
 ATTR(shmsize)
 ATTR(shmoffset)
 ATTR_UNUSED

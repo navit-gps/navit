@@ -1940,6 +1940,14 @@ static void gui_internal_cmd_show_vehicle_dimensions(struct gui_priv *this, stru
                gui_internal_cmd_change_vehicle_dimensions_emissionclass, v);
     gui_internal_widget_append(w, wdemissionclass);
 
+    attr.u.num = 0;
+    vehicleprofile_get_attr(v, attr_vehicle_lez_allowed, &attr, NULL);
+    sprintf(str, _("Enter Low Emission Zone: %s"), attr.u.num==1?_("Yes"):_("No"));
+    wdemissionclass = gui_internal_button_new_with_callback(this, _(str), image_new_xs(this, "gui_tools"),
+                gravity_left_center | orientation_horizontal | flags_fill,
+                gui_internal_cmd_change_vehicle_dimensions_lez, v);
+    gui_internal_widget_append(w, wdemissionclass);
+
     gui_internal_menu_render(this);
 }
 /**

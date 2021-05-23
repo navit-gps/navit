@@ -266,140 +266,123 @@ static int are_intersecting(
     int v1x1, int v1y1, int v1x2, int v1y2,
     int v2x1, int v2y1, int v2x2, int v2y2
 );
-int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res);
 
-/**
- * @brief finds the intersection point of 2 lines
- *
- * @param coord a1, a2, b1, b2 : coords of the start and
- * end of the first and the second line
- * @param coord res, will become the coords of the intersection if found
- * @return : TRUE if intersection found, otherwise FALSE
- */
-int line_intersection_lez(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res) {
-    int n, a, b;
-    int adx=a2->x-a1->x;
-    int ady=a2->y-a1->y;
-    int bdx=b2->x-b1->x;
-    int bdy=b2->y-b1->y;
-    n = bdy * adx - bdx * ady;
-    a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
-    b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
-    if (n < 0) {
-        n = -n;
-        a = -a;
-        b = -b;
-    }
-    if (a < 0 || b < 0)
-        return FALSE;
-    if (a > n || b > n)
-        return FALSE;
-    if (n == 0) {
-        dbg(lvl_error,"a=%d b=%d n=%d", a, b, n);
-        dbg(lvl_error,"a1=0x%x,0x%x ad %d,%d", a1->x, a1->y, adx, ady);
-        dbg(lvl_error,"b1=0x%x,0x%x bd %d,%d", b1->x, b1->y, bdx, bdy);
-        dbg(lvl_error,"No intersection found, lines assumed parallel ?");
-        return FALSE;
-    }
-    res->x = a1->x + a * adx / n;
-    res->y = a1->y + a * ady / n;
-    return TRUE;
-}
-
-
-//#define NO 0
-//#define YES 1
-//#define COLLINEAR 2
+#define NO 0
+#define YES 1
+#define COLLINEAR 2
 
 static int is_inside_lez(struct coord *coords, int number, struct coord point1, struct coord point2) {
     // Test the ray against all sides
-    int intersection = 0;
+    int intersection1 = 0;
+    int intersection2 = 0;
     int i;
-    struct coord min, max, dummy;
+    struct coord min;
 
-//    min.x=coords[0].x;
-//    min.y=coords[0].y;
-//    max.x=0;
-//    max.y=0;
-//
-//    //get min/max for x and y of the coords
-//    for (int i = 0; i < number; i++) {
-//        //min
-//        if(coords[i].x<min.x)
-//            min.x=coords[i].x;
-//    }
+    min.x=coords[0].x;
+    min.y=coords[0].y;
+
+    //get min for x and y of the coords
+    for (int i = 0; i < number; i++) {
+
+        if (coords[i].x < min.x)
+            min.x = coords[i].x;
+        if (coords[i].y < min.y)
+            min.y = coords[i].y;
+    }
 
     //count intersections. odd=inside, even=outside
     for (i = 0; i < (number-1); i++) {
 
-//        if((are_intersecting(coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y, min.x-1, point1.y, point1.x, point1.y)&1==1?1:0)) {
-//            intersections=1;
-//        }
+        //start inside ?
+        if(are_intersecting(min.x-1, point1.y, point1.x, point1.y, coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y)) {
+            intersection1++;
+        }
 
-        if(line_intersection_lez(&coords[i], &coords[i+1],  &point1, &point2, &dummy))
-            intersection=1;
-        //intersections+=are_intersecting(coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y, min.x-1, point2.y, point2.x, point2.y);
+        //end inside ?
+        if(are_intersecting(min.x-1, point2.y, point2.x, point2.y, coords[i].x, coords[i].y, coords[i+1].x, coords[i+1].y)) {
+            intersection2++;
+        }
     }
 
-    return intersection;
+    return ((intersection1 & 1) == 1 || (intersection2 & 1) == 1);
 }
 
-//static int are_intersecting(
-//    int v1x1, int v1y1, int v1x2, int v1y2,
-//    int v2x1, int v2y1, int v2x2, int v2y2
-//) {
-//    int d1, d2;
-//    int a1, a2, b1, b2, c1, c2;
-//
-//    // Convert vector 1 to a line (line 1) of infinite length.
-//    // We want the line in linear equation standard form: A*x + B*y + C = 0
-//    // See: http://en.wikipedia.org/wiki/Linear_equation
-//    a1 = v1y2 - v1y1;
-//    b1 = v1x1 - v1x2;
-//    c1 = (v1x2 * v1y1) - (v1x1 * v1y2);
-//
-//    // Every point (x,y), that solves the equation above, is on the line,
-//    // every point that does not solve it, is not. The equation will have a
-//    // positive result if it is on one side of the line and a negative one
-//    // if is on the other side of it. We insert (x1,y1) and (x2,y2) of vector
-//    // 2 into the equation above.
-//    d1 = (a1 * v2x1) + (b1 * v2y1) + c1;
-//    d2 = (a1 * v2x2) + (b1 * v2y2) + c1;
-//
-//    // If d1 and d2 both have the same sign, they are both on the same side
-//    // of our line 1 and in that case no intersection is possible. Careful,
-//    // 0 is a special case, that's why we don't test ">=" and "<=",
-//    // but "<" and ">".
-//    if (d1 > 0 && d2 > 0) return NO;
-//    if (d1 < 0 && d2 < 0) return NO;
-//
-//    // The fact that vector 2 intersected the infinite line 1 above doesn't
-//    // mean it also intersects the vector 1. Vector 1 is only a subset of that
-//    // infinite line 1, so it may have intersected that line before the vector
-//    // started or after it ended. To know for sure, we have to repeat the
-//    // the same test the other way round. We start by calculating the
-//    // infinite line 2 in linear equation standard form.
-//    a2 = v2y2 - v2y1;
-//    b2 = v2x1 - v2x2;
-//    c2 = (v2x2 * v2y1) - (v2x1 * v2y2);
-//
-//    // Calculate d1 and d2 again, this time using points of vector 1.
-//    d1 = (a2 * v1x1) + (b2 * v1y1) + c2;
-//    d2 = (a2 * v1x2) + (b2 * v1y2) + c2;
-//
-//    // Again, if both have the same sign (and neither one is 0),
-//    // no intersection is possible.
-//    if (d1 > 0 && d2 > 0) return NO;
-//    if (d1 < 0 && d2 < 0) return NO;
-//
-//    // If we get here, only two possibilities are left. Either the two
-//    // vectors intersect in exactly one point or they are collinear, which
-//    // means they intersect in any number of points from zero to infinite.
-//    if ((a1 * b2) - (a2 * b1) == 0.0f) return COLLINEAR;
-//
-//    // If they are not collinear, they must intersect in exactly one point.
-//    return YES;
-//}
+static int are_intersecting(
+    int v1x1, int v1y1, int v1x2, int v1y2,
+    int v2x1, int v2y1, int v2x2, int v2y2
+) {
+    int d1, d2;
+    int a1, a2, b1, b2, c1, c2;
+
+    dbg(lvl_debug, "Point 1: %i / %i, Point 2: %i / %i, Point 3: %i / %i, Point 4: %i / %i", v1x1, v1y1, v1x2, v1y2, v2x1, v2y1, v2x2, v2y2);
+
+    // Convert vector 1 to a line (line 1) of infinite length.
+    // We want the line in linear equation standard form: A*x + B*y + C = 0
+    // See: http://en.wikipedia.org/wiki/Linear_equation
+    a1 = v1y2 - v1y1;
+    b1 = v1x1 - v1x2;
+    c1 = (v1x2 * v1y1) - (v1x1 * v1y2);
+
+    // Every point (x,y), that solves the equation above, is on the line,
+    // every point that does not solve it, is not. The equation will have a
+    // positive result if it is on one side of the line and a negative one
+    // if is on the other side of it. We insert (x1,y1) and (x2,y2) of vector
+    // 2 into the equation above.
+    d1 = (a1 * v2x1) + (b1 * v2y1) + c1;
+    d2 = (a1 * v2x2) + (b1 * v2y2) + c1;
+
+    // If d1 and d2 both have the same sign, they are both on the same side
+    // of our line 1 and in that case no intersection is possible. Careful,
+    // 0 is a special case, that's why we don't test ">=" and "<=",
+    // but "<" and ">".
+    if (d1 > 0 && d2 > 0) {
+        dbg(lvl_debug, "NO INTERSECTION");
+        return NO;
+    }
+    if (d1 < 0 && d2 < 0) {
+        dbg(lvl_debug, "NO INTERSECTION");
+        return NO;
+    }
+
+    // The fact that vector 2 intersected the infinite line 1 above doesn't
+    // mean it also intersects the vector 1. Vector 1 is only a subset of that
+    // infinite line 1, so it may have intersected that line before the vector
+    // started or after it ended. To know for sure, we have to repeat the
+    // the same test the other way round. We start by calculating the
+    // infinite line 2 in linear equation standard form.
+    a2 = v2y2 - v2y1;
+    b2 = v2x1 - v2x2;
+    c2 = (v2x2 * v2y1) - (v2x1 * v2y2);
+
+    // Calculate d1 and d2 again, this time using points of vector 1.
+    d1 = (a2 * v1x1) + (b2 * v1y1) + c2;
+    d2 = (a2 * v1x2) + (b2 * v1y2) + c2;
+
+    // Again, if both have the same sign (and neither one is 0),
+    // no intersection is possible.
+    if (d1 > 0 && d2 > 0) {
+        dbg(lvl_debug, "NO INTERSECTION");
+        return NO;
+    }
+    if (d1 < 0 && d2 < 0) {
+        dbg(lvl_debug, "NO INTERSECTION");
+        return NO;
+    }
+
+    // If we get here, only two possibilities are left. Either the two
+    // vectors intersect in exactly one point or they are collinear, which
+    // means they intersect in any number of points from zero to infinite.
+    if ((a1 * b2) - (a2 * b1) == 0.0f) {
+        dbg(lvl_debug, "COLLINEAR");
+        return COLLINEAR;
+    }
+
+    dbg(lvl_debug, "Point 1: %i / %i, Point 2: %i / %i, Point 3: %i / %i, Point 4: %i / %i", v1x1, v1y1, v1x2, v1y2, v2x1, v2y1, v2x2, v2y2);
+    dbg(lvl_debug, "INTERSECTION");
+
+    // If they are not collinear, they must intersect in exactly one point.
+    return YES;
+}
 
 
 /**
@@ -677,14 +660,14 @@ void route_set_mapset(struct route *this, struct mapset *ms) {
  */
 
 void route_set_profile(struct route *this, struct vehicleprofile *prof) {
-    if (this->vehicleprofile != prof) {
+    //if (this->vehicleprofile != prof) { // When changing profile settings the route should be recalculated even for the same profile
         int dest_count = g_list_length(this->destinations);
         struct pcoord *pc;
         this->vehicleprofile = prof;
         pc = g_alloca(dest_count*sizeof(struct pcoord));
         route_get_destinations(this, pc, dest_count);
         route_set_destinations(this, pc, dest_count, 1);
-    }
+    //}
 }
 
 /**
@@ -1819,28 +1802,13 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
     //check lez
     if(this->lezs) {
         if(this->lezs->next) {
-//            int i;
-//            //c -> point, res -> point of intersection
-//            for (i = 0 ; i < ((this->lezs->next->ncoords) - 1); i++) {
-//                if(line_intersection(this->lezs->next->coord+i,this->lezs->next->coord+i+1, &start->c, &end->c, &res)) {
-//                    s->data.inside_lez=1;
-//                    dbg(lvl_error,"INTERSECTION WITH LEZ!");
-//                }
-//            }
-            //check if &l    lez
             int inside=is_inside_lez(&this->lezs->next->coord[0], this->lezs->next->ncoords, start->c, end->c);
-            //inside+=is_inside_lez(&this->lezs->next->coord[0], this->lezs->next->ncoords, start->c);
-            if(inside) {
 
-                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
-                dbg(lvl_error,"INSIDE LEZ");
+            if(inside) {
                 s->data.inside_lez=1;
             } else {
-                dbg(lvl_error,"IS INSIDE: %i", data->item->type);
-                dbg(lvl_error,"NOT INSIDE LEZ");
                 s->data.inside_lez=0;
             }
-
         }
     }
 
@@ -2407,36 +2375,62 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
                            int dir) {
     int ret;
     struct route_traffic_distortion dist,*distp=NULL;
+    struct attr attr;
+
+//    if(from) {
+//    if(item_attr_get(&from->start->data.item, attr_osm_nodeid, &attr)) {
+//        dbg(lvl_error, "OSM_ID: %li", attr.u.num64);
+//    }
+//    }
+
     if (!dir) {
         dbg(lvl_warning, "dir is zero, assuming positive");
         dir = 1;
     }
-    if (from && (over->start == over->end))
+    if (from && (over->start == over->end)) {
+        dbg(lvl_debug, "INT_MAX 1");
         return INT_MAX;
-    if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
+    }
+    if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags) {
+        dbg(lvl_debug, "INT_MAX 2, DIR (>=0 FWMask %i, FwdMask: %i, RwdMask: %i, Profile Flags: %i", dir, over->data.flags, profile->flags_forward_mask, profile->flags_reverse_mask);
         return INT_MAX;
-    if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
+    }
+    if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION)) {
+        dbg(lvl_debug, "INT_MAX 3");
         return INT_MAX;
-    if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION))
+    }
+    if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION)) {
+        dbg(lvl_debug, "INT_MAX 4");
         return INT_MAX;
-    if (from && from->seg == over)
+    }
+    if (from && from->seg == over) {
+        dbg(lvl_debug, "INT_MAX 5");
         return INT_MAX;
-    if (over->data.item.type == type_traffic_distortion)
+    }
+    if (over->data.item.type == type_traffic_distortion) {
+        dbg(lvl_debug, "INT_MAX 6");
         return INT_MAX;
+    }
     if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) &&
         route_get_traffic_distortion(over, dir, profile, &dist) && dir != 2 && dir != -2) {
         /* we have a traffic distortion */
         distp=&dist;
     }
     ret=route_time_seg(profile, &over->data, distp, dir);
-    if (ret == INT_MAX)
+    if (ret == INT_MAX) {
+        dbg(lvl_debug, "INT_MAX 7");
         return ret;
+    }
     if (!route_through_traffic_allowed(profile, over) && from && from->seg
         && route_through_traffic_allowed(profile, from->seg))
         ret+=profile->through_traffic_penalty;
-    if (over->data.inside_lez) { // Don't allow lez
-        dbg(lvl_error, "inside lez !!!");
-        //ret = INT_MAX; TODO: enable when detection is fixed
+    if (over->data.inside_lez) {
+        dbg(lvl_debug, "inside lez - start(%p): %i / %i, end(%llx): %i / %i", over->start, over->start->c.x, over->start->c.y, (long long int)over->end, over->end->c.x, over->end->c.y);
+        if(!profile->lez_allowed)
+            ret = INT_MAX;
+    } else {
+        dbg(lvl_debug, "not inside lez - start(%p): %i / %i, end(%llx): %i / %i", over->start, over->start->c.x, over->start->c.y, (long long int)over->end, over->end->c.x, over->end->c.y);
+
     }
     return ret;
 }
@@ -2846,52 +2840,23 @@ void route_graph_add_turn_restriction(struct route_graph *this, struct item *ite
 }
 
 /**
- * @brief Adds an item to the route graph
+ * @brief Adds an lez to the route graph
  *
- * This adds an item (e.g. a street) to the route graph, creating as many segments as needed for a
- * segmented item.
+ * This adds an lez to the route graph
  *
- * @param this The route graph to add to
- * @param item The item to add
- * @param profile		The vehicle profile currently in use
+ * @param this      The route graph to add to
+ * @param item      The lez to add
+ * @param profile   The vehicle profile currently in use
  */
-static void route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile) {
-#ifdef AVOID_FLOAT
-    int len=0;
-#else
-    double len=0;
-#endif
-    int segmented = 0;
+static void route_graph_add_lez(struct route_graph *this, struct item *item, struct vehicleprofile *profile) {
     int i = 0;
-    struct roadprofile *roadp;
-    int default_flags_value = AF_ALL;
-    int *default_flags;
     int co_cnt;
-    struct route_graph_point *s_pnt,*e_pnt; /* Start and end point */
-    struct coord c,l,le; /* Current and previous point */
-    struct attr attr;
-    struct route_graph_segment_data data;
     struct route_graph_lez *lez;
-    data.flags=0;
-    data.offset=1;
-    data.maxspeed=-1;
-    data.maxspeedcond=-1;
-    data.maxspeedcondfwd=-1;
-    data.maxspeedcondbwd=-1;
-    data.condition=0;
-    data.fwdcondition=0;
-    data.bwdcondition=0;
-    data.item=item;
-
-
-    roadp = vehicleprofile_get_roadprofile(profile, item->type);
 
     // if we have a lez polygon, create a data structure with all the coordinates to be checked later against
     // start and end point of a segment to be inside the lez polygon
 
     if(!strcmp(item_to_name(item->type), "poly_low_emission_zone")) {
-
-        this->request_update=1; //lez has been found on the map. Need to update the route as streets may have been added before lez was added.
 
         item_coord_rewind(item);
         co_cnt=item_coords_left(item);
@@ -2912,9 +2877,48 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
 
         for (i=0; i<co_cnt;i++) {
             item_coord_get(item, &lez->coord[i], 1);
-            dbg(lvl_error,"%i", i);
+            dbg(lvl_debug,"coord[%i}: %i / %i", i, lez->coord[i].x, lez->coord[i].y);
         }
     }
+}
+
+/**
+ * @brief Adds an item to the route graph
+ *
+ * This adds an item (e.g. a street) to the route graph, creating as many segments as needed for a
+ * segmented item.
+ *
+ * @param this The route graph to add to
+ * @param item The item to add
+ * @param profile		The vehicle profile currently in use
+ */
+static void route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile) {
+#ifdef AVOID_FLOAT
+    int len=0;
+#else
+    double len=0;
+#endif
+    int segmented = 0;
+    struct roadprofile *roadp;
+    int default_flags_value = AF_ALL;
+    int *default_flags;
+    struct route_graph_point *s_pnt,*e_pnt; /* Start and end point */
+    struct coord c,l; /* Current and previous point */
+    struct attr attr;
+    struct route_graph_segment_data data;
+    data.flags=0;
+    data.offset=1;
+    data.maxspeed=-1;
+    data.maxspeedcond=-1;
+    data.maxspeedcondfwd=-1;
+    data.maxspeedcondbwd=-1;
+    data.condition=0;
+    data.fwdcondition=0;
+    data.bwdcondition=0;
+    data.item=item;
+
+
+    roadp = vehicleprofile_get_roadprofile(profile, item->type);
 
     if (!roadp) {
         /* Don't include any roads that don't have a road profile in our vehicle profile */
@@ -3258,6 +3262,9 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
                 s1=s;
             }
         }
+        if (s->end->value == INT_MAX) {
+                    dbg(lvl_error,"no route found, pos blocked");
+                }
         val=route_value_seg(profile, NULL, s, -2);
         if (val != INT_MAX && s->start->value != INT_MAX) {
             val=val*pos->percent/100;
@@ -3271,6 +3278,9 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
                 val2=val2_new;
                 s2=s;
             }
+        }
+        if (s->start->value == INT_MAX) {
+            dbg(lvl_error,"no route found, pos blocked");
         }
     }
     if (val1 == INT_MAX && val2 == INT_MAX) {
@@ -3546,6 +3556,41 @@ static void route_graph_process_restrictions(struct route_graph *this) {
  * @param rg Points to the route graph
  * @param cancel True if the process was aborted before completing, false if it completed normally
  */
+void route_graph_build_lez_done(struct route_graph *rg, int cancel) {
+    dbg(lvl_debug,"cancel=%d",cancel);
+    if (rg->idle_ev)
+        event_remove_idle(rg->idle_ev);
+    if (rg->idle_cb)
+        callback_destroy(rg->idle_cb);
+    map_rect_destroy(rg->mr);
+    mapset_close(rg->h);
+    route_free_selection(rg->sel);
+    rg->idle_ev=NULL;
+    rg->idle_cb=NULL;
+    rg->mr=NULL;
+    rg->h=NULL;
+    rg->sel=NULL;
+    if (! cancel) {
+        route_graph_process_restrictions(rg);
+        if (rg->done_cb)
+            callback_call_0(rg->done_cb);
+    }
+    rg->busy=0;
+}
+
+/**
+ * @brief Releases all resources needed to build the route graph.
+ *
+ * If `cancel` is false, this function will start processing restrictions and ultimately call the route
+ * graph's `done_cb` callback.
+ *
+ * The traffic module will always call this method with `cancel` set to true, as it does not process
+ * restrictions and has no callback. Inside the routing module, `cancel` will be true if, and only if,
+ * navigation has been aborted.
+ *
+ * @param rg Points to the route graph
+ * @param cancel True if the process was aborted before completing, false if it completed normally
+ */
 void route_graph_build_done(struct route_graph *rg, int cancel) {
     dbg(lvl_debug,"cancel=%d",cancel);
     if (rg->idle_ev)
@@ -3568,11 +3613,40 @@ void route_graph_build_done(struct route_graph *rg, int cancel) {
     rg->busy=0;
 }
 
-static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile) {
+static void route_graph_build_lez(struct route_graph *rg, struct vehicleprofile *profile) {
     int count=1000;
     struct item *item;
 
-    rg->request_update=0;
+    if (!rg->lezs) {
+        // add LEZs first
+        while (count > 0) {
+            for (;;) {
+                item = map_rect_get_item(rg->mr);
+                if (item)
+                    break;
+                if (!route_graph_build_next_map(rg)) {
+                    route_graph_build_lez_done(rg, 0);
+                    return;
+                }
+            }
+
+            if (count && !strcmp(item_to_name(item->type), "poly_low_emission_zone")) {
+                route_graph_add_lez(rg, item, profile);
+            }
+            count--;
+        }
+        count=1000;
+    } else {
+        route_graph_build_lez_done(rg, 0);
+    }
+
+
+
+}
+
+static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile) {
+    int count=1000;
+    struct item *item;
 
     while (count > 0) {
         for (;;) {
@@ -3594,10 +3668,42 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
         count--;
     }
 
-    if(rg->request_update) {
-        rg->request_update=0;
-        route_graph_build_idle(rg, profile);
-    }
+}
+
+/**
+ * @brief Builds a new route graph from a mapset
+ *
+ * This function builds a new route graph from a map. Please note that this function does not
+ * add any routing information to the route graph - this has to be done via the route_graph_flood()
+ * function.
+ *
+ * @param ms The mapset to build the route graph from
+ * @param c An array of coordinates for the current position, waypoints (if any) and destination
+ * @param count Number of coordinates in `c`
+ * @param done_cb The callback which will be called when graph is complete
+ * @return The new route graph.
+ */
+static struct route_graph *route_graph_build_lezs(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
+                    int async,
+            struct vehicleprofile *profile) {
+    struct route_graph *ret=g_new0(struct route_graph, 1);
+
+    dbg(lvl_debug,"enter");
+
+    ret->sel=route_calc_selection(c, count, profile);
+    ret->h=mapset_open(ms);
+    ret->done_cb=done_cb;
+    ret->busy=1;
+    ret->heap = fh_makekeyheap();
+    if (route_graph_build_next_map(ret)) {
+        if (async) {
+            ret->idle_cb=callback_new_2(callback_cast(route_graph_build_lez), ret, profile);
+            ret->idle_ev=event_add_idle(50, ret->idle_cb);
+        }
+    } else
+        route_graph_build_lez_done(ret, 0);
+
+    return ret;
 }
 
 /**
@@ -3615,8 +3721,8 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
  */
 static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb,
                     int async,
-            struct vehicleprofile *profile) {
-    struct route_graph *ret=g_new0(struct route_graph, 1);
+            struct vehicleprofile *profile, struct route_graph * ret) {
+    //struct route_graph *ret=g_new0(struct route_graph, 1);
 
     dbg(lvl_debug,"enter");
 
@@ -3624,7 +3730,7 @@ static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c,
     ret->h=mapset_open(ms);
     ret->done_cb=done_cb;
     ret->busy=1;
-    ret->heap = fh_makekeyheap();
+    //ret->heap = fh_makekeyheap();
     if (route_graph_build_next_map(ret)) {
         if (async) {
             ret->idle_cb=callback_new_2(callback_cast(route_graph_build_idle), ret, profile);
@@ -3639,6 +3745,31 @@ static struct route_graph *route_graph_build(struct mapset *ms, struct coord *c,
 static void route_graph_update_done(struct route *this, struct callback *cb) {
     route_graph_init(this->graph, this->current_dst, this->vehicleprofile);
     route_graph_compute_shortest_path(this->graph, this->vehicleprofile, cb);
+}
+
+static void route_graph_update_lezs_done(struct route *this, struct callback *cb, int async) {
+    struct attr route_status;
+    struct coord *c=g_alloca(sizeof(struct coord)*(1+g_list_length(this->destinations)));
+    int i=0;
+    GList *tmp;
+
+    route_status.type=attr_route_status;
+    callback_destroy(this->route_graph_done_cb);
+    this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
+    route_status.u.num=route_status_building_graph;
+    route_set_attr(this, &route_status);
+    c[i++]=this->pos->c;
+    tmp=this->destinations;
+    while (tmp) {
+        struct route_info *dst=tmp->data;
+        c[i++]=dst->c;
+        tmp=g_list_next(tmp);
+    }
+    this->graph=route_graph_build(this->ms, c, i, this->route_graph_done_cb, async, this->vehicleprofile, this->graph);
+    if (! async) {
+        while (this->graph->busy)
+            route_graph_build_idle(this->graph, this->vehicleprofile);
+    }
 }
 
 /**
@@ -3661,7 +3792,7 @@ static void route_graph_update(struct route *this, struct callback *cb, int asyn
     route_graph_destroy(this->graph);
     this->graph=NULL;
     callback_destroy(this->route_graph_done_cb);
-    this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
+    this->route_graph_done_cb=callback_new_3(callback_cast(route_graph_update_lezs_done), this, cb, async);
     route_status.u.num=route_status_building_graph;
     route_set_attr(this, &route_status);
     c[i++]=this->pos->c;
@@ -3671,10 +3802,10 @@ static void route_graph_update(struct route *this, struct callback *cb, int asyn
         c[i++]=dst->c;
         tmp=g_list_next(tmp);
     }
-    this->graph=route_graph_build(this->ms, c, i, this->route_graph_done_cb, async, this->vehicleprofile);
+    this->graph=route_graph_build_lezs(this->ms, c, i, this->route_graph_done_cb, async, this->vehicleprofile);
     if (! async) {
         while (this->graph->busy)
-            route_graph_build_idle(this->graph, this->vehicleprofile);
+            route_graph_build_lez(this->graph, this->vehicleprofile);
     }
 }
 
@@ -4236,8 +4367,8 @@ static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
         case type_rg_segment:
             if (! seg)
                 return 0;
-            mr->str=g_strdup_printf("len %d time %d start %p end %p",seg->data.len, route_time_seg(route->vehicleprofile,
-                                    &seg->data, NULL, 0), seg->start, seg->end);
+            mr->str=g_strdup_printf("len %d time %d start %p: %i / %i, end %p: %i / %i",seg->data.len, route_time_seg(route->vehicleprofile,
+                                    &seg->data, NULL, 0), seg->start, seg->start->c.x, seg->start->c.y, seg->end, seg->end->c.x, seg->end->c.y);
             attr->u.str = mr->str;
             return 1;
             break;

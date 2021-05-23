@@ -102,6 +102,9 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_vehicle_emission_class:
         this_->emissionclass = attr->u.num;
         break;
+    case attr_vehicle_lez_allowed:
+        this_->lez_allowed = attr->u.num;
+        break;
     default:
         break;
     }
@@ -139,6 +142,7 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->axle_weight = -1;
     this_->through_traffic_penalty = 9000;
     this_->emissionclass = -1;
+    this_->lez_allowed = -1;
     vehicleprofile_free_hash(this_);
     this_->roadprofile_hash = g_hash_table_new(NULL, NULL);
 }
@@ -220,7 +224,6 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
         this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling,
         this_->static_speed, this_->static_distance, this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
-
 }
 
 char* getTagValue(char *xmlstring, char *tag) {
@@ -272,6 +275,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     char height[30] = "0";
     char hazmat[37] = "0";
     char emissionclass[34] = "0";
+    char lez_allowed[29] = "0";
     FILE *document, *newdocument;
     char line[250];
     char *value, *tmpfilename, *test;
@@ -305,6 +309,10 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         sprintf(emissionclass, "<emissionclass>%i</emissionclass>", profile->emissionclass);
     }
 
+    if (profile->lez_allowed < 2) {
+            sprintf(lez_allowed, "<lez_allowed>%i</lez_allowed>", profile->lez_allowed);
+    }
+
     filename = g_strjoin("/", navit_get_user_data_directory(TRUE), DIMENSIONSFILE, NULL);
     tmpfilename = g_strjoin("/", navit_get_user_data_directory(TRUE), TEMPFILE, NULL);
 
@@ -327,8 +335,8 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
         if (value) {
             if (!strcmp(value, profile->name)) {
                 profilefound = 1;
-                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length,
-                        width, height, hazmat, emissionclass);
+                fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length,
+                        width, height, hazmat, emissionclass, lez_allowed);
             } else {
                 fprintf(newdocument, "%s", line);
             }
@@ -337,7 +345,7 @@ int vehicleprofile_store_dimensions(struct vehicleprofile *profile) {
     }
 
     if (!profilefound) {
-        fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length, width, height, hazmat, emissionclass);
+        fprintf(newdocument, "<name>%s</name>%s%s%s%s%s%s%s%s\r\n", profile->name, weight, axle_weight, length, width, height, hazmat, emissionclass, lez_allowed);
     }
 
     fclose(newdocument);
@@ -443,6 +451,17 @@ int vehicleprofile_read_dimensions(struct vehicleprofile *profile) {
                         attr.u.num = atoi(value);
                         vehicleprofile_set_attr(profile, &attr);
                         free(value);
+                    }
+                    value = getTagValue(line, "lez_allowed");
+                    if (value) {
+                        attr.type = attr_vehicle_lez_allowed;
+                        attr.u.num = atoi(value);
+                        vehicleprofile_set_attr(profile, &attr);
+                        free(value);
+                    } else {
+                        attr.type = attr_vehicle_lez_allowed;
+                        attr.u.num = 1; // Default to 1
+                        vehicleprofile_set_attr(profile, &attr);
                     }
                 } else {
                     free(value);

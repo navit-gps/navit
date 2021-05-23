@@ -135,6 +135,13 @@ struct route_graph_segment_data {
 	int ep_inside_lez;                    /** 1 if the end point of the segment is inside a low emission zone*/
 };
 
+struct route_graph_lez {
+    struct coord *next;    /**< Pointer to the next coordinate */
+    unsigned ncoords;       /**< How many coordinates does this lez poly have? */
+    struct coord coord[0];      /**< Pointer to the coords coordinates of this lez */
+    /* WARNING: There will be coordinates following here, so do not create new fields after c! */
+};
+
 /**
  * @brief A segment in the route graph
  *
@@ -148,15 +155,11 @@ struct route_graph_segment {
 	                                         *  same point. Start of this list is in route_graph_point->end. */
 	struct route_graph_point *start;		/**< Pointer to the point this segment starts at. */
 	struct route_graph_point *end;			/**< Pointer to the point this segment ends at. */
+	struct route_graph_lez *lez;
 	struct route_segment_data data;			/**< The segment data */
 };
 
-struct route_graph_lez {
-    struct coord *next;    /**< Pointer to the next coordinate */
-    unsigned ncoords;       /**< How many coordinates does this lez poly have? */
-    struct coord coord[0];      /**< Pointer to the coords coordinates of this lez */
-    /* WARNING: There will be coordinates following here, so do not create new fields after c! */
-};
+
 
 struct route_graph_lezs {
     struct route_graph_lez *next;    /**< Pointer to the next lez */
@@ -182,6 +185,7 @@ struct route_graph {
 	struct vehicleprofile *vehicleprofile;      /**< The vehicle profile */
 	struct callback *idle_cb;                   /**< Idle callback to process the graph */
 	struct callback *done_cb;                   /**< Callback when graph is done */
+	struct callback *donelez_cb;                /**< Callback when graph is done */
 	struct event_idle *idle_ev;                 /**< The pointer to the idle event */
 	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
 	struct route_graph_segment *avoid_seg;
@@ -189,7 +193,6 @@ struct route_graph {
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
     struct route_graph_lezs *lezs; /* low emission zones */
-    int request_update;
 };
 
 
