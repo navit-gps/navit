@@ -282,7 +282,7 @@ static int is_inside_lez(struct coord *coords, int number, struct coord point1, 
     min.y=coords[0].y;
 
     //get min for x and y of the coords
-    for (int i = 0; i < number; i++) {
+    for (i = 0; i < number; i++) {
 
         if (coords[i].x < min.x)
             min.x = coords[i].x;
