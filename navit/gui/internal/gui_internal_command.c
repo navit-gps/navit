@@ -459,7 +459,7 @@ static int gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *f
                         if (coord_rect_overlap(&rbbox, &heightline->bbox)) {
                             for (i = 0 ; i < heightline->count - 1; i++) {
                                 if (heightline->c[i].x != heightline->c[i+1].x || heightline->c[i].y != heightline->c[i+1].y) {
-                                    if (line_intersection_lez(heightline->c+i, heightline->c+i+1, &last, &c, &res)) {
+                                    if (line_intersection(heightline->c+i, heightline->c+i+1, &last, &c, &res)) {
                                         if(first_height){
                                             prev_height = heightline->height;
                                             first_height=0;
