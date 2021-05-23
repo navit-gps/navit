@@ -307,6 +307,8 @@ static int is_inside_lez(struct coord *coords, int number, struct coord point1, 
     return ((intersection1 & 1) == 1 || (intersection2 & 1) == 1);
 }
 
+
+// Taken from https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
 static int are_intersecting(
     int v1x1, int v1y1, int v1x2, int v1y2,
     int v2x1, int v2y1, int v2x2, int v2y2
