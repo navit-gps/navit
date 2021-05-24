@@ -3619,7 +3619,7 @@ static void route_graph_build_lez(struct route_graph *rg, struct vehicleprofile 
     int count=1000;
     struct item *item;
 
-    if (!rg->lezs) {
+    if (!rg->lezs && !profile->lez_allowed) {
         // add LEZs first
         while (count > 0) {
             for (;;) {
