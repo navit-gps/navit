@@ -454,6 +454,15 @@ static int binfile_coord_get(void *priv_data, struct coord *c, int count) {
 }
 
 /**
+ * @brief Get nuber of coords left for current item
+ *
+ * @param prv_data
+ */
+static int binfile_coords_left(void *priv_data) {
+    return binfile_coord_left(priv_data);
+}
+
+/**
  * @brief
  * @param
  * @return
@@ -556,7 +565,7 @@ static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct at
                     size_rem-=subsize+1;
                     i++;
                 }
-                mr->attrs[i].type=type_none;
+                mr->attrs[i].type=attr_none;
                 mr->attrs[i].u.data=NULL;
                 attr->u.attrs=mr->attrs;
             } else {
@@ -829,6 +838,8 @@ static struct item_methods methods_binfile = {
     NULL,
     binfile_attr_set,
     binfile_coord_set,
+    NULL,
+    binfile_coords_left,
 };
 
 static void push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length) {
@@ -2315,7 +2326,7 @@ static void binmap_search_destroy(struct map_search_priv *ms) {
     if (ms->mr)
         map_rect_destroy_binfile(ms->mr);
     while(ms->boundaries) {
-        geom_poly_segment_destroy(ms->boundaries->data);
+        geom_poly_segment_destroy(ms->boundaries->data, NULL);
         ms->boundaries=g_list_delete_link(ms->boundaries,ms->boundaries);
     }
     g_free(ms);
@@ -2636,7 +2647,7 @@ static void binfile_check_version(struct map_priv *m) {
 
 static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *m;
-    struct attr *data=attr_search(attrs, NULL, attr_data);
+    struct attr *data=attr_search(attrs, attr_data);
     struct attr *check_version,*flags,*url,*download_enabled;
     struct file_wordexp *wexp;
     char **wexp_data;
@@ -2653,16 +2664,16 @@ static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **
     m->id=++map_id;
     m->filename=g_strdup(wexp_data[0]);
     file_wordexp_destroy(wexp);
-    check_version=attr_search(attrs, NULL, attr_check_version);
+    check_version=attr_search(attrs, attr_check_version);
     if (check_version)
         m->check_version=check_version->u.num;
-    flags=attr_search(attrs, NULL, attr_flags);
+    flags=attr_search(attrs, attr_flags);
     if (flags)
         m->flags=flags->u.num;
-    url=attr_search(attrs, NULL, attr_url);
+    url=attr_search(attrs, attr_url);
     if (url)
         m->url=g_strdup(url->u.str);
-    download_enabled = attr_search(attrs, NULL, attr_update);
+    download_enabled = attr_search(attrs, attr_update);
     if (download_enabled)
         m->download_enabled=download_enabled->u.num;
 

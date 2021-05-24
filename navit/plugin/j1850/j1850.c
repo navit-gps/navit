@@ -316,7 +316,7 @@ static void osd_j1850_init(struct j1850 *this, struct navit *nav) {
     graphics_gc_set_linewidth(this->white, this->width);
 
 
-    graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
+    graphics_gc_set_linewidth(this->osd_item.graphic_fg, this->width);
 
     event_add_timeout(500, 1, callback_new_1(callback_cast(osd_j1850_draw), this));
 
@@ -461,7 +461,7 @@ static struct osd_priv *osd_j1850_new(struct navit *nav, struct osd_methods *met
     this->osd_item.meth.draw = osd_draw_cast(osd_j1850_draw);
 
     osd_set_std_attr(attrs, &this->osd_item, 2);
-    attr = attr_search(attrs, NULL, attr_width);
+    attr = attr_search(attrs, attr_width);
     this->width=attr ? attr->u.num : 2;
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_j1850_init), attr_graphics_ready, this));
     return (struct osd_priv *) this;

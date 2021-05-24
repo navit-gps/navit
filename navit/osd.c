@@ -45,7 +45,7 @@ struct osd *
 osd_new(struct attr *parent, struct attr **attrs) {
     struct osd *o;
     struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
-    struct attr *type=attr_search(attrs, NULL, attr_type),cbl;
+    struct attr *type=attr_search(attrs, attr_type),cbl;
 
     if (! type)
         return NULL;
@@ -301,55 +301,55 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
         item->color_bg.a = 0x9fff;
     }
 
-    attr=attr_search(attrs, NULL, attr_osd_configuration);
+    attr=attr_search(attrs, attr_osd_configuration);
     if (attr)
         item->osd_configuration = attr->u.num;
 
-    attr=attr_search(attrs, NULL, attr_enable_expression);
+    attr=attr_search(attrs, attr_enable_expression);
     if (attr) {
         item->enable_cs = command_saved_new(attr->u.str, item->navit, NULL, 0);
     }
 
-    attr = attr_search(attrs, NULL, attr_w);
+    attr = attr_search(attrs, attr_w);
     if (attr) {
         item->rel_w = attr->u.num;
     }
 
-    attr = attr_search(attrs, NULL, attr_h);
+    attr = attr_search(attrs, attr_h);
     if (attr) {
         item->rel_h = attr->u.num;
     }
 
-    attr = attr_search(attrs, NULL, attr_x);
+    attr = attr_search(attrs, attr_x);
     if (attr) {
         item->rel_x = attr->u.num;
     }
 
-    attr = attr_search(attrs, NULL, attr_y);
+    attr = attr_search(attrs, attr_y);
     if (attr) {
         item->rel_y = attr->u.num;
     }
 
-    attr = attr_search(attrs, NULL, attr_font_size);
+    attr = attr_search(attrs, attr_font_size);
     if (attr)
         item->font_size = attr->u.num;
 
-    attr=attr_search(attrs, NULL, attr_background_color);
+    attr=attr_search(attrs, attr_background_color);
     if (attr)
         item->color_bg=*attr->u.color;
-    attr = attr_search(attrs, NULL, attr_command);
+    attr = attr_search(attrs, attr_command);
     if (attr)
         item->command = g_strdup(attr->u.str);
-    attr=attr_search(attrs, NULL, attr_text_color);
+    attr=attr_search(attrs, attr_text_color);
     if (attr)
         item->text_color=*attr->u.color;
-    attr=attr_search(attrs, NULL, attr_foreground_color);
+    attr=attr_search(attrs, attr_foreground_color);
     if (attr)
         item->color_fg=*attr->u.color;
-    attr=attr_search(attrs, NULL, attr_accesskey);
+    attr=attr_search(attrs, attr_accesskey);
     if (attr)
         item->accesskey = g_strdup(attr->u.str);
-    attr=attr_search(attrs, NULL, attr_font);
+    attr=attr_search(attrs, attr_font);
     if (attr)
         item->font_name = g_strdup(attr->u.str);
 

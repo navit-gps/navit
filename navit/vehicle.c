@@ -116,7 +116,7 @@ vehicle_new(struct attr *parent, struct attr **attrs) {
     struct pcoord center;
 
     dbg(lvl_debug, "enter");
-    source = attr_search(attrs, NULL, attr_source);
+    source = attr_search(attrs, attr_source);
     if (!source) {
         dbg(lvl_error, "incomplete vehicle definition: missing attribute 'source'");
         return NULL;
@@ -185,7 +185,7 @@ void vehicle_destroy(struct vehicle *this_) {
  * Creates an attribute iterator to be used with vehicles
  */
 struct attr_iter *
-vehicle_attr_iter_new(void) {
+vehicle_attr_iter_new(void * unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 
@@ -420,7 +420,7 @@ int vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle,
 
 static void vehicle_set_default_name(struct vehicle *this_) {
     struct attr default_name;
-    if (!attr_search(this_->attrs, NULL, attr_name)) {
+    if (!attr_search(this_->attrs, attr_name)) {
         default_name.type=attr_name;
         // Safe cast: attr_generic_set_attr does not modify its parameter.
         default_name.u.str=(char*)_("Unnamed vehicle");
@@ -600,7 +600,7 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
             && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
         logstr=g_strconcat_printf(logstr,"\t<speed>%.2f</speed>\n",(*attr.u.numd / 3.6));
     if (attr_types_contains_default(attr_types, attr_profilename, 0)
-            && (attrp=attr_search(this_->attrs, NULL, attr_profilename))) {
+            && (attrp=attr_search(this_->attrs, attr_profilename))) {
         logstr=g_strconcat_printf(logstr,"%s\t\t<navit:profilename>%s</navit:profilename>\n",extensions,attrp->u.str);
         extensions="";
     }

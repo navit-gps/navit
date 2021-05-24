@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -334,12 +334,21 @@ void tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *
 }
 
 void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max) {
+    /*TODO: make slice_trigger and slice_target configurable by commandline parameter.
+     * bonus: find out why there is a 'min' parameter here
+     */
+    int slice_trigger = 4;
+    int slice_target = 7;
     struct rect r;
     char buffer[1024];
     bbox((struct coord *)(ib+1), ib->clen/2, &r);
     buffer[0]='\0';
     tile(&r, info->suffix, buffer, max, overlap, NULL);
-    tile_write_item_to_tile(info, ib, reference, buffer);
+    if((ib->type >= type_area) && (ib->type != type_poly_water_tiled) && (tile_len(buffer) < slice_trigger)) {
+        itembin_nicer_slicer(info, ib, reference, buffer, slice_target);
+    } else {
+        tile_write_item_to_tile(info, ib, reference, buffer);
+    }
 }
 
 int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -255,7 +255,7 @@ static void add_plugin(char *path) {
 
     if (! plugins) {
         file_init();
-        plugins=plugins_new();
+        plugins=plugins_new(NULL, NULL);
     }
     pa_attr.u.str=path;
     pl_attr.u.plugins=plugins;
@@ -830,6 +830,8 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
             map_information_attrs[1].u.str=p->url;
         }
         index_init(zip_info, 1);
+        g_free(zipdir);
+        g_free(zipindex);
     }
     if (!g_strcmp0(suffix,ch_suffix)) {  /* Makes compiler happy due to bug 35903 in gcc */
         ch_assemble_map(suffix0,suffix,zip_info);
@@ -877,6 +879,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         zip_write_index(zip_info);
         zip_write_directory(zip_info);
         zip_close(zip_info);
+        zip_destroy(zip_info);
         if (!p->keep_tmpfiles) {
             remove_countryfiles();
             tempfile_unlink("index","");
@@ -1125,5 +1128,7 @@ int main(int argc, char **argv) {
     }
     phase+=2;
     start_phase(&p,"done");
+    if(p.timestamp != NULL)
+        g_free(p.timestamp);
     return 0;
 }

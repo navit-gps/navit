@@ -4,6 +4,10 @@ MacOS Development
 
 Here are some notes about running navit under Apple Mac OSX.
 
+================================================================================================================================
+WARNING: These instructions are currently unmaintained. Please feel free to submit a PR if you manage to build navit on Mac OSX.
+================================================================================================================================
+
 What you will need
 ==================
 

@@ -29,7 +29,7 @@ Navit follows the semantic versioning:
 <% title = "## [%s] - %s" % (version["tag"], version["date"]) if version["tag"] else "## %s" % opts["unreleased_version_label"] %>${title}
 % for section in version["sections"]:
 
-<% lbl = "## %s" % section["label"] %>${lbl}
+<% lbl = "### %s" % section["label"] %>${lbl}
 
 % for commit in section["commits"]:
 <%

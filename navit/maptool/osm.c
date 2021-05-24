@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -491,6 +491,7 @@ static char *attrmap= {
     "?	historic=memorial	poi_memorial\n"
     "?	historic=monument	poi_monument\n"
     "?	historic=ruins		poi_ruins\n"
+    "n	historic=archaeological_site	poi_archaeological_site\n"
 //	"?	historic=*		poi_ruins\n"
     "?	landuse=cemetery	poi_cemetery\n"
     "?	leisure=fishing		poi_fish\n"
@@ -543,7 +544,7 @@ static char *attrmap= {
     "?	shop=photo		poi_shop_photo\n"
     "?	shop=shoes		poi_shop_shoes\n"
     "?	shop=supermarket	poi_shopping\n"
-    "?      shop=mall               poi_mall\n"
+    "?	shop=mall               poi_mall\n"
     "?	sport=10pin		poi_bowling\n"
     "?	sport=baseball		poi_baseball\n"
     "?	sport=basketball	poi_basketball\n"
@@ -568,6 +569,7 @@ static char *attrmap= {
     "?	tourism=theme_park	poi_resort\n"
     "?	tourism=viewpoint	poi_viewpoint\n"
     "?	tourism=zoo		poi_zoo\n"
+    "n	natural=cave_entrance      poi_cave\n"
     "n	traffic_sign=city_limit	traffic_sign_city_limit\n"
     "n	highway=speed_camera	tec_common\n"
     "w	*=*			street_unkn\n"
@@ -579,6 +581,9 @@ static char *attrmap= {
     "w	aerialway=chair_lift	lift_chair\n"
     "w	aerialway=drag_lift	lift_drag\n"
     "w	aeroway=aerodrome	poly_airport\n"
+    /* airport wins over military landuse and specifier if given */
+    "w	aeroway=aerodrome,landuse=military	poly_airfield\n"
+    "w	aeroway=aerodrome,landuse=military,military=*	poly_airfield\n"
     "w	aeroway=apron		poly_apron\n"
     "w	aeroway=runway		aeroway_runway\n"
     "w	aeroway=taxiway		aeroway_taxiway\n"
@@ -673,6 +678,10 @@ static char *attrmap= {
     "w	highway=unsurfaced			track_gravelled\n"
     "w	highway=steps				steps\n"
     "w	historic=archaeological_site	poly_archaeological_site\n"
+    /* Albeit historic=archaeological_site should not be used on ways (only on areas) according to OSM wiki,
+     * it is at least done so for the Limes in germany. Luckily we can sort the Limes out as it has it's own
+     * tag scheme.*/
+    "w	historic=archaeological_site,site_type=fortification,fortification_type=limes	archaeological_site\n"
     "w	historic=battlefield	poly_battlefield\n"
     "w	historic=ruins		poly_ruins\n"
     "w	historic=town_gate	poly_building\n"
@@ -690,7 +699,15 @@ static char *attrmap= {
     "w	landuse=greenfield	poly_greenfield\n"
     "w	landuse=industrial	poly_industry\n"
     "w	landuse=landfill	poly_landfill\n"
+    /* landuse=military plus military tag */
     "w	landuse=military	poly_military\n"
+    "w	landuse=military,military=*	poly_military\n"
+    "w	landuse=military,military=airfield	poly_airfield\n"
+    "w	landuse=military,military=barracks	poly_barracks\n"
+    "w	landuse=military,military=danger_area	poly_danger_area\n"
+    "w	landuse=military,military=naval_base	poly_naval_base\n"
+    "w	landuse=military,military=range		poly_range\n"
+    "w	landuse=military,military=training_area		poly_military_zone\n"
     "w	landuse=meadow		poly_meadow\n"
     "w	landuse=plaza		poly_plaza\n"
     "w	landuse=quarry		poly_quarry\n"
@@ -718,15 +735,22 @@ static char *attrmap= {
     "w	leisure=park		poly_park\n"
     "w	leisure=pitch		poly_sports_pitch\n"
     "w	leisure=playground	poly_playground\n"
+    "w	leisure=sports_centre,building=1	poly_building\n"
     "w	leisure=sports_centre	poly_sport\n"
     "w	leisure=stadium		poly_sports_stadium\n"
-    "w	leisure=track		poly_sports_track\n"
+    "w	leisure=track,area=1		poly_sports_track\n"
+    "w	leisure=track,area=0		sports_track\n"
+    "w	leisure=track,type=multipolygon		poly_sports_track\n"
+    "w	leisure=track		sports_track\n"
     "w	leisure=water_park	poly_water_park\n"
+    "w	leisure=swimming_pool	poly_swimming_pool\n"
+    /* military tag without further info */
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
     "w	military=danger_area	poly_danger_area\n"
     "w	military=naval_base	poly_naval_base\n"
     "w	military=range		poly_range\n"
+    "w	military=training_area		poly_military_zone\n"
     "w	natural=beach		poly_beach\n"
     "w	natural=coastline	water_line\n"
     "w	natural=fell		poly_fell\n"
@@ -743,6 +767,7 @@ static char *attrmap= {
     "w	natural=water		poly_water\n"
     "w	natural=wetland		poly_mud\n"
     "w	natural=wood		poly_wood\n"
+    "w	natural=cliff		cliff\n"
     "w	piste:type=downhill,piste:difficulty=advanced		piste_downhill_advanced\n"
     "w	piste:type=downhill,piste:difficulty=easy		piste_downhill_easy\n"
     "w	piste:type=downhill,piste:difficulty=expert		piste_downhill_expert\n"
@@ -784,6 +809,8 @@ static char *attrmap= {
     "w	waterway=river		water_river\n"
     "w	waterway=riverbank	poly_water\n"
     "w	waterway=stream		water_stream\n"
+    "w	waterway=dam		poly_dam\n"
+    "w	waterway=weir		poly_dam\n"
     "w	barrier=ditch	ditch\n"
     "w	barrier=hedge	hedge\n"
     "w	barrier=fence	fence\n"
@@ -1159,6 +1186,10 @@ void osm_add_tag(char *k, char *v) {
     if (! g_strcmp0(k,"note"))
         level=5;
     if (! g_strcmp0(k,"name")) {
+        attr_strings_save(attr_string_label, v);
+        level=5;
+    } else if (! g_strcmp0(k,"description")) {
+        /* try description if no name is there */
         attr_strings_save(attr_string_label, v);
         level=5;
     }
@@ -1625,40 +1656,63 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
-static inline void osm_end_relation_multipolygon (struct maptool_osm * osm, enum item_type* type) {
+static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
     if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
-        if(attr_longest_match(attr_mapping_way, attr_mapping_way_count, type, 1)) {
-            tmp_item_bin->type = *type;
+        int count;
+        enum item_type types[10];
+        /* This is a multipolygon relation which is no boundary. Lets check what it is */
+        count = attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types) / (sizeof(enum item_type)));
+        if(count > 0) {
+            int a;
+            /* got some type(s). Duplicate the multipolygon if more than one type. That's the only
+             * way right now to deal with things tagged multiple things without loosing something.
+             */
+            if (count >= 10) {
+                fprintf(stderr,"relation id "OSMID_FMT"\n",osmid_attr_value);
+                dbg_assert(count < 10);
+                count = 10;
+            }
+            //fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            for(a=0; a < count ; a++) {
+                /* no need to clone the item in memory. We just write it out multiple times */
+                if(a==1) {
+                    /*add duplicate tag if 2nd type. The tag stays for all subsequent writes */
+                    item_bin_add_attr_int(tmp_item_bin, attr_duplicate, 1);
+                }
+                tmp_item_bin->type = types[a];
+                item_bin_write(tmp_item_bin, osm->multipolygons);
+            }
         } else {
-            *type=type_none;
+            /* Don't know what this is. Keep it, as it could have been preprocessed by e.g. turn restriction
+             * code before
+             */
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            item_bin_write(tmp_item_bin, osm->multipolygons);
         }
-        item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
-        item_bin_write(tmp_item_bin, osm->multipolygons);
     } else {
-        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, type, 1)) {
-            tmp_item_bin->type=*type;
+        enum item_type type;
+        if(attr_longest_match(attr_mapping_rel2poly_place, attr_mapping_rel2poly_place_count, &type, 1)) {
+            tmp_item_bin->type=type;
         } else {
-            *type=type_none;
             /* do not touch tmp_item_bin->type in this case, as it may be already set! For example
              * indicating the turn restrictions */
-            //tmp_item_bin->type=*type;
+            //tmp_item_bin->type=type_none;
         }
         if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-                && (boundary || *type!=type_none)) {
+                && (boundary || type!=type_none)) {
             item_bin_write(tmp_item_bin, osm->boundaries);
         }
     }
 }
 
 void osm_end_relation(struct maptool_osm *osm) {
-    enum item_type type;
-
     in_relation=0;
     /* sets tmp_item_bin type and other fields */
-    osm_end_relation_multipolygon (osm, &type);
+    osm_end_relation_multipolygon (osm);
 
     if (!g_strcmp0(relation_type, "restriction") && (tmp_item_bin->type == type_street_turn_restriction_no
             || tmp_item_bin->type == type_street_turn_restriction_only))
@@ -2592,6 +2646,11 @@ static void process_associated_streets_setup(FILE *in, struct relations *relatio
     relations_add_relation_default_entry(relations, relations_func);
 }
 
+/* to adapt g_free to GFunc */
+static void g_free_helper(void * data, void * user_data) {
+    g_free(data);
+}
+
 void process_associated_streets(FILE *in, struct files_relation_processing *files_relproc) {
     struct relations *relations=relations_new();
     struct process_relation_member_func_priv fp= {NULL,NULL};
@@ -2618,7 +2677,7 @@ void process_associated_streets(FILE *in, struct files_relation_processing *file
     }
 
     relations_destroy(relations);
-    g_list_foreach(fp.allocations, (GFunc)free, NULL);
+    g_list_foreach(fp.allocations, (GFunc)g_free_helper, NULL);
     g_list_free(fp.allocations);
 }
 
@@ -2674,7 +2733,7 @@ void process_house_number_interpolations(FILE *in, struct files_relation_process
     }
 
     relations_destroy(relations);
-    g_list_foreach(fp.allocations, (GFunc)free, NULL);
+    g_list_foreach(fp.allocations, (GFunc)g_free_helper, NULL);
     g_list_free(fp.allocations);
 }
 
@@ -2805,9 +2864,9 @@ static int process_multipolygons_find_loop(int in_count, struct item_bin ** part
         return 0;
 }
 
-static int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
-        int *** sequences,
-        int **direction) {
+int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
+                                     int *** sequences,
+                                     int **direction) {
     int done=0;
     int loop_count=0;
     int *used;
@@ -2826,6 +2885,7 @@ static int process_multipolygons_find_loops(osmid relid, int in_count, struct it
         sequence_count = process_multipolygons_find_loop(in_count, parts, sequence,  used);
         if(sequence_count < 0) {
             done = 1;
+            g_free(sequence);
         } else if(sequence_count == 0) {
             osm_warning("relation",relid,0,"multipolygon: skipping non loop sequence\n");
             /* skip empty sequence */
@@ -2845,8 +2905,8 @@ static int process_multipolygons_find_loops(osmid relid, int in_count, struct it
     return loop_count;
 }
 
-static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
-        struct coord *  buffer) {
+int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
+                                    struct coord *  buffer) {
     int points = 0;
     int a;
 
@@ -2890,7 +2950,7 @@ static int process_multipolygons_loop_dump(struct item_bin** bin, int scount, in
  * @param sequence sequence calculated by process_multipolygon_find_loop
  * @returns number of coords
  */
-static int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
+int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence) {
     return process_multipolygons_loop_dump(bin,scount,sequence,NULL,NULL);
 }
 
@@ -3082,6 +3142,19 @@ static void process_multipolygons_setup_one(struct item_bin * ib, struct relatio
             /*realloc outer to make space for next */
             outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
         }
+        /* in ancient times of OSM, multipolygons were created having no "role" for outer loop members.
+         * There are still such multipolygons. Rescue most of them, by treating the role less members
+         * as outer. These multiolygons are treated a mistake nowadays, but even now some editing tools
+         * seem to create such.*/
+        min_count=0;
+        while(search_relation_member(ib, "",&(outer[outer_count]),&min_count)) {
+            //osm_warning("relation",relid,0,"multipolygon: using empty role type as outer\n");
+            if(outer[outer_count].type != rel_member_way)
+                osm_warning("relation",relid,0,"multipolygon: wrong type for outer member\n");
+            outer_count ++;
+            /*realloc outer to make space for next */
+            outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count +1));
+        }
         min_count=0;
         while(search_relation_member(ib, "inner",&(inner[inner_count]),&min_count)) {
             if(inner[inner_count].type != rel_member_way)
@@ -3176,7 +3249,6 @@ static GList ** process_multipolygons_setup(FILE *in, int thread_count, struct r
     GList **multipolygons=NULL;
     /* allocate and reference async queue */
     GAsyncQueue * ib_queue=g_async_queue_new ();
-    g_async_queue_ref(ib_queue);
     /* allocate per thread storage */
     sthread=g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
 
@@ -3260,11 +3332,15 @@ void process_multipolygons(FILE *in, FILE *coords, FILE *ways, FILE *ways_index,
         if(ways)
             fseek(ways, 0,SEEK_SET);
         fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
+        /* we could use relations_process_multi here as well, but this would
+         * use way more memory. */
         relations_process(relations[i], coords, ways);
         fprintf(stderr,"process_multipolygons:finish (thread %d)\n", i);
         process_multipolygons_finish(multipolygons[i], out);
         relations_destroy(relations[i]);
     }
+    if(multipolygons != NULL)
+        g_free(multipolygons);
     g_free(relations);
     sig_alrm(0);
     sig_alrm_end();
@@ -3386,6 +3462,8 @@ static void process_turn_restrictions_finish(GList *tr, FILE *out) {
 
             }
         }
+        /* just for fun...*/
+        processed_relations ++;
         g_free(t->c[0]);
         g_free(t->c[1]);
         g_free(t->c[2]);
@@ -3395,60 +3473,64 @@ static void process_turn_restrictions_finish(GList *tr, FILE *out) {
     g_list_free(tr);
 }
 
-static GList *process_turn_restrictions_setup(FILE *in, struct relations *relations) {
+/**
+ * @brief prepare one multipolygon relation for relattion processing
+ *
+ * @param ib the relation
+ * @param relations the relation processing structure
+ * @param relations_func function to use for the members
+ * @param turn_restrictions write the resulting turn_restriction to the list
+ */
+static void process_turn_restrictions_setup_one(struct item_bin * ib, struct relations * relations,
+        struct relations_func * relations_func, GList ** turn_restrictions) {
     struct relation_member fromm,tom,viam,tmpm;
     long long relid;
-    struct item_bin *ib;
-    struct relations_func *relations_func;
     int min_count;
-    GList *turn_restrictions=NULL;
 
-    fseek(in, 0, SEEK_SET);
-    relations_func=relations_func_new(process_turn_restrictions_member, NULL);
-    while ((ib=read_item(in))) {
+    if(ib != NULL) {
         struct turn_restriction *turn_restriction;
         relid=item_bin_get_relationid(ib);
         min_count=0;
         if (!search_relation_member(ib, "from",&fromm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: from member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "from",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple from members\n");
-            continue;
+            return;
         }
         min_count=0;
         if (!search_relation_member(ib, "to",&tom,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: to member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "to",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple to members\n");
-            continue;
+            return;
         }
         min_count=0;
         if (!search_relation_member(ib, "via",&viam,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: via member missing\n");
-            continue;
+            return;
         }
         if (search_relation_member(ib, "via",&tmpm,&min_count)) {
             osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
-            continue;
+            return;
         }
         if (fromm.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for from member ");
             osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
-            continue;
+            return;
         }
         if (tom.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for to member ");
             osm_warning(osm_types[tom.type],tom.id,1,"\n");
-            continue;
+            return;
         }
         if (viam.type != rel_member_node && viam.type != rel_member_way) {
             osm_warning("relation",relid,0,"turn restriction: wrong type for via member ");
             osm_warning(osm_types[viam.type],viam.id,1,"\n");
-            continue;
+            return;
         }
         turn_restriction=g_new0(struct turn_restriction, 1);
         turn_restriction->relid=relid;
@@ -3458,19 +3540,164 @@ static GList *process_turn_restrictions_setup(FILE *in, struct relations *relati
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 0, fromm.type, fromm.id);
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 1, viam.type, viam.id);
         relations_add_relation_member_entry(relations, relations_func, turn_restriction, (gpointer) 2, tom.type, tom.id);
-        turn_restrictions=g_list_append(turn_restrictions, turn_restriction);
+        *turn_restrictions=g_list_append(*turn_restrictions, turn_restriction);
     }
+}
+
+/**
+ * @brief worker thread private storage
+ */
+struct process_turn_restrictions_setup_thread {
+    int number;
+    GAsyncQueue * queue;
+    struct relations * relations;
+    struct relations_func * relations_func;
+    GList* turn_restrictions;
+    GThread * thread;
+};
+
+/**
+ * @brief turn restrictions setup worker thread.
+ *
+ * This thread processes any item passed to it via async queue into it's local relations
+ * function.
+ * @param data this threads local storage
+ */
+static gpointer process_turn_restrictions_setup_worker (gpointer data) {
+    struct item_bin * ib;
+    //long long relid;
+    struct process_turn_restrictions_setup_thread * me = (struct process_turn_restrictions_setup_thread*) data;
+    fprintf(stderr,"worker %d up\n", me->number);
+    while((ib=g_async_queue_pop (me->queue)) != &killer) {
+        processed_relations ++;
+        //relid=item_bin_get_relationid(ib);
+        //fprintf(stderr,"worker %d processing %lld\n", me->number, relid);
+        process_turn_restrictions_setup_one(ib, me->relations, me->relations_func, &(me->turn_restrictions));
+        /* done with that. Free the item_bin */
+        g_free(ib);
+    }
+    fprintf(stderr,"worker %d exit\n", me->number);
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+/**
+ * @brief prepare turn restriction way matching
+ *
+ * This function reads all turn restriction relations and prepares relations structures
+ * for later way matching. Since this scales quite ugly, (O^3) i think, we use multiple threads
+ * creating their own hash each. This way none of the hashes get's that big, and we can utilize
+ * more cpu power.
+ *
+ * @param in file containing the relations
+ * @param thread_count number of threads to use
+ * @param relations array of preallocated relations structures. One per thread.
+ *
+ * @returns array of GLists. One per thread containing the resulting structures.
+ */
+static GList ** process_turn_restrictions_setup(FILE *in, int thread_count, struct relations **relations) {
+    struct process_turn_restrictions_setup_thread *sthread;
+
+    struct item_bin *ib;
+    struct relations_func *relations_func;
+    int i;
+    GList **turn_restrictions=NULL;
+    /* allocate and reference async queue */
+    GAsyncQueue * ib_queue=g_async_queue_new ();
+    /* allocate per thread storage */
+    sthread=g_malloc0(sizeof(struct process_turn_restrictions_setup_thread) * thread_count);
+
+    fseek(in, 0, SEEK_SET);
+    relations_func=relations_func_new(process_turn_restrictions_member, NULL);
+
+    /* start the threads */
+    for(i=0; i < thread_count; i ++) {
+        sthread[i].number = i;
+        sthread[i].queue = ib_queue;
+        sthread[i].relations_func = relations_func;
+        sthread[i].relations = relations[i];
+        sthread[i].turn_restrictions = NULL;
+        sthread[i].thread = g_thread_new ("process_turn_restrictions_setup_worker", process_turn_restrictions_setup_worker,
+                                          &(sthread[i]));
+    }
+
+    while ((ib=read_item(in))) {
+        /* get a duplicate of the returned item, as the one returned shares buffer */
+        struct item_bin * dup = item_bin_dup(ib);
+        //long long relid;
+        //relid=item_bin_get_relationid(dup);
+        //fprintf(stderr,"Pushing %lld\n", relid);
+        /* the dup's will be freed by the thread processing them*/
+        g_async_queue_push(ib_queue,dup);
+        /* limit queue size. This is ugly, but since GAsyncQueue doesn't support
+         * push to block when the queue reached a decent size, I help myself
+         * with this ugly hack */
+        while(g_async_queue_length(ib_queue) > 1000)
+            usleep(200);
+    }
+
+    /* stop iand join all remaining threads */
+    for(i = 0; i < thread_count; i ++)
+        g_async_queue_push(ib_queue,&killer);
+    for(i=0; i < thread_count; i ++)
+        g_thread_join(sthread[i].thread);
+
+    /* rescue the resulting glist */
+    turn_restrictions = g_malloc0(sizeof(GList *) * thread_count);
+    for(i =0; i < thread_count; i ++)
+        turn_restrictions[i]=sthread[i].turn_restrictions;
+
+    /* free the thread storage */
+    g_free(sthread);
+
+    /* release the queue */
+    g_async_queue_unref(ib_queue);
+
+    /* return the list of turn_restrictions */
     return turn_restrictions;
 }
 
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {
-    struct relations *relations=relations_new();
-    GList *turn_restrictions;
+    /* thread count is from maptool.c as commandline parameter */
+    int i;
+    struct relations **relations;
+    GList **turn_restrictions = NULL;
+    sig_alrm(0);
+
+    relations = g_malloc0(sizeof(struct relations *) * thread_count);
+    for(i=0; i < thread_count; i ++)
+        relations[i] = relations_new();
     fseek(in, 0, SEEK_SET);
-    turn_restrictions=process_turn_restrictions_setup(in, relations);
-    relations_process(relations, coords, ways);
-    process_turn_restrictions_finish(turn_restrictions, out);
-    relations_destroy(relations);
+    fprintf(stderr,"process_turn_restrictions:setup (threads %d)\n", thread_count);
+    turn_restrictions=process_turn_restrictions_setup(in,thread_count,relations);
+    /* Here we get an array of resulting relations structures and resultin
+     * GLists.
+     * Of course we need to iterate the ways multiple times, but that's fast
+     * compared to hashing the relations structures
+     * This even saves a lot of main memory, as we can process every result from
+     * every thread at once completely. Since we know it's self containing
+     */
+    sig_alrm(0);
+    processed_relations=0;
+    processed_ways=0;
+    sig_alrm(0);
+    if(coords)
+        fseek(coords, 0,SEEK_SET);
+    if(ways)
+        fseek(ways, 0,SEEK_SET);
+    fprintf(stderr,"process_multipolygons:process (thread %d)\n", i);
+    relations_process_multi(relations, thread_count, coords, ways);
+    for( i=0; i < thread_count; i ++) {
+
+        fprintf(stderr,"process_turn_restrictions:finish (thread %d)\n", i);
+        process_turn_restrictions_finish(turn_restrictions[i], out);
+        relations_destroy(relations[i]);
+    }
+    if(turn_restrictions != NULL)
+        g_free(turn_restrictions);
+    g_free(relations);
+    sig_alrm(0);
+    sig_alrm_end();
 }
 #if 0
 void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out) {

@@ -61,7 +61,8 @@ struct graphics_priv;
 #if USE_QML
 class GraphicsPriv : public QObject {
     Q_OBJECT
-public: GraphicsPriv(struct graphics_priv* gp);
+public:
+    GraphicsPriv(struct graphics_priv* gp);
     ~GraphicsPriv();
     void emit_update();
 

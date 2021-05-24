@@ -498,13 +498,12 @@ char *attr_to_text(struct attr *attr, struct map *map, int pretty) {
  * attribute type and returns the first match.
  *
  * @param attrs Points to the array of attribute pointers to be searched
- * @param last Not used
  * @param attr_type The attribute type to search for. Generic types (such as
  * attr_any or attr_any_xml) are NOT supported.
  * @return Pointer to the first matching attribute, or NULL if no match was found.
  */
 struct attr *
-attr_search(struct attr **attrs, struct attr *last, enum attr_type attr) {
+attr_search(struct attr **attrs, enum attr_type attr) {
     dbg(lvl_info, "enter attrs=%p", attrs);
     while (*attrs) {
         dbg(lvl_debug,"*attrs=%p", *attrs);
@@ -681,6 +680,10 @@ attr_generic_prepend_attr(struct attr **attrs, struct attr *attr) {
  *
  * If `attrs` does not contain `attr`, this function is a no-op.
  *
+ * Attributes are matched based on their `type` and `u.data` members, thus `attr` can be a shallow copy
+ * of the attribute, and can match multiple attributes in the list. The `attr` argument itself is not
+ * changed.
+ *
  * @param attrs The attribute list
  * @param attr The attribute to remove from the list
  *
@@ -834,6 +837,10 @@ void attr_free_content(struct attr *attr) {
 void attr_free(struct attr *attr) {
     attr_free_content_do(attr);
     g_free(attr);
+}
+
+void attr_free_g(struct attr *attr, void * unused) {
+    attr_free(attr);
 }
 
 void attr_dup_content(struct attr *src, struct attr *dst) {

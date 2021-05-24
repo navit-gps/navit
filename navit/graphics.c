@@ -53,6 +53,10 @@
 #include "event.h"
 #include "navit.h"
 
+/**
+ * @brief maximum amount of coordinates to allocate on stack using g_alloca
+ */
+#define ALLOCA_COORD_LIMIT 16384
 
 //##############################################################################################################
 //# Description:
@@ -333,7 +337,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
             struct callback_list *cbl);
 
-    if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+    if (! (type_attr=attr_search(attrs, attr_type))) {
         dbg(lvl_error,"Graphics plugin type is not set.");
         return NULL;
     }
@@ -360,8 +364,8 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs) {
     this_->font_size=20;
     this_->image_cache_hash = g_hash_table_new_full(g_str_hash, g_str_equal,g_free,g_free);
     /*get dpi */
-    virtual_dpi_attr=attr_search(attrs, NULL, attr_virtual_dpi);
-    real_dpi_attr=attr_search(attrs, NULL, attr_real_dpi);
+    virtual_dpi_attr=attr_search(attrs, attr_virtual_dpi);
+    real_dpi_attr=attr_search(attrs, attr_real_dpi);
     if(virtual_dpi_attr != NULL) {
         navit_float virtual_dpi, real_dpi=0;
         virtual_dpi=virtual_dpi_attr->u.num;
@@ -705,6 +709,29 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c) {
     gc->meth.gc_set_background(gc->priv, c);
 }
 
+/**
+ * Set textured background to current graphics context.
+ * @param gc Graphics context handle
+ * @param img Allocated image
+ * @returns void
+ * @author metalstrolch (04/2020)
+*/
+void graphics_gc_set_texture(struct graphics_gc *gc, struct graphics_image *img) {
+    if(graphics_gc_has_texture(gc))
+        gc->meth.gc_set_texture(gc->priv, img->priv);
+}
+
+/**
+ * Check if graphic context supports textured backgrounds
+ * @param gc Graphics context handle
+ * @returns true if supported otherwise false.
+ * @author metalstrolch (04/2020)
+*/
+gboolean graphics_gc_has_texture(struct graphics_gc *gc) {
+    if(gc->meth.gc_set_texture != NULL)
+        return TRUE;
+    return FALSE;
+}
 
 /**
  * FIXME
@@ -900,7 +927,6 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
     struct file_wordexp *we;
     int i;
     char **paths;
-
     if ( g_hash_table_lookup_extended( gra->image_cache_hash, hash_key, NULL, (gpointer)&this_) ) {
         g_free(hash_key);
         dbg(lvl_debug,"Found cached image%sfor '%s'",this_?" ":" miss ",path);
@@ -1035,11 +1061,18 @@ void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode) {
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count) {
-    struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
+    struct point * p_scaled;
     int a;
+    if(count < ALLOCA_COORD_LIMIT)
+        p_scaled = g_alloca(sizeof (struct point)* count);
+    else
+        p_scaled = g_malloc(sizeof (struct point)* count);
+
     for(a=0; a < count; a ++)
         p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
     this_->meth.draw_lines(this_->priv, gc->priv, p_scaled, count);
+    if(count >= ALLOCA_COORD_LIMIT)
+        g_free(p_scaled);
 }
 
 /**
@@ -1052,8 +1085,13 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
  * @author Martin Schaller (04/2008)
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r) {
-    struct point *pnt=g_alloca(sizeof(struct point)*(r*4+64));
+    struct point *pnt;
     int i=0;
+    if((r*4+64) < ALLOCA_COORD_LIMIT)
+        pnt=g_alloca(sizeof(struct point)*(r*4+64));
+    else
+        pnt=g_malloc(sizeof(struct point)*(r*4+64));
+
     if(this_->meth.draw_circle) {
         struct point p_scaled;
         p_scaled = graphics_dpi_scale_point(this_,p);
@@ -1065,6 +1103,8 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
         i++;
         graphics_draw_lines(this_, gc, pnt, i);
     }
+    if((r*4+64) >= ALLOCA_COORD_LIMIT)
+        g_free(pnt);
 }
 
 /**
@@ -1091,11 +1131,18 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
     if (! gra->meth.draw_polygon) {
         return;
     } else {
-        struct point * pin_scaled =  g_alloca(sizeof (struct point)*count_in);
+        struct point * pin_scaled;
         int a;
+        if(count_in < ALLOCA_COORD_LIMIT)
+            pin_scaled =  g_alloca(sizeof (struct point)*count_in);
+        else
+            pin_scaled =  g_malloc(sizeof (struct point)*count_in);
+
         for(a=0; a < count_in; a ++)
             pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
         gra->meth.draw_polygon(gra->priv, gc->priv, pin_scaled, count_in);
+        if(count_in >= ALLOCA_COORD_LIMIT)
+            g_free(pin_scaled);
     }
 }
 
@@ -1120,10 +1167,20 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         graphics_draw_polygon(gra, gc, pin, count_in);
         return;
     } else {
-        struct point * pin_scaled = g_alloca(sizeof (struct point)*count_in);
-        struct point ** holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        struct point * pin_scaled;
+        struct point ** holes_scaled;
         int a;
         int b;
+        if(count_in < ALLOCA_COORD_LIMIT) {
+            pin_scaled = g_alloca(sizeof (struct point)*count_in);
+        } else {
+            pin_scaled = g_malloc(sizeof (struct point)*count_in);
+        }
+        if(hole_count < ALLOCA_COORD_LIMIT) {
+            holes_scaled = g_alloca(sizeof (struct point *)*hole_count);
+        } else {
+            holes_scaled = g_malloc(sizeof (struct point *)*hole_count);
+        }
         /* scale the outline */
         for(a=0; a < count_in; a ++)
             pin_scaled[a] = graphics_dpi_scale_point(gra,&(pin[a]));
@@ -1137,17 +1194,25 @@ static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphi
         /* free the hole arrays */
         for(b=0; b < hole_count; b ++)
             g_free(holes_scaled[b]);
+        if(count_in >= ALLOCA_COORD_LIMIT)
+            g_free(pin_scaled);
+        if(hole_count >= ALLOCA_COORD_LIMIT)
+            g_free(holes_scaled);
     }
 }
 
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h,
                                      int r, int fill) {
-    struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
+    struct point *p;
     struct point pi0= {plu->x+r,plu->y+r};
     struct point pi1= {plu->x+w-r,plu->y+r};
     struct point pi2= {plu->x+w-r,plu->y+h-r};
     struct point pi3= {plu->x+r,plu->y+h-r};
     int i=0;
+    if((r*4+32) < ALLOCA_COORD_LIMIT)
+        p=g_alloca(sizeof(struct point)*(r*4+32));
+    else
+        p=g_malloc(sizeof(struct point)*(r*4+32));
 
     circle_to_points(&pi2, r*2, 0, -1, 258, p, &i, 1);
     circle_to_points(&pi1, r*2, 0, 255, 258, p, &i, 1);
@@ -1159,6 +1224,8 @@ void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc 
         graphics_draw_polygon(this_,gc,p,i);
     else
         graphics_draw_lines(this_,gc,p,i);
+    if((r*4+32) >= ALLOCA_COORD_LIMIT)
+        g_free(p);
 }
 
 
@@ -1228,11 +1295,18 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
 static void graphics_draw_image_warp(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count,
                                      struct graphics_image *img) {
     if(this_->meth.draw_image_warp) {
-        struct point * p_scaled =  g_alloca(sizeof (struct point)*count);
+        struct point * p_scaled;
         int a;
+        if(count < ALLOCA_COORD_LIMIT)
+            p_scaled =  g_alloca(sizeof (struct point)*count);
+        else
+            p_scaled =  g_malloc(sizeof (struct point)*count);
+
         for(a=0; a < count; a ++)
             p_scaled[a] = graphics_dpi_scale_point(this_,&(p[a]));
         this_->meth.draw_image_warp(this_->priv, gc->priv, p_scaled, count, img->priv);
+        if(count >= ALLOCA_COORD_LIMIT)
+            g_free(p_scaled);
     } else {
         dbg(lvl_error,"draw_image_warp not supported by graphics driver");
     }
@@ -1366,6 +1440,7 @@ struct displayitem {
     char *label;
     struct displayitem_poly_holes * holes;
     int z_order;
+    int flags;
     int count;
     struct coord c[0];
 };
@@ -1433,6 +1508,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     int hole_count=0;
     int hole_total_coords=0;
     int holes_length;
+    int flags=0;
 
     /* calculate number of bytes required */
     /* own length */
@@ -1445,6 +1521,11 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
             else
                 len++;
         }
+    }
+    /* check for and remember flags (for underground drawing) */
+    item_attr_rewind(item);
+    if(item_attr_get(item, attr_flags, &attr)) {
+        flags = attr.u.num;
     }
     /* add length for holes */
     item_attr_rewind(item);
@@ -1464,6 +1545,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
     p+=sizeof(*di)+count*sizeof(*c);
     di->item=*item;
     di->z_order=0;
+    di->flags=flags;
     di->holes=NULL;
     if(hole_count > 0) {
         di->holes = display_add_holes(item, hole_count, &p);
@@ -1539,34 +1621,101 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
     }
 }
 
-static void display_draw_arrow(struct point *p, int dx, int dy, int l, struct graphics_gc *gc, struct graphics *gra) {
-    struct point pnt[3];
+static void display_draw_arrow(struct point *p, navit_float dx, navit_float dy, navit_float width,
+                               struct display_context *dc,
+                               struct graphics *gra, int filled) {
+    struct point pnt[4];
+    /* half the width in every direction */
+    width /= 2;
     pnt[0]=pnt[1]=pnt[2]=*p;
-    pnt[0].x+=-dx*l/65536+dy*l/65536;
-    pnt[0].y+=-dy*l/65536-dx*l/65536;
-    pnt[2].x+=-dx*l/65536-dy*l/65536;
-    pnt[2].y+=-dy*l/65536+dx*l/65536;
-    graphics_draw_lines(gra, gc, pnt, 3);
+    pnt[0].x+=-dx*width+dy*width;
+    pnt[0].y+=-dy*width-dx*width;
+    pnt[2].x+=-dx*width-dy*width;
+    pnt[2].y+=-dy*width+dx*width;
+    if(filled) {
+        /* close the loop */
+        pnt[3]=pnt[0];
+        graphics_draw_polygon(gra, dc->gc, pnt, 4);
+    } else {
+        graphics_draw_lines(gra, dc->gc, pnt, 3);
+    }
+
 }
 
-static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count) {
-    int i,dx,dy,l;
+/**
+ * @brief draw arrows along a multi polygon line
+ *
+ * This function draws arrows along a multi polygon line, and scales the
+ * arrows according to current view settings by interpolating sizes at
+ * given arrow position,
+ *
+ * @param gra current graphics instance handle
+ * @param dc current drawing context
+ * @param pnt array of points for this polyline
+ * @param count number of points in pnt
+ * @param width arrray of integers giving the expexted line width at the corresponding point
+ * @param filled. True to draw filled arrows, false to draw only line arrows.
+ */
+static void display_draw_arrows(struct graphics *gra, struct display_context *dc, struct point *pnt, int count,
+                                int *width, int filled) {
+    navit_float dx,dy,dw,l;
+    int i;
     struct point p;
+    int w;
     for (i = 0 ; i < count-1 ; i++) {
+        /* get the X and Y size */
         dx=pnt[i+1].x-pnt[i].x;
         dy=pnt[i+1].y-pnt[i].y;
-        l=sqrt(dx*dx+dy*dy);
+        dw=width[i+1] - width[i];
+        /* calculate the length of the way segment */
+        l=navit_sqrt(dx*dx+dy*dy);
         if (l) {
-            dx=dx*65536/l;
-            dy=dy*65536/l;
-            p=pnt[i];
-            p.x+=dx*15/65536;
-            p.y+=dy*15/65536;
-            display_draw_arrow(&p, dx, dy, 10, gc, gra);
-            p=pnt[i+1];
-            p.x-=dx*15/65536;
-            p.y-=dy*15/65536;
-            display_draw_arrow(&p, dx, dy, 10, gc, gra);
+            /* length is not zero */
+            /* calculate the vector per length */
+            dx=dx/l;
+            dy=dy/l;
+            dw=dw/l;
+            /* different behaviour for oneway arrows than for routing graph ones */
+            if(filled) {
+                if(l > (2*width[i])) {
+                    /* print arrow at middle point */
+                    p=pnt[i];
+                    p.x+=dx*(l/2);
+                    p.y+=dy*(l/2);
+                    w=width[i];
+                    w+=dw*(l/2);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
+                }
+                /* if line is quite long, print arrows at 1/4 and 3/4 length */
+                if(l > (20*width[i])) {
+                    /* at 1/4 the line length */
+                    p=pnt[i];
+                    p.x+=dx*(l/4);
+                    p.y+=dy*(l/4);
+                    w=width[i];
+                    w+=dw*(l/4);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
+                    /* at 3/4 the arrow length */
+                    p=pnt[i+1];
+                    p.x-=dx*(l/4);
+                    p.y-=dy*(l/4);
+                    w=width[i+1];
+                    w-=dw*(l/4);
+                    display_draw_arrow(&p, dx, dy, w, dc, gra, filled);
+                }
+            } else {
+                /*FIXME: what if line length was smaller than 15?*/
+                /* print arrow 15 units from start */
+                p=pnt[i];
+                p.x+=dx*15;
+                p.y+=dy*15;
+                display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
+                /* print arrow 15 units before end */
+                p=pnt[i+1];
+                p.x-=dx*15;
+                p.y-=dy*15;
+                display_draw_arrow(&p, dx, dy, 20, dc, gra, filled);
+            }
         }
     }
 }
@@ -1919,7 +2068,10 @@ static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graph
         return;
     ctx.shape.l=0;
     ctx.shape.wi=0;
-    ctx.res=g_alloca(sizeof(struct point)*maxpoints);
+    if(maxpoints < ALLOCA_COORD_LIMIT)
+        ctx.res=g_alloca(sizeof(struct point)*maxpoints);
+    else
+        ctx.res=g_malloc(sizeof(struct point)*maxpoints);
     i=0;
     draw_init_ctx(&ctx, maxpoints);
     draw_shape(&ctx, pnt, *width++);
@@ -1939,6 +2091,8 @@ static void graphics_draw_polyline_as_polygon(struct graphics *gra, struct graph
     draw_end(&ctx,&pnt[count-1]);
     ctx.res[ctx.npos]=ctx.res[ctx.ppos-1];
     graphics_draw_polygon(gra, gc, ctx.res+ctx.npos, ctx.ppos-ctx.npos);
+    if(maxpoints >= ALLOCA_COORD_LIMIT)
+        g_free(ctx.res);
 }
 
 
@@ -2038,13 +2192,21 @@ static int clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *cl
  */
 void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count,
                                     int *width, int poly) {
-    struct point *points_to_draw=g_alloca(sizeof(struct point)*(count+1));
-    int *w=g_alloca(sizeof(int)*(count+1));
+    struct point *points_to_draw;
+    int *w;
     struct wpoint segment_start,segment_end;
     int i,points_to_draw_cnt=0;
     int clip_result;
     int r_width, r_height;
     struct point_rect r=gra->r;
+
+    if(count < ALLOCA_COORD_LIMIT) {
+        points_to_draw=g_alloca(sizeof(struct point)*(count+1));
+        w=g_alloca(sizeof(int)*(count+1));
+    } else {
+        points_to_draw=g_malloc(sizeof(struct point)*(count+1));
+        w=g_malloc(sizeof(int)*(count+1));
+    }
 
     r_width=r.rl.x-r.lu.x;
     r_height=r.rl.y-r.lu.y;
@@ -2095,6 +2257,10 @@ void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc
                 }
             }
         }
+    }
+    if(count >= ALLOCA_COORD_LIMIT) {
+        g_free(points_to_draw);
+        g_free(w);
     }
 }
 
@@ -2149,11 +2315,9 @@ static void poly_intersection(struct point *p1, struct point *p2, struct point_r
  */
 static void graphics_clip_polygon(struct point_rect * r, struct point * in, int count_in, struct point *out,
                                   int* count_out) {
-    /* set our self a limit for the in stack buffer. To not overflow stack */
-    const int limit=10000;
     /* get a temp buffer to store points after one direction clipping.
      * since we are clipping 4 directions, result is always in out at the end*/
-    struct point *temp=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+    struct point *temp;
     struct point *pout;
     struct point *pin;
     int edge;
@@ -2168,7 +2332,9 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
      * 1. the output buffer
      * 2. temp
      */
-    if (count_in >= limit) {
+    if (count_in < ALLOCA_COORD_LIMIT) {
+        temp=g_alloca(sizeof(struct point) * (count_in < ALLOCA_COORD_LIMIT ? count_in*8+1:0));
+    } else {
         /* too big. Allocate a buffer (slower) */
         temp=g_new(struct point, count_in*8+1);
     }
@@ -2229,7 +2395,7 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
     /* have clipped poly in out. And number of points now in *count_out */
 
     /* if we had to allocate the buffer, we need to free it */
-    if (count_in >= limit) {
+    if (count_in >= ALLOCA_COORD_LIMIT) {
         g_free(temp);
     }
     return;
@@ -2245,15 +2411,13 @@ static void graphics_clip_polygon(struct point_rect * r, struct point * in, int 
  */
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     struct point_rect r=gra->r;
-    int limit=10000;
-    struct point *pa1=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
     struct point *clipped;
     int count_out = count_in*8+1;
 
     /* prepare buffer */
-    if (count_in < limit) {
+    if (count_in < ALLOCA_COORD_LIMIT) {
         /* use on stack buffer */
-        clipped=pa1;
+        clipped=g_alloca(sizeof(struct point) * (count_in < ALLOCA_COORD_LIMIT ? count_in*8+1:0));
     } else {
         /* too big. allocate buffer (slower) */
         clipped=g_new(struct point, count_in*8+1);
@@ -2263,7 +2427,7 @@ void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc,
     graphics_draw_polygon(gra, gc, clipped, count_out);
 
     /* if we had to allocate buffer, free it */
-    if (count_in >= limit) {
+    if (count_in >= ALLOCA_COORD_LIMIT) {
         g_free(clipped);
     }
 }
@@ -2284,8 +2448,6 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
         int count_in, int hole_count, int* ccount, struct point **holes) {
     int i;
     struct point_rect r=gra->r;
-    int limit=10000;
-    struct point *pa1;
     struct point *clipped;
     int total_count_in;
     int count_out;
@@ -2293,6 +2455,7 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     int found_hole_count;
     int *found_ccount;
     struct point ** found_holes;
+    int need_free;
     /* get total node count for polygon plus all holes */
     total_count_in = count_in;
     for(i = 0; i < hole_count; i ++) {
@@ -2300,20 +2463,28 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     }
     count_out = total_count_in*8+1+hole_count;
 
-    /* prepare buffer */
-    pa1=g_alloca(sizeof(struct point) * (total_count_in < limit ? total_count_in*8+1:0));
-    if (count_in < limit) {
+    /* prepare buffer for outer and all holes!*/
+    if (count_out < ALLOCA_COORD_LIMIT) {
         /* use on stack buffer */
-        clipped=pa1;
+        clipped=g_alloca(sizeof(struct point) * count_out);
+        /* no need to free on stack buffer */
+        need_free=0;
     } else {
         /* too big. allocate buffer (slower) */
-        clipped=g_new(struct point, count_in*8+1);
+        clipped=g_new(struct point, count_out);
+        /* remember to free this, as we change count_out soon */
+        need_free=1;
     }
     count_used=0;
 
     /* prepare arrays for new holes */
-    found_ccount=g_alloca(sizeof(int)*hole_count);
-    found_holes=g_alloca(sizeof(struct point*)*hole_count);
+    if(hole_count < ALLOCA_COORD_LIMIT) {
+        found_ccount=g_alloca(sizeof(int)* hole_count);
+        found_holes=g_alloca(sizeof(struct point*)* hole_count);
+    } else {
+        found_ccount=g_malloc(sizeof(int)* hole_count);
+        found_holes=g_malloc(sizeof(struct point*)* hole_count);
+    }
     found_hole_count=0;
 
     /* clip outer polygon */
@@ -2334,9 +2505,12 @@ static void graphics_draw_polygon_with_holes_clipped(struct graphics *gra, struc
     }
     /* call drawing function */
     graphics_draw_polygon_with_holes(gra, gc, clipped, count_out, found_hole_count, found_ccount, found_holes);
-
+    if(hole_count >= ALLOCA_COORD_LIMIT) {
+        g_free(found_ccount);
+        g_free(found_holes);
+    }
     /* if we had to allocate buffer, free it */
-    if (total_count_in >= limit) {
+    if (need_free) {
         g_free(clipped);
     }
 }
@@ -2394,18 +2568,39 @@ char *graphics_icon_path(const char *icon) {
         ret=g_strdup(icon);
     else {
 #ifdef HAVE_API_ANDROID
-        // get resources for the correct screen density
-        //
-        // this part not needed, android unpacks only the correct version into res/drawable dir!
-        // dbg(lvl_debug,"android icon_path %s",icon);
-        // static char *android_density;
-        // android_density = getenv("ANDROID_DENSITY");
-        // ret=g_strdup_printf("res/drawable-%s/%s",android_density ,icon);
         ret=g_strdup_printf("res/drawable/%s",icon);
 #else
         if (! navit_sharedir)
             navit_sharedir = getenv("NAVIT_SHAREDIR");
         ret=g_strdup_printf("%s/icons/%s", navit_sharedir, icon);
+#endif
+    }
+    if (wordexp)
+        file_wordexp_destroy(wordexp);
+    return ret;
+}
+
+char *graphics_texture_path(const char *texture) {
+    static char *navit_sharedir;
+    char *ret=NULL;
+    struct file_wordexp *wordexp=NULL;
+    dbg(lvl_debug,"enter %s",texture);
+    if (strchr(texture, '$')) {
+        wordexp=file_wordexp_new(texture);
+        if (file_wordexp_get_count(wordexp))
+            texture=file_wordexp_get_array(wordexp)[0];
+    }
+    if (strchr(texture,'/'))
+        ret=g_strdup(texture);
+    else {
+#ifdef HAVE_API_ANDROID
+//TODO: Fix path for textures on android. Leave the same as for icons for now
+//
+        ret=g_strdup_printf("res/drawable/%s",texture);
+#else
+        if (! navit_sharedir)
+            navit_sharedir = getenv("NAVIT_SHAREDIR");
+        ret=g_strdup_printf("%s/textures/%s", navit_sharedir, texture);
 #endif
     }
     if (wordexp)
@@ -2528,8 +2723,20 @@ static void displayitem_free_holes(struct displayitem_poly_holes * holes) {
 }
 
 
-static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra, struct point * pa,
-        int count, struct displayitem_poly_holes * holes) {
+static inline void displayitem_draw_polygon (struct display_context * dc, struct graphics * gra,
+        struct point * pa, int count, struct displayitem_poly_holes * holes) {
+
+    /* Set texture if any, and supported by graphics */
+    if((graphics_gc_has_texture(dc->gc)) && (dc->e->u.polygon.src != NULL)) {
+        char * path;
+        struct graphics_image * texture;
+        path=graphics_texture_path(dc->e->u.polygon.src);
+        texture = graphics_image_new_scaled_rotated(gra, path, dc->e->u.polygon.width, dc->e->u.polygon.height,
+                  dc->e->u.polygon.rotation);
+        g_free(path);
+        if(texture != NULL)
+            graphics_gc_set_texture(dc->gc, texture);
+    }
     if((holes != NULL) && (holes->count > 0))
         graphics_draw_polygon_with_holes_clipped(gra, dc->gc, pa, count, holes->count, holes->ccount,
                 (struct point **)holes->coords);
@@ -2600,11 +2807,20 @@ static inline void displayitem_draw_text(struct displayitem *di,struct display_c
 }
 
 static inline void displayitem_draw_icon(struct displayitem *di,struct display_context *dc, struct element * e,
-        struct graphics * gra, struct point * pa, int count) {
+        struct graphics * gra, struct point * pa, int count, struct layout * l) {
     if (count) {
         struct graphics_image *img=dc->img;
         if (!img || item_is_custom_poi(di->item)) {
+            int icon_width =  e->u.icon.width;
+            int icon_height = e->u.icon.height;
             char *path;
+            /* get the standard icon size out of the layout if unset */
+            if(l != NULL) {
+                if(icon_height==-1)
+                    icon_height=l->icon_h;
+                if(icon_width==-1)
+                    icon_width=l->icon_w;
+            }
             if (item_is_custom_poi(di->item)) {
                 char *icon;
                 char *src;
@@ -2618,7 +2834,7 @@ static inline void displayitem_draw_icon(struct displayitem *di,struct display_c
                 g_free(icon);
             } else
                 path=graphics_icon_path(e->u.icon.src);
-            img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+            img=graphics_image_new_scaled_rotated(gra, path, icon_width, icon_height, e->u.icon.rotation);
             if (img)
                 dc->img=img;
             else
@@ -2657,15 +2873,24 @@ static inline void displayitem_draw_image (struct displayitem *di, struct displa
  * This function will invoke the appropriate draw primitive depending on the type of the element to draw
  *
  * @brief di The displayitem to draw
- * @brief dummy Unused
+ * @brief l current layout for getting defaults and underground alpha
  * @brief dc The display_context to use to draw items
  */
-static void displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc) {
-    int *width=g_alloca(sizeof(int)*dc->maxlen);
+static void displayitem_draw(struct displayitem *di, struct layout *l, struct display_context *dc) {
+    int *width;
     int limit=0;
-    struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
+    struct point *pa;
     struct graphics *gra=dc->gra;
     struct element *e=dc->e;
+    int draw_underground=0;
+
+    if (dc->maxlen < ALLOCA_COORD_LIMIT) {
+        width=g_alloca(sizeof(int)*dc->maxlen);
+        pa=g_alloca(sizeof(struct point)*dc->maxlen);
+    } else {
+        width=g_malloc(sizeof(int)*dc->maxlen);
+        pa=g_malloc(sizeof(struct point)*dc->maxlen);
+    }
 
     while (di) {
         int count=di->count,mindist=dc->mindist;
@@ -2674,12 +2899,34 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
 
         di->z_order=++(gra->current_z_order);
 
-        if (! dc->gc) {
-            struct graphics_gc * gc=graphics_gc_new(gra);
-            graphics_gc_set_foreground(gc, &e->color);
-            dc->gc=gc;
+        /* Skip elements that are to be drawn on oneway streets only
+         * if street is not oneway or roundabout */
+        if((e->oneway) && ((!(di->flags & AF_ONEWAY)) || (di->flags & AF_ROUNDABOUT))) {
+            di=di->next;
+            continue;
         }
 
+        if (! dc->gc) {
+            struct graphics_gc * gc=graphics_gc_new(gra);
+            dc->gc=gc;
+            graphics_gc_set_foreground(dc->gc, &e->color);
+        }
+
+        /* If the element id flagged AF_UNDERGROUND, we apply predefined transparenc to it if
+         * it's not the text. */
+        if((di->flags & AF_UNDERGROUND) && (dc->e->type != element_text)) {
+            if(!draw_underground) {
+                struct color fg_color = e->color;
+                fg_color.a= (l != NULL) ? l->underground_alpha: UNDERGROUND_ALPHA_;
+                graphics_gc_set_foreground(dc->gc, &fg_color);
+                draw_underground=1;
+            }
+        } else {
+            if(draw_underground) {
+                graphics_gc_set_foreground(dc->gc, &e->color);
+                draw_underground=0;
+            }
+        }
         if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
             limit = 0;
 
@@ -2691,6 +2938,8 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             mindist=0;
         if (dc->e->type == element_polyline)
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
+        else if (dc->e->type == element_arrows)
+            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
         else
             count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
@@ -2707,13 +2956,13 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
             displayitem_draw_text(di, dc, e, gra, pa,  count, &t_holes);
             break;
         case element_icon:
-            displayitem_draw_icon(di, dc, e, gra, pa, count);
+            displayitem_draw_icon(di, dc, e, gra, pa, count, l);
             break;
         case element_image:
             displayitem_draw_image (di, dc,  gra, pa, count);
             break;
         case element_arrows:
-            display_draw_arrows(gra,dc->gc,pa,count);
+            display_draw_arrows(gra,dc,pa,count, width, e->oneway);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);
@@ -2724,6 +2973,10 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
 
         di=di->next;
     }
+    if (dc->maxlen >= ALLOCA_COORD_LIMIT) {
+        g_free(width);
+        g_free(pa);
+    }
 }
 /**
  * FIXME
@@ -2731,7 +2984,8 @@ static void displayitem_draw(struct displayitem *di, void *dummy, struct display
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *display_list, struct itemgra *itm) {
+static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *display_list, struct itemgra *itm,
+                                   struct layout * l) {
     struct element *e;
     GList *es,*types;
     struct display_context *dc=&display_list->dc;
@@ -2746,7 +3000,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
             dc->type=GPOINTER_TO_INT(types->data);
             entry=get_hash_entry(display_list, dc->type);
             if (entry && entry->di) {
-                displayitem_draw(entry->di, NULL, dc);
+                displayitem_draw(entry->di, l, dc);
                 display_context_free(dc);
             }
             types=g_list_next(types);
@@ -2759,8 +3013,15 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
     GList *es;
     struct display_context dc;
     int max_coord=32;
-    char *buffer=g_alloca(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
-    struct displayitem *di=(struct displayitem *)buffer;
+    char *buffer;
+    struct displayitem *di;
+    if (max_coord < ALLOCA_COORD_LIMIT) {
+        buffer=g_alloca(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
+    } else {
+        buffer=g_malloc(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
+    }
+    di=(struct displayitem *)buffer;
+
     es=itm->elements;
     di->item.type=type_none;
     di->item.id_hi=0;
@@ -2798,6 +3059,9 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
         display_context_free(&dc);
         es=g_list_next(es);
     }
+    if (max_coord >= ALLOCA_COORD_LIMIT) {
+        g_free(buffer);
+    }
 }
 
 /**
@@ -2806,7 +3070,8 @@ void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct tra
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_layer(struct displaylist *display_list, struct graphics *gra, struct layer *lay, int order) {
+static void xdisplay_draw_layer(struct displaylist *display_list, struct graphics *gra, struct layer *lay, int order,
+                                struct layout * l) {
     GList *itms;
     struct itemgra *itm;
 
@@ -2814,7 +3079,7 @@ static void xdisplay_draw_layer(struct displaylist *display_list, struct graphic
     while (itms) {
         itm=itms->data;
         if (order >= itm->order.min && order <= itm->order.max)
-            xdisplay_draw_elements(gra, display_list, itm);
+            xdisplay_draw_elements(gra, display_list, itm, l);
         itms=g_list_next(itms);
     }
 }
@@ -2837,7 +3102,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
         if (lay->active) {
             if (lay->ref)
                 lay=lay->ref;
-            xdisplay_draw_layer(display_list, gra, lay, order);
+            xdisplay_draw_layer(display_list, gra, lay, order, l);
         }
         lays=g_list_next(lays);
     }
@@ -2931,9 +3196,19 @@ GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct poin
 static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     struct item *item;
     int count,max=displaylist->dc.maxlen,workload=0;
-    struct coord *ca=g_alloca(sizeof(struct coord)*max);
+    int used=0;
+    struct coord *ca;
     struct attr attr,attr2;
     enum projection pro;
+    int need_free=0;
+
+    if (max < ALLOCA_COORD_LIMIT) {
+        ca=g_alloca(sizeof(struct coord)*max);
+        need_free=0;
+    } else {
+        ca=g_malloc(sizeof(struct coord)*max);
+        need_free=1;
+    }
 
     if (displaylist->order != displaylist->order_hashed || displaylist->layout != displaylist->layout_hashed) {
         displaylist_update_hash(displaylist);
@@ -2965,24 +3240,59 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
                 int label_count=0;
                 char *labels[2];
                 struct hash_entry *entry;
+                int coords_left;
                 if (item == &busy_item) {
-                    if (displaylist->workload)
+                    if (displaylist->workload) {
+                        if (need_free) {
+                            g_free(ca);
+                        }
                         return;
-                    else
+                    } else
                         continue;
                 }
                 entry=get_hash_entry(displaylist, item->type);
                 if (!entry)
                     continue;
                 count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
+                /* abort if no coordinates within selection at all */
                 if (! count)
                     continue;
+                /* handle overflow */
+                if (count == max) {
+                    /* get required space */
+                    item_coord_rewind(item);
+                    coords_left=item_coords_left(item);
+                    /* increase to required space, or double space if we couldn't get required space */
+                    if(coords_left > 0) {
+                        displaylist->dc.maxlen=(coords_left+2);
+                    } else {
+                        displaylist->dc.maxlen=max*2;
+                    }
+                    dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT". Increase to %d", count,item_to_name(item->type),
+                        ITEM_ID_ARGS(*item), displaylist->dc.maxlen);
+                    /* remember the new maximum */
+                    max=displaylist->dc.maxlen;
+                    /* get more memory */
+                    if(need_free)
+                        g_free(ca);
+                    ca=g_malloc(sizeof(struct coord)*(displaylist->dc.maxlen));
+                    need_free=1;
+                    /* try again to get coordinates */
+                    item_coord_rewind(item);
+                    count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
+                    /* check if we got valid coordinates in second attempt. If not don't try to draw this at all */
+                    if(count <= 0) {
+                        continue;
+                    }
+                }
+                /* transform the coordinates */
                 if (displaylist->dc.pro != pro)
                     transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
-                if (count == max) {
-                    dbg(lvl_error,"point count overflow %d for %s "ITEM_ID_FMT"", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
-                    displaylist->dc.maxlen=max*2;
-                }
+
+                /* remember the peak coordinates actually used */
+                if(used < count)
+                    used=count;
+
                 if (item_is_custom_poi(*item)) {
                     if (item_attr_get(item, attr_icon_src, &attr2))
                         labels[1]=map_convert_string(displaylist->m, attr2.u.str);
@@ -3008,8 +3318,12 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
                 if (labels[1])
                     map_convert_free(labels[1]);
                 workload++;
-                if (workload == displaylist->workload)
+                if (workload == displaylist->workload) {
+                    if (need_free) {
+                        g_free(ca);
+                    }
                     return;
+                }
             }
             map_rect_destroy(displaylist->mr);
         }
@@ -3040,6 +3354,15 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     displaylist->msh=NULL;
     profile(1,"callback\n");
     callback_call_1(displaylist->cb, cancel);
+    /* check if we can shrink item buffer next time */
+    if((displaylist->dc.maxlen > ALLOCA_COORD_LIMIT) && (used < ALLOCA_COORD_LIMIT)) {
+        dbg(lvl_debug, "Shrink memory. %d actually used", used);
+        displaylist->dc.maxlen=ALLOCA_COORD_LIMIT;
+    }
+    /* clean up if required */
+    if (need_free) {
+        g_free(ca);
+    }
     profile(0,"end\n");
 }
 
@@ -3068,7 +3391,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
     graphics_background_gc(gra, gra->gc[0]);
     if (flags & 1)
         callback_list_call_attr_0(gra->cbl, attr_predraw);
-    graphics_draw_mode(gra, draw_mode_begin);
+    graphics_draw_mode(gra, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
     if (!(flags & 2))
         graphics_draw_rectangle(gra, gra->gc[0], &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
     if (l)	{
@@ -3206,7 +3529,7 @@ void graphics_displaylist_close(struct displaylist_handle *dlh) {
 struct displaylist * graphics_displaylist_new(void) {
     struct displaylist *ret=g_new0(struct displaylist, 1);
 
-    ret->dc.maxlen=16384;
+    ret->dc.maxlen=ALLOCA_COORD_LIMIT;
 
     return ret;
 }
@@ -3373,18 +3696,28 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
 */
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p,
                                      int dist) {
-    struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+    int result;
+    struct point *pa;
     int count;
+    if (displaylist->dc.maxlen < ALLOCA_COORD_LIMIT) {
+        pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+    } else {
+        pa=g_malloc(sizeof(struct point)*displaylist->dc.maxlen);
+    }
 
     count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
 
     if (di->item.type < type_line) {
-        return within_dist_point(p, &pa[0], dist);
+        result =  within_dist_point(p, &pa[0], dist);
+    } else if (di->item.type < type_area) {
+        result =  within_dist_polyline(p, pa, count, dist, 0);
+    } else
+        result = within_dist_polygon(p, pa, count, dist);
+
+    if (displaylist->dc.maxlen >= ALLOCA_COORD_LIMIT) {
+        g_free(pa);
     }
-    if (di->item.type < type_area) {
-        return within_dist_polyline(p, pa, count, dist, 0);
-    }
-    return within_dist_polygon(p, pa, count, dist);
+    return result;
 }
 
 

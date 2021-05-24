@@ -1,4 +1,4 @@
-/**
+/*
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2011 Navit Team
  *
@@ -21,19 +21,51 @@
 #include "maptool.h"
 #include "debug.h"
 
-
 /** Buffer for temporarily storing an item. */
 static char misc_item_buffer[20000000];
 /** An item_bin for temporary use. */
 struct item_bin *tmp_item_bin=(struct item_bin *)(void *)misc_item_buffer;
-/** A node_item for temporary use. */
-static struct node_item *tmp_node_item=(struct node_item *)(void *)misc_item_buffer;
 
 struct node_item *
 read_node_item(FILE *in) {
-    if (fread(tmp_node_item, sizeof(struct node_item), 1, in) != 1)
-        return NULL;
-    return tmp_node_item;
+#define ITEM_COUNT 1*1024*1024
+    /* we read in bigger chunks as file IO in small chunks is slow as hell */
+    static FILE * last_in = NULL;
+    static long last_pos = 0;
+    static int in_count;
+    static int out_count;
+    static struct node_item item_buffer[sizeof(struct node_item) * ITEM_COUNT];
+
+    struct node_item * retval = NULL;
+
+    if((last_in != in) || (last_pos != ftell(in))) {
+        if((out_count - in_count) > 0)
+            fprintf(stderr, "change file. Still %d items\n", out_count - in_count);
+        /* got new file. flush buffer. */
+        in_count=0;
+        out_count=0;
+        last_in=in;
+    }
+
+    /* check if we need to really read from file */
+    if ((in_count - out_count) > 0) {
+        /* no, return item from buffer */
+        retval=&(item_buffer[out_count]);
+    } else {
+        out_count=0;
+        in_count=fread(item_buffer, sizeof(struct node_item), ITEM_COUNT, in);
+        //fprintf(stderr, "read %d items\n", in_count);
+        if(in_count < 1) {
+            /* buffer still empty after read */
+            return NULL;
+        }
+        /* yes, try to read full buffer at once */
+        retval=&item_buffer[0];
+    }
+    out_count ++;
+    last_pos=ftell(in);
+
+    return retval;
 }
 
 struct item_bin *

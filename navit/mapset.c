@@ -36,11 +36,6 @@
 #include "map.h"
 #include "xmlconfig.h"
 
-/**
- * @brief A mapset
- *
- * This structure holds a complete mapset
- */
 struct mapset {
     NAVIT_OBJECT
     GList *maps; /**< Linked list of all the maps in the mapset */
@@ -74,7 +69,7 @@ struct mapset *mapset_dup(struct mapset *ms) {
 
 
 struct attr_iter *
-mapset_attr_iter_new(void) {
+mapset_attr_iter_new(void* unused) {
     return g_new0(struct attr_iter, 1);
 }
 

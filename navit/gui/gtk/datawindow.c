@@ -153,7 +153,7 @@ void gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn
 static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct datawindow_priv *win) {
     if (event->type != GDK_KEY_PRESS)
         return FALSE;
-    if (event->keyval == GDK_Cancel) {
+    if (event->keyval == GDK_KEY_Cancel) {
         gui_gtk_datawindow_delete(widget, (GdkEvent *)event, win);
         gtk_widget_destroy(win->window);
     }

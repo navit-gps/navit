@@ -1,5 +1,6 @@
 Advanced Options
 ================
+
 The rest of this webpage is meant for advanced/power users who'd like to fiddle a little more under-the-hood. The average user can safely ignore this section!
 
 Speech
@@ -32,7 +33,7 @@ espeak
 ~~~~~~
 .. code-block:: xml
 
- <speech type="cmdline" data="espeak -s 150 -v english_rp %s"/>
+	<speech type="cmdline" data="espeak -s 150 -v english_rp %s"/>
 
 Will use espeak instead, for those who want Navit to speak to them in English, at 150 words per minute. The ''%s'' is filled in by Navit when sent to the speech synthesis software (with something like "Turn left" or whatever is appropriate at the time). If you need more features, you should use an external wrapper script which can contain anything supported by your shell (see [[Translations]]).
 

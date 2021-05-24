@@ -158,6 +158,7 @@ static void info_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     struct coord lt, rb;
     struct point p;
     struct transformation *t;
+    int retval;
 
     t=navit_get_trans(gui->nav);
     transform_get_size(t, &mw, &mh);
@@ -169,7 +170,8 @@ static void info_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
     transform_reverse(t, &p, &rb);
 
     sprintf(buffer,"./info.sh %d,%d 0x%x,0x%x 0x%x,0x%x", mw, mh, lt.x, lt.y, rb.x, rb.y);
-    system(buffer);
+    retval=system(buffer);
+    dbg(lvl_debug,"calling %s returned %d", buffer, retval);
 
 }
 

@@ -45,6 +45,7 @@ extern "C" {
 #include <QFont>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 #include <QScreen>
 #include <QSvgRenderer>
@@ -268,12 +269,32 @@ static void gc_set_background(struct graphics_gc_priv* gc, struct color* c) {
     //gc->brush->setColor(col);
 }
 
+void gc_set_texture (struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
+    if(img == NULL) {
+        //disable texture mode
+        gc->brush->setStyle(Qt::SolidPattern);
+    } else {
+        //set and enable texture
+        //Use a new pixmap
+        QPixmap background(img->pixmap->size());
+        //Use fill color
+        background.fill(gc->brush->color());
+        //Get a painter
+        QPainter painter(&background);
+        //Blit the (transparent) image on pixmap.
+        painter.drawPixmap(0, 0, *(img->pixmap));
+        //Set the texture to the brush.
+        gc->brush->setTexture(background);
+    }
+}
+
 static struct graphics_gc_methods gc_methods = {
     gc_destroy,
     gc_set_linewidth,
     gc_set_dashes,
     gc_set_foreground,
-    gc_set_background
+    gc_set_background,
+    gc_set_texture
 };
 
 static struct graphics_gc_priv* gc_new(struct graphics_priv* gr, struct graphics_gc_methods* meth) {
@@ -934,7 +955,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     //dbg(lvl_debug,"enter");
 
     /* get qt widget attr */
-    if ((attr_widget = attr_search(attrs, NULL, attr_qt5_widget))) {
+    if ((attr_widget = attr_search(attrs, attr_qt5_widget))) {
         /* check if we shall use qml */
         if (strcmp(attr_widget->u.str, "qwidget") == 0) {
             use_qml = false;
@@ -953,7 +974,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     *meth = graphics_methods;
 
     /* get event loop from config and request event loop*/
-    event_loop_system = attr_search(attrs, NULL, attr_event_loop_system);
+    event_loop_system = attr_search(attrs, attr_event_loop_system);
     if (event_loop_system && event_loop_system->u.str) {
         //dbg(lvl_debug, "event_system is %s", event_loop_system->u.str);
         if (!event_request_system(event_loop_system->u.str, "graphics_qt5"))
@@ -982,7 +1003,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->argv[graphics_priv->argc] = g_strdup("navit");
     graphics_priv->argc++;
     /* Get qt platform from config */
-    if ((platform = attr_search(attrs, NULL, attr_qt5_platform))) {
+    if ((platform = attr_search(attrs, attr_qt5_platform))) {
         graphics_priv->argv[graphics_priv->argc] = g_strdup("-platform");
         graphics_priv->argc++;
         graphics_priv->argv[graphics_priv->argc] = g_strdup(platform->u.str);
@@ -1042,7 +1063,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
         graphics_priv->widget = new QNavitWidget(graphics_priv, NULL, Qt::Window);
     }
 #endif
-    if ((fullscreen = attr_search(attrs, NULL, attr_fullscreen)) && (fullscreen->u.num)) {
+    if ((fullscreen = attr_search(attrs, attr_fullscreen)) && (fullscreen->u.num)) {
         /* show this maximized */
 #if USE_QML
         if (graphics_priv->window != NULL)
@@ -1066,10 +1087,10 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
             geomet = primary->availableGeometry();
         }
         /* check for height */
-        if ((h = attr_search(attrs, NULL, attr_h)) && (h->u.num > 100))
+        if ((h = attr_search(attrs, attr_h)) && (h->u.num > 100))
             geomet.setHeight(h->u.num);
         /* check for width */
-        if ((w = attr_search(attrs, NULL, attr_w)) && (w->u.num > 100))
+        if ((w = attr_search(attrs, attr_w)) && (w->u.num > 100))
             geomet.setWidth(w->u.num);
 #if USE_QML
         if (graphics_priv->window != NULL) {

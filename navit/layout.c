@@ -39,9 +39,11 @@ layout_new(struct attr *parent, struct attr **attrs) {
     struct layout *l;
     struct navit *navit;
     struct color def_color = {COLOR_BACKGROUND_};
-    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr;
+    int def_underground_alpha = UNDERGROUND_ALPHA_;
+    struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr,*active_attr,
+               *underground_alpha_attr,*icon_attr;
 
-    if (! (name_attr=attr_search(attrs, NULL, attr_name)))
+    if (! (name_attr=attr_search(attrs, attr_name)))
         return NULL;
     navit = parent->u.navit;
     if (navit_get_layout_by_name(navit, name_attr->u.str)) {
@@ -54,22 +56,37 @@ layout_new(struct attr *parent, struct attr **attrs) {
     l->func=&layout_func;
     navit_object_ref((struct navit_object *)l);
     l->name = g_strdup(name_attr->u.str);
-    if ((font_attr=attr_search(attrs, NULL, attr_font))) {
+    if ((font_attr=attr_search(attrs, attr_font))) {
         l->font = g_strdup(font_attr->u.str);
     }
-    if ((day_attr=attr_search(attrs, NULL, attr_daylayout))) {
+    if ((day_attr=attr_search(attrs, attr_daylayout))) {
         l->dayname = g_strdup(day_attr->u.str);
     }
-    if ((night_attr=attr_search(attrs, NULL, attr_nightlayout))) {
+    if ((night_attr=attr_search(attrs, attr_nightlayout))) {
         l->nightname = g_strdup(night_attr->u.str);
     }
-    if ((color_attr=attr_search(attrs, NULL, attr_color)))
+    if ((color_attr=attr_search(attrs, attr_color)))
         l->color = *color_attr->u.color;
     else
         l->color = def_color;
-    if ((order_delta_attr=attr_search(attrs, NULL, attr_order_delta)))
+    if ((underground_alpha_attr=attr_search(attrs, attr_underground_alpha))) {
+        int a = underground_alpha_attr->u.num;
+        /* for convenience, the alpha value is just 8 bit as usual if using
+        * corresponding attr. therefore we need to shift that up */
+        l->underground_alpha = (a << 8) | a;
+    } else
+        l->underground_alpha = def_underground_alpha;
+    if ((icon_attr=attr_search(attrs, attr_icon_w)))
+        l->icon_w = icon_attr->u.num;
+    else
+        l->icon_w = -1;
+    if ((icon_attr=attr_search(attrs, attr_icon_h)))
+        l->icon_h = icon_attr->u.num;
+    else
+        l->icon_h = -1;
+    if ((order_delta_attr=attr_search(attrs, attr_order_delta)))
         l->order_delta=order_delta_attr->u.num;
-    if ((active_attr=attr_search(attrs, NULL, attr_active)))
+    if ((active_attr=attr_search(attrs, attr_active)))
         l->active = active_attr->u.num;
     l->navit=navit;
     return l;
@@ -81,7 +98,7 @@ struct attr_iter {
 
 
 struct attr_iter *
-layout_attr_iter_new(void) {
+layout_attr_iter_new(void* unused) {
     return g_new0(struct attr_iter, 1);
 }
 
@@ -182,23 +199,23 @@ cursor_new(struct attr *parent, struct attr **attrs) {
     struct attr *w, *h, *name, *interval, *sequence_range;
     struct cursor *this;
 
-    w=attr_search(attrs, NULL, attr_w);
-    h=attr_search(attrs, NULL, attr_h);
+    w=attr_search(attrs, attr_w);
+    h=attr_search(attrs, attr_h);
     if (! w || ! h)
         return NULL;
 
     this=g_new0(struct cursor,1);
     this->w=w->u.num;
     this->h=h->u.num;
-    name=attr_search(attrs, NULL, attr_name);
+    name=attr_search(attrs, attr_name);
     if (name)
         this->name=g_strdup(name->u.str);
     else
         this->name=g_strdup("default");
-    interval=attr_search(attrs, NULL, attr_interval);
+    interval=attr_search(attrs, attr_interval);
     if (interval)
         this->interval=interval->u.num;
-    sequence_range=attr_search(attrs, NULL, attr_sequence_range);
+    sequence_range=attr_search(attrs, attr_sequence_range);
     if (sequence_range) {
         struct range *r=g_new0(struct range,1);
         r->min=sequence_range->u.range.min;
@@ -265,6 +282,7 @@ static int layer_set_attr_do(struct layer *l, struct attr *attr, int init) {
             dbg(lvl_error, "Ignoring reference to unknown layer '%s' in layer '%s'.", attr->u.str, l->name);
         }
         obj->func->iter_destroy(iter);
+        return 0;
     default:
         return 0;
     }
@@ -340,11 +358,11 @@ struct itemgra * itemgra_new(struct attr *parent, struct attr **attrs) {
     struct range defrange;
 
     itm = g_new0(struct itemgra, 1);
-    order=attr_search(attrs, NULL, attr_order);
-    item_types=attr_search(attrs, NULL, attr_item_types);
-    speed_range=attr_search(attrs, NULL, attr_speed_range);
-    angle_range=attr_search(attrs, NULL, attr_angle_range);
-    sequence_range=attr_search(attrs, NULL, attr_sequence_range);
+    order=attr_search(attrs, attr_order);
+    item_types=attr_search(attrs, attr_item_types);
+    speed_range=attr_search(attrs, attr_speed_range);
+    angle_range=attr_search(attrs, attr_angle_range);
+    sequence_range=attr_search(attrs, attr_sequence_range);
     defrange.min=0;
     defrange.max=32767;
     if (order)
@@ -389,9 +407,16 @@ int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     }
 }
 
+static void element_set_oneway(struct element *e, struct attr **attrs) {
+    struct attr *oneway;
+    oneway=attr_search(attrs, attr_oneway);
+    if (oneway)
+        e->oneway=oneway->u.num;
+}
+
 static void element_set_color(struct element *e, struct attr **attrs) {
     struct attr *color;
-    color=attr_search(attrs, NULL, attr_color);
+    color=attr_search(attrs, attr_color);
     if (color)
         e->color=*color->u.color;
 }
@@ -399,7 +424,7 @@ static void element_set_color(struct element *e, struct attr **attrs) {
 
 static void element_set_background_color(struct color *c, struct attr **attrs) {
     struct attr *color;
-    color=attr_search(attrs, NULL, attr_background_color);
+    color=attr_search(attrs, attr_background_color);
     if (color)
         *c=*color->u.color;
 }
@@ -407,21 +432,30 @@ static void element_set_background_color(struct color *c, struct attr **attrs) {
 
 static void element_set_text_size(struct element *e, struct attr **attrs) {
     struct attr *text_size;
-    text_size=attr_search(attrs, NULL, attr_text_size);
+    text_size=attr_search(attrs, attr_text_size);
     if (text_size)
         e->text_size=text_size->u.num;
 }
 
+static void element_set_arrows_width(struct element *e, struct attr **attrs) {
+    struct attr *width;
+    width=attr_search(attrs, attr_width);
+    if (width)
+        e->u.arrows.width=width->u.num;
+    else
+        e->u.arrows.width=10;
+}
+
 static void element_set_polyline_width(struct element *e, struct attr **attrs) {
     struct attr *width;
-    width=attr_search(attrs, NULL, attr_width);
+    width=attr_search(attrs, attr_width);
     if (width)
         e->u.polyline.width=width->u.num;
 }
 
 static void element_set_polyline_directed(struct element *e, struct attr **attrs) {
     struct attr *directed;
-    directed=attr_search(attrs, NULL, attr_directed);
+    directed=attr_search(attrs, attr_directed);
     if (directed)
         e->u.polyline.directed=directed->u.num;
 }
@@ -430,7 +464,7 @@ static void element_set_polyline_dash(struct element *e, struct attr **attrs) {
     struct attr *dash;
     int i;
 
-    dash=attr_search(attrs, NULL, attr_dash);
+    dash=attr_search(attrs, attr_dash);
     if (dash) {
         for (i=0; i<4; i++) {
             if (!dash->u.dash[i])
@@ -443,21 +477,21 @@ static void element_set_polyline_dash(struct element *e, struct attr **attrs) {
 
 static void element_set_polyline_offset(struct element *e, struct attr **attrs) {
     struct attr *offset;
-    offset=attr_search(attrs, NULL, attr_offset);
+    offset=attr_search(attrs, attr_offset);
     if (offset)
         e->u.polyline.offset=offset->u.num;
 }
 
 static void element_set_circle_width(struct element *e, struct attr **attrs) {
     struct attr *width;
-    width=attr_search(attrs, NULL, attr_width);
+    width=attr_search(attrs, attr_width);
     if (width)
         e->u.circle.width=width->u.num;
 }
 
 static void element_set_circle_radius(struct element *e, struct attr **attrs) {
     struct attr *radius;
-    radius=attr_search(attrs, NULL, attr_radius);
+    radius=attr_search(attrs, attr_radius);
     if (radius)
         e->u.circle.radius=radius->u.num;
 }
@@ -465,9 +499,47 @@ static void element_set_circle_radius(struct element *e, struct attr **attrs) {
 struct polygon *
 polygon_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
-    e = g_new0(struct element, 1);
+    int add_size_to_e=0;
+    struct attr *src,*w,*h,*rotation,*x,*y;
+    /* search fot icon src first as this increases the required memory for e*/
+    src=attr_search(attrs, attr_src);
+    if (src != NULL) {
+        add_size_to_e += strlen(src->u.str)+1;
+    }
+
+    e = g_malloc0(sizeof(*e)+add_size_to_e);
     e->type=element_polygon;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
+    e->u.polygon.src=NULL;
+
+    /* copy over image url if any, and probe icon parameters */
+    if (src != NULL) {
+        e->u.polygon.src=(char *)(e+1);
+        strcpy(e->u.polygon.src,src->u.str);
+        if ((w=attr_search(attrs, attr_w)))
+            e->u.polygon.width=w->u.num;
+        else
+            e->u.polygon.width=-1;
+
+        if ((h=attr_search(attrs, attr_h)))
+            e->u.polygon.height=h->u.num;
+        else
+            e->u.polygon.height=-1;
+
+        if ((x=attr_search(attrs, attr_x)))
+            e->u.polygon.x=x->u.num;
+        else
+            e->u.polygon.x=-1;
+
+        if ((y=attr_search(attrs, attr_y)))
+            e->u.polygon.y=y->u.num;
+        else
+            e->u.polygon.y=-1;
+
+        if ((rotation=attr_search(attrs, attr_rotation)))
+            e->u.polygon.rotation=rotation->u.num;
+    }
 
     return (struct polygon *)e;
 }
@@ -479,6 +551,7 @@ polyline_new(struct attr *parent, struct attr **attrs) {
     e = g_new0(struct element, 1);
     e->type=element_polyline;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
     element_set_polyline_width(e, attrs);
     element_set_polyline_directed(e, attrs);
     element_set_polyline_dash(e, attrs);
@@ -498,6 +571,7 @@ circle_new(struct attr *parent, struct attr **attrs) {
     e->u.circle.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.circle.background_color, attrs);
+    element_set_oneway(e, attrs);
     element_set_text_size(e, attrs);
     element_set_circle_width(e, attrs);
     element_set_circle_radius(e, attrs);
@@ -518,6 +592,7 @@ text_new(struct attr *parent, struct attr **attrs) {
     e->u.text.background_color = color_white;
     element_set_color(e, attrs);
     element_set_background_color(&e->u.text.background_color, attrs);
+    element_set_oneway(e, attrs);
 
     return (struct text *)e;
 }
@@ -526,30 +601,29 @@ struct icon *
 icon_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
     struct attr *src,*w,*h,*rotation,*x,*y;
-    src=attr_search(attrs, NULL, attr_src);
+    src=attr_search(attrs, attr_src);
     if (! src)
         return NULL;
-
     e = g_malloc0(sizeof(*e)+strlen(src->u.str)+1);
     e->type=element_icon;
     e->u.icon.src=(char *)(e+1);
-    if ((w=attr_search(attrs, NULL, attr_w)))
+    if ((w=attr_search(attrs, attr_w)))
         e->u.icon.width=w->u.num;
     else
         e->u.icon.width=-1;
-    if ((h=attr_search(attrs, NULL, attr_h)))
+    if ((h=attr_search(attrs, attr_h)))
         e->u.icon.height=h->u.num;
     else
         e->u.icon.height=-1;
-    if ((x=attr_search(attrs, NULL, attr_x)))
+    if ((x=attr_search(attrs, attr_x)))
         e->u.icon.x=x->u.num;
     else
         e->u.icon.x=-1;
-    if ((y=attr_search(attrs, NULL, attr_y)))
+    if ((y=attr_search(attrs, attr_y)))
         e->u.icon.y=y->u.num;
     else
         e->u.icon.y=-1;
-    if ((rotation=attr_search(attrs, NULL, attr_rotation)))
+    if ((rotation=attr_search(attrs, attr_rotation)))
         e->u.icon.rotation=rotation->u.num;
     strcpy(e->u.icon.src,src->u.str);
 
@@ -572,6 +646,8 @@ arrows_new(struct attr *parent, struct attr **attrs) {
     e = g_malloc0(sizeof(*e));
     e->type=element_arrows;
     element_set_color(e, attrs);
+    element_set_oneway(e, attrs);
+    element_set_arrows_width(e, attrs);
     return (struct arrows *)e;
 }
 
