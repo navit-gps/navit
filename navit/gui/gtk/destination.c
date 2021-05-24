@@ -545,7 +545,7 @@ int destination_address(struct navit *nav) {
     gtk_widget_grab_focus(search->entry_city);
 
     gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
-    keyboard=gtk_socket_new();
+//    keyboard=gtk_socket_new();
     gtk_box_pack_end(GTK_BOX(vbox), keyboard, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(window2), vbox);
 #if 0
@@ -554,7 +554,7 @@ int destination_address(struct navit *nav) {
     gtk_widget_show_all(window2);
 
 #ifndef _WIN32
-    gtk_socket_steal(GTK_SOCKET(keyboard), spawn_xkbd("xkbd","-geometry 200x100"));
+//    gtk_socket_steal(GTK_SOCKET(keyboard), spawn_xkbd("xkbd","-geometry 200x100"));
 #endif
 
     country_attr=country_default();
