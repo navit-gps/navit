@@ -19,7 +19,7 @@ endif(NOT DISABLE_CXX)
 
 set(NAVIT_VERSION_MAJOR "0")
 set(NAVIT_VERSION_MINOR "5")
-set(NAVIT_VERSION_PATCH "5")
+set(NAVIT_VERSION_PATCH "6")
 if(ANDROID)
     set(PACKAGE_VERSION "${NAVIT_VERSION_MAJOR}.${NAVIT_VERSION_MINOR}.${NAVIT_VERSION_PATCH}.${ANDROID_ABI}")
 else(ANDROID)
@@ -158,6 +158,12 @@ INCLUDE (CheckIncludeFiles)
 INCLUDE (CheckLibraryExists)
 INCLUDE (CheckFunctionExists)
 INCLUDE (CheckSymbolExists)
+
+if(ANDROID)
+	set(ENV{PKG_CONFIG_DIR} "")
+	set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+	set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+endif(ANDROID)
 
 ################################
 #  pkg-config based detection  #
