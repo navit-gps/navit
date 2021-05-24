@@ -777,10 +777,10 @@ static int convert_weight_unit_to_integer(char *value, int multiplier) {
 
 static char* cleanCondition(char* condition) {
 
-    while(*condition==32) { //remove leading whitespace TODO: do it in maptool
+    while(*condition==32) {
         condition++;
     }
-    while(*(condition+strlen(condition)-1)==32) { //remove trailing whitespace TODO: do it in maptool
+    while(*(condition+strlen(condition)-1)==32) {
         *(condition+strlen(condition)-1)=0;
     }
 
