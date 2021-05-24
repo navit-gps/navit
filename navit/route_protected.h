@@ -159,16 +159,12 @@ struct route_graph_segment {
 	struct route_segment_data data;			/**< The segment data */
 };
 
-
-
 struct route_graph_lezs {
     struct route_graph_lez *next;    /**< Pointer to the next lez */
     unsigned nlezs;          /**< How many lezs do we have? */
     struct route_graph_lez lez[0];     /**< Pointer to the lez structure */
     /* WARNING: There will be lezs following here, so do not create new fields after c! */
 };
-
-
 
 /**
  * @brief A complete route graph
@@ -177,7 +173,9 @@ struct route_graph_lezs {
  * each segment.
  */
 struct route_graph {
-	int busy;                                   /**< The graph is being built */
+    int busy;                                   /**< Route calculation is in progress: the graph is being built,
+                                                *   flooded or the path is being built (a more detailed status can be
+                                                *   obtained from the route’s status attribute) */
 	struct map_selection *sel;                  /**< The rectangle selection for the graph */
 	struct mapset_handle *h;                    /**< Handle to the mapset */
 	struct map *m;                              /**< Pointer to the currently active map */
@@ -188,11 +186,11 @@ struct route_graph {
 	struct callback *donelez_cb;                /**< Callback when graph is done */
 	struct event_idle *idle_ev;                 /**< The pointer to the idle event */
 	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
-	struct route_graph_segment *avoid_seg;
+	struct route_graph_segment *avoid_seg;      /**< Segment to which a turnaround penalty (if active) applies */
 	struct fibheap *heap;                       /**< Priority queue for points to be expanded */
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
-    struct route_graph_lezs *lezs; /* low emission zones */
+    struct route_graph_lezs *lezs;              /**< low emission zones */
 };
 
 
