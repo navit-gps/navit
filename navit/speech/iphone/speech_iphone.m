@@ -31,11 +31,11 @@ struct speech_priv {
 };
 
 static int speech_iphone_say(struct speech_priv *this, const char *text) {
-    dbg(0,"enter %s",text);
+    dbg(lvl_debug,"enter %s",text);
     NSString *s=[[NSString alloc]initWithUTF8String: text];
     [this->speech startSpeakingString:s];
     [s release];
-    dbg(0,"ok");
+    dbg(lvl_debug,"ok");
     return 1;
 }
 
@@ -55,13 +55,13 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
     this=g_new0(struct speech_priv,1);
     this->speech= [VSSpeechSynthesizer alloc];
     [this->speech init];
-    dbg(0,"this->speech=%p",this->speech);
+    dbg(lvl_debug,"this->speech=%p",this->speech);
     [this->speech setRate:(float)1.0];
     return this;
 }
 
 
 void plugin_init(void) {
-    dbg(0,"enter");
+    dbg(lvl_debug,"enter");
     plugin_register_category_speech("iphone", speech_iphone_new);
 }
