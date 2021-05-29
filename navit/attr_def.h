@@ -160,6 +160,7 @@ ATTR(vehicle_height)
 ATTR(vehicle_weight)
 ATTR(vehicle_axle_weight)
 ATTR(vehicle_dangerous_goods)
+ATTR(vehicle_request_location_authorization)
 ATTR(shmsize)
 ATTR(shmoffset)
 ATTR_UNUSED
