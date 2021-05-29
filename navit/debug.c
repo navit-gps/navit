@@ -79,7 +79,11 @@ static void sigsegv(int sig) {
         sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());
     else
         sprintf(buffer, "gdb -ex bt -ex detach -ex quit %s %d", gdb_program, getpid());
+#if IOS
+    return 1; //system not available in iOS
+#else
     retval = system(buffer);
+#endif
     fprintf(stderr, "calling gdb returned %d\n", retval);
     exit(1);
 }
