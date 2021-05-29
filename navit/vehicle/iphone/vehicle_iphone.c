@@ -94,6 +94,8 @@ static int vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr)
         priv->navit = attr->u.navit;
         return 1;
     }
+    if (attr->type == attr_vehicle_request_location_authorization)
+        corelocation_req_auth();
     return 0;
 }
 
