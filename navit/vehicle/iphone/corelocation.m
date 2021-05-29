@@ -88,7 +88,7 @@ void corelocation_exit(void) {
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
     fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"New Location: %@", [newLocation description]);
+    //NSLog(@"New Location: %@", [newLocation description]);
     NSString *newDateString = [self.dateFormatter stringFromDate:newLocation.timestamp];
     const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding];
 
