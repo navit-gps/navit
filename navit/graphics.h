@@ -162,6 +162,7 @@ struct graphics_methods {
     navit_float (*get_dpi)(struct graphics_priv * gr);
     void (*draw_polygon_with_holes) (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
                                      int hole_count, int* ccount, struct point **holes);
+    int(*get_has_appeared) (void); // To check view has appeared on iOS
 };
 
 
