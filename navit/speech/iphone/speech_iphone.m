@@ -27,48 +27,41 @@
 #import "VSSpeechSynthesizer.h"
 
 struct speech_priv {
-	VSSpeechSynthesizer *speech;
+    VSSpeechSynthesizer *speech;
 };
 
-static int
-speech_iphone_say(struct speech_priv *this, const char *text)
-{
-	dbg(0,"enter %s",text);
-	NSString *s=[[NSString alloc]initWithUTF8String: text];
-	[this->speech startSpeakingString:s toURL:nil];
-	[s release];
-	dbg(0,"ok");
-	return 1;
+static int speech_iphone_say(struct speech_priv *this, const char *text) {
+    dbg(0,"enter %s",text);
+    NSString *s=[[NSString alloc]initWithUTF8String: text];
+    [this->speech startSpeakingString:s];
+    [s release];
+    dbg(0,"ok");
+    return 1;
 }
 
-static void
-speech_iphone_destroy(struct speech_priv *this)
-{
-	[this->speech release];
-	g_free(this);
+static void speech_iphone_destroy(struct speech_priv *this) {
+    [this->speech release];
+    g_free(this);
 }
 
 static struct speech_methods speech_iphone_meth = {
-	speech_iphone_destroy,
-	speech_iphone_say,
+    speech_iphone_destroy,
+    speech_iphone_say,
 };
 
-static struct speech_priv *
-speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent)
-{
-	struct speech_priv *this;
-	*meth=speech_iphone_meth;
-	this=g_new0(struct speech_priv,1);
-	this->speech=[[NSClassFromString(@"VSSpeechSynthesizer") alloc] init];
-	dbg(0,"this->speech=%p",this->speech);
-	[this->speech setRate:(float)1.0];
-	return this;
+static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+    struct speech_priv *this;
+    *meth=speech_iphone_meth;
+    this=g_new0(struct speech_priv,1);
+    this->speech= [VSSpeechSynthesizer alloc];
+    [this->speech init];
+    dbg(0,"this->speech=%p",this->speech);
+    [this->speech setRate:(float)1.0];
+    return this;
 }
 
 
-void
-plugin_init(void)
-{
-	dbg(0,"enter");
-	plugin_register_category_speech("iphone", speech_iphone_new);
+void plugin_init(void) {
+    dbg(0,"enter");
+    plugin_register_category_speech("iphone", speech_iphone_new);
 }
