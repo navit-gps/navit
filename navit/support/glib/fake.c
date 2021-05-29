@@ -15,6 +15,10 @@
 #include <process.h>
 #endif
 
+#ifdef IOS
+#include <sys/time.h>
+#endif
+
 #include <stdio.h>              /* fputs/fprintf */
 
 char* g_convert (const char  *in,
