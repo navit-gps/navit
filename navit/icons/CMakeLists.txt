@@ -139,7 +139,11 @@ endforeach()
 endif()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
-add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/xpm COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)
+if (IOS)
+    add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/icons COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/icons)
+else (IOS)
+    add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/icons COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)
+endif (IOS)
 add_dependencies(images_resource images)
 
 install(
