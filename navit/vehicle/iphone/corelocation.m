@@ -28,26 +28,34 @@ corelocation *locationcontroller = NULL;
 
 /** C update procedure */
 void corelocation_update(double lat, double lng, double dir, double spd, char * str_time, double radius) {
-	FT_LOCATION_CB pf_cb = locationcontroller->pf_cb;
-	void * pv_arg = locationcontroller->pv_arg;
-	if(pf_cb) pf_cb(pv_arg, lat, lng, dir, spd, str_time, radius);
+    FT_LOCATION_CB pf_cb = locationcontroller->pf_cb;
+    void * pv_arg = locationcontroller->pv_arg;
+    if(pf_cb) pf_cb(pv_arg, lat, lng, dir, spd, str_time, radius);
 }
 
 /** C init procedure */
 void corelocation_init(void * pv_arg, FT_LOCATION_CB pf_cb) {
-	locationcontroller = [[corelocation alloc] init];
+    locationcontroller = [[corelocation alloc] init];
 
-	/** Save callbacks */
-	locationcontroller->pv_arg = pv_arg;
-	locationcontroller->pf_cb = pf_cb;
+    /** Save callbacks */
+    locationcontroller->pv_arg = pv_arg;
+    locationcontroller->pf_cb = pf_cb;
 
-	/** Start location process */
-	[locationcontroller.locationManager startUpdatingLocation];
+    /** Start location process */
+    /** We can't request authorization here as the view is not loaded yet */
+    [locationcontroller.locationManager startUpdatingLocation];
 }
+
+/** Request authorization */
+void corelocation_req_auth(void) {
+    [locationcontroller.locationManager requestWhenInUseAuthorization];
+    [locationcontroller.locationManager startUpdatingLocation];
+}
+
 
 /** C exit procedure */
 void corelocation_exit(void) {
-	[locationcontroller dealloc];
+    [locationcontroller dealloc];
 }
 
 /** Core location implementation */
@@ -61,53 +69,68 @@ void corelocation_exit(void) {
 
 /** Init corelocation */
 - (id) init {
-	self = [super init];
-	if (self != nil) {
-		self.locationManager = [[[CLLocationManager alloc] init] autorelease];
-		self.locationManager.distanceFilter = kCLDistanceFilterNone;
-		self.locationManager.delegate = self; // send loc updates to myself
-		self.pf_cb = NULL;
-		self.pv_arg = NULL;
-		self.eventDate = [NSDate date];
-		self.dateFormatter = [[NSDateFormatter alloc] init];
-		[self.dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
-	}
-	return self;
+    self = [super init];
+    if (self != nil) {
+        self.locationManager = [[[CLLocationManager alloc] init] autorelease];
+        self.locationManager.distanceFilter = kCLDistanceFilterNone;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        self.locationManager.delegate = self; // send loc updates to myself
+        self.pf_cb = NULL;
+        self.pv_arg = NULL;
+        self.eventDate = [NSDate date];
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+    }
+    return self;
 }
 
 /** New Data EVENT */
 - (void)locationManager:(CLLocationManager *)manager
-didUpdateToLocation:(CLLocation *)newLocation
-fromLocation:(CLLocation *)oldLocation
-{
-	NSLog(@"New Location: %@", [newLocation description]);
-	NSString *newDateString = [self.dateFormatter stringFromDate:newLocation.timestamp];
-	const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding];
+    didUpdateToLocation:(CLLocation *)newLocation
+    fromLocation:(CLLocation *)oldLocation {
+    NSLog(@"New Location: %@", [newLocation description]);
+    NSString *newDateString = [self.dateFormatter stringFromDate:newLocation.timestamp];
+    const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding];
 
-	if(self.pf_cb) {
-		self.pf_cb(
-				self.pv_arg,
-				(double)newLocation.coordinate.latitude,
-				(double) newLocation.coordinate.longitude,
-				(double) newLocation.course,
-				(double) newLocation.speed,
-				cString,
-				(double) newLocation.horizontalAccuracy
-			  );
-	}
+    if(self.pf_cb) {
+        self.pf_cb(
+            self.pv_arg,
+            (double) newLocation.coordinate.latitude,
+            (double) newLocation.coordinate.longitude,
+            (double) newLocation.course,
+            (double) newLocation.speed,
+            (char *) cString,
+            (double) newLocation.horizontalAccuracy
+        );
+    }
 }
 
 /** Error EVENT */
 - (void)locationManager:(CLLocationManager *)manager
-didFailWithError:(NSError *)error
-{
-	NSLog(@"Error: %@", [error description]);
+    didFailWithError:(NSError *)error {
+    NSLog(@"Error: %@", [error description]);
 }
 
 /** Destructor */
 - (void)dealloc {
-	[self.locationManager release];
-	[super dealloc];
+    [self.locationManager release];
+    [super dealloc];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    switch (status) {
+    case kCLAuthorizationStatusNotDetermined:
+    case kCLAuthorizationStatusRestricted:
+    case kCLAuthorizationStatusDenied: {
+        NSLog(@"Error: didChangeAuthorizationStatus");
+        [locationcontroller.locationManager requestWhenInUseAuthorization];
+    }
+    break;
+    default: {
+        [self.locationManager startUpdatingLocation];
+    }
+    break;
+    }
 }
 
 @end
