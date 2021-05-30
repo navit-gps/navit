@@ -18,14 +18,14 @@ AVSpeechSynthesizer *synth;
     self = [super init];
 
     if (self) {
-        utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to navit"];
+        //utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to navit"];
         synth = [[AVSpeechSynthesizer alloc] init];
         utterance.volume=90.0f;
         utterance.rate=0.50f;
         utterance.pitchMultiplier=0.80f;
         NSString * language = [[NSLocale preferredLanguages] firstObject];
         utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:language];
-        [synth speakUtterance:utterance];
+        //[synth speakUtterance:utterance];
 
     }
 
