@@ -163,7 +163,9 @@ set (CMAKE_OSX_SYSROOT ${CMAKE_IOS_SDK_ROOT} CACHE PATH "Sysroot used for iOS su
 
 # set the architecture for iOS
 if (${IOS_PLATFORM} STREQUAL "OS")
-    set (IOS_ARCH arm64)
+    if (NOT DEFINED IOS_ARCH)
+        set (IOS_ARCH arm64)
+    endif (NOT DEFINED IOS_ARCH)
 elseif (${IOS_PLATFORM} STREQUAL "SIMULATOR")
     set (IOS_ARCH i386;x86_64)
 endif ()
