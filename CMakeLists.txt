@@ -976,6 +976,8 @@ endif(USE_NATIVE_LANGUAGE_SUPPORT)
 
 if (APPLE)
     if(USE_UIKIT)
+        set_target_properties(${TARGET} PROPERTIES XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME "Launchicon")
+        set_target_properties(${TARGET} PROPERTIES XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set(CMAKE_XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2 ")
         set_xcode_property(navit UIRequiresFullScreen "YES")
     endif(USE_UIKIT)
