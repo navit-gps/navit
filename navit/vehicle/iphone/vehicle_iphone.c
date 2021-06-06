@@ -98,23 +98,24 @@ static int vehicle_iphone_req_loc_auth(void) {
 static int vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     if (attr->type == attr_navit) {
         priv->navit = attr->u.navit;
-       
+
         // We have the navit instance, get the graphics and set our callback
         struct attr graphics_attr;
-        
-        if(!navit_get_attr(priv->navit, attr_graphics, &graphics_attr, NULL)){
+
+        if(!navit_get_attr(priv->navit, attr_graphics, &graphics_attr, NULL)) {
             dbg(lvl_error, "Graphics not yet set in navit!");
         } else {
-            
+
             struct attr cbattr;
-            
+
             cbattr.type = attr_callback;
-            cbattr.u.callback=callback_new_attr_0(callback_cast(vehicle_iphone_req_loc_auth), attr_vehicle_request_location_authorization);
-            
+            cbattr.u.callback=callback_new_attr_0(callback_cast(vehicle_iphone_req_loc_auth),
+                                                  attr_vehicle_request_location_authorization);
+
             graphics_set_attr(graphics_attr.u.graphics, &cbattr);
-            
+
         }
-        
+
         return 1;
     }
     if (attr->type == attr_vehicle_request_location_authorization)
@@ -177,7 +178,7 @@ static struct vehicle_priv *vehicle_iphone_new(struct vehicle_methods
 
     /** Initialize corelocation */
     corelocation_init(ret, vehicle_iphone_update);
-                      
+
     return ret;
 }
 

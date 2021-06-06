@@ -62,10 +62,10 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
     } else {
         [this->speech setRate:(float)0.2];
     }
-    
+
     [this->speech setVolume:(float)90.0];
     [this->speech setPitch:(float)0.8];
-    
+
     return this;
 }
 
