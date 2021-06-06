@@ -218,16 +218,16 @@ float startScale = 1;
 
 @synthesize frame;
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
-     return (UIInterfaceOrientationMaskAll);
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return (UIInterfaceOrientationMaskAll);
 }
 
 - (IBAction)handlePinch:(UIPinchGestureRecognizer *)sender {
-    if(sender.state == UIGestureRecognizerStateEnded){
+    if(sender.state == UIGestureRecognizerStateEnded) {
         startScale = sender.scale;
-    }else if(sender.state == UIGestureRecognizerStateEnded){
+    } else if(sender.state == UIGestureRecognizerStateEnded) {
         float result = sender.scale * startScale;
-        
+
         dbg(0,"Pinch Gesture state: %i %f",(int)sender.state, result);
         //callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_zoom, result);
     } else {
@@ -237,19 +237,19 @@ float startScale = 1;
 }
 
 - (void)rotated:(NSNotification *)notification {
-    
+
     int width =(int)UIScreen.mainScreen.bounds.size.width;
     int height = (int)UIScreen.mainScreen.bounds.size.height;
-    
+
     // Hack: issue on iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
     // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
-    
+
     if (@available(iOS 11, *)) {
         lt_ten=0;
     }
-    
+
     if (lt_ten && (UIDeviceOrientationIsLandscape(orientation))) {
         global_graphics_cocoa->w=height;
         global_graphics_cocoa->h=width;
@@ -261,7 +261,7 @@ float startScale = 1;
         callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
         NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
     }
-    
+
     dbg(0,"Rotated");
 }
 
@@ -308,8 +308,8 @@ static void setup_graphics(struct graphics_priv *gr) {
 
         global_graphics_cocoa->w=frame.size.width;
         global_graphics_cocoa->h=frame.size.height;
- 
-        setup_graphics(global_graphics_cocoa);	
+
+        setup_graphics(global_graphics_cocoa);
     }
 
     [myV initWithFrame: frame];
@@ -320,17 +320,19 @@ static void setup_graphics(struct graphics_priv *gr) {
 }
 - (void)viewDidAppear:(BOOL)animated {
     dbg(lvl_error,"view appeared");
-    
+
     has_appeared = 1;
-    
+
     callback_list_call_attr_0(global_graphics_cocoa->cbl, attr_vehicle_request_location_authorization);
-    
+
     UIPinchGestureRecognizer* pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinch:)];
     [self.view addGestureRecognizer:pinch];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:UIDeviceOrientationDidChangeNotification object:nil];
 
-    [self rotated:(NULL)]; //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
+                                          UIDeviceOrientationDidChangeNotification object:nil];
+
+    [self rotated:
+          (NULL)]; //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
 }
 
 - (void)didReceiveMemoryWarning {
@@ -486,7 +488,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     size_t len,inlen=strlen(text)+1,outlen=strlen(text)+1;
     char outb[outlen];
     char *inp=text,*outp=outb;
-    
+
     CGContextRef context = gr->layer_context;
     CGContextSaveGState(context);
 
@@ -501,14 +503,15 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     CGColorRef color = CGColorCreate(CGColorSpaceCreateDeviceRGB(), fg->rgba);
     CGContextSetTextDrawingMode(context, kCGTextFill);
 
-    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font->size/16.0], NSFontAttributeName, [UIColor colorWithCGColor:(CGColorRef) color], NSForegroundColorAttributeName, nil];
-    
+    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font->size/16.0],
+                                        NSFontAttributeName, [UIColor colorWithCGColor:(CGColorRef) color], NSForegroundColorAttributeName, nil];
+
     UIGraphicsPushContext(context);
     [(id)mytext drawAtPoint:CGPointMake(p->x, p->y-font->size/16.0) withAttributes:attrs];
     UIGraphicsPopContext();
 
     CGContextRestoreGState(context);
-    
+
 }
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
@@ -549,7 +552,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
         int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     *meth=font_methods;
-      
+
     ret->size=size;
     ret->name="Helvetica";
     return ret;
@@ -703,7 +706,7 @@ static void overlay_resize(struct graphics_priv *this, struct point *p, int w, i
 }
 
 void graphics_destroy (struct graphics_priv *gr) {
-    
+
 }
 
 static struct graphics_methods graphics_methods = {
