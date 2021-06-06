@@ -600,9 +600,7 @@ void graphics_free(struct graphics *gra) {
     g_free(gra->default_font);
     graphics_font_destroy_all(gra);
     g_free(gra->font);
-    if (gra->meth.graphics_destroy) {
-        gra->meth.graphics_destroy(gra->priv);
-    }
+    gra->meth.graphics_destroy(gra->priv);
     g_free(gra);
 }
 

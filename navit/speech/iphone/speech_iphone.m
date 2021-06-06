@@ -56,7 +56,16 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
     this->speech= [VSSpeechSynthesizer alloc];
     [this->speech init];
     dbg(lvl_debug,"this->speech=%p",this->speech);
-    [this->speech setRate:(float)1.0];
+
+    if (@available(iOS 10, *)) {
+        [this->speech setRate:(float)0.5];
+    } else {
+        [this->speech setRate:(float)0.2];
+    }
+    
+    [this->speech setVolume:(float)90.0];
+    [this->speech setPitch:(float)0.8];
+    
     return this;
 }
 

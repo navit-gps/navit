@@ -20,6 +20,8 @@
 
 #if USE_UIKIT
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <CoreText/CoreText.h>
 #define NSRect CGRect
 #define NSMakeRect CGRectMake
 #define REVERSE_Y 0
@@ -79,7 +81,7 @@ struct graphics_font_priv {
 };
 
 int has_appeared = 0;
-
+float startScale = 1;
 
 
 @implementation NavitView
@@ -109,7 +111,7 @@ int has_appeared = 0;
 #if REVERSE_Y
             pc.y=graphics->h-pc.y-gr->h;
 #endif
-            dbg(1,"draw %dx%d at %f,%f",gr->w,gr->h,pc.x,pc.y);
+            dbg(0,"draw %dx%d at %f,%f",gr->w,gr->h,pc.x,pc.y);
             CGContextDrawLayerAtPoint(X, pc, gr->layer);
         }
         gr=gr->next;
@@ -117,6 +119,7 @@ int has_appeared = 0;
 }
 
 #if USE_UIKIT
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     NSArray *arr=touches.allObjects;
     UITouch *touch=[arr objectAtIndex: 0];
@@ -124,7 +127,7 @@ int has_appeared = 0;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -136,7 +139,7 @@ int has_appeared = 0;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -147,7 +150,7 @@ int has_appeared = 0;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -158,7 +161,7 @@ int has_appeared = 0;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 
@@ -168,7 +171,7 @@ int has_appeared = 0;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(1,"Enter %d %d",p.x,p.y);
+    dbg(0,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -177,7 +180,7 @@ int has_appeared = 0;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(1,"Enter %d %d",p.x,p.y);
+    dbg(0,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -186,7 +189,7 @@ int has_appeared = 0;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(1,"Enter %d %d",p.x,p.y);
+    dbg(0,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 #endif
@@ -215,27 +218,51 @@ int has_appeared = 0;
 
 @synthesize frame;
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+     return (UIInterfaceOrientationMaskAll);
+}
 
-    // before rotation
+- (IBAction)handlePinch:(UIPinchGestureRecognizer *)sender {
+    if(sender.state == UIGestureRecognizerStateEnded){
+        startScale = sender.scale;
+    }else if(sender.state == UIGestureRecognizerStateEnded){
+        float result = sender.scale * startScale;
+        
+        dbg(0,"Pinch Gesture state: %i %f",(int)sender.state, result);
+        //callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_zoom, result);
+    } else {
+        //Ignore state
+        dbg(0,"Pinch Gesture state: %i ",(int)sender.state);
+    }
+}
 
-    [coordinator animateAlongsideTransition:^(id  _Nonnull context) {
-
-//        // during rotation: update our image view's bounds and centre
-                    UIImageView *imageView = [self.view viewWithTag:100];
-                    imageView.bounds = self.view.bounds;
-                    imageView.center = self.view.center;
-
-                    global_graphics_cocoa->w=size.width;
-                    global_graphics_cocoa->h=size.height;
-
-                }
-                completion:^(id  _Nonnull context) {
-
-        // after rotation
-        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)size.width, (int)size.height);
-
-    }];
+- (void)rotated:(NSNotification *)notification {
+    
+    int width =(int)UIScreen.mainScreen.bounds.size.width;
+    int height = (int)UIScreen.mainScreen.bounds.size.height;
+    
+    // Hack: issue on iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
+    // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    int lt_ten=1;
+    
+    if (@available(iOS 11, *)) {
+        lt_ten=0;
+    }
+    
+    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation))) {
+        global_graphics_cocoa->w=height;
+        global_graphics_cocoa->h=width;
+        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)height, (int)width);
+        NSLog(@"Rotated 9 %i %i %i %ld", lt_ten, width, height, (long)orientation);
+    } else {
+        global_graphics_cocoa->w=width;
+        global_graphics_cocoa->h=height;
+        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
+        NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
+    }
+    
+    dbg(0,"Rotated");
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -269,8 +296,6 @@ static void setup_graphics(struct graphics_priv *gr) {
     CGContextClearRect(gr->layer_context, lr);
 }
 
-
-
 - (void)loadView {
     NSLog(@"loadView");
     NavitView* myV = [NavitView alloc];
@@ -280,9 +305,11 @@ static void setup_graphics(struct graphics_priv *gr) {
     if (global_graphics_cocoa) {
         global_graphics_cocoa->view=myV;
         myV->graphics=global_graphics_cocoa;
+
         global_graphics_cocoa->w=frame.size.width;
         global_graphics_cocoa->h=frame.size.height;
-        setup_graphics(global_graphics_cocoa);
+ 
+        setup_graphics(global_graphics_cocoa);	
     }
 
     [myV initWithFrame: frame];
@@ -293,7 +320,17 @@ static void setup_graphics(struct graphics_priv *gr) {
 }
 - (void)viewDidAppear:(BOOL)animated {
     dbg(lvl_error,"view appeared");
+    
     has_appeared = 1;
+    
+    callback_list_call_attr_0(global_graphics_cocoa->cbl, attr_vehicle_request_location_authorization);
+    
+    UIPinchGestureRecognizer* pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinch:)];
+    [self.view addGestureRecognizer:pinch];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:UIDeviceOrientationDidChangeNotification object:nil];
+
+    [self rotated:(NULL)]; //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
 }
 
 - (void)didReceiveMemoryWarning {
@@ -304,7 +341,6 @@ static void setup_graphics(struct graphics_priv *gr) {
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
-
 
 - (void)dealloc {
     [super dealloc];
@@ -347,6 +383,7 @@ static void setup_graphics(struct graphics_priv *gr) {
     NSRect appFrame = [UIScreen mainScreen].bounds;
 
     self.viewController = [[[NavitViewController alloc] init_withFrame : appFrame] autorelease];
+    self.viewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
     NSRect windowRect = NSMakeRect(0, 0, appFrame.size.width, appFrame.size.height);
 
@@ -381,7 +418,6 @@ static void setup_graphics(struct graphics_priv *gr) {
 #endif
 }
 
-
 - (void)dealloc {
     [viewController release];
     [window release];
@@ -394,7 +430,7 @@ static void setup_graphics(struct graphics_priv *gr) {
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end) {
-        dbg(1,"end %p",gr);
+        dbg(0,"end %p",gr);
         if (!gr->parent) {
 #if USE_UIKIT
             [gr->view setNeedsDisplay];
@@ -437,7 +473,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     CGRect lr=CGRectMake(p->x, p->y, w, h);
     if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
-        dbg(1,"clear %p %dx%d",gr,w,h);
+        dbg(0,"clear %p %dx%d",gr,w,h);
         free_graphics(gr);
         setup_graphics(gr);
     }
@@ -450,16 +486,29 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     size_t len,inlen=strlen(text)+1,outlen=strlen(text)+1;
     char outb[outlen];
     char *inp=text,*outp=outb;
+    
+    CGContextRef context = gr->layer_context;
+    CGContextSaveGState(context);
 
-    len=iconv (utf8_macosroman, &inp, &inlen, &outp, &outlen);
+    strcpy(outb, inp);
 
-    CGContextSetFillColor(gr->layer_context, fg->rgba);
+    CFStringRef mytext = CFStringCreateWithCString(NULL, outb, kCFStringEncodingUTF8);
 
-    CGContextSelectFont(gr->layer_context, font->name, font->size/16.0, kCGEncodingMacRoman);
-    CGContextSetTextDrawingMode(gr->layer_context, kCGTextFill);
-    CGAffineTransform xform = CGAffineTransformMake(dx/65536.0, dy/65536.0, dy/65536.0, -dx/65536.0, 0.0f, 0.0f);
-    CGContextSetTextMatrix(gr->layer_context, xform);
-    CGContextShowTextAtPoint(gr->layer_context, p->x, p->y, outb, strlen(outb));
+    if((dx!=0 && dx!=65536) || (dy !=0 && dy!=65536)) {
+        dbg(lvl_error, "TEXT: %s  dx: %i  dy: %i", text, dx, dy);
+    }
+
+    CGColorRef color = CGColorCreate(CGColorSpaceCreateDeviceRGB(), fg->rgba);
+    CGContextSetTextDrawingMode(context, kCGTextFill);
+
+    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font->size/16.0], NSFontAttributeName, [UIColor colorWithCGColor:(CGColorRef) color], NSForegroundColorAttributeName, nil];
+    
+    UIGraphicsPushContext(context);
+    [(id)mytext drawAtPoint:CGPointMake(p->x, p->y-font->size/16.0) withAttributes:attrs];
+    UIGraphicsPopContext();
+
+    CGContextRestoreGState(context);
+    
 }
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
@@ -500,7 +549,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
         int size, int flags) {
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     *meth=font_methods;
-
+      
     ret->size=size;
     ret->name="Helvetica";
     return ret;
@@ -562,7 +611,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct g
 
     CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
     CGDataProviderRelease(imgDataProvider);
-    dbg(1,"size %dx%d",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image));
+    dbg(0,"size %dx%d",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image));
     if (w)
         *w=(int)CGImageGetWidth(image);
     if (h)
@@ -607,8 +656,11 @@ static void overlay_disable(struct graphics_priv *gr, int disabled) {
     gr->overlay_disabled=disabled;
 }
 
-static int get_has_appeared(void) {
-    return has_appeared;
+static int set_attr(struct graphics_priv *gr, struct attr * attr) {
+    if(attr->type == attr_callback) {
+        callback_list_add(gr->cbl, attr->u.callback);
+    }
+    return 1;
 }
 
 static void overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound) {
@@ -633,28 +685,29 @@ static void overlay_resize(struct graphics_priv *this, struct point *p, int w, i
     }
 
     this->p = *p;
-    if (this->view.bounds.size.width != w2) {
-//        this->view.bounds.size.width = w2;
+    if (this->w != w2) {
+        this->w = w2;
         changed = 1;
     }
 
-    if (this->view.bounds.size.height != h2) {
-//        this->height = h2;
+    if (this->h != h2) {
+        this->h = h2;
         changed = 1;
     }
 
     this->wraparound = wraparound;
 
     if (changed) {
-//
-
-
         callback_list_call_attr_2(this->cbl, attr_resize, GINT_TO_POINTER(w), GINT_TO_POINTER(h));
     }
 }
 
+void graphics_destroy (struct graphics_priv *gr) {
+    
+}
+
 static struct graphics_methods graphics_methods = {
-    NULL, /* graphics_destroy, */
+    graphics_destroy, /* graphics_destroy, */
     draw_mode,
     draw_lines,
     draw_polygon,
@@ -674,12 +727,11 @@ static struct graphics_methods graphics_methods = {
     get_text_bbox,
     overlay_disable,
     overlay_resize,
-    NULL, /* set_attr, */
+    set_attr,
     NULL, /* show_native_keyboard, */
     NULL, /* hide_native_keyboard, */
     NULL, /* navit_float, */
     NULL, /* draw_polygon_with_holes, */
-    get_has_appeared,
 };
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
@@ -766,7 +818,7 @@ static struct event_timeout *event_cocoa_add_timeout(int timeout, int multi, str
     ret->cb=cb;
     ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(
                             onTimer:) userInfo:nil repeats:multi?YES:NO];
-    dbg(1,"timer=%p",ret->timer);
+    dbg(0,"timer=%p",ret->timer);
     return (struct event_timeout *)ret;
 }
 
@@ -785,7 +837,7 @@ static struct event_idle *event_cocoa_add_idle(int priority, struct callback *cb
     ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(
                             onTimer:) userInfo:nil repeats:YES];
 
-    dbg(1,"timer=%p",ret->timer);
+    dbg(0,"timer=%p",ret->timer);
     return (struct event_idle *)ret;
 }
 

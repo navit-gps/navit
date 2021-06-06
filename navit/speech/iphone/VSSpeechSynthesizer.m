@@ -12,21 +12,17 @@
 AVSpeechUtterance *utterance;
 AVSpeechSynthesizer *synth;
 
+float volume;
+float rate;
+float pitch;
+
 @implementation VSSpeechSynthesizer
 
 - (id)init {
     self = [super init];
 
     if (self) {
-        //utterance = [AVSpeechUtterance speechUtteranceWithString:@"Welcome to navit"];
         synth = [[AVSpeechSynthesizer alloc] init];
-        utterance.volume=90.0f;
-        utterance.rate=0.50f;
-        utterance.pitchMultiplier=0.80f;
-        NSString * language = [[NSLocale preferredLanguages] firstObject];
-        utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:language];
-        //[synth speakUtterance:utterance];
-
     }
 
     return self;
@@ -43,11 +39,9 @@ AVSpeechSynthesizer *synth;
 
 - (id)startSpeakingString:(id)string {
     utterance = [AVSpeechUtterance speechUtteranceWithString:string];
-    utterance.volume=90.0f;
-    utterance.rate=0.50f;
-    utterance.pitchMultiplier=0.80f;
-    NSString * language = [[NSLocale preferredLanguages] firstObject];
-    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:language];
+    utterance.volume=volume;
+    utterance.rate=rate;
+    utterance.pitchMultiplier=pitch;
     [synth speakUtterance:utterance];
 }
 
@@ -60,27 +54,27 @@ AVSpeechSynthesizer *synth;
 }
 
 - (float)rate {
-    return utterance.rate;
+    return rate;
 }
 
-- (id)setRate:(float)rate {
-
+- (id)setRate:(float)newrate {
+    rate = newrate;
 }
 
 - (float)pitch {
-    return utterance.pitchMultiplier;
+    return pitch;
 }
 
-- (id)setPitch:(float)pitch {
-    utterance.pitchMultiplier = pitch;
+- (id)setPitch:(float)newpitch {
+    pitch = newpitch;
 }
 
 - (float)volume {
-    return utterance.volume;
+    return volume;
 }
 
-- (id)setVolume:(float)volume {
-    utterance.volume=volume;
+- (id)setVolume:(float)newvolume {
+    volume = newvolume;
 }
 
 @end
