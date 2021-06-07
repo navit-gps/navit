@@ -52,7 +52,7 @@
 #endif
 
 #if IOS
-#include "gthreadprivate.h"
+//#include "gthreadprivate.h"
 #endif
 
 int main_argc;
