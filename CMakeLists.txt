@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.2)
-cmake_policy(SET CMP0066 NEW)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
 message(STATUS "Building with CMake V${CMAKE_VERSION}")
