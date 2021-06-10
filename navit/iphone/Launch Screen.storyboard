@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="ipad11_0rounded" orientation="landscape" layout="splitview1_3" appearance="dark"/>
+    <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,28 +12,26 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="834"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="navit" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
-                                <rect key="frame" x="0.0" y="257.5" width="375" height="43"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="navit" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" id="GJd-Yh-RWb">
+                                <rect key="frame" x="117.7244444471753" y="20.000000000000227" width="82.999999999999744" height="43.000000000000014"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Launchicon" translatesAutoresizingMaskIntoConstraints="NO" id="8ap-cQ-L5t">
-                                <rect key="frame" x="46" y="321" width="282" height="192"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Launchicon" id="8ap-cQ-L5t">
+                                <rect key="frame" x="36.724444447174847" y="68.999999999999545" width="244.00000000000034" height="251.00000000000009"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="8ap-cQ-L5t" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="Fcz-Mb-yBP"/>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="Q3B-4B-g5h"/>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="8ap-cQ-L5t" secondAttribute="bottom" constant="29" id="gZw-cS-C0t"/>
-                            <constraint firstItem="8ap-cQ-L5t" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="94.5" id="kvX-4j-S2f"/>
-                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="bottom" multiplier="1/3" constant="1" id="moa-c2-u7t"/>
-                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="x7j-FC-K8j"/>
+                            <constraint firstItem="8ap-cQ-L5t" firstAttribute="top" relation="greaterThanOrEqual" secondItem="GJd-Yh-RWb" secondAttribute="centerY" constant="-50" id="978-mE-pT1"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="top" secondItem="8ap-cQ-L5t" secondAttribute="top" id="Bg8-NL-ozK"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -43,6 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Launchicon" width="512" height="512"/>
+        <image name="Launchicon" width="1024" height="1024"/>
     </resources>
 </document>

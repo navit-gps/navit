@@ -90,9 +90,14 @@ if(NOT ANDROID)
 		set_target_properties(navit PROPERTIES OUTPUT_NAME ${NAVIT_BINARY})
 	endif(DEFINED NAVIT_BINARY)
 	if (BUILD_BUNDLE)
+ message(STATUS "BUILD DIRS: ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}")
 		add_custom_command(OUTPUT resources/share COMMAND mkdir -p resources/share)
-        target_sources(navit PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/iphone/Images.xcassets)
-		set_source_files_properties(resources/share resources/Icon.png resources/Default.png ${CMAKE_CURRENT_SOURCE_DIR}/iphone/Images.xcassets "${CMAKE_CURRENT_SOURCE_DIR}/iphone/Launch Screen.storyboard" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/iphone/Images.xcassets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/navit)
+        add_custom_command( OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/icons/navit.png COMMAND rsvg-convert -f png -o ${CMAKE_CURRENT_SOURCE_DIR}/icons/navit.png -w 1024 -h 1024 ${CMAKE_CURRENT_SOURCE_DIR}/icons/navit.svg)
+        execute_process(COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/../scripts/ios-icon-generator.sh ${CMAKE_CURRENT_SOURCE_DIR}/icons/navit.png ${CMAKE_CURRENT_BINARY_DIR}/navit/Images.xcassets/AppIcon.appiconset)
+        file(COPY ${CMAKE_CURRENT_BINARY_DIR}/navit/Images.xcassets/AppIcon.appiconset/navit-1024.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/navit/Images.xcassets/Launchicon.imageset)
+        target_sources(navit PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/navit/Images.xcassets)
+		set_source_files_properties(resources/share resources/Icon.png resources/Default.png ${CMAKE_CURRENT_BINARY_DIR}/Images.xcassets "${CMAKE_CURRENT_SOURCE_DIR}/iphone/Launch Screen.storyboard" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 		set_target_properties(navit PROPERTIES MACOSX_BUNDLE TRUE)
 		set_target_properties(navit PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 		add_dependencies(navit navit_config_xml_resource)
@@ -258,3 +263,5 @@ WRITE_FILE("cmake_plugin_settings.txt"
 	"set(LIB_DIR \"${LIB_DIR}\" CACHE STRING init)\n"
 	"set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\" CACHE STRING init)\n"
 	)
+ 
+ message (STATUS "BUILD BUNCLE: ${BUILD_BUNDLE}")

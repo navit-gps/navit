@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-
+cmake_policy(SET CMP0066 NEW)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
 message(STATUS "Building with CMake V${CMAKE_VERSION}")
@@ -8,6 +8,11 @@ if (DISABLE_CXX)
 else(DISABLE_CXX)
 	project(navit C CXX)
 endif(DISABLE_CXX)
+
+if(USE_UIKIT)
+# Set the find root to the iOS developer roots
+    set (CMAKE_FIND_ROOT_PATH ${CMAKE_IOS_DEVELOPER_ROOT}/ ${CMAKE_IOS_SDK_ROOT}/ ${CMAKE_FIND_ROOT_PATH} CACHE string  "iOS find search path root")
+endif(USE_UIKIT)
 
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
 if(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$")
@@ -292,7 +297,7 @@ if (USE_UIKIT)
 	set(HAVE_GETOPT_H TRUE)
 endif(USE_UIKIT)
 CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
-CHECK_INCLUDE_FILES(string.h HAVE_STDLIB_H)
+CHECK_INCLUDE_FILES(stdlib.h HAVE_STDLIB_H)
 if (USE_UIKIT)
     set(HAVE_STDLIB_H TRUE)
 endif(USE_UIKIT)
@@ -536,7 +541,7 @@ if (USE_UIKIT)
     set(XGETTEXT "/usr/local/bin/xgettext")
     set(GETTEXT_MSGMERGE_EXECUTABLE "/usr/local/bin/msgmerge")
     set(GETTEXT_MSGFMT_EXECUTABLE "/usr/local/bin/msgfmt")
-    add_compile_definitions(IOS)
+    add_compile_definitions(IOS )
 endif(USE_UIKIT)
 
 #Independent modules
@@ -988,4 +993,17 @@ if (APPLE)
     message(STATUS "CODE_SIGN_IDENTITY: ${CODE_SIGN_IDENTITY}")
     SET_XCODE_PROPERTY(navit DEVELOPMENT_TEAM ${DEVELOPMENT_TEAM_ID} )
     message(STATUS "DEVELOPMENT_TEAM_ID: ${DEVELOPMENT_TEAM_ID}")
+message(STATUS "FIND ROOT PATH: ${INCLUDE} ${CMAKE_FIND_ROOT_PATH} ${CMAKE_IOS_DEVELOPER_ROOT} ${CMAKE_IOS_SDK_ROOT}")
 endif (APPLE)
+
+
+macro(print_all_variables)
+    message(STATUS "print_all_variables------------------------------------------{")
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+    message(STATUS "print_all_variables------------------------------------------}")
+endmacro()
+
+print_all_variables()
