@@ -24,8 +24,9 @@ struct speech_priv;
 struct attr_iter;
 
 struct speech_methods {
-	void (*destroy)(struct speech_priv *this_);
-	int (*say)(struct speech_priv *this_, const char *text);
+    void (*destroy)(struct speech_priv *this_);
+    int (*say)(struct speech_priv *this_, const char *text);
+    void (*useHFP)(int use_hfp);
 };
 
 /* prototypes */
