@@ -19,7 +19,7 @@
 #endif
 
 #if USE_UIKIT
-#import <UIKit/UIKit.h>
+#include "graphics_cocoa.h"
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #define NSRect CGRect
@@ -489,9 +489,10 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
                       struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
-    size_t len,inlen=strlen(text)+1,outlen=strlen(text)+1;
+#pragma unused (bg)
+    size_t outlen=strlen(text)+1;
     char outb[outlen];
-    char *inp=text,*outp=outb;
+    char *inp=text;
 
     CGContextRef context = gr->layer_context;
     CGContextSaveGState(context);
@@ -520,6 +521,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
                        struct graphics_image_priv *img) {
+#pragma unused (fg)
     CGImageRef imgc=(CGImageRef) img;
     int w=(int)CGImageGetWidth(imgc);
     int h=(int)CGImageGetHeight(imgc);
@@ -554,6 +556,7 @@ static void draw_drag(struct graphics_priv *gr, struct point *p) {
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
         int size, int flags) {
+#pragma unused (font, flags, gr)
     struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
     *meth=font_methods;
 
@@ -571,6 +574,7 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
 }
 
 static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
+#pragma unused (gc, w, offset, dash_list, n)
 }
 
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
@@ -581,6 +585,11 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
+#pragma unused (gc, c)
+}
+
+static void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
+#pragma unused (gc, img)
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -589,9 +598,11 @@ static struct graphics_gc_methods gc_methods = {
     gc_set_dashes,
     gc_set_foreground,
     gc_set_background,
+    gc_set_texture,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
+#pragma unused (gr, meth)
     struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
     gc->w=1;
 
@@ -601,6 +612,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 
 static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
+#pragma unused (gr, gc)
 }
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
@@ -609,6 +621,7 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path,
         int *w, int *h, struct point *hot, int rotation) {
+#pragma unused (gra, meth, rotation)
     NSString *s=[[NSString alloc]initWithCString:path encoding:NSMacOSRomanStringEncoding];
     CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((CFDataRef)[NSData dataWithContentsOfFile:s]);
     [s release];
@@ -638,11 +651,13 @@ static void *get_data(struct graphics_priv *this, const char *type) {
 }
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
+#pragma unused (gr)
     CGImageRelease((CGImageRef)priv);
 }
 
 static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
                           struct point *ret, int estimate) {
+#pragma unused (gr, dx, dy, estimate)
     int len = (int)g_utf8_strlen(text, -1);
     int xMin = 0;
     int yMin = 0;
@@ -709,8 +724,8 @@ static void overlay_resize(struct graphics_priv *this, struct point *p, int w, i
     }
 }
 
-void graphics_destroy (struct graphics_priv *gr) {
-
+static void graphics_destroy (struct graphics_priv *gr) {
+#pragma unused (gr)
 }
 
 static struct graphics_methods graphics_methods = {
@@ -756,8 +771,9 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     return ret;
 }
 
-struct graphics_priv *
+static struct graphics_priv *
 graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+#pragma unused (attrs, nav)
     struct graphics_priv *ret;
     *meth=graphics_methods;
     dbg(1,"enter");
@@ -839,6 +855,7 @@ static void event_cocoa_remove_timeout(struct event_timeout *ev) {
 
 
 static struct event_idle *event_cocoa_add_idle(int priority, struct callback *cb) {
+#pragma unused (priority)
     NavitTimer *ret=[[NavitTimer alloc]init];
     ret->cb=cb;
     ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(

@@ -25,8 +25,6 @@ int current_is_hfp;
 
 - (id)init {
 
-    NSError *setCategoryErr = nil;
-
     self = [super init];
 
     if (self) {
@@ -41,8 +39,8 @@ int current_is_hfp;
     return self;
 }
 
-+ (id)availableLanguageCodes {
-}
+//+ (id)availableLanguageCodes {
+//}
 
 + (BOOL)isSystemSpeaking {
     return synth.speaking;
@@ -90,14 +88,15 @@ int current_is_hfp;
     utterance.volume=volume;
     [synth speakUtterance:utterance];
     NSLog (@"AVSpeechUtterance play navigation announcement: %@", activationErr.localizedFailureReason);
+    return 0;
 }
 
 - (id)startSpeakingString:(id)string toURL:(id)url {
-
+    return 0;
 }
 
 - (id)startSpeakingString:(id)string toURL:(id)url withLanguageCode:(id)code {
-
+    return 0;
 }
 
 - (float)rate {
@@ -106,6 +105,7 @@ int current_is_hfp;
 
 - (id)setRate:(float)newrate {
     rate = newrate;
+    return 0;
 }
 
 - (float)pitch {
@@ -114,6 +114,7 @@ int current_is_hfp;
 
 - (id)setPitch:(float)newpitch {
     pitch = newpitch;
+    return 0;
 }
 
 - (float)volume {
@@ -122,11 +123,11 @@ int current_is_hfp;
 
 - (id)setVolume:(float)newvolume {
     volume = newvolume;
+    return 0;
 }
 
 - (id)useHFP:(int)newuse_hfp force:(int)force {
 
-    NSError *activationErr = nil;
     NSError *setCategoryErr = nil;
 
     // Change only for NO and YES
@@ -162,6 +163,7 @@ int current_is_hfp;
         NSLog(@"AVAudioSession A2DP: %@", setCategoryErr.localizedFailureReason);
     }
 
+    return 0;
 }
 
 - (BOOL)is_useHFP {

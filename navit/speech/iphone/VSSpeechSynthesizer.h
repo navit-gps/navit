@@ -5,7 +5,7 @@
 {
 }
 
-+ (id)availableLanguageCodes;
+//+ (id)availableLanguageCodes;
 + (BOOL)isSystemSpeaking;
 - (id)startSpeakingString:(id)string;
 - (id)startSpeakingString:(id)string toURL:(id)url;
