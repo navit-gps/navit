@@ -249,18 +249,19 @@ float startScale = 1;
     if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
         lt_ten=0;
     }
-    
+
     // iOS 9 seems to report UIDeviceOrientationIsLandscape=false if we have UIDeviceOrientationFaceUp/UIDeviceOrientationFaceDown
-    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation) || orientation==UIDeviceOrientationFaceDown || orientation == UIDeviceOrientationFaceUp)) {
+    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation) || orientation==UIDeviceOrientationFaceDown
+                   || orientation == UIDeviceOrientationFaceUp)) {
         global_graphics_cocoa->w=height;
         global_graphics_cocoa->h=width;
         callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)height, (int)width);
         NSLog(@"Rotated 9 %i %i %i %ld", lt_ten, width, height, (long)orientation);
     } else {
-            global_graphics_cocoa->w=width;
-            global_graphics_cocoa->h=height;
-            callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
-            NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
+        global_graphics_cocoa->w=width;
+        global_graphics_cocoa->h=height;
+        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
+        NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
     }
 
     dbg(1,"Rotated");
@@ -321,7 +322,7 @@ static void setup_graphics(struct graphics_priv *gr) {
 }
 - (void)viewDidAppear:(BOOL)animated {
     dbg(lvl_debug,"view appeared");
-    
+
     self.modalPresentationCapturesStatusBarAppearance = false;
 
     has_appeared = 1;
