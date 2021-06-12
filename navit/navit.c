@@ -3193,11 +3193,9 @@ static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, st
 
     attr.type=attr_vehicle_request_location_authorization;
 
-    if (this_->blocked||coord_not_set(nv->coord)) {
-//        if(coord_not_set(nv->coord))
-//            vehicle_set_attr(nv->vehicle, &attr);
+    if (this_->blocked||coord_not_set(nv->coord))
         return;
-    }
+
     if (pnt)
         cursor_pnt=*pnt;
     else {
