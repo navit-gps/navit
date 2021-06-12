@@ -111,7 +111,7 @@ float startScale = 1;
 #if REVERSE_Y
             pc.y=graphics->h-pc.y-gr->h;
 #endif
-            dbg(0,"draw %dx%d at %f,%f",gr->w,gr->h,pc.x,pc.y);
+            dbg(1,"draw %dx%d at %f,%f",gr->w,gr->h,pc.x,pc.y);
             CGContextDrawLayerAtPoint(X, pc, gr->layer);
         }
         gr=gr->next;
@@ -127,7 +127,7 @@ float startScale = 1;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -139,7 +139,7 @@ float startScale = 1;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -150,7 +150,7 @@ float startScale = 1;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -161,7 +161,7 @@ float startScale = 1;
     struct point p;
     p.x=pc.x;
     p.y=pc.y;
-    dbg(0,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
+    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
     callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 
@@ -171,7 +171,7 @@ float startScale = 1;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(0,"Enter %d %d",p.x,p.y);
+    dbg(1,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -180,7 +180,7 @@ float startScale = 1;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(0,"Enter %d %d",p.x,p.y);
+    dbg(1,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
 }
 
@@ -189,7 +189,7 @@ float startScale = 1;
     p.x=theEvent.locationInWindow.x;
     p.y=graphics->h-theEvent.locationInWindow.y;
 
-    dbg(0,"Enter %d %d",p.x,p.y);
+    dbg(1,"Enter %d %d",p.x,p.y);
     callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
 }
 #endif
@@ -228,11 +228,11 @@ float startScale = 1;
     } else if(sender.state == UIGestureRecognizerStateEnded) {
         float result = sender.scale * startScale;
 
-        dbg(0,"Pinch Gesture state: %i %f",(int)sender.state, result);
+        dbg(1,"Pinch Gesture state: %i %f",(int)sender.state, result);
         //callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_zoom, result);
     } else {
         //Ignore state
-        dbg(0,"Pinch Gesture state: %i ",(int)sender.state);
+        dbg(1,"Pinch Gesture state: %i ",(int)sender.state);
     }
 }
 
@@ -246,23 +246,24 @@ float startScale = 1;
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
 
-    if (@available(iOS 11, *)) {
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
         lt_ten=0;
     }
-
-    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation))) {
+    
+    // iOS 9 seems to report UIDeviceOrientationIsLandscape=false if we have UIDeviceOrientationFaceUp/UIDeviceOrientationFaceDown
+    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation) || orientation==UIDeviceOrientationFaceDown || orientation == UIDeviceOrientationFaceUp)) {
         global_graphics_cocoa->w=height;
         global_graphics_cocoa->h=width;
         callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)height, (int)width);
         NSLog(@"Rotated 9 %i %i %i %ld", lt_ten, width, height, (long)orientation);
     } else {
-        global_graphics_cocoa->w=width;
-        global_graphics_cocoa->h=height;
-        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
-        NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
+            global_graphics_cocoa->w=width;
+            global_graphics_cocoa->h=height;
+            callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
+            NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
     }
 
-    dbg(0,"Rotated");
+    dbg(1,"Rotated");
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -319,7 +320,9 @@ static void setup_graphics(struct graphics_priv *gr) {
     [myV release];
 }
 - (void)viewDidAppear:(BOOL)animated {
-    dbg(lvl_error,"view appeared");
+    dbg(lvl_debug,"view appeared");
+    
+    self.modalPresentationCapturesStatusBarAppearance = false;
 
     has_appeared = 1;
 
@@ -336,7 +339,7 @@ static void setup_graphics(struct graphics_priv *gr) {
 }
 
 - (void)didReceiveMemoryWarning {
-    dbg(0,"enter");
+    dbg(1,"enter");
 }
 
 - (void)viewDidUnload {
@@ -432,7 +435,7 @@ static void setup_graphics(struct graphics_priv *gr) {
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end) {
-        dbg(0,"end %p",gr);
+        dbg(1,"end %p",gr);
         if (!gr->parent) {
 #if USE_UIKIT
             [gr->view setNeedsDisplay];
@@ -475,7 +478,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     CGRect lr=CGRectMake(p->x, p->y, w, h);
     if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
-        dbg(0,"clear %p %dx%d",gr,w,h);
+        dbg(1,"clear %p %dx%d",gr,w,h);
         free_graphics(gr);
         setup_graphics(gr);
     }
@@ -497,7 +500,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     CFStringRef mytext = CFStringCreateWithCString(NULL, outb, kCFStringEncodingUTF8);
 
     if((dx!=0 && dx!=65536) || (dy !=0 && dy!=65536)) {
-        dbg(lvl_error, "TEXT: %s  dx: %i  dy: %i", text, dx, dy);
+        dbg(lvl_debug, "TEXT: %s  dx: %i  dy: %i", text, dx, dy);
     }
 
     CGColorRef color = CGColorCreate(CGColorSpaceCreateDeviceRGB(), fg->rgba);
@@ -614,7 +617,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct g
 
     CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
     CGDataProviderRelease(imgDataProvider);
-    dbg(0,"size %dx%d",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image));
+    dbg(1,"size %dx%d",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image));
     if (w)
         *w=(int)CGImageGetWidth(image);
     if (h)
@@ -756,7 +759,7 @@ struct graphics_priv *
 graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct graphics_priv *ret;
     *meth=graphics_methods;
-    dbg(0,"enter");
+    dbg(1,"enter");
     if(!event_request_system("cocoa","graphics_cocoa"))
         return NULL;
     ret=g_new0(struct graphics_priv, 1);
@@ -767,7 +770,7 @@ graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr
 
 static void event_cocoa_main_loop_run(void) {
 
-    dbg(0,"enter");
+    dbg(1,"enter");
 #if 0
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -777,9 +780,9 @@ static void event_cocoa_main_loop_run(void) {
 #endif
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 #if USE_UIKIT
-    dbg(0,"calling main");
+    dbg(1,"calling main");
     int retval = UIApplicationMain(main_argc, (char * _Nullable * _Nonnull)main_argv, nil, @"NavitAppDelegate");
-    dbg(0,"retval=%d",retval);
+    dbg(1,"retval=%d",retval);
 #else
     NavitAppDelegate * delegate = [[NavitAppDelegate alloc] init];
     NSApplication * application = [NSApplication sharedApplication];
@@ -821,7 +824,7 @@ static struct event_timeout *event_cocoa_add_timeout(int timeout, int multi, str
     ret->cb=cb;
     ret->timer=[NSTimer scheduledTimerWithTimeInterval:(timeout/1000.0) target:ret selector:@selector(
                             onTimer:) userInfo:nil repeats:multi?YES:NO];
-    dbg(0,"timer=%p",ret->timer);
+    dbg(1,"timer=%p",ret->timer);
     return (struct event_timeout *)ret;
 }
 
@@ -840,7 +843,7 @@ static struct event_idle *event_cocoa_add_idle(int priority, struct callback *cb
     ret->timer=[NSTimer scheduledTimerWithTimeInterval:(0.0) target:ret selector:@selector(
                             onTimer:) userInfo:nil repeats:YES];
 
-    dbg(0,"timer=%p",ret->timer);
+    dbg(1,"timer=%p",ret->timer);
     return (struct event_idle *)ret;
 }
 
@@ -865,14 +868,14 @@ static struct event_methods event_cocoa_methods = {
 
 
 static struct event_priv *event_cocoa_new(struct event_methods *meth) {
-    dbg(0,"enter");
+    dbg(1,"enter");
     *meth=event_cocoa_methods;
     return NULL;
 }
 
 
 void plugin_init(void) {
-    dbg(0,"enter");
+    dbg(1,"enter");
     plugin_register_category_graphics("cocoa", graphics_cocoa_new);
     plugin_register_category_event("cocoa", event_cocoa_new);
 }
