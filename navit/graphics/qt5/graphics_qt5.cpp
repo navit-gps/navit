@@ -55,6 +55,7 @@ extern "C" {
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QElapsedTimer>
 #endif
 #if USE_QWIDGET
 #include "QNavitWidget.h"
@@ -643,10 +644,11 @@ static void background_gc(struct graphics_priv* gr, struct graphics_gc_priv* gc)
     //        dbg(lvl_debug,"register context %p on %p", gc, gr);
     gr->background_graphics_gc_priv = gc;
 }
-
+static QElapsedTimer elapsedTimer;
 static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
     switch (mode) {
     case draw_mode_begin:
+        elapsedTimer.restart();
         dbg(lvl_debug, "Begin drawing on context %p (use == %d)", gr, gr->use_count);
         gr->use_count++;
         if (gr->painter == NULL) {
@@ -681,6 +683,7 @@ static void draw_mode(struct graphics_priv* gr, enum draw_mode_num mode) {
 
 #endif
 
+        dbg(lvl_debug, "qt5 draw took : %lld milliseconds to complete", elapsedTimer.elapsed())
         break;
     default:
         dbg(lvl_debug, "Unknown drawing %d on context %p", mode, gr);
