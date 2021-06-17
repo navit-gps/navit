@@ -31,7 +31,7 @@ Item {
         delegate: Item {
             id: element
             height: 80
-            width: parent.width
+            width: listView.width
 
             Text {
                 id: element1

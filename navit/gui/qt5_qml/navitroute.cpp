@@ -139,41 +139,43 @@ void NavitRoute::routeUpdate(){
 
     if (navit_get_attr(m_navitInstance->getNavit(), attr_route, &route, nullptr)) {
         struct attr destination_length, destination_time;
-        char *distance=nullptr,*timeLeft=nullptr;
 
         if (route_get_attr(route.u.route, attr_destination_length, &destination_length, nullptr)){
-            distance=attr_to_text_ext(&destination_length, nullptr, attr_format_with_units, attr_format_default, nullptr);
+            m_distance = attr_to_text_ext(&destination_length, nullptr, attr_format_with_units, attr_format_default, nullptr);
         }
 
         if (route_get_attr(route.u.route, attr_destination_time, &destination_time, nullptr)){
-            timeLeft=attr_to_text_ext(&destination_time, nullptr, attr_format_with_units, attr_format_default, nullptr);
+            char test[] = ": ads :";
+
+            QStringList timeLeft = QString(attr_to_text_ext(&destination_time, test, attr_format_with_units, attr_format_default, nullptr)).split(":");
+            QDateTime dt = QDateTime::currentDateTime();
+            QTime time;
+
+            switch (timeLeft.size()) {
+            case 4:
+    //            m_timeLeft = QString("%1 days %2 hours %3%4").arg("");
+                dt = dt.addDays(timeLeft[0].toInt());
+                time.setHMS(timeLeft[1].toInt(),timeLeft[2].toInt(),timeLeft[3].toInt());
+                m_timeLeft = QString("%1 day %2 h %3 min").arg(timeLeft[0].toInt()).arg(timeLeft[1].toInt()).arg(timeLeft[2].toInt());
+                break;
+            case 3:
+                time.setHMS(timeLeft[0].toInt(),timeLeft[1].toInt(),timeLeft[2].toInt());
+                m_timeLeft = QString("%1 h %2 min").arg(timeLeft[0].toInt()).arg(timeLeft[1].toInt());
+                break;
+            case 2:
+                time.setHMS(0,timeLeft[0].toInt(),timeLeft[1].toInt());
+                m_timeLeft = QString("%1 min").arg(timeLeft[0].toInt());
+                break;
+            case 1:
+                time.setHMS(0,0,timeLeft[0].toInt());
+                m_timeLeft = QString("%1 seconds").arg(timeLeft[0].toInt());
+                break;
+            }
+
+            dt = dt.addMSecs(time.msecsSinceStartOfDay());
+
+            m_arrivalTime = dt.toString("hh:mm");
         }
-
-        QStringList timeLeftArr = QString(timeLeft).split(":");
-        QDateTime dt = QDateTime::currentDateTime();
-        QTime time;
-
-        switch (timeLeftArr.size()) {
-        case 4:
-            dt = dt.addDays(timeLeftArr[0].toInt());
-            time.setHMS(timeLeftArr[1].toInt(),timeLeftArr[2].toInt(),timeLeftArr[3].toInt());
-            break;
-        case 3:
-            time.setHMS(timeLeftArr[0].toInt(),timeLeftArr[1].toInt(),timeLeftArr[2].toInt());
-            break;
-        case 2:
-            time.setHMS(0,timeLeftArr[0].toInt(),timeLeftArr[1].toInt());
-            break;
-        case 1:
-            time.setHMS(0,0,timeLeftArr[0].toInt());
-            break;
-        }
-
-        dt = dt.addMSecs(time.msecsSinceStartOfDay());
-
-        m_distance = distance;
-        m_timeLeft = timeLeft;
-        m_arrivalTime = dt.toString("hh:mm");
     }
 
     struct attr vehicle,speed_attr;

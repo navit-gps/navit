@@ -85,31 +85,7 @@ Item {
         }
     }
 
-    Rectangle {
-        id: contentRect
-        color: "#a4a4a4"
-        radius: 15
-        clip: true
-        anchors.topMargin: parent.height * 0.02
-        anchors.bottomMargin: parent.height * 0.02
-        anchors.rightMargin: parent.height * 0.02
-        anchors.leftMargin: parent.height * 0.02
-        anchors.fill: parent
-        Item {
-            id: contentWrapper
-            clip: true
-            anchors.rightMargin: parent.radius
-            anchors.leftMargin: parent.radius
-            anchors.bottomMargin: parent.radius
-            anchors.topMargin: parent.radius
-            anchors.fill: parent
-            StackView {
-                id:menuStack
-                anchors.fill: parent
-                initialItem: menuListView
-            }
-        }
-    }
+
 
     Component {
         id:menuListView
@@ -263,11 +239,6 @@ Item {
             imageUrl: ""
         }
         ListElement {
-            name: "Northing"
-            action: ""
-            imageUrl: ""
-        }
-        ListElement {
             name: "Map follows Vehicle"
             action: ""
             imageUrl: ""
@@ -334,9 +305,46 @@ Item {
             imageUrl: ""
         }
     }
+
+    Rectangle {
+        id: rectangle
+        color: "#ffffff"
+        radius: 20
+        anchors.fill: parent
+    }
+
+    Rectangle {
+        id: contentRect
+        color: "#a4a4a4"
+        radius: 15
+        clip: true
+        anchors.topMargin: parent.height * 0.02
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.height * 0.02
+        anchors.leftMargin: parent.height * 0.02
+        anchors.fill: parent
+        Item {
+            id: contentWrapper
+            clip: true
+            anchors.rightMargin: parent.radius
+            anchors.leftMargin: parent.radius
+            anchors.bottomMargin: parent.radius
+            anchors.topMargin: parent.radius
+            anchors.fill: parent
+            StackView {
+                id:menuStack
+                anchors.fill: parent
+                initialItem: menuListView
+            }
+        }
+    }
 }
 
+
+
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;height:480;width:640}D{i:37;anchors_height:200;anchors_width:200}
 }
  ##^##*/

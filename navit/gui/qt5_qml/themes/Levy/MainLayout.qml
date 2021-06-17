@@ -11,6 +11,13 @@ Item {
     property string prevState: ""
     height: parent.height
 
+    onStateChanged: {
+        if(state != "mapControlsVisible") {
+            mapControlsTimer.stop()
+        }
+        console.log(state)
+    }
+
     QtObject {
         id:navigation
 
@@ -20,7 +27,7 @@ Item {
             previous_pitch = navit1.pitch;
             __root.state = "routeOverview"
             navit1.pitch = 0;
-            navit1.followVehicle = 0;
+            navit1.followVehicle = false;
             navit1.zoomToRoute();
             navit1.zoomOut(2);
         }
@@ -30,8 +37,9 @@ Item {
             __root.prevState = ""
             mapNavigationBar.setNavigationState()
 
-//            navit1.pitch = 45;
-            navit1.followVehicle = 1
+            navit1.pitch = 45;
+            navit1.orientation = -1
+            navit1.followVehicle = true
             navit1.autoZoom = true
             navit1.centerOnPosition()
         }
@@ -39,7 +47,8 @@ Item {
         function cancelNavigation() {
             __root.state = __root.prevState
             __root.prevState = ""
-            navit1.followVehicle = 1;
+            navit1.followVehicle = true;
+            navit1.pitch = 0;
         }
     }
 
@@ -67,94 +76,77 @@ Item {
     NavitMap {
         id: navit1
         anchors.leftMargin: 0
+        anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.right: parent.right
         width: parent.width
         navit:Navit
-    }
 
-    Text {
-        x: 25
-        y: 25
-        text: "Zoom Level : " + navit1.zoomLevel
-    }
-
-    onStateChanged: {
-        if(state != "mapControlsVisible") {
-            mapControlsTimer.stop()
-        }
-    }
-
-    MouseArea {
-        id: mouseArea4
-        enabled: true
-        anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-        property int originX: 0
-        property int originY: 0
         property bool hasMoved : false
 
-        onClicked: {
-            switch(mouse.button){
-            case Qt.LeftButton :
-                if(__root.state == ""){
-                    mapControls.showControls()
-                }
-                break;
-            case Qt.RightButton  :
-                navit1.followVehicle = 0
-                pinpointPopup.mouseY = mouse.y
-                pinpointPopup.mouseX = mouse.x
-                pinpointPopup.address = navit1.getAddress(mouse.x, mouse.y)
-                pinpointPopup.open()
-                break;
+        onLeftButtonClicked: {
+            if(__root.state == ""){
+                mapControls.showControls()
             }
         }
-        onPressed: {
-            originX = mouse.x
-            originY = mouse.y
-            hasMoved = false
+        onRightButtonClicked: {
+            navit1.followVehicle = false
+            pinpointPopup.mouseY = position.y
+            pinpointPopup.mouseX = position.x
+            pinpointPopup.address = navit1.getAddress(position.x, position.y)
+            pinpointPopup.open()
         }
 
         onPositionChanged: {
             mapControls.restartTimer()
             hasMoved = true
-            if(mouse.modifiers === Qt.ShiftModifier){
-                var pitch = Math.floor((originY - mouse.y) / 10);
-                var orientation =  navit1.orientation + ( Math.floor((mouse.x - originX)) / 10 );
-
-                if(navit1.pitch + pitch < 0 ) {
-                    navit1.pitch = 0
-                } else if(navit1.pitch + pitch > 60 ) {
-                    navit1.pitch = 60
-                } else {
-                    navit1.pitch += pitch;
-                }
-
-                navit1.orientation = orientation % 360
-
-            } else {
-                navit1.followVehicle = 0
-                navit1.mapMove(originX, originY, mouse.x, mouse.y);
-                originX = mouse.x
-                originY = mouse.y
-            }
         }
-        onWheel: {
-            if (wheel.angleDelta.y > 0)
-                navit1.zoomInToPoint(2, wheel.x, wheel.y)
-            else
-                navit1.zoomOutFromPoint(2, wheel.x, wheel.y)
+    }
+
+    Text {
+        id:zoomLevel
+        text: "Zoom Level : " + navit1.zoomLevel
+    }
+    Text {
+        id: pitch
+        text: "Pitch : " + navit1.pitch
+        anchors.top: zoomLevel.bottom
+    }
+    Text {
+        id: orientation
+        text: "Orientation : " + navit1.orientation
+        anchors.top: pitch.bottom
+        MouseArea {
+            anchors.fill:parent
+            onClicked: navit1.orientation = !navit1.orientation
         }
-        onPressAndHold: {
-            if(!hasMoved){
-                navit1.followVehicle = 0
-                pinpointPopup.mouseY = mouse.y
-                pinpointPopup.mouseX = mouse.x
-                pinpointPopup.address = navit1.getAddress(mouse.x, mouse.y)
-                pinpointPopup.open()
-            }
+    }
+    Text {
+        id: followVehcile
+        text: "Follow Vehicle : " + navit1.followVehicle
+        anchors.top: orientation.bottom
+        MouseArea {
+            anchors.fill:parent
+            onClicked: navit1.followVehicle = !navit1.followVehicle
+        }
+    }
+    Text {
+        id: tracking
+        text: "Tracking : " + navit1.tracking
+        anchors.top: followVehcile.bottom
+        MouseArea {
+            anchors.fill:parent
+            onClicked: navit1.tracking = !navit1.tracking
+        }
+    }
+    Text {
+        id: autozoom
+        text: "Auto Zoom : " + navit1.autoZoom
+        anchors.top: tracking.bottom
+        MouseArea {
+            anchors.fill:parent
+            onClicked: navit1.autoZoom = !navit1.autoZoom
         }
     }
 
@@ -199,7 +191,7 @@ Item {
             navit1.autoZoom = !navit1.autoZoom
         }
         onCompassClicked: {
-            navit1.orientation = 0
+            navit1.orientation = -1
         }
 
         function showControls () {
@@ -295,7 +287,6 @@ Item {
         id: destinationDetailsBar
         height: parent.width > parent.height ?  parent.height * 0.15 : parent.width * 0.25
         anchors.topMargin: parent.height * 0.05
-        //        visible: false
         clip: true
         anchors.top: routeCalculating.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -364,8 +355,9 @@ Item {
             width: 71
             anchors.fill: parent
             onClicked: {
-                navit1.followVehicle = 1
+                navit1.followVehicle = true
                 navit1.autoZoom = true
+                navit1.orientation = -1
                 navit1.centerOnPosition()
             }
         }
@@ -497,7 +489,6 @@ Item {
         },
         State {
             name: "searchDrawerOpen"
-            when: mapNavigationBar.searchButtonClicked
             PropertyChanges {
                 target: searchDrawer
                 x: 0
@@ -506,22 +497,8 @@ Item {
 
             PropertyChanges {
                 target: overlay
-                //                color: parent.width > parent.height ? "#00000000" : "#a6000000"
-                //                visible: parent.width < parent.height
                 color: "#a6000000"
                 visible: true
-            }
-
-            PropertyChanges {
-                target: mouseArea4
-                //                enabled: true
-                enabled: false
-            }
-
-            PropertyChanges {
-                target: navit1
-                //width: parent.width > parent.height ? parent.width - searchDrawer.width : parent.width
-
             }
         },
         State {
@@ -538,21 +515,9 @@ Item {
                 color: "#a6000000"
                 visible: true
             }
-
-            PropertyChanges {
-                target: mouseArea4
-                enabled: false
-            }
         },
         State {
             name: "routeOverview"
-            //            PropertyChanges {
-            //                target: searchDrawer
-            //                x: 0
-            //                y: -height
-            //                width: parent.width
-            //                visible: true
-            //            }
 
             PropertyChanges {
                 target: overlay
@@ -597,10 +562,6 @@ Item {
                 visible: true
             }
 
-            PropertyChanges {
-                target: mouseArea4
-                enabled: false
-            }
         },
         State {
             name: "routeOverviewPOIs"
@@ -706,34 +667,6 @@ Item {
             NumberAnimation { property: "x"; easing.type: Easing.InOutQuad; }
         },
 
-        //        Transition {
-        //            from: "searchDrawerOpen"
-        //            to: "routeOverview"
-        //            SequentialAnimation {
-        //                PropertyAction {
-        //                    target: destinationBar
-        //                    property: "visible"
-        //                    value: true
-        //                }
-        //                ParallelAnimation {
-        //                    ColorAnimation { }
-        //                    NumberAnimation {
-        //                        property: "width";
-        //                        easing.type: Easing.InOutQuad;
-        //                    }
-        //                    NumberAnimation {
-        //                        property: "x";
-        //                        easing.type: Easing.InOutQuad;
-        //                    }
-        //                }
-
-        //                PropertyAction {
-        //                    property: "visible"
-        //                    value: false
-        //                }
-        //            }
-        //        },
-
         Transition {
             to: "routeOverview"
             reversible: true
@@ -763,17 +696,12 @@ Item {
     ]
 }
 
-/*##^## Designer {
-    D{i:0;height:720;width:1280}D{i:27;anchors_height:200;anchors_width:200}D{i:26;anchors_height:200;anchors_width:200}
-D{i:29;anchors_height:200;anchors_width:200}D{i:30;anchors_height:200;anchors_width:200}
-D{i:31;anchors_height:200;anchors_width:200}D{i:32;anchors_height:200;anchors_width:200}
-D{i:28;anchors_height:200;anchors_width:200}D{i:34;anchors_height:200;anchors_width:200}
-D{i:35;anchors_height:200;anchors_width:200}D{i:33;anchors_height:200;anchors_width:200}
-D{i:4;anchors_x:196}D{i:5;anchors_width:200;anchors_x:196}D{i:6;anchors_height:100;anchors_width:100}
-D{i:7;anchors_height:100;anchors_width:100}D{i:8;anchors_y:109}D{i:10;anchors_height:100;anchors_width:100;anchors_y:109}
-D{i:9;anchors_height:100;anchors_width:100;anchors_y:109}D{i:11;anchors_height:100;anchors_width:100;anchors_y:109}
-D{i:12;anchors_y:109}D{i:15;anchors_height:100;anchors_width:100}D{i:14;anchors_height:200;anchors_width:200}
-D{i:17;anchors_y:109}D{i:18;anchors_y:10}D{i:19;anchors_y:10}D{i:16;anchors_height:100;anchors_width:100;anchors_y:109}
-D{i:25;anchors_height:200;anchors_width:200}
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.33000001311302185;height:720;width:1280}D{i:4}D{i:5}D{i:7}
+D{i:6}D{i:9}D{i:8}D{i:11}D{i:10}D{i:12}D{i:14}D{i:15}D{i:16}D{i:18}D{i:17}D{i:19}
+D{i:25}D{i:26}D{i:27}D{i:28}D{i:30}D{i:29}D{i:31}D{i:32}D{i:33}D{i:35}D{i:34}D{i:37}
+D{i:38}D{i:39}D{i:36}D{i:41}D{i:40}
 }
- ##^##*/
+##^##*/

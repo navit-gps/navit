@@ -16,7 +16,7 @@ ListView {
     delegate: Item {
         id: element
         height: 40
-        width: parent.width
+        width: __root.width
 
         Text {
             y: 0

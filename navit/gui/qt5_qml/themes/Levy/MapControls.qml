@@ -37,7 +37,7 @@ ColumnLayout {
                 anchors.fill: parent
                 Text {
                     id: element5
-                    text: __root.autoZoom ? "M" : "A"
+                    text: __root.autoZoom ? "A" : "M"
                     font.pixelSize: parent.height * 0.4
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -68,7 +68,7 @@ ColumnLayout {
                 id: element6
                 Text {
                     id: element7
-                    text: __root.pitch === 0 ? "3D" : "2D"
+                    text: __root.pitch === 0 ? "2D" : "3D"
                     font.pixelSize: parent.height * 0.4
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -182,7 +182,7 @@ ColumnLayout {
             transform: Rotation{
                 origin.x:compassNeedle.width / 2
                 origin.y:compassNeedle.height / 2
-                angle:__root.orientation
+                angle:__root.orientation + 1
             }
         }
         MouseArea {
