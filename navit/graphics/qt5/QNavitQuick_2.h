@@ -73,6 +73,10 @@ public:
     }
 protected:
     virtual void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void wheelEvent(QWheelEvent* event);
 
 private:
     struct graphics_priv* graphics_priv;
@@ -85,11 +89,16 @@ private:
     int getNavitNumProperty(enum attr_type type);
     NavitInstance *m_navitInstance;
     long m_zoomLevel = 0;
+    int m_moveX;
+    int m_moveY;
+    int m_originX;
+    int m_originY;
 
     void updateZoomLevel();
 signals:
-    void mouseLeftButtonClicked();
-    void mouseRightButtonClicked();
+    void leftButtonClicked(QPoint position);
+    void rightButtonClicked(QPoint position);
+    void positionChanged(QMouseEvent* mouse);
     void pressAndHold(QMouseEvent* mouse);
     void propertiesChanged();
     void zoomLevelChanged();

@@ -51,7 +51,10 @@ extern "C" {
 
 #include <QOpenGLFramebufferObject>
 QNavitQuick_2::QNavitQuick_2(QQuickItem* parent)
-    : QQuickPaintedItem(parent) {
+    : QQuickPaintedItem(parent),
+      graphics_priv(nullptr),
+      m_moveX(0),
+      m_moveY(0) {
     setAcceptedMouseButtons(Qt::AllButtons);
     graphics_priv = nullptr;
 }
@@ -83,12 +86,12 @@ void QNavitQuick_2::paint(QPainter* painter) {
         boundingRect().height());
 
     /* color background if any */
-    if (graphics_priv->background_graphics_gc_priv != NULL) {
+    if (graphics_priv->background_graphics_gc_priv != nullptr) {
         painter->setPen(*graphics_priv->background_graphics_gc_priv->pen);
         painter->fillRect(boundingRect(), *graphics_priv->background_graphics_gc_priv->brush);
     }
 
-    painter->drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap,
+    painter->drawPixmap(m_moveX, m_moveY, *graphics_priv->pixmap,
                         boundingRect().x(), boundingRect().y(),
                         boundingRect().width(), boundingRect().height());
 
@@ -127,6 +130,70 @@ void QNavitQuick_2::geometryChanged(const QRectF& newGeometry, const QRectF& old
     /* if the root window got resized, tell navit about it */
     if (graphics_priv->root)
         resize_callback(graphics_priv, width(), height());
+}
+
+void QNavitQuick_2::mousePressEvent(QMouseEvent* event) {
+    QPoint loc;
+    loc.setX(event->x());
+    loc.setY(event->y());
+    if(event->button() == Qt::LeftButton){
+        m_originX = event->x();
+        m_originY = event->y();
+        emit leftButtonClicked(loc);
+    } else if (event->button() == Qt::RightButton) {
+        emit rightButtonClicked(loc);
+    }
+}
+
+void QNavitQuick_2::mouseReleaseEvent(QMouseEvent* event) {
+    if(event->button() == Qt::LeftButton){
+        if(m_navitInstance){
+            struct point origin;
+            origin.x = m_originX;
+            origin.y = m_originY;
+            struct point destination;
+            destination.x = event->x();
+            destination.y = event->y();
+
+            navit_drag_map(m_navitInstance->getNavit(), &origin, &destination);
+        }
+        m_moveX = 0;
+        m_moveY = 0;
+    }
+}
+
+void QNavitQuick_2::mouseMoveEvent(QMouseEvent* event) {
+    if(event->buttons() == Qt::LeftButton){
+        setFollowVehicle(false);
+        if(event->modifiers() & Qt::ShiftModifier){
+            int pitch = qFloor((m_originY - event->y()) / 10);
+            int orientation =  m_orientation + ( qFloor((event->x() - m_originX)) / 10 );
+
+            if(m_pitch + pitch < 0 ) {
+                setPitch(0);
+            } else if(m_pitch + pitch > 60 ) {
+                setPitch(60);
+            } else {
+                setPitch(m_pitch + pitch);
+            }
+
+            setOrientation(orientation % 360);
+
+        } else {
+            m_moveX = event->x() - m_originX;
+            m_moveY = event->y() - m_originY;
+            update();
+        }
+        emit positionChanged(event);
+    }
+}
+
+void QNavitQuick_2::wheelEvent(QWheelEvent* event) {
+    if (event->delta() > 0){
+        zoomInToPoint(2, event->x(), event->y());
+    } else {
+        zoomOutFromPoint(2, event->x(), event->y());
+    }
 }
 
 void QNavitQuick_2::mapMove(int originX, int originY, int destinationX, int destinationY) {
