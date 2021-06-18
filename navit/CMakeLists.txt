@@ -167,7 +167,7 @@ endmacro()
 # Give instructions on how to build all navit_*.xml navit_layout_*.xml files, obtained applying relevant xslt tranformation on the source navit_shipped_*.xml files
 # The following XMLCFG_ALL_FILE_PREFIXES variable below lists all xml config files, semicolon is the delimiter
 # For example, it contains layout_navit_car, that will then be used to guess the source filename navit_layout_car_shipped.xml, installed as navit_layout_car.xml (or on android DPI-related files like navit_layout_car_xxxhdpi.xml)
-set(XMLCFG_ALL_FILE_PREFIXES "navit;navit_layout_car;navit_layout_car_dark;navit_layout_car_android;navit_layout_car_simple;navit_layout_bike;navit_layout_th")
+set(XMLCFG_ALL_FILE_PREFIXES "navit;navit_layout_car;navit_layout_car_dark;navit_layout_car_modern;navit_layout_car_android;navit_layout_car_simple;navit_layout_bike;navit_layout_th")
 if(ANDROID)
 	# On android, additional xlst transformations are applied to scale the OSD, icons etc... and the size is selected depending on the definition of the screen of the device (xxxhdpi, xxhdpi, ... ldpi)
 	# Files for all screen definitions are shipped inside the android package (suffixed with _xxxhdpi, _xxhdpi etc.), and it is only at runtime that the correct navit_*.xml (corresponding to the current device's resolution) is selected
