@@ -11,6 +11,7 @@
 #include "callback.h"
 #include "color.h"
 #include <iconv.h>
+#include "navit.h"
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define USE_UIKIT 1
@@ -58,6 +59,7 @@ CGContextRef current_context(void) {
 @end
 
 static struct graphics_priv {
+    struct navit *navit;
     struct window win;
     NavitView *view;
     CGLayerRef layer;
@@ -118,54 +120,7 @@ float startScale = 1;
     }
 }
 
-#if USE_UIKIT
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSArray *arr=touches.allObjects;
-    UITouch *touch=[arr objectAtIndex: 0];
-    struct CGPoint pc=[touch locationInView: self];
-    struct point p;
-    p.x=pc.x;
-    p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
-    callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
-}
-
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSArray *arr=touches.allObjects;
-    UITouch *touch=[arr objectAtIndex: 0];
-    struct CGPoint pc=[touch locationInView: self];
-    struct point p;
-    p.x=pc.x;
-    p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
-    callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSArray *arr=touches.allObjects;
-    UITouch *touch=[arr objectAtIndex: 0];
-    struct CGPoint pc=[touch locationInView: self];
-    struct point p;
-    p.x=pc.x;
-    p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
-    callback_list_call_attr_3(graphics->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSArray *arr=touches.allObjects;
-    UITouch *touch=[arr objectAtIndex: 0];
-    struct CGPoint pc=[touch locationInView: self];
-    struct point p;
-    p.x=pc.x;
-    p.y=pc.y;
-    dbg(1,"Enter count=%d %d %d",(int)touches.count,p.x,p.y);
-    callback_list_call_attr_1(graphics->cbl, attr_motion, (void *)&p);
-}
-
-#else
+#if (USE_UIKIT==0)
 - (void)mouseDown:(UIEvent *)theEvent {
     struct point p;
     p.x=theEvent.locationInWindow.x;
@@ -221,18 +176,60 @@ float startScale = 1;
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return (UIInterfaceOrientationMaskAll);
 }
-
+#if USE_UIKIT
 - (IBAction)handlePinch:(UIPinchGestureRecognizer *)sender {
-    if(sender.state == UIGestureRecognizerStateEnded) {
+    if(sender.state == UIGestureRecognizerStateBegan) {
         startScale = sender.scale;
-    } else if(sender.state == UIGestureRecognizerStateEnded) {
-        float result = sender.scale * startScale;
+    } else if(sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateChanged) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
 
-        dbg(1,"Pinch Gesture state: %i %f",(int)sender.state, result);
-        //callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_zoom, result);
-    } else {
-        //Ignore state
-        dbg(1,"Pinch Gesture state: %i ",(int)sender.state);
+        if((startScale / sender.scale > 1.2) ||  (startScale / sender.scale < 0.8)) {
+            if((sender.scale > 1)) {
+                navit_zoom_in(global_graphics_cocoa->navit, 2, &p);
+                startScale=sender.scale * 1.5;
+            } else {
+                navit_zoom_out(global_graphics_cocoa->navit, 2, &p);
+                startScale=sender.scale * 0.75;
+            }
+        }
+    }
+}
+
+- (IBAction)handlePan:(UIPanGestureRecognizer *)sender {
+
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
+
+    }
+
+    if (sender.state == UIGestureRecognizerStateChanged) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_motion, (void *)&p);
+    }
+
+    if(sender.state == UIGestureRecognizerStateEnded) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
+    }
+}
+
+- (IBAction)handleTap:(UITapGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        struct CGPoint pc=[sender locationInView: self.view];
+        struct point p;
+        p.x=pc.x;
+        p.y=pc.y;
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
     }
 }
 
@@ -250,9 +247,12 @@ float startScale = 1;
         lt_ten=0;
     }
 
-    // iOS 9 seems to report UIDeviceOrientationIsLandscape=false if we have UIDeviceOrientationFaceUp/UIDeviceOrientationFaceDown
-    if (lt_ten && (UIDeviceOrientationIsLandscape(orientation) || orientation==UIDeviceOrientationFaceDown
+    if(lt_ten &&  (orientation==UIDeviceOrientationFaceDown
                    || orientation == UIDeviceOrientationFaceUp)) {
+        return;
+    }
+
+    if (lt_ten && UIDeviceOrientationIsLandscape(orientation)) {
         global_graphics_cocoa->w=height;
         global_graphics_cocoa->h=width;
         callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)height, (int)width);
@@ -270,6 +270,8 @@ float startScale = 1;
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }
+
+#endif
 
 - (id) init_withFrame : (NSRect) _frame {
     NSLog(@"init with frame\n");
@@ -320,6 +322,16 @@ static void setup_graphics(struct graphics_priv *gr) {
 
     [myV release];
 }
+
+- (void)viewDidLoad {
+    NSLog(@"View loaded!");
+    NSNotificationCenter *notficationcenter = NSNotificationCenter.defaultCenter;
+    [notficationcenter addObserver:self selector:@selector(appMovedToBackground:) name:
+                       UIApplicationWillResignActiveNotification object: nil];
+    [notficationcenter addObserver:self selector:@selector(appMovedToForeground:) name:
+                       UIApplicationDidBecomeActiveNotification object: nil];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     dbg(lvl_debug,"view appeared");
 
@@ -332,11 +344,28 @@ static void setup_graphics(struct graphics_priv *gr) {
     UIPinchGestureRecognizer* pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinch:)];
     [self.view addGestureRecognizer:pinch];
 
+    UITapGestureRecognizer* tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
+    [self.view addGestureRecognizer:tap];
+
+    UIPanGestureRecognizer* pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
+    [self.view addGestureRecognizer:pan];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
                                           UIDeviceOrientationDidChangeNotification object:nil];
 
-    [self rotated:
-          (NULL)]; //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
+    [self rotated: (NULL)];
+    //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
+}
+
+- (void) appMovedToBackground:(NSNotification*)note {
+    NSLog(@"App moved to background!");
+    //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
+}
+
+- (void) appMovedToForeground:(NSNotification*)note {
+    NSLog(@"App moved to foreground!");
+    [self rotated: (NULL)];
+    //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
 }
 
 - (void)didReceiveMemoryWarning {
@@ -382,9 +411,9 @@ static void setup_graphics(struct graphics_priv *gr) {
 #endif
 {
     NSLog(@"DidFinishLaunching\n");
-//#if USE_UIKIT
-//	[[UIApplication sharedApplication] setStatusBarHidden:NO];
-//#endif
+    //#if USE_UIKIT
+    //	[[UIApplication sharedApplication] setStatusBarHidden:NO];
+    //#endif
 
     NSRect appFrame = [UIScreen mainScreen].bounds;
 
@@ -771,15 +800,16 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     return ret;
 }
 
-static struct graphics_priv *
-graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl) {
-#pragma unused (attrs, nav)
+static struct graphics_priv *graphics_cocoa_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
+        struct callback_list *cbl) {
+#pragma unused (attrs)
     struct graphics_priv *ret;
     *meth=graphics_methods;
     dbg(1,"enter");
     if(!event_request_system("cocoa","graphics_cocoa"))
         return NULL;
     ret=g_new0(struct graphics_priv, 1);
+    ret->navit = nav;
     ret->cbl=cbl;
     global_graphics_cocoa=ret;
     return ret;
