@@ -24,6 +24,9 @@ extern "C" {
 #include "bookmarks.h"
 
 #include "proxy.h"
+
+#include "event.h"
+#include "callback.h"
 }
 
 class NavitHelper
@@ -35,9 +38,9 @@ public:
     static QVariantMap getPOI(NavitInstance *navitInstance, struct coord center, int distance = 2);
     static QString getClosest(QList<QVariantMap> items, int maxDistance = -1);
     static QString formatDist(int dist);
-    static pcoord positionToPcoord (NavitInstance *navitInstance, int x, int y);
-    static coord positionToCoord (NavitInstance *navitInstance, int x, int y);
-    static pcoord coordToPcoord(NavitInstance *navitInstance, int x, int y);
+    static pcoord positionToPcoord (navit *navit, int x, int y);
+    static coord positionToCoord (navit *navit, int x, int y);
+    static pcoord coordToPcoord(navit *navit, int x, int y);
     static void setDestination(NavitInstance *navitInstance, QString label, int x, int y);
     static void setPosition(NavitInstance *navitInstance, int x, int y);
     static void addBookmark(NavitInstance *navitInstance, QString label, int x, int y);

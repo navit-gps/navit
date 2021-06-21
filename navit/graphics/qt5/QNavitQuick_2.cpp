@@ -56,6 +56,14 @@ QNavitQuick_2::QNavitQuick_2(QQuickItem* parent)
       m_moveX(0),
       m_moveY(0) {
     setAcceptedMouseButtons(Qt::AllButtons);
+
+    connect(this, &QNavitQuick_2::onResizeEvent, qt5_timer, &Qt5GraphicsWorker::resizeEvent);
+    connect(this, &QNavitQuick_2::onMapMove, qt5_timer, &Qt5GraphicsWorker::mapMove);
+    connect(this, &QNavitQuick_2::onZoomIn, qt5_timer, &Qt5GraphicsWorker::zoomIn);
+    connect(this, &QNavitQuick_2::onZoomOut, qt5_timer, &Qt5GraphicsWorker::zoomOut);
+    connect(this, &QNavitQuick_2::onZoomToRoute, qt5_timer, &Qt5GraphicsWorker::zoomToRoute);
+    connect(this, &QNavitQuick_2::onSetNumAttr, qt5_timer, &Qt5GraphicsWorker::setNumAttr);
+    connect(this, &QNavitQuick_2::onCenterOnPosition, qt5_timer, &Qt5GraphicsWorker::centerOnPosition);
 }
 
 void QNavitQuick_2::paintOverlays(QPainter* painter, struct graphics_priv* gp, QPaintEvent* event) {
@@ -98,6 +106,7 @@ void QNavitQuick_2::paint(QPainter* painter) {
     if(!(graphics_priv->disable)) {
         paintOverlays(painter, graphics_priv, &event);
     }
+    qDebug() << "Painting thread : " << QThread::currentThread();
     updateZoomLevel();
 }
 
@@ -128,8 +137,9 @@ void QNavitQuick_2::geometryChanged(const QRectF& newGeometry, const QRectF& old
     dbg(lvl_debug, "pixmap %p %dx%d", graphics_priv->pixmap, graphics_priv->pixmap->width(),
         graphics_priv->pixmap->height())
     /* if the root window got resized, tell navit about it */
-    if (graphics_priv->root)
-        resize_callback(graphics_priv, width(), height());
+    if (graphics_priv->root){
+        emit onResizeEvent(m_navitInstance, width(), height());
+    }
 }
 
 void QNavitQuick_2::mousePressEvent(QMouseEvent* event) {
@@ -147,16 +157,7 @@ void QNavitQuick_2::mousePressEvent(QMouseEvent* event) {
 
 void QNavitQuick_2::mouseReleaseEvent(QMouseEvent* event) {
     if(event->button() == Qt::LeftButton){
-        if(m_navitInstance){
-            struct point origin;
-            origin.x = m_originX;
-            origin.y = m_originY;
-            struct point destination;
-            destination.x = event->x();
-            destination.y = event->y();
-
-            navit_drag_map(m_navitInstance->getNavit(), &origin, &destination);
-        }
+        mapMove(m_originX, m_originY, event->x(), event->y());
         m_moveX = 0;
         m_moveY = 0;
     }
@@ -189,59 +190,50 @@ void QNavitQuick_2::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void QNavitQuick_2::wheelEvent(QWheelEvent* event) {
-    if (event->delta() > 0){
-        zoomInToPoint(2, event->x(), event->y());
+    if (event->angleDelta().y() > 0){
+        zoomInToPoint(2, event->position().x(), event->position().y());
     } else {
-        zoomOutFromPoint(2, event->x(), event->y());
+        zoomOutFromPoint(2, event->position().x(), event->position().y());
     }
 }
 
 void QNavitQuick_2::mapMove(int originX, int originY, int destinationX, int destinationY) {
-    if(m_navitInstance){
-        struct point origin;
-        origin.x = originX;
-        origin.y = originY;
-        struct point destination;
-        destination.x = destinationX;
-        destination.y = destinationY;
+    struct point *origin = new struct point;
+    origin->x = originX;
+    origin->y = originY;
+    struct point *destination = new struct point;
+    destination->x = destinationX;
+    destination->y = destinationY;
 
-        navit_drag_map(m_navitInstance->getNavit(), &origin, &destination);
-    }
+    emit onMapMove(m_navitInstance, origin, destination);
 }
 
-void QNavitQuick_2::zoomIn(int zoomLevel){
-    if(m_navitInstance){
-        navit_zoom_in(m_navitInstance->getNavit(), zoomLevel, nullptr);
-    }
+void QNavitQuick_2::zoomIn(int zoomLevel, point *p){
+    emit onZoomIn(m_navitInstance, zoomLevel, p);
 }
-void QNavitQuick_2::zoomOut(int zoomLevel){    
-    if(m_navitInstance){
-        navit_zoom_out(m_navitInstance->getNavit(), zoomLevel, nullptr);
-    }
+void QNavitQuick_2::zoomOut(int zoomLevel, point *p){
+    emit onZoomOut(m_navitInstance, zoomLevel, p);
 }
 
 void QNavitQuick_2::zoomInToPoint(int zoomLevel, int x, int y){
     if(m_navitInstance){
-        struct point p;
-        p.x = x;
-        p.y = y;
-        navit_zoom_in(m_navitInstance->getNavit(), zoomLevel, &p);
+        struct point *p = new struct point;
+        p->x = x;
+        p->y = y;
+        zoomIn(zoomLevel, p);
     }
 }
 
 void QNavitQuick_2::zoomOutFromPoint(int zoomLevel, int x, int y){
     if(m_navitInstance){
-        struct point p;
-        p.x = x;
-        p.y = y;
-        navit_zoom_out(m_navitInstance->getNavit(), zoomLevel, &p);
+        struct point *p = new struct point;
+        p->x = x;
+        p->y = y;
+        zoomOut(zoomLevel, p);
     }
 }
-
 void QNavitQuick_2::zoomToRoute(){
-    if(m_navitInstance){
-        navit_zoom_to_route(m_navitInstance->getNavit(), 1);
-    }
+    emit onZoomToRoute(m_navitInstance);
 }
 
 void QNavitQuick_2::setNavitNumProperty(enum attr_type type, int value){
@@ -250,7 +242,8 @@ void QNavitQuick_2::setNavitNumProperty(enum attr_type type, int value){
 
         attr.type = type;
         attr.u.num = value;
-        navit_set_attr(m_navitInstance->getNavit(), &attr);
+
+        emit onSetNumAttr(m_navitInstance, &attr);
     }
 }
 
@@ -263,45 +256,30 @@ int QNavitQuick_2::getNavitNumProperty(enum attr_type type){
 }
 
 void QNavitQuick_2::setPitch(int pitch){
-    if(pitch != m_pitch){
-        setNavitNumProperty(attr_pitch, pitch);
-    }
+    setNavitNumProperty(attr_pitch, pitch);
 }
 
-void QNavitQuick_2::setFollowVehicle(bool followVehicle, int followTime){
-    if(followVehicle != m_followVehicle){
-        setNavitNumProperty(attr_follow, followTime);
-        setNavitNumProperty(attr_follow_cursor, followVehicle);
-    }
+void QNavitQuick_2::setFollowVehicle(bool followVehicle){
+    qDebug() << "setFollowVehicle " << followVehicle;
+    setNavitNumProperty(attr_follow, 0);
+    setNavitNumProperty(attr_follow_cursor, followVehicle);
 }
 
 void QNavitQuick_2::setTracking(bool tracking) {
-    if(tracking != m_tracking){
-        setNavitNumProperty(attr_tracking, tracking);
-    }
+    setNavitNumProperty(attr_tracking, tracking);
 }
 
 void QNavitQuick_2::setAutozoom(bool autoZoom){
-    if(autoZoom != m_autoZoom){
-        setNavitNumProperty(attr_autozoom, (int)autoZoom);
-        setNavitNumProperty(attr_autozoom_active, (int)autoZoom);
-    }
+    setNavitNumProperty(attr_autozoom, (int)autoZoom);
+    setNavitNumProperty(attr_autozoom_active, (int)autoZoom);
 }
 
 void QNavitQuick_2::setOrientation(int orientation){
-    if(orientation != m_orientation){
-        setNavitNumProperty(attr_orientation, orientation);
-    }
+    setNavitNumProperty(attr_orientation, orientation);
 }
 
 void QNavitQuick_2::addBookmark(QString label, int x, int y){
-    if(m_navitInstance){
-        struct attr attr;
-        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance, x ,y);
-        navit_get_attr(m_navitInstance->getNavit(), attr_bookmarks, &attr, nullptr);
-
-        bookmarks_add_bookmark(attr.u.bookmarks, &c, label.toUtf8().data());
-    }
+    NavitHelper::addBookmark(m_navitInstance, label, x, y);
 }
 NavitInstance* QNavitQuick_2::navitInstance(){
     return m_navitInstance;
@@ -335,26 +313,14 @@ void QNavitQuick_2::setNavitInstance(NavitInstance *navit){
 
 QString QNavitQuick_2::getAddress(int x, int y){
     if(m_navitInstance){
-        coord c = NavitHelper::positionToCoord(m_navitInstance, x, y);
+        coord c = NavitHelper::positionToCoord(m_navitInstance->getNavit(), x, y);
         return NavitHelper::getAddress(m_navitInstance, c);
     }
     return "";
 }
 
-QVariantMap QNavitQuick_2::positionToCoordinates(int x, int y){
-    QVariantMap ret;
-    if(m_navitInstance){
-        struct coord c = NavitHelper::positionToCoord(m_navitInstance, x ,y);
-        ret.insert("x", c.x);
-        ret.insert("y", c.y);
-    }
-    return ret;
-}
-
 void QNavitQuick_2::centerOnPosition(){
-    if(m_navitInstance){
-        navit_set_center_cursor_draw(m_navitInstance->getNavit());
-    }
+    emit onCenterOnPosition(m_navitInstance);
 }
 
 void QNavitQuick_2::updateZoomLevel(){

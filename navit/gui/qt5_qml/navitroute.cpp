@@ -317,22 +317,22 @@ void NavitRoute::cancelNavigation(){
 void NavitRoute::setDestination(QString label, int x, int y){
     if(m_navitInstance){
         cancelNavigation();
-        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance, x, y);
+        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance->getNavit(), x, y);
         NavitHelper::setDestination(m_navitInstance, label, c.x, c.y);
     }
 }
 
 void NavitRoute::setPosition(int x, int y){
     if(m_navitInstance){
-        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance, x, y);
-        navit_set_position(m_navitInstance->getNavit(), &c);
+        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance->getNavit(), x, y);
+//        navit_set_position(m_navitInstance->getNavit(), &c);
         NavitHelper::setPosition(m_navitInstance, c.x, c.y);
     }
 }
 
 void NavitRoute::addStop(QString label, int x, int y,  int position){
     if(m_navitInstance){
-        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance, x, y);
+        struct pcoord c = NavitHelper::positionToPcoord(m_navitInstance->getNavit(), x, y);
         NavitHelper::addStop(m_navitInstance, position, label, c.x, c.y);
     }
 }

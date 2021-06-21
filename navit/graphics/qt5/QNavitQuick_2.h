@@ -27,6 +27,8 @@
 #include <QVariantMap>
 #include <QtMath>
 
+#include <QThread>
+
 extern "C" {
 #include "config.h"
 #include "item.h" /* needs to be first, as attr.h depends on it */
@@ -36,6 +38,7 @@ extern "C" {
 #include "graphics_qt5.h"
 #include "navitinstance.h"
 #include "navithelper.h"
+#include "qt5graphicsworker.h"
 
 class QNavitQuick_2 : public QQuickPaintedItem {
     Q_OBJECT
@@ -51,20 +54,19 @@ public:
     void paint(QPainter* painter);
     QNavitQuick_2(QQuickItem* parent = 0);
 
-    Q_INVOKABLE void zoomIn(int zoomLevel);
-    Q_INVOKABLE void zoomOut(int zoomLevel);
+    Q_INVOKABLE void zoomIn(int zoomLevel, point *p = nullptr);
+    Q_INVOKABLE void zoomOut(int zoomLevel, point *p = nullptr);
     Q_INVOKABLE void zoomInToPoint(int zoomLevel, int x, int y);
     Q_INVOKABLE void zoomOutFromPoint(int zoomLevel, int x, int y);
     Q_INVOKABLE void zoomToRoute();
     Q_INVOKABLE void mapMove(int originX, int originY, int destinationX, int destinationY);
     Q_INVOKABLE void addBookmark(QString label, int x, int y);
-    Q_INVOKABLE QVariantMap positionToCoordinates(int x, int y);
     Q_INVOKABLE QString getAddress(int x, int y);
     Q_INVOKABLE void centerOnPosition();
 
     void setPitch(int pitch);
     void setAutozoom(bool autoZoom);
-    void setFollowVehicle(bool followVehicle, int followTime = 0);
+    void setFollowVehicle(bool followVehicle);
     void setTracking(bool tracking);
     void setOrientation(int orientation);
     NavitInstance *navitInstance();
@@ -107,6 +109,14 @@ signals:
     void pressAndHold(QMouseEvent* mouse);
     void propertiesChanged();
     void zoomLevelChanged();
+
+    void onResizeEvent(NavitInstance *navitInstance, int width, int height);
+    void onMapMove(struct NavitInstance *navitInstance, struct point *origin, struct point *destination);
+    void onZoomIn(struct NavitInstance *navitInstance, int zoomLevel, struct point *p);
+    void onZoomOut(struct NavitInstance *navitInstance, int zoomLevel, struct point *p);
+    void onZoomToRoute(struct NavitInstance* navitInstance);
+    void onSetNumAttr(struct NavitInstance *navitInstance, struct attr *attr);
+    void onCenterOnPosition(struct NavitInstance *navitInstance);
 };
 
 #endif

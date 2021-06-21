@@ -35,13 +35,18 @@ extern "C" {
 }
 
 
-class POISearchWorker : public QThread
+class POISearchWorker : public QObject
 {
     Q_OBJECT
 public:
     POISearchWorker (NavitInstance * navit, QString filter, int screenX, int screenY, int distance);
     ~POISearchWorker ();
-    void run() override;
+    void start();
+    void proccess();
+    void proccessMapset();
+    void proccessMapsetItem();
+    void finish();
+    static void callbackHandler(POISearchWorker this_);
 signals:
     void gotSearchResult(QVariantMap poi);
 private:
@@ -50,6 +55,15 @@ private:
     int m_screenX;
     int m_screenY;
     int m_distance;
+    enum projection m_pro;
+    struct mapset_handle * m_h = nullptr;
+    struct map_selection * m_sel = nullptr;
+    struct coord m_center;
+
+    struct map *m_m = nullptr;
+
+    struct callback * m_idleCallback = nullptr;
+    struct event_idle * m_idle = nullptr;
 };
 
 class NavitPOIModel : public QAbstractItemModel
@@ -96,6 +110,7 @@ private:
     void stopWorker(bool clearModel = false);
     POISearchWorker *m_poiWorker = nullptr;
     QMutex modelMutex;
+
 };
 
 #endif // NAVITPOIMODEL_H
