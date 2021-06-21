@@ -75,12 +75,14 @@ Item {
 
     NavitMap {
         id: navit1
-        anchors.leftMargin: 0
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        width: parent.width
+//        width: parent.width * 3
+//        height: parent.height * 3
+//        anchors.verticalCenter: parent.verticalCenter
+//        anchors.horizontalCenter: parent.horizontalCenter
         navit:Navit
 
         property bool hasMoved : false
@@ -355,8 +357,8 @@ Item {
             width: 71
             anchors.fill: parent
             onClicked: {
-                navit1.followVehicle = true
-                navit1.autoZoom = true
+                navit1.followVehicle = 1
+                navit1.autoZoom = 1
                 navit1.orientation = -1
                 navit1.centerOnPosition()
             }
