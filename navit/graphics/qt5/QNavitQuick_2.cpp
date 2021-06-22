@@ -158,8 +158,6 @@ void QNavitQuick_2::mousePressEvent(QMouseEvent* event) {
 void QNavitQuick_2::mouseReleaseEvent(QMouseEvent* event) {
     if(event->button() == Qt::LeftButton){
         mapMove(m_originX, m_originY, event->x(), event->y());
-        m_moveX = 0;
-        m_moveY = 0;
     }
 }
 
@@ -197,6 +195,11 @@ void QNavitQuick_2::wheelEvent(QWheelEvent* event) {
     }
 }
 
+void QNavitQuick_2::draw(){
+    m_moveX = 0;
+    m_moveY = 0;
+    update();
+}
 void QNavitQuick_2::mapMove(int originX, int originY, int destinationX, int destinationY) {
     struct point *origin = new struct point;
     origin->x = originX;
@@ -290,7 +293,7 @@ void QNavitQuick_2::setNavitInstance(NavitInstance *navit){
     if(m_navitInstance) {
         graphics_priv = navit->m_graphics_priv;
 
-        QObject::connect(navit, SIGNAL(update()), this, SLOT(update()));
+        QObject::connect(navit, SIGNAL(update()), this, SLOT(draw()));
 
         navit_add_callback(m_navitInstance->getNavit(),callback_new_attr_1(callback_cast(QNavitQuick_2::attributeCallbackHandler),
                                                                            attr_orientation,this));

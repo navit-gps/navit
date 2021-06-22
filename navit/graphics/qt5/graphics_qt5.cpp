@@ -627,16 +627,6 @@ static void draw_drag(struct graphics_priv* gr, struct point* p) {
 #endif
         gr->x = vector.x;
         gr->y = vector.y;
-#if USE_QWIDGET
-        /* call repaint on widget for stale area. */
-        if (gr->widget != NULL)
-            gr->widget->repaint(damage_x, damage_y, damage_w, damage_h);
-#endif
-#if USE_QML
-        // No need to emit update, as QNavitQuic always repaints everything.
-        //    if (gr->navitInstance != NULL)
-        //        gr->navitInstance->emit_update();
-#endif
     }
 }
 
@@ -819,16 +809,6 @@ static void get_text_bbox(struct graphics_priv* gr, struct graphics_font_priv* f
 static void overlay_disable(struct graphics_priv* gr, int disable) {
     //dbg(lvl_error,"enter gr=%p, %d", gr, disable);
     gr->disable = disable;
-#if USE_QWIDGET
-    /* call repaint on widget */
-    if (gr->widget != NULL)
-        gr->widget->repaint(gr->x, gr->y, gr->pixmap->width(), gr->pixmap->height());
-#endif
-#if USE_QML
-    if (gr->navitInstance != NULL)
-        gr->navitInstance->emit_update();
-
-#endif
 }
 
 static void overlay_resize(struct graphics_priv* gr, struct point* p, int w, int h, int wraparound) {

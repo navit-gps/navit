@@ -102,6 +102,8 @@ private:
     int m_originY;
 
     void updateZoomLevel();
+private slots:
+    void draw();
 signals:
     void leftButtonClicked(QPoint position);
     void rightButtonClicked(QPoint position);
