@@ -140,7 +140,7 @@ private:
 
     struct search_list *m_searchResultList;
 
-    char *m_country_iso2;
+    char *m_country_iso2 = nullptr;
 
     enum SearchType m_search_type;
 
