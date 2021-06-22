@@ -269,31 +269,31 @@ QString NavitHelper::getAddress(NavitInstance *navitInstance, struct coord cente
     if(!town.isEmpty())
       address.append(town);
 
-    return address.join(", ");;
+    return address.join(", ");
   }
   return QString();
 }
 
 
-coord NavitHelper::positionToCoord (NavitInstance *navitInstance, int x, int y){
+coord NavitHelper::positionToCoord (struct navit *navit, int x, int y){
   struct coord co;
-  if(navitInstance){
+  if(navit){
     struct point p;
     p.x = x;
     p.y = y;
 
 
-    struct transformation * trans = navit_get_trans(navitInstance->getNavit());
+    struct transformation * trans = navit_get_trans(navit);
     transform_reverse(trans, &p, &co);
 
   }
   return co;
 }
-pcoord NavitHelper::positionToPcoord (NavitInstance *navitInstance, int x, int y){
+pcoord NavitHelper::positionToPcoord (struct navit *navit, int x, int y){
   struct pcoord c;
-  if(navitInstance){
-    struct coord co = positionToCoord(navitInstance, x, y);
-    struct transformation * trans = navit_get_trans(navitInstance->getNavit());
+  if(navit){
+    struct coord co = positionToCoord(navit, x, y);
+    struct transformation * trans = navit_get_trans(navit);
 
     c.pro = transform_get_projection(trans);
     c.x = co.x;
@@ -302,10 +302,10 @@ pcoord NavitHelper::positionToPcoord (NavitInstance *navitInstance, int x, int y
   }
   return c;
 }
-pcoord NavitHelper::coordToPcoord (NavitInstance *navitInstance, int x, int y){
+pcoord NavitHelper::coordToPcoord (struct navit *navit, int x, int y){
   struct pcoord c;
-  if(navitInstance){
-    struct transformation * trans = navit_get_trans(navitInstance->getNavit());
+  if(navit){
+    struct transformation * trans = navit_get_trans(navit);
 
     c.pro = transform_get_projection(trans);
     c.x = x;
@@ -314,49 +314,70 @@ pcoord NavitHelper::coordToPcoord (NavitInstance *navitInstance, int x, int y){
   return c;
 }
 
+static void setDestinationStatic(struct navit *navit, char * label, int x, int y) {
+  if(navit){
+    navit_set_destination(navit, nullptr, nullptr, 0);
+    struct pcoord c = NavitHelper::coordToPcoord(navit, x, y);
+    navit_set_destination(navit, &c, label, 1);
+  }
+}
 void NavitHelper::setDestination(NavitInstance *navitInstance, QString label, int x, int y){
   if(navitInstance){
-    navit_set_destination(navitInstance->getNavit(), nullptr, nullptr, 0);
-    struct pcoord c = coordToPcoord(navitInstance, x, y);
-    navit_set_destination(navitInstance->getNavit(), &c, label.toUtf8().data(), 1);
+    event_add_timeout(0, 0, callback_new_4(callback_cast(setDestinationStatic), navitInstance->getNavit(), label.toUtf8().data(), x ,y));
+  }
+}
+
+static void setPositionStatic(struct navit *navit, int x, int y) {
+  if(navit){
+    struct pcoord c = NavitHelper::coordToPcoord(navit, x, y);
+    navit_set_position(navit, &c);
   }
 }
 
 void NavitHelper::setPosition(NavitInstance *navitInstance, int x, int y){
   if(navitInstance){
-    struct pcoord c = NavitHelper::coordToPcoord(navitInstance, x, y);
+    event_add_timeout(0, 0, callback_new_3(callback_cast(setPositionStatic), navitInstance->getNavit(), x ,y));
+  }
+}
 
-    navit_set_position(navitInstance->getNavit(), &c);
+static void addStopStatic(struct navit *navit, int position, char *label, pcoord *c) {
+  if(navit){
+    int dstcount=navit_get_destination_count(navit)+1;
+    int pos,i;
+    struct pcoord *dst=(pcoord *)g_alloca(dstcount*sizeof(struct pcoord));
+    dstcount=navit_get_destinations(navit,dst,dstcount);
+
+    pos=position;
+    if(pos<0)
+      pos=0;
+
+    for(i=dstcount; i>pos; i--)
+      dst[i]=dst[i-1];
+
+    dst[pos]=*c;
+
+    navit_add_destination_description(navit,c,label);
+    navit_set_destinations(navit,dst,dstcount+1,label,1);
   }
 }
 
 void NavitHelper::addStop(NavitInstance *navitInstance, int position, QString label, int x, int y) {
-  struct pcoord c = coordToPcoord(navitInstance, x, y);
+  if(navitInstance){
+    struct pcoord c = NavitHelper::coordToPcoord(navitInstance->getNavit(), x, y);
+    event_add_timeout(0, 0, callback_new_4(callback_cast(addStopStatic), navitInstance->getNavit(), position, label.toUtf8().data(), &c));
+  }
+}
+void addBookmarkStatic(struct navit *navit, QString label, int x, int y){
+  if(navit){
+    struct attr attr;
+    struct pcoord c = NavitHelper::positionToPcoord(navit, x ,y);
+    navit_get_attr(navit, attr_bookmarks, &attr, nullptr);
 
-  int dstcount=navit_get_destination_count(navitInstance->getNavit())+1;
-  int pos,i;
-  struct pcoord *dst=(pcoord *)g_alloca(dstcount*sizeof(struct pcoord));
-  dstcount=navit_get_destinations(navitInstance->getNavit(),dst,dstcount);
-
-  pos=position;
-  if(pos<0)
-    pos=0;
-
-  for(i=dstcount; i>pos; i--)
-    dst[i]=dst[i-1];
-
-  dst[pos]=c;
-
-  navit_add_destination_description(navitInstance->getNavit(),&c,label.toUtf8().data());
-  navit_set_destinations(navitInstance->getNavit(),dst,dstcount+1,label.toUtf8().data(),1);
+    bookmarks_add_bookmark(attr.u.bookmarks, &c, label.toUtf8().data());
+  }
 }
 void NavitHelper::addBookmark(NavitInstance *navitInstance, QString label, int x, int y){
   if(navitInstance){
-
-    struct attr attr;
-    struct pcoord c = NavitHelper::positionToPcoord(navitInstance, x ,y);
-    navit_get_attr(navitInstance->getNavit(), attr_bookmarks, &attr, nullptr);
-
-    bookmarks_add_bookmark(attr.u.bookmarks, &c, label.toUtf8().data());
+    event_add_timeout(0, 0, callback_new_4(callback_cast(addBookmarkStatic), navitInstance->getNavit(), label.toUtf8().data(), x, y));
   }
 }
