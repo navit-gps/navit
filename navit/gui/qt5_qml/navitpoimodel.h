@@ -63,18 +63,14 @@ private:
     struct coord m_center;
 
     struct map *m_m = nullptr;
-<<<<<<< HEAD
 
     struct callback * m_idleCallback = nullptr;
     struct event_idle * m_idle = nullptr;
-=======
+
     struct item * m_item = nullptr;
     struct map_rect *m_mr = nullptr;
 
-    struct callback * m_idleCallback = nullptr;
-    struct event_idle * m_idle = nullptr;
     struct map_selection *m_selm = nullptr;
->>>>>>> 3e7fdbf86... add:gt5_gui Run POI search on idle
 };
 
 class NavitPOIModel : public QAbstractItemModel
