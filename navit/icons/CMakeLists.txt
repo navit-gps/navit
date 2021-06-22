@@ -30,7 +30,7 @@ macro(convert_to_png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 		else()
 			set(SCALE_ARGS)
 		endif()
-		set(COMMAND_ARGS --without-gui --export-background-opacity=0 --export-png ${IMAGE_OUTPUT} ${SCALE_ARGS} ${IMAGE_INPUT})
+		set(COMMAND_ARGS --export-type=png --export-background-opacity=0 ${SCALE_ARGS} --export-filename=${IMAGE_OUTPUT} ${IMAGE_INPUT})
 	else()
 		message(FATAL_ERROR "no svg2png converter defined here.")
 	endif()
@@ -127,6 +127,7 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
 
 endforeach()
 
+if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
 foreach (IMAGE_FILE ${IMAGES_TO_COPY})
 	add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
 		DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
@@ -135,6 +136,7 @@ foreach (IMAGE_FILE ${IMAGES_TO_COPY})
 		)
 	list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}")
 endforeach()
+endif()
 
 add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
 add_custom_target(images_resource COMMAND mkdir -p ../resources/share/navit/xpm COMMAND cp ${IMAGE_TARGETS} ../resources/share/navit/xpm)

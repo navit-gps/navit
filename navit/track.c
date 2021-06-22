@@ -83,12 +83,12 @@ struct cdf_data {
 
 struct tracking {
     NAVIT_OBJECT
-    struct callback_list *callback_list;
-    struct mapset *ms;
-    struct route *rt;
-    struct map *map;
-    struct vehicle *vehicle;
-    struct vehicleprofile *vehicleprofile;
+    struct callback_list *callback_list;     /**< Callbacks which will be called whenever the position changes */
+    struct mapset *ms;                       /**< The mapset */
+    struct route *rt;                        /**< The route */
+    struct map *map;                         /**< The tracking map which holds our past movements */
+    struct vehicle *vehicle;                 /**< The vehicle from which we are obtaining location data */
+    struct vehicleprofile *vehicleprofile;   /**< The current vehicle profile */
     struct coord last_updated;
     struct tracking_line *lines;
     struct tracking_line *curr_line;
@@ -98,16 +98,16 @@ struct tracking {
     struct coord last[2], last_in, last_out;
     struct cdf_data cdf;
     struct attr *attr;
-    int valid;
+    int valid;                               /**< Whether we have valid location data */
     int time;
     double direction, direction_matched;
-    double speed;
+    double speed;                            /**< Current speed */
     int coord_geo_valid;
     struct coord_geo coord_geo;
     enum projection pro;
     int street_direction;
     int no_gps;
-    int tunnel;
+    int tunnel;                              /**< Whether we are in a tunnel */
     int angle_pref;
     int connected_pref;
     int nostop_pref;
@@ -117,8 +117,6 @@ struct tracking {
     int overspeed_percent_pref;
     int tunnel_extrapolation;
 };
-
-
 
 
 static void tracking_init_cdf(struct cdf_data *cdf, int hist_size) {
@@ -400,6 +398,10 @@ int *tracking_get_current_flags(struct tracking *_this) {
     return &_this->curr_line->street->flags;
 }
 
+int tracking_get_current_tunnel(struct tracking *_this) {
+    return _this->tunnel;
+}
+
 static void tracking_get_angles(struct tracking_line *tl) {
     int i;
     struct street_data *sd=tl->street;
@@ -637,10 +639,11 @@ void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofi
             !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
             !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
             !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
-        dbg(lvl_error,"failed to get position data %d %d %d",
+        dbg(lvl_error,"failed to get position data speed:%d direction:%d coord:%d time:%d",
             vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL),
             vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL),
-            vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL));
+            vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL),
+            vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
         return;
     }
     if (tr->tunnel_extrapolation) {
@@ -852,6 +855,7 @@ tracking_new(struct attr *parent, struct attr **attrs) {
     this->offroad_limit_pref=5000;
     this->route_pref=300;
     this->callback_list=callback_list_new();
+    this->tunnel=0;
 
 
     if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {

@@ -15,7 +15,11 @@ import java.time.format.DateTimeFormatter
 ext {
     git = Grgit.open(currentDir: projectDir)
     gitVersionName = git.describe(match: ["v[0-9.rc]*"])
-    gitVersionCode = Integer.parseInt(DateTimeFormatter.ofPattern("yyMMddHHmm").format(git.head().dateTime))
+    hh = Integer.parseInt(DateTimeFormatter.ofPattern("HH").format(git.head().dateTime))
+    mm = Integer.parseInt(DateTimeFormatter.ofPattern("mm").format(git.head().dateTime))
+    hhmm = Math.round((hh*4)+(mm/15)).toString()
+    yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd").format(git.head().dateTime)
+    gitVersionCode = Integer.parseInt(yyyyMMdd + hhmm)
 }
 
 task printVersion() {

@@ -1337,7 +1337,7 @@ static int pngdecode(struct graphics_priv *gr, char *name, struct graphics_image
 
     /* expand images to bit-depth 8 (only applicable for grayscale images) */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bit_depth < 8)
-        png_set_gray_1_2_4_to_8(png_ptr);
+        png_set_expand_gray_1_2_4_to_8(png_ptr);
 
     /* Expand grayscale to rgb */
     if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
