@@ -17,6 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef NAVIT_WINDOW_H
+#define NAVIT_WINDOW_H
 /**
  * Describes the Navit application window or equivalent.
  */
@@ -25,3 +27,5 @@ struct window {
 	int (*fullscreen)(struct window *win, int on); /**< Method to toggle fullscreen mode */
 	void (*disable_suspend)(struct window *win);   /**< Method to disable suspend mode or screen savers */
 };
+
+#endif //NAVIT_WINDOW_H

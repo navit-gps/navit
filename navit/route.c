@@ -4162,6 +4162,9 @@ struct route_graph * route_get_graph(struct route *this_) {
  * @return True if the route has a graph, false if not.
  */
 int route_has_graph(struct route *this_) {
+    if(this_== NULL){
+        return 0;
+    }
     return (this_->graph != NULL);
 }
 

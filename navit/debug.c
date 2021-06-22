@@ -376,12 +376,12 @@ void debug_vprintf(dbg_level level, const char *module, const int mlen, const ch
 
         /* In the code below, we prepend the end-of-line sequence to the current string pointed by debug_message ("\r\n" for Windows, "\r" otherwise */
 #ifdef HAVE_API_WIN32_BASE
-        if (len + 1 < sizeof(debug_message) - 1) {
-            /* For Windows platforms, add \r at the end of the buffer (if any room), make sure that we have room for one more character */
-            *end++ = '\r';
-            len++;
-            *end = '\0';
-        }
+//        if (len + 1 < sizeof(debug_message) - 1) {
+//            /* For Windows platforms, add \r at the end of the buffer (if any room), make sure that we have room for one more character */
+//            *end++ = '\r';
+//            len++;
+//            *end = '\0';
+//        }
 #endif
         if (len + 1 < sizeof(debug_message)) { /* Add \n at the end of the buffer (if any room) */
             *end++ = '\n';
