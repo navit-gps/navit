@@ -42,12 +42,18 @@ POISearchWorker::~POISearchWorker (){
     qDebug() << "Deleting POISearchWorker";
     finish();
 
-    if (m_idleCallback) {
-        callback_destroy(m_idleCallback);
-        m_idleCallback=nullptr;
-    }
+//    if(m_sel){
+//        map_selection_destroy(m_sel);
+//    }
+//    if(m_h){
+//        mapset_close(m_h);
+//    }
+//    if (m_idleCallback){
+//        callback_destroy(m_idleCallback);
+//    }
 }
 void POISearchWorker::start(){
+    qDebug() << "Starting POISearchWorker";
     this->m_idleCallback=callback_new_1(callback_cast(POISearchWorker::callbackHandler), this);
     this->m_idle=event_add_idle(100,this->m_idleCallback);
 }
@@ -57,27 +63,27 @@ void POISearchWorker::callbackHandler(POISearchWorker this_){
 }
 void POISearchWorker::proccess(){
     if(!m_idle || !m_idleCallback){
-        qDebug() << "m_idle or m_idleCallbackis null returning";
+        qDebug() << "  m_idle or m_idleCallbackis null returning";
         return;
     }
     if(!m_mr){
-        qDebug() << "m_mr is null, proccessMapset";
+        qDebug() << "  m_mr is null, proccessMapset";
         proccessMapset();
     } else if(!m_item){
-        qDebug() << "m_item is null, proccessMapset";
+        qDebug() << "  m_item is null, proccessMapset";
         map_rect_destroy(m_mr);
         proccessMapset();
     }
 
     if(m_mr){
         for(int i = 0; i < 100; i++){
+            proccessMapsetItem();
             if(!m_item){
-                proccessMapsetItem();
                 return;
             }
         }
     } else {
-        qDebug() << "mr is null, destroying";
+        qDebug() << "  mr is null, destroying";
         map_selection_destroy(m_sel);
         finish();
     }
@@ -87,7 +93,7 @@ void POISearchWorker::proccessMapset(){
     qDebug() << "    Processing mapset";
     m_m = mapset_next(m_h, 1);
     if(!m_m){
-        qDebug() << "Mapset is null";
+        qDebug() << "  Mapset is null";
         m_selm = nullptr;
         m_mr = nullptr;
         return;
@@ -155,21 +161,9 @@ void POISearchWorker::proccessMapsetItem(){
 
 void POISearchWorker::finish(){
     qDebug() << "Finishing worker";
-    if(m_sel){
-        map_selection_destroy(m_sel);
-        m_sel=nullptr;
-    }
-    if(m_h){
-        mapset_close(m_h);
-        m_h=nullptr;
-    }
     if (m_idle) {
         event_remove_idle(m_idle);
         m_idle=nullptr;
-    }
-    if (m_idleCallback){
-        callback_destroy(m_idleCallback);
-        m_idleCallback = nullptr;
     }
 }
 
@@ -278,8 +272,9 @@ QString NavitPOIModel::getAddressString(struct item *item, int prependPostal) {
 void NavitPOIModel::stopWorker(bool clearModel){
     if(m_poiWorker){
         m_poiWorker->finish();
+        m_poiWorker->deleteLater();
+        m_poiWorker = nullptr;
     }
-
     if(clearModel){
         beginResetModel();
         m_pois.clear();
@@ -289,11 +284,6 @@ void NavitPOIModel::stopWorker(bool clearModel){
 }
 void NavitPOIModel::search(QString filter, int screenX, int screenY, int distance){
     stopWorker(true);
-
-    if(m_poiWorker){
-        delete (m_poiWorker);
-        m_poiWorker = nullptr;
-    }
 
     m_poiWorker = new POISearchWorker(m_navitInstance, filter, screenX, screenY, distance);
     connect(m_poiWorker, &POISearchWorker::gotSearchResult, this, &NavitPOIModel::receiveSearchResult);
