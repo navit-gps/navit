@@ -78,6 +78,6 @@ echo Build
 ./gradlew assembleDebug || exit 128
 
 echo Build finished.
-echo APK should be in "navit/android/build/outputs/apk" and can be installed with
+echo APK should be in "build/outputs/apk" and can be installed with
 echo ./gradlew installDebug
 
