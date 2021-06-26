@@ -236,7 +236,7 @@ float startScale = 1;
 }
 
 - (void)rotated:(NSNotification *)notification {
-    
+
     NSLog(@"rotated enter");
 
     int width =(int)UIScreen.mainScreen.bounds.size.width;
@@ -246,7 +246,7 @@ float startScale = 1;
     // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
-    
+
     NSLog(@"System Version: %f",[[[UIDevice currentDevice] systemVersion] floatValue]);
 
     if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
@@ -258,9 +258,9 @@ float startScale = 1;
                    || orientation == UIDeviceOrientationFaceUp)) {
         return;
     }
-    
+
     if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
-            return;
+        return;
     }
 
     if (lt_ten && UIDeviceOrientationIsLandscape(orientation)) {
@@ -360,13 +360,13 @@ static void setup_graphics(struct graphics_priv *gr) {
 
     UIPanGestureRecognizer* pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:pan];
-    
+
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
                                           UIDeviceOrientationDidChangeNotification object:nil];
-    
-    
+
+
 
     //[self rotated: (NULL)];
     //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
@@ -402,7 +402,7 @@ static void setup_graphics(struct graphics_priv *gr) {
     [super dealloc];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-     
+
 @end
 
 @class NavitViewController;
