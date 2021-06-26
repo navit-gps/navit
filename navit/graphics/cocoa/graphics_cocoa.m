@@ -43,6 +43,8 @@ CGContextRef current_context(void) {
 #define UIEvent NSEvent
 #define applicationFrame frame
 #define REVERSE_Y 1
+#define UIFont NSFont
+#define UIColor NSColor
 
 CGContextRef current_context(void) {
     return [[NSGraphicsContext currentContext] graphicsPort];
@@ -185,7 +187,7 @@ float startScale = 1;
         p.x=[sender locationInView: self.view].x;
         p.y=[sender locationInView: self.view].y;
 
-        if((startScale / sender.scale > 1.2) ||  (startScale / sender.scale < 0.8)) {
+        if((startScale / sender.scale > 2) ||  (startScale / sender.scale < 0.5)) {
             if((sender.scale > 1)) {
                 navit_zoom_in(global_graphics_cocoa->navit, 2, &p);
                 startScale=sender.scale * 1.5;
@@ -234,22 +236,31 @@ float startScale = 1;
 }
 
 - (void)rotated:(NSNotification *)notification {
+    
+    NSLog(@"rotated enter");
 
     int width =(int)UIScreen.mainScreen.bounds.size.width;
     int height = (int)UIScreen.mainScreen.bounds.size.height;
 
-    // Hack: issue on iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
+    // Hack: issue on	 iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
     // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
+    
+    NSLog(@"System Version: %f",[[[UIDevice currentDevice] systemVersion] floatValue]);
 
     if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
         lt_ten=0;
+
     }
 
     if(lt_ten &&  (orientation==UIDeviceOrientationFaceDown
                    || orientation == UIDeviceOrientationFaceUp)) {
         return;
+    }
+    
+    if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
+            return;
     }
 
     if (lt_ten && UIDeviceOrientationIsLandscape(orientation)) {
@@ -349,11 +360,15 @@ static void setup_graphics(struct graphics_priv *gr) {
 
     UIPanGestureRecognizer* pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:pan];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
                                           UIDeviceOrientationDidChangeNotification object:nil];
+    
+    
 
-    [self rotated: (NULL)];
+    //[self rotated: (NULL)];
     //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
 }
 
@@ -372,15 +387,22 @@ static void setup_graphics(struct graphics_priv *gr) {
     dbg(1,"enter");
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    NSLog(@"didRotateFromInterfaceOrientation enter");
+    [self rotated: (NULL)];
+}
+
 - (void)viewDidUnload {
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {
+    NSLog(@"Dealloc enter");
     [super dealloc];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
+     
 @end
 
 @class NavitViewController;
@@ -523,29 +545,48 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     char outb[outlen];
     char *inp=text;
 
+    strcpy(outb, inp);
+
     CGContextRef context = gr->layer_context;
     CGContextSaveGState(context);
 
-    strcpy(outb, inp);
+#if !USE_UIKIT
+    NSGraphicsContext * oldctx = [NSGraphicsContext currentContext];
+    NSGraphicsContext * nscg = [NSGraphicsContext graphicsContextWithCGContext:context flipped:NO];
+    [NSGraphicsContext setCurrentContext:nscg];
+#endif
 
-    CFStringRef mytext = CFStringCreateWithCString(NULL, outb, kCFStringEncodingUTF8);
+    CGAffineTransform xform = CGAffineTransformMake(dx/65536.0, dy/65536.0, dy/65536.0, -dx/65536.0, p->x, p->y );
+    CGContextTranslateCTM(context, 0, 0);
+    CGContextConcatCTM(context, xform);
 
-    if((dx!=0 && dx!=65536) || (dy !=0 && dy!=65536)) {
-        dbg(lvl_debug, "TEXT: %s  dx: %i  dy: %i", text, dx, dy);
-    }
+#if USE_UIKIT
+    CGAffineTransform flipit = CGAffineTransformMakeScale(1, -1);
+    CGContextConcatCTM(context, flipit);
+#endif
 
     CGColorRef color = CGColorCreate(CGColorSpaceCreateDeviceRGB(), fg->rgba);
-    CGContextSetTextDrawingMode(context, kCGTextFill);
-
     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font->size/16.0],
                                         NSFontAttributeName, [UIColor colorWithCGColor:(CGColorRef) color], NSForegroundColorAttributeName, nil];
 
+#if USE_UIKIT
     UIGraphicsPushContext(context);
-    [(id)mytext drawAtPoint:CGPointMake(p->x, p->y-font->size/16.0) withAttributes:attrs];
+#endif
+
+    NSAttributedString *myText = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:outb] attributes
+                                                             :attrs];
+
+#if USE_UIKIT
+    [myText drawAtPoint:CGPointMake(0, 0
+                                    -font->size/16.0)];//[(id)mytext drawAtPoint:CGPointMake(p->x, p->y-font->size/16.0) withAttributes:attrs];
     UIGraphicsPopContext();
+#else
+    [myText drawAtPoint:CGPointMake(0 + font->size/16.0/4,
+                                    0 - font->size/16.0/4)];//[(id)mytext drawAtPoint:CGPointMake(p->x, p->y-font->size/16.0) withAttributes:attrs];
+    [NSGraphicsContext setCurrentContext:oldctx];
+#endif
 
     CGContextRestoreGState(context);
-
 }
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
