@@ -113,7 +113,7 @@ int speech_estimate_duration(struct speech *this_, char *str) {
         return -1;
     }
 
-    count = strlen(str);
+    count = (int)strlen(str);
 
     return (count * 10) / cps_attr.u.num;
 }
@@ -131,7 +131,9 @@ int speech_estimate_duration(struct speech *this_, char *str) {
  */
 
 int speech_set_attr(struct speech *this_, struct attr *attr) {
+
     this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+
     //callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
     return 1;
 }

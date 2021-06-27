@@ -3189,9 +3189,13 @@ static int coord_not_set(struct coord c) {
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt) {
     struct point cursor_pnt;
     enum projection pro;
+    struct attr attr;
+
+    attr.type=attr_vehicle_request_location_authorization;
 
     if (this_->blocked||coord_not_set(nv->coord))
         return;
+
     if (pnt)
         cursor_pnt=*pnt;
     else {

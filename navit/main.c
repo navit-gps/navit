@@ -349,7 +349,7 @@ void main_init(const char *program) {
 #ifdef HAVE_API_WIN32_BASE
     win_set_nls();
 #endif
-#ifndef HAVE_API_ANDROID
+#if !defined HAVE_API_ANDROID && !defined __APPLE__
     setenv("LC_NUMERIC","C",1);
     setlocale(LC_ALL,"");
     setlocale(LC_NUMERIC,"C");
