@@ -318,7 +318,7 @@ static void setup_graphics(struct graphics_priv *gr) {
 #if USE_UIKIT
     myV.tag = 100;
 #endif
-    
+
     if (global_graphics_cocoa) {
         global_graphics_cocoa->view=myV;
         myV->graphics=global_graphics_cocoa;
@@ -449,14 +449,14 @@ void onUncaughtException(NSException* exception) {
     //#if USE_UIKIT
     //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     //#endif
-    
+
     NSSetUncaughtExceptionHandler(&onUncaughtException);
 #if USE_UIKIT
     NSRect appFrame = [UIScreen mainScreen].bounds;
 #else
     NSRect appFrame = [NSScreen mainScreen].frame;
 #endif
-    
+
     self.viewController = [[[NavitViewController alloc] init_withFrame : appFrame] autorelease];
 
 #if USE_UIKIT
