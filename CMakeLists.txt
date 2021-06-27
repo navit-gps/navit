@@ -10,7 +10,7 @@ endif(DISABLE_CXX)
 
 if(USE_UIKIT)
 # Set the find root to the iOS developer roots
-    set (CMAKE_FIND_ROOT_PATH ${CMAKE_IOS_DEVELOPER_ROOT}/ ${CMAKE_IOS_SDK_ROOT}/ ${CMAKE_FIND_ROOT_PATH} CACHE string  "iOS find search path root")
+    set (CMAKE_FIND_ROOT_PATH ${CMAKE_IOS_DEVELOPER_ROOT}/ ${CMAKE_IOS_SDK_ROOT}/ ${CMAKE_FIND_ROOT_PATH} CACHE STRING  "iOS find search path root")
 endif(USE_UIKIT)
 
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
@@ -990,7 +990,6 @@ if (APPLE)
     message(STATUS "CODE_SIGN_IDENTITY: ${CODE_SIGN_IDENTITY}")
     SET_XCODE_PROPERTY(navit DEVELOPMENT_TEAM ${DEVELOPMENT_TEAM_ID} )
     message(STATUS "DEVELOPMENT_TEAM_ID: ${DEVELOPMENT_TEAM_ID}")
-message(STATUS "FIND ROOT PATH: ${INCLUDE} ${CMAKE_FIND_ROOT_PATH} ${CMAKE_IOS_DEVELOPER_ROOT} ${CMAKE_IOS_SDK_ROOT}")
 endif (APPLE)
 
 macro(print_all_variables)
