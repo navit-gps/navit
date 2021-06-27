@@ -174,6 +174,8 @@ navit-76         76
 navit-76@2x      152
 navit-83.5@2x    167
 navit-1024       1024
+navit.57x57	 57
+navit.512x512    512
 EOF`
 
 OLD_IFS=$IFS
