@@ -6,7 +6,7 @@
 #include "point.h"
 #include "window.h"
 #include "graphics.h"
-#include "event.h"
+#include "navit/event.h"
 #include "item.h"
 #include "callback.h"
 #include "color.h"
@@ -19,8 +19,9 @@
 #define USE_UIKIT 0
 #endif
 
-#if USE_UIKIT
 #include "graphics_cocoa.h"
+
+#if USE_UIKIT
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #define NSRect CGRect
@@ -32,7 +33,6 @@ CGContextRef current_context(void) {
 }
 
 #else
-#import <Cocoa/Cocoa.h>
 #define UIView NSView
 #define UIViewController NSViewController
 #define UIApplicationDelegate NSApplicationDelegate
@@ -47,7 +47,7 @@ CGContextRef current_context(void) {
 #define UIColor NSColor
 
 CGContextRef current_context(void) {
-    return [[NSGraphicsContext currentContext] graphicsPort];
+    return [[NSGraphicsContext currentContext] CGContext];
 }
 
 #endif
@@ -174,11 +174,11 @@ float startScale = 1;
 @implementation NavitViewController
 
 @synthesize frame;
-
+#if USE_UIKIT
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return (UIInterfaceOrientationMaskAll);
 }
-#if USE_UIKIT
+
 - (IBAction)handlePinch:(UIPinchGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan) {
         startScale = sender.scale;
@@ -242,7 +242,7 @@ float startScale = 1;
     int width =(int)UIScreen.mainScreen.bounds.size.width;
     int height = (int)UIScreen.mainScreen.bounds.size.height;
 
-    // Hack: issue on	 iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
+    // Hack: issue on     iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
     // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
@@ -315,8 +315,10 @@ static void setup_graphics(struct graphics_priv *gr) {
     NSLog(@"loadView");
     NavitView* myV = [NavitView alloc];
 
+#if USE_UIKIT
     myV.tag = 100;
-
+#endif
+    
     if (global_graphics_cocoa) {
         global_graphics_cocoa->view=myV;
         myV->graphics=global_graphics_cocoa;
@@ -336,20 +338,23 @@ static void setup_graphics(struct graphics_priv *gr) {
 
 - (void)viewDidLoad {
     NSLog(@"View loaded!");
+#if USE_UIKIT
     NSNotificationCenter *notficationcenter = NSNotificationCenter.defaultCenter;
     [notficationcenter addObserver:self selector:@selector(appMovedToBackground:) name:
                        UIApplicationWillResignActiveNotification object: nil];
     [notficationcenter addObserver:self selector:@selector(appMovedToForeground:) name:
                        UIApplicationDidBecomeActiveNotification object: nil];
+#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     dbg(lvl_debug,"view appeared");
-
+#if USE_UIKIT
     self.modalPresentationCapturesStatusBarAppearance = false;
+#endif
 
     has_appeared = 1;
-
+#if USE_UIKIT
     callback_list_call_attr_0(global_graphics_cocoa->cbl, attr_vehicle_request_location_authorization);
 
     UIPinchGestureRecognizer* pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinch:)];
@@ -366,10 +371,7 @@ static void setup_graphics(struct graphics_priv *gr) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
                                           UIDeviceOrientationDidChangeNotification object:nil];
 
-
-
-    //[self rotated: (NULL)];
-    //when the view has appeared call rotated to adjust layout in case the app was started while device was in landscape orentation
+#endif
 }
 
 - (void) appMovedToBackground:(NSNotification*)note {
@@ -377,20 +379,23 @@ static void setup_graphics(struct graphics_priv *gr) {
     //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
 }
 
+#if USE_UIKIT
 - (void) appMovedToForeground:(NSNotification*)note {
     NSLog(@"App moved to foreground!");
     [self rotated: (NULL)];
     //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
 }
+#endif
 
 - (void)didReceiveMemoryWarning {
     dbg(1,"enter");
 }
-
+#if USE_UIKIT
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     NSLog(@"didRotateFromInterfaceOrientation enter");
     [self rotated: (NULL)];
 }
+#endif
 
 - (void)viewDidUnload {
     // Release any retained subviews of the main view.
@@ -415,6 +420,8 @@ static void setup_graphics(struct graphics_priv *gr) {
 @property (nonatomic, retain) /*IBOutlet*/ UIWindow *window;
 @property (nonatomic, retain) /*IBOutlet*/ NavitViewController *viewController;
 
+void onUncaughtException(NSException* exception);
+
 @end
 
 
@@ -423,6 +430,12 @@ static void setup_graphics(struct graphics_priv *gr) {
 @synthesize window;
 @synthesize viewController;
 
+void onUncaughtException(NSException* exception) {
+    NSLog(@"onUncaughtException: %@ %@", exception.reason, exception.debugDescription);
+#if (!USE_UIKIT)
+    [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
+#endif
+}
 
 #if USE_UIKIT
 - (BOOL)application:(UIApplication *)application
@@ -434,20 +447,27 @@ static void setup_graphics(struct graphics_priv *gr) {
 {
     NSLog(@"DidFinishLaunching\n");
     //#if USE_UIKIT
-    //	[[UIApplication sharedApplication] setStatusBarHidden:NO];
+    //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     //#endif
-
+    
+    NSSetUncaughtExceptionHandler(&onUncaughtException);
+#if USE_UIKIT
     NSRect appFrame = [UIScreen mainScreen].bounds;
-
+#else
+    NSRect appFrame = [NSScreen mainScreen].frame;
+#endif
+    
     self.viewController = [[[NavitViewController alloc] init_withFrame : appFrame] autorelease];
-    self.viewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
+#if USE_UIKIT
+    self.viewController.modalPresentationStyle = UIModalPresentationFullScreen;
+#endif
     NSRect windowRect = NSMakeRect(0, 0, appFrame.size.width, appFrame.size.height);
 
 #if USE_UIKIT
     self.window = [[[UIWindow alloc] initWithFrame:windowRect] autorelease];
 #else
-    self.window = [[[UIWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:
+    self.window = [[[UIWindow alloc] initWithContentRect:windowRect styleMask:NSWindowStyleMaskBorderless backing:
                                       NSBackingStoreBuffered defer:NO] autorelease];
 #endif
     utf8_macosroman=iconv_open("MACROMAN","UTF-8");
@@ -884,6 +904,12 @@ static void event_cocoa_main_loop_run(void) {
     [pool release];
 }
 
+#if (!USE_UIKIT)
+static void event_cocoa_main_loop_quit(void) {
+    [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
+}
+#endif
+
 @interface NavitTimer : NSObject {
 @public
     struct callback *cb;
@@ -920,8 +946,10 @@ static struct event_timeout *event_cocoa_add_timeout(int timeout, int multi, str
 static void event_cocoa_remove_timeout(struct event_timeout *ev) {
     NavitTimer *t=(NavitTimer *)ev;
 
-    [t->timer invalidate];
-    [t release];
+    if(t) {
+        [t->timer invalidate];
+        [t release];
+    }
 }
 
 
@@ -945,7 +973,11 @@ static void event_cocoa_remove_idle(struct event_idle *ev) {
 
 static struct event_methods event_cocoa_methods = {
     event_cocoa_main_loop_run,
-    NULL, /* event_cocoa_main_loop_quit, */
+#if (USE_UIKIT)
+    NULL, /* event_cocoa_main_loop_quit */
+#else
+    event_cocoa_main_loop_quit,
+#endif
     NULL, /* event_cocoa_add_watch, */
     NULL, /* event_cocoa_remove_watch, */
     event_cocoa_add_timeout,
