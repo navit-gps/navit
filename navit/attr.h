@@ -65,7 +65,7 @@ enum attr_format {
 #define AF_ROUNDABOUT_VALID	(1<<4)
 #define AF_ONEWAY_EXCEPTION	(1<<5)
 #define AF_SPEED_LIMIT		(1<<6)
-#define AF_RESERVED1		(1<<7)
+#define AF_CONDITIONAL_SPEED_LIMIT		(1<<7)
 #define AF_SIZE_OR_WEIGHT_LIMIT	(1<<8)
 #define AF_THROUGH_TRAFFIC_LIMIT (1<<9)
 #define AF_TOLL			(1<<10)

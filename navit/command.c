@@ -1743,7 +1743,7 @@ static int command_register_callbacks(struct command_saved *cs) {
  *
  * @param command The command string
  * @param attr The context attribute for the saved command
- * @param cb The callback to call whenver the command is re-evaluated
+ * @param cb The callback to call whenever the command is re-evaluated
  * @param async Whether the saved command should be flagged as asynchronous, causing it to be evaluated
  * in an idle callback
  */

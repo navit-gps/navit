@@ -242,27 +242,27 @@ static int gui_internal_cmd2_setting_rules(struct gui_priv *this, char *function
     on.type=off.type=attr_tracking;
     gui_internal_widget_append(w,
                                gui_internal_button_navit_attr_new(this, _("Lock on road"), gravity_left_center|orientation_horizontal|flags_fill,
-                                       &on, &off));
+                                                                  &on, &off));
     on.u.num=0;
     off.u.num=-1;
     on.type=off.type=attr_orientation;
     gui_internal_widget_append(w,
                                gui_internal_button_navit_attr_new(this, _("Northing"), gravity_left_center|orientation_horizontal|flags_fill,
-                                       &on, &off));
+                                                                  &on, &off));
     on.u.num=1;
     off.u.num=0;
     on.type=off.type=attr_follow_cursor;
     gui_internal_widget_append(w,
                                gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"),
-                                       gravity_left_center|orientation_horizontal|flags_fill,
-                                       &on, &off));
+                                                                  gravity_left_center|orientation_horizontal|flags_fill,
+                                                                  &on, &off));
     on.u.num=1;
     off.u.num=0;
     on.type=off.type=attr_waypoints_flag;
     gui_internal_widget_append(w,
                                gui_internal_button_navit_attr_new(this, _("Plan with Waypoints"),
-                                       gravity_left_center|orientation_horizontal|flags_fill,
-                                       &on, &off));
+                                                                  gravity_left_center|orientation_horizontal|flags_fill,
+                                                                  &on, &off));
     gui_internal_menu_render(this);
     return 0;
 }
@@ -365,6 +365,10 @@ static int gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *f
     int min_ele=INT_MAX;
     int max_ele=INT_MIN;
     int distance=0;
+    int heightmeters=0; // sum of all inclines
+    int prev_height=0;
+    int dheight=0;
+    int first_height=1;
     sel.next=NULL;
     sel.order=18;
     sel.range.min=type_height_line_1;
@@ -456,9 +460,20 @@ static int gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *f
                             for (i = 0 ; i < heightline->count - 1; i++) {
                                 if (heightline->c[i].x != heightline->c[i+1].x || heightline->c[i].y != heightline->c[i+1].y) {
                                     if (line_intersection(heightline->c+i, heightline->c+i+1, &last, &c, &res)) {
+                                        if(first_height){
+                                            prev_height = heightline->height;
+                                            first_height=0;
+                                        }
                                         diagram_point=g_new(struct diagram_point, 1);
                                         diagram_point->c.x=dist+transform_distance(projection_mg, &last, &res);
                                         diagram_point->c.y=heightline->height;
+                                        //add heightmeters
+                                        dheight = heightline->height-prev_height;
+                                        if(dheight>0) {
+                                            heightmeters+=dheight;
+                                            dbg(lvl_debug,"dheight: %i",dheight);
+                                        }
+                                        prev_height=heightline->height;
                                         diagram_point->next=diagram_points;
                                         diagram_points=diagram_point;
                                         diagram_points_count ++;
@@ -543,14 +558,19 @@ static int gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *f
         }
     }
 
-    struct point pTopLeft= {0, box->p.y + 10};
+struct point pTopLeft= {0, box->p.y + 10};
     struct point pBottomLeft= {0, box->h + box->p.y - 2};
-    struct point pBottomRight= {box->w - 100, box->h + box->p.y - 2};
+    struct point pBottomRight= {box->w - 150, box->h + box->p.y - 2};
+    struct point pBottomRightHm= {box->w - 150, box->h + box->p.y - 20};
     char* minele_text=g_strdup_printf("%d m", min_ele);
     char* maxele_text=g_strdup_printf("%d m", max_ele);
-    char* distance_text=g_strdup_printf("%.3f km", distance/1000.0);
+    char* distance_text=_("Distance:");
+    distance_text = g_strconcat(distance_text, g_strdup_printf(" %.3f km", distance/1000.0), NULL);
+    char* heightmeter_text=_("Vertical Meters:");
+    heightmeter_text=g_strconcat(heightmeter_text, g_strdup_printf(" %i", heightmeters), NULL);
     graphics_draw_text_std(this->gra, 10, maxele_text, &pTopLeft);
     graphics_draw_text_std(this->gra, 10, minele_text, &pBottomLeft);
+    graphics_draw_text_std(this->gra, 10, heightmeter_text, &pBottomRightHm);
     graphics_draw_text_std(this->gra, 10, distance_text, &pBottomRight);
 
     while (diagram_points) {
@@ -1180,39 +1200,39 @@ static int gui_internal_cmd2(struct gui_priv *this, char *function, struct attr 
 }
 
 static struct command_table commands[] = {
-    {"E",command_cast(gui_internal_cmd_escape)},
-    {"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
-    {"back",command_cast(gui_internal_cmd2_back)},
-    {"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
-    {"bookmarks",command_cast(gui_internal_cmd2)},
-    {"debug",command_cast(gui_internal_cmd_debug)},
-    {"formerdests",command_cast(gui_internal_cmd2)},
-    {"get_data",command_cast(gui_internal_get_data)},
-    {"img",command_cast(gui_internal_cmd_img)},
-    {"locale",command_cast(gui_internal_cmd2)},
-    {"log",command_cast(gui_internal_cmd_log)},
-    {"menu",command_cast(gui_internal_cmd_menu2)},
-    {"position",command_cast(gui_internal_cmd2_position)},
-    {"pois",command_cast(gui_internal_cmd2)},
-    {"redraw_map",command_cast(gui_internal_cmd_redraw_map)},
-    {"refresh",command_cast(gui_internal_cmd2_refresh)},
-    {"route_description",command_cast(gui_internal_cmd2)},
-    {"route_height_profile",command_cast(gui_internal_cmd2)},
-    {"set",command_cast(gui_internal_cmd2_set)},
-    {"setting_layout",command_cast(gui_internal_cmd2)},
-    {"setting_maps",command_cast(gui_internal_cmd2)},
-    {"setting_rules",command_cast(gui_internal_cmd2)},
-    {"setting_vehicle",command_cast(gui_internal_cmd2)},
-    {"town",command_cast(gui_internal_cmd2)},
-    {"enter_coord",command_cast(gui_internal_cmd2)},
-    {"quit",command_cast(gui_internal_cmd2_quit)},
-    {"waypoints",command_cast(gui_internal_cmd2)},
-    {"write",command_cast(gui_internal_cmd_write)},
-    {"about",command_cast(gui_internal_cmd2)},
+            {"E",command_cast(gui_internal_cmd_escape)},
+            {"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
+            {"back",command_cast(gui_internal_cmd2_back)},
+            {"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
+            {"bookmarks",command_cast(gui_internal_cmd2)},
+            {"debug",command_cast(gui_internal_cmd_debug)},
+            {"formerdests",command_cast(gui_internal_cmd2)},
+            {"get_data",command_cast(gui_internal_get_data)},
+            {"img",command_cast(gui_internal_cmd_img)},
+            {"locale",command_cast(gui_internal_cmd2)},
+            {"log",command_cast(gui_internal_cmd_log)},
+            {"menu",command_cast(gui_internal_cmd_menu2)},
+            {"position",command_cast(gui_internal_cmd2_position)},
+            {"pois",command_cast(gui_internal_cmd2)},
+            {"redraw_map",command_cast(gui_internal_cmd_redraw_map)},
+            {"refresh",command_cast(gui_internal_cmd2_refresh)},
+            {"route_description",command_cast(gui_internal_cmd2)},
+            {"route_height_profile",command_cast(gui_internal_cmd2)},
+            {"set",command_cast(gui_internal_cmd2_set)},
+            {"setting_layout",command_cast(gui_internal_cmd2)},
+            {"setting_maps",command_cast(gui_internal_cmd2)},
+            {"setting_rules",command_cast(gui_internal_cmd2)},
+            {"setting_vehicle",command_cast(gui_internal_cmd2)},
+            {"town",command_cast(gui_internal_cmd2)},
+            {"enter_coord",command_cast(gui_internal_cmd2)},
+            {"quit",command_cast(gui_internal_cmd2_quit)},
+            {"waypoints",command_cast(gui_internal_cmd2)},
+            {"write",command_cast(gui_internal_cmd_write)},
+            {"about",command_cast(gui_internal_cmd2)},
 #if HAS_IFADDRS
-    {"network_info",command_cast(gui_internal_cmd2)},
+            {"network_info",command_cast(gui_internal_cmd2)},
 #endif
-};
+        };
 
 void gui_internal_command_init(struct gui_priv *this, struct attr **attrs) {
     struct attr *attr;

@@ -2973,3 +2973,64 @@ msgstr ""
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr ""
+
+#, c-format
+#~ msgid "Change settings"
+#~ msgstr "Ändere Einstellungen"
+
+#, c-format
+#~ msgid "Change settings for: %s"
+#~ msgstr "Ändere die Einstellungen für: %s"
+
+#, c-format
+#~ msgid "Total Weight: %li"
+#~ msgstr "Gesamtgewicht: %li"
+
+#, c-format
+#~ msgid "Axle Weight: %li"
+#~ msgstr "Achslast: %li"
+
+#, c-format
+#~ msgid "Length: %li"
+#~ msgstr "Länge: %li"
+
+#, c-format
+#~ msgid "Width: %li"
+#~ msgstr "Breite: %li"
+
+#, c-format
+#~ msgid "Height: %li"
+#~ msgstr "Höhe: %li"
+
+#, c-format
+#~ msgid "Hazardous materials: %s"
+#~ msgstr "Gefahrgut: %s"
+
+#, c-format
+#~ msgid "Emission Class: %s"
+#~ msgstr "Emissionsklasse: %s"
+
+#, c-format
+#~ msgid "Total Weight"
+#~ msgstr "Gesamtgewicht"
+
+#, c-format
+#~ msgid "Axle Weight"
+#~ msgstr "Achslast"
+
+#, c-format
+#~ msgid "Width"
+#~ msgstr "Breite"
+
+#, c-format
+#~ msgid "Height"
+#~ msgstr "Höhe"
+
+#, c-format
+#~ msgid "Hazardous materials status"
+#~ msgstr "Gefahrgut"
+
+#, c-format
+#~ msgid "Emission Class"
+#~ msgstr "Emissionsklasse"
+

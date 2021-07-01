@@ -38,23 +38,27 @@
 # singesang https://launchpad.net/~singesang
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.5\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-05-15 13:44+0200\n"
 "PO-Revision-Date: 2019-10-02 18:37+0000\n"
 "Last-Translator: jkoan kerich <jkoan@gmx.de>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: de\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "Aus dem Quellverzeichnis starten\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -1588,8 +1592,8 @@ msgstr ""
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
 msgstr ""
-"Konnte keine Configurations-Datei unter den Möglichkeiten navit.xml, "
-"navit.xml.local finden"
+"Konnte keine Configurations-Datei unter den Möglichkeiten navit.xml, navit."
+"xml.local finden"
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
@@ -1603,8 +1607,7 @@ msgstr "Benutze die Konfigurations-Datei '%s'"
 msgid "Error: No configuration found in config file '%s'"
 msgstr "Fehler: Konnte keine Konfiguration in Datei '%s' finden"
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
+msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 "Interne Initiierung fehlgeschlagen. Bitte vorangegangene Fehlermeldungen "
 "prüfen"
@@ -2034,6 +2037,42 @@ msgstr " Längengrad "
 msgid "Show NMEA Data"
 msgstr "zeige NMEA Daten"
 
+msgid "Change settings"
+msgstr "Ändere Einstellungen"
+
+#, c-format
+msgid "Total Weight: %li"
+msgstr "Gesamtgewicht: %li"
+
+#, c-format
+msgid "Axle Weight: %li"
+msgstr "Achslast: %li"
+
+#, c-format
+msgid "Length: %li"
+msgstr "Länge: %li"
+
+#, c-format
+msgid "Width: %li"
+msgstr "Breite: %li"
+
+#, c-format
+msgid "Height: %li"
+msgstr "Höhe: %li"
+
+#, c-format
+msgid "Hazardous materials: %s"
+msgstr "Gefahrgut: %s"
+
+#. Strings from android/res/values/strings.xml
+#. Android resource: @strings/yes
+msgid "Yes"
+msgstr "Ja"
+
+#, c-format
+msgid "Emission Class: %s"
+msgstr "Emissionsklasse: %s"
+
 msgid "car"
 msgstr "Auto"
 
@@ -2059,6 +2098,10 @@ msgstr "Satellitenstatus anzeigen"
 
 msgid "Show NMEA data"
 msgstr "NMEA Daten anzeigen"
+
+#, c-format
+msgid "Change settings for: %s"
+msgstr "Ändere die Einstellungen für: %s"
 
 msgid "Add Bookmark"
 msgstr "Lesezeichen hinzufügen"
@@ -2131,6 +2174,12 @@ msgstr ""
 
 msgid "The route must cross at least 2 heightlines"
 msgstr "Die Route muss mindestens zwei Höhenlinien kreuzen"
+
+msgid "Distance:"
+msgstr "Distanz:"
+
+msgid "Vertical Meters:"
+msgstr "Höhenmeter:"
 
 msgid "Route Description"
 msgstr "Wegbeschreibung"
@@ -2282,11 +2331,6 @@ msgstr "Pferd"
 msgid "Truck"
 msgstr "LKW"
 
-#. Strings from android/res/values/strings.xml
-#. Android resource: @strings/yes
-msgid "Yes"
-msgstr "Ja"
-
 #. Android resource: @strings/cancel
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -2371,6 +2415,10 @@ msgstr "Ziel setzen"
 #. Android resource: @strings/position_popup_view
 msgid "View"
 msgstr "Ansicht"
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -3077,18 +3125,34 @@ msgstr "Süd+Mittel-Amerika"
 msgid "Guyane Francaise"
 msgstr "Französisch-Guayana"
 
-#, c-format
+#~ msgid "Total Weight"
+#~ msgstr "Gesamtgewicht"
+
+#~ msgid "Axle Weight"
+#~ msgstr "Achslast"
+
+#~ msgid "Width"
+#~ msgstr "Breite"
+
+#~ msgid "Height"
+#~ msgstr "Höhe"
+
+#~ msgid "Hazardous materials"
+#~ msgstr "Gefahrgut"
+
+#~ msgid "Emission Class"
+#~ msgstr "Emissionsklasse"
+
 #~ msgid "Route %4.0fkm    %02d:%02d ETA"
 #~ msgstr "Route %4.0fkm    %02d:%02d ETA"
 
 #~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Keine Konfigurations-Datei navit.xml oder navit.xml.local gefunden\n"
+#~ msgstr ""
+#~ "Keine Konfigurations-Datei navit.xml oder navit.xml.local gefunden\n"
 
-#, c-format
 #~ msgid "Error parsing config file '%s': %s\n"
 #~ msgstr "Fehler beim Parsen der Konfigurations-Datei '%s': %s\n"
 
-#, c-format
 #~ msgid "Using config file '%s'\n"
 #~ msgstr "Benutze Konfigurations-Datei '%s'\n"
 
@@ -3130,7 +3194,6 @@ msgstr "Französisch-Guayana"
 #~ msgid "Map download aborted!"
 #~ msgstr "Kartendownload abgebrochen!"
 
-#, c-format
 #~ msgid "Error: No configuration found in config file '%s'\n"
 #~ msgstr "Fehler: Keine Konfiguration in der Datei '%s' gefunden\n"
 
@@ -3140,14 +3203,12 @@ msgstr "Französisch-Guayana"
 #~ msgid "Distance(m)"
 #~ msgstr "Entfernung (m)"
 
-#, c-format
 #~ msgid "Set destination to %ld, %ld \n"
 #~ msgstr "Setze Ziel auf %ld, %ld \n"
 
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Entfernung vom Bildschirmmittelpunkt (km)"
 
-#, c-format
 #~ msgid "Set map to %ld, %ld \n"
 #~ msgstr "Setze Karte auf %ld, %ld \n"
 
@@ -3160,28 +3221,24 @@ msgstr "Französisch-Guayana"
 
 #~ msgid ""
 #~ "Current map location %s is not available\n"
-#~ "Please restart Navit after you attach an SD card or select a different map "
-#~ "location."
+#~ "Please restart Navit after you attach an SD card or select a different "
+#~ "map location."
 #~ msgstr ""
 #~ "Der Speicherpfad für die Karte ist nicht verfügbar.\n"
 #~ "Setzen Sie eine SD Karte ein und starten Sie Navit erneut\n"
 #~ "oder wählen Sie einen anderen Pfad aus."
 
-#, c-format
 #~ msgid "then leave the roundabout at the %1$s %2$s"
 #~ msgstr "anschließend verlassen Sie den Kreisverkehr an der %1$s %2$s"
 
 #~ msgid "filenamePath"
 #~ msgstr "Dateipfad"
 
-#, c-format
 #~ msgid "in %d m"
 #~ msgstr "in %d m"
 
-#, c-format
 #~ msgid "%d m"
 #~ msgstr "%d m"
 
-#, c-format
 #~ msgid "Set next visit to %ld, %ld \n"
 #~ msgstr "Setze nächsten Besuch auf %ld, %ld \n"

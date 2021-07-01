@@ -68,6 +68,7 @@ static struct vehicle_priv {
     struct event_timeout *retry_timer2;
     struct attr ** attrs;
     char fixiso8601[128];
+    int is_selected;
 #ifdef HAVE_GPSBT
     gpsbt_t context;
 #endif
@@ -239,7 +240,8 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     if(!priv->gps) {
 #endif
         priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
-        dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source,
+        if(priv->is_selected)
+            dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source,
             priv->retry_interval);
         g_free(source);
         return TRUE;
@@ -374,6 +376,16 @@ static void vehicle_gpsd_destroy(struct vehicle_priv *priv) {
     g_free(priv);
 }
 
+static int vehicle_gpsd_position_attr_set(struct vehicle_priv *priv, struct attr *attr) {
+    switch (attr->type) {
+    case attr_vehicle_is_selected:
+        priv->is_selected = attr->u.num;
+        break;
+    default:
+        return 0;
+    }
+}
+
 static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
         enum attr_type type, struct attr *attr) {
     struct attr * active=NULL;
@@ -440,6 +452,8 @@ static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 static struct vehicle_methods vehicle_gpsd_methods = {
     vehicle_gpsd_destroy,
     vehicle_gpsd_position_attr_get,
+    0,   //we don't have attr_set
+    vehicle_gpsd_position_attr_set,
 };
 
 static struct vehicle_priv *vehicle_gpsd_new_gpsd(struct vehicle_methods

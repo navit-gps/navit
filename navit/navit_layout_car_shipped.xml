@@ -544,6 +544,11 @@
 				<polyline color="#ff0000b5"/>
 				<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_low_emission_zone" order="0-">
+			<polygon color="#00FF0010"/>
+            		<polyline color="#FF000080" width="3"/>
+            		<text text_size="15"/>
+		</itemgra>
 	</layer>
 	<layer name="heightlines">
 		<itemgra item_types="height_line_1" order="7">
