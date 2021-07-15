@@ -1,5 +1,6 @@
 var NAVTREEINDEX40 =
 {
+"structgraphics__data__image.html":[2,0,129],
 "structgraphics__data__image.html#a699415212ce9ee35351702906f604968":[2,0,129,0],
 "structgraphics__data__image.html#aa5658ce41e5b0e7a66d2fdfd605ff686":[2,0,129,1],
 "structgraphics__font.html":[2,0,130],
@@ -248,6 +249,5 @@ var NAVTREEINDEX40 =
 "structgraphics__priv.html#a55fad9250ec1e0cd7ee0b4cf15015172":[2,0,146,13],
 "structgraphics__priv.html#a56b57fd64a7462d5278761d32e53d860":[2,0,146,81],
 "structgraphics__priv.html#a56fa940b5e40f0129567cc7def94e32e":[2,0,146,108],
-"structgraphics__priv.html#a57e2b3b5b87fa1301482564d00cf1558":[2,0,146,123],
-"structgraphics__priv.html#a5811e2130c0e342657190f3e40978336":[2,0,146,157]
+"structgraphics__priv.html#a57e2b3b5b87fa1301482564d00cf1558":[2,0,146,123]
 };

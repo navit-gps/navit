@@ -190,7 +190,7 @@ var searchData=
   ['filter_5fentry',['filter_entry',['../structfilter__entry.html',1,'']]],
   ['filter_5fpois',['filter_pois',['../classBackend.html#abb9b2de08cd20b766b984e3dd12f6df8',1,'Backend']]],
   ['filter_5ftype',['filter_type',['../filter_8c.html#a6a1f24db57b2bb66e10ff4b7327b7166',1,'filter.c']]],
-  ['filter_5funknown',['filter_unknown',['../maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'misc.c']]],
+  ['filter_5funknown',['filter_unknown',['../maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'filter_unknown(struct item_bin *ib):&#160;misc.c'],['../osm_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'filter_unknown(struct item_bin *ib):&#160;osm.c']]],
   ['filterextension',['filterExtension',['../classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#ae7851fd08f9550862d8666995c89d1a5',1,'org::navitproject::navit::FileBrowserActivity']]],
   ['filters',['filters',['../structmap__priv.html#a7103126032a432f27ce38f164a397323',1,'map_priv']]],
   ['filterstr',['filterstr',['../structpoi__param.html#a9147fb73e12c80a9afbfc40d66d922bd',1,'poi_param']]],

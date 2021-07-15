@@ -90,7 +90,7 @@ var searchData=
   ['filter',['filter',['../binding__dbus_8c.html#a94d18bde112fd06e398ed2d736c671c7',1,'binding_dbus.c']]],
   ['filter_5fpois',['filter_pois',['../classBackend.html#abb9b2de08cd20b766b984e3dd12f6df8',1,'Backend']]],
   ['filter_5ftype',['filter_type',['../filter_8c.html#a6a1f24db57b2bb66e10ff4b7327b7166',1,'filter.c']]],
-  ['filter_5funknown',['filter_unknown',['../maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'misc.c']]],
+  ['filter_5funknown',['filter_unknown',['../maptool_2misc_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'filter_unknown(struct item_bin *ib):&#160;misc.c'],['../osm_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf',1,'filter_unknown(struct item_bin *ib):&#160;osm.c']]],
   ['find_5fattr',['find_attr',['../gui__internal__html_8c.html#a2e726359cfe15e6d0c67e9866fd03b14',1,'gui_internal_html.c']]],
   ['find_5fattr_5fdup',['find_attr_dup',['../gui__internal__html_8c.html#a7128a3f58b8e8fb6b3be5109f006d893',1,'gui_internal_html.c']]],
   ['find_5fattribute',['find_attribute',['../xmlconfig_8c.html#a5c24a0247cb6d4e318240a9d681d4885',1,'xmlconfig.c']]],

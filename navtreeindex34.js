@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"quadtree_8h.html#ae591ef8f6287f23fed1e6db69d44797b":[3,0,8,1,3,8],
 "quadtree_8h_source.html":[3,0,8,1,3],
 "raster_8c.html":[3,0,5,9,5],
 "raster_8c.html#a004c35133422cb574c41bb114d4592c6":[3,0,5,9,5,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "route_8h.html#a72a72ba653784a692bb599af0a3d71c8":[3,0,118,37],
 "route_8h.html#a7b384ba5ee5108099a2f03b66f338094":[3,0,118,39],
 "route_8h.html#a7d1f8dafb33552bd84a513d867c4aa6a":[3,0,118,19],
-"route_8h.html#a9097ff0fd3025bd6b52babbb4634c741":[3,0,118,36],
-"route_8h.html#a90ef6d40a0268bcf04ca06938affbaa3":[3,0,118,10]
+"route_8h.html#a9097ff0fd3025bd6b52babbb4634c741":[3,0,118,36]
 };
