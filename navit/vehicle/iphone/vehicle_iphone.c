@@ -43,7 +43,7 @@
  */
 
 struct vehicle_priv {
-    int interval;
+    long interval;
     int position_set;
     struct callback_list *cbl;
     struct navit *navit;
@@ -56,7 +56,17 @@ struct vehicle_priv {
     struct callback *timer_callback;
     struct event_timeout *timer;
     char str_time[200];
+    enum attr_position_valid valid;  /**< Whether the vehicle has valid position data **/
 };
+
+void vehicle_iphone_update(void *arg,
+                           double lat,
+                           double lng,
+                           double dir,
+                           double spd,
+                           char * str_time,
+                           double radius
+                          );
 
 static void vehicle_iphone_destroy(struct vehicle_priv *priv) {
     corelocation_exit();
@@ -83,6 +93,9 @@ static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
         break;
     case attr_position_nmea:
         return 0;
+    case attr_position_valid:
+        attr->u.num=&priv->valid;
+        break;
     default:
         return 0;
     }
@@ -127,6 +140,7 @@ struct vehicle_methods vehicle_iphone_methods = {
     vehicle_iphone_destroy,
     vehicle_iphone_position_attr_get,
     vehicle_iphone_set_attr,
+    NULL,
 };
 
 void vehicle_iphone_update(void *arg,
@@ -148,6 +162,10 @@ void vehicle_iphone_update(void *arg,
     dbg(lvl_debug,"position_get lat:%f lng:%f (spd:%f dir:%f time:%s)", priv->geo.lat, priv->geo.lng, priv->speed,
         priv->direction, priv->str_time);
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+    if (priv->valid != attr_position_valid_valid) {
+        priv->valid = attr_position_valid_valid;
+        callback_list_call_attr_0(priv->cbl, attr_position_valid);
+    }
 }
 
 
