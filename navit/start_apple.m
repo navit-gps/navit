@@ -21,15 +21,19 @@
 #import <Foundation/Foundation.h>
 #include <glib.h>
 #include <stdlib.h>
+#include "debug.h"
 
 int main(int argc, char **argv) {
     int ret;
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
-    NSString *locale = [[NSLocale currentLocale] localeIdentifier];
+    //NSString *locale = [[NSLocale currentLocale] localeIdentifier];
     NSString *language = [[NSLocale preferredLanguages] firstObject];
     if(language.UTF8String[2]=='-') //IOS returns e.g. de-DE instead of de_DE
         language=[language stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+    if(strlen(language.UTF8String)==
+            2) //IOS can have language "en" e.g. then the country selection in country.c does not work
+        language=[NSString stringWithFormat:@"%@_%@", language, language.uppercaseString];
     char *lang=g_strdup_printf("%s.UTF-8",[language UTF8String]);
     dbg(0,"lang %s",lang);
     setenv("LANG",lang,0);
