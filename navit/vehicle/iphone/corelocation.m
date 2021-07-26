@@ -50,6 +50,9 @@ void corelocation_init(void * pv_arg, FT_LOCATION_CB pf_cb) {
 void corelocation_req_auth(void) {
     [locationcontroller.locationManager requestWhenInUseAuthorization];
     [locationcontroller.locationManager startUpdatingLocation];
+
+    // set this here as we can be sure that UI has finished loading
+    locationcontroller.locationManager.pausesLocationUpdatesAutomatically = false;
 }
 
 
@@ -72,6 +75,8 @@ void corelocation_exit(void) {
     self = [super init];
     if (self != nil) {
         self.locationManager = [[[CLLocationManager alloc] init] autorelease];
+
+        self.locationManager.allowsBackgroundLocationUpdates = true;
         self.locationManager.distanceFilter = kCLDistanceFilterNone;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         self.locationManager.delegate = self; // send loc updates to myself
@@ -91,7 +96,7 @@ void corelocation_exit(void) {
     //NSLog(@"New Location: %@", [newLocation description]);
     NSString *newDateString = [self.dateFormatter stringFromDate:newLocation.timestamp];
     const char* cString = [newDateString cStringUsingEncoding:NSASCIIStringEncoding];
-
+//    NSLog(@"Location Update: %f %f %f %f %s %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, newLocation.course, newLocation.speed, cString, newLocation.horizontalAccuracy);
     if(self.pf_cb) {
         self.pf_cb(
             self.pv_arg,
