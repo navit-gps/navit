@@ -131,6 +131,7 @@ void navit_destroy(struct navit *this_);
 void navit_command_add_table(struct navit*this_, struct command_table *commands, int count);
 struct navit * navit_ref(struct navit *this_);
 void navit_unref(struct navit *this_);
+void navit_store_center(struct navit * this_);
 /* end of prototypes */
 #ifdef __cplusplus
 }
