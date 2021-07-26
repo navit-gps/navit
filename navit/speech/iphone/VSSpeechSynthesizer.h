@@ -1,8 +1,7 @@
 #import  <foundation/foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface VSSpeechSynthesizer : NSObject <AVSpeechSynthesizerDelegate>
-{
+@interface VSSpeechSynthesizer : NSObject <AVSpeechSynthesizerDelegate> {
 }
 
 //+ (id)availableLanguageCodes;
@@ -18,4 +17,5 @@
 - (id)setVolume:(float)volume;
 - (id)useHFP:(int)use_hfp force:(int)force;  // We want to use HFP to announce, default true
 - (BOOL)is_useHFP;
+- (void)setHFPDelay:(double) delay;
 @end
