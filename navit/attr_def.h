@@ -160,7 +160,7 @@ ATTR(vehicle_height)
 ATTR(vehicle_weight)
 ATTR(vehicle_axle_weight)
 ATTR(vehicle_dangerous_goods)
-ATTR(vehicle_request_location_authorization)
+ATTR(vehicle_is_selected)
 ATTR(shmsize)
 ATTR(shmoffset)
 ATTR_UNUSED
@@ -205,6 +205,8 @@ ATTR(virtual_dpi)
 ATTR(real_dpi)
 ATTR(underground_alpha)
 ATTR(sunrise_degrees)
+ATTR(vehicle_request_location_authorization)
+ATTR(speech_hfp_delay)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative or absolute values. See the
  * documentation of ATTR_REL_RELSHIFT for details.
