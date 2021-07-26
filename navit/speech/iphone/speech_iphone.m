@@ -28,6 +28,8 @@
 #import "VSSpeechSynthesizer.h"
 #import <UIKit/UIKit.h>
 
+#define DEFAULT_HFP_DELAY 0.5
+
 struct speech_priv {
     VSSpeechSynthesizer *speech;
 };
@@ -52,6 +54,7 @@ static struct speech_methods speech_iphone_meth = {
 };
 
 static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+#pragma unused(parent)
     struct speech_priv *this;
     *meth=speech_iphone_meth;
     this=g_new0(struct speech_priv,1);
@@ -59,13 +62,8 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
     [this->speech init];
     dbg(lvl_debug,"this->speech=%p",this->speech);
 
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
-        [this->speech setRate:0.5];
-        NSLog(@"iOS is >= 10: %f", [[[UIDevice currentDevice] systemVersion] floatValue]);
-    } else {
-        [this->speech setRate:0.15];
-        NSLog(@"iOS is < 10, %f", [[[UIDevice currentDevice] systemVersion] floatValue]);
-    }
+    [this->speech setRate:0.5];
+    NSLog(@"iOS version: %f", [[[UIDevice currentDevice] systemVersion] floatValue]);
 
     [this->speech setVolume:100.0];
     [this->speech setPitch:0.8];
@@ -80,6 +78,11 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
         [this->speech useHFP:(int)attr->u.num force:YES];
     else
         [this->speech useHFP:YES force:NO]; // AUTO
+
+    if ((attr=attr_search(attrs, attr_speech_hfp_delay)))
+        [this->speech setHFPDelay: attr->u.num*0.001];
+    else
+        [this->speech setHFPDelay:DEFAULT_HFP_DELAY];
 
     return this;
 }
