@@ -20,6 +20,8 @@ int use_hfp;
 int force_hfp;
 int use_mix_to_telephony_uplink;
 int current_is_hfp;
+int interrupted;
+double hfpdelay;
 
 @implementation VSSpeechSynthesizer
 
@@ -35,12 +37,30 @@ int current_is_hfp;
         current_is_hfp = NO;
 
         synth.delegate = self;
+
+        NSNotificationCenter *notficationcenter = NSNotificationCenter.defaultCenter;
+        [notficationcenter addObserver:self selector:@selector(handleInterruption:) name:
+                           AVAudioSessionInterruptionNotification object: session];
+
     }
     return self;
 }
 
-//+ (id)availableLanguageCodes {
-//}
+- (BOOL)isInterrupted {
+    return interrupted;
+}
+
+- (void) handleInterruption:(NSNotification*)note {
+    AVAudioSessionInterruptionType interruptionType = [[[note userInfo]
+            objectForKey:AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+    if (AVAudioSessionInterruptionTypeBegan == interruptionType) {
+        NSLog (@"AVAudioSession interrupted");
+        interrupted=YES;
+    } else if (AVAudioSessionInterruptionTypeEnded == interruptionType) {
+        NSLog (@"AVAudioSession interruption ended");
+        interrupted=NO;
+    }
+}
 
 + (BOOL)isSystemSpeaking {
     return synth.speaking;
@@ -60,35 +80,43 @@ int current_is_hfp;
 - (id)startSpeakingString:(id)string {
 
     NSError *activationErr = nil;
-    NSString *delayed = @"XantippeXantippe";
 
-//    // Wait any announcement to finish
-//    while([synth isSpeaking])
-//        [NSThread sleepForTimeInterval:0.01];
+    // Don't try to play announcements if the session is interrupted, else they all get queued and will be played
+    // when the interruption ends
+    if(!self.isInterrupted) {
 
-    utterance = [AVSpeechUtterance speechUtteranceWithString:delayed];
-    utterance.rate=rate;
-    utterance.pitchMultiplier=pitch;
-    [self useHFP:1 force:2];    // Checks before each announcement if there is background audio playing
-    // If that is detected, we use A2DP and not HFP. force:2 will keep current
-    // settings for force_hfp and useHFP.
-    [session setActive:true error:&activationErr];
+        [self useHFP:1 force:2];    // Checks before each announcement if there is background audio playing
+        // If that is detected, we use A2DP and not HFP. force:2 will keep current
+        // settings for force_hfp and useHFP.
+        [session setActive:true error:&activationErr];
 
-    // We use a silent announcement to give time to establish a HFP connection so the navigation
-    // announcement will not get trunkated
-    // TODO: Do we need this to be variable in length to match different hardware we are connected to?
-    if(current_is_hfp) {
-        NSLog (@"AVSpeechUtterance play silent announcement: %@", activationErr.localizedFailureReason);
-        utterance.volume=0;
+        utterance = [AVSpeechUtterance speechUtteranceWithString:string];
+
+        // We use a configurable delay (speech_hfp_delay in speech tag in navit.xml)
+        // to give time to establish a HFP connection so the navigation
+        // announcement will not get trunkated at the beginning
+        if(current_is_hfp) {
+            NSLog (@"AVSpeechUtterance delayed HFP by: %1.2f Error: %@", hfpdelay, activationErr.localizedFailureReason);
+            [utterance setPreUtteranceDelay:(hfpdelay)];
+        }
+
+        NSLog (@"AVSpeechUtterance play navigation announcement: %@ Error: %@", utterance.speechString,
+               activationErr.localizedFailureReason);
+
+        utterance.rate=rate;
+        utterance.pitchMultiplier=pitch;
+        utterance.volume=volume;
         [synth speakUtterance:utterance];
+        NSLog (@"AVSpeechUtterance play navigation announcement: %@ Error: %@", utterance.speechString,
+               activationErr.localizedFailureReason);
     }
-    utterance = [AVSpeechUtterance speechUtteranceWithString:string];
-    utterance.rate=rate;
-    utterance.pitchMultiplier=pitch;
-    utterance.volume=volume;
-    [synth speakUtterance:utterance];
-    NSLog (@"AVSpeechUtterance play navigation announcement: %@", activationErr.localizedFailureReason);
+
     return 0;
+}
+
+- (void) setHFPDelay:(double) delay {
+    hfpdelay = delay;
+    NSLog (@"setHFPDelay: %1.2f", delay);
 }
 
 - (id)startSpeakingString:(id)string toURL:(id)url {
@@ -152,6 +180,7 @@ int current_is_hfp;
             [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionAllowBluetooth |
                      AVAudioSessionCategoryOptionDuckOthers   error:&setCategoryErr];
         NSLog(@"AVAudioSession HFP: %@", setCategoryErr.localizedFailureReason);
+
     } else {
 
         current_is_hfp = NO;
