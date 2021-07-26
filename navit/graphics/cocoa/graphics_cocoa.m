@@ -12,6 +12,7 @@
 #include "color.h"
 #include <iconv.h>
 #include "navit.h"
+#include "command.h"
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define USE_UIKIT 1
@@ -235,6 +236,31 @@ float startScale = 1;
     }
 }
 
+- (IBAction)handleLongPress:(UIPanGestureRecognizer *)sender {
+
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(1), (void *)&p);
+
+    }
+
+    if (sender.state == UIGestureRecognizerStateChanged) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_1(global_graphics_cocoa->cbl, attr_motion, (void *)&p);
+    }
+
+    if(sender.state == UIGestureRecognizerStateEnded) {
+        struct point p;
+        p.x=[sender locationInView: self.view].x;
+        p.y=[sender locationInView: self.view].y;
+        callback_list_call_attr_3(global_graphics_cocoa->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(1), (void *)&p);
+    }
+}
+
 - (void)rotated:(NSNotification *)notification {
 
     NSLog(@"rotated enter");
@@ -242,8 +268,6 @@ float startScale = 1;
     int width =(int)UIScreen.mainScreen.bounds.size.width;
     int height = (int)UIScreen.mainScreen.bounds.size.height;
 
-    // Hack: issue on     iPad2: the width and height of the mainscreen bounds are not changing when orientation changes
-    // Detect OS version and exchange width<->height when iOS < 10 detected and orientation is landscape
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     int lt_ten=1;
 
@@ -251,7 +275,6 @@ float startScale = 1;
 
     if([[[UIDevice currentDevice] systemVersion] floatValue] >=10) {
         lt_ten=0;
-
     }
 
     if(lt_ten &&  (orientation==UIDeviceOrientationFaceDown
@@ -263,19 +286,11 @@ float startScale = 1;
         return;
     }
 
-    if (lt_ten && UIDeviceOrientationIsLandscape(orientation)) {
-        global_graphics_cocoa->w=height;
-        global_graphics_cocoa->h=width;
-        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)height, (int)width);
-        NSLog(@"Rotated 9 %i %i %i %ld", lt_ten, width, height, (long)orientation);
-    } else {
-        global_graphics_cocoa->w=width;
-        global_graphics_cocoa->h=height;
-        callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
-        NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
-    }
+    global_graphics_cocoa->w=width;
+    global_graphics_cocoa->h=height;
+    callback_list_call_attr_2(global_graphics_cocoa->cbl, attr_resize, (int)width, (int)height);
+    NSLog(@"Rotated 10 %i %i %i %ld", lt_ten, width, height, (long)orientation);
 
-    dbg(1,"Rotated");
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -366,6 +381,10 @@ static void setup_graphics(struct graphics_priv *gr) {
     UIPanGestureRecognizer* pan=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:pan];
 
+    UILongPressGestureRecognizer* longpress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(
+                                                handleLongPress:)];
+    [self.view addGestureRecognizer:longpress];
+
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotated:) name:
@@ -377,18 +396,28 @@ static void setup_graphics(struct graphics_priv *gr) {
 - (void) appMovedToBackground:(NSNotification*)note {
     NSLog(@"App moved to background!");
     //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
+    navit_store_center(global_graphics_cocoa->navit);
+    // To save power when in background we display the main menu CPU load decreases from 50%->0-1%
+    struct attr navit;
+    navit.type=attr_navit;
+    navit.u.navit=global_graphics_cocoa->navit;
+    command_evaluate(&navit, "gui.menu();");
 }
 
 #if USE_UIKIT
 - (void) appMovedToForeground:(NSNotification*)note {
     NSLog(@"App moved to foreground!");
     [self rotated: (NULL)];
-    //TODO: add a callback to deactivate speech instance. Otherwise an active announcement will keep the radio muted in HFP mode
+    // back to map
+    struct attr navit;
+    navit.type=attr_navit;
+    navit.u.navit=global_graphics_cocoa->navit;
+    command_evaluate(&navit, "gui.back_to_map();");
 }
 #endif
 
 - (void)didReceiveMemoryWarning {
-    dbg(1,"enter");
+    dbg(1,"didReceiveMemoryWarning enter");
 }
 #if USE_UIKIT
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -396,11 +425,6 @@ static void setup_graphics(struct graphics_priv *gr) {
     [self rotated: (NULL)];
 }
 #endif
-
-- (void)viewDidUnload {
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
 
 - (void)dealloc {
     NSLog(@"Dealloc enter");
@@ -438,6 +462,11 @@ void onUncaughtException(NSException* exception) {
 }
 
 #if USE_UIKIT
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    navit_destroy(global_graphics_cocoa->navit);
+}
+
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 #else
@@ -535,6 +564,10 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 }
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
+    if(count<=0) {
+        dbg(lvl_debug,"Point count <= 0!");
+        return;
+    }
     CGPoint points[count];
     int i;
     for (i = 0 ; i < count ; i++) {
@@ -550,7 +583,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     CGRect lr=CGRectMake(p->x, p->y, w, h);
     if (p->x <= 0 && p->y <= 0 && p->x+w+1 >= gr->w && p->y+h+1 >= gr->h) {
-        dbg(1,"clear %p %dx%d",gr,w,h);
+        dbg(lvl_debug,"clear %p %dx%d",gr,w,h);
         free_graphics(gr);
         setup_graphics(gr);
     }
@@ -709,6 +742,8 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
         int w, int h, int wraparound);
 
 
+
+
 static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path,
         int *w, int *h, struct point *hot, int rotation) {
 #pragma unused (gra, meth, rotation)
@@ -721,7 +756,36 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gra, struct g
 
     CGImageRef image = CGImageCreateWithPNGDataProvider(imgDataProvider, NULL, true, kCGRenderingIntentDefault);
     CGDataProviderRelease(imgDataProvider);
-    dbg(1,"size %dx%d",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image));
+    dbg(lvl_debug,"size %dx%d, name:%s",(int)CGImageGetWidth(image),(int)CGImageGetHeight(image), path);
+
+    // Resize image
+    if(w && (*w>0) && (CGImageGetWidth(image)>0) && CGImageGetHeight(image)>0) {
+        CGColorSpaceRef colorspace = CGImageGetColorSpace(image);
+        CGContextRef context = CGBitmapContextCreate(NULL,
+                               *w,
+                               CGImageGetHeight(image) / (CGImageGetWidth(image) / *w),
+                               CGImageGetBitsPerComponent(image),
+                               CGImageGetBytesPerRow(image)/CGImageGetWidth(image)* *w,
+                               colorspace,
+                               CGImageGetAlphaInfo(image));
+
+        if(context == NULL)
+            return nil;
+
+        CGContextDrawImage(context, CGContextGetClipBoundingBox(context), image);
+        CGImageRef imgRef = CGBitmapContextCreateImage(context);
+
+        *w=(int)CGImageGetWidth(imgRef);
+        *h=(int)CGImageGetHeight(imgRef);
+
+        if (hot) {
+            hot->x=(int)CGImageGetWidth(imgRef)/2;
+            hot->y=(int)CGImageGetHeight(imgRef)/2;
+        }
+
+        return (struct graphics_image_priv *)imgRef;
+    }
+
     if (w)
         *w=(int)CGImageGetWidth(image);
     if (h)
@@ -866,7 +930,7 @@ static struct graphics_priv *graphics_cocoa_new(struct navit *nav, struct graphi
 #pragma unused (attrs)
     struct graphics_priv *ret;
     *meth=graphics_methods;
-    dbg(1,"enter");
+    dbg(lvl_debug,"enter");
     if(!event_request_system("cocoa","graphics_cocoa"))
         return NULL;
     ret=g_new0(struct graphics_priv, 1);
@@ -878,7 +942,7 @@ static struct graphics_priv *graphics_cocoa_new(struct navit *nav, struct graphi
 
 static void event_cocoa_main_loop_run(void) {
 
-    dbg(1,"enter");
+    dbg(lvl_debug,"enter");
 #if 0
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
