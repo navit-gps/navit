@@ -6,7 +6,7 @@ sudo apt-get install xdotool
 event=0
 
 send_event (){
-    file=`printf "%05d\n" $event`
+    file=$(printf "%05d\n" $event)
 
     import -window root $CIRCLE_ARTIFACTS/frames/tmp.png
     if [[ "$1" == "mousemove" ]]; then
@@ -57,7 +57,7 @@ send_event mousemove 475 450 click 1 # Click 'Display'
 send_event mousemove 870 450 click 1 # Click '3D'
 
 # capture 5 seconds of usage
-for i in `seq 99994 99999`; do
+for i in $(seq 99994 99999); do
 	import -window root $CIRCLE_ARTIFACTS/frames/${i}.png
 	sleep 1
 done
