@@ -9,6 +9,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: setup sanity check requirements
+          command: bash scripts/setup_sanitycheck_requirements.sh
+      - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
       - run:
