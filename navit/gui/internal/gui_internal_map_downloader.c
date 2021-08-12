@@ -50,7 +50,10 @@ int enable_map(struct navit *navit, char * map_path) {
     name.type=attr_name;
     name.u.str=g_strdup(map_path);
 
-    attrs[0]=&type; attrs[1]=&data; attrs[2]=&name; attrs[3]=NULL;
+    attrs[0]=&type; 
+    attrs[1]=&data; 
+    attrs[2]=&name; 
+    attrs[3]=NULL;
 
     struct map * new_map = map_new(NULL, attrs);
     if (new_map) {
@@ -74,9 +77,7 @@ int enable_map(struct navit *navit, char * map_path) {
  * @returns nothing
  */
 
-void
-gui_internal_download_update(struct gui_priv * this)
-{
+void gui_internal_download_update(struct gui_priv * this) {
     dbg(lvl_debug, "downloading status = %i\n", dl_info.downloading);
 	if(dl_info.downloading == 1){
       event_add_timeout(500, 0, this->download_cb);
@@ -104,9 +105,7 @@ gui_internal_download_update(struct gui_priv * this)
  * @returns nothing
  */
 
-void
-gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data)
-{
+void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data) {
     struct widget *wb, *w, *wr, *we;
     wb=gui_internal_menu(this,"Map download");
     w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
@@ -173,9 +172,7 @@ gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void *data
  * @returns nothing
  */
 
-void
-gui_internal_populate_download_table(struct gui_priv * this)
-{   
+void gui_internal_populate_download_table(struct gui_priv * this) {   
     struct mapset * mapset = NULL;
     struct widget * label = NULL;
     struct widget * row = NULL;
@@ -215,9 +212,7 @@ gui_internal_populate_download_table(struct gui_priv * this)
  * The main purpose of this function is to remove the widgets from
  * references download_data because those widgets are about to be freed.
  */
-void
-gui_internal_download_screen_free(struct gui_priv * this,struct widget * w)
-{
+void gui_internal_download_screen_free(struct gui_priv * this,struct widget * w) {
     if(this) {
         this->download_data.download_showing=0;
         this->download_data.download_table=NULL;
