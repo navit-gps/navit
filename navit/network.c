@@ -37,8 +37,7 @@ int progressCallBack(struct map_download_info *dl_info, double dltotal, double d
  * @returns Returns curl's result
  */
 
-void * download_map(void * arguments)
-{
+void * download_map(void * arguments) {
     struct map_download_info * dl_info = arguments;
     CURL *handle;
     FILE* file;
@@ -59,7 +58,7 @@ void * download_map(void * arguments)
     handle = curl_easy_init();
     curl_easy_setopt(handle, CURLOPT_URL, dl_info->url);
 
-    if (current_size>0){
+    if (current_size>0) {
         dbg(lvl_debug, "Current size : %i, will resume\n", current_size);
         curl_easy_setopt(handle, CURLOPT_RESUME_FROM, current_size);
         dl_info->resume = 1;
@@ -88,10 +87,9 @@ void * download_map(void * arguments)
     dbg(lvl_debug, "download complete, creating XML\n");
 
     file = fopen( dl_info->xml, "w");
-    if(file == NULL)
-    {
-       dbg(lvl_error, "Could not open %s for writing", dl_info->xml);
-       return -1;
+    if(file == NULL) {
+        dbg(lvl_error, "Could not open %s for writing", dl_info->xml);
+        return -1;
     }
 
     fprintf(file, "<map type=\"binfile\" data=\"$NAVIT_SHAREDIR/maps/%s\" />", dl_info->name);
