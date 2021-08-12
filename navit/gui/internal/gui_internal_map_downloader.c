@@ -50,9 +50,9 @@ int enable_map(struct navit *navit, char * map_path) {
     name.type=attr_name;
     name.u.str=g_strdup(map_path);
 
-    attrs[0]=&type; 
-    attrs[1]=&data; 
-    attrs[2]=&name; 
+    attrs[0]=&type;
+    attrs[1]=&data;
+    attrs[2]=&name;
     attrs[3]=NULL;
 
     struct map * new_map = map_new(NULL, attrs);
@@ -65,7 +65,6 @@ int enable_map(struct navit *navit, char * map_path) {
         navit_draw(navit);
     }
     return ret;
- 
 }
 
 
@@ -79,14 +78,14 @@ int enable_map(struct navit *navit, char * map_path) {
 
 void gui_internal_download_update(struct gui_priv * this) {
     dbg(lvl_debug, "downloading status = %i\n", dl_info.downloading);
-	if(dl_info.downloading == 1){
-      event_add_timeout(500, 0, this->download_cb);
-	} else {
-		if(pthread_join(dl_thread, NULL)) {
-		    dbg(lvl_error, "Error joining download thread\n");
-		}
-		enable_map(this->nav, dl_info.path);
-   }
+    if(dl_info.downloading == 1){
+        event_add_timeout(500, 0, this->download_cb);
+    } else {
+               if(pthread_join(dl_thread, NULL)) {
+                   dbg(lvl_error, "Error joining download thread\n");
+               }
+               enable_map(this->nav, dl_info.path);
+    }
 
     if(this->download_data.download_showing) {
         gui_internal_populate_download_table(this);
@@ -117,14 +116,14 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
 
     struct widget * box;
 
-    if(! this->download_cb)
-    {
-	  dbg(lvl_error, "Added callback\n");
-      this->download_cb = callback_new_1(callback_cast(gui_internal_download_update), this);
-      event_add_timeout(500, 0, this->download_cb);
+    if(! this->download_cb) {
+        dbg(lvl_error, "Added callback\n");
+        this->download_cb = callback_new_1(callback_cast(gui_internal_download_update), this);
+        event_add_timeout(500, 0, this->download_cb);
     }
 
-    this->download_data.download_table = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+    this->download_data.download_table = gui_internal_widget_table_new(this,
+                                         gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
 
     wb->wfree=gui_internal_download_screen_free;
     this->download_data.download_showing=1;
@@ -140,25 +139,25 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
     gui_internal_widget_append(wb,box);
     gui_internal_populate_download_table(this);
 
-	if ( dl_thread ) {
+    if ( dl_thread ) {
 	  dbg(lvl_error, "Download already in progress\n");
 
-	} else {
-	  dbg(lvl_error, "Download will be started\n");
-      strcpy (dl_info.url, g_strdup_printf ("http://www.navit-project.org/maps/osm_bbox_11.3,47.9,11.7,48.2.osm.bz2"));
-      strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-125.94,32.43,-114.08,42.07&timestamp=161223"));
-      strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-123.7,36.9,-120.5,38.7&timestamp=161223"));
-	  dl_info.name = g_strdup("west.bin");
-	  dl_info.path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, NULL);
-	  dl_info.xml = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, ".xml", NULL);
-      dbg(lvl_error," %s -> %s %s\n", dl_info.url, dl_info.name, dl_info.path);
+    } else {
+        dbg(lvl_error, "Download will be started\n");
+        strcpy (dl_info.url, g_strdup_printf ("http://www.navit-project.org/maps/osm_bbox_11.3,47.9,11.7,48.2.osm.bz2"));
+        strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-125.94,32.43,-114.08,42.07&timestamp=161223"));
+        strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-123.7,36.9,-120.5,38.7&timestamp=161223"));
+        dl_info.name = g_strdup("west.bin");
+        dl_info.path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, NULL);
+        dl_info.xml = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, ".xml", NULL);
+        dbg(lvl_error," %s -> %s %s\n", dl_info.url, dl_info.name, dl_info.path);
 
-      if(pthread_create(&dl_thread, NULL, download_map, &dl_info)) {
-          dbg(lvl_error, "Error creating download thread\n");
-          return;
-      }
+        if(pthread_create(&dl_thread, NULL, download_map, &dl_info)) {
+            dbg(lvl_error, "Error creating download thread\n");
+            return;
+        }
 
-	}
+    }
 
     gui_internal_menu_render(this);
 }
@@ -172,7 +171,7 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
  * @returns nothing
  */
 
-void gui_internal_populate_download_table(struct gui_priv * this) {   
+void gui_internal_populate_download_table(struct gui_priv * this) {
     struct mapset * mapset = NULL;
     struct widget * label = NULL;
     struct widget * row = NULL;
