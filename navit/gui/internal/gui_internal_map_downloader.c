@@ -78,13 +78,13 @@ int enable_map(struct navit *navit, char * map_path) {
 
 void gui_internal_download_update(struct gui_priv * this) {
     dbg(lvl_debug, "downloading status = %i\n", dl_info.downloading);
-    if(dl_info.downloading == 1){
+    if(dl_info.downloading == 1) {
         event_add_timeout(500, 0, this->download_cb);
     } else {
-               if(pthread_join(dl_thread, NULL)) {
-                   dbg(lvl_error, "Error joining download thread\n");
-               }
-               enable_map(this->nav, dl_info.path);
+        if(pthread_join(dl_thread, NULL)) {
+            dbg(lvl_error, "Error joining download thread\n");
+        }
+        enable_map(this->nav, dl_info.path);
     }
 
     if(this->download_data.download_showing) {
@@ -140,13 +140,16 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
     gui_internal_populate_download_table(this);
 
     if ( dl_thread ) {
-	  dbg(lvl_error, "Download already in progress\n");
+        dbg(lvl_error, "Download already in progress\n");
 
     } else {
         dbg(lvl_error, "Download will be started\n");
-        strcpy (dl_info.url, g_strdup_printf ("http://www.navit-project.org/maps/osm_bbox_11.3,47.9,11.7,48.2.osm.bz2"));
-        strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-125.94,32.43,-114.08,42.07&timestamp=161223"));
-        strcpy (dl_info.url, g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-123.7,36.9,-120.5,38.7&timestamp=161223"));
+        strcpy (dl_info.url,
+	        g_strdup_printf ("http://www.navit-project.org/maps/osm_bbox_11.3,47.9,11.7,48.2.osm.bz2"));
+        strcpy (dl_info.url,
+	        g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-125.94,32.43,-114.08,42.07&timestamp=161223"));
+        strcpy (dl_info.url,
+	        g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-123.7,36.9,-120.5,38.7&timestamp=161223"));
         dl_info.name = g_strdup("west.bin");
         dl_info.path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, NULL);
         dl_info.xml = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, ".xml", NULL);
@@ -176,32 +179,32 @@ void gui_internal_populate_download_table(struct gui_priv * this) {
     struct widget * label = NULL;
     struct widget * row = NULL;
 
-	if(this->download_data.download_showing){
+    if(this->download_data.download_showing){
         GList *toprow;
-        struct item topitem={0};
+        struct item topitem= {0};
         toprow=gui_internal_widget_table_top_row(this, this->download_data.download_table);
         if(toprow && toprow->data)
             topitem=((struct widget*)toprow->data)->item;
         gui_internal_widget_table_clear(this,this->download_data.download_table);
 
         row = gui_internal_widget_table_row_new(this,
-                              gravity_left
-                              | flags_fill
-                              | orientation_horizontal);
+                                                gravity_left
+                                                | flags_fill
+                                                | orientation_horizontal);
         gui_internal_widget_append(this->download_data.download_table,row);
-      double percent = ( dl_info.dl_total > 0 ? dl_info.dl_now / dl_info.dl_total * 100 : 0 );
-      char * text;
-      text=g_strdup_printf(
-		"Download of %s is %s %1.0lf Mb / %1.0lf Mb = %1.0f% \n",
-			dl_info.name,
-			dl_info.downloading == 1 ? "active" : "inactive" ,
-			dl_info.dl_now / 1024 / 1024,
-			dl_info.dl_total / 1024 / 1024,
-			percent);
-      label = gui_internal_label_new(this,text);
-      gui_internal_widget_append(row,label);
-	  g_free(text);
-	}
+        double percent = ( dl_info.dl_total > 0 ? dl_info.dl_now / dl_info.dl_total * 100 : 0 );
+        char * text;
+        text=g_strdup_printf(
+                 "Download of %s is %s %1.0lf Mb / %1.0lf Mb = %1.0f% \n",
+                 dl_info.name,
+                 dl_info.downloading == 1 ? "active" : "inactive" ,
+                 dl_info.dl_now / 1024 / 1024,
+                 dl_info.dl_total / 1024 / 1024,
+                 percent);
+        label = gui_internal_label_new(this,text);
+        gui_internal_widget_append(row,label);
+        g_free(text);
+    }
 }
 
 
