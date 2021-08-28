@@ -41,7 +41,7 @@ var gui__gtk__action_8c =
     [ "n_stock_icons", "gui__gtk__action_8c.html#ab60037c4651f83b783a4388f826464e0", null ],
     [ "n_toggleentries", "gui__gtk__action_8c.html#a6dec2e93b37313626b3eff9c756566b7", null ],
     [ "north_xpm", "gui__gtk__action_8c.html#a43bc2577411c4363bb231a7bffeaaaf9", null ],
-    [ "stock_icons", "gui__gtk__action_8c.html#acd8f20b40db083eb0a7d96c60c2c3e8a", null ],
+    [ "stock_icons", "gui__gtk__action_8c.html#a224b628433f522f6d47a1bfdc26937e8", null ],
     [ "stockid", "gui__gtk__action_8c.html#a9b185f421ebeab95fc263414df4f6c6f", null ],
     [ "toggleentries", "gui__gtk__action_8c.html#aecdfc18eed0b2bc3adf9ea9599e1b715", null ]
 ];

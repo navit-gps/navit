@@ -20,7 +20,8 @@ var classPoiObject =
     [ "m_icon", "classPoiObject.html#a2f6fb30eaf2eca575dffe4b36ed95cae", null ],
     [ "m_name", "classPoiObject.html#a21d7b34c5a151e44470be5d5a1428881", null ],
     [ "m_type", "classPoiObject.html#ae8cb268e199a036ea5e633369cc1eba6", null ],
-    [ "distance", "classPoiObject.html#aecdac2f1cc61b0ce1a39bdb2606471a4", null ],
+    [ "coords", "classPoiObject.html#a691b64c42f0fbcd896beaf676eeb3891", null ],
+    [ "distance", "classPoiObject.html#acac19e37563414a3f521afa7542d25e8", null ],
     [ "icon", "classPoiObject.html#ad7d7eabd8b63f935401dfe9d7e32a785", null ],
     [ "name", "classPoiObject.html#a937f545633fb98057ffc334b6b121e3a", null ],
     [ "type", "classPoiObject.html#ad46890cb669816aeb2ea754a13bd9363", null ]

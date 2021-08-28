@@ -8,7 +8,7 @@ var interfaceVSSpeechSynthesizer =
     [ "setRate:", "interfaceVSSpeechSynthesizer.html#a3803af9cac86ea6270d1913714839b0c", null ],
     [ "setVolume:", "interfaceVSSpeechSynthesizer.html#a38b7a978d0018462537868527e666a82", null ],
     [ "startSpeakingString:", "interfaceVSSpeechSynthesizer.html#aad7cf3a6957094ed41a7a07d2823743f", null ],
-    [ "startSpeakingString:toURL:", "interfaceVSSpeechSynthesizer.html#a2d03b5f2c89b542d18cb9e1ac99e8a82", null ],
-    [ "startSpeakingString:toURL:withLanguageCode:", "interfaceVSSpeechSynthesizer.html#a63317dae43433dc32ddc9faa84023c7d", null ],
+    [ "startSpeakingString:toURL:", "interfaceVSSpeechSynthesizer.html#ab7098e9b49a06f56c2839e20aab389e8", null ],
+    [ "startSpeakingString:toURL:withLanguageCode:", "interfaceVSSpeechSynthesizer.html#a127d778223120cf73771ad209e7c13d2", null ],
     [ "volume", "interfaceVSSpeechSynthesizer.html#aa989bc284ea7db534120e271c5bc3546", null ]
 ];

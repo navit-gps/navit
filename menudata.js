@@ -1,3 +1,27 @@
+/*
+ @licstart  The following is the entire license notice for the JavaScript code in this file.
+
+ The MIT License (MIT)
+
+ Copyright (C) 1997-2020 by Dimitri van Heesch
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ and associated documentation files (the "Software"), to deal in the Software without restriction,
+ including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all copies or
+ substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ @licend  The above is the entire license notice for the JavaScript code in this file
+*/
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
 {text:"Modules",url:"modules.html"},
@@ -11,9 +35,9 @@ var menudata={children:[
 {text:"Class Hierarchy",url:"hierarchy.html"},
 {text:"Data Fields",url:"functions.html",children:[
 {text:"All",url:"functions.html",children:[
-{text:"$",url:"functions.html#index_0x24"},
-{text:"[",url:"functions_0x5b.html#index_0x5b"},
-{text:"_",url:"functions__.html#index__"},
+{text:"$",url:"functions.html#index__24"},
+{text:"[",url:"functions_[.html#index__5B"},
+{text:"_",url:"functions__.html#index__5F"},
 {text:"a",url:"functions_a.html#index_a"},
 {text:"b",url:"functions_b.html#index_b"},
 {text:"c",url:"functions_c.html#index_c"},
@@ -40,10 +64,10 @@ var menudata={children:[
 {text:"x",url:"functions_x.html#index_x"},
 {text:"y",url:"functions_y.html#index_y"},
 {text:"z",url:"functions_z.html#index_z"},
-{text:"~",url:"functions_0x7e.html#index_0x7e"}]},
+{text:"~",url:"functions_~.html#index__7E"}]},
 {text:"Functions",url:"functions_func.html",children:[
-{text:"[",url:"functions_func.html#index_0x5b"},
-{text:"_",url:"functions_func__.html#index__"},
+{text:"[",url:"functions_func.html#index__5B"},
+{text:"_",url:"functions_func__.html#index__5F"},
 {text:"a",url:"functions_func_a.html#index_a"},
 {text:"b",url:"functions_func_b.html#index_b"},
 {text:"c",url:"functions_func_c.html#index_c"},
@@ -66,10 +90,10 @@ var menudata={children:[
 {text:"u",url:"functions_func_u.html#index_u"},
 {text:"v",url:"functions_func_v.html#index_v"},
 {text:"w",url:"functions_func_w.html#index_w"},
-{text:"~",url:"functions_func_0x7e.html#index_0x7e"}]},
+{text:"~",url:"functions_func_~.html#index__7E"}]},
 {text:"Variables",url:"functions_vars.html",children:[
-{text:"$",url:"functions_vars.html#index_0x24"},
-{text:"_",url:"functions_vars__.html#index__"},
+{text:"$",url:"functions_vars.html#index__24"},
+{text:"_",url:"functions_vars__.html#index__5F"},
 {text:"a",url:"functions_vars_a.html#index_a"},
 {text:"b",url:"functions_vars_b.html#index_b"},
 {text:"c",url:"functions_vars_c.html#index_c"},
@@ -118,8 +142,8 @@ var menudata={children:[
 {text:"File List",url:"files.html"},
 {text:"Globals",url:"globals.html",children:[
 {text:"All",url:"globals.html",children:[
-{text:"$",url:"globals.html#index_0x24"},
-{text:"_",url:"globals__.html#index__"},
+{text:"$",url:"globals.html#index__24"},
+{text:"_",url:"globals__.html#index__5F"},
 {text:"a",url:"globals_a.html#index_a"},
 {text:"b",url:"globals_b.html#index_b"},
 {text:"c",url:"globals_c.html#index_c"},
@@ -146,7 +170,7 @@ var menudata={children:[
 {text:"x",url:"globals_x.html#index_x"},
 {text:"z",url:"globals_z.html#index_z"}]},
 {text:"Functions",url:"globals_func.html",children:[
-{text:"_",url:"globals_func.html#index__"},
+{text:"_",url:"globals_func.html#index__5F"},
 {text:"a",url:"globals_func_a.html#index_a"},
 {text:"b",url:"globals_func_b.html#index_b"},
 {text:"c",url:"globals_func_c.html#index_c"},
@@ -173,8 +197,8 @@ var menudata={children:[
 {text:"x",url:"globals_func_x.html#index_x"},
 {text:"z",url:"globals_func_z.html#index_z"}]},
 {text:"Variables",url:"globals_vars.html",children:[
-{text:"$",url:"globals_vars.html#index_0x24"},
-{text:"_",url:"globals_vars__.html#index__"},
+{text:"$",url:"globals_vars.html#index__24"},
+{text:"_",url:"globals_vars__.html#index__5F"},
 {text:"a",url:"globals_vars_a.html#index_a"},
 {text:"b",url:"globals_vars_b.html#index_b"},
 {text:"c",url:"globals_vars_c.html#index_c"},
@@ -213,7 +237,7 @@ var menudata={children:[
 {text:"v",url:"globals_type.html#index_v"},
 {text:"x",url:"globals_type.html#index_x"}]},
 {text:"Enumerations",url:"globals_enum.html",children:[
-{text:"_",url:"globals_enum.html#index__"},
+{text:"_",url:"globals_enum.html#index__5F"},
 {text:"a",url:"globals_enum.html#index_a"},
 {text:"c",url:"globals_enum.html#index_c"},
 {text:"d",url:"globals_enum.html#index_d"},
@@ -250,7 +274,7 @@ var menudata={children:[
 {text:"v",url:"globals_eval_v.html#index_v"},
 {text:"w",url:"globals_eval_w.html#index_w"}]},
 {text:"Macros",url:"globals_defs.html",children:[
-{text:"_",url:"globals_defs.html#index__"},
+{text:"_",url:"globals_defs.html#index__5F"},
 {text:"a",url:"globals_defs_a.html#index_a"},
 {text:"b",url:"globals_defs_b.html#index_b"},
 {text:"c",url:"globals_defs_c.html#index_c"},

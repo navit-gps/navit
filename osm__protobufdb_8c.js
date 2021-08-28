@@ -30,7 +30,7 @@ var osm__protobufdb_8c =
     [ "osm_protobufdb_timestamp", "osm__protobufdb_8c.html#af83889628bf7b53b0bf163669448b776", null ],
     [ "osm_protobufdb_write_blob", "osm__protobufdb_8c.html#acea55a97ea24208c5f89dd5285ddc32a", null ],
     [ "test", "osm__protobufdb_8c.html#a13eda00dd5efd9440b0eaf5430b73e84", null ],
-    [ "context", "osm__protobufdb_8c.html#a1c3a2ff756ebed189d8e410a00bed604", null ],
-    [ "db_config", "osm__protobufdb_8c.html#aa5057df3884b922991ee16c7b61a7ece", null ],
+    [ "context", "osm__protobufdb_8c.html#a5300b847376462b9f083b5a13d5a92dd", null ],
+    [ "db_config", "osm__protobufdb_8c.html#a015ac7b585010442a4bf6d4874675ea8", null ],
     [ "latlon_scale", "osm__protobufdb_8c.html#a933d758f17d6368d11d83b13dfedac41", null ]
 ];

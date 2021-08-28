@@ -11,5 +11,5 @@ var osm__xml_8c =
     [ "parse_tag", "osm__xml_8c.html#aba6131110413e80e3d52c1124d40ccec", null ],
     [ "parse_way", "osm__xml_8c.html#aa3165b5eaeb2d3d4968974d678803215", null ],
     [ "xml_declaration_in_line", "osm__xml_8c.html#a00dd21f504432eea0a02496376d7c22b", null ],
-    [ "entities", "osm__xml_8c.html#ad5f4cb5c26c407229e4653de33a21b08", null ]
+    [ "entities", "osm__xml_8c.html#a2693987b300bc5d120ee479897d9b46c", null ]
 ];

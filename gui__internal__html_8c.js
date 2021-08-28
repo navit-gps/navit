@@ -21,6 +21,6 @@ var gui__internal__html_8c =
     [ "gui_internal_refresh_callback_called", "gui__internal__html_8c.html#a9c4e8cbff770ac3105a663aae4cef296", null ],
     [ "gui_internal_set_refresh_callback", "gui__internal__html_8c.html#a18c18878d98b084ae858628c645dbfbf", null ],
     [ "html_image", "gui__internal__html_8c.html#a717969949db309c61b182df1481152c9", null ],
-    [ "div_flags_map", "gui__internal__html_8c.html#aae927a30f253bbf7ec639b588f682137", null ],
-    [ "html_tag_map", "gui__internal__html_8c.html#a75915d927eb965f81d3dd4201cdfcdd0", null ]
+    [ "div_flags_map", "gui__internal__html_8c.html#a8a581aaa2a00dc0b9057cc8eddda7174", null ],
+    [ "html_tag_map", "gui__internal__html_8c.html#acaa23fd1f1d30735b805d2292ab5242f", null ]
 ];

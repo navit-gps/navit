@@ -117,7 +117,7 @@ var navigation_8c =
     [ "navigation_map_meth", "navigation_8c.html#ababd897c8e965af2d2bbaa8bdc33331a", null ],
     [ "roundabout_extra_length", "navigation_8c.html#a609131fea6f8d51a2dacc2036f3b53f0", null ],
     [ "sharp_turn_limit", "navigation_8c.html#a27b8f1091b0fa5990ecb9bbb61b8687b", null ],
-    [ "suffixes", "navigation_8c.html#aa565aae0c1fb0952c6ac477f449f7549", null ],
+    [ "suffixes", "navigation_8c.html#a90c1b4e737595f725ea5f98a11380bf0", null ],
     [ "turn_2_limit", "navigation_8c.html#a22780171bb97e4bdd516bf4e3ce03be4", null ],
     [ "u_turn_limit", "navigation_8c.html#a81388baea902a53db5e41d24cdb892b2", null ]
 ];

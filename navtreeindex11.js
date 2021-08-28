@@ -1,7 +1,7 @@
 var NAVTREEINDEX11 =
 {
-"functions_0x5b.html":[2,2,0,1],
-"functions_0x7e.html":[2,2,0,29],
+"functions.html":[2,2,0,0],
+"functions_[.html":[2,2,0,1],
 "functions__.html":[2,2,0,2],
 "functions_a.html":[2,2,0,3],
 "functions_b.html":[2,2,0,4],
@@ -13,7 +13,6 @@ var NAVTREEINDEX11 =
 "functions_f.html":[2,2,0,8],
 "functions_func.html":[2,2,1],
 "functions_func.html":[2,2,1,0],
-"functions_func_0x7e.html":[2,2,1,24],
 "functions_func__.html":[2,2,1,1],
 "functions_func_a.html":[2,2,1,2],
 "functions_func_b.html":[2,2,1,3],
@@ -37,6 +36,7 @@ var NAVTREEINDEX11 =
 "functions_func_u.html":[2,2,1,21],
 "functions_func_v.html":[2,2,1,22],
 "functions_func_w.html":[2,2,1,23],
+"functions_func_~.html":[2,2,1,24],
 "functions_g.html":[2,2,0,9],
 "functions_h.html":[2,2,0,10],
 "functions_i.html":[2,2,0,11],
@@ -87,6 +87,7 @@ var NAVTREEINDEX11 =
 "functions_x.html":[2,2,0,26],
 "functions_y.html":[2,2,0,27],
 "functions_z.html":[2,2,0,28],
+"functions_~.html":[2,2,0,29],
 "gar2navit_8c.html":[3,0,8,3,0],
 "gar2navit_8c.html#a3335bbe331a7179a2ab18cff6fcea054":[3,0,8,3,0,4],
 "gar2navit_8c.html#a57b81a6fa88976690877ad5762fc4921":[3,0,8,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "garmin__img_8c.html#ab6250f82286bfdbb1cbb15f26876d258":[3,0,8,4,0,64],
 "garmin__img_8c.html#ab73ef06961be00b68af099e9f1210d74":[3,0,8,4,0,65],
 "garmin__img_8c.html#ab840e4291cac2007b3daba2c44f1ee19":[3,0,8,4,0,68],
-"garmin__img_8c.html#aba184e105606bd72d91cd3e4b2da4b2a":[3,0,8,4,0,60],
-"garmin__img_8c.html#abe2867ed103aed9cf25f8090c3db553f":[3,0,8,4,0,118]
+"garmin__img_8c.html#aba184e105606bd72d91cd3e4b2da4b2a":[3,0,8,4,0,60]
 };

@@ -1,5 +1,16 @@
 var NAVTREEINDEX34 =
 {
+"quadtree_8h.html#a631c01ae0c44947cfbca7ec3923de74f":[3,0,8,1,3,12],
+"quadtree_8h.html#a67526c4e22ecd014a9837a0711c8df6c":[3,0,8,1,3,9],
+"quadtree_8h.html#a70c3cfdd454c62fa4d1901faf0ff4610":[3,0,8,1,3,2],
+"quadtree_8h.html#a75c7f0e391a7879cc561f87ca7097849":[3,0,8,1,3,18],
+"quadtree_8h.html#a77d5eb3cc2537b033f643b7561bd2236":[3,0,8,1,3,5],
+"quadtree_8h.html#aadf7e2c06ae2a6d695fa91f24ccde64a":[3,0,8,1,3,3],
+"quadtree_8h.html#aae086106cfb7bde767419bd06bf96c39":[3,0,8,1,3,14],
+"quadtree_8h.html#ab99829ad4f998171b0fd939a2c7d9320":[3,0,8,1,3,17],
+"quadtree_8h.html#ac07bc6fe538e0c7557ad1be6e48a4d5b":[3,0,8,1,3,6],
+"quadtree_8h.html#ad0de869bb216e4e9ca8a1d8ac5ee4b8c":[3,0,8,1,3,13],
+"quadtree_8h.html#ade5d9e3103eba2cd8beeb7d55ff397f4":[3,0,8,1,3,16],
 "quadtree_8h.html#ae591ef8f6287f23fed1e6db69d44797b":[3,0,8,1,3,8],
 "quadtree_8h_source.html":[3,0,8,1,3],
 "raster_8c.html":[3,0,5,9,5],
@@ -238,16 +249,5 @@ var NAVTREEINDEX34 =
 "route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aa28a6601704d4f9f2d61bebb1e45858a":[3,0,118,4,1],
 "route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87ac10a7b932765724288ad30e0a575d854":[3,0,118,4,5],
 "route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aeba93e2b7f9516e2403112fe1468e4ea":[3,0,118,4,0],
-"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87af980434883796bc5445bfe7548d542d6":[3,0,118,4,6],
-"route_8h.html#a3634a13adb89a341c91d322079d2ba1f":[3,0,118,7],
-"route_8h.html#a3ef42040ce440fb91532f292a44e4062":[3,0,118,6],
-"route_8h.html#a4e2255ace92ab344940a03c6f60969cf":[3,0,118,15],
-"route_8h.html#a54777eb5e273c249f1fa36a69b0d2520":[3,0,118,29],
-"route_8h.html#a6d58eeebe86073b86fccfec847ab8472":[3,0,118,45],
-"route_8h.html#a6d8a75a45bed6f61c1783c4e6447c414":[3,0,118,32],
-"route_8h.html#a728f8ca3f7e02ffe4b48ae30c439c5e7":[3,0,118,42],
-"route_8h.html#a72a72ba653784a692bb599af0a3d71c8":[3,0,118,37],
-"route_8h.html#a7b384ba5ee5108099a2f03b66f338094":[3,0,118,39],
-"route_8h.html#a7d1f8dafb33552bd84a513d867c4aa6a":[3,0,118,19],
-"route_8h.html#a9097ff0fd3025bd6b52babbb4634c741":[3,0,118,36]
+"route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87af980434883796bc5445bfe7548d542d6":[3,0,118,4,6]
 };

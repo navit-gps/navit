@@ -53,7 +53,7 @@ var structattr =
     [ "traffic", "structattr.html#a7d47f66e026978deb924275dcda16283", null ],
     [ "transformation", "structattr.html#a7b87158e92e3ccb2527dbf471e68faaa", null ],
     [ "type", "structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457", null ],
-    [ "u", "structattr.html#a682d33096ece5ad806426918c15c4b10", null ],
+    [ "u", "structattr.html#a866ccbbc4e5249f2e53a0a3db2525542", null ],
     [ "vehicle", "structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5", null ],
     [ "vehicleprofile", "structattr.html#ab7f11572aa91de08c28f1d27a7189040", null ]
 ];

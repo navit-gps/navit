@@ -2,8 +2,8 @@ var structgraphics__image__priv =
 [
     [ "Bitmap", "structgraphics__image__priv.html#ac73c2118297fc78c89b4bc672e73134a", null ],
     [ "channels", "structgraphics__image__priv.html#a36118dcbe5bce6edbdf5696206ea873b", null ],
-    [ "data", "structgraphics__image__priv.html#a46dcab4dca382882cd14f526fa53df9d", null ],
     [ "data", "structgraphics__image__priv.html#add5d761cb321d98afe97d57364f4898d", null ],
+    [ "data", "structgraphics__image__priv.html#a46dcab4dca382882cd14f526fa53df9d", null ],
     [ "dummy", "structgraphics__image__priv.html#ac87e9a74e4140dda65e9d179337d296c", null ],
     [ "graphics_image_methods_proxy", "structgraphics__image__priv.html#af97a217a87dfbec0b4b367eb14c2279c", null ],
     [ "graphics_image_priv_proxy", "structgraphics__image__priv.html#af2f945be76e5525d22765e961937e19f", null ],

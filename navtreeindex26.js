@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"gui__internal__widget_8h.html#a0b7d20533a877b49c33b0bfe6895e2f5":[3,0,6,1,20,43],
+"gui__internal__widget_8h.html#a11c5ef4898bf9c8d411f4734d6aa7c8f":[3,0,6,1,20,16],
 "gui__internal__widget_8h.html#a165d692793757461ffecc5f05ea00ab6":[3,0,6,1,20,41],
 "gui__internal__widget_8h.html#a2d93c89044855dcddd9cf429b9fc72e9":[3,0,6,1,20,39],
 "gui__internal__widget_8h.html#a2dc75cf25dfb547cd1a3ab7da1b42fe7":[3,0,6,1,20,45],
@@ -121,16 +123,16 @@ var NAVTREEINDEX26 =
 "interfaceRootViewController.html#af8cab0cfc9bc240c655a58579d80540a":[2,0,329,1],
 "interfaceVSSpeechSynthesizer.html":[2,0,429],
 "interfaceVSSpeechSynthesizer.html#a08b5b4954718a35846cb7952f36bf3d0":[2,0,429,1],
-"interfaceVSSpeechSynthesizer.html#a2d03b5f2c89b542d18cb9e1ac99e8a82":[2,0,429,8],
+"interfaceVSSpeechSynthesizer.html#a127d778223120cf73771ad209e7c13d2":[2,0,429,9],
 "interfaceVSSpeechSynthesizer.html#a34e515e08388f7f1be1dffc34764035e":[2,0,429,2],
 "interfaceVSSpeechSynthesizer.html#a3803af9cac86ea6270d1913714839b0c":[2,0,429,5],
 "interfaceVSSpeechSynthesizer.html#a38b7a978d0018462537868527e666a82":[2,0,429,6],
 "interfaceVSSpeechSynthesizer.html#a3adf24f3a4f947468fa658d2eb81e495":[2,0,429,3],
 "interfaceVSSpeechSynthesizer.html#a5a7b3ef55ce44ef92b830d80c6da2f75":[2,0,429,0],
-"interfaceVSSpeechSynthesizer.html#a63317dae43433dc32ddc9faa84023c7d":[2,0,429,9],
 "interfaceVSSpeechSynthesizer.html#a7f710e355dd58cfe7495ce254267559d":[2,0,429,4],
 "interfaceVSSpeechSynthesizer.html#aa989bc284ea7db534120e271c5bc3546":[2,0,429,10],
 "interfaceVSSpeechSynthesizer.html#aad7cf3a6957094ed41a7a07d2823743f":[2,0,429,7],
+"interfaceVSSpeechSynthesizer.html#ab7098e9b49a06f56c2839e20aab389e8":[2,0,429,8],
 "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html":[2,0,0,0,0,2],
 "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00":[2,0,0,0,0,2,0],
 "item_8c.html":[3,0,68],
@@ -187,7 +189,6 @@ var NAVTREEINDEX26 =
 "item_8h.html#a1f97d6a6d85956aa73deb31d4a16397f":[3,0,69,21],
 "item_8h.html#a23108b32c807dc9ae8162eadc6452755":[3,0,69,36],
 "item_8h.html#a24d15da515f3431d5114956efe1cdc47":[3,0,69,5],
-"item_8h.html#a25b68e9d728ff004056a91299af4d7e1":[3,0,69,54],
 "item_8h.html#a2679318a14061852e50df3c6e4e42f62":[3,0,69,20],
 "item_8h.html#a29b6c55bda6614c901e4f341a70c79f1":[3,0,69,28],
 "item_8h.html#a29e5d337e75d347e81012e2dfad6a3c9":[3,0,69,19],
@@ -214,6 +215,7 @@ var NAVTREEINDEX26 =
 "item_8h.html#a933de3334c70a27fd070e4cc34866881":[3,0,69,7],
 "item_8h.html#a977d38291fd40708b38a49cf28049459":[3,0,69,33],
 "item_8h.html#a99dbca645342f64f20565cd1bde1d19d":[3,0,69,38],
+"item_8h.html#a9d74082234bf94fe04bd8585c40c7f90":[3,0,69,54],
 "item_8h.html#aa446802a34d88adf137bdf9f1ec6a516":[3,0,69,46],
 "item_8h.html#aa86dd5c691e5d0d7dae98db2f0017018":[3,0,69,39],
 "item_8h.html#aa9dbb3a59a629751a46a2ed6f94640a6":[3,0,69,41],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "itembin_8c.html#a3d7f823c071e3dd8adfcd870976e56ba":[3,0,9,4,31],
 "itembin_8c.html#a3e2a7ad0b22c786f3fddd9ff0a864dee":[3,0,9,4,6],
 "itembin_8c.html#a3e73114a5570916201d0fb4b060d973d":[3,0,9,4,36],
-"itembin_8c.html#a4ce0ea1d0697bfa191ac9b48d8f80cd4":[3,0,9,4,8],
-"itembin_8c.html#a61d8c7d7016225a56c65959f1af221d2":[3,0,9,4,16],
-"itembin_8c.html#a716e50557b512e3c915adb543dd5f1ca":[3,0,9,4,10]
+"itembin_8c.html#a4ce0ea1d0697bfa191ac9b48d8f80cd4":[3,0,9,4,8]
 };

@@ -100,8 +100,8 @@ var group__navit =
       [ "last", "structattr__iter.html#a0331c44753ee29c44711bb1f21500c22", null ],
       [ "list", "structattr__iter.html#a529c83b95045b7b1b031302261e7fda0", null ],
       [ "mapset_handle", "structattr__iter.html#a6190110cdced0fcfeed36cfa3f0aa016", null ],
-      [ "u", "structattr__iter.html#a855540d9e6e11a61e310572de15b4d98", null ],
-      [ "u", "structattr__iter.html#aeeaaac9338f3e4b523f8653167305040", null ]
+      [ "u", "structattr__iter.html#a3490ce8d06311ed4e31911f2809605be", null ],
+      [ "u", "structattr__iter.html#aee29ac8c2db4af8814ddd740ab202898", null ]
     ] ],
     [ "coord_not_set", "group__navit.html#gadf129eade1d4b658671d71d9faa54eda", null ],
     [ "navit_add_attr", "group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd", null ],

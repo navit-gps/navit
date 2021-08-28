@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"garmin__img_8c.html#abe2867ed103aed9cf25f8090c3db553f":[3,0,8,4,0,118],
 "garmin__img_8c.html#abe9831c764b0546872acd765a34d9ddf":[3,0,8,4,0,69],
 "garmin__img_8c.html#abf3d30798573437d324f6e867b748ac8":[3,0,8,4,0,98],
 "garmin__img_8c.html#ac08e123d84824cdf4ecabcff2239b1e3":[3,0,8,4,0,114],
@@ -86,7 +87,7 @@ var NAVTREEINDEX12 =
 "geodesic_8h.html#a93ddffb2da5fb46787c0fc85315cf617":[3,0,14,0,0,6,14],
 "geodesic_8h.html#a9a257aee51d18b34406a78ec89802632":[3,0,14,0,0,6,5],
 "geodesic_8h.html#aa030dbda8d522ceacc9c2133df65a56a":[3,0,14,0,0,6,9],
-"geodesic_8h.html#aa3765ff43997e7b99971ecb2f50d47ae":[3,0,14,0,0,6,23],
+"geodesic_8h.html#abcf3bc57ad6f3ca66171e0243b1c0493":[3,0,14,0,0,6,23],
 "geodesic_8h.html#ac2f3870b34bf49eb33d6c457b100a4c2":[3,0,14,0,0,6,4],
 "geodesic_8h.html#ad6bed204a0baad9a8edf362f066fc04b":[3,0,14,0,0,6,26],
 "geodesic_8h.html#ae5ad88ceec1b925545007c4ebef844ad":[3,0,14,0,0,6,3],
@@ -148,8 +149,8 @@ var NAVTREEINDEX12 =
 "globals_b.html":[3,1,0,3],
 "globals_c.html":[3,1,0,4],
 "globals_d.html":[3,1,0,5],
-"globals_defs.html":[3,1,6],
 "globals_defs.html":[3,1,6,0],
+"globals_defs.html":[3,1,6],
 "globals_defs_a.html":[3,1,6,1],
 "globals_defs_b.html":[3,1,6,2],
 "globals_defs_c.html":[3,1,6,3],
@@ -240,14 +241,13 @@ var NAVTREEINDEX12 =
 "globals_type.html":[3,1,3],
 "globals_u.html":[3,1,0,22],
 "globals_v.html":[3,1,0,23],
-"globals_vars.html":[3,1,2,0],
 "globals_vars.html":[3,1,2],
+"globals_vars.html":[3,1,2,0],
 "globals_vars__.html":[3,1,2,1],
 "globals_vars_a.html":[3,1,2,2],
 "globals_vars_b.html":[3,1,2,3],
 "globals_vars_c.html":[3,1,2,4],
 "globals_vars_d.html":[3,1,2,5],
 "globals_vars_e.html":[3,1,2,6],
-"globals_vars_f.html":[3,1,2,7],
-"globals_vars_g.html":[3,1,2,8]
+"globals_vars_f.html":[3,1,2,7]
 };

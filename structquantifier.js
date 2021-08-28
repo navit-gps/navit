@@ -4,5 +4,5 @@ var structquantifier =
     [ "q_int", "structquantifier.html#abe54bb6c74e03d43258975ddb6765b85", null ],
     [ "q_speed", "structquantifier.html#aa2ee92afafe60b1eb9a10cc9f5fd9a9c", null ],
     [ "q_time", "structquantifier.html#a02aefb76b3935abcf2c78dfb30b0f52c", null ],
-    [ "u", "structquantifier.html#a7e415478eb03cdae5018f766908a1a9c", null ]
+    [ "u", "structquantifier.html#ab3119506065adf3b2af6efe272cba996", null ]
 ];

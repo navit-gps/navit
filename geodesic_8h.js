@@ -23,7 +23,7 @@ var geodesic_8h =
     [ "geod_set", "geodesic_8h.html#ae8a83b13d9882582a02252ea09c18c3b", null ],
     [ "del_alpha", "geodesic_8h.html#a7a719c2b2b8cc7693defeda7cb7cff9d", null ],
     [ "fr_meter", "geodesic_8h.html#a4843e60784b7072307983c8ef2bf0091", null ],
-    [ "GEODESIC", "geodesic_8h.html#aa3765ff43997e7b99971ecb2f50d47ae", null ],
+    [ "GEODESIC", "geodesic_8h.html#abcf3bc57ad6f3ca66171e0243b1c0493", null ],
     [ "n_alpha", "geodesic_8h.html#a61caac7fd55ba63bc7969e19ba8fd636", null ],
     [ "n_S", "geodesic_8h.html#a6ddd05f186c3e0b7f2b3a1c96efbace3", null ],
     [ "to_meter", "geodesic_8h.html#ad6bed204a0baad9a8edf362f066fc04b", null ]

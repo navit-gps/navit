@@ -75,10 +75,7 @@ var attr_8h =
       [ "attr_position_valid_extrapolated_spatial", "attr_8h.html#a305f5066877295b76463240b9c19e531a1d10379bc872bf28ae4c735c4f2a7ec9", null ],
       [ "attr_position_valid_valid", "attr_8h.html#a305f5066877295b76463240b9c19e531aa41402ab2787d27a548c54d1de95ac81", null ]
     ] ],
-    [ "attr_type", "attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c", [
-      [ "ATTR", "attr_8h.html#a9a9ab3c12bda86add06f89976f36f98caea1d782b37390d25958d8325d9e7ac75", null ],
-      [ "ATTR", "attr_8h.html#a9a9ab3c12bda86add06f89976f36f98caea1d782b37390d25958d8325d9e7ac75", null ]
-    ] ],
+    [ "attr_type", "attr_8h.html#a9a9ab3c12bda86add06f89976f36f98c", null ],
     [ "attr_create_hash", "attr_8h.html#ae33174a74c16a0e00b919067ceda5550", null ],
     [ "attr_data_get", "attr_8h.html#ab0caff1ea6da467e43bfc6b8608b678a", null ],
     [ "attr_data_set", "attr_8h.html#ac954a50bb59bef3c825201e6ee7c94f7", null ],

@@ -16,6 +16,6 @@ var osm__o5m_8c =
     [ "print_escaped", "osm__o5m_8c.html#ada1481925f4f72212ddd41eaba684ad3", null ],
     [ "latlon_scale", "osm__o5m_8c.html#a933d758f17d6368d11d83b13dfedac41", null ],
     [ "print", "osm__o5m_8c.html#ae87c9065eb23621da3b62c32c1d11b31", null ],
-    [ "st", "osm__o5m_8c.html#acd10c8e7cc7135d7b6782fa2b7c016ac", null ],
+    [ "st", "osm__o5m_8c.html#ac3657e678c14acf7c402af830586e995", null ],
     [ "types", "osm__o5m_8c.html#a174d11d46dcffc2cdb825b28262fa25a", null ]
 ];

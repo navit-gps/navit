@@ -1,8 +1,8 @@
 var structgraphics__font__priv =
 [
     [ "dummy", "structgraphics__font__priv.html#a722168747f76ba22837db5db50fd423a", null ],
-    [ "font", "structgraphics__font__priv.html#a9fb12b71182bdd4c3e7cad7e84c3bccd", null ],
     [ "font", "structgraphics__font__priv.html#ac792528985fcf4f95f711301fd6aae7d", null ],
+    [ "font", "structgraphics__font__priv.html#a9fb12b71182bdd4c3e7cad7e84c3bccd", null ],
     [ "graphics_font_proxy", "structgraphics__font__priv.html#aa1820c9a399368618adf02b85a987296", null ],
     [ "hfont", "structgraphics__font__priv.html#a06be50e1be8f9249e23fc6646973dffb", null ],
     [ "lf", "structgraphics__font__priv.html#a09ac4b6e9714e46f62a2df93e34e1f9c", null ],

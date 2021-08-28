@@ -1,5 +1,7 @@
 var NAVTREEINDEX40 =
 {
+"structgraphics.html#acfd274a792520fbcd3e4b8b9cbb37488":[2,0,128,3],
+"structgraphics.html#ade13a4358d6ae98cce31ad9434613ac8":[2,0,128,14],
 "structgraphics__data__image.html":[2,0,129],
 "structgraphics__data__image.html#a699415212ce9ee35351702906f604968":[2,0,129,0],
 "structgraphics__data__image.html#aa5658ce41e5b0e7a66d2fdfd605ff686":[2,0,129,1],
@@ -14,9 +16,9 @@ var NAVTREEINDEX40 =
 "structgraphics__font__priv.html#a16b284ac076afc501ad95afc37b6e870":[2,0,132,7],
 "structgraphics__font__priv.html#a722168747f76ba22837db5db50fd423a":[2,0,132,0],
 "structgraphics__font__priv.html#a9b00072b6d4821d6decf50d1f5b96eb9":[2,0,132,6],
-"structgraphics__font__priv.html#a9fb12b71182bdd4c3e7cad7e84c3bccd":[2,0,132,1],
+"structgraphics__font__priv.html#a9fb12b71182bdd4c3e7cad7e84c3bccd":[2,0,132,2],
 "structgraphics__font__priv.html#aa1820c9a399368618adf02b85a987296":[2,0,132,3],
-"structgraphics__font__priv.html#ac792528985fcf4f95f711301fd6aae7d":[2,0,132,2],
+"structgraphics__font__priv.html#ac792528985fcf4f95f711301fd6aae7d":[2,0,132,1],
 "structgraphics__gc.html":[2,0,133],
 "structgraphics__gc.html#a41967312f6e87d64baa2b2f7a870c358":[2,0,133,0],
 "structgraphics__gc.html#aa34d6872fe5842bcb5db16789b12c945":[2,0,133,1],
@@ -108,7 +110,7 @@ var NAVTREEINDEX40 =
 "structgraphics__image__priv.html#a204fb576844e23d94c5bab5e9c45257e":[2,0,139,18],
 "structgraphics__image__priv.html#a36118dcbe5bce6edbdf5696206ea873b":[2,0,139,1],
 "structgraphics__image__priv.html#a371315707cd2b5b421a48f1a980b716f":[2,0,139,7],
-"structgraphics__image__priv.html#a46dcab4dca382882cd14f526fa53df9d":[2,0,139,2],
+"structgraphics__image__priv.html#a46dcab4dca382882cd14f526fa53df9d":[2,0,139,3],
 "structgraphics__image__priv.html#a54cbddf5a58e5d785c0f5b5f13ce71a7":[2,0,139,12],
 "structgraphics__image__priv.html#a658897e003f232bf470d85ca326d1198":[2,0,139,13],
 "structgraphics__image__priv.html#a6c87216699da6d81d702c9b29d976db2":[2,0,139,8],
@@ -124,7 +126,7 @@ var NAVTREEINDEX40 =
 "structgraphics__image__priv.html#ac87e9a74e4140dda65e9d179337d296c":[2,0,139,4],
 "structgraphics__image__priv.html#acd06bfa62bd0ef1c0ad7aefd2385d63e":[2,0,139,22],
 "structgraphics__image__priv.html#ad6441e19804b084707834f875c7a13f1":[2,0,139,11],
-"structgraphics__image__priv.html#add5d761cb321d98afe97d57364f4898d":[2,0,139,3],
+"structgraphics__image__priv.html#add5d761cb321d98afe97d57364f4898d":[2,0,139,2],
 "structgraphics__image__priv.html#af2f945be76e5525d22765e961937e19f":[2,0,139,6],
 "structgraphics__image__priv.html#af97a217a87dfbec0b4b367eb14c2279c":[2,0,139,5],
 "structgraphics__keyboard.html":[2,0,140],
@@ -162,8 +164,8 @@ var NAVTREEINDEX40 =
 "structgraphics__methods.html#aff7b043beff85fc74104aef78ed530bb":[2,0,141,14],
 "structgraphics__opengl__platform.html":[2,0,142],
 "structgraphics__opengl__platform.html#a1e5c326d996cca119e8a997e7171865f":[2,0,142,3],
-"structgraphics__opengl__platform.html#a8061b0a967f0dfde63a14f1bf6eaf4ee":[2,0,142,5],
-"structgraphics__opengl__platform.html#a833fd4a2d7dfc1645138905e066efdc2":[2,0,142,4],
+"structgraphics__opengl__platform.html#a8061b0a967f0dfde63a14f1bf6eaf4ee":[2,0,142,4],
+"structgraphics__opengl__platform.html#a833fd4a2d7dfc1645138905e066efdc2":[2,0,142,5],
 "structgraphics__opengl__platform.html#aaf5bcc18ed8a218154c757a8fa7ab5dc":[2,0,142,2],
 "structgraphics__opengl__platform.html#ab1b80dfe005154e6e814d88158e5c72e":[2,0,142,1],
 "structgraphics__opengl__platform.html#ae01219a2220936d1b648253da2d6c346":[2,0,142,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX40 =
 "structgraphics__priv.html#a5326c2c6b3205c51930f590ea5c358b2":[2,0,146,75],
 "structgraphics__priv.html#a546c433564062750df19c976e1d85560":[2,0,146,166],
 "structgraphics__priv.html#a55fad9250ec1e0cd7ee0b4cf15015172":[2,0,146,13],
-"structgraphics__priv.html#a56b57fd64a7462d5278761d32e53d860":[2,0,146,81],
-"structgraphics__priv.html#a56fa940b5e40f0129567cc7def94e32e":[2,0,146,108],
-"structgraphics__priv.html#a57e2b3b5b87fa1301482564d00cf1558":[2,0,146,123]
+"structgraphics__priv.html#a56b57fd64a7462d5278761d32e53d860":[2,0,146,81]
 };

@@ -156,7 +156,7 @@ var osm_8c =
     [ "boundary", "osm_8c.html#a44890011785a3e5286453b396bfa6d6f", null ],
     [ "coord_buffer", "osm_8c.html#ab64a2c7d16e599f601a2af42120201aa", null ],
     [ "coord_count", "osm_8c.html#a5b92fccc2697ac6d7311d556865d02b1", null ],
-    [ "country_table", "osm_8c.html#a24150bea496f0f2183c34acf764ebb2f", null ],
+    [ "country_table", "osm_8c.html#a227c2b3655c7221b718fc53b4a77baf4", null ],
     [ "country_table_hash", "osm_8c.html#a0b2cd628137828c96814246f27998bc8", null ],
     [ "current_node", "osm_8c.html#a7b9c4e012656fca93740410363bbdd64", null ],
     [ "debug_attr_buffer", "osm_8c.html#adaff2e4cfee49af417f57e1e60528b2a", null ],

@@ -48,9 +48,9 @@ var graphics__null_8c =
     [ "event_null_methods", "graphics__null_8c.html#add424a47364f4f4eb8d1e33c9a42d4a9", null ],
     [ "font_methods", "graphics__null_8c.html#ab4c3ba6a3ca91e710501bb96de5b775f", null ],
     [ "gc_methods", "graphics__null_8c.html#aa6bb60bac00d0933222379ee4279d981", null ],
-    [ "graphics_font_priv", "graphics__null_8c.html#ab54e2dc01410fe8092eabd8547842234", null ],
-    [ "graphics_gc_priv", "graphics__null_8c.html#a5a404a8f3de0019f064df54954555762", null ],
-    [ "graphics_image_priv", "graphics__null_8c.html#a9c75b93f10616f18733217964f0190d4", null ],
+    [ "graphics_font_priv", "graphics__null_8c.html#a92e7cb0e90127043d20512d73e7a1464", null ],
+    [ "graphics_gc_priv", "graphics__null_8c.html#ab646f77089569e39d0895e6e79145183", null ],
+    [ "graphics_image_priv", "graphics__null_8c.html#a7e87cfe2baba211e003761b3159e23e1", null ],
     [ "graphics_methods", "graphics__null_8c.html#a9deff224ce3850c76ba8377ae7a73681", null ],
-    [ "graphics_priv", "graphics__null_8c.html#af78b1c534842574302b9bb61708a0818", null ]
+    [ "graphics_priv", "graphics__null_8c.html#a533ddacb4ace09ba4a9fc05073213f4d", null ]
 ];

@@ -24,7 +24,7 @@ var map_2mg_2map_8c =
     [ "block_idx_count", "map_2mg_2map_8c.html#abb677b05d142ae904d552973f9bc2861", null ],
     [ "block_lin_count", "map_2mg_2map_8c.html#a07109af10b5d8c05b1e89e7ea1ecff5b", null ],
     [ "block_mem", "map_2mg_2map_8c.html#acc52ef84d0ea96b88efa1649ae3a0d57", null ],
-    [ "country_isonums", "map_2mg_2map_8c.html#af33285842dcfea870c0ee76e10be4ad7", null ],
+    [ "country_isonums", "map_2mg_2map_8c.html#aa85750e951cd74bf7c435e210e0c07d8", null ],
     [ "file", "map_2mg_2map_8c.html#aa7e82b3e2ea443917e8be39e43d5d5cb", null ],
     [ "map_id", "map_2mg_2map_8c.html#a65a7601de6f346ef6b38b0dde0552bc2", null ],
     [ "map_methods_mg", "map_2mg_2map_8c.html#a6ae8a8a107d4a033b950ace26a50b3fc", null ],

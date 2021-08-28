@@ -6,7 +6,7 @@ var osso_8c =
     [ "osso_display_on", "osso_8c.html#a917f3e440dbd02e5afc246751fa85110", null ],
     [ "osso_navit", "osso_8c.html#ad685fd1d2a84a71b33d1f43b01dea497", null ],
     [ "plugin_deinit", "osso_8c.html#a8a02dc8581cd4267536b00829347230d", null ],
-    [ "plugin_init", "osso_8c.html#ga1eaae939034896b436dffbf5e93c0da1", null ],
+    [ "plugin_init", "osso_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "callback", "osso_8c.html#a76720310d48e06d5c9849f910e1f018a", null ],
     [ "osso_context", "osso_8c.html#ad959ab626ea8c26fdae7506e07869e43", null ]
 ];

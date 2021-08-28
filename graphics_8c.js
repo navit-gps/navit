@@ -160,6 +160,6 @@ var graphics_8c =
     [ "xdisplay_draw_elements", "graphics_8c.html#ab5d7c098092b93832abb7b54ac0587b6", null ],
     [ "xdisplay_draw_layer", "graphics_8c.html#a7d3c031aef60b9f164235d4f37826e72", null ],
     [ "xdisplay_free", "graphics_8c.html#acf02ee0c1cb4c8ab0edac0844ab35ccf", null ],
-    [ "circle64", "graphics_8c.html#aa63b2ede92fc6c4e6d169e0b3aae44b8", null ],
+    [ "circle64", "graphics_8c.html#acc52e4daad95cf07d293be5bf9127391", null ],
     [ "route_selection", "graphics_8c.html#a28fa7fd03c5a4e1e223a6a84e9ee0404", null ]
 ];

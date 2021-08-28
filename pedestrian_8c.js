@@ -61,6 +61,6 @@ var pedestrian_8c =
     [ "no_recurse", "pedestrian_8c.html#a8852896e35b53e1cf577e1667b18e85e", null ],
     [ "orientation", "pedestrian_8c.html#a528d22a2a1651a4831eb643884a3c718", null ],
     [ "orientation_old", "pedestrian_8c.html#ad9c0acfdeaae4bea88844fcc646a5298", null ],
-    [ "pedestrian_data", "pedestrian_8c.html#a2e9c9651abfdf24280bbaeb58c99513f", null ],
+    [ "pedestrian_data", "pedestrian_8c.html#a14f66262fc734bdd884579029601c6da", null ],
     [ "sensors_locked", "pedestrian_8c.html#ac81756ed49d49c34ee3a6427a730d2b6", null ]
 ];

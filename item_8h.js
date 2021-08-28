@@ -59,5 +59,5 @@ var item_8h =
     [ "item_type_set", "item_8h.html#ab8d9b6e142e6445e6d36a35031d0c783", null ],
     [ "busy_item", "item_8h.html#a0d33bb189d22c6814c6f293784b00a22", null ],
     [ "default_flags", "item_8h.html#ae1e7b4e9bbde82cf2b21067025ac2007", null ],
-    [ "item_range_all", "item_8h.html#a25b68e9d728ff004056a91299af4d7e1", null ]
+    [ "item_range_all", "item_8h.html#a9d74082234bf94fe04bd8585c40c7f90", null ]
 ];

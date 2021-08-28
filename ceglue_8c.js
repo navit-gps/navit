@@ -9,8 +9,8 @@ var ceglue_8c =
     [ "SETPOWERMANAGEMENT", "ceglue_8c.html#af22160fabda49f9de87e3346cd4388ce", null ],
     [ "PVIDEO_POWER_MANAGEMENT", "ceglue_8c.html#a4a5ef961165ede9d8f1518c19fa31a43", null ],
     [ "PVIDEO_POWER_STATE", "ceglue_8c.html#af402c2e3bd0db67a97dc41796134081c", null ],
-    [ "VIDEO_POWER_MANAGEMENT", "ceglue_8c.html#a618d91b2c94a3981c5d133a4f81901bf", null ],
-    [ "VIDEO_POWER_STATE", "ceglue_8c.html#a99d0f63456fab140e281f383731be982", null ],
+    [ "VIDEO_POWER_MANAGEMENT", "ceglue_8c.html#afe5f4d1d59f7b0a874780e37bfcdc0e6", null ],
+    [ "VIDEO_POWER_STATE", "ceglue_8c.html#adfa6fa5c859e3721e07f7f6ff083c8d8", null ],
     [ "_VIDEO_POWER_STATE", "ceglue_8c.html#a8e930f75389ddcbaf003ab5605c2b1e9", [
       [ "VideoPowerOn", "ceglue_8c.html#a8e930f75389ddcbaf003ab5605c2b1e9a228c4f88e792ef65c0cb07c084ed5609", null ],
       [ "VideoPowerStandBy", "ceglue_8c.html#a8e930f75389ddcbaf003ab5605c2b1e9af8a8c625965a94c34516d05c19b2208a", null ],

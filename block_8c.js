@@ -16,7 +16,6 @@ var block_8c =
     [ "block_next_lin", "block_8c.html#ae6979a06d77dcc702b9ed50430e3f464", null ],
     [ "block_rect_same", "block_8c.html#a59236d5ff2cfabe3d16d56ff0b0bf94f", null ],
     [ "block_setup_tags", "block_8c.html#afe1410acbc613c8264efa9bba5405690", null ],
-    [ "__attribute", "block_8c.html#a5edfa658064d5a0dc0c73af3f4b9a6ac", null ],
     [ "block_active_count", "block_8c.html#aedd8db709c3145be2119bfef262e2510", null ],
     [ "block_active_mem", "block_8c.html#afc0e3e8cd44b3b075435ec8671edef1a", null ],
     [ "block_idx_count", "block_8c.html#abb677b05d142ae904d552973f9bc2861", null ],

@@ -8,5 +8,6 @@ var classBookmarkObject =
     [ "setName", "classBookmarkObject.html#ac36fa0a5997d093717471e2bb575ceb3", null ],
     [ "m_coords", "classBookmarkObject.html#a38436ef8c8878d0e4515302ca412a1fb", null ],
     [ "m_name", "classBookmarkObject.html#ac8e9662d4b791dae5f3c0073d4e4c50f", null ],
+    [ "coords", "classBookmarkObject.html#a2a9664547906b9d876ff4caf378f2e67", null ],
     [ "name", "classBookmarkObject.html#a3c04d2ee1eaf1d35e82784b7e0fc50bb", null ]
 ];

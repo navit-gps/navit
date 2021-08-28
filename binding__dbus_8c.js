@@ -115,7 +115,7 @@ var binding__dbus_8c =
     [ "resolve_object", "binding__dbus_8c.html#a7819e40256a61cf5d8b54afc9c4f8261", null ],
     [ "commands", "binding__dbus_8c.html#a7cfa223fa2b1e0cda6c6cd64bd16d988", null ],
     [ "connection", "binding__dbus_8c.html#a6c091e8c52939180cdae1157eeb53766", null ],
-    [ "dbus_methods", "binding__dbus_8c.html#ac2ceb2bfa53d9b825f80ca443538e70a", null ],
+    [ "dbus_methods", "binding__dbus_8c.html#a2210d3c82c71807f2122eee0a39c5725", null ],
     [ "dbus_navit_vtable", "binding__dbus_8c.html#a333f288c1778ea84ac328b004d7e8ae2", null ],
     [ "dbus_serial", "binding__dbus_8c.html#a7d40201963e30b368b2f1fc49c47c8c8", null ],
     [ "navitintrospectxml_head1", "binding__dbus_8c.html#a336f25c0623203f3c229f2de1b9ec812", null ],

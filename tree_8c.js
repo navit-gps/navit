@@ -27,7 +27,6 @@ var tree_8c =
     [ "tree_search_next", "tree_8c.html#adf131c653f4578c7d55c956003ec78a6", null ],
     [ "tree_search_next_lin", "tree_8c.html#a960abe7fd639272c4ce97ad3d5e85678", null ],
     [ "tree_search_v", "tree_8c.html#abf3d64a58941de903fe9486c25059019", null ],
-    [ "__attribute__", "tree_8c.html#a6d5e272bed27ad3f6938ac176563293b", null ],
     [ "key", "tree_8c.html#af60e40cb1e9827860f4993a00eb4ea33", null ],
     [ "p", "tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a", null ]
 ];

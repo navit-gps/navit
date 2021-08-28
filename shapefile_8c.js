@@ -44,7 +44,6 @@ var shapefile_8c =
     [ "VSI_SHP_Seek", "shapefile_8c.html#af16ffbe0d505c56a802c4551ad6e4776", null ],
     [ "VSI_SHP_Tell", "shapefile_8c.html#a94552582eaa85658f10d1c11930d6b97", null ],
     [ "VSI_SHP_Write", "shapefile_8c.html#acbaf47486d227df6925503eb5d9d84f2", null ],
-    [ "__attribute__", "shapefile_8c.html#aeb695be7062e839344f8ddb3d9cc6675", null ],
     [ "map_methods_shapefile", "shapefile_8c.html#a9d993e6f2cdbbba21ac97decdac30a32", null ],
     [ "methods_shapefile", "shapefile_8c.html#a36534d4bb3369595216bf1a01c8fe39e", null ]
 ];

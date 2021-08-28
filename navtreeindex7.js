@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a70d43ef0c6787556093d46212054488b":[2,0,0,0,0,12,0,6],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a724fa281f31988b6e03fd34bc41b00ca":[2,0,0,0,0,12,0,10],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a7c723f906e937881ad9e613a025302e9":[2,0,0,0,0,12,0,0],
 "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader_1_1OsmMapValues.html#a862afa1e16dc4fc0bae305aee9a6788d":[2,0,0,0,0,12,0,11],
@@ -84,7 +85,7 @@ var NAVTREEINDEX7 =
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html":[2,0,0,0,0,19],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a04aec9e887c8d2f8402c68f4ee937c96":[2,0,0,0,0,19,11],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a1f6ca47d22f8791306f50bea1ce2c161":[2,0,0,0,0,19,14],
-"classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a2253a684c7aec6e66f339f883f50eee7":[2,0,0,0,0,19,3],
+"classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a2253a684c7aec6e66f339f883f50eee7":[2,0,0,0,0,19,5],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a36f8fb6d52e623b53eae0c294b6db741":[2,0,0,0,0,19,10],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a5560b9f4ae2b081aea34d8694fe7b140":[2,0,0,0,0,19,8],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a57275c4a97893d9c40b298ba02aa5386":[2,0,0,0,0,19,1],
@@ -94,7 +95,7 @@ var NAVTREEINDEX7 =
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#a880cf639bb6066feb3c4532f7b0a39c9":[2,0,0,0,0,19,6],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#aa4a304c0c0468b3a2d458b7903a9f422":[2,0,0,0,0,19,13],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#ab9d15b9cf39779be21cc23c49ba0f619":[2,0,0,0,0,19,7],
-"classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#add1191f1ee414e5ff0149d6b9f7481b2":[2,0,0,0,0,19,5],
+"classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#add1191f1ee414e5ff0149d6b9f7481b2":[2,0,0,0,0,19,3],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#adf397784c90e0420fe41915a327eb261":[2,0,0,0,0,19,15],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html#af553574efd8aefb34bdd3484ed2a1cda":[2,0,0,0,0,19,12],
 "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html":[2,0,0,0,0,19,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "command_8c.html#af10dacfa214e2575bb2e0ee407c242e0aa80373b5c52429ece7ef5cec86476136":[3,0,37,5,12],
 "command_8c.html#af10dacfa214e2575bb2e0ee407c242e0aaf8ffed0016510f73b2658dc3629a770":[3,0,37,5,11],
 "command_8c.html#af10dacfa214e2575bb2e0ee407c242e0af2d7cb857db37afd164df6c70d147778":[3,0,37,5,10],
-"command_8c.html#af10dacfa214e2575bb2e0ee407c242e0afbc858ff11df0187be4ebc2f2d6e6f22":[3,0,37,5,7],
-"command_8c.html#af10dacfa214e2575bb2e0ee407c242e0affa8065880d7b153297ae0d722f5be7c":[3,0,37,5,5]
+"command_8c.html#af10dacfa214e2575bb2e0ee407c242e0afbc858ff11df0187be4ebc2f2d6e6f22":[3,0,37,5,7]
 };

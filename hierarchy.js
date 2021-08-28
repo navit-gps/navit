@@ -30,10 +30,10 @@ var hierarchy =
     [ "cache", "structcache.html", null ],
     [ "cache_entry", "structcache__entry.html", null ],
     [ "cache_entry_list", "structcache__entry__list.html", null ],
-    [ "Callback", null, [
+    [ "callback", "structcallback.html", null ],
+    [ "SurfaceHolder.Callback", null, [
       [ "org.navitproject.navit.NavitCamera", "classorg_1_1navitproject_1_1navit_1_1NavitCamera.html", null ]
     ] ],
-    [ "callback", "structcallback.html", null ],
     [ "callback_list", "structcallback__list.html", null ],
     [ "cb_hw_state_trail", "structcb__hw__state__trail.html", null ],
     [ "cdf_data", "structcdf__data.html", null ],
@@ -168,8 +168,8 @@ var hierarchy =
     [ "idle_task", "structidle__task.html", null ],
     [ "img_header", "structimg__header.html", null ],
     [ "InstanceData", "structInstanceData.html", null ],
-    [ "org.navitproject.navit.FileBrowserActivity.Item", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html", null ],
     [ "item", "structitem.html", null ],
+    [ "org.navitproject.navit.FileBrowserActivity.Item", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity_1_1Item.html", null ],
     [ "item_bin", "structitem__bin.html", null ],
     [ "item_bin_sink", "structitem__bin__sink.html", null ],
     [ "item_bin_sink_func", "structitem__bin__sink__func.html", null ],
@@ -192,7 +192,7 @@ var hierarchy =
     [ "layout", "structlayout.html", null ],
     [ "lcoord", "structlcoord.html", null ],
     [ "level", "structlevel.html", null ],
-    [ "Listener", null, [
+    [ "GpsStatus.Listener", null, [
       [ "org.navitproject.navit.NavitVehicle.NavitLocationListener", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html", null ]
     ] ],
     [ "log", "structlog.html", null ],
@@ -272,10 +272,10 @@ var hierarchy =
     [ "object_func", "structobject__func.html", null ],
     [ "odometer", "structodometer.html", null ],
     [ "offset_len", "structoffset__len.html", null ],
-    [ "OnInitListener", null, [
+    [ "TextToSpeech.OnInitListener", null, [
       [ "org.navitproject.navit.NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", null ]
     ] ],
-    [ "OnMenuItemClickListener", null, [
+    [ "MenuItem.OnMenuItemClickListener", null, [
       [ "org.navitproject.navit.NavitGraphics.NavitView", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics_1_1NavitView.html", null ]
     ] ],
     [ "osd", "structosd.html", null ],
@@ -331,10 +331,10 @@ var hierarchy =
       ] ],
       [ "PoiObject", "classPoiObject.html", null ],
       [ "QNavitGeoReceiver", "classQNavitGeoReceiver.html", null ],
-      [ "qt5_navit_timer", "classqt5__navit__timer.html", null ],
       [ "Qt5EspeakAudioOut", "classQt5EspeakAudioOut.html", null ],
       [ "SearchObject", "classSearchObject.html", null ],
-      [ "VehicleObject", "classVehicleObject.html", null ]
+      [ "VehicleObject", "classVehicleObject.html", null ],
+      [ "qt5_navit_timer", "classqt5__navit__timer.html", null ]
     ] ],
     [ "QQuickPaintedItem", null, [
       [ "QNavitQuick", "classQNavitQuick.html", null ]

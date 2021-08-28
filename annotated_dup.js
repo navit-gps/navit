@@ -1,6 +1,32 @@
 var annotated_dup =
 [
-    [ "org", "namespaceorg.html", "namespaceorg" ],
+    [ "org", null, [
+      [ "navitproject", null, [
+        [ "navit", "namespaceorg_1_1navitproject_1_1navit.html", [
+          [ "FileBrowserActivity", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html", "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity" ],
+          [ "Navit", "classorg_1_1navitproject_1_1navit_1_1Navit.html", "classorg_1_1navitproject_1_1navit_1_1Navit" ],
+          [ "NavitActivityResult", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html", "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult" ],
+          [ "NavitAddressSearchActivity", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity.html", "classorg_1_1navitproject_1_1navit_1_1NavitAddressSearchActivity" ],
+          [ "NavitAppConfig", "classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html", "classorg_1_1navitproject_1_1navit_1_1NavitAppConfig" ],
+          [ "NavitBackupTask", "classorg_1_1navitproject_1_1navit_1_1NavitBackupTask.html", "classorg_1_1navitproject_1_1navit_1_1NavitBackupTask" ],
+          [ "NavitCallbackHandler", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler.html", "classorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler" ],
+          [ "NavitCamera", "classorg_1_1navitproject_1_1navit_1_1NavitCamera.html", "classorg_1_1navitproject_1_1navit_1_1NavitCamera" ],
+          [ "NavitDialogs", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs.html", "classorg_1_1navitproject_1_1navit_1_1NavitDialogs" ],
+          [ "NavitDownloadSelectMapActivity", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity.html", "classorg_1_1navitproject_1_1navit_1_1NavitDownloadSelectMapActivity" ],
+          [ "NavitGraphics", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html", "classorg_1_1navitproject_1_1navit_1_1NavitGraphics" ],
+          [ "NavitMap", "classorg_1_1navitproject_1_1navit_1_1NavitMap.html", "classorg_1_1navitproject_1_1navit_1_1NavitMap" ],
+          [ "NavitMapDownloader", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader" ],
+          [ "NavitRestoreTask", "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html", "classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask" ],
+          [ "NavitSensors", "classorg_1_1navitproject_1_1navit_1_1NavitSensors.html", "classorg_1_1navitproject_1_1navit_1_1NavitSensors" ],
+          [ "NavitSpeech2", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html", "classorg_1_1navitproject_1_1navit_1_1NavitSpeech2" ],
+          [ "NavitTimeout", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout.html", "classorg_1_1navitproject_1_1navit_1_1NavitTimeout" ],
+          [ "NavitTraff", "classorg_1_1navitproject_1_1navit_1_1NavitTraff.html", "classorg_1_1navitproject_1_1navit_1_1NavitTraff" ],
+          [ "NavitUtils", "classorg_1_1navitproject_1_1navit_1_1NavitUtils.html", "classorg_1_1navitproject_1_1navit_1_1NavitUtils" ],
+          [ "NavitVehicle", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle.html", "classorg_1_1navitproject_1_1navit_1_1NavitVehicle" ],
+          [ "NavitWatch", "classorg_1_1navitproject_1_1navit_1_1NavitWatch.html", "classorg_1_1navitproject_1_1navit_1_1NavitWatch" ]
+        ] ]
+      ] ]
+    ] ],
     [ "_VIDEO_POWER_MANAGEMENT", "struct__VIDEO__POWER__MANAGEMENT.html", "struct__VIDEO__POWER__MANAGEMENT" ],
     [ "action_cb_data", "structaction__cb__data.html", "structaction__cb__data" ],
     [ "android_search_priv", "structandroid__search__priv.html", "structandroid__search__priv" ],

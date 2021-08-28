@@ -10,5 +10,5 @@ var gui__gtk__poi_8c =
     [ "model_poi", "gui__gtk__poi_8c.html#a139bd4131511ebd1499b9c0ccc454492", null ],
     [ "treeview_poi_changed", "gui__gtk__poi_8c.html#abce9ecfbb58ba2bea5fe07b40b17b906", null ],
     [ "treeview_poi_reload", "gui__gtk__poi_8c.html#ac1e44d77fe9152c61d2f4e5af62368e3", null ],
-    [ "gtk_poi_search", "gui__gtk__poi_8c.html#ace503cecd8dd7626dc63b3b9475ad186", null ]
+    [ "gtk_poi_search", "gui__gtk__poi_8c.html#aba2f6e4a6352dc2bcd298f53e7f5b644", null ]
 ];
