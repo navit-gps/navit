@@ -1,7 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structattr__name.html":[2,0,11],
-"structattr__name.html#a42268e571860c052cb330955a991b5fa":[2,0,11,1],
 "structattr__name.html#a63cb44fdf84c68966faf88e885ba6161":[2,0,11,0],
 "structaux__tile.html":[2,0,13],
 "structaux__tile.html#a0788c34b2fdaee3e6dbb59e6caf9e3e0":[2,0,13,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX37 =
 "structcountry.html#a9cedfb24e379cb2997523c808254820f":[2,0,63,2],
 "structcountry.html#afb7b04f64a7f8661d44f6c279d39fa35":[2,0,63,4],
 "structcountry__isonum.html":[2,0,64],
-"structcountry__isonum.html#a579a5067bb1d6a5323e1215b37fc057b":[2,0,64,3]
+"structcountry__isonum.html#a579a5067bb1d6a5323e1215b37fc057b":[2,0,64,3],
+"structcountry__isonum.html#a75bbcabda2880853ce788b57c5824a60":[2,0,64,1],
+"structcountry__isonum.html#a842076771060c05c2a658b917bef96c6":[2,0,64,2]
 };

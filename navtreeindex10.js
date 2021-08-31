@@ -1,7 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"event__qt5_8cpp.html#aeb7efe4b53b5244719ef0f777f08937f":[3,0,5,7,0,3],
-"event__qt5_8cpp.html#aed2a0c7a6c469c5f940d58fe0cdfb4bc":[3,0,5,7,0,12],
 "event__qt5_8h.html":[3,0,5,7,1],
 "event__qt5_8h.html#a5f6385fb846817b8c84e6932e51773e1":[3,0,5,7,1,1],
 "event__qt5_8h_source.html":[3,0,5,7,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX10 =
 "font__freetype_8c.html#aff84206c5843ec0d30b642fc4fb68008":[3,0,4,0,0,27],
 "font__freetype_8h.html":[3,0,4,0,1],
 "font__freetype_8h_source.html":[3,0,4,0,1],
-"functions.html":[2,2,0]
+"functions.html":[2,2,0],
+"functions.html":[2,2,0,0],
+"functions_[.html":[2,2,0,1]
 };
