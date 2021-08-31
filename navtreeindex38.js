@@ -1,5 +1,7 @@
 var NAVTREEINDEX38 =
 {
+"structcountry__isonum.html#a75bbcabda2880853ce788b57c5824a60":[2,0,64,1],
+"structcountry__isonum.html#a842076771060c05c2a658b917bef96c6":[2,0,64,2],
 "structcountry__isonum.html#acb074ba9ebbecb4390707229d1bc8ed9":[2,0,64,0],
 "structcountry__search.html":[2,0,65],
 "structcountry__search.html#a070a717ffa2b6d128d6e970e3f7bee39":[2,0,65,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX38 =
 "structfat__block.html#a313b0c6a6de6cfdaf82677b4cc5f225d":[2,0,101,6],
 "structfat__block.html#a6d628511ba95f82f6fea693b7be42bc1":[2,0,101,1],
 "structfat__block.html#a6fefa717783095afb297ab34c16175f9":[2,0,101,3],
-"structfat__block.html#a97104c6f6b48962f6279f55ba20f9d2f":[2,0,101,2],
-"structfat__block.html#ade36b37f48132eab422db07921ac3f49":[2,0,101,4],
-"structfat__block.html#afd2be7cccd5ee2feed50afba5ae67454":[2,0,101,5]
+"structfat__block.html#a97104c6f6b48962f6279f55ba20f9d2f":[2,0,101,2]
 };

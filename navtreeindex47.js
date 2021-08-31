@@ -1,5 +1,7 @@
 var NAVTREEINDEX47 =
 {
+"structpoi__param.html#a8245acb6254a48a88424eb9199506596":[2,0,291,0],
+"structpoi__param.html#a9147fb73e12c80a9afbfc40d66d922bd":[2,0,291,4],
 "structpoi__param.html#ae7ef481778597e62f8ba32d53d2cdb44":[2,0,291,1],
 "structpoi__param.html#afae856177f8237dd1475eefbc561b78e":[2,0,291,2],
 "structpoint.html":[2,0,292],
@@ -247,7 +249,5 @@ var NAVTREEINDEX47 =
 "structroute__guard.html":[2,0,339],
 "structroute__guard.html#a0527db3ce46a994e3460a13bfa0849cc":[2,0,339,5],
 "structroute__guard.html#a0530731354c790066b783e9b5f5d8bc1":[2,0,339,11],
-"structroute__guard.html#a13ac8d45a4cb44bd39160859553fffd9":[2,0,339,10],
-"structroute__guard.html#a57d1552fbd69c5808e8b303873806f25":[2,0,339,9],
-"structroute__guard.html#a6962bf1b5c2c5cc5ace2fd97b47d2dd8":[2,0,339,3]
+"structroute__guard.html#a13ac8d45a4cb44bd39160859553fffd9":[2,0,339,10]
 };
