@@ -835,7 +835,7 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
         /* get tile rectangle. One might like slicing without overlap, but since the
          * overlapping tiles do not cover the same area per tile code than the
          * overlapping ones we cannot. This will look ugly. But there is no chance.*/
-        tile_bbox(tilecode, &bbox, overlap);
+        tile_bbox(tilecode, sizeof(tilecode)-1, &bbox, 0);
 
         /* only process tiles which do intersect wit ib's bbox */
         if(!itembin_bbox_intersects (&sp.bbox, &bbox)) {

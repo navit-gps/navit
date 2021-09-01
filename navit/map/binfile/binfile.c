@@ -1405,10 +1405,9 @@ static struct map_rect_priv *map_rect_new_binfile_int(struct map_priv *map, stru
     mr->item.priv_data=mr;
     return mr;
 }
-
-static void tile_bbox(char *tile, int len, struct coord_rect *r) {
+#if 0
+static void tile_bbox(char *tile, int len, struct coord_rect *r, int overlap) {
     struct coord c;
-    int overlap=1;
     int xo,yo;
     struct coord_rect world_bbox = {
         { WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_Y}, /* left upper corner */
@@ -1444,12 +1443,82 @@ static void tile_bbox(char *tile, int len, struct coord_rect *r) {
         len--;
     }
 }
+#else
+static void tile_bbox(char *tile, int len, struct coord_rect *r, int overlap) {
+    struct coord c;
+    int xo,yo;
+    struct coord_rect world_bbox = {
+        { WORLD_BOUNDINGBOX_MIN_X, WORLD_BOUNDINGBOX_MAX_Y}, /* left upper corner */
+        { WORLD_BOUNDINGBOX_MAX_X, WORLD_BOUNDINGBOX_MIN_Y}, /* right lower corner */
+    };
+    *r=world_bbox;
+    while ((*tile) || (len)) {
+        //calculate next center point
+        c.x=(r->lu.x+r->rl.x)/2;
+        c.y=(r->lu.y+r->rl.y)/2;
+        //calculate next overlap size
+        xo=(r->rl.x-r->lu.x)*overlap/100;
+        yo=(r->rl.y-r->lu.y)*overlap/100;
+        //calculate subtile based on current tile character
+        switch (*tile) {
+        case 'a':
+            r->lu.x=c.x;
+            r->lu.y=c.y;
+            break;
+        case 'b':
+            r->rl.x=c.x;
+            r->lu.y=c.y;
+            break;
+        case 'c':
+            r->lu.x=c.x;
+            r->rl.y=c.y;
+            break;
+        case 'd':
+            r->rl.x=c.x;
+            r->rl.y=c.y;
+            break;
+        }
+        //if deepest tile, add overlap.
+        if((!(*(tile+1))) || (!(len -1))) {
+            switch (*tile) {
+            case 'a':
+                r->lu.x-=xo;
+                r->lu.y-=yo;
+                r->rl.x+=xo;
+                r->rl.y+=yo;
+                break;
+            case 'b':
+                r->rl.x+=xo;
+                r->lu.y-=yo;
+                r->lu.x-=xo;
+                r->rl.y+=yo;
+                break;
+            case 'c':
+                r->lu.x-=xo;
+                r->rl.y+=yo;
+                r->rl.x+=xo;
+                r->lu.y-=yo;
+                break;
+            case 'd':
+                r->rl.x+=xo;
+                r->rl.y+=yo;
+                r->lu.x-=xo;
+                r->lu.y-=yo;
+                break;
+            }
+        }
+        //next tile level
+        tile++;
+        len--;
+    }
+}
+#endif
 
 static int map_download_selection_check(struct zip_cd *cd, struct map_selection *sel) {
     struct coord_rect cd_rect;
     if (cd->zipcunc)
         return 0;
-    tile_bbox((char *)(cd+1), cd->zipcfnl, &cd_rect);
+    tile_bbox((char *)(cd+1), cd->zipcfnl, &cd_rect, 1);
     while (sel) {
         if (coord_rect_overlap(&cd_rect, &sel->u.c_rect))
             return 1;

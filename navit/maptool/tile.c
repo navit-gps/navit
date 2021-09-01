@@ -552,7 +552,7 @@ void index_submap_add(struct tile_info *info, struct tile_head *th) {
         len=0;
     index_tile[len]=0;
     strcat(index_tile, info->suffix);
-    tile_bbox(th->name, &r, overlap);
+    tile_bbox(th->name, strlen(th->name), &r, overlap);
 
     item_bin=init_item(type_submap);
     item_bin_add_coord_rect(item_bin, &r);

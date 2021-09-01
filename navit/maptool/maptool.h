@@ -396,7 +396,7 @@ struct aux_tile {
 extern GList *aux_tile_list;
 
 int tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect *tr);
-void tile_bbox(char *tile, struct rect *r, int overlap);
+void tile_bbox(char *tile, int len, struct rect *r, int overlap);
 int tile_len(char *tile);
 void load_tilesdir(FILE *in);
 void tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name);

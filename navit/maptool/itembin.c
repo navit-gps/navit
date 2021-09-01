@@ -282,7 +282,7 @@ void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, s
         struct rect clip_rect;
         tile_data.buffer[tile_data.tile_depth]='a'+i;
         tile_data.buffer[tile_data.tile_depth+1]='\0';
-        tile_bbox(tile_data.buffer, &clip_rect, param->overlap);
+        tile_bbox(tile_data.buffer, tile_data.tile_depth, &clip_rect, param->overlap);
         if (ib->type < type_area)
             clip_line(ib, &clip_rect, param, out);
         else

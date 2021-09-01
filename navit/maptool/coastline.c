@@ -158,7 +158,7 @@ static void tile_collector_process_tile(char *tile, int *tile_data, struct coast
     struct item_bin *ibt=(struct item_bin *)(tile_data+1);
     struct coastline_tile *ct=g_new0(struct coastline_tile, 1);
     ct->wayid=item_bin_get_wayid(ibt);
-    tile_bbox(tile, &bbox, 0);
+    tile_bbox(tile, 14, &bbox, 0);
     curr=tile_data_to_segments(tile_data);
     sorted_segments=geom_poly_segments_sort(curr, geom_poly_segment_type_way_right_side);
     g_list_foreach(curr,(GFunc)geom_poly_segment_destroy,NULL);
@@ -272,7 +272,7 @@ static void ocean_tile(GHashTable *hash, char *tile, char c, osmid wayid, struct
     if (ct)
         return;
     //fprintf(stderr,"%s ok\n",tile2);
-    tile_bbox(tile2, &bbox, 0);
+    tile_bbox(tile2, len-1, &bbox, 0);
     ib=init_item(type_poly_water_tiled);
     item_bin_bbox(ib, &bbox);
     item_bin_add_attr_longlong(ib, attr_osm_wayid, wayid);
