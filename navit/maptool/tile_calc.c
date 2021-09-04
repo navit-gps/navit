@@ -169,7 +169,7 @@ void tile_bbox(char *tile, int len, struct rect *r, int overlap) {
     struct coord c;
     int xo,yo;
     *r=world_bbox;
-    while ((*tile) || (len)) {
+    while ((*tile) && (len)) {
         //calculate next center point
         c.x=(r->l.x+r->h.x)/2;
         c.y=(r->l.y+r->h.y)/2;
