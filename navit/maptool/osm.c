@@ -1684,6 +1684,7 @@ static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
                 /*Don't write out multipolygons that will result in unknown types if -n is given.
                  *So we don't process useless multipolygons. May save a lot of time.
                  */
+                tmp_item_bin->type = types[a];
                 if(filter_unknown(tmp_item_bin))
                     continue;
                 /* no need to clone the item in memory. We just write it out multiple times */
@@ -1691,7 +1692,6 @@ static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
                     /*add duplicate tag if 2nd type. The tag stays for all subsequent writes */
                     item_bin_add_attr_int(tmp_item_bin, attr_duplicate, 1);
                 }
-                tmp_item_bin->type = types[a];
                 item_bin_write(tmp_item_bin, osm->multipolygons);
             }
         } else {
