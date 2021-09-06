@@ -18,7 +18,7 @@
 #include "navit.h"
 #include "point.h"
 #include "graphics.h"
-#include "event.h"
+#include "navit/event.h"
 #include "map.h"
 #include "coord.h"
 #include "vehicle.h"

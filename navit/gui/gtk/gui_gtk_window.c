@@ -45,7 +45,7 @@
 #include "vehicle.h"
 #include "map.h"
 #include "coord.h"
-#include "event.h"
+#include "navit/event.h"
 #include "bookmarks.h"
 #include "route.h"
 #include "navit_nls.h"

@@ -19,7 +19,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "event.h"
+#include "navit/event.h"
 #include "plugin.h"
 #include "debug.h"
 

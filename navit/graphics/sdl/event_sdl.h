@@ -5,7 +5,7 @@
 #include "SDL.h"
 #include "config.h"
 #include "callback.h"
-#include "event.h"
+#include "navit/event.h"
 #include "graphics_sdl.h"
 
 #ifdef USE_WEBOS

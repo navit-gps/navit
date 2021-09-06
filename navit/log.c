@@ -42,7 +42,7 @@
 #include <glib.h>
 #include "file.h"
 #include "item.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "debug.h"
 #include "xmlconfig.h"

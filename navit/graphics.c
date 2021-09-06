@@ -50,7 +50,7 @@
 #include "util.h"
 #include "callback.h"
 #include "file.h"
-#include "event.h"
+#include "navit/event.h"
 #include "navit.h"
 
 /**

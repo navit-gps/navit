@@ -33,7 +33,7 @@
 #include "coord.h"
 #include "item.h"
 #include "vehicle.h"
-#include "event.h"
+#include "navit/event.h"
 #include "types.h"
 
 /**

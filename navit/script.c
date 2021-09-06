@@ -20,7 +20,7 @@
 #include <glib.h>
 #include "item.h"
 #include "debug.h"
-#include "event.h"
+#include "navit/event.h"
 #include "callback.h"
 #include "command.h"
 #include "xmlconfig.h"

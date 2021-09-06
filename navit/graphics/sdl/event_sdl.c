@@ -23,7 +23,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include "config.h"
-#include "event.h"
+#include "navit/event.h"
 #include "event_sdl.h"
 #include "graphics_sdl.h"
 #include "debug.h"
