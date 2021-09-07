@@ -10,6 +10,7 @@
 #include <navit/command.h>
 #include <navit/config_.h>
 #include <navit/transform.h>
+#include <navit/network.h>
 
 #include "gui_internal.h"
 #include "coord.h"
@@ -18,8 +19,10 @@
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_map_downloader.h"
-#include "network.h"
+#include "cJSON.h"
 #include <pthread.h>
+#include <stdio.h>
+#include <string.h>
 
 pthread_t dl_thread;
 struct map_download_info dl_info;
@@ -30,10 +33,10 @@ struct map_download_info dl_info;
  *
  * @param the navit object from which we can fetch the mapset to enable
  *
- * @returns Returns mapset_add_attr() result
+ * @returns nothing
  */
 
-int enable_map(struct navit *navit, char * map_path) {
+void enable_map(struct navit *navit, char * map_path) {
     int ret;
     struct attr attr;
 
@@ -60,11 +63,11 @@ int enable_map(struct navit *navit, char * map_path) {
         struct attr map_a;
         map_a.type=attr_map;
         map_a.u.map=new_map;
+        map_a.u.data=NULL;
         ret = mapset_add_attr(ms, &map_a);
         dbg(lvl_error, "Enabled map %s with result %i\n", map_path, ret);
         navit_draw(navit);
     }
-    return ret;
 }
 
 
@@ -145,12 +148,15 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
     } else {
         dbg(lvl_error, "Download will be started\n");
         strcpy (dl_info.url,
-                g_strdup_printf ("http://www.navit-project.org/maps/osm_bbox_11.3,47.9,11.7,48.2.osm.bz2"));
+                g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/europe-germany-thueringen-2021-07-21.bin"));
         strcpy (dl_info.url,
-                g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-125.94,32.43,-114.08,42.07&timestamp=161223"));
+                g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/europe-germany-schleswig-holstein-2021-07-21.bin"));
         strcpy (dl_info.url,
-                g_strdup_printf ("http://maps9.navit-project.org/api/map/?bbox=-123.7,36.9,-120.5,38.7&timestamp=161223"));
-        dl_info.name = g_strdup("west.bin");
+                g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/australia-oceania-cook-islands-2021-07-21.bin"));
+        gchar* ret;
+
+        ret = g_strrstr(dl_info.url, "/");
+        dl_info.name = g_strdup(++ret);
         dl_info.path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, NULL);
         dl_info.xml = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/maps/", dl_info.name, ".xml", NULL);
         dbg(lvl_error," %s -> %s %s\n", dl_info.url, dl_info.name, dl_info.path);
