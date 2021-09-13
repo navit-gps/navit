@@ -490,8 +490,12 @@ void navit_handle_resize(struct navit *this_, int w, int h) {
     graphics_set_rect(this_->gra, &sel.u.p_rect);
     if (callback)
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
-    if (this_->ready == 3)
+    if (this_->ready == 3) {
+        /* About to resize. Cancel drawing whatever it is */
+        graphics_draw_cancel(this_->gra, this_->displaylist);
+        /* draw again even if we did not cancel anything */
         navit_draw_async(this_, 1);
+    }
 }
 
 static void navit_resize(void *data, int w, int h) {
