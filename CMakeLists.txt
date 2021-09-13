@@ -505,14 +505,6 @@ if (HAVE_CREATEPROCESS)
 	set_with_reason(speech/cmdline "CreateProcess() call is available" TRUE)
 endif(HAVE_CREATEPROCESS)
 
-if (LIBLOCATION_FOUND)
-	set_with_reason(vehicle/maemo "Maemo location library found" TRUE ${LIBLOCATION_LIBRARIES})
-endif(LIBLOCATION_FOUND)
-
-if (LIBOSSO_FOUND)
-	set_with_reason(autoload/osso "Maemo osso library found" TRUE ${LIBOSSO_LIBRARIES})
-endif(LIBOSSO_FOUND)
-
 if (GETTEXT_FOUND)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
