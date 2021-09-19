@@ -434,7 +434,7 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
             } else {
                 search_attr.type=attr_town_or_district_name;
             }
-        } 
+        }
         if (! strcmp(wm->name,"Street"))
             search_attr.type=attr_street_name;
         if (! strcmp(wm->name,"House number"))
