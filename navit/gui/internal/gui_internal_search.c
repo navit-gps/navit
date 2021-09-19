@@ -428,8 +428,13 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
         dbg(lvl_debug,"process");
         if (! strcmp(wm->name,"Country"))
             search_attr.type=attr_country_all;
-        if (! strcmp(wm->name,"Town"))
-            search_attr.type=attr_town_postal; /*attr_town_or_district_name to exclude zip code*/
+        if (! strcmp(wm->name,"Town")) {
+            if(this->town_use_postal) {
+                search_attr.type=attr_town_postal; /*attr_town_or_district_name to exclude zip code*/
+            } else {
+                search_attr.type=attr_town_or_district_name;
+            }
+        } 
         if (! strcmp(wm->name,"Street"))
             search_attr.type=attr_street_name;
         if (! strcmp(wm->name,"House number"))
