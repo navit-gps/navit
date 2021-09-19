@@ -10,11 +10,12 @@ Navit on Linux based Carputer:
 
 ![navit-nuc-osd](https://github.com/pgrandin/navit-nuc-layout/raw/master/screenshot.png)
 
-<p>
-<a href="https://play.google.com/store/apps/details?id=org.navitproject.navit"><img src="http://switzerland.tasis.com/uploaded/images2/appstore_button_google.png" height="100"/></a>
-
-<a href="https://f-droid.org/repository/browse/?fdfilter=navit&fdid=org.navitproject.navit"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Get_it_on_F-Droid.svg/200px-Get_it_on_F-Droid.svg.png" height="100"/></a>
-</p>
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="130">](https://f-droid.org/packages/org.navitproject.navit/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="130">](https://play.google.com/store/apps/details?id=org.navitproject.navit)
 
 Navit
 =====

@@ -177,6 +177,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
     }
     if (data->set & MODE_SET) {
         priv->fix_type = data->fix.mode - 1;
+        dbg(lvl_debug,"Fix Mode: %i", priv->fix_type);
         data->set &= ~MODE_SET;
     }
     if (data->set & TIME_SET) {
@@ -378,6 +379,9 @@ static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
         enum attr_type type, struct attr *attr) {
     struct attr * active=NULL;
     switch (type) {
+    case attr_position_valid:   // Fix #1130
+        attr->u.num=(priv->fix_type>0?attr_position_valid_valid:attr_position_valid_invalid);
+        break;
     case attr_position_fix_type:
         attr->u.num = priv->fix_type;
         break;
