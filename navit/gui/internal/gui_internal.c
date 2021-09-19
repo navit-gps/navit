@@ -3289,7 +3289,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
         this->town_use_postal = attr->u.num;
     else
         this->town_use_postal = 1;
-dbg(lvl_error,"use_postal=%d", this->town_use_postal);
+
     this->data.priv=this;
     this->data.gui=&gui_internal_methods_ext;
     this->data.widget=&gui_internal_widget_methods;
