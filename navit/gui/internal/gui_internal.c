@@ -2294,6 +2294,9 @@ static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr) {
     case attr_menu_on_map_click:
         this->menu_on_map_click=attr->u.num;
         return 1;
+    case attr_town_use_postal:
+        this->town_use_postal=attr->u.num;
+        return 1;
     case attr_on_map_click:
         g_free(this->on_map_click);
         this->on_map_click=g_strdup(attr->u.str);
@@ -3282,6 +3285,11 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
     else
         this->hide_keys = 0;
 
+    if((attr=attr_search(attrs, attr_town_use_postal)))
+        this->town_use_postal = attr->u.num;
+    else
+        this->town_use_postal = 1;
+dbg(lvl_error,"use_postal=%d", this->town_use_postal);
     this->data.priv=this;
     this->data.gui=&gui_internal_methods_ext;
     this->data.widget=&gui_internal_widget_methods;
