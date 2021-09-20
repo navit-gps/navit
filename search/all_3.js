@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['a_56',['A',['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic']]],
-  ['a_57',['a',['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a()'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a()'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a()']]],
+  ['a_56',['a',['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a()'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a()'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a()']]],
+  ['a_57',['A',['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic']]],
   ['a2w_58',['A2W',['../group__vehicle-wince.html#ga7f743aef33e1a85946b61fe1e4e8d034',1,'vehicle_wince.c']]],
   ['aa_59',['aa',['../structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05',1,'graphics_priv::aa()'],['../structquadtree__node.html#a035b4a5aa2c54fcad185239f96ea77dd',1,'quadtree_node::aa()']]],
   ['aabits_60',['AAbits',['../raster_8c.html#a2e16571bedf7a97c6fc02d86b48994eb',1,'raster.c']]],

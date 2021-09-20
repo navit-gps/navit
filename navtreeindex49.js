@@ -1,5 +1,6 @@
 var NAVTREEINDEX49 =
 {
+"structstreet__header__type.html#af57386067efd764ecdaef63d30e18d6e":[2,0,373,1],
 "structstreet__name.html":[2,0,374],
 "structstreet__name.html#a4976aec4f00473e3bf8f081d2a9b00d1":[2,0,374,3],
 "structstreet__name.html#a4edbeadadc07ab364ca800dcb4660b40":[2,0,374,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX49 =
 "structtraffic__location.html#a6d114f82a62ea0cd5e9aec33074eebb1":[2,0,402,3],
 "structtraffic__location.html#a94af1081991a9ae842aaef624a7ef694":[2,0,402,11],
 "structtraffic__location.html#a94d8646cce47405943ace674727d5530":[2,0,402,12],
-"structtraffic__location.html#a9970a97fa34580039cdd63cb79f11526":[2,0,402,2],
-"structtraffic__location.html#ab7da8b821b080fe42f369e67811cf378":[2,0,402,10]
+"structtraffic__location.html#a9970a97fa34580039cdd63cb79f11526":[2,0,402,2]
 };
