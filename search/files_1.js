@@ -1,19 +1,17 @@
 var searchData=
 [
-  ['backend_2ecpp_9074',['backend.cpp',['../backend_8cpp.html',1,'']]],
-  ['backend_2eh_9075',['backend.h',['../backend_8h.html',1,'']]],
-  ['binding_5fdbus_2ec_9076',['binding_dbus.c',['../binding__dbus_8c.html',1,'']]],
-  ['binding_5fpython_2ec_9077',['binding_python.c',['../binding__python_8c.html',1,'']]],
-  ['binding_5fwin32_2ec_9078',['binding_win32.c',['../binding__win32_8c.html',1,'']]],
-  ['binding_5fwin32_2eh_9079',['binding_win32.h',['../binding__win32_8h.html',1,'']]],
-  ['binfile_2ec_9080',['binfile.c',['../binfile_8c.html',1,'']]],
-  ['block_2ec_9081',['block.c',['../block_8c.html',1,'']]],
-  ['bluetooth_2ec_9082',['bluetooth.c',['../bluetooth_8c.html',1,'']]],
-  ['bluetooth_2eh_9083',['bluetooth.h',['../bluetooth_8h.html',1,'']]],
-  ['bookmarks_2ec_9084',['bookmarks.c',['../bookmarks_8c.html',1,'']]],
-  ['bookmarks_2eh_9085',['bookmarks.h',['../bookmarks_8h.html',1,'']]],
-  ['bookmarksproxy_2eh_9086',['bookmarksProxy.h',['../bookmarksProxy_8h.html',1,'']]],
-  ['boundaries_2ec_9087',['boundaries.c',['../boundaries_8c.html',1,'']]],
-  ['browserplugin_2ec_9088',['browserplugin.c',['../browserplugin_8c.html',1,'']]],
-  ['buffer_2ec_9089',['buffer.c',['../buffer_8c.html',1,'']]]
+  ['backend_2ecpp_8940',['backend.cpp',['../backend_8cpp.html',1,'']]],
+  ['backend_2eh_8941',['backend.h',['../backend_8h.html',1,'']]],
+  ['binding_5fdbus_2ec_8942',['binding_dbus.c',['../binding__dbus_8c.html',1,'']]],
+  ['binding_5fpython_2ec_8943',['binding_python.c',['../binding__python_8c.html',1,'']]],
+  ['binding_5fwin32_2ec_8944',['binding_win32.c',['../binding__win32_8c.html',1,'']]],
+  ['binding_5fwin32_2eh_8945',['binding_win32.h',['../binding__win32_8h.html',1,'']]],
+  ['binfile_2ec_8946',['binfile.c',['../binfile_8c.html',1,'']]],
+  ['block_2ec_8947',['block.c',['../block_8c.html',1,'']]],
+  ['bookmarks_2ec_8948',['bookmarks.c',['../bookmarks_8c.html',1,'']]],
+  ['bookmarks_2eh_8949',['bookmarks.h',['../bookmarks_8h.html',1,'']]],
+  ['bookmarksproxy_2eh_8950',['bookmarksProxy.h',['../bookmarksProxy_8h.html',1,'']]],
+  ['boundaries_2ec_8951',['boundaries.c',['../boundaries_8c.html',1,'']]],
+  ['browserplugin_2ec_8952',['browserplugin.c',['../browserplugin_8c.html',1,'']]],
+  ['buffer_2ec_8953',['buffer.c',['../buffer_8c.html',1,'']]]
 ];

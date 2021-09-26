@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['frame_16877',['frame',['../interfaceNavitViewController.html#a55787f746f286065032614549a2b3a66',1,'NavitViewController']]]
+  ['frame_16628',['frame',['../interfaceNavitViewController.html#a55787f746f286065032614549a2b3a66',1,'NavitViewController']]]
 ];
