@@ -41,3 +41,7 @@ if(SAMPLE_MAP)
 		DESTINATION ${SHARE_DIR}/maps
 		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endif()
+configure_file(${PROJECT_SOURCE_DIR}/navit/maps/download_menu.json download_menu.json)
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/navit/maps/download_menu.json
+		DESTINATION ${SHARE_DIR}/maps
+		PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
