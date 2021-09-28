@@ -89,8 +89,6 @@ $(document).ready(function(){initNavTree('track_8h.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;time.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 </div>
 <p><a href="track_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -112,8 +110,6 @@ Functions</h2></td></tr>
 <tr class="separator:ae5d91fe8d9b07291bed5dd67767b144f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32502c1c0b3c1f7e38439e50c75a11e7"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#a32502c1c0b3c1f7e38439e50c75a11e7">tracking_get_current_flags</a> (struct <a class="el" href="structtracking.html">tracking</a> *_this)</td></tr>
 <tr class="separator:a32502c1c0b3c1f7e38439e50c75a11e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3db4195d638440bfbc63af1c3cbc0997"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#a3db4195d638440bfbc63af1c3cbc0997">tracking_get_current_tunnel</a> (struct <a class="el" href="structtracking.html">tracking</a> *_this)</td></tr>
-<tr class="separator:a3db4195d638440bfbc63af1c3cbc0997"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a23a1b07e73d8fa54862108f4194ca3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#a0a23a1b07e73d8fa54862108f4194ca3">tracking_flush</a> (struct <a class="el" href="structtracking.html">tracking</a> *tr)</td></tr>
 <tr class="separator:a0a23a1b07e73d8fa54862108f4194ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ee6ea7d424a17edf786a24f5ea9e3a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#a3ee6ea7d424a17edf786a24f5ea9e3a1">tracking_update</a> (struct <a class="el" href="structtracking.html">tracking</a> *tr, struct <a class="el" href="structvehicle.html">vehicle</a> *v, struct <a class="el" href="structvehicleprofile.html">vehicleprofile</a> *<a class="el" href="structvehicleprofile.html">vehicleprofile</a>, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> pro)</td></tr>
@@ -322,28 +318,6 @@ Functions</h2></td></tr>
 <p class="reference">References <a class="el" href="structtracking.html#adaa9ddfdb837b35492857152319bad7a">tracking::curr_line</a>, <a class="el" href="structstreet__data.html#a224c9e84d6d6d05fe9d2213919d1d22a">street_data::item</a>, and <a class="el" href="structtracking__line.html#a0b3bbb9c898ef4e8de905c0345c7f30d">tracking_line::street</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="osd__core_8c.html#a1ce7bb2ebe64ec44f110191075c41fa4">osd_speed_warner_draw()</a>, and <a class="el" href="osd__core_8c.html#ad1b3aad9b6f3d02df61bea4c5759ebb4">osd_text_draw()</a>.</p>
-
-</div>
-</div>
-<a id="a3db4195d638440bfbc63af1c3cbc0997"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3db4195d638440bfbc63af1c3cbc0997">&#9670;&nbsp;</a></span>tracking_get_current_tunnel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tracking_get_current_tunnel </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structtracking.html">tracking</a> *&#160;</td>
-          <td class="paramname"><em>_this</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="structtracking.html#a954aab51cbf161df875aece319cfdc11">tracking::tunnel</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="group__navit.html#gaf0198646359c87ab16c25339a4300ee5">navit_layout_switch()</a>.</p>
 
 </div>
 </div>

@@ -57,7 +57,6 @@ var osm_8c =
     [ "country_id_from_iso2", "osm_8c.html#a95e8b29d99f438b27c4c35501378604c", null ],
     [ "dump_sequence", "osm_8c.html#a421e1372f89dcd1725bf67f09500f359", null ],
     [ "extend_buffer", "osm_8c.html#a468f57b8b2867be64a65def3e5e471d0", null ],
-    [ "filter_unknown", "osm_8c.html#a082ffd7c2399b9a2068e71b49d9dd2bf", null ],
     [ "flush_nodes", "osm_8c.html#a9e537c7d63876ec943f9cd48300c3a4d", null ],
     [ "g_free_helper", "osm_8c.html#a758860664ff8573544d78fb3b0fd26f9", null ],
     [ "index_country_add", "osm_8c.html#aa56fb4cd1506877d879624495ea870e4", null ],

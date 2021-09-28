@@ -9,5 +9,6 @@ var group__vehicle_plugins =
     [ "Vehicle iPhone", "group__vehicle-iphone.html", "group__vehicle-iphone" ],
     [ "Vehicle Null", "group__vehicle-null.html", "group__vehicle-null" ],
     [ "Vehicle QT5", "group__vehicle-qt5.html", "group__vehicle-qt5" ],
+    [ "Vehicle WebOS", "group__vehicle-webos.html", "group__vehicle-webos" ],
     [ "Vehicle WinCE", "group__vehicle-wince.html", "group__vehicle-wince" ]
 ];

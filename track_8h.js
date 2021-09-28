@@ -7,7 +7,6 @@ var track_8h =
     [ "tracking_get_attr", "track_8h.html#a947477c7269750bf7d88207ad972e8e5", null ],
     [ "tracking_get_current_flags", "track_8h.html#a32502c1c0b3c1f7e38439e50c75a11e7", null ],
     [ "tracking_get_current_item", "track_8h.html#ae5d91fe8d9b07291bed5dd67767b144f", null ],
-    [ "tracking_get_current_tunnel", "track_8h.html#a3db4195d638440bfbc63af1c3cbc0997", null ],
     [ "tracking_get_map", "track_8h.html#a21a72ba8880259ae882d46cd3f8ecdf3", null ],
     [ "tracking_get_pos", "track_8h.html#a539206d10f3d70dfbc5c08293765a52c", null ],
     [ "tracking_get_segment_pos", "track_8h.html#a8707ecde3ea6a105f23caec5661d84ec", null ],
