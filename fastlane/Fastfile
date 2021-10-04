@@ -25,8 +25,13 @@ end
 
 platform :android do
   desc "Description of what the lane does"
+  lane :github_actions do
+    # Here we can add other things that Github Actions should do
+    build
+  end
   lane :circleci do
-    # Here we can add other things that circleci should do
+    # Here we can add other things that CircleCI should do
+    build
     playstore
   end
   lane :playstore do
@@ -36,6 +41,8 @@ platform :android do
       task: 'assemble',
       build_type: 'Release'
     )
+  end
+  lane :build do
     isOnMasterBranch = currentBranch() == "master"
     isOnMasterBranch = false # Workarount do not push to google as its curently broken
     if isOnMasterBranch
