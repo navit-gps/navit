@@ -56,3 +56,4 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
         fi
     fi
 done
+git diff
