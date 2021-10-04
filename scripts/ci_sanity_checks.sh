@@ -19,7 +19,6 @@ check_diff(){
     if [[ $code -ne 0 ]]; then
         echo "[ERROR] You may need to do some cleanup in the files you commited, see the git diff output above."
     fi
-    git checkout -- .
     return_code=$(($return_code + $code))
 }
 
