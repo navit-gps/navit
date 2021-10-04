@@ -23,10 +23,10 @@ jobs:
         # FIXME: deactivated as somethings broken with it
         #- name: Run CheckStyle Test
         #  run: ./gradlew checkstyleMain
-        - uses: actions/upload-artifact@v1
-          with:
-            name: Store checkstyle report
-            path: navit/android/checkstyle
+        #- uses: actions/upload-artifact@v1
+        #  with:
+        #    name: Store checkstyle report
+        #    path: navit/android/checkstyle
 
   build_linux:
     runs-on: ubuntu-latest
