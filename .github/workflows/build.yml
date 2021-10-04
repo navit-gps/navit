@@ -83,10 +83,10 @@ jobs:
       - name: Setup Keystore and Playstore Keys
         run: scripts/setup_publish_keys.sh
       - uses: nttld/setup-ndk@v1
-          id: setup-ndk
-          with:
-            ndk-version: r21e
-            add-to-path: false
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+          add-to-path: false
       - name: Build and upload Android
         run: fastlane github_actions
       - name: Run Lint Test
