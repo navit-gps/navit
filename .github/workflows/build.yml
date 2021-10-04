@@ -89,7 +89,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install requirements
-        run: scripts/setup_android.sh
+        run: sudo bash scripts/setup_android.sh
       - name: Setup Keystore and Playstore Keys
         run: scripts/setup_publish_keys.sh
       - uses: nttld/setup-ndk@v1
