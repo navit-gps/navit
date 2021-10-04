@@ -10,6 +10,8 @@ jobs:
         image: navit/sanity_check:latest
     steps:
         - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
         - name: run sanity check script
           run: bash scripts/ci_sanity_checks.sh
         - uses: reviewdog/action-suggester@v1
