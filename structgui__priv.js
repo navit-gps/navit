@@ -116,6 +116,7 @@ var structgui__priv =
     [ "text_background_color", "structgui__priv.html#a0559949a41ad1a11c7063f2fc0151d19", null ],
     [ "text_foreground", "structgui__priv.html#ab9e6b4f27dec66cc326cc7a27bb4b4e5", null ],
     [ "toolbar_enable", "structgui__priv.html#ab80e3f2e033bff6a1818ccadd8bfede1", null ],
+    [ "town_use_postal", "structgui__priv.html#af7f4907f86288a07f701c8ce4d1ad344", null ],
     [ "ui_manager", "structgui__priv.html#a7a4f4c79a5a950ade1e2940a455e80ec", null ],
     [ "vbox", "structgui__priv.html#a71f4afda8d404e8c66c81c62b65110e7", null ],
     [ "vehicle_cb", "structgui__priv.html#aad18d42dcf19e5f6a9f1978d049e6243", null ],
