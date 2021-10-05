@@ -100,10 +100,6 @@ jobs:
           java-version: 1.8
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-      - uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
       - name: Build and upload Android
         run: fastlane github_actions
       - name: Run Lint Test
