@@ -34,7 +34,7 @@ platform :android do
     build
     playstore
   end
-  lane :playstore do
+  lane :build do
     sh("cd ..;bash scripts/build_android.sh")
 
     gradle(
@@ -42,7 +42,7 @@ platform :android do
       build_type: 'Release'
     )
   end
-  lane :build do
+  lane :playstore do
     isOnMasterBranch = currentBranch() == "master"
     isOnMasterBranch = false # Workarount do not push to google as its curently broken
     if isOnMasterBranch
