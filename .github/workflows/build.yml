@@ -88,6 +88,8 @@ jobs:
     needs: sanity_check
     steps:
       - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
       - name: Install requirements
         run: sudo bash scripts/setup_android.sh
       - name: Setup Keystore and Playstore Keys
