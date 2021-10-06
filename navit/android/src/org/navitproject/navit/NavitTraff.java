@@ -357,7 +357,7 @@ public class NavitTraff extends BroadcastReceiver {
             }
             StringBuilder builder = new StringBuilder("<feed>\n");
             while (cursor.moveToNext())
-                builder.append(cursor.getString(cursor.getColumnIndex(COLUMN_DATA))).append("\n");
+                builder.append(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATA))).append("\n");
             builder.append("</feed>");
             cursor.close();
             onFeedReceived(mCbid, builder.toString());
