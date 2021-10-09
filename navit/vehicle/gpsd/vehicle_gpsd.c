@@ -261,7 +261,7 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     if (!priv->gps->gps_fd) {
         dbg(lvl_error,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
     }
-    dbg(lvl_debug,"Connected to gpsd fd=%d evwatch=%p", priv->gps->gps_fd, priv->evwatch);
+    dbg(lvl_error,"Connected to gpsd fd=%d evwatch=%p", priv->gps->gps_fd, priv->evwatch);
     event_remove_timeout(priv->retry_timer2);
     priv->retry_timer2=NULL;
     return FALSE;
