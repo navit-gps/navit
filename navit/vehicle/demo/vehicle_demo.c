@@ -69,7 +69,7 @@ static void vehicle_demo_destroy(struct vehicle_priv *priv) {
 }
 
 static void nmea_chksum(char *nmea) {
-    int i;
+    unsigned long i;
     if (nmea && strlen(nmea) > 3) {
         unsigned char csum=0;
         for (i = 1 ; i < strlen(nmea)-4 ; i++)
