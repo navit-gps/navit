@@ -262,6 +262,11 @@ static void changed(GtkWidget *widget, struct search_param *search) {
             return;
         set_columns(search, 2);
     }
+    if (widget == search->entry_number) {
+            dbg(lvl_debug,"street");
+            search->attr.type=attr_house_number;
+            set_columns(search, 3);
+    }
 
     search_list_search(search->sl, &search->attr, search->partial);
     gtk_list_store_clear(search->liststore);
@@ -293,7 +298,10 @@ static void changed(GtkWidget *widget, struct search_param *search) {
                 gtk_list_store_set(search->liststore,&iter,4,res->street->name,-1);
             else
                 gtk_list_store_set(search->liststore,&iter,4,"",-1);
-
+            if (res->house_number)
+                gtk_list_store_set(search->liststore,&iter,5,res->house_number->house_number,-1);
+            else
+                gtk_list_store_set(search->liststore,&iter,5,"",-1);
         }
     }
 
@@ -564,6 +572,7 @@ int destination_address(struct navit *nav) {
     if (country_attr) {
         cs=country_search_new(country_attr, 0);
         item=country_search_get_item(cs);
+        search->partial=0; // To enable city and initialize after first usage of the dialog
         if (item && item_attr_get(item, attr_country_name, &country_name))
             gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
         country_search_destroy(cs);

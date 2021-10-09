@@ -5,7 +5,6 @@
  *      Author: norad
  */
 
-#include "webos/webos.h"
 
 struct event_timeout {
     SDL_TimerID id;

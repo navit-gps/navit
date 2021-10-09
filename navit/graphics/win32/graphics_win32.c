@@ -16,7 +16,6 @@
 #include "window.h"
 #include "graphics_win32.h"
 #include "xpm2bmp.h"
-#include "support/win32/ConvertUTF.h"
 #include "profile.h"
 #include "keys.h"
 
@@ -236,7 +235,7 @@ struct graphics_gc_priv {
     int         fg_alpha;
     int         bg_alpha;
     COLORREF    bg_color;
-    int		dashed;
+    int        dashed;
     HPEN hpen;
     HBRUSH hbrush;
     struct graphics_priv *gr;
@@ -612,17 +611,17 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu ) {
     WNDCLASS wc;
 #else
     WNDCLASSEX wc;
-    wc.cbSize		 = sizeof(WNDCLASSEX);
-    wc.hIconSm		 = NULL;
+    wc.cbSize         = sizeof(WNDCLASSEX);
+    wc.hIconSm         = NULL;
 #endif
 
-    wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-    wc.lpfnWndProc	= WndProc;
-    wc.cbClsExtra	= 0;
-    wc.cbWndExtra	= 64;
-    wc.hInstance	= GetModuleHandle(NULL);
-    wc.hIcon	= NULL;
-    wc.hCursor	= LoadCursor(NULL, IDC_ARROW);
+    wc.style     = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+    wc.lpfnWndProc    = WndProc;
+    wc.cbClsExtra    = 0;
+    wc.cbWndExtra    = 64;
+    wc.hInstance    = GetModuleHandle(NULL);
+    wc.hIcon    = NULL;
+    wc.hCursor    = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
     wc.lpszMenuName  = NULL;
     wc.lpszClassName = g_szClassName;
@@ -739,8 +738,8 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
     gc->dashed=n>0;
     DeleteObject (gc->hpen);
     gc->hpen = CreatePen(gc->dashed?PS_DASH:PS_SOLID, gc->line_width, gc->fg_color );
-//	gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
-//	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+//    gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
+//    gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 }
 
 
@@ -1204,26 +1203,25 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
     {
         wchar_t utf16[1024];
-        const UTF8 *utf8 = (UTF8 *)text;
-        UTF16 *utf16p = (UTF16 *) utf16;
         SetBkMode (gr->hMemDC, TRANSPARENT);
-        if (ConvertUTF8toUTF16(&utf8, utf8+strlen(text),
-                               &utf16p, utf16p+sizeof(utf16),
-                               lenientConversion) == conversionOK) {
+
+        int convertResult = MultiByteToWideChar(CP_UTF8, 0, text, -1, utf16, 1024);
+
+        if (convertResult > 0) { // Convert was ok
             if(bg && bg->fg_alpha) {
                 SetTextColor(gr->hMemDC, bg->fg_color);
                 ExtTextOutW(gr->hMemDC, -1, -1, 0, NULL,
-                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                            utf16, convertResult-1, NULL);
                 ExtTextOutW(gr->hMemDC, 1, 1, 0, NULL,
-                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                            utf16, convertResult-1, NULL);
                 ExtTextOutW(gr->hMemDC, -1, 1, 0, NULL,
-                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                            utf16, convertResult-1, NULL);
                 ExtTextOutW(gr->hMemDC, 1, -1, 0, NULL,
-                            utf16, (wchar_t*) utf16p - utf16, NULL);
+                            utf16, convertResult-1, NULL);
             }
             SetTextColor(gr->hMemDC, fg->fg_color);
             ExtTextOutW(gr->hMemDC, 0, 0, 0, NULL,
-                        utf16, (wchar_t*) utf16p - utf16, NULL);
+                        utf16, convertResult-1, NULL);
         }
     }
 
