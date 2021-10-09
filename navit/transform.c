@@ -727,7 +727,7 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 
     if(!this_)
         return 0;
-    
+
     ret=map_selection_dup(this_->map_sel);
     curri=this_->map_sel;
     curro=ret;
