@@ -1,88 +1,70 @@
-=================
 MacOS Development
 =================
 
-Here are some notes about running navit under Apple Mac OSX.
+Here are some notes about running navit under Apple macOS.
 
 What you will need
-==================
+------------------
 
 You need Xcode Tools and homebrew in order to install navit.
 
-.. code-block:: bash ⚠️ Warning:
+.. code:: shell
 
-If you have macports or fink installed create and use a new user account to build navit.
+If you have macports or fink installed create and use a new user account
+to build navit.
 
-For convinience there is the script prepare_navit_macos.sh available under the navit/scripts directory.
+For convinience there is the script prepare_navit_macos.sh available
+under the navit/scripts directory.
 
-.. code-block:: bash
+.. code:: shell
 
- $ curl https://raw.githubusercontent.com/OLFDB/navit/macosbuild/scripts/prepare_navit_macos.sh  -o prepare_navit_macos.sh
+   $ curl https://raw.githubusercontent.com/OLFDB/navit/macosbuild/scripts/prepare_navit_macos.sh  -o prepare_navit_macos.sh
 
- Then start the installation procedure:
+   Then start the installation procedure:
 
- .. code-block:: bash
+   .. code-block:: bash
 
- $ sh prepare_navit_macos.sh
-
+   $ sh prepare_navit_macos.sh
 
 What is working
-===============
-* internal Gui: 	Working, but problems with window refresh
-* GTK Gui: Working.
-* SDL Gui: Untested yet.
+---------------
+
+-  internal Gui: Working, but problems with window refresh
+
+-  GTK Gui: Working.
+
+-  SDL Gui: Untested yet.
 
 GPSD
-====
+----
 
 You have to add the GPS receiver device to gpsd:
 
-GPSD_SOCKET="/usr/local/var/gpsd.sock" /usr/local/opt/gpsd/sbin/gpsdctl add /dev/tty.usbserial-XYZ
+GPSD_SOCKET="/usr/local/var/gpsd.sock" /usr/local/opt/gpsd/sbin/gpsdctl
+add /dev/tty.usbserial-XYZ
 
 Speech
-======
+------
 
-If you want (spoken) directions, use the following snippet in your navit.xml:
+If you want (spoken) directions, use the following snippet in your
+navit.xml:
 
-.. code-block:: xml
+.. code:: xml
 
-           <speech type="cmdline" data="say '%s'"/>
+   <speech type="cmdline" data="say '%s'"/>
 
-This will use the native say command. You can list all available voices by typing say -v ? in a terminal.
-Change the command to say -v <voicename> if you would like a non standard voice to be used. New voices can be added in system preferences->keyboard->dictation
+This will use the native say command. You can list all available voices
+by typing say -v ? in a terminal. Change the command to say -v
+<voicename> if you would like a non standard voice to be used. New
+voices can be added in system preferences->keyboard->dictation
 
+Using Xcode
+-----------
 
-Using xcode
-===========
-
-========================================================================================================================================
-WARNING: These instructions are currently outdated. Please feel free to submit a PR if you manage to build navit on Mac OSX using Xcode.
-========================================================================================================================================
-
-Download one of the `Git sources <https://github.com/navit-gps/navit>`_ that don't contain autogen.sh.
-
-Open X-Code and create a new project. Cocoa will suffice
-
-Add in a new target by clicking the triangle next to "Targets" and selected the location of the navit folder. Delete the previous target.
-
-Delete the default files, and add in the navit files.
-
-In a terminal, go into the navit folder.
-
-.. code-block:: bash
-
- ./configure --disable-binding-python --disable-sample-map --disable-maptool
-
-xcode can now build the navit
-
-
-You can also use CMake.
-
-.. code-block:: bash
-
- cd navit && cmake -G Xcode .
+cmake -G Xcode ../ -DUSE_PLUGINS=0 -DBUILD_MAPTOOL=1 -DXSLTS=macos
+-Dbinding/python=false -DCLANG_ENABLE_OBJC_WEAK=YES
 
 Something went wrong?
-=====================
+---------------------
 
 Please let us know by filing an issue on Github or reach out on IRC.
