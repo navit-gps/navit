@@ -24,51 +24,67 @@
 #include "debug.h"
 #include "plugin.h"
 #include "speech.h"
+#include "attr.h"
 #import "VSSpeechSynthesizer.h"
+#import <UIKit/UIKit.h>
 
 struct speech_priv {
-	VSSpeechSynthesizer *speech;
+    VSSpeechSynthesizer *speech;
 };
 
-static int
-speech_iphone_say(struct speech_priv *this, const char *text)
-{
-	dbg(0,"enter %s",text);
-	NSString *s=[[NSString alloc]initWithUTF8String: text];
-	[this->speech startSpeakingString:s toURL:nil];
-	[s release];
-	dbg(0,"ok");
-	return 1;
+static int speech_iphone_say(struct speech_priv *this, const char *text) {
+    dbg(lvl_error,"enter %s",text);
+    NSString *s=[[NSString alloc]initWithUTF8String: text];
+    [this->speech startSpeakingString:s];
+    [s release];
+    dbg(lvl_debug,"ok");
+    return 1;
 }
 
-static void
-speech_iphone_destroy(struct speech_priv *this)
-{
-	[this->speech release];
-	g_free(this);
+static void speech_iphone_destroy(struct speech_priv *this) {
+    [this->speech release];
+    g_free(this);
 }
 
 static struct speech_methods speech_iphone_meth = {
-	speech_iphone_destroy,
-	speech_iphone_say,
+    speech_iphone_destroy,
+    speech_iphone_say,
 };
 
-static struct speech_priv *
-speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent)
-{
-	struct speech_priv *this;
-	*meth=speech_iphone_meth;
-	this=g_new0(struct speech_priv,1);
-	this->speech=[[NSClassFromString(@"VSSpeechSynthesizer") alloc] init];
-	dbg(0,"this->speech=%p",this->speech);
-	[this->speech setRate:(float)1.0];
-	return this;
+static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
+    struct speech_priv *this;
+    *meth=speech_iphone_meth;
+    this=g_new0(struct speech_priv,1);
+    this->speech= [VSSpeechSynthesizer alloc];
+    [this->speech init];
+    dbg(lvl_debug,"this->speech=%p",this->speech);
+
+    [this->speech setRate:0.5];
+    NSLog(@"iOS is >= 10: %f", [[[UIDevice currentDevice] systemVersion] floatValue]);
+
+    [this->speech setVolume:100.0];
+    [this->speech setPitch:0.8];
+
+    struct attr *attr;
+
+    // With the attribute speech_use_hfp="1" user can force to use HFP always.
+    // This will force background music to HFP as well.
+    // If not set we set HFP, but will automatically switch to A2DP when background music is being played
+    // A2DP will not stop your radio from playing when an announcement is spoken
+    if ((attr=attr_search(attrs, attr_speech_use_hfp)))
+        [this->speech useHFP:(int)attr->u.num force:YES];
+    else
+        [this->speech useHFP:YES force:NO]; // AUTO
+    
+    if ((attr=attr_search(attrs, attr_speech_hfp_delay)))
+        [this->speech setHFPDelay: attr->u.num*0.001];
+    else
+        [this->speech setHFPDelay:DEFAULT_HFP_DELAY];
+
+    return this;
 }
 
-
-void
-plugin_init(void)
-{
-	dbg(0,"enter");
-	plugin_register_category_speech("iphone", speech_iphone_new);
+void plugin_init(void) {
+    dbg(lvl_debug,"enter");
+    plugin_register_category_speech("iphone", speech_iphone_new);
 }
