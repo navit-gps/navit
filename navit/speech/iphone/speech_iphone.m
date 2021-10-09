@@ -75,7 +75,7 @@ static struct speech_priv *speech_iphone_new(struct speech_methods *meth, struct
         [this->speech useHFP:(int)attr->u.num force:YES];
     else
         [this->speech useHFP:YES force:NO]; // AUTO
-    
+
     if ((attr=attr_search(attrs, attr_speech_hfp_delay)))
         [this->speech setHFPDelay: attr->u.num*0.001];
     else
