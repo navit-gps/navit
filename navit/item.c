@@ -394,6 +394,13 @@ void item_attr_rewind(struct item *it) {
  * This function returns the next attribute matching `attr_type` from an item and advances the
  * "attribute pointer" accordingly, so that at the next call the next attribute will be returned.
  *
+ * IMPORTANT: Unless you are iterating over attributes, or operating on a “fresh” item (from which no
+ * other code has had a chance to retrieve an attribute), be sure to call
+ * {@link item_attr_rewind(struct item *)} before each call to this method. Not doing so may result in
+ * unpredictable behavior, i.e. attributes not being found if the attribute pointer is already past the
+ * requested attribute (which depends on the physical ordering of attributes and on the last attribute
+ * retrieved from the item).
+ *
  * This function is not safe to call after destroying the item's map rect, and doing so may cause errors
  * with some map implementations.
  *

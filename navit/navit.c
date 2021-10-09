@@ -462,8 +462,27 @@ void navit_handle_resize(struct navit *this_, int w, int h) {
     int callback=(this_->ready == 1);
     this_->ready |= 2;
     memset(&sel, 0, sizeof(sel));
+    int firstcall = 0;
+    struct attr attr;
+
+    /* Fix for #1135: Check if pitch was set while w and h were 0. In this case set pitch
+     * again so transformation value is set correctly */
+    if(this_->w==0 && this_->h==0) {
+        firstcall=1;
+    }
+
     this_->w=w;
     this_->h=h;
+
+    /* Fix for #1135: Now w and h are set initially, we can set pitch value again
+     *
+     */
+    if(firstcall) {
+        attr.type=attr_pitch;
+        attr.u.num=this_->pitch;
+        navit_set_attr(this_, &attr); // Set pitch again
+    }
+
     sel.u.p_rect.rl.x=w;
     sel.u.p_rect.rl.y=h;
     transform_set_screen_selection(this_->trans, &sel);
@@ -471,8 +490,12 @@ void navit_handle_resize(struct navit *this_, int w, int h) {
     graphics_set_rect(this_->gra, &sel.u.p_rect);
     if (callback)
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
-    if (this_->ready == 3)
+    if (this_->ready == 3) {
+        /* About to resize. Cancel drawing whatever it is */
+        graphics_draw_cancel(this_->gra, this_->displaylist);
+        /* draw again even if we did not cancel anything */
         navit_draw_async(this_, 1);
+    }
 }
 
 static void navit_resize(void *data, int w, int h) {
@@ -2087,6 +2110,9 @@ int navit_init(struct navit *this_) {
     struct attr_iter *iter;
     struct attr *attr;
     struct traffic * traffic;
+
+    this_->w=0;
+    this_->h=0;
 
     dbg(lvl_info,"enter gui %p graphics %p",this_->gui,this_->gra);
 

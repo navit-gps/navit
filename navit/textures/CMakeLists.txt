@@ -110,6 +110,7 @@ foreach (TEXTURE_SRC ${FILES_TO_PNG})
 
 endforeach()
 
+if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
 foreach (TEXTURE_FILE ${TEXTURES_TO_COPY})
 	add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${TEXTURE_FILE}"
 		DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${TEXTURE_FILE}"
@@ -118,6 +119,7 @@ foreach (TEXTURE_FILE ${TEXTURES_TO_COPY})
 		)
 	list(APPEND TEXTURE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${TEXTURE_FILE}")
 endforeach()
+endif()
 
 add_custom_target(textures ALL DEPENDS ${TEXTURE_TARGETS})
 add_custom_target(textures_resource COMMAND mkdir -p ../resources/share/navit/textures COMMAND cp ${TEXTURE_TARGETS} ../resources/share/navit/textures)

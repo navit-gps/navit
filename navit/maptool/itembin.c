@@ -85,13 +85,10 @@ void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir) {
     for (i = 1 ; i <= count ; i++)
         item_bin_add_coord(ib, &c[count-i], 1);
 }
-
 void item_bin_copy_attr(struct item_bin *ib, struct item_bin *from, enum attr_type attr) {
     struct attr_bin *ab=item_bin_get_attr_bin(from, attr, NULL);
     if (ab)
         item_bin_add_attr_data(ib, ab->type, (void *)(ab+1), (ab->len-1)*4);
-    assert(attr == attr_osm_wayid);
-    assert(item_bin_get_wayid(ib) == item_bin_get_wayid(from));
 }
 
 void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r) {

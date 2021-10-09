@@ -105,12 +105,7 @@ void QNavitWidget::resizeEvent(QResizeEvent* event) {
     if (graphics_priv->pixmap == NULL) {
         graphics_priv->pixmap = new QPixmap(size());
     }
-    painter = new QPainter(graphics_priv->pixmap);
-    if (painter != NULL) {
-        QBrush brush;
-        painter->fillRect(0, 0, width(), height(), brush);
-        delete painter;
-    }
+    graphics_priv->pixmap->fill(Qt::transparent);
     dbg(lvl_debug, "size %dx%d", width(), height());
     dbg(lvl_debug, "pixmap %p %dx%d", graphics_priv->pixmap, graphics_priv->pixmap->width(),
         graphics_priv->pixmap->height());
