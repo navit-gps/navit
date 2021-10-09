@@ -198,7 +198,7 @@ struct parsed_item {
     struct attr **attrs;        /**< The attributes for the item, `NULL`-terminated */
     struct coord *coords;       /**< The coordinates for the item */
     int coord_count;            /**< The number of elements in `coords` */
-    int length;                 /**< The length of the segment in meters */
+    int delay;                  /**< Delay in deciseconds */
     int is_matched;             /**< Whether any of the maps has a matching item */
 };
 
@@ -731,6 +731,7 @@ static struct item * tm_find_item(struct map_rect *mr, enum item_type type, stru
         if (attr_generic_get_attr(attrs, NULL, attr_flags, &wanted_flags_attr, NULL)) {
             if (!item_attr_get(curr, attr_flags, &curr_flags_attr))
                 continue;
+            item_attr_rewind(curr);
             if ((wanted_flags_attr.u.num & AF_ALL) != (curr_flags_attr.u.num & AF_ALL))
                 continue;
             continue;
@@ -954,10 +955,6 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
     int dirty = 0;
 
     dbg(lvl_debug,"enter");
-    mr=g_new0(struct map_rect_priv, 1);
-    mr->mpriv = priv;
-    mr->next_item = priv->items;
-    /* all other pointers are initially NULL */
 
     /* lazy location matching */
     if (sel != NULL)
@@ -990,6 +987,12 @@ static struct map_rect_priv * tm_rect_new(struct map_priv *priv, struct map_sele
                 map_selection_destroy(msg_sel);
             }
         }
+
+    mr=g_new0(struct map_rect_priv, 1);
+    mr->mpriv = priv;
+    mr->next_item = priv->items;
+    /* all other pointers are initially NULL */
+
     if (dirty)
         /* dump message store if new messages have been received */
         traffic_dump_messages_to_xml(priv->shared);
@@ -1379,6 +1382,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
     /* road_ref */
     if (this_->road_ref) {
         maxscore += 400;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_street_name_systematic, &attr))
             score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->road_ref, attr.u.str))) / MAX_MISMATCH;
     }
@@ -1386,6 +1390,7 @@ static int traffic_location_match_attributes(struct traffic_location * this_, st
     /* road_name */
     if (this_->road_name) {
         maxscore += 200;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_street_name, &attr)) {
             // TODO crude comparison in need of refinement
             if (!strcmp(this_->road_name, attr.u.str))
@@ -1430,12 +1435,14 @@ static int traffic_point_match_attributes(struct traffic_point * this_, struct i
     /* junction_ref */
     if (this_->junction_ref) {
         maxscore += 400;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_ref, &attr))
             score += (400 * (MAX_MISMATCH - compare_name_systematic(this_->junction_ref, attr.u.str))) / MAX_MISMATCH;
     }
 
     /* junction_name */
     if (this_->junction_name) {
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_label, &attr)) {
             maxscore += 400;
             // TODO crude comparison in need of refinement
@@ -1560,6 +1567,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_start_match = 1;
             }
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_street_name_systematic, &attr))
                 start_ref = g_strdup(attr.u.str);
         }
@@ -1576,6 +1584,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (!strcmp(this_->junction_name, attr.u.str))
                     has_end_match = 1;
             }
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_street_name_systematic, &attr))
                 end_ref = g_strdup(attr.u.str);
         }
@@ -1620,6 +1629,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (end_name)
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
+            item_attr_rewind(item);
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
                 if (start_ref)
                     route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
@@ -1645,6 +1655,7 @@ static int traffic_point_match_segment_attributes(struct traffic_point * this_, 
                 if (end_name)
                     route_leaves_road |= !strcmp(end_name, attr.u.str);
             }
+            item_attr_rewind(item);
             if (!route_leaves_road && item_attr_get(item, attr_street_name_systematic, &attr)) {
                 if (start_ref)
                     route_leaves_road |= !compare_name_systematic(start_ref, attr.u.str);
@@ -1981,6 +1992,7 @@ static void traffic_location_populate_route_graph(struct traffic_location * this
                     } else
                         data.flags = *default_flags;
 
+                    item_attr_rewind(item);
                     if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
                         data.maxspeed = attr.u.num;
 
@@ -3424,9 +3436,6 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
     struct parsed_item * pitem;
     struct item * item;
 
-    /* Location length */
-    int loc_len = 0;
-
     /* List of parsed items */
     GList * items = NULL, * curr_item;
 
@@ -3529,6 +3538,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             pitem->coord_count = ccnt;
             pitem->attrs = attr_list_dup(attrs);
             for (i = 0; attrs[i]; i++) {
+                if (attrs[i]->type == attr_delay)
+                    pitem->delay = attrs[i]->u.num;
                 g_free(attrs[i]);
                 attrs[i] = NULL;
             }
@@ -3614,6 +3625,7 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         segmented = 0;
                     }
                     /* Get maxspeed, if any */
+                    item_attr_rewind(map_item);
                     if ((item_flags & AF_SPEED_LIMIT) && (item_attr_get(map_item, attr_maxspeed, &attr)))
                         maxspeed = attr.u.num;
                     else
@@ -3649,12 +3661,8 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
                         dbg(lvl_debug, "*****checkpoint RESTORE-6.1, restoring segmented items is not supported yet");
                         map_item = NULL;
                     }
-                    if (map_item) {
+                    if (map_item)
                         pitem->is_matched = 1;
-                        for (i = 1; i < pitem->coord_count; i++)
-                            pitem->length += transform_distance(map_projection(m), &(ca[i-1]), &(ca[i]));
-                        loc_len += pitem->length;
-                    }
                 }
             }
 
@@ -3689,11 +3697,10 @@ static int traffic_message_restore_segments(struct traffic_message * this_, stru
             pitem = (struct parsed_item *) curr_item->data;
             item = tm_add_item(map, pitem->type, pitem->id_hi, pitem->id_lo, pitem->flags, pitem->attrs,
                                pitem->coords, pitem->coord_count, this_->id);
-            parsed_item_destroy(pitem);
             tm_item_add_message_data(item, this_->id,
                                      traffic_get_item_speed(item, seg_data, maxspeed),
-                                     traffic_get_item_delay(seg_data->delay, pitem->length, loc_len),
-                                     NULL, route);
+                                     pitem->delay, NULL, route);
+            parsed_item_destroy(pitem);
             this_->priv->items[i] = item;
             i++;
         }
