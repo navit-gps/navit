@@ -240,6 +240,7 @@ find_package(PNG)
 find_package(PythonLibs)
 find_package(Threads)
 find_package(CURL)
+find_package(cJSON)
 
 #Qt detection
 if (NOT DISABLE_QT)
@@ -519,6 +520,14 @@ if (CURL_FOUND)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u download_map")
     set(USE_DOWNLOAD 1)
 endif(CURL_FOUND)
+
+if (cJSON_FOUND)
+    set(HAVE_CJSON 1)
+    include_directories(${CJSON_INCLUDE_DIRS})
+    list(APPEND NAVIT_LIBS ${CJSON_LIBRARIES})
+else(cJSON_FOUND)
+    set_with_reason(support/cjson "cJSON not found" TRUE ${INTL_LIBS})
+endif(cJSON_FOUND)
 
 #Independent modules
 add_module(graphics/null "Default" TRUE)
