@@ -1218,7 +1218,8 @@ static struct command_table commands[] = {
     {"network_info",command_cast(gui_internal_cmd2)},
 #endif
 #ifdef USE_DOWNLOAD
-    {"map_downloader", command_cast (gui_internal_map_downloader)},
+//    {"map_downloader", command_cast (gui_internal_map_downloader)},
+    {"map_downloader", command_cast (gui_internal_cmd_map_download)},
 #endif
 };
 

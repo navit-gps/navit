@@ -19,7 +19,7 @@
 #include "gui_internal_widget.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_map_downloader.h"
-#include "cJSON.h"
+#include <cjson/cJSON.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -147,10 +147,6 @@ void gui_internal_map_downloader(struct gui_priv *this, struct widget *wm, void 
 
     } else {
         dbg(lvl_error, "Download will be started\n");
-        strcpy (dl_info.url,
-                g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/europe-germany-thueringen-2021-07-21.bin"));
-        strcpy (dl_info.url,
-                g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/europe-germany-schleswig-holstein-2021-07-21.bin"));
         strcpy (dl_info.url,
                 g_strdup_printf ("https://github.com/jkoan/gh-actions-mapserver/releases/download/2021-07-21/australia-oceania-cook-islands-2021-07-21.bin"));
         gchar* ret;
