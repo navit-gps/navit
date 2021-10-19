@@ -89,7 +89,7 @@
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
 #include "gui_internal_keyboard.h"
-
+#include <cjson/cJSON.h>
 
 /**
  * Indexes into the config_profiles array.
@@ -1784,18 +1784,59 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     download_enabled.type=download_disabled.type=attr_update;
     download_enabled.u.num=1;
     download_disabled.u.num=0;
-    wma=gui_internal_button_map_attr_new(this
+    /*wma=gui_internal_button_map_attr_new(this
                                          , _("Download Enabled")
                                          , gravity_left_center|orientation_horizontal|flags_fill
                                          , map
                                          , &download_enabled
                                          , &download_disabled
-                                         , 0);
+                                         , 0);*/
     gui_internal_widget_append(w, wma);
 
 
-    f=fopen("maps/areas.tsv","r");
-    while (f && fgets(buffer, sizeof(buffer), f)) {
+    gchar *json;
+    gsize len;
+    if (!g_file_get_contents("maps/download_menu.json", &json, &len, NULL)) {
+         dbg(lvl_error,"could not open JSON file");
+    }
+
+    cJSON *json_tree = cJSON_Parse(json);
+    cJSON *planet = NULL;
+    int size_planet = 0;
+    cJSON *continents = NULL;
+    cJSON *continent = NULL;
+    int size_continent = 0;
+    cJSON *countries = NULL;
+    cJSON *country = NULL;
+    int size_country = 0;
+    cJSON *regions = NULL;
+    cJSON *region = NULL;
+    int size_region = 0;
+    GList *entry = NULL;
+    GList *size = NULL;
+
+    planet = cJSON_GetObjectItem(json_tree, "planet");
+    continents = planet->child;
+    // add item for planet
+    cJSON_ArrayForEach(continent, continents) {
+        // add item for continent
+        if (cJSON_IsArray(continent)) {
+	    countries = continent->child;
+            cJSON_ArrayForEach(country, countries){
+                // add item for country
+                if (cJSON_IsArray(country)) {
+                    cJSON_ArrayForEach(region, regions){
+                        // add item for country
+		    }
+		}
+	    }
+	}
+	else {
+
+	}
+    }
+
+    /*while (f && fgets(buffer, sizeof(buffer), f)) {
         char *nl,*description,*description_size,*bbox,*size=NULL;
         int sp=0;
         if ((nl=strchr(buffer,'\n')))
@@ -1830,7 +1871,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
             wma->name=description;
             gui_internal_widget_append(w, wma);
         }
-    }
+    }*/
 
     gui_internal_menu_render(this);
 }
