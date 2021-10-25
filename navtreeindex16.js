@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"graphics__sdl_8c.html#ac579cea5cc1ad3fd5393b19f00934e67":[3,0,4,9,3,5],
+"graphics__sdl_8c.html#ac7210e0356bd2ffa491bb3c5880af036":[3,0,4,9,3,34],
 "graphics__sdl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297":[3,0,4,9,3,13],
 "graphics__sdl_8c.html#ad776465bab5741fdc7886fb14234b379":[3,0,4,9,3,20],
 "graphics__sdl_8c.html#add7dfa8917652d28c056970edf329468":[3,0,4,9,3,22],
@@ -203,16 +205,16 @@ var NAVTREEINDEX16 =
 "group__coord.html#gaeb489edd13309353cb486f855c00dbe5":[3,0,41,24],
 "group__coord.html#gaeb489edd13309353cb486f855c00dbe5":[0,0,7],
 "group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3":[0,0,12],
-"group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3":[3,0,41,29],
 "group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3":[3,0,40,12],
+"group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3":[3,0,41,29],
 "group__navit.html":[0,1],
 "group__navit.html#ga036a3c34bd0f6ca87297beaad595780d":[0,1,8],
 "group__navit.html#ga036a3c34bd0f6ca87297beaad595780d":[3,0,26,7],
 "group__navit.html#ga0391fed47033d87ed3283cc3a0e9098f":[3,0,26,122],
 "group__navit.html#ga0391fed47033d87ed3283cc3a0e9098f":[3,0,94,70],
 "group__navit.html#ga0391fed47033d87ed3283cc3a0e9098f":[0,1,123],
-"group__navit.html#ga042aae1ddd83a2d372761ca9e83f5f2a":[0,1,46],
 "group__navit.html#ga042aae1ddd83a2d372761ca9e83f5f2a":[3,0,26,45],
+"group__navit.html#ga042aae1ddd83a2d372761ca9e83f5f2a":[0,1,46],
 "group__navit.html#ga042aae1ddd83a2d372761ca9e83f5f2a":[3,0,94,12],
 "group__navit.html#ga046615b06fb3a87670ac2184bb029431":[3,0,26,114],
 "group__navit.html#ga046615b06fb3a87670ac2184bb029431":[3,0,94,62],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "group__navit.html#ga1b035def8233343661617a8a456f1e84":[3,0,94,76],
 "group__navit.html#ga1b035def8233343661617a8a456f1e84":[0,1,133],
 "group__navit.html#ga2148f5b4be7af659549d7d0d0fb3eaa4":[0,1,136],
-"group__navit.html#ga2148f5b4be7af659549d7d0d0fb3eaa4":[3,0,26,135],
-"group__navit.html#ga2148f5b4be7af659549d7d0d0fb3eaa4":[3,0,94,79],
-"group__navit.html#ga21f43c12c3d663fe2d0875bcd53c1b1c":[3,0,26,69]
+"group__navit.html#ga2148f5b4be7af659549d7d0d0fb3eaa4":[3,0,26,135]
 };

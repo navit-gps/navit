@@ -1,5 +1,7 @@
 var NAVTREEINDEX26 =
 {
+"item_8h.html#a164d1145c8ea7df8adb35f782b02949f":[3,0,68,6],
+"item_8h.html#a1f97d6a6d85956aa73deb31d4a16397f":[3,0,68,21],
 "item_8h.html#a23108b32c807dc9ae8162eadc6452755":[3,0,68,36],
 "item_8h.html#a24d15da515f3431d5114956efe1cdc47":[3,0,68,5],
 "item_8h.html#a2679318a14061852e50df3c6e4e42f62":[3,0,68,20],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8":[3,0,75,1],
 "linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8a179891a1766e8154d0ea4ee678be2076":[3,0,75,1,2],
 "linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8aa310bb12ece49a6f5f7ad00f375def79":[3,0,75,1,1],
-"linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8ae180eadbcf68ae0b8d9baec99471f16c":[3,0,75,1,0],
-"linguistics_8h.html#aecc5831def94e310a2f2f7b3c9fcf4dd":[3,0,75,0],
-"linguistics_8h.html#af811ff7e43a3a927e2416ffd96b872ce":[3,0,75,5]
+"linguistics_8h.html#adbc876ab4e8b30f3e20daf5e7cf07cd8ae180eadbcf68ae0b8d9baec99471f16c":[3,0,75,1,0]
 };
