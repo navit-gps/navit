@@ -1,7 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"qml__bookmark_8h_source.html":[3,0,5,3,7],
-"qml__map_8cpp.html":[3,0,5,3,8],
 "qml__map_8h.html":[3,0,5,3,9],
 "qml__map_8h_source.html":[3,0,5,3,9],
 "qml__poi_8cpp.html":[3,0,5,3,10],
@@ -249,5 +247,7 @@ var NAVTREEINDEX33 =
 "route_8c.html#ac5350c54b91e73388a818be703dd8840":[3,0,27,148],
 "route_8c.html#ac6c2ea074996da9478ae0f04327d2253":[3,0,27,25],
 "route_8c.html#acad5a08b925ad1fa0429997b0febde9b":[3,0,27,117],
-"route_8c.html#acbc1b6d420056c3cff9e60e3227143f2":[3,0,27,41]
+"route_8c.html#acbc1b6d420056c3cff9e60e3227143f2":[3,0,27,41],
+"route_8c.html#acd539fe25796de904f57342b14dde071":[3,0,27,30],
+"route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689":[3,0,27,34]
 };
