@@ -2691,15 +2691,26 @@ static inline void displayitem_transform_holes(struct transformation *trans, enu
     out->ccount=NULL;
     out->coords=NULL;
     if((in != NULL) && (in->count > 0)) {
-        int a;
+        int a, transform_res;
         /* alloc space for hole conversion. To be freed with displayitem_free_holes later*/
         out->count = in->count;
         out->ccount = g_malloc0(sizeof(*(out->ccount)) * in->count);
         out->coords = g_malloc0(sizeof(*(out->coords)) * in->count);
         for(a = 0; a < in->count; a ++) {
+            int buf_size=sizeof(*(out->coords[a])) * in->ccount[a];
             in->ccount[a]=limit_count(in->coords[a], in->ccount[a]);
-            out->coords[a]=g_malloc0(sizeof(*(out->coords[a])) * in->ccount[a]);
-            out->ccount[a]=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
+            out->coords[a]=g_malloc0(buf_size);
+            transform_res=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), buf_size, in->ccount[a],
+                                              mindist, 0, NULL);
+            /* if we did not have enough buf space for transfrom_point_buf, we try again with double the buffer size,
+               until we succeed. */
+            while (transform_res == TRANSFORM_ERR_BUF_SPACE) {
+                buf_size *= 2;
+                out->coords[a] = g_realloc(out->coords[a], buf_size);
+                transform_res=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), buf_size,
+                                                  in->ccount[a], mindist, 0, NULL);
+            }
+            out->ccount[a] = transform_res;
         }
     }
 }
@@ -2883,13 +2894,14 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
     struct graphics *gra=dc->gra;
     struct element *e=dc->e;
     int draw_underground=0;
+    long pa_buf_size=sizeof(struct point)*dc->maxlen;
 
     if (dc->maxlen < ALLOCA_COORD_LIMIT) {
         width=g_alloca(sizeof(int)*dc->maxlen);
-        pa=g_alloca(sizeof(struct point)*dc->maxlen);
+        pa=g_alloca(pa_buf_size);
     } else {
         width=g_malloc(sizeof(int)*dc->maxlen);
-        pa=g_malloc(sizeof(struct point)*dc->maxlen);
+        pa=g_malloc(pa_buf_size);
     }
 
     while (di) {
@@ -2937,11 +2949,13 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
         if (dc->type == type_poly_water_tiled)
             mindist=0;
         if (dc->e->type == element_polyline)
-            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.polyline.width,
+                                      width);
         else if (dc->e->type == element_arrows)
-            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.arrows.width,
+                                      width);
         else
-            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
             displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
@@ -3699,13 +3713,15 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
     int result;
     struct point *pa;
     int count;
+    long pa_buf_size=sizeof(struct point)*displaylist->dc.maxlen;
+
     if (displaylist->dc.maxlen < ALLOCA_COORD_LIMIT) {
-        pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+        pa=g_alloca(pa_buf_size);
     } else {
-        pa=g_malloc(sizeof(struct point)*displaylist->dc.maxlen);
+        pa=g_malloc(pa_buf_size);
     }
 
-    count=transform_point_buf(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
+    count=transform_point_buf(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, pa_buf_size, di->count, 0, 0, NULL);
 
     if (di->item.type < type_line) {
         result =  within_dist_point(p, &pa[0], dist);
