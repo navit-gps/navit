@@ -2699,7 +2699,7 @@ static inline void displayitem_transform_holes(struct transformation *trans, enu
         for(a = 0; a < in->count; a ++) {
             in->ccount[a]=limit_count(in->coords[a], in->ccount[a]);
             out->coords[a]=g_malloc0(sizeof(*(out->coords[a])) * in->ccount[a]);
-            out->ccount[a]=transform(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
+            out->ccount[a]=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
         }
     }
 }
@@ -2937,11 +2937,11 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
         if (dc->type == type_poly_water_tiled)
             mindist=0;
         if (dc->e->type == element_polyline)
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
         else if (dc->e->type == element_arrows)
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
         else
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
             displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
@@ -3705,7 +3705,7 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
         pa=g_malloc(sizeof(struct point)*displaylist->dc.maxlen);
     }
 
-    count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
+    count=transform_point_buf(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
 
     if (di->item.type < type_line) {
         result =  within_dist_point(p, &pa[0], dist);

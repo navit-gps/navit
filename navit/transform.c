@@ -545,7 +545,12 @@ static struct z_clip_result transform_z_clip_if_necessary(struct coord_3d coord,
     return clip_result;
 }
 
-int transform(struct transformation *t, enum projection required_projection, struct coord *input,
+int transform_point(struct transformation *t, enum projection required_projection, struct coord *input,
+                    struct point *result) {
+    return transform_point_buf(t, required_projection, input, result, 1, 0, 0, NULL);
+}
+
+int transform_point_buf(struct transformation *t, enum projection required_projection, struct coord *input,
               struct point *result, int count, int mindist, int width, int *width_result) {
     struct coord projected_coord, shifted_coord;
     struct coord_3d rotated_coord;
