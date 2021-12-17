@@ -753,10 +753,12 @@ static void* get_data(struct graphics_priv* this_priv, char const* type) {
         resize_callback(this_priv, this_priv->pixmap->width(), this_priv->pixmap->height());
         return win;
     }
+#if USE_QML
     if (strcmp(type, "engine") == 0) {
         dbg(lvl_debug, "Hand over QQmlApplicationEngine");
         return (this_priv->engine);
     }
+#endif
     return NULL;
 }
 
