@@ -2,7 +2,7 @@
 from datetime import datetime
 
 extensions = [
-    'm2r',
+    'm2r2',
     'sphinx_rtd_theme',
 ]
 
