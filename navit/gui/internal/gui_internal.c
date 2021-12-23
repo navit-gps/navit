@@ -1235,7 +1235,7 @@ void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, s
         c.y=pc.y;
 
         trans=navit_get_trans(this->nav);
-        transform(trans,pc.pro,&c,&p,1,0,0,0);
+        transform_point(trans,pc.pro,&c,&p);
         display=navit_get_displaylist(this->nav);
         dlh=graphics_displaylist_open(display);
         sel=displaylist_get_selection(display);
