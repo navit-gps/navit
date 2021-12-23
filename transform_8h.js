@@ -1,6 +1,6 @@
 var transform_8h =
 [
-    [ "transform", "transform_8h.html#a54d99d7c89e6cd5d6034d1b04d258de1", null ],
+    [ "TRANSFORM_ERR_BUF_SPACE", "transform_8h.html#a540296470cc7a72e8f0c437ba1ef11bc", null ],
     [ "transform_cart_to_geo", "transform_8h.html#aa9c7031e996d0ec6bb245225be9fe4a5", null ],
     [ "transform_center", "transform_8h.html#acfd8aede3d2b5564394739cd2c9b327e", null ],
     [ "transform_copy", "transform_8h.html#a3cd65d27f5fa565a7b5265ab000fd44e", null ],
@@ -35,6 +35,8 @@ var transform_8h =
     [ "transform_get_yaw", "transform_8h.html#a8a92e6ed1f885c1ad359488eb6013281", null ],
     [ "transform_new", "transform_8h.html#a7a7bfdede2bb9b2d05f4969b56449cd0", null ],
     [ "transform_pixels_to_map_distance", "transform_8h.html#a884903c79e69175a6008d3ccff261b2e", null ],
+    [ "transform_point", "transform_8h.html#a20e1fa18d9dbed8ce26ca047de3b1a57", null ],
+    [ "transform_point_buf", "transform_8h.html#a4c6d42bc0f8e76070b9d650535234f23", null ],
     [ "transform_polyline_length", "transform_8h.html#a2a164704cd689c4fe7b0b78259e19249", null ],
     [ "transform_print_deg", "transform_8h.html#a3350d82778e30d53e5d2af89efef2add", null ],
     [ "transform_project", "transform_8h.html#aab26d54522bb49785c15a3a6a9f0ac4b", null ],

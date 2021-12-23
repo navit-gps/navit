@@ -1,7 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classVehicleObject.html#a83011dfc9da7ebddfba1953fabf9e79a":[2,0,423,14],
-"classVehicleObject.html#a8ae628c4b4b09d015f7b2450033ee59e":[2,0,423,8],
 "classVehicleObject.html#a8f6f4e1e3c66638720337190131e3786":[2,0,423,15],
 "classVehicleObject.html#a91a69d213b28b21995a30002b1914801":[2,0,423,11],
 "classVehicleObject.html#a9704b2e19cd355d9e1e0ff8b0cb091a8":[2,0,423,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX5 =
 "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a65cc69525557e2d8eb737e1118bd9147":[2,0,0,0,0,10,68],
 "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6add13365cbb039303f1513f8c211b45":[2,0,0,0,0,10,12],
 "classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6e2c3cf4bd746da649ff5732df807103":[2,0,0,0,0,10,53],
-"classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6f91169cee7f289150375cae2ca640ef":[2,0,0,0,0,10,56]
+"classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a6f91169cee7f289150375cae2ca640ef":[2,0,0,0,0,10,56],
+"classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a72548b2d8a33344cafff3929d14ad306":[2,0,0,0,0,10,69],
+"classorg_1_1navitproject_1_1navit_1_1NavitGraphics.html#a78acbebf4d2771da8da5148bfb12cfcd":[2,0,0,0,0,10,5]
 };

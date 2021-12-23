@@ -1,8 +1,6 @@
 var NAVTREEINDEX18 =
 {
-"group__navit.html#gad58ecd3be2cab15e05ebba17ca758280":[3,0,26,57],
 "group__navit.html#gad58ecd3be2cab15e05ebba17ca758280":[0,1,58],
-"group__navit.html#gad58ecd3be2cab15e05ebba17ca758280":[3,0,94,22],
 "group__navit.html#gad65e35daa2f1f3182f161b6d1e062030":[3,0,26,50],
 "group__navit.html#gad65e35daa2f1f3182f161b6d1e062030":[0,1,51],
 "group__navit.html#gad65e35daa2f1f3182f161b6d1e062030":[3,0,94,16],
@@ -43,9 +41,9 @@ var NAVTREEINDEX18 =
 "group__navit.html#gaeefc21b8caacb6ad054eb8d4f59551da":[3,0,26,98],
 "group__navit.html#gaeefc21b8caacb6ad054eb8d4f59551da":[3,0,94,53],
 "group__navit.html#gaeefc21b8caacb6ad054eb8d4f59551da":[0,1,99],
+"group__navit.html#gaf0198646359c87ab16c25339a4300ee5":[3,0,26,80],
 "group__navit.html#gaf0198646359c87ab16c25339a4300ee5":[3,0,94,45],
 "group__navit.html#gaf0198646359c87ab16c25339a4300ee5":[0,1,81],
-"group__navit.html#gaf0198646359c87ab16c25339a4300ee5":[3,0,26,80],
 "group__navit.html#gaf0224062b4a1b7e4ec04c67343d79f15":[3,0,26,113],
 "group__navit.html#gaf0224062b4a1b7e4ec04c67343d79f15":[3,0,94,61],
 "group__navit.html#gaf0224062b4a1b7e4ec04c67343d79f15":[0,1,114],
@@ -109,8 +107,8 @@ var NAVTREEINDEX18 =
 "group__plugins.html#gaa074a3ab18b1fc6ff6ce18bd5f956388":[3,0,104,12],
 "group__plugins.html#gabac25cf3bd4ef14df348ee89b83d08c2":[0,2,1,3],
 "group__plugins.html#gabac25cf3bd4ef14df348ee89b83d08c2":[0,2,24],
-"group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9":[3,0,105,18],
 "group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9":[0,2,13],
+"group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9":[3,0,105,18],
 "group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9":[3,0,104,11],
 "group__plugins.html#gabed5f2c35cf99b78d26116f415394b00":[3,0,105,12],
 "group__plugins.html#gabed5f2c35cf99b78d26116f415394b00":[0,2,6],
@@ -249,5 +247,7 @@ var NAVTREEINDEX18 =
 "group__vehicle-file.html#ga487ffccb98e44ac1ac14b6c70e478260":[0,2,0,2,45],
 "group__vehicle-file.html#ga487ffccb98e44ac1ac14b6c70e478260":[0,2,0,6,0,35],
 "group__vehicle-file.html#ga487ffccb98e44ac1ac14b6c70e478260":[0,2,0,3,0,35],
-"group__vehicle-file.html#ga499f0690262451eafb3bed2dabc1b01d":[0,2,0,7,0,10]
+"group__vehicle-file.html#ga499f0690262451eafb3bed2dabc1b01d":[0,2,0,7,0,10],
+"group__vehicle-file.html#ga499f0690262451eafb3bed2dabc1b01d":[0,2,0,2,1,10],
+"group__vehicle-file.html#ga499f0690262451eafb3bed2dabc1b01d":[0,2,0,9,1,10]
 };

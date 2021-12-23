@@ -190,8 +190,10 @@ Functions</h2></td></tr>
 <tr class="separator:abb7259e6b26e5102f5fbacc03699b487"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7b2aff35176783ffa387bb52ce47fef"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structz__clip__result.html">z_clip_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#af7b2aff35176783ffa387bb52ce47fef">transform_z_clip_if_necessary</a> (struct <a class="el" href="structcoord__3d.html">coord_3d</a> <a class="el" href="structcoord.html">coord</a>, int zlimit, struct <a class="el" href="structz__clip__result.html">z_clip_result</a> clip_result_old)</td></tr>
 <tr class="separator:af7b2aff35176783ffa387bb52ce47fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26cd39d9b4265244e9453c5904c7eb02"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> required_projection, struct <a class="el" href="structcoord.html">coord</a> *input, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="structresult.html">result</a>, int count, int mindist, int <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, int *width_result)</td></tr>
-<tr class="separator:a26cd39d9b4265244e9453c5904c7eb02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab29bf5854aa785839e1217a4e60d5d94"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#ab29bf5854aa785839e1217a4e60d5d94">transform_point</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> required_projection, struct <a class="el" href="structcoord.html">coord</a> *input, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="structresult.html">result</a>)</td></tr>
+<tr class="separator:ab29bf5854aa785839e1217a4e60d5d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7380cfb4326a4a2f4b40f867dd1e275c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a> required_projection, struct <a class="el" href="structcoord.html">coord</a> *input, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="structresult.html">result</a>, long result_size, int count, int mindist, int <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, int *width_result)</td></tr>
+<tr class="separator:a7380cfb4326a4a2f4b40f867dd1e275c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9ecc1d5312ad35e89377ea7aeb6ead0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#aa9ecc1d5312ad35e89377ea7aeb6ead0">transform_apply_inverse_matrix</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, struct <a class="el" href="structcoord__geo__cart.html">coord_geo_cart</a> *in, struct <a class="el" href="structcoord__geo__cart.html">coord_geo_cart</a> *out)</td></tr>
 <tr class="separator:aa9ecc1d5312ad35e89377ea7aeb6ead0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32757441ba85b986bc7219e86927e8d0"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a32757441ba85b986bc7219e86927e8d0">transform_zplane_intersection</a> (struct <a class="el" href="structcoord__geo__cart.html">coord_geo_cart</a> *p1, struct <a class="el" href="structcoord__geo__cart.html">coord_geo_cart</a> *p2, <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> z, struct <a class="el" href="structcoord__geo__cart.html">coord_geo_cart</a> *<a class="el" href="structresult.html">result</a>)</td></tr>
@@ -547,74 +549,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a26cd39d9b4265244e9453c5904c7eb02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26cd39d9b4265244e9453c5904c7eb02">&#9670;&nbsp;</a></span>transform()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int transform </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structtransformation.html">transformation</a> *&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a>&#160;</td>
-          <td class="paramname"><em>required_projection</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>count</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>mindist</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int *&#160;</td>
-          <td class="paramname"><em>width_result</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structtransformation.html#a518054aef93ffdc5600d67b31729bb29">transformation::ddd</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structtransformation.html#a84ab4875ec16ac224aeceb7c0f67700d">transformation::offx</a>, <a class="el" href="structtransformation.html#ae4561d5f0cf97218ac84f3ef3b7fe67f">transformation::offy</a>, <a class="el" href="transform_8c.html#a142f183c856d187544d5beb8db7b564f">POST_SHIFT</a>, <a class="el" href="transform_8c.html#adb6dd7535108a2bded18405c5c7769f6">transform_correct_projection()</a>, <a class="el" href="transform_8c.html#abb7259e6b26e5102f5fbacc03699b487">transform_points_too_close()</a>, <a class="el" href="transform_8c.html#ab09b407594028ed9d896b2c4d233a2f9">transform_project_onto_view_plane()</a>, <a class="el" href="transform_8c.html#a94bac1c7085b9a9222ae6dfc358565a6">transform_rotate()</a>, <a class="el" href="transform_8c.html#a5091bc785066545d6c281bf7c450780c">transform_shift_by_center_and_scale()</a>, <a class="el" href="transform_8c.html#af7b2aff35176783ffa387bb52ce47fef">transform_z_clip_if_necessary()</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, <a class="el" href="structtransformation.html#a900cb0667ddcb87b3c4e6436297047e0">transformation::wscale</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord__3d.html#abf1d6c8bc29c347f437851b3b23ac433">coord_3d::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord__3d.html#a01ca9e6ba3114ada537f2d80891c4746">coord_3d::y</a>, and <a class="el" href="structtransformation.html#a227f6d989101bcac74a0a0de922b34d1">transformation::znear</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aeb8c3f56b95bd953ecf0fe33ded0c772">displayitem_draw()</a>, <a class="el" href="graphics_8c.html#a715c628de7070c197b000db8d82de219">displayitem_transform_holes()</a>, <a class="el" href="graphics_8c.html#a13081c584551dc733185be2ccdea0479">graphics_displayitem_within_dist()</a>, <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, <a class="el" href="android_8c.html#ab4eb36dc78a83609e5698a8472278da1">Java_org_navitproject_navit_NavitCallbackHandler_callbackMessageChannel()</a>, <a class="el" href="android_8c.html#ad353ed3cb130cacd6bafbd577a8737e7">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</a>, <a class="el" href="group__navit.html#gacea8245b879491d507fc44d7953d7ffb">navit_autozoom()</a>, <a class="el" href="group__navit.html#ga893a3e02e3fa6c5b4ec32fd15cd5d7ec">navit_vehicle_draw()</a>, <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>, and <a class="el" href="group__navit.html#ga77d24c83e538be7d8e7a7d2bc20db7aa">navit_zoom_to_rect()</a>.</p>
-
-</div>
-</div>
 <a id="aa9ecc1d5312ad35e89377ea7aeb6ead0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9ecc1d5312ad35e89377ea7aeb6ead0">&#9670;&nbsp;</a></span>transform_apply_inverse_matrix()</h2>
 
@@ -809,7 +743,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="geod__for_8c.html#ad8657a5ec76e12f3066fb4b4eb75ace9">D</a>, <a class="el" href="garmin__img_8c.html#ad59eb11fe1f9730eaa8f2a5f7c7a6fb1">e1</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="geod__for_8c.html#abb04f5f017f41f350a3d81fecdbfa762">M</a>, and <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>
@@ -1967,6 +1901,124 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ab29bf5854aa785839e1217a4e60d5d94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab29bf5854aa785839e1217a4e60d5d94">&#9670;&nbsp;</a></span>transform_point()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int transform_point </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structtransformation.html">transformation</a> *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a>&#160;</td>
+          <td class="paramname"><em>required_projection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, <a class="el" href="group__navit.html#gacea8245b879491d507fc44d7953d7ffb">navit_autozoom()</a>, <a class="el" href="group__navit.html#ga893a3e02e3fa6c5b4ec32fd15cd5d7ec">navit_vehicle_draw()</a>, <a class="el" href="group__navit.html#gabf3e952f4291a82655a69c1fb0dabdf9">navit_vehicle_update_position()</a>, and <a class="el" href="group__navit.html#ga77d24c83e538be7d8e7a7d2bc20db7aa">navit_zoom_to_rect()</a>.</p>
+
+</div>
+</div>
+<a id="a7380cfb4326a4a2f4b40f867dd1e275c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7380cfb4326a4a2f4b40f867dd1e275c">&#9670;&nbsp;</a></span>transform_point_buf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int transform_point_buf </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structtransformation.html">transformation</a> *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1">projection</a>&#160;</td>
+          <td class="paramname"><em>required_projection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>result_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mindist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>width_result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structtransformation.html#a518054aef93ffdc5600d67b31729bb29">transformation::ddd</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structtransformation.html#a84ab4875ec16ac224aeceb7c0f67700d">transformation::offx</a>, <a class="el" href="structtransformation.html#ae4561d5f0cf97218ac84f3ef3b7fe67f">transformation::offy</a>, <a class="el" href="transform_8c.html#a142f183c856d187544d5beb8db7b564f">POST_SHIFT</a>, <a class="el" href="transform_8c.html#adb6dd7535108a2bded18405c5c7769f6">transform_correct_projection()</a>, <a class="el" href="transform_8h.html#a540296470cc7a72e8f0c437ba1ef11bc">TRANSFORM_ERR_BUF_SPACE</a>, <a class="el" href="transform_8c.html#abb7259e6b26e5102f5fbacc03699b487">transform_points_too_close()</a>, <a class="el" href="transform_8c.html#ab09b407594028ed9d896b2c4d233a2f9">transform_project_onto_view_plane()</a>, <a class="el" href="transform_8c.html#a94bac1c7085b9a9222ae6dfc358565a6">transform_rotate()</a>, <a class="el" href="transform_8c.html#a5091bc785066545d6c281bf7c450780c">transform_shift_by_center_and_scale()</a>, <a class="el" href="transform_8c.html#af7b2aff35176783ffa387bb52ce47fef">transform_z_clip_if_necessary()</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, <a class="el" href="structtransformation.html#a900cb0667ddcb87b3c4e6436297047e0">transformation::wscale</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord__3d.html#abf1d6c8bc29c347f437851b3b23ac433">coord_3d::x</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structcoord__3d.html#a01ca9e6ba3114ada537f2d80891c4746">coord_3d::y</a>, and <a class="el" href="structtransformation.html#a227f6d989101bcac74a0a0de922b34d1">transformation::znear</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aeb8c3f56b95bd953ecf0fe33ded0c772">displayitem_draw()</a>, <a class="el" href="graphics_8c.html#a715c628de7070c197b000db8d82de219">displayitem_transform_holes()</a>, <a class="el" href="graphics_8c.html#a13081c584551dc733185be2ccdea0479">graphics_displayitem_within_dist()</a>, and <a class="el" href="transform_8c.html#ab29bf5854aa785839e1217a4e60d5d94">transform_point()</a>.</p>
+
+</div>
+</div>
 <a id="abb7259e6b26e5102f5fbacc03699b487"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb7259e6b26e5102f5fbacc03699b487">&#9670;&nbsp;</a></span>transform_points_too_close()</h2>
 
@@ -2009,7 +2061,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>
@@ -2153,7 +2205,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>
@@ -2287,7 +2339,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>
@@ -2917,7 +2969,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>
@@ -3368,7 +3420,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="transform_8c.html#a26cd39d9b4265244e9453c5904c7eb02">transform()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>.</p>
 
 </div>
 </div>

@@ -8,9 +8,10 @@ var searchData=
   ['time_5fslice_17138',['TIME_SLICE',['../traffic_8c.html#ae17b0e0d44770e679be7612a45ca831a',1,'traffic.c']]],
   ['timelength_17139',['TIMELENGTH',['../gpx2navit__txt_8h.html#a6641cf57cb83ec05e83ed1bc9f2c45d4',1,'gpx2navit_txt.h']]],
   ['tmod_17140',['TMOD',['../sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1',1,'sunriset.h']]],
-  ['transparent_5fbg_17141',['TRANSPARENT_BG',['../osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36',1,'osd.h']]],
-  ['twopi_17142',['TWOPI',['../transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a',1,'transform.c']]],
-  ['type_5faccelerometer_17143',['TYPE_ACCELEROMETER',['../pedestrian_8c.html#a4b86825d107b10f5fdf9021a068f668a',1,'pedestrian.c']]],
-  ['type_5fmagnetic_5ffield_17144',['TYPE_MAGNETIC_FIELD',['../pedestrian_8c.html#aae7894a48a184bcc6a6e52744aab717b',1,'pedestrian.c']]],
-  ['typelength_17145',['TYPELENGTH',['../gpx2navit__txt_8h.html#ae7fa5b0dbc9038dce1ce8a342a6c0618',1,'gpx2navit_txt.h']]]
+  ['transform_5ferr_5fbuf_5fspace_17141',['TRANSFORM_ERR_BUF_SPACE',['../transform_8h.html#a540296470cc7a72e8f0c437ba1ef11bc',1,'transform.h']]],
+  ['transparent_5fbg_17142',['TRANSPARENT_BG',['../osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36',1,'osd.h']]],
+  ['twopi_17143',['TWOPI',['../transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a',1,'transform.c']]],
+  ['type_5faccelerometer_17144',['TYPE_ACCELEROMETER',['../pedestrian_8c.html#a4b86825d107b10f5fdf9021a068f668a',1,'pedestrian.c']]],
+  ['type_5fmagnetic_5ffield_17145',['TYPE_MAGNETIC_FIELD',['../pedestrian_8c.html#aae7894a48a184bcc6a6e52744aab717b',1,'pedestrian.c']]],
+  ['typelength_17146',['TYPELENGTH',['../gpx2navit__txt_8h.html#ae7fa5b0dbc9038dce1ce8a342a6c0618',1,'gpx2navit_txt.h']]]
 ];
