@@ -192,6 +192,7 @@ struct attr {
         struct icon *icon;
         struct image *image;
         struct arrows *arrows;
+        struct spikes *spikes;
         struct element *element;
         struct speech *speech;
         struct cursor *cursor;

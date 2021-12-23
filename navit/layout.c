@@ -399,6 +399,7 @@ int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr) {
     case attr_icon:
     case attr_image:
     case attr_arrows:
+    case attr_spikes:
         itemgra->elements = g_list_append(itemgra->elements, attr->u.element);
         return 1;
     default:
@@ -444,6 +445,24 @@ static void element_set_arrows_width(struct element *e, struct attr **attrs) {
         e->u.arrows.width=width->u.num;
     else
         e->u.arrows.width=10;
+}
+
+static void element_set_spikes_width(struct element *e, struct attr **attrs) {
+    struct attr *width;
+    width=attr_search(attrs, attr_width);
+    if (width)
+        e->u.spikes.width=width->u.num;
+    else
+        e->u.spikes.width=10;
+}
+
+static void element_set_spikes_distance(struct element *e, struct attr **attrs) {
+    struct attr *distance;
+    distance=attr_search(attrs, attr_distance);
+    if (distance)
+        e->u.spikes.distance=distance->u.num;
+    else
+        e->u.spikes.distance=10;
 }
 
 static void element_set_polyline_width(struct element *e, struct attr **attrs) {
@@ -649,6 +668,17 @@ arrows_new(struct attr *parent, struct attr **attrs) {
     element_set_oneway(e, attrs);
     element_set_arrows_width(e, attrs);
     return (struct arrows *)e;
+}
+
+struct spikes *
+spikes_new(struct attr *parent, struct attr **attrs) {
+    struct element *e;
+    e = g_malloc0(sizeof(*e));
+    e->type=element_spikes;
+    element_set_color(e, attrs);
+    element_set_spikes_width(e, attrs);
+    element_set_spikes_distance(e, attrs);
+    return (struct spikes *)e;
 }
 
 int element_add_attr(struct element *e, struct attr *attr) {

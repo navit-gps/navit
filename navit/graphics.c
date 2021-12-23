@@ -1720,6 +1720,66 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
     }
 }
 
+static void display_draw_spike(struct point *p, navit_float dx, navit_float dy, navit_float width,
+                               struct display_context *dc,
+                               struct graphics *gra) {
+    struct point pnt[3];
+    navit_float l=navit_sqrt(dx*dx+dy*dy);
+    pnt[0]=pnt[1]=pnt[2]=*p;
+    pnt[1].x+=(-dy/l)*width;
+    pnt[1].y+=(dx/l)*width;
+    graphics_draw_lines(gra, dc->gc, pnt, 2);
+}
+
+/**
+ * @brief draw spikes along a multi polygon line
+ *
+ * This function draws spikes along a multi polygon line, and scales the
+ * spikes according to current view settings by interpolating sizes at
+ * given spike position,
+ *
+ * @param gra current graphics instance handle
+ * @param dc current drawing context
+ * @param pnt array of points for this polyline
+ * @param count number of points in pnt
+ * @param width array of integers giving the expected line width at the corresponding point
+ * @param distance giving the distance between spikes
+ */
+static void display_draw_spikes(struct graphics *gra, struct display_context *dc, struct point *pnt, int count,
+                                int *width, int distance) {
+    navit_float dx,dy,dw,l;
+    int i;
+    struct point p;
+    int w;
+    for (i = 0 ; i < count-1 ; i++) {
+        /* get the X and Y size */
+        dx=pnt[i+1].x-pnt[i].x;
+        dy=pnt[i+1].y-pnt[i].y;
+        dw=width[i+1] - width[i];
+        /* calculate the length of the way segment */
+        l=navit_sqrt(dx*dx+dy*dy);
+        if (l) {
+            /* length is not zero */
+            if(l > width[i]) {
+                int a =0;
+                int spike_count = l / distance;
+                /* calculate the vector per spike */
+                dx=dx/spike_count;
+                dy=dy/spike_count;
+                dw=dw/spike_count;
+                for( a=0; a < spike_count; a+=1 ) {
+                    p=pnt[i];
+                    p.x+=dx*a;
+                    p.y+=dy*a;
+                    w=width[i];
+                    w+=dw*a;
+                    display_draw_spike(&p, dx, dy, w, dc, gra);
+                }
+            }
+        }
+    }
+}
+
 static int intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, int bdy, struct point * res) {
     int n, a, b;
     dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
@@ -2954,6 +3014,9 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
         else if (dc->e->type == element_arrows)
             count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.arrows.width,
                                       width);
+        else if (dc->e->type == element_spikes)
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.spikes.width,
+                                      width);
         else
             count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, 0, NULL);
         switch (e->type) {
@@ -2977,6 +3040,9 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
             break;
         case element_arrows:
             display_draw_arrows(gra,dc,pa,count, width, e->oneway);
+            break;
+        case element_spikes:
+            display_draw_spikes(gra,dc,pa,count, width, e->u.spikes.distance);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);
