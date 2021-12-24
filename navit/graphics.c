@@ -1723,9 +1723,9 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
 static void display_draw_spike(struct point *p, navit_float dx, navit_float dy, navit_float width,
                                struct display_context *dc,
                                struct graphics *gra) {
-    struct point pnt[3];
+    struct point pnt[2];
     navit_float l=navit_sqrt(dx*dx+dy*dy);
-    pnt[0]=pnt[1]=pnt[2]=*p;
+    pnt[0]=pnt[1]=*p;
     pnt[1].x+=(-dy/l)*width;
     pnt[1].y+=(dx/l)*width;
     graphics_draw_lines(gra, dc->gc, pnt, 2);
@@ -1758,16 +1758,17 @@ static void display_draw_spikes(struct graphics *gra, struct display_context *dc
         dw=width[i+1] - width[i];
         /* calculate the length of the way segment */
         l=navit_sqrt(dx*dx+dy*dy);
-        if (l) {
+        if (l != 0) {
             /* length is not zero */
             if(l > width[i]) {
-                int a =0;
+                /* length is bigger than the length of one spike */
+                int a;
                 int spike_count = l / distance;
                 /* calculate the vector per spike */
                 dx=dx/spike_count;
                 dy=dy/spike_count;
                 dw=dw/spike_count;
-                for( a=0; a < spike_count; a+=1 ) {
+                for( a=0; a < spike_count; a++ ) {
                     p=pnt[i];
                     p.x+=dx*a;
                     p.y+=dy*a;

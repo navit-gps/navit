@@ -459,9 +459,12 @@ static void element_set_spikes_width(struct element *e, struct attr **attrs) {
 static void element_set_spikes_distance(struct element *e, struct attr **attrs) {
     struct attr *distance;
     distance=attr_search(attrs, attr_distance);
-    if (distance)
+    if (distance) {
         e->u.spikes.distance=distance->u.num;
-    else
+        /* paranoia check. We divide with that value */
+        if(e->u.spikes.distance < 1)
+            e->u.spikes.distance = 1;
+    } else
         e->u.spikes.distance=10;
 }
 
