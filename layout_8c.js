@@ -16,6 +16,8 @@ var layout_8c =
     [ "element_set_polyline_directed", "layout_8c.html#a9200e541b0f5a46aac86117b1fe42242", null ],
     [ "element_set_polyline_offset", "layout_8c.html#a6dc9ac443cc896d445ca2e1a4b7cf304", null ],
     [ "element_set_polyline_width", "layout_8c.html#a982d452a1843683381c225c2b8f8239e", null ],
+    [ "element_set_spikes_distance", "layout_8c.html#a2dd4d715adf5737e5b96eb6789541e5a", null ],
+    [ "element_set_spikes_width", "layout_8c.html#a083b92f7654b61d45302a5f359ff05c1", null ],
     [ "element_set_text_size", "layout_8c.html#aec906eec14050304294b494249383595", null ],
     [ "icon_new", "layout_8c.html#ae2c70612fd0a1d106db684927921095a", null ],
     [ "image_new", "layout_8c.html#a5c03135e5e923ffcf88fbdeeb27f104e", null ],
@@ -35,6 +37,7 @@ var layout_8c =
     [ "layout_new", "layout_8c.html#a6ebe4a41a65c8e52fd0bac5cb45c8647", null ],
     [ "polygon_new", "layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de", null ],
     [ "polyline_new", "layout_8c.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19", null ],
+    [ "spikes_new", "layout_8c.html#a6679274b38a614c58515d66e402de4ba", null ],
     [ "text_new", "layout_8c.html#ad5a065b4b5282fa7e09bf95a79fffee7", null ],
     [ "layer_func", "layout_8c.html#a985b6f89722a541b986509885b71ea13", null ],
     [ "layout_func", "layout_8c.html#af12a3d11ebf1e44ad330e5c8e3b7cbe5", null ]

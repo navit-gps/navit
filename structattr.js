@@ -47,6 +47,7 @@ var structattr =
     [ "roadprofile", "structattr.html#aec881300658f59fff0dbc21f30e565f1", null ],
     [ "route", "structattr.html#a2132d9f8722d472ea71342ea68b03754", null ],
     [ "speech", "structattr.html#a90b30756fbcd44ead3328e996ba3506e", null ],
+    [ "spikes", "structattr.html#a53d51a2861392f7b0ebb18127bc048cb", null ],
     [ "str", "structattr.html#a2a2a2da11501e5c4b5464938c91b87e9", null ],
     [ "text", "structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9", null ],
     [ "tracking", "structattr.html#a3121eab5589d9c11ceb1dd67635eab36", null ],

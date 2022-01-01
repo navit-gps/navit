@@ -28,5 +28,6 @@ var layout_8h =
     [ "layout_new", "layout_8h.html#a6ebe4a41a65c8e52fd0bac5cb45c8647", null ],
     [ "polygon_new", "layout_8h.html#a5e46226d681ad8ccb360c2f7907ff1de", null ],
     [ "polyline_new", "layout_8h.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19", null ],
+    [ "spikes_new", "layout_8h.html#a6679274b38a614c58515d66e402de4ba", null ],
     [ "text_new", "layout_8h.html#ad5a065b4b5282fa7e09bf95a79fffee7", null ]
 ];

@@ -152,6 +152,10 @@ Functions</h2></td></tr>
 <tr class="separator:aec906eec14050304294b494249383595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e516b8cafed4a9a95149589af226cb8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a0e516b8cafed4a9a95149589af226cb8">element_set_arrows_width</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="separator:a0e516b8cafed4a9a95149589af226cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a083b92f7654b61d45302a5f359ff05c1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a083b92f7654b61d45302a5f359ff05c1">element_set_spikes_width</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="separator:a083b92f7654b61d45302a5f359ff05c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dd4d715adf5737e5b96eb6789541e5a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a2dd4d715adf5737e5b96eb6789541e5a">element_set_spikes_distance</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="separator:a2dd4d715adf5737e5b96eb6789541e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a982d452a1843683381c225c2b8f8239e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a982d452a1843683381c225c2b8f8239e">element_set_polyline_width</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="separator:a982d452a1843683381c225c2b8f8239e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9200e541b0f5a46aac86117b1fe42242"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a9200e541b0f5a46aac86117b1fe42242">element_set_polyline_directed</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
@@ -178,6 +182,8 @@ Functions</h2></td></tr>
 <tr class="separator:a5c03135e5e923ffcf88fbdeeb27f104e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a647e39f10090fb7d917b1c5aec50fc86"><td class="memItemLeft" align="right" valign="top">struct arrows *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a647e39f10090fb7d917b1c5aec50fc86">arrows_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
 <tr class="separator:a647e39f10090fb7d917b1c5aec50fc86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6679274b38a614c58515d66e402de4ba"><td class="memItemLeft" align="right" valign="top">struct spikes *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#a6679274b38a614c58515d66e402de4ba">spikes_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="separator:a6679274b38a614c58515d66e402de4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfe632b7f24b87a434b6fc43507ce559"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="layout_8c.html#acfe632b7f24b87a434b6fc43507ce559">element_add_attr</a> (struct <a class="el" href="structelement.html">element</a> *e, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:acfe632b7f24b87a434b6fc43507ce559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -561,7 +567,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structattr.html#a58dd03447f7532a9a264ff3a38e6d1ec">attr::color</a>, and <a class="el" href="structelement.html#ad157e2bf31faa11ff3784b602ef9f88f">element::color</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="layout_8c.html#a647e39f10090fb7d917b1c5aec50fc86">arrows_new()</a>, <a class="el" href="layout_8c.html#a634fe4cfcb350abaf0f43b6375b94773">circle_new()</a>, <a class="el" href="layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de">polygon_new()</a>, <a class="el" href="layout_8c.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19">polyline_new()</a>, and <a class="el" href="layout_8c.html#ad5a065b4b5282fa7e09bf95a79fffee7">text_new()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="layout_8c.html#a647e39f10090fb7d917b1c5aec50fc86">arrows_new()</a>, <a class="el" href="layout_8c.html#a634fe4cfcb350abaf0f43b6375b94773">circle_new()</a>, <a class="el" href="layout_8c.html#a5e46226d681ad8ccb360c2f7907ff1de">polygon_new()</a>, <a class="el" href="layout_8c.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19">polyline_new()</a>, <a class="el" href="layout_8c.html#a6679274b38a614c58515d66e402de4ba">spikes_new()</a>, and <a class="el" href="layout_8c.html#ad5a065b4b5282fa7e09bf95a79fffee7">text_new()</a>.</p>
 
 </div>
 </div>
@@ -762,6 +768,86 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structelement.html#abe19e1c5261ebc33432e03f130df652a">element::polyline</a>, <a class="el" href="structelement.html#a2dd1c616aeb3c1668b2a03f850223ad9">element::u</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="layout_8c.html#ad2ff1b8bedb0da0bdc4dadc6cf611a19">polyline_new()</a>.</p>
+
+</div>
+</div>
+<a id="a2dd4d715adf5737e5b96eb6789541e5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dd4d715adf5737e5b96eb6789541e5a">&#9670;&nbsp;</a></span>element_set_spikes_distance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void element_set_spikes_distance </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structelement.html">element</a> *&#160;</td>
+          <td class="paramname"><em>e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structelement.html#a8bf4f0e89dade0ac07333dd9c7c65e0e">element::spikes</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, and <a class="el" href="structelement.html#a2dd1c616aeb3c1668b2a03f850223ad9">element::u</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="layout_8c.html#a6679274b38a614c58515d66e402de4ba">spikes_new()</a>.</p>
+
+</div>
+</div>
+<a id="a083b92f7654b61d45302a5f359ff05c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a083b92f7654b61d45302a5f359ff05c1">&#9670;&nbsp;</a></span>element_set_spikes_width()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void element_set_spikes_width </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structelement.html">element</a> *&#160;</td>
+          <td class="paramname"><em>e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="attr_8c.html#ac6577d49e590de0f9012c729a315c7cc">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structelement.html#a8bf4f0e89dade0ac07333dd9c7c65e0e">element::spikes</a>, <a class="el" href="structelement.html#a2dd1c616aeb3c1668b2a03f850223ad9">element::u</a>, and <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="layout_8c.html#a6679274b38a614c58515d66e402de4ba">spikes_new()</a>.</p>
 
 </div>
 </div>
@@ -1393,6 +1479,36 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a6679274b38a614c58515d66e402de4ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6679274b38a614c58515d66e402de4ba">&#9670;&nbsp;</a></span>spikes_new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct spikes* spikes_new </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> *&#160;</td>
+          <td class="paramname"><em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structattr.html">attr</a> **&#160;</td>
+          <td class="paramname"><em>attrs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="layout_8c.html#a11ad8994bebe6ca052fb74ac629d7a23">element_set_color()</a>, <a class="el" href="layout_8c.html#a2dd4d715adf5737e5b96eb6789541e5a">element_set_spikes_distance()</a>, <a class="el" href="layout_8c.html#a083b92f7654b61d45302a5f359ff05c1">element_set_spikes_width()</a>, <a class="el" href="structelement.html#aeba46169dd080712b74b7da37c1da599a6ff0d580cad7711d23f8d7412eed3298">element::element_spikes</a>, <a class="el" href="structelement.html#a8bf4f0e89dade0ac07333dd9c7c65e0e">element::spikes</a>, and <a class="el" href="structelement.html#a2189a91dcbd40d380a457ca955838eaf">element::type</a>.</p>
+
+</div>
+</div>
 <a id="ad5a065b4b5282fa7e09bf95a79fffee7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5a065b4b5282fa7e09bf95a79fffee7">&#9670;&nbsp;</a></span>text_new()</h2>
 
@@ -1455,8 +1571,8 @@ Variables</h2></td></tr>
 <div class="ttc" id="alayout_8c_html_aa8c35b148dc92f2758181fcb94cc6695"><div class="ttname"><a href="layout_8c.html#aa8c35b148dc92f2758181fcb94cc6695">layer_new</a></div><div class="ttdeci">struct layer * layer_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition:</b> layout.c:293</div></div>
 <div class="ttc" id="alayout_8c_html_ab9fe03394484d32c45e732ecd3c2194b"><div class="ttname"><a href="layout_8c.html#ab9fe03394484d32c45e732ecd3c2194b">layer_add_attr</a></div><div class="ttdeci">int layer_add_attr(struct layer *layer, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> layout.c:334</div></div>
 <div class="ttc" id="alayout_8c_html_abba7de7ad1494928bf4e7b8b8c456f23"><div class="ttname"><a href="layout_8c.html#abba7de7ad1494928bf4e7b8b8c456f23">layer_destroy</a></div><div class="ttdeci">static void layer_destroy(struct layer *layer)</div><div class="ttdef"><b>Definition:</b> layout.c:348</div></div>
-<div class="ttc" id="axmlconfig_8c_html_a97083afaca4bc8a33cd995acbbf0dd68"><div class="ttname"><a href="xmlconfig_8c.html#a97083afaca4bc8a33cd995acbbf0dd68">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1307</div></div>
-<div class="ttc" id="axmlconfig_8c_html_acc1bc70fa25d7d81b1fa01fe6ef3a2f6"><div class="ttname"><a href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1301</div></div>
+<div class="ttc" id="axmlconfig_8c_html_a97083afaca4bc8a33cd995acbbf0dd68"><div class="ttname"><a href="xmlconfig_8c.html#a97083afaca4bc8a33cd995acbbf0dd68">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1313</div></div>
+<div class="ttc" id="axmlconfig_8c_html_acc1bc70fa25d7d81b1fa01fe6ef3a2f6"><div class="ttname"><a href="xmlconfig_8c.html#acc1bc70fa25d7d81b1fa01fe6ef3a2f6">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition:</b> xmlconfig.c:1307</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a0c9c8dc41426168af7eea75f43b75c8c"><div class="ttname"><a href="xmlconfig_8h.html#a0c9c8dc41426168af7eea75f43b75c8c">object_func_iter_destroy</a></div><div class="ttdeci">void(* object_func_iter_destroy)(struct attr_iter *)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:57</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a0f2c712fe016b6312426013ec7dbecc6"><div class="ttname"><a href="xmlconfig_8h.html#a0f2c712fe016b6312426013ec7dbecc6">object_func_new</a></div><div class="ttdeci">void *(* object_func_new)(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:54</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a14949a117c8a06880b17d43b735f7897"><div class="ttname"><a href="xmlconfig_8h.html#a14949a117c8a06880b17d43b735f7897">object_func_remove_attr</a></div><div class="ttdeci">int(* object_func_remove_attr)(void *, struct attr *attr)</div><div class="ttdef"><b>Definition:</b> xmlconfig.h:60</div></div>

@@ -36,6 +36,8 @@ var graphics_8c =
     [ "display_context_free", "graphics_8c.html#a28b341d3b4f1fa9dc0f14e071a1aeeca", null ],
     [ "display_draw_arrow", "graphics_8c.html#a7dae8d2963792c7a7c4a0f98f66ee188", null ],
     [ "display_draw_arrows", "graphics_8c.html#a20832c034b1a45c0e70a8047aec445d8", null ],
+    [ "display_draw_spike", "graphics_8c.html#a2eb996aabbb9eee3c73221b3d17aabcf", null ],
+    [ "display_draw_spikes", "graphics_8c.html#a15beb6b64ba0378b309df9cb69e24fd4", null ],
     [ "displayitem_draw", "graphics_8c.html#aeb8c3f56b95bd953ecf0fe33ded0c772", null ],
     [ "displayitem_draw_circle", "graphics_8c.html#a347798813a5a0f755f802a119161d4b7", null ],
     [ "displayitem_draw_icon", "graphics_8c.html#ab25dce778084d7e38a72d2744444d22f", null ],

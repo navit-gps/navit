@@ -322,6 +322,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a20832c034b1a45c0e70a8047aec445d8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a20832c034b1a45c0e70a8047aec445d8">display_draw_arrows</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structdisplay__context.html">display_context</a> *dc, struct <a class="el" href="structpoint.html">point</a> *pnt, int count, int *<a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, int filled)</td></tr>
 <tr class="memdesc:a20832c034b1a45c0e70a8047aec445d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">draw arrows along a multi polygon line  <a href="graphics_8c.html#a20832c034b1a45c0e70a8047aec445d8">More...</a><br /></td></tr>
 <tr class="separator:a20832c034b1a45c0e70a8047aec445d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eb996aabbb9eee3c73221b3d17aabcf"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a2eb996aabbb9eee3c73221b3d17aabcf">display_draw_spike</a> (struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="tree_8c.html#a31aee918cc8b0f0e71b62d0441b0c74a">p</a>, <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> dx, <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> dy, <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, struct <a class="el" href="structdisplay__context.html">display_context</a> *dc, struct <a class="el" href="structgraphics.html">graphics</a> *gra)</td></tr>
+<tr class="separator:a2eb996aabbb9eee3c73221b3d17aabcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15beb6b64ba0378b309df9cb69e24fd4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a15beb6b64ba0378b309df9cb69e24fd4">display_draw_spikes</a> (struct <a class="el" href="structgraphics.html">graphics</a> *gra, struct <a class="el" href="structdisplay__context.html">display_context</a> *dc, struct <a class="el" href="structpoint.html">point</a> *pnt, int count, int *<a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, int distance)</td></tr>
+<tr class="memdesc:a15beb6b64ba0378b309df9cb69e24fd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">draw spikes along a multi polygon line  <a href="graphics_8c.html#a15beb6b64ba0378b309df9cb69e24fd4">More...</a><br /></td></tr>
+<tr class="separator:a15beb6b64ba0378b309df9cb69e24fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3edf56e5f4bd6e7046d2e030d5f6d6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#aae3edf56e5f4bd6e7046d2e030d5f6d6">intersection</a> (struct <a class="el" href="structpoint.html">point</a> *a1, int adx, int ady, struct <a class="el" href="structpoint.html">point</a> *b1, int bdx, int bdy, struct <a class="el" href="structpoint.html">point</a> *res)</td></tr>
 <tr class="separator:aae3edf56e5f4bd6e7046d2e030d5f6d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a324b733e46f8b60cf352267177370c7b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics_8c.html#a324b733e46f8b60cf352267177370c7b">fowler</a> (int dy, int dx)</td></tr>
@@ -1096,6 +1101,148 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a2eb996aabbb9eee3c73221b3d17aabcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eb996aabbb9eee3c73221b3d17aabcf">&#9670;&nbsp;</a></span>display_draw_spike()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void display_draw_spike </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td>
+          <td class="paramname"><em>dx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td>
+          <td class="paramname"><em>dy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structdisplay__context.html">display_context</a> *&#160;</td>
+          <td class="paramname"><em>dc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gra</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structdisplay__context.html#a9fa858279e57ecad816e43ffa1a2f9f0">display_context::gc</a>, <a class="el" href="graphics_8c.html#a5d8dc987416508625cf3d46571abdbcb">graphics_draw_lines()</a>, <a class="el" href="coord_8h.html#aae41641e415d4c65412d016224330e2b">navit_sqrt</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#a15beb6b64ba0378b309df9cb69e24fd4">display_draw_spikes()</a>.</p>
+
+</div>
+</div>
+<a id="a15beb6b64ba0378b309df9cb69e24fd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15beb6b64ba0378b309df9cb69e24fd4">&#9670;&nbsp;</a></span>display_draw_spikes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void display_draw_spikes </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgraphics.html">graphics</a> *&#160;</td>
+          <td class="paramname"><em>gra</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structdisplay__context.html">display_context</a> *&#160;</td>
+          <td class="paramname"><em>dc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpoint.html">point</a> *&#160;</td>
+          <td class="paramname"><em>pnt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>distance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>draw spikes along a multi polygon line </p>
+<p>This function draws spikes along a multi polygon line, and scales the spikes according to current view settings by interpolating sizes at given spike position,</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gra</td><td>current graphics instance handle </td></tr>
+    <tr><td class="paramname">dc</td><td>current drawing context </td></tr>
+    <tr><td class="paramname">pnt</td><td>array of points for this polyline </td></tr>
+    <tr><td class="paramname">count</td><td>number of points in pnt </td></tr>
+    <tr><td class="paramname">width</td><td>array of integers giving the expected line width at the corresponding point </td></tr>
+    <tr><td class="paramname">distance</td><td>giving the distance between spikes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="graphics_8c.html#a2eb996aabbb9eee3c73221b3d17aabcf">display_draw_spike()</a>, <a class="el" href="coord_8h.html#aae41641e415d4c65412d016224330e2b">navit_sqrt</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, and <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#aeb8c3f56b95bd953ecf0fe33ded0c772">displayitem_draw()</a>.</p>
+
+</div>
+</div>
 <a id="aeb8c3f56b95bd953ecf0fe33ded0c772"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb8c3f56b95bd953ecf0fe33ded0c772">&#9670;&nbsp;</a></span>displayitem_draw()</h2>
 
@@ -1142,7 +1289,7 @@ Variables</h2></td></tr>
 <p>l current layout for getting defaults and underground alpha</p>
 <p>dc The <a class="el" href="structdisplay__context.html">display_context</a> to use to draw items </p>
 
-<p class="reference">References <a class="el" href="structcolor.html#ada88c609a801744faf4f35601733f96f">color::a</a>, <a class="el" href="attr_8h.html#ac31624ef4f8ef64df93eef99f78b16c6">AF_ONEWAY</a>, <a class="el" href="attr_8h.html#a0c50dbd0c688b2eb990c0e1b8858f828">AF_ROUNDABOUT</a>, <a class="el" href="attr_8h.html#ac9443a1d6bee1405ac935c8218f46e6b">AF_UNDERGROUND</a>, <a class="el" href="graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2">ALLOCA_COORD_LIMIT</a>, <a class="el" href="structelement.html#aabcc56dfec299162ef0a8844316582b0">element::arrows</a>, <a class="el" href="structdisplayitem.html#ac82b2f0884a91a6010618e435faeb426">displayitem::c</a>, <a class="el" href="structelement.html#ad157e2bf31faa11ff3784b602ef9f88f">element::color</a>, <a class="el" href="structdisplayitem__poly__holes.html#afc684eb7e65b2ffa1d3d01425f748a7b">displayitem_poly_holes::count</a>, <a class="el" href="structdisplayitem.html#a439b2dac1557feb2d5f4a5afd68cd8a9">displayitem::count</a>, <a class="el" href="structgraphics.html#aa6fda1593495b84abfe6d023d3b0bf50">graphics::current_z_order</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="graphics_8c.html#a20832c034b1a45c0e70a8047aec445d8">display_draw_arrows()</a>, <a class="el" href="graphics_8c.html#a347798813a5a0f755f802a119161d4b7">displayitem_draw_circle()</a>, <a class="el" href="graphics_8c.html#ab25dce778084d7e38a72d2744444d22f">displayitem_draw_icon()</a>, <a class="el" href="graphics_8c.html#aad0fdf6d1f03e4b9d86c030144edac73">displayitem_draw_image()</a>, <a class="el" href="graphics_8c.html#abeb31054a632215c3677e777b683653a">displayitem_draw_polygon()</a>, <a class="el" href="graphics_8c.html#a562eb573d80dace52903b3aaf64f63bb">displayitem_draw_polyline()</a>, <a class="el" href="graphics_8c.html#a288dc5beed17d6b6b8c1e4364e2608a2">displayitem_draw_text()</a>, <a class="el" href="graphics_8c.html#a4dbc6d277a8f6b5b9154623ac4313a91">displayitem_free_holes()</a>, <a class="el" href="graphics_8c.html#a715c628de7070c197b000db8d82de219">displayitem_transform_holes()</a>, <a class="el" href="structdisplay__context.html#a79f283d77fb7a689fa69874ca93f861c">display_context::e</a>, <a class="el" href="structdisplayitem.html#a2da22a49492d871b571c4fc18a838493">displayitem::flags</a>, <a class="el" href="structdisplay__context.html#a9fa858279e57ecad816e43ffa1a2f9f0">display_context::gc</a>, <a class="el" href="structdisplay__context.html#a9bd75b9ad4bee5fb1df5b3bf8ef673b6">display_context::gra</a>, <a class="el" href="structgraphics__gc.html#a41967312f6e87d64baa2b2f7a870c358">graphics_gc::gra</a>, <a class="el" href="graphics_8c.html#a922588c7f73a70872a92e29b5cf45b83">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="structdisplayitem.html#a25248c51d835a9353d7b622314ef71bb">displayitem::holes</a>, <a class="el" href="item_8h.html#a5753cba275758ae589a88ec194ce75ec">item_type_is_area</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, <a class="el" href="graphics_8c.html#aa841c9099ea87afee3d3373ec9af6ae4">limit_count()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structdisplay__context.html#af25f6e97c50cbd3966181df31b98e701">display_context::maxlen</a>, <a class="el" href="structdisplay__context.html#a5c18fc171eff32fdd939acf982412873">display_context::mindist</a>, <a class="el" href="structdisplayitem.html#a569aa6738261ea442b403cdbbc50d8af">displayitem::next</a>, <a class="el" href="structelement.html#ab3f4c63a4e1748078fbf127f778b1474">element::oneway</a>, <a class="el" href="structelement.html#abe19e1c5261ebc33432e03f130df652a">element::polyline</a>, <a class="el" href="structdisplay__context.html#ac2656b0c2da70e7226a2a7380de6e388">display_context::pro</a>, <a class="el" href="structdisplay__context.html#a5ae42289d580caeaa50fb0fb100ab043">display_context::trans</a>, <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>, <a class="el" href="structdisplay__context.html#a748cc14d4acc07db4e169c63247ab1b8">display_context::type</a>, <a class="el" href="structelement.html#a2189a91dcbd40d380a457ca955838eaf">element::type</a>, <a class="el" href="structelement.html#a2dd1c616aeb3c1668b2a03f850223ad9">element::u</a>, <a class="el" href="structlayout.html#a1c4e39b39fd46fd17e02744da3d5a557">layout::underground_alpha</a>, <a class="el" href="color_8h.html#a70e2551822270363f0067bfd7390cbf0">UNDERGROUND_ALPHA_</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, and <a class="el" href="structdisplayitem.html#ab44aa97c70407b8778041dae0161f636">displayitem::z_order</a>.</p>
+<p class="reference">References <a class="el" href="structcolor.html#ada88c609a801744faf4f35601733f96f">color::a</a>, <a class="el" href="attr_8h.html#ac31624ef4f8ef64df93eef99f78b16c6">AF_ONEWAY</a>, <a class="el" href="attr_8h.html#a0c50dbd0c688b2eb990c0e1b8858f828">AF_ROUNDABOUT</a>, <a class="el" href="attr_8h.html#ac9443a1d6bee1405ac935c8218f46e6b">AF_UNDERGROUND</a>, <a class="el" href="graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2">ALLOCA_COORD_LIMIT</a>, <a class="el" href="structelement.html#aabcc56dfec299162ef0a8844316582b0">element::arrows</a>, <a class="el" href="structdisplayitem.html#ac82b2f0884a91a6010618e435faeb426">displayitem::c</a>, <a class="el" href="structelement.html#ad157e2bf31faa11ff3784b602ef9f88f">element::color</a>, <a class="el" href="structdisplayitem__poly__holes.html#afc684eb7e65b2ffa1d3d01425f748a7b">displayitem_poly_holes::count</a>, <a class="el" href="structdisplayitem.html#a439b2dac1557feb2d5f4a5afd68cd8a9">displayitem::count</a>, <a class="el" href="structgraphics.html#aa6fda1593495b84abfe6d023d3b0bf50">graphics::current_z_order</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="graphics_8c.html#a20832c034b1a45c0e70a8047aec445d8">display_draw_arrows()</a>, <a class="el" href="graphics_8c.html#a15beb6b64ba0378b309df9cb69e24fd4">display_draw_spikes()</a>, <a class="el" href="graphics_8c.html#a347798813a5a0f755f802a119161d4b7">displayitem_draw_circle()</a>, <a class="el" href="graphics_8c.html#ab25dce778084d7e38a72d2744444d22f">displayitem_draw_icon()</a>, <a class="el" href="graphics_8c.html#aad0fdf6d1f03e4b9d86c030144edac73">displayitem_draw_image()</a>, <a class="el" href="graphics_8c.html#abeb31054a632215c3677e777b683653a">displayitem_draw_polygon()</a>, <a class="el" href="graphics_8c.html#a562eb573d80dace52903b3aaf64f63bb">displayitem_draw_polyline()</a>, <a class="el" href="graphics_8c.html#a288dc5beed17d6b6b8c1e4364e2608a2">displayitem_draw_text()</a>, <a class="el" href="graphics_8c.html#a4dbc6d277a8f6b5b9154623ac4313a91">displayitem_free_holes()</a>, <a class="el" href="graphics_8c.html#a715c628de7070c197b000db8d82de219">displayitem_transform_holes()</a>, <a class="el" href="structdisplay__context.html#a79f283d77fb7a689fa69874ca93f861c">display_context::e</a>, <a class="el" href="structdisplayitem.html#a2da22a49492d871b571c4fc18a838493">displayitem::flags</a>, <a class="el" href="structdisplay__context.html#a9fa858279e57ecad816e43ffa1a2f9f0">display_context::gc</a>, <a class="el" href="structdisplay__context.html#a9bd75b9ad4bee5fb1df5b3bf8ef673b6">display_context::gra</a>, <a class="el" href="structgraphics__gc.html#a41967312f6e87d64baa2b2f7a870c358">graphics_gc::gra</a>, <a class="el" href="graphics_8c.html#a922588c7f73a70872a92e29b5cf45b83">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="structdisplayitem.html#a25248c51d835a9353d7b622314ef71bb">displayitem::holes</a>, <a class="el" href="item_8h.html#a5753cba275758ae589a88ec194ce75ec">item_type_is_area</a>, <a class="el" href="street_8c.html#adeb0279e86436e1191b805431fba9e72">limit</a>, <a class="el" href="graphics_8c.html#aa841c9099ea87afee3d3373ec9af6ae4">limit_count()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="structdisplay__context.html#af25f6e97c50cbd3966181df31b98e701">display_context::maxlen</a>, <a class="el" href="structdisplay__context.html#a5c18fc171eff32fdd939acf982412873">display_context::mindist</a>, <a class="el" href="structdisplayitem.html#a569aa6738261ea442b403cdbbc50d8af">displayitem::next</a>, <a class="el" href="structelement.html#ab3f4c63a4e1748078fbf127f778b1474">element::oneway</a>, <a class="el" href="structelement.html#abe19e1c5261ebc33432e03f130df652a">element::polyline</a>, <a class="el" href="structdisplay__context.html#ac2656b0c2da70e7226a2a7380de6e388">display_context::pro</a>, <a class="el" href="structelement.html#a8bf4f0e89dade0ac07333dd9c7c65e0e">element::spikes</a>, <a class="el" href="structdisplay__context.html#a5ae42289d580caeaa50fb0fb100ab043">display_context::trans</a>, <a class="el" href="transform_8c.html#a7380cfb4326a4a2f4b40f867dd1e275c">transform_point_buf()</a>, <a class="el" href="structdisplay__context.html#a748cc14d4acc07db4e169c63247ab1b8">display_context::type</a>, <a class="el" href="structelement.html#a2189a91dcbd40d380a457ca955838eaf">element::type</a>, <a class="el" href="structelement.html#a2dd1c616aeb3c1668b2a03f850223ad9">element::u</a>, <a class="el" href="structlayout.html#a1c4e39b39fd46fd17e02744da3d5a557">layout::underground_alpha</a>, <a class="el" href="color_8h.html#a70e2551822270363f0067bfd7390cbf0">UNDERGROUND_ALPHA_</a>, <a class="el" href="garmin__img_8c.html#a8a31e3e5c2765d45488c75c00bacfefd">width</a>, and <a class="el" href="structdisplayitem.html#ab44aa97c70407b8778041dae0161f636">displayitem::z_order</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="graphics_8c.html#a33c0fc6d6da62976d3eac28eef892e85">graphics_draw_itemgra()</a>, and <a class="el" href="graphics_8c.html#ab5d7c098092b93832abb7b54ac0587b6">xdisplay_draw_elements()</a>.</p>
 
@@ -3559,7 +3706,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="graphics_8c.html#a452af01c2ca8d81114a3646e52be54a2">ALLOCA_COORD_LIMIT</a>, <a class="el" href="structgraphics__methods.html#a0dd827b36bc59e603cd339ffe1ca89df">graphics_methods::draw_lines</a>, <a class="el" href="graphics_8c.html#a796f16e38bc3e8065afde9fbf9189c23">graphics_dpi_scale_point()</a>, <a class="el" href="structgraphics.html#a6f2bd084b124c909cf771037b37cdd73">graphics::meth</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="structgraphics.html#a4090f615376c0be5d7fbb69beb24deb1">graphics::priv</a>, and <a class="el" href="structgraphics__gc.html#acf992080c7fff4738579a432bb536ab5">graphics_gc::priv</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="graphics_8c.html#a7dae8d2963792c7a7c4a0f98f66ee188">display_draw_arrow()</a>, <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>, <a class="el" href="graphics_8c.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, <a class="el" href="graphics_8c.html#a39c00af10fa4bf6a547250715cf98f67">graphics_draw_polyline_clipped()</a>, <a class="el" href="graphics_8c.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>, <a class="el" href="gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297">gui_internal_box_render()</a>, <a class="el" href="gui__internal__command_8c.html#ac0b36e1a083a877942ed4012203f8ab5">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="gui__internal__widget_8c.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>, and <a class="el" href="osd__core_8c.html#a3ced02162786631e06d466a9931cdc97">osd_scale_draw()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="graphics_8c.html#a7dae8d2963792c7a7c4a0f98f66ee188">display_draw_arrow()</a>, <a class="el" href="graphics_8c.html#a2eb996aabbb9eee3c73221b3d17aabcf">display_draw_spike()</a>, <a class="el" href="osd__core_8c.html#a5ad995355183f6dbfa1479a06238780f">draw_handle()</a>, <a class="el" href="graphics_8c.html#ace0cc4cc1efad6bdf903dc5d8dc0c8d7">graphics_draw_circle()</a>, <a class="el" href="graphics_8c.html#a39c00af10fa4bf6a547250715cf98f67">graphics_draw_polyline_clipped()</a>, <a class="el" href="graphics_8c.html#a6fbefa5235319970bbc4df76be037a49">graphics_draw_rectangle_rounded()</a>, <a class="el" href="gui__internal__widget_8c.html#a338d02c0b110d2433a18d20060d6f297">gui_internal_box_render()</a>, <a class="el" href="gui__internal__command_8c.html#ac0b36e1a083a877942ed4012203f8ab5">gui_internal_cmd2_route_height_profile()</a>, <a class="el" href="gui__internal__widget_8c.html#a42afbe3d4d45614d30b688d0c8ca6f5c">gui_internal_table_render()</a>, and <a class="el" href="osd__core_8c.html#a3ced02162786631e06d466a9931cdc97">osd_scale_draw()</a>.</p>
 
 </div>
 </div>

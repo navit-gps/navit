@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"classNGQPoint.html#ab659b13168090b8b3608404a91a14ce4":[2,0,246,16],
+"classNGQPoint.html#aba3ae95ebb38154301bab38f55f7d573":[2,0,246,22],
 "classNGQPoint.html#ad96b404759ad7d5c5d82903e485dd328":[2,0,246,26],
 "classNGQPoint.html#ae2be9d91e059418bf049b59494313b94":[2,0,246,29],
 "classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8":[2,0,246,10],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "classVehicleObject.html#a548d289cbc560ac478aac320645e19aa":[2,0,423,9],
 "classVehicleObject.html#a5a842c1addd647adb0b5f094e7bd2575":[2,0,423,0],
 "classVehicleObject.html#a5fac8fd8519e7ff144c0ba10a0563efa":[2,0,423,6],
-"classVehicleObject.html#a7e7e626e89617c376699c3ec8fba589d":[2,0,423,10],
-"classVehicleObject.html#a83011dfc9da7ebddfba1953fabf9e79a":[2,0,423,14],
-"classVehicleObject.html#a8ae628c4b4b09d015f7b2450033ee59e":[2,0,423,8]
+"classVehicleObject.html#a7e7e626e89617c376699c3ec8fba589d":[2,0,423,10]
 };
