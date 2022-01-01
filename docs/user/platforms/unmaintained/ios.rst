@@ -4,7 +4,7 @@ IOS
 .. _on_a_jailbroken_device:
 
 On a jailbroken device
-======================
+----------------------
 
 .. figure:: Iphone4-20160622.png
    :alt: Iphone4-20160622.png
@@ -33,7 +33,7 @@ What does not work:
 .. _home_made_packages_on_osx:
 
 Home made packages on OSX
-=========================
+-------------------------
 
 Prepare your build environment :
 
@@ -87,17 +87,17 @@ iTunes.
 .. _old_content_kept_below_for_reference_until_we_fix_the_build:
 
 Old content kept below for reference until we fix the build
-===========================================================
+-----------------------------------------------------------
 
 .. _screenshots_and_videos:
 
 Screenshots and Videos
-----------------------
+''''''''''''''''''''''
 
 |Iphone_screen1.jpg| |Iphone_screen2.jpg|
 
 Status
-------
+''''''
 
 .. _what_works:
 
@@ -129,7 +129,7 @@ What was not tested
 .. _concerning_opentoolchain:
 
 Concerning Opentoolchain
-------------------------
+''''''''''''''''''''''''
 
 .. _cydia_packages:
 
@@ -274,7 +274,7 @@ thanks to dpkg ...
 **Then Have fun :)**
 
 Config
-------
+''''''
 
 OSM map files are expected as below:
 
@@ -299,7 +299,7 @@ your speech configuration in "/var/mobile/.navit/navit.xml" to
 .. _test_feedback:
 
 Test feedback
--------------
+'''''''''''''
 
 -  OSM: Routing is very slow (long distance is a nightmare for user :()
    (Almost fixed with CACHE_SIZE define)

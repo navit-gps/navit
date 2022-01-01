@@ -97,8 +97,6 @@ same time.
 |                | as any existing messages with the same identifier  |
 |                | will be replaced anyway.                           |
 +----------------+----------------------------------------------------+
-|                |                                                    |
-+----------------+----------------------------------------------------+
 
 Event
 -----
@@ -147,8 +145,6 @@ List#Events <Traffic_Event_List#Events>`__.
 |            | Permissible data types and their meanings depend on    |
 |            | the event type.                                        |
 +------------+--------------------------------------------------------+
-|            |                                                        |
-+------------+--------------------------------------------------------+
 
 .. _supplementary_information:
 
@@ -163,8 +159,7 @@ event. They are qualifiers, not events in their own right. Examples:
 -  Refinements to the position (e.g. in a tunnel, in the left lane)
 -  Instructions to drivers (e.g. avoid the area, approach with care)
 
-For a list of permitted values, see `Traffic Event List#Supplementary
-Information <Traffic_Event_List#Supplementary_Information>`__.
+For a list of permitted values, see Traffic Event List -> :ref:`traffic_event_list_supplementary_information`.
 
 +------------+--------------------------------------------------------+
 | Field      | Description                                            |
@@ -178,8 +173,6 @@ Information <Traffic_Event_List#Supplementary_Information>`__.
 | quantifier | Additional quantifier for supplementary information    |
 |            | types allowing this. Permissible data types and their  |
 |            | meanings depend on the type.                           |
-+------------+--------------------------------------------------------+
-|            |                                                        |
 +------------+--------------------------------------------------------+
 
 Quantifier
@@ -421,8 +414,6 @@ reference them with the respective road number.
 |                | the road to which this message applies (positive   |
 |                | or negative). Ignored for bidirectional messages.  |
 +----------------+----------------------------------------------------+
-|                |                                                    |
-+----------------+----------------------------------------------------+
 
 Point
 -----
@@ -454,8 +445,6 @@ number where applicable.
 |              |    from the point with the indicated LCID, in the    |
 |              |    direction specified. This is typically used with  |
 |              |    the secondary location.                           |
-+--------------+------------------------------------------------------+
-|              |                                                      |
 +--------------+------------------------------------------------------+
 
 .. |Compass directions such as “northbound” are ambiguous for some stretches of this road| image:: RoadDirectionality.png

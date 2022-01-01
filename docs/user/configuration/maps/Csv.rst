@@ -1,8 +1,6 @@
 Csv
 ===
 
-\__FORCETOC_\_
-
 The CSV map driver allows reading map items from a CSV file. It is
 particularly useful for displaying custom points of interes.
 

@@ -51,7 +51,7 @@ Current limitations:
 .. _proposed_git_ci_workflow:
 
 Proposed GIT + CI workflow
-==========================
+--------------------------
 
 This example should explain a few possible use cases:
 
@@ -121,7 +121,7 @@ Example (from the svn + git era, needs update) :
 .. _why_do_we_want_this:
 
 Why do we want this?
---------------------
+''''''''''''''''''''
 
 The whole point of this workflow is :
 
@@ -140,7 +140,7 @@ The whole point of this workflow is :
 .. _ok_ive_pushed_my_commits_where_is_my_ci_output:
 
 OK, I've pushed my commits, where is my CI output?
---------------------------------------------------
+''''''''''''''''''''''''''''''''''''''''''''''''''
 
 Completion of a CI run will be announced on `IRC <Contacts#IRC>`__. You
 can also check at https://circleci.com/gh/navit-gps/navit to see if your
@@ -149,7 +149,7 @@ CI build has completed.
 .. _but_wait:
 
 But wait!
----------
+'''''''''
 
 I already have my own awesome fork of Navit in github!
 
@@ -264,7 +264,7 @@ because it hasn't changed since the last push to the feature branch...)
 .. _using_circleci_for_your_own_fork:
 
 Using CircleCI for your own fork
-================================
+--------------------------------
 
 You may wish to use CircleCI for your own fork, so you can test commits
 before you push them to the main repo. Thanks to the infrastructure

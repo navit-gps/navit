@@ -2,8 +2,8 @@ OSD
 ===
 
 The On Screen Display (OSD) provides status information and controls
-blended directly onto the map. These can be implemented using the <osd
-... /> tag inside navit.xml `Configuration <Configuration>`__.
+blended directly onto the map. These can be implemented using the ``<osd
+... />`` tag inside navit.xml `Configuration <Configuration>`__.
 
 You might try `NavitConfigurator <NavitConfigurator>`__ as a WYSIWYG
 testing environment for customizing your screen setup.
@@ -129,6 +129,14 @@ Where the alignment number can be any of the following:
 
 To get a combination of alignment you have to sum vertical and
 horizontal alignment, so align="5" would give top left alignment.
+
++-----+-----+------+
+|4+1=5|0+1=1|8+1=9 |
++-----+-----+------+
+|4+0=4|0+0=0|8+0=8 |
++-----+-----+------+
+|4+2=6|0+2=2|8+2=10|
++-----+-----+------+
 
 Color
 =====
@@ -532,7 +540,9 @@ Any item type can be used that supports multiple coordinates (type
 vehicles). The *map* entry in the active mapset of *navit.xml* should
 also have its unique *name* set:
 
-``   ``\ 
+.. code:: xml
+
+   <map name="route_guard_test"  type="textfile" enabled="yes" active="1"  data="/home/dandor/tmp/navit_path_guard_test/route_guard_example_map.txt"/>
 
 An OSD entry should be set up with the appropriate item and map names
 and with a type="route_guard" attribute:
@@ -828,231 +838,232 @@ linebreak. The multi-line text obeys alignment settings.
 When using the text type, it is useful to set the width and height of
 each item, in addition to aligning the text using the 'align' attribute.
 
-Placeholders are specified as **``${section.attribute}``**. Attributes
+Placeholders are specified as **${section.attribute}**. Attributes
 which can be used in labels include:
 
-+----------------------------------+----------------------------------+
-| Attribute                        | Value                            |
-+==================================+==================================+
-| navigation                       | Section containing routing       |
-|                                  | information, available only when |
-|                                  | routing                          |
-+----------------------------------+----------------------------------+
-| navigation.item                  | Information related to the       |
-|                                  | entire route                     |
-+----------------------------------+----------------------------------+
-| navigatio                        | Remaining distance to            |
-| n.item.destination_length[named] | destination. Use                 |
-|                                  | navigatio                        |
-|                                  | n.item.destination_length[value] |
-|                                  | to get the bare value (without   |
-|                                  | units) or                        |
-|                                  | navigati                         |
-|                                  | on.item.destination_length[unit] |
-|                                  | to get just the unit. Useful for |
-|                                  | displaying the value and the     |
-|                                  | unit in two rows, or in          |
-|                                  | different font sizes.            |
-+----------------------------------+----------------------------------+
-| navigatio                        | Estimated time of arrival        |
-| n.item.destination_time[arrival] |                                  |
-+----------------------------------+----------------------------------+
-| navigation.                      | Estimated remaining time         |
-| item.destination_time[remaining] |                                  |
-+----------------------------------+----------------------------------+
-| navigation.item.street_name      | Name of the road which the       |
-|                                  | vehicle is currently on (e.g.    |
-|                                  | Via Gallarate)                   |
-+----------------------------------+----------------------------------+
-| naviga                           | Number/reference of the road     |
-| tion.item.street_name_systematic | which the vehicle is currently   |
-|                                  | on, if available (e.g. SS33)     |
-+----------------------------------+----------------------------------+
-| navigation.item[1]               | Information related to the next  |
-|                                  | navigation item (from the next   |
-|                                  | maneuver to the one following    |
-|                                  | it)                              |
-+----------------------------------+----------------------------------+
-| navigation.item[1].length[named] | Distance to next maneuver. Use   |
-|                                  | navigation.item[1].length[value] |
-|                                  | and                              |
-|                                  | navigation.item[1].length[unit]  |
-|                                  | in the same manner as for        |
-|                                  | nav                              |
-|                                  | igation.item.destination_length. |
-+----------------------------------+----------------------------------+
-| navigation.item[1].street_name   | Name of the road following the   |
-|                                  | next maneuver (cf.               |
-|                                  | navigation.item.street_name)     |
-+----------------------------------+----------------------------------+
-| navigatio                        | Name of the road following the   |
-| n.item[1].street_name_systematic | next maneuver (cf.               |
-|                                  | navigat                          |
-|                                  | ion.item.street_name_systematic) |
-+----------------------------------+----------------------------------+
-| navigati                         | Sentence explaining the next     |
-| on.item[1].navigation_long_exact | maneuver (e.g. 'Turn left in 2.2 |
-|                                  | miles into Main Street')         |
-+----------------------------------+----------------------------------+
-| navit                            |                                  |
-+----------------------------------+----------------------------------+
-| navit.messages                   |                                  |
-+----------------------------------+----------------------------------+
-| tracking                         | Section containing information   |
-|                                  | on current track, available      |
-|                                  | whenever valid GPS information   |
-|                                  | and corresponding map data is    |
-|                                  | available. The difference to     |
-|                                  | navigation is that tracking data |
-|                                  | is also available when not       |
-|                                  | routing. Ensure that             |
-|                                  | tracking="1" is set in the tag   |
-|                                  | to use these attributes.         |
-+----------------------------------+----------------------------------+
-| tracking.item                    | Information related to the road  |
-|                                  | the vehicle is currently         |
-|                                  | traveling along                  |
-+----------------------------------+----------------------------------+
-| tracking.item.route_speed        | Speed limit on the road which    |
-|                                  | the vehicle is currently on      |
-+----------------------------------+----------------------------------+
-| tracking.item.street_name        | Name of the road which the       |
-|                                  | vehicle is currently on (cf.     |
-|                                  | navigation.item.street_name)     |
-+----------------------------------+----------------------------------+
-| trac                             | Number/reference of the road     |
-| king.item.street_name_systematic | which the vehicle is currently   |
-|                                  | on (cf.                          |
-|                                  | navigat                          |
-|                                  | ion.item.street_name_systematic) |
-+----------------------------------+----------------------------------+
-| vehicle                          | Section containing GPS           |
-|                                  | information, available whenever  |
-|                                  | valid GPS information is         |
-|                                  | available                        |
-+----------------------------------+----------------------------------+
-| vehicle.position_coord_geo       | Current position. Use            |
-|                                  | vehi                             |
-|                                  | cle.position_coord_geo[*format*] |
-|                                  | to control the output format of  |
-|                                  | the coordinates (works reliably  |
-|                                  | from onwards). Valid *format*    |
-|                                  | values are:                      |
-|                                  |                                  |
-|                                  | -  pos_deg: Latitute and         |
-|                                  |    longitude in decimal degrees  |
-|                                  | -  pos_degmin: Latitude and      |
-|                                  |    longitude in degrees, minutes |
-|                                  |    and fractions of minutes      |
-|                                  |    (similar to NMEA style)       |
-|                                  | -  pos_degminsec: Latitude and   |
-|                                  |    longitude in degrees, minutes |
-|                                  |    and seconds                   |
-|                                  | -  lat_deg, lat_degmin,          |
-|                                  |    lat_degminsec: Only the       |
-|                                  |    latitude in one of the        |
-|                                  |    formats described above       |
-|                                  | -  lng_deg, lng_degmin,          |
-|                                  |    lng_degminsec: Only the       |
-|                                  |    longitude in one of the       |
-|                                  |    formats described above       |
-|                                  |                                  |
-|                                  | If omitted, pos_degminsec will   |
-|                                  | be assumed.                      |
-+----------------------------------+----------------------------------+
-| vehicle.position_direction       | Current orientation (direction   |
-|                                  | of travel) in degrees            |
-+----------------------------------+----------------------------------+
-| vehicle.position_height          | Current altitude in m            |
-+----------------------------------+----------------------------------+
-| vehicle.position_qual            | Number of satellites which your  |
-|                                  | GPS receiver can see. However,   |
-|                                  | your receiver may not be using   |
-|                                  | all of them for positioning due  |
-|                                  | to low signal etc...             |
-+----------------------------------+----------------------------------+
-| vehicle.position_sats_used       | Number of satellites used        |
-+----------------------------------+----------------------------------+
-| vehicle.position_speed           | Current speed in km/h            |
-+----------------------------------+----------------------------------+
-| vehicle.position_time_iso8601    | Current GPS time (roughly the    |
-|                                  | same as UTC, with a few seconds  |
-|                                  | of difference)                   |
-+----------------------------------+----------------------------------+
-| vehicle                          | Current GPS time with formatting |
-| .position_time_iso8601[*string*] | string: { iso8601 \| [ local; \| |
-|                                  | *offset* ; ] *format* }          |
-|                                  |                                  |
-|                                  | -  local; retrieves the timezone |
-|                                  |    setting of the system         |
-|                                  | -  *offset* is a literal offset  |
-|                                  |    such as +02:00 (sign, hours,  |
-|                                  |    colon, minutes)               |
-|                                  | -  *format* is a time format     |
-|                                  |    string which follows the      |
-|                                  |    syntax for the C strftime     |
-|                                  |    function                      |
-|                                  |                                  |
-|                                  | Examples:                        |
-|                                  |                                  |
-|                                  | -  vehicl                        |
-|                                  | e.position_time_iso8601[iso8601] |
-|                                  |    --> Current GPS time (default |
-|                                  |    as without qualifier)         |
-|                                  | -  vehicle.posi                  |
-|                                  | tion_time_iso8601[local;%Y-%m-%d |
-|                                  |    %X] --> Current GPS date and  |
-|                                  |    time at local timezone of the |
-|                                  |    system (tested on WinCE), %X  |
-|                                  |    gives time using the system's |
-|                                  |    time format                   |
-|                                  | -  vehicl                        |
-|                                  | e.position_time_iso8601[iso8601] |
-|                                  |    --> Current GPS time (default |
-|                                  |    as without qualifier)         |
-|                                  | -  vehicle.                      |
-|                                  | position_time_iso8601[+01:00;%X] |
-|                                  |    --> time of the UTC+01:00     |
-|                                  |    time zone                     |
-+----------------------------------+----------------------------------+
++----------------------------------+--------------------------------------------+
+| Attribute                        | Value                                      |
++==================================+============================================+
+| navigation                       | Section containing routing                 |
+|                                  | information, available only when           |
+|                                  | routing                                    |
++----------------------------------+--------------------------------------------+
+| navigation.item                  | Information related to the                 |
+|                                  | entire route                               |
++----------------------------------+--------------------------------------------+
+| navigatio                        | Remaining distance to                      |
+| n.item.destination_length[named] | destination. Use                           |
+|                                  | navigatio                                  |
+|                                  | n.item.destination_length[value]           |
+|                                  | to get the bare value (without             |
+|                                  | units) or                                  |
+|                                  | navigati                                   |
+|                                  | on.item.destination_length[unit]           |
+|                                  | to get just the unit. Useful for           |
+|                                  | displaying the value and the               |
+|                                  | unit in two rows, or in                    |
+|                                  | different font sizes.                      |
++----------------------------------+--------------------------------------------+
+| navigatio                        | Estimated time of arrival                  |
+| n.item.destination_time[arrival] |                                            |
++----------------------------------+--------------------------------------------+
+| navigation.                      | Estimated remaining time                   |
+| item.destination_time[remaining] |                                            |
++----------------------------------+--------------------------------------------+
+| navigation.item.street_name      | Name of the road which the                 |
+|                                  | vehicle is currently on (e.g.              |
+|                                  | Via Gallarate)                             |
++----------------------------------+--------------------------------------------+
+| naviga                           | Number/reference of the road               |
+| tion.item.street_name_systematic | which the vehicle is currently             |
+|                                  | on, if available (e.g. SS33)               |
++----------------------------------+--------------------------------------------+
+| navigation.item[1]               | Information related to the next            |
+|                                  | navigation item (from the next             |
+|                                  | maneuver to the one following              |
+|                                  | it)                                        |
++----------------------------------+--------------------------------------------+
+| navigation.item[1].length[named] | Distance to next maneuver. Use             |
+|                                  | navigation.item[1].length[value]           |
+|                                  | and                                        |
+|                                  | navigation.item[1].length[unit]            |
+|                                  | in the same manner as for                  |
+|                                  | nav                                        |
+|                                  | igation.item.destination_length.           |
++----------------------------------+--------------------------------------------+
+| navigation.item[1].street_name   | Name of the road following the             |
+|                                  | next maneuver (cf.                         |
+|                                  | navigation.item.street_name)               |
++----------------------------------+--------------------------------------------+
+| navigatio                        | Name of the road following the             |
+| n.item[1].street_name_systematic | next maneuver (cf.                         |
+|                                  | navigat                                    |
+|                                  | ion.item.street_name_systematic)           |
++----------------------------------+--------------------------------------------+
+| navigati                         | Sentence explaining the next               |
+| on.item[1].navigation_long_exact | maneuver (e.g. 'Turn left in 2.2           |
+|                                  | miles into Main Street')                   |
++----------------------------------+--------------------------------------------+
+| navit                            |                                            |
++----------------------------------+--------------------------------------------+
+| navit.messages                   |                                            |
++----------------------------------+--------------------------------------------+
+| tracking                         | Section containing information             |
+|                                  | on current track, available                |
+|                                  | whenever valid GPS information             |
+|                                  | and corresponding map data is              |
+|                                  | available. The difference to               |
+|                                  | navigation is that tracking data           |
+|                                  | is also available when not                 |
+|                                  | routing. Ensure that                       |
+|                                  | tracking="1" is set in the tag             |
+|                                  | to use these attributes.                   |
++----------------------------------+--------------------------------------------+
+| tracking.item                    | Information related to the road            |
+|                                  | the vehicle is currently                   |
+|                                  | traveling along                            |
++----------------------------------+--------------------------------------------+
+| tracking.item.route_speed        | Speed limit on the road which              |
+|                                  | the vehicle is currently on                |
++----------------------------------+--------------------------------------------+
+| tracking.item.street_name        | Name of the road which the                 |
+|                                  | vehicle is currently on (cf.               |
+|                                  | navigation.item.street_name)               |
++----------------------------------+--------------------------------------------+
+| trac                             | Number/reference of the road               |
+| king.item.street_name_systematic | which the vehicle is currently             |
+|                                  | on (cf.                                    |
+|                                  | navigat                                    |
+|                                  | ion.item.street_name_systematic)           |
++----------------------------------+--------------------------------------------+
+| vehicle                          | Section containing GPS                     |
+|                                  | information, available whenever            |
+|                                  | valid GPS information is                   |
+|                                  | available                                  |
++----------------------------------+--------------------------------------------+
+| vehicle.position_coord_geo       | Current position. Use                      |
+|                                  | vehi                                       |
+|                                  | cle.position_coord_geo[*format*]           |
+|                                  | to control the output format of            |
+|                                  | the coordinates (works reliably            |
+|                                  | from onwards). Valid *format*              |
+|                                  | values are:                                |
+|                                  |                                            |
+|                                  | -  pos_deg: Latitute and                   |
+|                                  |    longitude in decimal degrees            |
+|                                  | -  pos_degmin: Latitude and                |
+|                                  |    longitude in degrees, minutes           |
+|                                  |    and fractions of minutes                |
+|                                  |    (similar to NMEA style)                 |
+|                                  | -  pos_degminsec: Latitude and             |
+|                                  |    longitude in degrees, minutes           |
+|                                  |    and seconds                             |
+|                                  | -  lat_deg, lat_degmin,                    |
+|                                  |    lat_degminsec: Only the                 |
+|                                  |    latitude in one of the                  |
+|                                  |    formats described above                 |
+|                                  | -  lng_deg, lng_degmin,                    |
+|                                  |    lng_degminsec: Only the                 |
+|                                  |    longitude in one of the                 |
+|                                  |    formats described above                 |
+|                                  |                                            |
+|                                  | If omitted, pos_degminsec will             |
+|                                  | be assumed.                                |
++----------------------------------+--------------------------------------------+
+| vehicle.position_direction       | Current orientation (direction             |
+|                                  | of travel) in degrees                      |
++----------------------------------+--------------------------------------------+
+| vehicle.position_height          | Current altitude in m                      |
++----------------------------------+--------------------------------------------+
+| vehicle.position_qual            | Number of satellites which your            |
+|                                  | GPS receiver can see. However,             |
+|                                  | your receiver may not be using             |
+|                                  | all of them for positioning due            |
+|                                  | to low signal etc...                       |
++----------------------------------+--------------------------------------------+
+| vehicle.position_sats_used       | Number of satellites used                  |
++----------------------------------+--------------------------------------------+
+| vehicle.position_speed           | Current speed in km/h                      |
++----------------------------------+--------------------------------------------+
+| vehicle.position_time_iso8601    | Current GPS time (roughly the              |
+|                                  | same as UTC, with a few seconds            |
+|                                  | of difference)                             |
++----------------------------------+--------------------------------------------+
+| vehicle                          | Current GPS time with formatting           |
+| .position_time_iso8601[*string*] | string: { iso8601 \| [ local; \|           |
+|                                  | *offset* ; ] *format* }                    |
+|                                  |                                            |
+|                                  | -  local; retrieves the timezone           |
+|                                  |    setting of the system                   |
+|                                  | -  *offset* is a literal offset            |
+|                                  |    such as +02:00 (sign, hours,            |
+|                                  |    colon, minutes)                         |
+|                                  | -  *format* is a time format               |
+|                                  |    string which follows the                |
+|                                  |    syntax for the C strftime               |
+|                                  |    function                                |
+|                                  |                                            |
+|                                  | Examples:                                  |
+|                                  |                                            |
+|                                  | -  vehicl                                  |
+|                                  |    e.position_tim                          |
+|                                  |    e_iso8601[iso8601]                      |
+|                                  |    --> Current GPS time (default           |
+|                                  |    as without qualifier)                   |
+|                                  | -  vehicle.                                |
+|                                  |    position_time_iso8601                   |
+|                                  |    [local;%Y-%m-%d%X]                      |
+|                                  |    --> Current GPS date and                |
+|                                  |    time at local timezone of the           |
+|                                  |    system (tested on WinCE), %X            |
+|                                  |    gives time using the system's           |
+|                                  |    time format                             |
+|                                  | -  vehicl                                  |
+|                                  |    e.position_time_iso8601[iso8601]        |
+|                                  |    --> Current GPS time (default           |
+|                                  |    as without qualifier)                   |
+|                                  | -  vehicle.position_time_iso8601[+01:00;%X]|
+|                                  |    --> time of the UTC+01:00               |
+|                                  |    time zone                               |
++----------------------------------+--------------------------------------------+
 
 Examples:
 
 .. code:: xml
 
-       <!-- ALWAYS AVAILABLE (if GPS connected) -->
-       <!-- Current Speed (integer in km/h) -->
+   <!-- ALWAYS AVAILABLE (if GPS connected) -->
+   <!-- Current Speed (integer in km/h) -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="-200" y="0" />
 
-       <!-- Current Coordinate Position -->
+   <!-- Current Coordinate Position -->
    <osd enabled="yes" type="text" label="${vehicle.position_coord_geo}" x="-200" y="0" />
 
-       <!-- Current Altitude (in metres)-->
+   <!-- Current Altitude (in metres)-->
    <osd enabled="yes" type="text" label="${vehicle.position_height}m" x="-60" y="-80" />
 
-       <!-- Current Direction of Travel (integer from 0-360) -->
+   <!-- Current Direction of Travel (integer from 0-360) -->
    <osd enabled="yes" type="text" label="${vehicle.position_direction}" x="-60" y="-80" />
 
-       <!-- Number of Satellites Used / Number of Satellites Available -->
+   <!-- Number of Satellites Used / Number of Satellites Available -->
    <osd enabled="yes" type="text" label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="-50" y="40" />
 
-       <!-- ONLY AVAILABLE WHEN ROUTING (i.e in Sat-Nav mode) -->
-       <!-- Currently on ROADNAME -->
+   <!-- ONLY AVAILABLE WHEN ROUTING (i.e in Sat-Nav mode) -->
+   <!-- Currently on ROADNAME -->
    <osd enabled="yes" type="text" label="Currently on ${navigation.item.street_name_systematic}" x="0" y="0" />
 
-       <!-- Distance to next turn (in metres) -->
+   <!-- Distance to next turn (in metres) -->
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="-105" />
 
-       <!-- Next turn is onto ROADNAME -->
+   <!-- Next turn is onto ROADNAME -->
    <osd enabled="yes" type="text" label="Turn onto ${navigation.item[1].street_name_systematic}" x="0" y="-105" />
 
-       <!-- Estimated time of arrival (HH:mm) -->
+   <!-- Estimated time of arrival (HH:mm) -->
    <osd enabled="yes" type="text" label="ETA ${navigation.item.destination_time[arrival]}" x="-150" y="-30" />
 
-       <!-- Entire route distance remaining (in km) -->
+   <!-- Entire route distance remaining (in km) -->
    <osd enabled="yes" type="text" label="DR ${navigation.item.destination_length[named]}" x="-85" y="-60" />
 
-       <!-- Time remaining until destination is reached (HH:mm) -->
+   <!-- Time remaining until destination is reached (HH:mm) -->
    <osd enabled="yes" type="text" label="TR ${navigation.item.destination_time[remaining]}" x="-85" y="-90" />
 
 toggle_announcer
@@ -1387,8 +1398,6 @@ Show name of street after next maneuver
 
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name_systematic} ${navigation.item[1].street_name}" font_size="200" x="0" y="0" w="100%" h="22"/>
 
-.. _icon_source_setting_for_osd:
-
 Icon source setting for OSD
 ===========================
 
@@ -1422,327 +1431,301 @@ Commands
 Navit commands
 --------------
 
-The following commands (from ) can be used in the **``command``**
+The following commands (from ) can be used in the **command**
 attribute of OSD items by specifying the function name as shown below.
 If you want to call them from elsewhere (e.g. from internal GUI menu
-items), prefix them with **``navit.``** (e.g. **``navit.zoom_in()``**):
+items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
 
-+----------------------------------+----------------------------------+
-| Command                          | Meaning                          |
-+==================================+==================================+
-| **``announcer_toggle()``**       | Enables/disables speech output   |
-+----------------------------------+----------------------------------+
-| **``fmt_coordinates()``**        | Formats coordinates as string    |
-|                                  | (but as of r5904 seems to return |
-|                                  | only "Fix me").                  |
-+----------------------------------+----------------------------------+
-| **``say(``\ ``text``\ ``)``**    | Use to produce speech output;    |
-|                                  | sends ``text`` to the            |
-|                                  | text-to-speech engine. (The text |
-|                                  | argument of **``say``** must be  |
-|                                  | enclosed in **``"``** (quotes),  |
-|                                  | the containing command attribute |
-|                                  | in **``'``** (ticks). String     |
-|                                  | concatenation with **+** (plus)  |
-|                                  | works. Several **``say``** can   |
-|                                  | be executed in a command         |
-|                                  | sequence, enabling dynamic       |
-|                                  | composition of spoken text.      |
-|                                  | There is a non-obvious           |
-|                                  | limitations: Judging from        |
-|                                  | experiments and code review the  |
-|                                  | argument to **``say``** can      |
-|                                  | **not** interpolate of navit,    |
-|                                  | vehicle, and position            |
-|                                  | attributes.                      |
-|                                  | --`Nezmi <User:Nezmi>`__         |
-|                                  | (`talk <User_talk:Nezmi>`__)     |
-|                                  | 18:43, 15 July 2014 (CEST))      |
-+----------------------------------+----------------------------------+
-| **``set_center()``**             | center the map view to the given |
-|                                  | coordinates, see coord_parse()   |
-|                                  | in coord.c for the formatting of |
-|                                  | the coordinates                  |
-+----------------------------------+----------------------------------+
-| **``set_center_cursor()``**      | Recalculates the map view so     |
-|                                  | that the vehicle cursor is       |
-|                                  | visible                          |
-+----------------------------------+----------------------------------+
-| **``set_destination()``**        | FIXME: description to be         |
-|                                  | completed                        |
-+----------------------------------+----------------------------------+
-| **``set_position()``**           | FIXME: description to be         |
-|                                  | completed                        |
-+----------------------------------+----------------------------------+
-| *                                | call with "manual", "auto",      |
-| *``switch_layout_day_night()``** | "manual_toggle", "manual_day" or |
-|                                  | "manual_night"                   |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    c                             |
-|                                  | ommand="switch_layout_day_night( |
-|                                  | &amp;quot;manual_day&amp;quot;)" |
-+----------------------------------+----------------------------------+
-| **``zoom_in()``**                | Zoom into the map (dividing the  |
-|                                  | current zoom level by 2).        |
-+----------------------------------+----------------------------------+
-| **``zoom_out()``**               | Zoom out of the map (multiplying |
-|                                  | the current zoom level by 2).    |
-+----------------------------------+----------------------------------+
-| **``zoom_to_route()``**          | Zoom the entire route into view  |
-+----------------------------------+----------------------------------+
-| **``toggle_layer()``**           | Toggles active state of a named  |
-|                                  | layer within current layout.     |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd                          |
-|                                  | enabled="yes" type="button" x="0 |
-|                                  | "  y="-175" command="toggle_laye |
-|                                  | r(&amp;quot;streets&amp;quot;)"  |
-|                                  |  src="gui_display_48_48.png"  /> |
-|                                  |    </source>                     |
-|                                  |                                  |
-|                                  | If you want the layer to be      |
-|                                  | hidden by default, set the       |
-|                                  | active="0" tag in the layer      |
-|                                  | opening tag of the targetted     |
-|                                  | layer.                           |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <                             |
-|                                  | layer name="streets" active="0"> |
-+----------------------------------+----------------------------------+
-| **``set_int_var(``\ ``va         | Creates or updates an integer    |
-| riable_name``\ ``,int_value)``** | variable that can be accessed    |
-|                                  | from the command subsystem. This |
-|                                  | command requires a name string   |
-|                                  | (between ``&quot;``) and value   |
-|                                  | (integer types) be given as      |
-|                                  | arguments. If the named variable |
-|                                  | does not exist it is created,    |
-|                                  | otherwise the value is updated.  |
-|                                  |                                  |
-|                                  | For example, this command can be |
-|                                  | used to store the value of       |
-|                                  | ``osd_configuration`` before     |
-|                                  | changing it, as shown in the     |
-|                                  | example below:                   |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd enabled="yes"            |
-|                                  |  type="button" x="0"  y="-175" c |
-|                                  | ommand="set_int_var(&amp;quot;la |
-|                                  | st_osd_cfg&amp;quot;, osd_config |
-|                                  | uration);osd_configuration = 16" |
-|                                  |  src="gui_display_48_48.png"  /> |
-|                                  |    </source>                     |
-|                                  |                                  |
-|                                  | This command sets the variable   |
-|                                  | ``last_osd_cfg`` to the value of |
-|                                  | ``osd_configuration``, before    |
-|                                  | changing ``osd_configuration``   |
-|                                  | to *16*.                         |
-+----------------------------------+----------------------------------+
-| **``get_int_va                   | Returns the value of a           |
-| r(``\ ``variable_name``\ ``)``** | previously set command subsystem |
-|                                  | variable (set with               |
-|                                  | ``set_int_var``) or 0 if it does |
-|                                  | not exists. Accepts a variable   |
-|                                  | name (surrounded by ``&quot;``)  |
-|                                  | as a textual argument.           |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd enabled="yes" type="bu   |
-|                                  | tton" x="0"  y="-175" command="o |
-|                                  | sd_configuration=get_int_var(&am |
-|                                  | p;quot;last_osd_cfg&amp;quot;);" |
-|                                  |  src="gui_display_48_48.png"  /> |
-|                                  |    </source>                     |
-+----------------------------------+----------------------------------+
-| **``push_int(int_value)``**      | Pushes an integer variable onto  |
-|                                  | a stack (LIFO container). This   |
-|                                  | can be used to set some          |
-|                                  | parameter several times, after   |
-|                                  | which (for example) the          |
-|                                  | parameter values can be          |
-|                                  | reversed. For example, popping   |
-|                                  | up windows on the top of each    |
-|                                  | other can be implemented this    |
-|                                  | way using OSD's.                 |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd enabled=                 |
-|                                  | "yes" type="button" x="0"  y="-1 |
-|                                  | 75" command="push_int(osd_config |
-|                                  | uration);osd_configuration = 16" |
-|                                  |  src="gui_display_48_48.png"  /> |
-|                                  |    </source>                     |
-+----------------------------------+----------------------------------+
-| **``pop_int()``**                | Retrieves a value from the top   |
-|                                  | of the previously created stack. |
-|                                  | The following example retrieves  |
-|                                  | the top value and assigns it to  |
-|                                  | osd_configuration.               |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd enabled="yes" typ        |
-|                                  | e="button" x="0"  y="-175" comma |
-|                                  | nd="osd_configuration=pop_int()" |
-|                                  |  src="gui_display_48_48.png"  /> |
-|                                  |    </source>                     |
-+----------------------------------+----------------------------------+
-| **``int_stack_size()``**         | returns the size of the int      |
-|                                  | stack                            |
-+----------------------------------+----------------------------------+
-| **``map_add_curr                 | Creates an item on the named map |
-| _pos("map name","item type")``** | and returns an item attribute.   |
-|                                  | ``Currently only csv maps su     |
-|                                  | pport adding items by command.`` |
-|                                  | The returned item attribute can  |
-|                                  | be used to add attributes to the |
-|                                  | item with subsequent             |
-|                                  | *map_item_set_attr* commands.    |
-|                                  | Therefore it is a good idea to   |
-|                                  | save its value using the         |
-|                                  | *set_attr_var* command (see the  |
-|                                  | example below) and use it later  |
-|                                  | using the *set_attr_var*         |
-|                                  | command. The example is fitted   |
-|                                  | to the csv extract below:        |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    1                             |
-|                                  | 9.168051,47.565806,test2,Germany |
-|                                  |                                  |
-|                                  | 19.168375,47.565526,test,Hungary |
-|                                  |                                  |
-|                                  | The following map definition     |
-|                                  | will handle this csv data as     |
-|                                  | speed camera (tec_common) typed  |
-|                                  | items (see navit csv driver)     |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <map type="csv                |
-|                                  | " enabled="yes" data="/home/dand |
-|                                  | or/test.csv" item_type="tec_comm |
-|                                  | on" attr_types="position_longitu |
-|                                  | de,position_latitude,label,count |
-|                                  | ry_name" name="csv_test_map"  /> |
-|                                  |                                  |
-|                                  | the following osd definition     |
-|                                  | will allow you to add new items  |
-|                                  | to the map and set its           |
-|                                  | attributes runtime and save the  |
-|                                  | changes on exit. The commands    |
-|                                  | below do the following:          |
-|                                  |                                  |
-|                                  | -  create an empty item (one     |
-|                                  |    without attributes) of type   |
-|                                  |    specified as command          |
-|                                  |    parameter on the actual       |
-|                                  |    vehicle coordinate            |
-|                                  | -  store the returned item       |
-|                                  |    attribute with name           |
-|                                  |    "item_attr"                   |
-|                                  | -  load the stored attribute of  |
-|                                  |    the newly created item and    |
-|                                  |    use it to set item attribute  |
-|                                  |    "label" to value "test" and   |
-|                                  |    item attribute "country_name" |
-|                                  |    to value "Hungary"            |
-|                                  |                                  |
-|                                  | One can use the supported        |
-|                                  | attributes of navit objects as   |
-|                                  | function parameters. For example |
-|                                  | to store the gps timedate one    |
-|                                  | can use                          |
-|                                  | vehicle.position_time_iso8601    |
-|                                  | (for details see:`command        |
-|                                  | i                                |
-|                                  | nterface <command_interface>`__) |
-|                                  | as the value parameter of        |
-|                                  | *map_item_set_attr* .            |
-|                                  |                                  |
-|                                  | In case of csv maps the changes  |
-|                                  | will be written to the map file  |
-|                                  | on exit. Note that you will need |
-|                                  | the name attribute set to a      |
-|                                  | unique value for your map, since |
-|                                  | item creation and item attribute |
-|                                  | manipulation commands refer to   |
-|                                  | the map by name.                 |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <osd enabl                    |
-|                                  | ed="yes" type="button" command=' |
-|                                  |    set_attr_var("i               |
-|                                  | tem_attr",   map_add_curr_pos("c |
-|                                  | sv_test_map","tec_common") ) ;   |
-|                                  |    map_item_set_attr("csv_tes    |
-|                                  | t_map",  get_attr_var("item_attr |
-|                                  | ") , "label"  , "test" )    ,    |
-|                                  |    ma                            |
-|                                  | p_item_set_attr("csv_test_map",  |
-|                                  |  get_attr_var("item_attr") , "co |
-|                                  | untry_name"  , "Hungary" )    '  |
-|                                  |    x="150" y="100" w="           |
-|                                  | 50" h="50" src="zoom_in.xpm"  /> |
-+----------------------------------+----------------------------------+
-| **``map_item_set                 | sets an attribute of a given     |
-| _attr("map name", item attribute | item. See the example above.     |
-| , "attr name", "attr value")``** |                                  |
-+----------------------------------+----------------------------------+
-| **``set_attr_var                 | Stores an attribute (for example |
-| ("variable name", any attribute  | an attribute that stores an      |
-| returned by another command)``** | item) with a name to be used     |
-|                                  | later by the command system.     |
-|                                  | (see example at                  |
-|                                  | *map_add_curr_pos* command)      |
-+----------------------------------+----------------------------------+
-| **``g                            | Retrieves an attribute (for      |
-| et_attr_var("variable name")``** | example an attribute that stores |
-|                                  | an item) by name to be used by   |
-|                                  | the caller command. (see example |
-|                                  | at *map_add_curr_pos* command)   |
-+----------------------------------+----------------------------------+
-| **``s                            | Spawns an external command.      |
-| pawn("command" arguments...)``** | Since .                          |
-|                                  |                                  |
-|                                  | ::                               |
-|                                  |                                  |
-|                                  |    <source lang="xml">           |
-|                                  |    <                             |
-|                                  | osd enabled="yes" type="button"  |
-|                                  | x="-96" y="-96" command='spawn(" |
-|                                  | ls","/bin")' src="zoom_in.png"/> |
-|                                  |    </source>                     |
-+----------------------------------+----------------------------------+
-| **``                             | Removes the next waypoint of the |
-| route_remove_next_waypoint()``** | current route with waypoints.    |
-|                                  | Since .                          |
-+----------------------------------+----------------------------------+
-| **``                             | Removes the last waypoint of the |
-| route_remove_last_waypoint()``** | current route with waypoints.    |
-|                                  | Since .                          |
-+----------------------------------+----------------------------------+
-|                                  |                                  |
-+----------------------------------+----------------------------------+
++---------------------------------+----------------------------------------------------------------------------+
+| Command                         | Meaning                                                                    |
++=================================+============================================================================+
+| **announcer_toggle()**          | Enables/disables speech output                                             |
++---------------------------------+----------------------------------------------------------------------------+
+| **fmt_coordinates()**           | Formats coordinates as string                                              |
+|                                 | (but as of r5904 seems to return                                           |
+|                                 | only "Fix me").                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **say(**                        | Use to produce speech output;                                              |
+| text                            | sends ``text`` to the                                                      |
+| **)**                           | text-to-speech engine. (The text                                           |
+|                                 | argument of **say** must be                                                |
+|                                 | enclosed in **"** (quotes),                                                |
+|                                 | the containing command attribute                                           |
+|                                 | in **'** (ticks). String                                                   |
+|                                 | concatenation with **+** (plus)                                            |
+|                                 | works. Several **say** can                                                 |
+|                                 | be executed in a command                                                   |
+|                                 | sequence, enabling dynamic                                                 |
+|                                 | composition of spoken text.                                                |
+|                                 | There is a non-obvious                                                     |
+|                                 | limitations: Judging from                                                  |
+|                                 | experiments and code review the                                            |
+|                                 | argument to **say** can                                                    |
+|                                 | **not** interpolate of navit,                                              |
+|                                 | vehicle, and position                                                      |
+|                                 | attributes.                                                                |
+|                                 | --`Nezmi <User:Nezmi>`__                                                   |
+|                                 | (`talk <User_talk:Nezmi>`__)                                               |
+|                                 | 18:43, 15 July 2014 (CEST))                                                |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_center()**                | center the map view to the given                                           |
+|                                 | coordinates, see coord_parse()                                             |
+|                                 | in coord.c for the formatting of                                           |
+|                                 | the coordinates                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_center_cursor()**         | Recalculates the map view so                                               |
+|                                 | that the vehicle cursor is                                                 |
+|                                 | visible                                                                    |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_destination()**           | FIXME: description to be                                                   |
+|                                 | completed                                                                  |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_position()**              | FIXME: description to be                                                   |
+|                                 | completed                                                                  |
++---------------------------------+----------------------------------------------------------------------------+
+| **switch_layout_day_night()**   | call with "manual", "auto",                                                |
+|                                 | "manual_toggle", "manual_day" or                                           |
+|                                 | "manual_night"                                                             |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    command="switch_layout_day_night('manual_day')"                         |
+|                                 |                                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **zoom_in()**                   | Zoom into the map (dividing the                                            |
+|                                 | current zoom level by 2).                                                  |
++---------------------------------+----------------------------------------------------------------------------+
+| **zoom_out()**                  | Zoom out of the map (multiplying                                           |
+|                                 | the current zoom level by 2).                                              |
++---------------------------------+----------------------------------------------------------------------------+
+| **zoom_to_route()**             | Zoom the entire route into view                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **toggle_layer()**              | Toggles active state of a named                                            |
+|                                 | layer within current layout.                                               |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd                                                                    |
+|                                 |    enabled="yes" type="button" x="0"                                       |
+|                                 |    y="-175" command="toggle_layer(&amp;quot;streets&amp;quot;)"            |
+|                                 |    src="gui_display_48_48.png"  />                                         |
+|                                 |                                                                            |
+|                                 | If you want the layer to be                                                |
+|                                 | hidden by default, set the                                                 |
+|                                 | active="0" tag in the layer                                                |
+|                                 | opening tag of the targetted                                               |
+|                                 | layer.                                                                     |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <layer name="streets" active="0">                                       |
+|                                 |                                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_int_var(**                | Creates or updates an integer                                              |
+| variable_name, int_value        | variable that can be accessed                                              |
+| **)**                           | from the command subsystem. This                                           |
+|                                 | command requires a name string                                             |
+|                                 | (between ``&quot;``) and value                                             |
+|                                 | (integer types) be given as                                                |
+|                                 | arguments. If the named variable                                           |
+|                                 | does not exist it is created,                                              |
+|                                 | otherwise the value is updated.                                            |
+|                                 |                                                                            |
+|                                 | For example, this command can be                                           |
+|                                 | used to store the value of                                                 |
+|                                 | ``osd_configuration`` before                                               |
+|                                 | changing it, as shown in the                                               |
+|                                 | example below:                                                             |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd enabled="yes"                                                      |
+|                                 |    type="button" x="0"  y="-175"                                           |
+|                                 |    command="set_int_var('last_osd_cfg',                                    |
+|                                 |    osd_configuration);                                                     |
+|                                 |    osd_configuration = 16"                                                 |
+|                                 |    src="gui_display_48_48.png"  />                                         |
+|                                 |                                                                            |
+|                                 | This command sets the variable                                             |
+|                                 | ``last_osd_cfg`` to the value of                                           |
+|                                 | ``osd_configuration``, before                                              |
+|                                 | changing ``osd_configuration``                                             |
+|                                 | to *16*.                                                                   |
++---------------------------------+----------------------------------------------------------------------------+
+| **get_int_var(**                | Returns the value of a                                                     |
+| variable_name                   | previously set command subsystem                                           |
+| **)**                           | variable (set with                                                         |
+|                                 | ``set_int_var``) or 0 if it does                                           |
+|                                 | not exists. Accepts a variable                                             |
+|                                 | name (surrounded by ``&quot;``)                                            |
+|                                 | as a textual argument.                                                     |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <source lang="xml">                                                     |
+|                                 |    <osd enabled="yes" type="button"                                        |
+|                                 |    x="0"  y="-175" command="osd_configuration=get_int_var('last_osd_cfg');"|
+|                                 |    src="gui_display_48_48.png"  />                                         |
++---------------------------------+----------------------------------------------------------------------------+
+| **push_int(**int_value**)**     | Pushes an integer variable onto                                            |
+|                                 | a stack (LIFO container). This                                             |
+|                                 | can be used to set some                                                    |
+|                                 | parameter several times, after                                             |
+|                                 | which (for example) the                                                    |
+|                                 | parameter values can be                                                    |
+|                                 | reversed. For example, popping                                             |
+|                                 | up windows on the top of each                                              |
+|                                 | other can be implemented this                                              |
+|                                 | way using OSD's.                                                           |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd enabled="yes"                                                      |
+|                                 |    type="button" x="0" y="-175"                                            |
+|                                 |    command="push_int(osd_configuration);osd_configuration = 16"            |
+|                                 |    src="gui_display_48_48.png"  />                                         |
++---------------------------------+----------------------------------------------------------------------------+
+| **pop_int()**                   | Retrieves a value from the top                                             |
+|                                 | of the previously created stack.                                           |
+|                                 | The following example retrieves                                            |
+|                                 | the top value and assigns it to                                            |
+|                                 | osd_configuration.                                                         |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd enabled="yes" type="button"                                        |
+|                                 |    x="0" y="-175"                                                          |
+|                                 |    command="osd_configuration=pop_int()"                                   |
+|                                 |    src="gui_display_48_48.png" />                                          |
++---------------------------------+----------------------------------------------------------------------------+
+| **int_stack_size()**            | returns the size of the intstack                                           |
++---------------------------------+----------------------------------------------------------------------------+
+| **map_add_curr_pos(**           | Creates an item on the named map                                           |
+| map_name, item_type             | and returns an item attribute.                                             |
+| **)**                           | ``Currently only csv maps su                                               |
+|                                 | pport adding items by command.``                                           |
+|                                 | The returned item attribute can                                            |
+|                                 | be used to add attributes to the                                           |
+|                                 | item with subsequent                                                       |
+|                                 | *map_item_set_attr* commands.                                              |
+|                                 | Therefore it is a good idea to                                             |
+|                                 | save its value using the                                                   |
+|                                 | *set_attr_var* command (see the                                            |
+|                                 | example below) and use it later                                            |
+|                                 | using the *set_attr_var*                                                   |
+|                                 | command. The example is fitted                                             |
+|                                 | to the csv extract below:                                                  |
+|                                 |                                                                            |
+|                                 | .. code::                                                                  |
+|                                 |                                                                            |
+|                                 |    19.168051,47.565806,test2,Germany                                       |
+|                                 |    19.168375,47.565526,test,Hungary                                        |
+|                                 |                                                                            |
+|                                 | The following map definition                                               |
+|                                 | will handle this csv data as                                               |
+|                                 | speed camera (tec_common) typed                                            |
+|                                 | items (see navit csv driver)                                               |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <map type="csv"                                                         |
+|                                 |    enabled="yes"                                                           |
+|                                 |    data="/home/dandor/test.csv"                                            |
+|                                 |    item_type="tec_common"                                                  |
+|                                 |    attr_types="position_longitude,position_latitude,label,country_name"    |
+|                                 |    name="csv_test_map" />                                                  |
+|                                 |                                                                            |
+|                                 | the following osd definition                                               |
+|                                 | will allow you to add new items                                            |
+|                                 | to the map and set its                                                     |
+|                                 | attributes runtime and save the                                            |
+|                                 | changes on exit. The commands                                              |
+|                                 | below do the following:                                                    |
+|                                 |                                                                            |
+|                                 | -  create an empty item (one                                               |
+|                                 |    without attributes) of type                                             |
+|                                 |    specified as command                                                    |
+|                                 |    parameter on the actual                                                 |
+|                                 |    vehicle coordinate                                                      |
+|                                 | -  store the returned item                                                 |
+|                                 |    attribute with name                                                     |
+|                                 |    "item_attr"                                                             |
+|                                 | -  load the stored attribute of                                            |
+|                                 |    the newly created item and                                              |
+|                                 |    use it to set item attribute                                            |
+|                                 |    "label" to value "test" and                                             |
+|                                 |    item attribute "country_name"                                           |
+|                                 |    to value "Hungary"                                                      |
+|                                 |                                                                            |
+|                                 | One can use the supported                                                  |
+|                                 | attributes of navit objects as                                             |
+|                                 | function parameters. For example                                           |
+|                                 | to store the gps timedate one                                              |
+|                                 | can use                                                                    |
+|                                 | vehicle.position_time_iso8601                                              |
+|                                 | (for details see:`command                                                  |
+|                                 | interface <command_interface>`__)                                          |
+|                                 | as the value parameter of                                                  |
+|                                 | *map_item_set_attr* .                                                      |
+|                                 |                                                                            |
+|                                 | In case of csv maps the changes                                            |
+|                                 | will be written to the map file                                            |
+|                                 | on exit. Note that you will need                                           |
+|                                 | the name attribute set to a                                                |
+|                                 | unique value for your map, since                                           |
+|                                 | item creation and item attribute                                           |
+|                                 | manipulation commands refer to                                             |
+|                                 | the map by name.                                                           |
+|                                 |                                                                            |
+|                                 | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd enabled="yes"                                                      |
+|                                 |    type="button" command='                                                 |
+|                                 |    set_attr_var("item_attr",                                               |
+|                                 |    map_add_curr_pos("csv_test_map","tec_common") ) ;                       |
+|                                 |    map_item_set_attr("csv_test_map",                                       |
+|                                 |    get_attr_var("item_attr") , "label"  , "test" ),                        |
+|                                 |    map_item_set_attr("csv_test_map",                                       |
+|                                 |    get_attr_var("item_attr"),                                              |
+|                                 |    "country_name"  , "Hungary" )'                                          |
+|                                 |    x="150" y="100" w="50" h="50"                                           |
+|                                 |    src="zoom_in.xpm"  />                                                   |
++---------------------------------+----------------------------------------------------------------------------+
+| **map_item_set_attr(**          | sets an attribute of a given                                               |
+| map_name, item_attribute,       | item. See the example above.                                               |
+| attr_name, attr_value           |                                                                            |
+| **)**                           |                                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **set_attr_var(**               | Stores an attribute (for example                                           |
+| variable_name, any attribute    | an attribute that stores an                                                |
+| returned by another command     | item) with a name to be used                                               |
+| **)**                           | later by the command system.                                               |
+|                                 | (see example at                                                            |
+|                                 | *map_add_curr_pos* command)                                                |
++---------------------------------+----------------------------------------------------------------------------+
+| **get_attr_var(**               | Retrieves an attribute (for                                                |
+| variable_name                   | example an attribute that stores                                           |
+| **)**                           | an item) by name to be used by                                             |
+|                                 | the caller command. (see example                                           |
+|                                 | at *map_add_curr_pos* command)                                             |
++---------------------------------+----------------------------------------------------------------------------+
+| **spawn(**                      | Spawns an external command.                                                |
+| command, arguments...           |                                                                            |
+| **)**                           | .. code:: xml                                                              |
+|                                 |                                                                            |
+|                                 |    <osd enabled="yes"                                                      |
+|                                 |    type="button"                                                           |
+|                                 |    x="-96" y="-96"                                                         |
+|                                 |    command='spawn("ls","/bin")'                                            |
+|                                 |    src="zoom_in.png"/>                                                     |
+|                                 |                                                                            |
++---------------------------------+----------------------------------------------------------------------------+
+| **route_remove_next_waypoint()**| Removes the next waypoint of the                                           |
+|                                 | current route with waypoints.                                              |
++---------------------------------+----------------------------------------------------------------------------+
+| **route_remove_last_waypoint()**| Removes the last waypoint of the                                           |
+|                                 | current route with waypoints.                                              |
++---------------------------------+----------------------------------------------------------------------------+
 
 .. _gui_commands:
 
@@ -1751,186 +1734,184 @@ GUI commands
 
 GUI commands can be used within from GUI menu items by specifying the
 function name as shown below. If you want to call them from elsewhere
-(e.g. from OSD items), prefix them with **``gui.``** (e.g.
-**``gui.menu()``**) The following are available (from ):
+(e.g. from OSD items), prefix them with **gui**. (e.g.
+**gui.menu()**) The following are available (from ):
 
-+----------------------------------+----------------------------------+
-| Command                          | Meaning                          |
-+==================================+==================================+
-| **``abort_navigation()``**       | Cancels navigation: The route is |
-|                                  | cleared and Navit switches to    |
-|                                  | tracking mode.                   |
-+----------------------------------+----------------------------------+
-| **``about()``**                  | Displays the About screen.       |
-+----------------------------------+----------------------------------+
-| **``back()``**                   | FIXME: description to be         |
-|                                  | completed.                       |
-+----------------------------------+----------------------------------+
-| **``back_to_map()``**            | Leaves the menu and returns to   |
-|                                  | map view.                        |
-+----------------------------------+----------------------------------+
-| **``bookmarks()``**              | Shows bookmarks.                 |
-+----------------------------------+----------------------------------+
-| **``get_data()``**               | FIXME: description to be         |
-|                                  | completed                        |
-+----------------------------------+----------------------------------+
-| **``locale()``**                 | Shows locale information.        |
-+----------------------------------+----------------------------------+
-| **``log``**                      | FIXME: description to be         |
-|                                  | completed                        |
-+----------------------------------+----------------------------------+
-| **``menu()``**                   | Brings up the menu (used as      |
-|                                  | **``gui.menu()``** in OSD items  |
-|                                  | in order to have a dedicated     |
-|                                  | menu button).                    |
-+----------------------------------+----------------------------------+
-| **``posit                        | Presents possible operations on  |
-| ion(``\ ``position,``\ ````\ ``t | a position (set as current       |
-| ext,``\ ````\ ``flags``\ ``)``** | location, set as destination     |
-|                                  | etc.). ``position`` is a         |
-|                                  | coordinate-type attribute (e.g.  |
-|                                  | **``position_coord_geo``**).     |
-+----------------------------------+----------------------------------+
-| **``quit()``**                   | Closes Navit.                    |
-+----------------------------------+----------------------------------+
-| **``refresh()``**                | Redraws the currently active     |
-|                                  | menu. Typically used by menu     |
-|                                  | items which change parameters    |
-|                                  | used in ``cond``\ s in order to  |
-|                                  | reflect those changes.           |
-+----------------------------------+----------------------------------+
-| **``route_description()``**      | Shows a turn-by-turn description |
-|                                  | of the active route when in      |
-|                                  | navigation mode.                 |
-+----------------------------------+----------------------------------+
-| **``route_height_profile()``**   | Shows a height profile of the    |
-|                                  | active route when in navigation  |
-|                                  | mode.                            |
-+----------------------------------+----------------------------------+
-| **``set(``\ ``patter             | Save an option to be recovered   |
-| n,``\ ````\ ``args...``\ ``)``** | next time navit is opened.       |
-|                                  | Pattern is used to search the    |
-|                                  | old value to delete it, and also |
-|                                  | it's used to write the new       |
-|                                  | value. The '*' character inside  |
-|                                  | pattern will match with any      |
-|                                  | string when searching for the    |
-|                                  | old value, and it will also be   |
-|                                  | substituted by the values from   |
-|                                  | 'args' when writing the new      |
-|                                  | value. For example:              |
-|                                  |                                  |
-|                                  | - set("navit.pitch=*", 60) will  |
-|                                  | remove the previous saved value  |
-|                                  | of navit.pitch and will save the |
-|                                  | new one as navit.pitch=60.       |
-|                                  |                                  |
-|                                  | -                                |
-|                                  | set("navit.layou                 |
-|                                  | t.layer[@name==\"*\"].active=*", |
-|                                  | "POI symbols", 1) will set the   |
-|                                  | new value as                     |
-|                                  | navit.layout.layer[@name=="POI   |
-|                                  | symbols"].active=1               |
-+----------------------------------+----------------------------------+
-| **``img(``\ ``class,``           | Generate and print the code of a |
-| \ ````\ ``src,``\ ````\ ``text,` | button with the selected image,  |
-| `\ ````\ ``onclick_pre,``\ ````\ | text and actions                 |
-|  ``onclick_set_pattern,``\ ````\ |                                  |
-|  ``[onclick_set_replaces...,]``\ | - class: the class to style the  |
-|  ````\ ``onclick_post``\ ``)``** | image (for example, "centry"     |
-|                                  | class is used for lists of       |
-|                                  | options, once per line, with a   |
-|                                  | small image at the beginning of  |
-|                                  | the line)                        |
-|                                  |                                  |
-|                                  | - src: the image source          |
-|                                  |                                  |
-|                                  | - text: the text                 |
-|                                  |                                  |
-|                                  | - onclick_pre: commands to be    |
-|                                  | executed first (this must be a   |
-|                                  | string just like a normal        |
-|                                  | onclick command into an tag)     |
-|                                  |                                  |
-|                                  | - onclick_set_pattern: after     |
-|                                  | onclick_pre action, a 'set'      |
-|                                  | command is executed ('set' is    |
-|                                  | explained above), and this       |
-|                                  | string will be passed to this    |
-|                                  | 'set' command as first argument  |
-|                                  |                                  |
-|                                  | - onclick_set_replaces: the rest |
-|                                  | of the arguments for 'set'       |
-|                                  | action (the replacement          |
-|                                  | strings). There must be as much  |
-|                                  | arguments as replacements to be  |
-|                                  | done in onclick_set_pattern.     |
-|                                  |                                  |
-|                                  | - onclick_post: after the 'set'  |
-|                                  | command is executed, one or more |
-|                                  | additional commands are executed |
-|                                  |                                  |
-|                                  | EXAMPLE:                         |
-|                                  |                                  |
-|                                  | .. raw:: html                    |
-|                                  |                                  |
-|                                  |    <script>                      |
-|                                  |                                  |
-|                                  | img("centry",                    |
-|                                  | navit.waypoint_flag ?            |
-|                                  | "gui_active" : "gui_inactive",   |
-|                                  | "Activate waypoints", "",        |
-|                                  | "navit.waypoints_flag=%{d}*",    |
-|                                  | !navit.waypoints_flag,           |
-|                                  | "refresh();");                   |
-|                                  |                                  |
-|                                  | .. raw:: html                    |
-|                                  |                                  |
-|                                  |    </script>                     |
-|                                  |                                  |
-|                                  | In this example, gui_active and  |
-|                                  | gui_inactive images are used to  |
-|                                  | indicate if the option is        |
-|                                  | enabled or not. No onclick_pre   |
-|                                  | command is executed, set is used |
-|                                  | to save user choice and finally  |
-|                                  | refresh command is executed.     |
-+----------------------------------+----------------------------------+
-| **``setting_layout()``**         | Presents a selection of          |
-|                                  | available screen layouts.        |
-+----------------------------------+----------------------------------+
-| **``setting_maps()``**           | Presents a dialog to switch      |
-|                                  | between available mapsets.       |
-+----------------------------------+----------------------------------+
-| **``setting_rules()``**          | Presents a dialog for setting    |
-|                                  | various internal options.        |
-+----------------------------------+----------------------------------+
-| **``setting_vehicle()``**        | Presents a dialog for selecting  |
-|                                  | the active vehicle.              |
-+----------------------------------+----------------------------------+
-| **``town()``**                   | Presents a dialog for selecting  |
-|                                  | an address, starting with a      |
-|                                  | town.                            |
-+----------------------------------+----------------------------------+
-| **``                             | Writes an attribute. Used by the |
-| write(``\ ``attribute``\ ``)``** | GUI menu in conjunction with ''' |
-|                                  |                                  |
-|                                  | .. raw:: html                    |
-|                                  |                                  |
-|                                  |    <script>                      |
-|                                  |                                  |
-|                                  | ''' to display the content of an |
-|                                  | attribute in a menu item.        |
-+----------------------------------+----------------------------------+
-|                                  |                                  |
-+----------------------------------+----------------------------------+
++----------------------------+-----------------------------------+
+| Command                    | Meaning                           |
++============================+===================================+
+| **abort_navigation()**     | Cancels navigation: The route is  |
+|                            | cleared and Navit switches to     |
+|                            | tracking mode.                    |
++----------------------------+-----------------------------------+
+| **about()**                | Displays the About screen.        |
++----------------------------+-----------------------------------+
+| **back()**                 | FIXME: description to be          |
+|                            | completed.                        |
++----------------------------+-----------------------------------+
+| **back_to_map()**          | Leaves the menu and returns to    |
+|                            | map view.                         |
++----------------------------+-----------------------------------+
+| **bookmarks()**            | Shows bookmarks.                  |
++----------------------------+-----------------------------------+
+| **get_data()**             | FIXME: description to be          |
+|                            | completed                         |
++----------------------------+-----------------------------------+
+| **locale()**               | Shows locale information.         |
++----------------------------+-----------------------------------+
+| **log**                    | FIXME: description to be          |
+|                            | completed                         |
++----------------------------+-----------------------------------+
+| **menu()**                 | Brings up the menu (used as       |
+|                            | **gui.menu()** in OSD items       |
+|                            | in order to have a dedicated      |
+|                            | menu button).                     |
++----------------------------+-----------------------------------+
+| **position(**              | Presents possible operations on   |
+| position, text, flags **)**| a position (set as current        |
+|                            | location, set as destination      |
+|                            | etc.). ``position`` is a          |
+|                            | coordinate-type attribute (e.g.   |
+|                            | **position_coord_geo**).          |
++----------------------------+-----------------------------------+
+| **quit()**                 | Closes Navit.                     |
++----------------------------+-----------------------------------+
+| **refresh()**              | Redraws the currently active      |
+|                            | menu. Typically used by menu      |
+|                            | items which change parameters     |
+|                            | used in ``cond``\ s in order to   |
+|                            | reflect those changes.            |
++----------------------------+-----------------------------------+
+| **route_description()**    | Shows a turn-by-turn description  |
+|                            | of the active route when in       |
+|                            | navigation mode.                  |
++----------------------------+-----------------------------------+
+| **route_height_profile()** | Shows a height profile of the     |
+|                            | active route when in navigation   |
+|                            | mode.                             |
++----------------------------+-----------------------------------+
+| **set(**                   | Save an option to be recovered    |
+| pattern, args              | next time navit is opened.        |
+| **)**                      | Pattern is used to search the     |
+|                            | old value to delete it, and also  |
+|                            | it's used to write the new        |
+|                            | value. The '*' character inside   |
+|                            | pattern will match with any       |
+|                            | string when searching for the     |
+|                            | old value, and it will also be    |
+|                            | substituted by the values from    |
+|                            | 'args' when writing the new       |
+|                            | value. For example:               |
+|                            |                                   |
+|                            | - set("navit.pitch=*", 60) will   |
+|                            |   remove the previous saved value |
+|                            |   of navit.pitch and will save the|
+|                            |   new one as navit.pitch=60.      |
+|                            |                                   |
+|                            | - set("navit.layout.layer[@name=  |
+|                            |   =\"*\"].active=*","POI symbols" |
+|                            |   , 1)                            |
+|                            |   will set the new value as       |
+|                            |   navit.layout.layer[@name=="POI s|
+|                            |   ymbols"].active=1               |
++----------------------------+-----------------------------------+
+| **img(** class,            | Generate and print the code of a  |
+| src, text,                 | button with the selected image,   |
+| onclick_pre,               | text and actions                  |
+| onclick_set_pattern,       |                                   |
+| [onclick_set_replaces...,] | - class: the class to style the   |
+| onclick_post **)**         |   image (for example, "centry"    |
+|                            |   class is used for lists of      |
+|                            |   options, once per line, with a  |
+|                            |   small image at the beginning of |
+|                            |   the line)                       |
+|                            |                                   |
+|                            | - src: the image source           |
+|                            |                                   |
+|                            | - text: the text                  |
+|                            |                                   |
+|                            | - onclick_pre: commands to be     |
+|                            |   executed first (this must be a  |
+|                            |   string just like a normal       |
+|                            |   onclick command into an tag)    |
+|                            |                                   |
+|                            | - onclick_set_pattern: after      |
+|                            |   onclick_pre action, a 'set'     |
+|                            |   command is executed ('set' is   |
+|                            |   explained above), and this      |
+|                            |   string will be passed to this   |
+|                            |   'set' command as first argument |
+|                            |                                   |
+|                            | - onclick_set_replaces: the rest  |
+|                            |   of the arguments for 'set'      |
+|                            |   action (the replacement         |
+|                            |   strings). There must be as much |
+|                            |   arguments as replacements to be |
+|                            |   done in onclick_set_pattern.    |
+|                            |                                   |
+|                            | - onclick_post: after the 'set'   |
+|                            |   command is executed, one or more|
+|                            |   additional commands are executed|
+|                            |                                   |
+|                            | EXAMPLE:                          |
+|                            |                                   |
+|                            | .. raw:: html                     |
+|                            |                                   |
+|                            |    <script>                       |
+|                            |                                   |
+|                            | img("centry",                     |
+|                            | navit.waypoint_flag ?             |
+|                            | "gui_active" : "gui_inactive",    |
+|                            | "Activate waypoints", "",         |
+|                            | "navit.waypoints_flag=%{d}*",     |
+|                            | !navit.waypoints_flag,            |
+|                            | "refresh();");                    |
+|                            |                                   |
+|                            | .. raw:: html                     |
+|                            |                                   |
+|                            |    </script>                      |
+|                            |                                   |
+|                            | In this example, gui_active and   |
+|                            | gui_inactive images are used to   |
+|                            | indicate if the option is         |
+|                            | enabled or not. No onclick_pre    |
+|                            | command is executed, set is used  |
+|                            | to save user choice and finally   |
+|                            | refresh command is executed.      |
++----------------------------+-----------------------------------+
+| **setting_layout()**       | Presents a selection of           |
+|                            | available screen layouts.         |
++----------------------------+-----------------------------------+
+| **setting_maps()**         | Presents a dialog to switch       |
+|                            | between available mapsets.        |
++----------------------------+-----------------------------------+
+| **setting_rules()**        | Presents a dialog for setting     |
+|                            | various internal options.         |
++----------------------------+-----------------------------------+
+| **setting_vehicle()**      | Presents a dialog for selecting   |
+|                            | the active vehicle.               |
++----------------------------+-----------------------------------+
+| **town()**                 | Presents a dialog for selecting   |
+|                            | an address, starting with a       |
+|                            | town.                             |
++----------------------------+-----------------------------------+
+| **write(**                 | Writes an attribute. Used by the  |
+| attribute                  | GUI menu in conjunction with '''  |
+| **)**                      |                                   |
+|                            |                                   |
+|                            | .. raw:: html                     |
+|                            |                                   |
+|                            |    <script>                       |
+|                            |                                   |
+|                            | ''' to display the content of an  |
+|                            | attribute in a menu item.         |
++----------------------------+-----------------------------------+
 
 Attributes
 ==========
 
-Expressions in the **``command``** attribute of an OSD item or in the
-**``cond``** and **``onclick``** attributes of OSD menu items can use
+Expressions in the **command** attribute of an OSD item or in the
+**cond** and **onclick** attributes of OSD menu items can use
 the attributes listed below.
 
 .. _gui_attributes:
@@ -1938,23 +1919,21 @@ the attributes listed below.
 GUI Attributes
 --------------
 
-These have to be prefixed with **``gui.``** when used in an OSD item. In
+These have to be prefixed with **gui.** when used in an OSD item. In
 menu items they can be used directly.
 
-+--------------------+------------------------------------------------+
-| Attribute          | Meaning                                        |
-+====================+================================================+
-| **``flags``**      | GUI flags. FIXME: complete description         |
-|                    |                                                |
-|                    | -  **2** (if set, the menu should offer Show   |
-|                    |    Map)                                        |
-+--------------------+------------------------------------------------+
-| **``fullscreen``** | Nonzero if full-screen mode is active, zero    |
-|                    | otherwise. Use **``fullscreen=!fullscreen``**  |
-|                    | to toggle between window and fullscreen mode.  |
-+--------------------+------------------------------------------------+
-|                    |                                                |
-+--------------------+------------------------------------------------+
++---------------+------------------------------------------------+
+| Attribute     | Meaning                                        |
++===============+================================================+
+| **flags**     | GUI flags. FIXME: complete description         |
+|               |                                                |
+|               | -  **2** (if set, the menu should offer Show   |
+|               |    Map)                                        |
++---------------+------------------------------------------------+
+| **fullscreen**| Nonzero if full-screen mode is active, zero    |
+|               | otherwise. Use **fullscreen=!fullscreen**      |
+|               | to toggle between window and fullscreen mode.  |
++---------------+------------------------------------------------+
 
 .. _navit_attributes:
 
@@ -1963,125 +1942,124 @@ Navit attributes
 
 These can be used as shown below in OSD items. If you want to use them
 elsewhere (e.g. in internal GUI menu items), prefix them with
-**``navit.``** (e.g. **``navit.route.route_status``**):
+**navit.** (e.g. **navit.route.route_status**):
 
-+----------------------------+----------------------------------------+
-| Attribute                  | Description                            |
-+============================+========================================+
-| **``layout_name``**        | Change the map `layout <layout>`__     |
-|                            | and/or cursor configuration. The       |
-|                            | following command changes the layout   |
-|                            | to Car-dark.                           |
-|                            |                                        |
-|                            | .. code:: xml                          |
-|                            |                                        |
-|                            |                                        |
-|                            | <osd enabled="yes" type="button" src=" |
-|                            | gui_display_48_48.png" command="layout |
-|                            | _name=&amp;quot;Car-dark&amp;quot;" /> |
-+----------------------------+----------------------------------------+
-| **``route.route_status``** | Flags for the route status. See also   |
-|                            | route.h (enum route_status):           |
-|                            |                                        |
-|                            | +-------------------------+-------+    |
-|                            | | Const                   | Value |    |
-|                            | +=========================+=======+    |
-|                            | | rout                    | 0     |    |
-|                            | | e_status_no_destination |       |    |
-|                            | +-------------------------+-------+    |
-|                            | | route                   | 1     |    |
-|                            | | _status_destination_set |       |    |
-|                            | +-------------------------+-------+    |
-|                            | | route_status_not_found  | 1/2   |    |
-|                            | +-------------------------+-------+    |
-|                            | | rou                     | 1/4   |    |
-|                            | | te_status_building_path |       |    |
-|                            | +-------------------------+-------+    |
-|                            | | rout                    | 1/4/8 |    |
-|                            | | e_status_building_graph |       |    |
-|                            | +-------------------------+-------+    |
-|                            | | rou                     | 1/16  |    |
-|                            | | te_status_path_done_new |       |    |
-|                            | +-------------------------+-------+    |
-|                            | | route_statu             | 1/32  |    |
-|                            | | s_path_done_incremental |       |    |
-|                            | +-------------------------+-------+    |
-|                            | |                         |       |    |
-|                            | +-------------------------+-------+    |
-+----------------------------+----------------------------------------+
-| **``osd_configuration``**  | Set the osd_configuration flags for    |
-|                            | navit. With the command                |
-|                            | osd_configuration=2 all osds where the |
-|                            | condition (osd_configuration & 2) != 0 |
-|                            | is true will get visible, all others   |
-|                            | non-visible.                           |
-+----------------------------+----------------------------------------+
-| **``orientation``**        | Use this attribute to switch between a |
-|                            | north-oriented map, or a map which is  |
-|                            | oriented in the direction of vehicle   |
-|                            | travel (same as "Northing" in the      |
-|                            | menu). This example toggles between a  |
-|                            | northing and vehicle oriented map.     |
-|                            |                                        |
-|                            | ``comma                                |
-|                            | nd="orientation=orientation==0?-1:0"`` |
-+----------------------------+----------------------------------------+
-| **``pitch``**              | Use this attribute to vary the pitch   |
-|                            | of view (i.e. switch between 2D and 3D |
-|                            | view). The following example toggles   |
-|                            | between 2D view and 3D view angled at  |
-|                            | 20 degrees.                            |
-|                            |                                        |
-|                            | ``command="pitch=pitch==0?20:0"``      |
-+----------------------------+----------------------------------------+
-| **``speech.active``**      | The following example toggles speech   |
-|                            | enabled/disabled.                      |
-|                            |                                        |
-|                            | ``co                                   |
-|                            | mmand="speech.active=!speech.active"`` |
-+----------------------------+----------------------------------------+
-| **``zoom``**               | Use this attribute to vary the zoom    |
-|                            | level. The following example sets the  |
-|                            | zoom to level 15.                      |
-|                            |                                        |
-|                            | ``command="zoom=15"``                  |
-|                            |                                        |
-|                            | The following example toggles between  |
-|                            | zoom level 100 and zoom level 15.      |
-|                            |                                        |
-|                            | ``command="zoom=zoom==15?100:15"``     |
-+----------------------------+----------------------------------------+
-| **``follow``**             | Use this attribute to change the       |
-|                            | number of gps updates to wait before   |
-|                            | map is refreshed. A value of zero      |
-|                            | means vehicle will leave the edge of   |
-|                            | the map before the map is refreshed.   |
-|                            |                                        |
-|                            | ``command="follow=follow>1?1:10000"``  |
-+----------------------------+----------------------------------------+
-| **``timeout``**            | When the user scrolls the map, it      |
-|                            | stays there. After ``timeout`` number  |
-|                            | of GPS updates the map jumps back to   |
-|                            | the current location of the active     |
-|                            | vehicle.                               |
-|                            |                                        |
-|                            | ``command="timeout=8"``                |
-+----------------------------+----------------------------------------+
-| **``follow_cursor``**      | Use to set map followmode, follow=1    |
-|                            | means autocentering. Example will      |
-|                            | switch between autofollow on and off   |
-|                            |                                        |
-|                            | ::                                     |
-|                            |                                        |
-|                            |    <source lang="xml">                 |
-|                            |    <o                                  |
-|                            | sd type="button" src="/sdcard/navit/to |
-|                            | gglefollow.png" command="follow_cursor |
-|                            | =follow_cursor==0?1:0" x="-64" y="0"/> |
-|                            |    </source>                           |
-+----------------------------+----------------------------------------+
-|                            |                                        |
-+----------------------------+----------------------------------------+
++--------------------------+------------------------------------------+
+| Attribute                | Description                              |
++==========================+==========================================+
+| **layout_name**          | Change the map `layout <layout>`__       |
+|                          | and/or cursor configuration. The         |
+|                          | following command changes the layout     |
+|                          | to Car-dark.                             |
+|                          |                                          |
+|                          | .. code:: xml                            |
+|                          |                                          |
+|                          |    <osd enabled="yes"                    |
+|                          |    type="button"                         |
+|                          |    src="gui_display_48_48.png"           |
+|                          |    command="layout_name='Car-dark'       |
+|                          |    />                                    |
++--------------------------+------------------------------------------+
+| **route.route_status**   | Flags for the route status. See also     |
+|                          | route.h (enum route_status):             |
+|                          |                                          |
+|                          | +-------------------------+-------+      |
+|                          | | Const                   | Value |      |
+|                          | +=========================+=======+      |
+|                          | | rout                    | 0     |      |
+|                          | | e_status_no_destination |       |      |
+|                          | +-------------------------+-------+      |
+|                          | | route                   | 1     |      |
+|                          | | _status_destination_set |       |      |
+|                          | +-------------------------+-------+      |
+|                          | | route_status_not_found  | 1/2   |      |
+|                          | +-------------------------+-------+      |
+|                          | | rou                     | 1/4   |      |
+|                          | | te_status_building_path |       |      |
+|                          | +-------------------------+-------+      |
+|                          | | rout                    | 1/4/8 |      |
+|                          | | e_status_building_graph |       |      |
+|                          | +-------------------------+-------+      |
+|                          | | rou                     | 1/16  |      |
+|                          | | te_status_path_done_new |       |      |
+|                          | +-------------------------+-------+      |
+|                          | | route_statu             | 1/32  |      |
+|                          | | s_path_done_incremental |       |      |
+|                          | +-------------------------+-------+      |
+|                          | |                         |       |      |
+|                          | +-------------------------+-------+      |
++--------------------------+------------------------------------------+
+| **osd_configuration**    | Set the osd_configuration flags for      |
+|                          | navit. With the command                  |
+|                          | osd_configuration=2 all osds where the   |
+|                          | condition (osd_configuration & 2) != 0   |
+|                          | is true will get visible, all others     |
+|                          | non-visible.                             |
++--------------------------+------------------------------------------+
+| **orientation**          | Use this attribute to switch between a   |
+|                          | north-oriented map, or a map which is    |
+|                          | oriented in the direction of vehicle     |
+|                          | travel (same as "Northing" in the        |
+|                          | menu). This example toggles between a    |
+|                          | northing and vehicle oriented map.       |
+|                          |                                          |
+|                          | ``comma                                  |
+|                          | nd="orientation=orientation==0?-1:0"``   |
++--------------------------+------------------------------------------+
+| **pitch**                | Use this attribute to vary the pitch     |
+|                          | of view (i.e. switch between 2D and 3D   |
+|                          | view). The following example toggles     |
+|                          | between 2D view and 3D view angled at    |
+|                          | 20 degrees.                              |
+|                          |                                          |
+|                          | ``command="pitch=pitch==0?20:0"``        |
++--------------------------+------------------------------------------+
+| **speech.active**        | The following example toggles speech     |
+|                          | enabled/disabled.                        |
+|                          |                                          |
+|                          | ``co                                     |
+|                          | mmand="speech.active=!speech.active"``   |
++--------------------------+------------------------------------------+
+| **zoom**                 | Use this attribute to vary the zoom      |
+|                          | level. The following example sets the    |
+|                          | zoom to level 15.                        |
+|                          |                                          |
+|                          | ``command="zoom=15"``                    |
+|                          |                                          |
+|                          | The following example toggles between    |
+|                          | zoom level 100 and zoom level 15.        |
+|                          |                                          |
+|                          | ``command="zoom=zoom==15?100:15"``       |
++--------------------------+------------------------------------------+
+| **follow**               | Use this attribute to change the         |
+|                          | number of gps updates to wait before     |
+|                          | map is refreshed. A value of zero        |
+|                          | means vehicle will leave the edge of     |
+|                          | the map before the map is refreshed.     |
+|                          |                                          |
+|                          | ``command="follow=follow>1?1:10000"``    |
++--------------------------+------------------------------------------+
+| **timeout**              | When the user scrolls the map, it        |
+|                          | stays there. After ``timeout`` number    |
+|                          | of GPS updates the map jumps back to     |
+|                          | the current location of the active       |
+|                          | vehicle.                                 |
+|                          |                                          |
+|                          | ``command="timeout=8"``                  |
++--------------------------+------------------------------------------+
+| **follow_cursor**        | Use to set map followmode, follow=1      |
+|                          | means autocentering. Example will        |
+|                          | switch between autofollow on and off     |
+|                          |                                          |
+|                          | ::                                       |
+|                          |                                          |
+|                          |    <source lang="xml">                   |
+|                          |    <o                                    |
+|                          |    sd type="button" src="/sdcard/navit/to|
+|                          |    gglefollow.png" command="follow_cursor|
+|                          |    =follow_cursor==0?1:0" x="-64" y="0"/>|
+|                          |    </source>                             |
++--------------------------+------------------------------------------+
 
 .. |osd-button.png| image:: osd-button.png
 .. |osd-compass.png| image:: osd-compass.png

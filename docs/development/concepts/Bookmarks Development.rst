@@ -57,10 +57,10 @@ internally, with the following calls:
 
 There are also exists two helper calls:
 
--  void bookmarks_item_rewind(struct bookmarks\* this_) - tells
+-  void bookmarks_item_rewind(struct bookmarks\* this\_) - tells
    bookmarks_get_item to start from the beginning.
 
-const char\* bookmarks_item_cwd(struct bookmarks\* this_); - returns
+const char\* bookmarks_item_cwd(struct bookmarks\* this\_); - returns
 label of a current tree folder (or NULL if you are at topmost folder)
 
 Bookmarks will be useless without ability to change bookmarks data. Here

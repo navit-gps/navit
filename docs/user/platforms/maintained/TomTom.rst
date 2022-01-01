@@ -18,7 +18,7 @@ http://www.navit-project.org/~xenos1984/navitom.tar.gz.
 .. _tomtom_hardware:
 
 TomTom hardware
----------------
+'''''''''''''''
 
 Lots of information on the hardware of various TomTom models has been
 collected at `www.opentom.org (trough
@@ -79,7 +79,7 @@ now.
 .. _tomtom_software_options:
 
 Tomtom Software options
------------------------
+'''''''''''''''''''''''
 
 To use navit on a TomTom device you have the following options. As
 always in live there are advantages and disadvantages which you can find
@@ -122,12 +122,12 @@ for you.
 +---------------+----------------+----------------+----------------+
 
 OLD/WIP
-=======
+-------
 
 .. _tomtom_gps_settings:
 
 TomTom GPS settings
--------------------
+'''''''''''''''''''
 
 Devices with SiRFstarIII receiver like Tomtom go 730 work with this
 setting:
@@ -148,7 +148,7 @@ or the built in flash drive.
 .. _ram_memory_issues:
 
 RAM memory issues
------------------
+'''''''''''''''''
 
 Most Tomtom devices like TomTom one XL have only 32MB RAM. Navigation in
 cities is almost unusable. Devices with 64MB like Tomtom 730 work with
@@ -162,7 +162,7 @@ manual changes to compile.
 .. _using_pre_compiled_binaries:
 
 Using pre-compiled binaries
----------------------------
+'''''''''''''''''''''''''''
 
 There are some pre-compiled binaries available at
 http://www.navit-project.org/~xenos1984/navitom.tar.gz (this link always
@@ -189,6 +189,6 @@ and multilingual speech.
 .. _see_also:
 
 See also
---------
+''''''''
 
 -  `TomTom development <TomTom_development>`__

@@ -1,38 +1,23 @@
-.. _wince_development:
-
-WinCE development
+=================
+WinCE Development
 =================
 
-.. raw:: mediawiki
+This is a tutorial for Navit on WinCE/WinMobile. If want just want to download a cab file see [[WinCE]].
 
-   {{warning|1='''This is a page has been migrated to readthedocs:'''https://github.com/navit-gps/navit/pull/883 . It is only kept here for archiving purposes.}}
+This page explains how to build Navit for WinCE/WinMobile with `cegcc <http://cegcc.sourceforge.net>`.
 
-This is a tutorial for Navit on WinCE/WinMobile. If want just want to
-download a cab file see `WinCE <WinCE>`__.
+In November 2009 versions compiled using arm-cegcc-gcc (both revision 1214 and release 0.59.1) had problems (threw exception_datatype_misalignment and caused access violations).
 
-This page explains how to build Navit for WinCE/WinMobile with
-`cegcc <http://cegcc.sourceforge.net>`__.
+Using the variant arm-mingw32ce of CeGCC 0.59.1 it was possible to build a working executable which can be debugged.
 
-| In November 2009 versions compiled using arm-cegcc-gcc (both revision
-  1214 and release 0.59.1) had problems (threw
-  exception_datatype_misalignment and caused access violations).
-| Using the variant arm-mingw32ce of CeGCC 0.59.1 it was possible to
-  build a working executable which can be debugged.
-| The automatic builds from the subversion repository seem to use an
-  adjusted? version arm-wince-mingw32ce (see `build
-  logs <http://download.navit-project.org/logs/navit/wince/svn>`__).
-
-.. _building_using_arm_mingw32ce:
+The automatic builds from the subversion repository seem to use an adjusted? version arm-wince-mingw32ce (see `build logs <http://download.navit-project.org/logs/navit/wince/svn>`).
 
 Building using arm-mingw32ce
-----------------------------
-
-.. _install_arm_mingw32ce:
+============================
 
 Install arm-mingw32ce
-~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: bash
+.. code-block:: bash
 
     mkdir -p navit
     cd navit
@@ -40,78 +25,65 @@ Install arm-mingw32ce
     wget -c https://sourceforge.net/projects/cegcc/files/cegcc/0.59.1/mingw32ce-0.59.1.tar.bz2/download
     tar xjf mingw32ce-0.59.1.tar.bz2
 
-.. _building_navit_using_cmake:
-
 Building Navit using Cmake
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: bash
+.. code-block:: bash
 
-   #!/bin/bash
-   export NAVIT_PATH="/usr/src/navit"
-   export MINGW32CE_PATH="/opt/mingw32ce"
-   export PATH=$PATH:$MINGW32CE_PATH/bin 
+    #!/bin/bash
+    export NAVIT_PATH="/usr/src/navit"
+    export MINGW32CE_PATH="/opt/mingw32ce"
+    export PATH=$PATH:$MINGW32CE_PATH/bin
 
-   cd $NAVIT_PATH
-   if [ ! -e build ]; then 
-     mkdir build;
-   fi;
-   cd build
+    cd $NAVIT_PATH
+    if [ ! -e build ]; then
+      mkdir build;
+    fi;
+    cd build
 
-   cmake \
-   -DCMAKE_TOOLCHAIN_FILE=$NAVIT_PATH/Toolchain/arm-mingw32ce.cmake \
-   -Dsvg2png_scaling:STRING=0,16 \
-   -Dsvg2png_scaling_nav:STRING=32 \
-   -Dsvg2png_scaling_country:STRING=16 \
-   $NAVIT_PATH
+    cmake \
+    -DCMAKE_TOOLCHAIN_FILE=$NAVIT_PATH/Toolchain/arm-mingw32ce.cmake \
+    -Dsvg2png_scaling:STRING=0,16 \
+    -Dsvg2png_scaling_nav:STRING=32 \
+    -Dsvg2png_scaling_country:STRING=16 \
+    $NAVIT_PATH
 
-   make 
+    make
 
-For subsequential builds it is sufficient to issue "make" in the build
-directory. A rerun of cmake is only neccessary if parameters are
-changed.
-
-.. _remote_debugging:
+For subsequential builds it is sufficient to issue "make" in the build directory.
+A rerun of cmake is only neccessary if parameters are changed.
 
 Remote Debugging
-----------------
+================
 
 Download the debugger provided by the CeGCC project:
 
-.. code:: bash
+.. code-block:: bash
 
     cd $NAVIT_PATH
     wget -c https://sourceforge.net/projects/cegcc/files/cegcc/0.59.1/gdb-arm-0.59.1.tar.bz2/download
     tar xjf gdb-arm-0.59.1.tar.bz2
 
-Start navit (from SD card) in debug server at target (using TCP port
-9999):
+Start navit (from SD card) in debug server at target (using TCP port 9999):
 
-.. code:: bash
+.. code-block:: bash
 
     gdbserver :9999 "\Mounted Volume\navit\navit.exe"
 
-Execute remote debugger at host, if target's IP address was
-192.168.1.112:
+Execute remote debugger at host, if target's IP address was 192.168.1.112:
 
-.. code:: bash
+.. code-block:: bash
 
     $NAVIT_PATH/opt/mingw32ce/bin/arm-mingw32ce-gdbtui $NAVIT_PATH/navit/navit.exe -eval-command="target remote 192.168.1.112:9999"
 
-.. _building_using_arm_cegcc:
-
 Building using arm-cegcc
-------------------------
-
-.. _building_cegcc:
+========================
 
 Building cegcc
-~~~~~~~~~~~~~~
+--------------
 
-Set the install path to where you want to install
-`cegcc <http://cegcc.sourceforge.net>`__:
+Set the install path to where you want to install `cegcc <http://cegcc.sourceforge.net cegcc>`:
 
-.. code:: bash
+.. code-block:: bash
 
     export CEGCC_PATH=/usr/local/cegcc
     svn co -r 1214 https://cegcc.svn.sourceforge.net/svnroot/cegcc/trunk/cegcc
@@ -119,43 +91,32 @@ Set the install path to where you want to install
     cd cegcc-builds
     ../cegcc/src/build-cegcc.sh --prefix=$CEGCC_PATH --components="binutils bootstrap_gcc w32api newlib dummy_cegccdll gcc cegccdll cegccthrddll libstdcppdll profile"
 
-If you get an error like "'makekinfo' is missing on your system"
-although makeinfo is available (happened with openSUSE 11.2 and Debian
-Lenny, both 32 bit), add a workaround to the script src/newlib/missing.
-Insert a new line after the line " makeinfo)":
+If you get an error like "'makekinfo' is missing on your system" although makeinfo is available (happened with openSUSE 11.2 and Debian Lenny, both 32 bit), add a workaround to the script src/newlib/missing. Insert a new line after the line "  makeinfo)":
 
-``    "$@" && exit 0``
+.. code-block:: bash
 
-If you get an error like "arm-cegcc-windres: Can't detect architecture",
-apply the patch file you find on
-http://sourceforge.net/tracker/?func=detail&atid=865516&aid=2574606&group_id=173455
+     "$@" && exit 0
 
-.. _building_libraries:
+If you get an error like `arm-cegcc-windres: Can't detect architecture`, apply the patch file you find on http://sourceforge.net/tracker/?func=detail&atid=865516&aid=2574606&group_id=173455
 
 Building libraries
-~~~~~~~~~~~~~~~~~~
+------------------
 
-| November 2009: The libraries below are **not needed** anymore since
-  navit brings its own version of glib.
-| The libraries require additional (not published or not existing)
-  patches to build. Just skip to section Building Navit.
+November 2009: The libraries below are *not needed* anymore since navit brings its own version of glib.
+
+The libraries require additional (not published or not existing) patches to build. Just skip to section Building Navit.
 
 These are the libraries needed and versions which should work:
+ * zlib-1.2.3
+ * libiconv-1.9.1
+ * gettext-0.17
+ * libpng-1.2.34
+ * tiff-3.8.2
+ * glib-2.18.4
 
--  zlib-1.2.3
--  libiconv-1.9.1
--  gettext-0.17
--  libpng-1.2.34
--  tiff-3.8.2
--  glib-2.18.4
+The current versions of these libs don't need many changes, but they all don't know anything about cegcc. Until I found a way to upload the patches, you have to edit the code yourself. Just add `| -cegcc*` to the line containing `-cygwin*` of all files named config.sub. Here is the example for libiconv-1.9.1_cegcc.patch:
 
-The current versions of these libs don't need many changes, but they all
-don't know anything about cegcc. Until I found a way to upload the
-patches, you have to edit the code yourself. Just add "\| -cegcc*" to
-the line containing "-cygwin*" of all files named config.sub. Here is
-the example for libiconv-1.9.1_cegcc.patch:
-
-.. code:: bash
+.. code-block:: bash
 
     diff -ur libiconv-1.9.1/autoconf/config.sub libiconv-1.9.1_cegcc/autoconf/config.sub
     --- libiconv-1.9.1/autoconf/config.sub 2003-05-06 11:36:42.000000000 +0200
@@ -185,7 +146,7 @@ the example for libiconv-1.9.1_cegcc.patch:
 zlib
 ^^^^
 
-.. code:: bash
+.. code-block:: bash
 
     wget http://www.zlib.net/zlib-1.2.3.tar.gz
     tar xzf zlib-1.2.3.tar.gz
@@ -198,7 +159,8 @@ zlib
 libiconv
 ^^^^^^^^
 
-.. code:: bash
+
+.. code-block:: bash
 
     wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.9.1.tar.gz
     tar xzf libiconv-1.9.1.tar.gz
@@ -211,17 +173,12 @@ libiconv
 gettext
 ^^^^^^^
 
-workaround for
-
-``plural-eval.h:50: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'sigfpe_exit'``
-
-extend gettext-tools/src/plural-eval.h line 32 to
-
-``#if defined _MSC_VER || defined __MINGW32__ || defined __CEGCC__``
-
+workaround for `plural-eval.h:50: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'sigfpe_exit'`
+extend gettext-tools/src/plural-eval.h line 32 to `#if defined _MSC_VER || defined __MINGW32__ || defined __CEGCC__`
 dito for gettext-tools/gnulib-lib/wait-process.c line 31
 
-.. code:: bash
+
+.. code-block:: bash
 
     wget http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-0.17.tar.gz
     tar xzf gettext-0.17.tar.gz
@@ -234,7 +191,7 @@ dito for gettext-tools/gnulib-lib/wait-process.c line 31
 libpng
 ^^^^^^
 
-.. code:: bash
+.. code-block:: bash
 
     wget http://prdownloads.sourceforge.net/libpng/libpng-1.2.34.tar.gz?download
     tar xzf libpng-1.2.34.tar.gz
@@ -247,9 +204,12 @@ libpng
 libtiff
 ^^^^^^^
 
-:literal:`libtool: link: CURRENT `' must be a nonnegative integer`
+::
 
-.. code:: bash
+ libtool: link: CURRENT `' must be a nonnegative integer
+
+
+.. code-block:: bash
 
     wget http://libtiff.maptools.org/dl/tiff-3.8.2.tar.gz
     tar xzf tiff-3.8.2.tar.gz
@@ -262,9 +222,12 @@ libtiff
 glib
 ^^^^
 
-:literal:`gatomic.c:570: Error: no such instruction: `swp %eax,%eax,[%esi]'`
+::
 
-.. code:: bash
+ gatomic.c:570: Error: no such instruction: `swp %eax,%eax,[%esi]'
+
+
+.. code-block:: bash
 
     wget http://ftp.gnome.org/pub/gnome/sources/glib/2.18/glib-2.18.4.tar.bz2
     tar xjf glib-2.18.4.tar.bz2
@@ -274,31 +237,26 @@ glib
     make
     make install
 
-.. _building_navit:
-
 Building Navit
-~~~~~~~~~~~~~~
+==============
 
-.. code:: bash
+.. code-block:: bash
 
     git clone https://github.com/navit-gps/navit.git
     cd navit/navit
 
-Add ``| -cegcc*`` to all files named ``config.sub`` as for the
-libraries.
+Add `| -cegcc*` to all files named `config.sub` as for the libraries.
 
-``WINDRES=arm-cegcc-windres ./configure --disable-vehicle-file --host=arm-cegcc --prefix=$CEGCC_PATH 2>&1 | tee configure-cegcc.log``
+.. code-block:: bash
 
-Add to ``navit\support\wordexp\glob.h``:
+ WINDRES=arm-cegcc-windres ./configure --disable-vehicle-file --host=arm-cegcc --prefix=$CEGCC_PATH 2>&1 | tee configure-cegcc.log
 
-``|| defined __CEGCC__``
+Add to `navit\support\wordexp\glob.h`: `|| defined __CEGCC__`
 
-Change include in ``navit\vehicle\wince\vehicle_wince.c``:
+Change include in `navit\vehicle\wince\vehicle_wince.c`: `#include <sys/io.h>`
 
-``#include <sys/io.h>``
+Add to `navit\file.c`: `&& !defined __CEGCC__`
 
-Add to ``navit\file.c``:
+.. code-block:: bash
 
-``&& !defined __CEGCC__``
-
-``make -j``
+    make -j
