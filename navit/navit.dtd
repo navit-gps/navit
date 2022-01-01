@@ -129,7 +129,7 @@
 <!ATTLIST osd y CDATA #IMPLIED>
 <!ATTLIST osd src CDATA #IMPLIED>
 <!ATTLIST osd command CDATA #IMPLIED>
-<!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows)*>
+<!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows|spikes)*>
 <!ATTLIST itemgra item_types CDATA #IMPLIED>
 <!ATTLIST itemgra order CDATA #IMPLIED>
 <!ATTLIST itemgra speed_range CDATA #IMPLIED>
@@ -165,6 +165,10 @@
 <!ATTLIST arrows color CDATA #REQUIRED>
 <!ATTLIST arrows width CDATA #IMPLIED>
 <!ATTLIST arrows oneway CDATA #IMPLIED>
+<!ELEMENT spikes EMPTY>
+<!ATTLIST spikes color CDATA #REQUIRED>
+<!ATTLIST spikes width CDATA #IMPLIED>
+<!ATTLIST spikes distance CDATA #IMPLIED>
 <!ELEMENT image EMPTY>
 <!ELEMENT xi:include EMPTY>
 <!ATTLIST xi:include href CDATA #IMPLIED>
