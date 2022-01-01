@@ -1,10 +1,6 @@
 Development
 ===========
 
-.. raw:: mediawiki
-
-   {{warning|1='''This is a master page that can now be found at:''' https://navit.readthedocs.io/en/trunk/index.html . It is only kept here for archiving purposes.}}
-
 Process
 -------
 

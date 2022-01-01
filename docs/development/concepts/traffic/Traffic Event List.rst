@@ -27,8 +27,6 @@ The initial model defines the following event classes:
 | RESTRICTION | Temporary traffic restrictions, such as road or lane  |
 |             | closures or size, weight or access restrictions       |
 +-------------+-------------------------------------------------------+
-|             |                                                       |
-+-------------+-------------------------------------------------------+
 
 In the following tables, the F column (where present) marks events which
 can only be used in messages whose forecast attribute is true.
@@ -131,8 +129,6 @@ consistent with the reported speed.
 +-------------------------------+---+-------------------------------+
 | CONGESTION_TRAFFIC_PROBLEM    |   | Traffic problem               |
 +-------------------------------+---+-------------------------------+
-|                               |   |                               |
-+-------------------------------+---+-------------------------------+
 
 .. _events_in_the_delay_class:
 
@@ -150,7 +146,6 @@ DELAY_LONG_DELAY           Long delays up to
 DELAY_SEVERAL_HOURS        Delays of several hours
 DELAY_UNCERTAIN_DURATION   Delays of uncertain duration
 DELAY_VERY_LONG_DELAY      Very long delays up to
-\                          
 ======================== = ============================
 
 .. _events_in_the_restriction_class:
@@ -246,10 +241,8 @@ Events in the RESTRICTION Class
 +----------------------------------+----------------------------------+
 | RESTRICTION_SPEED_LIMIT_LIFTED   | Speed limit lifted               |
 +----------------------------------+----------------------------------+
-|                                  |                                  |
-+----------------------------------+----------------------------------+
 
-.. _supplementary_information:
+.. _traffic_event_list_supplementary_information:
 
 Supplementary Information
 -------------------------
@@ -263,7 +256,6 @@ Class    Description
 PLACE    Qualifiers specifying the place(s) to which the event refers
 TENDENCY Traffic density development
 VEHICLE  Specifies categories of vehicles to which the event applies
-\        
 ======== ============================================================
 
 .. _supplementary_information_in_the_place_class:
@@ -278,7 +270,6 @@ S_PLACE_BRIDGE    On bridges
 S_PLACE_RAMP      On ramps (entry/exit)
 S_PLACE_ROADWORKS In the roadworks area
 S_PLACE_TUNNEL    In tunnels
-\                 
 ================= =====================
 
 .. _supplementary_information_in_the_tendency_class:
@@ -294,8 +285,6 @@ Supplementary Information in the TENDENCY Class
 +-----------------------------+---------------------------------------+
 | S_TENDENCY_QUEUE_INCREASING | Traffic queue length increasing at an |
 |                             | average rate of                       |
-+-----------------------------+---------------------------------------+
-|                             |                                       |
 +-----------------------------+---------------------------------------+
 
 .. _supplementary_information_in_the_vehicle_class:
@@ -315,5 +304,4 @@ S_VEHICLE_HAZMAT           For hazardous loads only
 S_VEHICLE_HGV              For heavy trucks only
 S_VEHICLE_MOTOR            For all motor vehicles
 S_VEHICLE_WITH_TRAILER     For vehicles with trailers only
-\                          
 ========================== ===============================

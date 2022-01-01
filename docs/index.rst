@@ -3,7 +3,7 @@ Navit's User Manual
 ###################
 
 This document is the official User Manual for `Navit`__,
-the OpenSource vector based navigation software.
+the Open Source vector based navigation software.
 
 Navit is a open source (GPL) car navigation system with routing engine.
 
@@ -28,9 +28,12 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    :maxdepth: 2
    :caption: Navit's user manual
 
-   basic_configuration
-   maps
-   configuration/index
+   user/getting_started
+   user/platforms/index
+   user/configuration/basic/index
+   user/configuration/advanced/index
+   user/community/index
+   user/faq/index
 
 
 .. Indices and tables
@@ -43,6 +46,7 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 .. __: https://github.com/navit-gps/navit/
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
    :glob:
    :caption: Navit's developer documentation
@@ -50,15 +54,14 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    development/changelog_wrapper
    development/programming_guidelines
    development/commit_guidelines
-   development/linux_development
-   development/android_development
-   development/macos_development
-   development/wince_development
-   development/windows_development
+   development/targets
+   development/concepts
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
    :glob:
    :caption: Other Documents
 
    privacy
+   wiki/*

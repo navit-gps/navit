@@ -1,9 +1,11 @@
+.. _contact:
+
 Contacts
 ========
 
 You can contact Navit `team <team>`__ and frequent users for help or
 advice through a variety of methods. Though you can use any of the
-methods below, but the IRC channel will probably result the quickest
+methods below, but Discord/IRC will probably result the quickest
 response.
 
 .. _contact_options:
@@ -11,17 +13,10 @@ response.
 Contact Options
 ===============
 
-Forums
-------
-
-| To get support or discuss with developers, the easiest way is:
-| https://forum.navit-project.org
-| You need to login with your wiki credentials!
-
 Discord
 -------
 
-We are also on Discord with a Bridge to our IRC channel
+We are also on Discord with a Bridge to our IRC channel.
 
 Feel free to join: https://discord.gg/ADfXxZx
 
@@ -35,26 +30,6 @@ generally hang out.
    `WebChat <http://webchat.freenode.net/?channels=navit>`__ `IRC
    Log <http://irclogs.navit-project.org/>`__
 
-Setup
-~~~~~
-
-As of late July, 2018, Freenode requires verification of user accounts
-(possibly in reaction to some spam incident). They have
-`instructions <https://freenode.net/kb/answer/registration>`__ for this.
-In short:
-
--  Connect with the nick of your choice but no authentication. You will
-   get a message saying that you need to be identified with services.
--  Enter the following (replacing ``password`` with a password of your
-   choice):
-
-   ``/msg NickServ REGISTER password youremail@example.com``
-
--  Check your email. You will receive a confirmation message with
-   another line to type into the same chat session.
--  Now configure your IRC client to authenticate. The recommended method
-   is SASL, for which Freenode has
-   `instructions <https://freenode.net/kb/answer/sasl>`__ available.
 
 Rules
 ~~~~~
@@ -74,29 +49,13 @@ Rules
    logoff, leave a message to say that you'll check the logs and
    hopefully someone will reply later on.
 
-.. _mailing_lists:
-
-Mailing Lists
--------------
-
-.. raw:: mediawiki
-
-   {{note|We shutdown the mailinglists and focus all of our energy at the forums!}}
-
-There were `two mailing
-lists <http://sourceforge.net/p/navit/mailman>`__. One is specifically
-for helping users.
-
--  `navit-users <http://sourceforge.net/mailarchive/forum.php?forum_name=navit-users>`__
-   - For help or advice, use the navit-users mailing list.
-
 .. _reporting_bugsfeature_requests:
 
 Reporting Bugs/Feature Requests
 -------------------------------
 
-Please see `Reporting Bugs <Reporting_Bugs>`__ and
-`Patches <Patches>`__, if you like to contribute code.
+Please see `Reporting Bugs <reporting_bugs>`__ and
+:doc:`Patches <submitting_patches>`, if you like to contribute code.
 
 .. _following_development:
 
@@ -108,16 +67,7 @@ Following Development
 Github repository
 ~~~~~~~~~~~~~~~~~
 
--  `repository at Github <https://github.com/navit-gps/navit>`__
-
-.. _irc_1:
-
-IRC
-~~~
-
-Any new `bug reports <#Reporting_Bugs/Feature_Requests>`__ and commits
-to the Navit subversion repository are automatically announced in the
-`#IRC <#IRC>`__ channel.
+`repository at Github <https://github.com/navit-gps/navit>`__
 
 .. _following_navit:
 
@@ -138,3 +88,14 @@ Facebook
 ~~~~~~~~
 
 A Facebook fan page can be found at http://www.facebook.com/NavitProject
+
+Github
+~~~~~~
+
+You can star or Watch navit on github to automatically recive mails from github when we publish a new Release:
+https://github.com/navit-gps/navit
+
+Discord
+~~~~~~~
+
+In addition to the text-chats we also have some Broadcast Chanels where we share relevant information like new releases.

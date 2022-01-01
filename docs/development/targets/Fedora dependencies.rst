@@ -10,7 +10,7 @@ Fedora dependencies
 .. _compilation_tools:
 
 Compilation tools
-=================
+-----------------
 
 -  gettext-devel (provides autopoint)
 -  libtool (will install a bunch of other needed packages)
@@ -21,35 +21,35 @@ Compilation tools
 .. _opengl_gui:
 
 OpenGL GUI
-==========
+----------
 
 cegui-devel freeglut-devel quesoglc-devel SDL-devel libXmu-devel
 
 .. _gpsd_support:
 
 GPSD Support
-============
+------------
 
 gpsd-devel
 
 .. _gtk_gui:
 
 GTK Gui
-=======
+-------
 
 -  gtk2-devel
 
 .. _speech_support:
 
 Speech support
-==============
+--------------
 
 -  speech-dispatcher-devel
 
 .. _installing_all_dependencies:
 
 Installing all dependencies
-===========================
+---------------------------
 
 su -
 

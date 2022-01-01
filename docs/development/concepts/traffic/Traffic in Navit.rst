@@ -326,67 +326,67 @@ Dynamic Traffic Reports
 To get dynamic traffic reports into Navit (and remove them again when
 they are no longer valid), we have the following options:
 
-+----------------------+----------------------+----------------------+
-| Option               | Pros                 | Cons                 |
-+======================+======================+======================+
-| Maintain a textfile  | -  Distortions are   | -  Configuration     |
-| map and include a    |    persistent across |    (including legacy |
-| reference in the     |    relaunches (may   |    navit.xml) can    |
-| default mapset       |    not be needed if  |    easily break this |
-|                      |    the reports from  |    feature without   |
-|                      |    which they        |    any hint at the   |
-|                      |    originate are     |    reason it doesn’t |
-|                      |    kept persistent)  |    work              |
-|                      | -  Can be extended   | -  Some coding       |
-|                      |    to future traffic |    effort (existing  |
-|                      |    event types (such |    code only         |
-|                      |    as hazard         |    supports          |
-|                      |    warnings)         |    addition; updates |
-|                      | -  Good efficiency   |    and removals      |
-|                      |    as distortions    |    still need to be  |
-|                      |    can be reused     |    implemented)      |
-|                      |    between routes    |                      |
-+----------------------+----------------------+----------------------+
-| Add distortions via  | -  Little coding     | -  Not easily        |
-| ``route_graph_set_tr |    effort (call an   |    extensible to     |
-| affic_distortion()`` |    existing          |    traffic events    |
-| or similar           |    function, or a    |    other than        |
-|                      |    similar one still |    distortions       |
-|                      |    to be             | -  No persistence    |
-|                      |    implemented)      |    (unless traffic   |
-|                      | -  Not vulnerable to |    reports leading   |
-|                      |    misc              |    to distortions    |
-|                      | onfiguration/failure |    are kept          |
-|                      |    to update legacy  |    persistent)       |
-|                      |    configurations    | -  Efficiency is     |
-|                      | -  Insertions and    |    presumably not    |
-|                      |    removals well     |    optimal as        |
-|                      |    tested (updates   |    distortions need  |
-|                      |    should be easy    |    to be             |
-|                      |    too)              |    re-generated for  |
-|                      |                      |    each new route    |
-+----------------------+----------------------+----------------------+
-| Separate (in-memory) | -  Cleanest          | -  More coding       |
-| map driver, similar  |    solution,         |    effort (but       |
-| to route map         |    consistent with   |    similar           |
-|                      |    the rest of Navit |    constructs        |
-|                      | -  Can be extended   |    already exist)    |
-|                      |    to future traffic | -  No persistence    |
-|                      |    event types (such |    (unless traffic   |
-|                      |    as hazard         |    reports leading   |
-|                      |    warnings)         |    to distortions    |
-|                      | -  Not vulnerable to |    are kept          |
-|                      |    misc              |    persistent)       |
-|                      | onfiguration/failure |                      |
-|                      |    to update legacy  |                      |
-|                      |    configurations    |                      |
-|                      | -  Good efficiency   |                      |
-|                      |    as distortions    |                      |
-|                      |    can be reused     |                      |
-|                      |    between routes    |                      |
-+----------------------+----------------------+----------------------+
-|                      |                      |                      |
-+----------------------+----------------------+----------------------+
++----------------------+----------------------------+---------------------+
+| Option               | Pros                       | Cons                |
++======================+============================+=====================+
+| Maintain a textfile  | -  Distortions are         | -  Configuration    |
+| map and include a    |    persistent across       |    (including legacy|
+| reference in the     |    relaunches (may         |    navit.xml) can   |
+| default mapset       |    not be needed if        |    easily break this|
+|                      |    the reports from        |    feature without  |
+|                      |    which they              |    any hint at the  |
+|                      |    originate are           |    reason it doesn’t|
+|                      |    kept persistent)        |    work             |
+|                      | -  Can be extended         | -  Some coding      |
+|                      |    to future traffic       |    effort (existing |
+|                      |    event types (such       |    code only        |
+|                      |    as hazard               |    supports         |
+|                      |    warnings)               |    addition; updates|
+|                      | -  Good efficiency         |    and removals     |
+|                      |    as distortions          |    still need to be |
+|                      |    can be reused           |    implemented)     |
+|                      |    between routes          |                     |
+|                      |                            |                     |
++----------------------+----------------------------+---------------------+
+| Add distortions via  | -  Little coding           | -  Not easily       |
+| ``route_graph_set_tr |    effort (call an         |    extensible to    |
+| affic_distortion()`` |    existing                |    traffic events   |
+| or similar           |    function, or a          |    other than       |
+|                      |    similar one still       |    distortions      |
+|                      |    to be                   | -  No persistence   |
+|                      |    implemented)            |    (unless traffic  |
+|                      | -  Not vulnerable to       |    reports leading  |
+|                      |    misconfiguration/failure|    to distortions   |
+|                      |    to update legacy        |    are kept         |
+|                      |    configurations          |    persistent)      |
+|                      | -  Insertions and          | -  Efficiency is    |
+|                      |    removals well           |    presumably not   |
+|                      |    tested (updates         |    optimal as       |
+|                      |    should be easy          |    distortions need |
+|                      |    too)                    |    to be            |
+|                      |                            |    re-generated for |
+|                      |                            |    each new route   |
+|                      |                            |                     |
++----------------------+----------------------------+---------------------+
+| Separate (in-memory) | -  Cleanest                | -  More coding      |
+| map driver, similar  |    solution,               |    effort (but      |
+| to route map         |    consistent with         |    similar          |
+|                      |    the rest of Navit       |    constructs       |
+|                      | -  Can be extended         |    already exist)   |
+|                      |    to future traffic       | -  No persistence   |
+|                      |    event types (such       |    (unless traffic  |
+|                      |    as hazard               |    reports leading  |
+|                      |    warnings)               |    to distortions   |
+|                      | -  Not vulnerable to       |    are kept         |
+|                      |    misconfiguration/failure|    persistent)      |
+|                      |    to update legacy        |                     |
+|                      |    configurations          |                     |
+|                      | -  Good efficiency         |                     |
+|                      |    as distortions          |                     |
+|                      |    can be reused           |                     |
+|                      |    between routes          |                     |
+|                      |                            |                     |
++----------------------+----------------------------+---------------------+
 
 If we assume that traffic distortions are generated out of traffic
 reports (which may affect multiple segments), and that the reports are

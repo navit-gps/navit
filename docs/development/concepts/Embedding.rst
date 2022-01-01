@@ -20,8 +20,6 @@ project (e.g. void QX11EmbedContainer::embedClient(WId id) for Qt 4.4).
 Here is a gtk sample to embed navit's window into you own window:
 http://libgarmin.sf.net/zfe.tgz
 
-.. _see_also:
-
 See also
 --------
 

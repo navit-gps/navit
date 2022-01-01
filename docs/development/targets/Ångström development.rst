@@ -25,7 +25,7 @@ Installing Navit on the HP H2210 ipaq
   x86_64.
 
 Notes
-=====
+'''''
 
 | First read the info from
   http://wiki.openembedded.net/index.php/Getting_Started
@@ -95,7 +95,7 @@ Then go to the main dir of the build environment (/stuff) and type:
   manual <http://bitbake.berlios.de/manual/>`__.
 
 Later
-=====
+'''''
 
 Later, september 2009, I found out that one needs automake-native
 version 1.10.2, so I copied over the automake package directory from
@@ -107,10 +107,10 @@ version 1.10.2, so I copied over the automake package directory from
 to local.conf.
 
 Problems
-========
+''''''''
 
 bitbake
--------
+~~~~~~~
 
 | bitbake 1.8.12 didn't work as well as 1.8.10.
 | ====Libs==== For my build I had to change the plugins block in
@@ -196,7 +196,7 @@ But also:
 | Where does flite decide to produce mono sound?
 
 local.conf
-==========
+----------
 
 Below is the local.conf I used, it might be usefull.
 
@@ -230,7 +230,7 @@ Below is the local.conf I used, it might be usefull.
 .. _globalsat_bc_337_cf_gps:
 
 Globalsat BC-337 CF GPS
-=======================
+-----------------------
 
 |Navit on iPAQ H2210 w/ Globalsat BC-337| I got me a CF GPS because it
 would be handy to use while on the move, together with the H2210 ipaq.

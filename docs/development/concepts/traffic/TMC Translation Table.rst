@@ -1647,8 +1647,6 @@ TMC event codes which are not in this list are ignored for now.
 +------+--------------------------------------------------------------+
 | 2000 | >RESTRICTION_SMOG_ALERT + RESTRICTION_CLOSED                 |
 +------+--------------------------------------------------------------+
-|      |                                                              |
-+------+--------------------------------------------------------------+
 
 .. _supplementary_information:
 
@@ -1691,5 +1689,4 @@ TMC Supplementary Information
 248 >S_TENDENCY_QUEUE_INCREASING(Q=30 km/h)
 249 >S_TENDENCY_QUEUE_INCREASING(Q=40 km/h)
 255 >S_TENDENCY_QUEUE_DECREASING
-\   
 === =======================================

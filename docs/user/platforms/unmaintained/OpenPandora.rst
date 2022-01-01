@@ -34,40 +34,40 @@ and test it:
 Connect GPS
 ~~~~~~~~~~~
 
-+----------------------------------+----------------------------------+
-| | **Bluetooth:**                 | | **USB:**                       |
-| |  Power up your GPS device,     | | Connect you USB GPS and open a |
-|   enable bluetooth at the        |   terminal and execute:          |
-|   Pandora Manager and open a     |                                  |
-|   terminal and execute:          | .. code:: bash                   |
-|                                  |                                  |
-| .. code:: bash                   |    dmesg                         |
-|                                  |                                  |
-|    hcitool scan                  | | This should contain a line     |
-|                                  |   announcing a new USB device    |
-| Mark and copy your BTaddr and    |   and that it is attached to a   |
-| paste it in the following lines  |   virtual serial port as         |
-|                                  |   /dev/ttyUSB0 or /dev/ttyACM0   |
-| .. code:: bash                   | | Now test your virtual          |
-|                                  |   connection in a new terminal:  |
-|    s                             |                                  |
-| udo hcitool cc AA:BB:CC:DD:EE:FF | .. code:: bash                   |
-|    sudo rfcomm c                 |                                  |
-| onnect rfcomm0 AA:BB:CC:DD:EE:FF |    cat /dev/ttyUSB0              |
-|                                  |                                  |
-| | This should work fine and the  | This should show up scrolling    |
-|   GPS should show an established | lines with GP\* prefix           |
-|   BT link.                       |                                  |
-| | Now test your virtual          |                                  |
-|   connection:                    |                                  |
-|                                  |                                  |
-| .. code:: bash                   |                                  |
-|                                  |                                  |
-|    cat /dev/rfcomm0              |                                  |
-|                                  |                                  |
-| This should show up scrolling    |                                  |
-| lines with GP\* prefix           |                                  |
-+----------------------------------+----------------------------------+
++-------------------------------------------------+---------------------------------+
+| | **Bluetooth:**                                || **USB:**                       |
+| |  Power up your GPS device,                    || Connect you USB GPS and open a |
+|   enable bluetooth at the                       |   terminal and execute:         |
+|   Pandora Manager and open a                    |                                 |
+|   terminal and execute:                         | .. code:: bash                  |
+|                                                 |                                 |
+| .. code:: bash                                  |    dmesg                        |
+|                                                 |                                 |
+|    hcitool scan                                 || This should contain a line     |
+|                                                 |   announcing a new USB device   |
+| Mark and copy your BTaddr and                   |   and that it is attached to a  |
+| paste it in the following lines                 |   virtual serial port as        |
+|                                                 |   /dev/ttyUSB0 or /dev/ttyACM0  |
+| .. code:: bash                                  || Now test your virtual          |
+|                                                 |   connection in a new terminal: |
+|    sudo hcitool cc AA:BB:CC:DD:EE:FF            |                                 |
+|    sudo rfcomm connect rfcomm0 AA:BB:CC:DD:EE:FF| .. code:: bash                  |
+|                                                 |                                 |
+|                                                 |    cat /dev/ttyUSB0             |
+|                                                 |                                 |
+| | This should work fine and the                 | This should show up scrolling   |
+|   GPS should show an established                | lines with GP\* prefix          |
+|   BT link.                                      |                                 |
+| | Now test your virtual                         |                                 |
+|   connection:                                   |                                 |
+|                                                 |                                 |
+| .. code:: bash                                  |                                 |
+|                                                 |                                 |
+|    cat /dev/rfcomm0                             |                                 |
+|                                                 |                                 |
+| This should show up scrolling                   |                                 |
+| lines with GP\* prefix                          |                                 |
++-------------------------------------------------+---------------------------------+
 
 .. _adapt_configuration:
 
@@ -112,7 +112,7 @@ Todo
 -  Make use of pandora buttons
 -  Skin like minimenu
 
-.. _see_also:
+.. _open_pandora_see_also:
 
 See also
 --------

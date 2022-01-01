@@ -1,10 +1,6 @@
 Dependencies
 ============
 
-.. raw:: mediawiki
-
-   {{warning|1='''This is a page has been migrated to readthedocs:'''https://github.com/navit-gps/navit/pull/880 . It is only kept here for archiving purposes.}}
-
 **Be sure to check the prerequisites before building.**
 
 Note that most prerequisites are optional, meaning Navit will build
