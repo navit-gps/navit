@@ -38,7 +38,7 @@ struct speech_priv {
 static int speechd_say(struct speech_priv *this, const char *text) {
     int err;
 
-    err = spd_sayf(this->conn, SPD_MESSAGE, text);
+    err = spd_say(this->conn, SPD_MESSAGE, text);
     if (err != 1)
         return 1;
     return 0;
