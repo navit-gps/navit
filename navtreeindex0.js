@@ -1,7 +1,5 @@
 var NAVTREEINDEX0 =
 {
-"":[1,0,1],
-"":[1,0,1,0],
 "DownloaderAppDelegate_8h.html":[3,0,6,0,0,0],
 "DownloaderAppDelegate_8h_source.html":[3,0,6,0,0,0],
 "DownloaderAppDelegate_8m.html":[3,0,6,0,0,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "attr_8h.html#adedeee48e1c2fe13bdb75988b953afd8":[3,0,23,24],
 "attr_8h.html#adf6574ad1a34ce7251c34d2ea903c076":[3,0,23,82],
 "attr_8h.html#ae13d70b1ff7bbf7abf2586f15590f253":[3,0,23,92],
-"attr_8h.html#ae33174a74c16a0e00b919067ceda5550":[3,0,23,67]
+"attr_8h.html#ae33174a74c16a0e00b919067ceda5550":[3,0,23,67],
+"attr_8h.html#ae3ad97418331abb806502b2d5bf76579":[3,0,23,78],
+"attr_8h.html#aea83b4807e6d8661f72db20d375c356c":[3,0,23,2]
 };
