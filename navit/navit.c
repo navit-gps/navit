@@ -779,7 +779,7 @@ static void navit_autozoom(struct navit *this_, struct coord *center, int speed,
     distance = speed * this_->autozoom_secs;
 
     transform_get_size(this_->trans, &w, &h);
-    transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
+    transform_point(this_->trans, transform_get_projection(this_->trans), center, &pc);
     scale = transform_get_scale(this_->trans);
 
     /* We make sure that the point we want to see is within a certain range
@@ -2277,8 +2277,8 @@ void navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
         struct point p1,p2;
         transform_set_scale(this_->trans, scale);
         transform_setup_source_rect(this_->trans);
-        transform(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1, 1, 0, 0, NULL);
-        transform(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2, 1, 0, 0, NULL);
+        transform_point(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1);
+        transform_point(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2);
         dbg(lvl_debug,"%d,%d-%d,%d",p1.x,p1.y,p2.x,p2.y);
         if (p1.x < 0 || p2.x < 0 || p1.x > w || p2.x > w ||
                 p1.y < 0 || p2.y < 0 || p1.y > h || p2.y > h)
@@ -3224,7 +3224,7 @@ static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, st
         pro=transform_get_projection(this_->trans_cursor);
         if (!pro)
             return;
-        transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+        transform_point(this_->trans_cursor, pro, &nv->coord, &cursor_pnt);
     }
     vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, nv->dir-transform_get_yaw(this_->trans_cursor), nv->speed);
 }
@@ -3309,7 +3309,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
         if (this_->gui && nv->speed > 2)
             navit_disable_suspend();
 
-        transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+        transform_point(this_->trans_cursor, pro, &nv->coord, &cursor_pnt);
         if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow &&
                 (nv->follow_curr == 1 || !transform_within_border(this_->trans_cursor, &cursor_pnt, this_->border)))
             navit_set_center_cursor_draw(this_);

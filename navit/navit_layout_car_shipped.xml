@@ -1366,8 +1366,16 @@
 		<itemgra item_types="rail_tram" order="10-">
 			<polyline color="#606060" width="2"/>
 		</itemgra>
-		<itemgra item_types="cliff" order="12-">
+		<itemgra item_types="wall,retaining_wall" order="12-">
 			<polyline color="#606060" width="1"/>
+		</itemgra>
+		<itemgra item_types="cliff,embankment" order="12-16">
+			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="5" distance="4"/>
+		</itemgra>
+		<itemgra item_types="cliff,embankment" order="17-">
+			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="20" distance="10"/>
 		</itemgra>
 	</layer>
 	<layer name="labels">

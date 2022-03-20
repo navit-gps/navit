@@ -386,9 +386,11 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		set_with_reason(USE_QML "Qt5Quick found" TRUE)
 		if(USE_QML)
 			set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
+			set_with_reason(gui/qt5_qml "Qt5 found" TRUE
+				${Qt5Quick_LIBRARIES})
+		else()
+			set_with_reason(gui/qt5_qml "feature USE_QML disabled for graphics/qt5" FALSE)
 		endif()
-		set_with_reason(gui/qt5_qml "Qt5 found" TRUE
-			${Qt5Quick_LIBRARIES})
 
 	endif()
 	set_with_reason(graphics/qt5 "Qt5 found" TRUE
