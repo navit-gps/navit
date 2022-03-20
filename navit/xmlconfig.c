@@ -227,6 +227,7 @@ static int xmlconfig_announce(struct xmlstate *state) {
 static struct object_func object_funcs[] = {
     { attr_announcement,NEW(announcement_new),  GET(announcement_get_attr), NULL, NULL, SET(announcement_set_attr), ADD(announcement_add_attr) },
     { attr_arrows,     NEW(arrows_new)},
+    { attr_spikes,     NEW(spikes_new)},
     { attr_circle,     NEW(circle_new),   NULL, NULL, NULL, NULL, ADD(element_add_attr)},
     { attr_coord,      NEW(coord_new_from_attrs)},
     { attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
@@ -334,7 +335,7 @@ static char *element_fixmes[]= {
 };
 
 static void initStatic(void) {
-    elements=g_new0(struct element_func, 45); //44 is a number of elements + ending NULL element
+    elements=g_new0(struct element_func, 46); //45 is a number of elements + ending NULL element
 
     elements[0].name="config";
     elements[0].parent=NULL;
@@ -554,6 +555,11 @@ static void initStatic(void) {
     elements[43].parent="navit";
     elements[43].func=NULL;
     elements[43].type=attr_traffic;
+
+    elements[44].name="spikes";
+    elements[44].parent="itemgra";
+    elements[44].func=NULL;
+    elements[44].type=attr_spikes;
 }
 
 /**

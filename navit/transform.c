@@ -545,14 +545,21 @@ static struct z_clip_result transform_z_clip_if_necessary(struct coord_3d coord,
     return clip_result;
 }
 
-int transform(struct transformation *t, enum projection required_projection, struct coord *input,
-              struct point *result, int count, int mindist, int width, int *width_result) {
+int transform_point(struct transformation *t, enum projection required_projection, struct coord *input,
+                    struct point *result) {
+    return transform_point_buf(t, required_projection, input, result, sizeof(struct point), 1, 0, 0, NULL);
+}
+
+int transform_point_buf(struct transformation *t, enum projection required_projection, struct coord *input,
+                        struct point *result, long result_size, int count, int mindist, int width, int *width_result) {
     struct coord projected_coord, shifted_coord;
     struct coord_3d rotated_coord;
     struct point screen_point;
     int zlimit=t->znear;
     struct z_clip_result clip_result, clip_result_old= {{0,0}, -1, 0, 0};
     int i,result_idx = 0,result_idx_last=0;
+    long max_results = result_size / sizeof(struct point);
+
     dbg(lvl_debug,"count=%d", count);
     for (i=0; i < count; i++) {
         dbg(lvl_debug, "input coord %d: (%d, %d)", i, input[i].x, input[i].y);
@@ -570,7 +577,14 @@ int transform(struct transformation *t, enum projection required_projection, str
             clip_result=transform_z_clip_if_necessary(rotated_coord, zlimit, clip_result_old);
             clip_result_old=clip_result;
             if(clip_result.process_coord_again) {
-                i--;
+                /* if we repeat an interation, we have to make sure that there is enough space in the result buffer to
+                   not overflow. */
+                if (result_idx + 1  < max_results) {
+                    i--;
+                } else {
+                    dbg(lvl_debug, "Not enough space in buf for transform_point_buf");
+                    return TRANSFORM_ERR_BUF_SPACE;
+                }
             } else if (clip_result.skip_coord) {
                 continue;
             }
