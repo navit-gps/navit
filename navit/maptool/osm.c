@@ -53,6 +53,11 @@ static struct item_bin item;
 
 
 int maxspeed_attr_value;
+int maxheight_attr_value;
+int maxlength_attr_value;
+int maxwidth_attr_value;
+int maxweight_attr_value;           //actual weight
+int maxaxleload_attr_value;       //axle weight
 
 char debug_attr_buffer[BUFFER_SIZE];
 
@@ -419,331 +424,332 @@ struct country_table {
 //   otherwise - nodes
 
 static char *attrmap= {
-    "n	*=*			point_unkn\n"
-    "?	addr:housenumber=*	house_number\n"
-    "?	aeroway=aerodrome	poi_airport\n"
-    "?	aeroway=airport		poi_airport\n"
-    "?	aeroway=helipad		poi_heliport\n"
-    "?	aeroway=terminal	poi_airport\n"
-    "?	amenity=atm		poi_atm\n"
-    "?	amenity=bank		poi_bank\n"
-    "?	amenity=bar		poi_bar\n"
-    "n	amenity=bench		poi_bench\n"
-    "?	amenity=bicycle_rental	poi_bicycle_rental\n"
-    "?	amenity=bicycle_parking	poi_bicycle_parking\n"
-    "?	amenity=biergarten	poi_biergarten\n"
-    "?	amenity=bus_station	poi_bus_station\n"
-    "?	amenity=cafe		poi_cafe\n"
-    "?	amenity=car_sharing	poi_car_sharing\n"
-    "?	amenity=car_wash	poi_car_wash\n"
-    "?	amenity=cinema		poi_cinema\n"
-    "?	amenity=college		poi_school_college\n"
-    "?	amenity=courthouse	poi_justice\n"
-    "?	amenity=drinking_water	poi_potable_water\n"
-    "?	amenity=fast_food	poi_fastfood\n"
-    "?	amenity=fire_station	poi_firebrigade\n"
-    "?	amenity=fountain	poi_fountain\n"
-    "?	amenity=fuel		poi_fuel\n"
-    "?	amenity=grave_yard	poi_cemetery\n"
-    "?	amenity=hospital	poi_hospital\n"
-    "?	amenity=hunting_stand	poi_hunting_stand\n"
-    "?	amenity=kindergarten	poi_kindergarten\n"
-    "?	amenity=library		poi_library\n"
-    "?	amenity=nightclub	poi_nightclub\n"
-    "?	amenity=park_bench	poi_bench\n"
-    "?	amenity=parking		poi_car_parking\n"
-    "?	amenity=pharmacy	poi_pharmacy\n"
-    "?	amenity=place_of_worship,religion=christian	poi_church\n"
-    "?	amenity=place_of_worship			poi_worship\n"
-    "?	amenity=police		poi_police\n"
-    "?	amenity=post_box	poi_post_box\n"
-    "?	amenity=post_office	poi_post_office\n"
-    "?	amenity=prison		poi_prison\n"
-    "?	amenity=pub		poi_pub\n"
-    "?	amenity=public_building	poi_public_office\n"
-    "?	amenity=recycling	poi_recycling\n"
-    "?	amenity=restaurant,cuisine=fine_dining		poi_dining\n"
-    "?	amenity=restaurant				poi_restaurant\n"
-    "?	amenity=school		poi_school\n"
-    "?	amenity=shelter		poi_shelter\n"
-    "?	amenity=taxi		poi_taxi\n"
-    "?	amenity=tec_common	tec_common\n"
-    "?	amenity=telephone	poi_telephone\n"
-    "?	amenity=theatre		poi_theater\n"
-    "?	amenity=toilets		poi_restroom\n"
-    "?	amenity=townhall	poi_townhall\n"
-    "?	amenity=university	poi_school_university\n"
-    "?	amenity=vending_machine	poi_vending_machine\n"
-    "n	barrier=bollard		barrier_bollard\n"
-    "n	barrier=cycle_barrier	barrier_cycle\n"
-    "n	barrier=lift_gate	barrier_lift_gate\n"
-    "?	car=car_rental		poi_car_rent\n"
-    "?	highway=bus_station	poi_bus_station\n"
-    "?	highway=bus_stop	poi_bus_stop\n"
-    "n	highway=mini_roundabout	mini_roundabout\n"
-    "n	highway=motorway_junction	highway_exit\n"
-    "n	highway=stop		traffic_sign_stop\n"
-    "n	highway=toll_booth	poi_toll_booth\n"
-    "n	highway=traffic_signals	traffic_signals\n"
-    "n	highway=turning_circle	turning_circle\n"
-    "?	historic=boundary_stone	poi_boundary_stone\n"
-    "?	historic=castle		poi_castle\n"
-    "?	historic=memorial	poi_memorial\n"
-    "?	historic=monument	poi_monument\n"
-    "?	historic=ruins		poi_ruins\n"
-    "n	historic=archaeological_site	poi_archaeological_site\n"
-//	"?	historic=*		poi_ruins\n"
-    "?	landuse=cemetery	poi_cemetery\n"
-    "?	leisure=fishing		poi_fish\n"
-    "?	leisure=golf_course	poi_golf\n"
-    "?	leisure=marina		poi_marine\n"
-    "?	leisure=playground	poi_playground\n"
-    "?	leisure=slipway		poi_boat_ramp\n"
-    "?	leisure=sports_centre	poi_sport\n"
-    "?	leisure=stadium		poi_stadium\n"
-    "?	man_made=tower		poi_tower\n"
-    "?	military=airfield	poi_military\n"
-    "?	military=barracks	poi_military\n"
-    "?	military=bunker		poi_military\n"
-    "?	military=danger_area	poi_danger_area\n"
-    "?	military=range		poi_military\n"
-    "?	natural=bay		poi_bay\n"
-    "?	natural=peak,ele=*		poi_peak\n"     // show only major peaks with elevation
-    "?	natural=tree		poi_tree\n"
-    "n	place=city		town_label_2e5\n"
-    "n	place=hamlet		town_label_2e2\n"
-    "n	place=locality		town_label_2e0\n"
-    "n	place=suburb		district_label\n"
-    "n	place=town		town_label_2e4\n"
-    "n	place=village		town_label_2e3\n"
-    "n	power=tower		power_tower\n"
-    "n	power=sub_station	power_substation\n"
-    "n	railway=halt		poi_rail_halt\n"
-    "n	railway=level_crossing	poi_level_crossing\n"
-    "?	railway=station		poi_rail_station\n"
-    "?	railway=tram_stop	poi_rail_tram_stop\n"
-    "?	shop=baker		poi_shop_baker\n"
-    "?	shop=bakery		poi_shop_baker\n"
-    "?	shop=beverages		poi_shop_beverages\n"
-    "?	shop=bicycle		poi_shop_bicycle\n"
-    "?	shop=butcher		poi_shop_butcher\n"
-    "?	shop=car		poi_car_dealer_parts\n"
-    "?	shop=car_repair		poi_repair_service\n"
-    "?	shop=clothes		poi_shop_apparel\n"
-    "?	shop=convenience	poi_shop_grocery\n"
-    "?	shop=chemist		poi_shop_drugstore\n"
-    "?	shop=florist		poi_shop_florist\n"
-    "?	shop=fruit		poi_shop_fruit\n"
-    "?	shop=furniture		poi_shop_furniture\n"
-    "?	shop=garden_centre	poi_shop_handg\n"
-    "?	shop=hardware		poi_shop_handg\n"
-    "?	shop=hairdresser	poi_hairdresser\n"
-    "?	shop=kiosk		poi_shop_kiosk\n"
-    "?	shop=optician		poi_shop_optician\n"
-    "?	shop=parfum		poi_shop_parfum\n"
-    "?	shop=photo		poi_shop_photo\n"
-    "?	shop=shoes		poi_shop_shoes\n"
-    "?	shop=supermarket	poi_shopping\n"
-    "?	shop=mall               poi_mall\n"
-    "?	sport=10pin		poi_bowling\n"
-    "?	sport=baseball		poi_baseball\n"
-    "?	sport=basketball	poi_basketball\n"
-    "?	sport=climbing		poi_climbing\n"
-    "?	sport=golf		poi_golf\n"
-    "?	sport=motor_sports	poi_motor_sport\n"
-    "?	sport=skiing		poi_skiing\n"
-    "?	sport=soccer		poi_soccer\n"
-    "?	sport=stadium		poi_stadium\n"
-    "?	sport=swimming		poi_swimming\n"
-    "?	sport=tennis		poi_tennis\n"
-    "?	tourism=attraction	poi_attraction\n"
-    "?	tourism=camp_site	poi_camp_rv\n"
-    "?	tourism=caravan_site	poi_camp_rv\n"
-    "?	tourism=guest_house	poi_guesthouse\n"
-    "?	tourism=hostel		poi_hostel\n"
-    "?	tourism=hotel		poi_hotel\n"
-    "?	tourism=information	poi_information\n"
-    "?	tourism=motel		poi_motel\n"
-    "?	tourism=museum		poi_museum_history\n"
-    "?	tourism=picnic_site	poi_picnic\n"
-    "?	tourism=theme_park	poi_resort\n"
-    "?	tourism=viewpoint	poi_viewpoint\n"
-    "?	tourism=zoo		poi_zoo\n"
-    "n	natural=cave_entrance      poi_cave\n"
-    "n	traffic_sign=city_limit	traffic_sign_city_limit\n"
-    "n	highway=speed_camera	tec_common\n"
-    "w	*=*			street_unkn\n"
-    "w	addr:interpolation=even	house_number_interpolation_even\n"
-    "w	addr:interpolation=odd	house_number_interpolation_odd\n"
-    "w	addr:interpolation=all	house_number_interpolation_all\n"
-    "w	addr:interpolation=alphabetic	house_number_interpolation_alphabetic\n"
-    "w	aerialway=cable_car	lift_cable_car\n"
-    "w	aerialway=chair_lift	lift_chair\n"
-    "w	aerialway=drag_lift	lift_drag\n"
-    "w	aeroway=aerodrome	poly_airport\n"
+    "n  *=*         point_unkn\n"
+    "?  addr:housenumber=*  house_number\n"
+    "?  aeroway=aerodrome   poi_airport\n"
+    "?  aeroway=airport     poi_airport\n"
+    "?  aeroway=helipad     poi_heliport\n"
+    "?  aeroway=terminal    poi_airport\n"
+    "?  amenity=atm     poi_atm\n"
+    "?  amenity=bank        poi_bank\n"
+    "?  amenity=bar     poi_bar\n"
+    "n  amenity=bench       poi_bench\n"
+    "?  amenity=bicycle_rental  poi_bicycle_rental\n"
+    "?  amenity=bicycle_parking poi_bicycle_parking\n"
+    "?  amenity=biergarten  poi_biergarten\n"
+    "?  amenity=bus_station poi_bus_station\n"
+    "?  amenity=cafe        poi_cafe\n"
+    "?  amenity=car_sharing poi_car_sharing\n"
+    "?  amenity=car_wash    poi_car_wash\n"
+    "?  amenity=cinema      poi_cinema\n"
+    "?  amenity=college     poi_school_college\n"
+    "?  amenity=courthouse  poi_justice\n"
+    "?  amenity=drinking_water  poi_potable_water\n"
+    "?  amenity=fast_food   poi_fastfood\n"
+    "?  amenity=fire_station    poi_firebrigade\n"
+    "?  amenity=fountain    poi_fountain\n"
+    "?  amenity=fuel        poi_fuel\n"
+    "?  amenity=grave_yard  poi_cemetery\n"
+    "?  amenity=hospital    poi_hospital\n"
+    "?  amenity=hunting_stand   poi_hunting_stand\n"
+    "?  amenity=kindergarten    poi_kindergarten\n"
+    "?  amenity=library     poi_library\n"
+    "?  amenity=nightclub   poi_nightclub\n"
+    "?  amenity=park_bench  poi_bench\n"
+    "?  amenity=parking     poi_car_parking\n"
+    "?  amenity=pharmacy    poi_pharmacy\n"
+    "?  amenity=place_of_worship,religion=christian poi_church\n"
+    "?  amenity=place_of_worship            poi_worship\n"
+    "?  amenity=police      poi_police\n"
+    "?  amenity=post_box    poi_post_box\n"
+    "?  amenity=post_office poi_post_office\n"
+    "?  amenity=prison      poi_prison\n"
+    "?  amenity=pub     poi_pub\n"
+    "?  amenity=public_building poi_public_office\n"
+    "?  amenity=recycling   poi_recycling\n"
+    "?  amenity=restaurant,cuisine=fine_dining      poi_dining\n"
+    "?  amenity=restaurant              poi_restaurant\n"
+    "?  amenity=school      poi_school\n"
+    "?  amenity=shelter     poi_shelter\n"
+    "?  amenity=taxi        poi_taxi\n"
+    "?  amenity=tec_common  tec_common\n"
+    "?  amenity=telephone   poi_telephone\n"
+    "?  amenity=theatre     poi_theater\n"
+    "?  amenity=toilets     poi_restroom\n"
+    "?  amenity=townhall    poi_townhall\n"
+    "?  amenity=university  poi_school_university\n"
+    "?  amenity=vending_machine poi_vending_machine\n"
+    "n  barrier=bollard     barrier_bollard\n"
+    "n  barrier=cycle_barrier   barrier_cycle\n"
+    "n  barrier=lift_gate   barrier_lift_gate\n"
+    "?  car=car_rental      poi_car_rent\n"
+    "?  highway=bus_station poi_bus_station\n"
+    "?  highway=bus_stop    poi_bus_stop\n"
+    "n  highway=mini_roundabout mini_roundabout\n"
+    "n  highway=motorway_junction   highway_exit\n"
+    "n  highway=stop        traffic_sign_stop\n"
+    "n  highway=toll_booth  poi_toll_booth\n"
+    "n  highway=traffic_signals traffic_signals\n"
+    "n  highway=turning_circle  turning_circle\n"
+    "?  historic=boundary_stone poi_boundary_stone\n"
+    "?  historic=castle     poi_castle\n"
+    "?  historic=memorial   poi_memorial\n"
+    "?  historic=monument   poi_monument\n"
+    "?  historic=ruins      poi_ruins\n"
+    "n  historic=archaeological_site    poi_archaeological_site\n"
+//  "?  historic=*      poi_ruins\n"
+    "?  landuse=cemetery    poi_cemetery\n"
+    "?  leisure=fishing     poi_fish\n"
+    "?  leisure=golf_course poi_golf\n"
+    "?  leisure=marina      poi_marine\n"
+    "?  leisure=playground  poi_playground\n"
+    "?  leisure=slipway     poi_boat_ramp\n"
+    "?  leisure=sports_centre   poi_sport\n"
+    "?  leisure=stadium     poi_stadium\n"
+    "?  man_made=tower      poi_tower\n"
+    "?  military=airfield   poi_military\n"
+    "?  military=barracks   poi_military\n"
+    "?  military=bunker     poi_military\n"
+    "?  military=danger_area    poi_danger_area\n"
+    "?  military=range      poi_military\n"
+    "?  natural=bay     poi_bay\n"
+    "?  natural=peak,ele=*      poi_peak\n"     // show only major peaks with elevation
+    "?  natural=tree        poi_tree\n"
+    "n  place=city      town_label_2e5\n"
+    "n  place=hamlet        town_label_2e2\n"
+    "n  place=locality      town_label_2e0\n"
+    "n  place=suburb        district_label\n"
+    "n  place=town      town_label_2e4\n"
+    "n  place=village       town_label_2e3\n"
+    "n  power=tower     power_tower\n"
+    "n  power=sub_station   power_substation\n"
+    "n  railway=halt        poi_rail_halt\n"
+    "n  railway=level_crossing  poi_level_crossing\n"
+    "?  railway=station     poi_rail_station\n"
+    "?  railway=tram_stop   poi_rail_tram_stop\n"
+    "?  shop=baker      poi_shop_baker\n"
+    "?  shop=bakery     poi_shop_baker\n"
+    "?  shop=beverages      poi_shop_beverages\n"
+    "?  shop=bicycle        poi_shop_bicycle\n"
+    "?  shop=butcher        poi_shop_butcher\n"
+    "?  shop=car        poi_car_dealer_parts\n"
+    "?  shop=car_repair     poi_repair_service\n"
+    "?  shop=clothes        poi_shop_apparel\n"
+    "?  shop=convenience    poi_shop_grocery\n"
+    "?  shop=chemist        poi_shop_drugstore\n"
+    "?  shop=florist        poi_shop_florist\n"
+    "?  shop=fruit      poi_shop_fruit\n"
+    "?  shop=furniture      poi_shop_furniture\n"
+    "?  shop=garden_centre  poi_shop_handg\n"
+    "?  shop=hardware       poi_shop_handg\n"
+    "?  shop=hairdresser    poi_hairdresser\n"
+    "?  shop=kiosk      poi_shop_kiosk\n"
+    "?  shop=optician       poi_shop_optician\n"
+    "?  shop=parfum     poi_shop_parfum\n"
+    "?  shop=photo      poi_shop_photo\n"
+    "?  shop=shoes      poi_shop_shoes\n"
+    "?  shop=supermarket    poi_shopping\n"
+    "?  shop=mall               poi_mall\n"
+    "?  sport=10pin     poi_bowling\n"
+    "?  sport=baseball      poi_baseball\n"
+    "?  sport=basketball    poi_basketball\n"
+    "?  sport=climbing      poi_climbing\n"
+    "?  sport=golf      poi_golf\n"
+    "?  sport=motor_sports  poi_motor_sport\n"
+    "?  sport=skiing        poi_skiing\n"
+    "?  sport=soccer        poi_soccer\n"
+    "?  sport=stadium       poi_stadium\n"
+    "?  sport=swimming      poi_swimming\n"
+    "?  sport=tennis        poi_tennis\n"
+    "?  tourism=attraction  poi_attraction\n"
+    "?  tourism=camp_site   poi_camp_rv\n"
+    "?  tourism=caravan_site    poi_camp_rv\n"
+    "?  tourism=guest_house poi_guesthouse\n"
+    "?  tourism=hostel      poi_hostel\n"
+    "?  tourism=hotel       poi_hotel\n"
+    "?  tourism=information poi_information\n"
+    "?  tourism=motel       poi_motel\n"
+    "?  tourism=museum      poi_museum_history\n"
+    "?  tourism=picnic_site poi_picnic\n"
+    "?  tourism=theme_park  poi_resort\n"
+    "?  tourism=viewpoint   poi_viewpoint\n"
+    "?  tourism=zoo     poi_zoo\n"
+    "n  natural=cave_entrance      poi_cave\n"
+    "n  traffic_sign=city_limit traffic_sign_city_limit\n"
+    "n  highway=speed_camera    tec_common\n"
+    "w  *=*         street_unkn\n"
+    "w  addr:interpolation=even house_number_interpolation_even\n"
+    "w  addr:interpolation=odd  house_number_interpolation_odd\n"
+    "w  addr:interpolation=all  house_number_interpolation_all\n"
+    "w  addr:interpolation=alphabetic   house_number_interpolation_alphabetic\n"
+    "w  aerialway=cable_car lift_cable_car\n"
+    "w  aerialway=chair_lift    lift_chair\n"
+    "w  aerialway=drag_lift lift_drag\n"
+    "w  aeroway=aerodrome   poly_airport\n"
     /* airport wins over military landuse and specifier if given */
-    "w	aeroway=aerodrome,landuse=military	poly_airfield\n"
-    "w	aeroway=aerodrome,landuse=military,military=*	poly_airfield\n"
-    "w	aeroway=apron		poly_apron\n"
-    "w	aeroway=runway		aeroway_runway\n"
-    "w	aeroway=taxiway		aeroway_taxiway\n"
-    "w	aeroway=terminal	poly_terminal\n"
-    "w	amenity=college		poly_college\n"
-    "w	amenity=grave_yard	poly_cemetery\n"
-    "w	amenity=parking		poly_car_parking\n"
-    "w	amenity=place_of_worship	poly_building\n"
-    "w	amenity=university	poly_university\n"
-    "w	boundary=administrative,admin_level=2	border_country\n"
-    "w	boundary=civil		border_civil\n"
-    "w	boundary=national_park	border_national_park\n"
-    "w	boundary=political	border_political\n"
-    "w	building=*		poly_building\n"
-    "w	contour_ext=elevation_major	height_line_1\n"
-    "w	contour_ext=elevation_medium	height_line_2\n"
-    "w	contour_ext=elevation_minor	height_line_3\n"
-    "w	highway=bridleway	bridleway\n"
-    "w	highway=bus_guideway	bus_guideway\n"
-    "w	highway=construction	street_construction\n"
-    "w	highway=cyclepath	cycleway\n"
-    "w	highway=cycleway	cycleway\n"
-    "w	highway=footway		footway\n"
-    "w	highway=footway,piste:type=nordic	footway_and_piste_nordic\n"
-    "w	highway=living_street	living_street\n"
-    "w	highway=minor		street_1_land\n"
-    "w	highway=parking_lane	street_parking_lane\n"
-    "w	highway=path				path\n"
-    "w	highway=path,bicycle=designated		cycleway\n"
-    "w	highway=path,bicycle=official		cycleway\n"
-    "w	highway=path,bicycle=designated,foot=designated		cycleway\n"
-    "w	highway=path,bicycle=official,foot=official		cycleway\n"
-    "w	highway=path,foot=designated		footway\n"
-    "w	highway=path,foot=official		footway\n"
-    "w	highway=path,horse=designated		bridleway\n"
-    "w	highway=path,horse=official		bridleway\n"
-    "w	highway=path,sac_scale=alpine_hiking			hiking_alpine\n"
-    "w	highway=path,sac_scale=demanding_alpine_hiking		hiking_alpine_demanding\n"
-    "w	highway=path,sac_scale=demanding_mountain_hiking	hiking_mountain_demanding\n"
-    "w	highway=path,sac_scale=difficult_alpine_hiking		hiking_alpine_difficult\n"
-    "w	highway=path,sac_scale=hiking				hiking\n"
-    "w	highway=path,sac_scale=mountain_hiking			hiking_mountain\n"
-    "w	highway=pedestrian			street_pedestrian\n"
-    "w	highway=pedestrian,area=1		poly_pedestrian\n"
-    "w	highway=plaza				poly_plaza\n"
-    "w	highway=motorway			highway_land\n"
-    "w	highway=motorway,rural=0		highway_city\n"
-    "w	highway=motorway_link			ramp\n"
-    "w	highway=trunk				street_n_lanes\n"
-    "w	highway=trunk_link			ramp\n"
-    "w	highway=primary				street_4_land\n"
-    "w	highway=primary,name=*,rural=1		street_4_land\n"
-    "w	highway=primary,name=*			street_4_city\n"
-    "w	highway=primary,rural=0			street_4_city\n"
-    "w	highway=primary_link			ramp\n"
-    "w	highway=secondary			street_3_land\n"
-    "w	highway=secondary,name=*,rural=1	street_3_land\n"
-    "w	highway=secondary,name=*		street_3_city\n"
-    "w	highway=secondary,rural=0		street_3_city\n"
-    "w	highway=secondary,area=1		poly_street_3\n"
-    "w	highway=secondary_link			ramp\n"
-    "w	highway=tertiary			street_2_land\n"
-    "w	highway=tertiary,name=*,rural=1		street_2_land\n"
-    "w	highway=tertiary,name=*			street_2_city\n"
-    "w	highway=tertiary,rural=0		street_2_city\n"
-    "w	highway=tertiary,area=1			poly_street_2\n"
-    "w	highway=tertiary_link			ramp\n"
-    "w	highway=residential			street_1_city\n"
-    "w	highway=residential,area=1		poly_street_1\n"
-    "w	highway=unclassified			street_1_city\n"
-    "w	highway=unclassified,area=1		poly_street_1\n"
-    "w	highway=road				street_1_city\n"
-    "w	highway=service				street_service\n"
-    "w	highway=service,area=1			poly_service\n"
-    "w	highway=service,service=parking_aisle	street_parking_lane\n"
-    "w	highway=track				track_gravelled\n"
-    "w	highway=track,surface=grass		track_grass\n"
-    "w	highway=track,surface=gravel		track_gravelled\n"
-    "w	highway=track,surface=ground		track_ground\n"
-    "w	highway=track,surface=paved		track_paved\n"
-    "w	highway=track,surface=unpaved		track_unpaved\n"
-    "w	highway=track,tracktype=grade1		track_paved\n"
-    "w	highway=track,tracktype=grade2		track_gravelled\n"
-    "w	highway=track,tracktype=grade3		track_unpaved\n"
-    "w	highway=track,tracktype=grade4		track_ground\n"
-    "w	highway=track,tracktype=grade5		track_grass\n"
-    "w	highway=track,surface=paved,tracktype=grade1		track_paved\n"
-    "w	highway=track,surface=gravel,tracktype=grade2		track_gravelled\n"
-    "w	highway=track,surface=unpaved,tracktype=grade3		track_unpaved\n"
-    "w	highway=track,surface=ground,tracktype=grade4		track_ground\n"
-    "w	highway=track,surface=grass,tracktype=grade5		track_grass\n"
-    "w	highway=unsurfaced			track_gravelled\n"
-    "w	highway=steps				steps\n"
-    "w	historic=archaeological_site	poly_archaeological_site\n"
+    "w  aeroway=aerodrome,landuse=military  poly_airfield\n"
+    "w  aeroway=aerodrome,landuse=military,military=*   poly_airfield\n"
+    "w  aeroway=apron       poly_apron\n"
+    "w  aeroway=runway      aeroway_runway\n"
+    "w  aeroway=taxiway     aeroway_taxiway\n"
+    "w  aeroway=terminal    poly_terminal\n"
+    "w  amenity=college     poly_college\n"
+    "w  amenity=grave_yard  poly_cemetery\n"
+    "w  amenity=parking     poly_car_parking\n"
+    "w  amenity=place_of_worship    poly_building\n"
+    "w  amenity=university  poly_university\n"
+    "w  boundary=administrative,admin_level=2   border_country\n"
+    "w  boundary=civil      border_civil\n"
+    "w  boundary=national_park  border_national_park\n"
+    "w  boundary=political  border_political\n"
+    "w  boundary=low_emission_zone  poly_low_emission_zone\n"
+    "w  building=*      poly_building\n"
+    "w  contour_ext=elevation_major height_line_1\n"
+    "w  contour_ext=elevation_medium    height_line_2\n"
+    "w  contour_ext=elevation_minor height_line_3\n"
+    "w  highway=bridleway   bridleway\n"
+    "w  highway=bus_guideway    bus_guideway\n"
+    "w  highway=construction    street_construction\n"
+    "w  highway=cyclepath   cycleway\n"
+    "w  highway=cycleway    cycleway\n"
+    "w  highway=footway     footway\n"
+    "w  highway=footway,piste:type=nordic   footway_and_piste_nordic\n"
+    "w  highway=living_street   living_street\n"
+    "w  highway=minor       street_1_land\n"
+    "w  highway=parking_lane    street_parking_lane\n"
+    "w  highway=path                path\n"
+    "w  highway=path,bicycle=designated     cycleway\n"
+    "w  highway=path,bicycle=official       cycleway\n"
+    "w  highway=path,bicycle=designated,foot=designated     cycleway\n"
+    "w  highway=path,bicycle=official,foot=official     cycleway\n"
+    "w  highway=path,foot=designated        footway\n"
+    "w  highway=path,foot=official      footway\n"
+    "w  highway=path,horse=designated       bridleway\n"
+    "w  highway=path,horse=official     bridleway\n"
+    "w  highway=path,sac_scale=alpine_hiking            hiking_alpine\n"
+    "w  highway=path,sac_scale=demanding_alpine_hiking      hiking_alpine_demanding\n"
+    "w  highway=path,sac_scale=demanding_mountain_hiking    hiking_mountain_demanding\n"
+    "w  highway=path,sac_scale=difficult_alpine_hiking      hiking_alpine_difficult\n"
+    "w  highway=path,sac_scale=hiking               hiking\n"
+    "w  highway=path,sac_scale=mountain_hiking          hiking_mountain\n"
+    "w  highway=pedestrian          street_pedestrian\n"
+    "w  highway=pedestrian,area=1       poly_pedestrian\n"
+    "w  highway=plaza               poly_plaza\n"
+    "w  highway=motorway            highway_land\n"
+    "w  highway=motorway,rural=0        highway_city\n"
+    "w  highway=motorway_link           ramp\n"
+    "w  highway=trunk               street_n_lanes\n"
+    "w  highway=trunk_link          ramp\n"
+    "w  highway=primary             street_4_land\n"
+    "w  highway=primary,name=*,rural=1      street_4_land\n"
+    "w  highway=primary,name=*          street_4_city\n"
+    "w  highway=primary,rural=0         street_4_city\n"
+    "w  highway=primary_link            ramp\n"
+    "w  highway=secondary           street_3_land\n"
+    "w  highway=secondary,name=*,rural=1    street_3_land\n"
+    "w  highway=secondary,name=*        street_3_city\n"
+    "w  highway=secondary,rural=0       street_3_city\n"
+    "w  highway=secondary,area=1        poly_street_3\n"
+    "w  highway=secondary_link          ramp\n"
+    "w  highway=tertiary            street_2_land\n"
+    "w  highway=tertiary,name=*,rural=1     street_2_land\n"
+    "w  highway=tertiary,name=*         street_2_city\n"
+    "w  highway=tertiary,rural=0        street_2_city\n"
+    "w  highway=tertiary,area=1         poly_street_2\n"
+    "w  highway=tertiary_link           ramp\n"
+    "w  highway=residential         street_1_city\n"
+    "w  highway=residential,area=1      poly_street_1\n"
+    "w  highway=unclassified            street_1_city\n"
+    "w  highway=unclassified,area=1     poly_street_1\n"
+    "w  highway=road                street_1_city\n"
+    "w  highway=service             street_service\n"
+    "w  highway=service,area=1          poly_service\n"
+    "w  highway=service,service=parking_aisle   street_parking_lane\n"
+    "w  highway=track               track_gravelled\n"
+    "w  highway=track,surface=grass     track_grass\n"
+    "w  highway=track,surface=gravel        track_gravelled\n"
+    "w  highway=track,surface=ground        track_ground\n"
+    "w  highway=track,surface=paved     track_paved\n"
+    "w  highway=track,surface=unpaved       track_unpaved\n"
+    "w  highway=track,tracktype=grade1      track_paved\n"
+    "w  highway=track,tracktype=grade2      track_gravelled\n"
+    "w  highway=track,tracktype=grade3      track_unpaved\n"
+    "w  highway=track,tracktype=grade4      track_ground\n"
+    "w  highway=track,tracktype=grade5      track_grass\n"
+    "w  highway=track,surface=paved,tracktype=grade1        track_paved\n"
+    "w  highway=track,surface=gravel,tracktype=grade2       track_gravelled\n"
+    "w  highway=track,surface=unpaved,tracktype=grade3      track_unpaved\n"
+    "w  highway=track,surface=ground,tracktype=grade4       track_ground\n"
+    "w  highway=track,surface=grass,tracktype=grade5        track_grass\n"
+    "w  highway=unsurfaced          track_gravelled\n"
+    "w  highway=steps               steps\n"
+    "w  historic=archaeological_site    poly_archaeological_site\n"
     /* Albeit historic=archaeological_site should not be used on ways (only on areas) according to OSM wiki,
      * it is at least done so for the Limes in germany. Luckily we can sort the Limes out as it has it's own
      * tag scheme.*/
-    "w	historic=archaeological_site,site_type=fortification,fortification_type=limes	archaeological_site\n"
-    "w	historic=battlefield	poly_battlefield\n"
-    "w	historic=ruins		poly_ruins\n"
-    "w	historic=town_gate	poly_building\n"
-    "w	landuse=allotments	poly_allotments\n"
-    "w	landuse=basin		poly_basin\n"
-    "w	landuse=brownfield	poly_brownfield\n"
-    "w	landuse=cemetery	poly_cemetery\n"
-    "w	landuse=commercial	poly_commercial\n"
-    "w	landuse=construction	poly_construction\n"
-    "w	landuse=farm		poly_farm\n"
-    "w	landuse=farmland	poly_farm\n"
-    "w	landuse=farmyard	poly_town\n"
-    "w	landuse=forest		poly_wood\n"
-    "w	landuse=grass		poly_meadow\n"
-    "w	landuse=greenfield	poly_greenfield\n"
-    "w	landuse=industrial	poly_industry\n"
-    "w	landuse=landfill	poly_landfill\n"
+    "w  historic=archaeological_site,site_type=fortification,fortification_type=limes   archaeological_site\n"
+    "w  historic=battlefield    poly_battlefield\n"
+    "w  historic=ruins      poly_ruins\n"
+    "w  historic=town_gate  poly_building\n"
+    "w  landuse=allotments  poly_allotments\n"
+    "w  landuse=basin       poly_basin\n"
+    "w  landuse=brownfield  poly_brownfield\n"
+    "w  landuse=cemetery    poly_cemetery\n"
+    "w  landuse=commercial  poly_commercial\n"
+    "w  landuse=construction    poly_construction\n"
+    "w  landuse=farm        poly_farm\n"
+    "w  landuse=farmland    poly_farm\n"
+    "w  landuse=farmyard    poly_town\n"
+    "w  landuse=forest      poly_wood\n"
+    "w  landuse=grass       poly_meadow\n"
+    "w  landuse=greenfield  poly_greenfield\n"
+    "w  landuse=industrial  poly_industry\n"
+    "w  landuse=landfill    poly_landfill\n"
     /* landuse=military plus military tag */
-    "w	landuse=military	poly_military\n"
-    "w	landuse=military,military=*	poly_military\n"
-    "w	landuse=military,military=airfield	poly_airfield\n"
-    "w	landuse=military,military=barracks	poly_barracks\n"
-    "w	landuse=military,military=danger_area	poly_danger_area\n"
-    "w	landuse=military,military=naval_base	poly_naval_base\n"
-    "w	landuse=military,military=range		poly_range\n"
-    "w	landuse=military,military=training_area		poly_military_zone\n"
-    "w	landuse=meadow		poly_meadow\n"
-    "w	landuse=plaza		poly_plaza\n"
-    "w	landuse=quarry		poly_quarry\n"
-    "w	landuse=railway		poly_railway\n"
-    "w	landuse=recreation_ground		poly_recreation_ground\n"
-    "w	landuse=reservoir	poly_reservoir\n"
-    "w	landuse=residential	poly_town\n"
-    "w	landuse=residential,area=1	poly_town\n"
-    "w	landuse=retail		poly_retail\n"
-    "w	landuse=village_green	poly_village_green\n"
-    "w	landuse=vineyard	poly_farm\n"
-    "w	landuse=depot		poly_depot\n"
-    "w	landuse=garages		poly_garages\n"
-    "w	landuse=greenhouse_horticulture	poly_greenhouse\n"
-    "w	landuse=orchard		poly_orchard\n"
-    "w	landuse=plant_nursery	poly_plantnursery\n"
-    "w	landuse=port		poly_port\n"
-    "w	landuse=salt_pond	poly_saltpond\n"
-    "w	leisure=common		poly_common\n"
-    "w	leisure=fishing		poly_fishing\n"
-    "w	leisure=garden		poly_garden\n"
-    "w	leisure=golf_course	poly_golf_course\n"
-    "w	leisure=marina		poly_marina\n"
-    "w	leisure=nature_reserve	poly_nature_reserve\n"
-    "w	leisure=park		poly_park\n"
-    "w	leisure=pitch		poly_sports_pitch\n"
-    "w	leisure=playground	poly_playground\n"
-    "w	leisure=sports_centre,building=1	poly_building\n"
-    "w	leisure=sports_centre	poly_sport\n"
-    "w	leisure=stadium		poly_sports_stadium\n"
-    "w	leisure=track,area=1		poly_sports_track\n"
-    "w	leisure=track,area=0		sports_track\n"
-    "w	leisure=track,type=multipolygon		poly_sports_track\n"
-    "w	leisure=track		sports_track\n"
-    "w	leisure=water_park	poly_water_park\n"
-    "w	leisure=swimming_pool	poly_swimming_pool\n"
+    "w  landuse=military    poly_military\n"
+    "w  landuse=military,military=* poly_military\n"
+    "w  landuse=military,military=airfield  poly_airfield\n"
+    "w  landuse=military,military=barracks  poly_barracks\n"
+    "w  landuse=military,military=danger_area   poly_danger_area\n"
+    "w  landuse=military,military=naval_base    poly_naval_base\n"
+    "w  landuse=military,military=range     poly_range\n"
+    "w  landuse=military,military=training_area     poly_military_zone\n"
+    "w  landuse=meadow      poly_meadow\n"
+    "w  landuse=plaza       poly_plaza\n"
+    "w  landuse=quarry      poly_quarry\n"
+    "w  landuse=railway     poly_railway\n"
+    "w  landuse=recreation_ground       poly_recreation_ground\n"
+    "w  landuse=reservoir   poly_reservoir\n"
+    "w  landuse=residential poly_town\n"
+    "w  landuse=residential,area=1  poly_town\n"
+    "w  landuse=retail      poly_retail\n"
+    "w  landuse=village_green   poly_village_green\n"
+    "w  landuse=vineyard    poly_farm\n"
+    "w  landuse=depot       poly_depot\n"
+    "w  landuse=garages     poly_garages\n"
+    "w  landuse=greenhouse_horticulture poly_greenhouse\n"
+    "w  landuse=orchard     poly_orchard\n"
+    "w  landuse=plant_nursery   poly_plantnursery\n"
+    "w  landuse=port        poly_port\n"
+    "w  landuse=salt_pond   poly_saltpond\n"
+    "w  leisure=common      poly_common\n"
+    "w  leisure=fishing     poly_fishing\n"
+    "w  leisure=garden      poly_garden\n"
+    "w  leisure=golf_course poly_golf_course\n"
+    "w  leisure=marina      poly_marina\n"
+    "w  leisure=nature_reserve  poly_nature_reserve\n"
+    "w  leisure=park        poly_park\n"
+    "w  leisure=pitch       poly_sports_pitch\n"
+    "w  leisure=playground  poly_playground\n"
+    "w  leisure=sports_centre,building=1    poly_building\n"
+    "w  leisure=sports_centre   poly_sport\n"
+    "w  leisure=stadium     poly_sports_stadium\n"
+    "w  leisure=track,area=1        poly_sports_track\n"
+    "w  leisure=track,area=0        sports_track\n"
+    "w  leisure=track,type=multipolygon     poly_sports_track\n"
+    "w  leisure=track       sports_track\n"
+    "w  leisure=water_park  poly_water_park\n"
+    "w  leisure=swimming_pool   poly_swimming_pool\n"
     /* military tag without further info */
     "w	military=airfield	poly_airfield\n"
     "w	military=barracks	poly_barracks\n"
@@ -768,6 +774,7 @@ static char *attrmap= {
     "w	natural=wetland		poly_mud\n"
     "w	natural=wood		poly_wood\n"
     "w	natural=cliff		cliff\n"
+    "w	man_made=embankment  embankment\n"
     "w	piste:type=downhill,piste:difficulty=advanced		piste_downhill_advanced\n"
     "w	piste:type=downhill,piste:difficulty=easy		piste_downhill_easy\n"
     "w	piste:type=downhill,piste:difficulty=expert		piste_downhill_expert\n"
@@ -818,6 +825,112 @@ static char *attrmap= {
     "w	barrier=retaining_wall	retaining_wall\n"
     "w	barrier=city_wall	city_wall\n"
 };
+
+// Conversion to meters internally, choose multiplier as required. 1 is return value is in meters
+static int convert_length_unit_to_integer(char* value, int multiplier) {
+    int result = 0;
+    char* ptri = strstr(value, "'");     //inch value id
+    char* ptrf = strstr(value, "\"");    //feet value id
+    char* ptrm = strstr(value, "m");     //meter value id
+
+    // Hardening:
+    if(!value)
+        return 0;
+
+    //Need to have both else erroneous values like <7"0> will crash
+    if(ptrf && !ptri) {
+        fprintf(stderr,"Warning -- Node: %li unit length conversion can't convert. value was: %s\n", getcurrentid(), value);
+        return 0;
+    }
+
+    // Height not known exactly, use a value based on 2.5 meters height to exclude this way from routing for trucks
+    if(!strcmp(value, "below_default")) {
+        //fprintf(stderr,"Warning -- Node: %li unit length conversion 'below_default' - Setting value to 2.5 meters\n", getcurrentid());
+        value="2.5";
+    }
+
+    //fprintf(stderr,"unit length conversion value: %s, multiplier: %i\n", value, multiplier);
+
+    if(ptrm) { // We have metric unit and need to remove the "m"
+        ptrm--;
+        ptrm="\0";
+        result = (int)(atof(value) * multiplier);
+        //fprintf(stderr,"unit length conversion converted value metric: %i\n", result);
+        return result;
+    }
+
+    // We have an imperial value or meter without unit identifier
+    if(ptrf) {
+        *ptrf="\0"; // remove inch value identifier and calculate inches
+        result=(int)(atof(++ptri)*2.54);
+        //fprintf(stderr,"unit length conversion converted value inches: %i\n", result);
+    }
+
+    if(ptri) { // We have an imperial value and need to add feet
+        ptri--;
+        *ptri="\0";
+        result+=(int)(atof(value) * 0.3048 * multiplier);
+        //fprintf(stderr,"unit length conversion converted value inches + feet: %i\n", result);
+        return result;
+    }
+
+    // We have meters without unit id
+    result=(int)(atof(value) * multiplier);
+
+    // Ignore some defaults, but warn if other content
+    if(result == 0 && strcmp(value, "default") && strcmp(value, "none") && strcmp(value, "no_sign") && strcmp(value, "unsigned"))
+        fprintf(stderr,"Warning -- Node: %li unit weight conversion converted value from metric tons no unit id: %i value was %s\n", getcurrentid(), result, value);
+
+    return result;
+}
+
+
+// Conversion to metric tons internally, choose multiplier as required. 1 is return value is in metric tons
+static int convert_weight_unit_to_integer(char* value, int multiplier) {
+    int result = 0;
+    char* ptrst = strstr(value, "st");      //short ton value id
+    char* ptrlt = strstr(value, "lt");      //long ton value id
+    char* ptrlbs = strstr(value, "lbs");    //pund mass value id
+    char* ptrcwt = strstr(value, "cwt");    //long hundredweight value id
+
+    // Hardening:
+    if(!value)
+        return 0;
+
+    //fprintf(stderr,"unit weight conversion value: %s, multiplier: %i\n", value, multiplier);
+
+    if(ptrst) {
+            result=(int)(atof(value) * 0.9071847 * multiplier);
+            //fprintf(stderr,"unit weight conversion converted value from short tons: %i\n", result);
+            return result;
+    }
+
+    if(ptrlt) {
+            result=(int)(atof(value) * 1.016047 * multiplier);
+            //fprintf(stderr,"unit weight conversion converted value from long tons: %i\n", result);
+            return result;
+    }
+
+    if(ptrlbs) {
+            result=(int)(atof(value) * 0.00045359237  * multiplier);
+            //fprintf(stderr,"unit weight conversion converted value from pound mass: %i\n", result);
+            return result;
+    }
+
+    if(ptrcwt) {
+            result=(int)(atof(value) * 50.80 * multiplier);
+            //fprintf(stderr,"unit weight conversion converted value from long hundredweight: %i\n", result);
+            return result;
+    }
+
+    result=(int)(atof(value) * multiplier);
+
+    // Ignore default and none, but warn if other content
+    if(result == 0 && strcmp(value, "default") && strcmp(value, "none") && strcmp(value, "no_sign") && strcmp(value, "unsigned"))
+        fprintf(stderr,"Warning -- Node: %li unit length conversion converted value from meters no unit id: %i value was: %s\n", getcurrentid(), result, value);
+
+    return result;
+}
 
 static void build_attrmap_line(char *line) {
     char *t=NULL,*kvl=NULL,*i=NULL,*p,*kv;
@@ -1022,6 +1135,7 @@ static int node_is_tagged;
 static void relation_add_tag(char *k, char *v);
 
 static int access_value(char *v) {
+    //fprintf(stderr,"access_value %s\n",v);
     if (!g_strcmp0(v,"1"))
         return 1;
     if (!g_strcmp0(v,"yes"))
@@ -1046,12 +1160,21 @@ static int access_value(char *v) {
         return 2;
     if (!g_strcmp0(v,"destination"))
         return 2;
+    if (!g_strcmp0(v,"customer"))
+        return 2;
+    if (!g_strcmp0(v,"customers"))
+        return 2;
+    if (!g_strcmp0(v,"tenant"))
+        return 2;
+    if (!g_strcmp0(v,"permit"))
+        return 2;
     return 3;
 }
 
 static void osm_update_attr_present(char *k, char *v);
 
 void osm_add_tag(char *k, char *v) {
+    //fprintf(stderr,"tag_value %s\n",k);
     int level=2;
     if (in_relation) {
         relation_add_tag(k,v);
@@ -1102,6 +1225,41 @@ void osm_add_tag(char *k, char *v) {
         if (maxspeed_attr_value)
             flags[0] |= AF_SPEED_LIMIT;
         level=5;
+    }
+    if (!g_strcmp0(k, "maxheight")) {
+        maxheight_attr_value = convert_length_unit_to_integer(v, 100);
+
+        if (maxheight_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxlength")) {
+        maxlength_attr_value = convert_length_unit_to_integer(v, 100);
+
+        if (maxlength_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxwidth")) {
+        maxwidth_attr_value = convert_length_unit_to_integer(v, 100);
+
+        if (maxwidth_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxweight")) {
+        maxweight_attr_value = convert_weight_unit_to_integer(v, 1000);
+
+        if (maxweight_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
+    }
+    if (!g_strcmp0(k, "maxaxleload")) {
+        maxaxleload_attr_value = convert_weight_unit_to_integer(v, 1000);
+
+        if (maxaxleload_attr_value)
+            flags[0] |= AF_SIZE_OR_WEIGHT_LIMIT;
+        level = 5;
     }
     if (! g_strcmp0(k,"toll")) {
         if (!g_strcmp0(v,"1")) {
@@ -1304,9 +1462,9 @@ void osm_add_tag(char *k, char *v) {
         level=5;
     }
     if (! g_strcmp0(k,"gnis:ST_alpha")) {
-        /*	assume a gnis tag means it is part of the USA:
-        	http://en.wikipedia.org/wiki/Geographic_Names_Information_System
-        	many US towns do not have is_in tags
+        /*  assume a gnis tag means it is part of the USA:
+            http://en.wikipedia.org/wiki/Geographic_Names_Information_System
+            many US towns do not have is_in tags
         */
         g_strlcpy(is_in_buffer, "USA", sizeof(is_in_buffer));
         level=5;
@@ -1341,7 +1499,7 @@ static void osm_update_attr_present(char *k, char *v) {
 
     snprintf(buffer,bufsize,"%s=*", k);
     for(p=buffer; *p; p++)
-        if(isspace(*p))	*p='_';
+        if(isspace(*p)) *p='_';
     if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
         dbg_assert(idx<attr_present_count);
         attr_present[idx]=2;
@@ -1349,7 +1507,7 @@ static void osm_update_attr_present(char *k, char *v) {
 
     snprintf(buffer,bufsize,"*=%s", v);
     for(p=buffer; *p; p++)
-        if(isspace(*p))	*p='_';
+        if(isspace(*p)) *p='_';
     if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
         dbg_assert(idx<attr_present_count);
         attr_present[idx]=2;
@@ -1357,7 +1515,7 @@ static void osm_update_attr_present(char *k, char *v) {
 
     snprintf(buffer,bufsize,"%s=%s", k, v);
     for(p=buffer; *p; p++)
-        if(isspace(*p))	*p='_';
+        if(isspace(*p)) *p='_';
     if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
         dbg_assert(idx<attr_present_count);
         attr_present[idx]=4;
@@ -1597,6 +1755,11 @@ void osm_add_way(osmid id) {
     item.type=type_street_unkn;
     debug_attr_buffer[0]='\0';
     maxspeed_attr_value=0;
+    maxweight_attr_value=0;
+    maxheight_attr_value=0;
+    maxlength_attr_value=0;
+    maxwidth_attr_value=0;
+    maxaxleload_attr_value=0;
     flags_attr_value = 0;
     memset(flags, 0, sizeof(flags));
     memset(flagsa, 0, sizeof(flagsa));
@@ -1612,6 +1775,7 @@ void osm_add_way(osmid id) {
 char relation_type[BUFFER_SIZE];
 char iso_code[BUFFER_SIZE];
 int boundary;
+int multipolygon;
 
 void osm_add_relation(osmid id) {
     osmid_attr_value=id;
@@ -1621,6 +1785,7 @@ void osm_add_relation(osmid id) {
     relation_type[0]='\0';
     iso_code[0]='\0';
     boundary=0;
+    multipolygon=0;
     item_bin_init(tmp_item_bin, type_none);
     item_bin_add_attr_longlong(tmp_item_bin, attr_osm_relationid, osmid_attr_value);
 }
@@ -1663,7 +1828,7 @@ static inline int filter_unknown(struct item_bin * ib) {
 }
 
 static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
-    if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
+    if(multipolygon) {
         int count;
         enum item_type types[10];
         /* This is a multipolygon relation which is no boundary. Lets check what it is */
@@ -1746,9 +1911,12 @@ void osm_add_member(enum relation_member_type type, osmid ref, char *role) {
 }
 
 static void relation_add_tag(char *k, char *v) {
+    //fprintf(stderr,"access_value %s\n",k);
     int add_tag=1;
     if (!g_strcmp0(k,"type")) {
         g_strlcpy(relation_type, v, sizeof(relation_type));
+        if(!g_strcmp0(relation_type, "multipolygon"))
+            multipolygon=1;
         add_tag=0;
     } else if (!g_strcmp0(k,"restriction")) {
         if (!strncmp(v,"no_",3)) {
@@ -1762,8 +1930,12 @@ static void relation_add_tag(char *k, char *v) {
             osm_warning("relation", osmid_attr_value, 0, "Unknown restriction %s\n",v);
         }
     } else if (!g_strcmp0(k,"boundary")) {
+        //fprintf(stderr,"access_value %s\n",v);
         if (!g_strcmp0(v,"administrative") || !g_strcmp0(v,"postal_code")) {
             boundary=1;
+        }
+        if (!g_strcmp0(v,"low_emission_zone") || !g_strcmp0(v,"national_park")) {
+            multipolygon=1;
         }
     } else if (!g_strcmp0(k,"ISO3166-1") || !g_strcmp0(k,"ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
@@ -1874,6 +2046,16 @@ void osm_end_way(struct maptool_osm *osm) {
             item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
         if (maxspeed_attr_value)
             item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+        if (maxlength_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_length, maxlength_attr_value);
+        if (maxwidth_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_width, maxwidth_attr_value);
+        if (maxheight_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_height, maxheight_attr_value);
+        if (maxweight_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_weight, maxweight_attr_value);
+        if (maxaxleload_attr_value)
+            item_bin_add_attr_int(item_bin, attr_vehicle_axle_weight, maxaxleload_attr_value);
         if(i>0)
             item_bin_add_attr_int(item_bin, attr_duplicate, 1);
         item_bin_write(item_bin,osm->ways);
@@ -2205,6 +2387,7 @@ static void osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly) {
                     void *a;
                     item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
                     a=osm_tag_value(b->ib, "name");
+                    fprintf(stderr,"tag_value %s\n",a);
                     if(a)
                         item_bin_add_attr_string(ib,attr_label,a);
                     a=osm_tag_value(b->ib, "osm_relationid");
@@ -4237,4 +4420,3 @@ void osm_init(FILE* rule_file) {
     build_attrmap(rule_file);
     build_countrytable();
 }
-

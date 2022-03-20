@@ -25,6 +25,8 @@ extern "C" {
 #endif
 #include "coord.h"
 
+#define TRANSFORM_ERR_BUF_SPACE -1
+
 /* prototypes */
 enum attr_type;
 enum item_type;
@@ -55,7 +57,8 @@ void transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, 
 void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo);
 void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere, struct coord_geo *geo);
 void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
-int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return);
+int transform_point(struct transformation *t, enum projection pro, struct coord *c, struct point *p);
+int transform_point_buf(struct transformation *t, enum projection pro, struct coord *c, struct point *p, long result_size, int count, int mindist, int width, int *width_return);
 int transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 double transform_pixels_to_map_distance(struct transformation *transformation, int pixels);
 enum projection transform_get_projection(struct transformation *this_);

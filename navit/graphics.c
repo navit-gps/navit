@@ -1720,6 +1720,67 @@ static void display_draw_arrows(struct graphics *gra, struct display_context *dc
     }
 }
 
+static void display_draw_spike(struct point *p, navit_float dx, navit_float dy, navit_float width,
+                               struct display_context *dc,
+                               struct graphics *gra) {
+    struct point pnt[2];
+    navit_float l=navit_sqrt(dx*dx+dy*dy);
+    pnt[0]=pnt[1]=*p;
+    pnt[1].x+=(-dy/l)*width;
+    pnt[1].y+=(dx/l)*width;
+    graphics_draw_lines(gra, dc->gc, pnt, 2);
+}
+
+/**
+ * @brief draw spikes along a multi polygon line
+ *
+ * This function draws spikes along a multi polygon line, and scales the
+ * spikes according to current view settings by interpolating sizes at
+ * given spike position,
+ *
+ * @param gra current graphics instance handle
+ * @param dc current drawing context
+ * @param pnt array of points for this polyline
+ * @param count number of points in pnt
+ * @param width array of integers giving the expected line width at the corresponding point
+ * @param distance giving the distance between spikes
+ */
+static void display_draw_spikes(struct graphics *gra, struct display_context *dc, struct point *pnt, int count,
+                                int *width, int distance) {
+    navit_float dx,dy,dw,l;
+    int i;
+    struct point p;
+    int w;
+    for (i = 0 ; i < count-1 ; i++) {
+        /* get the X and Y size */
+        dx=pnt[i+1].x-pnt[i].x;
+        dy=pnt[i+1].y-pnt[i].y;
+        dw=width[i+1] - width[i];
+        /* calculate the length of the way segment */
+        l=navit_sqrt(dx*dx+dy*dy);
+        if (l != 0) {
+            /* length is not zero */
+            if(l > width[i]) {
+                /* length is bigger than the length of one spike */
+                int a;
+                int spike_count = l / distance;
+                /* calculate the vector per spike */
+                dx=dx/spike_count;
+                dy=dy/spike_count;
+                dw=dw/spike_count;
+                for( a=0; a < spike_count; a++ ) {
+                    p=pnt[i];
+                    p.x+=dx*a;
+                    p.y+=dy*a;
+                    w=width[i];
+                    w+=dw*a;
+                    display_draw_spike(&p, dx, dy, w, dc, gra);
+                }
+            }
+        }
+    }
+}
+
 static int intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, int bdy, struct point * res) {
     int n, a, b;
     dbg(lvl_debug,"%d,%d - %d,%d x %d,%d-%d,%d",a1->x,a1->y,a1->x+adx,a1->y+ady,b1->x,b1->y,b1->x+bdx,b1->y+bdy);
@@ -2691,15 +2752,26 @@ static inline void displayitem_transform_holes(struct transformation *trans, enu
     out->ccount=NULL;
     out->coords=NULL;
     if((in != NULL) && (in->count > 0)) {
-        int a;
+        int a, transform_res;
         /* alloc space for hole conversion. To be freed with displayitem_free_holes later*/
         out->count = in->count;
         out->ccount = g_malloc0(sizeof(*(out->ccount)) * in->count);
         out->coords = g_malloc0(sizeof(*(out->coords)) * in->count);
         for(a = 0; a < in->count; a ++) {
+            int buf_size=sizeof(*(out->coords[a])) * in->ccount[a];
             in->ccount[a]=limit_count(in->coords[a], in->ccount[a]);
-            out->coords[a]=g_malloc0(sizeof(*(out->coords[a])) * in->ccount[a]);
-            out->ccount[a]=transform(trans, pro, in->coords[a], (struct point *)(out->coords[a]), in->ccount[a], mindist, 0, NULL);
+            out->coords[a]=g_malloc0(buf_size);
+            transform_res=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), buf_size, in->ccount[a],
+                                              mindist, 0, NULL);
+            /* if we did not have enough buf space for transfrom_point_buf, we try again with double the buffer size,
+               until we succeed. */
+            while (transform_res == TRANSFORM_ERR_BUF_SPACE) {
+                buf_size *= 2;
+                out->coords[a] = g_realloc(out->coords[a], buf_size);
+                transform_res=transform_point_buf(trans, pro, in->coords[a], (struct point *)(out->coords[a]), buf_size,
+                                                  in->ccount[a], mindist, 0, NULL);
+            }
+            out->ccount[a] = transform_res;
         }
     }
 }
@@ -2883,13 +2955,14 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
     struct graphics *gra=dc->gra;
     struct element *e=dc->e;
     int draw_underground=0;
+    long pa_buf_size=sizeof(struct point)*dc->maxlen;
 
     if (dc->maxlen < ALLOCA_COORD_LIMIT) {
         width=g_alloca(sizeof(int)*dc->maxlen);
-        pa=g_alloca(sizeof(struct point)*dc->maxlen);
+        pa=g_alloca(pa_buf_size);
     } else {
         width=g_malloc(sizeof(int)*dc->maxlen);
-        pa=g_malloc(sizeof(struct point)*dc->maxlen);
+        pa=g_malloc(pa_buf_size);
     }
 
     while (di) {
@@ -2937,11 +3010,16 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
         if (dc->type == type_poly_water_tiled)
             mindist=0;
         if (dc->e->type == element_polyline)
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.polyline.width,
+                                      width);
         else if (dc->e->type == element_arrows)
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.arrows.width, width);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.arrows.width,
+                                      width);
+        else if (dc->e->type == element_spikes)
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, e->u.spikes.width,
+                                      width);
         else
-            count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
+            count=transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, 0, NULL);
         switch (e->type) {
         case element_polygon:
             displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
@@ -2963,6 +3041,9 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
             break;
         case element_arrows:
             display_draw_arrows(gra,dc,pa,count, width, e->oneway);
+            break;
+        case element_spikes:
+            display_draw_spikes(gra,dc,pa,count, width, e->u.spikes.distance);
             break;
         default:
             dbg(lvl_error, "Unhandled element type %d", e->type);
@@ -3699,13 +3780,15 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
     int result;
     struct point *pa;
     int count;
+    long pa_buf_size=sizeof(struct point)*displaylist->dc.maxlen;
+
     if (displaylist->dc.maxlen < ALLOCA_COORD_LIMIT) {
-        pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
+        pa=g_alloca(pa_buf_size);
     } else {
-        pa=g_malloc(sizeof(struct point)*displaylist->dc.maxlen);
+        pa=g_malloc(pa_buf_size);
     }
 
-    count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 0, 0, NULL);
+    count=transform_point_buf(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, pa_buf_size, di->count, 0, 0, NULL);
 
     if (di->item.type < type_line) {
         result =  within_dist_point(p, &pa[0], dist);

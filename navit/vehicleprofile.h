@@ -17,6 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef NAVIT_VEHICLEPROFILE_H
+#define NAVIT_VEHICLEPROFILE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,3 +71,4 @@ char * vehicleprofile_get_name(struct vehicleprofile *this_);
 #ifdef __cplusplus
 }
 #endif
+#endif //NAVIT_VEHICLEPROFILE_H

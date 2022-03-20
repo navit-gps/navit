@@ -544,6 +544,11 @@
 				<polyline color="#ff0000b5"/>
 				<text text_size="5"/>
 		</itemgra>
+		<itemgra item_types="poly_low_emission_zone" order="0-">
+			<polygon color="#00FF0010"/>
+            		<polyline color="#FF000080" width="3"/>
+            		<text text_size="15"/>
+		</itemgra>
 	</layer>
 	<layer name="heightlines">
 		<itemgra item_types="height_line_1" order="7">
@@ -1361,8 +1366,17 @@
 		<itemgra item_types="rail_tram" order="10-">
 			<polyline color="#606060" width="2"/>
 		</itemgra>
-		<itemgra item_types="cliff" order="12-">
+		<itemgra item_types="wall,retaining_wall" order="12-">
 			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="20" distance="10"/>
+		</itemgra>
+		<itemgra item_types="cliff,embankment" order="12-16">
+			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="5" distance="4"/>
+		</itemgra>
+		<itemgra item_types="cliff,embankment" order="17-">
+			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="20" distance="10"/>
 		</itemgra>
 	</layer>
 	<layer name="labels">
