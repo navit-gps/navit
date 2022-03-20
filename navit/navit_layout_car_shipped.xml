@@ -1368,6 +1368,7 @@
 		</itemgra>
 		<itemgra item_types="wall,retaining_wall" order="12-">
 			<polyline color="#606060" width="1"/>
+			<spikes color="#606060" width="20" distance="10"/>
 		</itemgra>
 		<itemgra item_types="cliff,embankment" order="12-16">
 			<polyline color="#606060" width="1"/>
