@@ -37,6 +37,11 @@
 #define HASH_TABLE_MIN_SIZE 11
 #define HASH_TABLE_MAX_SIZE 13845163
 
+#if defined(IOS)
+guint g_spaced_primes_closest (guint num);
+void g_atomic_int_add (volatile gint *atomic, gint val);
+gint g_atomic_int_exchange_and_add (volatile gint *atomic, gint val);
+#endif
 
 typedef struct _GHashNode      GHashNode;
 

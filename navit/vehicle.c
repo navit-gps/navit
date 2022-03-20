@@ -232,7 +232,12 @@ int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *at
  */
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr) {
     int ret=1;
-    if (attr->type == attr_log_gpx_desc) {
+    if(attr->type == attr_vehicle_is_selected) {
+        if(this_->meth.position_attr_set) {
+            ret=this_->meth.position_attr_set(this_->priv, attr);
+            return ret;
+        }
+    } else if (attr->type == attr_log_gpx_desc) {
         g_free(this_->gpx_desc);
         this_->gpx_desc = g_strdup(attr->u.str);
     } else if (this_->meth.set_attr)

@@ -15,6 +15,10 @@
 #include <process.h>
 #endif
 
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>		
+#endif
+
 #include <stdio.h>              /* fputs/fprintf */
 
 char* g_convert (const char  *in,

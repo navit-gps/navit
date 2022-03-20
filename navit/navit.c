@@ -3215,9 +3215,13 @@ static int coord_not_set(struct coord c) {
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt) {
     struct point cursor_pnt;
     enum projection pro;
+    struct attr attr;
+
+    attr.type=attr_vehicle_request_location_authorization;
 
     if (this_->blocked||coord_not_set(nv->coord))
         return;
+
     if (pnt)
         cursor_pnt=*pnt;
     else {
@@ -3398,8 +3402,8 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
 }
 
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
-    if (this_->vehicleprofile == vp)
-        return 0;
+//    if (this_->vehicleprofile == vp)  if we change the vehicleprofile settings we need to set even the same profile
+//        return 0;
     this_->vehicleprofile=vp;
     if (this_->route)
         route_set_profile(this_->route, this_->vehicleprofile);
@@ -3424,7 +3428,24 @@ int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
 
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
     struct attr attr;
+    struct vehicle *oldv;
+
+    //mark vehicle in priv as inactive
+    if (navit_get_attr(this_, attr_vehicle, &attr, NULL)) {
+        oldv=attr.u.vehicle;
+        attr.type = attr_vehicle_is_selected;
+        attr.u.num=0;
+        vehicle_set_attr(oldv, &attr);
+    }
+
     this_->vehicle=nv;
+
+    if(nv) {
+        attr.type = attr_vehicle_is_selected;
+        attr.u.num = 1;
+        vehicle_set_attr(nv->vehicle, &attr);
+    }
+
     if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
         if (navit_set_vehicleprofile_name(this_, attr.u.str))
             return;
@@ -3785,6 +3806,17 @@ int navit_block(struct navit *this_, int block) {
  */
 int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
+}
+
+/**
+ * @brief Stores current position in center.txt.
+ */
+void navit_store_center(struct navit * this_) {
+    if (this_->bookmarks) {
+        char *center_file = bookmarks_get_center_file(TRUE);
+        bookmarks_write_center_to_file(this_->bookmarks, center_file);
+        g_free(center_file);
+    }
 }
 
 void navit_destroy(struct navit *this_) {

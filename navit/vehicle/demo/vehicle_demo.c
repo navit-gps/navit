@@ -172,6 +172,7 @@ static int vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr
     case attr_name:
     case attr_follow:
     case attr_active:
+    case attr_vehicle_request_location_authorization:
         // Ignore; used by Navit's infrastructure, but not relevant for this vehicle.
         break;
     default:

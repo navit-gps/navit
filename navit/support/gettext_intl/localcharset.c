@@ -37,7 +37,7 @@
 # include <strings.h>
 #endif
 #if HAVE_STDLIB_H
-# include <stdlib.h>
+#include <stdlib.h>
 #endif
 
 #if defined _WIN32 || defined __WIN32__
