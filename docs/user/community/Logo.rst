@@ -19,8 +19,8 @@ color codes
 
 | color gradient
 | RGBA
-| ffda00ff |ffda00ff.JPG|
-| f57f0cff |f57f0cff.JPG| black and white
+| ffda00ff |ffda00ff.jpg|
+| f57f0cff |f57f0cff.jpg| black and white
 
 .. _logo_used_at:
 
@@ -54,5 +54,5 @@ logo used at
    -  Qt icons?
 
 .. |LogosV2.JPG| image:: LogosV2.JPG
-.. |ffda00ff.JPG| image:: ffda00ff.JPG
-.. |f57f0cff.JPG| image:: f57f0cff.JPG
+.. |ffda00ff.jpg| image:: ffda00ff.jpg
+.. |f57f0cff.jpg| image:: f57f0cff.jpg
