@@ -64,9 +64,6 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: install docker
-          command: circleci-install docker
-      - run:
           name: make build dir
           command:  mkdir ../rpmbuild
       - run:
