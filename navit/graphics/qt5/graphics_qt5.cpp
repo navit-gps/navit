@@ -1018,6 +1018,8 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
 #else
     navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
 #endif
+    navit_app->setOrganizationName(QStringLiteral("org.navitproject"));
+    navit_app->setApplicationName(QStringLiteral("navit"));
 
 #if HAVE_FREETYPE
     graphics_priv->font_freetype_new = font_freetype_new;
@@ -1044,7 +1046,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->GPriv = NULL;
     if (use_qml) {
         /* register our QtQuick widget to allow it's usage within QML */
-        qmlRegisterType<QNavitQuick>("com.navit.graphics_qt5", 1, 0, "QNavitQuick");
+        qmlRegisterType<QNavitQuick>("org.navitproject.graphics_qt5", 1, 0, "QNavitQuick");
         /* get our qml application from embedded resources. May be replaced by the
              * QtQuick gui component if enabled */
         graphics_priv->engine = new QQmlApplicationEngine();
