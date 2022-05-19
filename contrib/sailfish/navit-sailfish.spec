@@ -83,6 +83,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DLOCALE_DIR:PATH=share/harbour-navit/locale \
        -DIMAGE_DIR:PATH=share/harbour-navit/icons \
        -DTEXTURE_DIR:PATH=share/harbour-navit/textures \
+       -DHOMECONFIG_DIR:PATH=.config/org.navitproject/navit \
        -DLIB_DIR:PATH=share/harbour-navit/lib \
        -DBUILD_MAPTOOL:BOOL=FALSE \
        -Dfont/freetype:BOOL=FALSE \
@@ -138,6 +139,11 @@ fi
 
 
 %changelog
+*Thu May 19 2022 metalstrolch 0.5.6-0
+- Enable sailjail
+- local config dir in $HOME changed to ~/.config/org.naviproject/navit
+- default map location now /home/nemo/Documents/map.navit.bin due to sailjail
+
 *Mon Oct 01 2018 metalstrolch 0.5.3-1
 - fix rpm updating from 0.5.1 by adding %pre section
 
