@@ -51,6 +51,8 @@ set(TEXTURE_DIR share/navit/textures CACHE PATH "Navit texture path")
 add_definitions ("-DTEXTURE_DIR=\"${TEXTURE_DIR}\"")
 set(MAN_DIR share/man/man1 CACHE PATH "Navit man path")
 add_definitions ("-DMAN_DIR=\"${MAN_DIR}\"")
+set(HOMECONFIG_DIR .navit CACHE PATH "Navit config path in home dir")
+add_definitions ("-DHOMECONFIG_DIR=\"${HOMECONFIG_DIR}\"")
 # LIB_DIR
 IF(UNIX AND NOT ANDROID AND NOT APPLE)
 	IF (NOT LIBDIR)
