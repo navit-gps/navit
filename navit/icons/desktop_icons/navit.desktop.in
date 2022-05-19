@@ -18,6 +18,6 @@ GenericName[de]=Navit
 X-Nemo-Application-Type=no-invoker
 #sailfish jail. Doesn't hurt others hopefully
 [X-Sailjail]
-Permissions=Documents;Location;RemovableMedia
+Permissions=Documents;Location;RemovableMedia;Audio
 OrganizationName=org.navitproject
 ApplicationName=navit
