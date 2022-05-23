@@ -377,7 +377,7 @@ char* navit_get_user_data_directory(int create) {
     dir = getenv("NAVIT_USER_DATADIR");
     if (create && !file_exists(dir)) {
         dbg(lvl_debug,"creating dir %s", dir);
-        if (file_mkdir(dir,0)) {
+        if (file_mkdir(dir,1)) {
             dbg(lvl_error,"failed creating dir %s", dir);
             return NULL;
         }

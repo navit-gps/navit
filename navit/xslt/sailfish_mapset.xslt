@@ -17,9 +17,9 @@
          <xsl:text>&#x0A; 			</xsl:text>
 			<map type="binfile" enabled="yes" active="no" data="/usr/share/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin"/>
          <xsl:text>&#x0A; 			</xsl:text>
-			<map type="binfile" enabled="yes" data="~/Maps/map.navit.bin"/>
+			<map type="binfile" enabled="yes" data="~/Documents/map.navit.bin"/>
          <xsl:text>&#x0A; 			</xsl:text>
-			<map type="binfile" enabled="yes" active="no" name="map.navit.heightlines.bin" data="~/Maps/map.navit.heightlines.bin"/>
+			<map type="binfile" enabled="yes" active="no" name="map.navit.heightlines.bin" data="~/Documents/map.navit.heightlines.bin"/>
          <xsl:text>&#x0A; 		</xsl:text>
 		</mapset>
       <xsl:text>&#x0A; 		</xsl:text>
