@@ -1,0 +1,16 @@
+message("Copy '${GLOB_EXP}' to '${DST}'")
+
+file(GLOB SRC_FILES ${GLOB_EXP})
+
+if ( SRC_FILES )
+   foreach (FILE ${SRC_FILES})
+      if ( LOWER )
+         get_filename_component(FILEN_NAME ${FILE} NAME)
+         string(TOLOWER ${FILEN_NAME} FILEN_NAME_LOWER)
+         file(COPY ${FILE} DESTINATION ${DST}/)
+         file(RENAME ${DST}/${FILEN_NAME} ${DST}/${FILEN_NAME_LOWER})
+      else()
+         file(COPY ${FILE} DESTINATION ${DST})
+      endif( LOWER )
+   endforeach()
+endif()

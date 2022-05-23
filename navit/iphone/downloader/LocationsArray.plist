@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>bbox</key>
+		<string>-180,-90,180,90</string>
+		<key>name</key>
+		<string>Whole Planet</string>
+	</dict>
+	<dict>
+		<key>bbox</key>
+		<string>-12.97,33.59,34.15,72.10</string>
+		<key>name</key>
+		<string>Europe</string>
+	</dict>
+	<dict>
+		<key>bbox</key>
+		<string>-17.6,34.5,42.9,70.9</string>
+		<key>name</key>
+		<string>Western Europe</string>
+	</dict>
+	<dict>
+		<key>bbox</key>
+		<string>-11.17,51.25,-5.23,55.9</string>
+		<key>name</key>
+		<string>Ireland</string>
+	</dict>
+	<dict>
+		<key>bbox</key>
+		<string>5.18,46.84,15.47,55.64</string>
+		<key>name</key>
+		<string>Germany</string>
+	</dict>
+</array>
+</plist>

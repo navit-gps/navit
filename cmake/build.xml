@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Navit" default="help">
+<target name="help">
+   <antversion property="antversion" atleast="1.8"/>
+   <fail unless="antversion"/>
+</target>
+</project>

@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+	For configuration options used in this file, please read
+	http://wiki.navit-project.org/index.php/Configuration
+	Do not edit /usr/share/navit/navit.xml or /etc/navit/navit.xml :
+	changes would be lost on upgrade. Rather copy it to ~/.navit/.
+-->
+<!DOCTYPE config
+  SYSTEM "navit.dtd">
+<config xmlns:xi="http://www.w3.org/2001/XInclude">
+	<plugins>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libbinding_dbus.so" active="no"/>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no"/>
+	</plugins>
+
+	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
+	<!-- Possible debug levels: error, warning, info, debug. -->
+	<debug name="global" dbg_level="error"/>
+	<!-- Example of setting the debug level for a single function.  -->
+	<debug name="navit:do_draw" dbg_level="error"/>
+	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
+	<debug name="profile:navit:do_draw" dbg_level="debug"/>
+	-->
+	<!-- segv: 1 - show backtrace with gdb and exit, 2 - stay in gdb -->
+	<debug name="segv" level="1"/>
+	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
+	<debug name="timestamps" level="0"/>
+
+	<!--
+	center= defines which map location Navit will show after first start.
+	It will only be used for the first start; subsequent starts will remember the
+	last position (in center.txt).
+	Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
+	For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
+	-->
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
+		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. On windows systems, use win32 -->
+		<graphics type="gtk_drawing_area"/>
+
+		<!--
+		To debug the graphics plugin in question it is possible to proxy it with svg_debug
+		This way every frame will be written as a svg file. In addition to this the real graphics plugin will
+		be called. To configure this, set type to svg_debug and the name attribute to the proxied plugin.
+		Parameters are past to the proxied plugin as well. But resize callbacks currently only passed to the proxied
+		plugin, and not handled by svg_debug, so resizing the window will not update the width and height of the resulting
+		scg file. But all calls will still be recorded and written to the file, so you will see those drawing when opening
+		the svg in an editor like inkscape.
+		Example:
+		-->
+		<!--
+		<graphics type="svg_debug" name="sdl2" window_title="Alternative attributes as passed to proxied plugin" w="1000" h="1000" />
+		 -->
+
+		<!--
+		The following line let you select which graphical user interface you'd like to use.
+		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
+		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag
+		-->
+		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
+		<!--
+		In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
+		Here's an example for a freerunner:
+		<gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/>
+		-->
+
+		<!--
+		The action that appears on map click is configurable with the attribute "on_map_click".
+		To get the previous behaviour of showing the map point menu use on_map_click='menu("#Map Point")'
+		-->
+		<gui type="internal" enabled="yes"><![CDATA[
+			<html>
+				<a name='Main Menu'><text>Main menu</text>
+					<a href='#Actions'><img src='gui_actions'>Actions</img></a>
+					<img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show
+Map</text></img>
+					<a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a>
+				<a href='#Tools'><img src='gui_tools'><text>Tools</text></img></a>
+				<a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
+				<img src='gui_about' onclick='about()'><text>About</text></img>
+				<img src='gui_quit' onclick='quit()'><text>Quit</text></img>
+				</a>
+			<a name='Actions'><text>Actions</text>
+				<img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
+				<img src='gui_formerdests' onclick='formerdests()'><text>Former
+Destinations</text></img>
+				<img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><script>write(click_coord_geo)</script></img>
+				<img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img>
+				<img src='gui_town' onclick='town()'><text>Town</text></img>
+				<img src='gui_map' onclick='enter_coord()'><text>Coordinates</text></img>
+				<img cond='navit.route.route_status&amp;1' src='gui_stop' onclick='abort_navigation();refresh()'><text>Stop
+Navigation</text></img>
+			</a>
+			<a name='Settings'><text>Settings</text>
+				<a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a>
+				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
+				<!-- <a href='#Settings Maps'><img src='gui_maps'><text>Maps</text></img></a> -->
+				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
+				<!-- <a href='#Settings Vehicles'><img src='gui_vehicle'><text>Vehicle</text></img></a> -->
+				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
+			</a>
+			<a name='Settings Display'><text>Display</text>
+				<!-- <img src='gui_display' onclick='setting_layout()'><text>Layout</text></img> -->
+				<a href='#Settings Layouts'><img src='gui_display'><text>Layout</text></img></a>
+				<img cond='fullscreen==0' src='gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img>
+				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
+				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
+				<img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img>
+				<img cond='navit.autozoom_active==0' src='gui_zoom_auto' onclick='navit.autozoom_active=1;redraw_map();back_to_map()'><text>Auto zoom</text></img>
+				<img cond='navit.autozoom_active==1' src='gui_zoom_manual' onclick='navit.autozoom_active=0;redraw_map();back_to_map()'><text>Manual zoom</text></img>
+  				<a href='#Settings Layers'><img src='gui_layers'><text>Layers</text></img></a>
+			</a>
+			<a name='Tools'><text>Tools</text>
+				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
+				<img src='gui_tools' onclick='network_info()'><text>Network info</text></img>
+			</a>
+			<a name='Route'><text>Route</text>
+				<img cond='navit.route.route_status&amp;1' src='gui_zoom_route' onclick='navit.zoom_to_route();redraw_map();back_to_map()'><text>Zoom to route</text></img>
+				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
+				<img src='gui_heightprofile' onclick='route_height_profile()'><text>Height Profile</text></img>
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='cursor_still' onclick='waypoints()'><text>Waypoints</text></img>
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_last_waypoint()'><text>Drop last
+Waypoint</text></img>
+				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
+Waypoint</text></img>
+			</a>
+			<a name='Map Point'><text>Map Point</text>
+				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
+			</a>
+			<a name='Settings Layouts' class='clist' refresh_cond='navit.layout'><text>Layout</text>
+				<script>
+					foreach(layout;navit.layout)
+						img("centry", navit.layout==layout?"gui_active":"gui_inactive", layout.name,
+							"", "navit.layout=navit.layout[@name==%{se}*]", layout.name);
+				</script>
+			</a>
+			<a name='Settings Maps' class='clist'><text>Maps</text>
+				<script>
+					foreach(map;navit.mapset.map)
+						if (map.description)
+							img("centry",map.active?"gui_active":"gui_inactive", map.description,
+							"","navit.mapset.map[@description==%{se}].active=%{d}*",map.description,!map.active,"redraw_map();refresh();");
+						else
+							img("centry",map.active?"gui_active":"gui_inactive", map.type+":"+map.data,
+								"","navit.mapset.map[@data==%{se}].active=%{d}*",map.data,!map.active,"redraw_map();refresh();");
+				</script>
+			</a>
+			<a name='Settings Layers' class='clist'><text>Layers</text>
+				<script>
+					foreach(layer;navit.layout.layer)
+						if (layer.name)
+							img("centry",layer.active?"gui_active":"gui_inactive",layer.name,
+							"","navit.layout.layer[@name==%{se}].active=%{d}*",layer.name,!layer.active,"redraw_map();refresh();");
+						else
+							img("centry",layer.active?"gui_active":"gui_inactive",
+								"","navit.layout.layer[@name==%{se}].active=%{d}*",layer.name,!layer.active,"redraw_map();refresh();");
+				</script>
+			</a>
+			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						img("centry",navit.vehicle==vehicle?"gui_active":"gui_inactive",vehicle.name,
+							"name=%{se};menu(\"#Settings Vehicle\")",vehicle.name);
+				</script>
+			</a>
+			<a name='Settings Vehicle' class='clist'><script>write(name)</script>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						if (vehicle.name == name) {
+							if (vehicle!=navit.vehicle)
+								img("centry","gui_active","Set as active",
+									"","navit.vehicle=navit.vehicle[@name==%{se}*]",name);
+							foreach(vehicleprofile;navit.vehicleprofile)
+								img("centry",vehicle.profilename==vehicleprofile.name?"gui_active":"gui_inactive",vehicleprofile.name,
+									"","navit.vehicle[@name=%{se}].profilename=%{se}*",name,vehicleprofile.name,"refresh()");
+						}
+				</script>
+			</a>
+			<a name='Satellite Status' class='clist'><text>Satellite Status</text>
+				<script>satellite_status_page()</script>
+			</a>
+			<a name='NMEA Data' class='clist'><text>NMEA Data</text>
+				<script>nmea_data_page()</script>
+			</a>
+			</html>
+		]]></gui>
+		<!-- for a debug log -->
+		<log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
+		<!-- osd items allow to position display and control items directly on top of the map.
+		You can find a list of all the available OSDs items here:
+		http://wiki.navit-project.org/index.php/OSD -->
+		<osd enabled="no" type="compass"/>
+		<osd enabled="no" type="navigation_next_turn"/>
+
+		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
+			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
+			It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values. -->
+		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.png"/>
+		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu(1)" src="menu.png"/>
+		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.png"/>
+		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.png"/>
+
+		<!-- Traffic -->
+		<traffic type="null"/>
+
+		<!-- Vehicle with GPS enabled for gpsd on unix -->
+		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
+		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->
+		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1"
+				source="serial:COM4 baudrate=4800 parity=N data=8 stop=1" > -->
+
+			<!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
+			<log enabled="no" type="gpx" attr_types="position_time_iso8601,position_direction,position_speed,profilename,position_radius" data="track_%Y%m%d-%%i.gpx" flush_size="1000" flush_time="30"/>
+		</vehicle>
+
+		<!-- For SDL, you should add follow="1" to have the view centered on your position -->
+		<!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
+
+		<vehicle name="Demo" profilename="car" enabled="no" source="demo://"/>
+
+		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
+		<tracking cdf_histsize="0"/>
+
+		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4040002" flags_reverse_mask="0x4040001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30" />
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40" />
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50" />
+			<roadprofile item_types="highway_city" speed="80" route_weight="80" />
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65" />
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70" />
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80" />
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120" />
+			<roadprofile item_types="highway_land" speed="120" route_weight="120" />
+			<roadprofile item_types="ramp" speed="40" route_weight="40" />
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+
+		<vehicleprofile name="car_shortest" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="60" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="60" />
+			<roadprofile item_types="street_3_city" speed="40" route_weight="60" />
+			<roadprofile item_types="street_4_city" speed="50" route_weight="60" />
+			<roadprofile item_types="highway_city" speed="80" route_weight="60" />
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
+			<roadprofile item_types="street_2_land" speed="65" route_weight="60" />
+			<roadprofile item_types="street_3_land" speed="70" route_weight="60" />
+			<roadprofile item_types="street_4_land" speed="80" route_weight="60" />
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="60" />
+			<roadprofile item_types="highway_land" speed="120" route_weight="60" />
+			<roadprofile item_types="ramp" speed="40" route_weight="60" />
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="10" route_weight="60"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="60"/>
+		</vehicleprofile>
+
+		<vehicleprofile name="car_avoid_tolls" flags="0x4000000" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
+			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
+			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
+			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+		<vehicleprofile name="car_pedantic" route_depth="18:25%,18:40000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
+			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
+			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
+			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
+			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
+			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
+			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
+			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
+			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000002" flags_reverse_mask="0x40000001" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
+			<!-- cycleways and paved tracks are the favourite ways (caveat: can be next to a main road) -->
+			<roadprofile item_types="track_paved,cycleway" speed="20" route_weight="20" />
+			<!-- residential, unclassified, living street etc. -->
+			<roadprofile item_types="street_0,street_1_city,street_1_land,living_street" speed="20" route_weight="20" />
+			<!-- ways shared with pedestrians are OK if access flags permit, but lower preference (caveat: may or may not be segregated) -->
+			<roadprofile item_types="street_pedestrian,footway" speed="17" route_weight="17" />
+			<!-- serviceways etc. are OK but lower preference -->
+			<roadprofile item_types="street_service,street_parking_lane" speed="17" route_weight="15" />
+			<!-- tertiary roads are acceptable, but should be avoided in favour of tracks and cycleways -->
+			<roadprofile item_types="street_2_city,street_2_land" speed="20" route_weight="15" />
+			<!-- secondary, primary and trunk are acceptable when necessary, but give preference to lower tiers -->
+			<roadprofile item_types="street_3_city,street_3_land" speed="20" route_weight="15" />
+			<roadprofile item_types="street_4_land,street_4_city" speed="20" route_weight="12" />
+			<roadprofile item_types="street_n_lanes,ramp" speed="20" route_weight="10" />
+			<!-- low preference for rough terrain -->
+			<roadprofile item_types="path,track_ground" speed="7" route_weight="7" />
+			<roadprofile item_types="track_gravelled" speed="17" route_weight="12" />
+			<!-- avoid steps unless that means a huge detour -->
+			<roadprofile item_types="steps" speed="2" route_weight="2" />
+			<!--roundabout does not apply to OSM maps -->
+			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+
+		<vehicleprofile name="pedestrian" route_depth="18:25%,18:10000" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
+			<roadprofile item_types="footway,bridleway,path,steps" speed="5" route_weight="5"/>
+			<roadprofile item_types="hiking_mountain" speed="4" route_weight="4"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_gravelled,track_unpaved,track_grass,track_ground,hiking" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
+			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="5"/>
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="5" route_weight="5"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+		<vehicleprofile name="horse" route_depth="18:25%,18:40000" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
+			<roadprofile item_types="bridleway" speed="10" route_weight="10"/>
+			<roadprofile item_types="footway,path,steps" speed="5" route_weight="5"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="4"/>
+			<roadprofile item_types="track_gravelled" speed="5" route_weight="5"/>
+			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
+			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="2"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="4"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="2"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="4"/>
+			<!--roundabout does not apply to OSMaps -->
+			<roadprofile item_types="roundabout" speed="5" route_weight="2"/>
+			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+		</vehicleprofile>
+                <!-- chr:
+                     flags used for a truck: (first flag number is 0)
+                                 8: SIZE_OR_WEIGHT_LIMIT
+                                21: TRANSPORT_TRUCK
+                  speed setup:
+                     'speed' data of the vehicleprofile for a car is
+                        reduced about 10 km/h. When the speed was at
+                        10 km/h, I reduced it to 5 km/h.
+                     'route_weight' data has been treated in the same way.
+                        If you want to discourage the use of small roads,
+                        just reduce this value.
+                  size and weight setup:
+                     This is an example, you have to use the data of your truck.
+                     bobshaffer's standard truck:
+                       (1 lb = 453.59237 g, 1 foot = .3048 m)
+                       (data has to be in [cm] and [kg] according to 'vehicleprofile.h')
+                                vehicle_width=  9    feet,   274 cm
+                               vehicle_height= 13.5  feet,   411 cm
+                               vehicle_length= 70    feet,  2134 cm
+                               vehicle_weight= 80000 lbs,  36287 kg
+                          vehicle_axle_weight= 34000 lbs,  15422 kg
+                -->
+
+                <vehicleprofile name="Truck" flags="0x200000" flags_forward_mask="0x200002" flags_reverse_mask="0x200001" maxspeed_handling="1" route_mode="0" static_speed="5"
+ static_distance="25"
+                                vehicle_width="274" vehicle_height="411" vehicle_length="2134"
+                                vehicle_weight="36287" vehicle_axle_weight="15422">
+                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="5" />
+                        <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20"/>
+                        <roadprofile item_types="street_3_city" speed="30" route_weight="30"/>
+                       	<roadprofile item_types="street_4_city" speed="40" route_weight="40"/>
+                        <roadprofile item_types="highway_city" speed="70" route_weight="70"/>
+                        <roadprofile item_types="street_1_land" speed="50" route_weight="50"/>
+                        <roadprofile item_types="street_2_land" speed="55" route_weight="55"/>
+                        <roadprofile item_types="street_3_land" speed="60" route_weight="60"/>
+                        <roadprofile item_types="street_4_land" speed="70" route_weight="70"/>
+                        <roadprofile item_types="street_n_lanes" speed="80" route_weight="80"/>
+                        <roadprofile item_types="highway_land" speed="80" route_weight="80"/>
+                        <roadprofile item_types="ramp" speed="30" route_weight="30"/>
+                        <!--roundabout does not apply to OSMaps -->
+                        <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
+                        <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+                </vehicleprofile>
+
+
+		<route destination_distance="50"/>
+
+		<navigation>
+			<announce type="street_0,street_1_city,street_parking_lane,living_street,street_service" level0="25" level1="100" level2="200" unit="m"/>
+			<announce type="street_2_city,street_3_city,street_4_city,ramp" level0="50" level1="200" level2="500" unit="m"/>
+			<announce type="highway_city,street_1_land,street_2_land,street_3_land,street_4_land" level0="100" level1="400" level2="1000" unit="m"/>
+			<announce type="street_n_lanes,highway_land" level0="300" level1="1000" level2="2000" unit="m"/>
+		</navigation>
+
+		<!--
+		Navit provides speech output in text format.
+		If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
+		The default is text output to the shell
+		-->
+		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
+		<!--
+		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
+		See http://wiki.navit-project.org/index.php/Configuration for details.
+
+		<speech type="cmdline" data="aplay -q %s"
+		sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
+		vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
+		-->
+
+		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
+
+		<!-- If you have the reiseplaner maps installed, set enabled="yes" in the next line and set the path correctly -->
+		<mapset enabled="no">
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map"/>
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp1.smp"/>
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp2.smp"/>
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp3.smp"/>
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp4.smp"/>
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp5.smp"/>
+		</mapset>
+
+		<!-- If you dont want to use the sample map, either set enabled="no" in the next line or remove the xml file from the maps directory -->
+		<mapset enabled="yes">
+			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
+		</mapset>
+
+		<!-- Mapset template for OpenStreetMap -->
+		<mapset enabled="no">
+			<map type="binfile" enabled="yes" data="/media/mmc2/MapsNavit/osm_europe.bin"/>
+		</mapset>
+
+		<!-- Mapset template for garmin maps -->
+		<mapset enabled="no">
+			<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
+		</mapset>
+
+		<layer name="Found items" order="0-">
+			<itemgra item_types="found_item">
+				<circle color="#008080" radius="24" width="2" text_size="12"/>
+			</itemgra>
+		</layer>
+
+		<!--
+		Layouts are defined in their own specific XML files and are included below (one file per layout, all files matching the wildcard expression below will be used)
+		The layout files describe the appearance of maps on the screen (colors, width, text fonts and sizes for each type of element to draw)
+		One layout is a specifid theme. At runtime, the user can select only one layout at a time (by choosing the corresponding theme from its name tag defined in the layout XML file).
+		If two layouts with the same name are included, the first one takes precedence.
+		In the list below, we use the user-defined layouts first (in $NAVIT_USER_DATADIR), they take precedence. Being next in the list, the default layouts (in $NAVIT_SHAREDIR) will only be used if there is no user-defined layout that was already defined with the same name.
+		-->
+		<xi:include href="$NAVIT_USER_DATADIR/navit_layout_*.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/navit_layout_*.xml"/>
+		<layout name="Route">
+			<layer name="streets">
+				<itemgra item_types="street_route_occluded" order="0-">
+					<polyline color="#0000a0" width="20"/>
+				</itemgra>
+			</layer>
+		</layout>
+	</navit>
+</config>

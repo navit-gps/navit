@@ -1,0 +1,346 @@
+version: 2
+defaults: &defaults
+  docker:
+    - image: debian:latest
+jobs:
+  sanity_check:
+    docker:
+      - image: circleci/android:api-29-ndk
+    steps:
+      - checkout
+      - run:
+          name: run sanity check script
+          command: bash scripts/ci_sanity_checks.sh
+      - run:
+          name: Run CheckStyle Test
+          command: ./gradlew checkstyleMain
+      - store_artifacts:
+          name: Store checkstyle report
+          path: navit/android/checkstyle
+          destination: reports
+  build_linux:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Id
+          command: cat /etc/*release
+      - run:
+          name: Setup requirements
+          command: |
+            bash scripts/setup_common_requirements.sh
+            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+      - run:
+          name: Build for Linux
+          command: bash scripts/build_linux.sh
+      - store_artifacts:
+          path: linux/_CPack_Packages
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
+  run_doxygen:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Install doxygen and other essentials
+          command: apt-get update && apt-get -y install doxygen ca-certificates git rsync
+      - run:
+          name: Run doxygen
+          command: cd navit && doxygen
+      - run:
+          name: Update results to Github
+          command: bash scripts/update_doxygen.sh
+      - store_artifacts:
+          path: /root/project/doc
+  build_sailfish:
+    machine: true
+    steps:
+      - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: install docker
+          command: circleci-install docker
+      - run:
+          name: make build dir
+          command:  mkdir ../rpmbuild
+      - run:
+          name: run build
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+      - store_artifacts:
+          name: Store rpm
+          path: ../rpmbuild/RPMS/
+          destination: rpmbuild
+  build_android:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-29-ndk
+    environment:
+      JVM_OPTS: -Xmx3200m
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+      KEYSTORE: '/home/circleci/.keystore'
+    steps:
+      - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Install requirements
+          command: scripts/setup_android.sh
+      - run:
+          name: Setup Keystore and Playstore Keys
+          command: scripts/setup_publish_keys.sh
+      - run:
+          name: Build and upload Android
+          command: fastlane circleci
+      - run:
+          name: Run Lint Test
+          command: |
+            ln -s navit/navit.dtd navit.dtd
+            mkdir /home/circleci/code/test-results
+            ./gradlew lint test
+      - run:
+          name: Run Javadoc
+          command: ./gradlew generateDebugJavadoc
+      - store_artifacts:
+          name: Store APK
+          path: build/outputs/apk
+          destination: apk
+      - store_artifacts:
+          name: Store logs
+          path: build/outputs/logs
+          destination: logs
+      - store_artifacts:
+          name: Store Javadoc
+          path: build/outputs/docs/javadoc
+          destination: doc
+      - store_artifacts:
+          name: Store Lint reports
+          path: build/reports
+          destination: reports
+      - store_test_results:
+          path: test-results
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
+  build_fdroid:
+    docker:
+      - image: registry.gitlab.com/fdroid/ci-images-client:latest
+    steps:
+      - checkout
+      - run:
+          name: Build with F-Droid
+          command: |
+            test -d build || mkdir build
+            test -d fdroidserver || mkdir fdroidserver
+            git ls-remote https://gitlab.com/fdroid/fdroidserver.git master
+            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=fdroidserver --strip-components=1
+            export PATH="`pwd`/fdroidserver:$PATH"
+            export PYTHONPATH="$CI_PROJECT_DIR/fdroidserver:$CI_PROJECT_DIR/fdroidserver/examples"
+            export PYTHONUNBUFFERED=true
+            bash fdroidserver/buildserver/setup-env-vars $ANDROID_HOME
+            adduser --disabled-password --gecos "" vagrant
+            ln -s $CI_PROJECT_DIR/fdroidserver /home/vagrant/fdroidserver
+            mkdir -p /vagrant/cache
+            wget -q https://services.gradle.org/distributions/gradle-5.6.2-bin.zip --output-document=/vagrant/cache/gradle-5.6.2-bin.zip
+            bash fdroidserver/buildserver/provision-gradle
+            bash fdroidserver/buildserver/provision-apt-get-install http://deb.debian.org/debian
+            source /etc/profile.d/bsenv.sh
+            apt-get dist-upgrade
+            apt-get install -t stretch-backports fdroidserver python3-asn1crypto python3-ruamel.yaml yamllint
+            apt-get purge fdroidserver
+            export GRADLE_USER_HOME=$PWD/.gradle
+            set -x
+            apt-get install sudo
+            fdroid build --verbose --on-server --no-tarball
+      - store_artifacts:
+           name: Store APK
+           path: unsigned
+           destination: apk
+  build_win32:
+    docker:
+      - image: ubuntu:14.04
+    steps:
+      - checkout
+      - run: |
+          apt-get update && apt-get install -y git
+          if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Prepare the Windows build environment
+          command: |
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
+            apt-get install -y software-properties-common
+            add-apt-repository -y ppa:george-edison55/cmake-3.x
+            apt-get remove -y cmake
+            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+      - run:
+          name: Build for Windows
+          command: |
+            bash scripts/build_win32.sh
+      - store_artifacts:
+          path: win32/navit.exe
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
+  build_wince:
+    docker:
+      - image: navit/dockerfiles:wince
+    steps:
+      - checkout
+      - run: |
+          apt-get update && apt-get install -y git-core
+          if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Prepare the WinCE build environment
+          command: |
+            bash scripts/setup_wince.sh
+      - run:
+          name: Build for Windows CE
+          command: bash scripts/build_wince.sh
+      - store_artifacts:
+          path: wince/output
+      #- run:
+      #    name: Update Navit-Download-Center
+      #    command: |
+      #      bash scripts/update_download_center.sh
+  build_tomtom_minimal:
+    <<: *defaults
+    docker:
+      - image: navit/tomtom-ng
+    steps:
+      - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Prepare the tomtom build environment
+          command: |
+            bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
+      - run:
+          name: Build for Tomtom (minimal)
+          command: |
+            bash scripts/build_tomtom_minimal.sh
+      - store_artifacts:
+          path: /output
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
+  build_tomtom_plugin:
+    <<: *defaults
+    docker:
+      - image: navit/tomtom-ng
+    steps:
+      - checkout
+      - run: if scripts/check_need_build.sh; then circleci step halt; fi
+      - run:
+          name: Prepare the tomtom build environment
+          command: |
+            bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
+      - run:
+          name: Build for Tomtom (plugin)
+          command: |
+            bash scripts/build_tomtom_plugin.sh
+      - store_artifacts:
+          path: /output
+      - run:
+          name: Update Navit-Download-Center
+          command: |
+            bash scripts/update_download_center.sh
+  merge_trunk_in_master:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - run:
+          name: configure ssh git
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      - add_ssh_keys:
+          fingerprints:
+            - "58:42:73:90:cc:68:f7:34:7e:37:37:fa:b3:26:1f:a5"
+      - run:
+          name: Update results to Github
+          command: export GIT_TERMINAL_PROMPT=0 && git push origin $CIRCLE_SHA1:refs/heads/master
+  check_spelling:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get -y install curl
+      - run:
+          name: Install misspell
+          command: |
+              curl -L -o ./install-misspell.sh https://git.io/misspell
+              sh ./install-misspell.sh -b /usr/local/bin/
+      - run:
+          name: Check docs folder for misspells
+          command: |
+              misspell docs/ > typos.txt
+              if [[ $( wc -l < typos.txt ) -gt 0 ]]; then
+                echo "Typos/mispells found, please fix them";
+                cat typos.txt
+                exit -1
+              fi
+
+
+workflows:
+  version: 2
+  build_all:
+    jobs:
+      - sanity_check
+      - build_linux:
+          requires:
+            - sanity_check
+      - build_android:
+          requires:
+            - sanity_check
+      - build_fdroid:
+          requires:
+            - sanity_check
+      - build_sailfish:
+          requires:
+            - sanity_check
+      - build_win32:
+          requires:
+            - sanity_check
+      - build_wince:
+          requires:
+            - sanity_check
+      - build_tomtom_minimal:
+          requires:
+            - sanity_check
+      - build_tomtom_plugin:
+          requires:
+            - sanity_check
+      - run_doxygen:
+          requires:
+            - build_linux
+            - build_android
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
+          filters:
+            branches:
+              only: /^trunk$/
+      - merge_trunk_in_master:
+          requires:
+            - build_linux
+            - build_android
+            - build_win32
+            - build_wince
+            - build_tomtom_minimal
+            - build_tomtom_plugin
+          filters:
+            branches:
+              only: /^trunk$/
+      - check_spelling:
+          filters:
+            branches:
+              only: /^readthedocs$/

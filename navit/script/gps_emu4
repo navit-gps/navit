@@ -1,0 +1,136 @@
+#! /usr/bin/perl
+use Glib qw/TRUE FALSE/;
+use Gtk2 '-init';
+
+sub exit_with_error
+{
+	my ($error)=@_;
+	print STDERR "$error\n";
+	exit(1);
+}
+
+sub process_one_packet
+{
+	$pos[$idx++]=tell(STDIN);
+	while (<STDIN>) {
+		if (!defined($match)) {
+			syswrite(STDOUT,$_) or exit_with_error $!;
+		} else {
+			$buffer.=$_;
+		}
+		if (/^\$GPRMC/) {
+			my($dummy,$time,$dummy)=split(/,/,$_);
+			$entry->set_text($time);
+			if (!defined($match)) {
+				return;
+			}
+			if (substr($time,0,length($match)) eq $match) {
+				undef $match;
+				syswrite(STDOUT,$buffer) or exit_with_error $!;
+				return;
+			}
+			$buffer='';
+		}
+	}
+}
+
+sub process_one_packet_at_idx
+{
+	($idx)=@_;
+	seek(STDIN,$pos[$idx],SEEK_SET);
+	process_one_packet();
+}
+
+sub forward
+{
+	process_one_packet();
+	return 1;
+}
+
+sub backward
+{
+	if ($idx > 1) {
+		process_one_packet_at_idx($idx-2);
+	}
+	return 1;
+}
+
+sub add_timeout
+{
+	my ($interval,$dir)=@_;
+
+	if ($timeout > 0) {
+		Glib::Source->remove($timeout);
+	}
+	if ($dir > 0) {
+		forward();
+		$timeout=Glib::Timeout->add ($interval, \&forward);
+	}
+	if ($dir < 0) {
+		backward();
+		$timeout=Glib::Timeout->add ($interval, \&backward);
+	}
+}
+
+sub entry
+{
+	$match=$entry->get_text();
+	seek(STDIN,0,SEEK_SET);
+	process_one_packet();
+}
+
+$oldfh = select(STDOUT); $| = 1; select($oldfh);
+$window = Gtk2::Window->new('toplevel');
+$box = Gtk2::HBox->new();
+$window->add($box);
+$button = Gtk2::Button->new("Stop");
+$button->signal_connect(clicked => sub { add_timeout(0,0) });
+$box->add($button);
+$button = Gtk2::Button->new("100 Hz");
+$button->signal_connect(clicked => sub { add_timeout(10,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("10 Hz");
+$button->signal_connect(clicked => sub { add_timeout(100,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("4 Hz");
+$button->signal_connect(clicked => sub { add_timeout(250,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("1 Hz");
+$button->signal_connect(clicked => sub { add_timeout(1000,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("-");
+$button->signal_connect(clicked => sub { add_timeout(0,0) ; backward() });
+$box->add($button);
+$entry = Gtk2::Entry->new();
+$entry->set_text("???");
+$entry->signal_connect(activate => \&entry);
+$box->add($entry);
+$button = Gtk2::Button->new("+");
+$button->signal_connect(clicked => sub { add_timeout(0,0) ; forward() });
+$box->add($button);
+$button = Gtk2::Button->new("1 Hz");
+$button->signal_connect(clicked => sub { add_timeout(1000,1); });
+$box->add($button);
+$button = Gtk2::Button->new("4 Hz");
+$button->signal_connect(clicked => sub { add_timeout(250,1); });
+$box->add($button);
+$button = Gtk2::Button->new("10 Hz");
+$button->signal_connect(clicked => sub { add_timeout(100,1); });
+$box->add($button);
+$button = Gtk2::Button->new("100 Hz");
+$button->signal_connect(clicked => sub { add_timeout(10,1); });
+$box->add($button);
+$button = Gtk2::Button->new("Max");
+$button->signal_connect(clicked => sub { add_timeout(1,1); });
+$box->add($button);
+$window->show_all;
+if ($ARGV[0] eq '100' || $ARGV[0] eq '10' || $ARV[0] eq '4' || $ARGV[0] eq '1') {
+	add_timeout(1000/$ARGV[0], 1);
+	shift(@ARGV);
+}
+if ($ARGV[0]) {
+	$match=$ARGV[0];
+	process_one_packet();
+}
+Gtk2->main;
+0;

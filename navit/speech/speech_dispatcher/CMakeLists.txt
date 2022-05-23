@@ -1,0 +1,1 @@
+module_add_library(speech_speech_dispatcher speech_speech_dispatcher.c)

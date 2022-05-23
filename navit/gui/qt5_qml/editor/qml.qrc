@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/">
+        <file>map.png</file>
+        <file>skins/modern/main.qml</file>
+        <file>skins/modern/menu.qml</file>
+        <file>skins/modern/MainMenu.qml</file>
+        <file>skins/modern/navit.svg</file>
+        <file>skins/modern/MainButton.qml</file>
+        <file>skins/modern/settings.qml</file>
+        <file>skins/modern/maps.qml</file>
+        <file>skins/modern/poi.qml</file>
+        <file>skins/modern/pois.qml</file>
+        <file>skins/modern/bookmark.qml</file>
+        <file>skins/modern/bookmarks.qml</file>
+        <file>skins/modern/icons/appbar.home.variant.svg</file>
+        <file>skins/modern/icons/appbar.rocket.svg</file>
+        <file>skins/modern/icons/appbar.power.svg</file>
+        <file>skins/modern/icons/appbar.cog.svg</file>
+        <file>skins/modern/icons/appbar.layer.svg</file>
+        <file>skins/modern/icons/appbar.layer.delete.svg</file>
+        <file>skins/modern/icons/appbar.map.svg</file>
+        <file>skins/modern/icons/appbar.information.circle.svg</file>
+        <file>skins/modern/icons/appbar.chevron.up.svg</file>
+        <file>skins/modern/icons/appbar.chevron.down.svg</file>
+        <file>skins/modern/icons/appbar.fullscreen.box.svg</file>
+        <file>skins/modern/icons/appbar.transit.car.svg</file>
+        <file>skins/modern/icons/appbar.location.checkin.svg</file>
+        <file>skins/modern/icons/appbar.cogs.svg</file>
+        <file>skins/modern/icons/bigcity.png</file>
+        <file>skins/modern/search.qml</file>
+        <file>skins/modern/destination.qml</file>
+        <file>skins/modern/icons/appbar.city.svg</file>
+        <file>skins/modern/icons/appbar.location.svg</file>
+        <file>skins/modern/icons/appbar.timer.rewind.svg</file>
+        <file>skins/modern/icons/appbar.book.list.svg</file>
+        <file>skins/modern/icons/smallcity.png</file>
+        <file>skins/modern/destination_address.qml</file>
+        <file>skins/modern/search_result_item.qml</file>
+        <file>skins/modern/vehicles.qml</file>
+        <file>skins/modern/vehicle.qml</file>
+    </qresource>
+</RCC>

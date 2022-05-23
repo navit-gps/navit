@@ -1,0 +1,97 @@
+.TH FH_EXTRACTMIN 3 "29 Mar 2000" "libfib"
+.SH NAME
+fh_extractmin \- extract minimum element from a Fibonacci Heap
+.SH SYNOPSIS
+#include <fib.h>
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_extractmin "(struct fibheap *heap)"
+.PD
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_min "(struct fibheap *heap)"
+.PD
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_replacedata "(struct fibheap *heap, struct fibheap_el *elem, void *data)"
+.PD
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_delete "(struct fibheap *heap, struct fibheap_el *elem)"
+.PD
+.PP
+void
+.PD 0
+.HP 8
+.BR fh_deleteheap "(struct fibheap *heap)"
+.PD
+.PP
+struct fibheap *
+.PD 0
+.HP 8
+.BR fh_union "(struct fibheap *heapa, struct fibheap *heapb)"
+.PD
+.SH DESCRIPTION
+These functions are shared between both key heaps and normal heaps.
+.PP
+Once a
+.B elem
+pointer has been passed to
+.BR fh_delete (3)
+that
+.B elem
+pointer may be reused to store another datum.
+You should make sure that you destroy any copies of the pointer.
+.SH RETURN VALUES
+The
+.B fh_extractmin
+function returns the value of
+.B data
+that is the minimum element and removes it from the heap.
+.PP
+The
+.B fh_min
+function returns the current minimum element but does
+.I not
+remove it from the heap.
+.PP
+The
+.B fh_replacedata
+replaces the data in
+.B elem
+and returns the old data.
+.PP
+The
+.B fh_delete
+function removes
+.B elem
+from the heap, and returns the
+.B data
+that was stored in the element.
+.PP
+The
+.B fh_deleteheap
+complete destroys the heap.  It does not free any user supplied
+.B data
+elements stored in the heap.
+.PP
+The
+.B fh_union
+function returns the union of the two heaps
+.B heapa
+and
+.BR heapb .
+.SH SEE ALSO
+.BR fh_makeheap (3),
+.BR fh_makekeyheap (3)
+.SH AUTHORS
+This library and man page was writen by John-Mark Gurney <gurney_j@efn.org>.
+.SH BUGS
