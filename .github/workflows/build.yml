@@ -99,6 +99,8 @@ jobs:
           java-version: 1.8
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
+      - name: Install NDK
+        run: sdkmanager "ndk;22.0.7026061"
       - name: Build and upload Android
         run: fastlane github_actions
       - name: Run Lint Test
