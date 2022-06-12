@@ -161,7 +161,7 @@ jobs:
     container:
         image: navit/dockerfiles:wince
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       - run: |
           apt-get update && apt-get install -y git-core
       - name: Prepare the WinCE build environment
