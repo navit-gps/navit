@@ -172,6 +172,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           path: wince/output
+          name: WinCE Binary
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
