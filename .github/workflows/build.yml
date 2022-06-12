@@ -72,7 +72,7 @@ jobs:
     container:
         image: hoehnp/sailfishos-platform-sdk:3.1.0.12
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
       - name: run build
         run: contrib/sailfish/build_sailfish_ci.sh
