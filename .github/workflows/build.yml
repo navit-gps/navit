@@ -107,23 +107,24 @@ jobs:
             ./gradlew lint test
       - name: Run Javadoc
         run: ./gradlew generateDebugJavadoc
-      - uses: actions/upload-artifact@v1
+      - run: find / -name apk
+      - uses: actions/upload-artifact@v3
         with:
           name: Store APK
-          path: navit/android/build/outputs/apk
-      - uses: actions/upload-artifact@v1
+          path: build/outputs/apk
+      - uses: actions/upload-artifact@v3
         with:
           name: Store logs
-          path: navit/android/build/outputs/logs
-      - uses: actions/upload-artifact@v1
+          path: build/outputs/logs
+      - uses: actions/upload-artifact@v3
         with:
           name: Store Javadoc
-          path: navit/android/build/outputs/docs/javadoc
-      - uses: actions/upload-artifact@v1
+          path: build/outputs/docs/javadoc
+      - uses: actions/upload-artifact@v3
         with:
           name: Store Lint reports
-          path: navit/android/build/reports
-      - uses: actions/upload-artifact@v1
+          path: build/reports
+      - uses: actions/upload-artifact@v3
         with:
           name: Android Test-results
           path: test-results
