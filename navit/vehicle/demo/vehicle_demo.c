@@ -86,7 +86,6 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
     int hr,min,sec,year,mon,day;
     double lat,lng;
     int *flags;
-    struct attr speed_attr;
     switch (type) {
     case attr_position_speed:
         attr->u.numd = &priv->speed;
@@ -237,8 +236,6 @@ static void vehicle_demo_timer(struct vehicle_priv *priv) {
         dbg(lvl_debug, "last pos=0x%x,0x%x", priv->last.x, priv->last.y);
         if (priv->last.x == pos.x && priv->last.y == pos.y) {
             dbg(lvl_warning, "endless loop");
-            pos.x+=1;
-            pos.y+=1;
         }
         priv->last = pos;
         while (item && priv->config_speed) {
