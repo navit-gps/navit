@@ -12,14 +12,14 @@ jobs:
         - uses: actions/checkout@v2
           with:
             fetch-depth: 0
-        - name: run sanity check script
-          run: bash scripts/ci_sanity_checks.sh
-        - uses: reviewdog/action-suggester@v1
-          with:
-            github_token: ${{ secrets.github_token }}
-            tool_name: Navit sanity Check
-            level: error
-            fail_on_error: true
+        ##- name: run sanity check script
+        ##  run: bash scripts/ci_sanity_checks.sh
+        ##- uses: reviewdog/action-suggester@v1
+        ##  with:
+        ##    github_token: ${{ secrets.github_token }}
+        ##    tool_name: Navit sanity Check
+        ##    level: error
+        ##    fail_on_error: false
         # FIXME: deactivated as somethings broken with it
         #- name: Run CheckStyle Test
         #  run: ./gradlew checkstyleMain
@@ -89,18 +89,15 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - run: apt update && apt install -y sudo
       - name: Install requirements
-        run: sudo bash scripts/setup_android.sh
+        run: bash scripts/setup_android.sh
       - name: Setup Keystore and Playstore Keys
         run: scripts/setup_publish_keys.sh
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - name: Install NDK
-        run: sdkmanager "ndk;22.0.7026061"
+        run: sdkmanager "ndk;23.0.7599858"
       - name: Build and upload Android
         run: fastlane github_actions
       - name: Run Lint Test
