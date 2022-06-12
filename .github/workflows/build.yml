@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: apt update && apt install -y sudo
+      - run: if [ "X$UID" == X0 ]; then apt update && apt install -y sudo; fi
       - name: Install requirements
         run: bash scripts/setup_android.sh
       - name: Setup Keystore and Playstore Keys
