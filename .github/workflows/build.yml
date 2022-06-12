@@ -70,14 +70,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: hoehnp/sailfishos-platform-sdk:3.1.0.12
+        image: coderus/sailfishos-platform-sdk:3.4.0.24
     steps:
       - uses: actions/checkout@v1
       # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
       - name: run build
         run: contrib/sailfish/build_sailfish_ci.sh
         env:
-            VERSION_ID: 3.1.0.12
+            VERSION_ID: 3.4.0.24
       - uses: actions/upload-artifact@v1
         with:
           name: Store rpm
