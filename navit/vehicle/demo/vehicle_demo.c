@@ -106,8 +106,7 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
         if(flags = tracking_get_current_flags(navit_get_tracking(priv->navit))) {
             if(*flags & AF_UNDERGROUND)
                 attr->u.num = 0;
-        }
-        else
+        } else
             attr->u.num = 2;
         break;
     case attr_position_sats_used:
