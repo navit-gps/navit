@@ -10,7 +10,7 @@ if [ -z ${VERSION_ID+x} ]; then echo "VERSION_ID not set. Forgot to export VERSI
 # Makes calling it directly from docker easier.
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH
-ls -lah /navit
+
 mkdir $HOME/rpmbuild
 
 #arm devices
