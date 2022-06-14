@@ -3,7 +3,7 @@
 # please don't mess around with those lines without testing,
 # even if some fancy tool tells you to do so to save some pipes.
 # -hoehnp-
-export HOME=/home/nemo
+
 if [ -z ${VERSION_ID+x} ]; then echo "VERSION_ID not set. Forgot to export VERSION_ID?"; exit 1; fi
 
 # First we need to cd to the directory containing this script and the spec file.
