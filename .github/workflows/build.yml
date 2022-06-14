@@ -74,9 +74,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
+      - name: Fix Scratchbox setup
+        run: sudo cp -ar /home/nemo/.scratchbox2/ ~/
       - name: run build
-        run: sudo -E bash -x contrib/sailfish/build_sailfish_ci.sh
-        shell: bash
+        run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
         env:
             VERSION_ID: 3.4.0.24
       - uses: actions/upload-artifact@v1
