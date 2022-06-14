@@ -76,6 +76,7 @@ jobs:
       # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
       - name: run build
         run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
+        shell: bash -x
         env:
             VERSION_ID: 3.4.0.24
       - uses: actions/upload-artifact@v1
