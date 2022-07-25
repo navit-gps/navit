@@ -172,6 +172,7 @@ int map_collect_data_osm(FILE *in, struct maptool_osm *osm) {
     int size=BUFFER_SIZE;
     char buffer[BUFFER_SIZE];
     char *p;
+    int process_tags=0;
     sig_alrm(0);
     if (!fgets(buffer, size, in) || !xml_declaration_in_line(buffer)) {
         fprintf(stderr,"FATAL: First line does not start with XML declaration;\n"
@@ -188,11 +189,17 @@ int map_collect_data_osm(FILE *in, struct maptool_osm *osm) {
         }
         if (!strncmp(p, "<osm ",5)) {
         } else if (!strncmp(p, "<bound ",7)) {
+        } else if (!strncmp(p, "<boundary ",10)) {
+        } else if (!strncmp(p, "<changeset ",11)) {
+        } else if (!strncmp(p, "</changeset>",12)) {
         } else if (!strncmp(p, "<node ",6)) {
             if (!parse_node(p))
                 fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
             processed_nodes++;
+            process_tags=1;
         } else if (!strncmp(p, "<tag ",5)) {
+            if (!process_tags)
+                continue;
             if (!parse_tag(p))
                 fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
         } else if (!strncmp(p, "<way ",5)) {
