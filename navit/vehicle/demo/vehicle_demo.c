@@ -33,6 +33,7 @@
 #include "vehicle.h"
 #include "event.h"
 #include "util.h"
+#include "track.h"
 
 /**
  * @defgroup vehicle-demo Vehicle Demo
@@ -57,6 +58,7 @@ struct vehicle_priv {
     char *timep;
     char *nmea;
     enum attr_position_valid valid;  /**< Whether the vehicle has valid position data **/
+    double height;
 
 };
 
@@ -83,6 +85,7 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
     char ns='N',ew='E',*timep,*rmc,*gga;
     int hr,min,sec,year,mon,day;
     double lat,lng;
+    int *flags;
     switch (type) {
     case attr_position_speed:
         attr->u.numd = &priv->speed;
@@ -99,10 +102,17 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
         attr->u.str=priv->timep;
         break;
     case attr_position_fix_type:
-        attr->u.num = 2;
+        if(flags = tracking_get_current_flags(navit_get_tracking(priv->navit))) {
+            if(*flags & AF_UNDERGROUND)
+                attr->u.num = 0;
+        } else
+            attr->u.num = 2;
         break;
     case attr_position_sats_used:
-        attr->u.num = 9;
+        attr->u.num = 3 + ((rand() % 2 + 1) * (rand() %2 == 0?-1:1));
+        break;
+    case attr_position_height:
+        attr->u.numd = &priv->height;
         break;
     case attr_position_nmea:
         lat=priv->geo.lat;
@@ -151,6 +161,9 @@ static int vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr
         break;
     case attr_speed:
         priv->config_speed=attr->u.num;
+        break;
+    case attr_position_height:
+        priv->height = *attr->u.numd;
         break;
     case attr_interval:
         priv->interval=attr->u.num;
@@ -244,7 +257,8 @@ static void vehicle_demo_timer(struct vehicle_priv *priv) {
                     ci.y = pos.y + dy * len / slen;
                     priv->direction =
                         transform_get_angle_delta(&pos, &c, 0);
-                    priv->speed=priv->config_speed;
+                    priv->speed=priv->config_speed + ((rand() % 5 + 1) * (rand() %2 == 0?-1:1));  // a little random + or - 1 to 5 km/h
+                    priv->height=priv->height + ((rand() % 50 + 1) * (rand() %2 == 0?-1:1));       // a little random + or - 1 to 50 m
                 } else {
                     ci.x = pos.x;
                     ci.y = pos.y;
@@ -282,6 +296,7 @@ static struct vehicle_priv *vehicle_demo_new(struct vehicle_methods
     ret->cbl = cbl;
     ret->interval=1000;
     ret->config_speed=40;
+    ret->height=-10;
     ret->timer_callback=callback_new_1(callback_cast(vehicle_demo_timer), ret);
     ret->valid = attr_position_valid_invalid;
     *meth = vehicle_demo_methods;

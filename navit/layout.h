@@ -34,7 +34,7 @@ struct poly_hole {
 };
 
 struct element {
-    enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
+    enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows, element_spikes } type;
     struct color color;
     int text_size;
     int oneway;
@@ -77,6 +77,10 @@ struct element {
         struct element_arrows {
             int width;
         } arrows;
+        struct element_spikes {
+            int width;
+            int distance;
+        } spikes;
     } u;
     int coord_count;
     struct coord *coord;
@@ -162,6 +166,7 @@ struct text *text_new(struct attr *parent, struct attr **attrs);
 struct icon *icon_new(struct attr *parent, struct attr **attrs);
 struct image *image_new(struct attr *parent, struct attr **attrs);
 struct arrows *arrows_new(struct attr *parent, struct attr **attrs);
+struct spikes *spikes_new(struct attr *parent, struct attr **attrs);
 int element_add_attr(struct element *e, struct attr *attr);
 /* end of prototypes */
 

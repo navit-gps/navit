@@ -768,6 +768,7 @@ static char *attrmap= {
     "w	natural=wetland		poly_mud\n"
     "w	natural=wood		poly_wood\n"
     "w	natural=cliff		cliff\n"
+    "w	man_made=embankment  embankment\n"
     "w	piste:type=downhill,piste:difficulty=advanced		piste_downhill_advanced\n"
     "w	piste:type=downhill,piste:difficulty=easy		piste_downhill_easy\n"
     "w	piste:type=downhill,piste:difficulty=expert		piste_downhill_expert\n"
@@ -1656,6 +1657,12 @@ country_from_iso2(char *iso) {
     return country_from_countryid(country_id_from_iso2(iso));
 }
 
+static inline int filter_unknown(struct item_bin * ib) {
+    if(ignore_unknown && (ib->type==type_point_unkn || ib->type==type_street_unkn || ib->type==type_none))
+        return 1;
+    return 0;
+}
+
 static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
     if((!g_strcmp0(relation_type, "multipolygon")) && (!boundary)) {
         int count;
@@ -1675,12 +1682,17 @@ static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
             //fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
             item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
             for(a=0; a < count ; a++) {
+                /*Don't write out multipolygons that will result in unknown types if -n is given.
+                 *So we don't process useless multipolygons. May save a lot of time.
+                 */
+                tmp_item_bin->type = types[a];
+                if(filter_unknown(tmp_item_bin))
+                    continue;
                 /* no need to clone the item in memory. We just write it out multiple times */
                 if(a==1) {
                     /*add duplicate tag if 2nd type. The tag stays for all subsequent writes */
                     item_bin_add_attr_int(tmp_item_bin, attr_duplicate, 1);
                 }
-                tmp_item_bin->type = types[a];
                 item_bin_write(tmp_item_bin, osm->multipolygons);
             }
         } else {
@@ -1703,7 +1715,7 @@ static inline void osm_end_relation_multipolygon (struct maptool_osm * osm) {
             //tmp_item_bin->type=type_none;
         }
         if ((!g_strcmp0(relation_type, "multipolygon") || !g_strcmp0(relation_type, "boundary"))
-                && (boundary || type!=type_none)) {
+                && (boundary)) {
             item_bin_write(tmp_item_bin, osm->boundaries);
         }
     }

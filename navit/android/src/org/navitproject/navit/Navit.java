@@ -733,7 +733,7 @@ public class Navit extends Activity {
                 if (resultCode == RESULT_OK) {
                     String newDir = data.getStringExtra(FileBrowserActivity.returnDirectoryParameter);
                     Log.d(TAG, "selected path= " + newDir);
-                    if (!newDir.contains("/navit")) {
+                    if (!(newDir.contains("/navit") || newDir.contains("/org.navitproject.navit"))) {
                         newDir = newDir + "/navit/";
                     } else {
                         newDir = newDir + "/";
@@ -779,7 +779,8 @@ public class Navit extends Activity {
     private void setMapLocation() {
         Intent fileExploreIntent = new Intent(this,FileBrowserActivity.class);
         fileExploreIntent
-            .putExtra(FileBrowserActivity.startDirectoryParameter, "/mnt")
+            .putExtra(FileBrowserActivity.startDirectoryParameter,
+                    getApplicationContext().getExternalFilesDir(null).toString())
             .setAction(FileBrowserActivity.INTENT_ACTION_SELECT_DIR);
         startActivityForResult(fileExploreIntent,NavitSelectStorage_id);
     }

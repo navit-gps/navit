@@ -55,3 +55,10 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    development/macos_development
    development/wince_development
    development/windows_development
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+   :caption: Other Documents
+
+   privacy

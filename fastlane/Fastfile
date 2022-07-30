@@ -37,10 +37,11 @@ platform :android do
       build_type: 'Release'
     )
     isOnMasterBranch = currentBranch() == "master"
+    isOnMasterBranch = false # Workarount do not push to google as its curently broken
     if isOnMasterBranch
       upload_to_play_store( track: 'beta',
       						json_key: 'key.json',
-      						apk: 'navit/android/build/outputs/apk/release/android-release.apk',
+      						apk: 'build/outputs/apk/release/navit-release.apk',
       						package_name: 'org.navitproject.navit'
       					  )
     else

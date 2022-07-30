@@ -25,6 +25,9 @@
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ATTLIST navit drag_bitmap CDATA #IMPLIED>
 <!ATTLIST navit default_layout CDATA #IMPLIED>
+<!ATTLIST navit tunnel_nightlayout CDATA #IMPLIED>
+<!ATTLIST navit nightlayout_auto CDATA #IMPLIED>
+<!ATTLIST navit sunrise_degrees CDATA #IMPLIED>
 <!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
@@ -126,7 +129,7 @@
 <!ATTLIST osd y CDATA #IMPLIED>
 <!ATTLIST osd src CDATA #IMPLIED>
 <!ATTLIST osd command CDATA #IMPLIED>
-<!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows)*>
+<!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows|spikes)*>
 <!ATTLIST itemgra item_types CDATA #IMPLIED>
 <!ATTLIST itemgra order CDATA #IMPLIED>
 <!ATTLIST itemgra speed_range CDATA #IMPLIED>
@@ -162,6 +165,10 @@
 <!ATTLIST arrows color CDATA #REQUIRED>
 <!ATTLIST arrows width CDATA #IMPLIED>
 <!ATTLIST arrows oneway CDATA #IMPLIED>
+<!ELEMENT spikes EMPTY>
+<!ATTLIST spikes color CDATA #REQUIRED>
+<!ATTLIST spikes width CDATA #IMPLIED>
+<!ATTLIST spikes distance CDATA #IMPLIED>
 <!ELEMENT image EMPTY>
 <!ELEMENT xi:include EMPTY>
 <!ATTLIST xi:include href CDATA #IMPLIED>

@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <config.h>
 #include <gps.h>
 #include <string.h>
 #include <glib.h>
@@ -25,6 +26,7 @@
 #include <gpsbt.h>
 #include <errno.h>
 #endif
+#include "config.h"
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
@@ -175,6 +177,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
     }
     if (data->set & MODE_SET) {
         priv->fix_type = data->fix.mode - 1;
+        dbg(lvl_debug,"Fix Mode: %i", priv->fix_type);
         data->set &= ~MODE_SET;
     }
     if (data->set & TIME_SET) {
@@ -207,9 +210,10 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len,
         data->set &= ~LATLON_SET;
     }
     // If data->fix.speed is NAN, then the drawing gets jumpy.
-    if (! isnan(data->fix.speed) && priv->fix_type > 0) {
-        callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-    }
+    //if (! isnan(data->fix.speed) && priv->fix_type > 0) {
+
+    callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
+
     dbg(lvl_info,"speed ok");
 }
 
@@ -235,6 +239,7 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     priv->gps = gps_open(source + 7, port);
     if(!priv->gps) {
 #endif
+        priv->cbt = callback_new_1(callback_cast(vehicle_gpsd_try_open), priv);
         dbg(lvl_error,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?", priv->source,
             priv->retry_interval);
         g_free(source);
@@ -311,10 +316,11 @@ static void vehicle_gpsd_close(struct vehicle_priv *priv) {
     }
     if (priv->gps) {
         gps_close(priv->gps);
-#if GPSD_API_MAJOR_VERSION >= 5
-        g_free(priv->gps);
-#endif
-        priv->gps = NULL;
+//if we release the gps object a reconnect is no longer working.
+//#if GPSD_API_MAJOR_VERSION >= 5
+//        g_free(priv->gps);
+//#endif
+//        priv->gps = NULL;
     }
 #ifdef HAVE_GPSBT
     err = gpsbt_stop(&priv->context);
@@ -373,6 +379,9 @@ static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
         enum attr_type type, struct attr *attr) {
     struct attr * active=NULL;
     switch (type) {
+    case attr_position_valid:   // Fix #1130
+        attr->u.num=(priv->fix_type>0?attr_position_valid_valid:attr_position_valid_invalid);
+        break;
     case attr_position_fix_type:
         attr->u.num = priv->fix_type;
         break;

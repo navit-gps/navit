@@ -939,6 +939,17 @@ struct map_selection *route_selection;
 
 /**
  * @brief Returns a single map selection
+ *
+ * The boundaries of the selection are determined as follows: First a rectangle spanning `c1` and `c2` is
+ * built (the two coordinates can be any two opposite corners of the rectangle). Then its maximum extension
+ * (height or width) is determined and multiplied with the percentage specified by `rel`. The resulting
+ * amount of padding is added to each edge. After that, the amount specified by `abs` is added to each edge.
+ *
+ * @param order Map order (deepest tile level) to select
+ * @param c1 First coordinate
+ * @param c2 Second coordinate
+ * @param rel Relative padding to add to the selection rectangle, in percent
+ * @param abs Absolute padding to add to the selection rectangle
  */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs) {
@@ -1063,7 +1074,7 @@ struct map_selection * route_get_selection(struct route * this_) {
  *
  * @param sel Start of the list to be destroyed
  */
-static void route_free_selection(struct map_selection *sel) {
+void route_free_selection(struct map_selection *sel) {
     struct map_selection *next;
     while (sel) {
         next=sel->next;
@@ -1130,6 +1141,20 @@ void route_set_destinations(struct route *this, struct pcoord *dst, int count, i
     profile(0,"end");
 }
 
+/**
+ * @brief Retrieves destinations from the route
+ *
+ * Prior to calling this method, you may want to retrieve the number of destinations by calling
+ * {@link route_get_destination_count(struct route *)} and assigning a buffer of sufficient capacity.
+ *
+ * If the return value equals `count`, the buffer was either just large enough or too small to hold the
+ * entire list of destinations; there is no way to tell from the result which is the case.
+ *
+ * @param this The route instance
+ * @param pc Pointer to an array of projected coordinates which will receive the destination coordinates
+ * @param count Capacity of `pc`
+ * @return The number of destinations stored in `pc`, never greater than `count`
+ */
 int route_get_destinations(struct route *this, struct pcoord *pc, int count) {
     int ret=0;
     GList *l=this->destinations;
@@ -1584,11 +1609,7 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param len The length of this segment
- * @param item The item that is represented by this segment
- * @param flags Flags for this segment
- * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
- * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
+ * @param data The segment data
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
@@ -2275,10 +2296,13 @@ static void route_graph_set_traffic_distortion(struct route_graph *this, struct 
 /**
  * @brief Adds a traffic distortion item to the route graph
  *
+ * If `update` is true, the end points of the traffic distortion will have their cost recalculated. Set this to true
+ * for a partial recalculation of an existing route, false when initially building the route graph.
+ *
  * @param this The route graph to add to
  * @param profile The vehicle profile to use for cost calculations
  * @param item The item to add, must be of {@code type_traffic_distortion}
- * @param update Whether to update the point (true for LPA*, false for Dijkstra)
+ * @param update Whether to update the end points
  */
 static void route_graph_add_traffic_distortion(struct route_graph *this, struct vehicleprofile *profile,
         struct item *item, int update) {
@@ -2307,10 +2331,12 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
         e_pnt=route_graph_add_point(this,&l);
         s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             data.flags |= AF_SPEED_LIMIT;
             data.maxspeed=maxspeed_attr.u.num;
         }
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
@@ -2524,37 +2550,45 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     if (item_coord_get(item, &l, 1)) {
         if (!(default_flags = item_get_default_flags(item->type)))
             default_flags = &default_flags_value;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
             segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
 
+        item_attr_rewind(item);
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
         if (data.flags & AF_DANGEROUS_GOODS) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
             else
                 data.flags &= ~AF_DANGEROUS_GOODS;
         }
         if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_width, &attr))
                 data.size_weight.width=attr.u.num;
             else
                 data.size_weight.width=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_height, &attr))
                 data.size_weight.height=attr.u.num;
             else
                 data.size_weight.height=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_length, &attr))
                 data.size_weight.length=attr.u.num;
             else
                 data.size_weight.length=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_weight, &attr))
                 data.size_weight.weight=attr.u.num;
             else
                 data.size_weight.weight=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
                 data.size_weight.axle_weight=attr.u.num;
             else
@@ -2675,10 +2709,8 @@ static int route_graph_is_path_computed(struct route_graph *this_) {
  * After recalculation, the route path is updated.
  *
  * The function uses a modified LPA* algorithm for recalculations. Most modifications were made for compatibility with
- * the algorithm used for the initial routing:
- * \li The `value` of a node represents the cost to reach the destination and thus decreases along the route
- * (eliminating the need for recalculations as the vehicle moves within the route graph)
- * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, the basis of the main routing
+ * the old routing algorithm:
+ * \li The heuristic is always assumed to be zero (which would turn A* into Dijkstra, formerly the basis of the routing
  * algorithm, and makes our keys one-dimensional)
  * \li Currently, each pass evaluates all locally inconsistent points, leaving an empty heap at the end (though this
  * may change in the future).
