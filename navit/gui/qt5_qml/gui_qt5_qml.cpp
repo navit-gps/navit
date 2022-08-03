@@ -258,11 +258,11 @@ struct gui_methods gui_qt5_qml_methods = {
     NULL,
     NULL,
     NULL,
+    NULL, // gui_qt5_qml_show_coord_actions
     NULL,
     gui_qt5_qml_get_attr,
     NULL,
     gui_qt5_qml_set_attr,
-    NULL, // gui_qt5_qml_show_coord_actions
 };
 
 static struct gui_priv* gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs,
