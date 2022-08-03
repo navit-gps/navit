@@ -217,8 +217,6 @@ Tips
    different file names use the wildcard (*.bin) in your navit.xml file.
    For example:
 
-.. _see_also:
-
 See also
 --------
 

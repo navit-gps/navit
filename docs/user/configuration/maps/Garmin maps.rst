@@ -3,11 +3,9 @@
 Garmin maps
 ===========
 
-.. raw:: mediawiki
+.. warning
 
-   {{warning
-   |This is an experimental driver for '''Garmin IMG maps'''.Note that many features are not yet implemented (such as navigation). See section "Limitations" for details.
-   }}
+   This is an experimental driver for '''Garmin IMG maps'''.Note that many features are not yet implemented (such as navigation). See section "Limitations" for details.
 
 It's located here: http://libgarmin.sourceforge.net/ You will need the
 'subversion' (svn) tool to install this driver.
@@ -25,8 +23,6 @@ Please give us feedback / bug reports/feature requests/success stories
 about this driver either in navit tracker or
 `mailto:libgarmin@gmail.com <mailto:libgarmin@gmail.com>`__.
 
-.. _limitations_known_problems:
-
 Limitations / known problems
 ============================
 
@@ -42,8 +38,6 @@ Limitations / known problems
    or `Debian bug
    #601135 <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=601135>`__
    for details.
-
-.. _installation_and_configuration:
 
 Installation and configuration
 ==============================
@@ -109,8 +103,6 @@ You also need to add
 
 to the plugins section on the top of navit.xml
 
-.. _install_a_free_basemap_from_garmin:
-
 Install a free basemap from Garmin
 ----------------------------------
 
@@ -123,8 +115,3 @@ file called gmapbmap.img. Copy that file in some location for later use,
 let's say /mymaps/gmapbmap.img . Now you can remove the temporary
 directory. And register the map in your navit.xml
 
-| ``    ``\ 
-| ``           ``\ 
-| ``     ``\ 
-
-`category:maps <category:maps>`__ `category:Garmin <category:Garmin>`__

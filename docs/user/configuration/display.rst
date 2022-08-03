@@ -1,3 +1,5 @@
+.. configuration_display:
+
 Display Options
 ===============
 The Navit display is highly customisable and consists of the following components

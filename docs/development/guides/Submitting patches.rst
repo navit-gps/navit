@@ -3,10 +3,6 @@
 Submitting patches
 ==================
 
-.. raw:: mediawiki
-
-   {{warning|1='''The content of this page has been moved to:''' https://github.com/navit-gps/navit/blob/trunk/CONTRIBUTING.md . That page is only here for archiving purposes.}}
-
 We are very happy that you like to participate and help the
 `team <team>`__ to improve Navit :) To make this teamwork a pleasure for
 all, we will try to guide you trough this process:
@@ -47,8 +43,6 @@ your changes.
 
 So that's it, you helped Navit to go one step forward. Thank you very
 much :)
-
-.. _see_also:
 
 See also
 --------

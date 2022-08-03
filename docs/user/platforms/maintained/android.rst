@@ -158,8 +158,6 @@ There are two options here:
    Collector <https://play.google.com/store/apps/details?id=com.xtralogic.android.logcollector>`__
    and send the data via mail
 
-.. _see_also:
-
 See also
 --------
 

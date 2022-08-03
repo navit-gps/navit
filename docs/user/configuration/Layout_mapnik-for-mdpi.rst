@@ -3,7 +3,6 @@
 Layout/mapnik-for-mdpi
 ======================
 
-.. _mapnikopenstreetmap_style_layout:
 
 Mapnik/OpenStreetMap Style Layout
 =================================
@@ -12,7 +11,6 @@ Based upon the `Mapnik <Layout/mapnik>`__ layout, this layout improves
 the map for medium definition small screens, such as those for 'older'
 smartphones.
 
-.. _see_also:
 
 See also
 --------

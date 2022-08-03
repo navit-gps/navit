@@ -45,8 +45,6 @@ Android on Freerunner
 See `Android <Android>`__; instructions are the same as for other
 Android phones.
 
-.. _see_also:
-
 See also
 --------
 

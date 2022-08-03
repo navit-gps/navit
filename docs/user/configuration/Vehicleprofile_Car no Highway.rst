@@ -3,7 +3,6 @@
 Vehicleprofile/Car no Highway
 =============================
 
-.. _car_no_highway:
 
 **Car (no Highway)**
 ====================

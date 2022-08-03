@@ -1776,7 +1776,6 @@ March 2011 (UTC)
                </layer>
            </layout>
 
-.. _xml_dark:
 
 XML-DARK
 --------

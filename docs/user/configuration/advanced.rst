@@ -1,3 +1,5 @@
+.. configuration_advanced:
+
 Advanced Options
 ================
 

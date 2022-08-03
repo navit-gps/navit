@@ -10,8 +10,6 @@ devices run Windows CE, and can be tweaked to execute navit.exe.
 
 In order to run Navit on your Sony nav-u device, follow the steps below:
 
-.. _download_unlock_scripts:
-
 Download unlock scripts
 -----------------------
 

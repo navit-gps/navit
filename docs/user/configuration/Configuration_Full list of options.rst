@@ -24,950 +24,950 @@ Full options
 config
 ------
 
-+-----------+-------+--------------+---------------+---------------+
-| Attribute | Units | Values       | Notes         | Example       |
-+===========+=======+==============+===============+===============+
-| language  |       | | "en_US",   | Enables       | ``langu       |
-|           |       | | "en_GB",   | manual        | age="en_US"`` |
-|           |       | | "pl_PL"... | setting of    |               |
-|           |       |              | the locale.   |               |
-|           |       |              | For example,  |               |
-|           |       |              | ``langu       |               |
-|           |       |              | age="en_US"`` |               |
-|           |       |              | will force    |               |
-|           |       |              | Navit to      |               |
-|           |       |              | consider the  |               |
-|           |       |              | host device   |               |
-|           |       |              | as being      |               |
-|           |       |              | setup for USA |               |
-|           |       |              | English, and  |               |
-|           |       |              | the town      |               |
-|           |       |              | search will   |               |
-|           |       |              | automatically |               |
-|           |       |              | revert to     |               |
-|           |       |              | towns in the  |               |
-|           |       |              | USA. This is  |               |
-|           |       |              | useful if     |               |
-|           |       |              | your device   |               |
-|           |       |              | is from       |               |
-|           |       |              | another       |               |
-|           |       |              | country, or   |               |
-|           |       |              | you are       |               |
-|           |       |              | travelling in |               |
-|           |       |              | another       |               |
-|           |       |              | country. The  |               |
-|           |       |              | locale code   |               |
-|           |       |              | is made up of |               |
-|           |       |              | the language  |               |
-|           |       |              | (lowercase)   |               |
-|           |       |              | and the       |               |
-|           |       |              | country       |               |
-|           |       |              | (uppercase)   |               |
-|           |       |              | codes. For    |               |
-|           |       |              | language      |               |
-|           |       |              | codes, see    |               |
-|           |       |              | `ISO          |               |
-|           |       |              | 639-1 <http:  |               |
-|           |       |              | //en.wikipedi |               |
-|           |       |              | a.org/wiki/Li |               |
-|           |       |              | st_of_ISO_639 |               |
-|           |       |              | -1_codes>`__; |               |
-|           |       |              | for country   |               |
-|           |       |              | codes, see    |               |
-|           |       |              | `ISO 3166-1   |               |
-|           |       |              | Alpha2 <      |               |
-|           |       |              | http://en.wik |               |
-|           |       |              | ipedia.org/wi |               |
-|           |       |              | ki/ISO_3166-1 |               |
-|           |       |              | _alpha-2>`__. |               |
-|           |       |              | Note that you |               |
-|           |       |              | can combine   |               |
-|           |       |              | the languages |               |
-|           |       |              | and countries |               |
-|           |       |              | as you wish:  |               |
-|           |       |              | lan           |               |
-|           |       |              | guage="de_FR" |               |
-|           |       |              | will result   |               |
-|           |       |              | in German     |               |
-|           |       |              | interface and |               |
-|           |       |              | voice         |               |
-|           |       |              | announcements |               |
-|           |       |              | and search    |               |
-|           |       |              | defaulting to |               |
-|           |       |              | France.       |               |
-+-----------+-------+--------------+---------------+---------------+
++-----------+-------+--------------+--------------+---------------------+
+| Attribute | Units | Values       | Notes        | Example             |
++===========+=======+==============+==============+=====================+
+| language  |       | "en_US",     | Enables      | ``language="en_US"``|
+|           |       | "en_GB",     | manual       |                     |
+|           |       | "pl_PL",     | setting of   |                     |
+|           |       | ...          | the locale.  |                     |
+|           |       |              | For example, |                     |
+|           |       |              | ``langu      |                     |
+|           |       |              | age="en_US"``|                     |
+|           |       |              | will force   |                     |
+|           |       |              | Navit to     |                     |
+|           |       |              | consider the |                     |
+|           |       |              | host device  |                     |
+|           |       |              | as being     |                     |
+|           |       |              | setup for USA|                     |
+|           |       |              | English, and |                     |
+|           |       |              | the town     |                     |
+|           |       |              | search will  |                     |
+|           |       |              | automatically|                     |
+|           |       |              | revert to    |                     |
+|           |       |              | towns in the |                     |
+|           |       |              | USA. This is |                     |
+|           |       |              | useful if    |                     |
+|           |       |              | your device  |                     |
+|           |       |              | is from      |                     |
+|           |       |              | another      |                     |
+|           |       |              | country, or  |                     |
+|           |       |              | you are      |                     |
+|           |       |              | travelling in|                     |
+|           |       |              | another      |                     |
+|           |       |              | country. The |                     |
+|           |       |              | locale code  |                     |
+|           |       |              | is made up of|                     |
+|           |       |              | the language |                     |
+|           |       |              | (lowercase)  |                     |
+|           |       |              | and the      |                     |
+|           |       |              | country      |                     |
+|           |       |              | (uppercase)  |                     |
+|           |       |              | codes. For   |                     |
+|           |       |              | language     |                     |
+|           |       |              | codes, see   |                     |
+|           |       |              | `ISO         |                     |
+|           |       |              | 639-1 <http: |                     |
+|           |       |              | //en.wikipedi|                     |
+|           |       |              | a.org/wiki/Li|                     |
+|           |       |              | st_of_ISO_639|                     |
+|           |       |              | -1_codes>`__;|                     |
+|           |       |              | for country  |                     |
+|           |       |              | codes, see   |                     |
+|           |       |              | `ISO 3166-1  |                     |
+|           |       |              | Alpha2 <     |                     |
+|           |       |              | http://en.wik|                     |
+|           |       |              | ipedia.org/wi|                     |
+|           |       |              | ki/ISO_3166-1|                     |
+|           |       |              | _alpha-2>`__.|                     |
+|           |       |              | Note that you|                     |
+|           |       |              | can combine  |                     |
+|           |       |              | the languages|                     |
+|           |       |              | and countries|                     |
+|           |       |              | as you wish: |                     |
+|           |       |              | lan          |                     |
+|           |       |              | guage="de_FR"|                     |
+|           |       |              | will result  |                     |
+|           |       |              | in German    |                     |
+|           |       |              | interface and|                     |
+|           |       |              | voice        |                     |
+|           |       |              | announcements|                     |
+|           |       |              | and search   |                     |
+|           |       |              | defaulting to|                     |
+|           |       |              | France.      |                     |
++-----------+-------+--------------+--------------+---------------------+
 
 debug
 -----
 
-+--------------+-------+--------------+--------------+--------------+
-| Attribute    | Units | Values       | Notes        | Example      |
-+==============+=======+==============+==============+==============+
-| name         |       | "gu          | Set the      | ``name="gui  |
-|              |       | i_internal", | debug level  | _internal"`` |
-|              |       | "nav         | for a Navit  |              |
-|              |       | it:do_draw", | module.      |              |
-|              |       | "global"     | "name" is    |              |
-|              |       |              | the module   |              |
-|              |       |              | name;        |              |
-|              |       |              | optionally,  |              |
-|              |       |              | the name of  |              |
-|              |       |              | a function   |              |
-|              |       |              | in that      |              |
-|              |       |              | module can   |              |
-|              |       |              | be appended  |              |
-|              |       |              | with a colon |              |
-|              |       |              | (:). The     |              |
-|              |       |              | modules      |              |
-|              |       |              | correspond   |              |
-|              |       |              | to the       |              |
-|              |       |              | directories  |              |
-|              |       |              | of Navit's   |              |
-|              |       |              | source code  |              |
-|              |       |              | tree (the    |              |
-|              |       |              | module name  |              |
-|              |       |              | is set in    |              |
-|              |       |              | the          |              |
-|              |       |              | Makefile.am  |              |
-|              |       |              | in each      |              |
-|              |       |              | directory,   |              |
-|              |       |              | by a         |              |
-|              |       |              | statement    |              |
-|              |       |              | "-DM         |              |
-|              |       |              | ODULE=XXX"). |              |
-|              |       |              | A            |              |
-|              |       |              | dditionally, |              |
-|              |       |              | there are    |              |
-|              |       |              | some special |              |
-|              |       |              | module       |              |
-|              |       |              | names:       |              |
-|              |       |              | Setting a    |              |
-|              |       |              | debug level  |              |
-|              |       |              | > 0 for      |              |
-|              |       |              | *"           |              |
-|              |       |              | timestamps"* |              |
-|              |       |              | will enable  |              |
-|              |       |              | printing of  |              |
-|              |       |              | timestamps   |              |
-|              |       |              | in debug     |              |
-|              |       |              | messages.    |              |
-|              |       |              | Setting      |              |
-|              |       |              | *"segv"* to  |              |
-|              |       |              | 1 will print |              |
-|              |       |              | backtraces   |              |
-|              |       |              | on           |              |
-|              |       |              | segmentation |              |
-|              |       |              | faults,      |              |
-|              |       |              | setting it   |              |
-|              |       |              | to >1 will   |              |
-|              |       |              | start gdb.   |              |
-|              |       |              | Finally,     |              |
-|              |       |              | *"global"*   |              |
-|              |       |              | sets the     |              |
-|              |       |              | global debug |              |
-|              |       |              | level        |              |
-|              |       |              | (applies to  |              |
-|              |       |              | all modules; |              |
-|              |       |              | this is the  |              |
-|              |       |              | same as      |              |
-|              |       |              | using the    |              |
-|              |       |              | command line |              |
-|              |       |              | option -d).  |              |
-+--------------+-------+--------------+--------------+--------------+
-| dbg_level    |       | "error",     | The debug    | ``dbg_le     |
-|              |       | "warning",   | level to set | vel="info"`` |
-|              |       | "info",      | for the      |              |
-|              |       | "debug"      | component    |              |
-|              |       |              | given by the |              |
-|              |       |              | "name"       |              |
-|              |       |              | attribute.   |              |
-|              |       |              | The higher   |              |
-|              |       |              | the debug    |              |
-|              |       |              | level, the   |              |
-|              |       |              | more debug   |              |
-|              |       |              | output will  |              |
-|              |       |              | be printed.  |              |
-|              |       |              | The default  |              |
-|              |       |              | debug level  |              |
-|              |       |              | is "error",  |              |
-|              |       |              | which will   |              |
-|              |       |              | only print   |              |
-|              |       |              | error        |              |
-|              |       |              | messages.    |              |
-+--------------+-------+--------------+--------------+--------------+
-| level        |       | numeric      | Equivalent   | `            |
-| *(           |       | debug level  | to           | `level="3"`` |
-| deprecated)* |       | (0-3)        | "dbg_level", |              |
-|              |       |              | only using a |              |
-|              |       |              | number       |              |
-|              |       |              | instead of   |              |
-|              |       |              | the level's  |              |
-|              |       |              | name.        |              |
-|              |       |              | "dbg_level"  |              |
-|              |       |              | should be    |              |
-|              |       |              | used         |              |
-|              |       |              | instead, to  |              |
-|              |       |              | make the     |              |
-|              |       |              | c            |              |
-|              |       |              | onfiguration |              |
-|              |       |              | easier to    |              |
-|              |       |              | read.        |              |
-+--------------+-------+--------------+--------------+--------------+
++--------------+-------+-----------------+-------------+------------------------+
+| Attribute    | Units | Values          | Notes       | Example                |
++==============+=======+=================+=============+========================+
+| name         |       | "gui_internal", | Set the     | ``name="gui_internal"``|
+|              |       | "navit:do_draw",| debug level |                        |
+|              |       | "global"        | for a Navit |                        |
+|              |       |                 | module.     |                        |
+|              |       |                 | "name" is   |                        |
+|              |       |                 | the module  |                        |
+|              |       |                 | name;       |                        |
+|              |       |                 | optionally, |                        |
+|              |       |                 | the name of |                        |
+|              |       |                 | a function  |                        |
+|              |       |                 | in that     |                        |
+|              |       |                 | module can  |                        |
+|              |       |                 | be appended |                        |
+|              |       |                 | with a colon|                        |
+|              |       |                 | (:). The    |                        |
+|              |       |                 | modules     |                        |
+|              |       |                 | correspond  |                        |
+|              |       |                 | to the      |                        |
+|              |       |                 | directories |                        |
+|              |       |                 | of Navit's  |                        |
+|              |       |                 | source code |                        |
+|              |       |                 | tree (the   |                        |
+|              |       |                 | module name |                        |
+|              |       |                 | is set in   |                        |
+|              |       |                 | the         |                        |
+|              |       |                 | Makefile.am |                        |
+|              |       |                 | in each     |                        |
+|              |       |                 | directory,  |                        |
+|              |       |                 | by a        |                        |
+|              |       |                 | statement   |                        |
+|              |       |                 | "-DM        |                        |
+|              |       |                 | ODULE=XXX").|                        |
+|              |       |                 | A           |                        |
+|              |       |                 | dditionally,|                        |
+|              |       |                 | there are   |                        |
+|              |       |                 | some special|                        |
+|              |       |                 | module      |                        |
+|              |       |                 | names:      |                        |
+|              |       |                 | Setting a   |                        |
+|              |       |                 | debug level |                        |
+|              |       |                 | > 0 for     |                        |
+|              |       |                 | *"          |                        |
+|              |       |                 | timestamps"*|                        |
+|              |       |                 | will enable |                        |
+|              |       |                 | printing of |                        |
+|              |       |                 | timestamps  |                        |
+|              |       |                 | in debug    |                        |
+|              |       |                 | messages.   |                        |
+|              |       |                 | Setting     |                        |
+|              |       |                 | *"segv"* to |                        |
+|              |       |                 | 1 will print|                        |
+|              |       |                 | backtraces  |                        |
+|              |       |                 | on          |                        |
+|              |       |                 | segmentation|                        |
+|              |       |                 | faults,     |                        |
+|              |       |                 | setting it  |                        |
+|              |       |                 | to >1 will  |                        |
+|              |       |                 | start gdb.  |                        |
+|              |       |                 | Finally,    |                        |
+|              |       |                 | *"global"*  |                        |
+|              |       |                 | sets the    |                        |
+|              |       |                 | global debug|                        |
+|              |       |                 | level       |                        |
+|              |       |                 | (applies to |                        |
+|              |       |                 | all modules;|                        |
+|              |       |                 | this is the |                        |
+|              |       |                 | same as     |                        |
+|              |       |                 | using the   |                        |
+|              |       |                 | command line|                        |
+|              |       |                 | option -d). |                        |
++--------------+-------+-----------------+-------------+------------------------+
+| dbg_level    |       | "error",        | The debug   | ``dbg_level="info"``   |
+|              |       | "warning",      | level to set|                        |
+|              |       | "info",         | for the     |                        |
+|              |       | "debug"         | component   |                        |
+|              |       |                 | given by the|                        |
+|              |       |                 | "name"      |                        |
+|              |       |                 | attribute.  |                        |
+|              |       |                 | The higher  |                        |
+|              |       |                 | the debug   |                        |
+|              |       |                 | level, the  |                        |
+|              |       |                 | more debug  |                        |
+|              |       |                 | output will |                        |
+|              |       |                 | be printed. |                        |
+|              |       |                 | The default |                        |
+|              |       |                 | debug level |                        |
+|              |       |                 | is "error", |                        |
+|              |       |                 | which will  |                        |
+|              |       |                 | only print  |                        |
+|              |       |                 | error       |                        |
+|              |       |                 | messages.   |                        |
++--------------+-------+-----------------+-------------+------------------------+
+| level        |       | numeric         | Equivalent  | ``level="3"``          |
+| *(           |       | debug level     | to          |                        |
+| deprecated)* |       | (0-3)           | "dbg_level",|                        |
+|              |       |                 | only using a|                        |
+|              |       |                 | number      |                        |
+|              |       |                 | instead of  |                        |
+|              |       |                 | the level's |                        |
+|              |       |                 | name.       |                        |
+|              |       |                 | "dbg_level" |                        |
+|              |       |                 | should be   |                        |
+|              |       |                 | used        |                        |
+|              |       |                 | instead, to |                        |
+|              |       |                 | make the    |                        |
+|              |       |                 | c           |                        |
+|              |       |                 | onfiguration|                        |
+|              |       |                 | easier to   |                        |
+|              |       |                 | read.       |                        |
++--------------+-------+-----------------+-------------+------------------------+
 
 navit
 -----
 
-+-------------+-------------+-------------+-------------+-------------+
-| Attribute   | Units       | Values      | Notes       | Example     |
-+=============+=============+=============+=============+=============+
-| center      | coords      | ``DD.dd``   | | Map will  | ``ce        |
-|             |             | or          |   be        | nter="4808  |
-|             |             | ``DDMM.ss`` |   centred   | N 1134 E"`` |
-|             |             |             |   at these  |             |
-|             |             |             |             |             |
-|             |             |             | coordinates |             |
-|             |             |             |   on        |             |
-|             |             |             |   startup.  |             |
-|             |             |             |             |             |
-|             |             |             | Coordinates |             |
-|             |             |             |   are       |             |
-|             |             |             |   either in |             |
-|             |             |             |   decimal   |             |
-|             |             |             |   degrees   |             |
-|             |             |             |   (with     |             |
-|             |             |             |   sign in   |             |
-|             |             |             |   front to  |             |
-|             |             |             |   denote    |             |
-|             |             |             |   N/S or    |             |
-|             |             |             |   E/W) or   |             |
-|             |             |             |   decimal   |             |
-|             |             |             |   minutes   |             |
-|             |             |             |   with      |             |
-|             |             |             |   trailing  |             |
-|             |             |             |   N/S or    |             |
-|             |             |             |   E/W where |             |
-|             |             |             |   a         |             |
-|             |             |             | ppropriate. |             |
-|             |             |             | |           |             |
-|             |             |             |  **Default: |             |
-|             |             |             |   ``53.1    |             |
-|             |             |             | 3 11.70``** |             |
-+-------------+-------------+-------------+-------------+-------------+
-| orientation | degrees (or | 0-360 /     | | ``orienta | ``orienta   |
-|             | -1)         | **-1**      | tion="0"``: | tion="-1"`` |
-|             |             |             |   Map       |             |
-|             |             |             |   oriented  |             |
-|             |             |             |   North.    |             |
-|             |             |             | |           |             |
-|             |             |             | ``orientati |             |
-|             |             |             | on="180"``: |             |
-|             |             |             |   Map       |             |
-|             |             |             |   oriented  |             |
-|             |             |             |   South.    |             |
-|             |             |             | |           |             |
-|             |             |             |  ``orientat |             |
-|             |             |             | ion="-1"``: |             |
-|             |             |             |   Map       |             |
-|             |             |             |   oriented  |             |
-|             |             |             |   in        |             |
-|             |             |             |   direction |             |
-|             |             |             |   of        |             |
-|             |             |             |   travel.   |             |
-|             |             |             | | This is   |             |
-|             |             |             |             |             |
-|             |             |             |  equivalent |             |
-|             |             |             |   to        |             |
-|             |             |             |   selecting |             |
-|             |             |             |             |             |
-|             |             |             | ``Settings  |             |
-|             |             |             | -> Rules -> |             |
-|             |             |             |  Northing`` |             |
-|             |             |             |   in the    |             |
-|             |             |             |   internal  |             |
-|             |             |             |   gui.      |             |
-+-------------+-------------+-------------+-------------+-------------+
-| tracking    |             | 0 / **1**   | | ``trac    | ``tra       |
-|             |             |             | king="1"``: | cking="1"`` |
-|             |             |             |   Vehicle   |             |
-|             |             |             |   cursor    |             |
-|             |             |             |   will lock |             |
-|             |             |             |   to the    |             |
-|             |             |             |   roads on  |             |
-|             |             |             |   the map.  |             |
-|             |             |             | | This is   |             |
-|             |             |             |             |             |
-|             |             |             |  equivalent |             |
-|             |             |             |   to        |             |
-|             |             |             |   selecting |             |
-|             |             |             |   ``Se      |             |
-|             |             |             | ttings -> R |             |
-|             |             |             | ules -> Loc |             |
-|             |             |             | k on road`` |             |
-|             |             |             |   in the    |             |
-|             |             |             |   internal  |             |
-|             |             |             |   gui.      |             |
-+-------------+-------------+-------------+-------------+-------------+
-| way         |             | **0** / 1   | | `         | ``waypoints |
-| points_flag |             |             | `waypoints_ | _flag="1"`` |
-|             |             |             | flag="1"``: |             |
-|             |             |             |   Set       |             |
-|             |             |             |             |             |
-|             |             |             | destination |             |
-|             |             |             |   will used |             |
-|             |             |             |   to add    |             |
-|             |             |             |   next      |             |
-|             |             |             |   waypoint. |             |
-|             |             |             |   Previous  |             |
-|             |             |             |             |             |
-|             |             |             | destination |             |
-|             |             |             |   will not  |             |
-|             |             |             |   deleted.  |             |
-|             |             |             | | This is   |             |
-|             |             |             |             |             |
-|             |             |             |  equivalent |             |
-|             |             |             |   to        |             |
-|             |             |             |   selecting |             |
-|             |             |             |             |             |
-|             |             |             | ``Settings  |             |
-|             |             |             | -> Rules -> |             |
-|             |             |             |  Plan with  |             |
-|             |             |             | waypoints`` |             |
-|             |             |             |   in the    |             |
-|             |             |             |   internal  |             |
-|             |             |             |   gui.      |             |
-+-------------+-------------+-------------+-------------+-------------+
-| zoom        |             | | 1 - ∞     | | ``        | ``          |
-|             |             | | **256**   | zoom="1"``: | zoom="50"`` |
-|             |             |             |   Most      |             |
-|             |             |             |   zoomed    |             |
-|             |             |             |   in. Upper |             |
-|             |             |             |   limit is  |             |
-|             |             |             |   actually  |             |
-|             |             |             |   2097152.  |             |
-|             |             |             | | Map will  |             |
-|             |             |             |   be zoomed |             |
-|             |             |             |   in at     |             |
-|             |             |             |   this      |             |
-|             |             |             |   level on  |             |
-|             |             |             |   startup.  |             |
-+-------------+-------------+-------------+-------------+-------------+
-| auto        |             | **0** / 1   | | ``        | `           |
-| zoom_active |             |             | autozoom_ac | `autozoom_a |
-|             |             |             | tive="0"``: | ctive="1"`` |
-|             |             |             |   Autozoom  |             |
-|             |             |             |   disabled. |             |
-|             |             |             | | ``        |             |
-|             |             |             | autozoom_ac |             |
-|             |             |             | tive="1"``: |             |
-|             |             |             |   Autozoom  |             |
-|             |             |             |   enabled.  |             |
-+-------------+-------------+-------------+-------------+-------------+
-| autozoom    | seconds     | | 1 - ∞     | | Number of | ``auto      |
-|             |             | | **10**    |   seconds   | zoom="60"`` |
-|             |             |             |   of the    |             |
-|             |             |             |   way ahead |             |
-|             |             |             |   to leave  |             |
-|             |             |             |   visible   |             |
-|             |             |             |   during    |             |
-|             |             |             |   autozoom. |             |
-|             |             |             | | In        |             |
-|             |             |             |   effect,   |             |
-|             |             |             |   this      |             |
-|             |             |             |   specifies |             |
-|             |             |             |   the zoom  |             |
-|             |             |             |   level     |             |
-|             |             |             |   when      |             |
-|             |             |             |   autozoom  |             |
-|             |             |             |   is        |             |
-|             |             |             |   enabled.  |             |
-|             |             |             | | ``aut     |             |
-|             |             |             | ozoom="1"`` |             |
-|             |             |             |   is        |             |
-|             |             |             |   closest   |             |
-|             |             |             |   zoom.     |             |
-|             |             |             | | This      |             |
-|             |             |             |   attribute |             |
-|             |             |             |   has no    |             |
-|             |             |             |   effect    |             |
-|             |             |             |   without   |             |
-|             |             |             |   ``        |             |
-|             |             |             | autozoom_ac |             |
-|             |             |             | tive="1"``. |             |
-+-------------+-------------+-------------+-------------+-------------+
-| imperial    |             | **0**/1     | Use         | ``imp       |
-|             |             |             | imperial    | erial="1"`` |
-|             |             |             | units       |             |
-|             |             |             | (miles,     |             |
-|             |             |             | feet and    |             |
-|             |             |             | miles       |             |
-|             |             |             | -per-hour). |             |
-|             |             |             | Only in     |             |
-|             |             |             | Navit       |             |
-|             |             |             | versions    |             |
-|             |             |             | since .     |             |
-+-------------+-------------+-------------+-------------+-------------+
-| osd_co      |             | **1** - 32  | Sets the    | ``o         |
-| nfiguration |             |             | initial     | sd_configur |
-|             |             |             | value of    | ation="1"`` |
-|             |             |             | ```os       |             |
-|             |             |             | d_configura |             |
-|             |             |             | tion`` <OSD |             |
-|             |             |             | #osd_config |             |
-|             |             |             | uration>`__ |             |
-|             |             |             | when Navit  |             |
-|             |             |             | starts up.  |             |
-+-------------+-------------+-------------+-------------+-------------+
-| pitch       | degrees     | 0 - 359     | | ``p       | ``p         |
-|             |             |             | itch="0"``: | itch="20"`` |
-|             |             |             |             |             |
-|             |             |             |  Bird's-eye |             |
-|             |             |             |   view of   |             |
-|             |             |             |   map.      |             |
-|             |             |             | | ``pi      |             |
-|             |             |             | tch="20"``: |             |
-|             |             |             |   Map       |             |
-|             |             |             |   tilted by |             |
-|             |             |             |   20        |             |
-|             |             |             |   degrees   |             |
-|             |             |             |   to give   |             |
-|             |             |             |   3D view.  |             |
-|             |             |             | | ``pit     |             |
-|             |             |             | ch="180"``: |             |
-|             |             |             |   x-axis of |             |
-|             |             |             |   the map   |             |
-|             |             |             |   seems     |             |
-|             |             |             |   inverted, |             |
-|             |             |             |   since you |             |
-|             |             |             |   are       |             |
-|             |             |             |   seeing    |             |
-|             |             |             |   the map   |             |
-|             |             |             |   "from the |             |
-|             |             |             |   bottom    |             |
-|             |             |             |   up"       |             |
-|             |             |             | | Values    |             |
-|             |             |             |   between 0 |             |
-|             |             |             |   and 85    |             |
-|             |             |             |   are       |             |
-|             |             |             |   r         |             |
-|             |             |             | ecommended. |             |
-+-------------+-------------+-------------+-------------+-------------+
-| radius      | percent     | | -50 - 50  | |           | ``ra        |
-|             |             | | **30**    |  Percentage | dius="33"`` |
-|             |             |             |   of screen |             |
-|             |             |             |   size to   |             |
-|             |             |             |   offset    |             |
-|             |             |             |   vehicle   |             |
-|             |             |             |   cursor    |             |
-|             |             |             |   from      |             |
-|             |             |             |   centre    |             |
-|             |             |             |   when      |             |
-|             |             |             |   moving.   |             |
-|             |             |             | | ``r       |             |
-|             |             |             | adius="0"`` |             |
-|             |             |             |   places    |             |
-|             |             |             |   the       |             |
-|             |             |             |   vehicle   |             |
-|             |             |             |   cursor in |             |
-|             |             |             |   the       |             |
-|             |             |             |   center of |             |
-|             |             |             |   the map.  |             |
-|             |             |             | | ``ra      |             |
-|             |             |             | dius="50"`` |             |
-|             |             |             |   places    |             |
-|             |             |             |   the       |             |
-|             |             |             |   vehicle   |             |
-|             |             |             |   cursor on |             |
-|             |             |             |   the edge  |             |
-|             |             |             |   of the    |             |
-|             |             |             |   screen,   |             |
-|             |             |             |   showing   |             |
-|             |             |             |   only the  |             |
-|             |             |             |   map in    |             |
-|             |             |             |   front of  |             |
-|             |             |             |   you       |             |
-|             |             |             | | ``rad     |             |
-|             |             |             | ius="-50"`` |             |
-|             |             |             |   places    |             |
-|             |             |             |   the       |             |
-|             |             |             |   vehicle   |             |
-|             |             |             |   cursor on |             |
-|             |             |             |   the edge  |             |
-|             |             |             |   of the    |             |
-|             |             |             |   screen,   |             |
-|             |             |             |   showing   |             |
-|             |             |             |   only the  |             |
-|             |             |             |   map       |             |
-|             |             |             |   behind    |             |
-|             |             |             |   you       |             |
-|             |             |             | | Higher    |             |
-|             |             |             |   values    |             |
-|             |             |             |   cause the |             |
-|             |             |             |   map to    |             |
-|             |             |             |   "lead"    |             |
-|             |             |             |   the       |             |
-|             |             |             |   vehicle,  |             |
-|             |             |             |   showing   |             |
-|             |             |             |   more of   |             |
-|             |             |             |   where     |             |
-|             |             |             |   you're    |             |
-|             |             |             |   going and |             |
-|             |             |             |   less of   |             |
-|             |             |             |   where     |             |
-|             |             |             |   you've    |             |
-|             |             |             |   been.     |             |
-|             |             |             |   Values    |             |
-|             |             |             |   less than |             |
-|             |             |             |   -50 or    |             |
-|             |             |             |   more than |             |
-|             |             |             |   50 are    |             |
-|             |             |             |   possible, |             |
-|             |             |             |   but the   |             |
-|             |             |             |   vehicle   |             |
-|             |             |             |   cursor    |             |
-|             |             |             |   will be   |             |
-|             |             |             |   placed    |             |
-|             |             |             |   out of    |             |
-|             |             |             |   the       |             |
-|             |             |             |   screen    |             |
-|             |             |             |   area.     |             |
-+-------------+-------------+-------------+-------------+-------------+
-| recent_dest |             | | 1 - ∞     | | Number of | ``recent_   |
-|             |             | | **10**    |   entries   | dest="20"`` |
-|             |             |             |   kept in   |             |
-|             |             |             |   desti     |             |
-|             |             |             | nation.txt. |             |
-|             |             |             |   This text |             |
-|             |             |             |   file      |             |
-|             |             |             |   stores    |             |
-|             |             |             |   the most  |             |
-|             |             |             |   recent    |             |
-|             |             |             |   d         |             |
-|             |             |             | estinations |             |
-|             |             |             |   set by    |             |
-|             |             |             |   the user  |             |
-|             |             |             |   in Navit. |             |
-|             |             |             | | Defaults  |             |
-|             |             |             |   to ∞, if  |             |
-|             |             |             |   tag isn't |             |
-|             |             |             |   set.      |             |
-+-------------+-------------+-------------+-------------+-------------+
-| timeout     | gps updates | | 1 - ∞     | When the    | ``ti        |
-|             |             | | **10**    | user        | meout="5"`` |
-|             |             |             | scrolls the |             |
-|             |             |             | map, it     |             |
-|             |             |             | stays       |             |
-|             |             |             | there.      |             |
-|             |             |             | After       |             |
-|             |             |             | ``timeout`` |             |
-|             |             |             | number of   |             |
-|             |             |             | GPS updates |             |
-|             |             |             | the map     |             |
-|             |             |             | jumps back  |             |
-|             |             |             | to the      |             |
-|             |             |             | current     |             |
-|             |             |             | location of |             |
-|             |             |             | the active  |             |
-|             |             |             | vehicle.    |             |
-|             |             |             | Since most  |             |
-|             |             |             | GPS-modules |             |
-|             |             |             | have an     |             |
-|             |             |             | update rate |             |
-|             |             |             | of 1Hz,     |             |
-|             |             |             | "gps        |             |
-|             |             |             | updates" is |             |
-|             |             |             | likely to   |             |
-|             |             |             | be          |             |
-|             |             |             | equivalent  |             |
-|             |             |             | to          |             |
-|             |             |             | "seconds"   |             |
-|             |             |             | (see )      |             |
-+-------------+-------------+-------------+-------------+-------------+
-| fo          |             | 0/**1**     | | 1 = Map   | ``follow_c  |
-| llow_cursor |             |             |   will      | ursor="0"`` |
-|             |             |             |   au        |             |
-|             |             |             | tomatically |             |
-|             |             |             |   scroll to |             |
-|             |             |             |   follow    |             |
-|             |             |             |   the       |             |
-|             |             |             |   cursor    |             |
-|             |             |             |   (active   |             |
-|             |             |             |   vehicle). |             |
-|             |             |             |   0 = Map   |             |
-|             |             |             |   will not  |             |
-|             |             |             |   follow    |             |
-|             |             |             |   the       |             |
-|             |             |             |   cursor.   |             |
-|             |             |             | | This is   |             |
-|             |             |             |             |             |
-|             |             |             |  equivalent |             |
-|             |             |             |   to        |             |
-|             |             |             |   selecting |             |
-|             |             |             |             |             |
-|             |             |             | ``Settings  |             |
-|             |             |             | -> Rules -> |             |
-|             |             |             |  Map follow |             |
-|             |             |             | s Vehicle`` |             |
-|             |             |             |   in the    |             |
-|             |             |             |   internal  |             |
-|             |             |             |   gui.      |             |
-|             |             |             | | Note:     |             |
-|             |             |             |   When      |             |
-|             |             |             |   setting   |             |
-|             |             |             |   this to   |             |
-|             |             |             |   0, you    |             |
-|             |             |             |   can still |             |
-|             |             |             |   jump to   |             |
-|             |             |             |   the       |             |
-|             |             |             |   cursor    |             |
-|             |             |             |   position  |             |
-|             |             |             |   by        |             |
-|             |             |             |   calling   |             |
-|             |             |             |   the       |             |
-|             |             |             |   `Navit    |             |
-|             |             |             |   command < |             |
-|             |             |             | OSD#Navit_c |             |
-|             |             |             | ommands>`__ |             |
-|             |             |             |   ``        |             |
-|             |             |             | set_center_ |             |
-|             |             |             | cursor()``, |             |
-|             |             |             |   for       |             |
-|             |             |             |   example   |             |
-|             |             |             |   via an    |             |
-|             |             |             |   OSD       |             |
-|             |             |             |   button    |             |
-|             |             |             |   with      |             |
-|             |             |             |             |             |
-|             |             |             |  ``command= |             |
-|             |             |             | "follow=0;s |             |
-|             |             |             | et_center_c |             |
-|             |             |             | ursor()"``. |             |
-+-------------+-------------+-------------+-------------+-------------+
++-------------+-------------+-------------+-------------+---------------------------+
+| Attribute   | Units       | Values      | Notes       | Example                   |
++=============+=============+=============+=============+===========================+
+| center      | coords      | ``DD.dd``   | | Map will  | ``center="4808 N 1134 E"``|
+|             |             | or          |   be        |                           |
+|             |             | ``DDMM.ss`` |   centred   |                           |
+|             |             |             |   at these  |                           |
+|             |             |             |             |                           |
+|             |             |             | coordinates |                           |
+|             |             |             |   on        |                           |
+|             |             |             |   startup.  |                           |
+|             |             |             |             |                           |
+|             |             |             | Coordinates |                           |
+|             |             |             |   are       |                           |
+|             |             |             |   either in |                           |
+|             |             |             |   decimal   |                           |
+|             |             |             |   degrees   |                           |
+|             |             |             |   (with     |                           |
+|             |             |             |   sign in   |                           |
+|             |             |             |   front to  |                           |
+|             |             |             |   denote    |                           |
+|             |             |             |   N/S or    |                           |
+|             |             |             |   E/W) or   |                           |
+|             |             |             |   decimal   |                           |
+|             |             |             |   minutes   |                           |
+|             |             |             |   with      |                           |
+|             |             |             |   trailing  |                           |
+|             |             |             |   N/S or    |                           |
+|             |             |             |   E/W where |                           |
+|             |             |             |   a         |                           |
+|             |             |             | ppropriate. |                           |
+|             |             |             | |           |                           |
+|             |             |             |  **Default: |                           |
+|             |             |             |   ``53.1    |                           |
+|             |             |             | 3 11.70``** |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| orientation | degrees (or | 0-360 /     | | ``orienta | ``orientation="-1"``      |
+|             | -1)         | **-1**      | tion="0"``: |                           |
+|             |             |             |   Map       |                           |
+|             |             |             |   oriented  |                           |
+|             |             |             |   North.    |                           |
+|             |             |             | |           |                           |
+|             |             |             | ``orientati |                           |
+|             |             |             | on="180"``: |                           |
+|             |             |             |   Map       |                           |
+|             |             |             |   oriented  |                           |
+|             |             |             |   South.    |                           |
+|             |             |             | |           |                           |
+|             |             |             |  ``orientat |                           |
+|             |             |             | ion="-1"``: |                           |
+|             |             |             |   Map       |                           |
+|             |             |             |   oriented  |                           |
+|             |             |             |   in        |                           |
+|             |             |             |   direction |                           |
+|             |             |             |   of        |                           |
+|             |             |             |   travel.   |                           |
+|             |             |             | | This is   |                           |
+|             |             |             |             |                           |
+|             |             |             |  equivalent |                           |
+|             |             |             |   to        |                           |
+|             |             |             |   selecting |                           |
+|             |             |             |             |                           |
+|             |             |             | ``Settings  |                           |
+|             |             |             | -> Rules -> |                           |
+|             |             |             |  Northing`` |                           |
+|             |             |             |   in the    |                           |
+|             |             |             |   internal  |                           |
+|             |             |             |   gui.      |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| tracking    |             | 0 / **1**   | | ``trac    | ``tracking="1"``          |
+|             |             |             | king="1"``: |                           |
+|             |             |             |   Vehicle   |                           |
+|             |             |             |   cursor    |                           |
+|             |             |             |   will lock |                           |
+|             |             |             |   to the    |                           |
+|             |             |             |   roads on  |                           |
+|             |             |             |   the map.  |                           |
+|             |             |             | | This is   |                           |
+|             |             |             |             |                           |
+|             |             |             |  equivalent |                           |
+|             |             |             |   to        |                           |
+|             |             |             |   selecting |                           |
+|             |             |             |   ``Se      |                           |
+|             |             |             | ttings -> R |                           |
+|             |             |             | ules -> Loc |                           |
+|             |             |             | k on road`` |                           |
+|             |             |             |   in the    |                           |
+|             |             |             |   internal  |                           |
+|             |             |             |   gui.      |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| way         |             | **0** / 1   | | `         | ``waypoints_flag="1"``    |
+| points_flag |             |             | `waypoints_ |                           |
+|             |             |             | flag="1"``: |                           |
+|             |             |             |   Set       |                           |
+|             |             |             |             |                           |
+|             |             |             | destination |                           |
+|             |             |             |   will used |                           |
+|             |             |             |   to add    |                           |
+|             |             |             |   next      |                           |
+|             |             |             |   waypoint. |                           |
+|             |             |             |   Previous  |                           |
+|             |             |             |             |                           |
+|             |             |             | destination |                           |
+|             |             |             |   will not  |                           |
+|             |             |             |   deleted.  |                           |
+|             |             |             | | This is   |                           |
+|             |             |             |             |                           |
+|             |             |             |  equivalent |                           |
+|             |             |             |   to        |                           |
+|             |             |             |   selecting |                           |
+|             |             |             |             |                           |
+|             |             |             | ``Settings  |                           |
+|             |             |             | -> Rules -> |                           |
+|             |             |             |  Plan with  |                           |
+|             |             |             | waypoints`` |                           |
+|             |             |             |   in the    |                           |
+|             |             |             |   internal  |                           |
+|             |             |             |   gui.      |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| zoom        |             | | 1 - ∞     | | ``        | ``zoom="50"``             |
+|             |             | | **256**   | zoom="1"``: |                           |
+|             |             |             |   Most      |                           |
+|             |             |             |   zoomed    |                           |
+|             |             |             |   in. Upper |                           |
+|             |             |             |   limit is  |                           |
+|             |             |             |   actually  |                           |
+|             |             |             |   2097152.  |                           |
+|             |             |             | | Map will  |                           |
+|             |             |             |   be zoomed |                           |
+|             |             |             |   in at     |                           |
+|             |             |             |   this      |                           |
+|             |             |             |   level on  |                           |
+|             |             |             |   startup.  |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| auto        |             | **0** / 1   | | ``        | ``autozoom_active="1"``   |
+| zoom_active |             |             | autozoom_ac |                           |
+|             |             |             | tive="0"``: |                           |
+|             |             |             |   Autozoom  |                           |
+|             |             |             |   disabled. |                           |
+|             |             |             | | ``        |                           |
+|             |             |             | autozoom_ac |                           |
+|             |             |             | tive="1"``: |                           |
+|             |             |             |   Autozoom  |                           |
+|             |             |             |   enabled.  |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| autozoom    | seconds     | | 1 - ∞     | | Number of | ``autozoom="60"``         |
+|             |             | | **10**    |   seconds   |                           |
+|             |             |             |   of the    |                           |
+|             |             |             |   way ahead |                           |
+|             |             |             |   to leave  |                           |
+|             |             |             |   visible   |                           |
+|             |             |             |   during    |                           |
+|             |             |             |   autozoom. |                           |
+|             |             |             | | In        |                           |
+|             |             |             |   effect,   |                           |
+|             |             |             |   this      |                           |
+|             |             |             |   specifies |                           |
+|             |             |             |   the zoom  |                           |
+|             |             |             |   level     |                           |
+|             |             |             |   when      |                           |
+|             |             |             |   autozoom  |                           |
+|             |             |             |   is        |                           |
+|             |             |             |   enabled.  |                           |
+|             |             |             | | ``aut     |                           |
+|             |             |             | ozoom="1"`` |                           |
+|             |             |             |   is        |                           |
+|             |             |             |   closest   |                           |
+|             |             |             |   zoom.     |                           |
+|             |             |             | | This      |                           |
+|             |             |             |   attribute |                           |
+|             |             |             |   has no    |                           |
+|             |             |             |   effect    |                           |
+|             |             |             |   without   |                           |
+|             |             |             |   ``        |                           |
+|             |             |             | autozoom_ac |                           |
+|             |             |             | tive="1"``. |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| imperial    |             | **0**/1     | Use         | ``imperial="1"``          |
+|             |             |             | imperial    |                           |
+|             |             |             | units       |                           |
+|             |             |             | (miles,     |                           |
+|             |             |             | feet and    |                           |
+|             |             |             | miles       |                           |
+|             |             |             | -per-hour). |                           |
+|             |             |             | Only in     |                           |
+|             |             |             | Navit       |                           |
+|             |             |             | versions    |                           |
+|             |             |             | since .     |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| osd_co      |             | **1** - 32  | Sets the    | ``osd_configuration="1"`` |
+| nfiguration |             |             | initial     |                           |
+|             |             |             | value of    |                           |
+|             |             |             | ```os       |                           |
+|             |             |             | d_configura |                           |
+|             |             |             | tion`` <OSD |                           |
+|             |             |             | #osd_config |                           |
+|             |             |             | uration>`__ |                           |
+|             |             |             | when Navit  |                           |
+|             |             |             | starts up.  |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| pitch       | degrees     | 0 - 359     | | ``p       | ``pitch="20"``            |
+|             |             |             | itch="0"``: |                           |
+|             |             |             |             |                           |
+|             |             |             |  Bird's-eye |                           |
+|             |             |             |   view of   |                           |
+|             |             |             |   map.      |                           |
+|             |             |             | | ``pi      |                           |
+|             |             |             | tch="20"``: |                           |
+|             |             |             |   Map       |                           |
+|             |             |             |   tilted by |                           |
+|             |             |             |   20        |                           |
+|             |             |             |   degrees   |                           |
+|             |             |             |   to give   |                           |
+|             |             |             |   3D view.  |                           |
+|             |             |             | | ``pit     |                           |
+|             |             |             | ch="180"``: |                           |
+|             |             |             |   x-axis of |                           |
+|             |             |             |   the map   |                           |
+|             |             |             |   seems     |                           |
+|             |             |             |   inverted, |                           |
+|             |             |             |   since you |                           |
+|             |             |             |   are       |                           |
+|             |             |             |   seeing    |                           |
+|             |             |             |   the map   |                           |
+|             |             |             |   "from the |                           |
+|             |             |             |   bottom    |                           |
+|             |             |             |   up"       |                           |
+|             |             |             | | Values    |                           |
+|             |             |             |   between 0 |                           |
+|             |             |             |   and 85    |                           |
+|             |             |             |   are       |                           |
+|             |             |             |   r         |                           |
+|             |             |             | ecommended. |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| radius      | percent     | | -50 - 50  | |           | ``radius="33"``           |
+|             |             | | **30**    |  Percentage |                           |
+|             |             |             |   of screen |                           |
+|             |             |             |   size to   |                           |
+|             |             |             |   offset    |                           |
+|             |             |             |   vehicle   |                           |
+|             |             |             |   cursor    |                           |
+|             |             |             |   from      |                           |
+|             |             |             |   centre    |                           |
+|             |             |             |   when      |                           |
+|             |             |             |   moving.   |                           |
+|             |             |             | | ``r       |                           |
+|             |             |             | adius="0"`` |                           |
+|             |             |             |   places    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   vehicle   |                           |
+|             |             |             |   cursor in |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   center of |                           |
+|             |             |             |   the map.  |                           |
+|             |             |             | | ``ra      |                           |
+|             |             |             | dius="50"`` |                           |
+|             |             |             |   places    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   vehicle   |                           |
+|             |             |             |   cursor on |                           |
+|             |             |             |   the edge  |                           |
+|             |             |             |   of the    |                           |
+|             |             |             |   screen,   |                           |
+|             |             |             |   showing   |                           |
+|             |             |             |   only the  |                           |
+|             |             |             |   map in    |                           |
+|             |             |             |   front of  |                           |
+|             |             |             |   you       |                           |
+|             |             |             | | ``rad     |                           |
+|             |             |             | ius="-50"`` |                           |
+|             |             |             |   places    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   vehicle   |                           |
+|             |             |             |   cursor on |                           |
+|             |             |             |   the edge  |                           |
+|             |             |             |   of the    |                           |
+|             |             |             |   screen,   |                           |
+|             |             |             |   showing   |                           |
+|             |             |             |   only the  |                           |
+|             |             |             |   map       |                           |
+|             |             |             |   behind    |                           |
+|             |             |             |   you       |                           |
+|             |             |             | | Higher    |                           |
+|             |             |             |   values    |                           |
+|             |             |             |   cause the |                           |
+|             |             |             |   map to    |                           |
+|             |             |             |   "lead"    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   vehicle,  |                           |
+|             |             |             |   showing   |                           |
+|             |             |             |   more of   |                           |
+|             |             |             |   where     |                           |
+|             |             |             |   you're    |                           |
+|             |             |             |   going and |                           |
+|             |             |             |   less of   |                           |
+|             |             |             |   where     |                           |
+|             |             |             |   you've    |                           |
+|             |             |             |   been.     |                           |
+|             |             |             |   Values    |                           |
+|             |             |             |   less than |                           |
+|             |             |             |   -50 or    |                           |
+|             |             |             |   more than |                           |
+|             |             |             |   50 are    |                           |
+|             |             |             |   possible, |                           |
+|             |             |             |   but the   |                           |
+|             |             |             |   vehicle   |                           |
+|             |             |             |   cursor    |                           |
+|             |             |             |   will be   |                           |
+|             |             |             |   placed    |                           |
+|             |             |             |   out of    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   screen    |                           |
+|             |             |             |   area.     |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| recent_dest |             | | 1 - ∞     | | Number of | ``recent_dest="20"``      |
+|             |             | | **10**    |   entries   |                           |
+|             |             |             |   kept in   |                           |
+|             |             |             |   desti     |                           |
+|             |             |             | nation.txt. |                           |
+|             |             |             |   This text |                           |
+|             |             |             |   file      |                           |
+|             |             |             |   stores    |                           |
+|             |             |             |   the most  |                           |
+|             |             |             |   recent    |                           |
+|             |             |             |   d         |                           |
+|             |             |             | estinations |                           |
+|             |             |             |   set by    |                           |
+|             |             |             |   the user  |                           |
+|             |             |             |   in Navit. |                           |
+|             |             |             | | Defaults  |                           |
+|             |             |             |   to ∞, if  |                           |
+|             |             |             |   tag isn't |                           |
+|             |             |             |   set.      |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| timeout     | gps updates | | 1 - ∞     | When the    | ``timeout="5"``           |
+|             |             | | **10**    | user        |                           |
+|             |             |             | scrolls the |                           |
+|             |             |             | map, it     |                           |
+|             |             |             | stays       |                           |
+|             |             |             | there.      |                           |
+|             |             |             | After       |                           |
+|             |             |             | ``timeout`` |                           |
+|             |             |             | number of   |                           |
+|             |             |             | GPS updates |                           |
+|             |             |             | the map     |                           |
+|             |             |             | jumps back  |                           |
+|             |             |             | to the      |                           |
+|             |             |             | current     |                           |
+|             |             |             | location of |                           |
+|             |             |             | the active  |                           |
+|             |             |             | vehicle.    |                           |
+|             |             |             | Since most  |                           |
+|             |             |             | GPS-modules |                           |
+|             |             |             | have an     |                           |
+|             |             |             | update rate |                           |
+|             |             |             | of 1Hz,     |                           |
+|             |             |             | "gps        |                           |
+|             |             |             | updates" is |                           |
+|             |             |             | likely to   |                           |
+|             |             |             | be          |                           |
+|             |             |             | equivalent  |                           |
+|             |             |             | to          |                           |
+|             |             |             | "seconds"   |                           |
+|             |             |             | (see )      |                           |
++-------------+-------------+-------------+-------------+---------------------------+
+| fo          |             | 0/**1**     | | 1 = Map   | ``follow_cursor="0"``     |
+| llow_cursor |             |             |   will      |                           |
+|             |             |             |   au        |                           |
+|             |             |             | tomatically |                           |
+|             |             |             |   scroll to |                           |
+|             |             |             |   follow    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   cursor    |                           |
+|             |             |             |   (active   |                           |
+|             |             |             |   vehicle). |                           |
+|             |             |             |   0 = Map   |                           |
+|             |             |             |   will not  |                           |
+|             |             |             |   follow    |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   cursor.   |                           |
+|             |             |             | | This is   |                           |
+|             |             |             |             |                           |
+|             |             |             |  equivalent |                           |
+|             |             |             |   to        |                           |
+|             |             |             |   selecting |                           |
+|             |             |             |             |                           |
+|             |             |             | ``Settings  |                           |
+|             |             |             | -> Rules -> |                           |
+|             |             |             |  Map follow |                           |
+|             |             |             | s Vehicle`` |                           |
+|             |             |             |   in the    |                           |
+|             |             |             |   internal  |                           |
+|             |             |             |   gui.      |                           |
+|             |             |             | | Note:     |                           |
+|             |             |             |   When      |                           |
+|             |             |             |   setting   |                           |
+|             |             |             |   this to   |                           |
+|             |             |             |   0, you    |                           |
+|             |             |             |   can still |                           |
+|             |             |             |   jump to   |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   cursor    |                           |
+|             |             |             |   position  |                           |
+|             |             |             |   by        |                           |
+|             |             |             |   calling   |                           |
+|             |             |             |   the       |                           |
+|             |             |             |   `Navit    |                           |
+|             |             |             |   command < |                           |
+|             |             |             | OSD#Navit_c |                           |
+|             |             |             | ommands>`__ |                           |
+|             |             |             |   ``        |                           |
+|             |             |             | set_center_ |                           |
+|             |             |             | cursor()``, |                           |
+|             |             |             |   for       |                           |
+|             |             |             |   example   |                           |
+|             |             |             |   via an    |                           |
+|             |             |             |   OSD       |                           |
+|             |             |             |   button    |                           |
+|             |             |             |   with      |                           |
+|             |             |             |             |                           |
+|             |             |             |  ``command= |                           |
+|             |             |             | "follow=0;s |                           |
+|             |             |             | et_center_c |                           |
+|             |             |             | ursor()"``. |                           |
++-------------+-------------+-------------+-------------+---------------------------+
 
 graphics
 --------
 
 .. table:: style="text-align:left;" \| Insert inbetween \ ``...``\  tags
 
-   +--------------+--------+--------------+--------------+--------------+
-   | Attribute    | Units  | Values       | Notes        | Example      |
-   +==============+========+==============+==============+==============+
-   | type         |        | | ``gtk_dr   | Type of      | ``t          |
-   |              |        | awing_area`` | graphics to  | ype="gtk_dra |
-   |              |        | | ``q        | use for      | wing_area"`` |
-   |              |        | t_qpainter`` | display.     |              |
-   |              |        | | ``qt5``    |              |              |
-   |              |        | | ``sdl``    |              |              |
-   |              |        | | ``opengl`` |              |              |
-   |              |        | | ``win32``  |              |              |
-   |              |        | |            |              |              |
-   |              |        |  ``android`` |              |              |
-   |              |        | | ``cocoa``  |              |              |
-   |              |        | | ``gd``     |              |              |
-   |              |        | | ``null``   |              |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | x            | pixels | numeric      | Application  | ``x="10"``   |
-   |              |        |              | window x     |              |
-   |              |        |              | position on  |              |
-   |              |        |              | the screen.  |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | y            | pixels | numeric      | Application  | ``y="10"``   |
-   |              |        |              | window y     |              |
-   |              |        |              | position on  |              |
-   |              |        |              | the screen.  |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | w            | pixels | numeric      | Application  | ``w="600"``  |
-   |              |        |              | window       |              |
-   |              |        |              | width.       |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | h            | pixels | numeric      | Application  | ``h="400"``  |
-   |              |        |              | window       |              |
-   |              |        |              | height.      |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | back         |        | color        | Background   | ``color="    |
-   | ground_color |        |              | color for    | #00000060"`` |
-   |              |        |              | screen       |              |
-   |              |        |              | portions     |              |
-   |              |        |              | overlapped   |              |
-   |              |        |              | by the       |              |
-   |              |        |              | system UI (  |              |
-   |              |        |              | and later,   |              |
-   |              |        |              | currently    |              |
-   |              |        |              | meaningful   |              |
-   |              |        |              | on Android   |              |
-   |              |        |              | only)        |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | qt5_widget   |        | | ``qml``    | Qt5 widget   | ``qt_wi      |
-   |              |        | |            | technology.  | dget="qml"`` |
-   |              |        |  ``qwidget`` | Only         |              |
-   |              |        |              | meaningful   |              |
-   |              |        |              | if using qt5 |              |
-   |              |        |              | graphics     |              |
-   |              |        |              | with both    |              |
-   |              |        |              | technologies |              |
-   |              |        |              | enabled on   |              |
-   |              |        |              | build.       |              |
-   +--------------+--------+--------------+--------------+--------------+
-   | qt5_platform |        | See Qt5      | Qt5 platform | ``qt5_plat   |
-   |              |        | d            | plugin to    | form="xcb"`` |
-   |              |        | ocumentation | use. Only    |              |
-   |              |        |              | meaningful   |              |
-   |              |        |              | if using qt5 |              |
-   |              |        |              | graphics.    |              |
-   +--------------+--------+--------------+--------------+--------------+
+   +--------------+--------+--------------+--------------+----------------------------+
+   | Attribute    | Units  | Values       | Notes        | Example                    |
+   +==============+========+==============+==============+============================+
+   | type         |        | | ``gtk_dr   | Type of      | ``type="gtk_drawing_area"``|
+   |              |        | awing_area`` | graphics to  |                            |
+   |              |        | | ``q        | use for      |                            |
+   |              |        | t_qpainter`` | display.     |                            |
+   |              |        | | ``qt5``    |              |                            |
+   |              |        | | ``sdl``    |              |                            |
+   |              |        | | ``opengl`` |              |                            |
+   |              |        | | ``win32``  |              |                            |
+   |              |        | |            |              |                            |
+   |              |        |  ``android`` |              |                            |
+   |              |        | | ``cocoa``  |              |                            |
+   |              |        | | ``gd``     |              |                            |
+   |              |        | | ``null``   |              |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | x            | pixels | numeric      | Application  | ``x="10"``                 |
+   |              |        |              | window x     |                            |
+   |              |        |              | position on  |                            |
+   |              |        |              | the screen.  |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | y            | pixels | numeric      | Application  | ``y="10"``                 |
+   |              |        |              | window y     |                            |
+   |              |        |              | position on  |                            |
+   |              |        |              | the screen.  |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | w            | pixels | numeric      | Application  | ``w="600"``                |
+   |              |        |              | window       |                            |
+   |              |        |              | width.       |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | h            | pixels | numeric      | Application  | ``h="400"``                |
+   |              |        |              | window       |                            |
+   |              |        |              | height.      |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | back         |        | color        | Background   | ``color="#00000060"``      |
+   | ground_color |        |              | color for    |                            |
+   |              |        |              | screen       |                            |
+   |              |        |              | portions     |                            |
+   |              |        |              | overlapped   |                            |
+   |              |        |              | by the       |                            |
+   |              |        |              | system UI (  |                            |
+   |              |        |              | and later,   |                            |
+   |              |        |              | currently    |                            |
+   |              |        |              | meaningful   |                            |
+   |              |        |              | on Android   |                            |
+   |              |        |              | only)        |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | qt5_widget   |        | | ``qml``    | Qt5 widget   | ``qt_widget="qml"``        |
+   |              |        | |            | technology.  |                            |
+   |              |        |  ``qwidget`` | Only         |                            |
+   |              |        |              | meaningful   |                            |
+   |              |        |              | if using qt5 |                            |
+   |              |        |              | graphics     |                            |
+   |              |        |              | with both    |                            |
+   |              |        |              | technologies |                            |
+   |              |        |              | enabled on   |                            |
+   |              |        |              | build.       |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
+   | qt5_platform |        | See Qt5      | Qt5 platform | ``qt5_platform="xcb"``     |
+   |              |        | d            | plugin to    |                            |
+   |              |        | ocumentation | use. Only    |                            |
+   |              |        |              | meaningful   |                            |
+   |              |        |              | if using qt5 |                            |
+   |              |        |              | graphics.    |                            |
+   +--------------+--------+--------------+--------------+----------------------------+
 
 gui
 ---
 
 .. table:: style="text-align:left;" \| Insert inbetween \ ``...``\  tags
 
-   +-------------+-------------+-------------+-------------+-------------+
-   | Attribute   | Units       | Values      | Notes       | Example     |
-   +=============+=============+=============+=============+=============+
-   | type        |             | | ``gtk``   | Type of     | ``type="    |
-   |             |             | | `         | user        | internal"`` |
-   |             |             | `internal`` | interface   |             |
-   |             |             | | ``qml``   | to use      |             |
-   |             |             | | ``cegui`` |             |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | enabled     |             | ``yes`` /   | Enable this | ``enab      |
-   |             |             | ``no``      | user        | led="yes"`` |
-   |             |             |             | interface.  |             |
-   |             |             |             | This        |             |
-   |             |             |             | attribute   |             |
-   |             |             |             | enables you |             |
-   |             |             |             | to define   |             |
-   |             |             |             | multiple    |             |
-   |             |             |             | user        |             |
-   |             |             |             | interfaces  |             |
-   |             |             |             | within      |             |
-   |             |             |             | navit.xml   |             |
-   |             |             |             | (i.e.       |             |
-   |             |             |             | multiple    |             |
-   |             |             |             | \ ``...``\  |             |
-   |             |             |             | tags), and  |             |
-   |             |             |             | quickly     |             |
-   |             |             |             | switch      |             |
-   |             |             |             | between     |             |
-   |             |             |             | them by     |             |
-   |             |             |             | changing    |             |
-   |             |             |             | the         |             |
-   |             |             |             | ``enabled`` |             |
-   |             |             |             | status.     |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | font_size   | Pt          | 1 - ∞       | The base    | ``font_s    |
-   |             | fractions   |             | text size   | ize="350"`` |
-   |             |             |             | to use for  |             |
-   |             |             |             | text and    |             |
-   |             |             |             | labels in   |             |
-   |             |             |             | the menus.  |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | icon_xs     | pixels      | 1 - ∞       | The size    | ``ico       |
-   |             |             |             | that        | n_xs="32"`` |
-   |             |             |             | extra-small |             |
-   |             |             |             | style icons |             |
-   |             |             |             | should be   |             |
-   |             |             |             | scaled to   |             |
-   |             |             |             | (e.g.       |             |
-   |             |             |             | country     |             |
-   |             |             |             | flag on     |             |
-   |             |             |             | town        |             |
-   |             |             |             | search).    |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | icon_s      | pixels      | 1 - ∞       | The size    | ``ic        |
-   |             |             |             | that small  | on_s="96"`` |
-   |             |             |             | style icons |             |
-   |             |             |             | should be   |             |
-   |             |             |             | scaled to   |             |
-   |             |             |             | (e.g. icons |             |
-   |             |             |             | of internal |             |
-   |             |             |             | GUI         |             |
-   |             |             |             | toolbar).   |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | icon_l      | pixels      | 1 - ∞       | The size    | ``ic        |
-   |             |             |             | that large  | on_l="96"`` |
-   |             |             |             | style icons |             |
-   |             |             |             | should be   |             |
-   |             |             |             | scaled to   |             |
-   |             |             |             | (e.g. icons |             |
-   |             |             |             | of internal |             |
-   |             |             |             | GUI menu).  |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | keyboard    |             | **true** /  | Whether to  | ``keyboar   |
-   |             |             | false       | display     | d="false"`` |
-   |             |             |             | Navit's     |             |
-   |             |             |             | internal    |             |
-   |             |             |             | keyboard in |             |
-   |             |             |             | search. Set |             |
-   |             |             |             | to          |             |
-   |             |             |             | ``false``   |             |
-   |             |             |             | if you want |             |
-   |             |             |             | to use your |             |
-   |             |             |             | device's    |             |
-   |             |             |             | physical    |             |
-   |             |             |             | keyboard or |             |
-   |             |             |             | the OS      |             |
-   |             |             |             | on-screen   |             |
-   |             |             |             | keyboard    |             |
-   |             |             |             | instead of  |             |
-   |             |             |             | Navit's     |             |
-   |             |             |             | on-screen   |             |
-   |             |             |             | keyboard.   |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | fullscreen  |             | 0 / 1       | ``fullsc    | ``fulls     |
-   |             |             |             | reen="1"``: | creen="1"`` |
-   |             |             |             | Start Navit |             |
-   |             |             |             | in          |             |
-   |             |             |             | fullscreen  |             |
-   |             |             |             | mode        |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | menubar     |             | 0 / 1       | Toggle      | ``me        |
-   |             |             |             | display of  | nubar="1"`` |
-   |             |             |             | the menu    |             |
-   |             |             |             | bar. This   |             |
-   |             |             |             | only        |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``t         |             |
-   |             |             |             | ype="gtk"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | menu_o      |             | 0 / **1**   | Toggles the | ``m         |
-   | n_map_click |             |             | ability to  | enu_on_map_ |
-   |             |             |             | bring up    | click="0"`` |
-   |             |             |             | the menu    |             |
-   |             |             |             | screen when |             |
-   |             |             |             | clicking on |             |
-   |             |             |             | the map.    |             |
-   |             |             |             | When using  |             |
-   |             |             |             | ``m         |             |
-   |             |             |             | enu_on_map_ |             |
-   |             |             |             | click="0"`` |             |
-   |             |             |             | it is       |             |
-   |             |             |             | recommended |             |
-   |             |             |             | to use an   |             |
-   |             |             |             | `OSD        |             |
-   |             |             |             | button <OSD |             |
-   |             |             |             | #button>`__ |             |
-   |             |             |             | with the    |             |
-   |             |             |             | `command    |             |
-   |             |             |             | ``gui.      |             |
-   |             |             |             | menu()`` <O |             |
-   |             |             |             | SD#Navit_co |             |
-   |             |             |             | mmands>`__, |             |
-   |             |             |             | or else you |             |
-   |             |             |             | can't get   |             |
-   |             |             |             | to the menu |             |
-   |             |             |             | screen!     |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | o           |             | navit       | You may     | ``on        |
-   | n_map_click |             | command     | specify a   | _map_click= |
-   |             |             |             | command to  | 'menu("#Map |
-   |             |             |             | execute     |  Point")'`` |
-   |             |             |             | when        |             |
-   |             |             |             | entering    |             |
-   |             |             |             | internal    |             |
-   |             |             |             | gui by      |             |
-   |             |             |             | clicking on |             |
-   |             |             |             | the map.    |             |
-   |             |             |             | The example |             |
-   |             |             |             | provided    |             |
-   |             |             |             | allows to   |             |
-   |             |             |             | enter       |             |
-   |             |             |             | directly to |             |
-   |             |             |             | operations  |             |
-   |             |             |             | related to  |             |
-   |             |             |             | the clicked |             |
-   |             |             |             | map point.  |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="    |             |
-   |             |             |             | internal"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | toolbar     |             | 0 / 1       | Toggle      | ``to        |
-   |             |             |             | display of  | olbar="1"`` |
-   |             |             |             | the         |             |
-   |             |             |             | toolbar.    |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``t         |             |
-   |             |             |             | ype="gtk"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | statusbar   |             | 0 / 1       | Toggle      | ``stat      |
-   |             |             |             | display of  | usbar="1"`` |
-   |             |             |             | the status  |             |
-   |             |             |             | bar. This   |             |
-   |             |             |             | only        |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``t         |             |
-   |             |             |             | ype="gtk"`` |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | skin        |             |             |             |             |
-   +-------------+-------------+-------------+-------------+-------------+
-   | hid         |             | 0 / 1       | When        | ``hide_impo |
-   | e_impossibl |             |             | searching a | ssible_next |
-   | e_next_keys |             |             | country/    | _keys="1"`` |
-   |             |             |             | town/street |             |
-   |             |             |             | using the   |             |
-   |             |             |             | on-screen   |             |
-   |             |             |             | keyboard,   |             |
-   |             |             |             | instead of  |             |
-   |             |             |             | h           |             |
-   |             |             |             | ighlighting |             |
-   |             |             |             | possible    |             |
-   |             |             |             | keys based  |             |
-   |             |             |             | on current  |             |
-   |             |             |             | search      |             |
-   |             |             |             | result,     |             |
-   |             |             |             | hide        |             |
-   |             |             |             | impossible  |             |
-   |             |             |             | keys.       |             |
-   |             |             |             | P           |             |
-   |             |             |             | articularly |             |
-   |             |             |             | useful when |             |
-   |             |             |             | using a     |             |
-   |             |             |             | rotary      |             |
-   |             |             |             | encoder or  |             |
-   |             |             |             | cursor keys |             |
-   |             |             |             | to operate  |             |
-   |             |             |             | the         |             |
-   |             |             |             | keyboard,   |             |
-   |             |             |             | as there    |             |
-   |             |             |             | are less    |             |
-   |             |             |             | keys to     |             |
-   |             |             |             | traverse.   |             |
-   |             |             |             | This only   |             |
-   |             |             |             | applies     |             |
-   |             |             |             | when        |             |
-   |             |             |             | ``type="i   |             |
-   |             |             |             | nternal"``. |             |
-   +-------------+-------------+-------------+-------------+-------------+
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | Attribute   | Units       | Values      | Notes       | Example                             |
+   +=============+=============+=============+=============+=====================================+
+   | type        |             | | ``gtk``   | Type of     | ``type="internal"``                 |
+   |             |             | | `         | user        |                                     |
+   |             |             | `internal`` | interface   |                                     |
+   |             |             | | ``qml``   | to use      |                                     |
+   |             |             | | ``cegui`` |             |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | enabled     |             | ``yes`` /   | Enable this | ``enabled="yes"``                   |
+   |             |             | ``no``      | user        |                                     |
+   |             |             |             | interface.  |                                     |
+   |             |             |             | This        |                                     |
+   |             |             |             | attribute   |                                     |
+   |             |             |             | enables you |                                     |
+   |             |             |             | to define   |                                     |
+   |             |             |             | multiple    |                                     |
+   |             |             |             | user        |                                     |
+   |             |             |             | interfaces  |                                     |
+   |             |             |             | within      |                                     |
+   |             |             |             | navit.xml   |                                     |
+   |             |             |             | (i.e.       |                                     |
+   |             |             |             | multiple    |                                     |
+   |             |             |             | \ ``...``\  |                                     |
+   |             |             |             | tags), and  |                                     |
+   |             |             |             | quickly     |                                     |
+   |             |             |             | switch      |                                     |
+   |             |             |             | between     |                                     |
+   |             |             |             | them by     |                                     |
+   |             |             |             | changing    |                                     |
+   |             |             |             | the         |                                     |
+   |             |             |             | ``enabled`` |                                     |
+   |             |             |             | status.     |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | font_size   | Pt          | 1 - ∞       | The base    | ``font_size="350"``                 |
+   |             | fractions   |             | text size   |                                     |
+   |             |             |             | to use for  |                                     |
+   |             |             |             | text and    |                                     |
+   |             |             |             | labels in   |                                     |
+   |             |             |             | the menus.  |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | icon_xs     | pixels      | 1 - ∞       | The size    | ``icon_xs="32"``                    |
+   |             |             |             | that        |                                     |
+   |             |             |             | extra-small |                                     |
+   |             |             |             | style icons |                                     |
+   |             |             |             | should be   |                                     |
+   |             |             |             | scaled to   |                                     |
+   |             |             |             | (e.g.       |                                     |
+   |             |             |             | country     |                                     |
+   |             |             |             | flag on     |                                     |
+   |             |             |             | town        |                                     |
+   |             |             |             | search).    |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | icon_s      | pixels      | 1 - ∞       | The size    | ``icon_s="96"``                     |
+   |             |             |             | that small  |                                     |
+   |             |             |             | style icons |                                     |
+   |             |             |             | should be   |                                     |
+   |             |             |             | scaled to   |                                     |
+   |             |             |             | (e.g. icons |                                     |
+   |             |             |             | of internal |                                     |
+   |             |             |             | GUI         |                                     |
+   |             |             |             | toolbar).   |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | icon_l      | pixels      | 1 - ∞       | The size    | ``icon_l="96"``                     |
+   |             |             |             | that large  |                                     |
+   |             |             |             | style icons |                                     |
+   |             |             |             | should be   |                                     |
+   |             |             |             | scaled to   |                                     |
+   |             |             |             | (e.g. icons |                                     |
+   |             |             |             | of internal |                                     |
+   |             |             |             | GUI menu).  |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | keyboard    |             | **true** /  | Whether to  | ``keyboard="false"``                |
+   |             |             | false       | display     |                                     |
+   |             |             |             | Navit's     |                                     |
+   |             |             |             | internal    |                                     |
+   |             |             |             | keyboard in |                                     |
+   |             |             |             | search. Set |                                     |
+   |             |             |             | to          |                                     |
+   |             |             |             | ``false``   |                                     |
+   |             |             |             | if you want |                                     |
+   |             |             |             | to use your |                                     |
+   |             |             |             | device's    |                                     |
+   |             |             |             | physical    |                                     |
+   |             |             |             | keyboard or |                                     |
+   |             |             |             | the OS      |                                     |
+   |             |             |             | on-screen   |                                     |
+   |             |             |             | keyboard    |                                     |
+   |             |             |             | instead of  |                                     |
+   |             |             |             | Navit's     |                                     |
+   |             |             |             | on-screen   |                                     |
+   |             |             |             | keyboard.   |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | fullscreen  |             | 0 / 1       | ``fullsc    | ``fullscreen="1"``                  |
+   |             |             |             | reen="1"``: |                                     |
+   |             |             |             | Start Navit |                                     |
+   |             |             |             | in          |                                     |
+   |             |             |             | fullscreen  |                                     |
+   |             |             |             | mode        |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | menubar     |             | 0 / 1       | Toggle      | ``menubar="1"``                     |
+   |             |             |             | display of  |                                     |
+   |             |             |             | the menu    |                                     |
+   |             |             |             | bar. This   |                                     |
+   |             |             |             | only        |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``t         |                                     |
+   |             |             |             | ype="gtk"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | menu_o      |             | 0 / **1**   | Toggles the | ``menu_on_map_click="0"``           |
+   | n_map_click |             |             | ability to  |                                     |
+   |             |             |             | bring up    |                                     |
+   |             |             |             | the menu    |                                     |
+   |             |             |             | screen when |                                     |
+   |             |             |             | clicking on |                                     |
+   |             |             |             | the map.    |                                     |
+   |             |             |             | When using  |                                     |
+   |             |             |             | ``m         |                                     |
+   |             |             |             | enu_on_map_ |                                     |
+   |             |             |             | click="0"`` |                                     |
+   |             |             |             | it is       |                                     |
+   |             |             |             | recommended |                                     |
+   |             |             |             | to use an   |                                     |
+   |             |             |             | `OSD        |                                     |
+   |             |             |             | button <OSD |                                     |
+   |             |             |             | #button>`__ |                                     |
+   |             |             |             | with the    |                                     |
+   |             |             |             | `command    |                                     |
+   |             |             |             | ``gui.      |                                     |
+   |             |             |             | menu()`` <O |                                     |
+   |             |             |             | SD#Navit_co |                                     |
+   |             |             |             | mmands>`__, |                                     |
+   |             |             |             | or else you |                                     |
+   |             |             |             | can't get   |                                     |
+   |             |             |             | to the menu |                                     |
+   |             |             |             | screen!     |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | o           |             | navit       | You may     | ``on_map_click='menu("#MapPoint")'``|
+   | n_map_click |             | command     | specify a   |                                     |
+   |             |             |             | command to  |                                     |
+   |             |             |             | execute     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | entering    |                                     |
+   |             |             |             | internal    |                                     |
+   |             |             |             | gui by      |                                     |
+   |             |             |             | clicking on |                                     |
+   |             |             |             | the map.    |                                     |
+   |             |             |             | The example |                                     |
+   |             |             |             | provided    |                                     |
+   |             |             |             | allows to   |                                     |
+   |             |             |             | enter       |                                     |
+   |             |             |             | directly to |                                     |
+   |             |             |             | operations  |                                     |
+   |             |             |             | related to  |                                     |
+   |             |             |             | the clicked |                                     |
+   |             |             |             | map point.  |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="    |                                     |
+   |             |             |             | internal"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | toolbar     |             | 0 / 1       | Toggle      | ``toolbar="1"``                     |
+   |             |             |             | display of  |                                     |
+   |             |             |             | the         |                                     |
+   |             |             |             | toolbar.    |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``t         |                                     |
+   |             |             |             | ype="gtk"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | statusbar   |             | 0 / 1       | Toggle      | ``statusbar="1"``                   |
+   |             |             |             | display of  |                                     |
+   |             |             |             | the status  |                                     |
+   |             |             |             | bar. This   |                                     |
+   |             |             |             | only        |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``t         |                                     |
+   |             |             |             | ype="gtk"`` |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | skin        |             |             |             |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
+   | hid         |             | 0 / 1       | When        | ``hide_impossible_next_keys="1"``   |
+   | e_impossibl |             |             | searching a |                                     |
+   | e_next_keys |             |             | country/    |                                     |
+   |             |             |             | town/street |                                     |
+   |             |             |             | using the   |                                     |
+   |             |             |             | on-screen   |                                     |
+   |             |             |             | keyboard,   |                                     |
+   |             |             |             | instead of  |                                     |
+   |             |             |             | h           |                                     |
+   |             |             |             | ighlighting |                                     |
+   |             |             |             | possible    |                                     |
+   |             |             |             | keys based  |                                     |
+   |             |             |             | on current  |                                     |
+   |             |             |             | search      |                                     |
+   |             |             |             | result,     |                                     |
+   |             |             |             | hide        |                                     |
+   |             |             |             | impossible  |                                     |
+   |             |             |             | keys.       |                                     |
+   |             |             |             | P           |                                     |
+   |             |             |             | articularly |                                     |
+   |             |             |             | useful when |                                     |
+   |             |             |             | using a     |                                     |
+   |             |             |             | rotary      |                                     |
+   |             |             |             | encoder or  |                                     |
+   |             |             |             | cursor keys |                                     |
+   |             |             |             | to operate  |                                     |
+   |             |             |             | the         |                                     |
+   |             |             |             | keyboard,   |                                     |
+   |             |             |             | as there    |                                     |
+   |             |             |             | are less    |                                     |
+   |             |             |             | keys to     |                                     |
+   |             |             |             | traverse.   |                                     |
+   |             |             |             | This only   |                                     |
+   |             |             |             | applies     |                                     |
+   |             |             |             | when        |                                     |
+   |             |             |             | ``type="i   |                                     |
+   |             |             |             | nternal"``. |                                     |
+   +-------------+-------------+-------------+-------------+-------------------------------------+
 
 log
 ---
@@ -976,222 +976,222 @@ log
 for ``type="textfile_debug"``.
 Insert inbetween \ ``...``\  tags for all other types.
 
-   +------------+---------+--------------+--------------+--------------+
-   | Attribute  | Units   | Values       | Notes        | Example      |
-   +============+=========+==============+==============+==============+
-   | type       |         | | ``nmea``   | | Type of    | ``           |
-   |            |         | | ``gpx``    |   log to     | type="gpx"`` |
-   |            |         | |            |   output.    |              |
-   |            |         | ``textfile`` | | ``ty       |              |
-   |            |         | |            | pe="nmea"``: |              |
-   |            |         |  ``binfile`` |   outputs    |              |
-   |            |         |              |   data as    |              |
-   |            |         |              |   NMEA       |              |
-   |            |         |              |   messages   |              |
-   |            |         |              |   (the data  |              |
-   |            |         |              |   format     |              |
-   |            |         |              |   used by    |              |
-   |            |         |              |   most GPS   |              |
-   |            |         |              |              |              |
-   |            |         |              |  receivers). |              |
-   |            |         |              | | ``t        |              |
-   |            |         |              | ype="gpx"``: |              |
-   |            |         |              |   outputs    |              |
-   |            |         |              |   GPX XML    |              |
-   |            |         |              |   files      |              |
-   |            |         |              |   (e.g. for  |              |
-   |            |         |              |   upload to  |              |
-   |            |         |              |   Ope        |              |
-   |            |         |              | nStreetMap). |              |
-   |            |         |              | | ``type="   |              |
-   |            |         |              | textfile"``: |              |
-   |            |         |              |   creates a  |              |
-   |            |         |              |   text file  |              |
-   |            |         |              |   that can   |              |
-   |            |         |              |   be used as |              |
-   |            |         |              |   a          |              |
-   |            |         |              |              |              |
-   |            |         |              |  `textfile < |              |
-   |            |         |              | textfile>`__ |              |
-   |            |         |              | | ``type=    |              |
-   |            |         |              | "binfile"``: |              |
-   |            |         |              |   outputs a  |              |
-   |            |         |              |   binary map |              |
-   |            |         |              |   file for   |              |
-   |            |         |              |   use within |              |
-   |            |         |              |   Navit      |              |
-   |            |         |              | | ``         |              |
-   |            |         |              | type="textfi |              |
-   |            |         |              | le_debug"``: |              |
-   |            |         |              |   outputs a  |              |
-   |            |         |              |   debug text |              |
-   |            |         |              |   file.      |              |
-   +------------+---------+--------------+--------------+--------------+
-   | enabled    |         | ``yes`` /    | Enable       | ``ena        |
-   |            |         | ``no``       | logging.     | bled="yes"`` |
-   |            |         |              | This         |              |
-   |            |         |              | attribute    |              |
-   |            |         |              | enables you  |              |
-   |            |         |              | to define    |              |
-   |            |         |              | multiple log |              |
-   |            |         |              | types within |              |
-   |            |         |              | navit.xml    |              |
-   |            |         |              | (i.e.        |              |
-   |            |         |              | multiple     |              |
-   |            |         |              | \ ``...``\   |              |
-   |            |         |              | tags), and   |              |
-   |            |         |              | quickly      |              |
-   |            |         |              | switch       |              |
-   |            |         |              | between them |              |
-   |            |         |              | by changing  |              |
-   |            |         |              | the          |              |
-   |            |         |              | ``enabled``  |              |
-   |            |         |              | status.      |              |
-   +------------+---------+--------------+--------------+--------------+
-   | data       |         | *filename*   | | The name   | `            |
-   |            |         |              |   for the    | `data="%Y%m% |
-   |            |         |              |   logfile.   | d-%%i.gpx"`` |
-   |            |         |              |   There is   |              |
-   |            |         |              |   support    |              |
-   |            |         |              |   for date   |              |
-   |            |         |              |   and time   |              |
-   |            |         |              |   p          |              |
-   |            |         |              | laceholders: |              |
-   |            |         |              | | ``%Y``:    |              |
-   |            |         |              |   Current    |              |
-   |            |         |              |   year       |              |
-   |            |         |              | | ``%m``:    |              |
-   |            |         |              |   Current    |              |
-   |            |         |              |   month      |              |
-   |            |         |              | | ``%d``:    |              |
-   |            |         |              |   Current    |              |
-   |            |         |              |   day        |              |
-   |            |         |              | | ``%%i``:   |              |
-   |            |         |              |   Next       |              |
-   |            |         |              |   sequential |              |
-   |            |         |              |   logfile    |              |
-   |            |         |              |   number (to |              |
-   |            |         |              |   make the   |              |
-   |            |         |              |   filename   |              |
-   |            |         |              |   unique)    |              |
-   +------------+---------+--------------+--------------+--------------+
-   | overwrite  |         | **0** / 1    | | Toggle to  | ``ove        |
-   |            |         |              |   choose     | rwrite="1"`` |
-   |            |         |              |   whether an |              |
-   |            |         |              |   existing   |              |
-   |            |         |              |   tracklog   |              |
-   |            |         |              |   of the     |              |
-   |            |         |              |   same name  |              |
-   |            |         |              |   gets:      |              |
-   |            |         |              | | ``over     |              |
-   |            |         |              | write="0"``: |              |
-   |            |         |              |   Appended   |              |
-   |            |         |              |   to, or     |              |
-   |            |         |              | | ``over     |              |
-   |            |         |              | write="1"``: |              |
-   |            |         |              |              |              |
-   |            |         |              |  overwritten |              |
-   +------------+---------+--------------+--------------+--------------+
-   | flush_size | bytes   | 0 - ∞        | | The file   | ``flush_size |
-   |            |         |              |   is kept in | ="1048576"`` |
-   |            |         |              |   memory and |              |
-   |            |         |              |   will be    |              |
-   |            |         |              |   committed  |              |
-   |            |         |              |   to disk if |              |
-   |            |         |              |   the size   |              |
-   |            |         |              |   reaches    |              |
-   |            |         |              |   the        |              |
-   |            |         |              |   ``         |              |
-   |            |         |              | flush_size`` |              |
-   |            |         |              |   limit.     |              |
-   |            |         |              | | ``flush    |              |
-   |            |         |              | _size="0"``: |              |
-   |            |         |              |   Writes the |              |
-   |            |         |              |   tracklog   |              |
-   |            |         |              |   to disk    |              |
-   |            |         |              |              |              |
-   |            |         |              | immediately. |              |
-   |            |         |              | | When used  |              |
-   |            |         |              |   in         |              |
-   |            |         |              |              |              |
-   |            |         |              |  combination |              |
-   |            |         |              |   with       |              |
-   |            |         |              |   ``f        |              |
-   |            |         |              | lush_time``, |              |
-   |            |         |              |   whichever  |              |
-   |            |         |              |   limit is   |              |
-   |            |         |              |   reached    |              |
-   |            |         |              |   first      |              |
-   |            |         |              |   triggers a |              |
-   |            |         |              |   disk       |              |
-   |            |         |              |   write.     |              |
-   +------------+---------+--------------+--------------+--------------+
-   | flush_time | seconds | 0 - ∞        | | The file   | ``flush      |
-   |            |         |              |   is kept in | _time="90"`` |
-   |            |         |              |   memory and |              |
-   |            |         |              |   will be    |              |
-   |            |         |              |   committed  |              |
-   |            |         |              |   to disk    |              |
-   |            |         |              |   after      |              |
-   |            |         |              |   ``         |              |
-   |            |         |              | flush_time`` |              |
-   |            |         |              |   seconds.   |              |
-   |            |         |              | | ``flush    |              |
-   |            |         |              | _time="0"``: |              |
-   |            |         |              |   Writes the |              |
-   |            |         |              |   tracklog   |              |
-   |            |         |              |   to disk    |              |
-   |            |         |              |              |              |
-   |            |         |              | immediately. |              |
-   |            |         |              | | When used  |              |
-   |            |         |              |   in         |              |
-   |            |         |              |              |              |
-   |            |         |              |  combination |              |
-   |            |         |              |   with       |              |
-   |            |         |              |   ``f        |              |
-   |            |         |              | lush_size``, |              |
-   |            |         |              |   whichever  |              |
-   |            |         |              |   limit is   |              |
-   |            |         |              |   reached    |              |
-   |            |         |              |   first      |              |
-   |            |         |              |   triggers a |              |
-   |            |         |              |   disk       |              |
-   |            |         |              |   write.     |              |
-   +------------+---------+--------------+--------------+--------------+
-   | attr_types |         | | `          | | Com        | | ``attr_t   |
-   |            |         | `position_ti | ma-separated | ypes="positi |
-   |            |         | me_iso8601`` |   list which | on_height,`` |
-   |            |         | | ``position |   determines | |            |
-   |            |         | _direction`` |   what       |  ``position_ |
-   |            |         | | ``posi     |              | direction"`` |
-   |            |         | tion_speed`` |  information |              |
-   |            |         | | ``p        |   will be    |              |
-   |            |         | rofilename`` |   stored in  |              |
-   |            |         | | ``posit    |   the log    |              |
-   |            |         | ion_radius`` |   file (in   |              |
-   |            |         | | ``posit    |   addition   |              |
-   |            |         | ion_height`` |   to the     |              |
-   |            |         | | ``position |   position,  |              |
-   |            |         | _sats_used`` |   and only   |              |
-   |            |         | | ``pos      |   if         |              |
-   |            |         | ition_hdop`` |   supported  |              |
-   |            |         |              |   by the GPS |              |
-   |            |         |              |   receiver). |              |
-   |            |         |              |   This only  |              |
-   |            |         |              |   applies    |              |
-   |            |         |              |   when       |              |
-   |            |         |              |   ``         |              |
-   |            |         |              | type="gpx"`` |              |
-   |            |         |              | | See        |              |
-   |            |         |              |   `Configur  |              |
-   |            |         |              | ation <Confi |              |
-   |            |         |              | guration>`__ |              |
-   |            |         |              |   for        |              |
-   |            |         |              |              |              |
-   |            |         |              | descriptions |              |
-   |            |         |              |   of each    |              |
-   |            |         |              |   type.      |              |
-   +------------+---------+--------------+--------------+--------------+
+   +------------+---------+--------------+--------------+---------------+
+   | Attribute  | Units   | Values       | Notes        | Example       |
+   +============+=========+==============+==============+===============+
+   | type       |         | | ``nmea``   | | Type of    | ``type="gpx"``|
+   |            |         | | ``gpx``    |   log to     |               |
+   |            |         | |            |   output.    |               |
+   |            |         | ``textfile`` | | ``ty       |               |
+   |            |         | |            | pe="nmea"``: |               |
+   |            |         |  ``binfile`` |   outputs    |               |
+   |            |         |              |   data as    |               |
+   |            |         |              |   NMEA       |               |
+   |            |         |              |   messages   |               |
+   |            |         |              |   (the data  |               |
+   |            |         |              |   format     |               |
+   |            |         |              |   used by    |               |
+   |            |         |              |   most GPS   |               |
+   |            |         |              |              |               |
+   |            |         |              |  receivers). |               |
+   |            |         |              | | ``t        |               |
+   |            |         |              | ype="gpx"``: |               |
+   |            |         |              |   outputs    |               |
+   |            |         |              |   GPX XML    |               |
+   |            |         |              |   files      |               |
+   |            |         |              |   (e.g. for  |               |
+   |            |         |              |   upload to  |               |
+   |            |         |              |   Ope        |               |
+   |            |         |              | nStreetMap). |               |
+   |            |         |              | | ``type="   |               |
+   |            |         |              | textfile"``: |               |
+   |            |         |              |   creates a  |               |
+   |            |         |              |   text file  |               |
+   |            |         |              |   that can   |               |
+   |            |         |              |   be used as |               |
+   |            |         |              |   a          |               |
+   |            |         |              |              |               |
+   |            |         |              |  `textfile < |               |
+   |            |         |              | textfile>`__ |               |
+   |            |         |              | | ``type=    |               |
+   |            |         |              | "binfile"``: |               |
+   |            |         |              |   outputs a  |               |
+   |            |         |              |   binary map |               |
+   |            |         |              |   file for   |               |
+   |            |         |              |   use within |               |
+   |            |         |              |   Navit      |               |
+   |            |         |              | | ``         |               |
+   |            |         |              | type="textfi |               |
+   |            |         |              | le_debug"``: |               |
+   |            |         |              |   outputs a  |               |
+   |            |         |              |   debug text |               |
+   |            |         |              |   file.      |               |
+   +------------+---------+--------------+--------------+---------------+
+   | enabled    |         | ``yes`` /    | Enable       | ``ena         |
+   |            |         | ``no``       | logging.     | bled="yes"``  |
+   |            |         |              | This         |               |
+   |            |         |              | attribute    |               |
+   |            |         |              | enables you  |               |
+   |            |         |              | to define    |               |
+   |            |         |              | multiple log |               |
+   |            |         |              | types within |               |
+   |            |         |              | navit.xml    |               |
+   |            |         |              | (i.e.        |               |
+   |            |         |              | multiple     |               |
+   |            |         |              | \ ``...``\   |               |
+   |            |         |              | tags), and   |               |
+   |            |         |              | quickly      |               |
+   |            |         |              | switch       |               |
+   |            |         |              | between them |               |
+   |            |         |              | by changing  |               |
+   |            |         |              | the          |               |
+   |            |         |              | ``enabled``  |               |
+   |            |         |              | status.      |               |
+   +------------+---------+--------------+--------------+---------------+
+   | data       |         | *filename*   | | The name   | `             |
+   |            |         |              |   for the    | `data="%Y%m%  |
+   |            |         |              |   logfile.   | d-%%i.gpx"``  |
+   |            |         |              |   There is   |               |
+   |            |         |              |   support    |               |
+   |            |         |              |   for date   |               |
+   |            |         |              |   and time   |               |
+   |            |         |              |   p          |               |
+   |            |         |              | laceholders: |               |
+   |            |         |              | | ``%Y``:    |               |
+   |            |         |              |   Current    |               |
+   |            |         |              |   year       |               |
+   |            |         |              | | ``%m``:    |               |
+   |            |         |              |   Current    |               |
+   |            |         |              |   month      |               |
+   |            |         |              | | ``%d``:    |               |
+   |            |         |              |   Current    |               |
+   |            |         |              |   day        |               |
+   |            |         |              | | ``%%i``:   |               |
+   |            |         |              |   Next       |               |
+   |            |         |              |   sequential |               |
+   |            |         |              |   logfile    |               |
+   |            |         |              |   number (to |               |
+   |            |         |              |   make the   |               |
+   |            |         |              |   filename   |               |
+   |            |         |              |   unique)    |               |
+   +------------+---------+--------------+--------------+---------------+
+   | overwrite  |         | **0** / 1    | | Toggle to  | ``ove         |
+   |            |         |              |   choose     | rwrite="1"``  |
+   |            |         |              |   whether an |               |
+   |            |         |              |   existing   |               |
+   |            |         |              |   tracklog   |               |
+   |            |         |              |   of the     |               |
+   |            |         |              |   same name  |               |
+   |            |         |              |   gets:      |               |
+   |            |         |              | | ``over     |               |
+   |            |         |              | write="0"``: |               |
+   |            |         |              |   Appended   |               |
+   |            |         |              |   to, or     |               |
+   |            |         |              | | ``over     |               |
+   |            |         |              | write="1"``: |               |
+   |            |         |              |              |               |
+   |            |         |              |  overwritten |               |
+   +------------+---------+--------------+--------------+---------------+
+   | flush_size | bytes   | 0 - ∞        | | The file   | ``flush_size  |
+   |            |         |              |   is kept in | ="1048576"``  |
+   |            |         |              |   memory and |               |
+   |            |         |              |   will be    |               |
+   |            |         |              |   committed  |               |
+   |            |         |              |   to disk if |               |
+   |            |         |              |   the size   |               |
+   |            |         |              |   reaches    |               |
+   |            |         |              |   the        |               |
+   |            |         |              |   ``         |               |
+   |            |         |              | flush_size`` |               |
+   |            |         |              |   limit.     |               |
+   |            |         |              | | ``flush    |               |
+   |            |         |              | _size="0"``: |               |
+   |            |         |              |   Writes the |               |
+   |            |         |              |   tracklog   |               |
+   |            |         |              |   to disk    |               |
+   |            |         |              |              |               |
+   |            |         |              | immediately. |               |
+   |            |         |              | | When used  |               |
+   |            |         |              |   in         |               |
+   |            |         |              |              |               |
+   |            |         |              |  combination |               |
+   |            |         |              |   with       |               |
+   |            |         |              |   ``f        |               |
+   |            |         |              | lush_time``, |               |
+   |            |         |              |   whichever  |               |
+   |            |         |              |   limit is   |               |
+   |            |         |              |   reached    |               |
+   |            |         |              |   first      |               |
+   |            |         |              |   triggers a |               |
+   |            |         |              |   disk       |               |
+   |            |         |              |   write.     |               |
+   +------------+---------+--------------+--------------+---------------+
+   | flush_time | seconds | 0 - ∞        | | The file   | ``flush       |
+   |            |         |              |   is kept in | _time="90"``  |
+   |            |         |              |   memory and |               |
+   |            |         |              |   will be    |               |
+   |            |         |              |   committed  |               |
+   |            |         |              |   to disk    |               |
+   |            |         |              |   after      |               |
+   |            |         |              |   ``         |               |
+   |            |         |              | flush_time`` |               |
+   |            |         |              |   seconds.   |               |
+   |            |         |              | | ``flush    |               |
+   |            |         |              | _time="0"``: |               |
+   |            |         |              |   Writes the |               |
+   |            |         |              |   tracklog   |               |
+   |            |         |              |   to disk    |               |
+   |            |         |              |              |               |
+   |            |         |              | immediately. |               |
+   |            |         |              | | When used  |               |
+   |            |         |              |   in         |               |
+   |            |         |              |              |               |
+   |            |         |              |  combination |               |
+   |            |         |              |   with       |               |
+   |            |         |              |   ``f        |               |
+   |            |         |              | lush_size``, |               |
+   |            |         |              |   whichever  |               |
+   |            |         |              |   limit is   |               |
+   |            |         |              |   reached    |               |
+   |            |         |              |   first      |               |
+   |            |         |              |   triggers a |               |
+   |            |         |              |   disk       |               |
+   |            |         |              |   write.     |               |
+   +------------+---------+--------------+--------------+---------------+
+   | attr_types |         | | `          | | Com        | | ``attr_t    |
+   |            |         | `position_ti | ma-separated | ypes="positi  |
+   |            |         | me_iso8601`` |   list which | on_height,``  |
+   |            |         | | ``position |   determines | |             |
+   |            |         | _direction`` |   what       |  ``position_  |
+   |            |         | | ``posi     |              | direction"``  |
+   |            |         | tion_speed`` |  information |               |
+   |            |         | | ``p        |   will be    |               |
+   |            |         | rofilename`` |   stored in  |               |
+   |            |         | | ``posit    |   the log    |               |
+   |            |         | ion_radius`` |   file (in   |               |
+   |            |         | | ``posit    |   addition   |               |
+   |            |         | ion_height`` |   to the     |               |
+   |            |         | | ``position |   position,  |               |
+   |            |         | _sats_used`` |   and only   |               |
+   |            |         | | ``pos      |   if         |               |
+   |            |         | ition_hdop`` |   supported  |               |
+   |            |         |              |   by the GPS |               |
+   |            |         |              |   receiver). |               |
+   |            |         |              |   This only  |               |
+   |            |         |              |   applies    |               |
+   |            |         |              |   when       |               |
+   |            |         |              |   ``         |               |
+   |            |         |              | type="gpx"`` |               |
+   |            |         |              | | See        |               |
+   |            |         |              |   `Configur  |               |
+   |            |         |              | ation <Confi |               |
+   |            |         |              | guration>`__ |               |
+   |            |         |              |   for        |               |
+   |            |         |              |              |               |
+   |            |         |              | descriptions |               |
+   |            |         |              |   of each    |               |
+   |            |         |              |   type.      |               |
+   +------------+---------+--------------+--------------+---------------+
 
 osd
 ---

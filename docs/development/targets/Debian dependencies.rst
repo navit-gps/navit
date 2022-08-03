@@ -3,10 +3,6 @@
 Debian dependencies
 ===================
 
-.. raw:: mediawiki
-
-   {{warning|1='''This is a page has been migrated to readthedocs:'''https://github.com/navit-gps/navit/pull/880 . It is only kept here for archiving purposes.}}
-
 It compiles flawlessly on a Lenny (5.0) or later, once all dependencies
 installed.
 
@@ -17,8 +13,6 @@ Notes:
    Ubuntu is based on Debian). Maybe we should merge this page with
    `Ubuntu dependencies <Ubuntu_dependencies>`__?
 
-.. _absolute_minimum_requirements:
-
 Absolute minimum requirements
 -----------------------------
 
@@ -28,7 +22,6 @@ Absolute minimum requirements
 maptool can be built without installing GTK+), but this is the smallest
 practical set of packages if you want to run Navit.
 
-.. _translations_for_the_user_interface:
 
 Translations for the user interface
 -----------------------------------
@@ -50,8 +43,6 @@ SDL
 
 **libsdl-image1.2-dev libdevil-dev libglc-dev freeglut3-dev libxmu-dev
 libfribidi-dev**
-
-.. _opengl_graphics:
 
 OpenGL graphics
 ---------------

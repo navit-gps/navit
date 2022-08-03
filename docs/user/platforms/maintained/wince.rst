@@ -24,8 +24,6 @@ Windows Mobile 6.1  ?
 Windows Mobile 6.5  ?
 =================== =======
 
-.. _make_sure_your_device_is_compatible:
-
 Make sure your device is compatible
 -----------------------------------
 
@@ -34,8 +32,6 @@ is to say, to make sure you can install arbitrary cab files or run
 arbitrary exe files on it. For some devices, there are unlock procedures
 (`Mio C310 and C210 <Unlocking_Mio_C310_and_C210_for_Navit>`__) that
 will allow to escape from the main program and get a Windows CE desktop.
-
-.. _download_cab_or_zip_navit_package:
 
 Download cab or zip Navit package
 ---------------------------------
@@ -46,12 +42,8 @@ put it on your device (see below). You may use the latest shipped XML
 file for you to configure (or for devices with low memory output use the
 file from http://ix.io/18Jb).
 
-.. _installation_of_navit:
-
 Installation of Navit
 ---------------------
-
-.. _sd_card_or_microsd_card:
 
 SD Card or MicroSD Card
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,15 +58,11 @@ OR
    Insert it in your mobile device. Navigate to the folder ``navit``
    (probably located in ``\Storage Card``. Start ``navit.exe``.
 
-.. _direct_download:
-
 Direct Download
 ~~~~~~~~~~~~~~~
 
 If you mobile device with WinCE/WinMobile is directly connected to the
 internet. Download the cab file and install it.
-
-.. _editing_navit.xml:
 
 Editing navit.xml
 ~~~~~~~~~~~~~~~~~
@@ -84,8 +72,6 @@ file ``navit.xml`` to your Desktop-Computer (ActiveSync on Win.. or with
 `SynCE <http://www.synce.org/moin/>`__ on Linux). Edit the XML-file
 ``navit.xml`` using Notepad++ or another editor and store it back on
 your mobile device.
-
-.. _gps_receiver:
 
 GPS Receiver
 ^^^^^^^^^^^^
@@ -127,8 +113,6 @@ COM7 and baud rate 57600, then you have to set these values in
 
 On some device, it is necessary to use uppercase letters for the COM
 port (eg: "COM5") to get it work (added by Killerhippy, hope it helps)
-
-.. _using_navigation_next_turn_osd_item:
 
 Using Navigation Next Turn OSD item
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -209,12 +193,8 @@ Linux, Mac, ... "/".
    Example below for 4123 N 1234 E (this string means 41.23 North and
    12.34 East):
 
-.. _running_navit:
-
 Running Navit
 -------------
-
-.. _memory_issues:
 
 Memory Issues
 ~~~~~~~~~~~~~
@@ -228,8 +208,6 @@ for program memory assignment. This may not fix all crashes but should
 stop those immediate crashes after you have selected your destination.
 Also, using a specific ``navit.xml`` configuration file like
 http://ix.io/18Jb might help (see the reference above).
-
-.. _vehicle_settings_for_various_devices:
 
 Vehicle settings for various devices
 ------------------------------------
@@ -247,7 +225,6 @@ Vehicle settings for various devices
 | `Sony Nav-u <Sony_Nav-u_Devices>`__                   |             |
 +-------------------------------------------------------+-------------+
 
-.. _see_also:
 
 See also
 --------

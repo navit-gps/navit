@@ -9,8 +9,6 @@ for WinCE, please refer to the `Windows CE <WinCE>`__ page. Mio C210 and
 Mio C310 devices run Windows CE 4.2, and can be unlocked to execute any
 custom Windows CE application, including navit.exe.
 
-.. _first_make_sure_you_can_start_on_an_sd_card:
-
 First make sure you can start on an SD card
 -------------------------------------------
 
@@ -19,8 +17,6 @@ sufficient space to store unlock programs as well as the navit files.
 You will also need to test that your device can startup on the SD card.
 For C210 (and maybe also C310), SD cards of a capacity above 1 GB are
 likely not going to work, unfortunately...
-
-.. _download_unlock_scripts:
 
 Download unlock scripts
 -----------------------
@@ -56,8 +52,6 @@ press (often, when changing the SD card, the startup from SD only works
 at the second attempt) You should get the desktop showing off, with a
 list of icons displayed on the screen. This means the unlock is working!
 
-.. _unlock_directly_at_factory_config_reset:
-
 Unlock directly at factory config reset
 ---------------------------------------
 
@@ -75,8 +69,6 @@ using MortScript utilities (search on the Internet for MortScript.zip
 downloads - I used MortScript-4.11b5). I only use the executable called
 killproc.exe</tt, located inside the ``bin\PNA`` folder of the
 MortScript archive.
-
-.. _allow_use_of_device_unlocked_at_factory_reset_on_c210:
 
 Allow use of device unlocked at factory reset on C210
 -----------------------------------------------------
@@ -146,8 +138,6 @@ the default C310Auto.c31 file:
 | ``RegEdit "\Storage card\Unlock\Registry\Mitac.reg"``
 | ``RegEdit "\Storage Card\Unlock\Registry\Time.reg"``
 
-.. _test_factory_reset_on_a_sd_card_with_unlock:
-
 Test factory reset on a SD card with unlock
 -------------------------------------------
 
@@ -155,8 +145,6 @@ Try to perform a factory default reset with the SD card inserted in your
 device, you should see the desktop and the default Mio navigation should
 not start automatically anymore. You will be able to run it using the
 Mio Map icon on the desktop.
-
-.. _install_navit_on_your_unlock_sd_card:
 
 Install navit on your unlock SD card
 ------------------------------------
@@ -213,8 +201,6 @@ Finally, you might as well hardcode your language and force fullscreen
 mode, by setting the following in ``navit.xml``:
 
 And also
-
-.. _see_also:
 
 See also
 --------

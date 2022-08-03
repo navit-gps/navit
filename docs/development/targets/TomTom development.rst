@@ -9,8 +9,6 @@ TomTom development
    This Page is old, dont use SVN anymore!
    }}
 
-.. _prerequisities_for_building_navit:
-
 Prerequisities for building Navit
 ---------------------------------
 
@@ -37,8 +35,6 @@ autotools suite, including autoconf, automake, autoheader and aclocal.
 Install these if you don't already have them.
 
 The toolchain is now ready for use.
-
-.. _porting_libraries:
 
 Porting libraries
 -----------------
@@ -275,8 +271,6 @@ http://www.libsdl.org/projects/SDL_image/, configure, make and install:
     make
     make install
 
-.. _porting_navit:
-
 Porting Navit
 -------------
 
@@ -297,12 +291,8 @@ recommended). We can simply run autogen.sh, configure, make and install:
 Since we have not ported gtk, as we will use libSDL and the internal GUI
 only, we have to disable the gtk drivers in the configure command.
 
-.. _installing_navit:
-
 Installing Navit
 ----------------
-
-.. _creating_directories:
 
 Creating directories
 ~~~~~~~~~~~~~~~~~~~~
@@ -328,8 +318,6 @@ share, sdl and ts.
     mkdir -p bin lib share sdl ts
 
 Now these directories have to be filled with content.
-
-.. _installing_libraries:
 
 Installing libraries
 ~~~~~~~~~~~~~~~~~~~~
@@ -362,8 +350,6 @@ following libraries as well:
 
 -  librt.so
 -  libthread_db.so
-
-.. _installing_tslib:
 
 Installing tslib
 ~~~~~~~~~~~~~~~~
@@ -432,8 +418,6 @@ directory with the following contents:
 
 This will create an entry named "Touchscreen" in TomTom's main menu.
 
-.. _installing_sdl_utilities:
-
 Installing SDL utilities
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -468,8 +452,6 @@ in the SDKRegistry with the following contents:
 
 Replace "sdl-wrapper" with the name of your wrapper script, if
 necessary.
-
-.. _installing_navit_binaries_plugins_and_icons:
 
 Installing Navit binaries, plugins and icons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -595,8 +577,6 @@ happy without such an icon, you can omit this step and delete the two
 | ``AppPort||``
 | ``COMMAND|CMD|hallo||Navit|``
 
-.. _installing_maps:
-
 Installing maps
 ~~~~~~~~~~~~~~~
 
@@ -604,8 +584,6 @@ Any navigation software would be useless without maps. See the
 `Maps <Maps>`__ section for maps you can use with Navit. Put them into
 the directory /media/TOMTOM/navit/share/maps which you have just
 created.
-
-.. _configuring_navit:
 
 Configuring Navit
 -----------------
@@ -648,8 +626,6 @@ navit/share/maps folder will appear in /mnt/sdcard/navit/share/maps
 (which is the same as $NAVIT_SHAREDIR/maps, if you have set
 $NAVIT_SHAREDIR as shown above).
 
-.. _running_navit:
-
 Running Navit
 -------------
 
@@ -658,8 +634,6 @@ device properly from the computer and let it reboot. Touch the screen to
 enter the main manu. On the last page of the main menu, a new menu entry
 named "Navit" should be visible. Simply press the Navit button and wait
 for the Navit screen to appear. Have fun!
-
-.. _debugging_navit:
 
 Debugging Navit
 ---------------
@@ -700,8 +674,6 @@ similar to this one in your navit-wrapper script:
 The debugger output will then be placed in a file named "navit.log" in
 the navit folder on your TomTom.
 
-.. _additional_helpful_tools:
-
 Additional helpful tools
 ------------------------
 
@@ -711,8 +683,6 @@ Console <https://web.archive.org/web/20120921131048/http://www-cip.physik.uni-bo
 It seems not to run an all TomTom devices and software versions, so you
 may try using `Btconsole <http://www.opentom.org/Btconsole>`__ instead,
 which allows you to login to your TomTom device via bluetooth.
-
-.. _things_to_be_done:
 
 Things to be done
 -----------------

@@ -6,8 +6,8 @@ This site is about the logo of Navit
 shapes
 ------
 
-| |LogosV2.JPG|
-| `SVG <https://wiki.navit-project.org/images/6/6e/Navit_logoV2_full_vect_no_font.svg>`__
+.. figure:: /../logo_catalog.svg
+   :width: 100%
 
 font
 ----
@@ -20,7 +20,12 @@ color codes
 | color gradient
 | RGBA
 | ffda00ff |ffda00ff.jpg|
-| f57f0cff |f57f0cff.jpg| black and white
+| f57f0cff |f57f0cff.jpg|
+
+..raw:: html
+    <div style="background-color: #f57f0cff;height: 1em;width: 3em;" />
+
+ black and white
 
 .. _logo_used_at:
 
@@ -53,6 +58,5 @@ logo used at
    -  GTK GUI window icon
    -  Qt icons?
 
-.. |LogosV2.JPG| image:: LogosV2.JPG
 .. |ffda00ff.jpg| image:: ffda00ff.jpg
 .. |f57f0cff.jpg| image:: f57f0cff.jpg

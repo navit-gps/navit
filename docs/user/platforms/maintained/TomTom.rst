@@ -186,8 +186,6 @@ https://1390-30791823-gh.circle-artifacts.com/2/tmp/circle-artifacts.xgv65b2/nav
 It does not provide a config for 320x240 screens but it has translations
 and multilingual speech.
 
-.. _see_also:
-
 See also
 ''''''''
 
