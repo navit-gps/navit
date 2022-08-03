@@ -146,8 +146,6 @@ List#Events <Traffic_Event_List#Events>`__.
 |            | the event type.                                        |
 +------------+--------------------------------------------------------+
 
-.. _supplementary_information:
-
 Supplementary Information
 -------------------------
 

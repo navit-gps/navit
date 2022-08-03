@@ -112,7 +112,6 @@ Under Rules we find:
 #. Map follows vehicle
 #. Attack defenseless civilians
 
-.. _on_screen_display:
 
 On Screen Display
 -----------------

@@ -61,19 +61,17 @@ guys!
 |         |           |         |         | penPand|         |         |
 |         |           |         |         | ora>`__|         |         |
 +---------+-----------+---------+---------+--------+---------+---------+
-| pini    | o         |         |         |        |         | busy    |
-|         |fficial    |         |         |        |         |         |
+| pini    | official  |         |         |        |         | busy    |
 |         |debian     |         |         |        |         |         |
-|         |p          |         |         |        |         |         |
-|         |ackager    |         |         |        |         |         |
+|         |packager   |         |         |        |         |         |
 +---------+-----------+---------+---------+--------+---------+---------+
 | Kamikaaz| :ref:`And |         |         |        |         | ?       |
-|e        | roid`     |         |         |        |         |         |
+|e        |roid`      |         |         |        |         |         |
 |         | port      |         |         |        |         |         |
 +---------+-----------+---------+---------+--------+---------+---------+
 | Horwitz |           | Michael |         |        |         | ?       |
 |         |           | Fa      |         |        |         |         |
-|         |           | rmbauer |         |        |         |         |
+|         |           |rmbauer  |         |        |         |         |
 +---------+-----------+---------+---------+--------+---------+---------+
 | jkoan   | everything|         |         | TomTom |Android  |         |
 |         |           |         |         |WinCE   |Manajaro |         |
@@ -154,18 +152,11 @@ This had been contributors for a long time, but the had to quit
 |           | stopwatch |           |          |           |    |
 +-----------+-----------+-----------+----------+-----------+----+
 
-See also:
-
--  https://forum.navit-project.org/viewtopic.php?f=20&t=392 - Forum: Who
-   is who
--  https://github.com/navit-gps/navit/graphs/contributors - Full list of
-   contributors
--  https://launchpad.net/navit/+topcontributors - Full list of
-   translators
-
-.. _see_also:
-
 See also
 --------
 
 -  :ref:`Contacts <contacts>`__
+-  https://github.com/navit-gps/navit/graphs/contributors - Full list of
+   contributors
+-  https://launchpad.net/navit/+topcontributors - Full list of
+   translators

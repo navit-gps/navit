@@ -1648,7 +1648,6 @@ TMC event codes which are not in this list are ignored for now.
 | 2000 | >RESTRICTION_SMOG_ALERT + RESTRICTION_CLOSED                 |
 +------+--------------------------------------------------------------+
 
-.. _supplementary_information:
 
 Supplementary Information
 -------------------------

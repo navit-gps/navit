@@ -40,8 +40,6 @@ wrinting the file, as it will suggest tags and values as you write.
 For **looking at** your xml file, any web browser is fine. Firefox will
 let you expand and collapse sections, too. But not edit it...
 
-.. _full_list_of_options:
-
 Full List of Options
 ====================
 
@@ -49,7 +47,6 @@ For the power users, or those who've already read through this guide a
 few times, a `full list of options is
 available. <Configuring/Full_list_of_options>`__
 
-.. _graphical_user_interface:
 
 Graphical User Interface
 ========================
@@ -124,12 +121,10 @@ To enable this GUI please refer to the `Graphics
 Driver <Configuring_Navit#The_graphic_driver_.28graphics.29>`__ section
 of this page.
 
-.. _settings_you_might_need_to_change:
 
 Settings you might need to change
 =================================
 
-.. _starting_position:
 
 Starting position
 -----------------
@@ -275,7 +270,6 @@ You can also set the debug level globally (for all modules):
 
 This is the same as using command line option "-d".
 
-.. _southern_hemisphere_users:
 
 Southern Hemisphere users
 -------------------------
@@ -283,7 +277,6 @@ Southern Hemisphere users
 The day/night auto changing layouts will be "reversed" for you. Please
 change the daylayout to nightlayout and vice versa.
 
-.. _a_deeper_look_at_the_xml_file:
 
 A deeper look at the XML file
 =============================
@@ -319,7 +312,6 @@ An instance looks like the following :
 
 Don't forget the at the end.
 
-.. _the_navit_instance:
 
 The navit instance
 ------------------
@@ -335,7 +327,6 @@ Further graphics drivers include gtk_drawing_area, qt_qpainter and sdl.
 
 The center / zoom values are explained below also gui and graphics
 
-.. _the_graphic_driver_graphics:
 
 The graphic driver (graphics)
 -----------------------------
@@ -391,7 +382,6 @@ or for the internal GUI on Windows:
 
 For the moment don't attempt other gui / graphics combinations.
 
-.. _window_resolution:
 
 Window resolution
 ~~~~~~~~~~~~~~~~~
@@ -399,7 +389,6 @@ Window resolution
 On some graphic drivers the default resolution is 800x600 like sdl. You
 may want to change that to the native resolution of your display:
 
-.. _the_default_map_view_center_center:
 
 The default map view center (center)
 ------------------------------------
@@ -426,7 +415,6 @@ For example
 
 ``center="4744.123 N 913.876 E"``
 
-.. _the_zoom_level_zoom:
 
 The Zoom Level (zoom)
 ---------------------
@@ -439,7 +427,6 @@ You can use almost any value for the gtk gui, but the sdl gui will react
 better (and the drawings will look nicer) with a lower zoom value. 128
 is often a good idea for sdl :
 
-.. _auto_zoom:
 
 Auto Zoom
 ---------
@@ -498,7 +485,6 @@ Again, the last item on the line above tells Navit what value of pitch
 to use when the 3D option is activated through the Internal GUI settings
 menu.
 
-.. _full_screen:
 
 Full Screen
 -----------
@@ -511,7 +497,6 @@ For example:
 The second item in the tag turns on the full screen option on startup.
 To disable this you can use fullscreen="0".
 
-.. _the_on_screen_display:
 
 The On Screen Display
 ---------------------
@@ -536,7 +521,6 @@ the trackpad to move the mouse over the correct OSD item. For
 instructions on implementation, see `On Screen
 Display#Keybindings <On_Screen_Display#Keybindings>`__
 
-.. _the_vehicles_definitions:
 
 The Vehicles Definitions
 ------------------------
@@ -616,7 +600,6 @@ And use it in navit by adding:
 
 to the vehicle section in your ~/.navit/navit.xml file.
 
-.. _logging_trips:
 
 Logging Trips
 ~~~~~~~~~~~~~
@@ -822,7 +805,6 @@ A layout defines how to render a map. You can have multiple layouts
 within the ``layouts`` tag. At startup the first layout in navit.xml
 will be chosen. The GUI may allow you to change the layout on the fly.
 
-.. _custom_layouts:
 
 Custom layouts
 ~~~~~~~~~~~~~~
@@ -895,7 +877,6 @@ The poly\ **line** color defines the color with which the lines will be
 drawn. If the item is a line, such as a street, it's its color. If the
 item is a polygon, then it is it's border color.
 
-.. _choosing_a_default_layout_for_navit:
 
 Choosing a default layout for navit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -908,7 +889,6 @@ Since Navit supports the ``active`` attribute inside the layout tag -
 irrespective of where the layout appears in navit.xml, if ``active="1"``
 that particular layout will become the default.
 
-.. _text_size:
 
 Text Size
 ~~~~~~~~~
@@ -996,7 +976,6 @@ Also note that there was a bug that did not allow for text sizes greater
 than 15 to be set. This bug was addressed around Navit SVN-2311 so if
 you are using an older version you will want to update.
 
-.. _font_types:
 
 Font Types
 ~~~~~~~~~~
@@ -1021,7 +1000,6 @@ ignore the "style=" tag and just use the font name. So to change to the
 NewCourier font the tag from above would change the layout tag as
 follows:
 
-.. _navit_map_items:
 
 Navit Map items
 ~~~~~~~~~~~~~~~
@@ -1029,7 +1007,6 @@ Navit Map items
 For a list of the navit map items (types of POI, types of ways ...), see
 `map items <Configuring_Navit/map_items>`__
 
-.. _support_for_xincludexpath:
 
 Support for XInclude/XPath
 --------------------------

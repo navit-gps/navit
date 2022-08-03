@@ -1,3 +1,5 @@
+.. configuration_general:
+
 General Options
 ===============
 Settings which affect Navit's general behaviour are located within the ``<navit .. >`` tag. In a default installation, this is found on line 31 of ``navit.xml``. By default, the ``navit`` tag is set as follows:

@@ -1,7 +1,6 @@
 Layout/detailedcampingbike
 ==========================
 
-.. _detailed_camping_biker:
 
 Detailed Camping Biker
 ======================

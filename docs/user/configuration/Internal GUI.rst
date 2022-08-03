@@ -11,12 +11,10 @@ missing or poorly implemented, come talk to us in the `irc
 channel <Contacts#IRC>`__ or open up a feature request on the `trac
 system <Contacts#trac>`__.
 
-.. _configuring_internal_gui:
 
 Configuring Internal GUI
 ------------------------
 
-.. _enabling_internal_gui:
 
 Enabling Internal GUI
 ~~~~~~~~~~~~~~~~~~~~~
@@ -31,7 +29,6 @@ can be chosen by setting the ``type`` attribute in the tag.
 Ensure that any other ``gui`` tags are disabled by setting their
 ``enabled`` attribute to "no".
 
-.. _keyboard_preferences:
 
 Keyboard Preferences
 ~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +39,6 @@ keyboard to enter text. If your device has it's own keyboard which you'd
 prefer to use, and you'd like to conserve some screen space then set the
 ``keyboard`` attribute to "false" inside the tag.
 
-.. _map_click_preferences:
 
 Map-click Preferences
 ~~~~~~~~~~~~~~~~~~~~~
@@ -60,8 +56,6 @@ below:
 You can use the following example to enable/disable the
 ``menu_on_map_click`` behaviour from an `OSD#button <OSD#button>`__:
 
-.. _icon_and_font_sizes:
-
 Icon and font sizes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -76,7 +70,6 @@ icons `defined in the menu html <Internal_GUI/Menu_configurations>`__.
 The icon sizes need to be available as files in Navit (they should be by
 default).
 
-.. _menu_configuration:
 
 Menu Configuration
 ~~~~~~~~~~~~~~~~~~
@@ -90,7 +83,6 @@ course, this configuration can be customised - alternative
 configurations can be found in `Internal GUI/Menu
 configurations <Internal_GUI/Menu_configurations>`__.
 
-.. _initial_start_up:
 
 Initial Start-up
 ~~~~~~~~~~~~~~~~
@@ -103,12 +95,10 @@ tags should be located within the first 100 lines of the file. For
 information on how to modify the appearance of the OSD layout please
 reference this link. `OSD Layout <OSD>`__
 
-.. _using_the_internal_gui:
 
 Using the Internal GUI
 ----------------------
 
-.. _basics_and_breadcrumbs:
 
 Basics and breadcrumbs
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -125,7 +115,6 @@ the top of the screen, which shows the current position inside the
 screen hierarchy of the Internal GUI. The breadcrumbs are clickable, to
 return to an earlier screen.
 
-.. _operation_with_keyboard_or_rotary_encoder:
 
 Operation with keyboard or rotary encoder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -148,7 +137,6 @@ options <Configuration/Full_list_of_options#gui>`__ for details.
 *Support for rotary encoders was added in December 2015, and
 hide_impossible_next_keys in February 2017.*
 
-.. _main_menu:
 
 Main Menu
 ---------
@@ -204,7 +192,6 @@ Friends and the bookmarks Bill and Joe in there.
   Bookmarks are stored in a plain-text bookmarks file in your Navit
   directory (~/.navit on unix systems).
 
-.. _former_destinations:
 
 Former destinations
 ^^^^^^^^^^^^^^^^^^^
@@ -227,7 +214,6 @@ list will be discarded. As an exception, if a destination is set that is
 already in the list, it will not be repeated in the list; instead the
 entry will just be moved to the top.
 
-.. _map_point:
 
 Map Point
 ^^^^^^^^^
@@ -260,7 +246,6 @@ POIs
   to that location. Navit will create a route from the current position
   to the location of the POI selected.
 
-.. _vehicle_position:
 
 Vehicle Position
 ^^^^^^^^^^^^^^^^
@@ -351,14 +336,12 @@ Layout
   layout options MUST be enabled in the navit.xml file before they can
   be turned on or off in this menu.
 
-.. _window_mode_toggle:
 
 Window Mode (Toggle)
 ''''''''''''''''''''
 
 Changes Navit from windowed mode to fullscreen mode and vice versa.
 
-.. _d_toggle:
 
 3D (Toggle)
 '''''''''''
@@ -409,7 +392,6 @@ will display the active route.
 
 | 
 
-.. _route_description:
 
 Route Description
 ^^^^^^^^^^^^^^^^^

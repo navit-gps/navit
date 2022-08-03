@@ -3,7 +3,6 @@
 Configuration/Display Options
 =============================
 
-.. _display_options:
 
 Display Options
 ---------------
@@ -16,7 +15,6 @@ components
 -  GUI (enables user interaction and map display)
 -  OSD (shows widgets on map screen)
 
-.. _graphics_driver:
 
 Graphics Driver
 ~~~~~~~~~~~~~~~
@@ -55,7 +53,6 @@ As mentioned, it's usually best to leave this as whatever the default is
 within your ``navit.xml``, and only mess around with it if you know what
 you are doing, or have been told to by one of the developers.
 
-.. _graphical_user_interface:
 
 Graphical User Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,7 +151,6 @@ Not all GUIs work with all Graphics drivers
 |       |       |       |       |       |       |       |       |       |       |       | 4.png |
 +-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+
 
-.. _generic_gui_options:
 
 Generic GUI Options
 ^^^^^^^^^^^^^^^^^^^
@@ -176,7 +172,6 @@ selected from the menu. Note that to start Navit in 3D mode by default,
 
     <gui type="internal" enabled="yes" fullscreen="1" pitch="35">
 
-.. _internal_gui:
 
 Internal GUI
 ^^^^^^^^^^^^
@@ -216,7 +211,6 @@ An example ``gui`` tag using the previous options is shown below:
 More options are discussed on the `Internal Gui <Internal_Gui>`__ and
 the `full list of options <Configuration/Full_list_of_options>`__.
 
-.. _gtk_gui:
 
 GTK GUI
 ^^^^^^^
@@ -229,7 +223,6 @@ use.
 
     <gui type="gtk" enabled="yes" ... />
 
-.. _options_1:
 
 Options
 '''''''
@@ -245,7 +238,6 @@ include:
 
     <gui type="gtk" enabled="yes" menubar="1" toolbar="1" statusbar="1"/>
 
-.. _on_screen_display:
 
 On Screen Display
 ~~~~~~~~~~~~~~~~~

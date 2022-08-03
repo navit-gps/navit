@@ -3,7 +3,6 @@
 Augmented Reality
 =================
 
-.. _project_reality_view:
 
 **Project Reality View**
 ------------------------
@@ -57,7 +56,6 @@ or shortest route does not always have highest priority. Crucial factors
 governing route choice include the attractiveness of surroundings, shops
 and restaurants en route, as well as pedestrian safety.
 
-.. _navigation_methods:
 
 Navigation methods
 ~~~~~~~~~~~~~~~~~~
@@ -71,7 +69,6 @@ users of computer navigation. Newly in use is a dynamic cable adapted to
 the route. Like a wire stretched to the destination, this cable follows
 the selected route based on a real-world situation.
 
-.. _reality_view:
 
 Reality View
 ~~~~~~~~~~~~
@@ -109,7 +106,6 @@ situation. Obstructions on the base map are blended in the maximum
 visual range of the camera. The result is a reduced visual range adapted
 to the real-world surroundings.
 
-.. _base_maps:
 
 Base Maps
 ~~~~~~~~~
@@ -152,7 +148,6 @@ pedestrian navigation purposes.
 
 File:pns-1-small.jpg File:pns-2-small.jpg
 
-.. _menu_integration:
 
 Menu Integration
 ----------------
@@ -161,7 +156,6 @@ An integration in the `Menu <Menu>`__ is possible as extension on the
 top level of the navit menu, because it can be regarded as a main view
 of navigation of pedestrians.
 
-.. _download_android_.apk_package:
 
 **Download Android .apk Package**
 ---------------------------------

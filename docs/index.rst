@@ -64,4 +64,3 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    :caption: Other Documents
 
    privacy
-   wiki/*

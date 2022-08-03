@@ -3,13 +3,10 @@
 Ubuntu dependencies
 ===================
 
-.. raw:: mediawiki
 
-   {{warning|1='''This is a page has been migrated to readthedocs:'''https://github.com/navit-gps/navit/pull/880 . It is only kept here for archiving purposes.}}
+.. warning
 
-.. raw:: mediawiki
-
-   {{merge|Debian dependencies}}
+   Merge with `Debian dependencies`
 
 .. _packages_required_for_building_and_running_navit_on_ubuntu:
 
@@ -31,7 +28,6 @@ Notes:
 -  This list is for the CMake build. The build via autotools requires
    some more packages, but is no longer supported.
 
-.. _minimum_requirements:
 
 Minimum requirements
 --------------------
@@ -53,14 +49,12 @@ practical set of packages if you want to run Navit.
 Optionals
 ---------
 
-.. _translated_text_in_the_user_interface:
 
 Translated text in the user interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  gettext
 
-.. _gps_support:
 
 GPS support
 ~~~~~~~~~~~
@@ -74,7 +68,6 @@ DBus
 
 libdbus-glib-1-dev
 
-.. _gtk_drawing_area_graphics:
 
 GTK drawing area graphics
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +76,6 @@ libimlib2-dev (needed to enable draw_image_warp function which, in turn
 allows to use raster maps as discussed in
 `#1285 <http://trac.navit-project.org/ticket/1285>`__)
 
-.. _opengl_graphics:
 
 OpenGL graphics
 ~~~~~~~~~~~~~~~
@@ -113,11 +105,10 @@ versions):
    (Maverick) <https://launchpad.net/ubuntu/maverick/+source/navit>`__
 -  `10.04 (Lucid) <https://launchpad.net/ubuntu/lucid/+source/navit>`__
 
-.. _everything_in_one_command:
-
 Everything in one command
 =========================
 
 | ``sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin \``
 | ``g++ gpsd gpsd-clients libgps-dev libdbus-glib-1-dev freeglut3-dev libxft-dev \``
 | ``libglib2.0-dev libfreeimage-dev gettext protobuf-c-compiler  libprotobuf-c-dev``
+

@@ -11,7 +11,6 @@ Cases <http://en.wikipedia.org/wiki/Use_case>`__ and possible future
 **application scenarios** of an OpenSource navigation system for Offline
 usage especially with a Crowd Sourcing approach and Open Maps.
 
-.. _navigation_view:
 
 Navigation View
 ---------------
@@ -24,7 +23,6 @@ set, the route is displayed in the map.
 
    NavIt_4997_on_HTC_Wildfire.png
 
-.. _reality_view:
 
 Reality View
 ------------
@@ -50,7 +48,6 @@ Contacts/Bookmarks
 
 The bookmarks are used for start or destination point of routing.
 
-.. _trip_bookmarks:
 
 Trip Bookmarks
 ~~~~~~~~~~~~~~
@@ -62,7 +59,6 @@ could be modified by real traffic data of the user stored locally on the
 mobile device for a more accurate tailored estimation for Weekdays,
 Month and Start time of the trip.
 
-.. _return_trip:
 
 Return Trip
 ~~~~~~~~~~~
@@ -71,7 +67,6 @@ A return trip button swaps Start Point and Destination Point of a trip.
 This is not implemented in current version of Navit, but it can be
 realized with bookmarks.
 
-.. _trip_bookmarks_1:
 
 Trip Bookmarks
 ~~~~~~~~~~~~~~
@@ -80,7 +75,6 @@ Trip bookmarks consisting of Departure and Destination geo location
 cannot be saved. As departure location the current GPS location is used
 but not stored.
 
-.. _settings_of_navit:
 
 Settings of Navit
 -----------------
@@ -93,14 +87,12 @@ SD-card on a smart phone for Offline usage. A list of loaded maps is
 currently not visible. Update button of maps e.g. from OpenStreetMap is
 not implemented (could increase the traffic on the map server)
 
-.. _d3d_views:
 
 2D/3D-Views
 ~~~~~~~~~~~
 
 Views are the setting of the navigation view of Navit.
 
-.. _vehicle_properties:
 
 Vehicle Properties
 ~~~~~~~~~~~~~~~~~~
@@ -110,7 +102,6 @@ of the trip. Furthermore the vehicle setting/pedestrian for reality view
 determines, if certain roads are accessible for the person navigating
 with the mobile device.
 
-.. _settings_of_internal_gui:
 
 Settings of Internal GUI
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +109,6 @@ Settings of Internal GUI
 The settings of `Internal GUI <Internal_GUI>`__ of defined by an
 XML-File.
 
-.. _use_cases_and_menu_levels:
 
 Use Cases and Menu Levels
 -------------------------

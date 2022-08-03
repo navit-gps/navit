@@ -13,11 +13,10 @@ that the developers receive a clear and helpful bug report.
 Reporting a bug
 ===============
 
-.. raw:: mediawiki
+.. note
 
-   {{note
-   |You should also head over to the [[Contacts#Forums|Forums]] or to the [[Contacts#IRC| IRC channel]] if you want to discuss the bug before submitting a report - for example, it may just be that your local configuration is wrong, which can quickly be diagnosed by the developers.
-   }}
+   You should also head over to the [[Contacts#Forums|Forums]] or to the [[Contacts#IRC| IRC channel]] if you want to discuss the bug before submitting a report 
+   for example, it may just be that your local configuration is wrong, which can quickly be diagnosed by the developers.
 
 #. Head over to https://github.com/navit-gps/navit/issues and search for
    existing tickets on that bug
@@ -27,7 +26,6 @@ Reporting a bug
    days)
 #. Help to reproduce the bug or give more details on your problem
 
-.. _information_you_should_provide:
 
 Information you should provide
 ==============================
@@ -37,7 +35,6 @@ developers to very quickly isolate the section of code which is causing
 problems, and hopefully fix it. Please provide the requested information
 in your bug report.
 
-.. _for_usage_problems:
 
 For usage problems
 ------------------
@@ -58,7 +55,6 @@ For usage problems
 
 In addition, please provide the following (where appropriate):
 
-.. _reporting_coordinates_for_problems:
 
 Reporting coordinates for problems
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,7 +65,6 @@ Assuming you are using `OpenStreetMap <OpenStreetMap>`__ map packages:
 #. Pick the "share" tool from the right toolbox.
 #. Copy the link from the editbox
 
-.. _routing_errors:
 
 Routing errors
 ~~~~~~~~~~~~~~
@@ -84,7 +79,6 @@ road), routes which are sub-optimum or no route found at all!
 -  If you are able to route, but there is something wrong with the
    route, report what Navit gave you and what you expected.
 
-.. _navigation_errors:
 
 Navigation errors
 ~~~~~~~~~~~~~~~~~
@@ -119,7 +113,6 @@ Note that quite a few navigation problems occur due to bad map data -
 this can only be solved by improving the data in
 `OpenStreetMap <http://www.openstreetmap.org>`__
 
-.. _announcement_errors:
 
 Announcement errors
 ~~~~~~~~~~~~~~~~~~~
@@ -140,7 +133,6 @@ etc.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
 
-.. _tracking_errors:
 
 Tracking errors
 ~~~~~~~~~~~~~~~
@@ -157,7 +149,6 @@ jumping between correct and incorrect positions.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
 
-.. _for_compileinstall_problems:
 
 For compile/install problems
 ----------------------------
@@ -181,7 +172,6 @@ Anyway, we will review your ticket and try to improve it, if required.
 
 Thanks for your submission, the Navit team.
 
-.. _see_also:
 
 See also
 ========

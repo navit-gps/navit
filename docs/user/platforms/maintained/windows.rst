@@ -55,7 +55,6 @@ instructions following.
 
      <vehicle name="GPSOnCom4" enabled="yes" active="1" source="serial:COM4 baud=115200 parity=N data=8 stop=1" />
 
-.. _see_also:
 
 See also
 --------

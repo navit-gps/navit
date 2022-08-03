@@ -3,7 +3,6 @@
 Vehicleprofile/Bike Cycleway
 ============================
 
-.. _bike_cycleway:
 
 **Bike Cycleway**
 =================

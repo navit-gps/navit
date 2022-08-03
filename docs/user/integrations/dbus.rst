@@ -169,78 +169,43 @@ draw
 **Arguments:**   *none*
 **Return:**      *none*
 **Description:** Forces a redraw of the current view of the map
-**Example:**     .. code:: bash
-                 
-                    org.navit_project.navit.navit.draw
-\                
+**Example:**     org.navit_project.navit.navit.draw
 ================ ==============================================
 
 add_message
 ~~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string: "message"                                |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | **FIXME** Adds a message to the messages label   |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_pro                                 |
-|                  | ject.navit.navit.add_message string:"My Message" |
-+------------------+--------------------------------------------------+
-|                  |                                                  |
-+------------------+--------------------------------------------------+
+================ =============================================================
+**Path:**        .navit
+**Arguments:**   string: "message"
+**Return:**      *none*
+**Description:** **FIXME** Adds a message to the messages label
+**Example:**     org.navit_project.navit.navit.add_message string:"My Message"
+================ =============================================================
 
 set_center_by_string
 ~~~~~~~~~~~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string: ``coordinates``                          |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Centres the map over the specified position.     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.na                    |
-|                  | vit.set_center_by_string string:"geo: 24.0 65.0" |
-+------------------+--------------------------------------------------+
-|                  |                                                  |
-+------------------+--------------------------------------------------+
+================ ==========================================================================
+**Path:**        .navit
+**Arguments:**   string: ``coordinates``
+**Return:**      *none*
+**Description:** Centres the map over the specified position.
+**Example:**     org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
+================ ==========================================================================
 
 set_center
 ~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | integer: ``projection`` string: ``coordinates``  |
-|                  | integer: ``projection`` integer: ``longitude``   |
-|                  | integer: ``latitude``                            |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Centres the map over the specified position.     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.                      |
-|                  | navit.set_center int32:1 string:"geo: 24.0 65.0" |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.navit.                |
-|                  | set_center int32:1 int32:0x138a4a int32:0x5d773f |
-+------------------+--------------------------------------------------+
-|                  |                                                  |
-+------------------+--------------------------------------------------+
+================ ==============================================================================
+**Path:**        .navit
+**Arguments:**   integer: ``projection`` string: ``coordinates``
+**Return:**      *none*
+**Description:** Centres the map over the specified position.
+**Example:**     org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
+
+                 org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
+================ ==============================================================================
 
 set_center_screen
 ~~~~~~~~~~~~~~~~~

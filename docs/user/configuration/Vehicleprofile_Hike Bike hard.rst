@@ -3,8 +3,6 @@
 Vehicleprofile/Hike Bike hard
 =============================
 
-.. _hike_bike_hard:
-
 **Hike & Bike hard**
 ====================
 

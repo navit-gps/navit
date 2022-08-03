@@ -1,11 +1,10 @@
 Usability
 =========
 
-.. raw:: mediawiki
+.. warning
 
-   {{OutOfDate}}
+   This content is probably out of date
 
-.. _basic_functions:
 
 Basic Functions
 ---------------
@@ -192,7 +191,6 @@ navit-project.org)
    <!-- Distance and units -->
    <osd enabled="yes" type="text" label="${navigation.item.destination_length[unit]}" />
 
-.. _android_port_specific_issues:
 
 Android port specific issues
 ----------------------------

@@ -1,3 +1,5 @@
+.. configuration_vehicle:
+
 Vehicle Options
 ===============
 It's important to understand the separate but linked Navit concepts of a **vehicle** and [[Vehicleprofile| **vehicleprofile**]] element. A vehicle defines the source of positional data (suchas a USB GPS device), and how to present that data to the user on the map, where the vehicleprofile defines all aspects of routing.

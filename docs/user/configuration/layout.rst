@@ -1,3 +1,5 @@
+.. configuration_layout:
+
 Layout Options
 ==============
 Layouts

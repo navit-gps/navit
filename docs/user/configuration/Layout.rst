@@ -7,7 +7,6 @@ particular Layout which has been selected. As with almost everything
 else in Navit, Layouts are highly configurable. Below are user-submitted
 examples of Navit Layouts.
 
-.. _adding_a_layout:
 
 Adding a Layout
 ---------------
@@ -18,7 +17,6 @@ other layout descriptions as a template), and link to a new page in the
 Layout/ namespace where you can include extra images and the relevant
 xml code
 
-.. _alternate_layouts:
 
 Alternate Layouts
 -----------------
@@ -66,7 +64,6 @@ Features
 
 | 
 
-.. _mapnik_for_small_screens:
 
 Mapnik for small screens
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +80,6 @@ with smaller screens. There are two layouts available:
 -  MDPI - for medium definition small screens. `Go to
    layout <Layout/mapnik-for-mdpi>`__
 
-.. _features_1:
 
 Features
 ^^^^^^^^
@@ -92,7 +88,6 @@ Features
 -  Reduced the number of visible elements at higher zoom levels
 -  Increased font sizes for town and street names
 
-.. _see_also:
 
 See also
 ^^^^^^^^
@@ -114,7 +109,6 @@ Snow style theme, optimised for the iPod/iPhone.
 
 | 
 
-.. _high_visibility:
 
 `High-Visibility <Layout/hi_vis>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,7 +120,6 @@ attempts to address those problems.
 
 `Go to layout <Layout/hi_vis>`__
 
-.. _features_2:
 
 Features
 ^^^^^^^^
@@ -145,7 +138,6 @@ Features
 
 -  Changed activation zoom levels for airport POI icons
 
-.. _detailed_camping_biker:
 
 `Detailed Camping Biker <Layout/detailedcampingbike>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,7 +148,6 @@ Features
 
    Layout_Detailed_Camping_Biker.png
 
-.. _features_3:
 
 Features
 ^^^^^^^^
@@ -178,7 +169,6 @@ also not independent from car layout - another problem
 
 `Go to layout <Layout/bike>`__
 
-.. _features_4:
 
 Features
 ^^^^^^^^
@@ -188,7 +178,6 @@ Features
 -  everything else is much like car layout
 -  no dashed lines - suitable for winCE
 
-.. _alternate_cursors:
 
 Alternate Cursors
 -----------------
@@ -197,7 +186,6 @@ The cursor is also defined in the layout, and alternate cursors are
 shown below. If you would like to share your alternate cursor design,
 but haven't really changed the rest of the layout, add it below!
 
-.. _d_car:
 
 2D Car
 ~~~~~~
@@ -304,7 +292,6 @@ but haven't really changed the rest of the layout, add it below!
 |    </cursor>                                             |
 +----------------------------------------------------------+
 
-.. _d_car_black_for_102:
 
 2D Car black for 10,2"
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -437,7 +424,6 @@ but haven't really changed the rest of the layout, add it below!
 
 | 
 
-.. _d_cursor_tangogps_like:
 
 2D cursor tangoGPS-like
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -477,8 +463,6 @@ but haven't really changed the rest of the layout, add it below!
 +------------------------------------------------------------+
 
 | 
-
-.. _d_arrow_head:
 
 3D Arrow-head
 ~~~~~~~~~~~~~
