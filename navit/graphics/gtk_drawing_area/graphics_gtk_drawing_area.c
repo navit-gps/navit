@@ -228,24 +228,10 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
     struct graphics_image_priv *ret;
     const char *option;
 
-    if (!strcmp(name,"buffer:")) {
-        struct graphics_image_buffer *buffer=(struct graphics_image_buffer *)name;
-        GdkPixbufLoader *loader=gdk_pixbuf_loader_new();
-        if (!loader)
-            return NULL;
-        if (*w != IMAGE_W_H_UNSET || *h != IMAGE_W_H_UNSET)
-            gdk_pixbuf_loader_set_size(loader, *w, *h);
-        gdk_pixbuf_loader_write(loader, buffer->start, buffer->len, NULL);
-        gdk_pixbuf_loader_close(loader, NULL);
-        pixbuf=gdk_pixbuf_loader_get_pixbuf(loader);
-        g_object_ref(pixbuf);
-        g_object_unref(loader);
-    } else {
-        if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
-            pixbuf=gdk_pixbuf_new_from_file(name, NULL);
-        else
-            pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
-    }
+    if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
+        pixbuf=gdk_pixbuf_new_from_file(name, NULL);
+    else
+        pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
 
     if (!pixbuf)
         return NULL;

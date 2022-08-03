@@ -776,7 +776,7 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 }
 
 static void image_new_helper(struct graphics *gra, struct graphics_image *this_, char *path, char *name, int width,
-                             int height, int rotate, int zip) {
+                             int height, int rotate) {
     int i=0;
     int stdsizes[]= {8,12,16,22,24,32,36,48,64,72,96,128,192,256};
     const int numstdsizes=sizeof(stdsizes)/sizeof(int);
@@ -865,42 +865,20 @@ static void image_new_helper(struct graphics *gra, struct graphics_image *this_,
         this_->width=width;
         this_->height=height;
         dbg(lvl_debug,"Trying to load image '%s' for '%s' at %dx%d", new_name, path, width, height);
-        if (zip) {
-            unsigned char *start;
-            int len;
-            if (file_get_contents(new_name, &start, &len)) {
-                struct graphics_image_buffer buffer= {"buffer:",graphics_image_type_unknown};
-                buffer.start=start;
-                buffer.len=len;
-                this_->hot = graphics_dpi_scale_point(gra,&this_->hot);
-                if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_scale(gra,this_->width);
-                if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_scale(gra,this_->height);
-                this_->priv=gra->meth.image_new(gra->priv, &this_->meth, (char *)&buffer, &this_->width, &this_->height, &this_->hot,
-                                                rotate);
-                this_->hot = graphics_dpi_unscale_point(gra,&this_->hot);
-                if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_unscale(gra,this_->width);
-                if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_unscale(gra,this_->height);
-                g_free(start);
-            }
-        } else {
-            if (strcmp(new_name,"buffer:")) {
-                this_->hot = graphics_dpi_scale_point(gra,&this_->hot);
-                if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_scale(gra,this_->width);
-                if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_scale(gra,this_->height);
-                this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
-                this_->hot = graphics_dpi_unscale_point(gra,&this_->hot);
-                if(this_->width != IMAGE_W_H_UNSET)
-                    this_->width = graphics_dpi_unscale(gra,this_->width);
-                if(this_->height != IMAGE_W_H_UNSET)
-                    this_->height = graphics_dpi_unscale(gra,this_->height);
-            }
-        }
+
+
+        this_->hot = graphics_dpi_scale_point(gra,&this_->hot);
+        if(this_->width != IMAGE_W_H_UNSET)
+            this_->width = graphics_dpi_scale(gra,this_->width);
+        if(this_->height != IMAGE_W_H_UNSET)
+            this_->height = graphics_dpi_scale(gra,this_->height);
+        this_->priv=gra->meth.image_new(gra->priv, &this_->meth, new_name, &this_->width, &this_->height, &this_->hot, rotate);
+        this_->hot = graphics_dpi_unscale_point(gra,&this_->hot);
+        if(this_->width != IMAGE_W_H_UNSET)
+            this_->width = graphics_dpi_unscale(gra,this_->width);
+        if(this_->height != IMAGE_W_H_UNSET)
+            this_->height = graphics_dpi_unscale(gra,this_->height);
+
         if (this_->priv) {
             dbg(lvl_info,"Using image '%s' for '%s' at %dx%d", new_name, path, width, height);
             g_free(new_name);
@@ -999,9 +977,7 @@ struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, 
             newheight=h;
 
         name=g_strndup(pathi,s-pathi);
-        image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 0);
-        if (!this_->priv && strstr(pathi, ".zip/"))
-            image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate, 1);
+        image_new_helper(gra, this_, pathi, name, newwidth, newheight, rotate);
         g_free(name);
     }
 
