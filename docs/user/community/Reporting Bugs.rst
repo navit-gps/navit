@@ -13,9 +13,9 @@ that the developers receive a clear and helpful bug report.
 Reporting a bug
 ===============
 
-.. note
+.. note::
 
-   You should also head over to the [[Contacts#Forums|Forums]] or to the [[Contacts#IRC| IRC channel]] if you want to discuss the bug before submitting a report 
+   You should also head over to the [[Contacts#Discord|Discord]] or to the [[Contacts#IRC| IRC channel]] if you want to discuss the bug before submitting a report 
    for example, it may just be that your local configuration is wrong, which can quickly be diagnosed by the developers.
 
 #. Head over to https://github.com/navit-gps/navit/issues and search for

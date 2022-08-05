@@ -2,7 +2,7 @@ Android
 =======
 
 .. note::
-   Developers wanted! To maintain this port, the build and implementing new features. See :doc:`/development/targets/android_development`
+   Developers wanted! To maintain this port, the build and implementing new features. See :doc:`/development/targets/android`
 
 |First run of Navit| Navit is available on Android! Using the `Internal
 GUI <Internal_GUI>`__, Navit enables complete offline routing anywhere

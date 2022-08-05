@@ -17,5 +17,25 @@ Routeplaner Europa 2007        EU       > 4y
 Map + Route                    EU       > 4y
 ============================== ======== ===== ======= ====== == =============== ========
 
-.. include:: osm.rst
-.. include:: binfile.rst
+.. toctree::
+   :glob:
+   :maxdepth: 1
+   :caption: Map Plugins
+   
+   binfile
+   Binfile
+   Csv
+   Custom POIs
+   Garmin maps
+   Map + Route
+   Maps
+   Marco Polo Grosser Reiseplaner
+   OpenStreetMap_countries
+   OpenStreetMap
+   osm
+   Shapefiles
+   Textfile
+   US_Tiger maps
+   Other maps
+
+   

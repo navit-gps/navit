@@ -4,6 +4,7 @@ from datetime import datetime
 extensions = [
     'm2r2',
     'sphinx_rtd_theme',
+    'sphinx.ext.todo',
 ]
 
 source_suffix = '.rst'

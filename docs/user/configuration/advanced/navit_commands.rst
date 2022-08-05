@@ -1,3 +1,5 @@
+.. _command_interface:
+
 Command interface
 =================
 

@@ -6,7 +6,7 @@ Raspberry Pi
 .. _compiling_for_the_raspberry_pi:
 
 Compiling for the Raspberry Pi
-==============================
+------------------------------
 
 Compiling for the Pi is (of course) mostly like `Compiling for
 Linux <Linux_development>`__.
@@ -17,7 +17,7 @@ Linux <Linux_development>`__.
 .. _want_the_easy_way:
 
 Want the easy way?
-==================
+------------------
 
 You can try out our automated, unattended install :
 https://github.com/navit-gps/raspbian-ua-netinst
@@ -27,7 +27,7 @@ https://raw.githubusercontent.com/navit-gps/raspbian-ua-netinst/master/example.g
 .. _prefer_to_install_yourself_on_raspian:
 
 Prefer to install yourself on Raspian?
---------------------------------------
+''''''''''''''''''''''''''''''''''''''
 
 First of all, we will have to deal with the
 `dependencies <dependencies>`__:

@@ -55,7 +55,7 @@ Reporting Bugs/Feature Requests
 -------------------------------
 
 Please see `Reporting Bugs <reporting_bugs>`__ and
-:doc:`Patches <submitting_patches>`, if you like to contribute code.
+:doc:`Patches </development/guides/submitting_patches>`, if you like to contribute code.
 
 .. _following_development:
 

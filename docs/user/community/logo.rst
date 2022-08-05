@@ -22,7 +22,7 @@ color codes
 | ffda00ff |ffda00ff.jpg|
 | f57f0cff |f57f0cff.jpg|
 
-..raw:: html
+.. raw:: html
     <div style="background-color: #f57f0cff;height: 1em;width: 3em;" />
 
  black and white
@@ -53,7 +53,7 @@ logo used at
 
 -  app
 
-   -  Android application icon in apk (file res/drawable-*/icon.png)
+   -  Android application icon in apk (file res/drawable-\*/icon.png)
    -  Internal GUI menu about
    -  GTK GUI window icon
    -  Qt icons?

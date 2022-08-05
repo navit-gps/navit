@@ -1,7 +1,7 @@
 .. _main_pagedeveloper:
 
-Developer Guide
-===============
+Developer Overview
+==================
 
 **Navit** is written mostly in C (see `Programming
 guidelines <Programming_guidelines>`__), and versioned with git at the `Git
