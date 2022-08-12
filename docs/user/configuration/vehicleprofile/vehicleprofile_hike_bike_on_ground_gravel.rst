@@ -61,4 +61,4 @@ Copy and paste the following XML into navit.xml. Last update 01.01.13
                        <announcement level="2" distance_metric="200"/>
          </roadprofile>
                </vehicleprofile>
-               
+

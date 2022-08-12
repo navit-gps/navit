@@ -133,7 +133,7 @@ Map point    ?Kartenpunkt
 screen coord Bildschirm
 settings     Einstellungen
 vehicle      Fahrzeug
-\            
+\
 ============ ================
 
 .. _not_to_translate:

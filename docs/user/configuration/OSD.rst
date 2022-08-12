@@ -334,12 +334,12 @@ on the screen) but can be used to run a command periodically. Example:
 .. code:: xml
 
    <osd name="my_osd_cmdif" update_period="1" enabled="yes" type="cmd_interface" w="200" h="20" x="350" y="175" command='osd_set_attr("my_osd_text","label",
-       route.route_status==1     ? "Dst set" : 
-       (route.route_status==0     ? "No dst set" :  
-       (route.route_status==3     ? "Not found" : 
-       (route.route_status==5     ? "building path" : 
-       (route.route_status==13    ? "building path" : 
-       (route.route_status==17    ? "path done new" : 
+       route.route_status==1     ? "Dst set" :
+       (route.route_status==0     ? "No dst set" :
+       (route.route_status==3     ? "Not found" :
+       (route.route_status==5     ? "building path" :
+       (route.route_status==13    ? "building path" :
+       (route.route_status==17    ? "path done new" :
        (route.route_status==33    ? "path done incremental" : "unhandled"
        )))))))
        '  />
@@ -1368,7 +1368,7 @@ following bitmaps to be present in ``$HOME/.navit/buttons``:
 .. code:: xml
 
    <osd name="status1" h="1" w="1"  update_period="1"  enabled="yes" type="cmd_interface" x="11"  y="416" command='osd[@name=="status"].src = route.route_status==1     ? "$HOME/.navit/buttons/set.png" :
-   (route.route_status==0     ? "$HOME/.navit/buttons/def.png" :  
+   (route.route_status==0     ? "$HOME/.navit/buttons/def.png" :
    (route.route_status==3     ? "$HOME/.navit/buttons/no_destination.png" :
 
    (route.route_status==5     ? "$HOME/.navit/buttons/calculate.png" :

@@ -40,31 +40,31 @@ This is for the compiling process:
 
 .. code:: bash
 
-   sudo apt-get install gcc g++ cmake make zlib1g-dev libpng12-dev librsvg2-bin 
+   sudo apt-get install gcc g++ cmake make zlib1g-dev libpng12-dev librsvg2-bin
 
 This is for the SDL graphics (suggested):
 
 .. code:: bash
 
-   sudo apt-get install libsdl-image1.2-dev libdevil-dev libglc-dev freeglut3-dev libxmu-dev libfribidi-dev 
+   sudo apt-get install libsdl-image1.2-dev libdevil-dev libglc-dev freeglut3-dev libxmu-dev libfribidi-dev
 
 This is for the OpenGL support:
 
 .. code:: bash
 
-   sudo apt-get install libglc-dev freeglut3-dev libgl1-mesa-dev libfreeimage-dev 
+   sudo apt-get install libglc-dev freeglut3-dev libgl1-mesa-dev libfreeimage-dev
 
 This is QT (note that the QT gui is not maintained currently) :
 
 .. code:: bash
 
-   sudo apt-get install libqt4-dev 
+   sudo apt-get install libqt4-dev
 
 This is for GPSd support :
 
 .. code:: bash
 
-   sudo apt-get install libgps-dev 
+   sudo apt-get install libgps-dev
 
 This is espeak, TTS (text to speech)(optional):
 
@@ -77,7 +77,7 @@ are really detailed ) :
 
 .. code:: bash
 
-   sudo apt-get install libgarmin-dev 
+   sudo apt-get install libgarmin-dev
 
 Ok, now let's download the latest version of Navit from the repository
 (starting from your user's folder like /home/pi):

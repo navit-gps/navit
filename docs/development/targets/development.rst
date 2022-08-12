@@ -119,7 +119,7 @@ Visual
 
 -  `Custom POIs <Custom_POIs>`__
 
--  
+-
 
    -  `OSD <OSD>`__ - for internal UI
 

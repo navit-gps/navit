@@ -168,7 +168,7 @@ espeak on Linux
 To get Navit to speak with espeak you can add the following XML to your
 navit.xml file:
 
-`` ``\ 
+`` ``\
 
 This tells espeak to output in the English language (-ven) using female
 voice #4 (+f4).
@@ -180,7 +180,7 @@ Dutch, and the speech pronunciation has to change to Dutch too.
 For the first, you can change the LANG variable but much better solution
 is to use language attribute of the config tag:
 
-`` ``\ 
+`` ``\
 
 Here "nl" tells Navit to display its interface and announce directions
 in Dutch and "NL" to default town searching to the Netherlands. Change
@@ -191,7 +191,7 @@ perfectly valid combination for German in France.
 To change the pronunciation -- I'll use Dutch again as an example -- use
 this in your navit.xml instead:
 
-`` ``\ 
+`` ``\
 
 For different eSpeak language codes see `the eSpeak language
 documentation <http://espeak.sourceforge.net/languages.html>`__.

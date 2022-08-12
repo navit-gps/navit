@@ -40,7 +40,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
 
 .. code:: xml
 
-       
+
              <layout name="+ Detailed Camping Biker" nightlayout="+ Detailed Camping Biker Night" color="#ffefb7" font="Liberation Sans" active="1">
                <cursor w="26" h="26">
                    <itemgra>
@@ -288,7 +288,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                        <polyline color="#FF00FF" width="530"/>
                    </itemgra>
                </layer>
-               
+
                <layer name="Ways and Paths">
                    <itemgra item_types="powerline" order="13-">
                        <polyline color="#5e5e5e" width="1"/>
@@ -487,11 +487,11 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="hiking_alpine_difficult" order="15-">
                    <polyline color="#562000" width="5"/>
                        <polyline color="#8b4513" width="4" dash="14,4"/>
-                   </itemgra> 
+                   </itemgra>
                </layer>
-               
-               
-               
+
+
+
                <layer name="Streets">
                    <itemgra item_types="poly_pedestrian,poly_plaza" order="0-">
                        <polygon color="#d2d2d2"/>
@@ -1088,7 +1088,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                        <icon src="gui_sound_32_32.png"/>
                        <circle color="#FF089C" radius="10" text_size="7"/>
                    </itemgra>
-               </layer>            
+               </layer>
                <layer name="Street Labels">
                    <itemgra item_types="highway_exit_label" order="10-">
                        <circle color="#000000" radius="3" text_size="12"/>
@@ -1116,7 +1116,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <!-- This entry shows all unknown linear elements as blue lines -->
                    <!--
                    <itemgra item_types="street_unkn" order="0-">
-                       <polyline color="#8080ff" width="3"/> 
+                       <polyline color="#8080ff" width="3"/>
                    </itemgra>
                    -->
                </layer>
@@ -1169,7 +1169,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    </itemgra>
                    <itemgra item_types="poi_aerodrome" order="5-">
                        <icon src="/sdcard/navit/icons/transport_aerodrome2.n.20.png"/>
-                   </itemgra>      
+                   </itemgra>
                    <itemgra item_types="poi_fuel" order="16-">
                        <icon src="/sdcard/navit/icons/transport_fuel.n.20.png"/>
                    </itemgra>
@@ -1316,7 +1316,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="poi_drinking_water" order="11-">
                        <icon src="/sdcard/navit/icons/food_drinkingtap.p.16.png"/>
                    </itemgra>
-                  
+
                    <itemgra item_types="poi_fish" order="12-">
                        <icon src="fish.xpm"/>
                    </itemgra>
@@ -1630,19 +1630,19 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                            <circle color="#000000" radius="3" text_size="7"/>
                        </itemgra>
                </layer>
-        
+
            </layout>
 
-           
-       
-       
-       
-      
-    
-       
-       
-      
-     
+
+
+
+
+
+
+
+
+
+
        <layout name="+ Detailed Camping Biker Night" daylayout="+ Detailed Camping Biker" color="#48272e" font="Liberation Sans" >
                <cursor w="26" h="26">
                    <itemgra>
@@ -1904,7 +1904,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                        <polyline color="#d200d2" width="530"/>
                    </itemgra>
                </layer>
-               
+
                <layer name="Ways and Paths">
                    <itemgra item_types="powerline" order="13-">
                        <polyline color="#000000" width="1"/>
@@ -2102,11 +2102,11 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="hiking_alpine_difficult" order="15-">
                    <polyline color="#562000" width="5"/>
                        <polyline color="#8b4513" width="4" dash="14,4"/>
-                   </itemgra> 
+                   </itemgra>
                </layer>
-               
-               
-               
+
+
+
                <layer name="Streets">
                    <itemgra item_types="poly_pedestrian,poly_plaza" order="0-">
                        <polygon color="#d2d2d2"/>
@@ -2703,7 +2703,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                        <icon src="gui_sound_32_32.png"/>
                        <circle color="#FF089C" radius="10" text_size="7"/>
                    </itemgra>
-               </layer>            
+               </layer>
                <layer name="Street Labels">
                    <itemgra item_types="highway_exit_label" order="10-">
                        <circle color="#ffffff" radius="3" text_size="12"/>
@@ -2731,7 +2731,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <!-- This entry shows all unknown linear elements as blue lines -->
                    <!--
                    <itemgra item_types="street_unkn" order="0-">
-                       <polyline color="#8080ff" width="3"/> 
+                       <polyline color="#8080ff" width="3"/>
                    </itemgra>
                    -->
                </layer>
@@ -2784,7 +2784,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    </itemgra>
                    <itemgra item_types="poi_aerodrome" order="5-">
                        <icon src="/sdcard/navit/icons/transport_aerodrome2.n.20.png"/>
-                   </itemgra>      
+                   </itemgra>
                    <itemgra item_types="poi_fuel" order="16-">
                        <icon src="/sdcard/navit/icons/transport_fuel.n.20.png"/>
                    </itemgra>
@@ -2931,7 +2931,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="poi_drinking_water" order="11-">
                        <icon src="/sdcard/navit/icons/food_drinkingtap.p.16.png"/>
                    </itemgra>
-                  
+
                    <itemgra item_types="poi_fish" order="12-">
                        <icon src="fish.xpm"/>
                    </itemgra>
@@ -3245,7 +3245,7 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                            <circle color="#ff0000" radius="3" text_size="7"/>
                        </itemgra>
                </layer>
-        
+
            </layout>
 
 .. |250px| image:: Detailed_Camping_Biker_png2.png

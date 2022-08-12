@@ -21,7 +21,7 @@ Map + Route                    EU       > 4y
    :glob:
    :maxdepth: 1
    :caption: Map Plugins
-   
+
    binfile
    Binfile
    Csv
@@ -38,4 +38,4 @@ Map + Route                    EU       > 4y
    US_Tiger maps
    Other maps
 
-   
+

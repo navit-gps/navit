@@ -16,7 +16,7 @@ For instructions how to get started you should look at :doc:`platforms/index`
 
 Configration
 ------------
-The most difficult task on setting up Navit is its configuration. 
+The most difficult task on setting up Navit is its configuration.
 The configuration is mostly done with xml-Files.
 We have seperated this section into two Parts to get you on the track.
 

@@ -37,13 +37,13 @@ Supported Operating systems
 Operating System        Tested Successfully
 ======================= ===================
 Windows 2008            .. raw:: mediawiki
-                        
+
                            {{yes}}
 Lubuntu 12.10           .. raw:: mediawiki
-                        
+
                            {{yes}}
 Lubuntu 12.10 with wine .. raw:: mediawiki
-                        
+
                            {{yes}}
 ======================= ===================
 

@@ -64,5 +64,5 @@ Copy and paste the following XML into navit.xml. Last update 01.01.13
                <roadprofile item_types="roundabout" speed="20" route_weight="18"/>
                <roadprofile item_types="ferry" speed="40" route_weight="15"/>
            </vehicleprofile>
-           
-     
+
+

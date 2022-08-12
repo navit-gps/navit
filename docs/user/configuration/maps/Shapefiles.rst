@@ -32,9 +32,9 @@ of the default navit.xml
 **Note : you need to disable any other mapset that could be already
 enabled**
 
-| 
-| `` ``\ 
-| 
+|
+| `` ``\
+|
 
 **Note : do not include the ".shp" extension** otherwise Navit will
 complain with

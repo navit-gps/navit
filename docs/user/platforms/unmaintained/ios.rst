@@ -294,7 +294,7 @@ Speech
 Get **festival** library + **Erica utilities** on Cydia. Then change
 your speech configuration in "/var/mobile/.navit/navit.xml" to
 
-`` ``\ 
+`` ``\
 
 .. _test_feedback:
 

@@ -902,7 +902,7 @@ renderer**
                        <icon src="gui_sound_32_32.png"/>
                        <circle color="#FF089C" radius="10" text_size="7"/>
                    </itemgra>
-               </layer>            
+               </layer>
                <layer name="Street Labels">
                    <itemgra item_types="highway_exit_label" order="10-">
                        <circle color="#000000" radius="3" text_size="12"/>
@@ -930,7 +930,7 @@ renderer**
                    <!-- This entry shows all unknown linear elements as blue lines -->
                    <!--
                    <itemgra item_types="street_unkn" order="0-">
-                       <polyline color="#8080ff" width="3"/> 
+                       <polyline color="#8080ff" width="3"/>
                    </itemgra>
                    -->
                </layer>

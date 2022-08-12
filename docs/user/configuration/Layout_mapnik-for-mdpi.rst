@@ -45,7 +45,7 @@ XML
                        </polyline>
                </itemgra>
        </cursor>
-           
+
                <layer name="polygons">
                    <itemgra item_types="image" order="0-">
                        <image/>
@@ -213,7 +213,7 @@ XML
                        <polygon color="#fefefe"/>
                        <polyline color="#9A9889" width="1"/>
                    </itemgra>
-                   
+
                    <itemgra item_types="poly_street_1" order="8-13">
                        <polygon color="#ffffff"/>
                        <polyline color="#9A9889" width="1"/>
@@ -265,7 +265,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poly_building" order="15-">
                        <polygon color="#BCA9A9"/>
-                       <polyline color="#BCA9A9" width="1"/> 
+                       <polyline color="#BCA9A9" width="1"/>
                    </itemgra>
                    <itemgra item_types="rail" order="9-11">
                        <polyline color="#000000" width="1"/>
@@ -286,7 +286,7 @@ XML
                    <itemgra item_types="ferry" order="10-">
                        <polyline color="#000000" width="1" dash="10"/>
                    </itemgra>
-                  
+
                    <itemgra item_types="border_state" order="0-">
                        <polyline color="#808080" width="1"/>
                    </itemgra>
@@ -675,8 +675,8 @@ XML
                    <itemgra item_types="street_0,street_1_city,street_1_land" order="11">
                        <polyline color="#bbbbbb" width="1"/>
                    </itemgra>
-                   
-                           
+
+
                    <itemgra item_types="street_0,street_1_city,street_1_land" order="12">
                        <polyline color="#9A9889" width="10"/>
                        <polyline color="#ffffff" width="7"/>
@@ -1003,7 +1003,7 @@ XML
                        <polyline color="#00FFFF" width="2"/>
                    </itemgra>
 
-           
+
 
            <!-- ROUTING -->
 
@@ -1090,7 +1090,7 @@ XML
                    <itemgra item_types="highway_exit_label" order="10-">
                        <circle color="#000000" radius="3" text_size="4"/>
                    </itemgra>
-                   
+
                    <itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-13">
                        <text text_size="9"/>
                    </itemgra>
@@ -1104,7 +1104,7 @@ XML
                        <text text_size="23"/>
                    </itemgra>
 
-                   
+
                    <itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="10-13">
                        <text text_size="7"/>
                    </itemgra>
@@ -1117,7 +1117,7 @@ XML
                     <itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="17-18">
                        <text text_size="21"/>
                    </itemgra>
-                   
+
 
                    <itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,street_pedestrian" order="12-13">
                        <text text_size="7"/>
@@ -1131,8 +1131,8 @@ XML
                    <itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,street_pedestrian" order="17-18">
                        <text text_size="21"/>
                    </itemgra>
-                   
-                   
+
+
                    <itemgra item_types="traffic_distortion" order="2">
                        <polyline color="#ff9000" width="2"/>
                    </itemgra>
@@ -1295,7 +1295,7 @@ XML
                    </itemgra>-->
 
                </layer>
-               
+
                <layer name="POI Symbols">
 
    <!-- IMPORTANT sort by layer -->
@@ -1310,7 +1310,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_aerodrome" order="5-">
                        <icon src="/sdcard/navit/icons/transport_aerodrome2.n.24.png"/>
-                   </itemgra>      
+                   </itemgra>
                    <itemgra item_types="poi_fuel" order="11-">
                        <icon src="/sdcard/navit/icons/transport_fuel.n.20.png"/>
                    </itemgra>
@@ -1403,7 +1403,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_border_station" order="10-">
                        <icon src="/sdcard/navit/icons/poi_boundary_administrative.n.16.png"/>
-                   </itemgra> 
+                   </itemgra>
                    <itemgra item_types="barrier_bollard" order="13-">
                        <icon src="/sdcard/navit/icons/barrier_bollard.p.24.png"/>
                    </itemgra>
@@ -1431,7 +1431,7 @@ XML
                    <itemgra item_types="poi_level_crossing" order="11-">
                        <icon src="/sdcard/navit/icons/level_crossing.xpm"/>
                    </itemgra>
-                   
+
                    <!--<itemgra item_types="poi_rail_halt" order="11-">
                        <circle color="#ff0000" radius="3" width="3"/>
                        <circle color="#000000" radius="5" width="2" text_size="8"/>
@@ -1442,7 +1442,7 @@ XML
                    <itemgra item_types="poi_rail_station" order="13-"> <!-- UBAHN-->
                        <circle color="#0000A5" radius="6" width="6"/>
                    </itemgra>
-                                
+
                    <itemgra item_types="poi_rail_tram_stop" order="12">
                        <circle color="#0000A5" radius="3" width="3"/>
                    </itemgra>
@@ -1484,10 +1484,10 @@ XML
                        <icon src="/sdcard/navit/icons/accommodation_camping.n.32.png"/>
                    </itemgra> -->
 
-                   
-                   
-                   
-   <!-- MUSEUMS and ATTRACTIONS poi_museum_history, poi_attraction,poi_theater,poi_zoo,poi_castle, poi_ruins,poi_memorial,poi_monument,poi_viewpoint  
+
+
+
+   <!-- MUSEUMS and ATTRACTIONS poi_museum_history, poi_attraction,poi_theater,poi_zoo,poi_castle, poi_ruins,poi_memorial,poi_monument,poi_viewpoint
                    <itemgra item_types="poi_museum_history" order="13-">
                        <icon src="/sdcard/navit/icons/tourist_museum.n.32.png"/>
                    </itemgra>
@@ -1543,7 +1543,7 @@ XML
                        <icon src="/sdcard/navit/icons/tourist_view_point.glow.24.png"/>
                    </itemgra> -->
 
-   <!-- SHOPPING poi_shop_grocery,poi_shopping,   
+   <!-- SHOPPING poi_shop_grocery,poi_shopping,
                    <itemgra item_types="poi_shop_grocery" order="15-">
                        <icon src="/sdcard/navit/icons/shopping_convenience.n.24.png"/>
                    </itemgra>
@@ -1577,8 +1577,8 @@ XML
                        <itemgra item_types="poi_shop_garden_centre" order="15-">
                        <icon src="/sdcard/navit/icons/shopping_garden_centre.p.32.png"/>
                    </itemgra> -->
-                   
-                   
+
+
    <!-- SECURITY poi_hospital,poi_police,poi_pharmacy
                    <itemgra item_types="poi_hospital" order="13-">
                        <icon src="/sdcard/navit/icons/health_hospital_emergency.n.32.png"/>
@@ -1610,8 +1610,8 @@ XML
                    <itemgra item_types="poi_pharmacy" order="13-">
                        <icon src="/sdcard/navit/icons/health_pharmacy.n.32.png"/>
                    </itemgra> -->
-                  
-   <!-- SPORTS 
+
+   <!-- SPORTS
                    <itemgra item_types="poi_diving" order="14-">
                        <icon src="/sdcard/navit/icons/sport_diving.p.32.png"/>
                    </itemgra>
@@ -1643,8 +1643,8 @@ XML
                        <icon src="/sdcard/navit/icons/stadium.xpm"/>
                    </itemgra>
                     -->
-                   
-   <!-- ELSE poi_airport,highway_exit,poi_school,poi_church,poi_repair_service, poi_bank,poi_sport,poi_stadium,poi_swimmingpoi_shelter      
+
+   <!-- ELSE poi_airport,highway_exit,poi_school,poi_church,poi_repair_service, poi_bank,poi_sport,poi_stadium,poi_swimmingpoi_shelter
                    <itemgra item_types="poi_college" order="14-" zoom="0">
                        <icon src="/sdcard/navit/icons/education_colledge.p.32.png"/>
                    </itemgra>
@@ -1653,7 +1653,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_university" order="12-">
                        <icon src="/sdcard/navit/icons/education_university.p.32.png"/>
-                   </itemgra>  
+                   </itemgra>
                    <itemgra item_types="poi_border_station" order="14-">
                        <icon src="/sdcard/navit/icons/poi_boundary_administrative.n.20.png"/>
                    </itemgra>
@@ -1670,7 +1670,7 @@ XML
                        <icon src="/sdcard/navit/icons/dangerous.xpm"/>
                    </itemgra>
                        <itemgra item_types="poi_emergency" order="12-">
-                       <icon src="/sdcard/navit/icons/emergency.xpm"/>>  
+                       <icon src="/sdcard/navit/icons/emergency.xpm"/>>
                    <itemgra>
                    <itemgra item_types="mini_roundabout" order="13-">
                        <circle color="#ffffff" radius="3"/>
@@ -1693,11 +1693,11 @@ XML
                    <itemgra item_types="poi_post" order="13-">
                        <icon src="/sdcard/navit/icons/amenity_post_box.p.32.png"/>
                    </itemgra>
-                   
+
                    <itemgra item_types="poi_telephone" order="15-">
                        <icon src="/sdcard/navit/icons/amenity_telephone.p.32.png"/>
                    </itemgra>
-                   
+
                    <itemgra item_types="poi_tower" order="13-">
                        <icon src="/sdcard/navit/icons/poi_tower_communications.p.32.png"/>
                    </itemgra>
@@ -1718,7 +1718,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_waste_basket" order="16-">
                        <icon src="/sdcard/navit/icons/amenity_waste_bin.p.32.png"/>
-                   </itemgra>  
+                   </itemgra>
                    <itemgra item_types="poi_taxi" order="13-">
                        <icon src="/sdcard/navit/icons/transport_taxi_rank.p.32.png"/>
                    </itemgra>
@@ -1732,7 +1732,7 @@ XML
                    </itemgra>
                    <itemgra item_types="rg_point" order="12-">
                        <circle color="#FF089C" radius="10" text_size="7"/>
-                   </itemgra> 
+                   </itemgra>
                    <itemgra item_types="tec_common" order="11-">
                        <icon src="/sdcard/navit/icons/traffic_camera.png" w="24" h="24"/>
                    </itemgra>
@@ -1759,7 +1759,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_border_station" order="14-">
                        <icon src="/sdcard/navit/icons/poi_boundary_administrative.n.20.png"/>
-                   </itemgra> 
+                   </itemgra>
                    <aitemgra item_types="poi__halt" order="11-">
                        <circle color="#ff0000" radius="3" width="3"/>
                        <circle color="#000000" radius="5" width="2" text_size="8"/>
@@ -1774,9 +1774,9 @@ XML
                    <itemgra item_types="poi__tram_stop" order="12-">
                        <circle color="#ff0000" radius="3" width="3"/>
                        <circle color="#606060" radius="5" width="2" text_size="8"/>
-                   </itemgra>   -->    
-               
-   <!-- BARRIERS 
+                   </itemgra>   -->
+
+   <!-- BARRIERS
                    <itemgra item_types="barrier_bollard" order="13-">
                        <icon src="/sdcard/navit/icons/barrier_bollard.p.32.png"/>
                    </itemgra>
@@ -1800,12 +1800,12 @@ XML
                    </itemgra>
                    <itemgra item_types="barrier_toll_booth" order="14-">
                        <icon src="/sdcard/navit/icons/barrier_toll_booth.p.32.png"/>
-                   </itemgra> --> 
-                            
-               
-               
+                   </itemgra> -->
+
+
+
            <!-- HIGHEST LEVEL POIs -->
-           <!-- Solid background 
+           <!-- Solid background
                    <itemgra item_types="poi_airport" order="5-">
                        <icon src="/sdcard/navit/icons/transport_airport2.n.32.png"/>
                    </itemgra>
@@ -1814,7 +1814,7 @@ XML
                    </itemgra>
                    <itemgra item_types="poi_aerodrome" order="5-">
                        <icon src="/sdcard/navit/icons/transport_aerodrome2.n.32.png"/>
-                   </itemgra>      
+                   </itemgra>
                    <itemgra item_types="poi_fuel" order="6-">
                        <icon src="/sdcard/navit/icons/transport_fuel.n.24.png"/>
                    </itemgra>
@@ -1839,9 +1839,9 @@ XML
                          <itemgra item_types="traffic_signals" order="13-" zoom="0">
                        <icon src="/sdcard/navit/icons/traffic_signals.png"/>
                    </itemgra> -->
-     
+
            <!-- Clear background -->
-                  
+
                    <!--<itemgra item_types="nav_left_1" order="0-">
                        <icon src="/sdcard/navit/icons/nav_left_1_bk.svg" w="32" h="32"/>
                    </itemgra>
@@ -1945,14 +1945,14 @@ XML
                        <circle color="#606060" radius="0" width="1" text_size="15"/>
                    </itemgra>
                </layer>-->
-               
+
    <!-- HOTEL and FOOT poi_resort, poi_motel,poi_hotel,poi_restaurant,poi_cafe,poi_bar,poi_fastfood,-->
-   <!-- MUSEUMS and ATTRACTIONS poi_museum_history, poi_attraction,poi_theater,poi_zoo,poi_castle, poi_ruins,poi_memorial,poi_monument,poi_viewpoint --> 
-   <!-- SHOPPING poi_shop_grocery,poi_shopping,  -->   
+   <!-- MUSEUMS and ATTRACTIONS poi_museum_history, poi_attraction,poi_theater,poi_zoo,poi_castle, poi_ruins,poi_memorial,poi_monument,poi_viewpoint -->
+   <!-- SHOPPING poi_shop_grocery,poi_shopping,  -->
    <!-- SECURITY poi_hospital,poi_police,poi_pharmacy-->
    <!-- ELSE poi_airport,highway_exit,poi_school,poi_church,poi_repair_service, poi_bank,poi_sport,poi_stadium,poi_swimmingpoi_shelter-->>
-               
-           
+
+
            <!-- TOWN LABELS -->
            <layer name="labels">
            <itemgra item_types="house_number" order="16-">
@@ -1982,7 +1982,7 @@ XML
                    <itemgra item_types="town_label_1e4,town_label_2e4,town_label_5e4" order="10-">
                        <circle color="#000000" radius="3" text_size="30"/>
                    </itemgra>
-                                            
+
                    <itemgra item_types="district_label_1e5,district_label_2e5,district_label_5e5" order="8-">
                        <circle color="#000000" radius="3" text_size="27"/>
                    </itemgra>
@@ -1998,6 +1998,6 @@ XML
                    <itemgra item_types="town_label_1e7,district_label_1e7" order="1-">
                        <circle color="#000000" radius="3" text_size="47"/>
                    </itemgra>
-           
+
                </layer>
            </layout>

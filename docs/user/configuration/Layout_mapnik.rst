@@ -80,7 +80,7 @@ March 2011 (UTC)
                        </polyline>
                </itemgra>
        </cursor>
-           
+
                <layer name="polygons">
                    <itemgra item_types="image" order="0-">
                        <image/>
@@ -299,7 +299,7 @@ March 2011 (UTC)
                    </itemgra>
                    <itemgra item_types="poly_building" order="0-">
                        <polygon color="#BCA9A9"/>
-               <polyline color="#BCA9A9" width="2"/> 
+               <polyline color="#BCA9A9" width="2"/>
                    </itemgra>
                    <itemgra item_types="rail" order="6-">
                        <polyline color="#696969" width="3"/>
@@ -1252,7 +1252,7 @@ March 2011 (UTC)
                        <polyline color="#918A8A" width="1" dash="15,15"/>
                    </itemgra>
                </layer>
-               
+
                <layer name="POI Symbols">
            <!-- HIGHEST LEVEL POIs -->
            <!-- Solid background -->
@@ -1264,7 +1264,7 @@ March 2011 (UTC)
                    </itemgra>
                    <itemgra item_types="poi_aerodrome" order="5-">
                        <icon src="/home/netbook/.navit/poi/png/transport_aerodrome2.n.20.png"/>
-                   </itemgra>      
+                   </itemgra>
                    <itemgra item_types="poi_fuel" order="3-">
                        <icon src="/home/netbook/.navit/poi/png/transport_fuel.n.20.png"/>
                    </itemgra>
@@ -1408,7 +1408,7 @@ March 2011 (UTC)
                    <itemgra item_types="poi_drinking_water" order="13-">
                        <icon src="/home/netbook/.navit/poi/png/food_drinkingtap.p.20.png"/>
                    </itemgra>
-                  
+
                    <itemgra item_types="poi_fish" order="9-">
                        <icon src="fish.xpm"/>
                    </itemgra>
@@ -1787,7 +1787,7 @@ Last update 19:30, 3 July 2011 (UTC)
 
 .. code:: xml
 
-           
+
        <layout name="OSM-dark" daylayout="OSM" color="#011001">
 
        <cursor w="26" h="26">
@@ -1810,7 +1810,7 @@ Last update 19:30, 3 July 2011 (UTC)
                        </polyline>
                </itemgra>
        </cursor>
-           
+
                <layer name="polygons">
                    <itemgra item_types="image" order="0-">
                        <image/>
@@ -2927,10 +2927,10 @@ Last update 19:30, 3 July 2011 (UTC)
                        <polyline color="#000000" width="1" dash="15,15"/>
                    </itemgra>
                </layer>
-               
+
                <layer name="POI Symbols">
            <!-- HIGHEST LEVEL POIs -->
-           <!-- Solid background -->       
+           <!-- Solid background -->
                    <itemgra item_types="poi_fuel" order="3-">
                        <icon src="fuel1.png"/>
                    </itemgra>
@@ -3086,7 +3086,7 @@ Last update 19:30, 3 July 2011 (UTC)
                    <itemgra item_types="poi_drinking_water" order="13-">
                        <icon src="food_drinkingtap.p.20.png"/>
                    </itemgra>
-                  
+
                    <itemgra item_types="poi_fish" order="9-">
                        <icon src="fish.xpm"/>
                    </itemgra>

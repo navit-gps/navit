@@ -30,9 +30,9 @@ Quick Start
    to the active the mapset (see `Configuration <Configuration>`__) in
    navit.xml with a line similar to the following:
 
-| 
-| `` ``\ 
-| 
+|
+| `` ``\
+|
 
 .. _add_osm_map_to_your_mapset:
 
@@ -43,9 +43,9 @@ Move the downloaded map to the directory of your choice, and add it to
 the active mapset (see `Configuration <Configuration>`__) in navit.xml
 with a line similar to the following:
 
-| 
-| `` ``\ 
-| 
+|
+| `` ``\
+|
 
 .. _topographic_maps:
 
@@ -112,7 +112,7 @@ space (so are quicker to download and process) but are not editable.
 
 ``wget -O map.osm "``\ ```http://xapi.openstreetmap.org/api/0.6/map?bbox=11.4,48.7,11.6,48.9`` <http://xapi.openstreetmap.org/api/0.6/map?bbox=11.4,48.7,11.6,48.9>`__\ ``"``
 
--  
+-
 
    -  `OpenStreetMap (visual) <http://www.openstreetmap.org/export>`__
       allows you to select a small rectangular area and download the

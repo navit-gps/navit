@@ -55,9 +55,9 @@ file below the home directory.
 This basically follows the `Configuration <Configuration>`__
 instructions. But there are a few platform specific changes nessesary:
 
--  
--  
--  
+-
+-
+-
 
 old
 ---
@@ -213,7 +213,7 @@ below is an example of laying out the information on an n810
     <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="5" y="46" font_size="800"
        w="200" h="55" align="4" background_color="#1b0877cc"/>
     <osd enabled="yes" type="text" label="ETA: ${navigation.item.destination_time[arrival]}" x="-220"
-       y="46" font_size="500" w="215" h="40" align="4" background_color="#1b0877cc"/> 
+       y="46" font_size="500" w="215" h="40" align="4" background_color="#1b0877cc"/>
     <osd enabled="yes" type="text" label="Left to Go" x="-175" y="87" font_size="400" w="170" h="40"
        align="4" background_color="#1b0877cc"/>
     <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="-200" y="128"
@@ -221,19 +221,19 @@ below is an example of laying out the information on an n810
     <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="-200"
        y="169" font_size="550" w="195" h="40" align="4" background_color="#1b0877cc"/>
     <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="-320" y="-86"
-       font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/> 
+       font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/>
     <osd enabled="yes" type="navigation_next_turn" x="-85" y="-106" font_size="500" w="80" h="65"
-       background_color="#1b0877cc"/>  
+       background_color="#1b0877cc"/>
     <osd enabled="yes" type="text" label="onto ${navigation.item[1].street_name}" x="-555" y="-40"
        font_size="550" w="550" h="35" align="4" background_color="#1b0877cc"/>
-    <osd enabled="yes" type="text" label="${navigation.item.street_name} 
+    <osd enabled="yes" type="text" label="${navigation.item.street_name}
        Max:${tracking.item.route_speed}" x="5" y="5" align="0" background_color="#1b0877cc" font_size="550"
-       w="790" h="40"/>    
+       w="790" h="40"/>
     <osd enabled="yes" type="gps_status" x="5" y="101" w="50" h="40" background_color="#1b0877cc"/>
     <osd enabled="yes"  type="button" x="5" y="-120" command="zoom_in()" src="gui_zoom_in.png"/>
-    <osd enabled="yes"  type="button" x="60" y="-60" command="zoom_out()" src="gui_zoom_out.png"/> 
+    <osd enabled="yes"  type="button" x="60" y="-60" command="zoom_out()" src="gui_zoom_out.png"/>
     <osd enabled="yes"  type="button" x="5" y="-60" command="gui.fullscreen()" src="gui_fullscreen.png"/>
-    <osd enabled="no" type="speed_warner" x="-60" y="180" w="60" h="60"/> 
+    <osd enabled="no" type="speed_warner" x="-60" y="180" w="60" h="60"/>
     <osd enabled="no" type="button" x="0" y="0" command="gui_internal_menu" src="menu.xpm"/>
 
 gives: |Screenshot-2009-02-06-21-59-28.png|
@@ -286,22 +286,22 @@ also works without overlaping when in windowed mode.
        font_size="400" w="170" h="30" align="4" background_color="#1a6ad780"/>
     <osd enabled="yes" type="text" label="Left to Go" x="5" y="-185" font_size="400" w="170" h="30" align="4"
     background_color="#1a6ad780"/>
-    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="5" y="-150" 
+    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="5" y="-150"
        font_size="400" w="170" h="30" align="4" background_color="#1a6ad780"/>
-    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="5" y="-115" 
+    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="5" y="-115"
        font_size="400" w="170" h="30" align="4" background_color="#1a6ad780"/>
-    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="5" y="-40" 
+    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="5" y="-40"
        font_size="500" w="235" h="35" align="4" background_color="#000000c8"/>
     <osd enabled="yes" type="navigation_next_turn" x="245" y="-45" font_size="500" w="60" h="40"
        background_color="#000000c8"/>
     <osd enabled="yes" type="text" label="onto ${navigation.item[1].street_name}" x="310" y="-40"
        font_size="500" w="485" h="35" align="4" background_color="#000000c8"/>
     <osd enabled="yes" type="text" label="${navigation.item.street_name}" x="150" y="5"  font_size="500"
-       w="500" h="35" align="0" background_color="#ff71004b"/> 
+       w="500" h="35" align="0" background_color="#ff71004b"/>
     <osd enabled="yes" type="button" x="-60" y="0" command="zoom_in()" src="gui_zoom_in.png"/>
     <osd enabled="yes" type="toggle_announcer" x="-65" y="95" w="60" h="60" background_color="#1a6ad700"/>
     <osd enabled="yes" type="button" x="-60" y="200" command="gui.fullscreen()" src="gui_fullscreen.png"/>
-    <osd enabled="yes" type="button" x="-60" y="-105" command="zoom_out()" src="gui_zoom_out.png"/> 
+    <osd enabled="yes" type="button" x="-60" y="-105" command="zoom_out()" src="gui_zoom_out.png"/>
 
 gives:|osd2.png|
 
@@ -331,23 +331,23 @@ reading.
 
     <osd enabled="yes" type="compass" x="-110" y="-60" font_size="250" w="60" h="60" background_color="#000000c8"/>
     <osd enabled="yes" type="gps_status" x="-50" y="-60" w="50" h="40" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="${vehicle.position_sats_signal}/${vehicle.position_qual}" x="-50" y="-20" 
+    <osd enabled="yes" type="text" label="${vehicle.position_sats_signal}/${vehicle.position_qual}" x="-50" y="-20"
        font_size="250" w="50" h="20" align="0" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="0" y="-60" font_size="400" w="110" h="60" 
+    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="0" y="-60" font_size="400" w="110" h="60"
        align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="ETA: ${navigation.item.destination_time[arrival]}" x="110" y="-30" 
+    <osd enabled="yes" type="text" label="ETA: ${navigation.item.destination_time[arrival]}" x="110" y="-30"
        font_size="300" w="170" h="30" align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="280" y="-30" 
+    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="280" y="-30"
        font_size="300" w="170" h="30" align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="450" y="-30" 
+    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="450" y="-30"
        font_size="300" w="240" h="30" align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="0" y="0" font_size="500" 
+    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="0" y="0" font_size="500"
        w="245" h="40" align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="navigation_next_turn" x="245" y="0" font_size="500" w="60" h="40" background_color="#000000c8" 
+    <osd enabled="yes" type="navigation_next_turn" x="245" y="0" font_size="500" w="60" h="40" background_color="#000000c8"
        icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_48_48.png" />
-    <osd enabled="yes" type="text" label="Onto ${navigation.item[1].street_name}" x="305" y="0" font_size="500" 
+    <osd enabled="yes" type="text" label="Onto ${navigation.item[1].street_name}" x="305" y="0" font_size="500"
        w="495" h="40" align="4" background_color="#000000c8"/>
-    <osd enabled="yes" type="text" label="${navigation.item.street_name}" x="110" y="-60"  font_size="500" 
+    <osd enabled="yes" type="text" label="${navigation.item.street_name}" x="110" y="-60"  font_size="500"
        w="580" h="30" align="0" background_color="#000000c8"/>
     <osd enabled="yes" type="button" x="-60" y="50" command="zoom_in()" src="gui_zoom_in.png"/>
     <osd enabled="yes" type="toggle_announcer" x="-65" y="130" w="60" h="60" background_color="#1a6ad700"/>
@@ -390,7 +390,7 @@ the following config addition:
 
 .. code:: xml
 
-    <osd enabled="yes" type="navigation_next_turn" x="325" y="-135" w="150" h="100" align="15" 
+    <osd enabled="yes" type="navigation_next_turn" x="325" y="-135" w="150" h="100" align="15"
     background_color="#a60c0f00" icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_48_48.png" />
 
 Note the icon_src parameter specifies the template for the image file

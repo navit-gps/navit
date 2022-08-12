@@ -174,9 +174,9 @@ Linux, Mac, ... "/".
 -  Add and enable the map for the application in navit by changing the
    lines (at approx line number 370)
 
-| 
-| ``   ``\ 
-| 
+|
+| ``   ``\
+|
 
 | It seems you need to specify the bin name in newer versions of navit.
   I also had to add two backslashes before the bin name running 0.2.0,
@@ -185,9 +185,9 @@ Linux, Mac, ... "/".
 | Disable unused mapset sections by setting enabled to ``no``, e.g. the
   pre-installed sample maps at line 370 in ``navit.xml``.
 
-| 
-| ``   ``\ 
-| 
+|
+| ``   ``\
+|
 
 -  You may want to customize the initial location displayed on the map.
    Example below for 4123 N 1234 E (this string means 41.23 North and

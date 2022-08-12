@@ -290,9 +290,9 @@ block
 **Return:**      *none*
 **Description:** **FIXME**
 **Example:**     .. code:: bash
-                 
+
                     org.navit_project.navit.navit.block int32:1
-\                
+\
 ================ ==============================================
 
 set_position
@@ -373,9 +373,9 @@ clear_destination
 **Return:**      *none*
 **Description:** Removes the destination and stops routing.
 **Example:**     .. code:: bash
-                 
+
                     org.navit_project.navit.navit.clear_destination
-\                
+\
 ================ ==================================================
 
 get_attr

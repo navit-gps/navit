@@ -78,4 +78,4 @@ Copy and paste the following XML into navit.xml. Last update 01.01.13
                <roadprofile item_types="ferry" speed="40" route_weight="40"/>
            </vehicleprofile>
 
-           
+

@@ -62,7 +62,7 @@ Features
    actually get converted from OSM and won't currently appear in the
    Navit data) have been removed.
 
-| 
+|
 
 
 Mapnik for small screens
@@ -97,7 +97,7 @@ Android <OSD_Layouts#0606.at_Android_Layout>`__. Check out the OSD
 layout for a simple download package to install both this map layout and
 the OSD layout, and all associated icons and POI image files.
 
-| 
+|
 
 `Snow <Layout/snow>`__
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -107,7 +107,7 @@ Snow style theme, optimised for the iPod/iPhone.
 
 `Go to layout <Layout/snow>`__
 
-| 
+|
 
 
 `High-Visibility <Layout/hi_vis>`__
@@ -422,7 +422,7 @@ but haven't really changed the rest of the layout, add it below!
 |        </cursor>                                                 |
 +------------------------------------------------------------------+
 
-| 
+|
 
 
 2D cursor tangoGPS-like
@@ -462,7 +462,7 @@ but haven't really changed the rest of the layout, add it below!
 |    </cursor>                                               |
 +------------------------------------------------------------+
 
-| 
+|
 
 3D Arrow-head
 ~~~~~~~~~~~~~
@@ -529,4 +529,4 @@ Arrow-head cursor on Windows <image:3D-arrow-head-windows.png>`__
 |    </cursor>                                               |
 +------------------------------------------------------------+
 
-| 
+|

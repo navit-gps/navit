@@ -130,7 +130,7 @@ See :doc:`advanced`
    :glob:
    :maxdepth: 2
    :hidden:
-   
+
    general
    display
    vehicle

@@ -29,9 +29,9 @@ Navit is able to compose phrases if you give it a set of prerecorded
 
 .. code:: xml
 
-   <speech type="cmdline" data="aplay -q %s" 
+   <speech type="cmdline" data="aplay -q %s"
    sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
-   vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/> 
+   vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
 
 The directory *sample_dir* should contain audio files. *sample_suffix*
 is the common file type suffix of those files. The names of the files
