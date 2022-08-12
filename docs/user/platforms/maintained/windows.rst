@@ -1,20 +1,10 @@
+.. _platform_windows:
+
 Windows
 =======
 
 `320px|thumb|Navit under Windows, GTK Gui, Dutch
 translation <image:Navit_win32_dutch.JPG>`__
-
-============= =======
-Version       Support
-============= =======
-Windows 2000  ?
-Windows XP    ?
-Windows Vista ?
-Windows 7     ?
-Windows 8     ?
-============= =======
-
-.. _download_the_binary_distribution_package_of_navit:
 
 Download the binary distribution package of Navit
 -------------------------------------------------
@@ -24,22 +14,15 @@ The Win32 binary distribution of Navit can be downloaded via the
 bleeding edge <http://download.navit-project.org/navit/win32/svn/>`__
 compiled daily from SVN.
 
-The WinCE binary distribution of Navit can be downloaded via the
-`Download Navit <Download_Navit>`__ page, or download the `WinCE
-bleeding edge <http://download.navit-project.org/navit/wince/svn/>`__
-compiled daily from SVN.
-
 If the created start menu entry does not work, check if a 'bin' is too
 many in the link target location.
-
-.. _tips_and_tricks:
 
 Tips and Tricks
 ---------------
 
-.. raw:: mediawiki
+.. warning::
 
-   {{warning|The [[Win32 GUI]] build is broken, so use [[Gui internal]] instead!}}
+   The [[Win32 GUI]] build is broken, so use [[Gui internal]] instead!
 
 Compiling, configuring and running Navit on Windows can be a challenge
 at times. Below are a few hints, in addition to the more detailed
