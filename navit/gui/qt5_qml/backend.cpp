@@ -78,9 +78,9 @@ void Backend::get_maps() {
             label = g_strdup(description.u.str);
         } else {
             if (!map_get_attr(attr.u.map, attr_type, &type, NULL))
-                type.u.str = "";
+                type.u.str = (char*)"";
             if (!map_get_attr(attr.u.map, attr_data, &data, NULL))
-                data.u.str = "";
+                data.u.str = (char*)"";
             label = g_strdup_printf("%s:%s", type.u.str, data.u.str);
         }
         is_active = false;
@@ -501,7 +501,7 @@ void Backend::updateSearch(QString text) {
         search->partial = 1;
         dbg(lvl_debug,"attempting to use country '%s'", _country_iso2);
         search_attr.type=attr_country_iso2;
-        search_attr.u.str=_country_iso2;
+        search_attr.u.str=(char*)_country_iso2;
         search_list_search(search->sl, &search_attr, 0);
 
         while((res=search_list_get_result(search->sl)));
