@@ -167,7 +167,6 @@ void QNavitQuick::keyReleaseEvent(QKeyEvent* event) {
 void QNavitQuick::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) {
     dbg(lvl_debug, "enter");
     QQuickPaintedItem::geometryChanged(newGeometry, oldGeometry);
-    QPainter* painter = NULL;
     if (graphics_priv == NULL) {
         dbg(lvl_debug, "Context not set, aborting");
         return;
