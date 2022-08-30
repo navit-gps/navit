@@ -32,7 +32,6 @@ char * get_icon(struct navit *nav, struct item *item) {
                         if(el->type==element_icon) {
                             char *src;
                             char *icon;
-                            struct graphics_image *img;
                             if(item_is_custom_poi(*item)) {
                                 struct map_rect *mr=map_rect_new(item->map, NULL);
                                 item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
