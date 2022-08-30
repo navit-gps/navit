@@ -9,6 +9,7 @@
 #include "transform.h"
 #include "debug.h"
 #include "search.h"
+#include "proxy.h"
 
 
 char * get_icon(struct navit *nav, struct item *item) {
