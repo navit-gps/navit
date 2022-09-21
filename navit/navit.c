@@ -1806,6 +1806,8 @@ static int navit_former_destinations_active(struct navit *this_) {
     if (destination_file) {
         while(fgets(lastline, sizeof(lastline), destination_file));
         fclose(destination_file);
+        /*forcefully terminate the string, there is no proper fgets error handling.*/
+        lastline[sizeof(lastline) -1] = 0;
         if (strcmp(lastline, TEXTFILE_COMMENT_NAVI_STOPPED)) {
             active=1;
         }
