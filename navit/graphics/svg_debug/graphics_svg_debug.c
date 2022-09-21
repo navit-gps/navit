@@ -170,7 +170,7 @@ static void svg_debug_gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
 
 static void svg_debug_gc_set_dashes(struct graphics_gc_priv *gc, int w,
                                     int offset, unsigned char *dash_list, int n) {
-    gc->dashed = dash_list;
+    gc->dashed = (unsigned int*)dash_list;
     gc->is_dashed = TRUE;
     if (gc->graphics_gc_methods_proxy->gc_set_dashes) {
         gc->graphics_gc_methods_proxy->gc_set_dashes(gc->graphics_gc_priv_proxy,

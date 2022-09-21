@@ -102,7 +102,7 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv,
         attr->u.str=priv->timep;
         break;
     case attr_position_fix_type:
-        if(flags = tracking_get_current_flags(navit_get_tracking(priv->navit))) {
+        if((flags = tracking_get_current_flags(navit_get_tracking(priv->navit)))) {
             if(*flags & AF_UNDERGROUND)
                 attr->u.num = 0;
         } else

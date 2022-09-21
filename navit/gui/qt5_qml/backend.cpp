@@ -63,24 +63,21 @@ void Backend::showMenu(struct point *p) {
  * @returns nothing
  */
 void Backend::get_maps() {
-    struct attr attr, on, off, description, type, data, active;
+    struct attr attr, description, type, data, active;
     char * label;
     bool is_active;
     struct attr_iter * iter;
     _maps.clear();
 
     iter = navit_attr_iter_new(NULL);
-    on.type = off.type = attr_active;
-    on.u.num = 1;
-    off.u.num = 0;
     while (navit_get_attr(this->nav, attr_map, &attr, iter)) {
         if (map_get_attr(attr.u.map, attr_description, &description, NULL)) {
             label = g_strdup(description.u.str);
         } else {
             if (!map_get_attr(attr.u.map, attr_type, &type, NULL))
-                type.u.str = "";
+                type.u.str = (char*)"";
             if (!map_get_attr(attr.u.map, attr_data, &data, NULL))
-                data.u.str = "";
+                data.u.str = (char*)"";
             label = g_strdup_printf("%s:%s", type.u.str, data.u.str);
         }
         is_active = false;
@@ -159,7 +156,6 @@ void Backend::set_engine(QQmlApplicationEngine * engine) {
  * @returns 0 if the item should be discarded, 1 otherwise
  */
 int Backend::filter_pois(struct item *item) {
-    enum item_type *types;
     enum item_type type=item->type;
     if (type >= type_line)
         return 0;
@@ -173,7 +169,6 @@ int Backend::filter_pois(struct item *item) {
  */
 void Backend::get_bookmarks() {
     struct attr attr,mattr;
-    struct navigation * nav = NULL;
     struct item *item;
     struct coord c;
     struct pcoord pc;
@@ -501,7 +496,7 @@ void Backend::updateSearch(QString text) {
         search->partial = 1;
         dbg(lvl_debug,"attempting to use country '%s'", _country_iso2);
         search_attr.type=attr_country_iso2;
-        search_attr.u.str=_country_iso2;
+        search_attr.u.str=(char*)_country_iso2;
         search_list_search(search->sl, &search_attr, 0);
 
         while((res=search_list_get_result(search->sl)));
