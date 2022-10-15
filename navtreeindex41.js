@@ -1,7 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structgui__priv.html#a0559949a41ad1a11c7063f2fc0151d19":[2,0,154,113],
-"structgui__priv.html#a055cdc970c6f7f17e452a3b7ad71ab7c":[2,0,154,22],
 "structgui__priv.html#a0668be54ecba2541e26d8840f30ad484":[2,0,154,75],
 "structgui__priv.html#a0ae5d7524cdfaf5dc0266ea6b5567fdf":[2,0,154,64],
 "structgui__priv.html#a10f086c6a6a5199eca4d4f9e97d383a5":[2,0,154,105],
@@ -249,5 +247,7 @@ var NAVTREEINDEX41 =
 "structitem__methods.html#a455a20503bbcf7a2969c07b557f56284":[2,0,171,7],
 "structitem__methods.html#a56d5cb25c442d5d4fcf07274a306ca69":[2,0,171,8],
 "structitem__methods.html#a5949d5d2928d271fa16a8663df8c9d9a":[2,0,171,2],
-"structitem__methods.html#a7233c37d89407bc69ec7bd9fb40e20f2":[2,0,171,3]
+"structitem__methods.html#a7233c37d89407bc69ec7bd9fb40e20f2":[2,0,171,3],
+"structitem__methods.html#a7d348e70a85ccbd220c9cc79912fbfef":[2,0,171,1],
+"structitem__methods.html#ab1ca673efa14710234cc8dd9b37f4331":[2,0,171,4]
 };
