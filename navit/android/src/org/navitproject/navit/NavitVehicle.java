@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -62,6 +63,7 @@ public class NavitVehicle {
         boolean mPrecise = false;
 
         public void onLocationChanged(Location location) {
+            Log.e("NavitVehicle", String.format("Location update from %s, precise=%b", location.getProvider(), mPrecise));
             // Disable the fast provider if still active
             if (mPrecise && mFastProvider != null) {
                 sLocationManager.removeUpdates(sFastLocationListener);
@@ -163,10 +165,78 @@ public class NavitVehicle {
 
         Log.d("NavitVehicle", "Providers " + sLocationManager.getAllProviders());
 
-        String mPreciseProvider = sLocationManager.getBestProvider(highCriteria, false);
+        HashSet<String> preciseProviders;
+        try {
+            preciseProviders = new HashSet<String>(sLocationManager.getProviders(highCriteria, false));
+        } catch (NullPointerException e) {
+            preciseProviders = new HashSet<String>();
+        }
+        HashSet<String> fastProviders;
+        try {
+            fastProviders = new HashSet<String>(sLocationManager.getProviders(lowCriteria, false));
+        } catch (NullPointerException e) {
+            fastProviders = new HashSet<String>();
+        }
+        /*
+         * Never use the passive and fused providers for the precise providers.
+         * These merge data from multiple sources, which can lead to your location skipping back and
+         * forth between two places. While that may be acceptable for the fast provider (just to get a
+         * first location), it may render navigation unusable if such a provider were to be used as the
+         * precise provider.
+         */
+        preciseProviders.remove(LocationManager.PASSIVE_PROVIDER);
+        preciseProviders.remove("fused");
+
+        /*
+         * Some magic to pick the precise provider:
+         * If Android’s best chosen provider is on our list, use that.
+         * Otherwise, if the list has only one candidate, use that.
+         * Otherwise, prefer GPS for the precise provider, if available.
+         * Otherwise, just pick a random provider from the list.
+         */
+        Log.d("NavitVehicle", "Precise Provider candidates " + preciseProviders);
+        String mPreciseProvider = null;
+        if (preciseProviders.contains(sLocationManager.getBestProvider(highCriteria, false)))
+            mPreciseProvider = sLocationManager.getBestProvider(highCriteria, false);
+        else if (preciseProviders.size() == 1)
+            for (String provider : preciseProviders)
+                mPreciseProvider = provider;
+        else if (preciseProviders.contains(LocationManager.GPS_PROVIDER))
+            mPreciseProvider = LocationManager.GPS_PROVIDER;
+        else
+            /*
+             * Multiple providers, but no GPS, nor any fused/passive providers, and we can’t use the
+             * best provider suggested by the OS.
+             * If we ever get here, we’re on a very exotic device.
+             * This may need some more tweaks – right now, we just pick one at random.
+             */
+            for (String provider : preciseProviders) {
+                mPreciseProvider = provider;
+                break;
+            }
         Log.d("NavitVehicle", "Precise Provider " + mPreciseProvider);
-        mFastProvider = sLocationManager.getBestProvider(lowCriteria, false);
+
+        /*
+         * Similar magic to pick the fast provider:
+         * Eliminate the precise provider from our list so we get to use two providers.
+         * If Android’s best chosen provider is on our list, use that.
+         * Otherwise, if the list has only one candidate, use that.
+         * Otherwise, just pick a random provider from the list.
+         */
+        fastProviders.remove(mPreciseProvider);
+        Log.d("NavitVehicle", "Fast Provider candidates " + fastProviders);
+        if (fastProviders.contains(sLocationManager.getBestProvider(lowCriteria, false)))
+            mFastProvider = sLocationManager.getBestProvider(lowCriteria, false);
+        else if (fastProviders.size() == 1)
+            for (String provider: fastProviders)
+                mFastProvider = provider;
+        else
+            for (String provider: fastProviders) {
+                mFastProvider = provider;
+                break;
+            }
         Log.d("NavitVehicle", "Fast Provider " + mFastProvider);
+
         mVehiclePcbid = pcbid;
         mVehicleScbid = scbid;
         mVehicleFcbid = fcbid;
