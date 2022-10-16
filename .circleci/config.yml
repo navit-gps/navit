@@ -126,33 +126,40 @@ jobs:
             bash scripts/update_download_center.sh
   build_fdroid:
     docker:
-      - image: registry.gitlab.com/fdroid/ci-images-client:latest
+      - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-stretch
     steps:
       - checkout
       - run:
           name: Build with F-Droid
           command: |
-            test -d build || mkdir build
+            # Mostly copied from fdroidserver’s own CI script (fdroid build), except for everything marked APP_CI
+            apt-get update
+            apt-get dist-upgrade
+            apt-get clean
+
+            test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
+
+            # APP_CI: we need to install fdroidserver from source (the link path will differ from fdroidserver CI)
             test -d fdroidserver || mkdir fdroidserver
             git ls-remote https://gitlab.com/fdroid/fdroidserver.git master
-            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/7accb96b/fdroidserver-7accb96b.tar.gz | tar -xz --directory=fdroidserver --strip-components=1
+            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=fdroidserver --strip-components=1
+            ln -fsv $PWD/fdroidserver "$fdroidserver"
+
+            # APP_CI: skip fdroiddata download as we’re building from our own recipe
+            for d in build logs repo tmp unsigned $home_vagrant/.android; do
+              test -d $d || mkdir $d;
+              chown -R vagrant $d;
+            done
+
+            export GRADLE_USER_HOME=$home_vagrant/.gradle
+            # APP_CI: we run F-Droid in a slightly different manner
             export PATH="`pwd`/fdroidserver:$PATH"
             export PYTHONPATH="$CI_PROJECT_DIR/fdroidserver:$CI_PROJECT_DIR/fdroidserver/examples"
             export PYTHONUNBUFFERED=true
-            bash fdroidserver/buildserver/setup-env-vars $ANDROID_HOME
-            adduser --disabled-password --gecos "" vagrant
-            ln -s $CI_PROJECT_DIR/fdroidserver /home/vagrant/fdroidserver
-            mkdir -p /vagrant/cache
-            wget -q https://services.gradle.org/distributions/gradle-5.6.2-bin.zip --output-document=/vagrant/cache/gradle-5.6.2-bin.zip
-            bash fdroidserver/buildserver/provision-gradle
-            bash fdroidserver/buildserver/provision-apt-get-install http://deb.debian.org/debian
-            source /etc/profile.d/bsenv.sh
-            apt-get dist-upgrade
-            apt-get install -t stretch-backports fdroidserver python3-asn1crypto python3-ruamel.yaml yamllint
-            apt-get purge fdroidserver
-            export GRADLE_USER_HOME=$PWD/.gradle
-            set -x
-            apt-get install sudo
+
+            chown -R vagrant $home_vagrant
+
+            # APP_CI: just build our own app
             fdroid build --verbose --on-server --no-tarball
       - store_artifacts:
            name: Store APK
