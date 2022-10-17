@@ -153,8 +153,8 @@ jobs:
 
             export GRADLE_USER_HOME=$home_vagrant/.gradle
             # APP_CI: we run F-Droid in a slightly different manner
-            export PATH="`pwd`/fdroidserver:$PATH"
-            export PYTHONPATH="$CI_PROJECT_DIR/fdroidserver:$CI_PROJECT_DIR/fdroidserver/examples"
+            export PATH=$fdroidserver:$PATH
+            export PYTHONPATH=$fdroidserver:$fdroidserver/examples
             export PYTHONUNBUFFERED=true
 
             chown -R vagrant $home_vagrant
