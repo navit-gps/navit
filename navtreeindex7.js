@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html":[2,0,0,0,0,20,0],
+"classorg_1_1navitproject_1_1navit_1_1NavitWatch_1_1WatchHandler.html#a7452630d2d000dd4e23394bf9fb86b6c":[2,0,0,0,0,20,0,0],
 "classqt5__navit__timer.html":[2,0,304],
 "classqt5__navit__timer.html#a3866983df278a27ad30d4b483da157f6":[2,0,304,5],
 "classqt5__navit__timer.html#a7bbda26f1ee764099c0484eb7f39addb":[2,0,304,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "country_8c.html#ac29e61efa223020e66b2ca2c67f48011":[3,0,42,9],
 "country_8c.html#ac5d7a454c7f6c1a591e7a91bea148aca":[3,0,42,5],
 "country_8c.html#ad66d702af533d533874fbe5cc59b840d":[3,0,42,10],
-"country_8c.html#adbba109620163e291ab77e96a3860cd8":[3,0,42,2],
-"country_8c.html#ae0923d8e38c030b357bf53ff404dcb85":[3,0,42,4],
-"country_8c.html#aff0eea34cd750225824f4abe38b2bbd1":[3,0,42,7]
+"country_8c.html#adbba109620163e291ab77e96a3860cd8":[3,0,42,2]
 };
