@@ -126,7 +126,7 @@ jobs:
             bash scripts/update_download_center.sh
   build_fdroid:
     docker:
-      - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-stretch
+      - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bullseye
     steps:
       - checkout
       - run:
@@ -139,28 +139,47 @@ jobs:
 
             test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
 
-            # APP_CI: we need to install fdroidserver from source (the link path will differ from fdroidserver CI)
-            test -d fdroidserver || mkdir fdroidserver
+            # APP_CI: we need to install fdroidserver from source, directly into $fdroidserver, and set ownership accordingly
+            test -d $fdroidserver || mkdir -p $fdroidserver
             git ls-remote https://gitlab.com/fdroid/fdroidserver.git master
-            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=fdroidserver --strip-components=1
-            ln -fsv $PWD/fdroidserver "$fdroidserver"
+            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=$fdroidserver --strip-components=1
+            chown -R vagrant $fdroidserver
 
-            # APP_CI: skip fdroiddata download as we’re building from our own recipe
-            for d in build logs repo tmp unsigned $home_vagrant/.android; do
-              test -d $d || mkdir $d;
-              chown -R vagrant $d;
-            done
+            # TODO remove sdkmanager install once it is included in the buildserver image
+            apt-get install sdkmanager
+            rm -rf "$ANDROID_HOME/tools" # TODO remove once sdkmanager can upgrade installed packages
+            sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
 
+            # APP_CI:
+            # Skip fdroiddata download as we’re building from our own recipe.
+            # Since we are not fetching source code but building from the project dir, we need to modify permissions:
+            #   - Since we are in another user’s home dir, we grant permissions via group.
+            #   - git needs read/execute on all parents of the source code dir.
+            #   - fdroid creates subdirs, so the source code dir must be writable.
+            # $home_vagrant/.android gets created and chowned just like on fdroidserver CI.
+            chgrp -R vagrant $PWD
+            chmod -R g+r $PWD
+            chmod g+w $PWD
+            chgrp vagrant ..
+            chmod g+rx-w ..
+            test -d $home_vagrant/.android || mkdir $home_vagrant/.android
+            chown -R vagrant $home_vagrant/.android
+
+            # APP_CI: for some reason fdroid complains about missing git but runs fine when the warning is suppressed
             export GRADLE_USER_HOME=$home_vagrant/.gradle
-            # APP_CI: we run F-Droid in a slightly different manner
-            export PATH=$fdroidserver:$PATH
-            export PYTHONPATH=$fdroidserver:$fdroidserver/examples
-            export PYTHONUNBUFFERED=true
+            export fdroid="sudo --preserve-env --user vagrant
+              env PATH=$fdroidserver:$PATH
+              env PYTHONPATH=$fdroidserver:$fdroidserver/examples
+              env PYTHONUNBUFFERED=true
+              env TERM=$TERM
+              env HOME=$home_vagrant
+              env GIT_PYTHON_REFRESH=quiet
+              fdroid"
 
             chown -R vagrant $home_vagrant
 
             # APP_CI: just build our own app
-            fdroid build --verbose --on-server --no-tarball
+            $fdroid build --verbose --on-server --no-tarball
       - store_artifacts:
            name: Store APK
            path: unsigned
