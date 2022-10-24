@@ -38,19 +38,22 @@
 # singesang https://launchpad.net/~singesang
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
+# jkoan <jkoan@gmx.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2019-10-02 18:37+0000\n"
-"Last-Translator: jkoan kerich <jkoan@gmx.de>\n"
-"Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
+"PO-Revision-Date: 2022-10-24 07:42+0000\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1494,19 +1497,20 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Keine Konfigurations-Datei navit.xml oder navit.xml.local gefunden\n"
+msgstr ""
+"Es wurde keine Konfigurationsdatei (navit.xml, navit.xml.local) gefunden"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr "Fehler beim Parsen der Konfigurations-Datei '%s': %s\n"
+msgstr "Fehler bei der Verarbeitung von Datei '%s': %s"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr "Benutze Konfigurations-Datei '%s'\n"
+msgstr "Nutze Konfigurations-Datei: '%s'"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr "Fehler: Keine Konfiguration in der Datei '%s' gefunden\n"
+msgstr "Fehler: Keine Konfiguration in der Konfigurations-Datei gefunden: '%s'"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
