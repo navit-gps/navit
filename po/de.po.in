@@ -39,12 +39,13 @@
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
+# jkoan <jkoan@gmx.de>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -3078,21 +3079,6 @@ msgstr "Süd+Mittel-Amerika"
 msgid "Guyane Francaise"
 msgstr "Französisch-Guayana"
 
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Keine Konfigurations-Datei navit.xml oder navit.xml.local gefunden\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "Fehler beim Parsen der Konfigurations-Datei '%s': %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Benutze Konfigurations-Datei '%s'\n"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Fehler: Keine Konfiguration in der Datei '%s' gefunden\n"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Entfernung vom Bildschirmmittelpunkt (km)"
 
@@ -3179,4 +3165,20 @@ msgid "Distance(m)"
 msgstr ""
 
 msgid "Select a distance to look for (km)"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
 msgstr ""
