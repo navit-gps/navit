@@ -11,12 +11,13 @@
 # Thor H. Johansen https://launchpad.net/~thorhajo
 # burner https://launchpad.net/~bendik-xplore
 # kingu https://launchpad.net/~comradekingu
+# Allan Nordhøy <epost@anotheragency.no>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/navit/"
 "navit-core/nb_NO/>\n"
 "Language: nb\n"
@@ -2755,4 +2756,12 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
 msgstr ""
