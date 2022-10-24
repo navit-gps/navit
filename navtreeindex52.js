@@ -1,12 +1,5 @@
 var NAVTREEINDEX52 =
 {
-"tools_2gpx2navit__txt_2src_2misc_8c.html#ab98a41aff9d6acdef651c74c3a761b7a":[3,0,13,0,0,9,0],
-"tools_2gpx2navit__txt_2src_2misc_8c.html#abfad51901cc4a177805f94cfc9817d85":[3,0,13,0,0,9,11],
-"town_8c.html":[3,0,7,5,5],
-"town_8c.html#a0b912d381cfba43f06a1b1623e512e05":[3,0,7,5,5,7],
-"town_8c.html#a4ddc018df7dfd4ee0791f0014b06705e":[3,0,7,5,5,2],
-"town_8c.html#a53c3b0f0dbe26fb2fc3161f0cb0e67de":[3,0,7,5,5,9],
-"town_8c.html#a6cbd413356738380324e12f94c91c75a":[3,0,7,5,5,12],
 "town_8c.html#a720c1771cdd6eb2ee755bd8eb5877c0a":[3,0,7,5,5,4],
 "town_8c.html#a729b3c21f51bd90f8f6fbf1315dc7958":[3,0,7,5,5,6],
 "town_8c.html#a72b2bf8cc2052a2869a475506a95a33a":[3,0,7,5,5,11],
@@ -176,8 +169,8 @@ var NAVTREEINDEX52 =
 "traffic_8c.html#aa9a9f48838e73f6a665af8a5cfb20a86":[3,0,134,20],
 "traffic_8c.html#aac734f94ee54ddb25a539362a09d4b16":[3,0,134,121],
 "traffic_8c.html#aae0076b9498a247a66e8547547368d0d":[3,0,134,112],
-"traffic_8c.html#aae27ab2eff31eba6cf17d58428648b22":[3,0,134,46],
 "traffic_8c.html#aae27ab2eff31eba6cf17d58428648b22":[3,0,134,47],
+"traffic_8c.html#aae27ab2eff31eba6cf17d58428648b22":[3,0,134,46],
 "traffic_8c.html#ab15ae598dc2309e1ff0fe58be7f38ef3":[3,0,134,29],
 "traffic_8c.html#ab26e0786cb6a43039a567d0e8eb5fb91":[3,0,134,86],
 "traffic_8c.html#ab4114b1f47de9ba5e1fe739ab0cc9568":[3,0,134,30],
@@ -249,5 +242,12 @@ var NAVTREEINDEX52 =
 "traffic_8h.html#a2ac13bc2df7fc10faf6820b3c6750171afa713cfd88bde839c20ecfd4d8cee49b":[3,0,135,14,3],
 "traffic_8h.html#a38fad0c104961dcb2eb81ac3ce78d9af":[3,0,135,31],
 "traffic_8h.html#a3b6a019b6bf324006a3492b1d39b0887":[3,0,135,34],
-"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1ce":[3,0,135,9]
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1ce":[3,0,135,9],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea012ee33bd385db6d8863b3ec33fba2a2":[3,0,135,9,39],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea0f7768fd3ee5a28436cd774a651459c6":[3,0,135,9,36],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea0f79c32c21417288b744757b8593a0dc":[3,0,135,9,41],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea117619f8184b9c25d19d49439d9dd2e8":[3,0,135,9,0],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea1d37041598d9acc57f4083e58256b3d3":[3,0,135,9,46],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea1eb7c0173fab64cefab350d6f3fb152e":[3,0,135,9,1],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea22a180d1553a1a789a5b560b62435396":[3,0,135,9,9]
 };

@@ -145,7 +145,7 @@ var graphics_8c =
     [ "graphics_set_rect", "graphics_8c.html#a23e7443d3205fd8cd61c4fe8589de8a6", null ],
     [ "graphics_show_native_keyboard", "graphics_8c.html#aee7998ec26bb2b69bd536eaa2a6305d5", null ],
     [ "graphics_texture_path", "graphics_8c.html#ad01c2499e811f7a63475214ce70ba4ff", null ],
-    [ "image_new_helper", "graphics_8c.html#aceafbb8c2bc25ce645391da0a5dbdf46", null ],
+    [ "image_new_helper", "graphics_8c.html#af74f4cb36a544e9d76daa94229a30a5d", null ],
     [ "intersection", "graphics_8c.html#aae3edf56e5f4bd6e7046d2e030d5f6d6", null ],
     [ "is_inside", "graphics_8c.html#ad0486d32837d1d2f5e331ce1349892a8", null ],
     [ "label_line", "graphics_8c.html#a324319a35ac5de50116e718419638e22", null ],

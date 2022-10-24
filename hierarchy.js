@@ -134,7 +134,6 @@ var hierarchy =
     [ "graphics_gc_methods", "structgraphics__gc__methods.html", null ],
     [ "graphics_gc_priv", "structgraphics__gc__priv.html", null ],
     [ "graphics_image", "structgraphics__image.html", null ],
-    [ "graphics_image_buffer", "structgraphics__image__buffer.html", null ],
     [ "graphics_image_methods", "structgraphics__image__methods.html", null ],
     [ "graphics_image_priv", "structgraphics__image__priv.html", null ],
     [ "graphics_keyboard", "structgraphics__keyboard.html", null ],

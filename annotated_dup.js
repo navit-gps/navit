@@ -160,7 +160,6 @@ var annotated_dup =
     [ "graphics_gc_methods", "structgraphics__gc__methods.html", "structgraphics__gc__methods" ],
     [ "graphics_gc_priv", "structgraphics__gc__priv.html", "structgraphics__gc__priv" ],
     [ "graphics_image", "structgraphics__image.html", "structgraphics__image" ],
-    [ "graphics_image_buffer", "structgraphics__image__buffer.html", "structgraphics__image__buffer" ],
     [ "graphics_image_methods", "structgraphics__image__methods.html", "structgraphics__image__methods" ],
     [ "graphics_image_priv", "structgraphics__image__priv.html", "structgraphics__image__priv" ],
     [ "graphics_keyboard", "structgraphics__keyboard.html", "structgraphics__keyboard" ],

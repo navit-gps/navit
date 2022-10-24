@@ -1,6 +1,5 @@
 var graphics_8h =
 [
-    [ "graphics_image_buffer", "structgraphics__image__buffer.html", "structgraphics__image__buffer" ],
     [ "graphics_keyboard", "structgraphics__keyboard.html", "structgraphics__keyboard" ],
     [ "padding", "structpadding.html", "structpadding" ],
     [ "graphics_methods", "structgraphics__methods.html", "structgraphics__methods" ],
@@ -15,9 +14,6 @@ var graphics_8h =
       [ "draw_mode_begin", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa05532e5792068ce2c07421367ef768cb", null ],
       [ "draw_mode_end", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57", null ],
       [ "draw_mode_begin_clear", "graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa5104dc24231960f5badaeea16807e9b7", null ]
-    ] ],
-    [ "graphics_image_type", "graphics_8h.html#a69a49b0ac412dbee7329ebd26b87d280", [
-      [ "graphics_image_type_unknown", "graphics_8h.html#a69a49b0ac412dbee7329ebd26b87d280a2a9a605461ac62afec0c53141734b2d6", null ]
     ] ],
     [ "displaylist_get_clicked_list", "graphics_8h.html#ab6c7e7294111973ca56b9eadb68744d6", null ],
     [ "displaylist_get_selection", "graphics_8h.html#af6d13e794cb0ee96565deec385881a27", null ],
