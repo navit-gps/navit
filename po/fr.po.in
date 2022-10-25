@@ -28,19 +28,22 @@
 # quent57 https://launchpad.net/~quent57
 # tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
+# J. Lavoie <j.lavoie@net-c.ca>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2018-10-13 16:09+0000\n"
-"Last-Translator: lains <Unknown>\n"
-"Language-Team: KaZeR <kazer@altern.org>\n"
+"PO-Revision-Date: 2022-10-25 23:12+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -96,11 +99,11 @@ msgstr "sixième sortie"
 
 #, c-format
 msgid "%d m"
-msgstr "%d m"
+msgstr "%d m"
 
 #, c-format
 msgid "in %d m"
-msgstr "dans %d m"
+msgstr "dans %d m"
 
 #, c-format
 msgid "%d feet"
@@ -1739,7 +1742,7 @@ msgid "Select a category"
 msgstr "Sélectionnez une catégorie"
 
 msgid "Select a distance to look for (km)"
-msgstr "Sélectionnez une distance à chercher (km)"
+msgstr "Sélectionnez un rayon de recherche à partir du centre de l'écran"
 
 msgid "Select a POI"
 msgstr "Sélectionnez un point d'intérêt"
@@ -1801,7 +1804,7 @@ msgstr "Autre"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
+msgstr "Itinéraire %4.0f km, %02d:%02d temps estimé"
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trajet 0000 km  temps estimé 0+00:00"
@@ -2071,7 +2074,7 @@ msgid "Route to here"
 msgstr "Conduire ici"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
+msgstr "Données de la carte © Contributeurs OpenStreetMap, licence ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
