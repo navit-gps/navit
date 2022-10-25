@@ -38,12 +38,13 @@
 # singesang https://launchpad.net/~singesang
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
+# "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -3092,12 +3093,6 @@ msgstr "Französisch-Guayana"
 #~ msgid "Error: No configuration found in config file '%s'\n"
 #~ msgstr "Fehler: Keine Konfiguration in der Datei '%s' gefunden\n"
 
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Wählen Sie eine Suchdistanz (km)"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Entfernung (m)"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Entfernung vom Bildschirmmittelpunkt (km)"
 
@@ -3177,4 +3172,11 @@ msgid ""
 msgstr ""
 
 msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
 msgstr ""
