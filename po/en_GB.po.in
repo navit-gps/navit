@@ -13,12 +13,13 @@
 # ilovekiruna https://launchpad.net/~ilovekiruna
 # jan https://launchpad.net/~jandegr1
 # lopho https://launchpad.net/~lopho
+# "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "navit/navit-core/en_GB/>\n"
 "Language: en_GB\n"
@@ -3036,17 +3037,6 @@ msgstr "Guyane Francaise"
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Distance from screen centre (km)"
 
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Select a search radius from screen center"
-
-#, c-format
-#~ msgid "in %d m"
-#~ msgstr "in %d m"
-
-#, c-format
-#~ msgid "%d m"
-#~ msgstr "%d m"
-
 msgid "Map download aborted!"
 msgstr ""
 
@@ -3132,4 +3122,18 @@ msgstr ""
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
 msgstr ""
