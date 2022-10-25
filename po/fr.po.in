@@ -34,7 +34,7 @@ msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2022-10-25 23:12+0000\n"
+"PO-Revision-Date: 2022-10-27 00:08+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
 "fr/>\n"
@@ -2374,7 +2374,7 @@ msgid "USA"
 msgstr "États-Unis"
 
 msgid " (except Alaska and Hawaii)"
-msgstr " (sans Alaska et Hawaï)"
+msgstr "(sauf l'Alaska et Hawaï)"
 
 msgid "Midwest"
 msgstr "Midwest"
@@ -2485,13 +2485,13 @@ msgid "Not enough free space"
 msgstr "Pas assez d'espace libre"
 
 msgid "Error downloading map!"
-msgstr "Erreur de téléchargement de carte !"
+msgstr "Erreur lors du téléchargement de la carte !"
 
 msgid "Error writing map!"
 msgstr "Erreur d'écriture de carte !"
 
 msgid "Map download aborted!"
-msgstr "Téléchargement de la carte abandonné!"
+msgstr "Téléchargement de la carte annulé !"
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
@@ -2565,8 +2565,8 @@ msgid ""
 "Drop last \n"
 "Waypoint"
 msgstr ""
-"Sauter le dernier \n"
-"Point de passage"
+"Retirer le dernier\n"
+"point de passe"
 
 msgid ""
 "Drop next \n"
@@ -2576,7 +2576,7 @@ msgstr ""
 "point de passage"
 
 msgid "Satellite Status"
-msgstr "Etat des satellites"
+msgstr "État des satellites"
 
 msgid "NMEA Data"
 msgstr "Données NMEA"
@@ -2603,15 +2603,15 @@ msgstr "Oui"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
-msgstr "Navit commencé"
+msgstr "Navit a démarré"
 
 #. Android resource: @strings/notification_event_default
 msgid "Navit running"
-msgstr "Navit exécute"
+msgstr "Navit en fonction"
 
 #. Android resource: @strings/initial_info_box_title
 msgid "Welcome to Navit"
-msgstr "Bienvenue chez Navit"
+msgstr "Bienvenue dans Navit"
 
 #. Android resource: @strings/initial_info_box_message
 msgid ""
@@ -2624,15 +2624,15 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Nous vous remercions d'avoir installé Navit!\n"
+"Nous vous remercions d'avoir installé Navit !\n"
 "\n"
-"Pour commencer, sélectionnez \"Télécharger des cartes\" du menu et "
+"Pour commencer, sélectionnez « Télécharger des cartes » du menu et "
 "télechargez une carte de votre région. Les cartes sont volumineuses, donc il "
 "est préférable d'avoir une connection internet illimitée!\n"
 "\n"
-"Cartes: (c) OpenStreetMap contributors\n"
+"Cartes : © OpenStreetMap contributors\n"
 "\n"
-"Amusez-vous avec Navit!"
+"Amusez-vous avec Navit !"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2640,15 +2640,15 @@ msgstr "OK"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr "Plus d'infos"
+msgstr "En savoir plus"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr "Zoom-avant"
+msgstr "Agrandir"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr "Zoom-arrière"
+msgstr "Réduire"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
@@ -2656,7 +2656,7 @@ msgstr "Télécharger des cartes"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
-msgstr "Afficher/masquer POIs"
+msgstr "Afficher/masquer les points d'intérêt"
 
 #. Android resource: @strings/optionsmenu_exit_navit
 msgid "Exit Navit"
@@ -2672,11 +2672,11 @@ msgstr "Emplacement des cartes"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
-msgstr "Supprimer cette carte?"
+msgstr "Supprimer cette carte ?"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
-msgstr "Télécharger:"
+msgstr "Télécharger :"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2696,7 +2696,7 @@ msgstr "Cartes couvrant la position actuelle"
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
-msgstr "Cherchez adresse"
+msgstr "Cherchez l'adresse"
 
 #. Android resource: @strings/address_enter_destination
 msgid "Enter destination"
@@ -2732,7 +2732,7 @@ msgstr "Aucun texte entré"
 
 #. Android resource: @strings/address_search_set_destination
 msgid "Setting destination to:"
-msgstr "Destination fixée à:"
+msgstr "Destination fixée à :"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
@@ -2744,11 +2744,11 @@ msgstr "Veuillez insérer une carte SD"
 
 #. Android resource: @strings/backing_up
 msgid "Backing up..."
-msgstr "Sauvegarde..."
+msgstr "Sauvegarde…"
 
 #. Android resource: @strings/restoring
 msgid "Restoring..."
-msgstr "Restauration..."
+msgstr "Restauration…"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2808,10 +2808,10 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
-"Navit peut utiliser n'importe quel système de parole disponible sur votre "
-"appareil. Le système actuellement sélectionné indique qu'il ne peut pas "
-"parler dans votre langue. Devons nous demander au système d'afficher le menu "
-"de téléchargement des voix?"
+"Navit peut utiliser n'importe quel système de synthèse vocale disponible sur "
+"votre appareil. Le système actuellement sélectionné indique qu'il ne peut "
+"pas parler dans votre langue. Devons nous demander au système d'afficher le "
+"menu de téléchargement des voix ?"
 
 #~ msgid "then enter the roundabout"
 #~ msgstr "puis engagez-vous dans le rond-point"
