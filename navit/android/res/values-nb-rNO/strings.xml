@@ -1,2 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="map_download_ready">klar</string>
+    <string name="position_popup_title">Posisjon</string>
+    <string name="initial_info_box_title">Velkommen til Navit</string>
+    <string name="address_search_no_results">Resultatløst</string>
+    <string name="yes">Ja</string>
+    <string name="channel_name">Navit</string>
+    <string name="no">Nei</string>
+    <string name="cancel">Avbryt</string>
+    <string name="notification_event_default">Navit kjører</string>
+    <string name="notification_ticker">Navit startet</string>
+    <string name="initial_info_box_OK">OK</string>
+    <string name="initial_info_box_more_info">Mer info</string>
+    <string name="optionsmenu_zoom_out">Forminsk</string>
+    <string name="map_delete">Slett dette kartet</string>
+    <string name="map_download_downloading">Nedlasting:</string>
+    <string name="map_download_not_enough_free_space">Ikke nok ledig plass</string>
+    <string name="address_search_towns">Byer</string>
+    <string name="backing_up">Sikkerhetskopierer …</string>
+    <string name="optionsmenu_zoom_in">Forstørr</string>
+    <string name="use_position_with">Bruk posisjon med</string>
+    <string name="address_search_button">Søk</string>
+    <string name="optionsmenu_download_maps">Last ned kart</string>
+    <string name="optionsmenu_exit_navit">Avslutt Navit</string>
+    <string name="optionsmenu_set_map_location">Sett kartposisjon</string>
+    <string name="position_popup_view">Vis</string>
+    <string name="maps_installed">Installerte kart</string>
+    <string name="address_search_title">Adressesøk</string>
+    <string name="address_enter_destination">Angi mål</string>
+    <string name="address_search_searching">Søker …</string>
+    <string name="address_search_not_found">Fant ikke adressen</string>
+    <string name="address_search_loading_results">Laster inn søkeresultater …</string>
+    <string name="map_download_title">Kartnedlasting</string>
+    <string name="map_download_download_aborted">Kartnedlasting avbrutt</string>
+    <string name="address_search_getting_results">Henter søkeresultater …</string>
+    <string name="address_search_streets">Gater</string>
+    <string name="choose_an_action">Velg foretagende</string>
+    <string name="please_insert_an_sd_card">Sett inn et SD-kort</string>
+    <string name="restoring">Gjenoppretter …</string>
+    <string name="africa">Afrika</string>
+    <string name="select_backup">Velg sikkerhetskopi</string>
+    <string name="angola">Angola</string>
+</resources>
