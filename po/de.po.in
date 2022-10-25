@@ -39,13 +39,14 @@
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
 # jkoan <jkoan@gmx.de>, 2022.
+# J. Lavoie <j.lavoie@net-c.ca>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2022-10-24 07:42+0000\n"
-"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"PO-Revision-Date: 2022-10-27 00:07+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -1757,7 +1758,7 @@ msgid "Select a category"
 msgstr "Eine Kategorie auswählen"
 
 msgid "Select a distance to look for (km)"
-msgstr "Wählen Sie eine Suchdistanz (km)"
+msgstr "Wählen Sie einen Suchradius von der Bildschirmmitte aus"
 
 msgid "Select a POI"
 msgstr "Wählen Sie ein POI"
@@ -1772,7 +1773,7 @@ msgid "Direction"
 msgstr "Richtung"
 
 msgid "Distance(m)"
-msgstr "Entfernung (m)"
+msgstr "Entfernung"
 
 msgid "Name"
 msgstr "Bezeichnung"
@@ -2825,9 +2826,9 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
-"Navit kann jede text-to-speech Engine nutzen, die installiert ist. Die "
-"derzeit angewählte Engine kann Ihre Sprache nicht wiedergeben. Soll das "
-"System den Voice-Download Dialog öffnen?"
+"Navit kann jedes Sprachsynthese-Programm nutzen, das installiert ist. Das "
+"derzeit angewählte Programm kann Ihre Sprache nicht wiedergeben. Soll das "
+"System den Stimme-Download-Dialog öffnen?"
 
 #~ msgid "then enter the roundabout"
 #~ msgstr "dann in den Kreisverkehr einfahren"
