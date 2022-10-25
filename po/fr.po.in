@@ -28,12 +28,13 @@
 # quent57 https://launchpad.net/~quent57
 # tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
+# "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
 "fr/>\n"
 "Language: fr\n"
@@ -3043,48 +3044,8 @@ msgstr "Amérique (Centrale et Sud)"
 msgid "Guyane Francaise"
 msgstr "Guyane Française"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
-
-#~ msgid ""
-#~ "Drop last \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Sauter le dernier \n"
-#~ "Point de passage"
-
-#~ msgid "partial match"
-#~ msgstr "correspondance partielle"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Erreur de téléchargement de carte !"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (sans Alaska et Hawaï)"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Distance (m)"
-
-#, c-format
-#~ msgid "in %d m"
-#~ msgstr "dans %d m"
-
-#, c-format
-#~ msgid "%d m"
-#~ msgstr "%d m"
-
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Sélectionnez une distance à chercher (km)"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Distance du centre de l'écran (km)"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Téléchargement de la carte abandonné!"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -3146,4 +3107,43 @@ msgid ""
 "Current map location %s is not available\n"
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid "partial match"
 msgstr ""
