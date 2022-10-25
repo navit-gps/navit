@@ -19,12 +19,13 @@
 # giardia https://launchpad.net/~fabriziosm
 # jackyes https://launchpad.net/~jackthebest
 # tomas https://launchpad.net/~tracks-tomyt
+# "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/navit/navit-core/"
 "it/>\n"
 "Language: it\n"
@@ -2786,4 +2787,8 @@ msgstr ""
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "%d m"
 msgstr ""
