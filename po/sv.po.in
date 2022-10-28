@@ -12,19 +12,22 @@
 # ilovekiruna https://launchpad.net/~ilovekiruna
 # nairobie https://launchpad.net/~samuel-ostman
 # pipe https://launchpad.net/~pipatron
+# Patrick Höhn <hoehnp@gmx.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2019-10-29 19:15+0000\n"
-"Last-Translator: blabla2019 <Unknown>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2022-10-29 07:04+0000\n"
+"Last-Translator: Patrick Höhn <hoehnp@gmx.de>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/navit/navit-core/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -64,7 +67,7 @@ msgid "first exit"
 msgstr "första avfarten"
 
 msgid "second exit"
-msgstr "andra  utfarten"
+msgstr "andra utfarten"
 
 msgid "third exit"
 msgstr "tredje utfarten"
