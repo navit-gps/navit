@@ -12,12 +12,13 @@
 # ilovekiruna https://launchpad.net/~ilovekiruna
 # nairobie https://launchpad.net/~samuel-ostman
 # pipe https://launchpad.net/~pipatron
+# Patrick Höhn <hoehnp@gmx.de>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: Patrick Höhn <hoehnp@gmx.de>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/navit/navit-core/"
 "sv/>\n"
 "Language: sv\n"
