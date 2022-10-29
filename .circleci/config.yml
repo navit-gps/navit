@@ -127,6 +127,7 @@ jobs:
   build_fdroid:
     docker:
       - image: registry.gitlab.com/mvglasow/fdroidserver:buildserver-bullseye
+    working_directory: /builds/navit-gps/navit
     steps:
       - checkout
       - run:
