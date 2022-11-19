@@ -1,12 +1,21 @@
 import jsontree 
+import requests
 
 
-base_url = 'https://github.com/jkoan/gh_actions_mapserver/releases/download/'
-release = '2019_09_12'
+base_url = 'https://api.github.com/repositories/384098365/releases/latest'
+
+resp = requests.get(base_url)
+assets = resp.json().get("assets")
+maps_size = {}
+for asset in assets:
+    maps_size.update({asset["name"][:asset["name"].find("-2")].replace("-","_"): asset["size"]})
+
 continents = ['africa', 'antarctica', 'asia', 'australia_oceania', 'central_america', 'antarctica', 'europe', 'north_america', 'south_america']
 
 countries_europe_subregion = ['france', 'germany', 'great_britain', 'italy', 'netherlands', 'poland']
-countries_europe = ['albania', 'andorra', 'austria', 'azores', 'belarus', 'belgium', 'bosnia_herzegovina', 'bulgaria', 'croatia', 'cyprus', 'czech_republic', 'denmark', 'estonia', 'faroe_islands', 'finland','france',  'georgia', 'germany', 'great_britan', 'greece', 'guernsey_jersey', 'hungary', 'iceland', 'ireland_and_northern_ireland', 'isle_of_man', 'italy', 'kosovo', 'latvia', 'liechtenstein', 'lithuania', 'luxembourg', 'macedonia', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'norway', 'poland', 'portugal', 'romania', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland', 'turkey', 'ukraine'] 
+countries_europe = ['albania', 'andorra', 'austria', 'azores', 'belarus', 'belgium',
+'bosnia_herzegovina', 'bulgaria', 'croatia', 'cyprus', 'czech_republic', 'denmark', 'estonia',
+'faroe_islands', 'finland','france',  'georgia', 'germany', 'great_britain', 'greece', 'guernsey_jersey', 'hungary', 'iceland', 'ireland_and_northern_ireland', 'isle_of_man', 'italy', 'kosovo', 'latvia', 'liechtenstein', 'lithuania', 'luxembourg', 'macedonia', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'norway', 'poland', 'portugal', 'romania', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland', 'turkey', 'ukraine'] 
 countries_africa = ['algeria', 'angola', 'benin', 'botswana', 'burkina_faso', 'burundi', 'cameroon', 'canary_islands', 'cape_verde', 'central_african_republic', 'chad', 'comores', 'congo_brazzaville', 'congo_democratic_republic', 'djibouti', 'egypt', 'equatorial_guinea', 'eritrea', 'ethiopia', 'gabon', 'ghana', 'guinea', 'guinea_bissau', 'ivory_coast', 'kenya', 'lesotho', 'liberia', 'libya', 'madagascar', 'malawi', 'mali', 'mauritania', 'mauritius', 'morocco', 'mozambique', 'namibia', 'niger', 'nigeria', 'rwanda', 'saint_helena_ascension_and_tristan_da_cunha', 'sao_tome_and_principe', 'senegal_and_gambia', 'seychelles', 'sierra_leone', 'somalia', 'south_africa', 'south_sudan', 'sudan', 'swaziland', 'tanzania', 'togo', 'tunisia', 'uganda', 'zambia', 'zimbabwe']
 countries_asia = ['afghanistan', 'armenia', 'azerbaijan', 'bangladesh', 'bhutan', 'cambodia', 'china', 'gcc_states', 'india', 'indonesia', 'iran', 'iraq', 'israel_and_palestine', 'japan', 'jordan', 'kazakhstan', 'kyrgyzstan', 'laos', 'lebanon', 'malaysia_singapore_brunei', 'maldives', 'mongolia', 'myanmar', 'nepal', 'north_korea', 'pakistan', 'philippines', 'south_korea', 'sri_lanka', 'syria', 'taiwan', 'tajikistan', 'thailand', 'turkmenistan', 'uzbekistan', 'vietnam', 'yemen'] 
 countries_australia_oceania = ['american_oceania', 'australia', 'cook_islands', 'fiji', 'ile_de_clipperton', 'kiribati', 'marshall_islands', 'micronesia', 'nauru', 'new_caledonia', 'new_zealand', 'niue', 'palau', 'papua_new_guinea', 'pitcairn_islands', 'polynesie_francaise', 'samoa', 'solomon_islands', 'tokelau', 'tonga', 'tuvalu', 'vanuatu', 'wallis_et_futuna']
@@ -32,31 +41,38 @@ for continent in continents:
         for country in countries_europe:
             if country in countries_europe_subregion:
                 for region in eval("regions_" + country):
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = 0")
+                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
               
             else:
-                exec("data.planet." + continent + "." + country + ".filesize = 0")
+                map_size = maps_size[continent + "_" + country] 
+                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
 
     elif continent == 'north_america':
         for country in countries_north_america:
             if country in countries_north_america_subregion:
                 for region in eval("regions_" + country):
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = 0")
+                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
 
             else:
-                exec("data.planet." + continent + "." + country + ".filesize = 0")
+                map_size = maps_size[continent + "_" + country] 
+                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
     elif continent == 'south_america':
         for country in countries_south_america:
             if country in countries_south_america_subregion:
                 for region in eval("regions_" + country):
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = 0")
+                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
             else:
-                exec("data.planet." + continent + "." + country + ".filesize = 0")
+                map_size = maps_size[continent + "_" + country] 
+                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
     elif continent == 'antarctica':
-        data.planet.antarctica.filesize = 0
+        data.planet.antarctica.filesize = maps_size[continent]
     else:
         for country in eval("countries_" + continent):
-            exec("data.planet." + continent + "." + country + ".filesize = 0")
+            map_size = maps_size[continent + "_" + country] 
+            exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
 
 file = open('./menu.json', 'w')
 file.write(jsontree.dumps(data))
