@@ -1,5 +1,5 @@
-import jsontree 
 import requests
+import pandas as pd
 
 
 base_url = 'https://api.github.com/repositories/384098365/releases/latest'
@@ -34,45 +34,63 @@ regions_canada = ['alberta','british_columbia','manitoba','new_brunswick','newfo
 regions_us = ['alabama','alaska','arizona','arkansas','california','colorado','connecticut','delaware','district_of_columbia','florida','georgia','hawaii','idaho','illinois','indiana','iowa','kansas','kentucky','louisiana','maine','maryland','massachusetts','michigan','minnesota','mississippi','missouri','montana','nebraska','nevada','new_hampshire','new_jersey','new_mexico','new_york','north_carolina','north_dakota','ohio','oklahoma','oregon','pennsylvania','puerto_rico','rhode_island','south_carolina','south_dakota','tennessee','texas','utah','vermont','virginia','washington','west_virginia','wisconsin','wyoming']
 regions_brazil = ['centro_oeste','nordeste','norte','sudeste','sul']
 
-data = jsontree.jsontree()
-
+listdata = []
+size_planet = 0
 for continent in continents:
     if continent == 'europe':
+        size_europe = 0
         for country in countries_europe:
+            size_country = 0
             if country in countries_europe_subregion:
                 for region in eval("regions_" + country):
                     map_size = maps_size[continent + "_" + country + "_" + region] 
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
+                    size_country = size_country + map_size
+                    listdata.append([continent+"_"+country+"_"+region, map_size])
               
             else:
-                map_size = maps_size[continent + "_" + country] 
-                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
-
+                size_country = maps_size[continent + "_" + country] 
+            listdata.append([continent+"_"+country, size_country])
+            size_europe = size_europe + size_country
+        listdata.append(['europe', size_europe])
     elif continent == 'north_america':
+        size_north_america = 0
         for country in countries_north_america:
             if country in countries_north_america_subregion:
+                size_country = 0
                 for region in eval("regions_" + country):
+                    size_country = size_country + map_size
                     map_size = maps_size[continent + "_" + country + "_" + region] 
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
+                    listdata.append([continent+"_"+country+"_"+region, map_size])
 
             else:
-                map_size = maps_size[continent + "_" + country] 
-                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
+                size_country = maps_size[continent + "_" + country] 
+            listdata.append([continent+"_"+country, size_country])
+            size_north_america = size_north_america + size_country
+        listdata.append(['north_america', size_north_america])
     elif continent == 'south_america':
+        size_south_america = 0
         for country in countries_south_america:
+            size_country = 0
             if country in countries_south_america_subregion:
                 for region in eval("regions_" + country):
                     map_size = maps_size[continent + "_" + country + "_" + region] 
-                    exec("data.planet." + continent + "." + country + "." + region + ".filesize = " + str(map_size))
+                    size_country = size_country + map_size
+                    listdata.append([continent+"_"+country+"_"+region, map_size])
             else:
-                map_size = maps_size[continent + "_" + country] 
-                exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
+                size_country = maps_size[continent + "_" + country] 
+            listdata.append([continent+"_"+country, size_country])
+            size_south_america = size_south_america + size_country
+        listdata.append(['south_america', size_south_america])
     elif continent == 'antarctica':
-        data.planet.antarctica.filesize = maps_size[continent]
+        listdata.append(['antartica', maps_size[continent]])
     else:
+        size_continent = 0
         for country in eval("countries_" + continent):
             map_size = maps_size[continent + "_" + country] 
-            exec("data.planet." + continent + "." + country + ".filesize = " + str(map_size))
+            size_continent = size_continent + map_size
+            listdata.append([continent+"_"+country, map_size])
+            size_continent = size_continent + map_size
+        listdata.append([continent, size_continent])
+    size_planet = size_planet + size_continent
 
-file = open('./menu.json', 'w')
-file.write(jsontree.dumps(data))
+pd.concat([pd.DataFrame([['planet',size_planet]]), pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).to_csv('./menu.csv', header=False, index=False)
