@@ -31,18 +31,18 @@ Builds:
     # therefore we use dummy values and skip the version check
     novcheck: yes
     commit: HEAD
+    sudo:
+      - apt-get update
+      - apt-get install -y build-essential cmake gettext libpng-dev librsvg2-bin libsaxonb-java rename zlib1g-dev
     gradle:
       - yes
     output: build/outputs/apk/release/navit-release.apk
     rm:
       - navit/support/espeak/espeak-data/*
     prebuild:
-      # ndk is needed because of CI limitations and can be removed once the CI image comes with NDK 20
-      - $$SDK$$/tools/bin/sdkmanager "cmake;3.6.4111459" "ndk;20.0.5594570" > /dev/null
       - sed -i -e '/gradlew/d' scripts/build_android.sh
     build: scripts/build_android.sh
-    # disable for now because of CI limitations
-    #ndk: r20b
+    ndk: r20b
 
 MaintainerNotes: |-
     Found JAR file at navit/android/libs/TTS_library_stub.jar, removed as of v0.5.3-442-g96d9c41.

@@ -11,7 +11,7 @@ PoiObject::PoiObject(
     const QString &icon,
     struct pcoord &coords,
     QObject *parent)
-    : QObject(parent), m_name(name), m_type(type), m_icon(icon), m_coords(coords) {
+    : QObject(parent), m_coords(coords), m_name(name), m_type(type), m_icon(icon)  {
 }
 
 QString PoiObject::name() const {
