@@ -2402,10 +2402,19 @@ static void gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget
     /* possible entry can be identical to coord_format output but only space between lat and lng is allowed */
     widgettext=g_ascii_strup(widget->text,-1);
 
-    lat=strtok(widgettext," ");
-    lng=strtok(NULL,"");
+    lat = NULL;
+    lng=strchr(widgettext, ' ');
+    if (lng == NULL) { /* If no space is found in string, try comma-separated coordinates */
+        lng=strchr(widgettext, ',');
+    }
+    if (lng) {
+        lat = widgettext;
+        *lng = '\0';
+        lng++;
+    }
 
     if(!lat || !lng) {
+        dbg(lvl_warning,"Could not parse coord \"%s\", ignoring", widget->text);
         g_free(widgettext);
         return;
     }

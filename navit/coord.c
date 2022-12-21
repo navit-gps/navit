@@ -134,8 +134,9 @@ void coord_rect_extend(struct coord_rect *r, struct coord *c) {
  * The format for \a *coord_input can be:
  * 	\li [Proj:][-]0xXX.... [-]0xXX... - Mercator coordinates, hex integers (XX), Proj can be "mg" or "garmin", defaults to mg
  * 	\li [Proj:][D][D]Dmm.mm.. N/S [D][D]DMM.mm... E/W - lat/long (WGS 84), integer degrees (DD) and minutes as decimal fraction (MM), Proj must be "geo" or absent
- * 	\li [Proj:][-][D]D.d[d]... [-][D][D]D.d[d] - long/lat (WGS 84, note order!), degrees as decimal fraction, Proj does not matter
+ * 	\li [Proj:][-][D]D.d[d]... [-][D][D]D.d[d]... - long/lat (WGS 84, note order!), degrees as decimal fraction, Proj does not matter
  * 	\li utm[zoneinfo]:[-][D]D.d[d]... [-][D][D]D.d[d] - UTM coordinates, as decimal fraction, with optional zone information (?)
+ *     \li [-][D]D.d[d]...,[-][D][D]D.d[d]... - comma-separated (but without space inside the string) lat/long degrees as decimal fraction, Proj does not matter
  * Note that the spaces are relevant for parsing.
  *
  * @param *coord_input String to be parsed
@@ -151,16 +152,21 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     struct coord_geo g;
     struct coord c,offset;
     enum projection str_pro=projection_none;
+    int space_as_sep = 0;
 
     dbg(lvl_debug,"enter('%s',%d,%p)", coord_input, output_projection, result);
-    s=strchr(str,' ');
+    s=strchr(str, ' ');
+    if (!s) {
+        space_as_sep = 1;
+        s=strchr(str, ',');
+    }
     co=strchr(str,':');
     if (co && co < s) {
         proj=g_malloc(co-str+1);
         g_strlcpy(proj, str, 1+co-str);
         dbg(lvl_debug,"projection=%s", proj);
         str=co+1;
-        s=strchr(str,' ');
+        s=strchr(str,space_as_sep?' ':',');
         if (!strcmp(proj, "geo"))
             str_pro = projection_none;
         else {
@@ -178,7 +184,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     while (*s == ' ') {
         s++;
     }
-    if (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3)) {
+    if (!space_as_sep && (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3))) {
         args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
         if (args < 2)
             goto out;
@@ -192,7 +198,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else if (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's') {
+    } else if (!space_as_sep && (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's')) {
         double lng, lat;
         char ns, ew;
         dbg(lvl_debug,"str='%s'", str);
@@ -219,7 +225,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         }
         dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d", str, lng, ns, lat, ew, ret);
         dbg(lvl_debug,"rest='%s'", str+ret);
-    } else if (str_pro == projection_utm) {
+    } else if (!space_as_sep && (str_pro == projection_utm)) {
         double x,y;
         args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
         if (args < 2)
@@ -231,7 +237,19 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else {
+    } else if (space_as_sep) {
+        // When entering coords like google's format, we actually get strings like "52.5219,19.4127"
+        double lng, lat;
+        args=sscanf(str, "%lf,%lf%n", &lat, &lng, &ret);
+        if (args < 2)
+            goto out;
+        dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d", str, lng, lat, ret);
+        dbg(lvl_debug,"rest='%s'", str+ret);
+        g.lng=lng;
+        g.lat=lat;
+        transform_from_geo(output_projection, &g, result);
+    }
+    else {
         double lng, lat;
         args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
         if (args < 2)
