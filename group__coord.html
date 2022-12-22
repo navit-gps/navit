@@ -581,8 +581,9 @@ Functions</h2></td></tr>
 <p>Parses <code>char</code> <em>*coord_input</em> and writes back the coordinates to <code>coord</code> <em>*result</em>, using <code>projection</code> <em>output_projection</em>. <em>*coord_input</em> may specify its projection at the beginning. The format for <em>*coord_input</em> can be: </p><ul>
 <li>[Proj:][-]0xXX.... [-]0xXX... - Mercator coordinates, hex integers (XX), Proj can be "mg" or "garmin", defaults to mg </li>
 <li>[Proj:][D][D]Dmm.mm.. N/S [D][D]DMM.mm... E/W - lat/long (WGS 84), integer degrees (DD) and minutes as decimal fraction (MM), Proj must be "geo" or absent </li>
-<li>[Proj:][-][D]D.d[d]... [-][D][D]D.d[d] - long/lat (WGS 84, note order!), degrees as decimal fraction, Proj does not matter </li>
-<li>utm[zoneinfo]:[-][D]D.d[d]... [-][D][D]D.d[d] - UTM coordinates, as decimal fraction, with optional zone information (?) Note that the spaces are relevant for parsing.</li>
+<li>[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]... - long/lat (WGS 84, note order!), degrees as decimal fraction, Proj does not matter </li>
+<li>utm[zoneinfo]:[-][D]D.d[d]... [-][D][D]D.d[d] - UTM coordinates, as decimal fraction, with optional zone information (?) </li>
+<li>[-][D]D.d[d]...,[-][D][D]D.d[d]... - comma-separated (but without space inside the string) lat/long degrees as decimal fraction, Proj does not matter Note that the spaces are relevant for parsing.</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

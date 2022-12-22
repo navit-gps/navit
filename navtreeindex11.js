@@ -1,7 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"garmin_8c.html#a3ffd1d0816f86fc30603f26664f91fad":[3,0,7,3,2,12],
-"garmin_8c.html#a5082a1ba232f68b39000200a1659460a":[3,0,7,3,2,23],
 "garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec":[3,0,7,3,2,27],
 "garmin_8c.html#a5626a4c626274d571ef46fe9c7969fa2":[3,0,7,3,2,20],
 "garmin_8c.html#a65a7601de6f346ef6b38b0dde0552bc2":[3,0,7,3,2,33],
@@ -249,5 +247,7 @@ var NAVTREEINDEX11 =
 "geom_8h.html#a9117d4126f324bc9ca7574c77ffefd1a":[3,0,60,11],
 "geom_8h.html#a96397fbb6f714aeb1fab06b28d8e4508":[3,0,60,13],
 "geom_8h.html#a9765e9bf9f71f76c462ad7636ebab50d":[3,0,60,20],
-"geom_8h.html#ab4f576f6fc3b0990ef2e8e63234a9704":[3,0,60,5]
+"geom_8h.html#ab4f576f6fc3b0990ef2e8e63234a9704":[3,0,60,5],
+"geom_8h.html#abdf8e0844c6e3ec203d28f5614b1e5c4":[3,0,60,8],
+"geom_8h.html#ad62281d7e40043e22ec1af73fb29ae6d":[3,0,60,3]
 };
