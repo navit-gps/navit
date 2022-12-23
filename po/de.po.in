@@ -40,12 +40,13 @@
 # vsandre https://launchpad.net/~vsandre
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 # jkoan <jkoan@gmx.de>, 2024.
+# Ettore Atalan <atalanttore@googlemail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -3083,14 +3084,6 @@ msgstr "Französisch-Guayana"
 #~ msgstr "Entfernung vom Bildschirmmittelpunkt (km)"
 
 #, c-format
-#~ msgid "in %d m"
-#~ msgstr "in %d m"
-
-#, c-format
-#~ msgid "%d m"
-#~ msgstr "%d m"
-
-#, c-format
 msgid "Set map to %ld, %ld \n"
 msgstr ""
 
@@ -3181,4 +3174,12 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
 msgstr ""
