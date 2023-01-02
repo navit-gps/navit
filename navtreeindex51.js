@@ -1,5 +1,7 @@
 var NAVTREEINDEX51 =
 {
+"structxmlstate.html#a9d03b2abd62f7ed16887a09233cb03e4":[2,0,436,5],
+"structxmlstate.html#aaaeade6d9876fe98d4541fd931bc0e4d":[2,0,436,0],
 "structxmlstate.html#ad6e1974df86c9f949b445f2e24bcb34a":[2,0,436,7],
 "structxmlstate.html#ae2f6b21dab92b95c035529886944c9f7":[2,0,436,1],
 "structz__clip__result.html":[2,0,439],
@@ -247,7 +249,5 @@ var NAVTREEINDEX51 =
 "town_8c.html#a0b912d381cfba43f06a1b1623e512e05":[3,0,7,5,5,7],
 "town_8c.html#a4ddc018df7dfd4ee0791f0014b06705e":[3,0,7,5,5,2],
 "town_8c.html#a53c3b0f0dbe26fb2fc3161f0cb0e67de":[3,0,7,5,5,9],
-"town_8c.html#a6cbd413356738380324e12f94c91c75a":[3,0,7,5,5,12],
-"town_8c.html#a720c1771cdd6eb2ee755bd8eb5877c0a":[3,0,7,5,5,4],
-"town_8c.html#a729b3c21f51bd90f8f6fbf1315dc7958":[3,0,7,5,5,6]
+"town_8c.html#a6cbd413356738380324e12f94c91c75a":[3,0,7,5,5,12]
 };
