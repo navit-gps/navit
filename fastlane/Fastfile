@@ -37,6 +37,7 @@ platform :android do
       build_type: 'Release'
     )
     isOnMasterBranch = currentBranch() == "master"
+    isOnMasterBranch = false # Workarount do not push to google as its curently broken
     if isOnMasterBranch
       upload_to_play_store( track: 'beta',
       						json_key: 'key.json',

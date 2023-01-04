@@ -95,7 +95,6 @@ void QNavitWidget::paintEvent(QPaintEvent* event) {
 }
 
 void QNavitWidget::resizeEvent(QResizeEvent* event) {
-    QPainter* painter = NULL;
     if (graphics_priv->pixmap != NULL) {
         if((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
             delete graphics_priv->pixmap;

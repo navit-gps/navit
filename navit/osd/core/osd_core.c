@@ -3864,7 +3864,7 @@ static void osd_auxmap_draw(struct osd_priv_common *opc) {
 
     int d=10;
     struct point p;
-    struct attr mapset;
+    struct attr mapset, layout;
 
     if (!opc->osd_item.configured)
         return;
@@ -3888,6 +3888,11 @@ static void osd_auxmap_draw(struct osd_priv_common *opc) {
     transform_set_yaw(this->trans, transform_get_yaw(this->ntrans));
     transform_setup_source_rect(this->trans);
     transform_set_projection(this->trans, transform_get_projection(this->ntrans));
+
+    // Support change of layout, e.g. for night layout
+    if (navit_get_attr(this->nav, attr_layout, &layout, NULL))
+        this->layout=layout.u.layout;
+
 #if 0
     graphics_displaylist_draw(opc->osd_item.gr, this->displaylist, this->trans, this->layout, 4);
 #endif

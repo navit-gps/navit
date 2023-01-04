@@ -8,7 +8,7 @@ BookmarkObject::BookmarkObject(
     const QString &name,
     struct pcoord &coords,
     QObject *parent)
-    : QObject(parent), m_name(name), m_coords(coords) {
+    : QObject(parent), m_coords(coords), m_name(name) {
 }
 
 QString BookmarkObject::name() const {

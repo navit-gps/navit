@@ -377,7 +377,7 @@ char* navit_get_user_data_directory(int create) {
     dir = getenv("NAVIT_USER_DATADIR");
     if (create && !file_exists(dir)) {
         dbg(lvl_debug,"creating dir %s", dir);
-        if (file_mkdir(dir,0)) {
+        if (file_mkdir(dir,1)) {
             dbg(lvl_error,"failed creating dir %s", dir);
             return NULL;
         }
@@ -1806,7 +1806,9 @@ static int navit_former_destinations_active(struct navit *this_) {
     if (destination_file) {
         while(fgets(lastline, sizeof(lastline), destination_file));
         fclose(destination_file);
-        if ((lastline != NULL) && (strcmp(lastline, TEXTFILE_COMMENT_NAVI_STOPPED))) {
+        /*forcefully terminate the string, there is no proper fgets error handling.*/
+        lastline[sizeof(lastline) -1] = 0;
+        if (strcmp(lastline, TEXTFILE_COMMENT_NAVI_STOPPED)) {
             active=1;
         }
     }

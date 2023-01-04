@@ -176,6 +176,8 @@ static int gui_internal_cmd_enter_coord(struct gui_priv *this, char *function, s
     gui_internal_widget_append(wr,row);
     row=gui_internal_text_new(this, "52°31'19N 19°24'46E", gravity_top_center|flags_fill|orientation_vertical);
     gui_internal_widget_append(wr,row);
+    row=gui_internal_text_new(this, "52.5219,19.4127", gravity_top_center|flags_fill|orientation_vertical);
+    gui_internal_widget_append(wr,row);
 
     if (this->keyboard)
         gui_internal_widget_append(w, gui_internal_keyboard(this, VKBD_DEGREE));

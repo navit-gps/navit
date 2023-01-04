@@ -64,14 +64,11 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
-          name: install docker
-          command: circleci-install docker
-      - run:
           name: make build dir
-          command:  mkdir ../rpmbuild
+          command:  mkdir ../rpmbuild && chmod 777 ../rpmbuild
       - run:
           name: run build
-          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.1.0.12 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit hoehnp/sailfishos-platform-sdk:3.1.0.12 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+          command: ls -lah ../rpmbuild && docker run -e VERSION_ID=3.4.0.24 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit coderus/sailfishos-platform-sdk:3.4.0.24 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
       - store_artifacts:
           name: Store rpm
           path: ../rpmbuild/RPMS/
@@ -129,34 +126,60 @@ jobs:
             bash scripts/update_download_center.sh
   build_fdroid:
     docker:
-      - image: registry.gitlab.com/fdroid/ci-images-client:latest
+      - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bullseye
     steps:
       - checkout
       - run:
           name: Build with F-Droid
           command: |
-            test -d build || mkdir build
-            test -d fdroidserver || mkdir fdroidserver
-            git ls-remote https://gitlab.com/fdroid/fdroidserver.git master
-            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=fdroidserver --strip-components=1
-            export PATH="`pwd`/fdroidserver:$PATH"
-            export PYTHONPATH="$CI_PROJECT_DIR/fdroidserver:$CI_PROJECT_DIR/fdroidserver/examples"
-            export PYTHONUNBUFFERED=true
-            bash fdroidserver/buildserver/setup-env-vars $ANDROID_HOME
-            adduser --disabled-password --gecos "" vagrant
-            ln -s $CI_PROJECT_DIR/fdroidserver /home/vagrant/fdroidserver
-            mkdir -p /vagrant/cache
-            wget -q https://services.gradle.org/distributions/gradle-5.6.2-bin.zip --output-document=/vagrant/cache/gradle-5.6.2-bin.zip
-            bash fdroidserver/buildserver/provision-gradle
-            bash fdroidserver/buildserver/provision-apt-get-install http://deb.debian.org/debian
-            source /etc/profile.d/bsenv.sh
+            # Mostly copied from fdroidserver’s own CI script (fdroid build), except for everything marked APP_CI
+            apt-get update
             apt-get dist-upgrade
-            apt-get install -t stretch-backports fdroidserver python3-asn1crypto python3-ruamel.yaml yamllint
-            apt-get purge fdroidserver
-            export GRADLE_USER_HOME=$PWD/.gradle
-            set -x
-            apt-get install sudo
-            fdroid build --verbose --on-server --no-tarball
+            apt-get clean
+
+            test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
+
+            # APP_CI: we need to install fdroidserver from source, directly into $fdroidserver, and set ownership accordingly
+            test -d $fdroidserver || mkdir -p $fdroidserver
+            git ls-remote https://gitlab.com/fdroid/fdroidserver.git master
+            curl --silent https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver-master.tar.gz | tar -xz --directory=$fdroidserver --strip-components=1
+            chown -R vagrant $fdroidserver
+
+            # TODO remove sdkmanager install once it is included in the buildserver image
+            apt-get install sdkmanager
+            rm -rf "$ANDROID_HOME/tools" # TODO remove once sdkmanager can upgrade installed packages
+            sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
+
+            # APP_CI:
+            # Skip fdroiddata download as we’re building from our own recipe.
+            # Since we are not fetching source code but building from the project dir, we need to modify permissions:
+            #   - Since we are in another user’s home dir, we grant permissions via group.
+            #   - git needs read/execute on all parents of the source code dir.
+            #   - fdroid creates subdirs, so the source code dir must be writable.
+            # $home_vagrant/.android gets created and chowned just like on fdroidserver CI.
+            chgrp -R vagrant $PWD
+            chmod -R g+r $PWD
+            chmod g+w $PWD
+            chgrp vagrant ..
+            chmod g+rx-w ..
+            test -d $home_vagrant/.android || mkdir $home_vagrant/.android
+            chown -R vagrant $home_vagrant/.android
+
+            # APP_CI: for some reason fdroid complains about missing git but runs fine when the warning is suppressed
+            export GRADLE_USER_HOME=$home_vagrant/.gradle
+            export fdroid="sudo --preserve-env --user vagrant
+              env PATH=$fdroidserver:$PATH
+              env PYTHONPATH=$fdroidserver:$fdroidserver/examples
+              env PYTHONUNBUFFERED=true
+              env TERM=$TERM
+              env HOME=$home_vagrant
+              env GIT_PYTHON_REFRESH=quiet
+              fdroid"
+
+            chown -R vagrant $home_vagrant
+
+            # APP_CI: just build our own app
+            $fdroid build --verbose --on-server --no-tarball
       - store_artifacts:
            name: Store APK
            path: unsigned

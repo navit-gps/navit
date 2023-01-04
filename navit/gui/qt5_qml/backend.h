@@ -104,10 +104,10 @@ private:
     VehicleObject * m_currentVehicle;
     QList<QObject *> _search_results;
     void set_default_country();
-    char * _country_iso2;
-    char * _current_country;
-    char * _current_town;
-    char * _current_street;
+    const char * _country_iso2;
+    const char * _current_country;
+    const char * _current_town;
+    const char * _current_street;
     struct search_param *search;
     enum attr_type _search_context;
 };
