@@ -3624,7 +3624,7 @@ void navit_layout_switch(struct navit *n) {
             if((tcur<=ts) || (tcur>=tr)) {
                 after_sunrise = TRUE;
             }
-            if(tcur>ts || tcur<tr) {
+            if(tcur>ts && tcur<tr) {
                 after_sunset = TRUE;
             }
         }
