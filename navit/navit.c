@@ -3613,21 +3613,21 @@ void navit_layout_switch(struct navit *n) {
         int ts=HOURS(tset)*60+MINUTES(tset);
         int tcur = (currTs%86400)/60;
 
-		if (ts > tr) {
-			if (tr < tcur) {
-				after_sunrise = TRUE;
-			}
-			if (((ts < tcur) || (tr > tcur))) {
-				after_sunset = TRUE;
-			}
-		} else {
-			if(tcur < ts || tcur > tr) {
-				after_sunrise = TRUE;
-			}
-			if(tcur > ts && tcur < tr) {
-				after_sunset = TRUE;
-			}
-		}
+        if (ts>tr) {
+            if (tr<=tcur) {
+                after_sunrise = TRUE;
+            }
+            if (ts<tcur || ts>1440 || tr>tcur) {
+                after_sunset = TRUE;
+            }
+        } else {
+            if((tcur<=ts) || (tcur>=tr)) {
+                after_sunrise = TRUE;
+            }
+            if(tcur>ts || tcur<tr)
+                    after_sunset = TRUE;
+            }
+        }
 
         if (after_sunrise && !after_sunset && l->dayname) {
             navit_set_layout_by_name(n,l->dayname);
