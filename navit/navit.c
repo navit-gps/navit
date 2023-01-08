@@ -3539,12 +3539,11 @@ void navit_layout_switch(struct navit *n) {
         //Ok, we know that we have profile to switch
 
         //Check that we aren't calculating too fast
-        //attr_position_time_iso8601 has to be in UTC time
         if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
             currTs=iso8601_to_secs(iso8601_attr.u.str);
-            dbg(lvl_debug,"currTs: %02u:%02u",currTs%86400/3600,((currTs%86400)%3600)/60);
+            dbg(lvl_debug,"currTs: %u:%u",currTs%86400/3600,((currTs%86400)%3600)/60);
         }
-        dbg(lvl_debug,"prevTs: %02u:%02u",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
+        dbg(lvl_debug,"prevTs: %u:%u",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
 
         if (n->auto_switch == FALSE)
             return;
@@ -3603,32 +3602,18 @@ void navit_layout_switch(struct navit *n) {
             return;
         }
         trise_actual=trise;
-        dbg(lvl_debug,"trise: %02u:%02u",HOURS(trise),MINUTES(trise));
-        dbg(lvl_debug,"tset: %02u:%02u",HOURS(tset),MINUTES(tset));
-        dbg(lvl_debug,"currTs: %02u:%02u",currTs%86400/3600,((currTs%86400)%3600)/60);
+        dbg(lvl_debug,"trise: %u:%u",HOURS(trise),MINUTES(trise));
+        dbg(lvl_debug,"tset: %u:%u",HOURS(tset),MINUTES(tset));
         dbg(lvl_debug,"dayname = %s, name =%s ",l->dayname, l->name);
         dbg(lvl_debug,"nightname = %s, name = %s ",l->nightname, l->name);
+        if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
+            after_sunrise = TRUE;
+        }
 
-        int tr=HOURS(trise)*60+MINUTES(trise);
-        int ts=HOURS(tset)*60+MINUTES(tset);
-        int tcur = (currTs%86400)/60;
-
-		if (ts > tr) {
-			if (tr < tcur) {
-				after_sunrise = TRUE;
-			}
-			if (((ts < tcur) || (tr > tcur))) {
-				after_sunset = TRUE;
-			}
-		} else {
-			if(tcur < ts || tcur > tr) {
-				after_sunrise = TRUE;
-			}
-			if(tcur > ts && tcur < tr) {
-				after_sunset = TRUE;
-			}
-		}
-
+        if (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) ||
+                ((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))) {
+            after_sunset = TRUE;
+        }
         if (after_sunrise && !after_sunset && l->dayname) {
             navit_set_layout_by_name(n,l->dayname);
             dbg(lvl_debug,"layout set to day");
