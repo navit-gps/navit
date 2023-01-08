@@ -4,7 +4,7 @@ extern long int timezone_offset;
 #define TMOD(x) ((x)<0?(x)+24:((x)>=24?(x)-24:(x)))
 #define DAYSOFF(x) ((x)<0?"(-1) ":((x)>=24?"(+1) ":""))
 
-#define HOURS(h) ((((int)(floor(h)))<0.0)?(1440/60+((int)(floor(h)))):((int)(floor(h))))
+#define HOURS(h) ((int)(floor(h)))
 #define MINUTES(h) ((int)(60*(h-floor(h))))
 
 #ifndef ABS
