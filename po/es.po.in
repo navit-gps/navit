@@ -22,13 +22,13 @@
 # marZiano https://launchpad.net/~m3marte
 # pataquets https://launchpad.net/~pataquets
 # singesang https://launchpad.net/~singesang
-# gallegonovato <fran-carro@hotmail.es>, 2022.
+# gallegonovato <fran-carro@hotmail.es>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-03 02:23+0200\n"
-"PO-Revision-Date: 2022-12-05 19:47+0000\n"
+"PO-Revision-Date: 2023-01-12 18:47+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/navit/navit-core/"
 "es/>\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "Ejecutando desde el directorio fuente\n"
@@ -444,7 +444,7 @@ msgstr "Agregar como favorito"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr "Punto 0x%x 0x%x"
+msgstr ""
 
 #, c-format
 msgid "Screen coord : %d %d"
