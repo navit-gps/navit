@@ -3521,7 +3521,7 @@ void navit_layout_switch(struct navit *n) {
 
     int currTs=0;
     struct attr iso8601_attr,geo_attr,valid_attr,layout_attr;
-    double trise,tset,trise_actual;
+    double trise,tset;
     struct layout *l;
     int year, month, day;
     int after_sunrise = FALSE;
@@ -3541,9 +3541,9 @@ void navit_layout_switch(struct navit *n) {
         //Check that we aren't calculating too fast
         if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
             currTs=iso8601_to_secs(iso8601_attr.u.str);
-            dbg(lvl_debug,"currTs: %u:%u",currTs%86400/3600,((currTs%86400)%3600)/60);
+            dbg(lvl_debug,"currTs: %02u:%02u",currTs%86400/3600,((currTs%86400)%3600)/60);
         }
-        dbg(lvl_debug,"prevTs: %u:%u",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
+        dbg(lvl_debug,"prevTs: %02u:%02u",n->prevTs%86400/3600,((n->prevTs%86400)%3600)/60);
 
         if (n->auto_switch == FALSE)
             return;
@@ -3596,36 +3596,43 @@ void navit_layout_switch(struct navit *n) {
         if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,n->sunrise_degrees,1,&trise,
                          &tset)!=0) {
             dbg(lvl_debug,"near the pole sun never rises/sets, so we should never switch profiles");
-            dbg(lvl_debug,"trise: %u:%u",HOURS(trise),MINUTES(trise));
-            dbg(lvl_debug,"tset: %u:%u",HOURS(tset),MINUTES(tset));
+            dbg(lvl_debug,"trise: %02u:%02u",HOURS(trise),MINUTES(trise));
+            dbg(lvl_debug,"tset: %02u:%02u",HOURS(tset),MINUTES(tset));
             n->prevTs=currTs;
             return;
         }
-        trise_actual=trise;
-        dbg(lvl_debug,"trise: %u:%u",HOURS(trise),MINUTES(trise));
-        dbg(lvl_debug,"tset: %u:%u",HOURS(tset),MINUTES(tset));
+
+        dbg(lvl_debug,"trise: %02u:%02u",HOURS(trise),MINUTES(trise));
+        dbg(lvl_debug,"tset: %02u:%02u",HOURS(tset),MINUTES(tset));
         dbg(lvl_debug,"dayname = %s, name =%s ",l->dayname, l->name);
         dbg(lvl_debug,"nightname = %s, name = %s ",l->nightname, l->name);
-        if (HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60) {
+
+        // We want any times to be in [0;1439].
+        if(trise<0)
+            trise+=24;
+        if(tset>=24)
+            tset-=24;
+
+        int trmin=HOURS(trise)*60+MINUTES(trise); // rise time in minutes
+        int tsmin=HOURS(tset)*60+MINUTES(tset);   // set time in minutes
+        int tcur=(currTs%86400)/60;               // minutes elapsed today
+
+        if (trmin<=tcur) { // use <= to have defined values for after_sunrise for any value of tcur
             after_sunrise = TRUE;
         }
 
-        int tr=HOURS(trise)*60+MINUTES(trise);
-        int ts=HOURS(tset)*60+MINUTES(tset);
-        int tcur = (currTs%86400)/60;
-
-        if (ts>tr) {
-            if (tr<=tcur) {
+        if (tsmin>trmin) { // set > rise
+            if (trmin<=tcur) {
                 after_sunrise = TRUE;
             }
-            if (ts<tcur || ts>1440 || tr>tcur) {
+            if (tsmin<=tcur || trmin>tcur) {
                 after_sunset = TRUE;
             }
-        } else {
-            if((tcur<=ts) || (tcur>=tr)) {
+        } else { // rise > set
+            if((tcur<=tsmin) || (tcur>=trmin)) {
                 after_sunrise = TRUE;
             }
-            if(tcur>ts && tcur<tr) {
+            if(tcur>tsmin && tcur<trmin) {
                 after_sunset = TRUE;
             }
         }
