@@ -3602,10 +3602,10 @@ void navit_layout_switch(struct navit *n) {
             return;
         }
 
-        dbg(lvl_error,"trise: %02u:%02u",HOURS(trise),MINUTES(trise));
-        dbg(lvl_error,"tset: %02u:%02u",HOURS(tset),MINUTES(tset));
-        dbg(lvl_error,"dayname = %s, name =%s ",l->dayname, l->name);
-        dbg(lvl_error,"nightname = %s, name = %s ",l->nightname, l->name);
+        dbg(lvl_debug,"trise: %02u:%02u",HOURS(trise),MINUTES(trise));
+        dbg(lvl_debug,"tset: %02u:%02u",HOURS(tset),MINUTES(tset));
+        dbg(lvl_debug,"dayname = %s, name =%s ",l->dayname, l->name);
+        dbg(lvl_debug,"nightname = %s, name = %s ",l->nightname, l->name);
 
         // We want any times to be in [0;1439].
         if(trise<0)
