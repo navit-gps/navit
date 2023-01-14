@@ -39,7 +39,7 @@
  * @returns the coordinate
  */
 
-int projection_enum_size[SIZE];
+int projection_enum_size[projection_enumsize];
 #define PROJASSTRING(x) (x==0?"projection_none":x==1?"projection_mg":x==2?"projection_garmin":x==3?"projection_screen":x==4?"projection_utm":"UNKNOWN")
 
 struct coord * coord_get(unsigned char **p) {

@@ -26,7 +26,7 @@ enum projection {
     projection_garmin,    /*!< Garmin projection */
     projection_screen,    /*!< Screen projection */
     projection_utm,        /*!< UTM projection */
-    SIZE
+	projection_enumsize
 };
 
 enum map_datum {
