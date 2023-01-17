@@ -937,53 +937,17 @@ option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
 message(STATUS "Enable testing: ${ENABLE_UNIT_TESTS}")
 
 if(ENABLE_UNIT_TESTS)
-	configure_file(cmake/googletest.cmake googletest-download/CMakeLists.txt)
-	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-	if(result)
-		message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-	endif()
-	execute_process(COMMAND ${CMAKE_COMMAND} --build .
-		RESULT_VARIABLE result
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-	if(result)
-		message(FATAL_ERROR "Build step for googletest failed: ${result}")
-	endif()
-
-	# Prevent overriding the parent project's compiler/linker
-	# settings on Windows
+	include(FetchContent)
+	FetchContent_Declare(
+	  googletest
+	  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+	)
+	# For Windows: Prevent overriding the parent project's compiler/linker settings
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+	FetchContent_MakeAvailable(googletest)
 
-	# Add googletest directly to our build. This defines
-	# the gtest and gtest_main targets.
-	add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-		${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-		EXCLUDE_FROM_ALL)
+	enable_testing()
+	
+	add_subdirectory (test)
 
-	# The gtest/gtest_main targets carry header search path
-	# dependencies automatically when using CMake 2.8.11 or
-	# later. Otherwise we have to add them here ourselves.
-	if (CMAKE_VERSION VERSION_LESS 2.8.11)
-		include_directories("${gtest_SOURCE_DIR}/include")
-	endif()
-
-	# Now simply link against gtest or gtest_main as needed. Eg
-	add_executable(unit_tests "")
-
-	target_sources(
-		unit_tests
-		PRIVATE
-			search.cpp
-			main.cpp
-		)
-
-	target_link_libraries(
-		unit_tests
-		PRIVATE
-			navit
-			gtest_main
-		)
-
-	add_test(unit ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
-endif()
+endif(ENABLE_UNIT_TESTS)
