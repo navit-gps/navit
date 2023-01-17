@@ -1,10 +1,21 @@
 file(GLOB TEST_FILES_SOURCES "*.cpp")
 
-add_executable(unit_tests ${TEST_FILES_SOURCES})
+set_property(TARGET navit PROPERTY ENABLE_EXPORTS 1)
 
-target_link_libraries(unit_tests navit)
+include_directories( "${PROJECT_BINARY_DIR}")
+include_directories( "${PROJECT_SOURCE_DIR}")
+include_directories( "${PROJECT_BINARY_DIR}/navit")
+include_directories( "${PROJECT_SOURCE_DIR}/navit")
 
-add_test(
-	NAME unit
-	COMMAND ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests
-	)
+add_executable(unit_tests "")
+
+target_sources(
+	unit_tests
+	PRIVATE
+		${TEST_FILES_SOURCES}
+)
+
+target_link_libraries(unit_tests PRIVATE navit GTest::gtest_main )
+
+include(GoogleTest)
+gtest_discover_tests(unit_tests)

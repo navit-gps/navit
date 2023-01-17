@@ -1,4 +1,4 @@
-#include "search.h"
+#include "navit/search.h"
 #include <gtest/gtest.h>
 
 TEST(SearchTestSuite, search_fix_spaces) {
