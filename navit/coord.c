@@ -39,9 +39,6 @@
  * @returns the coordinate
  */
 
-int projection_enum_size[projection_enumsize];
-#define PROJASSTRING(x) (x==0?"projection_none":x==1?"projection_mg":x==2?"projection_garmin":x==3?"projection_screen":x==4?"projection_utm":"UNKNOWN")
-
 struct coord * coord_get(unsigned char **p) {
     struct coord *ret=(struct coord *)(*p);
     *p += sizeof(*ret);
@@ -158,7 +155,7 @@ int coord_parse(const char *coord_input, enum projection output_projection,	stru
 	int space_as_sep = 0;
 
 	dbg(lvl_debug, "enter('%s',%s,%p)\n", coord_input,
-			PROJASSTRING(output_projection), result);
+			projection_to_name(output_projection), result);
 	co = strchr(str, ':');
 	if (co)
 		s = strstr(str, ": ");
@@ -178,7 +175,7 @@ int coord_parse(const char *coord_input, enum projection output_projection,	stru
 		else {
 			str_pro = projection_from_name(proj, &offset);
 			if (str_pro == projection_none) {
-				dbg(lvl_debug, "Unknown projection: %s\n", proj);
+				dbg(lvl_error, "Unknown projection: %s\n", proj);
 				goto out;
 			}
 		}
@@ -209,7 +206,7 @@ int coord_parse(const char *coord_input, enum projection output_projection,	stru
 		if (args < 4)
 			goto out;
 		dbg(lvl_debug, "projection=%s str_pro=%d projection_none=%d\n",
-				PROJASSTRING(output_projection), str_pro, projection_none);
+				projection_to_name(output_projection), str_pro, projection_none);
 		if (str_pro == projection_none) {
 			g.lat = floor(lat / 100);
 			lat -= g.lat * 100;
