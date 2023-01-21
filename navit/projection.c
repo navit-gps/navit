@@ -79,20 +79,20 @@ enum projection projection_from_name(const char *name, struct coord *utm_offset)
             square_y=tolower(square_y);
             i=utmref_letter(zone_field);
             if (i < 2 || i > 21) {
-                printf("invalid zone field '%c' in '%s'",zone_field,name);
+                dbg(lvl_error,"invalid zone field '%c' in '%s'",zone_field,name);
                 return projection_none;
             }
             i-=12;
-            printf("zone_field %d",i);
+            dbg(lvl_debug,"zone_field %d",i);
             baserow=i*887.6/100;
             utm_offset->x=zone*1000000;
             i=utmref_letter(square_x);
             utm_offset->x+=((i%8)+1)*100000;
             i=utmref_letter(square_y);
-            printf("baserow %d",baserow);
+            dbg(lvl_debug,"baserow %d",baserow);
             if (!(zone % 2))
                 i-=5;
-            printf("i=%d",i);
+            dbg(lvl_debug,"i=%d",i);
             i=(i-baserow+100)%20+baserow;
             utm_offset->y=i*100000;
             return projection_utm;
