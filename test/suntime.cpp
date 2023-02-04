@@ -1,4 +1,4 @@
-extern "C"{
+extern "C" {
 #include <math.h>
 #include "sunriset.h"
 }
