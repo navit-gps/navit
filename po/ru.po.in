@@ -24,20 +24,20 @@
 # kisaa https://launchpad.net/~kisaa-mail
 # tryagain https://launchpad.net/~mdankov
 # Павел https://launchpad.net/~pavel-sgn
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2016-07-11 21:09+0000\n"
 "Last-Translator: tryagain <mdankov@yandex.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -91,6 +91,16 @@ msgstr "пятый съезд"
 msgid "sixth exit"
 msgstr "шестой съезд"
 
+#, fuzzy, c-format
+#| msgid "%d meters"
+msgid "%d m"
+msgstr "%d метров"
+
+#, fuzzy, c-format
+#| msgid "in %d meters"
+msgid "in %d m"
+msgstr "через %d метров"
+
 #, c-format
 msgid "%d feet"
 msgstr "%d футов"
@@ -100,12 +110,28 @@ msgid "in %d feet"
 msgstr "через %d футов"
 
 #, c-format
+msgid "%d meters"
+msgstr "%d метров"
+
+#, c-format
+msgid "in %d meters"
+msgstr "через %d метров"
+
+#, c-format
 msgid "%d.%d miles"
 msgstr "%d,%d миль"
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr "через %d,%d миль"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d,%d километров"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "через %d,%d километров"
 
 #, c-format
 msgid "one mile"
@@ -120,22 +146,6 @@ msgid_plural "in %d miles"
 msgstr[0] "через %d милю"
 msgstr[1] "через %d мили"
 msgstr[2] "через %d миль"
-
-#, c-format
-msgid "%d meters"
-msgstr "%d метров"
-
-#, c-format
-msgid "in %d meters"
-msgstr "через %d метров"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d,%d километров"
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "через %d,%d километров"
 
 #, c-format
 msgid "one kilometer"
@@ -225,8 +235,10 @@ msgstr "Скоро круговое движение"
 msgid "Enter the roundabout %s"
 msgstr "%s круговое движение"
 
-msgid "then enter the roundabout"
-msgstr "затем круговое движение"
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr "затем %2$s съезжайте с круга на %1$s"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -332,10 +344,6 @@ msgid "strongly "
 msgstr "круто "
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Выезжайте на %1$s дорогу в направлении %2$s"
 
@@ -343,6 +351,7 @@ msgstr "Выезжайте на %1$s дорогу в направлении %2$s
 msgid "after %i roads"
 msgstr "после %i дорог"
 
+#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -373,7 +382,7 @@ msgstr "%1$s разворот направо"
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give useful info to the driver.
+#. * and then we can give usefull info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -1952,11 +1961,11 @@ msgid "Enter Coordinates"
 msgstr "Введите координаты"
 
 #.
-#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
-#. gui_internal_widget_append(wb, w)
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+#. gui_internal_widget_append(wb, w);
 #.
-#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
-#. gui_internal_widget_append(w, we)
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+#. gui_internal_widget_append(w, we);
 msgid "Latitude Longitude"
 msgstr "Широта Долгота"
 
@@ -1989,12 +1998,6 @@ msgstr "Схема"
 
 msgid "Height Profile"
 msgstr "Профиль высот"
-
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
 
 msgid "Route Description"
 msgstr "Описание маршрута"
@@ -2051,6 +2054,10 @@ msgstr "Поиск"
 msgid "Towns"
 msgstr "Города"
 
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "Ехать сюда"
+
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr "Данные карты (c) участники OpenStreetMap, ODBL"
 
@@ -2072,10 +2079,6 @@ msgid ""
 msgstr ""
 "К сожалению, карты свыше 3.8 Гб не поддерживаются в Android версии. Выберите "
 "другую карту."
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "Ехать сюда"
 
 msgid "Cancel"
 msgstr "Отмена"
@@ -2541,9 +2544,6 @@ msgstr "Во весь экран"
 msgid "Window Mode"
 msgstr "Режим окна"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "Описание"
 
@@ -2799,6 +2799,9 @@ msgstr ""
 "невозможности работы на выбранном языке. Попросим систему показать диалог "
 "загрузки голосовых данных?"
 
+#~ msgid "then enter the roundabout"
+#~ msgstr "затем круговое движение"
+
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "затем %2$s съезжайте с круга на %1$s"
+#~ msgid "then take the %1$s road to the %2$s"
+#~ msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"

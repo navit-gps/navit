@@ -1,0 +1,11 @@
+Navit for Android er et fritt (GPLv3+) -bilnavigasjonssystem.
+Det viser posisjonen din på et kart (i fugleperspektiv, eller som en 3D-visualisering) basert på GPS-sensordata, og kan gi presis ruteberegning, berøringsskjermsfunksjonalitet og støtte for interessepunkter (POI).
+
+I motsetning til andre navigasjonssystemer genereres Navit-kart dynamisk i sanntid fra vektordata.
+Navit er helt frakoblet og fungerer uten internettforbindelse. Navit respekterer ditt privatliv og sporer deg ikke.
+
+Funksjoner:
+*) Naviger til målet fra Google Maps
+*) fungerer frakoblet
+*) talesyntese-veiledninger på mange språk
+*) oppdaterte OSM-kart

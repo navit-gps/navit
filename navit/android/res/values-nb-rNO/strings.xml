@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_download_ready">klar</string>
+    <string name="position_popup_title">Posisjon</string>
+    <string name="initial_info_box_title">Velkommen til Navit</string>
+    <string name="address_search_no_results">Resultatløst</string>
+    <string name="yes">Ja</string>
+    <string name="channel_name">Navit</string>
+    <string name="no">Nei</string>
+    <string name="cancel">Avbryt</string>
+    <string name="notification_event_default">Navit kjører</string>
+    <string name="notification_ticker">Navit startet</string>
+    <string name="initial_info_box_OK">OK</string>
+    <string name="initial_info_box_more_info">Mer info</string>
+    <string name="optionsmenu_zoom_out">Forminsk</string>
+    <string name="map_delete">Slett dette kartet</string>
+    <string name="map_download_downloading">Nedlasting:</string>
+    <string name="map_download_not_enough_free_space">Ikke nok ledig plass</string>
+    <string name="address_search_towns">Byer</string>
+    <string name="backing_up">Sikkerhetskopierer …</string>
+    <string name="optionsmenu_zoom_in">Forstørr</string>
+    <string name="use_position_with">Bruk posisjon med</string>
+    <string name="address_search_button">Søk</string>
+    <string name="optionsmenu_download_maps">Last ned kart</string>
+    <string name="optionsmenu_exit_navit">Avslutt Navit</string>
+    <string name="optionsmenu_set_map_location">Sett kartposisjon</string>
+    <string name="position_popup_view">Vis</string>
+    <string name="maps_installed">Installerte kart</string>
+    <string name="address_search_title">Adressesøk</string>
+    <string name="address_enter_destination">Angi mål</string>
+    <string name="address_search_searching">Søker …</string>
+    <string name="address_search_not_found">Fant ikke adressen</string>
+    <string name="address_search_loading_results">Laster inn søkeresultater …</string>
+    <string name="map_download_title">Kartnedlasting</string>
+    <string name="map_download_download_aborted">Kartnedlasting avbrutt</string>
+    <string name="address_search_getting_results">Henter søkeresultater …</string>
+    <string name="address_search_streets">Gater</string>
+    <string name="choose_an_action">Velg foretagende</string>
+    <string name="please_insert_an_sd_card">Sett inn et SD-kort</string>
+    <string name="restoring">Gjenoppretter …</string>
+    <string name="africa">Afrika</string>
+    <string name="select_backup">Velg sikkerhetskopi</string>
+    <string name="angola">Angola</string>
+    <string name="optionsmenu_toggle_poi">Veksle interessepunkter</string>
+    <string name="optionsmenu_backup_restore">Sikkerhetskopier/gjenopprett</string>
+    <string name="position_popup_drive_here">Naviger hit</string>
+    <string name="map_download_download_error">Kunne ikke laste ned kart.</string>
+    <string name="map_download_eta">ETA</string>
+    <string name="map_no_fix">Ingen posisjon. Åpne igjen etter at du har innhentet tilknytning fra GPS.</string>
+    <string name="map_download_medium_unavailable">Media valgt for kartlagring er ikke tilgjengelig</string>
+    <string name="map_download_error_writing_map">Kunne ikke skrive kart.</string>
+    <string name="map_location_changed">Ny posisjon satt til %s. Start programmet igjen for å bruke endringene.</string>
+    <string name="address_partial_match">Delvis adressejamføring</string>
+    <string name="address_search_no_text_entered">Ingen tekst innskrevet</string>
+    <string name="address_search_set_destination">Setter mål til</string>
+    <string name="failed_to_create_backup_directory">Klarte ikke å opprette sikkerhetskopimappe</string>
+    <string name="backup_failed">Sikkerhetskopiering mislyktes</string>
+    <string name="failed_to_restore">Klarte ikke å gjenopprette</string>
+    <string name="restore_failed">Gjenoppretting mislyktes</string>
+    <string name="backup">Sikkerhetskopier</string>
+    <string name="restore">Gjenopprett</string>
+    <string name="TTS_title_data_missing">Systemets talesyntesemotor-data mangler</string>
+    <string name="permissions_info_box_title">Én eller flere tilganger er ikke innvilget</string>
+    <string name="whole_planet">Hele planeten</string>
+    <string name="backup_not_found">Fant ikke sikkerhetskopi</string>
+    <string name="no_backup_found">Fant ingen sikkerhetskopier</string>
+    <string name="backup_successful">Gjenoppretting utført</string>
+    <string name="restore_successful_please_restart_navit">Gjenoppretting utført.
+\nStart Navit igjen.</string>
+    <string name="initial_info_box_message">Takk for at du installerte Navit.
+\n
+\nBegynn med «Last ned kart» fra menyen. Merk: Filstørrelsen kan være over 50 MB. Wi-Fi-tilkobling anbefales.
+\n
+\nMapdata: © OpenStreetMap-bidragsyterne
+\n
+\nKos deg med Navit.</string>
+    <string name="map_downloading">nedlasting</string>
+    <string name="map_download_oversize">Kart over 3,8 GB støttes ikke på Android. Velg noe mindre.</string>
+    <string name="maps_for_current_location">Kart som inneholder nåværende posisjon</string>
+    <string name="map_location_unavailable">Nåværende kartposisjon %s er ikke tilgjengelig. Start Navit etter at du har satt inn et SD-kort eller valgt en annen kartposisjon.</string>
+    <string name="TTS_qery_install_data">Navit kan bruke hvilken som helst tekst-til-tale-motor installert på enheten. Valgt motor sier at den ikke kan snakke på ditt språk. Spør systemet om å laste det ned\?</string>
+    <string name="permissions_not_granted">Navit trenger GPS-tilgang for å lese kartet.
+\nDu kan starte Navit igjen og innvilge tilgangene.</string>
+</resources>

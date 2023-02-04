@@ -4,19 +4,19 @@
 # Many thanks to the contributors of this translation:
 # Dinesh Ramalingam https://launchpad.net/~dinodinu+navit
 # Rajiv Subrahmanyam https://launchpad.net/~rajiv-public
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-03 02:23+0200\n"
 "PO-Revision-Date: 2013-09-04 00:29+0000\n"
 "Last-Translator: Dinesh Ramalingam <Unknown>\n"
 "Language-Team: Tamil <ta@li.org>\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: ta\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -70,6 +70,16 @@ msgstr "ஐந்தாவது வெளியேற்றம்"
 msgid "sixth exit"
 msgstr "ஐந்தாவது வெளியேற்றம்"
 
+#, fuzzy, c-format
+#| msgid "%d meters"
+msgid "%d m"
+msgstr "%d மீட்டர்கள்"
+
+#, fuzzy, c-format
+#| msgid "in %d meters"
+msgid "in %d m"
+msgstr "%d மீட்டருக்குள்"
+
 #, c-format
 msgid "%d feet"
 msgstr ""
@@ -79,12 +89,28 @@ msgid "in %d feet"
 msgstr ""
 
 #, c-format
+msgid "%d meters"
+msgstr "%d மீட்டர்கள்"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d மீட்டருக்குள்"
+
+#, c-format
 msgid "%d.%d miles"
 msgstr ""
 
 #, c-format
 msgid "in %d.%d miles"
 msgstr ""
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d.%d கிலோமீட்டர்கள்."
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d.%d கிலோமீட்டருக்குள்"
 
 #, c-format
 msgid "one mile"
@@ -97,22 +123,6 @@ msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
-
-#, c-format
-msgid "%d meters"
-msgstr "%d மீட்டர்கள்"
-
-#, c-format
-msgid "in %d meters"
-msgstr "%d மீட்டருக்குள்"
-
-#, c-format
-msgid "%d.%d kilometers"
-msgstr "%d.%d கிலோமீட்டர்கள்."
-
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d.%d கிலோமீட்டருக்குள்"
 
 #, c-format
 msgid "one kilometer"
@@ -200,7 +210,9 @@ msgstr ""
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
 msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
@@ -307,10 +319,6 @@ msgid "strongly "
 msgstr ""
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr ""
 
@@ -318,6 +326,7 @@ msgstr ""
 msgid "after %i roads"
 msgstr ""
 
+#. cave: no else - may come from 'if (skip_roads)' above !
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
@@ -348,7 +357,7 @@ msgstr ""
 #. * in cases where relevant destination info is available.
 #. * Even if there is no driving command to be announced, in some cases
 #. * there is an overhead roadsign in preparation of an upcoming road-split,
-#. * and then we can give useful info to the driver.
+#. * and then we can give usefull info to the driver.
 #. *
 #. *  UNTESTED !
 #. *
@@ -1925,11 +1934,11 @@ msgid "Enter Coordinates"
 msgstr ""
 
 #.
-#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
-#. gui_internal_widget_append(wb, w)
+#. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+#. gui_internal_widget_append(wb, w);
 #.
-#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
-#. gui_internal_widget_append(w, we)
+#. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+#. gui_internal_widget_append(w, we);
 msgid "Latitude Longitude"
 msgstr ""
 
@@ -1961,12 +1970,6 @@ msgid "Layout"
 msgstr ""
 
 msgid "Height Profile"
-msgstr ""
-
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
 msgstr ""
 
 msgid "Route Description"
@@ -2024,6 +2027,10 @@ msgstr ""
 msgid "Towns"
 msgstr ""
 
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr ""
+
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
 
@@ -2039,10 +2046,6 @@ msgstr ""
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
-msgstr ""
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
 msgstr ""
 
 msgid "Cancel"
@@ -2499,9 +2502,6 @@ msgid "Fullscreen"
 msgstr ""
 
 msgid "Window Mode"
-msgstr ""
-
-msgid "Layers"
 msgstr ""
 
 msgid "Description"
