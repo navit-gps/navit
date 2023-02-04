@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <time.h>
 #include "config.h"
+#include "glib.h"
 
 #define MAX_MISMATCH 100
 
