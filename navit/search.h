@@ -20,6 +20,10 @@
 #ifndef NAVIT_SEARCH_H
 #define NAVIT_SEARCH_H
 
+#include "navit/item.h"
+#include "navit/attr.h"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
