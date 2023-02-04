@@ -947,7 +947,7 @@ if(ENABLE_UNIT_TESTS)
 	FetchContent_MakeAvailable(googletest)
 
 	enable_testing()
-	
+
 	add_subdirectory (test)
 
 endif(ENABLE_UNIT_TESTS)
