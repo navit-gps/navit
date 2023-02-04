@@ -19,3 +19,4 @@ if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	echo "Copying icons to artifacts..."
 	cp -r navit/icons $CIRCLE_ARTIFACTS
 fi
+ctest
