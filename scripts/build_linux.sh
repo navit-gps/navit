@@ -15,3 +15,4 @@ cmake ${cmake_opts} ../
 make -j $(nproc --all)
 make package
 
+ctest
