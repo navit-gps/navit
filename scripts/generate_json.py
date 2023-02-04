@@ -93,5 +93,7 @@ for continent in continents:
         listdata.append([continent, size_continent])
     size_planet = size_planet + size_continent
 
-pd.concat([pd.DataFrame([['planet',size_planet]]),
-pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).to_csv('./menu.tsv', header=False, index=False, sep="\t")
+pd.concat([pd.DataFrame([['planet',size_planet]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).to_csv('./menu.tsv', header=False, index=False, sep="\t")
+
+pd.concat([pd.DataFrame([['planet',size_planet]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).reset_index(drop=True).to_xml('test.xml', index=False,
+elem_cols=['name', 'size'])
