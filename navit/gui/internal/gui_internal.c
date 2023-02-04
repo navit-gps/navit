@@ -89,7 +89,6 @@
 #include "gui_internal_poi.h"
 #include "gui_internal_command.h"
 #include "gui_internal_keyboard.h"
-#include <cjson/cJSON.h>
 
 /**
  * Indexes into the config_profiles array.
@@ -1716,37 +1715,7 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     struct widget *w, *wb;
     struct map *map=data;
     double bllon,bllat,trlon,trlat;
-/*
-    wb=gui_internal_menu(this, text);
-    g_free(text);
-    w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-    w->spy=this->spacing*3;
-    gui_internal_widget_append(wb, w);
-    if (sscanf(wm->prefix,"%lf,%lf,%lf,%lf",&bllon,&bllat,&trlon,&trlat) == 4) {
-        struct coord_geo g;
-        struct map_selection sel;
-        struct map_rect *mr;
-        struct item *item;
-
-        sel.next=NULL;
-        sel.order=255;
-        g.lng=bllon;
-        g.lat=trlat;
-        transform_from_geo(projection_mg, &g, &sel.u.c_rect.lu);
-        g.lng=trlon;
-        g.lat=bllat;
-        transform_from_geo(projection_mg, &g, &sel.u.c_rect.rl);
-        sel.range.min=type_none;
-        sel.range.max=type_last;
-        mr=map_rect_new(map, &sel);
-        while ((item=map_rect_get_item(mr))) {
-            dbg(lvl_info,"item");
-        }
-        map_rect_destroy(mr);
-    }
-
-    dbg(lvl_info,"bbox=%s",wm->prefix);
-    gui_internal_menu_render(this);*/
+    dbg(lvl_info, "download clicked!!!!, %s \n", text);
 }
 
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
@@ -1784,40 +1753,15 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     download_enabled.type=download_disabled.type=attr_update;
     download_enabled.u.num=1;
     download_disabled.u.num=0;
-    f = fopen("maps/areas.tsv", "r");
+    f = fopen("maps/menu.tsv", "r");
 
-
+    
     while (f && fgets(buffer, sizeof(buffer), f)) {
-        /*char *nl,*description,*description_size,*bbox,*size=NULL;
-	int sp=0;
-        if ((nl=strchr(buffer,'\n')))
-            *nl='\0';
-        if ((nl=strchr(buffer,'\r')))
-            *nl='\0';
-        if ((bbox=strchr(buffer,'\t')))
-            *bbox++='\0';
-        if (search && !strcmp(buffer, search)) {
-            wma=gui_internal_button_new_with_callback(this, _("Download completely"), NULL,
-                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, map);
-            wma->name=g_strdup(buffer+sp);
-            wma->prefix=g_strdup(bbox);
-            gui_internal_widget_append(w, wma);
-            found=1;
-        } else if (sp < sp_match)
-            found=0;
-        if (sp == sp_match) {
-            description_size=g_strdup(buffer);
-            wma=gui_internal_button_new_with_callback(this, description_size, NULL,
-                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download, map);
-            g_free(description_size);
-            wma->prefix=g_strdup(buffer);
-            wma->name=buffer;
-            gui_internal_widget_append(w, wma);
-        }*/
 	gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
                                    gravity_left|orientation_horizontal|flags_fill));
+	map->priv->
         wl=gui_internal_button_new_with_callback(this, buffer, NULL,
-                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, map);
+                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_map_downloader, map);
 
 	gui_internal_widget_append(row, wl);
 
