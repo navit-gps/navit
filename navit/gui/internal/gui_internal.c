@@ -1716,7 +1716,7 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     struct widget *w, *wb;
     struct map *map=data;
     double bllon,bllat,trlon,trlat;
-
+/*
     wb=gui_internal_menu(this, text);
     g_free(text);
     w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
@@ -1746,12 +1746,12 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     }
 
     dbg(lvl_info,"bbox=%s",wm->prefix);
-    gui_internal_menu_render(this);
+    gui_internal_menu_render(this);*/
 }
 
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr on, off, download_enabled, download_disabled;
-    struct widget *w,*wb,*wma;
+    struct widget *w,*wb,*wma, *wl, *row;
     struct map *map=data;
     FILE *f;
     char *search,buffer[256];
@@ -1772,9 +1772,9 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     on.u.num=1;
     off.u.num=0;
     wb=gui_internal_menu(this, wm->name?wm->name:_("Map Download"));
-    w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-    w->spy=this->spacing*3;
+    w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
     gui_internal_widget_append(wb, w);
+
     if (!search) {
         wma=gui_internal_button_map_attr_new(this, _("Active"), gravity_left_center|orientation_horizontal|flags_fill, map, &on,
                                              &off, 1);
@@ -1784,71 +1784,18 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     download_enabled.type=download_disabled.type=attr_update;
     download_enabled.u.num=1;
     download_disabled.u.num=0;
-    /*wma=gui_internal_button_map_attr_new(this
-                                         , _("Download Enabled")
-                                         , gravity_left_center|orientation_horizontal|flags_fill
-                                         , map
-                                         , &download_enabled
-                                         , &download_disabled
-                                         , 0);*/
-    gui_internal_widget_append(w, wma);
+    f = fopen("maps/areas.tsv", "r");
 
 
-    gchar *json;
-    gsize len;
-    if (!g_file_get_contents("maps/download_menu.json", &json, &len, NULL)) {
-         dbg(lvl_error,"could not open JSON file");
-    }
-
-    cJSON *json_tree = cJSON_Parse(json);
-    cJSON *planet = NULL;
-    int size_planet = 0;
-    cJSON *continents = NULL;
-    cJSON *continent = NULL;
-    int size_continent = 0;
-    cJSON *countries = NULL;
-    cJSON *country = NULL;
-    int size_country = 0;
-    cJSON *regions = NULL;
-    cJSON *region = NULL;
-    int size_region = 0;
-    GList *entry = NULL;
-    GList *size = NULL;
-
-    planet = cJSON_GetObjectItem(json_tree, "planet");
-    continents = planet->child;
-    // add item for planet
-    cJSON_ArrayForEach(continent, continents) {
-        // add item for continent
-        if (cJSON_IsArray(continent)) {
-	    countries = continent->child;
-            cJSON_ArrayForEach(country, countries){
-                // add item for country
-                if (cJSON_IsArray(country)) {
-                    cJSON_ArrayForEach(region, regions){
-                        // add item for country
-		    }
-		}
-	    }
-	}
-	else {
-
-	}
-    }
-
-    /*while (f && fgets(buffer, sizeof(buffer), f)) {
-        char *nl,*description,*description_size,*bbox,*size=NULL;
-        int sp=0;
+    while (f && fgets(buffer, sizeof(buffer), f)) {
+        /*char *nl,*description,*description_size,*bbox,*size=NULL;
+	int sp=0;
         if ((nl=strchr(buffer,'\n')))
             *nl='\0';
         if ((nl=strchr(buffer,'\r')))
             *nl='\0';
-        while(buffer[sp] == ' ')
-            sp++;
         if ((bbox=strchr(buffer,'\t')))
             *bbox++='\0';
-        if (bbox && (size=strchr(bbox,'\t')))
-            *size++='\0';
         if (search && !strcmp(buffer, search)) {
             wma=gui_internal_button_new_with_callback(this, _("Download completely"), NULL,
                     gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, map);
@@ -1858,20 +1805,23 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
             found=1;
         } else if (sp < sp_match)
             found=0;
-        if (sp == sp_match && found && buffer[sp]) {
-            description=g_strdup(buffer+sp);
-            if (size)
-                description_size=g_strdup_printf("%s (%s)",description,size);
-            else
-                description_size=g_strdup(description);
+        if (sp == sp_match) {
+            description_size=g_strdup(buffer);
             wma=gui_internal_button_new_with_callback(this, description_size, NULL,
                     gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download, map);
             g_free(description_size);
             wma->prefix=g_strdup(buffer);
-            wma->name=description;
+            wma->name=buffer;
             gui_internal_widget_append(w, wma);
-        }
-    }*/
+        }*/
+	gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
+                                   gravity_left|orientation_horizontal|flags_fill));
+        wl=gui_internal_button_new_with_callback(this, buffer, NULL,
+                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, map);
+
+	gui_internal_widget_append(row, wl);
+
+    }
 
     gui_internal_menu_render(this);
 }
