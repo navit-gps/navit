@@ -36,3 +36,49 @@ TEST(UtilTimeTestSuite, last_32bit) {
 	result = iso8601_to_secs(time_str);
 	ASSERT_EQ(result, INT32_MAX-7); // 07 SECONDS REMOVED
 }
+
+TEST(UtilTimeTestSuite, feb){
+	unsigned int result = 0;
+	char *time_str = strdup("2021-02-01T00:00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1612137600);
+
+	time_str = strdup("2021-02-01T00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1612137600);
+}
+
+TEST(UtilTimeTestSuite, mar){
+	unsigned int result = 0;
+	char *time_str = strdup("2021-03-01T00:00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1614556800);
+
+	time_str = strdup("2021-03-01T00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1614556800);
+}
+
+TEST(UtilTimeTestSuite, feb_leep){
+	unsigned int result = 0;
+	char *time_str = strdup("2020-02-29T00:00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1582934400);
+
+	time_str = strdup("2020-02-29T00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1582934400);
+}
+
+TEST(UtilTimeTestSuite, mar_leep){
+	unsigned int result = 0;
+	char *time_str = strdup("2020-03-01T00:00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1583020800);
+
+	time_str = strdup("2020-03-01T00:00Z");
+	result = iso8601_to_secs(time_str);
+	ASSERT_EQ(result, 1583020800);
+}
+
+
