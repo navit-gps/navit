@@ -64,7 +64,8 @@ void house_number_interpolation_clear_current(struct house_number_interpolation 
     g_free(inter->last);
     g_free(inter->curr);
     inter->first=inter->last=inter->curr=NULL;
-    inter->increment=inter->include_end_nodes=-1;
+    inter->increment=-1;
+    inter->include_end_nodes=end_nodes_undefined;
 }
 
 void house_number_interpolation_clear_all(struct house_number_interpolation *inter) {
@@ -111,6 +112,8 @@ static char *search_next_house_number_curr_interpol(struct house_number_interpol
             hn=search_next_house_number_curr_interpol_with_ends(inter);
         } while (hn!=NULL && house_number_is_end_number(hn, inter));
         break;
+    case end_nodes_undefined:
+    	break;
     }
     return hn;
 }

@@ -495,6 +495,8 @@ void *debug_malloc(const char *where, int line, const char *func, int size) {
 #if !defined (__GNUC__)
 #define __builtin_return_address(x) NULL
 #endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"			// We know what we doing here, suppress warnings
     head->return_address[0]=__builtin_return_address(0);
     head->return_address[1]=__builtin_return_address(1);
     head->return_address[2]=__builtin_return_address(2);
@@ -503,6 +505,7 @@ void *debug_malloc(const char *where, int line, const char *func, int size) {
     head->return_address[5]=__builtin_return_address(5);
     head->return_address[6]=__builtin_return_address(6);
     head->return_address[7]=__builtin_return_address(7);
+#pragma GCC diagnostic pop
     head++;
     tail=(struct malloc_tail *)((unsigned char *)head+size);
     tail->magic=0xdeadbef0;
