@@ -18,7 +18,7 @@ Current vehicle position from gpsd or directly from NMEA (GPS) sensors. \
 Optimal routes and directions spoken in 70+ languages. \
 Points of interest (POIs) in many formats.
 
-Help and more info available on [the wiki](https://wiki.navit-project.org/index.php/Main_Page). \
+Help and more info available on [the wiki](https://navit.readthedocs.io/en/v0.5.6/). \
 The [Reporting Bugs](http://wiki.navit-project.org/index.php/Reporting_Bugs) document helps you file issues.
 
 Maps
