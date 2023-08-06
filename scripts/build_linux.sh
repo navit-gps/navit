@@ -13,7 +13,7 @@ pushd $BUILD_PATH
     echo "Building..."
 cmake ${cmake_opts} ../
 make -j $(nproc --all)
-#make package
+make package
 
 if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
 	echo "Copying icons to artifacts..."
