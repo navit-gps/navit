@@ -183,6 +183,7 @@ jobs:
 
             # APP_CI: just build our own app
             $fdroid build --verbose --on-server --no-tarball
+      
       - store_artifacts:
            name: Store APK
            path: unsigned
