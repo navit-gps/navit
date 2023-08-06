@@ -32,7 +32,7 @@ jobs:
           name: Setup requirements
           command: |
             bash scripts/setup_common_requirements.sh
-            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl libcurl4-gnutls-dev
       - run:
           name: Build for Linux
           command: bash scripts/build_linux.sh
@@ -199,7 +199,7 @@ jobs:
             apt-get install -y software-properties-common
             add-apt-repository -y ppa:george-edison55/cmake-3.x
             apt-get remove -y cmake
-            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl libcurl4-gnutls-dev
       - run:
           name: Build for Windows
           command: |
