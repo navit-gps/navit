@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 struct map_download_info{
-	char url[256];
+	char *url;
 	char *name;
 	char *path;
 	char *xml;
