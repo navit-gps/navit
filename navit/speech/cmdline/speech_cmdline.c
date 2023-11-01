@@ -97,6 +97,22 @@ static GList *speech_cmdline_search(GList *samples, int suffix_len, const char *
             g_free(sample_name);
         loop_samples=g_list_next(loop_samples);
     }
+
+    // if no sample file matches, the 'missing' sample is played
+    // that way Navit is not silent when a word is missing
+    // TODO: Add a setting in navit.xml to use this feature or not
+    // and sample name in configuration file
+    if (result == NULL){
+       char *sample_name_missing = "missing";
+       while (loop_samples) {
+          if (g_ascii_strncasecmp(loop_samples->data, sample_name_missing, strlen(sample_name_missing)) == 0) {
+             dbg(lvl_error,"Missing sample played.");
+             result=g_list_prepend(NULL, loop_samples->data);
+          }
+          loop_samples=g_list_next(loop_samples);
+       }
+    }
+    
     return result;
 }
 
