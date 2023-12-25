@@ -2369,7 +2369,7 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
-"Kaarten gorter dan 3,8GB zijn momenteel niet ondersteund op Android.\r\n"
+"Kaarten gorter dan 3,8GB zijn momenteel niet ondersteund op Android.\n"
 "Kies a.u.b. een kleinere kaart."
 
 #. Android resource: @strings/map_no_fix
