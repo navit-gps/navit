@@ -249,9 +249,9 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         }
         *result=c;
     } else if (!space_as_sep) {
-        // When entering coords like google's format, we actually get strings like "52.5219,19.4127"
+        // When entering coords like google's format, we actually get strings like "52.5219, 19.4127"
         double lng, lat;
-        args=sscanf(str, "%lf,%lf%n", &lat, &lng, &ret);
+        args=sscanf(str, "%lf, %lf%n", &lat, &lng, &ret);
         if (args < 2)
             goto out;
         dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
