@@ -146,50 +146,60 @@ void coord_rect_extend(struct coord_rect *r, struct coord *c) {
  */
 
 int coord_parse(const char *coord_input, enum projection output_projection, struct coord *result) {
-    char *proj=NULL,*s,*co;
+    char *proj=NULL,*s=NULL,*co;
     const char *str=coord_input;
     int args,ret = 0;
     struct coord_geo g;
     struct coord c,offset;
     enum projection str_pro=projection_none;
     int space_as_sep = 0;
+    c.x=0;
+    c.y=0;
 
-    dbg(lvl_debug,"enter('%s',%d,%p)", coord_input, output_projection, result);
-    s=strchr(str, ' ');
-    if (!s) {
-        space_as_sep = 1;
-        s=strchr(str, ',');
-    }
+    dbg(lvl_debug,"enter('%s',%s,%p)\n", coord_input, projection_to_name(output_projection), result);
     co=strchr(str,':');
-    if (co && co < s) {
+    if(co)
+        s=strstr(str, ": ");
+    else {
+        while(*str==' ') {
+            str++;
+        }
+        s=strstr(str, " ");
+        while(s && *s==' ') {
+            s++;
+        }
+    }
+
+
+    if (s && !strstr(str, ",")) {
+        space_as_sep = 1;
+    }
+    if (co) {
         proj=g_malloc(co-str+1);
         g_strlcpy(proj, str, 1+co-str);
-        dbg(lvl_debug,"projection=%s", proj);
+        dbg(lvl_debug,"projection=%s\n", proj);
         str=co+1;
-        s=strchr(str,space_as_sep?' ':',');
+        if(space_as_sep)
+            str++;
+        s=(char*)str;
         if (!strcmp(proj, "geo"))
             str_pro = projection_none;
         else {
             str_pro = projection_from_name(proj,&offset);
             if (str_pro == projection_none) {
-                dbg(lvl_error, "Unknown projection: %s", proj);
+                dbg(lvl_error, "Unknown projection: %s\n", proj);
                 goto out;
             }
         }
+    } else if (!space_as_sep || strstr(str, "0x")) {
+        s=(char*)str;
     }
-    if (! s) {
-        ret=0;
-        goto out;
-    }
-    while (*s == ' ') {
-        s++;
-    }
-    if (!space_as_sep && (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3))) {
+    if ((!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3))) {
         args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
         if (args < 2)
             goto out;
-        dbg(lvl_debug,"str='%s' x=0x%x y=0x%x c=%d", str, c.x, c.y, ret);
-        dbg(lvl_debug,"rest='%s'", str+ret);
+        dbg(lvl_debug,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
+        dbg(lvl_debug,"rest='%s'\n", str+ret);
 
         if (str_pro == projection_none)
             str_pro=projection_mg;
@@ -198,16 +208,17 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else if (!space_as_sep && (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's')) {
+    } else if ((*s == 'N' || *s == 'n' || *s == 'S' || *s == 's')) {
         double lng, lat;
         char ns, ew;
-        dbg(lvl_debug,"str='%s'", str);
+        dbg(lvl_debug,"str='%s'\n", str);
         args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
-        dbg(lvl_debug,"args=%d", args);
-        dbg(lvl_debug,"lat=%f %c lon=%f %c", lat, ns, lng, ew);
+        dbg(lvl_debug,"args=%d\n", args);
+        dbg(lvl_debug,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
         if (args < 4)
             goto out;
-        dbg(lvl_debug,"projection=%d str_pro=%d projection_none=%d", output_projection, str_pro, projection_none);
+        dbg(lvl_debug,"projection=%s str_pro=%d projection_none=%d\n", projection_to_name(output_projection), str_pro,
+            projection_none);
         if (str_pro == projection_none) {
             g.lat=floor(lat/100);
             lat-=g.lat*100;
@@ -219,13 +230,13 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
                 g.lat=-g.lat;
             if (ew == 'w' || ew == 'W')
                 g.lng=-g.lng;
-            dbg(lvl_debug,"transform_from_geo(%f,%f)",g.lat,g.lng);
+            dbg(lvl_debug,"transform_from_geo(%f,%f)\n",g.lat,g.lng);
             transform_from_geo(output_projection, &g, result);
-            dbg(lvl_debug,"result 0x%x,0x%x", result->x,result->y);
+            dbg(lvl_debug,"result 0x%x,0x%x\n", result->x,result->y);
         }
-        dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d", str, lng, ns, lat, ew, ret);
-        dbg(lvl_debug,"rest='%s'", str+ret);
-    } else if (!space_as_sep && (str_pro == projection_utm)) {
+        dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
+        dbg(lvl_debug,"rest='%s'\n", str+ret);
+    } else if (str_pro == projection_utm) {
         double x,y;
         args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
         if (args < 2)
@@ -237,35 +248,35 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else if (space_as_sep) {
-        // When entering coords like google's format, we actually get strings like "52.5219,19.4127"
+    } else if (!space_as_sep) {
+        // When entering coords like google's format, we actually get strings like "52.5219, 19.4127"
         double lng, lat;
-        args=sscanf(str, "%lf,%lf%n", &lat, &lng, &ret);
+        args=sscanf(str, "%lf, %lf%n", &lat, &lng, &ret);
         if (args < 2)
             goto out;
-        dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d", str, lng, lat, ret);
-        dbg(lvl_debug,"rest='%s'", str+ret);
+        dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
+        dbg(lvl_debug,"rest='%s'\n", str+ret);
         g.lng=lng;
         g.lat=lat;
         transform_from_geo(output_projection, &g, result);
-    }
-    else {
+    } else {
         double lng, lat;
         args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
         if (args < 2)
             goto out;
-        dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d", str, lng, lat, ret);
-        dbg(lvl_debug,"rest='%s'", str+ret);
+        dbg(lvl_debug,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
+        dbg(lvl_debug,"rest='%s'\n", str+ret);
         g.lng=lng;
         g.lat=lat;
         transform_from_geo(output_projection, &g, result);
     }
     ret+=str-coord_input;
-    dbg(lvl_info, "ret=%d delta=%d ret_str='%s'", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
+    dbg(lvl_debug, "ret=%d delta=%d ret_str='%s'\n", ret, GPOINTER_TO_INT(str-coord_input), coord_input+ret);
 out:
     g_free(proj);
     return ret;
 }
+
 
 /**
  * A wrapper for coord_parse that also returns the projection.
