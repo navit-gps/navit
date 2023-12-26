@@ -37,6 +37,7 @@ struct projection_name projection_names[]= {
 };
 
 static int utmref_letter(char l) {
+    l=tolower(l);
     if (l < 'a' || l == 'i' || l == 'o')
         return -1;
     if (l < 'i')
