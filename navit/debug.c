@@ -472,9 +472,6 @@ void debug_dump_mallocs(void) {
     }
 }
 
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wframe-address"			// We know what we are doing here, suppress warning
 void *debug_malloc(const char *where, int line, const char *func, int size) {
     struct malloc_head *head;
     struct malloc_tail *tail;
@@ -511,7 +508,7 @@ void *debug_malloc(const char *where, int line, const char *func, int size) {
     tail->magic=0xdeadbef0;
     return head;
 }
-#pragma GCC diagnostic pop
+
 
 void *debug_malloc0(const char *where, int line, const char *func, int size) {
     void *ret=debug_malloc(where, line, func, size);
