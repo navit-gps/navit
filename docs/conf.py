@@ -11,6 +11,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'navit'
+project = 'navit'
 year = datetime.now().year
-author = u'The Navit Team'
+author = 'The Navit Team'
+html_theme = "sphinx_rtd_theme"
