@@ -37,6 +37,7 @@ struct projection_name projection_names[]= {
 };
 
 static int utmref_letter(char l) {
+    l=tolower(l);
     if (l < 'a' || l == 'i' || l == 'o')
         return -1;
     if (l < 'i')
@@ -65,7 +66,7 @@ enum projection projection_from_name(const char *name, struct coord *utm_offset)
             return projection_names[i].projection;
     }
     if (utm_offset) {
-        if (sscanf(name,"utm%d%c",&zone,&ns) == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's')) {
+        if (sscanf(name,"utm%d%c",&zone,&ns) == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's' || ns == 'N' || ns == 'S')) {
             utm_offset->x=zone*1000000;
             utm_offset->y=(ns == 's' ? -10000000:0);
             return projection_utm;
