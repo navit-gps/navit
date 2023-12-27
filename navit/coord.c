@@ -141,7 +141,7 @@ void coord_rect_extend(struct coord_rect *r, struct coord *c) {
  *
  * @param *coord_input String to be parsed
  * @param output_projection Desired projection of the result
- * @param *result For returning result
+ * @param[out] *result For returning result
  * @returns The lenght of the parsed string
  */
 
@@ -248,8 +248,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         g.lng=lng;
         g.lat=lat;
         transform_from_geo(output_projection, &g, result);
-    }
-    else {
+    } else {
         double lng, lat;
         args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
         if (args < 2)

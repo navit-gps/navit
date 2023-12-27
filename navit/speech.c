@@ -24,6 +24,7 @@
 #include "speech.h"
 #include "plugin.h"
 #include "xmlconfig.h"
+#include "attr.h"
 
 struct speech {
     NAVIT_OBJECT;
