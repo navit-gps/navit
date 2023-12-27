@@ -2163,7 +2163,7 @@ static void osm_process_town_by_boundary_update_attrs(struct item_bin *town, str
     /* Administrative centres are not to be contained in their own districts. */
     if(max_adm_level>0)
         for(a=max_possible_adm_level-1; a>max_adm_level && a>2; a--)
-            tc->attrs[a-2].type=attr_none;
+            tc->attrs[a-2].type=type_none;
 }
 
 /**

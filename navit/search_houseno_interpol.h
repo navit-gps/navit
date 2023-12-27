@@ -20,7 +20,6 @@
 enum include_end_nodes {
 	end_nodes_yes,
 	end_nodes_no,
-	end_nodes_undefined=-1,
 };
 
 /** Data for a house number interpolation. */

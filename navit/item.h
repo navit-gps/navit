@@ -25,7 +25,14 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include "item_type_def.h"
+
+enum item_type {
+#define ITEM2(x,y) type_##y=x,
+#define ITEM(x) type_##x,
+#include "item_def.h"
+#undef ITEM2
+#undef ITEM
+};
 
 #define route_item_first type_street_0
 #define route_item_last type_street_parking_lane

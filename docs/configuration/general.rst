@@ -18,7 +18,7 @@ On Navit's very first startup, it needs a **center** to look at on the map. By d
 
 		center="11.5666 48.1333"
 
-Coordinates can be written in different formats; see [[Coordinate_format]] for the full list.
+Coordinates can be written in different formats; see :doc:`coordinates` for the full list.
 To determine a specific latitude and longitude for your location you can use http://itouchmap.com/latlong.html.
 Usually, changing the "center" setting is not necessary, since it is only used during the first start.
 On subsequent starts, Navit will remember the last map position (stored in "center.txt") and ignore the "center" setting.

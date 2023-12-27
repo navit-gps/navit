@@ -37,6 +37,7 @@ struct projection_name projection_names[]= {
 };
 
 static int utmref_letter(char l) {
+    l=tolower(l);
     if (l < 'a' || l == 'i' || l == 'o')
         return -1;
     if (l < 'i')
@@ -65,12 +66,18 @@ enum projection projection_from_name(const char *name, struct coord *utm_offset)
             return projection_names[i].projection;
     }
     if (utm_offset) {
-        if (sscanf(name,"utm%d%c",&zone,&ns) == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's')) {
+        int scanres = sscanf(name,"utm%d%c",&zone,&ns);
+        ns = tolower(ns);
+        if (scanres == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's')) {
             utm_offset->x=zone*1000000;
             utm_offset->y=(ns == 's' ? -10000000:0);
             return projection_utm;
         }
         if (sscanf(name,"utmref%d%c%c%c",&zone,&zone_field,&square_x,&square_y)) {
+            zone=tolower(zone);
+            zone_field=tolower(zone_field);
+            square_x=tolower(square_x);
+            square_y=tolower(square_y);
             i=utmref_letter(zone_field);
             if (i < 2 || i > 21) {
                 dbg(lvl_error,"invalid zone field '%c' in '%s'",zone_field,name);
