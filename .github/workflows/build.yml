@@ -1,0 +1,232 @@
+
+name: Build Navit Binarys
+
+on: [push, pull_request]
+
+jobs:
+  sanity_check:
+    runs-on: ubuntu-latest
+    container:
+        image: navit/sanity_check:latest
+    steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+        ##- name: run sanity check script
+        ##  run: bash scripts/ci_sanity_checks.sh
+        ##- uses: reviewdog/action-suggester@v1
+        ##  with:
+        ##    github_token: ${{ secrets.github_token }}
+        ##    tool_name: Navit sanity Check
+        ##    level: error
+        ##    fail_on_error: false
+        # FIXME: deactivated as somethings broken with it
+        #- name: Run CheckStyle Test
+        #  run: ./gradlew checkstyleMain
+        #- uses: actions/upload-artifact@v1
+        #  with:
+        #    name: Store checkstyle report
+        #    path: navit/android/checkstyle
+
+  build_linux:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+      image: debian:latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          apt-get update && apt-get install -y git
+      - name: Setup requirements
+        run: |
+           bash scripts/setup_common_requirements.sh
+           apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+      - name: Build for Linux
+        run: bash scripts/build_linux.sh
+      - uses: actions/upload-artifact@v2
+        with:
+           name: Linux Artifacts
+           path: linux/_CPack_Packages
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  run_doxygen:
+    runs-on: ubuntu-latest
+    needs: [build_android, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
+    container:
+      image: debian:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install doxygen and other essentials
+        run: apt-get update && apt-get -y install doxygen ca-certificates git rsync
+      - name: Run doxygen
+        run: cd navit && doxygen
+      - name: Update results to Github
+        run: bash scripts/update_doxygen.sh
+      - uses: actions/upload-artifact@v1
+        with:
+          path: /root/project/doc
+  build_sailfish:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+        image: coderus/sailfishos-platform-sdk:4.4.0.64
+    steps:
+      - uses: actions/checkout@v1
+      # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
+      - name: run build
+        run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
+        env:
+            VERSION_ID: 4.4.0.64
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Store rpm
+          path: rpmbuild/RPMS/
+  build_android:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: if [ "X$UID" == X0 ]; then apt update && apt install -y sudo; fi
+      - name: Install requirements
+        run: bash scripts/setup_android.sh
+      - name: Setup Keystore and Playstore Keys
+        run: scripts/setup_publish_keys.sh
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - name: Install NDK
+        run: sdkmanager "ndk;23.0.7599858"
+      - name: Build and upload Android
+        run: fastlane github_actions
+      - name: Run Lint Test
+        run: |
+            ln -sf navit/navit.dtd navit.dtd
+            mkdir test-results
+            ./gradlew lint test
+      - name: Run Javadoc
+        run: ./gradlew generateDebugJavadoc
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Store APK
+          path: build/outputs/apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Store logs
+          path: build/outputs/logs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Store Javadoc
+          path: build/outputs/docs/javadoc
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Store Lint reports
+          path: build/reports
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Android Test-results
+          path: test-results
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  build_win32:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+        image: ubuntu:16.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          apt-get update && apt-get install -y git
+      - name: Prepare the Windows build environment
+        run: |
+            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
+            apt-get install -y software-properties-common
+            add-apt-repository -y ppa:george-edison55/cmake-3.x
+            apt-get install -y cmake mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+      - name: Build for Windows
+        run: |
+            bash scripts/build_win32.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Win32
+          path: win32/navit.exe
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  build_wince:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+        image: navit/dockerfiles:wince
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          apt-get update && apt-get install -y git-core
+      - name: Prepare the WinCE build environment
+        run: |
+            bash scripts/setup_wince.sh
+      - name: Build for Windows CE
+        run: bash scripts/build_wince.sh
+      - uses: actions/upload-artifact@v1
+        with:
+          path: wince/output
+          name: WinCE Binary
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  build_tomtom_minimal:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+        image: navit/tomtom-ng
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare the tomtom build environment
+        run: |
+            bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
+      - name: Build for Tomtom (minimal)
+        run: bash scripts/build_tomtom_minimal.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Tomtom Minimal
+          path: /output
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  build_tomtom_plugin:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+        image: navit/tomtom-ng
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare the tomtom build environment
+        run: |
+            bash scripts/setup_common_requirements.sh
+            apt-get install -y xsltproc
+      - name: Build for Tomtom (plugin)
+        run: |
+            bash scripts/build_tomtom_plugin.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Tomtom Plugin
+          path: /output
+      - name: Update Navit-Download-Center
+        run: |
+            bash scripts/update_download_center.sh
+  merge_trunk_in_master:
+    runs-on: ubuntu-latest
+    needs: [build_android, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
+    if: github.ref == 'trunk'
+    steps:
+      - uses: actions/checkout@master
+      - name: Merge to master branch
+        uses: devmasx/merge-branch@v1.1.0
+        with:
+          type: now
+          target_branch: 'master'
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
