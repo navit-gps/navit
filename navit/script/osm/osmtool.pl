@@ -138,5 +138,5 @@ while (substr($ARGV[0],0,2) eq '--') {
 	$attr{$key}=$value;
 	shift;
 }
-$api=new Geo::OSM::APIClient(api=>'http://www.openstreetmap.org/api/0.6',%attr);
+$api=new Geo::OSM::APIClient(api=>'https://api.openstreetmap.org/api/0.6',%attr);
 command(@ARGV);
