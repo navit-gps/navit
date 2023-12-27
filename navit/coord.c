@@ -152,12 +152,12 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     struct coord_geo g;
     struct coord c,offset;
     enum projection str_pro=projection_none;
-    int space_as_sep = 0;
+    int comma_as_sep = 0;
 
     dbg(lvl_debug,"enter('%s',%d,%p)", coord_input, output_projection, result);
     s=strchr(str, ' ');
-    if (!s) {
-        space_as_sep = 1;
+    if (s == NULL) {
+        comma_as_sep = 1;
         s=strchr(str, ',');
     }
     co=strchr(str,':');
@@ -166,7 +166,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         g_strlcpy(proj, str, 1+co-str);
         dbg(lvl_debug,"projection=%s", proj);
         str=co+1;
-        s=strchr(str,space_as_sep?' ':',');
+        s=strchr(str,comma_as_sep?',':' ');
         if (!strcmp(proj, "geo"))
             str_pro = projection_none;
         else {
@@ -184,7 +184,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
     while (*s == ' ') {
         s++;
     }
-    if (!space_as_sep && (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3))) {
+    if (!comma_as_sep && (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3))) {
         args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
         if (args < 2)
             goto out;
@@ -198,7 +198,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else if (!space_as_sep && (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's')) {
+    } else if (!comma_as_sep && (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's')) {
         double lng, lat;
         char ns, ew;
         dbg(lvl_debug,"str='%s'", str);
@@ -225,7 +225,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         }
         dbg(lvl_debug,"str='%s' x=%f ns=%c y=%f ew=%c c=%d", str, lng, ns, lat, ew, ret);
         dbg(lvl_debug,"rest='%s'", str+ret);
-    } else if (!space_as_sep && (str_pro == projection_utm)) {
+    } else if (!comma_as_sep && (str_pro == projection_utm)) {
         double x,y;
         args=sscanf(str, "%lf %lf%n", &x, &y, &ret);
         if (args < 2)
@@ -237,7 +237,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
             transform_from_geo(output_projection, &g, &c);
         }
         *result=c;
-    } else if (space_as_sep) {
+    } else if (comma_as_sep) {
         // When entering coords like google's format, we actually get strings like "52.5219,19.4127"
         double lng, lat;
         args=sscanf(str, "%lf,%lf%n", &lat, &lng, &ret);
