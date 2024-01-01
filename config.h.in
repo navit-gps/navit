@@ -105,3 +105,4 @@
 
 #cmakedefine ENABLE_ROLL 1
 
+#cmakedefine USE_DOWNLOAD 1
