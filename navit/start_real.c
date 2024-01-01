@@ -51,6 +51,10 @@
 #include <winbase.h>
 #endif
 
+#if IOS
+//#include "gthreadprivate.h"
+#endif
+
 int main_argc;
 char * const* main_argv;
 

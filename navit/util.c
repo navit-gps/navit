@@ -1120,7 +1120,11 @@ spawn_process(char **argv) {
         char *cmdline=spawn_process_compose_cmdline(argv);
         int status;
         dbg(lvl_error,"Unblocked spawn_process isn't availiable on this platform.");
+#if defined(IOS)
+        status=1;
+#else
         status=system(cmdline);
+#endif
         g_free(cmdline);
         r->status=status;
         r->pid=0;

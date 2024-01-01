@@ -40,6 +40,12 @@ extern "C" {
 #define RP_TURN_RESTRICTION_RESOLVED 4
 
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
+#define RSD_MAXCONDSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_conditional_speed))
+#define RSD_MAXCONDSPEEDFWD(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_fwd_conditional_speed))
+#define RSD_MAXCONDSPEEDBWD(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed_bwd_conditional_speed))
+#define RSD_MAXCONDSPEEDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_conditional_condition))
+#define RSD_MAXCONDSPEEDFWDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_fwd_conditional_condition))
+#define RSD_MAXCONDSPEEDBWDCOND(x) *((unsigned char **)route_segment_data_field_pos((x), attr_maxspeed_bwd_conditional_condition))
 
 /**
  * @brief A point in the route graph
@@ -111,6 +117,15 @@ struct route_graph_segment_data {
 	int len;                              /**< The length of this segment */
 	int maxspeed;                         /**< The maximum speed allowed on this segment in km/h,
 	                                       *   -1 if not known */
+	int maxspeedcond;                         /**< The maximum conditional speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* condition;
+	int maxspeedcondfwd;                         /**< The maximum conditional forward speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* fwdcondition;
+	int maxspeedcondbwd;                         /**< The maximum conditional backward speed allowed on this segment in km/h,
+	                                           *   -1 if not known */
+	char* bwdcondition;
 	struct size_weight_limit size_weight; /**< Size and weight limits for this segment */
 	int dangerous_goods;
 	int score;                            /**< Used by the traffic module to give preference to some
@@ -140,9 +155,7 @@ struct route_graph_segment {
  * each segment.
  */
 struct route_graph {
-	int busy;                                   /**< Route calculation is in progress: the graph is being built,
-	                                             *   flooded or the path is being built (a more detailed status can be
-	                                             *   obtained from the route’s status attribute) */
+	int busy;                                   /**< The graph is being built */
 	struct map_selection *sel;                  /**< The rectangle selection for the graph */
 	struct mapset_handle *h;                    /**< Handle to the mapset */
 	struct map *m;                              /**< Pointer to the currently active map */
@@ -152,7 +165,7 @@ struct route_graph {
 	struct callback *done_cb;                   /**< Callback when graph is done */
 	struct event_idle *idle_ev;                 /**< The pointer to the idle event */
 	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
-	struct route_graph_segment *avoid_seg;      /**< Segment to which a turnaround penalty (if active) applies */
+	struct route_graph_segment *avoid_seg;
 	struct fibheap *heap;                       /**< Priority queue for points to be expanded */
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];  /**< A hashtable containing all route_graph_points in this graph */
