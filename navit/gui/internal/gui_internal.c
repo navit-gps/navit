@@ -1022,6 +1022,8 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * @param wm The widget that points to this function as a callback
  * @param name The display name for the position
  * @param flags Flags specifying the operations available from the GUI
+ *
+ * @note Position input can be done either using pc_in or g_in (if both are provided, pc_in takes precedence)
  */
 /* meaning of the bits in "flags":
  * 1: "Streets"
@@ -2146,6 +2148,12 @@ void gui_internal_leave(struct gui_priv *this) {
     graphics_draw_mode(this->gra, draw_mode_end);
 }
 
+/**
+ * @brief Update the internal state of the internal GUI to store a specific point clicked on the display
+ *
+ * @param[in] this Our gui context
+ * @param[in] p The position of the point clicked on the display
+ */
 void gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     struct coord c;
     struct coord_geo g;
@@ -2167,6 +2175,11 @@ void gui_internal_set_click_coord(struct gui_priv *this, struct point *p) {
     }
 }
 
+/**
+ * @brief Update the internal state of the internal GUI to store the current vehicle position
+ *
+ * @param[in] this Our gui context
+ */
 static void gui_internal_set_position_coord(struct gui_priv *this) {
     struct transformation *trans;
     struct attr attr,attrp;
@@ -2190,6 +2203,13 @@ void gui_internal_enter_setup(struct gui_priv *this) {
         gui_internal_set_position_coord(this);
 }
 
+/**
+ * @brief Display an internal GUI menu
+ *
+ * @param[in] this Our gui context
+ * @param ignore Whether the current triggering button press should be ignored by subsequent handlers (see navit_ignore_button())
+ * @param href The anchor of the HTML menu to display (or NULL to display the main menu)
+ */
 void gui_internal_cmd_menu(struct gui_priv *this, int ignore, char *href) {
     dbg(lvl_debug,"enter");
     gui_internal_enter(this, ignore);
@@ -2518,7 +2538,7 @@ static void gui_internal_setup(struct gui_priv *this) {
     char *gui_file;
     int size;
 
-    if (this->background)
+    if (this->background) /* When this->background is non NULL, we know we have already been initialized (thus already went through gui_internal_setup() previously) */
         return;
     this->background=graphics_gc_new(gra);
     this->background2=graphics_gc_new(gra);
@@ -2542,6 +2562,10 @@ static void gui_internal_setup(struct gui_priv *this) {
         g_free(buffer);
     }
     g_free(gui_file);
+    if (this->deferred_exec_at_init) {
+        event_add_timeout(5, 0, this->deferred_exec_at_init);
+        this->deferred_exec_at_init = NULL; /* Unregister deferred exec, it will be run as an asynchronous callback */
+    }
 }
 
 /**
@@ -2905,6 +2929,95 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
     return 0;
 }
 
+/**
+ * @brief A structure containing the context (arguments) to run gui_internal_show_coord()
+**/
+struct gui_internal_show_coord_args {
+    const char *description;    /*!< The label to use for the geographical coordinates (ex: "Map Point") */
+    struct pcoord coord;  /*!< The geographical coordinates to use */
+};
+
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c,
+        const char *description); /* Forward declaration */
+
+/**
+ * @brief Takes a context (as a pointer to a gui_internal_show_coord_args structure) and run gui_internal_show_coord_actions() with these arguments
+ *
+ * This function is used as a callback to invoke gui_internal_show_coord_actions() asynchronously
+ *
+ * @note We will also take care of deallocating all dynamic memory in this context struct)
+**/
+static void gui_internal_deferred_show_coord_actions(struct gui_priv *this,
+        const struct gui_internal_show_coord_args *context) {
+    if (!context)
+        return;
+
+    gui_internal_show_coord_actions(this, &(context->coord), context->description);
+    /* Context is not needed anymore, it is up to us to free all its allocated memory */
+    if (context->description)
+        g_free(context->description);
+
+    g_free(context);
+}
+
+/**
+ * @brief Display an internal contextual menu for the specified geographical coordinates
+ *
+ * @param this The internal GUI instance
+ * @param[in] c The geographical coordinates to use (or NULL if we just want to probe that this feature is supported without actually displaing the menu)
+ * @param[in] description A label to use for the geographical coordinates (ex: "Map Point"), or NULL if no specific label has been chosen. In that case, we will use the geographical coordinates as a label
+ *
+ * @return 0 on failure, 1 on success, -1 if argument c is NULL
+ */
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description) {
+    struct widget w;
+
+    dbg(lvl_debug,"enter");
+
+    if (!c) { /* Probe mode */
+        return -1;
+    }
+
+    if (!this->background) {
+        dbg(lvl_warning, "Internal GUI not yet initialized at invokation, actions queued for future execution");
+        struct gui_internal_show_coord_args *deferred_show_coord_actions_context = g_malloc(sizeof(
+                    struct gui_internal_show_coord_args));
+        if (description)
+            deferred_show_coord_actions_context->description = g_strdup(description);
+        else
+            deferred_show_coord_actions_context->description = NULL;
+
+        deferred_show_coord_actions_context->coord = *c;
+
+        struct callback *gui_internal_show_coord_actions_callback = callback_new_2(callback_cast(
+                    gui_internal_deferred_show_coord_actions), this, deferred_show_coord_actions_context);
+        this->deferred_exec_at_init =
+            gui_internal_show_coord_actions_callback; /* Plan execution of this callback when internal GUI will be initialized */
+        return 1;
+    }
+
+    w.text = g_malloc(32);
+    pcoord_format_degree_short(c, w.text, 32, " ");
+
+    if (description)
+        w.name = description;
+    else
+        w.name = w.text;
+
+    gui_internal_enter(this, 1);
+    gui_internal_set_click_coord(this, NULL);
+    gui_internal_enter_setup(this);
+
+    gui_internal_cmd_position_do(this, c, NULL, &w, w.name ? w.name : w.text, 8|16|32|64|128);
+
+    gui_internal_menu_render(this);
+    gui_internal_leave(this);
+
+    g_free(w.text);
+
+    return 1;
+}
+
 static void gui_internal_disable_suspend(struct gui_priv *this) {
     if (this->win->disable_suspend)
         this->win->disable_suspend(this->win);
@@ -2916,12 +3029,13 @@ static void gui_internal_disable_suspend(struct gui_priv *this) {
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct gui_methods gui_internal_methods = {
-    NULL,
-    NULL,
+    NULL, // gui_internal_menubar_new
+    NULL, // gui_internal_popup_new
     gui_internal_set_graphics,
-    NULL,
-    NULL,
-    NULL,
+    NULL, // gui_internal_run_main_loop
+    NULL, // gui_internal_datawindow_new
+    NULL, // gui_internal_add_bookmark
+    gui_internal_show_coord_actions,
     gui_internal_disable_suspend,
     gui_internal_get_attr,
     gui_internal_add_attr,

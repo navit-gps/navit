@@ -258,6 +258,7 @@ struct gui_methods gui_qt5_qml_methods = {
     NULL,
     NULL,
     NULL,
+    NULL, // gui_qt5_qml_show_coord_actions
     NULL,
     gui_qt5_qml_get_attr,
     NULL,
