@@ -115,7 +115,7 @@ static GList *speech_cmdline_search(GList *samples, gchar *suffix, const char *t
           result_length_end=g_list_length(result);
 
        if (result_length_start == result_length_end) {
-          result=g_list_prepend(result, sample_missing);
+          result=g_list_prepend(result, g_strdup(sample_missing));
           dbg(lvl_error,"sample for '%s' missing",text);
           //TODO: Speak missing text by espeak-ng
 
