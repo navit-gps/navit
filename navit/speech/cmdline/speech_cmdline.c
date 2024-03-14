@@ -57,46 +57,79 @@ static char *urldecode(char *str) {
     return ret;
 }
 
-static GList *speech_cmdline_search(GList *samples, int suffix_len, const char *text, int decode) {
-    GList *loop_samples=samples,*result=NULL,*recursion_result;
-    int shortest_result_length=INT_MAX;
+static gint get_longest_cmp(gconstpointer s1, gconstpointer s2) {
+    gint diff=strlen((char *)s1)-strlen((char *)s2);
+    return diff;
+}
+
+static GList *speech_cmdline_search(GList *samples, gchar *suffix, const char *text, int decode) {
+    GList *loop_samples=samples,*loop_samples_sorted=NULL,*result=NULL;
+    int sample_name_len;
+    int suffix_len=strlen(suffix);
+    int result_length_start;
+    int result_length_end;
+    gchar *sample_missing=g_strdup("missing");
+
     dbg(lvl_debug,"searching samples for text: '%s'",text);
-    while (loop_samples) {
-        char *sample_name=loop_samples->data;
-        int sample_name_len;
-        if (decode)
-            sample_name=urldecode(sample_name);
-        sample_name_len=strlen(sample_name)-suffix_len;
-        // TODO: Here we compare UTF-8 text with a filename.
-        // It's unclear how a case-insensitive comparison should work
-        // in general, so for now we only do it for ASCII text.
-        if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
-            const char *remaining_text=text+sample_name_len;
-            while (*remaining_text == ' ' || *remaining_text == ',')
-                remaining_text++;
-            dbg(lvl_debug,"sample '%s' matched; remaining text: '%s'",sample_name,remaining_text);
-            if (*remaining_text) {
-                recursion_result=speech_cmdline_search(samples, suffix_len, remaining_text, decode);
-                if (recursion_result && g_list_length(recursion_result) < shortest_result_length) {
-                    g_list_free(result);
-                    result=recursion_result;
-                    result=g_list_prepend(result, loop_samples->data);
-                    shortest_result_length=g_list_length(result);
-                } else {
-                    dbg(lvl_debug,"no (shorter) result found for remaining text '%s', "
-                        "trying next sample\n", remaining_text);
-                    g_list_free(recursion_result);
-                }
-            } else {
-                g_list_free(result);
-                result=g_list_prepend(NULL, loop_samples->data);
-                break;
-            }
-        }
-        if (decode)
-            g_free(sample_name);
-        loop_samples=g_list_next(loop_samples);
+
+    sample_missing=g_strconcat(sample_missing,suffix);
+    loop_samples_sorted=loop_samples;
+    loop_samples_sorted=g_list_first(loop_samples_sorted);
+    loop_samples_sorted=g_list_sort(loop_samples_sorted, get_longest_cmp);
+    loop_samples_sorted=g_list_first(loop_samples_sorted);
+    loop_samples_sorted=g_list_reverse(loop_samples_sorted);
+
+    result_length_start=0;
+    result_length_end=0;
+
+    while (*text) {
+       loop_samples_sorted=g_list_first(loop_samples_sorted);
+
+       if (result) {
+          result_length_start=g_list_length(result);
+          result_length_end=result_length_start;
+       }
+
+       while (loop_samples_sorted) {
+          char *sample_name=loop_samples_sorted->data;
+
+          if (decode)
+              sample_name=urldecode(sample_name);
+          sample_name_len=strlen(sample_name)-suffix_len;
+          // TODO: Here we compare UTF-8 text with a filename.
+          // It's unclear how a case-insensitive comparison should work
+          // in general, so for now we only do it for ASCII text.
+          if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
+             result=g_list_prepend(result, loop_samples_sorted->data);
+             text=text+sample_name_len;
+
+             dbg(lvl_debug,"sample '%s' matched",sample_name);
+             break;
+          }
+          if (decode)
+             g_free(sample_name);
+          loop_samples_sorted=g_list_next(loop_samples_sorted);
+       }
+
+       if (result)
+          result_length_end=g_list_length(result);
+
+       if (result_length_start == result_length_end) {
+          result=g_list_prepend(result, g_strdup(sample_missing));
+          dbg(lvl_error,"sample for '%s' missing",text);
+          //TODO: Speak missing text by espeak-ng
+
+          while (!(!g_ascii_strncasecmp(text, " ", 1) || !g_ascii_strncasecmp(text, ",", 1) || !g_ascii_strncasecmp(text, "-", 1)))
+             text++;
+       }
+
+       while (!g_ascii_strncasecmp(text, " ", 1) || !g_ascii_strncasecmp(text, ",", 1) || !g_ascii_strncasecmp(text, "-", 1))
+          text++;
     }
+
+    g_free(sample_missing);
+    result=g_list_reverse(result);
+
     return result;
 }
 
@@ -124,7 +157,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         }
 
     if (this->sample_dir && this->sample_suffix)  {
-        argl=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text, !!(this->flags & 1));
+        argl=speech_cmdline_search(this->samples, this->sample_suffix, text, !!(this->flags & 1));
         samplesmode=1;
         listlen=g_list_length(argl);
         dbg(lvl_debug,"For text: '%s', found %d samples.",text,listlen);
