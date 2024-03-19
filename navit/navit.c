@@ -823,7 +823,7 @@ void navit_zoom_in(struct navit *this_, int factor, struct point *p) {
 }
 
 /**
- * Change the current zoom level
+ * Change the current zoom level, further to the ground
  *
  * @param navit The navit instance
  * @param factor The zoom factor, usually 2
@@ -2514,6 +2514,27 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
 }
 
 /**
+ * @brief Drags (moves) the map
+ *
+ * Drags (moves) the map from origin point to the destination point
+ *
+ * @param navit The navit instance
+ * @param origin The point point where the drag starts
+ * @param destination The point where to map should be dragged to
+ * @returns nothing
+ */
+
+void navit_drag_map(struct navit *this_, struct point *origin, struct point *destination) {
+    update_transformation(this_->trans, origin, destination);
+    graphics_draw_drag(this_->gra, NULL);
+    transform_copy(this_->trans, this_->trans_cursor);
+    graphics_overlay_disable(this_->gra, 0);
+    if (!this_->zoomed)
+        navit_set_timeout(this_);
+    navit_draw(this_);
+}
+
+/**
  * @brief Recenters the map so that the vehicle cursor is visible
  *
  * This function first calls {@code navit_set_center_cursor()} to recalculate the map display, then
@@ -2521,7 +2542,7 @@ void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orienta
  *
  *@param this_ The navit object
  */
-static void navit_set_center_cursor_draw(struct navit *this_) {
+void navit_set_center_cursor_draw(struct navit *this_) {
     navit_set_center_cursor(this_,1,0);
     if (this_->ready == 3)
         navit_draw_async(this_, 1);
@@ -2657,6 +2678,8 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 #endif
                 attr_updated=1;
             }
+            if (attr_updated && this_->ready == 3)
+                navit_draw(this_);
         }
         break;
     case attr_osd_configuration:
