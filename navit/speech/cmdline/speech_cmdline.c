@@ -392,7 +392,6 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         file_closedir(handle);
     }
     *meth=speechd_meth;
-    dbg(lvl_error,"cmdline_tts: %s", this->cmdline_tts);
     return this;
 }
 
