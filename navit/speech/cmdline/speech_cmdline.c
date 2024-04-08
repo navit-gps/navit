@@ -359,10 +359,19 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
     this=g_new0(struct speech_priv,1);
     this->cmdline=g_strdup(attr->u.str);
 //-------------------------------------------------------
-// TODO: get attribute 'data_tts' in 'speech' tag from xml file
-//   if ((attr=attr_search(attrs, attr_data_tts)))
-//       this->cmdline_tts=g_strdup(attr->u.str);
-    this->cmdline_tts="espeak-ng -v dutch-mbrola-3 -s 130 %s";
+//  TODO: get attribute 'data_tts' in 'speech' tag from xml file
+//  if ((attr=attr_search(attrs, attr_data_tts)))
+//      this->cmdline_tts=g_strdup(attr->u.str);
+    FILE *file_tts;
+    char tts_command[50];
+    file_tts=fopen("tts.txt","r");
+    if(file_tts){
+      if(fgets(tts_command, 50, file_tts) != NULL){
+         puts(tts_command);
+      }
+      fclose(file_tts);
+    }
+    this->cmdline_tts=tts_command;
 //-------------------------------------------------------
     if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
