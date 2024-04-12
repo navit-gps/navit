@@ -363,15 +363,18 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
 //  if ((attr=attr_search(attrs, attr_data_tts)))
 //      this->cmdline_tts=g_strdup(attr->u.str);
     FILE *file_tts;
-    char tts_command[50];
+    char *line[50];
+    char *tts_command[50];
     file_tts=fopen("tts.txt","r");
     if(file_tts){
-      if(fgets(tts_command, 50, file_tts) != NULL){
-         puts(tts_command);
+      if(fgets(line, 50, file_tts) != EOF){
+         puts(line);
       }
       fclose(file_tts);
     }
-    this->cmdline_tts=tts_command;
+    g_strlcpy(tts_command,line,strlen(line));
+    this->cmdline_tts=g_strdup(tts_command);
+    dbg(lvl_error,"this->cmdline_tts: '%s'", this->cmdline_tts);
 //-------------------------------------------------------
     if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
