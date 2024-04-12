@@ -374,7 +374,6 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
     }
     g_strlcpy(tts_command,line,strlen(line));
     this->cmdline_tts=g_strdup(tts_command);
-    dbg(lvl_error,"this->cmdline_tts: '%s'", this->cmdline_tts);
 //-------------------------------------------------------
     if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
