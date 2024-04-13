@@ -20,19 +20,20 @@
 # rob https://launchpad.net/~rvdb
 # wb9688 https://launchpad.net/~wb9688
 # worldcitizen https://launchpad.net/~joop-boonen
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-10 19:30+0000\n"
-"Last-Translator: jan <jandegr1@hotmail.com>\n"
-"Language-Team: afaber\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/navit/navit-core/"
+"nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: nl\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "soon"
@@ -3030,91 +3031,106 @@ msgstr "Zuid- en Midden-Amerika"
 msgid "Guyane Francaise"
 msgstr "Frans Guyana"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Gedownloade kaarten"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Gebruikte configuratie bestand: '%s'\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "Interne initialisatie is mislukt, programma wordt afgesloten. Controleer de "
-#~ "vorafgaande foutmeldingen.\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "Foutieve waarde in het configuratie bestand '%s': %s\n"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "kaart gegevens (c) OpenStreetMap contributeurs, ODBL"
-
-#~ msgid "partial match"
-#~ msgstr "gedeeltelijke overeenkomst"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Geen configuratiebestand navit.xml of navit.xml.local gevonden\n"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (behalve Alaska en Hawaï)"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Kaart downloaden mislukt!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Kaart-download afgebroken!"
-
-#~ msgid ""
-#~ "Drop last \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Laatste routepunt \n"
-#~ "verwijderen"
-
-#~ msgid ""
-#~ "Drop next \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Volgende routepunt \n"
-#~ "verwijderen"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Fout: Geen configuratie gevonden in configuratiebestand '%s'\n"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Afstand(m)"
-
-#~ msgid ""
-#~ "Current map location %s is not available\n"
-#~ "Please restart Navit after you attach an SD card or select a different map "
-#~ "location."
-#~ msgstr ""
-#~ "Huidige locatie %s voor opslag van de kaart is niet beschikbaar.\n"
-#~ "Herstart Navit na dat U een SD kaart heeft geplaatst of een andere\n"
-#~ "locatie voor opslag heeft gekozen."
-
-#~ msgid ""
-#~ "New location set to %s\n"
-#~ "Restart Navit to apply the changes."
-#~ msgstr ""
-#~ "%s is als nieuwe locatie ingesteld.\n"
-#~ "Herstart a.u.b. Navit om de wijzigingen door te voeren."
-
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Zoekafstand kiezen (km)"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Afstand vanaf schem midden (km)"
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "daarna de rotonde verlaten bij de %1$s %2$s"
+msgid "in %d m"
+msgstr ""
 
-#~ msgid "filenamePath"
-#~ msgstr "bestandslocatie"
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid "partial match"
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
