@@ -16,19 +16,20 @@
 # brukutu https://launchpad.net/~brukutu99
 # eSkiSo https://launchpad.net/~wise-gdr
 # lezurdis https://launchpad.net/~f-dos-santos
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2017-06-26 15:54+0000\n"
-"Last-Translator: João Pirralha <joaopirralha@gmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/navit/"
+"navit-core/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: pt\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1462,8 +1463,7 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-"Ficheiros de configuração navit.xml, navit.xml.local não encontrados\n"
+msgstr "Ficheiros de configuração navit.xml, navit.xml.local não encontrados\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
@@ -2684,8 +2684,7 @@ msgstr "Transferência cancelada"
 
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
-msgstr ""
-"Localização indisponível. Abra novamente após determinar a localização."
+msgstr "Localização indisponível. Abra novamente após determinar a localização."
 
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
@@ -2821,6 +2820,15 @@ msgstr ""
 msgid "One or more ungranted permissions"
 msgstr "Uma ou mais permissões não concedidas"
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "e saia da rotunda na %1$s %2$s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
