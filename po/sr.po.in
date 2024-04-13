@@ -8,20 +8,21 @@
 # momcilo https://launchpad.net/~momcilo-majic
 # Мирослав Николић https://launchpad.net/~lipek
 # Саша Петровић https://launchpad.net/~salepetronije
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-10 17:33+0000\n"
-"Last-Translator: Саша Петровић <salepetronije@gmail.com>\n"
-"Language-Team: српски <xfce4@xfce4.org>\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Serbian <https://hosted.weblate.org/projects/navit/navit-core/"
+"sr/>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -3006,63 +3007,86 @@ msgstr ""
 msgid "Guyane Francaise"
 msgstr ""
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Рута %4.0fкм %02d:%02d ПВД"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr ""
-#~ "Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Користим датотеку подешавања „%s“\n"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "ГРЕШКА: Нису пронађене поставке у датотеци подешавања „%s“\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "Није успело унутрашње покретање, излазим. Проверите претходне поруке "
-#~ "грешака.\n"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Растојање од средишта екрана (km)"
 
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Постави одредиште на %ld, %ld \n"
+msgid "Error downloading map!"
+msgstr ""
 
 #, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "Постави карту на %ld, %ld \n"
+msgid "%d m"
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+msgid "partial match"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
 
 #, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Постави следећу посету на %ld, %ld \n"
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
 
-#~ msgid "partial match"
-#~ msgstr "делимично поклапање"
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
 
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Подаци карте (c) доприносиоци Отворене карте улица, ОДБЛ"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Преузете карте"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Десила се грешка приликом преузимања карте!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Преузимање карте је прекинуто!"
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "потом напутстите обилазницу на %1$s %2$s"
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
