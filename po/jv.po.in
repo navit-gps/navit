@@ -4,19 +4,20 @@
 # Many thanks to the contributors of this translation:
 # Leonardus Priyo Handono https://launchpad.net/~leonardus-ymail
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Javanese <jv@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Javanese <https://hosted.weblate.org/projects/navit/"
+"navit-core/jv/>\n"
+"Language: jv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 0;\n"
-"Language: jv\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "now"
@@ -2741,5 +2742,14 @@ msgid ""
 msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "terus metu soko puteran ing cawang kaping %1$s %2$s"
+msgid "%d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
