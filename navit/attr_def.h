@@ -274,6 +274,8 @@ ATTR2(0x00030000,type_string_begin)
 ATTR(type)
 ATTR(label)
 ATTR(data)
+//  TODO: get attribute 'data_tts' in 'speech' tag from xml file
+ATTR(data_tts)
 ATTR(charset)
 ATTR(country_all)
 ATTR(country_iso3)

@@ -75,6 +75,8 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
     gchar *text_first[2];
 
     dbg(lvl_debug,"searching samples for text: '%s'",text);
+    dbg(lvl_error,"searching samples for text: '%s'",text);
+
 
     sample_missing=g_strconcat(sample_missing,suffix);
 
@@ -110,6 +112,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
              text=text+sample_name_len;
 
              dbg(lvl_debug,"sample '%s' matched",sample_name);
+             dbg(lvl_error,"sample '%s' matched",sample_name);
              break;
           }
           if (decode)
@@ -133,6 +136,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
              if (strlen(text_first) == 0)
                 break;
              text_tts=g_strconcat(text_tts, text_first);
+             dbg(lvl_error,"text_tts '%s'",text_tts);
              text++;
           }
           result=g_list_prepend(result, g_strdup(text_tts));
@@ -199,6 +203,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         samples=g_list_copy(argl);
         listlen=g_list_length(argl);
         dbg(lvl_debug,"For text: '%s', found %d samples.",text,listlen);
+        dbg(lvl_error,"For text: '%s', found %d samples.",text,listlen);
         if (!listlen) {
             dbg(lvl_error,"No matching samples found. Cannot speak text: '%s'",text);
         }
@@ -360,8 +365,8 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
     this->cmdline=g_strdup(attr->u.str);
 //-------------------------------------------------------
 //  TODO: get attribute 'data_tts' in 'speech' tag from xml file
-//  if ((attr=attr_search(attrs, attr_data_tts)))
-//      this->cmdline_tts=g_strdup(attr->u.str);
+//    if ((attr=attr_search(attrs, attr_data_tts)))
+//        this->cmdline_tts=g_strdup(attr->u.str);
     FILE *file_tts;
     char *line[50];
     char *tts_command[50];
