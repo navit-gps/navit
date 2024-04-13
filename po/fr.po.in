@@ -28,19 +28,20 @@
 # quent57 https://launchpad.net/~quent57
 # tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-10-13 16:09+0000\n"
-"Last-Translator: lains <Unknown>\n"
-"Language-Team: KaZeR <kazer@altern.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
+"fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"Language: fr\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -3046,39 +3047,12 @@ msgstr "Guyane Française"
 #~ msgid "Route %4.0fkm    %02d:%02d ETA"
 #~ msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
 
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "utilisation du fichier '%s'\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "initialisation interne échouée, arrêt de l'exécution. Vérifiez les messages "
-#~ "d'erreurs précédents.\n"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Pas de fichier de configuration navit.xml, navit.xml.local trouvé\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "erreur d'analyse du fichier de configuration '%s': %s\n"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Cartes téléchargées"
-
 #~ msgid ""
 #~ "Drop last \n"
 #~ "Waypoint"
 #~ msgstr ""
 #~ "Sauter le dernier \n"
 #~ "Point de passage"
-
-#~ msgid ""
-#~ "Drop next \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Sauter le prochain \n"
-#~ "point de passage"
 
 #~ msgid "partial match"
 #~ msgstr "correspondance partielle"
@@ -3092,29 +3066,8 @@ msgstr "Guyane Française"
 #~ msgid " (except Alaska and Hawaii)"
 #~ msgstr " (sans Alaska et Hawaï)"
 
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Erreur: Configuration non trouvée dans le fichier '%s'\n"
-
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Définir la destination vers %ld, %ld \n"
-
 #~ msgid "Distance(m)"
 #~ msgstr "Distance (m)"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "puis sortez du rond-point à la %1$s %2$s"
-
-#, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "sélectionner la carte de  %ld, %ld \n"
-
-#~ msgid ""
-#~ "New location set to %s\n"
-#~ "Restart Navit to apply the changes."
-#~ msgstr "redémarrer Navit pour appliquer les modifications"
 
 #, c-format
 #~ msgid "in %d m"
@@ -3127,24 +3080,70 @@ msgstr "Guyane Française"
 #~ msgid "Select a distance to look for (km)"
 #~ msgstr "Sélectionnez une distance à chercher (km)"
 
-#, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Définir la prochaine visite à %ld, %ld \n"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Distance du centre de l'écran (km)"
 
-#~ msgid "filenamePath"
-#~ msgstr "emplacementFichier"
-
-#~ msgid ""
-#~ "Current map location %s is not available\n"
-#~ "Please restart Navit after you attach an SD card or select a different map "
-#~ "location."
-#~ msgstr ""
-#~ "L'emplacement de carte %s n'est pas disponible\n"
-#~ "Veuillez redémarrer Navit après avoir branché une carte SD ou selectionné en "
-#~ "emplacement de carte différent."
-
 #~ msgid "Map download aborted!"
 #~ msgstr "Téléchargement de la carte abandonné!"
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
