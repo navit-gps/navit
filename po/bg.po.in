@@ -8,19 +8,20 @@
 # Lyudmil Bonev https://launchpad.net/~bonev-j
 # MalamiR https://launchpad.net/~mamut-killer
 # Martin Voinov https://launchpad.net/~mvoinov
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-01 20:30+0000\n"
-"Last-Translator: Anton Todorov <Unknown>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/navit/"
+"navit-core/bg/>\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: bg\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2984,10 +2985,103 @@ msgstr ""
 msgid "Guyane Francaise"
 msgstr ""
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Маршрут %4.0fкм %02d:%02d ОВП"
+msgid "partial match"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "след това излезте от кръговото на %1$s %2$s"
+msgid "in %d m"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
