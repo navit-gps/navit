@@ -4,27 +4,32 @@
 # Many thanks to the contributors of this translation:
 # Inaki Saez https://launchpad.net/~inaki-saez
 # mikel https://launchpad.net/~mikel85
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:58+0000\n"
-"Last-Translator: Inaki Saez <Inaki.Saez@gmail.com>\n"
-"Language-Team: Basque <eu@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Basque <https://hosted.weblate.org/projects/navit/navit-core/"
+"eu/>\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: eu\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr "Iturburu direktoriotik ari\\n\n"
+msgstr ""
+"Iturburu direktoriotik ari\\n"
+"\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "'%s' '%s'ra ezartzen\\n\n"
+msgstr ""
+"'%s' '%s'ra ezartzen\\n"
+"\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -2744,6 +2749,15 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "gero, irten errotondatik %1$s-ean %2$s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
