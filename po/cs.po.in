@@ -19,19 +19,20 @@
 # Vojtěch Látal https://launchpad.net/~vojtik
 # stritek https://launchpad.net/~stritek
 # talmik https://launchpad.net/~mikatom
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-25 09:58+0000\n"
-"Last-Translator: Clon <Unknown>\n"
-"Language-Team: Čeština\n"
+"PO-Revision-Date: 2024-04-13 17:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/navit/navit-core/"
+"cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2284,8 +2285,8 @@ msgstr ""
 "Děkujeme za instalaci Navit!\n"
 "\n"
 "Pro začátek, vyberte \"Stáhnout mapy\" z menu pro stažení map. Poznámka: "
-"Velikost souboru map mohou být velké (>50MB) - wifi připojení je "
-"doporučeno.\n"
+"Velikost souboru map mohou být velké (>50MB) - wifi připojení je doporučeno."
+"\n"
 "\n"
 "Mapdata: (c) OpenStreetMap a přispěvovatelé\n"
 "\n"
@@ -3024,84 +3025,106 @@ msgstr "Jižní a Střední Amerika"
 msgid "Guyane Francaise"
 msgstr "Francouzská Guyana"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Trasa %4.0fkm    %02d:%02d ETA"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Nenalezen konfigurační soubor navit.xml a navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "Chyba při zpracování konfiguračního souboru '%s': %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Používáte konfigurační soubor '% s'\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "Interní selhání inicializace, končím. Zkontrolujte předchozí chybové "
-#~ "zprávy.\n"
-
-#~ msgid "partial match"
-#~ msgstr "Částečná shoda"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Mapová data (c) přispěvatelé OpenStreetMap, ODBL"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Stažené mapy"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (mimo Aljašky a Havaje)"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Chyba při stahování mapy!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Stahování mapy přerušeno!"
-
-#~ msgid ""
-#~ "Drop last \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Zrušit minulý \n"
-#~ "bod trasy"
-
-#~ msgid ""
-#~ "Drop next \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Zrušit příští \n"
-#~ " bod trasy"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Chyba: Nenalezena žádná konfigurace v konfiguračním souboru '%s'\n"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Vzdálenost od středu mapy (km)"
 
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Nastav cíl na %ld, %ld \n"
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
 
 #, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "Posuň mapu na %ld, %ld \n"
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
 
 #, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Nastav další zastavení na %ld, %ld \n"
-
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Vyberte vzdálenost ve které hledat (km)"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Vzdálenost (m)"
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "pak sjeďte na %1$s %2$s"
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+msgid "partial match"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
