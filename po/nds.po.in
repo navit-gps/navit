@@ -11,19 +11,20 @@
 # Roschkor https://launchpad.net/~bound-one2000
 # everyone https://launchpad.net/~anonymus1338
 # fred husche https://launchpad.net/~paidmailacc
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-04-03 18:48+0000\n"
-"Last-Translator: Marc0 <ubuntuone@hidden-primary.net>\n"
-"Language-Team: German, Low <nds@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: German (Low) <https://hosted.weblate.org/projects/navit/"
+"navit-core/nds/>\n"
+"Language: nds\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: nds\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2752,5 +2753,14 @@ msgid ""
 msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "dann den Kreisverkehr an der %1$s %2$s verlassen"
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
