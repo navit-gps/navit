@@ -24,20 +24,21 @@
 # kisaa https://launchpad.net/~kisaa-mail
 # tryagain https://launchpad.net/~mdankov
 # Павел https://launchpad.net/~pavel-sgn
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-07-11 21:09+0000\n"
-"Last-Translator: tryagain <mdankov@yandex.ru>\n"
-"Language-Team: Rustam T. Usmanov\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/navit/navit-core/"
+"ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -45,7 +46,9 @@ msgstr "Запуск в исходном каталоге\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "установка '%s' в '%s'\\n\n"
+msgstr ""
+"установка '%s' в '%s'\\n"
+"\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -2800,5 +2803,14 @@ msgstr ""
 "загрузки голосовых данных?"
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "затем %2$s съезжайте с круга на %1$s"
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
