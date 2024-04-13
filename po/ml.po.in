@@ -5,19 +5,20 @@
 # Faju https://launchpad.net/~gotoarunk
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Sunil K https://launchpad.net/~sunilk
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Malayalam <ml@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Malayalam <https://hosted.weblate.org/projects/navit/"
+"navit-core/ml/>\n"
+"Language: ml\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: ml\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "സോര്‍സ് ഡൈരക്ടറിയില് നിന്നും പ്രവര്ത്തിക്കുന്നു\n"
@@ -1444,7 +1445,9 @@ msgstr "കോണ്‍ഫിഗറേഷന്‍ ഫയലുകള്‍ (nav
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr "'%s': %s കോണ്‍ഫിഗറേഷന്‍ ഫയല്‍ വായിക്കത്തില്ല \\n\n"
+msgstr ""
+"'%s': %s കോണ്‍ഫിഗറേഷന്‍ ഫയല്‍ വായിക്കത്തില്ല \\n"
+"\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
@@ -1456,8 +1459,7 @@ msgstr "'%s' കോണ്‍ഫിഗറേഷന്‍ ഫയലില്‍ �
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr ""
-"പിഴവ് സംഭവിച്ചു. നിര്‍ത്തുന്നു. ദയവായ് മുന് സന്ദേശങ്ങള്‍ പരിശോധിക്കുക\n"
+msgstr "പിഴവ് സംഭവിച്ചു. നിര്‍ത്തുന്നു. ദയവായ് മുന് സന്ദേശങ്ങള്‍ പരിശോധിക്കുക\n"
 
 msgid "unknown street"
 msgstr "പേരില്ലാത്ത തെരുവ്"
@@ -2761,6 +2763,15 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "%1$s- ല്‍ റൗണ്ടാനയില്‍ നിന്നും പുറത്തോട്ട് പോവുക %2$s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
