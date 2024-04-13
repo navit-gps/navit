@@ -22,19 +22,20 @@
 # marZiano https://launchpad.net/~m3marte
 # pataquets https://launchpad.net/~pataquets
 # singesang https://launchpad.net/~singesang
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-01 17:39+0000\n"
-"Last-Translator: iceman75 <Unknown>\n"
-"Language-Team: Chris Eubank <cteubank@gmail.com>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/navit/navit-core/"
+"es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: es\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "Ejecutando desde el directorio fuente\n"
@@ -2420,463 +2421,452 @@ msgstr ""
 msgid "One or more ungranted permissions"
 msgstr "Uno o más permisos rechazados"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Ruta %4.0fkm    %02d:%02d TEL"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "No hay fichero de configuración navit.xml, encontrado navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "Error cargando el fichero de configuración '%s': %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Usando el fichero de configuración '%s'\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "Inicialización interna fallida, saliendo. Compruebe mensajes previos de "
-#~ "error\n"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Mapas descargados"
-
-#~ msgid "partial match"
-#~ msgstr "Coincidencia parcial"
-
-#~ msgid "Taiwan"
-#~ msgstr "Taiwán"
-
-#~ msgid "Asia"
-#~ msgstr "Asia"
-
-#~ msgid "Canary Islands"
-#~ msgstr "Islas Canarias"
-
-#~ msgid "Whole Planet"
-#~ msgstr "Todo el Planeta"
-
-#~ msgid "Korea"
-#~ msgstr "Corea"
-
-#~ msgid "Tasmania"
-#~ msgstr "Tasmania"
-
-#~ msgid "Victoria"
-#~ msgstr "Victoria"
-
-#~ msgid "Oceania"
-#~ msgstr "Oceanía"
-
-#~ msgid "UAE+Other"
-#~ msgstr "Emiratos Árabes Unidos + Otros"
-
-#~ msgid "BeNeLux"
-#~ msgstr "Benelux"
-
-#~ msgid "Alsace"
-#~ msgstr "Alsacia"
-
-#~ msgid "Western Europe"
-#~ msgstr "Europa Occidental"
-
-#~ msgid "Azores"
-#~ msgstr "Azores"
-
-#~ msgid "New South Wales"
-#~ msgstr "Nueva Gales del Sur"
-
-#~ msgid "Europe"
-#~ msgstr "Europa"
-
-#~ msgid "Bourgogne"
-#~ msgstr "Borgoña"
-
-#~ msgid "Auvergne"
-#~ msgstr "Auvernia"
-
-#~ msgid "Aquitaine"
-#~ msgstr "Aquitania"
-
-#~ msgid "Basse-Normandie"
-#~ msgstr "Baja Normandía"
-
-#~ msgid "Lorraine"
-#~ msgstr "Lorena"
-
-#~ msgid "Languedoc-Roussillon"
-#~ msgstr "Languedoc - Rosellón"
-
-#~ msgid "Bretagne"
-#~ msgstr "Bretaña"
-
-#~ msgid "Haute-Normandie"
-#~ msgstr "Alta Normandía"
-
-#~ msgid "Centre"
-#~ msgstr "Centro"
-
-#~ msgid "Corse"
-#~ msgstr "Córcega"
-
-#~ msgid "Champagne-Ardenne"
-#~ msgstr "Champaña - Ardenas"
-
-#~ msgid "Baden-Wuerttemberg"
-#~ msgstr "Baden-Wuerttemberg"
-
-#~ msgid "Rhone-Alpes"
-#~ msgstr "Rhone - Alpes"
-
-#~ msgid "Provence-Alpes-Cote-d-Azur"
-#~ msgstr "Alpes - Costa Azul"
-
-#~ msgid "Midi-Pyrenees"
-#~ msgstr "Midi - Pirineos"
-
-#~ msgid "Nord-pas-de-Calais"
-#~ msgstr "Paso Norte de Calais"
-
-#~ msgid "Picardie"
-#~ msgstr "Paradía"
-
-#~ msgid "Schwaben"
-#~ msgstr "Schawben"
-
-#~ msgid "Hamburg"
-#~ msgstr "Hamburgo"
-
-#~ msgid "Bremen"
-#~ msgstr "Bremen"
-
-#~ msgid "Berlin"
-#~ msgstr "Berlín"
-
-#~ msgid "Brandenburg"
-#~ msgstr "Brandenburgo"
-
-#~ msgid "Saarland"
-#~ msgstr "Sarre"
-
-#~ msgid "Niedersachsen"
-#~ msgstr "Niedersachsen"
-
-#~ msgid "Hessen"
-#~ msgstr "Hessen"
-
-#~ msgid "Sachsen"
-#~ msgstr "Sachsen"
-
-#~ msgid "Thueringen"
-#~ msgstr "Turingia"
-
-#~ msgid "Schleswig-Holstein"
-#~ msgstr "Schleswig-Holstein"
-
-#~ msgid "Cumbria"
-#~ msgstr "Cumbria"
-
-#~ msgid "Herefordshire"
-#~ msgstr "Herefordshire"
-
-#~ msgid "Essex"
-#~ msgstr "Essex"
-
-#~ msgid "Buckinghamshire"
-#~ msgstr "Buckinghamshire"
-
-#~ msgid "Galicia"
-#~ msgstr "Galicia"
-
-#~ msgid "Mallorca"
-#~ msgstr "Mallorca"
-
-#~ msgid "England"
-#~ msgstr "Inglaterra"
-
-#~ msgid "Scandinavia"
-#~ msgstr "Escandinavia"
-
-#~ msgid "Cambridgeshire"
-#~ msgstr "Cambridgeshire"
-
-#~ msgid "Oxfordshire"
-#~ msgstr "Oxfordshire"
-
-#~ msgid "Nottinghamshire"
-#~ msgstr "Nottinghamshire"
-
-#~ msgid "Lancashire"
-#~ msgstr "Lancashire"
-
-#~ msgid "Kent"
-#~ msgstr "Kent"
-
-#~ msgid "Norfolk"
-#~ msgstr "Norfolk"
-
-#~ msgid "Leicestershire"
-#~ msgstr "Leicestershire"
-
-#~ msgid "Suffolk"
-#~ msgstr "Suffolk"
-
-#~ msgid "Somerset"
-#~ msgstr "Somerset"
-
 #~ msgid " (except Alaska and Hawaii)"
 #~ msgstr " (excepto Alaska y Hawái)"
-
-#~ msgid "USA"
-#~ msgstr "Estados Unidos de Norteamérica"
-
-#~ msgid "Hawaii"
-#~ msgstr "Hawái"
-
-#~ msgid "Alaska"
-#~ msgstr "Alaska"
-
-#~ msgid "Crete"
-#~ msgstr "Creta"
-
-#~ msgid "North America"
-#~ msgstr "Norteamérica"
-
-#~ msgid "Scotland"
-#~ msgstr "Escocia"
-
-#~ msgid "Wales"
-#~ msgstr "Gales"
-
-#~ msgid "Surrey"
-#~ msgstr "Surrey"
-
-#~ msgid "Wiltshire"
-#~ msgstr "Wiltshire"
-
-#~ msgid "Pacific"
-#~ msgstr "Pacífico"
-
-#~ msgid "South"
-#~ msgstr "Sur"
-
-#~ msgid "Arkansas"
-#~ msgstr "Arkansas"
-
-#~ msgid "District of Columbia"
-#~ msgstr "Distrito de Columbia"
-
-#~ msgid "Ohio"
-#~ msgstr "Ohio"
-
-#~ msgid "Michigan"
-#~ msgstr "Michigan"
-
-#~ msgid "Vermont"
-#~ msgstr "Vermont"
-
-#~ msgid "Massachusetts"
-#~ msgstr "Massachusetts"
-
-#~ msgid "Florida"
-#~ msgstr "Florida"
-
-#~ msgid "Louisiana"
-#~ msgstr "Luisiana"
-
-#~ msgid "Maryland"
-#~ msgstr "Maryland"
-
-#~ msgid "Oklahoma"
-#~ msgstr "Oklahoma"
-
-#~ msgid "Mississippi"
-#~ msgstr "Mississippi"
-
-#~ msgid "Texas"
-#~ msgstr "Tejas"
-
-#~ msgid "West Virginia"
-#~ msgstr "Virginia Occidental"
-
-#~ msgid "Virginia"
-#~ msgstr "Virginia"
-
-#~ msgid "Arizona"
-#~ msgstr "Arizona"
-
-#~ msgid "West"
-#~ msgstr "Oeste"
-
-#~ msgid "Washington State"
-#~ msgstr "Estado de Washington"
-
-#~ msgid "South+Middle America"
-#~ msgstr "Suramérica + Centroamérica"
-
-#~ msgid "Oregon"
-#~ msgstr "Oregón"
-
-#~ msgid "Utah"
-#~ msgstr "Utah"
-
-#~ msgid "Nevada"
-#~ msgstr "Nevada"
-
-#~ msgid "New Mexico"
-#~ msgstr "Nuevo Méjico"
-
-#~ msgid "Colorado"
-#~ msgstr "Colorado"
-
-#~ msgid "California"
-#~ msgstr "California"
-
-#~ msgid "Montana"
-#~ msgstr "Montana"
-
-#~ msgid "Idaho"
-#~ msgstr "Idaho"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Error al descargar el mapa"
-
-#~ msgid "Guyane Francaise"
-#~ msgstr "Guayana Francesa"
-
-#~ msgid "downloading"
-#~ msgstr "descargando"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Descarga del mapa interrumpida"
-
-#~ msgid "Error writing map!"
-#~ msgstr "Error al guardar el mapa"
-
-#~ msgid "Mittelfranken"
-#~ msgstr "Franconia Media"
-
-#~ msgid "Africa"
-#~ msgstr "África"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Datos de Mapa (c) contribuyentes de OpenStreetMap,  ODBL"
-
-#~ msgid "Ile-de-France"
-#~ msgstr "Isla de Francia"
-
-#~ msgid "Limousin"
-#~ msgstr "Limusina"
-
-#~ msgid "Pays-de-la-Loire"
-#~ msgstr "Países del Loira"
-
-#~ msgid "Poitou-Charentes"
-#~ msgstr "Poitou-Charentes"
-
-#~ msgid "Franche-Comte"
-#~ msgstr "Franco Condado"
-
-#~ msgid "Northeast"
-#~ msgstr "Noreste"
-
-#~ msgid "Midwest"
-#~ msgstr "Medio-Oeste"
-
-#~ msgid "Oberpfalz"
-#~ msgstr "Alto Palatinado"
-
-#~ msgid "Oberfranken"
-#~ msgstr "Alta Franconia"
-
-#~ msgid "Unterfranken"
-#~ msgstr "Baja Franconia"
-
-#~ msgid "Rheinland-Pfalz"
-#~ msgstr "Renania del Norte-Westfalia"
-
-#~ msgid "Mecklenburg-Vorpommern"
-#~ msgstr "Mecklemburgo-Pomerania"
-
-#~ msgid "Sachsen-Anhalt"
-#~ msgstr "Sajonia-Anhalt"
-
-#~ msgid "Nordrhein-westfalen"
-#~ msgstr "Renania del Norte-Westfalia"
-
-#~ msgid "South yorkshire"
-#~ msgstr "Yorkshire Sur"
-
-#~ msgid "Shropshire"
-#~ msgstr "Shropshire"
-
-#~ msgid "East yorkshire with hull"
-#~ msgstr "Yorkshire Este con Hull"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "después salga de la rotonda por la %1$s %2$s"
-
-#~ msgid "Bayern"
-#~ msgstr "Baviera"
-
-#~ msgid "Niederbayern"
-#~ msgstr "Baja Baviera"
-
-#~ msgid "Oberbayern"
-#~ msgstr "Alta Baviera"
 
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Distancia del centro de la pantalla (km)"
 
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Cambiar destino a %ld, %ld \n"
+msgid "Asia"
+msgstr ""
+
+msgid "Pays-de-la-Loire"
+msgstr ""
+
+msgid "Florida"
+msgstr ""
+
+msgid "Arizona"
+msgstr ""
+
+msgid "Poitou-Charentes"
+msgstr ""
+
+msgid "Centre"
+msgstr ""
+
+msgid "Berlin"
+msgstr ""
+
+msgid "Azores"
+msgstr ""
 
 #, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "Cambiar mapa a % ld, %ld \n"
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+msgid "Cumbria"
+msgstr ""
+
+msgid "Montana"
+msgstr ""
+
+msgid "Whole Planet"
+msgstr ""
+
+msgid "Essex"
+msgstr ""
+
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+msgid "New South Wales"
+msgstr ""
+
+msgid "Nevada"
+msgstr ""
 
 #, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Conjunto siguiente visita a %ld, %ld \n"
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
 
-#~ msgid ""
-#~ "Current map location %s is not available\n"
-#~ "Please restart Navit after you attach an SD card or select a different map "
-#~ "location."
-#~ msgstr ""
-#~ "Ubicación actual del mapa %s no se encuentra disponible\n"
-#~ "Por favor reiniciar Navit después de conectar una tarjeta SD o seleccione "
-#~ "una ubicación del mapa diferente."
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
 
-#~ msgid ""
-#~ "Sorry, we currently do not support maps above 3.8G on Android, please select "
-#~ "a smaller one."
-#~ msgstr ""
-#~ "Lo sentimos, actualmente no permitimos mapas por encima de 3,8 G en Android, "
-#~ "por favor, seleccione una versión más pequeña."
+msgid "Herefordshire"
+msgstr ""
 
-#~ msgid ""
-#~ "New location set to %s\n"
-#~ "Restart Navit to apply the changes."
-#~ msgstr ""
-#~ "Nueva ubicación cambiada a %s\n"
-#~ "Reinicie Navit para aplicar los cambios."
+msgid "Oregon"
+msgstr ""
 
-#~ msgid "Media selected for map storage is not available"
-#~ msgstr ""
-#~ "Los medios de comunicación seleccionados para el almacenamiento del mapa no "
-#~ "está disponible"
+msgid "Map download aborted!"
+msgstr ""
+
+msgid "Aquitaine"
+msgstr ""
 
 #, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr ""
-#~ "Error: No se encontró la configuración en el archivo de configuración '%s'\n"
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "Suffolk"
+msgstr ""
+
+msgid "Bremen"
+msgstr ""
+
+msgid "Norfolk"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+msgid "South"
+msgstr ""
+
+msgid "partial match"
+msgstr ""
+
+msgid "Hawaii"
+msgstr ""
+
+msgid "Media selected for map storage is not available"
+msgstr ""
+
+msgid "Unterfranken"
+msgstr ""
+
+msgid "Hamburg"
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""
+
+msgid "Utah"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
+msgstr ""
+
+msgid "Oceania"
+msgstr ""
+
+msgid "Korea"
+msgstr ""
+
+msgid "UAE+Other"
+msgstr ""
+
+msgid "Europe"
+msgstr ""
+
+msgid "Victoria"
+msgstr ""
+
+msgid "Taiwan"
+msgstr ""
+
+msgid "Tasmania"
+msgstr ""
+
+msgid "Alsace"
+msgstr ""
+
+msgid "Bourgogne"
+msgstr ""
+
+msgid "Basse-Normandie"
+msgstr ""
+
+msgid "Auvergne"
+msgstr ""
+
+msgid "Bretagne"
+msgstr ""
+
+msgid "Corse"
+msgstr ""
+
+msgid "Haute-Normandie"
+msgstr ""
+
+msgid "Midi-Pyrenees"
+msgstr ""
+
+msgid "Languedoc-Roussillon"
+msgstr ""
+
+msgid "Limousin"
+msgstr ""
+
+msgid "Ile-de-France"
+msgstr ""
+
+msgid "Nord-pas-de-Calais"
+msgstr ""
+
+msgid "Lorraine"
+msgstr ""
+
+msgid "Picardie"
+msgstr ""
+
+msgid "Niedersachsen"
+msgstr ""
+
+msgid "Saarland"
+msgstr ""
+
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+msgid "Scandinavia"
+msgstr ""
+
+msgid "Thueringen"
+msgstr ""
+
+msgid "Mallorca"
+msgstr ""
+
+msgid "England"
+msgstr ""
+
+msgid "Galicia"
+msgstr ""
+
+msgid "Sachsen"
+msgstr ""
+
+msgid "Schleswig-Holstein"
+msgstr ""
+
+msgid "USA"
+msgstr ""
+
+msgid "Michigan"
+msgstr ""
+
+msgid "Northeast"
+msgstr ""
+
+msgid "Pacific"
+msgstr ""
+
+msgid "Virginia"
+msgstr ""
+
+msgid "West"
+msgstr ""
+
+msgid "downloading"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+msgid "Crete"
+msgstr ""
+
+msgid "Bayern"
+msgstr ""
+
+msgid "Brandenburg"
+msgstr ""
+
+msgid "Rhone-Alpes"
+msgstr ""
+
+msgid "Maryland"
+msgstr ""
+
+msgid "Canary Islands"
+msgstr ""
+
+msgid "Cambridgeshire"
+msgstr ""
+
+msgid "Nordrhein-westfalen"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+msgid "Africa"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid "Franche-Comte"
+msgstr ""
+
+msgid "Oberpfalz"
+msgstr ""
+
+msgid "Oberbayern"
+msgstr ""
+
+msgid "Baden-Wuerttemberg"
+msgstr ""
+
+msgid "Schwaben"
+msgstr ""
+
+msgid "Niederbayern"
+msgstr ""
+
+msgid "BeNeLux"
+msgstr ""
+
+msgid "Western Europe"
+msgstr ""
+
+msgid "Provence-Alpes-Cote-d-Azur"
+msgstr ""
+
+msgid "Mittelfranken"
+msgstr ""
+
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+msgid "Leicestershire"
+msgstr ""
+
+msgid "Lancashire"
+msgstr ""
+
+msgid "Kent"
+msgstr ""
+
+msgid "Hessen"
+msgstr ""
+
+msgid "East yorkshire with hull"
+msgstr ""
+
+msgid "Buckinghamshire"
+msgstr ""
+
+msgid "Shropshire"
+msgstr ""
+
+msgid "Wiltshire"
+msgstr ""
+
+msgid "Oxfordshire"
+msgstr ""
+
+msgid "Surrey"
+msgstr ""
+
+msgid "Scotland"
+msgstr ""
+
+msgid "Somerset"
+msgstr ""
+
+msgid "Nottinghamshire"
+msgstr ""
+
+msgid "South yorkshire"
+msgstr ""
+
+msgid "Wales"
+msgstr ""
+
+msgid "Alaska"
+msgstr ""
+
+msgid "Midwest"
+msgstr ""
+
+msgid "Massachusetts"
+msgstr ""
+
+msgid "North America"
+msgstr ""
+
+msgid "District of Columbia"
+msgstr ""
+
+msgid "Louisiana"
+msgstr ""
+
+msgid "Mississippi"
+msgstr ""
+
+msgid "West Virginia"
+msgstr ""
+
+msgid "Vermont"
+msgstr ""
+
+msgid "Arkansas"
+msgstr ""
+
+msgid "Idaho"
+msgstr ""
+
+msgid "California"
+msgstr ""
+
+msgid "Texas"
+msgstr ""
+
+msgid "Colorado"
+msgstr ""
+
+msgid "Oklahoma"
+msgstr ""
+
+msgid "Guyane Francaise"
+msgstr ""
+
+msgid "Error writing map!"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+msgid "South+Middle America"
+msgstr ""
+
+msgid "New Mexico"
+msgstr ""
+
+msgid "Washington State"
+msgstr ""
+
+msgid "Oberfranken"
+msgstr ""
+
+msgid "Champagne-Ardenne"
+msgstr ""
+
+msgid "Ohio"
+msgstr ""
