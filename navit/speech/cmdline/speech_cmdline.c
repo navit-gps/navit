@@ -69,14 +69,14 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
     int result_length_start;
     int result_length_end;
     int sample_index;
+    int sample_matched;
     gchar *sample_missing=g_strdup("missing");
     gchar *text_missing=g_strdup(sample_missing);
     gchar *text_tts;
     gchar *text_first[2];
+    gchar *text_next[2];
 
     dbg(lvl_debug,"searching samples for text: '%s'",text);
-    dbg(lvl_error,"searching samples for text: '%s'",text);
-
 
     sample_missing=g_strconcat(sample_missing,suffix);
 
@@ -107,13 +107,26 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
           // TODO: Here we compare UTF-8 text with a filename.
           // It's unclear how a case-insensitive comparison should work
           // in general, so for now we only do it for ASCII text.
+          sample_matched=0;
           if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
-             result=g_list_prepend(result, loop_samples_sorted->data);
-             text=text+sample_name_len;
+             if(sample_name_len==1){
+                text++;
+                g_strlcpy(text_next,text,2);
+                text--;
+                if (!g_ascii_strncasecmp(text_next, "1", 1) || !g_ascii_strncasecmp(text_next, "2", 1) || !g_ascii_strncasecmp(text_next, "3", 1) || !g_ascii_strncasecmp(text_next, "4", 1) || !g_ascii_strncasecmp(text_next, "5", 1) || !g_ascii_strncasecmp(text_next, "6", 1) || !g_ascii_strncasecmp(text_next, "7", 1) || !g_ascii_strncasecmp(text_next, "8", 1) || !g_ascii_strncasecmp(text_next, "9", 1) || !g_ascii_strncasecmp(text_next, "0", 1) || !g_ascii_strncasecmp(text_next, " ", 1) || !g_ascii_strncasecmp(text_next, ",", 1) || !g_ascii_strncasecmp(text_next, ".", 1) || !g_ascii_strncasecmp(text_next, ";", 1)) {
+                    sample_matched=1;
+                }
+             } else {
+               sample_matched=1;
+             }
 
-             dbg(lvl_debug,"sample '%s' matched",sample_name);
-             dbg(lvl_error,"sample '%s' matched",sample_name);
-             break;
+             if(sample_matched==1){
+               result=g_list_prepend(result, loop_samples_sorted->data);
+               text=text+sample_name_len;
+
+               dbg(lvl_debug,"sample '%s' matched",sample_name);
+               break;
+             }
           }
           if (decode)
              g_free(sample_name);
@@ -136,7 +149,6 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
              if (strlen(text_first) == 0)
                 break;
              text_tts=g_strconcat(text_tts, text_first);
-             dbg(lvl_error,"text_tts '%s'",text_tts);
              text++;
           }
           result=g_list_prepend(result, g_strdup(text_tts));
@@ -203,7 +215,6 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         samples=g_list_copy(argl);
         listlen=g_list_length(argl);
         dbg(lvl_debug,"For text: '%s', found %d samples.",text,listlen);
-        dbg(lvl_error,"For text: '%s', found %d samples.",text,listlen);
         if (!listlen) {
             dbg(lvl_error,"No matching samples found. Cannot speak text: '%s'",text);
         }
