@@ -166,7 +166,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         g_strlcpy(proj, str, 1+co-str);
         dbg(lvl_debug,"projection=%s", proj);
         str=co+1;
-        s=strchr(str,space_as_sep?' ':',');
+        s=strchr(str,(space_as_sep==0)?' ':',');
         if (!strcmp(proj, "geo"))
             str_pro = projection_none;
         else {
@@ -248,8 +248,7 @@ int coord_parse(const char *coord_input, enum projection output_projection, stru
         g.lng=lng;
         g.lat=lat;
         transform_from_geo(output_projection, &g, result);
-    }
-    else {
+    } else {
         double lng, lat;
         args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
         if (args < 2)
