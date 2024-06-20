@@ -24,7 +24,7 @@
 
 pthread_mutex_t* g_mutex_new_navit(void);
 void g_get_current_time (GTimeVal *result);
-GPrivate g_private_new_navit ();
+GPrivate g_private_new_navit (void);
 
 #else
 # if HAVE_API_WIN32_BASE
