@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>loader.qml</file>
+        <file>loader_norotate.qml</file>
         <file>graphics_qt5.qml</file>
     </qresource>
 </RCC>

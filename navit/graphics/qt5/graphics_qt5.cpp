@@ -953,6 +953,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     struct attr* attr_widget = NULL;
     bool use_qml = USE_QML;
     bool use_qwidget = USE_QWIDGET;
+    bool qml_norotate = false;
 
     //dbg(lvl_debug,"enter");
 
@@ -965,6 +966,11 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
         /* check if we shall use qwidget */
         if (strcmp(attr_widget->u.str, "qml") == 0) {
             use_qwidget = false;
+        }
+        /* check if we shall use qml but no rotate helper*/
+        if (strcmp(attr_widget->u.str, "qml_norotate") == 0) {
+            use_qwidget = false;
+            qml_norotate=true;
         }
     }
     if (use_qml && use_qwidget) {
@@ -1018,7 +1024,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
 #else
     navit_app = new QGuiApplication(graphics_priv->argc, graphics_priv->argv);
 #endif
-    navit_app->setOrganizationName(QStringLiteral("org.navitproject"));
+    navit_app->setOrganizationName(QStringLiteral("org.navitproject.navit"));
     navit_app->setApplicationName(QStringLiteral("navit"));
 
 #if HAVE_FREETYPE
@@ -1046,7 +1052,7 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     graphics_priv->GPriv = NULL;
     if (use_qml) {
         /* register our QtQuick widget to allow it's usage within QML */
-        qmlRegisterType<QNavitQuick>("org.navitproject.graphics_qt5", 1, 0, "QNavitQuick");
+        qmlRegisterType<QNavitQuick>("org.navitproject.navit.graphics_qt5", 1, 0, "QNavitQuick");
         /* get our qml application from embedded resources. May be replaced by the
              * QtQuick gui component if enabled */
         graphics_priv->engine = new QQmlApplicationEngine();
@@ -1054,7 +1060,10 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
             graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
             QQmlContext* context = graphics_priv->engine->rootContext();
             context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
-            graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
+            if(qml_norotate)
+                graphics_priv->engine->load(QUrl("qrc:///loader_norotate.qml"));
+            else
+                graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
             /* Get the engine's root window (for resizing) */
             QObject* toplevel = graphics_priv->engine->rootObjects().value(0);
             graphics_priv->window = qobject_cast<QQuickWindow*>(toplevel);
