@@ -12,22 +12,6 @@ Window {
            width: root.width
 	   height: root.height
 	   anchors.centerIn: parent
-	   Screen.onOrientationChanged: {
-	       rotation = Screen.angleBetween(Screen.orientation , Screen.primaryOrientation)
-	       switch(Screen.angleBetween(Screen.orientation , Screen.primaryOrientation))
-	       {
-	           case 0:
-		   case 180:
-		       width = root.width
-		       height = root.height
-		   break
-		   case 90:
-		   case 270:
-		   width = root.height
-		   height = root.width
-		   break
-	       }
-           }
            id: navit_loader
            focus: true
            source: "graphics_qt5.qml"
