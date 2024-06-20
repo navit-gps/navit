@@ -933,3 +933,7 @@ add_subdirectory (man)
 if (USE_NATIVE_LANGUAGE_SUPPORT)
 	add_subdirectory (po)
 endif(USE_NATIVE_LANGUAGE_SUPPORT)
+
+if (UBTOUCH)
+	add_subdirectory(contrib/ubuntutouch)
+endif()

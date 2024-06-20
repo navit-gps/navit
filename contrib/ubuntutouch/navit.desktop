@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=NavIT
+Exec=env NAVIT_PREFIX=${APP_DIR} bin/navit
+Icon=share/org.navitproject.navit/icons/navit.svg
+Terminal=false
+Type=Application
+X-Lomiri-Touch=true
