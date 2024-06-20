@@ -99,7 +99,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DUSE_QWIDGET:BOOL=FALSE \
        -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_cursor;sailfish_mapset;sailfish_svg;sailfish_gui" \
          %{navit_real_source}
-%{__make}
+%{__make} -j4
 
 #       -DMAN_DIR:PATH=share/harbour-navit/man1
 
