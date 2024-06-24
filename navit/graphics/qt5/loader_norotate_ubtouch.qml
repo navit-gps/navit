@@ -1,5 +1,6 @@
 import org.navitproject.navit.graphics_qt5 1.0
 import QtQuick 2.4
+import QtSystemInfo 5.0
 import Lomiri.Components 1.3
 import QtQuick.Window 2.0
 
@@ -8,18 +9,7 @@ Window {
 
     ScreenSaver {
         id: screenSaver
-        screenSaverEnabled: !Core.settings.disableScreensaver
-    }
-
-    Connections {
-        target: Qt.application
-        onActiveChanged: {
-            if (!Qt.application.active) {
-                screenSaver.screenSaverEnabled = false
-            } else {
-                screenSaver.screenSaverEnabled = !Core.settings.disableScreensaver
-            }
-        }
+        screenSaverEnabled: false
     }
 
     Item {
