@@ -954,6 +954,10 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
     bool use_qml = USE_QML;
     bool use_qwidget = USE_QWIDGET;
     bool qml_norotate = false;
+    bool is_ubtouch = false;
+#ifdef UBTOUCH
+    is_ubtouch = true;
+#endif
 
     //dbg(lvl_debug,"enter");
 
@@ -1060,9 +1064,12 @@ static struct graphics_priv* graphics_qt5_new(struct navit* nav, struct graphics
             graphics_priv->GPriv = new GraphicsPriv(graphics_priv);
             QQmlContext* context = graphics_priv->engine->rootContext();
             context->setContextProperty("graphics_qt5_context", graphics_priv->GPriv);
-            if(qml_norotate)
-                graphics_priv->engine->load(QUrl("qrc:///loader_norotate.qml"));
-            else
+            if(qml_norotate) {
+                if(is_ubtouch)
+                    graphics_priv->engine->load(QUrl("qrc:///loader_norotate_ubtouch.qml"));
+                else
+                    graphics_priv->engine->load(QUrl("qrc:///loader_norotate.qml"));
+            } else
                 graphics_priv->engine->load(QUrl("qrc:///loader.qml"));
             /* Get the engine's root window (for resizing) */
             QObject* toplevel = graphics_priv->engine->rootObjects().value(0);
