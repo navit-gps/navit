@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.12)
 
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
@@ -236,7 +236,7 @@ find_package(GLUT)
 find_package(GTK2 2.6 COMPONENTS gtk)
 find_package(Gettext)
 find_package(PNG)
-find_package(PythonLibs)
+find_package(Python2 COMPONENTS Development)
 find_package(Threads)
 
 #Qt detection
@@ -491,8 +491,8 @@ if (LIBGARMIN_FOUND)
 	set_with_reason(map/garmin "Garmin library found" TRUE ${LIBGARMIN_LDFLAGS})
 endif(LIBGARMIN_FOUND)
 
-if(PYTHONLIBS_FOUND)
-	set_with_reason(binding/python "python libraries [${PYTHONLIBS_VERSION_STRING}] found" TRUE ${PYTHON_LIBRARIES})
+if(Python2_FOUND)
+	set_with_reason(binding/python "python libraries [${Python2_VERSION}] found" TRUE ${Python2_LIBRARIES})
 endif()
 
 if (HAVE_LIBSPEECHD)
