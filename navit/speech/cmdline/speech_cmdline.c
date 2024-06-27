@@ -374,18 +374,10 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         return NULL;
     this=g_new0(struct speech_priv,1);
     this->cmdline=g_strdup(attr->u.str);
-//-------------------------------------------------------
-//  TODO: get attribute 'data_tts' in 'speech' tag from xml file
-//  if ((attr=attr_search(attrs, attr_data_tts)))
-//      this->cmdline_tts=g_strdup(attr->u.str);
-    char *tts_command[50];
-    const char delimiter[2] = "x";
-    char *token;
-    token=strtok(this->cmdline, delimiter); 
-    this->cmdline = g_strdup(token); 
-    token=strtok(NULL, delimiter);
-    this->cmdline_tts=g_strdup(token);
-//-------------------------------------------------------
+    attr=attr_search(attrs, attr_data_tts);
+    if (! attr)
+        return NULL;
+    this->cmdline_tts=g_strdup(attr->u.str);
     if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
     if ((attr=attr_search(attrs, attr_sample_suffix)))
