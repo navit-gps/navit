@@ -79,13 +79,14 @@ static unsigned char remove_accent[N_REMOVE_ACCENT] = {
 
 
 
-
+#ifndef WINCE
 void strncpy0(char *to,const char *from, int size)
 {//===================================================
 // strcpy with limit, ensures a zero terminator
 	strncpy(to,from,size);
 	to[size-1] = 0;
 }
+#endif
 
 
 int Reverse4Bytes(int word)
