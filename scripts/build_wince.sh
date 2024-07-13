@@ -5,7 +5,7 @@ mkdir -p wince
 pushd wince
 #
 cmake \
-  -DTARGET_ARCH=arm-mingw32ce -DCMAKE_SYSTEM_NAME=WindowsCETest \
+  -DTARGET_ARCH=arm-mingw32ce -DCMAKE_SYSTEM_NAME=WindowsCE \
   -DCMAKE_TOOLCHAIN_FILE=../Toolchain/mingw.cmake \
   -DXSLTS=windows,wince -DCACHE_SIZE=10485760 -Dsvg2png_scaling:STRING=16,32 \
   -Dsvg2png_scaling_nav:STRING=32 -Dsvg2png_scaling_flag=16 -DSAMPLE_MAP=n ..

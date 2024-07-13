@@ -212,7 +212,7 @@ jobs:
             bash scripts/update_download_center.sh
   build_wince:
     docker:
-      - image: navit/dockerfiles:wince
+      - image: ghcr.io/enlyze/windows-ce-build-environment-arm
     steps:
       - checkout
       - run: |
@@ -227,10 +227,6 @@ jobs:
           command: bash scripts/build_wince.sh
       - store_artifacts:
           path: wince/output
-      #- run:
-      #    name: Update Navit-Download-Center
-      #    command: |
-      #      bash scripts/update_download_center.sh
   build_tomtom_minimal:
     <<: *defaults
     docker:
