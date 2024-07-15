@@ -90,7 +90,7 @@ int main_real(int argc, char * const* argv) {
     main_init(argv[0]);
     navit_nls_main_init();
     debug_init(argv[0]);
-    
+
     cp = getenv("NAVIT_LOGFILE");
     if (cp) {
         debug_set_logfile(cp);
