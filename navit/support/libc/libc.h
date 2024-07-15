@@ -47,7 +47,7 @@ size_t strftime (char *s, size_t maxsize, const char *format, const struct tm *t
 
 #endif
 
-#ifdef __MINGW32CE__
+#ifdef WIN32
 #define getenv      _getenv
 #endif
 
