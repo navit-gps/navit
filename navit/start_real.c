@@ -49,6 +49,7 @@
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
+#include "libc.h"
 #endif
 
 int main_argc;
@@ -89,14 +90,16 @@ int main_real(int argc, char * const* argv) {
     main_init(argv[0]);
     navit_nls_main_init();
     debug_init(argv[0]);
-
+    
     cp = getenv("NAVIT_LOGFILE");
     if (cp) {
         debug_set_logfile(cp);
     }
 #ifdef HAVE_API_WIN32_CE
     else {
-        debug_set_logfile("/Storage Card/navit.log");
+//        debug_set_logfile("/Storage Card/navit.log");
+        debug_set_logfile(stdout);
+        //debug_set_global_level(3, 1);
     }
 #endif
     file_init();
