@@ -30,18 +30,17 @@ static void cleanup_libc(void)
 	}
 }
 
-#ifndef WINCE
 char *
-getenv(const char *name)
+_getenv(const char *name)
 {
 	int i;
 	for (i=0; i < MAXENV; i++) {
-		if (envnames[i] && !strcmp(envnames[i], name))
+		if (envnames[i] && !strcmp(envnames[i], name)){
 			return envvars[i];
+		}
 	}
 	return NULL;
 }
-#endif
 
 int
 setenv(const char *name, const char *value, int overwrite)
