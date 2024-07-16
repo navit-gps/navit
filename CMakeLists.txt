@@ -865,8 +865,11 @@ add_compiler_flag_if_available("-Wmissing-prototypes")
 add_compiler_flag_if_available("-Wstrict-prototypes")
 add_compiler_flag_if_available("-Wformat-security")
 add_compiler_flag_if_available("-Werror=format-security")
-add_compiler_flag_if_available("-fstack-protector-strong")
-add_compiler_flag_if_available("-D_FORTIFY_SOURCE=2")
+if(NOT WIN32)
+	# https://bugzilla.redhat.com/show_bug.cgi?id=822312
+	add_compiler_flag_if_available("-fstack-protector-strong")
+	add_compiler_flag_if_available("-D_FORTIFY_SOURCE=2")
+endif(NOT WIN32)
 
 if (EXTRA_DEFINES)
 	add_definitions("${EXTRA_DEFINES}")

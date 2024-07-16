@@ -63,7 +63,7 @@ struct map_data *map_data_default;
 
 struct callback_list *cbl;
 
-#ifdef HAVE_API_WIN32
+#ifdef HAVE_API_WIN32 AND NOT HAVE_API_WIN32_CE
 void setenv(char *var, char *val, int overwrite) {
     char *str=g_strdup_printf("%s=%s",var,val);
     if (overwrite || !getenv(var))
