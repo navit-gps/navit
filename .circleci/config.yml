@@ -195,7 +195,7 @@ jobs:
       - run:
           name: Prepare the Windows build environment
           command: |
-            bash scripts/build_win32.sh
+            bash scripts/setup_win32.sh
       - run:
           name: Build for Windows
           command: |
