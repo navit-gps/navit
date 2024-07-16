@@ -186,7 +186,7 @@ jobs:
            destination: apk
   build_win32:
     docker:
-      - image: ubuntu:14.04
+      - image: ubuntu:ubuntu:24.04
     steps:
       - checkout
       - run: |
@@ -195,11 +195,7 @@ jobs:
       - run:
           name: Prepare the Windows build environment
           command: |
-            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
-            apt-get install -y software-properties-common
-            add-apt-repository -y ppa:george-edison55/cmake-3.x
-            apt-get remove -y cmake
-            apt-get install -y cmake3 mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+            bash scripts/build_win32.sh
       - run:
           name: Build for Windows
           command: |
