@@ -186,7 +186,7 @@ jobs:
            destination: apk
   build_win32:
     docker:
-      - image: ubuntu:ubuntu:24.04
+      - image: ubuntu:24.04
     steps:
       - checkout
       - run: |
