@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.6
-Release: 2
+Release: 3
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+*Sun Dec 01 2024 metalstrolch 0.5.6-3
+- Rebuild with newer sailfish sdk
+
 *Thu May 19 2022 metalstrolch 0.5.6-2
 - Enable sailjail
 - local config dir in $HOME changed to ~/.config/org.naviproject/navit
