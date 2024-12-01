@@ -3,7 +3,7 @@ set -e
 
 wget https://packages.cloud.google.com/apt/doc/apt-key.gpg && sudo apt-key add apt-key.gpg
 
-sudo apt-get update
+#sudo apt-get update
 sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
 gem install --no-document domain_name -v 0.5.20190701
 gem install --no-document git -v 1.19.1
