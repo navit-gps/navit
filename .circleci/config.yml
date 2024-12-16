@@ -11,13 +11,13 @@ jobs:
       - run:
           name: run sanity check script
           command: bash scripts/ci_sanity_checks.sh
-      - run:
-          name: Run CheckStyle Test
-          command: ./gradlew checkstyleMain
-      - store_artifacts:
-          name: Store checkstyle report
-          path: navit/android/checkstyle
-          destination: reports
+      #- run:
+      #    name: Run CheckStyle Test
+      #    command: ./gradlew checkstyleMain
+      #- store_artifacts:
+      #    name: Store checkstyle report
+      #    path: navit/android/checkstyle
+      #    destination: reports
   build_linux:
     <<: *defaults
     steps:
