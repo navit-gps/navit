@@ -179,7 +179,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: navit/tomtom-ng
+        image: ghcr.io/navit-gps/tomtom:master
     steps:
       - uses: actions/checkout@v2
       - name: Prepare the tomtom build environment
@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: navit/tomtom-ng
+        image: ghcr.io/navit-gps/tomtom:master
     steps:
       - uses: actions/checkout@v2
       - name: Prepare the tomtom build environment
