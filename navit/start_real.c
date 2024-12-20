@@ -97,9 +97,7 @@ int main_real(int argc, char * const* argv) {
     }
 #ifdef HAVE_API_WIN32_CE
     else {
-//        debug_set_logfile("/Storage Card/navit.log");
-        debug_set_logfile(stdout);
-        //debug_set_global_level(3, 1);
+        debug_set_logfile("/Storage Card/navit.log");
     }
 #endif
     file_init();
