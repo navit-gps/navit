@@ -23,7 +23,7 @@ jobs:
         # FIXME: deactivated as somethings broken with it
         #- name: Run CheckStyle Test
         #  run: ./gradlew checkstyleMain
-        #- uses: actions/upload-artifact@v1
+        #- uses: actions/upload-artifact@v4
         #  with:
         #    name: Store checkstyle report
         #    path: navit/android/checkstyle
@@ -63,7 +63,7 @@ jobs:
         run: cd navit && doxygen
       - name: Update results to Github
         run: bash scripts/update_doxygen.sh
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: /root/project/doc
   build_sailfish:
@@ -78,7 +78,7 @@ jobs:
         run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
         env:
             VERSION_ID: 4.4.0.64
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: Store rpm
           path: rpmbuild/RPMS/
@@ -107,23 +107,23 @@ jobs:
             ./gradlew lint test
       - name: Run Javadoc
         run: ./gradlew generateDebugJavadoc
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Store APK
           path: build/outputs/apk
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Store logs
           path: build/outputs/logs
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Store Javadoc
           path: build/outputs/docs/javadoc
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Store Lint reports
           path: build/reports
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Android Test-results
           path: test-results
@@ -169,7 +169,7 @@ jobs:
             bash scripts/setup_wince.sh
       - name: Build for Windows CE
         run: bash scripts/build_wince.sh
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: wince/output
           name: WinCE Binary
