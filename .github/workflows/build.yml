@@ -159,23 +159,26 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: navit/dockerfiles:wince
+        image: ghcr.io/enlyze/windows-ce-build-environment-arm
     steps:
       - uses: actions/checkout@v1
-      - run: |
-          apt-get update && apt-get install -y git-core
+
+      #- run: apt-get update && apt-get install -y git-core
+
       - name: Prepare the WinCE build environment
-        run: |
-            bash scripts/setup_wince.sh
+        run: bash scripts/setup_wince.sh
+
       - name: Build for Windows CE
         run: bash scripts/build_wince.sh
+
       - uses: actions/upload-artifact@v4
         with:
           path: wince/output
           name: WinCE Binary
+
       - name: Update Navit-Download-Center
-        run: |
-            bash scripts/update_download_center.sh
+        run: bash scripts/update_download_center.sh
+
   build_tomtom_minimal:
     runs-on: ubuntu-latest
     needs: sanity_check
