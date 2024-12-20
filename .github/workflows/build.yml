@@ -43,7 +43,7 @@ jobs:
            apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
       - name: Build for Linux
         run: bash scripts/build_linux.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
            name: Linux Artifacts
            path: linux/_CPack_Packages
@@ -148,7 +148,7 @@ jobs:
       - name: Build for Windows
         run: |
             bash scripts/build_win32.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Win32
           path: win32/navit.exe
@@ -189,7 +189,7 @@ jobs:
             apt-get install -y xsltproc
       - name: Build for Tomtom (minimal)
         run: bash scripts/build_tomtom_minimal.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Tomtom Minimal
           path: /output
@@ -210,7 +210,7 @@ jobs:
       - name: Build for Tomtom (plugin)
         run: |
             bash scripts/build_tomtom_plugin.sh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Tomtom Plugin
           path: /output
