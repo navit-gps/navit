@@ -2,7 +2,7 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'org.ajoberstar:grgit:2.3.0'
