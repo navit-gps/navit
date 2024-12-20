@@ -134,17 +134,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: ubuntu:16.04
+        image: ubuntu:24.04
     steps:
       - uses: actions/checkout@v2
       - run: |
           apt-get update && apt-get install -y git
       - name: Prepare the Windows build environment
-        run: |
-            apt-get update && xargs -a scripts/setup_14.04_requirements.list apt-get install -y
-            apt-get install -y software-properties-common
-            add-apt-repository -y ppa:george-edison55/cmake-3.x
-            apt-get install -y cmake mingw-w64 mingw-w64-tools default-jdk nsis libsaxonb-java curl
+        run: bash scripts/setup_win32.sh
       - name: Build for Windows
         run: |
             bash scripts/build_win32.sh
