@@ -142,7 +142,7 @@ fi
 *Thu May 19 2022 metalstrolch 0.5.6-2
 - Enable sailjail
 - local config dir in $HOME changed to ~/.config/org.naviproject/navit
-- default map location now /home/nemo/Documents/map.navit.bin due to sailjail
+- default map location now /home/appsupport-root/Documents/map.navit.bin due to sailjail
 
 *Mon Oct 01 2018 metalstrolch 0.5.3-1
 - fix rpm updating from 0.5.1 by adding %pre section
