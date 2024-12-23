@@ -75,6 +75,7 @@ mkdir navit-build
 %build
 %define debug_package %{nil}
 %{__rm} -rf %{buildroot}
+%define _unpackaged_files_terminate_build 0
 #cmake git files directly
 cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DPACKAGE:STRING=harbour-navit \
