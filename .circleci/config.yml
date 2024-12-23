@@ -71,7 +71,7 @@ jobs:
           command: ls -lah ../rpmbuild && docker run -e VERSION_ID=4.6.0.13 -v `pwd`/../rpmbuild:/home/appsupport-root/rpmbuild:rw -v `pwd`:/home/appsupport-root/navit ghcr.io/hoehnp/sailfishos-platform-sdk:4.6.0.13 /bin/bash -x /home/appsupport-root/navit/contrib/sailfish/build_sailfish_ci_4.6.sh
       - run:
           name: remake build dir
-          command:  rm -rf ../rpmbuild && mkdir ../rpmbuild && chmod 777 ../rpmbuild
+          command:  rm -rf ../rpmbuild/*
       - run:
           name: run build 5.0
           command: ls -lah ../rpmbuild && docker run -e VERSION_ID=5.0.0.29 -v `pwd`/../rpmbuild:/home/appsupport-root/rpmbuild:rw -v `pwd`:/home/appsupport-root/navit ghcr.io/hoehnp/sailfishos-platform-sdk:5.0.0.29 /bin/bash -x /home/appsupport-root/navit/contrib/sailfish/build_sailfish_ci_5.0.sh
