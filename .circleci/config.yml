@@ -74,9 +74,7 @@ jobs:
           command: ls -lah ../rpmbuild && docker run -e VERSION_ID=5.0.0.29 -v `pwd`/../rpmbuild2:/home/appsupport-root/rpmbuild2:rw -v `pwd`:/home/appsupport-root/navit ghcr.io/hoehnp/sailfishos-platform-sdk:5.0.0.29 /bin/bash -x /home/appsupport-root/navit/contrib/sailfish/build_sailfish_ci_5.0.sh
       - store_artifacts:
           name: Store rpm
-          paths: 
-            - ../rpmbuild/RPMS/
-            - ../rpmbuild2/RPMS/
+          path: ../
           destination: rpmbuild
   build_android:
     working_directory: ~/code
