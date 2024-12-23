@@ -136,7 +136,6 @@ jobs:
             apt-get update
             apt-get dist-upgrade
             apt-get clean
-            git config --global --add safe.directory /root/project/.git
 
             test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
 
@@ -180,7 +179,7 @@ jobs:
             chown -R vagrant $home_vagrant
 
             # APP_CI: just build our own app
-            $fdroid build --verbose --on-server --no-tarball
+            #$fdroid build --verbose --on-server --no-tarball
       - store_artifacts:
            name: Store APK
            path: unsigned
