@@ -136,6 +136,7 @@ jobs:
             apt-get update
             apt-get dist-upgrade
             apt-get clean
+            git config --global --add safe.directory /root/project/.git
 
             test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
 
