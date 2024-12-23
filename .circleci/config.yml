@@ -128,7 +128,6 @@ jobs:
     docker:
       - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
     steps:
-      - checkout
       - run:
           name: Build with F-Droid
           command: |
@@ -179,7 +178,7 @@ jobs:
             chown -R vagrant $home_vagrant
 
             # APP_CI: just build our own app
-            #$fdroid build --verbose --on-server --no-tarball
+            $fdroid build --verbose --on-server --no-tarball
       - store_artifacts:
            name: Store APK
            path: unsigned
