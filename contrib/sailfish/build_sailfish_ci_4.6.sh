@@ -15,11 +15,11 @@ mkdir $HOME/rpmbuild
 
 #arm devices
 sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
-sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/appsupport-root/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish.spec
+sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/appsupport-root/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish_4.6.spec
 #intel devices
 #sb2 -t SailfishOS-${VERSION_ID}-i486 -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
 #sb2 -t SailfishOS-${VERSION_ID}-i486 -m sdk-build rpmbuild --define "_topdir /home/nemo/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish.spec
 #64 bit devices
 sb2 -t SailfishOS-${VERSION_ID}-aarch64 -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish.spec | sed -e "s/BuildRequires: //")
-sb2 -t SailfishOS-${VERSION_ID}-aarch64 -m sdk-build rpmbuild --define "_topdir /home/appsupport-root/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish.spec
+sb2 -t SailfishOS-${VERSION_ID}-aarch64 -m sdk-build rpmbuild --define "_topdir /home/appsupport-root/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish_4.6.spec
 
