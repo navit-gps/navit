@@ -135,6 +135,7 @@ jobs:
             # Mostly copied from fdroidserver’s own CI script (fdroid build), except for everything marked APP_CI
             apt-get update
             apt-get dist-upgrade
+            apt-get install python3-pip
             apt-get clean
 
             test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
