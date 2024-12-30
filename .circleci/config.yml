@@ -128,6 +128,7 @@ jobs:
     docker:
       - image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
     steps:
+      - checkout
       - run:
           name: Build with F-Droid
           command: |
