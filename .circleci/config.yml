@@ -137,7 +137,7 @@ jobs:
             apt-get dist-upgrade
             apt-get install python3-tomli
             apt-get clean
-            chown -R $(whoami) /root/project
+            chown -R vagrant /root/project
 
             test -n "$fdroidserver" || source /etc/profile.d/bsenv.sh
 
