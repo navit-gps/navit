@@ -111,7 +111,7 @@ fi
 %install
 %make_install
 #copy in sailfish config
-#cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
+cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 
 %files
 %defattr(644, root, root, 755)
