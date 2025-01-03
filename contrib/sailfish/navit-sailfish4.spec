@@ -24,9 +24,6 @@ BuildRequires: gettext-devel
 #BuildRequires: freetype-devel
 BuildRequires: libxslt
 BuildRequires: libxslt-devel
-BuildRequires: libsvg
-BuildRequires: libsvg-tools
-BuildRequires: libsvg-devel
 BuildRequires: dbus-glib
 BuildRequires: libgps
 BuildRequires: zlib-devel
