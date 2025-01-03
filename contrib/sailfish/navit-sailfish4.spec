@@ -23,6 +23,8 @@ BuildRequires: glib2-devel
 BuildRequires: gettext-devel
 #BuildRequires: freetype-devel
 BuildRequires: dbus-glib
+BuildRequires: saxon
+BuildRequires: rsvg-convert
 BuildRequires: libgps
 BuildRequires: zlib-devel
 BuildRequires: qt5-qtcore-devel
