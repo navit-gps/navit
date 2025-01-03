@@ -13,6 +13,9 @@ cd $SCRIPTPATH
 ls -lah /navit
 mkdir $HOME/rpmbuild
 
+# test install additional packages
+apt-get install rsvg-convert saxon-xslt
+
 #arm devices
 sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-install -R zypper --non-interactive in $(grep "^BuildRequires: " navit-sailfish4.spec | sed -e "s/BuildRequires: //")
 sb2 -t SailfishOS-${VERSION_ID}-armv7hl -m sdk-build rpmbuild --define "_topdir /home/appsupport-root/rpmbuild" --define "navit_source ${SCRIPTPATH}/../.." -bb navit-sailfish4.spec
