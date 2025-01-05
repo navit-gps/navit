@@ -89,7 +89,7 @@ To record your trip , you can add a sub-instance "log" to the vehicle. It is pos
 This will give a log file named YearMonthDaySequencenumber.gpx/.nmea which will be kept in memory and flushed to disk when it is 1048576 bytes large or the oldest data is older than 900 seconds.
 .. how to define, where the file get's stored?
 
-To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display 
+To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display
 .. do I need to add it as a map source?
 
 .. code-block:: xml

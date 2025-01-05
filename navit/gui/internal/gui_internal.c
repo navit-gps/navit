@@ -1755,7 +1755,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     download_disabled.u.num=0;
     f = fopen("maps/menu.tsv", "r");
 
-    
+
     while (f && fgets(buffer, sizeof(buffer), f)) {
 	gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
                                    gravity_left|orientation_horizontal|flags_fill));
@@ -1765,7 +1765,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
 	dl_info->name = g_strsplit(buffer,"\t",0)[0];
         dl_info->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", dl_info->name, ".bin",  NULL);
         dl_info->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", dl_info->name, ".xml",  NULL);
-	dl_info->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", dl_info->name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL); 
+	dl_info->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", dl_info->name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
 
         wl=gui_internal_button_new_with_callback(this, buffer, NULL,
                     gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, dl_info);

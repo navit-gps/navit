@@ -8,7 +8,7 @@ The ideal Navit setups consists of some basic things.
 3) A GPS to lat navit know where you are
 
 Additionally we need to tell Navit about how our setup looks like.
-There are 
+There are
 
 Get a supported map package
 ---------------------------
