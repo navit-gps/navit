@@ -26,9 +26,9 @@ continents = ['africa', 'antarctica', 'asia', 'australia_oceania', 'central_amer
 countries_europe_subregion = ['france', 'germany', 'great_britain', 'italy', 'netherlands', 'poland']
 countries_europe = ['albania', 'andorra', 'austria', 'azores', 'belarus', 'belgium',
 'bosnia_herzegovina', 'bulgaria', 'croatia', 'cyprus', 'czech_republic', 'denmark', 'estonia',
-'faroe_islands', 'finland','france',  'georgia', 'germany', 'great_britain', 'greece', 'guernsey_jersey', 'hungary', 'iceland', 'ireland_and_northern_ireland', 'isle_of_man', 'italy', 'kosovo', 'latvia', 'liechtenstein', 'lithuania', 'luxembourg', 'macedonia', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'norway', 'poland', 'portugal', 'romania', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland', 'turkey', 'ukraine'] 
+'faroe_islands', 'finland','france',  'georgia', 'germany', 'great_britain', 'greece', 'guernsey_jersey', 'hungary', 'iceland', 'ireland_and_northern_ireland', 'isle_of_man', 'italy', 'kosovo', 'latvia', 'liechtenstein', 'lithuania', 'luxembourg', 'macedonia', 'malta', 'moldova', 'monaco', 'montenegro', 'netherlands', 'norway', 'poland', 'portugal', 'romania', 'serbia', 'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland', 'turkey', 'ukraine']
 countries_africa = ['algeria', 'angola', 'benin', 'botswana', 'burkina_faso', 'burundi', 'cameroon', 'canary_islands', 'cape_verde', 'central_african_republic', 'chad', 'comores', 'congo_brazzaville', 'congo_democratic_republic', 'djibouti', 'egypt', 'equatorial_guinea', 'eritrea', 'ethiopia', 'gabon', 'ghana', 'guinea', 'guinea_bissau', 'ivory_coast', 'kenya', 'lesotho', 'liberia', 'libya', 'madagascar', 'malawi', 'mali', 'mauritania', 'mauritius', 'morocco', 'mozambique', 'namibia', 'niger', 'nigeria', 'rwanda', 'saint_helena_ascension_and_tristan_da_cunha', 'sao_tome_and_principe', 'senegal_and_gambia', 'seychelles', 'sierra_leone', 'somalia', 'south_africa', 'south_sudan', 'sudan', 'swaziland', 'tanzania', 'togo', 'tunisia', 'uganda', 'zambia', 'zimbabwe']
-countries_asia = ['afghanistan', 'armenia', 'azerbaijan', 'bangladesh', 'bhutan', 'cambodia', 'china', 'gcc_states', 'india', 'indonesia', 'iran', 'iraq', 'israel_and_palestine', 'japan', 'jordan', 'kazakhstan', 'kyrgyzstan', 'laos', 'lebanon', 'malaysia_singapore_brunei', 'maldives', 'mongolia', 'myanmar', 'nepal', 'north_korea', 'pakistan', 'philippines', 'south_korea', 'sri_lanka', 'syria', 'taiwan', 'tajikistan', 'thailand', 'turkmenistan', 'uzbekistan', 'vietnam', 'yemen'] 
+countries_asia = ['afghanistan', 'armenia', 'azerbaijan', 'bangladesh', 'bhutan', 'cambodia', 'china', 'gcc_states', 'india', 'indonesia', 'iran', 'iraq', 'israel_and_palestine', 'japan', 'jordan', 'kazakhstan', 'kyrgyzstan', 'laos', 'lebanon', 'malaysia_singapore_brunei', 'maldives', 'mongolia', 'myanmar', 'nepal', 'north_korea', 'pakistan', 'philippines', 'south_korea', 'sri_lanka', 'syria', 'taiwan', 'tajikistan', 'thailand', 'turkmenistan', 'uzbekistan', 'vietnam', 'yemen']
 countries_australia_oceania = ['american_oceania', 'australia', 'cook_islands', 'fiji', 'ile_de_clipperton', 'kiribati', 'marshall_islands', 'micronesia', 'nauru', 'new_caledonia', 'new_zealand', 'niue', 'palau', 'papua_new_guinea', 'pitcairn_islands', 'polynesie_francaise', 'samoa', 'solomon_islands', 'tokelau', 'tonga', 'tuvalu', 'vanuatu', 'wallis_et_futuna']
 countries_central_america = ['bahamas', 'belize', 'costa_rica', 'cuba', 'el_salvador', 'guatemala', 'haiti_and_domrep', 'honduras', 'jamaica', 'nicaragua']
 countries_north_america_subregion = ['canada', 'us']
@@ -54,11 +54,11 @@ for continent in continents:
             size_country = 0
             if country in countries_europe_subregion:
                 for region in eval("regions_" + country):
-                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    map_size = maps_size[continent + "_" + country + "_" + region]
                     size_country = size_country + map_size
                     listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
             else:
-                size_country = maps_size[continent + "_" + country] 
+                size_country = maps_size[continent + "_" + country]
             listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_europe = size_europe + size_country
         listdata.append(['europe', format_filesize(size_europe)])
@@ -69,11 +69,11 @@ for continent in continents:
                 size_country = 0
                 for region in eval("regions_" + country):
                     size_country = size_country + map_size
-                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    map_size = maps_size[continent + "_" + country + "_" + region]
                     listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
 
             else:
-                size_country = maps_size[continent + "_" + country] 
+                size_country = maps_size[continent + "_" + country]
             listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_north_america = size_north_america + size_country
         listdata.append(['north_america', format_filesize(size_north_america)])
@@ -83,11 +83,11 @@ for continent in continents:
             size_country = 0
             if country in countries_south_america_subregion:
                 for region in eval("regions_" + country):
-                    map_size = maps_size[continent + "_" + country + "_" + region] 
+                    map_size = maps_size[continent + "_" + country + "_" + region]
                     size_country = size_country + map_size
                     listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
             else:
-                size_country = maps_size[continent + "_" + country] 
+                size_country = maps_size[continent + "_" + country]
             listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_south_america = size_south_america + size_country
         listdata.append(['south_america', format_filesize(size_south_america)])
@@ -96,7 +96,7 @@ for continent in continents:
     else:
         size_continent = 0
         for country in eval("countries_" + continent):
-            map_size = maps_size[continent + "_" + country] 
+            map_size = maps_size[continent + "_" + country]
             size_continent = size_continent + map_size
             listdata.append([continent+"_"+country, format_filesize(map_size)])
             size_continent = size_continent + map_size
