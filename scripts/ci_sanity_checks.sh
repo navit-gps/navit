@@ -43,13 +43,13 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
         # Formats any *.c and *.cpp files
         if [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
             echo "[INFO] Checking for indentation and style compliance on ${f}..."
-            #astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"
+            astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"
             check_diff
         fi
 
         if [[ "${f: -11}" == "shipped.xml" ]]; then
             echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
-            #xmllint --noout --dtdvalid navit/navit.dtd "$f"
+            xmllint --noout --dtdvalid navit/navit.dtd "$f"
             rc=$?
             if [[ $rc -ne 0 ]]; then
                 echo "[ERROR] Your ${f} file doesn't validate against the navit/navit.dtd using xmllint"
