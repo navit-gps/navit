@@ -217,7 +217,7 @@ jobs:
     steps:
       - checkout
       - run: |
-          apt-get update && apt-get install -y git-core
+          apt-get update && apt-get install -y git-core 
           if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: Prepare the WinCE build environment
@@ -239,7 +239,7 @@ jobs:
           name: Prepare the tomtom build environment
           command: |
             bash scripts/setup_common_requirements.sh
-            apt-get install -y xsltproc
+            apt-get install -y xsltproc cjson libcurl-dev
       - run:
           name: Build for Tomtom (minimal)
           command: |
