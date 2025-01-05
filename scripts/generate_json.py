@@ -1,6 +1,17 @@
 import requests
 import pandas as pd
+import numpy as np
 
+
+def format_filesize(map_size):
+    if map_size<1024:
+        return str(map_size) + " B"
+    elif map_size<1024*1024:
+        return str(np.round(map_size/1024,0)) + " KiB"
+    elif map_size<1024*1024*1024:
+        return str(np.round(map_size/1024/1024,0)) + " MiB"
+    elif map_size>=1024*1024*1024:
+        return str(np.round(map_size/1024/1024/1024,0)) + " GiB"
 
 base_url = 'https://api.github.com/repositories/384098365/releases/latest'
 
@@ -45,13 +56,12 @@ for continent in continents:
                 for region in eval("regions_" + country):
                     map_size = maps_size[continent + "_" + country + "_" + region] 
                     size_country = size_country + map_size
-                    listdata.append([continent+"_"+country+"_"+region, map_size])
-              
+                    listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
             else:
                 size_country = maps_size[continent + "_" + country] 
-            listdata.append([continent+"_"+country, size_country])
+            listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_europe = size_europe + size_country
-        listdata.append(['europe', size_europe])
+        listdata.append(['europe', format_filesize(size_europe)])
     elif continent == 'north_america':
         size_north_america = 0
         for country in countries_north_america:
@@ -60,13 +70,13 @@ for continent in continents:
                 for region in eval("regions_" + country):
                     size_country = size_country + map_size
                     map_size = maps_size[continent + "_" + country + "_" + region] 
-                    listdata.append([continent+"_"+country+"_"+region, map_size])
+                    listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
 
             else:
                 size_country = maps_size[continent + "_" + country] 
-            listdata.append([continent+"_"+country, size_country])
+            listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_north_america = size_north_america + size_country
-        listdata.append(['north_america', size_north_america])
+        listdata.append(['north_america', format_filesize(size_north_america)])
     elif continent == 'south_america':
         size_south_america = 0
         for country in countries_south_america:
@@ -75,25 +85,24 @@ for continent in continents:
                 for region in eval("regions_" + country):
                     map_size = maps_size[continent + "_" + country + "_" + region] 
                     size_country = size_country + map_size
-                    listdata.append([continent+"_"+country+"_"+region, map_size])
+                    listdata.append([continent+"_"+country+"_"+region, format_filesize(map_size)])
             else:
                 size_country = maps_size[continent + "_" + country] 
-            listdata.append([continent+"_"+country, size_country])
+            listdata.append([continent+"_"+country, format_filesize(size_country)])
             size_south_america = size_south_america + size_country
-        listdata.append(['south_america', size_south_america])
+        listdata.append(['south_america', format_filesize(size_south_america)])
     elif continent == 'antarctica':
-        listdata.append(['antartica', maps_size[continent]])
+        listdata.append(['antartica', format_filesize(maps_size[continent])])
     else:
         size_continent = 0
         for country in eval("countries_" + continent):
             map_size = maps_size[continent + "_" + country] 
             size_continent = size_continent + map_size
-            listdata.append([continent+"_"+country, map_size])
+            listdata.append([continent+"_"+country, format_filesize(map_size)])
             size_continent = size_continent + map_size
-        listdata.append([continent, size_continent])
+        listdata.append([continent, format_filesize(size_continent)])
     size_planet = size_planet + size_continent
 
-pd.concat([pd.DataFrame([['planet',size_planet]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).to_csv('./menu.tsv', header=False, index=False, sep="\t")
+pd.concat([pd.DataFrame([['planet',format_filesize(size_planet)]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).to_csv('./menu.tsv', header=False, index=False, sep="\t")
 
-pd.concat([pd.DataFrame([['planet',size_planet]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).reset_index(drop=True).to_xml('test.xml', index=False,
-elem_cols=['name', 'size'])
+pd.concat([pd.DataFrame([['planet',format_filesize(size_planet)]]),pd.DataFrame(listdata).sort_values(by=[0]).drop_duplicates()]).reset_index(drop=True).to_xml('test.xml', index=False, elem_cols=['name', 'size'])
