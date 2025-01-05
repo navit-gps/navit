@@ -147,9 +147,6 @@ public class NavitMapDownloader extends Thread {
                          350750954L, 1),
         new OsmMapValues(R.string.europe, "-12.97", "33.59", "34.15", "72.10",
                          15902268761L, 0),
-        // Is more than 'Europe' from above where 'western europe' should be smaller than europe
-        //new OsmMapValues(R.string.western_europe, "-17.6", "34.5", "42.9", "70.9",
-        //           16879410713L, 1),
         new OsmMapValues(R.string.austria, "9.4", "46.32", "17.21", "49.1",
                          1184302570L, 1),
         new OsmMapValues(R.string.azores, "-31.62", "36.63", "-24.67", "40.13",
@@ -609,7 +606,6 @@ public class NavitMapDownloader extends Thread {
             url = getDownloadURL();
         }
 
-        // URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
         URLConnection c = initConnection(url);
         if (c != null) {
 
@@ -813,8 +809,7 @@ public class NavitMapDownloader extends Thread {
             infoStream.close();
             // looks like the same file, try to resume
             Log.v(TAG, "Try to resume download");
-            String resumeProto = infoStream.readUTF();
-            url = new URL(resumeProto + "://" + "maps.navit-project.org" + resumeFile);
+            url = new URL("https://" + "maps.navit-project.org" + resumeFile);
         } catch (Exception e) {
             getMapInfoFile().delete();
         }
