@@ -312,14 +312,14 @@ workflows:
   version: 2
   build_all:
     jobs:
-      - build_linux:
-      - build_android:
-      - build_fdroid:
-      - build_sailfish:
-      - build_win32:
-      - build_wince:
-      - build_tomtom_minimal:
-      - build_tomtom_plugin:
+      - build_linux
+      - build_android
+      - build_fdroid
+      - build_sailfish
+      - build_win32
+      - build_wince
+      - build_tomtom_minimal
+      - build_tomtom_plugin
       - run_doxygen:
           requires:
             - build_linux
