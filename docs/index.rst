@@ -111,7 +111,7 @@ Main Features
    user/faq/Gpsd Troubleshooting
    user/faq/Troubleshooting
 
-   
+
 .. Indices and tables
 .. ------------------
 
