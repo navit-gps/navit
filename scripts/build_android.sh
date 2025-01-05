@@ -33,7 +33,7 @@ pushd $BUILD_PATH
 echo Run CMake
 test -z "$PKG_CONFIG_LIBDIR" && export PKG_CONFIG_LIBDIR=""     # Force cmake below to run ignore build host libraries when using pkgconfig.
 # Note: If you want to compile against specific target libraries that are searched using pkgconfig, please run this script with variable PKG_CONFIG_LIBDIR set to the appropriate path
-cmake ../ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DDISABLE_CXX=y || exit 1
+cmake ../ -Dvehicle/gpsd_dbus:BOOL=FALSE -Dsvg2png_scaling:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_nav:STRING=-1,24,32,48,64,96,128,192,256 -Dsvg2png_scaling_flag:STRING=-1,24,32,64,96 -DXSL_PROCESSING=y -DXSLTS=android -DANDROID=y -DDISABLE_CXX=y -DDISABLE_QT=y || exit 1
 
 echo Process icons
 pushd navit/icons
@@ -42,7 +42,7 @@ rm -rf ../../android/res/drawable-nodpi
 mkdir -p ../../android/res/drawable-nodpi
 cp ./*.png ../../android/res/drawable-nodpi
 pushd ../../android/res/drawable-nodpi
-rename -f 'y/A-Z/a-z/' ./*.png
+rename 'y/A-Z/a-z/' ./*.png
 popd
 popd
 
@@ -53,7 +53,7 @@ rm -rf ../android/res/raw
 mkdir -p ../android/res/raw
 cp ./*.mo ../android/res/raw
 pushd ../android/res/raw
-rename -f 'y/A-Z/a-z/' ./*.mo
+rename 'y/A-Z/a-z/' ./*.mo
 popd
 popd
 
