@@ -9,12 +9,13 @@
 # Ossi Berg https://launchpad.net/~fso-polonez
 # Roadrunner IN https://launchpad.net/~online
 # Timo Jyrinki https://launchpad.net/~timo-jyrinki
+# Ricky Tigg <ricky.tigg@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-01-15 11:00+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/navit/navit-core/"
 "fi/>\n"
 "Language: fi\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1874,10 +1875,10 @@ msgid "Show Satellite Status"
 msgstr "Näytä satelliittien tila"
 
 msgid " Elevation "
-msgstr " Korkeus "
+msgstr ""
 
 msgid " Azimuth "
-msgstr " Atsimuutti "
+msgstr ""
 
 msgid "Show NMEA Data"
 msgstr "Näytä NMEA-tiedot"
