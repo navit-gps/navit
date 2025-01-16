@@ -10,12 +10,13 @@
 # Roadrunner IN https://launchpad.net/~online
 # Timo Jyrinki https://launchpad.net/~timo-jyrinki
 # Ricky Tigg <ricky.tigg@gmail.com>, 2025.
+# jkoan <jkoan@gmx.de>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-15 11:00+0000\n"
-"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"PO-Revision-Date: 2025-01-16 09:07+0000\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/navit/navit-core/"
 "fi/>\n"
 "Language: fi\n"
@@ -1875,10 +1876,10 @@ msgid "Show Satellite Status"
 msgstr "Näytä satelliittien tila"
 
 msgid " Elevation "
-msgstr ""
+msgstr "Korkeus"
 
 msgid " Azimuth "
-msgstr ""
+msgstr "Atsimuutti"
 
 msgid "Show NMEA Data"
 msgstr "Näytä NMEA-tiedot"
