@@ -4,12 +4,13 @@
 # Many thanks to the contributors of this translation:
 # Dinesh Ramalingam https://launchpad.net/~dinodinu+navit
 # Rajiv Subrahmanyam https://launchpad.net/~rajiv-public
+# தமிழ்நேரம் <anishprabu.t@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-01-19 09:13+0000\n"
+"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
 "Language: ta\n"
@@ -17,11 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "மூல கோப்பகத்திலிருந்து இயங்குகிறது\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -29,7 +30,7 @@ msgstr "'%s', '%s' ஆக மாற்றபடுகின்றது\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr ""
+msgstr "சீரோத்"
 
 msgid "first"
 msgstr "முதல்"
@@ -51,7 +52,7 @@ msgstr "ஆறாவது"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr ""
+msgstr "சீரோத் வெளியேறுதல்"
 
 msgid "first exit"
 msgstr "முதல் வெளியேற்றம்"
@@ -140,21 +141,21 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "% 1 $ வாரம்% 2 $ கள்"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "% 1 $ வாரம்% 2 $ கள்"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "% 1 $ வாரம்% 2 $ கள்"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
-msgstr ""
+msgstr "மின்னோடி பாதை வளைவில்"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -164,25 +165,25 @@ msgstr ""
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
-msgstr ""
+msgstr "%மன்னிக்கவும்%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
-msgstr ""
+msgstr "%மன்னிக்கவும்%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
-msgstr ""
+msgstr "%மன்னிக்கவும்%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%சிண்டோ %s"
 
 msgid "When possible, please turn around"
-msgstr ""
+msgstr "முடிந்தால், தயவுசெய்து திரும்பவும்"
 
 #. TRANSLATORS: the argument is the destination to follow
 #, c-format
@@ -221,22 +222,22 @@ msgstr ""
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "பின்னர்%1$s ஐ இணைக்கவும்"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "%1$s %2$s ஐ இணைக்கவும்"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "பின்னர்%1$s ஐ இணைக்கவும்"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "%1$s %2$s ஐ இணைக்கவும்"
 
 msgid "on your left"
 msgstr ""
@@ -293,11 +294,11 @@ msgstr ""
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr ""
+msgstr "வலது"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr ""
+msgstr "இடது"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
@@ -305,7 +306,7 @@ msgstr "இயல்பாக "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr ""
+msgstr "வலுவாக "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
@@ -313,34 +314,34 @@ msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "%2$s க்கு %1$s சாலையை எடுத்துக் கொள்ளுங்கள்"
 
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "%நான் சாலைகளுக்குப் பிறகு"
 
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "%1$s %2$s %3$s %4 $ s ஐத் திருப்புங்கள்"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "பின்னர் யு-டர்ன் செய்யுங்கள்"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "U-turn %1$s ஐ உருவாக்குங்கள்"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "பின்னர் யு-டர்ன் செய்யுங்கள்"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
 #, c-format
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "U-turn %1$s ஐ உருவாக்குங்கள்"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -358,19 +359,19 @@ msgid "follow"
 msgstr ""
 
 msgid "then you have reached your destination."
-msgstr ""
+msgstr "நீங்கள் உங்கள் இலக்கை அடைந்துவிட்டீர்கள்."
 
 #. TRANSLATORS: the arg. is distance
 #, c-format
 msgid "You have reached your destination %s"
-msgstr ""
+msgstr "நீங்கள் உங்கள் இலக்கை அடைந்துவிட்டீர்கள்"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
-msgstr ""
+msgstr "பரிமாற்றம்"
 
 msgid "Exit"
-msgstr ""
+msgstr "வெளியேறு"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
@@ -1692,7 +1693,7 @@ msgid "Select a category"
 msgstr ""
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "திரை மையத்திலிருந்து ஒரு தேடல் ஆரம் என்பதைத் தேர்ந்தெடுக்கவும்"
 
 msgid "Select a POI"
 msgstr ""
@@ -1707,7 +1708,7 @@ msgid "Direction"
 msgstr ""
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "தூரம்"
 
 msgid "Name"
 msgstr ""
@@ -2743,11 +2744,11 @@ msgstr ""
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d மீ"
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "%d m இல்"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
