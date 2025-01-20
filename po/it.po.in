@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-20 17:16+0000\n"
+"PO-Revision-Date: 2025-01-20 17:20+0000\n"
 "Last-Translator: bovirus <roberto.boriotti@canon.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/navit/navit-core/"
 "it/>\n"
@@ -1896,10 +1896,10 @@ msgid "Show Satellite Status"
 msgstr "Visualizza stato satellite"
 
 msgid " Elevation "
-msgstr " Elevazione "
+msgstr "Elevazione"
 
 msgid " Azimuth "
-msgstr " Azimuth "
+msgstr "Azimuth"
 
 msgid "Show NMEA Data"
 msgstr "Visualizza dati NMEA"
@@ -2363,7 +2363,7 @@ msgid "USA"
 msgstr "Stati Uniti d'America"
 
 msgid " (except Alaska and Hawaii)"
-msgstr " (eccetto Alaska e Hawaii)"
+msgstr "(eccetto Alaska e Hawaii)"
 
 msgid "Midwest"
 msgstr "Stati Uniti medio occidentali"
@@ -2660,7 +2660,7 @@ msgstr "Backup/ripristino"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "@strings/optionsmenu_set_map_location"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
