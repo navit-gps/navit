@@ -24,6 +24,13 @@
       <xsl:attribute name="follow">1</xsl:attribute>
       <xsl:apply-templates/></xsl:copy>
    </xsl:template>
+   <xsl:template match="/config/navit/vehicle[2]">
+      <xsl:copy><xsl:copy-of select="@*[not(name()='gpsd_query')]"/>
+      <xsl:attribute name="source">demo:</xsl:attribute>
+      <xsl:attribute name="follow">1</xsl:attribute>
+      <xsl:attribute name="active">0</xsl:attribute>
+      <xsl:apply-templates/></xsl:copy>
+   </xsl:template>
    <xsl:template match="/config/navit/speech">
       <xsl:copy>
          <xsl:copy-of select="@*[not(name()='data')]"/>

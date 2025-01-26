@@ -24,7 +24,7 @@
 
 pthread_mutex_t* g_mutex_new_navit(void);
 void g_get_current_time (GTimeVal *result);
-GPrivate g_private_new_navit ();
+GPrivate g_private_new_navit (void);
 
 #else
 # if HAVE_API_WIN32_BASE
@@ -41,12 +41,12 @@ GPrivate g_private_new_navit ();
 #endif
 
 char* g_convert               (const char  *str,
-				int        len,            
-				const char  *to_codeset,
-				const char  *from_codeset,
-				int        *bytes_read,     
-				int        *bytes_written,  
-				void      **error);
+                               int        len,
+                               const char  *to_codeset,
+                               const char  *from_codeset,
+                               int        *bytes_read,
+                               int        *bytes_written,
+                               void      **error);
 #define G_LOCK_DEFINE_STATIC(name)    //void
 #define G_LOCK(name) //void //g_mutex_lock       (&G_LOCK_NAME (name))
 #define G_UNLOCK(name) //void //g_mutex_unlock   (&G_LOCK_NAME (name))

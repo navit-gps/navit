@@ -31,7 +31,6 @@
 #include <string.h>
 #include <errno.h>
 #include "gmem.h"               /* gslice.h */
-#include "gthreadprivate.h"
 #include "glib.h"
 #include "galias.h"
 #include "fake.h"
@@ -42,7 +41,7 @@
 #include <windows.h>
 #include <process.h>
 #endif
-
+#include "gslice.h"
 #include <stdio.h>              /* fputs/fprintf */
 
 

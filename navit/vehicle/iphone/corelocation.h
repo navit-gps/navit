@@ -19,27 +19,28 @@
 #ifndef VEHICLE_IPHONE_CORELOCATION_H
 #define VEHICLE_IPHONE_CORELOCATION_H
 
-typedef void(*FT_LOCATION_CB)(void *, double , double , double , double, char *, double);
+typedef void(*FT_LOCATION_CB)(void *, double, double, double, double, char *, double);
 void corelocation_update(double lat,
-		double lng,
-		double dir,
-		double spd,
-		char * time,
-		double radius);
+                         double lng,
+                         double dir,
+                         double spd,
+                         char * time,
+                         double radius);
 void corelocation_init(void * pv_arg, FT_LOCATION_CB pf_cb);
 void corelocation_exit(void);
+void corelocation_req_auth(void);
 
 #ifdef VEHICLE_IPHONE_OBJC
 #import <CoreLocation/CoreLocation.h>
 
 
 @interface corelocation : NSObject <CLLocationManagerDelegate> {
-	CLLocationManager *locationManager;
-	NSDateFormatter *dateFormatter;
-	NSDate* eventDate;
+    CLLocationManager *locationManager;
+    NSDateFormatter *dateFormatter;
+    NSDate* eventDate;
 @public
-	FT_LOCATION_CB pf_cb;
-	void * pv_arg;
+    FT_LOCATION_CB pf_cb;
+    void * pv_arg;
 }
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
@@ -50,11 +51,11 @@ void corelocation_exit(void);
 @property (nonatomic) FT_LOCATION_CB pf_cb;
 
 - (void)locationManager:(CLLocationManager *)manager
-	didUpdateToLocation:(CLLocation *)newLocation
-		   fromLocation:(CLLocation *)oldLocation;
+    didUpdateToLocation:(CLLocation *)newLocation
+    fromLocation:(CLLocation *)oldLocation;
 
 - (void)locationManager:(CLLocationManager *)manager
-	   didFailWithError:(NSError *)error;
+    didFailWithError:(NSError *)error;
 
 @end
 
