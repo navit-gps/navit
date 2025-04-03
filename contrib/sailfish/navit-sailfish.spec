@@ -23,6 +23,7 @@ BuildRequires: glib2-devel
 BuildRequires: gettext-devel
 #BuildRequires: freetype-devel
 BuildRequires: zlib-devel
+BuildRequires: libxslt
 BuildRequires: qt5-qtcore-devel
 BuildRequires: qt5-qtdeclarative-devel
 BuildRequires: qt5-qtdbus-devel
