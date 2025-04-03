@@ -110,6 +110,9 @@ fi
 
 %install
 %make_install
+# prune bogus files
+for a in $(find %{buildroot} -name "*.a"); do rm $a; done;
+
 #copy in sailfish config
 #cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 
@@ -139,7 +142,7 @@ fi
 
 
 %changelog
-*Sun Dec 01 2024 metalstrolch 0.5.6-3
+*Thu Apr 03 2025 metalstrolch 0.5.6-3
 - Rebuild with newer sailfish sdk
 
 *Thu May 19 2022 metalstrolch 0.5.6-2
@@ -174,7 +177,7 @@ To get the latest builds, see: http://download.navit-project.org/
 - Fix medium GUI icon size to cope with changed icon set on upstream
 - Update upstream
 
-*Wed Jun 05 2017 metalstrolch 0.5.1-3
+*Mon Jun 05 2017 metalstrolch 0.5.1-3
 - Enable rotating.
 - Create default config from xlst
 - Switch to QT font rendering.
