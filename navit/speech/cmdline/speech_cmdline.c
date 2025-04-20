@@ -223,7 +223,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
     }
 
     if(listlen>0) {
-        dbg(lvl_debug,"Speaking text '%s'",text);
+        dbg(lvl_debug,"Speaking text: '%s'",text);
 
         int argc;
         char**argv;
@@ -278,7 +278,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                               for(index=speak_index_start;index<=speak_index_end;index++){
                                   char *new_arg;
                                   new_arg=g_strdup_printf("%s/%s",this->sample_dir,(char *)g_list_nth_data(samples,index));
-                                  dbg(lvl_debug,"new_arg %s",new_arg);
+                                  dbg(lvl_debug,"new_arg sample: %s",new_arg);
                                   argv[j++]=g_strdup_printf(cmdv[i],new_arg);
                                   g_free(new_arg);
                               }
@@ -294,6 +294,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
 
                   if(this->spi) {
                       spawn_process_check_status(this->spi,1); // Block until previous spawned speech process is terminated.
+                      dbg(lvl_debug,"Speaking samples: %s",argv[0]);
                       spawn_process_info_free(this->spi);
                   }
                   this->spi=spawn_process(argv);
@@ -308,6 +309,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                   argv=g_new(char *,cmdvttslen+2);
                   for(i=0;i<=cmdvttslen;i++) {
                       argv[i]=g_strdup_printf("%s",cmdv_tts[i]);
+                      dbg(lvl_debug,"new_arg tts: %s",argv[i]);
                       if (i==cmdvttslen-1){
                           text_tts=g_strdup_printf("%s",(char *)g_list_nth_data(samples,sample_index));
                           text_tts=g_strdup(&text_tts[strlen(missing_text)]);
@@ -321,6 +323,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                       spawn_process_check_status(this->spi,1); // Block until previous spawned speech process is terminated.
                       spawn_process_info_free(this->spi);
                    }
+                   dbg(lvl_debug,"Speaking tts: %s",argv[0]);
                    this->spi=spawn_process(argv);
 
                    g_strfreev(argv);
