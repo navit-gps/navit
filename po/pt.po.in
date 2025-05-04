@@ -16,12 +16,13 @@
 # brukutu https://launchpad.net/~brukutu99
 # eSkiSo https://launchpad.net/~wise-gdr
 # lezurdis https://launchpad.net/~f-dos-santos
+# Bruno Fragoso <darth_signa@hotmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-02-04 00:01+0000\n"
+"Last-Translator: Bruno Fragoso <darth_signa@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/navit/"
 "navit-core/pt/>\n"
 "Language: pt\n"
@@ -29,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2823,12 +2824,12 @@ msgstr "Uma ou mais permissões não concedidas"
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "seguidamente saia da rotunda na %1$s %2$s"
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "em %d m"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
