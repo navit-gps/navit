@@ -1457,7 +1457,7 @@ msgstr ""
 "\tLe impostazioni del file configurazione continueranno ad avere effetto "
 "laddove è stato impostato un valore più alto livello.\n"
 "\t-h: stampa queste info d'uso ed esci.\n"
-"\t-v: stampa la versione ed esci."
+"\t-v: stampa la versione ed esci.\n"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
