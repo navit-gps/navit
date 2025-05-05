@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-20 07:27+0000\n"
+"PO-Revision-Date: 2025-05-05 18:31+0000\n"
 "Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -132,12 +132,12 @@ msgstr[1] "%d கிலோமீட்டர்களுக்குள்"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
-msgstr "%1 $ சோன்டோ%2$s%3$s%4 $ s"
+msgstr "%1$ சோன்டோ%2$s%3$s%4$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name
 #, c-format
 msgid "%1$sonto %2$s"
-msgstr "% 1 $ வாரம்% 2 $ கள்"
+msgstr "%1$ வாரம்%2$ கள்"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
@@ -1434,15 +1434,15 @@ msgid ""
 "\t-v: print the version and exit.\n"
 msgstr ""
 "கடற்படை பயன்பாடு:\n"
-" கடற்படை [விருப்பங்கள்] [கட்டமைப்பு]\n"
-" -c <file>: இயல்புநிலை கோப்பைப் பயன்படுத்துவதற்குப் பதிலாக <file> கட்டமைப்பு கோப்பாக "
+"\\tகடற்படை [விருப்பங்கள்] [கட்டமைப்பு]\n"
+"\\t-c <file>: இயல்புநிலை கோப்பைப் பயன்படுத்துவதற்குப் பதிலாக <file> கட்டமைப்பு கோப்பாக "
 "பயன்படுத்தவும்.\n"
-" -d <n>: உலகளாவிய பிழைத்திருத்த வெளியீட்டு அளவை <n> (0 = பிழை, 1 = எச்சரிக்கை, 2 = "
-"செய்தி, 3 = பிழைத்திருத்தம்) என அமைக்கவும்.\n"
-" கட்டமைப்பு கோப்பிலிருந்து அமைப்புகள் இன்னும் உயர் மட்டத்தை நிர்ணயிக்கும் இடத்தில் நடைமுறைக்கு"
-" வரும்.\n"
-" -H: இந்த பயன்பாட்டு தகவலை அச்சிட்டு வெளியேறவும்.\n"
-" -V: பதிப்பை அச்சிட்டு வெளியேறவும்."
+"\\t-d <n>: உலகளாவிய பிழைத்திருத்த வெளியீட்டு அளவை <n> (0 = பிழை, 1 = எச்சரிக்கை, 2 "
+"= செய்தி, 3 = பிழைத்திருத்தம்) என அமைக்கவும்.\n"
+"\\tகட்டமைப்பு கோப்பிலிருந்து அமைப்புகள் இன்னும் உயர் மட்டத்தை நிர்ணயிக்கும் இடத்தில் "
+"நடைமுறைக்கு வரும்.\n"
+"\\t-H: இந்த பயன்பாட்டு தகவலை அச்சிட்டு வெளியேறவும்.\n"
+"\\t-V: பதிப்பை அச்சிட்டு வெளியேறவும்."
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
