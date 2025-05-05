@@ -228,9 +228,6 @@ msgstr "Скоро круговое движение"
 msgid "Enter the roundabout %s"
 msgstr "%s круговое движение"
 
-msgid "then enter the roundabout"
-msgstr "затем круговое движение"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -333,10 +330,6 @@ msgstr "немного "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "круто "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1993,12 +1986,6 @@ msgstr "Схема"
 msgid "Height Profile"
 msgstr "Профиль высот"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Описание маршрута"
 
@@ -2543,9 +2530,6 @@ msgstr "Во весь экран"
 
 msgid "Window Mode"
 msgstr "Режим окна"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Описание"
