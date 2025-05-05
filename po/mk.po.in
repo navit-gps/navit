@@ -204,9 +204,6 @@ msgstr "Наскоро влегувате во кружен тек"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -309,10 +306,6 @@ msgstr "лесно "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "силно "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1969,12 +1962,6 @@ msgstr "Изглед"
 msgid "Height Profile"
 msgstr "Висински профил"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Објаснување за патот"
 
@@ -2510,9 +2497,6 @@ msgstr "На цел екран"
 
 msgid "Window Mode"
 msgstr "Работи во прозорец"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Опис"

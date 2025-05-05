@@ -210,9 +210,6 @@ msgstr "Entreu a la rotonda vinent"
 msgid "Enter the roundabout %s"
 msgstr "Entreu a la rotonda %s"
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -317,10 +314,6 @@ msgid "strongly "
 msgstr "fortament "
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Preneu el %1$s carrer a la %2$s"
 
@@ -390,14 +383,8 @@ msgstr "Ordre"
 msgid "Length"
 msgstr "Durada"
 
-msgid "mi"
-msgstr ""
-
 msgid "km"
 msgstr "km"
-
-msgid "feet"
-msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -1545,26 +1532,6 @@ msgid ""
 "\t-v: print the version and exit.\n"
 msgstr ""
 
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found"
-msgstr ""
-
-#, c-format
-msgid "Error parsing config file '%s': %s"
-msgstr ""
-
-#, c-format
-msgid "Using config file '%s'"
-msgstr ""
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'"
-msgstr ""
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
-msgstr ""
-
 msgid "unknown street"
 msgstr ""
 
@@ -1703,9 +1670,6 @@ msgstr ""
 msgid "_Lock on Road"
 msgstr ""
 
-msgid "_Follow Vehicle"
-msgstr ""
-
 msgid "_Keep orientation to the North"
 msgstr ""
 
@@ -1775,28 +1739,8 @@ msgstr ""
 msgid "Shopping"
 msgstr ""
 
-#. Input is in kilometers
-msgid "Select a search radius from screen center in km"
-msgstr ""
-
-#. Input is in miles.
-msgid "Select a search radius from screen center in miles"
-msgstr ""
-
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
-
-#, c-format
-msgid "Set destination to %ld, %ld "
-msgstr ""
-
-#, c-format
-msgid "Set map to %ld, %ld "
-msgstr ""
-
-#, c-format
-msgid "Set next visit to %ld, %ld "
 msgstr ""
 
 msgid "POI search"
@@ -1815,9 +1759,6 @@ msgid "Category"
 msgstr ""
 
 msgid "Direction"
-msgstr ""
-
-msgid "Distance"
 msgstr ""
 
 msgid "Name"
@@ -1861,10 +1802,6 @@ msgid "3D"
 msgstr "3D"
 
 msgid "OT"
-msgstr ""
-
-#, c-format
-msgid "Route %4.1f%s    %02d:%02d ETA"
 msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
@@ -2075,20 +2012,11 @@ msgstr "Disposició"
 msgid "Height Profile"
 msgstr "Perfil d'alçada"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Descripció de la ruta"
 
 msgid "Show Locale"
 msgstr "Mostra la localitat"
-
-msgid "Network info"
-msgstr ""
 
 msgid "Former Destinations"
 msgstr "Destinacions anteriors"
@@ -2183,30 +2111,8 @@ msgstr "Pantalla completa"
 msgid "Window Mode"
 msgstr "Mode de la finestra"
 
-msgid "Auto zoom"
-msgstr ""
-
-msgid "Manual zoom"
-msgstr ""
-
-msgid "Layers"
-msgstr ""
-
-msgid "Zoom to route"
-msgstr ""
-
 msgid "Description"
 msgstr "Descripció"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr ""
 
 msgid "Satellite Status"
 msgstr ""
@@ -2348,10 +2254,6 @@ msgstr ""
 msgid "Maps containing current location"
 msgstr ""
 
-#. Android resource: @strings/maps_installed
-msgid "Installed maps"
-msgstr ""
-
 #. Android resource: @strings/map_downloading
 msgid "downloading"
 msgstr ""
@@ -2362,18 +2264,6 @@ msgstr ""
 
 #. Android resource: @strings/map_download_error_writing_map
 msgid "Error writing map!"
-msgstr ""
-
-#. Android resource: @strings/map_location_changed
-#, c-format
-msgid "New location set to %s Restart Navit to apply the changes."
-msgstr ""
-
-#. Android resource: @strings/map_location_unavailable
-#, c-format
-msgid ""
-"Current map location %s is not available Please restart Navit after you "
-"attach an SD card or select a different map location."
 msgstr ""
 
 #. Android resource: @strings/address_search_title
@@ -2495,16 +2385,6 @@ msgid ""
 "Navit can use any text to speech engine installed on your device. The "
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
-msgstr ""
-
-#. Android resource: @strings/permissions_not_granted
-msgid ""
-"Navit needs permission to access GPS and read the map.\n"
-"If you change your mind please restart Navit and grant the permissions"
-msgstr ""
-
-#. Android resource: @strings/permissions_info_box_title
-msgid "One or more ungranted permissions"
 msgstr ""
 
 #. Android resource: @strings/whole_planet
@@ -2861,10 +2741,6 @@ msgstr ""
 
 #. Android resource: @strings/usa
 msgid "USA"
-msgstr ""
-
-#. Android resource: @strings/except_alaska_and_hawaii
-msgid "(except Alaska and Hawaii)"
 msgstr ""
 
 #. Android resource: @strings/midwest
