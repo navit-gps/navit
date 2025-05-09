@@ -294,7 +294,6 @@ static int speechd_say(struct speech_priv *this, const char *text) {
 
                   if(this->spi) {
                       spawn_process_check_status(this->spi,1); // Block until previous spawned speech process is terminated.
-                      dbg(lvl_debug,"Speaking samples: %s",argv[0]);
                       spawn_process_info_free(this->spi);
                   }
                   this->spi=spawn_process(argv);
@@ -323,7 +322,6 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                       spawn_process_check_status(this->spi,1); // Block until previous spawned speech process is terminated.
                       spawn_process_info_free(this->spi);
                    }
-                   dbg(lvl_debug,"Speaking tts: %s",argv[0]);
                    this->spi=spawn_process(argv);
 
                    g_strfreev(argv);
