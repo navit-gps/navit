@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <glib.h>
+#include <ctype.h>
 #include "coord.h"
 #include "debug.h"
 #include "projection.h"
