@@ -251,7 +251,7 @@ if (NOT DISABLE_QT)
 			find_package(Qt5Svg REQUIRED)
 			find_package(Qt5DBus REQUIRED)
 			find_package(Qt5Multimedia)
-			find_package(espeak)
+			find_package(espeak QUIET)
 		endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		if (Qt5Positioning_FOUND)
 			find_package(Qt5Sensors REQUIRED)
@@ -388,33 +388,33 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		set_with_reason(USE_QML "Qt5Quick found" TRUE)
 		if(USE_QML)
 			set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
-			set_with_reason(gui/qt5_qml "Qt5 found" TRUE
+			set_with_reason(gui/qt5_qml "Qt5 found" FALSE
 				${Qt5Quick_LIBRARIES})
 		else()
 			set_with_reason(gui/qt5_qml "feature USE_QML disabled for graphics/qt5" FALSE)
 		endif()
 
 	endif()
-	set_with_reason(graphics/qt5 "Qt5 found" TRUE
+	set_with_reason(graphics/qt5 "Qt5 found" FALSE
 		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
 	if (Qt5Multimedia_FOUND)
 		if (espeak_FOUND)
 			set_with_reason(support/espeak "native espeak found" FALSE)
-			set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
+			set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" FALSE
 				${Qt5Multimedia_LIBRARIES}
 				${espeak_LIBRARIES})
 		else()
 			set_with_reason(support/espeak "native espeak missing" TRUE)
 			set_with_reason(INTERNAL_ESPEAK_COMPLETE "speech_qt5_espeak requires full libespeak" TRUE)
-			set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
+			set_with_reason(speech/qt5_espeak "Qt5Multimedia found" FALSE
 				${Qt5Multimedia_LIBRARIES})
 		endif()
 	endif()
 endif ()
 if (Qt5Positioning_FOUND)
-	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
+	set_with_reason(vehicle/qt5 "Qt5 Positioning found" FALSE
 		${Qt5Positioning_LIBRARIES}
 		${Qt5Sensors_LIBRARIES})
 endif ()
@@ -771,7 +771,6 @@ if(ANDROID)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Android detected" TRUE)
 	#   set_with_reason(plugin/pedestrian "Android detected" TRUE)
 	set_with_reason(support/libpng "Android detected" FALSE)
-	set(SHARED_LIBNAVIT TRUE)
 
 	add_feature(XPM2PNG "Android detected" TRUE)
 	set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
@@ -825,10 +824,12 @@ set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to p
 # Plugins
 if(USE_PLUGINS)
 	set(MODULE_BUILD_TYPE "MODULE")
+	set(SHARED_LIBNAVIT TRUE)
 	add_definitions("-fPIC")
 	list(APPEND NAVIT_LIBS dl)
 else()
 	set(MODULE_BUILD_TYPE "STATIC")
+	set(SHARED_LIBNAVIT FALSE)
 endif(USE_PLUGINS)
 message(STATUS "Use plugins: ${MODULE_BUILD_TYPE}")
 
