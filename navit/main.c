@@ -95,7 +95,7 @@ static char *environment_vars[][6]= {
     {"NAVIT_LOCALEDIR",   ":/../locale",":/"LOCALE_DIR,  ":\\locale",   ":/locale",     ":\\locale"},
     {"NAVIT_USER_DATADIR",":",          "~/"HOMECONFIG_DIR,      ":\\data",     ":/home",       "~\\navit"},
     {"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL,           ":\\navit.log"},
-    {"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL,           NULL},
+    {"NAVIT_LIBPREFIX",   "*/",   NULL,            NULL,          NULL,           NULL},
     {NULL,                NULL,         NULL,            NULL,          NULL,           NULL},
 };
 
