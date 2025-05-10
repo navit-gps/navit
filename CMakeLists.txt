@@ -388,33 +388,33 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		set_with_reason(USE_QML "Qt5Quick found" TRUE)
 		if(USE_QML)
 			set(Qt5_ADDITIONAL_LIBRARIES ${Qt5_ADDITIONAL_LIBRARIES} ${Qt5Quick_LIBRARIES})
-			set_with_reason(gui/qt5_qml "Qt5 found" FALSE
+			set_with_reason(gui/qt5_qml "Qt5 found" TRUE
 				${Qt5Quick_LIBRARIES})
 		else()
 			set_with_reason(gui/qt5_qml "feature USE_QML disabled for graphics/qt5" FALSE)
 		endif()
 
 	endif()
-	set_with_reason(graphics/qt5 "Qt5 found" FALSE
+	set_with_reason(graphics/qt5 "Qt5 found" TRUE
 		${Qt5_ADDITIONAL_LIBRARIES}
 		${Qt5Svg_LIBRARIES}
 		${Qt5DBus_LIBRARIES})
 	if (Qt5Multimedia_FOUND)
 		if (espeak_FOUND)
 			set_with_reason(support/espeak "native espeak found" FALSE)
-			set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" FALSE
+			set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
 				${Qt5Multimedia_LIBRARIES}
 				${espeak_LIBRARIES})
 		else()
 			set_with_reason(support/espeak "native espeak missing" TRUE)
 			set_with_reason(INTERNAL_ESPEAK_COMPLETE "speech_qt5_espeak requires full libespeak" TRUE)
-			set_with_reason(speech/qt5_espeak "Qt5Multimedia found" FALSE
+			set_with_reason(speech/qt5_espeak "Qt5Multimedia found" TRUE
 				${Qt5Multimedia_LIBRARIES})
 		endif()
 	endif()
 endif ()
 if (Qt5Positioning_FOUND)
-	set_with_reason(vehicle/qt5 "Qt5 Positioning found" FALSE
+	set_with_reason(vehicle/qt5 "Qt5 Positioning found" TRUE
 		${Qt5Positioning_LIBRARIES}
 		${Qt5Sensors_LIBRARIES})
 endif ()
