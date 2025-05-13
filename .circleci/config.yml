@@ -226,7 +226,7 @@ jobs:
   build_tomtom_minimal:
     <<: *defaults
     docker:
-      - image: navit/tomtom-ng
+      - image: ghcr.io/navit-gps/tomtom:nightly
     steps:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
@@ -248,7 +248,7 @@ jobs:
   build_tomtom_plugin:
     <<: *defaults
     docker:
-      - image: navit/tomtom-ng
+      - image: ghcr.io/navit-gps/tomtom:nightly
     steps:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
