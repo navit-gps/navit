@@ -1,2 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="cancel">Отмена</string>
+    <string name="channel_name">Navit</string>
+    <string name="notification_ticker">Navit запущен</string>
+    <string name="notification_event_default">Navit выполняется</string>
+    <string name="initial_info_box_title">Добро пожаловать в Navit</string>
+    <string name="initial_info_box_OK">Ладно</string>
+    <string name="initial_info_box_more_info">Подробнее</string>
+    <string name="optionsmenu_zoom_in">Увеличить</string>
+    <string name="optionsmenu_zoom_out">Отдалить</string>
+    <string name="optionsmenu_download_maps">Скачать карты</string>
+    <string name="optionsmenu_toggle_poi">Переключить POI</string>
+    <string name="optionsmenu_exit_navit">Выйти из Navit</string>
+    <string name="optionsmenu_backup_restore">Резервная копия и востановление</string>
+    <string name="optionsmenu_set_map_location">Установить место карты</string>
+    <string name="position_popup_title">Позиция</string>
+    <string name="position_popup_drive_here">Маршрут сюда</string>
+    <string name="position_popup_view">Просмотр</string>
+</resources>
