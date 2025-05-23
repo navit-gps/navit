@@ -94,6 +94,7 @@ Navigation</text></img>
 				<a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a>
 				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
 				<!-- <a href='#Settings Maps'><img src='gui_maps'><text>Maps</text></img></a> -->
+				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Voice</text></img>
 				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
 				<!-- <a href='#Settings Vehicles'><img src='gui_vehicle'><text>Vehicle</text></img></a> -->
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
