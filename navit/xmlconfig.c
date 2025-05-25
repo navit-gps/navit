@@ -44,6 +44,7 @@
 #include "route.h"
 #include "speech.h"
 #include "track.h"
+#include "voice.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include <ctype.h>

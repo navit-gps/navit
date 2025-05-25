@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 ListView {
     id: list
-    model: backend.vehicles
+    model: backend.voices
     delegate: Item {
         height: 64
         width: parent.width;
@@ -35,12 +35,12 @@ ListView {
 
                 onClicked:{
                     list.currentIndex = index
-                    backend.setCurrentVehicle(index);
-                    menucontent.source = "vehicle.qml"
+                    backend.setCurrentVoice(index);
+                    menucontent.source = "voice.qml"
                 }
             }
         }
     }
 
-    Component.onCompleted: backend.get_vehicles()
+    Component.onCompleted: backend.get_voices()
 }
