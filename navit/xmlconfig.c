@@ -281,6 +281,10 @@ struct object_func *object_func_lookup(enum attr_type type) {
         return &speech_func;
     case attr_traffic:
         return &traffic_func;
+    case attr_voice:
+        return &voice_func;
+    case attr_voiceprofile:
+        return &voiceprofile_func;
     case attr_vehicle:
         return &vehicle_func;
     case attr_vehicleprofile:

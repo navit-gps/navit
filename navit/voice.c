@@ -54,14 +54,13 @@
 #include "color.h"
 #include "layout.h"
 #include "voice.h"
-#include "vehicle.h"
 #include "navit_nls.h"
 
 
 struct voice {
     NAVIT_OBJECT
-    struct vehicle_methods meth;
-    struct vehicle_priv *priv;
+    struct voice_methods meth;
+    struct voice_priv *priv;
     struct callback_list *cbl;
     struct log *nmea_log, *gpx_log;
     char *gpx_desc;
@@ -84,15 +83,15 @@ struct voice {
     GHashTable *log_to_cb;
 };
 
-struct object_func vehicle_func;
+struct object_func voice_func;
 
-static void vehicle_set_default_name(struct vehicle *this);
-static void vehicle_draw_do(struct vehicle *this_);
-static void vehicle_log_nmea(struct vehicle *this_, struct log *log);
-static void vehicle_log_gpx(struct vehicle *this_, struct log *log);
-static void vehicle_log_textfile(struct vehicle *this_, struct log *log);
-static void vehicle_log_binfile(struct vehicle *this_, struct log *log);
-static int vehicle_add_log(struct vehicle *this_, struct log *log);
+static void voice_set_default_name(struct voice *this);
+static void voice_draw_do(struct voice *this_);
+static void voice_log_nmea(struct voice *this_, struct log *log);
+static void voice_log_gpx(struct voice *this_, struct log *log);
+static void voice_log_textfile(struct voice *this_, struct log *log);
+static void voice_log_binfile(struct voice *this_, struct log *log);
+static int voice_add_log(struct voice *this_, struct log *log);
 
 
 
@@ -103,13 +102,13 @@ static int vehicle_add_log(struct vehicle *this_, struct log *log);
  * @param attrs Points to a null-terminated array of pointers to the attributes
  * for the new voice type.
  *
- * @return The newly created vehicle object
+ * @return The newly created voice object
  */
 struct voice *
 voice_new(struct attr *parent, struct attr **attrs) {
-    struct vehicle *this_;
+    struct voice *this_;
     struct attr *source;
-    struct vehicle_priv *(*vehicletype_new) (struct vehicle_methods *
+    struct voice_priv *(*voicetype_new) (struct voice_methods *
             meth,
             struct callback_list *
             cbl,
@@ -120,7 +119,7 @@ voice_new(struct attr *parent, struct attr **attrs) {
     dbg(lvl_debug, "enter");
     source = attr_search(attrs, attr_source);
     if (!source) {
-        dbg(lvl_error, "incomplete vehicle definition: missing attribute 'source'");
+        dbg(lvl_error, "incomplete voice definition: missing attribute 'source'");
         return NULL;
     }
 
@@ -130,20 +129,20 @@ voice_new(struct attr *parent, struct attr **attrs) {
         *colon = '\0';
     dbg(lvl_debug, "source='%s' type='%s'", source->u.str, type);
 
-    vehicletype_new = plugin_get_category_vehicle(type);
-    if (!vehicletype_new) {
+    voicetype_new = plugin_get_category_speech(type);
+    if (!voicetype_new) {
         dbg(lvl_error, "invalid source '%s': unknown type '%s'", source->u.str, type);
         g_free(type);
         return NULL;
     }
     g_free(type);
-    this_ = g_new0(struct vehicle, 1);
-    this_->func=&vehicle_func;
+    this_ = g_new0(struct voice, 1);
+    this_->func=&voice_func;
     navit_object_ref((struct navit_object *)this_);
     this_->cbl = callback_list_new();
-    this_->priv = vehicletype_new(&this_->meth, this_->cbl, attrs);
+    this_->priv = voicetype_new(&this_->meth, this_->cbl, attrs);
     if (!this_->priv) {
-        dbg(lvl_error, "vehicletype_new failed");
+        dbg(lvl_error, "voicetype_new failed");
         callback_list_destroy(this_->cbl);
         g_free(this_);
         return NULL;
@@ -154,7 +153,7 @@ voice_new(struct attr *parent, struct attr **attrs) {
     center.x=0;
     center.y=0;
     this_->trans=transform_new(&center, 16, 0);
-    vehicle_set_default_name(this_);
+    voice_set_default_name(this_);
 
     dbg(lvl_debug, "leave");
     this_->log_to_cb=g_hash_table_new(NULL,NULL);
@@ -166,7 +165,7 @@ voice_new(struct attr *parent, struct attr **attrs) {
  *
  * @param this_ The voice to destroy
  */
-void voice_destroy(struct vehicle *this_) {
+void voice_destroy(struct voice *this_) {
     dbg(lvl_debug,"enter");
     if (this_->animate_callback) {
         callback_destroy(this_->animate_callback);
@@ -187,14 +186,14 @@ void voice_destroy(struct vehicle *this_) {
  * Creates an attribute iterator to be used with voices
  */
 struct attr_iter *
-vehicle_attr_iter_new(void * unused) {
+voice_attr_iter_new(void * unused) {
     return (struct attr_iter *)g_new0(void *,1);
 }
 
 /**
  * Destroys a voice attribute iterator
  *
- * @param iter a vehicle attr_iter
+ * @param iter a voice attr_iter
  */
 void voice_attr_iter_destroy(struct attr_iter *iter) {
     g_free(iter);
@@ -208,10 +207,10 @@ void voice_attr_iter_destroy(struct attr_iter *iter) {
  * @param this_ Pointer to a voice structure
  * @param type The attribute type to look for
  * @param attr Pointer to a {@code struct attr} to store the attribute
- * @param iter A voice attr_iter. This is only used for generic attributes; for attributes specific to the vehicle object it is ignored.
+ * @param iter A voice attr_iter. This is only used for generic attributes; for attributes specific to the voice object it is ignored.
  * @return True for success, false for failure
  */
-int voice_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+int voice_get_attr(struct voice *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
     int ret;
     if (type == attr_log_gpx_desc) {
         attr->u.str = this_->gpx_desc;
@@ -232,7 +231,7 @@ int voice_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr
  * @param attr The attribute to set
  * @return False on success, true on failure
  */
-int voice_set_attr(struct vehicle *this_, struct attr *attr) {
+int voice_set_attr(struct voice *this_, struct attr *attr) {
     int ret=1;
     if (attr->type == attr_log_gpx_desc) {
         g_free(this_->gpx_desc);
@@ -256,19 +255,19 @@ int voice_set_attr(struct vehicle *this_, struct attr *attr) {
  *
  * @return true if the attribute was added, false if not.
  */
-int voice_add_attr(struct vehicle *this_, struct attr *attr) {
+int voice_add_attr(struct voice *this_, struct attr *attr) {
     int ret=1;
     switch (attr->type) {
     case attr_callback:
         callback_list_add(this_->cbl, attr->u.callback);
         break;
     case attr_log:
-        ret=vehicle_add_log(this_, attr->u.log);
+        ret=voice_add_log(this_, attr->u.log);
         break;
     // currently supporting oldstyle cursor config.
     case attr_cursor:
         this_->cursor_fixed=1;
-        vehicle_set_cursor(this_, attr->u.cursor, 1);
+        voice_set_cursor(this_, attr->u.cursor, 1);
         break;
     default:
         break;
@@ -285,7 +284,7 @@ int voice_add_attr(struct vehicle *this_, struct attr *attr) {
  * @param this_ A voice
  * @param attr
  */
-int voice_remove_attr(struct vehicle *this_, struct attr *attr) {
+int voice_remove_attr(struct voice *this_, struct attr *attr) {
     struct callback *cb;
     switch (attr->type) {
     case attr_callback:
@@ -314,7 +313,7 @@ int voice_remove_attr(struct vehicle *this_, struct attr *attr) {
  * @param cursor A cursor
  * @author Ralph Sennhauser (10/2009)
  */
-void voice_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrite) {
+void voice_set_cursor(struct voice *this_, struct cursor *cursor, int overwrite) {
     dbg(lvl_debug,"enter this_=%p cursot=%p overwrit=%d, this_->cursor_fixed=%d, this_->gra=%p", this_, cursor, overwrite,
         this_->cursor_fixed, this_->gra);
     if (this_->cursor_fixed && !overwrite)
@@ -326,7 +325,7 @@ void voice_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrit
         this_->animate_callback=NULL;	// dangling pointer! prevent double freeing.
     }
     if (cursor && cursor->interval) {
-        this_->animate_callback=callback_new_2(callback_cast(vehicle_draw_do), this_, 0);
+        this_->animate_callback=callback_new_2(callback_cast(voice_draw_do), this_, 0);
         this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
     }
     /* we changed the cursor, so the overlay (if existing) may need a resize */
@@ -354,7 +353,7 @@ void voice_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwrit
  * @param angle The angle relative to the map.
  * @param speed The speed of the voice.
  */
-void voice_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
+void voice_draw(struct voice *this_, struct graphics *gra, struct point *pnt, int angle, int speed) {
     struct point sc;
     if (angle < 0)
         angle+=360;
@@ -413,25 +412,25 @@ void voice_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, 
     voice_draw_do(this_);
 }
 
-int voice_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int *speed) {
+int voice_get_cursor_data(struct voice *this, struct point *pnt, int *angle, int *speed) {
     *pnt=this->cursor_pnt;
     *angle=this->angle;
     *speed=this->speed;
     return 1;
 }
 
-static void voice_set_default_name(struct vehicle *this_) {
+static void voice_set_default_name(struct voice *this_) {
     struct attr default_name;
     if (!attr_search(this_->attrs, attr_name)) {
         default_name.type=attr_name;
         // Safe cast: attr_generic_set_attr does not modify its parameter.
-        default_name.u.str=(char*)_("Unnamed vehicle");
+        default_name.u.str=(char*)_("Unnamed voice");
         this_->attrs=attr_generic_set_attr(this_->attrs, &default_name);
         dbg(lvl_error, "Incomplete voice definition: missing attribute 'name'. Default name set.");
     }
 }
 
-static void voice_draw_do(struct vehicle *this_) {
+static void voice_draw_do(struct voice *this_) {
     struct point p;
     struct cursor *cursor=this_->cursor;
     int speed=this_->speed;
@@ -488,7 +487,7 @@ static void voice_draw_do(struct vehicle *this_) {
  * @param this_ The voice supplying data
  * @param log The log to write to
  */
-static void voice_log_nmea(struct vehicle *this_, struct log *log) {
+static void voice_log_nmea(struct voice *this_, struct log *log) {
     struct attr pos_attr;
     if (!this_->meth.position_attr_get)
         return;
@@ -543,7 +542,7 @@ void voice_log_gpx_add_tag(char *tag, char **logstr) {
  * @param this_ The voice supplying data
  * @param log The log to write to
  */
-static void voice_log_gpx(struct vehicle *this_, struct log *log) {
+static void voice_log_gpx(struct voice *this_, struct log *log) {
     struct attr attr,*attrp, fix_attr;
     enum attr_type *attr_types;
     char *logstr;
@@ -626,7 +625,7 @@ static void voice_log_gpx(struct vehicle *this_, struct log *log) {
  * @param this_ The voice supplying data
  * @param log The log to write to
  */
-static void voice_log_textfile(struct vehicle *this_, struct log *log) {
+static void voice_log_textfile(struct voice *this_, struct log *log) {
     struct attr pos_attr,fix_attr;
     char *logstr;
     if (!this_->meth.position_attr_get)
@@ -648,7 +647,7 @@ static void voice_log_textfile(struct vehicle *this_, struct log *log) {
  * @param this_ The voice supplying data
  * @param log The log to write to
  */
-static void voice_log_binfile(struct vehicle *this_, struct log *log) {
+static void voice_log_binfile(struct voice *this_, struct log *log) {
     struct attr pos_attr, fix_attr;
     int *buffer;
     int *buffer_new;
@@ -708,14 +707,14 @@ static void voice_log_binfile(struct vehicle *this_, struct log *log) {
  *
  * @return False if the log is of an unknown type, true otherwise (including when {@code attr_type} is missing).
  */
-static int voice_add_log(struct vehicle *this_, struct log *log) {
+static int voice_add_log(struct voice *this_, struct log *log) {
     struct callback *cb;
     struct attr type_attr;
     if (!log_get_attr(log, attr_type, &type_attr, NULL))
         return 1;
 
     if (!strcmp(type_attr.u.str, "nmea")) {
-        cb=callback_new_attr_2(callback_cast(vehicle_log_nmea), attr_position_coord_geo, this_, log);
+        cb=callback_new_attr_2(callback_cast(voice_log_nmea), attr_position_coord_geo, this_, log);
     } else if (!strcmp(type_attr.u.str, "gpx")) {
         char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
                        "<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
@@ -728,13 +727,13 @@ static int voice_add_log(struct vehicle *this_, struct log *log) {
         char *trailer = "</trkseg>\n</trk>\n</gpx>\n";
         log_set_header(log, header, strlen(header));
         log_set_trailer(log, trailer, strlen(trailer));
-        cb=callback_new_attr_2(callback_cast(vehicle_log_gpx), attr_position_coord_geo, this_, log);
+        cb=callback_new_attr_2(callback_cast(voice_log_gpx), attr_position_coord_geo, this_, log);
     } else if (!strcmp(type_attr.u.str, "textfile")) {
         char *header = "type=track\n";
         log_set_header(log, header, strlen(header));
-        cb=callback_new_attr_2(callback_cast(vehicle_log_textfile), attr_position_coord_geo, this_, log);
+        cb=callback_new_attr_2(callback_cast(voice_log_textfile), attr_position_coord_geo, this_, log);
     } else if (!strcmp(type_attr.u.str, "binfile")) {
-        cb=callback_new_attr_2(callback_cast(vehicle_log_binfile), attr_position_coord_geo, this_, log);
+        cb=callback_new_attr_2(callback_cast(voice_log_binfile), attr_position_coord_geo, this_, log);
     } else
         return 0;
     g_hash_table_insert(this_->log_to_cb, log, cb);
@@ -743,16 +742,16 @@ static int voice_add_log(struct vehicle *this_, struct log *log) {
 }
 
 struct object_func voice_func = {
-    attr_vehicle,
-    (object_func_new)vehicle_new,
-    (object_func_get_attr)vehicle_get_attr,
-    (object_func_iter_new)vehicle_attr_iter_new,
-    (object_func_iter_destroy)vehicle_attr_iter_destroy,
-    (object_func_set_attr)vehicle_set_attr,
-    (object_func_add_attr)vehicle_add_attr,
-    (object_func_remove_attr)vehicle_remove_attr,
+    attr_voice,
+    (object_func_new)voice_new,
+    (object_func_get_attr)voice_get_attr,
+    (object_func_iter_new)voice_attr_iter_new,
+    (object_func_iter_destroy)voice_attr_iter_destroy,
+    (object_func_set_attr)voice_set_attr,
+    (object_func_add_attr)voice_add_attr,
+    (object_func_remove_attr)voice_remove_attr,
     (object_func_init)NULL,
-    (object_func_destroy)vehicle_destroy,
+    (object_func_destroy)voice_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,

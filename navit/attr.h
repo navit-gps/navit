@@ -150,6 +150,7 @@ struct attr {
         struct navit *navit;
         struct callback *callback;
         struct callback_list *callback_list;
+        struct voice *voice;
         struct vehicle *vehicle;
         struct layout *layout;
         struct layer *layer;
@@ -179,6 +180,7 @@ struct attr {
         struct cursor *cursor;
         struct displaylist *displaylist;
         struct transformation *transformation;
+        struct voiceprofile *voiceprofile;
         struct vehicleprofile *vehicleprofile;
         struct roadprofile *roadprofile;
         struct bookmarks *bookmarks;

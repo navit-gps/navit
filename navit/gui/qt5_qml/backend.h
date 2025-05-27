@@ -19,7 +19,7 @@ class Backend : public QObject {
     Q_PROPERTY(QQmlListProperty<QObject> pois READ getPois NOTIFY poisChanged)
     Q_PROPERTY(QQmlListProperty<QObject> bookmarks READ getBookmarks NOTIFY bookmarksChanged)
     Q_PROPERTY(QQmlListProperty<QObject> maps READ getMaps NOTIFY mapsChanged)
-    Q_PROPERTY(QQmlListProperty<QObject> voices READ getVehicles NOTIFY vehiclesChanged)
+    Q_PROPERTY(QQmlListProperty<QObject> voices READ getVoies NOTIFY voicesChanged)
     Q_PROPERTY(QQmlListProperty<QObject> vehicles READ getVehicles NOTIFY vehiclesChanged)
     Q_PROPERTY(PoiObject *activePoi READ activePoi NOTIFY activePoiChanged)
     Q_PROPERTY(BookmarkObject *currentBookmark READ currentBookmark NOTIFY currentBookmarkChanged)

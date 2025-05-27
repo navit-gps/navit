@@ -195,6 +195,42 @@ static int gui_internal_cmd2_town(struct gui_priv *this, char *function, struct 
     return 0;
 }
 
+static int gui_internal_cmd2_setting_voice(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
+    struct attr attr,attr2,vattr;
+    struct widget *w, *wb, *wl;
+    struct attr_iter *iter;
+    struct attr active_voice;
+    
+    iter = navit_attr_iter_new(NULL);
+    if (navit_get_attr(this->nav, attr_voice, &attr, iter) && !navit_get_attr(this->nav, attr_voice, &attr2, iter)) {
+        voice_get_attr(attr.u.voice, attr_name, &vattr, NULL); 
+        navit_attr_iter_destroy(iter);
+        gui_internal_menu_voice_settings(this, attr.u.voice, vattr.u.str);
+        return 0;
+    }   
+    navit_attr_iter_destroy(iter);
+        
+    wb=gui_internal_menu(this, _("Voice"));
+    w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+    w->spy=this->spacing*3;
+    gui_internal_widget_append(wb, w);
+    if (!navit_get_attr(this->nav, attr_voice, &active_voice, NULL))
+        active_voice.u.voice=NULL;
+    iter=navit_attr_iter_new(NULL);
+    while(navit_get_attr(this->nav, attr_voice, &attr, iter)) {
+        voice_get_attr(attr.u.voice, attr_name, &vattr, NULL);
+        wl=gui_internal_button_new_with_callback(this, vattr.u.str,
+                image_new_xs(this, attr.u.voice == active_voice.u.voice ? "gui_active" : "gui_inactive"),
+                gravity_left_center|orientation_horizontal|flags_fill,
+                gui_internal_cmd_voice_settings, attr.u.voice);
+        wl->text=g_strdup(vattr.u.str);
+        gui_internal_widget_append(w, wl);
+    }
+    navit_attr_iter_destroy(iter);
+    gui_internal_menu_render(this);
+    return 0;
+}
+
 static int gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct attr **in,
                                              struct attr ***out) {
     struct attr attr, attr2, vattr;
@@ -1161,6 +1197,8 @@ static int gui_internal_cmd2(struct gui_priv *this, char *function, struct attr 
         gui_internal_cmd2_setting_maps(this, function, in, out);
     else if (!strcmp(function, "setting_rules"))
         gui_internal_cmd2_setting_rules(this, function, in, out);
+    else if (!strcmp(function, "setting_voice"))
+        gui_internal_cmd2_setting_voice(this, function, in, out);
     else if (!strcmp(function, "setting_vehicle"))
         gui_internal_cmd2_setting_vehicle(this, function, in, out);
     else if (!strcmp(function, "town"))
@@ -1200,6 +1238,7 @@ static struct command_table commands[] = {
     {"setting_layout",       command_cast(gui_internal_cmd2)                 },
     {"setting_maps",         command_cast(gui_internal_cmd2)                 },
     {"setting_rules",        command_cast(gui_internal_cmd2)                 },
+    {"setting_voice",        command_cast(gui_internal_cmd2)                 },
     {"setting_vehicle",      command_cast(gui_internal_cmd2)                 },
     {"town",                 command_cast(gui_internal_cmd2)                 },
     {"enter_coord",          command_cast(gui_internal_cmd2)                 },

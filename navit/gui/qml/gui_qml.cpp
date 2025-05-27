@@ -21,6 +21,7 @@
 #include "event.h"
 #include "map.h"
 #include "coord.h"
+#include "voice.h"
 #include "vehicle.h"
 #include "coord.h"
 #include "transform.h"
@@ -39,6 +40,7 @@ struct gui_priv {
     struct navit *nav;
     struct gui *gui;
     struct attr self;
+    struct voice* currVoice;
     struct vehicle* currVehicle;
 
     //configuration items
@@ -73,6 +75,7 @@ struct gui_priv {
     //Proxy objects
     class NGQProxyGui* guiProxy;
     class NGQProxyNavit* navitProxy;
+    class NGQProxyVoice* voiceProxy;
     class NGQProxyVehicle* vehicleProxy;
     class NGQProxySearch* searchProxy;
     class NGQProxyBookmarks* bookmarksProxy;
@@ -85,6 +88,7 @@ struct gui_priv {
 #include "searchProxy.h"
 #include "routeProxy.h"
 #include "bookmarksProxy.h"
+#include "voiceProxy.h"
 #include "vehicleProxy.h"
 #include "navitProxy.h"
 #include "guiProxy.h"
@@ -285,6 +289,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra) {
     //Create proxy object and bind them to gui widget
     this_->guiProxy = new NGQProxyGui(this_,this_->mainWindow);
     this_->navitProxy = new NGQProxyNavit(this_,this_->mainWindow);
+    this_->voiceProxy = new NGQProxyVoice(this_,this_->mainWindow);
     this_->vehicleProxy = new NGQProxyVehicle(this_,this_->mainWindow);
     this_->searchProxy = new NGQProxySearch(this_,this_->mainWindow);
     this_->bookmarksProxy = new NGQProxyBookmarks(this_,this_->mainWindow);
@@ -303,6 +308,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra) {
 
     this_->guiWidget->rootContext()->setContextProperty("gui",this_->guiProxy);
     this_->guiWidget->rootContext()->setContextProperty("navit",this_->navitProxy);
+    this_->guiWidget->rootContext()->setContextProperty("voice",this_->voiceProxy);
     this_->guiWidget->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
     this_->guiWidget->rootContext()->setContextProperty("search",this_->searchProxy);
     this_->guiWidget->rootContext()->setContextProperty("bookmarks",this_->bookmarksProxy);

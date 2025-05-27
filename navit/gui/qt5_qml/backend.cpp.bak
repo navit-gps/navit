@@ -100,14 +100,13 @@ void Backend::get_maps() {
 void Backend::get_voices() {
     struct attr attr,attr2,vattr;
     struct attr_iter *iter;
-    struct attr active_voice;
+    struct attr active_vehicle;
     _voices.clear();
 
     iter=navit_attr_iter_new(NULL);
-    if (navit_get_attr(this->nav, attr_speech, &attr, iter) && !navit_get_attr(this->nav, attr_speech, &attr2, iter)) {
-        voice_get_attr(attr.u.speech, attr_name, &vattr, NULL);
+    if (navit_get_attr(this->nav, attr_voice, &attr, iter) && !navit_get_attr(this->nav, attr_voice, &attr2, iter)) {
+        voice_get_attr(attr.u.voice, attr_name, &vattr, NULL);
         navit_attr_iter_destroy(iter);
-        dbg(lvl_debug, "adding voice %s", vattr.u.str);
         _voices.append(new VoiceObject(g_strdup(vattr.u.str), active_voice.u.voice, attr.u.voice));
         dbg(lvl_debug, "done");
         emit voicesChanged();
@@ -115,15 +114,18 @@ void Backend::get_voices() {
     }
     navit_attr_iter_destroy(iter);
 
-    if (!navit_get_attr(this->nav, attr_speech, &active_voice, NULL))
+    if (!navit_get_attr(this->nav, attr_voice, &active_voice, NULL))
         active_voice.u.voice=NULL;
     iter=navit_attr_iter_new(NULL);
-    while(navit_get_attr(this->nav, attr_speech, &attr, iter)) {
-        voice_get_attr(attr.u.speech, attr_name, &vattr, NULL);
+    while(navit_get_attr(this->nav, attr_voice, &attr, iter)) {
+        voice_get_attr(attr.u.voice, attr_name, &vattr, NULL);
         dbg(lvl_debug, "adding voice %s", vattr.u.str);
         _voices.append(
-            new VoiceObject(g_strdup(vattr.u.str),
-                attr.u.voice == active_voice.u.voice, attr.u.voice)
+            new VehicleObject(
+                g_strdup(vattr.u.str),
+                attr.u.voice == active_voice.u.voice,
+                attr.u.voice
+            )
         );
     }
     navit_attr_iter_destroy(iter);
@@ -371,8 +373,13 @@ BookmarkObject * Backend::currentBookmark() {
  */
 VehicleObject * Backend::currentVoice() {
     struct attr attr;
-    dbg(lvl_debug, "current voice : %s", m_currentVoice->name().toUtf8().data());
+    dbg(lvl_debug, "name : %s", m_currentVoice->name().toUtf8().data());
     if (m_currentVoice->voice()) {
+        if (voice_get_attr(m_currentVoice->voice(), attr_position_nmea, &attr, NULL))
+            dbg(lvl_debug, "NMEA : %s", attr.u.str);
+    } else {
+        dbg(lvl_debug, "m_currentVoice->v is null");
+    }
     
     return m_currentVoice;
 }   
@@ -447,9 +454,9 @@ void Backend::setCurrentBookmark(int index) {
  * @param int index the index of the voice in the m_voice list
  * @returns nothing
  */ 
-void Backend::setCurrentVoice(int index) {
-    m_currentVoice = (VoiceObject *)_voices.at(index);
-    emit currentVoiceChanged();
+void Backend::setCurrentVehicle(int index) {
+    m_currentVehicle = (VehicleObject *)_vehicles.at(index);
+    emit currentVehicleChanged();
 }
 
 /**

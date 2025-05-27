@@ -165,6 +165,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
 }
 
 struct speech_priv {
+    char *name;
     char *cmdline;
     char *cmdline_tts;
     char *sample_dir;
@@ -346,6 +347,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
 
 static void speechd_destroy(struct speech_priv *this) {
     GList *l = this->samples;
+    g_free(this->name);
     g_free(this->cmdline);
     g_free(this->cmdline_tts);
     g_free(this->sample_dir);
@@ -372,6 +374,8 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         return NULL;
     this=g_new0(struct speech_priv,1);
     this->cmdline=g_strdup(attr->u.str);
+    attr=attr_search(attrs, attr_name);
+    this->name=g_strdup(attr->u.str);
     attr=attr_search(attrs, attr_data_tts);
     if (! attr)
         return NULL;

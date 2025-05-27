@@ -11,11 +11,11 @@ class VoiceObject : public QObject
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
-    //Q_PROPERTY(struct vehicle * vehicle READ vehicle WRITE setVehicle NOTIFY vehicleChanged)
+    //Q_PROPERTY(struct voice * voice READ voice WRITE setVoice NOTIFY voiceChanged)
 
 public:
-    VehicleObject(QObject *parent=0);
-    VehicleObject(const QString &name, const bool &active, struct vehicle *v, QObject *parent=0);
+    VoiceObject(QObject *parent=0);
+    VoiceObject(const QString &name, const bool &active, struct voice *v, QObject *parent=0);
 
     QString name() const;
     void setName(const QString &name);
@@ -23,18 +23,18 @@ public:
     bool active() const;
     void setActive(const bool &active);
 
-    struct vehicle * vehicle() const;
-    void setVehicle(struct vehicle * vehicle);
+    struct voice * voice() const;
+    void setVoice(struct voice * voice);
 
 signals:
     void nameChanged();
     void activeChanged();
-    void vehicleChanged();
+    void voiceChanged();
 
 private:
     QString m_name;
     bool m_active;
-    struct vehicle *m_vehicle;
+    struct voice *m_voice;
 };
 
 #endif // MAPOBJECT_H
