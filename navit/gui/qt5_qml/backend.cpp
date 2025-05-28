@@ -103,6 +103,8 @@ void Backend::get_voices() {
     struct attr active_voice;
     _voices.clear();
 
+    dbg(lvl_debug, "get_voices() from backend");
+
     iter=navit_attr_iter_new(NULL);
     if (navit_get_attr(this->nav, attr_speech, &attr, iter) && !navit_get_attr(this->nav, attr_speech, &attr2, iter)) {
         voice_get_attr(attr.u.speech, attr_name, &vattr, NULL);
