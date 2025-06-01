@@ -15,7 +15,7 @@
 
 	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
 	<!-- Possible debug levels: error, warning, info, debug. -->
-	<debug name="global" dbg_level="error"/>
+	<debug name="global" dbg_level="debug"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".

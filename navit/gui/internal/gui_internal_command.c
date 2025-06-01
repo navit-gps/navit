@@ -33,6 +33,7 @@
 #include "search.h"
 #include "transform.h"
 #include "util.h"
+#include "speech.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"

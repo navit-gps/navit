@@ -83,6 +83,7 @@
 #include "transform.h"
 #include "types.h"
 #include "util.h"
+#include "speech.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "window.h"
@@ -1842,11 +1843,11 @@ static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget
 }
 
 /**
- * A container to hold the selected voice and the desired profile in
+ * A container to hold the selected voice and the profile in
  * one data item.
  */
 struct voice_and_profilename {
-    struct voice *voice;
+    struct speech *voice;
     char *profilename;
 };
 
@@ -1913,7 +1914,7 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
     voice_get_attr(v, attr_name, &voice_name_attr, NULL);
     voice_name = voice_name_attr.u.str;
 
-    dbg(lvl_debug, "Changing voice %s to profile %s", voice_name, profilename);
+    dbg(lvl_debug, "Changing voice to %s", voice_name);
 
     // Change the profile name
     profilename_attr.type = attr_profilename;
@@ -1924,13 +1925,11 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
 
     navit_set_voiceprofile_name(this->nav,profilename);
 
-    save_voice_xml(v);
-
     voice.type=attr_voice;
     navit_set_attr(this->nav, &voice);
 
     gui_internal_prune_menu_count(this, 1, 0);
-    gui_internal_menu_voice_settings(this, v, voice_name);
+    gui_internal_menu_voice_settings(this);
 }
 
 /**
@@ -1981,10 +1980,10 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct wi
 }
 
 /**
- * Adds the voice profile to the GUI, allowing the user to pick a
- * profile for the currently selected voice.
+ * Adds one voice profile to the GUI, allowing the user to pick a
+ * profile for the voice.
  */
-static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget *parent, struct vehicle *v, struct vehicleprofile *profile) {
+static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget *parent, struct speech *profile) {
     // Just here to show up in the translation file, nice and close to where the translations are actually used.
     struct attr profile_attr;
     struct attr *attr = NULL;
@@ -1995,34 +1994,29 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
     struct voice_and_profilename *context = NULL;
 
 #ifdef ONLY_FOR_TRANSLATION
-    char *translations[] = {_n("car"), _n("bike"), _n("pedestrian")};
+    char *translations[] = {_n("voice")};
 #endif
 
+    // TODO Figure out the profile name
     // Figure out the profile name
-    attr = attr_search(profile->attrs, attr_name);
-    if (!attr) {
-        dbg(lvl_error, "Adding voice profile failed. attr==NULL");
-        return;
-    }
-    name = attr->u.str;
+    name = "Dutch female";
 
+    // TODO Determine whether the profile is the active one
     // Determine whether the profile is the active one
-    if (voice_get_attr(v, attr_profilename, &profile_attr, NULL))
-        active_profile = profile_attr.u.str;
-    active = active_profile != NULL && !strcmp(name, active_profile);
+    active = 0;
 
     dbg(lvl_debug, "Adding voice profile %s, active=%s/%i", name, active_profile, active);
 
     // Build a translatable label.
     if(active) {
-        label = g_strdup_printf(_("Current profile: %s"), _(name));
+        label = g_strdup_printf(_("Current profile: %s"), name);
     } else {
-        label = g_strdup_printf(_("Change profile to: %s"), _(name));
+        label = g_strdup_printf(_("Change profile to: %s"), name);
     }
 
-    // Create the context object (the voice and the desired profile)
+    // Create the context object (the voice)
     context = g_new0(struct voice_and_profilename, 1);
-    context->voice = v;
+    context->voice = profile;
     context->profilename = name;
 
     // Add the button
@@ -2037,7 +2031,7 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
 }
 
 /**
- * Adds the vehicle profile to the GUI, allowing the user to pick a
+ * Adds one vehicle profile to the GUI, allowing the user to pick a
  * profile for the currently selected vehicle.
  */
 static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget *parent, struct vehicle *v,
@@ -2092,10 +2086,10 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
     free(label);
 }
 
-void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, char *name) {
+void gui_internal_menu_voice_settings(struct gui_priv *this) {
     struct widget *w,*wb,*row;
     struct attr attr;
-    struct vehicleprofile *profile = NULL;
+    struct speech *profile = NULL;
     GList *profiles;
 
     wb = gui_internal_menu(this, name);
@@ -2103,8 +2097,64 @@ void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, ch
     gui_internal_widget_append(wb, w);
 
     // Add the "Set as active" button if this isn't the active
-    // vehicle.
-    if (!gui_internal_is_active_vehicle(this, v)) {
+    // voice.
+    if (!gui_internal_is_active_voice(this, v)) {
+        gui_internal_widget_append(
+            w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
+        gui_internal_widget_append(
+            row, gui_internal_button_new_with_callback(this, _("Set as active"), image_new_xs(this, "gui_active"),
+                                                       gravity_left_center | orientation_horizontal | flags_fill,
+                                                       gui_internal_cmd_set_active_vehicle, v));
+    }
+
+    if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
+        gui_internal_widget_append(
+            w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
+        gui_internal_widget_append(row, gui_internal_button_new_with_callback(
+                                            this, _("Show Satellite status"), image_new_xs(this, "gui_active"),
+                                            gravity_left_center | orientation_horizontal | flags_fill,
+                                            gui_internal_cmd_show_satellite_status, v));
+    }
+    if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
+        gui_internal_widget_append(
+            w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
+        gui_internal_widget_append(
+            row, gui_internal_button_new_with_callback(this, _("Show NMEA data"), image_new_xs(this, "gui_active"),
+                                                       gravity_left_center | orientation_horizontal | flags_fill,
+                                                       gui_internal_cmd_show_nmea_data, v));
+    }
+
+    // Add all the possible voice profiles to the menu
+    profiles = navit_get_voiceprofiles(this->nav);
+    while (profiles) {
+        profile = (struct speech *)profiles->data;
+        gui_internal_widget_append(
+            w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
+        gui_internal_add_vehicle_profile(this, row, v, profile);
+        profiles = g_list_next(profiles);
+    }
+
+    callback_list_call_attr_2(this->cbl, attr_vehicle, w, v);
+    gui_internal_menu_render(this);
+}
+
+void gui_internal_cmd_voice_settings(struct gui_priv *this, struct widget *wm, void *data) {
+    gui_internal_menu_voice_settings(this, wm->data, wm->text);
+}
+
+void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, char *name) {
+    struct widget *w, *wb,*row;
+    struct attr attr;
+    struct vehicleprofile *profile = NULL;
+    GList *profiles;
+
+    wb=gui_internal_menu(this, name);
+    w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
+    gui_internal_widget_append(wb, w);
+
+    // Add the "Set as active" button if this isn't the active
+    // voice.
+    if (!gui_internal_is_active_voice(this, v)) {
         gui_internal_widget_append(
             w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
         gui_internal_widget_append(
@@ -2132,62 +2182,6 @@ void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, ch
 
     // Add all the possible voice profiles to the menu
     profiles = navit_get_vehicleprofiles(this->nav);
-    while (profiles) {
-        profile = (struct vehicleprofile *)profiles->data;
-        gui_internal_widget_append(
-            w, row = gui_internal_widget_table_row_new(this, gravity_left | orientation_horizontal | flags_fill));
-        gui_internal_add_vehicle_profile(this, row, v, profile);
-        profiles = g_list_next(profiles);
-    }
-
-    callback_list_call_attr_2(this->cbl, attr_vehicle, w, v);
-    gui_internal_menu_render(this);
-}
-
-void gui_internal_cmd_voice_settings(struct gui_priv *this, struct widget *wm, void *data) {
-    gui_internal_menu_voice_settings(this, wm->data, wm->text);
-}
-
-void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, char *name) {
-    struct widget *w, *wb,*row;
-    struct attr attr;
-    struct vehicleprofile *profile = NULL;
-    GList *profiles;
-
-    wb=gui_internal_menu(this, name);
-    w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
-    gui_internal_widget_append(wb, w);
-
-    // Add the "Set as active" button if this isn't the active
-    // vehicle.
-    if (!gui_internal_is_active_vehicle(this, v)) {
-        gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
-                                          gravity_left|orientation_horizontal|flags_fill));
-        gui_internal_widget_append(row,
-                                   gui_internal_button_new_with_callback(this, _("Set as active"),
-                                           image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-                                           gui_internal_cmd_set_active_vehicle, v));
-    }
-
-    if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
-        gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
-                                          gravity_left|orientation_horizontal|flags_fill));
-        gui_internal_widget_append(row,
-                                   gui_internal_button_new_with_callback(this, _("Show Satellite status"),
-                                           image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-                                           gui_internal_cmd_show_satellite_status, v));
-    }
-    if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
-        gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
-                                          gravity_left|orientation_horizontal|flags_fill));
-        gui_internal_widget_append(row,
-                                   gui_internal_button_new_with_callback(this, _("Show NMEA data"),
-                                           image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-                                           gui_internal_cmd_show_nmea_data, v));
-    }
-
-    // Add all the possible voice profiles to the menu
-    profiles = navit_get_vehicleprofiles(this->nav);
     while(profiles) {
         profile = (struct vehicleprofile *)profiles->data;
         gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
@@ -2196,7 +2190,32 @@ void gui_internal_menu_voice_settings(struct gui_priv *this, struct voice *v, ch
         profiles = g_list_next(profiles);
     }
 
-    callback_list_call_attr_2(this->cbl, attr_vehicle, w, v);
+    callback_list_call_attr_2(this->cbl, attr_voice, w, v);
+    gui_internal_menu_render(this);
+}
+
+void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name) {
+    struct widget *w,*wb,*row;
+    struct attr attr;
+    struct vehicleprofile *profile = NULL;
+    GList *profiles;
+
+    wb=gui_internal_menu(this, "Voice");
+    w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
+    gui_internal_widget_append(wb, w);
+
+    // Add all the possible voice profiles to the menu
+    profiles = navit_get_voiceprofiles(this->nav);
+    dbg(lvl_debug,"------------------- before profiles loop ---------------------");
+    while(profiles) {
+        dbg(lvl_debug,"------------------- in profiles loop ---------------------");
+        profile = (struct speech *)profiles->data;
+        gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill));
+        gui_internal_add_voice_profile(this, row, profile);
+        profiles = g_list_next(profiles);
+    }
+
+    callback_list_call_attr_2(this->cbl, attr_vehicle, w, profile);
     gui_internal_menu_render(this);
 }
 
@@ -2205,6 +2224,8 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
     struct attr attr;
     struct vehicleprofile *profile = NULL;
     GList *profiles;
+
+    dbg(lvl_debug,"------------------- gui_internal_menu_vehicle_settings ---------------------");
 
     wb = gui_internal_menu(this, name);
     w = gui_internal_widget_table_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill, 1);
@@ -2253,7 +2274,7 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
 }
 
 void gui_internal_cmd_voice_settings(struct gui_priv *this, struct widget *wm, void *data) {
-    gui_internal_menu_voice_settings(this, wm->data, wm->text);
+    gui_internal_menu_voice_settings(this);
 }
 
 void gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data) {
