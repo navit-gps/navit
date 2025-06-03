@@ -3155,6 +3155,8 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
     case attr_speech:
         this_->speech=attr->u.speech;
         this_->voiceprofiles=g_list_append(this_->voiceprofiles, attr->u.speech);
+        dbg(lvl_debug, "----------------- %i ---------------", g_list_length(this_->voiceprofiles));
+        dbg(lvl_debug, "----------------- appended voiceprofile ---------------");
         break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;

@@ -1902,6 +1902,7 @@ static DBusHandlerResult request_tracking_get_attr(DBusConnection *connection, D
                             (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))tracking_get_attr);
 }
 
+
 /* vehicle */
 
 static DBusHandlerResult request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message) {

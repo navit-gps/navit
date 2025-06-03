@@ -112,6 +112,7 @@ static struct gui_config_settings config_profiles[] = {
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r);
 
+static int gui_internal_is_active_voiceprofile(struct gui_priv *this, struct speech *voiceprofile);
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
 /**
@@ -1847,7 +1848,7 @@ static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget
  * one data item.
  */
 struct voice_and_profilename {
-    struct speech *voice;
+    struct speech *speech;
     char *profilename;
 };
 
@@ -1859,6 +1860,21 @@ struct vehicle_and_profilename {
     struct vehicle *vehicle;
     char *profilename;
 };
+
+/** 
+ * Figures out whether the given voice is the active voice.
+ *
+ * @return true if the voice is active, false otherwise. 
+ */ 
+static int gui_internal_is_active_voice(struct gui_priv *this, struct speech *profile) {
+    struct attr active_voice;
+    int active = 0;
+
+    navit_get_attr(this->nav, attr_speech, &active_voice, NULL);
+    active = active_voice.u.speech == profile;
+
+    return active;
+}
 
 /**
  * Figures out whether the given vehicle is the active vehicle.
@@ -1903,30 +1919,19 @@ static void save_vehicle_xml(struct vehicle *v) {
  */
 static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
     struct voice_and_profilename *vapn = data;
-    struct voice *v = vapn->voice;
+    struct speech *v = vapn->speech;
     char *profilename = vapn->profilename;
-    struct attr voice_name_attr;
-    char *voice_name = NULL;
-    struct attr profilename_attr;
-    struct attr voice;
+    struct attr speech_name_attr;
+    //char *voice_name = NULL;
 
     // Get the voice name
-    voice_get_attr(v, attr_name, &voice_name_attr, NULL);
-    voice_name = voice_name_attr.u.str;
+    //speech_get_attr(v, attr_name, &speech_name_attr, NULL);
+    //voice_name = speech_name_attr.u.str;
 
-    dbg(lvl_debug, "Changing voice to %s", voice_name);
+    // Change the active profile
+    navit_set_attr(this->nav, &v);
 
-    // Change the profile name
-    profilename_attr.type = attr_profilename;
-    profilename_attr.u.str = profilename;
-    if(!voice_set_attr(v, &profilename_attr)) {
-        dbg(lvl_error, "Unable to set the voice's profile name");
-    }
-
-    navit_set_voiceprofile_name(this->nav,profilename);
-
-    voice.type=attr_voice;
-    navit_set_attr(this->nav, &voice);
+    dbg(lvl_debug, "Changed voice to '%s'", profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
     gui_internal_menu_voice_settings(this);
@@ -1985,7 +1990,7 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct wi
  */
 static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget *parent, struct speech *profile) {
     // Just here to show up in the translation file, nice and close to where the translations are actually used.
-    struct attr profile_attr;
+    struct attr name_attr;
     struct attr *attr = NULL;
     char *name = NULL;
     char *active_profile = NULL;
@@ -1994,18 +1999,18 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
     struct voice_and_profilename *context = NULL;
 
 #ifdef ONLY_FOR_TRANSLATION
-    char *translations[] = {_n("voice")};
+    char *translations[] = {_n("Voice")};
 #endif
 
-    // TODO Figure out the profile name
+    // TODO Voice: Figure out the profile name
     // Figure out the profile name
-    name = "Dutch female";
+    if(speech_get_attr(profile, attr_name, &name_attr, NULL))
+       name = name_attr.u.str;
+    else
+       name = "<none>";
 
-    // TODO Determine whether the profile is the active one
-    // Determine whether the profile is the active one
-    active = 0;
-
-    dbg(lvl_debug, "Adding voice profile %s, active=%s/%i", name, active_profile, active);
+    active = gui_internal_is_active_voice(this, profile);
+    dbg(lvl_debug, "Adding voice profile '%s' active=/%i", name, active);
 
     // Build a translatable label.
     if(active) {
@@ -2016,7 +2021,7 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
 
     // Create the context object (the voice)
     context = g_new0(struct voice_and_profilename, 1);
-    context->voice = profile;
+    context->speech = profile;
     context->profilename = name;
 
     // Add the button
@@ -2206,9 +2211,7 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
 
     // Add all the possible voice profiles to the menu
     profiles = navit_get_voiceprofiles(this->nav);
-    dbg(lvl_debug,"------------------- before profiles loop ---------------------");
     while(profiles) {
-        dbg(lvl_debug,"------------------- in profiles loop ---------------------");
         profile = (struct speech *)profiles->data;
         gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill));
         gui_internal_add_voice_profile(this, row, profile);
@@ -2224,8 +2227,6 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
     struct attr attr;
     struct vehicleprofile *profile = NULL;
     GList *profiles;
-
-    dbg(lvl_debug,"------------------- gui_internal_menu_vehicle_settings ---------------------");
 
     wb = gui_internal_menu(this, name);
     w = gui_internal_widget_table_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill, 1);
