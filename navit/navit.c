@@ -52,6 +52,7 @@
 #include "traffic.h"
 #include "transform.h"
 #include "util.h"
+#include "speech.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
@@ -203,7 +204,6 @@ static void navit_set_cursors(struct navit *this_);
 static int navit_cmd_zoom_to_route(struct navit *this, char *function, struct attr **in, struct attr ***out);
 static int navit_cmd_set_center_cursor(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out);
-static int navit_set_voiceprofile(struct navit *this_, struct speech *s);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
 static int navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out);
@@ -1562,11 +1562,6 @@ struct graphics *navit_get_graphics(struct navit *this_) {
     return this_->gra;
 }
 
-struct speech *
-navit_get_voiceprofile(struct navit *this_) {
-    return this_->speech;
-}
-    
 GList *navit_get_voiceprofiles(struct navit *this_) {
     return this_->voiceprofiles;
 }
@@ -2802,6 +2797,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 }
 
 int navit_set_attr(struct navit *this_, struct attr *attr) {
+    dbg(lvl_debug, "-------------------------------- calling generic setter method for attribute type %s", attr_to_name(attr->type))
     return navit_set_attr_do(this_, attr, 0);
 }
 
@@ -3155,8 +3151,6 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
     case attr_speech:
         this_->speech=attr->u.speech;
         this_->voiceprofiles=g_list_append(this_->voiceprofiles, attr->u.speech);
-        dbg(lvl_debug, "----------------- %i ---------------", g_list_length(this_->voiceprofiles));
-        dbg(lvl_debug, "----------------- appended voiceprofile ---------------");
         break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;
@@ -3416,13 +3410,6 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
         navit_draw(this_);
 }
 
-static int navit_set_voiceprofile(struct navit *this_, struct speech *s) {
-    if (this_->speech == s)
-        return 0;
-    this_->speech=s;
-    return 1;
-}
-
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
     if (this_->vehicleprofile == vp)
         return 0;
@@ -3430,22 +3417,6 @@ static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *
     if (this_->route)
         route_set_profile(this_->route, this_->vehicleprofile);
     return 1;
-}
-
-int navit_set_voiceprofile_name(struct navit *this_, char *name) {
-    struct attr attr;
-    GList *l;
-    l=this_->voiceprofiles;
-    while (l) {
-        if (voiceprofile_get_attr(l->data, attr_name, &attr, NULL)) {
-            if (!strcmp(attr.u.str, name)) {
-                navit_set_voiceprofile(this_, l->data);
-                return 1;
-            }
-        }
-        l=g_list_next(l);
-    }
-    return 0;
 }
 
 int navit_set_vehicleprofile_name(struct navit *this_, char *name) {

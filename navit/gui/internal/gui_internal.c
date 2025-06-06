@@ -112,7 +112,6 @@ static struct gui_config_settings config_profiles[] = {
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r);
 
-static int gui_internal_is_active_voiceprofile(struct gui_priv *this, struct speech *voiceprofile);
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 
 /**
@@ -1919,19 +1918,11 @@ static void save_vehicle_xml(struct vehicle *v) {
  */
 static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
     struct voice_and_profilename *vapn = data;
-    struct speech *v = vapn->speech;
-    char *profilename = vapn->profilename;
-    struct attr speech_name_attr;
-    //char *voice_name = NULL;
 
-    // Get the voice name
-    //speech_get_attr(v, attr_name, &speech_name_attr, NULL);
-    //voice_name = speech_name_attr.u.str;
-
-    // Change the active profile
-    navit_set_attr(this->nav, &v);
-
-    dbg(lvl_debug, "Changed voice to '%s'", profilename);
+    // TODO Voice Change the active profile
+    dbg(lvl_debug, "----------------------------------- setting speech to '%s' (%s) with navit_set_attr", vapn->profilename, vapn->speech);
+    navit_set_attr(this->nav, &vapn->speech);
+    dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
     gui_internal_menu_voice_settings(this);
@@ -2002,7 +1993,6 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
     char *translations[] = {_n("Voice")};
 #endif
 
-    // TODO Voice: Figure out the profile name
     // Figure out the profile name
     if(speech_get_attr(profile, attr_name, &name_attr, NULL))
        name = name_attr.u.str;
