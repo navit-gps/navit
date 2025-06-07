@@ -241,16 +241,16 @@ find_package(Threads)
 
 #Qt detection
 if (NOT DISABLE_QT)
-	find_package(Qt5Widgets)
-	find_package(Qt5Quick)
-	find_package(Qt5Positioning)
+	find_package(Qt5Widgets QUIET)
+	find_package(Qt5Quick QUIET)
+	find_package(Qt5Positioning QUIET)
 	if (Qt5Widgets_FOUND OR Qt5Quick_FOUND OR Qt5Sensors_FOUND)
 		add_feature (USE_QWIDGET "Qt5 Qt5Widget not found" FALSE)
 		add_feature (USE_QML "Qt5 Qt5Quick not found" FALSE)
 		if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 			find_package(Qt5Svg REQUIRED)
 			find_package(Qt5DBus REQUIRED)
-			find_package(Qt5Multimedia)
+			find_package(Qt5Multimedia QUIET)
 			find_package(espeak QUIET)
 		endif (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 		if (Qt5Positioning_FOUND)
@@ -824,7 +824,9 @@ set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to p
 # Plugins
 if(USE_PLUGINS)
 	set(MODULE_BUILD_TYPE "MODULE")
-	set(SHARED_LIBNAVIT TRUE)
+	# Acknowledging the want of libnavit_core.so, there is something missing since it doesn't get
+	# installed anywhere. Reverting this for now. -- metalstrolch
+	#	set(SHARED_LIBNAVIT TRUE)
 	add_definitions("-fPIC")
 	list(APPEND NAVIT_LIBS dl)
 else()
