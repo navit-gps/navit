@@ -5,19 +5,20 @@
 # Hoàng Đỗ Can Trực https://launchpad.net/~truc294
 # Le Viet Thanh https://launchpad.net/~lethanhx2k
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:01+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://hosted.weblate.org/projects/navit/"
+"navit-core/vi/>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: vi\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -91,13 +92,11 @@ msgstr ""
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
-msgstr[1] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
-msgstr[1] ""
 
 #, c-format
 msgid "%d meters"
@@ -197,9 +196,6 @@ msgstr "Sắp tới chỗ vòng"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
-
-msgid "then enter the roundabout"
 msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
@@ -304,10 +300,6 @@ msgstr "dễ dàng "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "mạnh "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1962,12 +1954,6 @@ msgstr "Layout"
 msgid "Height Profile"
 msgstr "Thông tin chiều cao"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Mô tả hành trình"
 
@@ -2500,9 +2486,6 @@ msgstr "Toàn màn hình"
 msgid "Window Mode"
 msgstr "Chế độ cửa sổ"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "Mô tả"
 
@@ -2740,5 +2723,14 @@ msgid ""
 msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "sau đó ra khỏi đường vòng tại %1$s %2$s"
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""

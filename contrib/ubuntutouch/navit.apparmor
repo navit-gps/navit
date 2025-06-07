@@ -1,0 +1,8 @@
+{
+    "policy_groups": [
+	"audio",
+	"location",
+	"sensors",
+	"keep-display-on" ],
+    "policy_version": 20.04
+}

@@ -9,19 +9,20 @@
 # Lele Long https://launchpad.net/~schemacs
 # Li Jin https://launchpad.net/~lijin
 # kelvin https://launchpad.net/~kelvinz
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:01+0000\n"
-"Last-Translator: Kyle WANG <waxaca@163.com>\n"
-"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"navit/navit-core/zh_Hans/>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_CN\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -95,13 +96,11 @@ msgstr ""
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
-msgstr[1] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
-msgstr[1] ""
 
 #, c-format
 msgid "%d meters"
@@ -201,9 +200,6 @@ msgstr "不久将进入环形交叉路口"
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "Enter the roundabout %s"
-msgstr ""
-
-msgid "then enter the roundabout"
 msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
@@ -308,10 +304,6 @@ msgstr "缓 "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "急转 "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1966,12 +1958,6 @@ msgstr "布局"
 msgid "Height Profile"
 msgstr "高度设定"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "到目的地的路线"
 
@@ -2504,9 +2490,6 @@ msgstr "全屏"
 msgid "Window Mode"
 msgstr "窗口模式"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "描述"
 
@@ -2743,6 +2726,15 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "然后在%1$s %2$s处驶出环形区"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""

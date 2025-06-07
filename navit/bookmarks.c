@@ -664,6 +664,12 @@ static GList* read_former_destination_map_as_list(struct map *map) {
             item_attr_get(item, attr_label, &attr);
             dest->description = g_strdup(attr.u.str);
             more = item_coord_get(item, &c, 1);
+            if(!more) {
+                dbg(lvl_error, "Item %s got no coordinates\n", dest->description);
+                g_free(dest);
+                dest = NULL;
+                continue;
+            }
             while (more) {
                 dest->c = g_list_append(dest->c, g_new(struct coord, 1));
                 *(struct coord *)g_list_last(dest->c)->data = c;
@@ -782,7 +788,6 @@ void bookmarks_append_destinations(struct map *former_destination_map, char *for
     int i;
 
     former_destinations = read_former_destination_map_as_list(former_destination_map);
-
     if(c && count>0) {
         GList *older;
         struct coord ctmp;

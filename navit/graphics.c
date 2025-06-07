@@ -52,6 +52,9 @@
 #include "file.h"
 #include "event.h"
 #include "navit.h"
+#ifdef HAVE_API_WIN32_CE
+#include "libc.h"
+#endif
 
 /**
  * @brief maximum amount of coordinates to allocate on stack using g_alloca

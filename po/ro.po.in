@@ -12,20 +12,21 @@
 # dodobird https://launchpad.net/~dorinnirod
 # fasiol https://launchpad.net/~fasiol2
 # igorashu https://launchpad.net/~ionut-soare
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:00+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2025-05-05 18:07+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Romanian <https://hosted.weblate.org/projects/navit/"
+"navit-core/ro/>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
-"== 0) && (n != 0))) ? 2: 1));\n"
-"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -100,12 +101,14 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "%d meters"
@@ -211,9 +214,6 @@ msgstr "Intrați în curând în giratoriu"
 msgid "Enter the roundabout %s"
 msgstr "Intrați în giratoriu %s"
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -317,11 +317,7 @@ msgstr "uşor "
 msgid "strongly "
 msgstr "strâns "
 
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#, c-format
+#, c-format, fuzzy
 msgid "Take the %1$s road to the %2$s"
 msgstr "Virați %2s pe %1s stradă"
 
@@ -1974,12 +1970,6 @@ msgstr "Dispunere"
 msgid "Height Profile"
 msgstr "Profil înălțime"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Descrerea traseului"
 
@@ -2516,9 +2506,6 @@ msgstr "Pe tot ecranul"
 msgid "Window Mode"
 msgstr "Mod „fereastră”"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "Descriere"
 
@@ -2756,5 +2743,14 @@ msgid ""
 msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "apoi ieșiți din giratoriu la %1$s %2$s"
+msgid "%d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""

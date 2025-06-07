@@ -359,6 +359,7 @@ static void PrintVersion(void)
 #define optional_argument 2
 #endif
 
+#ifndef WINCE
 int main (int argc, char **argv)
 //==============================
 {
@@ -809,3 +810,4 @@ int main (int argc, char **argv)
 		fclose(f_phonemes_out);  // needed for WinCE
 	return(0);
 }
+#endif

@@ -19,19 +19,20 @@
 # Vojtěch Látal https://launchpad.net/~vojtik
 # stritek https://launchpad.net/~stritek
 # talmik https://launchpad.net/~mikatom
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-25 09:58+0000\n"
-"Last-Translator: Clon <Unknown>\n"
-"Language-Team: Čeština\n"
+"PO-Revision-Date: 2024-04-13 17:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/navit/navit-core/"
+"cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -218,9 +219,6 @@ msgstr "Brzy najeďte na kruhový objezd"
 msgid "Enter the roundabout %s"
 msgstr "Vjeďte na kruhový objezd po %s"
 
-msgid "then enter the roundabout"
-msgstr "poté vjeďte na kruhový objezd"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -325,10 +323,6 @@ msgid "strongly "
 msgstr "ostře "
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "poté jeďte %1$s silnici %2$s"
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Jeďte na %1$s silnici %2$s"
 
@@ -398,14 +392,8 @@ msgstr "Příkaz"
 msgid "Length"
 msgstr "Délka"
 
-msgid "mi"
-msgstr ""
-
 msgid "km"
 msgstr "km"
-
-msgid "feet"
-msgstr "stop"
 
 msgid "m"
 msgstr "m"
@@ -1563,26 +1551,6 @@ msgstr ""
 "\t-h: vytisknout tyto informace o použití a zavřít.\n"
 "\t-v: vytisknout verzi a zavřít.\n"
 
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found"
-msgstr "Nebyl nalezen konfigurační soubor navit.xml, navit.xml.local"
-
-#, c-format
-msgid "Error parsing config file '%s': %s"
-msgstr "Chyba při načítání konfiguračního souboru '%s': %s"
-
-#, c-format
-msgid "Using config file '%s'"
-msgstr "Použit konfigurační soubor '%s'"
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'"
-msgstr "Chyba: Nebylo nalezeno nastavení v konfiguračním souboru '%s'"
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
-msgstr ""
-
 msgid "unknown street"
 msgstr "neznámá ulice"
 
@@ -1721,9 +1689,6 @@ msgstr "Zobrazit pozici _kurzoru"
 msgid "_Lock on Road"
 msgstr "Jet jen po silnici"
 
-msgid "_Follow Vehicle"
-msgstr ""
-
 msgid "_Keep orientation to the North"
 msgstr "_Orientovat na sever"
 
@@ -1793,29 +1758,9 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Nakupování"
 
-#. Input is in kilometers
-msgid "Select a search radius from screen center in km"
-msgstr ""
-
-#. Input is in miles.
-msgid "Select a search radius from screen center in miles"
-msgstr ""
-
 #, c-format
 msgid "POI %s. %s"
 msgstr "POI %s. %s"
-
-#, c-format
-msgid "Set destination to %ld, %ld "
-msgstr "Nastavit cíl na %ld, %ld "
-
-#, c-format
-msgid "Set map to %ld, %ld "
-msgstr "Nastavit mapu na %ld, %ld "
-
-#, c-format
-msgid "Set next visit to %ld, %ld "
-msgstr "Nastavit příští návštěvu na %ld, %ld "
 
 msgid "POI search"
 msgstr "Vyhledávání POI"
@@ -1834,9 +1779,6 @@ msgstr "Kategorie"
 
 msgid "Direction"
 msgstr "Směr"
-
-msgid "Distance"
-msgstr ""
 
 msgid "Name"
 msgstr "Název"
@@ -1880,10 +1822,6 @@ msgstr "3D"
 
 msgid "OT"
 msgstr "OT"
-
-#, c-format
-msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trasa 0000km  0+00:00 ETA"
@@ -2093,20 +2031,11 @@ msgstr "Rozvržení"
 msgid "Height Profile"
 msgstr "Výškový profil"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr "pro výškové údaje nainstalujte mapu *.heightlines.bin"
-
-msgid "The route must cross at least 2 heightlines"
-msgstr "Trasa musí překročit alspoň dvě vrstevnice."
-
 msgid "Route Description"
 msgstr "Popis trasy"
 
 msgid "Show Locale"
 msgstr "Zobrazit jazyk"
-
-msgid "Network info"
-msgstr "Informace o síti"
 
 msgid "Former Destinations"
 msgstr "Minulé cíle"
@@ -2203,30 +2132,8 @@ msgstr "Celá obrazovka"
 msgid "Window Mode"
 msgstr "V okně"
 
-msgid "Auto zoom"
-msgstr "Automatické přiblížení"
-
-msgid "Manual zoom"
-msgstr "Ruční přiblížení"
-
-msgid "Layers"
-msgstr "Vrstvy"
-
-msgid "Zoom to route"
-msgstr "Přiblížit trasu"
-
 msgid "Description"
 msgstr "Popis"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr ""
 
 msgid "Satellite Status"
 msgstr "Stav satelitu"
@@ -2284,8 +2191,8 @@ msgstr ""
 "Děkujeme za instalaci Navit!\n"
 "\n"
 "Pro začátek, vyberte \"Stáhnout mapy\" z menu pro stažení map. Poznámka: "
-"Velikost souboru map mohou být velké (>50MB) - wifi připojení je "
-"doporučeno.\n"
+"Velikost souboru map mohou být velké (>50MB) - wifi připojení je doporučeno."
+"\n"
 "\n"
 "Mapdata: (c) OpenStreetMap a přispěvovatelé\n"
 "\n"
@@ -2379,10 +2286,6 @@ msgstr "Žádné umístění. Zkuste znovu po opravě umístění."
 msgid "Maps containing current location"
 msgstr "Mapy obsahující nynější umístění"
 
-#. Android resource: @strings/maps_installed
-msgid "Installed maps"
-msgstr ""
-
 #. Android resource: @strings/map_downloading
 msgid "downloading"
 msgstr "stahování…"
@@ -2394,18 +2297,6 @@ msgstr "Médium zvolené pro uchovávání map není k dispozici"
 #. Android resource: @strings/map_download_error_writing_map
 msgid "Error writing map!"
 msgstr "Chyba při zápisu mapy!"
-
-#. Android resource: @strings/map_location_changed
-#, c-format
-msgid "New location set to %s Restart Navit to apply the changes."
-msgstr ""
-
-#. Android resource: @strings/map_location_unavailable
-#, c-format
-msgid ""
-"Current map location %s is not available Please restart Navit after you "
-"attach an SD card or select a different map location."
-msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2529,16 +2420,6 @@ msgid ""
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
 msgstr ""
-
-#. Android resource: @strings/permissions_not_granted
-msgid ""
-"Navit needs permission to access GPS and read the map.\n"
-"If you change your mind please restart Navit and grant the permissions"
-msgstr ""
-
-#. Android resource: @strings/permissions_info_box_title
-msgid "One or more ungranted permissions"
-msgstr "Chybí přinejmenším jedno oprávnění"
 
 #. Android resource: @strings/whole_planet
 msgid "Whole Planet"
@@ -2896,10 +2777,6 @@ msgstr "Havaj"
 msgid "USA"
 msgstr "USA"
 
-#. Android resource: @strings/except_alaska_and_hawaii
-msgid "(except Alaska and Hawaii)"
-msgstr ""
-
 #. Android resource: @strings/midwest
 msgid "Midwest"
 msgstr "Středozápad"
@@ -3024,84 +2901,106 @@ msgstr "Jižní a Střední Amerika"
 msgid "Guyane Francaise"
 msgstr "Francouzská Guyana"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Trasa %4.0fkm    %02d:%02d ETA"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Nenalezen konfigurační soubor navit.xml a navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "Chyba při zpracování konfiguračního souboru '%s': %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Používáte konfigurační soubor '% s'\n"
-
-#~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
-#~ msgstr ""
-#~ "Interní selhání inicializace, končím. Zkontrolujte předchozí chybové "
-#~ "zprávy.\n"
-
-#~ msgid "partial match"
-#~ msgstr "Částečná shoda"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Mapová data (c) přispěvatelé OpenStreetMap, ODBL"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Stažené mapy"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (mimo Aljašky a Havaje)"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Chyba při stahování mapy!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Stahování mapy přerušeno!"
-
-#~ msgid ""
-#~ "Drop last \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Zrušit minulý \n"
-#~ "bod trasy"
-
-#~ msgid ""
-#~ "Drop next \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Zrušit příští \n"
-#~ " bod trasy"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Chyba: Nenalezena žádná konfigurace v konfiguračním souboru '%s'\n"
-
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Vzdálenost od středu mapy (km)"
 
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Nastav cíl na %ld, %ld \n"
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr ""
 
 #, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "Posuň mapu na %ld, %ld \n"
+msgid "Set next visit to %ld, %ld \n"
+msgstr ""
+
+msgid "Select a search radius from screen center"
+msgstr ""
 
 #, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Nastav další zastavení na %ld, %ld \n"
-
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Vyberte vzdálenost ve které hledat (km)"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Vzdálenost (m)"
+msgid "Error: No configuration found in config file '%s'\n"
+msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "pak sjeďte na %1$s %2$s"
+msgid "Error parsing config file '%s': %s\n"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld \n"
+msgstr ""
+
+msgid "Select a distance to look for (km)"
+msgstr ""
+
+msgid ""
+"Internal initialization failed, exiting. Check previous error messages.\n"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'\n"
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld \n"
+msgstr ""
+
+msgid ""
+"Current map location %s is not available\n"
+"Please restart Navit after you attach an SD card or select a different map "
+"location."
+msgstr ""
+
+msgid "filenamePath"
+msgstr ""
+
+msgid "Downloaded maps"
+msgstr ""
+
+msgid ""
+"New location set to %s\n"
+"Restart Navit to apply the changes."
+msgstr ""
+
+msgid "Map download aborted!"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+msgid "Distance(m)"
+msgstr ""
+
+msgid ""
+"Drop next \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+msgid " (except Alaska and Hawaii)"
+msgstr ""
+
+msgid "Error downloading map!"
+msgstr ""
+
+msgid "partial match"
+msgstr ""
+
+msgid ""
+"Drop last \n"
+"Waypoint"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+msgid "Map data (c) OpenStreetMap contributors, ODBL"
+msgstr ""

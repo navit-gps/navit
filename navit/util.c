@@ -766,7 +766,7 @@ unsigned int iso8601_to_secs(char *iso8601) {
     a=val[0]/100;
     b=2-a+a/4;
 
-    if (val[1] < 2) {
+    if (val[1] < 3) {
         val[0]--;
         val[1]+=12;
     }

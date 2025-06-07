@@ -7,19 +7,20 @@
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Stendec https://launchpad.net/~stendec
 # sieks https://launchpad.net/~sieks
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:59+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Latvian <https://hosted.weblate.org/projects/navit/navit-core/"
+"lv/>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"Language: lv\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -207,9 +208,6 @@ msgstr "Drīzumā uzbraukt uz apļa"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -312,10 +310,6 @@ msgstr "nedaudz "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "strauji "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1972,12 +1966,6 @@ msgstr "Izklājums"
 msgid "Height Profile"
 msgstr "Augstuma profils"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Maršruta apraksts"
 
@@ -2516,9 +2504,6 @@ msgstr "Pilnekrāns"
 msgid "Window Mode"
 msgstr "Loga režīms"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "Apraksts"
 
@@ -2770,6 +2755,15 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "pēc tam izbraukt no apļa pa %1$s %2$s"
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
+
+#, c-format
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""

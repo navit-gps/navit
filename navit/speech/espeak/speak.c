@@ -56,6 +56,7 @@ int (* uri_callback)(int, const char *, const char *) = NULL;
 int (* phoneme_callback)(const char *) = NULL;
 FILE *f_wave = NULL;
 
+#ifndef WINCE
 int GetFileLength(const char *filename) {
     struct stat statbuf;
 
@@ -67,6 +68,7 @@ int GetFileLength(const char *filename) {
 
     return(statbuf.st_size);
 }
+#endif
 
 void MarkerEvent(int type, unsigned int char_position, int value, int value2, unsigned char *out_ptr) {
 }

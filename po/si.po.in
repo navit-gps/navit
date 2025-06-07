@@ -3,19 +3,20 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # සපුමල් බණ්ඩාර https://launchpad.net/~sapumalbandaraucsc
-
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 04:00+0000\n"
-"Last-Translator: සපුමල් බණ්ඩාර <sapumalbandaraucsc@gmail.com>\n"
-"Language-Team: Sinhalese <si@li.org>\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Sinhala <https://hosted.weblate.org/projects/navit/navit-core/"
+"si/>\n"
+"Language: si\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: si\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "මූල ඩිරෙක්ටරියෙන් විචලනය වේ\n"
@@ -198,9 +199,6 @@ msgstr ""
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -303,10 +301,6 @@ msgstr "පහසුවෙන් "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "ශක්තිමත් ලෙස "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1961,12 +1955,6 @@ msgstr "පිරිසැලසුම"
 msgid "Height Profile"
 msgstr "උසේ පැතිපෙනුම"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "රවුට් විස්තරය"
 
@@ -2503,9 +2491,6 @@ msgstr "මුළු තිරය"
 msgid "Window Mode"
 msgstr "කවුළු ප්‍රකාරය"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "විස්තරය"
 
@@ -2743,5 +2728,14 @@ msgid ""
 msgstr ""
 
 #, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "එවිට %1$s %2$s හිදී වටරවුමෙන් ඉවත්වන්න."
+msgid "%d m"
+msgstr ""
+
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
+#, c-format
+msgid "then leave the roundabout at the %1$s %2$s"
+msgstr ""
