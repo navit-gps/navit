@@ -88,6 +88,12 @@ jobs:
           name: Install Google Cloud keys
           command: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/google-keyring.gpg
       - run:
+          name: Dump apt config
+          command: |
+            cat /etc/apt/sources.list
+            ls -al /etc/apt/sources-list.d/
+            cat /etc/apt/sources-list.d/*
+      - run:
           name: Install requirements
           command: scripts/setup_android.sh
       - run:
