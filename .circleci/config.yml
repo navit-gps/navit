@@ -85,6 +85,9 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
+          name: Install Google Cloud keys
+          command: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/google-keyring.gpg
+      - run:
           name: Install requirements
           command: scripts/setup_android.sh
       - run:
