@@ -720,7 +720,7 @@ if(CMAKE_SIZEOF_VOID_P LESS 8)
 endif()
 
 if(BUILD_MAPTOOL)
-	find_package(Protobuf-c REQUIRED)
+	find_package(PROTOBUF_C REQUIRED)
 	if(NOT PROTOBUF_C_FOUND)
 		set_with_reason(BUILD_MAPTOOL "PROTOBUF-C not found" FALSE)
 	endif()
