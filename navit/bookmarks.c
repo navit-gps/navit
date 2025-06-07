@@ -79,6 +79,9 @@ struct bookmark_item_priv {
     struct item item;
 };
 
+// Force all debugging for the rest of this file
+#define dbg(level,...) { debug_printf(level,"bookmarks",9,__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,__VA_ARGS__); }
+
 void bookmarks_move_root(struct bookmarks *this_) {
     this_->current=this_->root;
     this_->current->iter=g_list_first(this_->current->children);
@@ -678,10 +681,18 @@ static GList* read_former_destination_map_as_list(struct map *map) {
 
 static int destination_equal(struct former_destination* dest1, struct former_destination* dest2,
                              int ignore_descriptions) {
-    if ((dest1->type == dest2->type) &&
-            (ignore_descriptions || !strcmp(dest1->description, dest2->description)) &&
-            (coord_equal((struct coord *)g_list_last(dest1->c)->data, (struct coord *)g_list_last(dest2->c)->data))) {
-        return TRUE;
+    dbg(lvl_debug,"TRACE:Entering function");
+    if (dest1 && dest2 && (dest1->type == dest2->type)) {
+        if (ignore_descriptions || (dest1->description && dest2->description && strcmp(dest1->description, dest2->description)==0)) {
+            GList* c1 = dest1->c;
+            GList* c2 = dest2->c;
+            if (c1 && c2) {
+                struct coord* coord1 = c1->data;
+                struct coord* coord2 = c2->data;
+                if (coord1 && coord2 && coord_equal(coord1, coord2))
+                    return TRUE;
+            }
+        }
     }
     return FALSE;
 }
@@ -698,7 +709,9 @@ static GList* find_destination_in_list(struct former_destination* dest_to_remove
     struct former_destination* curr_dest;
     while(curr_el) {
         curr_dest = curr_el->data;
+        dbg(lvl_error, "TRACE:%d", __LINE__);
         if (destination_equal(dest_to_remove, curr_dest, remove_found?0:1)) {
+        dbg(lvl_error, "TRACE:%d", __LINE__);
             if(remove_found) {
                 free_former_destination(curr_dest, NULL);
                 curr_el = g_list_remove(curr_el, curr_dest);
@@ -732,6 +745,7 @@ static void write_former_destinations(const GList* former_destinations, const ch
     GList* c_list = NULL;
     struct coord *c;
     struct former_destination *dest;
+    dbg(lvl_debug,"TRACE:Entering function");
     const char* prostr = projection_to_name(proj);
     if (prostr == NULL)
         prostr = "";	/* Protect from NULL pointer dereference below */
@@ -741,18 +755,19 @@ static void write_former_destinations(const GList* former_destinations, const ch
         for(currdest = former_destinations; currdest; currdest = g_list_next(currdest)) {
             dest = currdest->data;
             fprintf(f,"type=%s", item_to_name(dest->type));
-            if (dest->description)
+            if (dest->description) {
                 fprintf(f," label=\"%s\"", str_escape(escape_mode_quote, dest->description));
+            }
             fputc('\n', f);
             c_list = dest->c;
-            do {
+            while (c_list) {
                 c = (struct coord *)c_list->data;
                 fprintf(f,"%s%s%s0x%x %s0x%x\n",
                         prostr, *prostr ? ":" : "",
                         c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x,
                         c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y);
                 c_list = g_list_next(c_list);
-            } while (c_list);
+            };
         }
         fclose(f);
     } else {
@@ -781,6 +796,7 @@ void bookmarks_append_destinations(struct map *former_destination_map, char *for
     int no_of_former_destinations;
     int i;
 
+    dbg(lvl_debug,"TRACE:Entering function");
     former_destinations = read_former_destination_map_as_list(former_destination_map);
 
     if(c && count>0) {
@@ -795,7 +811,9 @@ void bookmarks_append_destinations(struct map *former_destination_map, char *for
             transform_from_to(&ctmp,c[i].pro, c_dup, map_projection(former_destination_map));
             new_dest->c = g_list_append(new_dest->c, c_dup);
         }
-        older=find_destination_in_list(new_dest, former_destinations,0);
+        dbg(lvl_error, "TRACE:%d", __LINE__);
+        older=find_destination_in_list(new_dest, former_destinations,0); // crash here
+        dbg(lvl_error, "TRACE:%d", __LINE__);
         if(!description && older)
             description=((struct former_destination *)older->data)->description;
         new_dest->description = g_strdup(description?description:_("Map Point"));
@@ -804,14 +822,18 @@ void bookmarks_append_destinations(struct map *former_destination_map, char *for
         former_destinations = g_list_append(former_destinations, new_dest);
     }
     no_of_former_destinations = g_list_length(former_destinations);
+    dbg(lvl_error, "TRACE:no_of_former_destinations=%d", no_of_former_destinations);
     if (limit > 0 && no_of_former_destinations > limit)
         former_destinations_shortened = g_list_nth(former_destinations, no_of_former_destinations - limit);
     else
         former_destinations_shortened = former_destinations;
 
+    dbg(lvl_error, "TRACE:former_destination_map=%p", former_destination_map);
+    dbg(lvl_error, "TRACE:former_destinations_shortened=%p", former_destinations_shortened);
+    dbg(lvl_error, "TRACE:former_destination_file=\"%s\"", former_destination_file);
     write_former_destinations(former_destinations_shortened, former_destination_file,
-                              map_projection(former_destination_map));
+                              map_projection(former_destination_map)); // There a crash here if no bookmarks.txt file exists
+    dbg(lvl_error, "TRACE:%d", __LINE__);
     g_list_foreach(former_destinations, (GFunc) free_former_destination, NULL);
     g_list_free(former_destinations);
 }
-
