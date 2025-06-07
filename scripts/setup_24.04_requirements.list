@@ -1,0 +1,3 @@
+wget unzip cmake build-essential gettext librsvg2-bin util-linux git ssh
+sed astyle libprotobuf-c-dev protobuf-c-compiler bash mingw-w64 mingw-w64-tools
+default-jdk nsis libsaxonb-java curl cmake

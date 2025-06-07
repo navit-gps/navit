@@ -210,9 +210,6 @@ msgstr "Ускоро прелазак на обилазницу"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -317,10 +314,6 @@ msgid "strongly "
 msgstr "јако "
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Прати %1$s пут до %2$s"
 
@@ -391,14 +384,8 @@ msgstr "Наредба"
 msgid "Length"
 msgstr "Дужина"
 
-msgid "mi"
-msgstr ""
-
 msgid "km"
 msgstr "km"
-
-msgid "feet"
-msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -1546,27 +1533,6 @@ msgid ""
 "\t-v: print the version and exit.\n"
 msgstr ""
 
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found"
-msgstr "Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен"
-
-#, c-format
-msgid "Error parsing config file '%s': %s"
-msgstr "Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s"
-
-#, c-format
-msgid "Using config file '%s'"
-msgstr "Користим датотеку подешавања „%s“"
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'"
-msgstr "ГРЕШКА: Нису пронађене поставке у датотеци подешавања „%s"
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
-msgstr ""
-"Није успело унутрашње покретање, излазим. Проверите претходне поруке грешака."
-
 msgid "unknown street"
 msgstr "непозната улица"
 
@@ -1705,9 +1671,6 @@ msgstr "Прикажи _показивач положаја"
 msgid "_Lock on Road"
 msgstr "Прати пут"
 
-msgid "_Follow Vehicle"
-msgstr ""
-
 msgid "_Keep orientation to the North"
 msgstr "_Држи усмерење према северу"
 
@@ -1784,18 +1747,6 @@ msgstr "Растојање од средишта екрана"
 msgid "POI %s. %s"
 msgstr "Занимљива тачка %s. %s"
 
-#, c-format
-msgid "Set destination to %ld, %ld "
-msgstr "Постави одредиште на %ld, %ld "
-
-#, c-format
-msgid "Set map to %ld, %ld "
-msgstr "Постави карту на %ld, %ld "
-
-#, c-format
-msgid "Set next visit to %ld, %ld "
-msgstr "Постави следећу посету на %ld, %ld "
-
 msgid "POI search"
 msgstr "Претрага занимљивих тачака"
 
@@ -1862,10 +1813,6 @@ msgstr "3Д"
 
 msgid "OT"
 msgstr "ОТ"
-
-#, c-format
-msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Рута 0000км 0+00:00 ПВД"
@@ -2075,20 +2022,11 @@ msgstr "Распоред"
 msgid "Height Profile"
 msgstr "Висински профил"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Опис путање"
 
 msgid "Show Locale"
 msgstr "Прикажи име превода"
-
-msgid "Network info"
-msgstr ""
 
 msgid "Former Destinations"
 msgstr "Претходна одредишта"
@@ -2184,18 +2122,6 @@ msgstr "Цео екран"
 
 msgid "Window Mode"
 msgstr "Режим прозора"
-
-msgid "Auto zoom"
-msgstr ""
-
-msgid "Manual zoom"
-msgstr ""
-
-msgid "Layers"
-msgstr ""
-
-msgid "Zoom to route"
-msgstr ""
 
 msgid "Description"
 msgstr "Опис"
@@ -2362,10 +2288,6 @@ msgstr "Нема положаја. Отварам поново по исправ
 msgid "Maps containing current location"
 msgstr "Карте које садрже тренутни положај"
 
-#. Android resource: @strings/maps_installed
-msgid "Installed maps"
-msgstr ""
-
 #. Android resource: @strings/map_downloading
 msgid "downloading"
 msgstr "преузимање"
@@ -2377,18 +2299,6 @@ msgstr ""
 #. Android resource: @strings/map_download_error_writing_map
 msgid "Error writing map!"
 msgstr "Десила се грешка при упису карте!"
-
-#. Android resource: @strings/map_location_changed
-#, c-format
-msgid "New location set to %s Restart Navit to apply the changes."
-msgstr ""
-
-#. Android resource: @strings/map_location_unavailable
-#, c-format
-msgid ""
-"Current map location %s is not available Please restart Navit after you "
-"attach an SD card or select a different map location."
-msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2511,16 +2421,6 @@ msgid ""
 "Navit can use any text to speech engine installed on your device. The "
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
-msgstr ""
-
-#. Android resource: @strings/permissions_not_granted
-msgid ""
-"Navit needs permission to access GPS and read the map.\n"
-"If you change your mind please restart Navit and grant the permissions"
-msgstr ""
-
-#. Android resource: @strings/permissions_info_box_title
-msgid "One or more ungranted permissions"
 msgstr ""
 
 #. Android resource: @strings/whole_planet
@@ -2878,10 +2778,6 @@ msgstr "Хаваји"
 #. Android resource: @strings/usa
 msgid "USA"
 msgstr "САД"
-
-#. Android resource: @strings/except_alaska_and_hawaii
-msgid "(except Alaska and Hawaii)"
-msgstr ""
 
 #. Android resource: @strings/midwest
 msgid "Midwest"

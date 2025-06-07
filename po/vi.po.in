@@ -198,9 +198,6 @@ msgstr "Sắp tới chỗ vòng"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -303,10 +300,6 @@ msgstr "dễ dàng "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "mạnh "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1961,12 +1954,6 @@ msgstr "Layout"
 msgid "Height Profile"
 msgstr "Thông tin chiều cao"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Mô tả hành trình"
 
@@ -2498,9 +2485,6 @@ msgstr "Toàn màn hình"
 
 msgid "Window Mode"
 msgstr "Chế độ cửa sổ"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Mô tả"

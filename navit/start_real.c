@@ -49,6 +49,7 @@
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
+#include "libc.h"
 #endif
 
 int main_argc;
