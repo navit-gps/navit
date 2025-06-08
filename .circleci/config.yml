@@ -85,6 +85,24 @@ jobs:
       - checkout
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
+          name: Upgrade docker container packages
+          command: |
+            wget https://packages.cloud.google.com/apt/doc/apt-key.gpg && sudo apt-key add apt-key.gpg
+            sudo apt-get update
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
+      - run:
+          name: Install rbenv
+          command: |
+            # The docker image's ruby version is really old now, so we need to reinstall a more recent ruby
+            sudo apt-get install -y git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+            curl -sL https://raw.githubusercontent.com/rbenv/rbenv-installer/refs/heads/main/bin/rbenv-installer | bash -
+      - run:
+          name: Upgrade ruby
+          command: |
+            echo PATH:$PATH
+            bash -c "$HOME/.rbenv/bin/rbenv install 2.7.0"
+            bash -c "$HOME/.rbenv/bin/rbenv global 2.7.0"
+      - run:
           name: Install requirements
           command: bash scripts/setup_android.sh
       - run:
