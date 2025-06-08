@@ -13,7 +13,7 @@ sudo apt-get install -y git curl libssl-dev libreadline-dev zlib1g-dev \
 curl -sL https://raw.githubusercontent.com/rbenv/rbenv-installer/refs/heads/main/bin/rbenv-installer | bash -
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-exec bash -
+source ~/.bashrc
 rbenv install 2.7.0
 rbenv global 2.7.0
 
