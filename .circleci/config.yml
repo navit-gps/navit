@@ -89,7 +89,7 @@ jobs:
           command: |
             wget https://packages.cloud.google.com/apt/doc/apt-key.gpg && sudo apt-key add apt-key.gpg
             sudo apt-get update
-            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename libprotobuf-c-dev
+            sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename libprotobuf-c-dev xsltproc imagemagick
       - run:
           name: Install rbenv
           command: |
@@ -102,6 +102,11 @@ jobs:
             echo PATH:$PATH
             bash -c "$HOME/.rbenv/bin/rbenv install 2.7.0"
             bash -c "$HOME/.rbenv/bin/rbenv global 2.7.0"
+      - run:
+          name: Upgrade to a recent Android cmake
+          command: |
+            sdkmanager 'cmake;3.30.3'
+            sdkmanager --uninstall 'cmake;3.6.4111459'
       - run:
           shell: bash
           name: Install requirements
