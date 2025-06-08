@@ -5,20 +5,21 @@ wget https://packages.cloud.google.com/apt/doc/apt-key.gpg && sudo apt-key add a
 
 sudo apt-get update
 sudo apt-get install -y cmake gettext libsaxonb-java librsvg2-bin pkg-config rename
-gem install --no-document domain_name -v 0.5.20190701
-gem install --no-document rchardet -v 1.8.0
+
+# The docker image's ruby version is really old now, so we need to reinstall a more recent ruby
+sudo apt-get install -y git curl libssl-dev libreadline-dev zlib1g-dev \
+    autoconf bison build-essential libyaml-dev \
+    libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+curl -sL https://raw.githubusercontent.com/rbenv/rbenv-installer/refs/heads/main/bin/rbenv-installer | bash -
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+exec bash -
+rbenv install 2.7.0
+rbenv global 2.7.0
+
+# What we actually want is fastlane but because out ruby version is not that recent (2.7.0), we need to manually pin dependencies to compatible versions before installing fastlane
 gem install --no-document public_suffix -v 5.1.1
-gem install --no-document git -v 1.19.1
-gem install --no-document faraday -v 2.8.1
-gem install --no-document faraday-net_http -v 3.0.2
-gem install --no-document signet -v 0.18.0
-gem install --no-document google-cloud-errors -v 1.3.1
-gem install --no-document google-cloud-env -v 1.6.0
-gem install --no-document google-cloud-core -v 1.6.1
-gem install --no-document drb -v 2.0.6
-gem install --no-document activesupport -v 6.1.7.8
-gem install --no-document google-cloud-storage -v 1.31.1
-gem install --no-document excon -v 0.109.0
+gem install --no-document signet -v 0.19.0
+gem install --no-document google-cloud-errors -v 1.4.0
+gem install --no-document google-cloud-core -v 1.7.1
 gem install --no-document fastlane
-
-
