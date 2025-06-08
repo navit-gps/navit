@@ -12,3 +12,7 @@ gem install --no-document google-cloud-errors -v 1.4.0
 gem install --no-document google-cloud-env -v 2.1.1
 gem install --no-document google-cloud-core -v 1.7.1
 gem install --no-document fastlane
+
+# At runtime, fastlane will also require git:
+gem install --no-document rchardet -v 1.8.0
+gem install --no-document git -v 1.19.1
