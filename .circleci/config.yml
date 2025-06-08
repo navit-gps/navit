@@ -104,9 +104,7 @@ jobs:
             bash -c "$HOME/.rbenv/bin/rbenv global 2.7.0"
       - run:
           name: Upgrade to a recent Android cmake
-          command: |
-            sdkmanager 'cmake;3.30.3'
-            sdkmanager --uninstall 'cmake;3.6.4111459'
+          command: sdkmanager ndk-bundle 'cmake;3.18.1'
       - run:
           shell: bash
           name: Install requirements

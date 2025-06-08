@@ -59,6 +59,7 @@ task clean(type: Delete) {
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    ndkVersion "22.1.7171670"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -80,6 +81,7 @@ android {
         }
         externalNativeBuild {
             cmake {
+                version '3.18.1'
                 arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n', '-DCMAKE_SYSROOT='+android.ndkDirectory+'/sysroot'
             }
         }
