@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:8.10.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -36,8 +36,8 @@ task clean(type: Delete) {
 }
 */
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 31
+    ndkVersion "29.0.13113456"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -48,6 +48,9 @@ android {
         }
     }
     defaultConfig {
+        ndk {
+            abiFilters 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
+        }
         applicationId "org.navitproject.navit"
         minSdkVersion 10
         targetSdkVersion 29
@@ -103,8 +106,8 @@ android {
         classpath = files()
         reports {
             include ('**/*.java')
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
             xml {
                 destination file("checkstyle/checkstyleMain.xml")
             }
