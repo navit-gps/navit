@@ -774,6 +774,7 @@ if(ANDROID)
 
 	add_feature(XPM2PNG "Android detected" TRUE)
 	set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
+	set(BUILD_MAPTOOL FALSE)
 
 endif(ANDROID)
 
