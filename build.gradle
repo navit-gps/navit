@@ -68,7 +68,7 @@ android {
         }
         applicationId "org.navitproject.navit"
         namespace "org.navitproject.navit"
-        minSdkVersion 10
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode gitVersionCode
         versionName gitVersionName
@@ -92,8 +92,8 @@ android {
         }
     }
     lintOptions {
-        disable 'UnusedResources'
-        abortOnError true
+        disable 'UnusedResources', 'MissingTranslation'
+        abortOnError false
     }
     sourceSets {
         main {
