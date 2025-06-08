@@ -163,6 +163,7 @@ if(ANDROID)
 	set(ENV{PKG_CONFIG_DIR} "")
 	set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
 	set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+	set(BUILD_MAPTOOL FALSE)
 endif(ANDROID)
 
 ################################
@@ -774,7 +775,6 @@ if(ANDROID)
 
 	add_feature(XPM2PNG "Android detected" TRUE)
 	set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
-	set(BUILD_MAPTOOL FALSE)
 
 endif(ANDROID)
 
