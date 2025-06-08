@@ -14,6 +14,9 @@ curl -sL https://raw.githubusercontent.com/rbenv/rbenv-installer/refs/heads/main
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
+echo PATH:"$PATH"
+echo Shell:$0
+rbenv -v
 rbenv install 2.7.0
 rbenv global 2.7.0
 
