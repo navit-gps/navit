@@ -21,7 +21,6 @@ navit/tools/gpx2navit_txt/config.guess
 navit/tools/gpx2navit_txt/config.sub
 navit/tools/gpx2navit_txt/COPYING
 navit/tools/gpx2navit_txt/missing
-navit/voice/file/voice_file.c
 navit/vehicle/file/vehicle_file.c
 navit/vehicle/demo/vehicle_demo.c
 navit/vehicle/gpsd/vehicle_gpsd.c
@@ -96,7 +95,6 @@ navit/search.c
 navit/map.c
 navit/maptype.c
 navit/file.c
-navit/voice.c
 navit/vehicle.c
 navit/navit.c
 navit/log.c
@@ -155,7 +153,6 @@ navit/layer.h
 navit/map.h
 navit/maptype.h
 navit/file.h
-navit/voice.h
 navit/vehicle.h
 navit/log.h
 navit/navit.h

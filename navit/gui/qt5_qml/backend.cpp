@@ -7,7 +7,6 @@
 #include "layout.h"
 #include "map.h"
 #include "transform.h"
-#include "voice.h"
 #include "vehicle.h"
 #include "bookmarks.h"
 #include "backend.h"
@@ -90,46 +89,6 @@ void Backend::get_maps() {
         _maps.append(new MapObject(label, is_active));
     }
     emit mapsChanged();
-}
-
-/**
- * @brief update the private m_voices list. Expected to be called from QML
- * @param none
- * @returns nothing
- */
-void Backend::get_voices() {
-    struct attr attr,attr2,vattr;
-    struct attr_iter *iter;
-    struct attr active_voice;
-    _voices.clear();
-
-    dbg(lvl_debug, "---------- get_voices() from backend");
-
-    iter=navit_attr_iter_new(NULL);
-    if (navit_get_attr(this->nav, attr_speech, &attr, iter) && !navit_get_attr(this->nav, attr_speech, &attr2, iter)) {
-        voice_get_attr(attr.u.speech, attr_name, &vattr, NULL);
-        navit_attr_iter_destroy(iter);
-        dbg(lvl_debug, "adding voice %s", vattr.u.str);
-        _voices.append(new VoiceObject(g_strdup(vattr.u.str), active_voice.u.voice, attr.u.voice));
-        dbg(lvl_debug, "done");
-        emit voicesChanged();
-        return;
-    }
-    navit_attr_iter_destroy(iter);
-
-    if (!navit_get_attr(this->nav, attr_speech, &active_voice, NULL))
-        active_voice.u.voice=NULL;
-    iter=navit_attr_iter_new(NULL);
-    while(navit_get_attr(this->nav, attr_speech, &attr, iter)) {
-        voice_get_attr(attr.u.speech, attr_name, &vattr, NULL);
-        dbg(lvl_debug, "adding voice %s", vattr.u.str);
-        _voices.append(
-            new VoiceObject(g_strdup(vattr.u.str),
-                attr.u.voice == active_voice.u.voice, attr.u.voice)
-        );
-    }
-    navit_attr_iter_destroy(iter);
-    emit voicesChanged();
 }
 
 /**
@@ -322,15 +281,6 @@ QQmlListProperty<QObject> Backend::getMaps() {
 }
 
 /**
- * @brief get the voices as a QList
- * @param none
- * @returns the voices QList
- */
-QQmlListProperty<QObject> Backend::getVoices() {
-    return QQmlListProperty<QObject>(this, _voices);
-}
-
-/**
  * @brief get the vehicles as a QList
  * @param none
  * @returns the vehicles QList
@@ -367,19 +317,6 @@ PoiObject * Backend::activePoi() {
 BookmarkObject * Backend::currentBookmark() {
     return m_currentBookmark;
 }
-
-/**
- * @brief get the currently selected voice. Used when displaying the relevant menu
- * @param none
- * @returns the current voice
- */
-VehicleObject * Backend::currentVoice() {
-    struct attr attr;
-    dbg(lvl_debug, "current voice : %s", m_currentVoice->name().toUtf8().data());
-    if (m_currentVoice->voice()) {
-    
-    return m_currentVoice;
-}   
 
 /**
  * @brief get the currently selected vehicle. Used when displaying the relevant menu
@@ -444,16 +381,6 @@ void Backend::setCurrentBookmark(int index) {
     resize(320, 240);
     navit_set_center(this->nav, &c, 1);
     emit currentBookmarkChanged();
-}
-
-/** 
- * @brief set the current voice. Used when clicking on a voice list to display one single voice
- * @param int index the index of the voice in the m_voice list
- * @returns nothing
- */ 
-void Backend::setCurrentVoice(int index) {
-    m_currentVoice = (VoiceObject *)_voices.at(index);
-    emit currentVoiceChanged();
 }
 
 /**
