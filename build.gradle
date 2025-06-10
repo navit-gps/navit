@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.10.1'
@@ -19,7 +19,7 @@ apply plugin: 'com.android.application'
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -48,7 +48,7 @@ task clean(type: Delete) {
 */
 android {
     compileSdkVersion 36
-    ndkVersion "29.0.13113456"
+    ndkVersion = "29.0.13113456"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -66,13 +66,13 @@ android {
         ndk {
             abiFilters 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
         }
-        applicationId "org.navitproject.navit"
-        namespace "org.navitproject.navit"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode gitVersionCode
-        versionName gitVersionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId = "org.navitproject.navit"
+        namespace = "org.navitproject.navit"
+        minSdkVersion = 21
+        targetSdkVersion = 29
+        versionCode = gitVersionCode
+        versionName = gitVersionName
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
         }
@@ -84,16 +84,16 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles = getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if(file(System.getenv("KEYSTORE")  ?: "/store").exists()){
-                signingConfig signingConfigs.release
+                signingConfig = signingConfigs.release
             }
         }
     }
     lintOptions {
         disable 'UnusedResources', 'MissingTranslation'
-        abortOnError false
+        abortOnError = false
     }
     sourceSets {
         main {
@@ -107,8 +107,8 @@ android {
     }
 
     task checkstyleMain(type: Checkstyle){
-        source 'navit/android/src'
-        include '**/*.java'
+        source = 'navit/android/src'
+        include = '**/*.java'
         configFile = rootProject.file('checkstyle.xml')
         ignoreFailures = false
         showViolations = true
@@ -119,10 +119,10 @@ android {
             xml.required = true
             html.required = true
             xml {
-                destination file("checkstyle/checkstyleMain.xml")
+                outputLocation = file("checkstyle/checkstyleMain.xml")
             }
             html {
-                destination file("checkstyle/checkstyleMain.html")
+                outputLocation = file("checkstyle/checkstyleMain.html")
             }
         }
 
