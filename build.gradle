@@ -108,7 +108,7 @@ android {
 
     task checkstyleMain(type: Checkstyle){
         source = 'navit/android/src'
-        include = '**/*.java'
+        include '**/*.java'
         configFile = rootProject.file('checkstyle.xml')
         ignoreFailures = false
         showViolations = true
