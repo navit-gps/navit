@@ -141,7 +141,7 @@ android {
             title = rootProject.name
             options.memberLevel = JavadocMemberLevel.PACKAGE
             verbose = true
-            failOnError false
+            failOnError = false
         }
     }
 
