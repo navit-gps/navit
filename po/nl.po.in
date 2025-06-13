@@ -1607,6 +1607,9 @@ msgstr "Gebied"
 msgid "Map"
 msgstr "Kaart"
 
+msgid "Voice"
+msgstr "Stem"
+
 msgid "Bookmark"
 msgstr "Favoriet"
 
@@ -1634,6 +1637,9 @@ msgstr "Opmaak"
 
 msgid "_Projection"
 msgstr "Projectie"
+
+msgid "_Voice"
+msgstr "Stem"
 
 msgid "_Vehicle"
 msgstr "Voertuig"
