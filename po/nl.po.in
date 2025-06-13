@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-13 09:24+0000\n"
+"PO-Revision-Date: 2025-06-14 10:01+0000\n"
 "Last-Translator: adevoss <arnobugs@hotmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/navit/navit-core/"
 "nl/>\n"
@@ -388,7 +388,7 @@ msgid "Command"
 msgstr "Opdracht"
 
 msgid "Length"
-msgstr "Afstand"
+msgstr "Lengte"
 
 msgid "km"
 msgstr "km"
@@ -400,7 +400,7 @@ msgid "Time"
 msgstr "Tijd"
 
 msgid "Destination Length"
-msgstr "Afstand"
+msgstr "Afstand tot bestemming"
 
 msgid "Destination Time"
 msgstr "Aankomsttijd"
@@ -1933,10 +1933,10 @@ msgid "Show Satellite Status"
 msgstr "Satellietstatus weergeven"
 
 msgid " Elevation "
-msgstr " Hoogte "
+msgstr "Hoogte"
 
 msgid " Azimuth "
-msgstr " Azimuth "
+msgstr "Azimut"
 
 msgid "Show NMEA Data"
 msgstr "NMEA-gegevens weergeven"
@@ -2009,7 +2009,7 @@ msgid "Vehicle"
 msgstr "Voertuig"
 
 msgid "Rules"
-msgstr "Voorschrift"
+msgstr "Voorkeuren"
 
 msgid "Lock on road"
 msgstr "Op weg houden"
@@ -2944,7 +2944,7 @@ msgstr "bestandslocatie"
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
 msgid "Distance(m)"
-msgstr "Afstand"
+msgstr "Afstand(m)"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
@@ -2957,7 +2957,7 @@ msgstr "Volgende Routepunt verwijderen"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Fout bij lezen configuratie bestand '%s': %s"
 
 msgid ""
 "New location set to %s\n"
@@ -2996,7 +2996,7 @@ msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Geen configuratiebestand gevonden (navit.xml of navit.xml.local)"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
