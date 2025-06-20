@@ -19,12 +19,13 @@
 # hvera https://launchpad.net/~hamilton-listas
 # paulohm https://launchpad.net/~paulohm
 # pingflood https://launchpad.net/~pingflood
+# Helder Santana <helder.santana@systemsbr.com.br>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-06-21 13:01+0000\n"
+"Last-Translator: Helder Santana <helder.santana@systemsbr.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "navit/navit-core/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1928,10 +1929,10 @@ msgid "Show Satellite Status"
 msgstr "Mostrar Estado do Satélite"
 
 msgid " Elevation "
-msgstr " Elevação "
+msgstr "Elevação"
 
 msgid " Azimuth "
-msgstr " Azimute "
+msgstr "Azimute"
 
 msgid "Show NMEA Data"
 msgstr "Mostrar Dados NMEA"
@@ -2907,100 +2908,107 @@ msgstr "Guiana Francesa"
 msgid ""
 "Drop last \n"
 "Waypoint"
-msgstr ""
+msgstr "Remover último ponto de passagem"
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distância(m)"
 
 msgid "partial match"
-msgstr ""
+msgstr "correspondência parcial"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Nenhum arquivo de configuração navit.xml, navit.xml.local encontrado"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"Falha na inicialização interna, encerrando. Verifique as mensagens de erro "
+"anteriores."
 
 msgid "Select a search radius from screen center"
-msgstr ""
+msgstr "Selecione um raio de busca a partir do centro da tela"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Selecione um raio de busca a partir do centro da tela"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Rota %4,0fkm    %02d:%02d ETA"
 
 msgid " (except Alaska and Hawaii)"
-msgstr ""
+msgstr "(exceto Alasca e Havaí)"
 
 msgid "Map download aborted!"
-msgstr ""
+msgstr "Download do mapa abortado!"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Erro ao analisar o arquivo de configuração '%s': %s"
 
 msgid ""
 "Drop next \n"
 "Waypoint"
-msgstr ""
+msgstr "Remover próximo ponto de passagem"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"Novo local definido como %s\n"
+"Reinicie o Navit para aplicar as alterações."
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "Mapas baixados"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "Dados do mapa (c) Colaboradores do OpenStreetMap, ODBL"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "Definir próxima parada para %ld, %ld"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "Definir destino para %ld, %ld"
 
 msgid "Error downloading map!"
-msgstr ""
+msgstr "Erro ao baixar o mapa!"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "Definir mapa para %ld, %ld"
 
 msgid ""
 "Current map location %s is not available\n"
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"A localização atual do mapa %s não está disponível.\n"
+"Reinicie o Navit após inserir um cartão SD ou selecionar uma localização "
+"diferente no mapa."
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Usando o arquivo de configuração '%s'"
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "em %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "então saia da rotatória em %1$s %2$s"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Nenhuma configuração encontrada no arquivo '%s'"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "filenamePath"
