@@ -143,4 +143,11 @@
     <string name="scotland">Escocia</string>
     <string name="bulgaria">Bulgaria</string>
     <string name="belarus">Bielorrusia</string>
+    <string name="address_search_loading_results">Cargando resultados de la búsqueda</string>
+    <string name="address_search_no_results">No se encontró ningún resultado</string>
+    <string name="address_search_no_text_entered">No se introdujo texto</string>
+    <string name="please_insert_an_sd_card">Inserte una tarjeta SD</string>
+    <string name="backup_failed">Falló el respaldo</string>
+    <string name="failed_to_restore">No se pudo restaurar</string>
+    <string name="select_backup">Seleccione un respaldo</string>
 </resources>
