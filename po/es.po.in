@@ -23,12 +23,13 @@
 # pataquets https://launchpad.net/~pataquets
 # singesang https://launchpad.net/~singesang
 # gallegonovato <fran-carro@hotmail.es>, 2024.
+# Adolfo Jayme Barrientos <fitojb@ubuntu.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2025-06-28 13:05+0000\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/navit/navit-core/"
 "es/>\n"
 "Language: es\n"
@@ -36,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "Ejecutando desde el directorio fuente\n"
@@ -2784,11 +2785,11 @@ msgstr ""
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "en %d m"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 msgid " (except Alaska and Hawaii)"
 msgstr ""
