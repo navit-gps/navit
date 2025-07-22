@@ -16,12 +16,13 @@
 # Wojtek https://launchpad.net/~wojtek-pol
 # skrzat https://launchpad.net/~skrzat
 # Łukasz Semler https://launchpad.net/~lukasz-semler
+# Mr Mati <mati7042@users.noreply.hosted.weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-07-23 08:05+0000\n"
+"Last-Translator: Mr Mati <mati7042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/navit/navit-core/"
 "pl/>\n"
 "Language: pl\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2770,7 +2771,7 @@ msgstr ""
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "za %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -2779,4 +2780,4 @@ msgstr ""
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
