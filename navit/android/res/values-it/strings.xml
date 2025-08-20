@@ -280,7 +280,7 @@
     <string name="provence_alpes_cote_d_azur">Provenza-Alpi-Costa Azzurra</string>
     <string name="map_location_unavailable">La posizione attuale sulla mappa %s non è disponibile Riavvia Navit dopo aver collegato una scheda SD o selezionato una posizione diversa della mappa.</string>
     <string name="restore_successful_please_restart_navit">Ripristino completato\nRiavvia Navit</string>
-    <string name="TTS_qery_install_data">Navit può usare qualsiasi motore di sintesi vocale installato nel dispositivo. \nIl motore attualmente selezionato non è in grado di parlare nella tua lingua. \nVuoi visualizzare la finestra di dialogo download sintesi vocale?</string>
+    <string name="TTS_qery_install_data">Navit può usare qualsiasi motore di sintesi vocale installato nel dispositivo. Il motore attualmente selezionato non è in grado di parlare nella tua lingua. Vuoi visualizzare la finestra di dialogo download sintesi vocale?</string>
     <string name="hessen">Assia</string>
     <string name="TTS_title_data_missing">Mancano i dati del motore di sintesi vocale del sistema</string>
 </resources>
