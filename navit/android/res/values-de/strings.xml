@@ -20,4 +20,23 @@
     <string name="position_popup_view">Ansicht</string>
     <string name="use_position_with">Position verwenden mit</string>
     <string name="map_delete">Diese Karte löschen?</string>
+    <string name="map_download_title">Karte herunterladen</string>
+    <string name="map_download_downloading">Wird heruntergeladen:</string>
+    <string name="map_download_ready">bereit</string>
+    <string name="map_download_download_error">Fehler beim Herunterladen der Karte.</string>
+    <string name="map_download_download_aborted">Herunterladen der Karte abgebrochen</string>
+    <string name="map_download_not_enough_free_space">Nicht genügend freier Speicherplatz</string>
+    <string name="maps_installed">Installierte Karten</string>
+    <string name="map_downloading">wird heruntergeladen</string>
+    <string name="address_search_title">Adressensuche</string>
+    <string name="address_enter_destination">Ziel eingeben</string>
+    <string name="address_partial_match">Teiladresse abgleichen</string>
+    <string name="address_search_button">Suchen</string>
+    <string name="address_search_not_found">Adresse nicht gefunden</string>
+    <string name="address_search_loading_results">Suchergebnisse werden geladen</string>
+    <string name="address_search_no_results">Keine Ergebnisse gefunden</string>
+    <string name="address_search_no_text_entered">Kein Text eingegeben</string>
+    <string name="address_search_set_destination">Ziel festlegen auf:</string>
+    <string name="address_search_towns">Städte</string>
+    <string name="address_search_streets">Straßen</string>
 </resources>
