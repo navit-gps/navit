@@ -38,7 +38,7 @@ task clean(type: Delete) {
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-    ndkVersion "23.0.7599858"
+    ndkVersion "25.2.9519653"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -49,6 +49,8 @@ android {
         }
     }
     defaultConfig {
+        compileSdk 29
+        compileSdkVersion 29
         applicationId "org.navitproject.navit"
         minSdkVersion 10
         targetSdkVersion 29
@@ -104,8 +106,8 @@ android {
         classpath = files()
         reports {
             include ('**/*.java')
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
             xml {
                 destination file("checkstyle/checkstyleMain.xml")
             }
