@@ -1,0 +1,58 @@
+Logo
+====
+
+This site is about the logo of Navit
+
+shapes
+------
+
+.. figure:: /../logo_catalog.svg
+   :width: 100%
+
+font
+----
+
+.. _color_codes:
+
+color codes
+-----------
+
+| color gradient
+| RGBA
+| ffda00ff |ffda00ff.jpg|
+| f57f0cff |f57f0cff.jpg|
+
+.. raw:: html
+    <div style="background-color: #f57f0cff;height: 1em;width: 3em;" />
+
+ black and white
+
+.. _logo_used_at:
+
+logo used at
+------------
+
+-  website
+
+   -  Main website favicon (on https://www.navit-project.org/)
+   -  Main website logo (https://www.navit-project.org/assets/images/logo.png)
+   -  Github website (https://github.com/navit-gps/)
+   -  Sourceforge website (https://sourceforge.net/projects/navit/)
+   -  Wikipedia page (https://en.wikipedia.org/wiki/Navit)
+   -  Twitter (https://twitter.com/NavitProject)
+
+-  app stores
+
+   -  google play
+   -  f-droid
+   -  openrepos
+
+-  app
+
+   -  Android application icon in apk (file res/drawable-\*/icon.png)
+   -  Internal GUI menu about
+   -  GTK GUI window icon
+   -  Qt icons?
+
+.. |ffda00ff.jpg| image:: ffda00ff.jpg
+.. |f57f0cff.jpg| image:: f57f0cff.jpg

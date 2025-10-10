@@ -16,12 +16,13 @@
 # brukutu https://launchpad.net/~brukutu99
 # eSkiSo https://launchpad.net/~wise-gdr
 # lezurdis https://launchpad.net/~f-dos-santos
+# Bruno Fragoso <darth_signa@hotmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-02-04 00:01+0000\n"
+"Last-Translator: Bruno Fragoso <darth_signa@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/navit/"
 "navit-core/pt/>\n"
 "Language: pt\n"
@@ -29,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -213,9 +214,6 @@ msgstr "Entre na próxima rotunda"
 msgid "Enter the roundabout %s"
 msgstr "Entre na rotunda %s"
 
-msgid "then enter the roundabout"
-msgstr "e entre na rotunda"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -318,10 +316,6 @@ msgstr "ligeiramente "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "apertadamente "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "depois apanhe a %1$s estrada para %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1987,21 +1981,11 @@ msgstr "Esquema"
 msgid "Height Profile"
 msgstr "Perfil de altitude"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-"por favor instale um mapa *.heightlines.bin para fornecer dados de elevação"
-
-msgid "The route must cross at least 2 heightlines"
-msgstr "A rota deve cruzar pelo menos 2 linhas de altura"
-
 msgid "Route Description"
 msgstr "Descrição da rota"
 
 msgid "Show Locale"
 msgstr "Exibir região e idioma"
-
-msgid "Network info"
-msgstr "Informação da rede"
 
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
@@ -2542,18 +2526,6 @@ msgstr "Ecrã completo"
 msgid "Window Mode"
 msgstr "Modo de janela"
 
-msgid "Auto zoom"
-msgstr "Ampliação automática"
-
-msgid "Manual zoom"
-msgstr "Ampliação manual"
-
-msgid "Layers"
-msgstr "Camadas"
-
-msgid "Zoom to route"
-msgstr "Ampliar para a rota"
-
 msgid "Description"
 msgstr "Descrição"
 
@@ -2808,27 +2780,15 @@ msgstr ""
 "atualmente selecionado reporta não suportar o seu idioma. Pedir ao sistema "
 "para exibir o diálogo de transferência de voz?"
 
-#. Android resource: @strings/permissions_not_granted
-msgid ""
-"Navit needs permission to access GPS and read the map.\n"
-"If you change your mind please restart Navit and grant the permissions"
-msgstr ""
-"O Navit necessita de permissão para aceder ao GPS e ler o mapa.\n"
-"Se mudar de ideias por favor reinicie o Navit e conceda estas permissões."
-
-#. Android resource: @strings/permissions_info_box_title
-msgid "One or more ungranted permissions"
-msgstr "Uma ou mais permissões não concedidas"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
+msgstr "seguidamente saia da rotunda na %1$s %2$s"
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "em %d m"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d m"

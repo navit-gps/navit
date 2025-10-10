@@ -207,11 +207,14 @@ void callback_list_call_attr(struct callback_list *l, enum attr_type type, int p
         l->patch(l, type, pcount, p, l->patch_context);
 
     cbi=l->list;
-    while (cbi) {
+    /* do not use g_list_foreach and friends, as the callbacks could alter this
+     * list. Do it the "traditional" way as proposed by glib manual. */
+    while (cbi != NULL) {
+        GList* next_item = cbi->next;
         cb=cbi->data;
         if (type == attr_any || cb->type == attr_any || cb->type == type)
             callback_call(cb, pcount, p);
-        cbi=g_list_next(cbi);
+        cbi=next_item;
     }
 
 }

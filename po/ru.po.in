@@ -24,12 +24,13 @@
 # kisaa https://launchpad.net/~kisaa-mail
 # tryagain https://launchpad.net/~mdankov
 # Павел https://launchpad.net/~pavel-sgn
+# Yurt Page <yurtpage@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-05-17 19:35+0000\n"
+"Last-Translator: Yurt Page <yurtpage@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/navit/navit-core/"
 "ru/>\n"
 "Language: ru\n"
@@ -38,7 +39,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -228,9 +229,6 @@ msgstr "Скоро круговое движение"
 msgid "Enter the roundabout %s"
 msgstr "%s круговое движение"
 
-msgid "then enter the roundabout"
-msgstr "затем круговое движение"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -333,10 +331,6 @@ msgstr "немного "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "круто "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "затем выезжайте на дорогу %1$s в направлении %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1993,12 +1987,6 @@ msgstr "Схема"
 msgid "Height Profile"
 msgstr "Профиль высот"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Описание маршрута"
 
@@ -2544,9 +2532,6 @@ msgstr "Во весь экран"
 msgid "Window Mode"
 msgstr "Режим окна"
 
-msgid "Layers"
-msgstr ""
-
 msgid "Description"
 msgstr "Описание"
 
@@ -2804,11 +2789,11 @@ msgstr ""
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "в %d м"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d м"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format

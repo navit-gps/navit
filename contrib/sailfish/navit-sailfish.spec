@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.6
-Release: 2
+Release: 3
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -23,6 +23,7 @@ BuildRequires: glib2-devel
 BuildRequires: gettext-devel
 #BuildRequires: freetype-devel
 BuildRequires: zlib-devel
+BuildRequires: libxslt
 BuildRequires: qt5-qtcore-devel
 BuildRequires: qt5-qtdeclarative-devel
 BuildRequires: qt5-qtdbus-devel
@@ -99,7 +100,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DUSE_QWIDGET:BOOL=FALSE \
        -DXSLTS:STRING="sailfish_disable;sailfish_qt5;sailfish_osd;sailfish_cursor;sailfish_mapset;sailfish_svg;sailfish_gui" \
          %{navit_real_source}
-%{__make}
+%{__make} -j4
 
 #       -DMAN_DIR:PATH=share/harbour-navit/man1
 
@@ -110,6 +111,9 @@ fi
 
 %install
 %make_install
+# prune bogus files
+for a in $(find %{buildroot} -name "*.a"); do rm $a; done;
+
 #copy in sailfish config
 #cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
 
@@ -139,6 +143,9 @@ fi
 
 
 %changelog
+*Thu Apr 03 2025 metalstrolch 0.5.6-3
+- Rebuild with newer sailfish sdk
+
 *Thu May 19 2022 metalstrolch 0.5.6-2
 - Enable sailjail
 - local config dir in $HOME changed to ~/.config/org.naviproject/navit
@@ -171,7 +178,7 @@ To get the latest builds, see: http://download.navit-project.org/
 - Fix medium GUI icon size to cope with changed icon set on upstream
 - Update upstream
 
-*Wed Jun 05 2017 metalstrolch 0.5.1-3
+*Mon Jun 05 2017 metalstrolch 0.5.1-3
 - Enable rotating.
 - Create default config from xlst
 - Switch to QT font rendering.

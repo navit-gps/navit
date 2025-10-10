@@ -203,9 +203,6 @@ msgstr "Métase pronto na rotonda"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -308,10 +305,6 @@ msgstr "suavemente "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "bruscamente "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1966,12 +1959,6 @@ msgstr "Disposición"
 msgid "Height Profile"
 msgstr ""
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr ""
 
@@ -2505,9 +2492,6 @@ msgstr "Pantalla completa"
 
 msgid "Window Mode"
 msgstr "Modo de xanela"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Descrición"

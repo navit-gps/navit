@@ -211,9 +211,6 @@ msgstr "Yakındaki kavşağa girin"
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -316,10 +313,6 @@ msgstr "kolayca "
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
 msgstr "sertçe "
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1984,12 +1977,6 @@ msgstr "Yerleşim"
 msgid "Height Profile"
 msgstr "Yükseklik Profili"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Rota Açıklaması"
 
@@ -2526,9 +2513,6 @@ msgstr "Tam Ekran"
 
 msgid "Window Mode"
 msgstr "Pencere Modu"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Açıklama"

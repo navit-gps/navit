@@ -1,1 +1,2 @@
 module_add_library(map_shapefile shapefile.c)
+target_link_libraries(map_shapefile PUBLIC support_shapefile)
