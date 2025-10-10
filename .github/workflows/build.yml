@@ -50,22 +50,23 @@ jobs:
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
-  run_doxygen:
-    runs-on: ubuntu-latest
-    needs: [build_android, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
-    container:
-      image: debian:latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install doxygen and other essentials
-        run: apt-get update && apt-get -y install doxygen ca-certificates git rsync
-      - name: Run doxygen
-        run: cd navit && doxygen
-      - name: Update results to Github
-        run: bash scripts/update_doxygen.sh
-      - uses: actions/upload-artifact@v4
-        with:
-          path: /root/project/doc
+  #run_doxygen:
+  # TODO: replace with pages Upload instead of gh-pages branch
+  #  runs-on: ubuntu-latest
+  #  needs: [build_android, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
+  #  container:
+  #    image: debian:latest
+  #  steps:
+  #    - uses: actions/checkout@v2
+  #    - name: Install doxygen and other essentials
+  #      run: apt-get update && apt-get -y install doxygen ca-certificates git rsync
+  #    - name: Run doxygen
+  #      run: cd navit && doxygen
+  #    - name: Update results to Github
+  #      run: bash scripts/update_doxygen.sh
+  #    - uses: actions/upload-artifact@v4
+  #      with:
+  #        path: /root/project/doc
   #build_sailfish:
   #  runs-on: ubuntu-latest
   #  needs: sanity_check
