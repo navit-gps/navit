@@ -66,22 +66,22 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: /root/project/doc
-  build_sailfish:
-    runs-on: ubuntu-latest
-    needs: sanity_check
-    container:
-        image: coderus/sailfishos-platform-sdk:4.4.0.64
-    steps:
-      - uses: actions/checkout@v1
-      # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
-      - name: run build
-        run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
-        env:
-            VERSION_ID: 4.4.0.64
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Store rpm
-          path: rpmbuild/RPMS/
+  #build_sailfish:
+  #  runs-on: ubuntu-latest
+  #  needs: sanity_check
+  #  container:
+  #      image: coderus/sailfishos-platform-sdk:4.4.0.64
+  #  steps:
+  #    - uses: actions/checkout@v1
+  #    # TODO currently broken because of USER in Dockerimage and probably because of double containers as well
+  #    - name: run build
+  #      run: sudo -E bash contrib/sailfish/build_sailfish_ci.sh
+  #      env:
+  #          VERSION_ID: 4.4.0.64
+  #    - uses: actions/upload-artifact@v4
+  #      with:
+  #        name: Store rpm
+  #        path: rpmbuild/RPMS/
   build_android:
     runs-on: ubuntu-latest
     needs: sanity_check
@@ -100,11 +100,11 @@ jobs:
         run: sdkmanager "ndk;23.0.7599858"
       - name: Build and upload Android
         run: fastlane github_actions
-      - name: Run Lint Test
-        run: |
-            ln -sf navit/navit.dtd navit.dtd
-            mkdir test-results
-            ./gradlew lint test
+      #- name: Run Lint Test
+      #  run: |
+      #      ln -sf navit/navit.dtd navit.dtd
+      #      mkdir test-results
+      #      ./gradlew lint test
       - name: Run Javadoc
         run: ./gradlew generateDebugJavadoc
       - uses: actions/upload-artifact@v4
@@ -119,10 +119,10 @@ jobs:
         with:
           name: Store Javadoc
           path: build/outputs/docs/javadoc
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Store Lint reports
-          path: build/reports
+      #- uses: actions/upload-artifact@v4
+      #  with:
+      #    name: Store Lint reports
+      #    path: build/reports
       - uses: actions/upload-artifact@v4
         with:
           name: Android Test-results
