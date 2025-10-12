@@ -38,7 +38,7 @@
  * due to (sharp) turns or traffic lights. 
  * The speed to culculate the time it takes to pass a segment is lowered by multiplying the speed by this number.
  * The value must be <= 1 */
-#define DEFAULT_DELAY_FACTOR	0.9
+#define DEFAULT_DELAY_FACTOR	0.8
 
 #ifdef __cplusplus
 extern "C" {
