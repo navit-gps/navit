@@ -98,6 +98,7 @@
 #include "map.h"
 #include "mapset.h"
 #include "route_protected.h"
+#include "navigation.h"
 #include "route.h"
 #include "track.h"
 #include "transform.h"
@@ -735,7 +736,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
             /* FIXME */
             int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
             if (seg_time == INT_MAX) {
-                dbg(lvl_debug,"error");
+                dbg(lvl_debug,"seg_time == INT_MAX");
             } else
                 path_time+=seg_time;
             path_len+=seg->data->len;
@@ -1970,10 +1971,12 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
 
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
                           struct route_traffic_distortion *dist) {
+    int time = INT_MAX;
     int speed=route_seg_speed(profile, over, dist);
-    if (!speed)
-        return INT_MAX;
-    return over->len*36/speed+(dist ? dist->delay : 0);
+    if (speed) {
+        time = over->len * MPS_TO_KPH * 10/(speed*DEFAULT_DELAY_FACTOR)+(dist ? dist->delay : 0);
+    }
+    return time;
 }
 
 /**

@@ -34,6 +34,12 @@
  * meters per second. */
 #define MPS_TO_KPH	3.6
 
+/* Actual speed on a segment of the route is never equal to the maximum speed
+ * due to (sharp) turns or traffic lights. 
+ * The speed to culculate the time it takes to pass a segment is lowered by multiplying the speed by this number.
+ * The value must be <= 1 */
+#define DEFAULT_DELAY_FACTOR	0.9
+
 #ifdef __cplusplus
 extern "C" {
 #endif
