@@ -201,24 +201,24 @@ struct route_path {
  */
 struct route {
     NAVIT_OBJECT
-    struct mapset *ms;			/**< The mapset this route is built upon */
+    struct mapset *ms;				/**< The mapset this route is built upon */
     enum route_path_flags flags;
-    struct route_info *pos;		/**< Current position within this route */
-    GList *destinations;		/**< Destinations of the route */
-    int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
-    struct route_info *current_dst;	/**< Current destination */
+    struct route_info *pos;			/**< Current position within this route */
+    GList *destinations;			/**< Destinations of the route */
+    int reached_destinations_count;		/**< Used as base to calculate waypoint numbers */
+    struct route_info *current_dst;		/**< Current destination */
 
-    struct route_graph *graph;	/**< Pointer to the route graph */
-    struct route_path *path2;	/**< Pointer to the route path */
-    struct map *map;            /**< The map containing the route path */
-    struct map *graph_map;      /**< The map containing the route graph */
-    struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
-    struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
-    struct callback_list *cbl2;	/**< Callback list to call when route changes */
-    int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
-    struct vehicleprofile *vehicleprofile; /**< Routing preferences */
-    int route_status;		/**< Route Status */
-    int link_path;			/**< Link paths over multiple waypoints together */
+    struct route_graph *graph;			/**< Pointer to the route graph */
+    struct route_path *path2;			/**< Pointer to the route path */
+    struct map *map;           			/**< The map containing the route path */
+    struct map *graph_map;     			/**< The map containing the route graph */
+    struct callback * route_graph_done_cb;	/**< Callback when route graph is done */
+    struct callback * route_graph_flood_done_cb ;/**< Callback when route graph flooding is done */
+    struct callback_list *cbl2;			/**< Callback list to call when route changes */
+    int destination_distance;			/**< Distance to the destination at which the destination is considered "reached" */
+    struct vehicleprofile *vehicleprofile;	/**< Routing preferences */
+    int route_status;				/**< Route Status */
+    int link_path;				/**< Link paths over multiple waypoints together */
     struct pcoord pc;
     struct vehicle *v;
 };
@@ -1920,21 +1920,25 @@ static void route_graph_destroy(struct route_graph *this) {
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
     struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-    int speed,maxspeed;
-    if (!roadprofile || !roadprofile->route_weight)
+    int vehiclemaxspeed,roadmaxspeed;
+    int calculatedmaxspeed;
+    if (!roadprofile || !roadprofile->speed || !roadprofile->route_weight)
         return 0;
-    speed=roadprofile->route_weight;
+
+    vehiclemaxspeed=roadprofile->speed;
     if (profile->maxspeed_handling != maxspeed_ignore) {
         if (over->flags & AF_SPEED_LIMIT) {
-            maxspeed=RSD_MAXSPEED(over);
+            roadmaxspeed=RSD_MAXSPEED(over);
             if (profile->maxspeed_handling == maxspeed_enforce)
-                speed=maxspeed;
+                calculatedmaxspeed=roadmaxspeed;
+                if (vehiclemaxspeed < roadmaxspeed)
+                    calculatedmaxspeed=vehiclemaxspeed;
         } else
-            maxspeed=INT_MAX;
-        if (dist && maxspeed > dist->maxspeed)
-            maxspeed=dist->maxspeed;
-        if (maxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || maxspeed < speed))
-            speed=maxspeed;
+            roadmaxspeed=INT_MAX;
+        if (dist && roadmaxspeed > dist->maxspeed)
+            roadmaxspeed=dist->maxspeed;
+        if (roadmaxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || roadmaxspeed < vehiclemaxspeed))
+            calculatedmaxspeed=roadmaxspeed;
     }
     if (over->flags & AF_DANGEROUS_GOODS) {
         if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
@@ -1953,7 +1957,7 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
         if (size_weight->axle_weight != -1 && profile->axle_weight != -1 && profile->axle_weight > size_weight->axle_weight)
             return 0;
     }
-    return speed;
+    return calculatedmaxspeed;
 }
 
 /**
@@ -1972,10 +1976,12 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
                           struct route_traffic_distortion *dist) {
     int time = INT_MAX;
+    double delay_factor=DEFAULT_DELAY_FACTOR;
+    if (profile->delay_factor)
+        delay_factor=profile->delay_factor;
     int speed=route_seg_speed(profile, over, dist);
-    if (speed) {
-        time = over->len * MPS_TO_KPH * 10/(speed*DEFAULT_DELAY_FACTOR)+(dist ? dist->delay : 0);
-    }
+    if (speed) 
+        time = over->len * MPS_TO_KPH * 10/(speed*delay_factor)+(dist ? dist->delay : 0);
     return time;
 }
 

@@ -42,6 +42,9 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_maxspeed_handling:
         this_->maxspeed_handling=attr->u.num;
         break;
+    case attr_delay_factor:
+        this_->delay_factor=attr->u.double;
+        break;
     case attr_route_mode:
         this_->mode=attr->u.num;
         break;
