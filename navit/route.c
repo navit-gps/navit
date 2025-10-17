@@ -98,8 +98,8 @@
 #include "map.h"
 #include "mapset.h"
 #include "route_protected.h"
-#include "navigation.h"
 #include "route.h"
+#include "navigation.h"
 #include "track.h"
 #include "transform.h"
 #include "plugin.h"
@@ -201,24 +201,24 @@ struct route_path {
  */
 struct route {
     NAVIT_OBJECT
-    struct mapset *ms;				/**< The mapset this route is built upon */
+    struct mapset *ms;			/**< The mapset this route is built upon */
     enum route_path_flags flags;
-    struct route_info *pos;			/**< Current position within this route */
-    GList *destinations;			/**< Destinations of the route */
-    int reached_destinations_count;		/**< Used as base to calculate waypoint numbers */
-    struct route_info *current_dst;		/**< Current destination */
+    struct route_info *pos;		/**< Current position within this route */
+    GList *destinations;		/**< Destinations of the route */
+    int reached_destinations_count;	/**< Used as base to calculate waypoint numbers */
+    struct route_info *current_dst;	/**< Current destination */
 
-    struct route_graph *graph;			/**< Pointer to the route graph */
-    struct route_path *path2;			/**< Pointer to the route path */
-    struct map *map;           			/**< The map containing the route path */
-    struct map *graph_map;     			/**< The map containing the route graph */
-    struct callback * route_graph_done_cb;	/**< Callback when route graph is done */
-    struct callback * route_graph_flood_done_cb ;/**< Callback when route graph flooding is done */
-    struct callback_list *cbl2;			/**< Callback list to call when route changes */
-    int destination_distance;			/**< Distance to the destination at which the destination is considered "reached" */
-    struct vehicleprofile *vehicleprofile;	/**< Routing preferences */
-    int route_status;				/**< Route Status */
-    int link_path;				/**< Link paths over multiple waypoints together */
+    struct route_graph *graph;	/**< Pointer to the route graph */
+    struct route_path *path2;	/**< Pointer to the route path */
+    struct map *map;            /**< The map containing the route path */
+    struct map *graph_map;      /**< The map containing the route graph */
+    struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
+    struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
+    struct callback_list *cbl2;	/**< Callback list to call when route changes */
+    int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
+    struct vehicleprofile *vehicleprofile; /**< Routing preferences */
+    int route_status;		/**< Route Status */
+    int link_path;			/**< Link paths over multiple waypoints together */
     struct pcoord pc;
     struct vehicle *v;
 };
@@ -1610,7 +1610,11 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param data The segment data
+ * @param len The length of this segment
+ * @param item The item that is represented by this segment
+ * @param flags Flags for this segment
+ * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
+ * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
@@ -1917,47 +1921,57 @@ static void route_graph_destroy(struct route_graph *this) {
  * @param dist A traffic distortion if applicable, or {@code NULL}
  * @return The estimated speed in km/h, or 0 if the segment is impassable
  */
+
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
-    struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-    int vehiclemaxspeed,roadmaxspeed;
-    int calculatedmaxspeed;
-    if (!roadprofile || !roadprofile->speed || !roadprofile->route_weight)
-        return 0;
+    struct roadprofile *vehicleroadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
+    int calculatedspeed=INT_MAX;
+    int roadmaxspeed=INT_MAX;
+    int vehiclemaxspeed=INT_MAX;
 
-    vehiclemaxspeed=roadprofile->speed;
-    if (profile->maxspeed_handling != maxspeed_ignore) {
-        if (over->flags & AF_SPEED_LIMIT) {
-            roadmaxspeed=RSD_MAXSPEED(over);
-            if (profile->maxspeed_handling == maxspeed_enforce)
-                calculatedmaxspeed=roadmaxspeed;
-                if (vehiclemaxspeed < roadmaxspeed)
-                    calculatedmaxspeed=vehiclemaxspeed;
-        } else
-            roadmaxspeed=INT_MAX;
-        if (dist && roadmaxspeed > dist->maxspeed)
-            roadmaxspeed=dist->maxspeed;
-        if (roadmaxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || roadmaxspeed < vehiclemaxspeed))
-            calculatedmaxspeed=roadmaxspeed;
-    }
+    if (!vehicleroadprofile || !vehicleroadprofile->speed)
+        calculatedspeed = 0;
+
     if (over->flags & AF_DANGEROUS_GOODS) {
         if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
-            return 0;
+            calculatedspeed = 0;
     }
+
     if (over->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
         struct size_weight_limit *size_weight=&RSD_SIZE_WEIGHT(over);
         if (size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->axle_weight != -1 && profile->axle_weight != -1 && profile->axle_weight > size_weight->axle_weight)
-            return 0;
+            calculatedspeed = 0;
     }
-    return calculatedmaxspeed;
+
+    if (calculatedspeed != 0) {
+	/* Get vehiclemaxspeed */
+        vehiclemaxspeed=vehicleroadprofile->route_weight;
+
+	/* Get roadmaxspeed */
+        if (profile->maxspeed_handling != maxspeed_ignore) {
+            if (over->flags & AF_SPEED_LIMIT) 
+                roadmaxspeed=RSD_MAXSPEED(over);
+            if (dist && roadmaxspeed > dist->maxspeed)
+                roadmaxspeed=dist->maxspeed;
+        }
+
+	/* Set calculatedspeed */
+        calculatedspeed=roadmaxspeed;
+        if (profile->maxspeed_handling != maxspeed_ignore) {
+           if (vehiclemaxspeed < roadmaxspeed)
+               calculatedspeed=vehiclemaxspeed;
+	}
+    }
+
+    return calculatedspeed;
 }
 
 /**
@@ -1972,16 +1986,14 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
  * @param dist A traffic distortion if applicable, or {@code NULL}
  * @return The time needed in tenths of seconds
  */
-
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
                           struct route_traffic_distortion *dist) {
-    int time = INT_MAX;
-    double delay_factor=DEFAULT_DELAY_FACTOR;
-    if (profile->delay_factor)
-        delay_factor=profile->delay_factor;
+    int time=INT_MAX;
     int speed=route_seg_speed(profile, over, dist);
-    if (speed) 
-        time = over->len * MPS_TO_KPH * 10/(speed*delay_factor)+(dist ? dist->delay : 0);
+
+    if (speed)
+        time=over->len*MPS_TO_KPH*10/speed+(dist ? dist->delay : 0);
+
     return time;
 }
 
@@ -2340,12 +2352,10 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
         e_pnt=route_graph_add_point(this,&l);
         s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         e_pnt->flags |= RP_TRAFFIC_DISTORTION;
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             data.flags |= AF_SPEED_LIMIT;
             data.maxspeed=maxspeed_attr.u.num;
         }
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
@@ -2559,45 +2569,37 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     if (item_coord_get(item, &l, 1)) {
         if (!(default_flags = item_get_default_flags(item->type)))
             default_flags = &default_flags_value;
-        item_attr_rewind(item);
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
             segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
 
-        item_attr_rewind(item);
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
         if (data.flags & AF_DANGEROUS_GOODS) {
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
             else
                 data.flags &= ~AF_DANGEROUS_GOODS;
         }
         if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_width, &attr))
                 data.size_weight.width=attr.u.num;
             else
                 data.size_weight.width=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_height, &attr))
                 data.size_weight.height=attr.u.num;
             else
                 data.size_weight.height=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_length, &attr))
                 data.size_weight.length=attr.u.num;
             else
                 data.size_weight.length=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_weight, &attr))
                 data.size_weight.weight=attr.u.num;
             else
                 data.size_weight.weight=-1;
-            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
                 data.size_weight.axle_weight=attr.u.num;
             else

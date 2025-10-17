@@ -36,8 +36,8 @@ struct vehicleprofile {
     int flags_forward_mask;		/**< Flags mask for moving in positive direction */
     int flags_reverse_mask;		/**< Flags mask for moving in reverse direction */
     int flags;				/**< Required flags to move through a segment */
-    float delay_factor;			/**< Reduce speed for ETA calculation. Must be <= 1 */
     int maxspeed_handling;		/**< How to handle maxspeed of segment, see {@code enum maxspeed_handling} */
+    int delay_factor;			/**< Reduce speed for ETA calculation. Must be a percentage */
     int static_speed;			/**< Maximum speed of vehicle to consider it stationary */
     int static_distance;		/**< Maximum distance of previous position of vehicle to consider it stationary */
     char *name;				/**< the vehicle profile name */
