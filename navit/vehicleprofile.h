@@ -33,13 +33,12 @@ enum maxspeed_handling {
 struct vehicleprofile {
     NAVIT_OBJECT
     int mode;				/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
-    int flags_forward_mask;		/**< Flags mask for moving in positive direction */
-    int flags_reverse_mask;		/**< Flags mask for moving in reverse direction */
+    int flags_forward_mask;			/**< Flags mask for moving in positive direction */
+    int flags_reverse_mask;			/**< Flags mask for moving in reverse direction */
     int flags;				/**< Required flags to move through a segment */
-    int maxspeed_handling;		/**< How to handle maxspeed of segment, see {@code enum maxspeed_handling} */
-    int delay_factor;			/**< Reduce speed for ETA calculation. Must be a percentage */
+    int maxspeed_handling;			/**< How to handle maxspeed of segment, see {@code enum maxspeed_handling} */
     int static_speed;			/**< Maximum speed of vehicle to consider it stationary */
-    int static_distance;		/**< Maximum distance of previous position of vehicle to consider it stationary */
+    int static_distance;			/**< Maximum distance of previous position of vehicle to consider it stationary */
     char *name;				/**< the vehicle profile name */
     char *route_depth;			/**< the route depth attribute */
     int width;				/**< Width of the vehicle in cm */
@@ -47,8 +46,8 @@ struct vehicleprofile {
     int length;				/**< Length of the vehicle in cm */
     int weight;				/**< Weight of the vehicle in kg */
     int axle_weight;			/**< Axle Weight of the vehicle in kg */
-    int dangerous_goods;		/**< Flags of dangerous goods present */
-    int through_traffic_penalty;	/**< Penalty when driving on a through traffic limited road */
+    int dangerous_goods;			/**< Flags of dangerous goods present */
+    int through_traffic_penalty;		/**< Penalty when driving on a through traffic limited road */
     GHashTable *roadprofile_hash;
     struct attr active_callback;
     int turn_around_penalty;		/**< Penalty when turning around */

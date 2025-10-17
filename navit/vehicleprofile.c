@@ -26,7 +26,6 @@
 #include "roadprofile.h"
 #include "vehicleprofile.h"
 #include "callback.h"
-#include "navigation.h"
 
 static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     dbg(lvl_debug,"%s:%ld", attr_to_name(attr->type), attr->u.num);
@@ -42,9 +41,6 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
         break;
     case attr_maxspeed_handling:
         this_->maxspeed_handling=attr->u.num;
-        break;
-    case attr_delay_factor:
-        this_->delay_factor=attr->u.num;
         break;
     case attr_route_mode:
         this_->mode=attr->u.num;
@@ -116,7 +112,6 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->flags_reverse_mask=0;
     this_->flags=0;
     this_->maxspeed_handling = maxspeed_enforce;
-    this_->delay_factor=-1;
     this_->static_speed=0;
     this_->static_distance=0;
     g_free(this_->name);
