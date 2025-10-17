@@ -736,7 +736,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
             /* FIXME */
             int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
             if (seg_time == INT_MAX) {
-                dbg(lvl_debug,"seg_time == INT_MAX");
+		dbg(lvl_debug,"seg_time == INT_MAX");
             } else
                 path_time+=seg_time;
             path_len+=seg->data->len;
@@ -1610,11 +1610,7 @@ int route_graph_segment_is_duplicate(struct route_graph_point *start, struct rou
  * @param this The route graph to insert the segment into
  * @param start The graph point which should be connected to the start of this segment
  * @param end The graph point which should be connected to the end of this segment
- * @param len The length of this segment
- * @param item The item that is represented by this segment
- * @param flags Flags for this segment
- * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
- * @param maxspeed The maximum speed allowed on this segment in km/h. -1 if not known.
+ * @param data The segment data
  */
 void route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
                              struct route_graph_point *end, struct route_graph_segment_data *data) {
@@ -1921,7 +1917,6 @@ static void route_graph_destroy(struct route_graph *this) {
  * @param dist A traffic distortion if applicable, or {@code NULL}
  * @return The estimated speed in km/h, or 0 if the segment is impassable
  */
-
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
     struct roadprofile *vehicleroadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
@@ -1952,10 +1947,10 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
     }
 
     if (calculatedspeed != 0) {
-	/* Get vehiclemaxspeed */
+        /* Get vehiclemaxspeed */
         vehiclemaxspeed=vehicleroadprofile->route_weight;
 
-	/* Get roadmaxspeed */
+        /* Get roadmaxspeed */
         if (profile->maxspeed_handling != maxspeed_ignore) {
             if (over->flags & AF_SPEED_LIMIT) 
                 roadmaxspeed=RSD_MAXSPEED(over);
@@ -1963,12 +1958,12 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
                 roadmaxspeed=dist->maxspeed;
         }
 
-	/* Set calculatedspeed */
+        /* Set calculatedspeed */
         calculatedspeed=roadmaxspeed;
         if (profile->maxspeed_handling != maxspeed_ignore) {
            if (vehiclemaxspeed < roadmaxspeed)
                calculatedspeed=vehiclemaxspeed;
-	}
+        }
     }
 
     return calculatedspeed;
@@ -1991,9 +1986,9 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
     int time=INT_MAX;
     int speed=route_seg_speed(profile, over, dist);
 
-    if (speed)
+    if (speed) 
         time=over->len*MPS_TO_KPH*10/speed+(dist ? dist->delay : 0);
-
+        
     return time;
 }
 
@@ -2352,10 +2347,12 @@ static void route_graph_add_traffic_distortion(struct route_graph *this, struct 
         e_pnt=route_graph_add_point(this,&l);
         s_pnt->flags |= RP_TRAFFIC_DISTORTION;
         e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
             data.flags |= AF_SPEED_LIMIT;
             data.maxspeed=maxspeed_attr.u.num;
         }
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_delay, &delay_attr))
             data.len=delay_attr.u.num;
         route_graph_add_segment(this, s_pnt, e_pnt, &data);
@@ -2569,37 +2566,45 @@ static void route_graph_add_street(struct route_graph *this, struct item *item, 
     if (item_coord_get(item, &l, 1)) {
         if (!(default_flags = item_get_default_flags(item->type)))
             default_flags = &default_flags_value;
+        item_attr_rewind(item);
         if (item_attr_get(item, attr_flags, &attr)) {
             data.flags = attr.u.num;
             segmented = (data.flags & AF_SEGMENTED);
         } else
             data.flags = *default_flags;
 
+        item_attr_rewind(item);
         if ((data.flags & AF_SPEED_LIMIT) && (item_attr_get(item, attr_maxspeed, &attr)))
             data.maxspeed = attr.u.num;
         if (data.flags & AF_DANGEROUS_GOODS) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr))
                 data.dangerous_goods = attr.u.num;
             else
                 data.flags &= ~AF_DANGEROUS_GOODS;
         }
         if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_width, &attr))
                 data.size_weight.width=attr.u.num;
             else
                 data.size_weight.width=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_height, &attr))
                 data.size_weight.height=attr.u.num;
             else
                 data.size_weight.height=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_length, &attr))
                 data.size_weight.length=attr.u.num;
             else
                 data.size_weight.length=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_weight, &attr))
                 data.size_weight.weight=attr.u.num;
             else
                 data.size_weight.weight=-1;
+            item_attr_rewind(item);
             if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
                 data.size_weight.axle_weight=attr.u.num;
             else
