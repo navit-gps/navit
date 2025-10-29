@@ -16,7 +16,7 @@ Navit can use different :doc:`../maps/index` formats, including free `OpenStreet
 
 Install TTS
 -----------
-To get speech support, you need to install a text-to-speech tool such as **espeak**, **mbrola** or **festival**. These tools can be invoked from the command line. Test your setup by invoking the tools manually e.g.
+To get speech support, you need to install a text-to-speech tool such as **espeak**, **mbrola**, **festival**, **pico2wave** or **piper-tts**. These tools can be invoked from the command line. Test your setup by invoking the tools manually e.g.
 
 .. code-block:: bash
 
