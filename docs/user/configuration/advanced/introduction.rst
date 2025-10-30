@@ -144,6 +144,7 @@ href is expanded with wordexp internally, so you can do stuff like:
     <xi:include href="$NAVIT_SHAREDIR/maps/*.xml" />
 
 Some examples on the supported syntax:
+
 .. code-block:: xml
 
     <xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='points'])" />
