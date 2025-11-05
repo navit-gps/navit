@@ -128,7 +128,7 @@ Jolla
   `4 <https://github.com/zintor/navit-jolla-layout/blob/master/screenshots/output640.gif>`__
 
 | Some screenshots with pre-shipped OSD:
-| |Navit-sailfish-output320.gif| |Jolla_map_withoutGPS_20161014.jpg|
+| |Navit-sailfish-output320.jpg| |Jolla_map_withoutGPS_20161014.jpg|
   |Jolla_map2_withoutGPS_20161014.jpg| |Jolla_Routing_20161005.png|
   |Jolla_Navit_Ressourcen.png|
 
@@ -242,7 +242,7 @@ Vendor check
 | ``OK [No vendor set!]``
 | `` PASSED``
 
-.. |Navit-sailfish-output320.gif| image:: Navit-sailfish-output320.gif
+.. |Navit-sailfish-output320.jpg| image:: Navit-sailfish-output320.jpg
 .. |Jolla_map_withoutGPS_20161014.jpg| image:: Jolla_map_withoutGPS_20161014.jpg
    :width: 200px
 .. |Jolla_map2_withoutGPS_20161014.jpg| image:: Jolla_map2_withoutGPS_20161014.jpg
