@@ -251,6 +251,7 @@ extern int processed_nodes, processed_nodes_out, processed_ways, processed_relat
 extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
+extern char* hardcoded_country;
 extern int experimental;
 void sig_alrm(int sig);
 void sig_alrm_end(void);

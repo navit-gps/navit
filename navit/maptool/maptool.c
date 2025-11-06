@@ -57,6 +57,7 @@ GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
 int unknown_country;
+char* hardcoded_country;
 char ch_suffix[] ="r"; /* Used to make compiler happy due to Bug 35903 in gcc */
 /** Textual description of available experimental features, or NULL (=none available). */
 char* experimental_feature_description =
@@ -311,6 +312,7 @@ static void usage(void) {
             "-w (--dedupe-ways)                : ensure no duplicate ways or nodes. useful when using several input files\n");
     fprintf(f,"-W (--ways-only)                  : process only ways\n");
     fprintf(f,"-U (--unknown-country)            : add objects with unknown country to index\n");
+    fprintf(f,"-C <ISO-Code>                     : Assign country <ISO-code> to towns in unknown countries\n");
     fprintf(f,"-x (--index-size)                 : set maximum country index size in bytes\n");
     fprintf(f,"-z (--compression-level) <level>  : set the compression level\n");
     fprintf(f,"Internal options (undocumented):\n");
@@ -399,7 +401,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
 #ifdef HAVE_POSTGRESQL
                      "d:"
 #endif
-                     "e:hi:knm:p:r:s:t:T:wu:z:Ux:", long_options, option_index);
+                     "e:hi:knm:C:p:r:s:t:T:wu:z:Ux:", long_options, option_index);
     if (c == -1)
         return 1;
     switch (c) {
@@ -442,6 +444,9 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         break;
     case 'U':
         unknown_country=1;
+        break;
+    case 'C':
+        hardcoded_country=g_strdup(optarg);
         break;
     case 'a':
         attr_debug_level=atoi(optarg);
