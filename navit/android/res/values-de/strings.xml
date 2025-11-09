@@ -39,4 +39,5 @@
     <string name="address_search_set_destination">Ziel festlegen auf:</string>
     <string name="address_search_towns">Städte</string>
     <string name="address_search_streets">Straßen</string>
+    <string name="optionsmenu_set_map_location">Kartenposition festlegen</string>
 </resources>
