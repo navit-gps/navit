@@ -41,12 +41,13 @@
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 # jkoan <jkoan@gmx.de>, 2024.
 # Ettore Atalan <atalanttore@googlemail.com>, 2024, 2025.
+# Patrick Höhn <hoehnp@gmx.de>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-03 20:02+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"PO-Revision-Date: 2025-11-17 18:51+0000\n"
+"Last-Translator: Patrick Höhn <hoehnp@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -54,7 +55,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1954,10 +1955,10 @@ msgid "Show Satellite Status"
 msgstr "Satellitenstatus anzeigen"
 
 msgid " Elevation "
-msgstr " Höhe "
+msgstr "Höhe"
 
 msgid " Azimuth "
-msgstr " Längengrad "
+msgstr "Längengrad"
 
 msgid "Show NMEA Data"
 msgstr "zeige NMEA Daten"
@@ -2963,6 +2964,7 @@ msgstr ""
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
 msgstr ""
+"dann verlassen Sie den Kreisel bei der %1$s ten Ausfahrt in Richtung  %2$s"
 
 msgid "partial match"
 msgstr ""
@@ -3002,26 +3004,26 @@ msgstr ""
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
 msgid "Distance(m)"
-msgstr ""
+msgstr "Entfernung"
 
 msgid "Select a distance to look for (km)"
 msgstr ""
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "Fehler: Keine Konfiguration in der Konfigurations-Datei gefunden: '%s'"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "Beutze Konfigurations-Datei: '%s'"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "Fehler bei der Verarbeitung von Datei '%s': %s"
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Wir haben an allen möglichen Orten keine Konfigurationsdatei gefunden."
 
 #, c-format
 msgid "in %d m"
