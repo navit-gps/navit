@@ -40,4 +40,10 @@
     <string name="address_search_towns">Städte</string>
     <string name="address_search_streets">Straßen</string>
     <string name="optionsmenu_set_map_location">Kartenposition festlegen</string>
+    <string name="map_download_eta">Voraussichtliche Ankunftszeit</string>
+    <string name="maps_for_current_location">Karten mit der aktuellen Position</string>
+    <string name="map_download_medium_unavailable">Speichermedium für die Speicherung der Karten nicht verfügbar</string>
+    <string name="map_download_error_writing_map">Fehler beim Schreiben der Karte!</string>
+    <string name="map_no_fix">Keine Positionsdaten vorhanden. Öffnen Sie Navit nach dem GPS-Fix wieder.</string>
+    <string name="map_location_changed">Neuer Speicherort definiert bei %s. Starten Sie Navit neu um die Änderungen anzuwenden.</string>
 </resources>
