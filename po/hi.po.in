@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-16 16:51+0000\n"
+"PO-Revision-Date: 2025-11-20 06:51+0000\n"
 "Last-Translator: deepak09A <deepak09@live.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/navit/navit-core/"
 "hi/>\n"
@@ -316,7 +316,7 @@ msgstr "%i के बाद सड़कों"
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "%1$s%2$s %3$s%4$s मुड़ें"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -796,7 +796,7 @@ msgstr "गिनी-बिसाऊ"
 
 #. 328
 msgid "Guyana"
-msgstr ""
+msgstr "गयाना"
 
 #. 344
 msgid "Hong Kong"
@@ -1120,303 +1120,303 @@ msgstr "पेरू"
 
 #. 258
 msgid "French Polynesia"
-msgstr ""
+msgstr "फ़्रेंच पोलिनेशिया"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "पापुआ न्यू गिनी"
 
 #. 608
 msgid "Philippines"
-msgstr ""
+msgstr "फिलीपींस"
 
 #. 586
 msgid "Pakistan"
-msgstr ""
+msgstr "पाकिस्तान"
 
 #. 616
 msgid "Poland"
-msgstr ""
+msgstr "पोलैंड"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "सेंट पियरे और मिकेलॉन"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "पिटकेर्न"
 
 #. 630
 msgid "Puerto Rico"
-msgstr ""
+msgstr "प्यूर्टो रिको"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "फिलिस्तीनी क्षेत्र (कब्ज़ा किया हुआ)"
 
 #. 620
 msgid "Portugal"
-msgstr ""
+msgstr "पोर्चुगल"
 
 #. 585
 msgid "Palau"
-msgstr ""
+msgstr "पलाऊ"
 
 #. 600
 msgid "Paraguay"
-msgstr ""
+msgstr "पैराग्वे"
 
 #. 634
 msgid "Qatar"
-msgstr ""
+msgstr "क़तर"
 
 #. 638
 msgid "Reunion"
-msgstr ""
+msgstr "रियूनियन"
 
 #. 642
 msgid "Romania"
-msgstr ""
+msgstr "रोमानिया"
 
 #. 688
 msgid "Serbia"
-msgstr ""
+msgstr "सर्बिया"
 
 #. 643
 msgid "Russian Federation"
-msgstr ""
+msgstr "रूसी संघ"
 
 #. 646
 msgid "Rwanda"
-msgstr ""
+msgstr "रवांडा"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "सऊदी अरब"
 
 #. 090
 msgid "Solomon Islands"
-msgstr ""
+msgstr "सोलोमन द्वीपसमूह"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "सेशल्स"
 
 #. 736
 msgid "Sudan"
-msgstr ""
+msgstr "सूडान"
 
 #. 752
 msgid "Sweden"
-msgstr ""
+msgstr "स्वीडन"
 
 #. 702
 msgid "Singapore"
-msgstr ""
+msgstr "सिंगापुर"
 
 #. 654
 msgid "Saint Helena"
-msgstr ""
+msgstr "सेंट हेलेना"
 
 #. 705
 msgid "Slovenia"
-msgstr ""
+msgstr "स्लोवेनिया"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "स्वालबार्ड और जान मायेन"
 
 #. 703
 msgid "Slovakia"
-msgstr ""
+msgstr "स्लोवाकिया"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "सिएरा लियोन"
 
 #. 674
 msgid "San Marino"
-msgstr ""
+msgstr "सान मारिनो"
 
 #. 686
 msgid "Senegal"
-msgstr ""
+msgstr "सेनेगल"
 
 #. 706
 msgid "Somalia"
-msgstr ""
+msgstr "सोमालिया"
 
 #. 740
 msgid "Suriname"
-msgstr ""
+msgstr "सूरीनाम"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "दक्षिण सूडान"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "साओ टोमे और प्रिंसिपे"
 
 #. 222
 msgid "El Salvador"
-msgstr ""
+msgstr "अल साल्वाडोर"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "सिंट मार्टेन (डच हिस्सा)"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "सीरियाई अरब गणराज्य"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "स्वाज़ीलैंड"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "तुर्क्स और कैकोस द्वीपसमूह"
 
 #. 148
 msgid "Chad"
-msgstr ""
+msgstr "चाड"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "फ़्रांसीसी दक्षिणी क्षेत्र"
 
 #. 768
 msgid "Togo"
-msgstr ""
+msgstr "टोगो"
 
 #. 764
 msgid "Thailand"
-msgstr ""
+msgstr "थाईलैंड"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "ताजिकिस्तान"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "टोकेलाउ"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "तिमोर-लेस्ते"
 
 #. 795
 msgid "Turkmenistan"
-msgstr ""
+msgstr "तुर्कमेनिस्तान"
 
 #. 788
 msgid "Tunisia"
-msgstr ""
+msgstr "ट्यूनीशिया"
 
 #. 776
 msgid "Tonga"
-msgstr ""
+msgstr "टोंगा"
 
 #. 792
 msgid "Turkey"
-msgstr ""
+msgstr "तुर्की"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "त्रिनिदाद और टोबैगो"
 
 #. 798
 msgid "Tuvalu"
-msgstr ""
+msgstr "तुवालु"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "ताइवान (चीन का प्रांत)"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "तंज़ानिया, संयुक्त गणराज्य"
 
 #. 804
 msgid "Ukraine"
-msgstr ""
+msgstr "यूक्रेन"
 
 #. 800
 msgid "Uganda"
-msgstr ""
+msgstr "युगांडा"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "संयुक्त राज्य अमेरिका के छोटे बाहरी द्वीप"
 
 #. 840
 msgid "United States"
-msgstr ""
+msgstr "संयुक्त राज्य अमेरिका"
 
 #. 858
 msgid "Uruguay"
-msgstr ""
+msgstr "उरूग्वे"
 
 #. 860
 msgid "Uzbekistan"
-msgstr ""
+msgstr "उज़्बेकिस्तान"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "होली सी (वेटिकन सिटी राज्य)"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "सेंट विंसेंट और ग्रेनाडाइन्स"
 
 #. 862
 msgid "Venezuela"
-msgstr ""
+msgstr "वेनेज़ुएला"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "वर्जिन द्वीपसमूह (ब्रिटिश)"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "वर्जिन द्वीपसमूह (अमेरिकी)"
 
 #. 704
 msgid "Viet Nam"
-msgstr ""
+msgstr "वियतनाम"
 
 #. 548
 msgid "Vanuatu"
-msgstr ""
+msgstr "वानुआतु"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "वालिस और फ़्यूचूना"
 
 #. 882
 msgid "Samoa"
-msgstr ""
+msgstr "समोआ"
 
 #. 887
 msgid "Yemen"
-msgstr ""
+msgstr "यमन"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "मायोट"
 
 #. 710
 msgid "South Africa"
-msgstr ""
+msgstr "दक्षिण अफ्रीका"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "ज़ाम्बिया"
 
 #. 716
 msgid "Zimbabwe"
-msgstr ""
+msgstr "ज़िम्बाब्वे"
 
 msgid "* Unknown, add is_in tags to those cities"
 msgstr ""
@@ -1435,191 +1435,192 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "navit.xml, navit.xml.local कॉन्फ़िग फ़ाइल नहीं मिली"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr ""
+msgstr "कॉन्फ़िग फ़ाइल '%s' पार्स करते समय त्रुटि: %s"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr ""
+msgstr "कॉन्फ़िग फ़ाइल '%s' का उपयोग किया जा रहा है"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
+msgstr "त्रुटि: कॉन्फ़िग फ़ाइल '%s' में कोई कॉन्फ़िगरेशन नहीं मिला"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
+"आंतरिक प्रारंभिककरण विफल, बाहर निकला जा रहा है। कृपया पहले के त्रुटि संदेश देखें।"
 
 msgid "unknown street"
-msgstr ""
+msgstr "अज्ञात सड़क"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
-msgstr ""
+msgstr "बेनाम वाहन"
 
 msgid "Failed to write bookmarks file"
-msgstr ""
+msgstr "बुकमार्क फ़ाइल लिखने में विफल"
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr ""
+msgstr "मानचित्र बिंदु"
 
 msgid "Car"
-msgstr ""
+msgstr "कार"
 
 msgid "Iso2"
-msgstr ""
+msgstr "ISO2"
 
 msgid "Iso3"
-msgstr ""
+msgstr "iso3"
 
 msgid "Country"
-msgstr ""
+msgstr "देश"
 
 msgid "Postal"
-msgstr ""
+msgstr "पोस्टल"
 
 msgid "Town"
-msgstr ""
+msgstr "नगर"
 
 msgid "District"
-msgstr ""
+msgstr "ज़िला"
 
 msgid "Street"
-msgstr ""
+msgstr "सड़क"
 
 msgid "Number"
-msgstr ""
+msgstr "संख्या"
 
 msgid "Enter Destination"
-msgstr ""
+msgstr "गंतव्य दर्ज करें"
 
 msgid "Zip Code"
-msgstr ""
+msgstr "ज़िप कोड / पिन कोड"
 
 msgid "City"
-msgstr ""
+msgstr "शहर"
 
 msgid "District/Township"
-msgstr ""
+msgstr "ज़िला / नगर पंचायत"
 
 msgid "Map"
-msgstr ""
+msgstr "मानचित्र"
 
 msgid "Bookmark"
-msgstr ""
+msgstr "बुकमार्क"
 
 msgid "Destination"
-msgstr ""
+msgstr "गंतव्य"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr ""
+msgstr "_प्रदर्शन"
 
 msgid "_Route"
-msgstr ""
+msgstr "_मार्ग"
 
 msgid "_Former Destinations"
-msgstr ""
+msgstr "_पिछले गंतव्य"
 
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_बुकमार्क"
 
 msgid "_Map"
-msgstr ""
+msgstr "_मानचित्र"
 
 msgid "_Layout"
-msgstr ""
+msgstr "_लेआउट"
 
 msgid "_Projection"
-msgstr ""
+msgstr "_प्रोजेक्शन"
 
 msgid "_Vehicle"
-msgstr ""
+msgstr "_वाहन"
 
 msgid "Zoom_Out"
-msgstr ""
+msgstr "दूर करें"
 
 msgid "Decrease zoom level"
-msgstr ""
+msgstr "दूर करें"
 
 msgid "Zoom_In"
-msgstr ""
+msgstr "बड़ा करें"
 
 msgid "Increase zoom level"
-msgstr ""
+msgstr "आवर्धन बढ़ाएँ"
 
 msgid "_Recalculate"
-msgstr ""
+msgstr "_पुनः गणना"
 
 msgid "Redraw map"
-msgstr ""
+msgstr "मानचित्र फिर से बनाएं"
 
 msgid "_Info"
-msgstr ""
+msgstr "_जानकारी"
 
 msgid "Set _destination"
-msgstr ""
+msgstr "_गंतव्य सेट करें"
 
 msgid "Opens address search dialog"
-msgstr ""
+msgstr "पता खोज संवाद खोलता है"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_POI खोज"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "POI खोज संवाद खोलता है"
 
 msgid "_Stop Navigation"
-msgstr ""
+msgstr "_नेविगेशन रोकें"
 
 msgid "Test"
-msgstr ""
+msgstr "परीक्षण"
 
 msgid "_Quit"
-msgstr ""
+msgstr "_बंद करें"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "अनुप्रयोग बंद करें"
 
 msgid "Show position _cursor"
-msgstr ""
+msgstr "स्थिति _कर्सर दिखाएँ"
 
 msgid "_Lock on Road"
-msgstr ""
+msgstr "_सड़क पर लॉक करें"
 
 msgid "_Keep orientation to the North"
-msgstr ""
+msgstr "_दिशा उत्तर पर स्थिर रखें"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
+msgstr "मानचित्र की दिशा उत्तर या वाहन की ओर बदलता है"
 
 msgid "_Roadbook"
-msgstr ""
+msgstr "_रोडबुक"
 
 msgid "Show/hide route description"
-msgstr ""
+msgstr "मार्ग विवरण दिखाएँ/छिपाएँ"
 
 msgid "_Autozoom"
-msgstr ""
+msgstr "_स्वचलित ज़ूम"
 
 msgid "Enable/disable automatic zoom level changing"
-msgstr ""
+msgstr "स्वचालित ज़ूम स्तर बदलना चालू/बंद करें"
 
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_पूर्ण स्क्रीन"
 
 msgid "Data"
-msgstr ""
+msgstr "डेटा"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "दवा दुकान"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "भोजनालय"
 
 msgid "Restaurant. Fast food"
 msgstr ""
