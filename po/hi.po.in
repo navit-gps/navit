@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-20 06:51+0000\n"
+"PO-Revision-Date: 2025-11-20 07:35+0000\n"
 "Last-Translator: deepak09A <deepak09@live.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/navit/navit-core/"
 "hi/>\n"
@@ -1623,302 +1623,302 @@ msgid "Restaurant"
 msgstr "भोजनालय"
 
 msgid "Restaurant. Fast food"
-msgstr ""
+msgstr "त्वरित-भोजनालय"
 
 msgid "Hotel"
-msgstr ""
+msgstr "विश्रामालय"
 
 msgid "Car parking"
-msgstr ""
+msgstr "वाहन-स्थापन स्थल"
 
 msgid "Fuel station"
-msgstr ""
+msgstr "ईंधन-केन्द्र"
 
 msgid "Bank"
-msgstr ""
+msgstr "बैंक"
 
 msgid "Hospital"
-msgstr ""
+msgstr "आंकड़े"
 
 msgid "Cinema"
-msgstr ""
+msgstr "चलचित्र गृह"
 
 msgid "Train station"
-msgstr ""
+msgstr "रेलवे स्टेशन"
 
 msgid "School"
-msgstr ""
+msgstr "विद्यालय"
 
 msgid "Police"
-msgstr ""
+msgstr "पुलिस"
 
 msgid "Justice"
-msgstr ""
+msgstr "न्यायालय"
 
 msgid "Taxi"
-msgstr ""
+msgstr "टैक्सी"
 
 msgid "Shopping"
-msgstr ""
+msgstr "खरीदारी"
 
 msgid "Select a search radius from screen center"
-msgstr ""
+msgstr "स्क्रीन के केंद्र से खोज-त्रिज्या चुनें"
 
 #, c-format
 msgid "POI %s. %s"
-msgstr ""
+msgstr "रुचि-बिन्दु %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr ""
+msgstr "तव्य को %ld, %ld पर निर्धारित करें"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr ""
+msgstr "मानचित्र को %ld, %ld पर स्थापित करें"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr ""
+msgstr "अगली यात्रा को %ld, %ld पर निर्धारित करें"
 
 msgid "POI search"
-msgstr ""
+msgstr "रुचि-बिन्दु खोज"
 
 msgid "Select a category"
-msgstr ""
+msgstr "एक श्रेणी चुनें"
 
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "खोज की दूरी चुनें (किमी में)"
 
 msgid "Select a POI"
-msgstr ""
+msgstr "रुचि-बिन्दु चुनें"
 
 msgid " "
 msgstr ""
 
 msgid "Category"
-msgstr ""
+msgstr "श्रेणी"
 
 msgid "Direction"
-msgstr ""
+msgstr "दिशा"
 
 msgid "Distance(m)"
-msgstr ""
+msgstr "दूरी (मीटर)"
 
 msgid "Name"
-msgstr ""
+msgstr "नाम"
 
 msgid "Visit Before"
-msgstr ""
+msgstr "पहले भ्रमण किया हुआ"
 
 msgid "N"
-msgstr ""
+msgstr "उ (उत्तर)"
 
 msgid "NE"
-msgstr ""
+msgstr "उपू (उत्तर-पूर्व)"
 
 msgid "E"
-msgstr ""
+msgstr "पू (पूर्व)"
 
 msgid "SE"
-msgstr ""
+msgstr "दपू (दक्षिण-पूर्व)"
 
 msgid "S"
-msgstr ""
+msgstr "द (दक्षिण)"
 
 msgid "SW"
-msgstr ""
+msgstr "दपशि (दक्षिण-पश्चिम)"
 
 msgid "W"
-msgstr ""
+msgstr "पशि (पश्चिम)"
 
 msgid "NW"
-msgstr ""
+msgstr "उपशि (उत्तर-पश्चिम)"
 
 #. Android resource: @strings/no
 msgid "No"
-msgstr ""
+msgstr "नहीं"
 
 msgid "2D"
-msgstr ""
+msgstr "2D दो-आयामी"
 
 msgid "3D"
-msgstr ""
+msgstr "3D त्रि-आयामी"
 
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "मार्ग %4.0f कि.मी. %02d:%02d अनुमानित आगमन समय"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "मार्ग 0000 कि.मी. 0+00:00 अनुमानित आगमन समय"
 
 msgid "Help"
-msgstr ""
+msgstr "सहायता"
 
 #, c-format
 msgid "Waypoint %s"
-msgstr ""
+msgstr "वेपॉइंट %s"
 
 msgid "Select waypoint to insert the new one before"
-msgstr ""
+msgstr "नया वेपॉइंट जिस वेपॉइंट के पहले जोड़ना है, उसे चुनें"
 
 msgid "View in Browser"
-msgstr ""
+msgstr "ब्राउज़र में देखें"
 
 msgid "Item type"
-msgstr ""
+msgstr "आइटम प्रकार"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
-msgstr ""
+msgstr "सड़कें"
 
 msgid "House numbers"
-msgstr ""
+msgstr "घर संख्या"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "गुण देखें"
 
 msgid "Set as position (and deactivate vehicle)"
-msgstr ""
+msgstr "स्थिति के रूप में सेट करें (और वाहन निष्क्रिय करें)"
 
 msgid "POIs"
-msgstr ""
+msgstr "रूचि स्थल (POI)"
 
 msgid "View on map"
-msgstr ""
+msgstr "मानचित्र पर देखें"
 
 msgid "Remove search results from the map"
-msgstr ""
+msgstr "मानचित्र से खोज परिणाम हटाएँ"
 
 msgid "Show results on the map"
-msgstr ""
+msgstr "मानचित्र पर परिणाम दिखाएँ"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "बुकमार्क काटें"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "बुकमार्क कॉपी करें"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "बुकमार्क का नाम बदलें"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "बुकमार्क चिपकाएँ"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "बुकमार्क हटाएँ"
 
 msgid "Delete waypoint"
-msgstr ""
+msgstr "वेपॉइंट हटाएँ"
 
 msgid "Bookmarks"
-msgstr ""
+msgstr "चिह्नित स्थान"
 
 msgid "Bookmarks as waypoints"
-msgstr ""
+msgstr "चिह्नित स्थान को मार्ग-बिंदु के रूप में उपयोग करें"
 
 msgid "Save waypoints"
-msgstr ""
+msgstr "मार्ग-बिंदु सहेजें"
 
 msgid "Replace with waypoints"
-msgstr ""
+msgstr "मार्ग-बिंदु से प्रतिस्थापित करें"
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "फ़ोल्डर हटाएँ"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "चिह्नित स्थान फ़ोल्डर जोड़ें"
 
 #. Pastes the Bookmark
 msgid "Paste bookmark"
-msgstr ""
+msgstr "चिह्नित स्थान चिपकाएँ"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "चिह्नित स्थान %s"
 
 #, c-format
 msgid "Download %s"
-msgstr ""
+msgstr "%s डाउनलोड करें"
 
 msgid "Map Download"
-msgstr ""
+msgstr "मानचित्र डाउनलोड"
 
 msgid "Active"
-msgstr ""
+msgstr "सक्रिय"
 
 msgid "Download Enabled"
-msgstr ""
+msgstr "डाउनलोड सक्षम"
 
 msgid "Download completely"
-msgstr ""
+msgstr "पूरी तरह डाउनलोड करें"
 
 msgid "Show Satellite Status"
-msgstr ""
+msgstr "उपग्रह स्थिति दिखाएँ"
 
 msgid " Elevation "
-msgstr ""
+msgstr "ऊँचाई"
 
 msgid " Azimuth "
-msgstr ""
+msgstr "दिशा कोण (अज़ीमुथ)"
 
 msgid "Show NMEA Data"
-msgstr ""
+msgstr "NMEA डेटा दिखाएँ"
 
 msgid "car"
-msgstr ""
+msgstr "मोटरगाड़ी"
 
 msgid "bike"
-msgstr ""
+msgstr "मोटरसाइकिल"
 
 msgid "pedestrian"
-msgstr ""
+msgstr "पैदल यात्री"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "वर्तमान प्रोफ़ाइल: %s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr ""
+msgstr "प्रोफ़ाइल बदलकर यह करें: %s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "सक्रिय के रूप में सेट करें"
 
 msgid "Show Satellite status"
-msgstr ""
+msgstr "उपग्रह स्थिति दिखाएँ"
 
 msgid "Show NMEA data"
-msgstr ""
+msgstr "NMEA डेटा दिखाएँ"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "चिह्नित स्थान जोड़ें"
 
 msgid "Rename"
-msgstr ""
+msgstr "नाम बदलें"
 
 msgid "About Navit"
-msgstr ""
+msgstr "नैविट के बारे में"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "द्वारा"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "और पूरी नैविट टीम"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "सदस्यों और योगदानकर्ताओं द्वारा।"
 
 msgid "Waypoints"
-msgstr ""
+msgstr "मार्ग-बिंदु"
 
 msgid "Enter Coordinates"
-msgstr ""
+msgstr "निर्देशांक दर्ज करें"
 
 #.
 #. w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill)
@@ -1927,52 +1927,52 @@ msgstr ""
 #. we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill)
 #. gui_internal_widget_append(w, we)
 msgid "Latitude Longitude"
-msgstr ""
+msgstr "अक्षांश देशांतर"
 
 msgid "Enter coordinates, for example:"
-msgstr ""
+msgstr "निर्देशांक दर्ज करें, उदाहरण के लिए:"
 
 msgid "Vehicle"
-msgstr ""
+msgstr "वाहन"
 
 msgid "Rules"
-msgstr ""
+msgstr "नियम"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "सड़क पर स्थिर रखें"
 
 msgid "Northing"
-msgstr ""
+msgstr "उत्तर दिशा मापन"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "मानचित्र वाहन के साथ चले"
 
 msgid "Plan with Waypoints"
-msgstr ""
+msgstr "मार्ग बिंदुओं के साथ योजना बनाएँ"
 
 msgid "Maps"
-msgstr ""
+msgstr "मानचित्र"
 
 msgid "Layout"
-msgstr ""
+msgstr "रूपरेखा"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "ऊँचाई रूपरेखा"
 
 msgid "Route Description"
-msgstr ""
+msgstr "मार्ग विवरण"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "स्थानीय क्षेत्र दिखाएँ"
 
 msgid "Former Destinations"
-msgstr ""
+msgstr "पूर्व गंतव्य"
 
 msgid "- No former destinations available -"
-msgstr ""
+msgstr "– कोई पूर्व गंतव्य उपलब्ध नहीं –"
 
 msgid "Message"
-msgstr ""
+msgstr "संदेश"
 
 msgid "Back"
 msgstr ""
