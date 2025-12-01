@@ -19,7 +19,6 @@ check_diff(){
     if [[ $code -ne 0 ]]; then
         echo "[ERROR] You may need to do some cleanup in the files you commited, see the git diff output above."
     fi
-    git checkout -- .
     return_code=$(($return_code + $code))
 }
 
@@ -57,5 +56,4 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
         fi
     fi
 done
-
-exit $return_code
+git diff
