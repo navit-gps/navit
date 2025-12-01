@@ -25,6 +25,10 @@
 #ifndef NAVIT_GRAPHICS_H
 #define NAVIT_GRAPHICS_H
 #include "coord.h"
+#include "point.h"
+#include "navit.h"
+
+#include <glib.h>
 
 #ifdef __cplusplus
 extern "C" {

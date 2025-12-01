@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+#include "attr.h"
+
 struct point;
 struct vehicle_priv;
 

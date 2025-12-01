@@ -20,11 +20,15 @@
 #ifndef NAVIT_XMLCONFIG_H
 #define NAVIT_XMLCONFIG_H
 
+#include "navit.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "config.h"
+
+#include <glib.h>
 
 #ifndef USE_EZXML
 #ifdef HAVE_GLIB
@@ -118,7 +122,6 @@ extern struct object_func map_func, mapset_func, navit_func, osd_func, tracking_
 
 #define HAS_OBJECT_FUNC(x) ((x) == attr_map || (x) == attr_mapset || (x) == attr_navit || (x) == attr_osd || (x) == attr_trackingo || (x) == attr_vehicle || (x) == attr_maps || (x) == attr_layout || (x) == attr_roadprofile || (x) == attr_vehicleprofile || (x) == attr_layer || (x) == attr_config || (x) == attr_profile_option || (x) == attr_script || (x) == attr_log || (x) == attr_speech || (x) == attr_navigation || (x) == attr_route || (x) == attr_traffic)
 
-#define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
 struct navit_object {
     NAVIT_OBJECT
 };

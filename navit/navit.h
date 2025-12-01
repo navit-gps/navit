@@ -20,15 +20,14 @@
 #ifndef NAVIT_NAVIT_H
 #define NAVIT_NAVIT_H
 
+#define NAVIT_OBJECT struct object_func *func; int refcount; struct attr **attrs;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 extern struct gui *main_loop_gui;
-// defined in glib.h.
-#ifndef __G_LIST_H__
-struct _GList;
-typedef struct _GList GList;
-#endif
+
+#include <glib.h>
 
 /* prototypes */
 enum attr_type;
