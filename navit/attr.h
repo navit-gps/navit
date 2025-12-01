@@ -26,7 +26,7 @@ extern "C" {
 
 #include "projection.h"
 
-enum item_type;
+#include "item_type_def.h"
 
 #include "attr_type_def.h"
 
