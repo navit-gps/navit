@@ -46,4 +46,23 @@
     <string name="map_download_error_writing_map">Fehler beim Schreiben der Karte!</string>
     <string name="map_no_fix">Keine Positionsdaten vorhanden. Öffnen Sie Navit nach dem GPS-Fix wieder.</string>
     <string name="map_location_changed">Neuer Speicherort definiert bei %s. Starten Sie Navit neu um die Änderungen anzuwenden.</string>
+    <string name="initial_info_box_message">Danke für das Installieren von Navit!\n\nWählen Sie \"Karte herunterladen\" aus dem Menü um zu beginnen. Die Karten können sehr groß sein (&gt;50MB) - eine Verbindung über WLAN wird empfohlen.\n\nKartendaten: (c) Beitragende zum OpenStreetMap Projekt\n\nViel Spaß mit Navit!</string>
+    <string name="map_download_oversize">Es tut uns Leid, Karten mit einer Größe von mehr als 3,8GB werden auf Android nicht unterstützt. Bitte wählen Sie eine kleinere Karte.</string>
+    <string name="map_location_unavailable">Der Speicherort der aktuellen Karte (%s) ist nicht mehr verfügbar. Bitte wählen Sie einen anderen Speicherort oder starten Sie Navit neu.</string>
+    <string name="address_search_searching">Suche…</string>
+    <string name="address_search_getting_results">Hole Suchergebnisse</string>
+    <string name="choose_an_action">Sicherung und Wiederherstellung</string>
+    <string name="please_insert_an_sd_card">Bitte SD-Karte einstecken</string>
+    <string name="backing_up">Sicherung läuft…</string>
+    <string name="restoring">Wiederherstellung läuft…</string>
+    <string name="failed_to_create_backup_directory">Konnte das Sicherungsverzeichnis nicht erstellen</string>
+    <string name="backup_failed">Sicherung gescheitert</string>
+    <string name="no_backup_found">Keine Sicherung gefunden</string>
+    <string name="failed_to_restore">Wiederherstellung gescheitert</string>
+    <string name="backup_successful">Sicherung erfolgreich</string>
+    <string name="restore_successful_please_restart_navit">Wiederherstellung erfolgreich\nBitte Navit neu starten</string>
+    <string name="backup_not_found">Sicherung nicht gefunden</string>
+    <string name="select_backup">Sicherung auswählen</string>
+    <string name="backup">Sicherung</string>
+    <string name="restore">Wiederherstellung</string>
 </resources>
