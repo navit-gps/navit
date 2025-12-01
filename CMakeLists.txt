@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
+set(CMAKE_EXECUTABLE_ENABLE_EXPORTS "true")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
 message(STATUS "Building with CMake V${CMAKE_VERSION}")
 if (DISABLE_CXX)
