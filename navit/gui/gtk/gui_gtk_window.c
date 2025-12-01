@@ -27,6 +27,7 @@
 #include <X11/XF86keysym.h>
 #endif
 #include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include "config.h"
 #include "item.h"
 #include "xmlconfig.h"
@@ -59,10 +60,10 @@
 #define KEY_LEFT HILDON_HARDKEY_LEFT
 #define KEY_RIGHT HILDON_HARDKEY_RIGHT
 #else
-#ifndef GDK_Book
+#ifndef GDK_KEY_Book
 #define GDK_KEY_Book XF86XK_Book
 #endif
-#ifndef GDK_Calendar
+#ifndef GDK_KEY_Calendar
 #define GDK_KEY_Calendar XF86XK_Calendar
 #endif
 #define KEY_ZOOM_IN GDK_KEY_Book
@@ -207,7 +208,7 @@ static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra) {
     graphics=graphics_get_data(gra, "gtk_widget");
     if (! graphics)
         return 1;
-    GTK_WIDGET_SET_FLAGS (graphics, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(graphics, TRUE);
     gtk_widget_set_sensitive(graphics, TRUE);
     g_signal_connect(G_OBJECT(graphics), "key-press-event", G_CALLBACK(keypress), this);
     gtk_box_pack_end(GTK_BOX(this->vbox), graphics, TRUE, TRUE, 0);
@@ -246,10 +247,9 @@ static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *de
 
     gui->dialog_coord=*c;
     gui->dialog_win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    vbox=gtk_vbox_new(FALSE, 0);
+    vbox=gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (gui->dialog_win), vbox);
     gtk_window_set_title(GTK_WINDOW(gui->dialog_win),_("Add Bookmark"));
-    gtk_window_set_wmclass (GTK_WINDOW (gui->dialog_win), "navit", "Navit");
     gtk_window_set_transient_for(GTK_WINDOW(gui->dialog_win), GTK_WINDOW(gui->win));
     gtk_window_set_modal(GTK_WINDOW(gui->dialog_win), TRUE);
     label=gtk_label_new(_("Name"));
@@ -264,7 +264,7 @@ static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *de
     gtk_box_pack_start(GTK_BOX(hbox), button_cancel, TRUE, TRUE, 10);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE, 10);
     gtk_widget_show_all(gui->dialog_win);
-    GTK_WIDGET_SET_FLAGS (button_ok, GTK_CAN_DEFAULT);
+    gtk_widget_set_can_default(button_ok, TRUE);
     gtk_widget_grab_default(button_ok);
     g_signal_connect_swapped (G_OBJECT (button_cancel), "clicked", G_CALLBACK (gtk_widget_destroy),
                               G_OBJECT (gui->dialog_win));
@@ -725,14 +725,14 @@ static struct gui_priv *gui_gtk_new(struct navit *nav, struct gui_methods *meth,
     gui_gtk_ui_init(this);
     if (this->menubar_enable) {
         widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/MenuBar");
-        GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+        gtk_widget_set_can_focus(widget, FALSE);
         gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
         gtk_widget_show (widget);
         this->menubar=widget;
     }
     if (this->toolbar_enable) {
         widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/ToolBar");
-        GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+        gtk_widget_set_can_focus(widget, FALSE);
         gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
         gtk_widget_show (widget);
     }
@@ -764,7 +764,6 @@ static char **gtk_argv= {NULL};
 
 void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
-    gtk_set_locale();
 #ifdef HAVE_API_WIN32
     setlocale(LC_NUMERIC,"C");
 #endif
