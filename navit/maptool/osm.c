@@ -1082,7 +1082,11 @@ void osm_add_tag(char *k, char *v) {
         if (!g_strcmp0(v,"1")) {
             flags[0] |= AF_ONEWAY | AF_ROUNDABOUT_VALID;
         }
-        if (! g_strcmp0(v,"-1")) {
+        else if (! g_strcmp0(v,"0")) {
+            flags[0] &= ~AF_ONEWAY;
+            flags[0] &= ~AF_ONEWAYREV;
+        }
+        else if (! g_strcmp0(v,"-1")) {
             flags[0] |= AF_ONEWAYREV | AF_ROUNDABOUT_VALID;
         }
         if (!in_way)
