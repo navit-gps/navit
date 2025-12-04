@@ -1241,13 +1241,13 @@ static struct map_methods traffic_map_meth = {
  */
 static int traffic_event_is_valid(struct traffic_event *this_) {
     if (!this_->event_class || !this_->type) {
-        dbg(lvl_debug, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
+        dbg(lvl_warning, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
         return 0;
     }
     switch (this_->event_class) {
     case event_class_congestion:
         if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance)) {
-            dbg(lvl_debug, "illegal type (%d) for event_class_congestion", this_->type);
+            dbg(lvl_warning, "illegal type (%d) for event_class_congestion", this_->type);
             return 0;
         }
         break;
@@ -1265,11 +1265,11 @@ static int traffic_event_is_valid(struct traffic_event *this_) {
         }
         break;
     default:
-        dbg(lvl_debug, "unknown event class %d", this_->event_class);
+        dbg(lvl_warning, "unknown event class %d", this_->event_class);
         return 0;
     }
     if (this_->si_count && !this_->si) {
-        dbg(lvl_debug, "si_count=%d but no supplementary information", this_->si_count);
+        dbg(lvl_warning, "si_count=%d but no supplementary information", this_->si_count);
         return 0;
     }
     /* TODO check SI */
@@ -3861,7 +3861,7 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
+        dbg(lvl_warning, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
@@ -3870,15 +3870,15 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
