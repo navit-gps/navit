@@ -24,11 +24,12 @@
 
 #include "thread.h"
 #include <glib.h>
+#include <math.h>
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #else
 #include <errno.h>
-#include <time.h>
+#include <sys/time.h>
 #define _GNU_SOURCE
 #endif
 #include "debug.h"

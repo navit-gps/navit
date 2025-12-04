@@ -55,6 +55,7 @@
 #include "debug.h"
 #include "navit.h"
 #include "util.h"
+#include "navigation.h"
 
 /**
  * @brief Default poll interval, in msec.
@@ -295,7 +296,7 @@ static int traffic_traff_http_process_response(struct traffic_priv * this_,
  *
  * @param this_gpointer Pointer to the `struct traffic_priv` for the plugin instance
  */
-static gpointer traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
+static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
     struct traffic_priv * this_ = (struct traffic_priv *) this_gpointer;
 
     /* Whether the current run of the loop should poll the source */
