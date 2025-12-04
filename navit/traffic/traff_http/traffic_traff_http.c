@@ -396,6 +396,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
         /* finally, sleep until the next poll is due or we receive a new request */
         thread_event_wait(this_->queue_event, this_->interval);
     }
+    return 0;
 }
 
 
@@ -547,7 +548,6 @@ static void traffic_traff_http_position_callback(struct traffic_priv * this_, st
  * @return True on success, false on failure
  */
 static int traffic_traff_http_init(struct traffic_priv * this_) {
-    struct route * route;
     struct navigation * navigation;
 
     /* TODO verify event system, accept if thread-safe, warn if functions are missing, else exit
