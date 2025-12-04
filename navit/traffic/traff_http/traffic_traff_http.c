@@ -83,19 +83,19 @@
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-    struct navit * nav;         /**< The navit instance */
-    struct traffic * traffic;   /**< The traffic instance */
-    int position_valid;         /**< Whether Navit currently has a valid position */
-    struct coord_rect * position_rect; /**< Rectangle around last known vehicle position (in `projection_mg`) */
-    struct map_selection * route_map_sel; /**< Map selection for the current route */
-    thread * worker_thread;     /**< Worker thread for network communication */
-    int interval;               /**< Poll interval for the source, in msec */
-    char * source;              /**< URL of the TraFF service */
-    GList * queue;              /**< Queue of requests to be processed by the worker thread */
-    thread_lock * queue_lock;   /**< Lock for the request queue */
-    thread_event * queue_event; /**< Event that is signaled when a request is posted to the queue */
-    char * subscription_id;     /**< Subscription ID */
-    int exiting;                /**< Whether the plugin is shutting down */
+    struct navit *nav;                   /**< The navit instance */
+    struct traffic *traffic;             /**< The traffic instance */
+    int position_valid;                  /**< Whether Navit currently has a valid position */
+    struct coord_rect *position_rect;    /**< Rectangle around last known vehicle position (in `projection_mg`) */
+    struct map_selection *route_map_sel; /**< Map selection for the current route */
+    thread *worker_thread;               /**< Worker thread for network communication */
+    int interval;                        /**< Poll interval for the source, in msec */
+    char *source;                        /**< URL of the TraFF service */
+    GList *queue;                        /**< Queue of requests to be processed by the worker thread */
+    thread_lock *queue_lock;             /**< Lock for the request queue */
+    thread_event *queue_event;           /**< Event that is signaled when a request is posted to the queue */
+    char *subscription_id;               /**< Subscription ID */
+    int exiting;                         /**< Whether the plugin is shutting down */
 };
 
 /**
@@ -411,6 +411,7 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     gchar *filter_list;
     struct map_selection * sel;
     gchar *min_road_class;
+
 
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
