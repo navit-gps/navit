@@ -72,7 +72,8 @@ static int town_attr_get(void *priv_data, enum attr_type attr_type, struct attr 
         return ((attr->u.str && attr->u.str[0]) ? 1:0);
     case attr_town_postal:
     case attr_postal:
-        strncpy(twn->postal, twn->postal_code1, 32);
+        *twn->postal = '\0';
+        strncat(twn->postal, twn->postal_code1, sizeof(twn->postal)-1);
         attr->u.str=twn->postal;
         len=mg_country_postal_len(twn->country);
         if (!len)

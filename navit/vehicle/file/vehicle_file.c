@@ -484,7 +484,8 @@ static int vehicle_file_parse(struct vehicle_priv *priv, char *buffer) {
 
             if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
                 ret = 1;
-                strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+                *priv->fixtime = '\0';
+                strncat(priv->fixtime, item[1], sizeof(priv->fixtime)-1);
             }
 
             dbg(lvl_info, "latitude '%2.4f' longitude %2.4f", priv->geo.lat, priv->geo.lng);
@@ -574,7 +575,8 @@ static int vehicle_file_parse(struct vehicle_priv *priv, char *buffer) {
 
             if (*item[1] && strncmp(priv->fixtime, item[1], sizeof(priv->fixtime))) {
                 ret = 1;
-                strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
+                *priv->fixtime = '\0';
+                strncat(priv->fixtime, item[1], sizeof(priv->fixtime)-1);
             }
 
             dbg(lvl_info, "latitude '%2.4f' longitude %2.4f", priv->geo.lat, priv->geo.lng);
