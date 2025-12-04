@@ -74,6 +74,7 @@ extern "C" {
 #else
 #define HAVE_POSIX_THREADS 1
 #define HAVE_NAVIT_THREADS 1
+#define _GNU_SOURCE
 #include <pthread.h>
 #endif
 
