@@ -1091,7 +1091,7 @@ void osm_add_tag(char *k, char *v) {
             level=5;
     }
     if (! g_strcmp0(k,"junction")) {
-        if (! g_strcmp0(v,"roundabout"))
+        if ( (! g_strcmp0(v,"roundabout") ) || (! g_strcmp0(v,"circular") ) )
             flags[0] |= AF_ONEWAY | AF_ROUNDABOUT | AF_ROUNDABOUT_VALID;
     }
     if (! g_strcmp0(k,"maxspeed")) {
