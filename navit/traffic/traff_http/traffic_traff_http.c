@@ -399,6 +399,25 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
     return 0;
 }
 
+static void coordtostr(char *dst, size_t dstsize, navit_float a, navit_float b, navit_float c, navit_float d) {
+    if (a > c) {
+        dbg(lvl_error, "BUGBUGBUG TRAFFIC rl.LAT > lu.lat. This should never happen.");
+    }
+
+#define numsize 14
+    char e[4][numsize];
+    memset(e, '\0', sizeof(e));
+    floattostr(e[0], numsize, a, '.');
+    floattostr(e[1], numsize, b, '.');
+    floattostr(e[2], numsize, c, '.');
+    floattostr(e[3], numsize, d, '.');
+    dst[0] = '\0';
+    strncat(dst, (e[0]), dstsize - 1);
+    for (int i = 1; i < 4; i++) {
+        strncat(dst, " ", dstsize - strlen(dst) - 1);
+        strncat(dst, (e[i]), dstsize - strlen(dst) - 1);
+    }
+}
 
 /**
  * @brief Sets the route map selection
@@ -411,6 +430,7 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     gchar *filter_list;
     struct map_selection * sel;
     gchar *min_road_class;
+    char coordbuf[80] = "";
 
 
     if (this_->route_map_sel)
@@ -424,19 +444,20 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     if (this_->position_rect) {
         transform_to_geo(projection_mg, &this_->position_rect->lu, &lu);
         transform_to_geo(projection_mg, &this_->position_rect->rl, &rl);
-        filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                         rl.lat, lu.lng, lu.lat, rl.lng);
+        coordtostr(coordbuf, 80, rl.lat, lu.lng, lu.lat, rl.lng);
+        filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%s\"/>\n", coordbuf);
     }
     for (sel = this_->route_map_sel; sel; sel = sel->next) {
         transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
         transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
         min_road_class = order_to_min_road_class(sel->order);
-        if (!min_road_class)
-            filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                             rl.lat, lu.lng, lu.lat, rl.lng);
-        else
-            filter_list = g_strconcat_printf(filter_list, "    <filter min_road_class=\"%s\" bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                             min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
+        coordtostr(coordbuf, 80, rl.lat, lu.lng, lu.lat, rl.lng);
+        if (!min_road_class) {
+            filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%s\"/>\n", coordbuf);
+        } else {
+            filter_list = g_strconcat_printf(filter_list, "    <filter min_road_class=\"%s\" bbox=\"%s\"/>\n",
+                                             min_road_class, coordbuf);
+        }
     }
     filter_list = g_strconcat_printf(filter_list, "</filter_list>");
     thread_lock_acquire_write(this_->queue_lock);
