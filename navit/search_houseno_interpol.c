@@ -173,7 +173,7 @@ search_house_number_coordinate(struct item *item, struct house_number_interpolat
             hn_pos=atoi(inter->curr)-atoi(inter->first);
         if (count) {
             int i,distance_sum=0,hn_distance;
-            int *distances=g_alloca(sizeof(int)*(count-1));
+            int *distances=g_alloca(sizeof(int)*(count));
             dbg(lvl_debug,"count=%d hn_length=%d hn_pos=%d (%s of %s-%s)",count,hn_length,hn_pos,inter->curr,inter->first,
                 inter->last);
             if (!hn_length) {
