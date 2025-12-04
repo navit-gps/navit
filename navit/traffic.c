@@ -245,25 +245,25 @@ struct point_data {
  * to NULL when a message is created.
  */
 struct xml_state {
-    char * status;                      /**< Response status, indicating success or an error, if any */
-    char * subscription_id;             /**< Subscription ID, if any */
-    int timeout;                        /**< Timeout in seconds, if any, else 0 */
-    GList * messages;                   /**< Messages read so far */
-    GList * tagstack;                   /**< Currently open tags (order is bottom to top) */
-    int is_valid;                       /**< Whether `tagstack` represents a hierarchy of elements we recognize */
-    int is_opened;                      /**< True if we have just opened an element;
-	                                     *   false if child elements have been opened and closed since */
-    struct traffic_point * at;          /**< The point for a point location, NULL for linear locations. */
-    struct traffic_point * from;        /**< The start of a linear location, or a point before `at`. */
-    struct traffic_point * to;          /**< The end of a linear location, or a point after `at`. */
-    struct traffic_point * via;         /**< A point between `from` and `to`. Required on ring roads
-	                                     *   unless `not_via` is used; cannot be used together with `at`. */
-    struct traffic_point * not_via;     /**< A point NOT between `from` and `to`. Required on ring roads
-	                                     *   unless `via` is used; cannot be used together with `at`. */
-    struct traffic_location * location; /**< The location to which the next message refers. */
-    char * location_txt_data;           /**< Persisted location data in txtfile map format. */
-    GList * si;                         /**< Supplementary information items for the next event. */
-    GList * events;                     /**< The events for the next message. */
+    char *status;                      /**< Response status, indicating success or an error, if any */
+    char *subscription_id;             /**< Subscription ID, if any */
+    int timeout;                       /**< Timeout in seconds, if any, else 0 */
+    GList *messages;                   /**< Messages read so far */
+    GList *tagstack;                   /**< Currently open tags (order is bottom to top) */
+    int is_valid;                      /**< Whether `tagstack` represents a hierarchy of elements we recognize */
+    int is_opened;                     /**< True if we have just opened an element;
+                                        *   false if child elements have been opened and closed since */
+    struct traffic_point *at;          /**< The point for a point location, NULL for linear locations. */
+    struct traffic_point *from;        /**< The start of a linear location, or a point before `at`. */
+    struct traffic_point *to;          /**< The end of a linear location, or a point after `at`. */
+    struct traffic_point *via;         /**< A point between `from` and `to`. Required on ring roads
+                                        *   unless `not_via` is used; cannot be used together with `at`. */
+    struct traffic_point *not_via;     /**< A point NOT between `from` and `to`. Required on ring roads
+                                        *   unless `via` is used; cannot be used together with `at`. */
+    struct traffic_location *location; /**< The location to which the next message refers. */
+    char *location_txt_data;           /**< Persisted location data in txtfile map format. */
+    GList *si;                         /**< Supplementary information items for the next event. */
+    GList *events;                     /**< The events for the next message. */
 };
 
 /**
@@ -299,6 +299,7 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 static int tm_type_set(void *priv_data, enum item_type type);
 static struct map_selection *traffic_location_get_rect(struct traffic_location *this_, enum projection projection);
 static struct route_graph *traffic_location_get_route_graph(struct traffic_location *this_, struct mapset *ms);
+struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state);
 static int traffic_location_match_attributes(struct traffic_location *this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message *this_, struct mapset *ms, struct seg_data *data,
                                         struct map *map, struct route *route);
@@ -4762,30 +4763,24 @@ static int traffic_xml_is_tagstack_valid(struct xml_state *state) {
         el = (struct xml_element *)tagiter->data;
         el_parent = tagiter->next ? tagiter->next->data : NULL;
 
-        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages")
-                || !g_ascii_strcasecmp(el->tag_name, "response"))
+        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages") || !g_ascii_strcasecmp(el->tag_name, "response"))
             /* response and navit_messages are only allowed as root elements */
             ret = !tagiter->next;
         else if (!g_ascii_strcasecmp(el->tag_name, "feed"))
             /* feed can be a root element or a child of response */
-            ret = (!el_parent
-                   || !g_ascii_strcasecmp(el_parent->tag_name, "response"));
-        else if (!g_ascii_strcasecmp((char *) el->tag_name, "message"))
+            ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "response"));
+        else if (!g_ascii_strcasecmp((char *)el->tag_name, "message"))
             /* message can be a root element or a child of feed or navit_messages */
-            ret = (!el_parent
-                   || !g_ascii_strcasecmp(el_parent->tag_name, "navit_messages")
+            ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "navit_messages")
                    || !g_ascii_strcasecmp(el_parent->tag_name, "feed"));
         else if (!g_ascii_strcasecmp(el->tag_name, "events") || !g_ascii_strcasecmp(el->tag_name, "location")
                  || !g_ascii_strcasecmp(el->tag_name, "merge"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "message"));
         else if (!g_ascii_strcasecmp(el->tag_name, "event"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "events"));
-        else if (!g_ascii_strcasecmp(el->tag_name, "from")
-                 || !g_ascii_strcasecmp(el->tag_name, "to")
-                 || !g_ascii_strcasecmp(el->tag_name, "at")
-                 || !g_ascii_strcasecmp(el->tag_name, "via")
-                 || !g_ascii_strcasecmp(el->tag_name, "not_via")
-                 || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
+        else if (!g_ascii_strcasecmp(el->tag_name, "from") || !g_ascii_strcasecmp(el->tag_name, "to")
+                 || !g_ascii_strcasecmp(el->tag_name, "at") || !g_ascii_strcasecmp(el->tag_name, "via")
+                 || !g_ascii_strcasecmp(el->tag_name, "not_via") || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
             /* FIXME navit_messages is not legal in TraFF (root element is feed or response) */
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
         else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
@@ -4824,7 +4819,7 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
 
     dbg(lvl_debug, "OPEN: %s", tag_name);
 
-    if (!g_ascii_strcasecmp((char *) tag_name, "response")) {
+    if (!g_ascii_strcasecmp((char *)tag_name, "response")) {
         state->status = traffic_xml_get_attr("status", el->names, el->values);
         if (state->status)
             state->status = g_strdup(state->status);
@@ -4833,13 +4828,13 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
             state->subscription_id = g_strdup(state->subscription_id);
         state->timeout = 0;
         /* TODO parse timeout */
-    } else if (!g_ascii_strcasecmp((char *) tag_name, "supplementary_info")) {
-        state->si = g_list_append(state->si, traffic_suppl_info_new(
-                                      si_class_new(traffic_xml_get_attr("class", el->names, el->values)),
-                                      si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
-                                      /* TODO quantifier */
-                                      NULL));
-    } else if (!g_ascii_strcasecmp((char *) tag_name, "replaces")) {
+    } else if (!g_ascii_strcasecmp((char *)tag_name, "supplementary_info")) {
+        state->si = g_list_append(
+            state->si, traffic_suppl_info_new(si_class_new(traffic_xml_get_attr("class", el->names, el->values)),
+                                              si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
+                                              /* TODO quantifier */
+                                              NULL));
+    } else if (!g_ascii_strcasecmp((char *)tag_name, "replaces")) {
         /* TODO */
     }
 
@@ -5881,9 +5876,9 @@ static struct traffic_message **traffic_get_messages_from_parsed_xml(struct xml_
  *
  * @return The response, or NULL if the data did not contain a response
  */
-struct traffic_response * traffic_get_response_from_parsed_xml(struct xml_state * state) {
-    struct traffic_response * ret = NULL;
-    struct traffic_message ** messages = NULL;
+struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state) {
+    struct traffic_response *ret = NULL;
+    struct traffic_message **messages = NULL;
 
     messages = traffic_get_messages_from_parsed_xml(state);
     if (messages || state->status) {
