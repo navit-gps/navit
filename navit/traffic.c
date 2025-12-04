@@ -45,6 +45,7 @@
 #include "util.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
@@ -124,6 +125,11 @@ struct traffic {
     struct event_timeout *timeout;      /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;           /**< Idle callback to process new messages */
     struct event_idle *idle_ev;         /**< The pointer to the idle event */
+#ifndef WIN32                           // TODO: find win32 implementation to allow parsing of traff data
+                                        // independent from locale
+    locale_t systemlocale;
+    locale_t trafflocale;
+#endif
 };
 
 struct traffic_location_priv {
@@ -4863,9 +4869,11 @@ static int floatparse(char *line, gdouble *lat, gdouble *lon) {
         if (token) {
             *lon = g_ascii_strtod(token, NULL);
         } else {
+            g_free(foo);
             return 1;
         }
     } else {
+        g_free(foo);
         return 1;
     }
 
@@ -4903,7 +4911,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     /* New traffic event */
     struct traffic_event *event = NULL;
 
-    float lat, lon;
+    navit_float lat, lon;
 
     if (state->is_valid) {
         dbg(lvl_debug, "  END:  %s", tag_name);
@@ -4930,6 +4938,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           0, NULL, state->location, count, (struct traffic_event **)children);
             if (!traffic_message_is_valid(message)) {
                 dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
+
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -5015,7 +5024,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
 
         if (point) {
             /* we have a location point (from, at, to, via or not_via) to process */
-            if (floatparse(el->text, (gdouble *)&lat, (gdouble *)&lon) == 0) {
+            if (floatparse(el->text, &lat, &lon) == 0) {
                 *point = traffic_point_new(lon, lat, traffic_xml_get_attr("junction_name", el->names, el->values),
                                            traffic_xml_get_attr("junction_ref", el->names, el->values),
                                            traffic_xml_get_attr("tmc_id", el->names, el->values));
