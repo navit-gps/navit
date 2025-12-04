@@ -4853,6 +4853,27 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
      */
 }
 
+static int floatparse(char *line, gdouble *lat, gdouble *lon) {
+    char *foo = g_strdup(line);
+    char *token = strtok(foo, " ");
+
+    if (token) {
+        *lat = g_ascii_strtod(token, NULL);
+        token = strtok(NULL, " ");
+        if (token) {
+            *lon = g_ascii_strtod(token, NULL);
+        } else {
+            return 1;
+        }
+    } else {
+        return 1;
+    }
+
+    g_free(foo);
+
+    return 0;
+}
+
 /**
  * @brief Callback function which gets called when a closing tag is encountered.
  *
@@ -4994,7 +5015,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
 
         if (point) {
             /* we have a location point (from, at, to, via or not_via) to process */
-            if (sscanf(el->text, "%f %f", &lat, &lon) == 2) {
+            if (floatparse(el->text, (gdouble *)&lat, (gdouble *)&lon) == 0) {
                 *point = traffic_point_new(lon, lat, traffic_xml_get_attr("junction_name", el->names, el->values),
                                            traffic_xml_get_attr("junction_ref", el->names, el->values),
                                            traffic_xml_get_attr("tmc_id", el->names, el->values));
