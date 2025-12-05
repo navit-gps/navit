@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-20 07:35+0000\n"
+"PO-Revision-Date: 2025-12-06 15:00+0000\n"
 "Last-Translator: deepak09A <deepak09@live.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/navit/navit-core/"
 "hi/>\n"
@@ -1978,175 +1978,180 @@ msgid "Back"
 msgstr ""
 
 msgid "Back to map"
-msgstr ""
+msgstr "मानचित्र पर वापस जाएँ"
 
 msgid "Main Menu"
-msgstr ""
+msgstr "मुख्य मेनू"
 
 msgid "House number"
-msgstr ""
+msgstr "घर संख्या"
 
 msgid "Next"
-msgstr ""
+msgstr "अगला"
 
 msgid "Prev"
-msgstr ""
+msgstr "पिछला"
 
 msgid "Return to route!"
-msgstr ""
+msgstr "मार्ग पर लौटें!"
 
 #. warning told
 msgid "Look out! Camera!"
-msgstr ""
+msgstr "सावधान! कैमरा है!"
 
 #. warning told
 msgid "Please decrease your speed"
-msgstr ""
+msgstr "कृपया अपनी गति कम करें"
 
 msgid "partial match"
-msgstr ""
+msgstr "आंशिक मिलान"
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "खोज"
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
+msgstr "नगर"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
+msgstr "मानचित्र डेटा (c) OpenStreetMap योगदानकर्ताओं द्वारा, ODBL"
 
 msgid ""
 "Current map location %s is not available\n"
 "Please restart Navit after you attach an SD card or select a different map "
 "location."
 msgstr ""
+"वर्तमान मानचित्र स्थान %s उपलब्ध नहीं है\n"
+"कृपया SD कार्ड जोड़ने या अन्य मानचित्र स्थान चुनने के बाद Navit को पुनरारंभ करें।"
 
 msgid "Downloaded maps"
-msgstr ""
+msgstr "डाउनलोड किए गए मानचित्र"
 
 msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
+"क्षमा करें, Android पर 3.8 GB से बड़े मानचित्र समर्थित नहीं हैं। कृपया छोटा मानचित्र चुनें।"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "यहाँ तक का मार्ग बनाएँ"
 
 msgid "Cancel"
-msgstr ""
+msgstr "रद्द करें"
 
 msgid "filenamePath"
-msgstr ""
+msgstr "फ़ाइल नाम पथ"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
+"नया स्थान %s पर सेट किया गया\n"
+"परिवर्तनों को लागू करने के लिए Navit पुनरारंभ करें।"
 
 msgid "Whole Planet"
-msgstr ""
+msgstr "पूरा ग्रह"
 
 msgid "Africa"
-msgstr ""
+msgstr "अफ्रीका"
 
 msgid "Canary Islands"
-msgstr ""
+msgstr "कैनरी द्वीपसमूह"
 
 msgid "Asia"
-msgstr ""
+msgstr "एशिया"
 
 msgid "Korea"
-msgstr ""
+msgstr "कोरिया"
 
 msgid "Taiwan"
-msgstr ""
+msgstr "ताइवान"
 
 msgid "UAE+Other"
-msgstr ""
+msgstr "यूएई + अन्य"
 
 msgid "Oceania"
-msgstr ""
+msgstr "ओशिआनिया"
 
 msgid "Tasmania"
-msgstr ""
+msgstr "तस्मानिया"
 
 msgid "Victoria"
-msgstr ""
+msgstr "विक्टोरिया"
 
 msgid "New South Wales"
-msgstr ""
+msgstr "न्यू साउथ वेल्स"
 
 msgid "Europe"
-msgstr ""
+msgstr "यूरोप"
 
 msgid "Western Europe"
-msgstr ""
+msgstr "पश्चिमी यूरोप"
 
 msgid "Azores"
-msgstr ""
+msgstr "अज़ोर्स"
 
 msgid "BeNeLux"
-msgstr ""
+msgstr "बेनेलक्स"
 
 msgid "Alsace"
-msgstr ""
+msgstr "अलसास"
 
 msgid "Aquitaine"
-msgstr ""
+msgstr "अक्विटेन"
 
 msgid "Auvergne"
-msgstr ""
+msgstr "ओवर्ग्न"
 
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "बास-नॉरमांडी"
 
 msgid "Bourgogne"
-msgstr ""
+msgstr "बुर्गोने"
 
 msgid "Bretagne"
-msgstr ""
+msgstr "ब्रेटान्य"
 
 msgid "Centre"
-msgstr ""
+msgstr "केंद्र"
 
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "शाँपान्य-आर्देन"
 
 msgid "Corse"
-msgstr ""
+msgstr "कोर्स"
 
 msgid "Franche-Comte"
-msgstr ""
+msgstr "फ्रांश-कोँते"
 
 msgid "Haute-Normandie"
-msgstr ""
+msgstr "ओत-नॉरमांडी"
 
 msgid "Ile-de-France"
-msgstr ""
+msgstr "ईल-द-फ़्रांस"
 
 msgid "Languedoc-Roussillon"
-msgstr ""
+msgstr "लांगदोक-रूसियों"
 
 msgid "Limousin"
-msgstr ""
+msgstr "लिमूज़ाँ"
 
 msgid "Lorraine"
-msgstr ""
+msgstr "लोरेन"
 
 msgid "Midi-Pyrenees"
-msgstr ""
+msgstr "मीदी-पीरेने"
 
 msgid "Nord-pas-de-Calais"
-msgstr ""
+msgstr "नॉर-पा-द-काले"
 
 msgid "Pays-de-la-Loire"
-msgstr ""
+msgstr "पे-द-ला-ल्वार"
 
 msgid "Picardie"
-msgstr ""
+msgstr "पिकार्दी"
 
 msgid "Poitou-Charentes"
 msgstr ""
