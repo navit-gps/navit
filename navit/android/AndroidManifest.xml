@@ -23,6 +23,7 @@
             android:label="@string/app_name"
             android:theme="@style/NavitTheme"
             android:launchMode="singleTask"
+            android:exported="true"
             android:configChanges="screenLayout|smallestScreenSize|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale|screenSize"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -47,6 +48,7 @@
         <activity
             android:name="FileBrowserActivity"
             android:label="File browser"
+            android:exported="true"
             android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="ua.com.vassiliev.androidfilebrowser.SELECT_DIRECTORY_ACTION"></action>
