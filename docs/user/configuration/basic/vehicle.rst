@@ -13,7 +13,8 @@ A simple vehicle definition looks like this:
 
 
 Here some of the available options:
-* **active**: If set to 1, makes the vehicle the default active one. Routing, view centering and map redraw would be applied to this one by default.
+
+* **active**: If set to 1, makes the vehicle the default active one. Routing, view centering and map redraw would be applied to this one by default. The demo vehicle will not work without being active.
 * **enabled**: If set to yes, Navit connects to the vehicle data source and shows the vehicle on the map.
 * **follow**: map follows after "n" gps updates (where n=0 means only when the vehicle leaves the map->saving CPU time)
 * **source** : source of GPS (required)
@@ -72,7 +73,12 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 
 * source="file:/home/myhome/mynmea.log" : here, navit will replay the nmea logfile (under Windows it is currently not possible in Navit)
 * source="pipe:/usr/bin/gpspipe -r" - any executable that produces NMEA output - gpsbabel, gpspipe, ...
-* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source.
+* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source. A demo vehicle spec could look like this: 
+
+.. code-block:: xml
+
+  <vehicle name="Demo" profilename="car" enabled="yes" active="yes" source="demo://" follow="1"/>
+
 * source="null://" : no GPS at all
 
 Logging tracks
