@@ -565,11 +565,16 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
         this_->meth.position_attr_get(this_->priv, attr_position_height, &attr))
         logstr = g_strconcat_printf(logstr, "\t<ele>%.6f</ele>\n", *attr.u.numd);
     // <magvar> magnetic variation in degrees; we might use position_magnetic_direction and position_direction to figure
-    // it out <geoidheight> Height (in meters) of geoid (mean sea level) above WGS84 earth ellipsoid. As defined in NMEA
-    // GGA message (field 11, which vehicle_wince.c ignores) <name> GPS name (arbitrary) <cmt> comment <src> Source of
-    // data <link> Link to additional information (URL) <sym> Text of GPS symbol name <type> Type (classification) <fix>
-    // Type of GPS fix {'none'|'2d'|'3d'|'dgps'|'pps'}, leave out if unknown. Similar to position_fix_type but more
-    // detailed.
+    // it out
+    // <geoidheight> Height (in meters) of geoid (mean sea level) above WGS84 earth ellipsoid. As defined in NMEA GGA
+    // message (field 11, which vehicle_wince.c ignores)
+    // <name> GPS name (arbitrary)
+    // <cmt> comment <src> Source of data
+    // <link> Link to additional information (URL)
+    // <sym> Text of GPS symbol name
+    // <type> Type (classification)
+    // <fix> Type of GPS fix {'none'|'2d'|'3d'|'dgps'|'pps'}, leave out if unknown. Similar to position_fix_type but
+    // more detailed.
     if (attr_types_contains_default(attr_types, attr_position_sats_used, 0) &&
         this_->meth.position_attr_get(this_->priv, attr_position_sats_used, &attr))
         logstr = g_strconcat_printf(logstr, "\t<sat>%d</sat>\n", attr.u.num);
