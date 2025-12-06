@@ -49,11 +49,11 @@ android {
         }
     }
     defaultConfig {
-        compileSdk 29
-        compileSdkVersion 29
+        compileSdk 33
+        compileSdkVersion 33
         applicationId "org.navitproject.navit"
         minSdkVersion 10
-        targetSdkVersion 29
+        targetSdkVersion 33
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
