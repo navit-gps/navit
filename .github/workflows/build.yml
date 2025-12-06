@@ -98,7 +98,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - name: Install NDK
-        run: sdkmanager "ndk;23.0.7599858"
+        run: sdkmanager "ndk;25.2.9519653"
       - name: Build and upload Android
         run: fastlane github_actions
       #- name: Run Lint Test
