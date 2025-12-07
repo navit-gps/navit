@@ -80,6 +80,9 @@ static long start_brk;
 #endif
 static struct timespec start_ts;
 
+static char coord_tmp_path[PATH_MAX];
+
+
 /*
   Asynchronous signal safe lltoa function (note: no trailing \0 char!)
 */
@@ -558,7 +561,7 @@ static void exit_with_error(char* error_message) {
 }
 
 static void osm_read_input_data(struct maptool_params *p, char *suffix) {
-    unlink("coords.tmp");
+    unlink(coord_tmp_path);
     if (p->process_ways)
         p->osm.ways=tempfile(suffix,"ways",1);
     if (p->process_nodes) {
@@ -635,11 +638,11 @@ static void osm_count_references(struct maptool_params *p, char *suffix, int cle
         fprintf(stderr, "slice %d of %d\n",slices-i-1,slices-1);
         if (!first) {
             FILE *ways=tempfile(suffix,"ways",0);
-            load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+            load_buffer(coord_tmp_path,&node_buffer, i*slice_size, slice_size);
             if (clear)
                 clear_node_item_buffer();
             ref_ways(ways);
-            save_buffer("coords.tmp",&node_buffer, i*slice_size);
+            save_buffer(coord_tmp_path,&node_buffer, i*slice_size);
             fclose(ways);
         }
         FILE *poly2poi=tempfile(suffix,first?"poly2poi":"poly2poi_resolved",0);
@@ -675,7 +678,7 @@ static void osm_resolve_coords_and_split_at_intersections(struct maptool_params 
         graph=tempfile(suffix,"graph",1);
         coastline=tempfile(suffix,"coastline",1);
         if (i)
-            load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+            load_buffer(coord_tmp_path,&node_buffer, i*slice_size, slice_size);
         map_resolve_coords_and_split_at_intersections(ways,ways_split,ways_split_index,graph,coastline,final);
         fclose(ways_split);
         if (ways_split_index)
@@ -718,13 +721,15 @@ static void osm_process_coastlines(struct maptool_params *p, char *suffix) {
     }
 }
 
+
+
 static void osm_process_turn_restrictions(struct maptool_params *p, char *suffix) {
     FILE *ways_split, *ways_split_index, *relations, *coords;
     p->osm.turn_restrictions=tempfile(suffix,"turn_restrictions",0);
     if (!p->osm.turn_restrictions)
         return;
     relations=tempfile(suffix,"relations",1);
-    coords=fopen("coords.tmp","rb");
+    coords=fopen(coord_tmp_path,"rb");
     ways_split=tempfile(suffix,"ways_split",0);
     ways_split_index=tempfile(suffix,"ways_split_index",0);
     process_turn_restrictions(p->osm.turn_restrictions,coords,ways_split,ways_split_index,relations);
@@ -744,7 +749,7 @@ static void osm_process_multipolygons(struct maptool_params *p, char *suffix) {
         return;
     relations=tempfile(suffix,"multipolygons_out", 1);
     /* no coords in multipolygons. */
-    //coords=fopen("coords.tmp", "rb");
+    //coords=fopen(coord_tmp_path, "rb");
     ways_split=tempfile(suffix,"ways_split",0);
     ways_split_index=tempfile(suffix,"ways_split_index",0);
     process_multipolygons(p->osm.multipolygons,/*coords*/NULL,ways_split,ways_split_index,relations);
@@ -868,7 +873,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         tempfile_unlink(suffix,"way2poi_result");
         tempfile_unlink(suffix,"coastline_result");
         tempfile_unlink(suffix,"towns_poly");
-        unlink("coords.tmp");
+        unlink(coord_tmp_path);
     }
     if (last) {
         zipnum=zip_get_zipnum(zip_info);
@@ -890,9 +895,9 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
 
 static void maptool_load_node_table(struct maptool_params *p, int last) {
     if (!p->node_table_loaded) {
-        slices=(sizeof_buffer("coords.tmp")+(long long)slice_size-(long long)1)/(long long)slice_size;
+        slices=(sizeof_buffer(coord_tmp_path)+(long long)slice_size-(long long)1)/(long long)slice_size;
         assert(slices>0);
-        load_buffer("coords.tmp",&node_buffer,last?(slices-1)*slice_size:0, slice_size);
+        load_buffer(coord_tmp_path,&node_buffer,last?(slices-1)*slice_size:0, slice_size);
         p->node_table_loaded=1;
     }
 }
@@ -928,6 +933,7 @@ int main(int argc, char **argv) {
 #ifndef HAVE_GLIB
     _g_slice_thread_init_nomessage();
 #endif
+    snprintf(coord_tmp_path, FILENAME_MAX, "%s/coords.tmp", tempfile_obtain_prefix());
     linguistics_init();
 
     memset(&p, 0, sizeof(p));
@@ -1130,5 +1136,6 @@ int main(int argc, char **argv) {
     start_phase(&p,"done");
     if(p.timestamp != NULL)
         g_free(p.timestamp);
+    tempfile_cleanup();
     return 0;
 }

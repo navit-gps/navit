@@ -383,6 +383,8 @@ char *tempfile_name(char *suffix, char *name);
 FILE *tempfile(char *suffix, char *name, int mode);
 void tempfile_unlink(char *suffix, char *name);
 void tempfile_rename(char *suffix, char *from, char *to);
+char *tempfile_obtain_prefix(void);
+void tempfile_cleanup(void);
 
 /* tile.c */
 extern GHashTable *tile_hash,*tile_hash2;
