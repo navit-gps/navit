@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.navitproject.navit")
 set(CMAKE_EXECUTABLE_ENABLE_EXPORTS "true")
