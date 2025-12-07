@@ -20,11 +20,32 @@
 #ifndef _MSC_VER
 #include <unistd.h>
 #endif
+#include <sys/stat.h>
 #include "maptool.h"
 #include "debug.h"
 
+char *tempfile_obtain_prefix() {
+    static char *tmpfile_prefix = NULL;
+
+    if (!tmpfile_prefix) {
+#define tmpfile_prefix_size 64
+        tmpfile_prefix=calloc(tmpfile_prefix_size, 1);
+
+        snprintf(tmpfile_prefix, tmpfile_prefix_size, "maptool_%d.tmp", getpid());
+        if (mkdir(tmpfile_prefix, 0755)) {
+            perror("Error creating directory");
+            exit(1);
+        }
+    }
+    return tmpfile_prefix;
+}
+
+void tempfile_cleanup() {
+    rmdir(tempfile_obtain_prefix());
+}
+
 char *tempfile_name(char *suffix, char *name) {
-    return g_strdup_printf("%s_%s.tmp",name, suffix);
+    return g_strdup_printf("%s/%s_%s.tmp", tempfile_obtain_prefix(), name, suffix);
 }
 FILE *tempfile(char *suffix, char *name, int mode) {
     char *buffer=tempfile_name(suffix, name);
@@ -46,14 +67,14 @@ FILE *tempfile(char *suffix, char *name, int mode) {
 
 void tempfile_unlink(char *suffix, char *name) {
     char buffer[4096];
-    sprintf(buffer,"%s_%s.tmp",name, suffix);
+    sprintf(buffer,"%s/%s_%s.tmp",tempfile_obtain_prefix(), name, suffix);
     unlink(buffer);
 }
 
 void tempfile_rename(char *suffix, char *from, char *to) {
     char buffer_from[4096],buffer_to[4096];
-    sprintf(buffer_from,"%s_%s.tmp",from,suffix);
-    sprintf(buffer_to,"%s_%s.tmp",to,suffix);
+    sprintf(buffer_from,"%s/%s_%s.tmp",tempfile_obtain_prefix(),from,suffix);
+    sprintf(buffer_to,"%s/%s_%s.tmp",tempfile_obtain_prefix(),to,suffix);
     dbg_assert(rename(buffer_from, buffer_to) == 0);
 
 }
