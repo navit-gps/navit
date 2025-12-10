@@ -1,4 +1,4 @@
-if (ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
+if (ANDROID)
 
 	FILE(GLOB SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*/*/*/*")
 
@@ -109,4 +109,4 @@ if (ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
 	add_dependencies(apkg android_resources)
 	add_dependencies(apkg-release android_resources)
 
-endif(ANDROID AND NOT ${CMAKE_GENERATOR} STREQUAL Ninja)
+endif(ANDROID)
