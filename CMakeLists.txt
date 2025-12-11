@@ -826,9 +826,7 @@ set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to p
 # Plugins
 if(USE_PLUGINS)
 	set(MODULE_BUILD_TYPE "MODULE")
-	# Acknowledging the want of libnavit_core.so, there is something missing since it doesn't get
-	# installed anywhere. Reverting this for now. -- metalstrolch
-	#	set(SHARED_LIBNAVIT TRUE)
+	set(SHARED_LIBNAVIT TRUE)
 	add_definitions("-fPIC")
 	list(APPEND NAVIT_LIBS dl)
 else()
