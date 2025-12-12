@@ -93,6 +93,7 @@ endif(EXTRA_LIBDIR)
 
 ### Detect environment
 
+add_plugin(support/fib "Default" TRUE)
 add_plugin(support/espeak "Default" FALSE)
 add_feature(INTERNAL_ESPEAK_COMPLETE "build complete internal libespeak" FALSE)
 add_plugin(support/ezxml "native Glib found" FALSE)

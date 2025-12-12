@@ -1,2 +1,2 @@
-supportlib_add_library(fib fib.c)
+supportlib_add_library(support_fib fib.c)
 
