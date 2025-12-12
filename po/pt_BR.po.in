@@ -215,9 +215,6 @@ msgstr "Entre na rotatória em seguida"
 msgid "Enter the roundabout %s"
 msgstr "Entre na rotatória %s"
 
-msgid "then enter the roundabout"
-msgstr "em seguida entre na rotatória"
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -322,10 +319,6 @@ msgid "strongly "
 msgstr "fortemente "
 
 #, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr "então pegue a %1$s via para a %2$s"
-
-#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Pegue a %1$s via para a %2$s"
 
@@ -395,14 +388,8 @@ msgstr "Comando"
 msgid "Length"
 msgstr "Distância"
 
-msgid "mi"
-msgstr "milha"
-
 msgid "km"
 msgstr "km"
-
-msgid "feet"
-msgstr "pé"
 
 msgid "m"
 msgstr "m"
@@ -1560,28 +1547,6 @@ msgstr ""
 "\t-h: imprimir esta informação de utilização e sair.\n"
 "\t-v: imprimir a versão e sair.\n"
 
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found"
-msgstr "Nenhum arquivo de configuração navit.xml, navit.xml.local encontrado"
-
-#, c-format
-msgid "Error parsing config file '%s': %s"
-msgstr "Erro ao analisar o arquivo de configuração '%s': %s"
-
-#, c-format
-msgid "Using config file '%s'"
-msgstr "Usando o arquivo de configuração '%s'"
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'"
-msgstr ""
-"Erro: Nenhuma configuração encontrada no arquivo de configuração '%s'"
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
-msgstr ""
-"Inicialização interna falhou, saindo. Verificar mensagens de erro anteriores."
-
 msgid "unknown street"
 msgstr "rua desconhecida"
 
@@ -1720,9 +1685,6 @@ msgstr "Mostrar a posição _cursor"
 msgid "_Lock on Road"
 msgstr "_Bloqueio na estrada"
 
-msgid "_Follow Vehicle"
-msgstr "_Siga o Veículo"
-
 msgid "_Keep orientation to the North"
 msgstr "_Manter orientação para o Norte"
 
@@ -1792,29 +1754,9 @@ msgstr "Táxi"
 msgid "Shopping"
 msgstr "Comprando"
 
-#. Input is in kilometers
-msgid "Select a search radius from screen center in km"
-msgstr ""
-
-#. Input is in miles.
-msgid "Select a search radius from screen center in miles"
-msgstr ""
-
 #, c-format
 msgid "POI %s. %s"
 msgstr "POI %s. %s"
-
-#, c-format
-msgid "Set destination to %ld, %ld "
-msgstr "Definir destino para %ld, %ld "
-
-#, c-format
-msgid "Set map to %ld, %ld "
-msgstr "Definir mapa para %ld, %ld "
-
-#, c-format
-msgid "Set next visit to %ld, %ld "
-msgstr "Configurar próxima visita para %ld, %ld "
 
 msgid "POI search"
 msgstr "Pesquisar POI"
@@ -1833,9 +1775,6 @@ msgstr "Categori­a"
 
 msgid "Direction"
 msgstr "Direção"
-
-msgid "Distance"
-msgstr ""
 
 msgid "Name"
 msgstr "Nome"
@@ -1879,10 +1818,6 @@ msgstr "3D"
 
 msgid "OT"
 msgstr "OT"
-
-#, c-format
-msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr "Rota %4.1f%s    %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Rota 0000km  TEC 0+00:00"
@@ -2092,20 +2027,11 @@ msgstr "Layout"
 msgid "Height Profile"
 msgstr "Perfil de Altitude"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr "Instale um mapa *.heightlines.bin para fornecer dados de elevação"
-
-msgid "The route must cross at least 2 heightlines"
-msgstr "A rota deve atravessar pelo menos 2 linhas de altitude"
-
 msgid "Route Description"
 msgstr "Descrição da Rota"
 
 msgid "Show Locale"
 msgstr "Inf. Regionais"
-
-msgid "Network info"
-msgstr "Informações de rede"
 
 msgid "Former Destinations"
 msgstr "Destinos Anteriores"
@@ -2202,34 +2128,8 @@ msgstr "Tela cheia"
 msgid "Window Mode"
 msgstr "Modo de Janela"
 
-msgid "Auto zoom"
-msgstr "Zoom automático"
-
-msgid "Manual zoom"
-msgstr "Zoom manual"
-
-msgid "Layers"
-msgstr "Camadas"
-
-msgid "Zoom to route"
-msgstr "Zoom para rota"
-
 msgid "Description"
 msgstr "Descrição"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr ""
-"Baixe o último\n"
-"Nó"
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr ""
-"Baixe o próximo\n"
-"Nó"
 
 msgid "Satellite Status"
 msgstr "Estado do Satélite"
@@ -2382,10 +2282,6 @@ msgstr "Nenhum local. Reabrir após corrigir localização"
 msgid "Maps containing current location"
 msgstr "Mapas contendo localização atual"
 
-#. Android resource: @strings/maps_installed
-msgid "Installed maps"
-msgstr "Installed maps"
-
 #. Android resource: @strings/map_downloading
 msgid "downloading"
 msgstr "baixando"
@@ -2397,22 +2293,6 @@ msgstr "Mídia selecionada para armazenamento de mapas não está disponível"
 #. Android resource: @strings/map_download_error_writing_map
 msgid "Error writing map!"
 msgstr "Erro escrevendo mapa!"
-
-#. Android resource: @strings/map_location_changed
-#, c-format
-msgid "New location set to %s Restart Navit to apply the changes."
-msgstr ""
-"Novo local configurado para %s Reinicie o Navit para aplicar as alterações."
-
-#. Android resource: @strings/map_location_unavailable
-#, c-format
-msgid ""
-"Current map location %s is not available Please restart Navit after you "
-"attach an SD card or select a different map location."
-msgstr ""
-"Localização atual no mapa %s não está disponível. Por favor, reinicie o "
-"Navit depois de conectar um cartão SD ou selecione um local diferente no "
-"mapa."
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2540,18 +2420,6 @@ msgstr ""
 "seu dispositivo. O motor atualmente selecionado  informa que é incapaz de "
 "falar em seu idioma. Devemos pedir ao sistema que mostre a caixa de diálogo "
 "de download de voz?"
-
-#. Android resource: @strings/permissions_not_granted
-msgid ""
-"Navit needs permission to access GPS and read the map.\n"
-"If you change your mind please restart Navit and grant the permissions"
-msgstr ""
-"Navit precisa de permissão para acessar GPS e ler o mapa. \n"
-"Se você mudar de idéia, por favor, reinicie o Navit e conceda as permissões"
-
-#. Android resource: @strings/permissions_info_box_title
-msgid "One or more ungranted permissions"
-msgstr "Uma ou mais permissões não concedidas"
 
 #. Android resource: @strings/whole_planet
 msgid "Whole Planet"
@@ -2908,10 +2776,6 @@ msgstr "Havaí"
 #. Android resource: @strings/usa
 msgid "USA"
 msgstr "EUA"
-
-#. Android resource: @strings/except_alaska_and_hawaii
-msgid "(except Alaska and Hawaii)"
-msgstr "(exceto Alasca e Havaí)"
 
 #. Android resource: @strings/midwest
 msgid "Midwest"

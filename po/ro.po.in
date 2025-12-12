@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"PO-Revision-Date: 2025-05-05 18:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/navit/"
 "navit-core/ro/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -214,9 +214,6 @@ msgstr "Intrați în curând în giratoriu"
 msgid "Enter the roundabout %s"
 msgstr "Intrați în giratoriu %s"
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -320,11 +317,7 @@ msgstr "uşor "
 msgid "strongly "
 msgstr "strâns "
 
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#, c-format
+#, c-format, fuzzy
 msgid "Take the %1$s road to the %2$s"
 msgstr "Virați %2s pe %1s stradă"
 
@@ -1977,12 +1970,6 @@ msgstr "Dispunere"
 msgid "Height Profile"
 msgstr "Profil înălțime"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "Descrerea traseului"
 
@@ -2518,9 +2505,6 @@ msgstr "Pe tot ecranul"
 
 msgid "Window Mode"
 msgstr "Mod „fereastră”"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "Descriere"

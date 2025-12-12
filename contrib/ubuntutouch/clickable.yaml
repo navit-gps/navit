@@ -1,0 +1,33 @@
+clickable_minimum_required: 8.0.0
+builder: cmake
+build_args:
+  - -DUBTOUCH:BOOL=TRUE
+  - -DPACKAGE:STRING=org.navitproject.navit
+  - -DNAVIT_BINARY:STRING=navit
+  - -DSHARE_DIR:PATH=share/org.navitproject.navit
+  - -DLOCALE_DIR:PATH=share/org.navitproject.navit/locale
+  - -DIMAGE_DIR:PATH=share/org.navitproject.navit/icons
+  - -DTEXTURE_DIR:PATH=share/org.navitproject.navit/textures
+  - -DHOMECONFIG_DIR:PATH=.config/org.navitproject.navit
+  - -DLIB_DIR:PATH=share/org.navitproject.navit/lib
+  - -DBUILD_MAPTOOL:BOOL=FALSE
+  - -Dfont/freetype:BOOL=FALSE
+  - -Dbinding/dbus:BOOL=FALSE
+  - -Dgraphics/gtk_drawing_area:BOOL=FALSE
+  - -Dgraphics/null:BOOL=FALSE
+  - -Dgraphics/opengl:BOOL=FALSE
+  - -Dgraphics/sdl:BOOL=FALSE
+  - -Dspeech/dbus:BOOL=FALSE
+  - -Dvehicle/gpsd:BOOL=FALSE
+  - -Dvehicle/gpsd_dbus:BOOL=FALSE
+  - -DUSE_QWIDGET:BOOL=FALSE
+  - -DUSE_PLUGINS=n
+  - -DXSLTS:STRING=\"sailfish_disable;ubtouch_qt5;sailfish_osd;sailfish_cursor;ubtouch_mapset;sailfish_svg;sailfish_gui\"
+
+dependencies_host:
+  - "xsltproc"
+
+root_dir: ../../
+#src_dir:
+build_dir: build/${ARCH_TRIPLET}
+kill: navit

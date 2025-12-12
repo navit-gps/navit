@@ -48,7 +48,7 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 #endif
 
 GPrivate
-g_private_new_navit ()
+g_private_new_navit (void)
 {
 #if HAVE_API_WIN32_BASE
 	int dwTlsIndex;

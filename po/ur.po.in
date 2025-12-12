@@ -238,9 +238,6 @@ msgstr ""
 msgid "Enter the roundabout %s"
 msgstr ""
 
-msgid "then enter the roundabout"
-msgstr ""
-
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -326,10 +323,6 @@ msgstr ""
 #. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
-msgstr ""
-
-#, c-format
-msgid "then take the %1$s road to the %2$s"
 msgstr ""
 
 #, c-format
@@ -1966,12 +1959,6 @@ msgstr "بناوٹ"
 msgid "Height Profile"
 msgstr "اونچائی کی پروفائل"
 
-msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
-
-msgid "The route must cross at least 2 heightlines"
-msgstr ""
-
 msgid "Route Description"
 msgstr "سفر کی تفصیل"
 
@@ -2507,9 +2494,6 @@ msgstr "پوری سکرین"
 
 msgid "Window Mode"
 msgstr "ونڈو موڈ"
-
-msgid "Layers"
-msgstr ""
 
 msgid "Description"
 msgstr "تفصیل"

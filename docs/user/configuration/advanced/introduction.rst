@@ -41,8 +41,69 @@ festival
 flite
 ~~~~~
 
+
+speech2wave
+~~~~~~~~~~~
+
+.. code-block:: xml
+
+        <speech type="cmdline" data="/home/mobian/bin/speech2text '%s'" cps="15"/>
+
+
+.. code-block:: sh
+
+        #!/bin/bash
+        function cleanup() {
+                rm -f /tmp/$$.wav
+        }
+
+        trap cleanup TERM EXIT
+        pico2wave -l de-DE -w /tmp/$$.wav "$@"
+        aplay /tmp/$$.wav
+
+
+install speech2wavewith
+
+.. code-block:: sh
+
+        apt install libttspico-utils
+
+
+
+piper-tts
+~~~~~~~~~
+
+.. code-block:: xml
+
+        <speech type="cmdline" data="/home/mobian/bin/speech2text '%s'" cps="5"/>
+
+
+.. code-block:: sh
+
+        #!/bin/bash
+
+        piper -m /home/mobian/tts/de_DE-thorsten-high.onnx --output-raw <<< "$@" | aplay -r 22500  -c 1 -f S16_LE
+
+
+install piper-tts with
+
+.. code-block:: sh
+
+        apt installer pipx
+        pipx install piper-tts
+
+Then obtain the voice files and configuration, for example from https://www.thorsten-voice.de/thorsten-voice-%f0%9f%92%9b-piper/
+On my Oneplus 6 phone from 2018, Thorsten-voice is sufficiently fast on medium quality setting.
+
+
+
 Mbrola
 ~~~~~~
+
+.. code-block:: xml
+
+        <speech type="cmdline" data="espeak-ng -s 170 -a 150 -p 40 -v mb-de7 '%s'" cps="15"/>
+
 
 Android
 ~~~~~~~
@@ -54,14 +115,14 @@ Android
 
 Start up in silent mode
 ~~~~~~~~~~~~~~~~~~~~~~~
-To have Navit start up in silent mode, insert ``<code>active="0"</code>`` somewhere in your ``<code>speech</code>`` tag. For example on Android:
+To have Navit start up in silent mode, insert ``active="0"`` somewhere in your ``speech`` tag. For example on Android:
 
 .. code-block:: xml
 
     <speech type="android" cps="15" active="0"/>
 
 
-In this case, you should place a <code>toggle_announcer</code> item in your [[OSD]] configuration, or add a menu item so you can enable speech output when you need it.
+In this case, you should place a ``toggle_announcer`` item in your [[OSD]] configuration, or add a menu item so you can enable speech output when you need it.
 
 
 Splitting navit.xml
@@ -83,6 +144,7 @@ href is expanded with wordexp internally, so you can do stuff like:
     <xi:include href="$NAVIT_SHAREDIR/maps/*.xml" />
 
 Some examples on the supported syntax:
+
 .. code-block:: xml
 
     <xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='points'])" />

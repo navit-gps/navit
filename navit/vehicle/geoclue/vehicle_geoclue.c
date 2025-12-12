@@ -26,6 +26,7 @@
 #include "callback.h"
 #include "coord.h"
 #include "item.h"
+#include "navigation.h"
 #include "vehicle.h"
 #include "plugin.h"
 
@@ -84,7 +85,7 @@ static void print_location(GClueSimple *simple,
     if(altitude != -G_MAXDOUBLE) {
         priv->height=altitude;
     }
-    speed = gclue_location_get_speed(location);
+    speed = gclue_location_get_speed(location) * MPS_TO_KPH;
     if(speed != -G_MAXDOUBLE) {
         priv->speed=speed;
     }
