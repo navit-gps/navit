@@ -14,7 +14,7 @@ A simple vehicle definition looks like this:
 
 Here some of the available options:
 
-* **active**: If set to 1, makes the vehicle the default active one. Routing, view centering and map redraw would be applied to this one by default. The demo vehicle will not work without being active.
+* **active**: If set to 1, makes the vehicle the default active one. Routing, view centering and map redraw would be applied to this one by default. The demo vehicle will not work without being active. Vehicles can also be activated via the gui by switching the vehicle after planning a route.
 * **enabled**: If set to yes, Navit connects to the vehicle data source and shows the vehicle on the map.
 * **follow**: map follows after "n" gps updates (where n=0 means only when the vehicle leaves the map->saving CPU time)
 * **source** : source of GPS (required)
