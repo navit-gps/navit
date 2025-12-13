@@ -872,14 +872,12 @@ add_compiler_flag_if_available("-Wformat-security")
 add_compiler_flag_if_available("-Werror=format-security")
 
 if (ASAN)
-	message("Enabling ASAN")
+	message(STATUS "Activating AddressSanitizer. To prevent libasan breaking the build, export ASAN_OPTIONS=detect_leaks=0")
 	add_compile_options(-fsanitize=address)
 	add_compile_options(-g)
 	add_compile_options(-fno-omit-frame-pointer)
 	add_link_options(-fsanitize=address)
 	add_link_options(-fno-omit-frame-pointer)
-	set(ASAN_OPTIONS
-		"ASAN_OPTIONS=fast_unwind_on_malloc=false,report_objects=1")
 endif(ASAN)
 
 if(NOT WIN32)
