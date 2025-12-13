@@ -870,6 +870,18 @@ add_compiler_flag_if_available("-Wmissing-prototypes")
 add_compiler_flag_if_available("-Wstrict-prototypes")
 add_compiler_flag_if_available("-Wformat-security")
 add_compiler_flag_if_available("-Werror=format-security")
+
+if (ASAN)
+	message("Enabling ASAN")
+	add_compile_options(-fsanitize=address)
+	add_compile_options(-g)
+	add_compile_options(-fno-omit-frame-pointer)
+	add_link_options(-fsanitize=address)
+	add_link_options(-fno-omit-frame-pointer)
+	set(ASAN_OPTIONS
+		"ASAN_OPTIONS=fast_unwind_on_malloc=false,report_objects=1")
+endif(ASAN)
+
 if(NOT WIN32)
 	# https://bugzilla.redhat.com/show_bug.cgi?id=822312
 	add_compiler_flag_if_available("-fstack-protector-strong")
