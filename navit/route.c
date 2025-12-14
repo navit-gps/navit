@@ -99,6 +99,7 @@
 #include "mapset.h"
 #include "route_protected.h"
 #include "route.h"
+#include "navigation.h"
 #include "track.h"
 #include "transform.h"
 #include "plugin.h"
@@ -735,7 +736,7 @@ static void route_path_update_done(struct route *this, int new_graph) {
             /* FIXME */
             int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
             if (seg_time == INT_MAX) {
-                dbg(lvl_debug,"error");
+		dbg(lvl_debug,"seg_time == INT_MAX");
             } else
                 path_time+=seg_time;
             path_len+=seg->data->len;
@@ -1918,41 +1919,54 @@ static void route_graph_destroy(struct route_graph *this) {
  */
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
-    struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-    int speed,maxspeed;
-    if (!roadprofile || !roadprofile->route_weight)
-        return 0;
-    speed=roadprofile->route_weight;
-    if (profile->maxspeed_handling != maxspeed_ignore) {
-        if (over->flags & AF_SPEED_LIMIT) {
-            maxspeed=RSD_MAXSPEED(over);
-            if (profile->maxspeed_handling == maxspeed_enforce)
-                speed=maxspeed;
-        } else
-            maxspeed=INT_MAX;
-        if (dist && maxspeed > dist->maxspeed)
-            maxspeed=dist->maxspeed;
-        if (maxspeed != INT_MAX && (profile->maxspeed_handling != maxspeed_restrict || maxspeed < speed))
-            speed=maxspeed;
-    }
+    struct roadprofile *vehicleroadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
+    int calculatedspeed=INT_MAX;
+    int roadmaxspeed=INT_MAX;
+    int vehiclemaxspeed=INT_MAX;
+
+    if (!vehicleroadprofile || !vehicleroadprofile->speed)
+        calculatedspeed = 0;
+
     if (over->flags & AF_DANGEROUS_GOODS) {
         if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
-            return 0;
+            calculatedspeed = 0;
     }
+
     if (over->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
         struct size_weight_limit *size_weight=&RSD_SIZE_WEIGHT(over);
         if (size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
-            return 0;
+            calculatedspeed = 0;
         if (size_weight->axle_weight != -1 && profile->axle_weight != -1 && profile->axle_weight > size_weight->axle_weight)
-            return 0;
+            calculatedspeed = 0;
     }
-    return speed;
+
+    if (calculatedspeed != 0) {
+        /* Get vehiclemaxspeed */
+        vehiclemaxspeed=vehicleroadprofile->route_weight;
+
+        /* Get roadmaxspeed */
+        if (profile->maxspeed_handling != maxspeed_ignore) {
+            if (over->flags & AF_SPEED_LIMIT) 
+                roadmaxspeed=RSD_MAXSPEED(over);
+            if (dist && roadmaxspeed > dist->maxspeed)
+                roadmaxspeed=dist->maxspeed;
+        }
+
+        /* Set calculatedspeed */
+        calculatedspeed=roadmaxspeed;
+        if (profile->maxspeed_handling != maxspeed_ignore) {
+           if (vehiclemaxspeed < roadmaxspeed)
+               calculatedspeed=vehiclemaxspeed;
+        }
+    }
+
+    return calculatedspeed;
 }
 
 /**
@@ -1967,13 +1981,15 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
  * @param dist A traffic distortion if applicable, or {@code NULL}
  * @return The time needed in tenths of seconds
  */
-
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
                           struct route_traffic_distortion *dist) {
+    int time=INT_MAX;
     int speed=route_seg_speed(profile, over, dist);
-    if (!speed)
-        return INT_MAX;
-    return over->len*36/speed+(dist ? dist->delay : 0);
+
+    if (speed) 
+        time=over->len*MPS_TO_KPH*10/speed+(dist ? dist->delay : 0);
+        
+    return time;
 }
 
 /**
