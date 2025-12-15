@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # icefirewu https://launchpad.net/~icefirewu
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
-"navit/navit-core/zh_Hant/>\n"
+"PO-Revision-Date: 2025-12-15 11:34+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
+"projects/navit/navit-core/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "自源目錄執行\n"
@@ -2749,13 +2750,13 @@ msgid ""
 msgstr "Navit 可使用所有已安裝之文轉音引擎. 現在選定的引擎表示無法依照您的語言發音. "
 "要顯示語音下載對話框嗎?"
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
