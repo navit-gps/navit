@@ -8,28 +8,29 @@
 # Lyudmil Bonev https://launchpad.net/~bonev-j
 # MalamiR https://launchpad.net/~mamut-killer
 # Martin Voinov https://launchpad.net/~mvoinov
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:24+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/navit/"
-"navit-core/bg/>\n"
+"PO-Revision-Date: 2025-12-15 11:29+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/navit/navit-"
+"core/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "стартиране от главната директория\n"
 
-#, c-format
+#, c-format, fuzzy
 msgid "setting '%s' to '%s'\n"
-msgstr ""
+msgstr "setting '%s' to '%s'\n"
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
@@ -142,19 +143,19 @@ msgid "%1$sonto %2$s"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 msgid "onto the motorway ramp"
 msgstr "на рампата"
@@ -180,9 +181,9 @@ msgid "%sinto %s%s%s|neuter form"
 msgstr "%sпо улица %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#, c-format
+#, c-format, fuzzy
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%sinto the %s"
 
 msgid "When possible, please turn around"
 msgstr "Когато е възможно обърнете"
@@ -219,24 +220,24 @@ msgid "then"
 msgstr "след това"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 msgid "on your left"
 msgstr "ваше ляво"
@@ -2865,22 +2866,23 @@ msgid "partial match"
 msgstr ""
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid "Downloaded maps"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 msgid "Error downloading map!"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
@@ -2894,8 +2896,9 @@ msgstr ""
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
