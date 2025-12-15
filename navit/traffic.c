@@ -35,6 +35,7 @@
 #include <sys/time.h>
 #include "glib_slice.h"
 #include "config.h"
+#include "file.h"
 #include "navit.h"
 #include "util.h"
 #include "coord.h"
@@ -5863,7 +5864,7 @@ struct traffic_message ** traffic_get_messages_from_xml_file(struct traffic * th
     struct xml_state state;
     int read_success = 0;
 
-    if (filename) {
+    if (filename && file_exists(filename)) {
         memset(&state, 0, sizeof(struct xml_state));
         read_success = xml_parse_file(filename, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
         if (read_success) {
