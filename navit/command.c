@@ -1472,7 +1472,7 @@ void command_evaluate(struct attr *attr, const char *expr) {
     }
     if (ctx.error && ctx.error != eof_reached) {
         char expr[32];
-        strncpy(expr, ctx.expr, 32);
+        strncpy(expr, ctx.expr, 31);
         expr[31]='\0';
         err = command_error_to_text(ctx.error);
         dbg(lvl_error, "error %s starting at %s", err, expr);
