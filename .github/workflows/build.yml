@@ -50,6 +50,28 @@ jobs:
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
+  build_fdroid:
+    runs-on: ubuntu-latest
+    needs: sanity_check
+    container:
+      image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
+    steps:
+      - uses: actions/checkout@v2
+      - run: bash -c 'if [ "X$UID" == X0 ]; then apt update && apt dist-upgrade && apt install -y sudo; fi'
+      - name: Install requirements
+        run: sudo bash scripts/setup_common_requirements.sh && bash scripts/setup_android.sh
+      - name: sdkmanager installed
+        run: |
+          apt-get install sdkmanager
+          rm -rf "$ANDROID_HOME/tools"
+      - name: sdkmanager usage
+        run: sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
+      - name: build
+        run: scripts/build_fdroid.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: F-Droid APK
+          path: unsigned
   #run_doxygen:
   # TODO: replace with pages Upload instead of gh-pages branch
   #  runs-on: ubuntu-latest
@@ -219,7 +241,7 @@ jobs:
             bash scripts/update_download_center.sh
   merge_trunk_in_master:
     runs-on: ubuntu-latest
-    needs: [build_android, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
+    needs: [build_android, build_fdroid, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
     if: github.ref == 'trunk'
     steps:
       - uses: actions/checkout@master
