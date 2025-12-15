@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-15 09:21+0000\n"
+"PO-Revision-Date: 2025-12-15 09:45+0000\n"
 "Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
@@ -1689,7 +1689,7 @@ msgstr "வரைபடத்தை %LD, %LD ஆக அமைக்கவும�
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr "அடுத்த வருகையை %LD, %LD க்கு அமைக்கவும்\\n"
+msgstr "அடுத்த வருகையை %LD, %LD க்கு அமைக்கவும்"
 
 msgid "POI search"
 msgstr "பின்னர் தேடுங்கள்"
