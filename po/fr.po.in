@@ -29,12 +29,13 @@
 # tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2025-12-15 11:33+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
 "fr/>\n"
 "Language: fr\n"
@@ -42,7 +43,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2986,20 +2987,21 @@ msgstr ""
 msgid "Error downloading map!"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 msgid "Map download aborted!"
 msgstr ""
@@ -3008,8 +3010,9 @@ msgid " (except Alaska and Hawaii)"
 msgstr ""
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid ""
 "Drop last \n"
