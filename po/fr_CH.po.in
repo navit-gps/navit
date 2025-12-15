@@ -4,12 +4,13 @@
 # Many thanks to the contributors of this translation:
 # KaZeR https://launchpad.net/~kazer
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-12-15 11:24+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
 "Language-Team: French (Switzerland) <https://hosted.weblate.org/projects/"
 "navit/navit-core/fr_CH/>\n"
 "Language: fr_CH\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -216,24 +217,24 @@ msgid "then"
 msgstr "puis"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 msgid "on your left"
 msgstr ""
@@ -316,9 +317,9 @@ msgid "after %i roads"
 msgstr "après %i rues"
 
 #. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
-#, c-format
+#, c-format, fuzzy
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Turn %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
 msgid "then make a U-turn|left"
@@ -1687,8 +1688,9 @@ msgstr ""
 msgid "Select a category"
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
 msgid "Select a POI"
 msgstr ""
@@ -1702,8 +1704,9 @@ msgstr ""
 msgid "Direction"
 msgstr ""
 
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid "Name"
 msgstr ""
@@ -2732,15 +2735,15 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "then leave the roundabout at the %1$s %2$s"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
