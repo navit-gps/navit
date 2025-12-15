@@ -5,12 +5,13 @@
 # Athol Mullen https://launchpad.net/~athol-mullen
 # KaZeR https://launchpad.net/~kazer
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2025-12-15 11:33+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
 "Language-Team: English (Australia) <https://hosted.weblate.org/projects/"
 "navit/navit-core/en_AU/>\n"
 "Language: en_AU\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -2731,13 +2732,13 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
