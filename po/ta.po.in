@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-21 13:01+0000\n"
-"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"PO-Revision-Date: 2025-12-15 09:21+0000\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1689,7 +1689,7 @@ msgstr "வரைபடத்தை %LD, %LD ஆக அமைக்கவும�
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr "அடுத்த வருகையை %LD, %LD க்கு அமைக்கவும்"
+msgstr "அடுத்த வருகையை %LD, %LD க்கு அமைக்கவும்\\n"
 
 msgid "POI search"
 msgstr "பின்னர் தேடுங்கள்"
