@@ -82,7 +82,7 @@ msgstr "%d फ़ीट"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr "%d मील"
+msgstr "%d.%d मील"
 
 #, c-format
 msgid "in %d.%d miles"
@@ -412,7 +412,7 @@ msgstr "बुकमार्क के रूप में जोड़ें"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr "बिंदु 0x%x"
+msgstr "बिंदु 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
@@ -1435,24 +1435,24 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "navit.xml, navit.xml.local कॉन्फ़िग फ़ाइल नहीं मिली"
+msgstr "navit.xml, navit.xml.local कॉन्फ़िग फ़ाइल नहीं मिली\n"
 
 #, c-format
 msgid "Error parsing config file '%s': %s\n"
-msgstr "कॉन्फ़िग फ़ाइल '%s' पार्स करते समय त्रुटि: %s"
+msgstr "कॉन्फ़िग फ़ाइल '%s' पार्स करते समय त्रुटि: %s\n"
 
 #, c-format
 msgid "Using config file '%s'\n"
-msgstr "कॉन्फ़िग फ़ाइल '%s' का उपयोग किया जा रहा है"
+msgstr "कॉन्फ़िग फ़ाइल '%s' का उपयोग किया जा रहा है\n"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'\n"
-msgstr "त्रुटि: कॉन्फ़िग फ़ाइल '%s' में कोई कॉन्फ़िगरेशन नहीं मिला"
+msgstr "त्रुटि: कॉन्फ़िग फ़ाइल '%s' में कोई कॉन्फ़िगरेशन नहीं मिला\n"
 
 msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
-"आंतरिक प्रारंभिककरण विफल, बाहर निकला जा रहा है। कृपया पहले के त्रुटि संदेश देखें।"
+"आंतरिक प्रारंभिककरण विफल, बाहर निकला जा रहा है। कृपया पहले के त्रुटि संदेश देखें।\n"
 
 msgid "unknown street"
 msgstr "अज्ञात सड़क"
@@ -1670,15 +1670,15 @@ msgstr "रुचि-बिन्दु %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld \n"
-msgstr "तव्य को %ld, %ld पर निर्धारित करें"
+msgstr "तव्य को %ld, %ld पर निर्धारित करें\n"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
-msgstr "मानचित्र को %ld, %ld पर स्थापित करें"
+msgstr "मानचित्र को %ld, %ld पर स्थापित करें\n"
 
 #, c-format
 msgid "Set next visit to %ld, %ld \n"
-msgstr "अगली यात्रा को %ld, %ld पर निर्धारित करें"
+msgstr "अगली यात्रा को %ld, %ld पर निर्धारित करें\n"
 
 msgid "POI search"
 msgstr "रुचि-बिन्दु खोज"
