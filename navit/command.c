@@ -55,6 +55,7 @@ struct result_list {
 };
 
 struct context {
+    struct attr *attr;
     int error;
     int skip;
     const char *expr;
@@ -355,6 +356,7 @@ static void command_set_attr(struct context *ctx, struct result *res, struct res
  */
 static void resolve_object(struct context *ctx, struct result *res) {
     if (res->attr.type == attr_none && res->varlen) {
+        res->attr=*ctx->attr;
         res->attrn=res->var;
         res->attrnlen=res->varlen;
         res->var=NULL;
@@ -1197,6 +1199,7 @@ void command(struct attr *attr, char *expr) {
     struct context ctx;
     memset(&res, 0, sizeof(res));
     memset(&ctx, 0, sizeof(ctx));
+    ctx.attr=attr;
     ctx.error=0;
     ctx.expr=expr;
     printf("command='%s'\n", expr);
@@ -1214,6 +1217,7 @@ static void command_evaluate_to(struct attr *attr, const char *expr, struct cont
     result_free(res);
     memset(res, 0, sizeof(*res));
     memset(ctx, 0, sizeof(*ctx));
+    ctx->attr=attr;
     ctx->expr=expr;
     eval_comma(ctx,res);
 }
@@ -1464,6 +1468,7 @@ void command_evaluate(struct attr *attr, const char *expr) {
     char *expr_dup;
     char *err = NULL;	/* Error description */
     struct context ctx= {0,};
+    ctx.attr=attr;
     ctx.error=0;
     ctx.expr=expr_dup=g_strdup(expr);
     for (;;) {
@@ -1674,6 +1679,7 @@ static int command_register_callbacks(struct command_saved *cs) {
 
     while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
         tmpoffset = cs->res.var - cs->command;
+        cs->ctx.attr = &prev;
         resolve(&cs->ctx, &cs->res);
 
         if (cs->ctx.error) {
@@ -1699,6 +1705,7 @@ static int command_register_callbacks(struct command_saved *cs) {
                     cb = callback_new_attr_1(callback_cast(command_saved_callbacks_changed), cs->res.attr.type, (void*)cs);
                 } else if (status == 1) { // This is the final attribute name
                     cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
+                    cs->ctx.attr = &cs->context_attr;
                 } else {
                     dbg(lvl_error, "Error: Strange status returned from get_next_object()");
                 }
