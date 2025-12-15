@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Denis Ju https://launchpad.net/~deblenden
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Albanian <https://hosted.weblate.org/projects/navit/"
-"navit-core/sq/>\n"
+"PO-Revision-Date: 2025-12-15 11:26+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"Language-Team: Albanian <https://hosted.weblate.org/projects/navit/navit-"
+"core/sq/>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 msgid "Running from source directory\n"
 msgstr "Fillo nga lista preardhëse\n"
@@ -357,8 +358,9 @@ msgid "You have reached your destination %s"
 msgstr "Ju e keni arritur pikëmbërritjen tuaj %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
+#, fuzzy
 msgid "Interchange"
-msgstr ""
+msgstr "Interchange"
 
 msgid "Exit"
 msgstr "Dalje"
@@ -1682,8 +1684,9 @@ msgstr ""
 msgid "Select a category"
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
 msgid "Select a POI"
 msgstr ""
@@ -1697,8 +1700,9 @@ msgstr ""
 msgid "Direction"
 msgstr ""
 
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid "Name"
 msgstr ""
@@ -2723,13 +2727,13 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
