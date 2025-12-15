@@ -7,24 +7,26 @@
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
 # Walter Cheuk https://launchpad.net/~wwycheuk
 # icefirewu https://launchpad.net/~icefirewu
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Chinese (Traditional, Hong Kong) <https://hosted.weblate.org/"
-"projects/navit/navit-core/zh_Hant_HK/>\n"
+"PO-Revision-Date: 2025-12-15 11:29+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
+"hosted.weblate.org/projects/navit/navit-core/zh_Hant_HK/>\n"
 "Language: zh_HK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
+#, fuzzy
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Running from source directory\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -137,19 +139,19 @@ msgid "%1$sonto %2$s"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
@@ -215,24 +217,24 @@ msgid "then"
 msgstr "然後"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 msgid "on your left"
 msgstr ""
@@ -317,22 +319,24 @@ msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%1$s转向%2$s %3$s至%4$s"
 
 #. TRANSLATORS: Left U-turn, the stuff after | doesn't have to be included.
+#, fuzzy
 msgid "then make a U-turn|left"
-msgstr ""
+msgstr "then make a U-turn"
 
 #. TRANSLATORS: the arg. is distance. Left U-turn, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Make a U-turn %1$s|left"
-msgstr ""
+msgstr "Make a U-turn %1$s"
 
 #. TRANSLATORS: Right U-turn, the stuff after | doesn't have to be included.
+#, fuzzy
 msgid "then make a U-turn|right"
-msgstr ""
+msgstr "then make a U-turn"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Make a U-turn %1$s|right"
-msgstr ""
+msgstr "Make a U-turn %1$s"
 
 #. An empty placeholder that we can use in the future for
 #. * some motorway commands that are now suppressed but we
@@ -358,8 +362,9 @@ msgid "You have reached your destination %s"
 msgstr "已到達目的地 %s"
 
 #. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
+#, fuzzy
 msgid "Interchange"
-msgstr ""
+msgstr "Interchange"
 
 msgid "Exit"
 msgstr "退出"
@@ -1683,8 +1688,9 @@ msgstr ""
 msgid "Select a category"
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
 msgid "Select a POI"
 msgstr ""
@@ -1698,8 +1704,9 @@ msgstr ""
 msgid "Direction"
 msgstr ""
 
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid "Name"
 msgstr ""
@@ -2728,13 +2735,13 @@ msgid ""
 "Should we ask the system to show voice download dialog?"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
