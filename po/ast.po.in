@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the navit package.
 # Many thanks to the contributors of this translation:
 # Xuacu Saturio https://launchpad.net/~xuacusk8
+# Prefill add-on <noreply-addon-prefill@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-13 17:24+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Asturian <https://hosted.weblate.org/projects/navit/"
-"navit-core/ast/>\n"
+"PO-Revision-Date: 2025-12-15 11:34+0000\n"
+"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"Language-Team: Asturian <https://hosted.weblate.org/projects/navit/navit-"
+"core/ast/>\n"
 "Language: ast\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -137,19 +138,19 @@ msgid "%1$sonto %2$s"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|masculine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|feminine form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
-#, c-format
+#, c-format, fuzzy
 msgid "%1$sonto %2$s|neuter form"
-msgstr ""
+msgstr "%1$sonto %2$s"
 
 msgid "onto the motorway ramp"
 msgstr "pal enllaz"
@@ -214,24 +215,24 @@ msgid "then"
 msgstr "llueu"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|right"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|right"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "then merge%1$s|left"
-msgstr ""
+msgstr "then merge%1$s"
 
 #. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
-#, c-format
+#, c-format, fuzzy
 msgid "Merge %1$s%2$s|left"
-msgstr ""
+msgstr "Merge %1$s%2$s"
 
 msgid "on your left"
 msgstr ""
@@ -356,8 +357,9 @@ msgstr "entós llegará al destín."
 msgid "You have reached your destination %s"
 msgstr "Llegó al destín %s"
 
+#, fuzzy
 msgid "Interchange"
-msgstr ""
+msgstr "Interchange"
 
 msgid "Exit"
 msgstr "Salida"
@@ -2884,9 +2886,9 @@ msgid ""
 "Internal initialization failed, exiting. Check previous error messages.\n"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "in %d m"
-msgstr ""
+msgstr "in %d m"
 
 msgid "Error downloading map!"
 msgstr ""
@@ -2902,9 +2904,9 @@ msgstr ""
 msgid "partial match"
 msgstr ""
 
-#, c-format
+#, c-format, fuzzy
 msgid "%d m"
-msgstr ""
+msgstr "%d m"
 
 #, c-format
 msgid "Set map to %ld, %ld \n"
@@ -2940,16 +2942,18 @@ msgid "Select a search radius from screen center"
 msgstr ""
 
 # TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
+#, fuzzy
 msgid "Distance(m)"
-msgstr ""
+msgstr "Distance"
 
 msgid ""
 "New location set to %s\n"
 "Restart Navit to apply the changes."
 msgstr ""
 
+#, fuzzy
 msgid "Select a distance to look for (km)"
-msgstr ""
+msgstr "Select a search radius from screen center"
 
 msgid "Map data (c) OpenStreetMap contributors, ODBL"
 msgstr ""
