@@ -15,7 +15,3 @@ cmake ${cmake_opts} ../
 make -j $(nproc --all)
 make package
 
-if [[ "$CIRCLE_ARTIFACTS" != "" ]]; then
-	echo "Copying icons to artifacts..."
-	cp -r navit/icons $CIRCLE_ARTIFACTS
-fi
