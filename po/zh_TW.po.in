@@ -5,8 +5,9 @@
 # icefirewu https://launchpad.net/~icefirewu
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: navit 0.5.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
 "PO-Revision-Date: 2024-04-13 17:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -20,6 +21,10 @@ msgstr ""
 
 msgid "Running from source directory\n"
 msgstr "自源目錄執行\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -146,7 +151,6 @@ msgstr "%1$s 往 %2$s"
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$s 往 %2$s"
 
-#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
 msgstr "往交流道匝道"
 
@@ -194,6 +198,9 @@ msgstr "即將進入圓環"
 #, c-format
 msgid "Enter the roundabout %s"
 msgstr "在 %s 進入圓環"
+
+msgid "then enter the roundabout"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -299,6 +306,10 @@ msgid "strongly "
 msgstr "急 "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "進入 %1$s 往 %2$s"
 
@@ -352,7 +363,6 @@ msgstr "然後你將抵達目的地"
 msgid "You have reached your destination %s"
 msgstr "%s 你將抵達目的地"
 
-#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr "交流道"
 
@@ -369,8 +379,14 @@ msgstr "指令"
 msgid "Length"
 msgstr "距離"
 
+msgid "mi"
+msgstr ""
+
 msgid "km"
 msgstr "公里"
+
+msgid "feet"
+msgstr ""
 
 msgid "m"
 msgstr "公尺"
@@ -432,6 +448,7 @@ msgid "Anguilla"
 msgstr "英屬安圭拉"
 
 #. 008
+#. Android resource: @strings/albania
 msgid "Albania"
 msgstr "阿爾巴尼亞"
 
@@ -444,6 +461,7 @@ msgid "Netherlands Antilles"
 msgstr "荷屬安地列斯群島"
 
 #. 024
+#. Android resource: @strings/angola
 msgid "Angola"
 msgstr "安哥拉"
 
@@ -452,6 +470,7 @@ msgid "Antarctica"
 msgstr "南極洲"
 
 #. 032
+#. Android resource: @strings/argentina
 msgid "Argentina"
 msgstr "阿根廷"
 
@@ -460,10 +479,12 @@ msgid "American Samoa"
 msgstr "美屬薩摩亞"
 
 #. 040
+#. Android resource: @strings/austria
 msgid "Austria"
 msgstr "奧地利"
 
 #. 036
+#. Android resource: @strings/australia
 msgid "Australia"
 msgstr "澳洲"
 
@@ -476,10 +497,12 @@ msgid "Aland Islands"
 msgstr "奧蘭群島"
 
 #. 031
+#. Android resource: @strings/azerbaijan
 msgid "Azerbaijan"
 msgstr "亞塞拜然"
 
 #. 070
+#. Android resource: @strings/bosnia_and_herzegovina
 msgid "Bosnia and Herzegovina"
 msgstr "波士尼亞與赫塞哥維納"
 
@@ -492,6 +515,7 @@ msgid "Bangladesh"
 msgstr "孟加拉"
 
 #. 056
+#. Android resource: @strings/belgium
 msgid "Belgium"
 msgstr "比利時"
 
@@ -500,6 +524,7 @@ msgid "Burkina Faso"
 msgstr "布吉納法索"
 
 #. 100
+#. Android resource: @strings/bulgaria
 msgid "Bulgaria"
 msgstr "保加利亞"
 
@@ -508,6 +533,7 @@ msgid "Bahrain"
 msgstr "巴林"
 
 #. 108
+#. Android resource: @strings/burundi
 msgid "Burundi"
 msgstr "蒲隆地"
 
@@ -528,6 +554,7 @@ msgid "Brunei Darussalam"
 msgstr "汶萊"
 
 #. 068
+#. Android resource: @strings/bolivia
 msgid "Bolivia"
 msgstr "玻利維亞"
 
@@ -536,6 +563,7 @@ msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "荷蘭加勒比區"
 
 #. 076
+#. Android resource: @strings/brazil
 msgid "Brazil"
 msgstr "巴西"
 
@@ -552,10 +580,12 @@ msgid "Bouvet Island"
 msgstr "布威島"
 
 #. 072
+#. Android resource: @strings/botswana
 msgid "Botswana"
 msgstr "波札那"
 
 #. 112
+#. Android resource: @strings/belarus
 msgid "Belarus"
 msgstr "白俄羅斯"
 
@@ -564,6 +594,7 @@ msgid "Belize"
 msgstr "貝里斯"
 
 #. 124
+#. Android resource: @strings/canada
 msgid "Canada"
 msgstr "加拿大"
 
@@ -572,6 +603,7 @@ msgid "Cocos (Keeling) Islands"
 msgstr "科科斯 (基林) 群島"
 
 #. 180
+#. Android resource: @strings/congo
 msgid "Congo, Democratic Republic of the"
 msgstr "剛果民主共和國"
 
@@ -584,10 +616,12 @@ msgid "Congo"
 msgstr "剛果共和國"
 
 #. 756
+#. Android resource: @strings/switzerland
 msgid "Switzerland"
 msgstr "瑞士"
 
 #. 384
+#. Android resource: @strings/cotedivoire
 msgid "Cote d'Ivoire"
 msgstr "象牙海岸"
 
@@ -596,6 +630,7 @@ msgid "Cook Islands"
 msgstr "庫克群島"
 
 #. 152
+#. Android resource: @strings/chile
 msgid "Chile"
 msgstr "智利"
 
@@ -604,10 +639,12 @@ msgid "Cameroon"
 msgstr "喀麥隆"
 
 #. 156
+#. Android resource: @strings/china
 msgid "China"
 msgstr "中國"
 
 #. 170
+#. Android resource: @strings/colombia
 msgid "Colombia"
 msgstr "哥倫比亞"
 
@@ -616,6 +653,7 @@ msgid "Costa Rica"
 msgstr "哥斯大黎加"
 
 #. 192
+#. Android resource: @strings/cuba
 msgid "Cuba"
 msgstr "古巴"
 
@@ -632,14 +670,17 @@ msgid "Christmas Island"
 msgstr "聖誕島"
 
 #. 196
+#. Android resource: @strings/cyprus
 msgid "Cyprus"
 msgstr "賽普勒斯"
 
 #. 203
+#. Android resource: @strings/czech_republic
 msgid "Czech Republic"
 msgstr "捷克"
 
 #. 276
+#. Android resource: @strings/germany
 msgid "Germany"
 msgstr "德國"
 
@@ -648,6 +689,7 @@ msgid "Djibouti"
 msgstr "吉布地"
 
 #. 208
+#. Android resource: @strings/denmark
 msgid "Denmark"
 msgstr "丹麥"
 
@@ -656,6 +698,7 @@ msgid "Dominica"
 msgstr "多米尼克"
 
 #. 214
+#. Android resource: @strings/dominican_republic
 msgid "Dominican Republic"
 msgstr "多明尼加"
 
@@ -664,10 +707,12 @@ msgid "Algeria"
 msgstr "阿爾及利亞"
 
 #. 218
+#. Android resource: @strings/ecuador
 msgid "Ecuador"
 msgstr "厄瓜多"
 
 #. 233
+#. Android resource: @strings/estonia
 msgid "Estonia"
 msgstr "愛沙尼亞"
 
@@ -684,14 +729,17 @@ msgid "Eritrea"
 msgstr "厄利垂亞"
 
 #. 724
+#. Android resource: @strings/spain
 msgid "Spain"
 msgstr "西班牙"
 
 #. 231
+#. Android resource: @strings/ethiopia
 msgid "Ethiopia"
 msgstr "衣索披亞"
 
 #. 246
+#. Android resource: @strings/finland
 msgid "Finland"
 msgstr "芬蘭"
 
@@ -708,10 +756,12 @@ msgid "Micronesia, Federated States of"
 msgstr "密克羅尼西亞聯邦"
 
 #. 234
+#. Android resource: @strings/faroe_islands
 msgid "Faroe Islands"
 msgstr "法羅群島"
 
 #. 250
+#. Android resource: @strings/france
 msgid "France"
 msgstr "法國"
 
@@ -720,6 +770,7 @@ msgid "Gabon"
 msgstr "加彭"
 
 #. 826
+#. Android resource: @strings/united_kingdom
 msgid "United Kingdom"
 msgstr "英國"
 
@@ -756,6 +807,7 @@ msgid "Gambia"
 msgstr "甘比亞"
 
 #. 324
+#. Android resource: @strings/guinea
 msgid "Guinea"
 msgstr "幾內亞"
 
@@ -768,6 +820,7 @@ msgid "Equatorial Guinea"
 msgstr "赤道幾內亞"
 
 #. 300
+#. Android resource: @strings/greece
 msgid "Greece"
 msgstr "希臘"
 
@@ -788,6 +841,7 @@ msgid "Guinea-Bissau"
 msgstr "幾內亞比索"
 
 #. 328
+#. Android resource: @strings/guyana
 msgid "Guyana"
 msgstr "蓋亞那"
 
@@ -804,26 +858,32 @@ msgid "Honduras"
 msgstr "宏都拉斯"
 
 #. 191
+#. Android resource: @strings/croatia
 msgid "Croatia"
 msgstr "克羅埃西亞"
 
 #. 332
+#. Android resource: @strings/haiti
 msgid "Haiti"
 msgstr "海地"
 
 #. 348
+#. Android resource: @strings/hungary
 msgid "Hungary"
 msgstr "匈牙利"
 
 #. 360
+#. Android resource: @strings/indonesia
 msgid "Indonesia"
 msgstr "印尼"
 
 #. 372
+#. Android resource: @strings/ireland
 msgid "Ireland"
 msgstr "愛爾蘭"
 
 #. 376
+#. Android resource: @strings/israel
 msgid "Israel"
 msgstr "以色列"
 
@@ -832,6 +892,7 @@ msgid "Isle of Man"
 msgstr "英屬曼島"
 
 #. 356
+#. Android resource: @strings/india
 msgid "India"
 msgstr "印度"
 
@@ -840,18 +901,22 @@ msgid "British Indian Ocean Territory"
 msgstr "英屬印度洋地區"
 
 #. 368
+#. Android resource: @strings/iraq
 msgid "Iraq"
 msgstr "伊拉克"
 
 #. 364
+#. Android resource: @strings/iran
 msgid "Iran, Islamic Republic of"
 msgstr "伊朗"
 
 #. 352
+#. Android resource: @strings/iceland
 msgid "Iceland"
 msgstr "冰島"
 
 #. 380
+#. Android resource: @strings/italy
 msgid "Italy"
 msgstr "義大利"
 
@@ -860,6 +925,7 @@ msgid "Jersey"
 msgstr "澤西島"
 
 #. 388
+#. Android resource: @strings/jamaica
 msgid "Jamaica"
 msgstr "牙買加"
 
@@ -868,14 +934,17 @@ msgid "Jordan"
 msgstr "約旦"
 
 #. 392
+#. Android resource: @strings/japan
 msgid "Japan"
 msgstr "日本"
 
 #. 404
+#. Android resource: @strings/kenya
 msgid "Kenya"
 msgstr "肯亞"
 
 #. 417
+#. Android resource: @strings/kyrgyzsyan
 msgid "Kyrgyzstan"
 msgstr "吉爾吉斯"
 
@@ -912,6 +981,7 @@ msgid "Cayman Islands"
 msgstr "開曼群島"
 
 #. 398
+#. Android resource: @strings/kazakhstan
 msgid "Kazakhstan"
 msgstr "哈薩克"
 
@@ -936,26 +1006,32 @@ msgid "Sri Lanka"
 msgstr "斯里蘭卡"
 
 #. 430
+#. Android resource: @strings/liberia
 msgid "Liberia"
 msgstr "賴比瑞亞"
 
 #. 426
+#. Android resource: @strings/lesotho
 msgid "Lesotho"
 msgstr "賴索托"
 
 #. 440
+#. Android resource: @strings/lithuania
 msgid "Lithuania"
 msgstr "立陶宛"
 
 #. 442
+#. Android resource: @strings/luxembourg
 msgid "Luxembourg"
 msgstr "盧森堡"
 
 #. 428
+#. Android resource: @strings/latvia
 msgid "Latvia"
 msgstr "拉脫維亞"
 
 #. 434
+#. Android resource: @strings/libya
 msgid "Libya"
 msgstr "利比亞"
 
@@ -980,6 +1056,7 @@ msgid "Saint Martin (French part)"
 msgstr "法屬聖馬丁"
 
 #. 450
+#. Android resource: @strings/madagascar
 msgid "Madagascar"
 msgstr "馬達加斯加"
 
@@ -1000,6 +1077,7 @@ msgid "Myanmar"
 msgstr "緬甸"
 
 #. 496
+#. Android resource: @strings/mongolia
 msgid "Mongolia"
 msgstr "蒙古"
 
@@ -1040,10 +1118,12 @@ msgid "Malawi"
 msgstr "馬拉威"
 
 #. 484
+#. Android resource: @strings/mexico
 msgid "Mexico"
 msgstr "墨西哥"
 
 #. 458
+#. Android resource: @strings/malaysia
 msgid "Malaysia"
 msgstr "馬來西亞"
 
@@ -1052,10 +1132,12 @@ msgid "Mozambique"
 msgstr "莫三比克"
 
 #. 516
+#. Android resource: @strings/namibia
 msgid "Namibia"
 msgstr "納米比亞"
 
 #. 540
+#. Android resource: @strings/new_caledonia
 msgid "New Caledonia"
 msgstr "新喀里多尼亞"
 
@@ -1076,6 +1158,7 @@ msgid "Nicaragua"
 msgstr "尼加拉瓜"
 
 #. 528
+#. Android resource: @strings/netherlands
 msgid "Netherlands"
 msgstr "荷蘭"
 
@@ -1084,6 +1167,7 @@ msgid "Norway"
 msgstr "挪威"
 
 #. 524
+#. Android resource: @strings/nepal
 msgid "Nepal"
 msgstr "尼泊爾"
 
@@ -1096,6 +1180,7 @@ msgid "Niue"
 msgstr "紐埃"
 
 #. 554
+#. Android resource: @strings/newzealand
 msgid "New Zealand"
 msgstr "紐西蘭"
 
@@ -1108,6 +1193,7 @@ msgid "Panama"
 msgstr "巴拿馬"
 
 #. 604
+#. Android resource: @strings/peru
 msgid "Peru"
 msgstr "秘魯"
 
@@ -1120,14 +1206,17 @@ msgid "Papua New Guinea"
 msgstr "巴布亞紐幾內亞"
 
 #. 608
+#. Android resource: @strings/philippines
 msgid "Philippines"
 msgstr "菲律賓"
 
 #. 586
+#. Android resource: @strings/pakistan
 msgid "Pakistan"
 msgstr "巴基斯坦"
 
 #. 616
+#. Android resource: @strings/poland
 msgid "Poland"
 msgstr "波蘭"
 
@@ -1148,6 +1237,7 @@ msgid "Palestinian Territory, Occupied"
 msgstr "巴勒斯坦"
 
 #. 620
+#. Android resource: @strings/portugal
 msgid "Portugal"
 msgstr "葡萄牙"
 
@@ -1156,6 +1246,7 @@ msgid "Palau"
 msgstr "帛琉"
 
 #. 600
+#. Android resource: @strings/paraguay
 msgid "Paraguay"
 msgstr "巴拉圭"
 
@@ -1164,10 +1255,12 @@ msgid "Qatar"
 msgstr "卡達"
 
 #. 638
+#. Android resource: @strings/reunion
 msgid "Reunion"
 msgstr "留尼旺"
 
 #. 642
+#. Android resource: @strings/romania
 msgid "Romania"
 msgstr "羅馬尼亞"
 
@@ -1176,14 +1269,17 @@ msgid "Serbia"
 msgstr "塞爾維亞"
 
 #. 643
+#. Android resource: @strings/russian_federation
 msgid "Russian Federation"
 msgstr "俄羅斯"
 
 #. 646
+#. Android resource: @strings/rwanda
 msgid "Rwanda"
 msgstr "盧安達"
 
 #. 682
+#. Android resource: @strings/saudi_arabia
 msgid "Saudi Arabia"
 msgstr "沙烏地阿拉伯"
 
@@ -1204,6 +1300,7 @@ msgid "Sweden"
 msgstr "瑞典"
 
 #. 702
+#. Android resource: @strings/singapore
 msgid "Singapore"
 msgstr "新加坡"
 
@@ -1220,6 +1317,7 @@ msgid "Svalbard and Jan Mayen"
 msgstr "斯瓦巴和揚馬延"
 
 #. 703
+#. Android resource: @strings/slovakia
 msgid "Slovakia"
 msgstr "斯洛伐克"
 
@@ -1240,6 +1338,7 @@ msgid "Somalia"
 msgstr "索馬利亞"
 
 #. 740
+#. Android resource: @strings/suriname
 msgid "Suriname"
 msgstr "蘇利南"
 
@@ -1284,6 +1383,7 @@ msgid "Togo"
 msgstr "多哥"
 
 #. 764
+#. Android resource: @strings/thailand
 msgid "Thailand"
 msgstr "泰國"
 
@@ -1300,6 +1400,7 @@ msgid "Timor-Leste"
 msgstr "東帝汶"
 
 #. 795
+#. Android resource: @strings/turkmenistan
 msgid "Turkmenistan"
 msgstr "土庫曼"
 
@@ -1312,6 +1413,7 @@ msgid "Tonga"
 msgstr "東加"
 
 #. 792
+#. Android resource: @strings/turkey
 msgid "Turkey"
 msgstr "土耳其"
 
@@ -1328,14 +1430,17 @@ msgid "Taiwan, Province of China"
 msgstr "臺灣省"
 
 #. 834
+#. Android resource: @strings/tanzania
 msgid "Tanzania, United Republic of"
 msgstr "坦尚尼亞"
 
 #. 804
+#. Android resource: @strings/ukraine
 msgid "Ukraine"
 msgstr "烏克蘭"
 
 #. 800
+#. Android resource: @strings/uganda
 msgid "Uganda"
 msgstr "烏干達"
 
@@ -1348,6 +1453,7 @@ msgid "United States"
 msgstr "美國"
 
 #. 858
+#. Android resource: @strings/uruguay
 msgid "Uruguay"
 msgstr "烏拉圭"
 
@@ -1364,6 +1470,7 @@ msgid "Saint Vincent and the Grenadines"
 msgstr "聖文森及格瑞那丁"
 
 #. 862
+#. Android resource: @strings/venezuela
 msgid "Venezuela"
 msgstr "委內瑞拉"
 
@@ -1391,6 +1498,10 @@ msgstr "瓦利斯和富圖納群島"
 msgid "Samoa"
 msgstr "薩摩亞"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "葉門"
@@ -1400,6 +1511,7 @@ msgid "Mayotte"
 msgstr "馬約特"
 
 #. 710
+#. Android resource: @strings/south_africa
 msgid "South Africa"
 msgstr "南非"
 
@@ -1434,24 +1546,23 @@ msgstr ""
 "\t-v: 顯示版本資訊後停止.\n"
 
 #. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "設定檔 navit.xml, navit.xml.local 未發現\n"
+msgid "No config file navit.xml, navit.xml.local found"
+msgstr ""
 
 #, c-format
-msgid "Error parsing config file '%s': %s\n"
-msgstr "設定檔 '%s' 解讀錯誤 : %s\n"
+msgid "Error parsing config file '%s': %s"
+msgstr ""
 
 #, c-format
-msgid "Using config file '%s'\n"
-msgstr "採用設定檔 '%s'\n"
+msgid "Using config file '%s'"
+msgstr ""
 
 #, c-format
-msgid "Error: No configuration found in config file '%s'\n"
-msgstr "錯誤: 設定檔 '%s' 內無設定\n"
+msgid "Error: No configuration found in config file '%s'"
+msgstr ""
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr "通用初始化失敗, 正在脫出. 檢查之前的錯誤訊息.\n"
+msgid "Internal initialization failed, exiting. Check previous error messages."
+msgstr ""
 
 msgid "unknown street"
 msgstr "未知街道"
@@ -1591,6 +1702,9 @@ msgstr "_顯示游標"
 msgid "_Lock on Road"
 msgstr "_鎖定道路"
 
+msgid "_Follow Vehicle"
+msgstr ""
+
 msgid "_Keep orientation to the North"
 msgstr "_保持地圖朝北"
 
@@ -1660,33 +1774,35 @@ msgstr "計程車"
 msgid "Shopping"
 msgstr "購物處"
 
-msgid "Select a search radius from screen center"
-msgstr "距螢幕中心的距離 (公里)"
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
 msgstr "趣點 %s. %s"
 
 #, c-format
-msgid "Set destination to %ld, %ld \n"
-msgstr "將  %ld, %ld 設為目的地 \n"
+msgid "Set destination to %ld, %ld "
+msgstr ""
 
 #, c-format
-msgid "Set map to %ld, %ld \n"
-msgstr "將 %ld, %ld 設為地圖 \n"
+msgid "Set map to %ld, %ld "
+msgstr ""
 
 #, c-format
-msgid "Set next visit to %ld, %ld \n"
-msgstr "設定接下來經過 %ld, %ld \n"
+msgid "Set next visit to %ld, %ld "
+msgstr ""
 
 msgid "POI search"
 msgstr "趣點搜尋"
 
 msgid "Select a category"
 msgstr "選取類別"
-
-msgid "Select a distance to look for (km)"
-msgstr "選擇搜尋範圍 (公里)"
 
 msgid "Select a POI"
 msgstr "擇一趣點"
@@ -1700,8 +1816,8 @@ msgstr "類別"
 msgid "Direction"
 msgstr "方向"
 
-msgid "Distance(m)"
-msgstr "距離(公尺)"
+msgid "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "名稱"
@@ -1747,8 +1863,8 @@ msgid "OT"
 msgstr "OT"
 
 #, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "路徑 %4.0fkm    %02d:%02d ETA"
+msgid "Route %4.1f%s    %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "路徑 0000公里 0+00:00 ETA"
@@ -1958,11 +2074,20 @@ msgstr "版面佈局"
 msgid "Height Profile"
 msgstr "高度資料"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "路徑敘述"
 
 msgid "Show Locale"
 msgstr "顯示語言環境"
+
+msgid "Network info"
+msgstr ""
 
 msgid "Former Destinations"
 msgstr "歷來目的地"
@@ -2001,445 +2126,6 @@ msgstr "注意! 拍照!"
 #. warning told
 msgid "Please decrease your speed"
 msgstr "請減速"
-
-msgid "partial match"
-msgstr "局部符合"
-
-#. Android resource: @strings/address_search_button
-msgid "Search"
-msgstr "搜尋"
-
-#. Android resource: @strings/address_search_towns
-msgid "Towns"
-msgstr "鄉鎮市區"
-
-msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr "圖資 (c) OpenStreetMap 創作群, ODBL"
-
-msgid ""
-"Current map location %s is not available\n"
-"Please restart Navit after you attach an SD card or select a different map "
-"location."
-msgstr ""
-
-msgid "Downloaded maps"
-msgstr "下載地圖"
-
-msgid ""
-"Sorry, we currently do not support maps above 3.8G on Android, please select "
-"a smaller one."
-msgstr "抱歉, 我們現今於安卓系統上不支援大於3.8G的圖資, 請另選一個較小的."
-
-#. Android resource: @strings/position_popup_drive_here
-msgid "Route to here"
-msgstr "導航至此"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "filenamePath"
-msgstr "檔名路徑"
-
-msgid ""
-"New location set to %s\n"
-"Restart Navit to apply the changes."
-msgstr ""
-"重新定位至 %s\n"
-"套用變更請重啟 Navit ."
-
-msgid "Whole Planet"
-msgstr "全球"
-
-msgid "Africa"
-msgstr "非洲"
-
-msgid "Canary Islands"
-msgstr "加那利群島"
-
-msgid "Asia"
-msgstr "亞洲"
-
-msgid "Korea"
-msgstr "南韓"
-
-msgid "Taiwan"
-msgstr "臺灣"
-
-msgid "UAE+Other"
-msgstr "阿拉伯聯合大公國+其他"
-
-msgid "Oceania"
-msgstr "大洋洲"
-
-msgid "Tasmania"
-msgstr "塔斯馬尼亞"
-
-msgid "Victoria"
-msgstr "維多利亞"
-
-msgid "New South Wales"
-msgstr "新南威爾斯"
-
-msgid "Europe"
-msgstr "歐洲"
-
-msgid "Western Europe"
-msgstr "西歐"
-
-msgid "Azores"
-msgstr "亞速爾群島"
-
-msgid "BeNeLux"
-msgstr "比荷盧聯盟"
-
-msgid "Alsace"
-msgstr "亞爾薩斯"
-
-msgid "Aquitaine"
-msgstr "亞奎丹"
-
-msgid "Auvergne"
-msgstr "奧文尼"
-
-msgid "Basse-Normandie"
-msgstr "下諾曼第"
-
-msgid "Bourgogne"
-msgstr "勃艮第"
-
-msgid "Bretagne"
-msgstr "布列塔尼"
-
-msgid "Centre"
-msgstr "中央區"
-
-msgid "Champagne-Ardenne"
-msgstr "香檳-阿登"
-
-msgid "Corse"
-msgstr "科西嘉"
-
-msgid "Franche-Comte"
-msgstr "法蘭琪-康堤"
-
-msgid "Haute-Normandie"
-msgstr "上諾曼第"
-
-msgid "Ile-de-France"
-msgstr "法蘭西島"
-
-msgid "Languedoc-Roussillon"
-msgstr "朗格多克-魯西永"
-
-msgid "Limousin"
-msgstr "利木森"
-
-msgid "Lorraine"
-msgstr "洛林"
-
-msgid "Midi-Pyrenees"
-msgstr "南部-庇里牛斯"
-
-msgid "Nord-pas-de-Calais"
-msgstr "北部-加來海峽"
-
-msgid "Pays-de-la-Loire"
-msgstr "羅亞爾河地區"
-
-msgid "Picardie"
-msgstr "皮卡第區"
-
-msgid "Poitou-Charentes"
-msgstr "普瓦圖-夏朗德區"
-
-msgid "Provence-Alpes-Cote-d-Azur"
-msgstr "普羅旺斯-阿爾卑斯-藍色海岸區"
-
-msgid "Rhone-Alpes"
-msgstr "隆河-阿爾卑斯區"
-
-msgid "Baden-Wuerttemberg"
-msgstr "巴登-符登堡邦"
-
-msgid "Bayern"
-msgstr "拜仁"
-
-msgid "Mittelfranken"
-msgstr "中法蘭克尼亞"
-
-msgid "Niederbayern"
-msgstr "下巴伐利亞"
-
-msgid "Oberbayern"
-msgstr "上巴伐利亞"
-
-msgid "Oberfranken"
-msgstr "上法蘭克尼亞"
-
-msgid "Oberpfalz"
-msgstr "上法爾茲"
-
-msgid "Schwaben"
-msgstr "士瓦本"
-
-msgid "Unterfranken"
-msgstr "下法蘭克尼亞"
-
-msgid "Berlin"
-msgstr "柏林"
-
-msgid "Brandenburg"
-msgstr "布蘭登堡"
-
-msgid "Bremen"
-msgstr "不來梅"
-
-msgid "Hamburg"
-msgstr "漢堡"
-
-msgid "Hessen"
-msgstr "黑森"
-
-msgid "Mecklenburg-Vorpommern"
-msgstr "梅克倫堡-前波莫瑞"
-
-msgid "Niedersachsen"
-msgstr "下薩克森"
-
-msgid "Nordrhein-westfalen"
-msgstr "北萊茵-西伐利亞"
-
-msgid "Rheinland-Pfalz"
-msgstr "萊茵蘭-普法茲"
-
-msgid "Saarland"
-msgstr "薩爾蘭"
-
-msgid "Sachsen-Anhalt"
-msgstr "薩克森-安哈特"
-
-msgid "Sachsen"
-msgstr "薩克森"
-
-msgid "Schleswig-Holstein"
-msgstr "什列斯威-好斯敦"
-
-msgid "Thueringen"
-msgstr "圖林根"
-
-msgid "Mallorca"
-msgstr "馬約卡"
-
-msgid "Galicia"
-msgstr "加利西亞"
-
-msgid "Scandinavia"
-msgstr "斯堪地那維亞"
-
-msgid "England"
-msgstr "英格蘭"
-
-msgid "Buckinghamshire"
-msgstr "白金漢郡"
-
-msgid "Cambridgeshire"
-msgstr "劍橋郡"
-
-msgid "Cumbria"
-msgstr "坎布里亞郡"
-
-msgid "East yorkshire with hull"
-msgstr "東約克郡及赫爾"
-
-msgid "Essex"
-msgstr "艾塞克斯郡"
-
-msgid "Herefordshire"
-msgstr "禧福郡"
-
-msgid "Kent"
-msgstr "肯特郡"
-
-msgid "Lancashire"
-msgstr "蘭開夏郡"
-
-msgid "Leicestershire"
-msgstr "萊斯特郡"
-
-msgid "Norfolk"
-msgstr "諾福克郡"
-
-msgid "Nottinghamshire"
-msgstr "諾丁漢郡"
-
-msgid "Oxfordshire"
-msgstr "牛津郡"
-
-msgid "Shropshire"
-msgstr "施洛普郡"
-
-msgid "Somerset"
-msgstr "索美塞特郡"
-
-msgid "South yorkshire"
-msgstr "南約克郡"
-
-msgid "Suffolk"
-msgstr "薩福克郡"
-
-msgid "Surrey"
-msgstr "薩里"
-
-msgid "Wiltshire"
-msgstr "威爾特郡"
-
-msgid "Scotland"
-msgstr "蘇格蘭"
-
-msgid "Wales"
-msgstr "威爾斯"
-
-msgid "Crete"
-msgstr "克里特"
-
-msgid "North America"
-msgstr "北美"
-
-msgid "Alaska"
-msgstr "阿拉斯加"
-
-msgid "Hawaii"
-msgstr "夏威夷"
-
-msgid "USA"
-msgstr "美國"
-
-msgid " (except Alaska and Hawaii)"
-msgstr " (阿拉斯加及夏威夷除外)"
-
-msgid "Midwest"
-msgstr "中西部"
-
-msgid "Michigan"
-msgstr "密西根"
-
-msgid "Ohio"
-msgstr "俄亥俄"
-
-msgid "Northeast"
-msgstr "東北"
-
-msgid "Massachusetts"
-msgstr "麻塞諸塞"
-
-msgid "Vermont"
-msgstr "佛蒙特"
-
-msgid "Pacific"
-msgstr "太平洋"
-
-msgid "South"
-msgstr "南"
-
-msgid "Arkansas"
-msgstr "阿肯色"
-
-msgid "District of Columbia"
-msgstr "哥倫比亞特區"
-
-msgid "Florida"
-msgstr "佛羅里達"
-
-msgid "Louisiana"
-msgstr "路易斯安那"
-
-msgid "Maryland"
-msgstr "馬里蘭"
-
-msgid "Mississippi"
-msgstr "密西西比"
-
-msgid "Oklahoma"
-msgstr "奧克拉荷馬"
-
-msgid "Texas"
-msgstr "德克薩斯"
-
-msgid "Virginia"
-msgstr "維吉尼亞"
-
-msgid "West Virginia"
-msgstr "西維吉尼亞"
-
-msgid "West"
-msgstr "西"
-
-msgid "Arizona"
-msgstr "亞利桑那"
-
-msgid "California"
-msgstr "加利福尼亞"
-
-msgid "Colorado"
-msgstr "科羅拉多"
-
-msgid "Idaho"
-msgstr "愛達荷"
-
-msgid "Montana"
-msgstr "蒙大拿"
-
-msgid "New Mexico"
-msgstr "新墨西哥"
-
-msgid "Nevada"
-msgstr "內華達"
-
-msgid "Oregon"
-msgstr "奧勒岡"
-
-msgid "Utah"
-msgstr "猶他"
-
-msgid "Washington State"
-msgstr "華盛頓州"
-
-msgid "South+Middle America"
-msgstr "中南美洲"
-
-msgid "Guyane Francaise"
-msgstr "法屬圭亞那"
-
-msgid "downloading"
-msgstr "下載中"
-
-#. Android resource: @strings/map_download_ready
-msgid "ready"
-msgstr "就緒"
-
-msgid "Media selected for map storage is not available"
-msgstr "儲存空間不足以下載已選資源"
-
-#. Android resource: @strings/map_download_not_enough_free_space
-msgid "Not enough free space"
-msgstr "空間不足"
-
-msgid "Error downloading map!"
-msgstr "下載地圖發生錯誤!"
-
-msgid "Error writing map!"
-msgstr "寫入地圖發生錯誤!"
-
-msgid "Map download aborted!"
-msgstr "中止下載地圖!"
-
-#. Android resource: @strings/map_download_eta
-msgid "ETA"
-msgstr "ETA"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "下載地圖"
 
 msgid "Vehicle Position"
 msgstr "車輛位置"
@@ -2498,22 +2184,30 @@ msgstr "全螢幕"
 msgid "Window Mode"
 msgstr "視窗模式"
 
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
+msgid "Layers"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr ""
+
 msgid "Description"
 msgstr "備註"
 
 msgid ""
-"Drop last \n"
+"Drop last\n"
 "Waypoint"
 msgstr ""
-"捨棄前一\n"
-"航點"
 
 msgid ""
-"Drop next \n"
+"Drop next\n"
 "Waypoint"
 msgstr ""
-"捨棄次一\n"
-"航點"
 
 msgid "Satellite Status"
 msgstr "衛星狀態"
@@ -2541,6 +2235,14 @@ msgstr "卡車"
 msgid "Yes"
 msgstr "確定"
 
+#. Android resource: @strings/cancel
+msgid "Cancel"
+msgstr "取消"
+
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "Navit 啟動"
@@ -2558,20 +2260,12 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"感謝您安裝 Navit!\n"
-"\n"
-"剛開始, 從選單選擇 \"下載圖資\" 來下載地圖. 注意: 地圖檔可能很大 (>50MB) - "
-"建議使用 wifi 網路連線.\n"
-"\n"
-"圖資: (c) OpenStreetMap 建構群\n"
-"\n"
-"請享用 Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2609,13 +2303,37 @@ msgstr "備份/回復"
 msgid "Set map location"
 msgstr "設定地圖區域"
 
+#. Android resource: @strings/position_popup_drive_here
+msgid "Route to here"
+msgstr "導航至此"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
+
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "刪除此圖資?"
 
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "下載地圖"
+
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
 msgstr "下載中:"
+
+#. Android resource: @strings/map_download_eta
+msgid "ETA"
+msgstr "ETA"
+
+#. Android resource: @strings/map_download_ready
+msgid "ready"
+msgstr "就緒"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2625,6 +2343,16 @@ msgstr "圖資下載錯誤"
 msgid "Map download aborted"
 msgstr "已中止地圖下載"
 
+#. Android resource: @strings/map_download_not_enough_free_space
+msgid "Not enough free space"
+msgstr "空間不足"
+
+#. Android resource: @strings/map_download_oversize
+msgid ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
+msgstr "抱歉, 我們現今於安卓系統上不支援大於3.8G的圖資, 請另選一個較小的."
+
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
 msgstr "圖資不含現在位置. 修正後重啟."
@@ -2632,6 +2360,34 @@ msgstr "圖資不含現在位置. 修正後重啟."
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
 msgstr "圖資含現在位置"
+
+#. Android resource: @strings/maps_installed
+msgid "Installed maps"
+msgstr ""
+
+#. Android resource: @strings/map_downloading
+msgid "downloading"
+msgstr "下載中"
+
+#. Android resource: @strings/map_download_medium_unavailable
+msgid "Media selected for map storage is not available"
+msgstr "儲存空間不足以下載已選資源"
+
+#. Android resource: @strings/map_download_error_writing_map
+msgid "Error writing map!"
+msgstr "寫入地圖發生錯誤!"
+
+#. Android resource: @strings/map_location_changed
+#, c-format
+msgid "New location set to %s Restart Navit to apply the changes."
+msgstr ""
+
+#. Android resource: @strings/map_location_unavailable
+#, c-format
+msgid ""
+"Current map location %s is not available Please restart Navit after you "
+"attach an SD card or select a different map location."
+msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2645,9 +2401,15 @@ msgstr "輸入目的地"
 msgid "Match partial address"
 msgstr "符合部分地址"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "搜尋中…"
+#. Android resource: @strings/address_search_button
+msgid "Search"
+msgstr "搜尋"
+
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2673,6 +2435,10 @@ msgstr "未鍵入文字"
 msgid "Setting destination to:"
 msgstr "將目的地設為:"
 
+#. Android resource: @strings/address_search_towns
+msgid "Towns"
+msgstr "鄉鎮市區"
+
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
 msgstr "選擇動作"
@@ -2680,14 +2446,6 @@ msgstr "選擇動作"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "請插入SD卡"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "正在備份..."
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "正在還原..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2746,18 +2504,615 @@ msgid ""
 "Navit can use any text to speech engine installed on your device. The "
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
-msgstr "Navit 可使用所有已安裝之文轉音引擎. 現在選定的引擎表示無法依照您的語言發音. "
+msgstr ""
+"Navit 可使用所有已安裝之文轉音引擎. 現在選定的引擎表示無法依照您的語言發音. "
 "要顯示語音下載對話框嗎?"
 
-#, c-format
-msgid "%d m"
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
 msgstr ""
 
-#, c-format
-msgid "in %d m"
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
 msgstr ""
 
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
+#. Android resource: @strings/whole_planet
+msgid "Whole Planet"
+msgstr "全球"
+
+#. Android resource: @strings/africa
+msgid "Africa"
+msgstr "非洲"
+
+#. Android resource: @strings/canary_islands
+msgid "Canary Islands"
+msgstr "加那利群島"
+
+#. Android resource: @strings/asia
+msgid "Asia"
+msgstr "亞洲"
+
+#. Android resource: @strings/taiwan
+msgid "Taiwan"
+msgstr "臺灣"
+
+#. Android resource: @strings/korea
+msgid "Korea"
+msgstr "南韓"
+
+#. Android resource: @strings/uae_other
+msgid "UAE+Other"
+msgstr "阿拉伯聯合大公國+其他"
+
+#. Android resource: @strings/oceania
+msgid "Oceania"
+msgstr "大洋洲"
+
+#. Android resource: @strings/tasmania
+msgid "Tasmania"
+msgstr "塔斯馬尼亞"
+
+#. Android resource: @strings/victoria
+msgid "Victoria"
+msgstr "維多利亞"
+
+#. Android resource: @strings/new_south_wales
+msgid "New South Wales"
+msgstr "新南威爾斯"
+
+#. Android resource: @strings/europe
+msgid "Europe"
+msgstr "歐洲"
+
+#. Android resource: @strings/western_europe
+msgid "Western Europe"
+msgstr "西歐"
+
+#. Android resource: @strings/azores
+msgid "Azores"
+msgstr "亞速爾群島"
+
+#. Android resource: @strings/benelux
+msgid "BeNeLux"
+msgstr "比荷盧聯盟"
+
+#. Android resource: @strings/alsace
+msgid "Alsace"
+msgstr "亞爾薩斯"
+
+#. Android resource: @strings/aquitaine
+msgid "Aquitaine"
+msgstr "亞奎丹"
+
+#. Android resource: @strings/auvergne
+msgid "Auvergne"
+msgstr "奧文尼"
+
+#. Android resource: @strings/centre
+msgid "Centre"
+msgstr "中央區"
+
+#. Android resource: @strings/bretagne
+msgid "Bretagne"
+msgstr "布列塔尼"
+
+#. Android resource: @strings/bourgogne
+msgid "Bourgogne"
+msgstr "勃艮第"
+
+#. Android resource: @strings/basse_normandie
+msgid "Basse-Normandie"
+msgstr "下諾曼第"
+
+#. Android resource: @strings/champagne_ardenne
+msgid "Champagne-Ardenne"
+msgstr "香檳-阿登"
+
+#. Android resource: @strings/corse
+msgid "Corse"
+msgstr "科西嘉"
+
+#. Android resource: @strings/franche_comte
+msgid "Franche-Comte"
+msgstr "法蘭琪-康堤"
+
+#. Android resource: @strings/haute_normandie
+msgid "Haute-Normandie"
+msgstr "上諾曼第"
+
+#. Android resource: @strings/ile_de_france
+msgid "Ile-de-France"
+msgstr "法蘭西島"
+
+#. Android resource: @strings/languedoc_roussillon
+msgid "Languedoc-Roussillon"
+msgstr "朗格多克-魯西永"
+
+#. Android resource: @strings/limousin
+msgid "Limousin"
+msgstr "利木森"
+
+#. Android resource: @strings/lorraine
+msgid "Lorraine"
+msgstr "洛林"
+
+#. Android resource: @strings/midi_pyrenees
+msgid "Midi-Pyrenees"
+msgstr "南部-庇里牛斯"
+
+#. Android resource: @strings/nord_pas_de_calais
+msgid "Nord-pas-de-Calais"
+msgstr "北部-加來海峽"
+
+#. Android resource: @strings/pays_de_la_loire
+msgid "Pays-de-la-Loire"
+msgstr "羅亞爾河地區"
+
+#. Android resource: @strings/picardie
+msgid "Picardie"
+msgstr "皮卡第區"
+
+#. Android resource: @strings/poitou_charentes
+msgid "Poitou-Charentes"
+msgstr "普瓦圖-夏朗德區"
+
+#. Android resource: @strings/provence_alpes_cote_d_azur
+msgid "Provence-Alpes-Cote-d-Azur"
+msgstr "普羅旺斯-阿爾卑斯-藍色海岸區"
+
+#. Android resource: @strings/rhone_alpes
+msgid "Rhone-Alpes"
+msgstr "隆河-阿爾卑斯區"
+
+#. Android resource: @strings/baden_wuerttemberg
+msgid "Baden-Wuerttemberg"
+msgstr "巴登-符登堡邦"
+
+#. Android resource: @strings/bayern
+msgid "Bayern"
+msgstr "拜仁"
+
+#. Android resource: @strings/mittelfranken
+msgid "Mittelfranken"
+msgstr "中法蘭克尼亞"
+
+#. Android resource: @strings/niederbayern
+msgid "Niederbayern"
+msgstr "下巴伐利亞"
+
+#. Android resource: @strings/oberbayern
+msgid "Oberbayern"
+msgstr "上巴伐利亞"
+
+#. Android resource: @strings/oberfranken
+msgid "Oberfranken"
+msgstr "上法蘭克尼亞"
+
+#. Android resource: @strings/oberpfalz
+msgid "Oberpfalz"
+msgstr "上法爾茲"
+
+#. Android resource: @strings/schwaben
+msgid "Schwaben"
+msgstr "士瓦本"
+
+#. Android resource: @strings/unterfranken
+msgid "Unterfranken"
+msgstr "下法蘭克尼亞"
+
+#. Android resource: @strings/berlin
+msgid "Berlin"
+msgstr "柏林"
+
+#. Android resource: @strings/brandenburg
+msgid "Brandenburg"
+msgstr "布蘭登堡"
+
+#. Android resource: @strings/bremen
+msgid "Bremen"
+msgstr "不來梅"
+
+#. Android resource: @strings/hamburg
+msgid "Hamburg"
+msgstr "漢堡"
+
+#. Android resource: @strings/hessen
+msgid "Hessen"
+msgstr "黑森"
+
+#. Android resource: @strings/mecklenburg_vorpommern
+msgid "Mecklenburg-Vorpommern"
+msgstr "梅克倫堡-前波莫瑞"
+
+#. Android resource: @strings/niedersachsen
+msgid "Niedersachsen"
+msgstr "下薩克森"
+
+#. Android resource: @strings/nordrhein_westfalen
+msgid "Nordrhein-westfalen"
+msgstr "北萊茵-西伐利亞"
+
+#. Android resource: @strings/rheinland_pfalz
+msgid "Rheinland-Pfalz"
+msgstr "萊茵蘭-普法茲"
+
+#. Android resource: @strings/saarland
+msgid "Saarland"
+msgstr "薩爾蘭"
+
+#. Android resource: @strings/sachsen_anhalt
+msgid "Sachsen-Anhalt"
+msgstr "薩克森-安哈特"
+
+#. Android resource: @strings/sachsen
+msgid "Sachsen"
+msgstr "薩克森"
+
+#. Android resource: @strings/schleswig_holstein
+msgid "Schleswig-Holstein"
+msgstr "什列斯威-好斯敦"
+
+#. Android resource: @strings/thueringen
+msgid "Thueringen"
+msgstr "圖林根"
+
+#. Android resource: @strings/mallorca
+msgid "Mallorca"
+msgstr "馬約卡"
+
+#. Android resource: @strings/galicia
+msgid "Galicia"
+msgstr "加利西亞"
+
+#. Android resource: @strings/scandinavia
+msgid "Scandinavia"
+msgstr "斯堪地那維亞"
+
+#. Android resource: @strings/england
+msgid "England"
+msgstr "英格蘭"
+
+#. Android resource: @strings/buckinghamshire
+msgid "Buckinghamshire"
+msgstr "白金漢郡"
+
+#. Android resource: @strings/cambridgeshire
+msgid "Cambridgeshire"
+msgstr "劍橋郡"
+
+#. Android resource: @strings/cumbria
+msgid "Cumbria"
+msgstr "坎布里亞郡"
+
+#. Android resource: @strings/east_yorkshire_with_hull
+msgid "East yorkshire with hull"
+msgstr "東約克郡及赫爾"
+
+#. Android resource: @strings/essex
+msgid "Essex"
+msgstr "艾塞克斯郡"
+
+#. Android resource: @strings/herefordshire
+msgid "Herefordshire"
+msgstr "禧福郡"
+
+#. Android resource: @strings/kent
+msgid "Kent"
+msgstr "肯特郡"
+
+#. Android resource: @strings/lancashire
+msgid "Lancashire"
+msgstr "蘭開夏郡"
+
+#. Android resource: @strings/leicestershire
+msgid "Leicestershire"
+msgstr "萊斯特郡"
+
+#. Android resource: @strings/norfolk
+msgid "Norfolk"
+msgstr "諾福克郡"
+
+#. Android resource: @strings/nottinghamshire
+msgid "Nottinghamshire"
+msgstr "諾丁漢郡"
+
+#. Android resource: @strings/oxfordshire
+msgid "Oxfordshire"
+msgstr "牛津郡"
+
+#. Android resource: @strings/shropshire
+msgid "Shropshire"
+msgstr "施洛普郡"
+
+#. Android resource: @strings/somerset
+msgid "Somerset"
+msgstr "索美塞特郡"
+
+#. Android resource: @strings/south_yorkshire
+msgid "South yorkshire"
+msgstr "南約克郡"
+
+#. Android resource: @strings/suffolk
+msgid "Suffolk"
+msgstr "薩福克郡"
+
+#. Android resource: @strings/surrey
+msgid "Surrey"
+msgstr "薩里"
+
+#. Android resource: @strings/wiltshire
+msgid "Wiltshire"
+msgstr "威爾特郡"
+
+#. Android resource: @strings/scotland
+msgid "Scotland"
+msgstr "蘇格蘭"
+
+#. Android resource: @strings/wales
+msgid "Wales"
+msgstr "威爾斯"
+
+#. Android resource: @strings/crete
+msgid "Crete"
+msgstr "克里特"
+
+#. Android resource: @strings/north_america
+msgid "North America"
+msgstr "北美"
+
+#. Android resource: @strings/alaska
+msgid "Alaska"
+msgstr "阿拉斯加"
+
+#. Android resource: @strings/hawaii
+msgid "Hawaii"
+msgstr "夏威夷"
+
+#. Android resource: @strings/usa
+msgid "USA"
+msgstr "美國"
+
+#. Android resource: @strings/except_alaska_and_hawaii
+msgid "(except Alaska and Hawaii)"
 msgstr ""
+
+#. Android resource: @strings/midwest
+msgid "Midwest"
+msgstr "中西部"
+
+#. Android resource: @strings/michigan
+msgid "Michigan"
+msgstr "密西根"
+
+#. Android resource: @strings/ohio
+msgid "Ohio"
+msgstr "俄亥俄"
+
+#. Android resource: @strings/northeast
+msgid "Northeast"
+msgstr "東北"
+
+#. Android resource: @strings/massachusetts
+msgid "Massachusetts"
+msgstr "麻塞諸塞"
+
+#. Android resource: @strings/vermont
+msgid "Vermont"
+msgstr "佛蒙特"
+
+#. Android resource: @strings/pacific
+msgid "Pacific"
+msgstr "太平洋"
+
+#. Android resource: @strings/south
+msgid "South"
+msgstr "南"
+
+#. Android resource: @strings/arkansas
+msgid "Arkansas"
+msgstr "阿肯色"
+
+#. Android resource: @strings/district_of_columbia
+msgid "District of Columbia"
+msgstr "哥倫比亞特區"
+
+#. Android resource: @strings/florida
+msgid "Florida"
+msgstr "佛羅里達"
+
+#. Android resource: @strings/louisiana
+msgid "Louisiana"
+msgstr "路易斯安那"
+
+#. Android resource: @strings/maryland
+msgid "Maryland"
+msgstr "馬里蘭"
+
+#. Android resource: @strings/mississippi
+msgid "Mississippi"
+msgstr "密西西比"
+
+#. Android resource: @strings/oklahoma
+msgid "Oklahoma"
+msgstr "奧克拉荷馬"
+
+#. Android resource: @strings/texas
+msgid "Texas"
+msgstr "德克薩斯"
+
+#. Android resource: @strings/virginia
+msgid "Virginia"
+msgstr "維吉尼亞"
+
+#. Android resource: @strings/west_virginia
+msgid "West Virginia"
+msgstr "西維吉尼亞"
+
+#. Android resource: @strings/west
+msgid "West"
+msgstr "西"
+
+#. Android resource: @strings/arizona
+msgid "Arizona"
+msgstr "亞利桑那"
+
+#. Android resource: @strings/california
+msgid "California"
+msgstr "加利福尼亞"
+
+#. Android resource: @strings/colorado
+msgid "Colorado"
+msgstr "科羅拉多"
+
+#. Android resource: @strings/idaho
+msgid "Idaho"
+msgstr "愛達荷"
+
+#. Android resource: @strings/montana
+msgid "Montana"
+msgstr "蒙大拿"
+
+#. Android resource: @strings/new_mexico
+msgid "New Mexico"
+msgstr "新墨西哥"
+
+#. Android resource: @strings/nevada
+msgid "Nevada"
+msgstr "內華達"
+
+#. Android resource: @strings/oregon
+msgid "Oregon"
+msgstr "奧勒岡"
+
+#. Android resource: @strings/utah
+msgid "Utah"
+msgstr "猶他"
+
+#. Android resource: @strings/washington_state
+msgid "Washington State"
+msgstr "華盛頓州"
+
+#. Android resource: @strings/south_middle_america
+msgid "South+Middle America"
+msgstr "中南美洲"
+
+#. Android resource: @strings/guyane_francaise
+msgid "Guyane Francaise"
+msgstr "法屬圭亞那"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "設定檔 navit.xml, navit.xml.local 未發現\n"
+
+#, c-format
+#~ msgid "Error parsing config file '%s': %s\n"
+#~ msgstr "設定檔 '%s' 解讀錯誤 : %s\n"
+
+#, c-format
+#~ msgid "Using config file '%s'\n"
+#~ msgstr "採用設定檔 '%s'\n"
+
+#, c-format
+#~ msgid "Error: No configuration found in config file '%s'\n"
+#~ msgstr "錯誤: 設定檔 '%s' 內無設定\n"
+
+#~ msgid ""
+#~ "Internal initialization failed, exiting. Check previous error messages.\n"
+#~ msgstr "通用初始化失敗, 正在脫出. 檢查之前的錯誤訊息.\n"
+
+#~ msgid "Select a search radius from screen center"
+#~ msgstr "距螢幕中心的距離 (公里)"
+
+#, c-format
+#~ msgid "Set destination to %ld, %ld \n"
+#~ msgstr "將  %ld, %ld 設為目的地 \n"
+
+#, c-format
+#~ msgid "Set map to %ld, %ld \n"
+#~ msgstr "將 %ld, %ld 設為地圖 \n"
+
+#, c-format
+#~ msgid "Set next visit to %ld, %ld \n"
+#~ msgstr "設定接下來經過 %ld, %ld \n"
+
+#~ msgid "Select a distance to look for (km)"
+#~ msgstr "選擇搜尋範圍 (公里)"
+
+#~ msgid "Distance(m)"
+#~ msgstr "距離(公尺)"
+
+#, c-format
+#~ msgid "Route %4.0fkm    %02d:%02d ETA"
+#~ msgstr "路徑 %4.0fkm    %02d:%02d ETA"
+
+#~ msgid "partial match"
+#~ msgstr "局部符合"
+
+#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
+#~ msgstr "圖資 (c) OpenStreetMap 創作群, ODBL"
+
+#~ msgid "Downloaded maps"
+#~ msgstr "下載地圖"
+
+#~ msgid "filenamePath"
+#~ msgstr "檔名路徑"
+
+#~ msgid ""
+#~ "New location set to %s\n"
+#~ "Restart Navit to apply the changes."
+#~ msgstr ""
+#~ "重新定位至 %s\n"
+#~ "套用變更請重啟 Navit ."
+
+#~ msgid " (except Alaska and Hawaii)"
+#~ msgstr " (阿拉斯加及夏威夷除外)"
+
+#~ msgid "Error downloading map!"
+#~ msgstr "下載地圖發生錯誤!"
+
+#~ msgid "Map download aborted!"
+#~ msgstr "中止下載地圖!"
+
+#~ msgid ""
+#~ "Drop last \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "捨棄前一\n"
+#~ "航點"
+
+#~ msgid ""
+#~ "Drop next \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "捨棄次一\n"
+#~ "航點"
+
+#~ msgid ""
+#~ "Thank you for installing Navit!\n"
+#~ "\n"
+#~ "To start, select \"Download maps\" from the menu to download a map. Note: "
+#~ "The map filesize may be large (>50MB) - a wifi connection is "
+#~ "recommended.\n"
+#~ "\n"
+#~ "Mapdata: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Enjoy Navit!"
+#~ msgstr ""
+#~ "感謝您安裝 Navit!\n"
+#~ "\n"
+#~ "剛開始, 從選單選擇 \"下載圖資\" 來下載地圖. 注意: 地圖檔可能很大 (>50MB) "
+#~ "- 建議使用 wifi 網路連線.\n"
+#~ "\n"
+#~ "圖資: (c) OpenStreetMap 建構群\n"
+#~ "\n"
+#~ "請享用 Navit!"
+
+#~ msgid "Searching..."
+#~ msgstr "搜尋中…"
+
+#~ msgid "Backing up..."
+#~ msgstr "正在備份..."
+
+#~ msgid "Restoring..."
+#~ msgstr "正在還原..."
