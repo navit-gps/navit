@@ -11,6 +11,12 @@ set -u
 
 return_code=0
 
+cleanup() {
+	rm -rf build-locale-$$
+}
+trap cleanup EXIT
+
+
 # Check if any file has been modified. If yes, that means the best practices
 # have not been followed, so we will fail the job later but print a message here.
 check_diff(){
@@ -20,6 +26,32 @@ check_diff(){
         echo "[ERROR] You may need to do some cleanup in the files you commited, see the git diff output above." >&2
     fi
     return_code=$(($return_code + $code))
+}
+
+check_po() {
+	local retval=0
+
+	mkdir build-locale-$$
+	cd build-locale-$$
+	cmake .. >/dev/null
+	cd po
+	make -j5 locales >/dev/null
+
+	for po in *.po
+	do
+		if diff -u $po ../../po/$po.in 2>&1 | grep -Eq "[+-]msgid"
+		then
+			echo "[ERROR] new or changed msgid found in $po.in" >&2
+			retval=2
+		fi
+	done
+	cd ../..
+	return $retval
+}
+
+check_po || {
+	echo "[ERROR] found outdated po-files. Please build navit locally and overwrite the files in po/<pofile>.in with the contents of build/po/<pofile>" >&2
+	exit 2
 }
 
 # List the files that are different from the trunk
