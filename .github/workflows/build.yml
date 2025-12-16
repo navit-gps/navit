@@ -12,8 +12,8 @@ jobs:
         - uses: actions/checkout@v2
           with:
             fetch-depth: 0
-        ##- name: run sanity check script
-        ##  run: bash scripts/ci_sanity_checks.sh
+        - name: run sanity check script
+          run: bash scripts/ci_sanity_checks.sh
         ##- uses: reviewdog/action-suggester@v1
         ##  with:
         ##    github_token: ${{ secrets.github_token }}
