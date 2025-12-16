@@ -26,8 +26,9 @@
 # Adolfo Jayme Barrientos <fitojb@ubuntu.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
 "PO-Revision-Date: 2025-06-28 13:05+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -41,6 +42,10 @@ msgstr ""
 
 msgid "Running from source directory\n"
 msgstr "Ejecutando desde el directorio fuente\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -171,7 +176,6 @@ msgstr "%1$sen la %2$s"
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$sen la carretera %2$s"
 
-#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
 msgstr "en el carril de entrada"
 
@@ -219,6 +223,9 @@ msgstr "Entre en la próxima rotonda"
 #, c-format
 msgid "Enter the roundabout %s"
 msgstr "Entre en la rotonda %s"
+
+msgid "then enter the roundabout"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -324,6 +331,10 @@ msgid "strongly "
 msgstr "bruscamente "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Tome la %1$s carretera %2$s"
 
@@ -377,7 +388,6 @@ msgstr "entonces ha llegado a su destino."
 msgid "You have reached your destination %s"
 msgstr "Ha llegado a su destino %s"
 
-#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr "Enlace"
 
@@ -394,8 +404,14 @@ msgstr "Orden"
 msgid "Length"
 msgstr "Longitud"
 
+msgid "mi"
+msgstr ""
+
 msgid "km"
 msgstr "km"
+
+msgid "feet"
+msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -457,6 +473,7 @@ msgid "Anguilla"
 msgstr "Anguila"
 
 #. 008
+#. Android resource: @strings/albania
 msgid "Albania"
 msgstr "Albania"
 
@@ -469,6 +486,7 @@ msgid "Netherlands Antilles"
 msgstr "Antillas Holandesas"
 
 #. 024
+#. Android resource: @strings/angola
 msgid "Angola"
 msgstr "Angola"
 
@@ -477,6 +495,7 @@ msgid "Antarctica"
 msgstr "Antártida"
 
 #. 032
+#. Android resource: @strings/argentina
 msgid "Argentina"
 msgstr "Argentina"
 
@@ -485,10 +504,12 @@ msgid "American Samoa"
 msgstr "Samoa Americana"
 
 #. 040
+#. Android resource: @strings/austria
 msgid "Austria"
 msgstr "Austria"
 
 #. 036
+#. Android resource: @strings/australia
 msgid "Australia"
 msgstr "Australia"
 
@@ -501,10 +522,12 @@ msgid "Aland Islands"
 msgstr "Islas de Åland"
 
 #. 031
+#. Android resource: @strings/azerbaijan
 msgid "Azerbaijan"
 msgstr "Azerbaiyán"
 
 #. 070
+#. Android resource: @strings/bosnia_and_herzegovina
 msgid "Bosnia and Herzegovina"
 msgstr "Bosnia Herzegovina"
 
@@ -517,6 +540,7 @@ msgid "Bangladesh"
 msgstr "Bangladesh"
 
 #. 056
+#. Android resource: @strings/belgium
 msgid "Belgium"
 msgstr "Bélgica"
 
@@ -525,6 +549,7 @@ msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
 #. 100
+#. Android resource: @strings/bulgaria
 msgid "Bulgaria"
 msgstr "Bulgaria"
 
@@ -533,6 +558,7 @@ msgid "Bahrain"
 msgstr "Bahrein"
 
 #. 108
+#. Android resource: @strings/burundi
 msgid "Burundi"
 msgstr "Burundi"
 
@@ -553,6 +579,7 @@ msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
 #. 068
+#. Android resource: @strings/bolivia
 msgid "Bolivia"
 msgstr "Bolivia"
 
@@ -561,6 +588,7 @@ msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, San Eustaquio y Saba"
 
 #. 076
+#. Android resource: @strings/brazil
 msgid "Brazil"
 msgstr "Brasil"
 
@@ -577,10 +605,12 @@ msgid "Bouvet Island"
 msgstr "Isla Bouvet"
 
 #. 072
+#. Android resource: @strings/botswana
 msgid "Botswana"
 msgstr "Botsuana"
 
 #. 112
+#. Android resource: @strings/belarus
 msgid "Belarus"
 msgstr "Bielorrusia"
 
@@ -589,6 +619,7 @@ msgid "Belize"
 msgstr "Belice"
 
 #. 124
+#. Android resource: @strings/canada
 msgid "Canada"
 msgstr "Canadá"
 
@@ -597,6 +628,7 @@ msgid "Cocos (Keeling) Islands"
 msgstr "Islas de Cocos (Keeling)"
 
 #. 180
+#. Android resource: @strings/congo
 msgid "Congo, Democratic Republic of the"
 msgstr "Congo, República Democrática del"
 
@@ -609,10 +641,12 @@ msgid "Congo"
 msgstr "Congo"
 
 #. 756
+#. Android resource: @strings/switzerland
 msgid "Switzerland"
 msgstr "Suiza"
 
 #. 384
+#. Android resource: @strings/cotedivoire
 msgid "Cote d'Ivoire"
 msgstr "Costa de Marfil"
 
@@ -621,6 +655,7 @@ msgid "Cook Islands"
 msgstr "Islas Cook"
 
 #. 152
+#. Android resource: @strings/chile
 msgid "Chile"
 msgstr "Chile"
 
@@ -629,10 +664,12 @@ msgid "Cameroon"
 msgstr "Camerún"
 
 #. 156
+#. Android resource: @strings/china
 msgid "China"
 msgstr "China"
 
 #. 170
+#. Android resource: @strings/colombia
 msgid "Colombia"
 msgstr "Colombia"
 
@@ -641,6 +678,7 @@ msgid "Costa Rica"
 msgstr "Costa Rica"
 
 #. 192
+#. Android resource: @strings/cuba
 msgid "Cuba"
 msgstr "Cuba"
 
@@ -657,14 +695,17 @@ msgid "Christmas Island"
 msgstr "Isla Natividad"
 
 #. 196
+#. Android resource: @strings/cyprus
 msgid "Cyprus"
 msgstr "Chipre"
 
 #. 203
+#. Android resource: @strings/czech_republic
 msgid "Czech Republic"
 msgstr "República Checa"
 
 #. 276
+#. Android resource: @strings/germany
 msgid "Germany"
 msgstr "Alemania"
 
@@ -673,6 +714,7 @@ msgid "Djibouti"
 msgstr "República de Yibuti"
 
 #. 208
+#. Android resource: @strings/denmark
 msgid "Denmark"
 msgstr "Dinamarca"
 
@@ -681,6 +723,7 @@ msgid "Dominica"
 msgstr "Dominica"
 
 #. 214
+#. Android resource: @strings/dominican_republic
 msgid "Dominican Republic"
 msgstr "República Dominicana"
 
@@ -689,10 +732,12 @@ msgid "Algeria"
 msgstr "Argelia"
 
 #. 218
+#. Android resource: @strings/ecuador
 msgid "Ecuador"
 msgstr "Ecuador"
 
 #. 233
+#. Android resource: @strings/estonia
 msgid "Estonia"
 msgstr "Estonia"
 
@@ -709,14 +754,17 @@ msgid "Eritrea"
 msgstr "Eritrea"
 
 #. 724
+#. Android resource: @strings/spain
 msgid "Spain"
 msgstr "España"
 
 #. 231
+#. Android resource: @strings/ethiopia
 msgid "Ethiopia"
 msgstr "Etiopía"
 
 #. 246
+#. Android resource: @strings/finland
 msgid "Finland"
 msgstr "Finlandia"
 
@@ -733,10 +781,12 @@ msgid "Micronesia, Federated States of"
 msgstr "Estados Federados de Micronesia"
 
 #. 234
+#. Android resource: @strings/faroe_islands
 msgid "Faroe Islands"
 msgstr "Islas Feroe"
 
 #. 250
+#. Android resource: @strings/france
 msgid "France"
 msgstr "Francia"
 
@@ -745,6 +795,7 @@ msgid "Gabon"
 msgstr "Gabón"
 
 #. 826
+#. Android resource: @strings/united_kingdom
 msgid "United Kingdom"
 msgstr "Reino Unido"
 
@@ -781,6 +832,7 @@ msgid "Gambia"
 msgstr "Gambia"
 
 #. 324
+#. Android resource: @strings/guinea
 msgid "Guinea"
 msgstr "Guinea"
 
@@ -793,6 +845,7 @@ msgid "Equatorial Guinea"
 msgstr "Guinea Ecuatorial"
 
 #. 300
+#. Android resource: @strings/greece
 msgid "Greece"
 msgstr "Grecia"
 
@@ -813,6 +866,7 @@ msgid "Guinea-Bissau"
 msgstr "Guinea-Bissau"
 
 #. 328
+#. Android resource: @strings/guyana
 msgid "Guyana"
 msgstr "Guayana"
 
@@ -829,26 +883,32 @@ msgid "Honduras"
 msgstr "Honduras"
 
 #. 191
+#. Android resource: @strings/croatia
 msgid "Croatia"
 msgstr "Croacia"
 
 #. 332
+#. Android resource: @strings/haiti
 msgid "Haiti"
 msgstr "Haiti"
 
 #. 348
+#. Android resource: @strings/hungary
 msgid "Hungary"
 msgstr "Hungría"
 
 #. 360
+#. Android resource: @strings/indonesia
 msgid "Indonesia"
 msgstr "Indonesia"
 
 #. 372
+#. Android resource: @strings/ireland
 msgid "Ireland"
 msgstr "Irlanda"
 
 #. 376
+#. Android resource: @strings/israel
 msgid "Israel"
 msgstr "Israel"
 
@@ -857,6 +917,7 @@ msgid "Isle of Man"
 msgstr "Isla de Man"
 
 #. 356
+#. Android resource: @strings/india
 msgid "India"
 msgstr "India"
 
@@ -865,18 +926,22 @@ msgid "British Indian Ocean Territory"
 msgstr "Territorio Británico en el Océano Indico"
 
 #. 368
+#. Android resource: @strings/iraq
 msgid "Iraq"
 msgstr "Irak"
 
 #. 364
+#. Android resource: @strings/iran
 msgid "Iran, Islamic Republic of"
 msgstr "Irán"
 
 #. 352
+#. Android resource: @strings/iceland
 msgid "Iceland"
 msgstr "Islandia"
 
 #. 380
+#. Android resource: @strings/italy
 msgid "Italy"
 msgstr "Italia"
 
@@ -885,6 +950,7 @@ msgid "Jersey"
 msgstr "Jersey"
 
 #. 388
+#. Android resource: @strings/jamaica
 msgid "Jamaica"
 msgstr "Jamaica"
 
@@ -893,14 +959,17 @@ msgid "Jordan"
 msgstr "Jordania"
 
 #. 392
+#. Android resource: @strings/japan
 msgid "Japan"
 msgstr "Japón"
 
 #. 404
+#. Android resource: @strings/kenya
 msgid "Kenya"
 msgstr "Kenia"
 
 #. 417
+#. Android resource: @strings/kyrgyzsyan
 msgid "Kyrgyzstan"
 msgstr "Kirguistán"
 
@@ -937,6 +1006,7 @@ msgid "Cayman Islands"
 msgstr "Islas Caimán"
 
 #. 398
+#. Android resource: @strings/kazakhstan
 msgid "Kazakhstan"
 msgstr "Kazajstán"
 
@@ -961,26 +1031,32 @@ msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
 #. 430
+#. Android resource: @strings/liberia
 msgid "Liberia"
 msgstr "Liberia"
 
 #. 426
+#. Android resource: @strings/lesotho
 msgid "Lesotho"
 msgstr "Lesoto"
 
 #. 440
+#. Android resource: @strings/lithuania
 msgid "Lithuania"
 msgstr "Lituania"
 
 #. 442
+#. Android resource: @strings/luxembourg
 msgid "Luxembourg"
 msgstr "Luxemburgo"
 
 #. 428
+#. Android resource: @strings/latvia
 msgid "Latvia"
 msgstr "Letonia"
 
 #. 434
+#. Android resource: @strings/libya
 msgid "Libya"
 msgstr "Libia"
 
@@ -1005,6 +1081,7 @@ msgid "Saint Martin (French part)"
 msgstr "San Martín (zona francesa)"
 
 #. 450
+#. Android resource: @strings/madagascar
 msgid "Madagascar"
 msgstr "Madagascar"
 
@@ -1025,6 +1102,7 @@ msgid "Myanmar"
 msgstr "Myanmar"
 
 #. 496
+#. Android resource: @strings/mongolia
 msgid "Mongolia"
 msgstr "Mongolia"
 
@@ -1065,10 +1143,12 @@ msgid "Malawi"
 msgstr "Malawi"
 
 #. 484
+#. Android resource: @strings/mexico
 msgid "Mexico"
 msgstr "México"
 
 #. 458
+#. Android resource: @strings/malaysia
 msgid "Malaysia"
 msgstr "Malasia"
 
@@ -1077,10 +1157,12 @@ msgid "Mozambique"
 msgstr "Mozambique"
 
 #. 516
+#. Android resource: @strings/namibia
 msgid "Namibia"
 msgstr "Namibia"
 
 #. 540
+#. Android resource: @strings/new_caledonia
 msgid "New Caledonia"
 msgstr "Nueva Caledonia"
 
@@ -1101,6 +1183,7 @@ msgid "Nicaragua"
 msgstr "Nicaragua"
 
 #. 528
+#. Android resource: @strings/netherlands
 msgid "Netherlands"
 msgstr "Países Bajos"
 
@@ -1109,6 +1192,7 @@ msgid "Norway"
 msgstr "Noruega"
 
 #. 524
+#. Android resource: @strings/nepal
 msgid "Nepal"
 msgstr "Nepal"
 
@@ -1121,6 +1205,7 @@ msgid "Niue"
 msgstr "Niue"
 
 #. 554
+#. Android resource: @strings/newzealand
 msgid "New Zealand"
 msgstr "Nueva Zelanda"
 
@@ -1133,6 +1218,7 @@ msgid "Panama"
 msgstr "Panamá"
 
 #. 604
+#. Android resource: @strings/peru
 msgid "Peru"
 msgstr "Perú"
 
@@ -1145,14 +1231,17 @@ msgid "Papua New Guinea"
 msgstr "Papúa Nueva Guinea"
 
 #. 608
+#. Android resource: @strings/philippines
 msgid "Philippines"
 msgstr "Filipinas"
 
 #. 586
+#. Android resource: @strings/pakistan
 msgid "Pakistan"
 msgstr "Pakistán"
 
 #. 616
+#. Android resource: @strings/poland
 msgid "Poland"
 msgstr "Polonia"
 
@@ -1173,6 +1262,7 @@ msgid "Palestinian Territory, Occupied"
 msgstr "Territorio Palestino Ocupado"
 
 #. 620
+#. Android resource: @strings/portugal
 msgid "Portugal"
 msgstr "Portugal"
 
@@ -1181,6 +1271,7 @@ msgid "Palau"
 msgstr "Palau"
 
 #. 600
+#. Android resource: @strings/paraguay
 msgid "Paraguay"
 msgstr "Paraguay"
 
@@ -1189,10 +1280,12 @@ msgid "Qatar"
 msgstr "Catar"
 
 #. 638
+#. Android resource: @strings/reunion
 msgid "Reunion"
 msgstr "Reunión"
 
 #. 642
+#. Android resource: @strings/romania
 msgid "Romania"
 msgstr "Rumania"
 
@@ -1201,14 +1294,17 @@ msgid "Serbia"
 msgstr "Serbia"
 
 #. 643
+#. Android resource: @strings/russian_federation
 msgid "Russian Federation"
 msgstr "Federación de Rusia"
 
 #. 646
+#. Android resource: @strings/rwanda
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #. 682
+#. Android resource: @strings/saudi_arabia
 msgid "Saudi Arabia"
 msgstr "Arabia Saudita"
 
@@ -1229,6 +1325,7 @@ msgid "Sweden"
 msgstr "Suecia"
 
 #. 702
+#. Android resource: @strings/singapore
 msgid "Singapore"
 msgstr "Singapur"
 
@@ -1245,6 +1342,7 @@ msgid "Svalbard and Jan Mayen"
 msgstr "Svalbard y Jan Mayen"
 
 #. 703
+#. Android resource: @strings/slovakia
 msgid "Slovakia"
 msgstr "Eslovaquia"
 
@@ -1265,6 +1363,7 @@ msgid "Somalia"
 msgstr "Somalia"
 
 #. 740
+#. Android resource: @strings/suriname
 msgid "Suriname"
 msgstr "Surinam"
 
@@ -1309,6 +1408,7 @@ msgid "Togo"
 msgstr "Togo"
 
 #. 764
+#. Android resource: @strings/thailand
 msgid "Thailand"
 msgstr "Tailandia"
 
@@ -1325,6 +1425,7 @@ msgid "Timor-Leste"
 msgstr "Timor Oriental"
 
 #. 795
+#. Android resource: @strings/turkmenistan
 msgid "Turkmenistan"
 msgstr "Turkmenistán"
 
@@ -1337,6 +1438,7 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #. 792
+#. Android resource: @strings/turkey
 msgid "Turkey"
 msgstr "Turquía"
 
@@ -1353,14 +1455,17 @@ msgid "Taiwan, Province of China"
 msgstr "Taiwán, Provincia de China"
 
 #. 834
+#. Android resource: @strings/tanzania
 msgid "Tanzania, United Republic of"
 msgstr "Tanzania, República Unida de"
 
 #. 804
+#. Android resource: @strings/ukraine
 msgid "Ukraine"
 msgstr "Ucrania"
 
 #. 800
+#. Android resource: @strings/uganda
 msgid "Uganda"
 msgstr "Uganda"
 
@@ -1373,6 +1478,7 @@ msgid "United States"
 msgstr "Estados Unidos"
 
 #. 858
+#. Android resource: @strings/uruguay
 msgid "Uruguay"
 msgstr "Uruguay"
 
@@ -1389,6 +1495,7 @@ msgid "Saint Vincent and the Grenadines"
 msgstr "San Vicente y las Granadinas"
 
 #. 862
+#. Android resource: @strings/venezuela
 msgid "Venezuela"
 msgstr "Venezuela"
 
@@ -1416,6 +1523,10 @@ msgstr "Wallis y Futuna"
 msgid "Samoa"
 msgstr "Samoa"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "Yemen"
@@ -1425,6 +1536,7 @@ msgid "Mayotte"
 msgstr "Mayotte"
 
 #. 710
+#. Android resource: @strings/south_africa
 msgid "South Africa"
 msgstr "Sudáfrica"
 
@@ -1460,6 +1572,25 @@ msgstr ""
 "fijen un nivel mayor.\n"
 "\t-h: muestra este mensaje de ayuda y termina.\n"
 "\t-v: muestra la versión y termina.\n"
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'"
+msgstr ""
+
+msgid "Internal initialization failed, exiting. Check previous error messages."
+msgstr ""
 
 msgid "unknown street"
 msgstr "calle desconocida"
@@ -1599,6 +1730,9 @@ msgstr "_Mostrar posición del cursor"
 msgid "_Lock on Road"
 msgstr "_Bloqueo en la ruta"
 
+msgid "_Follow Vehicle"
+msgstr ""
+
 msgid "_Keep orientation to the North"
 msgstr "Mantener _orientación al Norte"
 
@@ -1668,21 +1802,35 @@ msgstr "Taxi"
 msgid "Shopping"
 msgstr "Shopping"
 
-msgid "Select a search radius from screen center"
-msgstr "Distancia del centro de la pantalla"
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
 msgstr "POI %s. %s"
+
+#, c-format
+msgid "Set destination to %ld, %ld "
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld "
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld "
+msgstr ""
 
 msgid "POI search"
 msgstr "Búsqueda de puntos de interés"
 
 msgid "Select a category"
 msgstr "Elige una categoría"
-
-msgid "Select a distance to look for (km)"
-msgstr "Seleccione una distancia para buscar (km)"
 
 msgid "Select a POI"
 msgstr "Seleccionar un POI"
@@ -1696,8 +1844,8 @@ msgstr "Categoría"
 msgid "Direction"
 msgstr "Dirección"
 
-msgid "Distance(m)"
-msgstr "Distancia(m)"
+msgid "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "Nombre"
@@ -1741,6 +1889,10 @@ msgstr "3D"
 
 msgid "OT"
 msgstr "OT"
+
+#, c-format
+msgid "Route %4.1f%s    %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Ruta 0000km  0+00:00 TEL"
@@ -1950,11 +2102,20 @@ msgstr "Diseño"
 msgid "Height Profile"
 msgstr "Perfil de altura"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "Descripción de ruta"
 
 msgid "Show Locale"
 msgstr "Mostrar locale"
+
+msgid "Network info"
+msgstr ""
 
 msgid "Former Destinations"
 msgstr "Destinos anteriores"
@@ -1993,9 +2154,6 @@ msgstr "¡Atención! Radar"
 #. warning told
 msgid "Please decrease your speed"
 msgstr "Por favor, disminuya su velocidad"
-
-msgid "filenamePath"
-msgstr ""
 
 msgid "Vehicle Position"
 msgstr "Posición del vehículo"
@@ -2054,22 +2212,30 @@ msgstr "Pantalla completa"
 msgid "Window Mode"
 msgstr "Modo ventana"
 
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
+msgid "Layers"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr ""
+
 msgid "Description"
 msgstr "Descripción"
 
 msgid ""
-"Drop last \n"
+"Drop last\n"
 "Waypoint"
 msgstr ""
-"Quitar último \n"
-"Punto de ruta"
 
 msgid ""
-"Drop next \n"
+"Drop next\n"
 "Waypoint"
 msgstr ""
-"Quitar el siguiente \n"
-"Punto de ruta"
 
 msgid "Satellite Status"
 msgstr "Estado Satélites"
@@ -2097,6 +2263,14 @@ msgstr "Camión"
 msgid "Yes"
 msgstr "Sí"
 
+#. Android resource: @strings/cancel
+msgid "Cancel"
+msgstr ""
+
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "Iniciado Navit"
@@ -2114,21 +2288,12 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Gracias por instalar Navit!\n"
-"\n"
-"Para iniciar, seleccione \"Descarga de mapas\" del menú para descargar un "
-"mapa. Nota: El tamaño del mapa puede ser grande (>50 MB) - se recomienda una "
-"conexión Wi-Fi.\n"
-"\n"
-"Mapdata: (c) OpenStreetMap contributors\n"
-"\n"
-"Disfruta de Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2170,6 +2335,14 @@ msgstr "Establecer ubicación en mapa"
 msgid "Route to here"
 msgstr "Ruta hasta aquí"
 
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
+
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "¿Borrar este mapa?"
@@ -2202,6 +2375,12 @@ msgstr "Descarga de mapa interrumpida"
 msgid "Not enough free space"
 msgstr "No hay suficiente espacio libre"
 
+#. Android resource: @strings/map_download_oversize
+msgid ""
+"Sorry, we currently do not support maps above 3.8G on Android, please select "
+"a smaller one."
+msgstr ""
+
 #. Android resource: @strings/map_no_fix
 msgid "No location. Reopen after location fix."
 msgstr "Sin localización. Reabra tras fijar localización."
@@ -2209,6 +2388,34 @@ msgstr "Sin localización. Reabra tras fijar localización."
 #. Android resource: @strings/maps_for_current_location
 msgid "Maps containing current location"
 msgstr "Mapas que contienen localización actual"
+
+#. Android resource: @strings/maps_installed
+msgid "Installed maps"
+msgstr ""
+
+#. Android resource: @strings/map_downloading
+msgid "downloading"
+msgstr ""
+
+#. Android resource: @strings/map_download_medium_unavailable
+msgid "Media selected for map storage is not available"
+msgstr ""
+
+#. Android resource: @strings/map_download_error_writing_map
+msgid "Error writing map!"
+msgstr ""
+
+#. Android resource: @strings/map_location_changed
+#, c-format
+msgid "New location set to %s Restart Navit to apply the changes."
+msgstr ""
+
+#. Android resource: @strings/map_location_unavailable
+#, c-format
+msgid ""
+"Current map location %s is not available Please restart Navit after you "
+"attach an SD card or select a different map location."
+msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2226,9 +2433,11 @@ msgstr "Coincidencia parcial en la dirección"
 msgid "Search"
 msgstr "Búsqueda"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "Buscando…"
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2265,14 +2474,6 @@ msgstr "Elija una acción"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "Por favor, introduzca una tarjeta SD"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "Creando copia de seguridad"
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "Recuperando..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2336,460 +2537,560 @@ msgstr ""
 "El sintetizador seleccionado actualmente informa de que no puede hablar en "
 "su idioma. ¿Desea ver el diálogo de descarga de voces del sistema?"
 
-#~ msgid "Distance from screen center (km)"
-#~ msgstr "Distancia del centro de la pantalla (km)"
-
-msgid "Asia"
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
 msgstr ""
 
-msgid "Pays-de-la-Loire"
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
 msgstr ""
 
-msgid "Florida"
-msgstr ""
-
-msgid "Arizona"
-msgstr ""
-
-msgid "Poitou-Charentes"
-msgstr ""
-
-msgid "Centre"
-msgstr ""
-
-msgid "Berlin"
-msgstr ""
-
-msgid "Azores"
-msgstr ""
-
-#, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
-
-msgid "Cumbria"
-msgstr ""
-
-msgid "Montana"
-msgstr ""
-
+#. Android resource: @strings/whole_planet
 msgid "Whole Planet"
 msgstr ""
 
-msgid "Essex"
-msgstr ""
-
-msgid "Rheinland-Pfalz"
-msgstr ""
-
-msgid "New South Wales"
-msgstr ""
-
-msgid "Nevada"
-msgstr ""
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr ""
-
-msgid "Herefordshire"
-msgstr ""
-
-msgid "Oregon"
-msgstr ""
-
-msgid "Map download aborted!"
-msgstr ""
-
-msgid "Aquitaine"
-msgstr ""
-
-#, c-format
-msgid "Set destination to %ld, %ld \n"
-msgstr ""
-
-#, c-format
-msgid "Set map to %ld, %ld \n"
-msgstr ""
-
-#, c-format
-msgid "Set next visit to %ld, %ld \n"
-msgstr ""
-
-msgid "Suffolk"
-msgstr ""
-
-msgid "Bremen"
-msgstr ""
-
-msgid "Norfolk"
-msgstr ""
-
-#, c-format
-msgid "Using config file '%s'\n"
-msgstr ""
-
-msgid "South"
-msgstr ""
-
-msgid "partial match"
-msgstr ""
-
-msgid "Hawaii"
-msgstr ""
-
-msgid "Media selected for map storage is not available"
-msgstr ""
-
-msgid "Unterfranken"
-msgstr ""
-
-msgid "Hamburg"
-msgstr ""
-
-msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
-
-msgid "Utah"
-msgstr ""
-
-msgid ""
-"Current map location %s is not available\n"
-"Please restart Navit after you attach an SD card or select a different map "
-"location."
-msgstr ""
-
-msgid "Downloaded maps"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid ""
-"Sorry, we currently do not support maps above 3.8G on Android, please select "
-"a smaller one."
-msgstr ""
-
-msgid "Oceania"
-msgstr ""
-
-msgid "Korea"
-msgstr ""
-
-msgid "UAE+Other"
-msgstr ""
-
-msgid "Europe"
-msgstr ""
-
-msgid "Victoria"
-msgstr ""
-
-msgid "Taiwan"
-msgstr ""
-
-msgid "Tasmania"
-msgstr ""
-
-msgid "Alsace"
-msgstr ""
-
-msgid "Bourgogne"
-msgstr ""
-
-msgid "Basse-Normandie"
-msgstr ""
-
-msgid "Auvergne"
-msgstr ""
-
-msgid "Bretagne"
-msgstr ""
-
-msgid "Corse"
-msgstr ""
-
-msgid "Haute-Normandie"
-msgstr ""
-
-msgid "Midi-Pyrenees"
-msgstr ""
-
-msgid "Languedoc-Roussillon"
-msgstr ""
-
-msgid "Limousin"
-msgstr ""
-
-msgid "Ile-de-France"
-msgstr ""
-
-msgid "Nord-pas-de-Calais"
-msgstr ""
-
-msgid "Lorraine"
-msgstr ""
-
-msgid "Picardie"
-msgstr ""
-
-msgid "Niedersachsen"
-msgstr ""
-
-msgid "Saarland"
-msgstr ""
-
-msgid "Sachsen-Anhalt"
-msgstr ""
-
-msgid "Scandinavia"
-msgstr ""
-
-msgid "Thueringen"
-msgstr ""
-
-msgid "Mallorca"
-msgstr ""
-
-msgid "England"
-msgstr ""
-
-msgid "Galicia"
-msgstr ""
-
-msgid "Sachsen"
-msgstr ""
-
-msgid "Schleswig-Holstein"
-msgstr ""
-
-msgid "USA"
-msgstr ""
-
-msgid "Michigan"
-msgstr ""
-
-msgid "Northeast"
-msgstr ""
-
-msgid "Pacific"
-msgstr ""
-
-msgid "Virginia"
-msgstr ""
-
-msgid "West"
-msgstr ""
-
-msgid "downloading"
-msgstr ""
-
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
-
-msgid "Crete"
-msgstr ""
-
-msgid "Bayern"
-msgstr ""
-
-msgid "Brandenburg"
-msgstr ""
-
-msgid "Rhone-Alpes"
-msgstr ""
-
-msgid "Maryland"
-msgstr ""
-
-msgid "Canary Islands"
-msgstr ""
-
-msgid "Cambridgeshire"
-msgstr ""
-
-msgid "Nordrhein-westfalen"
-msgstr ""
-
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-
-#, c-format
-msgid "Error parsing config file '%s': %s\n"
-msgstr ""
-
+#. Android resource: @strings/africa
 msgid "Africa"
 msgstr ""
 
-msgid ""
-"New location set to %s\n"
-"Restart Navit to apply the changes."
+#. Android resource: @strings/canary_islands
+msgid "Canary Islands"
 msgstr ""
 
-msgid "Franche-Comte"
+#. Android resource: @strings/asia
+msgid "Asia"
 msgstr ""
 
-msgid "Oberpfalz"
+#. Android resource: @strings/taiwan
+msgid "Taiwan"
 msgstr ""
 
-msgid "Oberbayern"
+#. Android resource: @strings/korea
+msgid "Korea"
 msgstr ""
 
-msgid "Baden-Wuerttemberg"
+#. Android resource: @strings/uae_other
+msgid "UAE+Other"
 msgstr ""
 
-msgid "Schwaben"
+#. Android resource: @strings/oceania
+msgid "Oceania"
 msgstr ""
 
-msgid "Niederbayern"
+#. Android resource: @strings/tasmania
+msgid "Tasmania"
 msgstr ""
 
-msgid "BeNeLux"
+#. Android resource: @strings/victoria
+msgid "Victoria"
 msgstr ""
 
+#. Android resource: @strings/new_south_wales
+msgid "New South Wales"
+msgstr ""
+
+#. Android resource: @strings/europe
+msgid "Europe"
+msgstr ""
+
+#. Android resource: @strings/western_europe
 msgid "Western Europe"
 msgstr ""
 
-msgid "Provence-Alpes-Cote-d-Azur"
+#. Android resource: @strings/azores
+msgid "Azores"
 msgstr ""
 
-msgid "Mittelfranken"
+#. Android resource: @strings/benelux
+msgid "BeNeLux"
 msgstr ""
 
-msgid "Mecklenburg-Vorpommern"
+#. Android resource: @strings/alsace
+msgid "Alsace"
 msgstr ""
 
-msgid "Leicestershire"
+#. Android resource: @strings/aquitaine
+msgid "Aquitaine"
 msgstr ""
 
-msgid "Lancashire"
+#. Android resource: @strings/auvergne
+msgid "Auvergne"
 msgstr ""
 
-msgid "Kent"
+#. Android resource: @strings/centre
+msgid "Centre"
 msgstr ""
 
-msgid "Hessen"
+#. Android resource: @strings/bretagne
+msgid "Bretagne"
 msgstr ""
 
-msgid "East yorkshire with hull"
+#. Android resource: @strings/bourgogne
+msgid "Bourgogne"
 msgstr ""
 
-msgid "Buckinghamshire"
+#. Android resource: @strings/basse_normandie
+msgid "Basse-Normandie"
 msgstr ""
 
-msgid "Shropshire"
-msgstr ""
-
-msgid "Wiltshire"
-msgstr ""
-
-msgid "Oxfordshire"
-msgstr ""
-
-msgid "Surrey"
-msgstr ""
-
-msgid "Scotland"
-msgstr ""
-
-msgid "Somerset"
-msgstr ""
-
-msgid "Nottinghamshire"
-msgstr ""
-
-msgid "South yorkshire"
-msgstr ""
-
-msgid "Wales"
-msgstr ""
-
-msgid "Alaska"
-msgstr ""
-
-msgid "Midwest"
-msgstr ""
-
-msgid "Massachusetts"
-msgstr ""
-
-msgid "North America"
-msgstr ""
-
-msgid "District of Columbia"
-msgstr ""
-
-msgid "Louisiana"
-msgstr ""
-
-msgid "Mississippi"
-msgstr ""
-
-msgid "West Virginia"
-msgstr ""
-
-msgid "Vermont"
-msgstr ""
-
-msgid "Arkansas"
-msgstr ""
-
-msgid "Idaho"
-msgstr ""
-
-msgid "California"
-msgstr ""
-
-msgid "Texas"
-msgstr ""
-
-msgid "Colorado"
-msgstr ""
-
-msgid "Oklahoma"
-msgstr ""
-
-msgid "Guyane Francaise"
-msgstr ""
-
-msgid "Error writing map!"
-msgstr ""
-
-msgid "Error downloading map!"
-msgstr ""
-
-msgid "South+Middle America"
-msgstr ""
-
-msgid "New Mexico"
-msgstr ""
-
-msgid "Washington State"
-msgstr ""
-
-msgid "Oberfranken"
-msgstr ""
-
+#. Android resource: @strings/champagne_ardenne
 msgid "Champagne-Ardenne"
 msgstr ""
 
+#. Android resource: @strings/corse
+msgid "Corse"
+msgstr ""
+
+#. Android resource: @strings/franche_comte
+msgid "Franche-Comte"
+msgstr ""
+
+#. Android resource: @strings/haute_normandie
+msgid "Haute-Normandie"
+msgstr ""
+
+#. Android resource: @strings/ile_de_france
+msgid "Ile-de-France"
+msgstr ""
+
+#. Android resource: @strings/languedoc_roussillon
+msgid "Languedoc-Roussillon"
+msgstr ""
+
+#. Android resource: @strings/limousin
+msgid "Limousin"
+msgstr ""
+
+#. Android resource: @strings/lorraine
+msgid "Lorraine"
+msgstr ""
+
+#. Android resource: @strings/midi_pyrenees
+msgid "Midi-Pyrenees"
+msgstr ""
+
+#. Android resource: @strings/nord_pas_de_calais
+msgid "Nord-pas-de-Calais"
+msgstr ""
+
+#. Android resource: @strings/pays_de_la_loire
+msgid "Pays-de-la-Loire"
+msgstr ""
+
+#. Android resource: @strings/picardie
+msgid "Picardie"
+msgstr ""
+
+#. Android resource: @strings/poitou_charentes
+msgid "Poitou-Charentes"
+msgstr ""
+
+#. Android resource: @strings/provence_alpes_cote_d_azur
+msgid "Provence-Alpes-Cote-d-Azur"
+msgstr ""
+
+#. Android resource: @strings/rhone_alpes
+msgid "Rhone-Alpes"
+msgstr ""
+
+#. Android resource: @strings/baden_wuerttemberg
+msgid "Baden-Wuerttemberg"
+msgstr ""
+
+#. Android resource: @strings/bayern
+msgid "Bayern"
+msgstr ""
+
+#. Android resource: @strings/mittelfranken
+msgid "Mittelfranken"
+msgstr ""
+
+#. Android resource: @strings/niederbayern
+msgid "Niederbayern"
+msgstr ""
+
+#. Android resource: @strings/oberbayern
+msgid "Oberbayern"
+msgstr ""
+
+#. Android resource: @strings/oberfranken
+msgid "Oberfranken"
+msgstr ""
+
+#. Android resource: @strings/oberpfalz
+msgid "Oberpfalz"
+msgstr ""
+
+#. Android resource: @strings/schwaben
+msgid "Schwaben"
+msgstr ""
+
+#. Android resource: @strings/unterfranken
+msgid "Unterfranken"
+msgstr ""
+
+#. Android resource: @strings/berlin
+msgid "Berlin"
+msgstr ""
+
+#. Android resource: @strings/brandenburg
+msgid "Brandenburg"
+msgstr ""
+
+#. Android resource: @strings/bremen
+msgid "Bremen"
+msgstr ""
+
+#. Android resource: @strings/hamburg
+msgid "Hamburg"
+msgstr ""
+
+#. Android resource: @strings/hessen
+msgid "Hessen"
+msgstr ""
+
+#. Android resource: @strings/mecklenburg_vorpommern
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+#. Android resource: @strings/niedersachsen
+msgid "Niedersachsen"
+msgstr ""
+
+#. Android resource: @strings/nordrhein_westfalen
+msgid "Nordrhein-westfalen"
+msgstr ""
+
+#. Android resource: @strings/rheinland_pfalz
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+#. Android resource: @strings/saarland
+msgid "Saarland"
+msgstr ""
+
+#. Android resource: @strings/sachsen_anhalt
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+#. Android resource: @strings/sachsen
+msgid "Sachsen"
+msgstr ""
+
+#. Android resource: @strings/schleswig_holstein
+msgid "Schleswig-Holstein"
+msgstr ""
+
+#. Android resource: @strings/thueringen
+msgid "Thueringen"
+msgstr ""
+
+#. Android resource: @strings/mallorca
+msgid "Mallorca"
+msgstr ""
+
+#. Android resource: @strings/galicia
+msgid "Galicia"
+msgstr ""
+
+#. Android resource: @strings/scandinavia
+msgid "Scandinavia"
+msgstr ""
+
+#. Android resource: @strings/england
+msgid "England"
+msgstr ""
+
+#. Android resource: @strings/buckinghamshire
+msgid "Buckinghamshire"
+msgstr ""
+
+#. Android resource: @strings/cambridgeshire
+msgid "Cambridgeshire"
+msgstr ""
+
+#. Android resource: @strings/cumbria
+msgid "Cumbria"
+msgstr ""
+
+#. Android resource: @strings/east_yorkshire_with_hull
+msgid "East yorkshire with hull"
+msgstr ""
+
+#. Android resource: @strings/essex
+msgid "Essex"
+msgstr ""
+
+#. Android resource: @strings/herefordshire
+msgid "Herefordshire"
+msgstr ""
+
+#. Android resource: @strings/kent
+msgid "Kent"
+msgstr ""
+
+#. Android resource: @strings/lancashire
+msgid "Lancashire"
+msgstr ""
+
+#. Android resource: @strings/leicestershire
+msgid "Leicestershire"
+msgstr ""
+
+#. Android resource: @strings/norfolk
+msgid "Norfolk"
+msgstr ""
+
+#. Android resource: @strings/nottinghamshire
+msgid "Nottinghamshire"
+msgstr ""
+
+#. Android resource: @strings/oxfordshire
+msgid "Oxfordshire"
+msgstr ""
+
+#. Android resource: @strings/shropshire
+msgid "Shropshire"
+msgstr ""
+
+#. Android resource: @strings/somerset
+msgid "Somerset"
+msgstr ""
+
+#. Android resource: @strings/south_yorkshire
+msgid "South yorkshire"
+msgstr ""
+
+#. Android resource: @strings/suffolk
+msgid "Suffolk"
+msgstr ""
+
+#. Android resource: @strings/surrey
+msgid "Surrey"
+msgstr ""
+
+#. Android resource: @strings/wiltshire
+msgid "Wiltshire"
+msgstr ""
+
+#. Android resource: @strings/scotland
+msgid "Scotland"
+msgstr ""
+
+#. Android resource: @strings/wales
+msgid "Wales"
+msgstr ""
+
+#. Android resource: @strings/crete
+msgid "Crete"
+msgstr ""
+
+#. Android resource: @strings/north_america
+msgid "North America"
+msgstr ""
+
+#. Android resource: @strings/alaska
+msgid "Alaska"
+msgstr ""
+
+#. Android resource: @strings/hawaii
+msgid "Hawaii"
+msgstr ""
+
+#. Android resource: @strings/usa
+msgid "USA"
+msgstr ""
+
+#. Android resource: @strings/except_alaska_and_hawaii
+msgid "(except Alaska and Hawaii)"
+msgstr ""
+
+#. Android resource: @strings/midwest
+msgid "Midwest"
+msgstr ""
+
+#. Android resource: @strings/michigan
+msgid "Michigan"
+msgstr ""
+
+#. Android resource: @strings/ohio
 msgid "Ohio"
 msgstr ""
 
-#, c-format
-msgid "in %d m"
-msgstr "en %d m"
-
-#, c-format
-msgid "%d m"
-msgstr "%d m"
-
-msgid " (except Alaska and Hawaii)"
+#. Android resource: @strings/northeast
+msgid "Northeast"
 msgstr ""
+
+#. Android resource: @strings/massachusetts
+msgid "Massachusetts"
+msgstr ""
+
+#. Android resource: @strings/vermont
+msgid "Vermont"
+msgstr ""
+
+#. Android resource: @strings/pacific
+msgid "Pacific"
+msgstr ""
+
+#. Android resource: @strings/south
+msgid "South"
+msgstr ""
+
+#. Android resource: @strings/arkansas
+msgid "Arkansas"
+msgstr ""
+
+#. Android resource: @strings/district_of_columbia
+msgid "District of Columbia"
+msgstr ""
+
+#. Android resource: @strings/florida
+msgid "Florida"
+msgstr ""
+
+#. Android resource: @strings/louisiana
+msgid "Louisiana"
+msgstr ""
+
+#. Android resource: @strings/maryland
+msgid "Maryland"
+msgstr ""
+
+#. Android resource: @strings/mississippi
+msgid "Mississippi"
+msgstr ""
+
+#. Android resource: @strings/oklahoma
+msgid "Oklahoma"
+msgstr ""
+
+#. Android resource: @strings/texas
+msgid "Texas"
+msgstr ""
+
+#. Android resource: @strings/virginia
+msgid "Virginia"
+msgstr ""
+
+#. Android resource: @strings/west_virginia
+msgid "West Virginia"
+msgstr ""
+
+#. Android resource: @strings/west
+msgid "West"
+msgstr ""
+
+#. Android resource: @strings/arizona
+msgid "Arizona"
+msgstr ""
+
+#. Android resource: @strings/california
+msgid "California"
+msgstr ""
+
+#. Android resource: @strings/colorado
+msgid "Colorado"
+msgstr ""
+
+#. Android resource: @strings/idaho
+msgid "Idaho"
+msgstr ""
+
+#. Android resource: @strings/montana
+msgid "Montana"
+msgstr ""
+
+#. Android resource: @strings/new_mexico
+msgid "New Mexico"
+msgstr ""
+
+#. Android resource: @strings/nevada
+msgid "Nevada"
+msgstr ""
+
+#. Android resource: @strings/oregon
+msgid "Oregon"
+msgstr ""
+
+#. Android resource: @strings/utah
+msgid "Utah"
+msgstr ""
+
+#. Android resource: @strings/washington_state
+msgid "Washington State"
+msgstr ""
+
+#. Android resource: @strings/south_middle_america
+msgid "South+Middle America"
+msgstr ""
+
+#. Android resource: @strings/guyane_francaise
+msgid "Guyane Francaise"
+msgstr ""
+
+#~ msgid "Select a search radius from screen center"
+#~ msgstr "Distancia del centro de la pantalla"
+
+#~ msgid "Select a distance to look for (km)"
+#~ msgstr "Seleccione una distancia para buscar (km)"
+
+#~ msgid "Distance(m)"
+#~ msgstr "Distancia(m)"
+
+#~ msgid ""
+#~ "Drop last \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Quitar último \n"
+#~ "Punto de ruta"
+
+#~ msgid ""
+#~ "Drop next \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Quitar el siguiente \n"
+#~ "Punto de ruta"
+
+#~ msgid ""
+#~ "Thank you for installing Navit!\n"
+#~ "\n"
+#~ "To start, select \"Download maps\" from the menu to download a map. Note: "
+#~ "The map filesize may be large (>50MB) - a wifi connection is "
+#~ "recommended.\n"
+#~ "\n"
+#~ "Mapdata: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Enjoy Navit!"
+#~ msgstr ""
+#~ "Gracias por instalar Navit!\n"
+#~ "\n"
+#~ "Para iniciar, seleccione \"Descarga de mapas\" del menú para descargar un "
+#~ "mapa. Nota: El tamaño del mapa puede ser grande (>50 MB) - se recomienda "
+#~ "una conexión Wi-Fi.\n"
+#~ "\n"
+#~ "Mapdata: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Disfruta de Navit!"
+
+#~ msgid "Searching..."
+#~ msgstr "Buscando…"
+
+#~ msgid "Backing up..."
+#~ msgstr "Creando copia de seguridad"
+
+#~ msgid "Restoring..."
+#~ msgstr "Recuperando..."
+
+#~ msgid "Distance from screen center (km)"
+#~ msgstr "Distancia del centro de la pantalla (km)"
+
+#, c-format
+#~ msgid "in %d m"
+#~ msgstr "en %d m"
+
+#, c-format
+#~ msgid "%d m"
+#~ msgstr "%d m"
