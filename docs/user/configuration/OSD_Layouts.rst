@@ -1010,7 +1010,7 @@ LCARS v0.1 (Startrek TNG)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This OSD does not scale so well, so use the
-`resizer <http://wiki.navit-project.org/index.php/OSD_Layouts#Layout_scaler_for_different_screen_sizes>`__
+`resizer <Layout scaler for different screen sizes>`__
 if you need to. It also makes use of empty.svg which it expects in the
 default image location of navit (included in lcars directory of the tar)
 
@@ -2185,7 +2185,7 @@ the bottom left corner.
   (= arrows), leave them out and just use the "design"-files.
 | An additional Menu-Configuration optimized for 240x240 Display will be
   found here:
-| http://wiki.navit-project.org/index.php/Internal_GUI/Menu_configurations#QVGA_Square_.28240x240.29_Configuration_1_.28German.29
+| `_qvga_square_240x240_configuration_1_german`__
 
 +----------------------------------------------------------------------+
 | Layout XML for Treo 750 QVGA Square                                  |

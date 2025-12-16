@@ -179,8 +179,7 @@ navit-project.org)
 
    -  With the distance OSD element, you can display the distance only,
       units only or distance and units together. No such option for
-      speed. See http://wiki.navit-project.org/index.php/OSD#text.
-      --`Tiiiim <User:Tiiiim>`__ 14:14, 7 April 2010 (UTC)
+      speed. See :doc:`/user/configuration/OSD:text`__.
 
 ::
 
