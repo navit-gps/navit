@@ -10,8 +10,9 @@
 # metehyi https://launchpad.net/~metehyi
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
 "PO-Revision-Date: 2024-04-13 17:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -27,6 +28,10 @@ msgstr ""
 
 msgid "Running from source directory\n"
 msgstr "جاري التنفيذ من المجلد المصدر\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -221,6 +226,9 @@ msgstr "قريباً الدخول إلى المستديرة"
 msgid "Enter the roundabout %s"
 msgstr "ادخل الدائرة بعد  %s"
 
+msgid "then enter the roundabout"
+msgstr ""
+
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
 msgid "Leave the roundabout at the %1$s %2$s"
@@ -325,6 +333,10 @@ msgid "strongly "
 msgstr "بكل شدة "
 
 #, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "خذ الطريق %1$s إلى ال%2$s"
 
@@ -394,8 +406,14 @@ msgstr "الأمر"
 msgid "Length"
 msgstr "الطول"
 
+msgid "mi"
+msgstr ""
+
 msgid "km"
 msgstr "كلم"
+
+msgid "feet"
+msgstr ""
 
 msgid "m"
 msgstr "م."
@@ -1507,6 +1525,10 @@ msgstr "واليس و فوتونا"
 msgid "Samoa"
 msgstr "ساموا"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "اليمن"
@@ -1541,6 +1563,25 @@ msgid ""
 "level.\n"
 "\t-h: print this usage info and exit.\n"
 "\t-v: print the version and exit.\n"
+msgstr ""
+
+#. We have not found an existing config file from all possibilities
+msgid "No config file navit.xml, navit.xml.local found"
+msgstr ""
+
+#, c-format
+msgid "Error parsing config file '%s': %s"
+msgstr ""
+
+#, c-format
+msgid "Using config file '%s'"
+msgstr ""
+
+#, c-format
+msgid "Error: No configuration found in config file '%s'"
+msgstr ""
+
+msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 
 msgid "unknown street"
@@ -1681,6 +1722,9 @@ msgstr ""
 msgid "_Lock on Road"
 msgstr "إقفال على الطريق"
 
+msgid "_Follow Vehicle"
+msgstr ""
+
 msgid "_Keep orientation to the North"
 msgstr "_حافظ على الإتجاه شمالا"
 
@@ -1750,8 +1794,28 @@ msgstr ""
 msgid "Shopping"
 msgstr ""
 
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
+
 #, c-format
 msgid "POI %s. %s"
+msgstr ""
+
+#, c-format
+msgid "Set destination to %ld, %ld "
+msgstr ""
+
+#, c-format
+msgid "Set map to %ld, %ld "
+msgstr ""
+
+#, c-format
+msgid "Set next visit to %ld, %ld "
 msgstr ""
 
 msgid "POI search"
@@ -1770,6 +1834,9 @@ msgid "Category"
 msgstr ""
 
 msgid "Direction"
+msgstr ""
+
+msgid "Distance"
 msgstr ""
 
 msgid "Name"
@@ -1814,6 +1881,10 @@ msgstr "ثلاثي الأبعاد"
 
 msgid "OT"
 msgstr "OT"
+
+#, c-format
+msgid "Route %4.1f%s    %02d:%02d ETA"
+msgstr ""
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "الطريك 0000كلم  0+00:00 ETA"
@@ -2023,11 +2094,20 @@ msgstr "التصميم"
 msgid "Height Profile"
 msgstr "لمحة عن الإرتفاع"
 
+msgid "please install a map *.heightlines.bin to provide elevationdata"
+msgstr ""
+
+msgid "The route must cross at least 2 heightlines"
+msgstr ""
+
 msgid "Route Description"
 msgstr "وصف الطريق"
 
 msgid "Show Locale"
 msgstr "أعرض المحليات"
+
+msgid "Network info"
+msgstr ""
 
 msgid "Former Destinations"
 msgstr "الأهداف السابقة"
@@ -2122,8 +2202,30 @@ msgstr "ملء الشاشة"
 msgid "Window Mode"
 msgstr "نمط النافذة"
 
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
+msgid "Layers"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr ""
+
 msgid "Description"
 msgstr "الوصف"
+
+msgid ""
+"Drop last\n"
+"Waypoint"
+msgstr ""
+
+msgid ""
+"Drop next\n"
+"Waypoint"
+msgstr ""
 
 msgid "Satellite Status"
 msgstr "حالة القمر الأصطناعي"
@@ -2155,6 +2257,10 @@ msgstr "نعم"
 msgid "Cancel"
 msgstr "إلغاء"
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "نافيت بدء التشغيل"
@@ -2172,7 +2278,7 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
@@ -2218,6 +2324,14 @@ msgstr ""
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "الطريق إلى هنا"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2265,6 +2379,10 @@ msgstr ""
 msgid "Maps containing current location"
 msgstr "الخرائط المحتوية على الموقع الحالي"
 
+#. Android resource: @strings/maps_installed
+msgid "Installed maps"
+msgstr ""
+
 #. Android resource: @strings/map_downloading
 msgid "downloading"
 msgstr "يُنزّل"
@@ -2276,6 +2394,18 @@ msgstr ""
 #. Android resource: @strings/map_download_error_writing_map
 msgid "Error writing map!"
 msgstr "خطأ عند كتابة الخريطة!"
+
+#. Android resource: @strings/map_location_changed
+#, c-format
+msgid "New location set to %s Restart Navit to apply the changes."
+msgstr ""
+
+#. Android resource: @strings/map_location_unavailable
+#, c-format
+msgid ""
+"Current map location %s is not available Please restart Navit after you "
+"attach an SD card or select a different map location."
+msgstr ""
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2293,9 +2423,11 @@ msgstr ""
 msgid "Search"
 msgstr "إبحث"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "جاري البحث..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2332,14 +2464,6 @@ msgstr "اختر فعلاَ"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "الرجاء إدخال رقيقة أس دي"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "جاري النسخ الإحتياطي"
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "جاري الإستعادة"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2396,6 +2520,16 @@ msgid ""
 "Navit can use any text to speech engine installed on your device. The "
 "currently selected engine reports it is unable to speak in your language. "
 "Should we ask the system to show voice download dialog?"
+msgstr ""
+
+#. Android resource: @strings/permissions_not_granted
+msgid ""
+"Navit needs permission to access GPS and read the map.\n"
+"If you change your mind please restart Navit and grant the permissions"
+msgstr ""
+
+#. Android resource: @strings/permissions_info_box_title
+msgid "One or more ungranted permissions"
 msgstr ""
 
 #. Android resource: @strings/whole_planet
@@ -2754,6 +2888,10 @@ msgstr "هاواي"
 msgid "USA"
 msgstr "الوﻻيات المتحدة الامريكية"
 
+#. Android resource: @strings/except_alaska_and_hawaii
+msgid "(except Alaska and Hawaii)"
+msgstr ""
+
 #. Android resource: @strings/midwest
 msgid "Midwest"
 msgstr "وسط الغرب"
@@ -2878,103 +3016,11 @@ msgstr "جنوب و وسط امريكا"
 msgid "Guyane Francaise"
 msgstr "غويانا الفرنسية"
 
-#, c-format
-msgid "Using config file '%s'\n"
-msgstr ""
+#~ msgid "Searching..."
+#~ msgstr "جاري البحث..."
 
-msgid ""
-"New location set to %s\n"
-"Restart Navit to apply the changes."
-msgstr ""
+#~ msgid "Backing up..."
+#~ msgstr "جاري النسخ الإحتياطي"
 
-#, c-format
-msgid "Set map to %ld, %ld \n"
-msgstr ""
-
-msgid "filenamePath"
-msgstr ""
-
-#, c-format
-msgid "%d m"
-msgstr ""
-
-msgid "Map download aborted!"
-msgstr ""
-
-msgid " (except Alaska and Hawaii)"
-msgstr ""
-
-msgid ""
-"Current map location %s is not available\n"
-"Please restart Navit after you attach an SD card or select a different map "
-"location."
-msgstr ""
-
-#. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
-#, c-format
-msgid "then leave the roundabout at the %1$s %2$s"
-msgstr ""
-
-#, c-format
-msgid "Error: No configuration found in config file '%s'\n"
-msgstr ""
-
-#, c-format
-msgid "Error parsing config file '%s': %s\n"
-msgstr ""
-
-#. We have not found an existing config file from all possibilities
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages.\n"
-msgstr ""
-
-msgid "Error downloading map!"
-msgstr ""
-
-msgid "partial match"
-msgstr ""
-
-msgid "Map data (c) OpenStreetMap contributors, ODBL"
-msgstr ""
-
-msgid "Downloaded maps"
-msgstr ""
-
-msgid ""
-"Drop last \n"
-"Waypoint"
-msgstr ""
-
-#, c-format
-msgid "in %d m"
-msgstr ""
-
-#, c-format
-msgid "Set destination to %ld, %ld \n"
-msgstr ""
-
-#, c-format
-msgid "Set next visit to %ld, %ld \n"
-msgstr ""
-
-msgid "Select a distance to look for (km)"
-msgstr ""
-
-msgid ""
-"Drop next \n"
-"Waypoint"
-msgstr ""
-
-# TRANSLATORS: This is the distance to a Point of Interest (POI) in the POI window. It will be feet (imperial) or, meters (metric), depending on the user's preference.
-msgid "Distance(m)"
-msgstr ""
-
-#, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
-
-msgid "Select a search radius from screen center"
-msgstr ""
+#~ msgid "Restoring..."
+#~ msgstr "جاري الإستعادة"
