@@ -9,44 +9,11 @@ set -e
 # Note: it uses git's mailmap functionnality to get a clean list of users
 # ###########################################################################################################
 
-declare -A CONTRIBUTORS=()
-declare -a authors=()
-TWO_YEARS_AGO=$(date +%s --date="2 years ago")
-retiredTitleWritten=false
+recentcontributors=$(git log --after="2 years ago" --encoding=utf-8 --full-history --date=short --use-mailmap "--format=format:%aN"  | sort  -fu)
+allcontributors=$(git log  --encoding=utf-8 --full-history --date=short --use-mailmap "--format=format:%aN"|sort -fu)
 
-git log --encoding=utf-8 --full-history --date=short --use-mailmap "--format=format:%ad;%aN" |
-{
-  echo "# Active contributors:" > AUTHORS
-  while read -r line; do
-    IFS=';'; arrLine=($line); unset IFS;
-    author=${arrLine[1]}
-    commitDate=$(date +%s --date="${arrLine[0]}")
 
-    # Exclude circleci
-    if [[ $author =~ [Cc]ircle[[:space:]]*[Cc][Ii] ]]; then
-      continue
-    fi
-
-    # indicates that the commits are now older than 2 years so we print the
-    # sorted list of active contributors and reset the authors array
-    if [ "$retiredTitleWritten" = false ]; then
-      if [ $TWO_YEARS_AGO -ge $commitDate ]; then
-        IFS=$'\n' sorted=($(sort <<<"${authors[*]}"))
-        printf "%s\n" "${sorted[@]}" >> AUTHORS
-        authors=()
-        echo -e "\n# Retired contributors:" >> AUTHORS
-        retiredTitleWritten=true
-      fi
-    fi
-
-    # using the map as an easy way to check if the author has already been listed
-    if [ -z "${CONTRIBUTORS[${author}]}" ]; then
-      CONTRIBUTORS[${author}]=${arrLine[0]}
-      authors+=("${author}")
-    fi
-  done
-  # We are still in the subprocess scope so we can print the sorted list of
-  # retired contributors
-  IFS=$'\n' sorted=($(sort <<<"${authors[*]}"))
-  printf "%s\n" "${sorted[@]}" >> AUTHORS
-}
+echo "# Active contributors:" > AUTHORS
+echo "$recentcontributors" >> AUTHORS
+echo -e "\n# Retired contributors:" >> AUTHORS
+echo -e "$recentcontributors\n$allcontributors" |sort | uniq -u >> AUTHORS
