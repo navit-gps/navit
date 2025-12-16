@@ -106,7 +106,7 @@ Test the customized startup with unlock, and automatic launch of navit
       -  In case the COM port or baudrate that you set above is
          different from the line in ``navit.xml``, you will have to
          update ``navit.xml`` with the correct values as detailed
-         `here <https://wiki.navit-project.org/index.php/WinCE#GPS_Receiver>`__
+         :doc:`/user/platforms/maintained/wince`
 
 -  Exit SirfTech. Navit should show up. Have fun!
 

@@ -24,9 +24,9 @@ The [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Repor
 Maps
 ====
 
-[OpenStreetMap](https://wiki.navit-project.org/index.php/OpenStreetMap) — display, routing, incomplete street-name search. \
-[Grosser Reiseplaner](https://wiki.navit-project.org/index.php/Marco_Polo_Grosser_Reiseplaner) and compliant maps — full support. \
-[Garmin maps](https://wiki.navit-project.org/index.php/Garmin_maps) —display, routing, search is being worked on.
+[OpenStreetMap](https://navit.readthedocs.io/en/latest/user/configuration/maps/OpenStreetMap.html) — display, routing, incomplete street-name search. \
+[Grosser Reiseplaner](https://navit.readthedocs.io/en/latest/user/configuration/maps/Marco%20Polo%20Grosser%20Reiseplaner.html) and compliant maps — full support. \
+[Garmin maps](https://navit.readthedocs.io/en/latest/user/configuration/maps/Garmin%20maps.html) —display, routing, search is being worked on.
 
 GPS Support
 ===========

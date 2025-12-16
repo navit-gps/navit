@@ -1,5 +1,5 @@
-Basic Configuration
-===================
+Quickstart guide
+================
 
 Basics
 ''''''
@@ -95,7 +95,7 @@ On Navit's very first startup, it needs a **center** to look at on the map. By d
 
    <navit center="4808 N 1134 E" />
 
-See furthermore: :doc:`general`
+See furthermore: :doc:`basic/general`
 
 
 Setup GPS
@@ -106,7 +106,7 @@ Add the GPS connection
 
    <vehicle name="My" enabled="yes" source="file://dev/ttyS0" active="1"/>
 
-See furthermore: :doc:`vehicle`
+See furthermore: :doc:`basic/vehicle`
 
 
 Enable Map
@@ -127,14 +127,21 @@ There are many more options, including debugging, specific plugins, speech annou
 See :doc:`advanced`
 
 .. toctree::
-   :glob:
-   :maxdepth: 2
    :hidden:
 
-   general
-   display
-   vehicle
-   maps
-   layout
-   basic/*
 
+   basic/general
+   basic/display
+   basic/vehicle
+   basic/maps
+   basic/layout
+
+:doc:`basic/general`
+
+:doc:`basic/display`
+
+:doc:`basic/vehicle`
+
+:doc:`basic/maps`
+
+:doc:`basic/layout`

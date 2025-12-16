@@ -1010,7 +1010,7 @@ LCARS v0.1 (Startrek TNG)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This OSD does not scale so well, so use the
-`resizer <Layout scaler for different screen sizes>`__
+`resizer <Scaler>`__
 if you need to. It also makes use of empty.svg which it expects in the
 default image location of navit (included in lcars directory of the tar)
 

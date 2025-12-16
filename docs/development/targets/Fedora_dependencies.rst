@@ -51,4 +51,4 @@ Installing all dependencies
 
 
 Now continue and follow compilation instructions on:
-http://wiki.navit-project.org/index.php/NavIt_on_Linux
+:doc:`/development/targets/linux_development`

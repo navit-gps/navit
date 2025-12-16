@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
 	For configuration options used in this file, please read
-	http://wiki.navit-project.org/index.php/Configuration
+	https://navit.readthedocs.io/en/latest/user/configuration/advanced.html
 	Do not edit /usr/share/navit/navit.xml or /etc/navit/navit.xml :
 	changes would be lost on upgrade. Rather copy it to ~/.navit/.
 -->
@@ -31,7 +31,7 @@
 	It will only be used for the first start; subsequent starts will remember the
 	last position (in center.txt).
 	Center coordinates format: "Long Lat" in decimal degrees (WGS 84).
-	For other formats see http://wiki.navit-project.org/index.php/Coordinate_format.
+	For other formats see https://navit.readthedocs.io/en/latest/user/configuration/Coordinate%20format.html.
 	-->
 	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. On windows systems, use win32 -->
@@ -187,7 +187,7 @@ Waypoint</text></img>
 		<log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
 		<!-- osd items allow to position display and control items directly on top of the map.
 		You can find a list of all the available OSDs items here:
-		http://wiki.navit-project.org/index.php/OSD -->
+		https://navit.readthedocs.io/en/latest/user/configuration/OSD.html -->
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/>
 
@@ -407,7 +407,7 @@ Waypoint</text></img>
 		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!--
 		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
-		See http://wiki.navit-project.org/index.php/Configuration for details.
+		See https://navit.readthedocs.io/en/latest/user/configuration/advanced/options.html#prerecorded-samples for details.
 
 		<speech type="cmdline" data="aplay -q %s"
 		sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
