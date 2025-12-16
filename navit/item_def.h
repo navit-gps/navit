@@ -17,8 +17,6 @@
  * Boston, MA  02110-1301, USA.
  */
 
-/* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page
- * instead */
 #ifndef ITEM
 #    define ITEM(x) extern##x;
 #endif
