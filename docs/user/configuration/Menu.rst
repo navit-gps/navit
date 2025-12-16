@@ -3,8 +3,7 @@ Menu
 
 The Menu of Navit has the following main views and settings for
 navigation and trips. This survey about the menu is not reflecting
-`Navit's main
-menu <http://wiki.navit-project.org/index.php/Internal_GUI#Main_Menu>`__
+:ref:`Navit's mainmenu <main_menu>`
 resp. the structure of the `Internal GUI <Internal_GUI>`__. This wiki
 article highlights the main `Use
 Cases <http://en.wikipedia.org/wiki/Use_case>`__ and possible future

@@ -137,6 +137,7 @@ options <Configuration/Full_list_of_options#gui>`__ for details.
 *Support for rotary encoders was added in December 2015, and
 hide_impossible_next_keys in February 2017.*
 
+.. _main_menu:
 
 Main Menu
 ---------

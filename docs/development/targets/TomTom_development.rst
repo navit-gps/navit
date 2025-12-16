@@ -365,7 +365,7 @@ telling tslib which driver to use. Copy it into navit/ts:
 tslib comes with some utilities for touchscreen devices, such as
 calibration and testing tools. When you followed the procedure described
 above for compiling and installing tslib, you can find them in
-$PREFIX/bin - easily recognizable, because their names start with "ts_".
+$PREFIX/bin - easily recognizable, because their names start with "ts\_".
 If you wish to use them on your TomTom, simply copy them into the
 navit/ts folder:
 

@@ -82,7 +82,7 @@ extern struct tile_head {
  * actual data (coordinates and attributes) is stored in memory after
  * this struct as two arrays of type struct coord and struct attr_bin
  * respectively.
- * See also http://wiki.navit-project.org/index.php/Navit%27s_binary_map_driver .
+ * See also https://navit.readthedocs.io/en/latest/user/configuration/maps/binfile.html#content .
  * @see struct coord
  * @see struct attr_bin
  */

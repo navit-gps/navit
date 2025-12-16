@@ -3,10 +3,9 @@
 % endif
 All notable changes to this project will be documented in this file.
 
-Changes and documentation about Navit can be found in the wiki at:
-  http://wiki.navit-project.org
-A timeline of opened and closed issue tickets can be found at our trac instance:
-  http://trac.navit-project.org and on our github project:
+Changes and documentation about Navit can be found in the docs:
+  https://navit.readthedocs.io/en/latest/index.html
+Please Report Bugs on our github project:
   https://github.com/navit-gps/navit/issues
 
 Navit follows the semantic versioning:

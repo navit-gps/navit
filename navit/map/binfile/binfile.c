@@ -54,7 +54,7 @@ static int map_id;
  * <p>
  * See the Navit wiki for details on the binfile format:
  *
- * http://wiki.navit-project.org/index.php/Navit%27s_binary_map_driver
+ * https://navit.readthedocs.io/en/latest/user/configuration/maps/binfile.html#content
  * <p>
  * Note that this tile struct also maintains pointers to several current positions
  * inside the tile. These are not part of the actual tile data, but are

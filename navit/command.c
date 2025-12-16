@@ -885,8 +885,9 @@ static void command_call_function(struct context *ctx, struct result *res) {
                 callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
                 if (valid != 1) {
                     dbg(lvl_error,
-                        "invalid command ignored: \"%s\"; see http://wiki.navit-project.org/index.php/"
-                        "OSD#Navit_commands for valid commands.",
+                        "invalid command ignored: \"%s\"; see "
+                        "https://navit.readthedocs.io/en/latest/user/configuration/OSD.html#navit-commands"
+                        " for valid commands.",
                         function);
                 }
                 if (out && out[0]) {

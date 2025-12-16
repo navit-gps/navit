@@ -26,8 +26,7 @@ There are several ways of installing Navit to your Android devices:
 -  Manually install from apk's built nightly from the latest source code
    : `Nightly
    Builds <http://download.navit-project.org>`__''
--  Building Navit yourself from source : `Build from
-   Source <http://wiki.navit-project.org/index.php/Android_development>`__''
+-  Building Navit yourself from source : :doc:`Build from Source </development/targets/android>`''
 
 Manually installing from an apk means that you have the very latest
 features built into Navit, but requires you to install and update it
