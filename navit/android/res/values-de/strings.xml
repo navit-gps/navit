@@ -65,4 +65,16 @@
     <string name="select_backup">Sicherung auswählen</string>
     <string name="backup">Sicherung</string>
     <string name="restore">Wiederherstellung</string>
+    <string name="restore_failed">Wiederherstellung gescheitert</string>
+    <string name="TTS_title_data_missing">Sprachausgabe des Systems fehlt</string>
+    <string name="TTS_qery_install_data">Navit kann die Sprachausgabe Ihres Geräts verwenden. Die aktuell gewählte Ausgabe kann keine Sprache in der gewählten Sprache ausgeben. Soll der Systemdialog zum Herunterladen von Stimmdaten angezeigt werden?</string>
+    <string name="permissions_not_granted">Navit benötigt Berechtigungen für den Zugriff auf GPS und die Karten.\nFalls Sie sich umentscheiden, starten Sie bitte Navit neu und erteilen die Berechtigungen</string>
+    <string name="permissions_info_box_title">Es gibt eine oder mehr nicht erteilte Berechtigungen</string>
+    <string name="whole_planet">Gesamter Planet</string>
+    <string name="africa">Afrika</string>
+    <string name="angola">Angola</string>
+    <string name="burundi">Burundi</string>
+    <string name="canary_islands">Kanarische Inseln</string>
+    <string name="congo">Demokratische Republik Kongo</string>
+    <string name="ethiopia">Äthiopien</string>
 </resources>
