@@ -54,6 +54,8 @@ check_po || {
 	exit 2
 }
 
+git config --global --add safe.directory $(pwd)
+
 # List the files that are different from the trunk
 for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
     if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
