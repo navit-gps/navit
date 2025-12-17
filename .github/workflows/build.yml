@@ -7,7 +7,7 @@ jobs:
   sanity_check:
     runs-on: ubuntu-latest
     container:
-        image: navit/sanity_check:latest
+      image: ghcr.io/navit-gps/sanity_check:master
     steps:
         - uses: actions/checkout@v2
           with:
