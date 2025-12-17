@@ -3597,6 +3597,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
              * Iterate through items in the map.
              */
             while ((map_item = map_rect_get_item(mr))) {
+                if (!map_item)
+                    continue;
                 /* If item is not routable, continue */
                 if ((map_item->type < route_item_first) || (map_item->type > route_item_last))
                     continue;
@@ -3625,6 +3627,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
 
                     /* Skip already-matched items */
                     if (pitem->is_matched)
+                        continue;
+                    if (!map_item)
                         continue;
                     /* If IDs do not match, continue */
                     if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
