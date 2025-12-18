@@ -86,8 +86,10 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
             rc=$?
             if [[ $rc -ne 0 ]]; then
                 echo "[ERROR] Your ${f} file doesn't validate against the navit/navit.dtd using xmllint" >&2
+                exit 3
             fi
         fi
     fi
 done
 git diff
+exit $return_code
