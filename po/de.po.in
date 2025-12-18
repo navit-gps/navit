@@ -48,7 +48,7 @@ msgstr ""
 "Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 19:22+0100\n"
-"PO-Revision-Date: 2025-12-02 14:22+0000\n"
+"PO-Revision-Date: 2025-12-18 13:05+0000\n"
 "Last-Translator: Christof Schulze <christof.schulze@gmx.net>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.15.1-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -353,7 +353,7 @@ msgstr "scharf "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "dann die %1$s Straße %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -1598,22 +1598,22 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
-msgstr ""
+msgstr "Konfigurationsdatei nicht gefunden"
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
-msgstr ""
+msgstr "Fehler beim Lesen der Konfigurationsdatei '%s': %s"
 
 #, c-format
 msgid "Using config file '%s'"
-msgstr ""
+msgstr "Nutze Konfigurationsdatei '%s'"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'"
-msgstr ""
+msgstr "Keine Konfiguration in der Datei '%s' gefunden"
 
 msgid "Internal initialization failed, exiting. Check previous error messages."
-msgstr ""
+msgstr "Start gescheitert. Bitte vorherige Fehlermeldungen prüfen."
 
 msgid "unknown street"
 msgstr "unbekannte Straße"
@@ -1755,7 +1755,7 @@ msgid "_Lock on Road"
 msgstr "Auf Straße _zeigen"
 
 msgid "_Follow Vehicle"
-msgstr ""
+msgstr "_Fahrzeug folgen"
 
 msgid "_Keep orientation to the North"
 msgstr "_Nordorientierung"
@@ -1829,11 +1829,11 @@ msgstr "Einkaufen"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr ""
+msgstr "Eingabe ist in Kilometern"
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr ""
+msgstr "Eingabe in Meilen"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1841,11 +1841,11 @@ msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld "
-msgstr ""
+msgstr "Setze Ziel auf %ld, %ld"
 
 #, c-format
 msgid "Set map to %ld, %ld "
-msgstr ""
+msgstr "Setze Karte auf %ld, %ld"
 
 #, c-format
 msgid "Set next visit to %ld, %ld "
@@ -1870,7 +1870,7 @@ msgid "Direction"
 msgstr "Richtung"
 
 msgid "Distance"
-msgstr ""
+msgstr "Entfernung"
 
 msgid "Name"
 msgstr "Bezeichnung"
@@ -1917,7 +1917,7 @@ msgstr "OT"
 
 #, c-format
 msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr ""
+msgstr "Route %4.1f%s %02d:%02d Ankunft"
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km 0+00:00 ETA"
@@ -2128,10 +2128,10 @@ msgid "Height Profile"
 msgstr "Höhenprofil"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
+msgstr "Bitte Karte mit Höhenlinien installieren zur Nutzung des Höhenprofils"
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "Die Route muss mindestens 2 Höhenlinien schneiden"
 
 msgid "Route Description"
 msgstr "Wegbeschreibung"
@@ -2140,7 +2140,7 @@ msgid "Show Locale"
 msgstr "Lokalisierung anzeigen"
 
 msgid "Network info"
-msgstr ""
+msgstr "Netzwerkinformation"
 
 msgid "Former Destinations"
 msgstr "Vorherige Ziele"
@@ -2244,10 +2244,10 @@ msgid "Manual zoom"
 msgstr ""
 
 msgid "Layers"
-msgstr ""
+msgstr "Ebenen"
 
 msgid "Zoom to route"
-msgstr ""
+msgstr "Zoom auf Route"
 
 msgid "Description"
 msgstr "Beschreibung"
@@ -2255,12 +2255,12 @@ msgstr "Beschreibung"
 msgid ""
 "Drop last\n"
 "Waypoint"
-msgstr ""
+msgstr "Letzten Wegpunkt entfernen"
 
 msgid ""
 "Drop next\n"
 "Waypoint"
-msgstr ""
+msgstr "nächsten Wegpunkt entfernen"
 
 msgid "Satellite Status"
 msgstr "Satellitenstatus"
