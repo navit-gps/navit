@@ -73,8 +73,8 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
     gchar *sample_missing=g_strdup("missing");
     gchar *text_missing=g_strdup(sample_missing);
     gchar *text_tts;
-    gchar *text_first[2];
-    gchar *text_next[2];
+    gchar text_first[2];
+    gchar text_next[2];
 
     dbg(lvl_debug,"searching samples for text: '%s'",text);
 
@@ -356,7 +356,6 @@ static void speechd_destroy(struct speech_priv *this) {
         g_free(l->data);
     }
     g_list_free(this->samples);
-    g_free(this->sample_count);
     if(this->spi)
         spawn_process_info_free(this->spi);
     g_free(this);
