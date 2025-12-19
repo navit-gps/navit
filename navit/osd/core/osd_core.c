@@ -2243,7 +2243,7 @@ static void osd_nav_toggle_announcer_draw(struct osd_priv_common *opc, struct na
                 path = graphics_icon_path("sound_on.png");
             else
                 path = graphics_icon_path("sound_off.png");
-        gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, opc->osd_item.w, opc->osd_item.h);
+            gr_image = graphics_image_new_scaled(opc->osd_item.gr, path, opc->osd_item.w, opc->osd_item.h);
         }
 
         dbg(lvl_debug, "gr_image=%p", gr_image);

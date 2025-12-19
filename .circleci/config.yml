@@ -41,7 +41,7 @@ jobs:
       - run: if scripts/check_need_build.sh; then circleci step halt; fi
       - run:
           name: make build dir
-          command:  mkdir ../rpmbuild && chmod 777 ../rpmbuild
+          command:  mkdir ../rpmbuild && chmod 777 ../rpmbuild && mkdir ../rpmbuild2 && chmod 777 ../rpmbuild2
       - run:
           name: run build
           command: ls -lah ../rpmbuild && docker run -e VERSION_ID=5.0.0.43 -v `pwd`/../rpmbuild:/home/nemo/rpmbuild:rw -v `pwd`:/home/nemo/navit coderus/sailfishos-platform-sdk:5.0.0.43 /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh

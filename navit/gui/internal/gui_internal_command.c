@@ -40,6 +40,9 @@
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #endif
+#ifdef USE_DOWNLOAD
+#include "gui_internal_map_downloader.h"
+#endif
 
 static int gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
     struct attr escaped;
@@ -1214,6 +1217,38 @@ static struct command_table commands[] = {
 #if HAS_IFADDRS
     {"network_info",command_cast(gui_internal_cmd2)},
 #endif
+#ifdef USE_DOWNLOAD
+    {"map_downloader", command_cast (gui_internal_cmd_map_download)},
+#endif
+	{"E",command_cast(gui_internal_cmd_escape)},
+	{"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
+	{"back",command_cast(gui_internal_cmd2_back)},
+	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
+	{"bookmarks",command_cast(gui_internal_cmd2)},
+	{"debug",command_cast(gui_internal_cmd_debug)},
+	{"formerdests",command_cast(gui_internal_cmd2)},
+	{"get_data",command_cast(gui_internal_get_data)},
+	{"img",command_cast(gui_internal_cmd_img)},
+	{"locale",command_cast(gui_internal_cmd2)},
+	{"log",command_cast(gui_internal_cmd_log)},
+	{"menu",command_cast(gui_internal_cmd_menu2)},
+	{"position",command_cast(gui_internal_cmd2_position)},
+	{"pois",command_cast(gui_internal_cmd2)},
+	{"redraw_map",command_cast(gui_internal_cmd_redraw_map)},
+	{"refresh",command_cast(gui_internal_cmd2_refresh)},
+	{"route_description",command_cast(gui_internal_cmd2)},
+	{"route_height_profile",command_cast(gui_internal_cmd2)},
+	{"set",command_cast(gui_internal_cmd2_set)},
+	{"setting_layout",command_cast(gui_internal_cmd2)},
+	{"setting_maps",command_cast(gui_internal_cmd2)},
+	{"setting_rules",command_cast(gui_internal_cmd2)},
+	{"setting_vehicle",command_cast(gui_internal_cmd2)},
+	{"town",command_cast(gui_internal_cmd2)},
+	{"enter_coord",command_cast(gui_internal_cmd2)},
+	{"quit",command_cast(gui_internal_cmd2_quit)},
+	{"waypoints",command_cast(gui_internal_cmd2)},
+	{"write",command_cast(gui_internal_cmd_write)},
+	{"about",command_cast(gui_internal_cmd2)},
 };
 
 void gui_internal_command_init(struct gui_priv *this, struct attr **attrs) {
