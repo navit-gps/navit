@@ -39,9 +39,6 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_flags_reverse_mask:
         this_->flags_reverse_mask = attr->u.num;
         break;
-    case attr_maxspeed_handling:
-        this_->maxspeed_handling = attr->u.num;
-        break;
     case attr_route_mode:
         this_->mode = attr->u.num;
         break;
@@ -111,7 +108,6 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->flags_forward_mask = 0;
     this_->flags_reverse_mask = 0;
     this_->flags = 0;
-    this_->maxspeed_handling = maxspeed_enforce;
     this_->static_speed = 0;
     this_->static_distance = 0;
     g_free(this_->name);
@@ -202,8 +198,8 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
     dbg(lvl_debug, "result l %d w %d h %d wg %d awg %d pen %d", this_->length, this_->width, this_->height,
         this_->weight, this_->axle_weight, this_->through_traffic_penalty);
     dbg(lvl_debug, "m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d", this_->mode,
-        this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->maxspeed_handling,
-        this_->static_speed, this_->static_distance, this_->dangerous_goods);
+        this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->static_speed, this_->static_distance,
+        this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 }
 

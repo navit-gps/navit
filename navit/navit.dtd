@@ -53,7 +53,6 @@
 <!ATTLIST vehicleprofile flags CDATA #REQUIRED>
 <!ATTLIST vehicleprofile flags_forward_mask CDATA #REQUIRED>
 <!ATTLIST vehicleprofile flags_reverse_mask CDATA #REQUIRED>
-<!ATTLIST vehicleprofile maxspeed_handling CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_mode CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_depth CDATA #IMPLIED>
 <!ATTLIST vehicleprofile static_distance CDATA #IMPLIED>
