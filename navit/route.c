@@ -1904,9 +1904,6 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
     int roadmaxspeed = INT_MAX;
     int vehiclemaxspeed = INT_MAX;
 
-    if (!vehicleroadprofile || !vehicleroadprofile->speed)
-        calculatedspeed = 0;
-
     if (over->flags & AF_DANGEROUS_GOODS) {
         if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
             calculatedspeed = 0;
