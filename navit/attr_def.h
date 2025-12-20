@@ -129,7 +129,6 @@ ATTR(route_status)
 ATTR(route_weight)
 ATTR_UNUSED
 ATTR(route_mode)
-ATTR(maxspeed_handling)
 ATTR(flags_forward_mask)
 ATTR(flags_reverse_mask)
 ATTR_UNUSED

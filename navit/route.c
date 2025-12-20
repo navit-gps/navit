@@ -1890,21 +1890,7 @@ static void route_graph_destroy(struct route_graph *this) {
 /**
  * @brief Returns the estimated speed on a segment, or 0 for an impassable segment
  *
- * This function returns the estimated speed to be driven on a segment, calculated as follows:
- * <ul>
- * <li>Initially the route weight of the vehicle profile for the given item type is used. If the
- * item type does not have a route weight in the vehicle profile given, it is considered impassable
- * and 0 is returned.</li>
- * <li>If the {@code maxspeed} attribute of the segment's item is set, either it or the previous
- * speed estimate for the segment is used, as governed by the vehicle profile's
- * {@code maxspeed_handling} attribute.</li>
- * <li>If a traffic distortion is present, its {@code maxspeed} is taken into account in a similar
- * manner. Unlike the regular {@code maxspeed}, a {@code maxspeed} resulting from a traffic
- * distortion is always considered if it limits the speed, regardless of {@code maxspeed_handling}.
- * </li>
- * <li>Access restrictions for dangerous goods, size or weight are evaluated, and 0 is returned if
- * the given vehicle profile violates one of them.</li>
- * </ul>
+ * This function returns the estimated speed to be driven on a segment
  *
  * @param profile The routing preferences
  * @param over The segment which is passed
@@ -1946,19 +1932,15 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
         vehiclemaxspeed = vehicleroadprofile->route_weight;
 
         /* Get roadmaxspeed */
-        if (profile->maxspeed_handling != maxspeed_ignore) {
-            if (over->flags & AF_SPEED_LIMIT)
-                roadmaxspeed = RSD_MAXSPEED(over);
-            if (dist && roadmaxspeed > dist->maxspeed)
-                roadmaxspeed = dist->maxspeed;
-        }
+        if (over->flags & AF_SPEED_LIMIT)
+            roadmaxspeed = RSD_MAXSPEED(over);
+        if (dist && roadmaxspeed > dist->maxspeed)
+            roadmaxspeed = dist->maxspeed;
 
         /* Set calculatedspeed */
         calculatedspeed = roadmaxspeed;
-        if (profile->maxspeed_handling != maxspeed_ignore) {
-            if (vehiclemaxspeed < roadmaxspeed)
-                calculatedspeed = vehiclemaxspeed;
-        }
+        if (vehiclemaxspeed < roadmaxspeed)
+            calculatedspeed = vehiclemaxspeed;
     }
 
     return calculatedspeed;

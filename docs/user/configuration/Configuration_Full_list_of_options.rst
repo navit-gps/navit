@@ -1861,45 +1861,6 @@ tags.
    |              |        |              | the reverse  |              |
    |              |        |              | direction.   |              |
    +--------------+--------+--------------+--------------+--------------+
-   | maxsp        |        | 0 - 2        | | ``         | `            |
-   | eed_handling |        |              | maxspeed_han | `maxspeed_ha |
-   |              |        |              | dling="0"``: | ndling="1"`` |
-   |              |        |              |   Always     |              |
-   |              |        |              |   handle the |              |
-   |              |        |              |   maxspeed   |              |
-   |              |        |              |   attribute  |              |
-   |              |        |              |   of a       |              |
-   |              |        |              |   street.    |              |
-   |              |        |              | | ``         |              |
-   |              |        |              | maxspeed_han |              |
-   |              |        |              | dling="1"``: |              |
-   |              |        |              |   Only       |              |
-   |              |        |              |   handle the |              |
-   |              |        |              |   maxspeed   |              |
-   |              |        |              |   attribute  |              |
-   |              |        |              |   of a       |              |
-   |              |        |              |   street if  |              |
-   |              |        |              |   it         |              |
-   |              |        |              |   restricts  |              |
-   |              |        |              |   the speed. |              |
-   |              |        |              | | ``         |              |
-   |              |        |              | maxspeed_han |              |
-   |              |        |              | dling="2"``: |              |
-   |              |        |              |   Never.     |              |
-   |              |        |              |   Reason     |              |
-   |              |        |              |   behind     |              |
-   |              |        |              |   this is    |              |
-   |              |        |              |   that a     |              |
-   |              |        |              |   pedestrian |              |
-   |              |        |              |   doesn't    |              |
-   |              |        |              |   want to    |              |
-   |              |        |              |   travel     |              |
-   |              |        |              |   with 30    |              |
-   |              |        |              |   km/h when  |              |
-   |              |        |              |   there is a |              |
-   |              |        |              |   speed      |              |
-   |              |        |              |   limit.     |              |
-   +--------------+--------+--------------+--------------+--------------+
    | route_depth  |        |              | Sets which   | ``ro         |
    |              |        |              | roads to     | ute_depth="4 |
    |              |        |              | consider for | :25%,8:40000 |
