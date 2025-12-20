@@ -206,7 +206,7 @@ void gui_internal_select_waypoint(struct gui_priv *this, const char *title, cons
                                   void (*cmd)(struct gui_priv *priv, struct widget *widget, void *data), void *data);
 void gui_internal_call_linked_on_finish(struct gui_priv *this, struct widget *wm, void *data);
 char *removecase(char *s);
-void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in,
+void gui_internal_cmd_position_do(struct gui_priv *this, const struct pcoord *pc_in, struct coord_geo *g_in,
                                   struct widget *wm, const char *name, int flags);
 void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data);

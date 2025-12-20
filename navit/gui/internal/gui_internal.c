@@ -1040,7 +1040,7 @@ static void gui_internal_cmd_delete_waypoint(struct gui_priv *this, struct widge
  * 2048: "Show search results on the map"
  * TODO define constants for these values
  */
-void gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in,
+void gui_internal_cmd_position_do(struct gui_priv *this, const struct pcoord *pc_in, struct coord_geo *g_in,
                                   struct widget *wm, const char *name, int flags) {
     struct widget *wb,*w,*wtable,*row,*wc,*wbc,*wclosest=NULL;
     struct coord_geo g;
@@ -2933,12 +2933,12 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
  * @brief A structure containing the context (arguments) to run gui_internal_show_coord()
 **/
 struct gui_internal_show_coord_args {
-    const char *description;    /*!< The label to use for the geographical coordinates (ex: "Map Point") */
+    char *description;    /*!< The label to use for the geographical coordinates (ex: "Map Point") */
     struct pcoord coord;  /*!< The geographical coordinates to use */
 };
 
-static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c,
-        const char *description); /* Forward declaration */
+static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c,
+        char *description); /* Forward declaration */
 
 /**
  * @brief Takes a context (as a pointer to a gui_internal_show_coord_args structure) and run gui_internal_show_coord_actions() with these arguments
@@ -2948,7 +2948,7 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, const struct p
  * @note We will also take care of deallocating all dynamic memory in this context struct)
 **/
 static void gui_internal_deferred_show_coord_actions(struct gui_priv *this,
-        const struct gui_internal_show_coord_args *context) {
+        struct gui_internal_show_coord_args *context) {
     if (!context)
         return;
 
@@ -2969,7 +2969,7 @@ static void gui_internal_deferred_show_coord_actions(struct gui_priv *this,
  *
  * @return 0 on failure, 1 on success, -1 if argument c is NULL
  */
-static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description) {
+static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
     struct widget w;
 
     dbg(lvl_debug,"enter");
