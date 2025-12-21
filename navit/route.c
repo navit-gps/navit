@@ -1947,8 +1947,8 @@ static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_
     }
 
     if (calculatedspeed != 0) {
-        /* Get vehiclemaxspeed */
-        vehiclemaxspeed=vehicleroadprofile->route_weight;
+        /* Get vehiclespeed */
+        vehiclemaxspeed=vehicleroadprofile->speed;
 
         /* Get roadmaxspeed */
         if (profile->maxspeed_handling != maxspeed_ignore) {
