@@ -57,7 +57,7 @@ jobs:
       image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
     steps:
       - uses: actions/checkout@v2
-      - run: bash -c 'if [ "X$UID" == X0 ]; then apt update && apt dist-upgrade && apt install -y sudo; fi'
+      - run: bash -c 'if [ "X$UID" == X0 ]; then apt update && apt dist-upgrade && apt install -y sudo nodejs; fi'
       - name: Install requirements
         run: sudo bash scripts/setup_common_requirements.sh && bash scripts/setup_android.sh
       - name: sdkmanager installed
