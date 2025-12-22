@@ -218,6 +218,9 @@ add_subdirectory (textures)
 add_subdirectory (maps)
 if(ANDROID)
 	add_subdirectory (android)
+    if(DEFINED GRADLE_BUILD_DIR)
+        add_dependencies(${PROJECT_NAME} copy_to_gradle)
+    endif(DEFINED GRADLE_BUILD_DIR)
 endif()
 
 install(TARGETS navit
