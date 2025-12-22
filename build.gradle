@@ -61,7 +61,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n', '-DCMAKE_SYSROOT='+android.ndkDirectory+'/sysroot'
+                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile()
             }
         }
     }
@@ -84,8 +84,9 @@ android {
             java.srcDirs = ["navit/android/src"]
             resources.srcDirs = ["navit/android/src"]
             renderscript.srcDirs = ["navit/android/src"]
-            res.srcDirs = ["navit/android/res", "android-builddir/android/res"]
-            assets.srcDirs = ["navit/android/assets", "android-builddir/android/assets"]
+            res.srcDirs = ["navit/android/res", layout.buildDirectory.file('generated/navit_generated/android/res').get().getAsFile()]
+            assets.srcDirs =  ["navit/android/assets", layout.buildDirectory.file('generated/navit_generated/android/assets').get().getAsFile()]
+
             }
     }
     externalNativeBuild {
@@ -135,6 +136,20 @@ android {
     }
 
 }
+
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        def cap = variant.name.capitalize()
+
+        tasks.matching { it.name.endsWith("Assets") ||it.name.endsWith("Resources") }
+            .configureEach {
+                dependsOn(tasks.matching { t ->
+                    t.name.startsWith("externalNativeBuild${cap}")
+            })
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'navit/android/libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
