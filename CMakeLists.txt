@@ -10,6 +10,14 @@ else(DISABLE_CXX)
 	project(navit C CXX)
 endif(DISABLE_CXX)
 
+execute_process(
+        COMMAND git describe --tags --dirty
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+)
+
 # Workaround for CMake issue 8345 / 9220, see http://trac.navit-project.org/ticket/1041
 if(DEFINED CMAKE_CXX_COMPILER AND CMAKE_CXX_COMPILER MATCHES "^$")
 	set(CMAKE_CXX_COMPILER CMAKE_CXX_COMPILER-NOTFOUND)
