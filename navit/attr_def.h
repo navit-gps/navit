@@ -126,7 +126,6 @@ ATTR(pitch)
 ATTR_UNUSED
 ATTR_UNUSED
 ATTR(route_status)
-ATTR(route_weight)
 ATTR_UNUSED
 ATTR(route_mode)
 ATTR(flags_forward_mask)

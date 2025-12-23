@@ -137,12 +137,12 @@ Vehicleprofile
 .. code:: xml
 
    <vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
-     <roadprofile item_types="path,track_ground" speed="12" route_weight="5">
+     <roadprofile item_types="path,track_ground" speed="12" >
      </roadprofile>
-     <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" route_weight="15">
+     <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" >
      </roadprofile>
-     <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
-     <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+     <roadprofile item_types="roundabout" speed="20" />
+     <roadprofile item_types="ferry" speed="40" />
     </vehicleprofile>
 
 For details on the flags, see `Vehicle profile

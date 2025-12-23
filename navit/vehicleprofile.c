@@ -175,8 +175,7 @@ static void vehicleprofile_apply_attrs(struct vehicleprofile *this_, struct navi
 
 static void vehicleprofile_debug_roadprofile(gpointer key, gpointer value, gpointer user_data) {
     struct roadprofile *rp = value;
-    dbg(lvl_debug, "type %s avg %d weight %d max %d", item_to_name((int)(long)key), rp->speed, rp->route_weight,
-        rp->maxspeed);
+    dbg(lvl_debug, "type %s avg %d max %d", item_to_name((int)(long)key), rp->speed, rp->maxspeed);
 }
 
 static void vehicleprofile_update(struct vehicleprofile *this_) {

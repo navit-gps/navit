@@ -77,7 +77,6 @@
 <!ELEMENT roadprofile (announcement*)>
 <!ATTLIST roadprofile item_types CDATA #REQUIRED>
 <!ATTLIST roadprofile speed CDATA #REQUIRED>
-<!ATTLIST roadprofile route_weight CDATA #REQUIRED>
 <!ELEMENT speed EMPTY>
 <!ATTLIST speed type CDATA #REQUIRED>
 <!ATTLIST speed value CDATA #REQUIRED>
