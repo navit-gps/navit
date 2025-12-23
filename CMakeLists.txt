@@ -85,6 +85,7 @@ IF(UNIX AND NOT ANDROID AND NOT APPLE)
 ELSE (UNIX AND NOT ANDROID AND NOT APPLE)
 	SET(LIB_DIR lib/navit CACHE PATH "Navit unix bin path")
 ENDIF (UNIX AND NOT ANDROID AND NOT APPLE)
+set(CMAKE_INSTALL_RPATH \$ORIGIN "\$ORIGIN/../${LIB_DIR}")
 foreach(EXTRA_MODULE ${EXTRA_MODULES})
 	add_module(${EXTRA_MODULE} "extra module specified" TRUE)
 endforeach()
@@ -740,6 +741,7 @@ if(BUILD_MAPTOOL)
 endif()
 
 set(LOCALEDIR "${LOCALE_DIR}")
+
 
 find_program(BZCAT NAMES bzcat)
 if (SAMPLE_MAP)
