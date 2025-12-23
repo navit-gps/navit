@@ -22,6 +22,9 @@
 extern "C" {
 #endif
 
+#include "callback.h"
+#include "navit.h"
+
 
 enum maxspeed_handling {
     maxspeed_enforce = 0,		/*!< Always enforce maxspeed of segment */
