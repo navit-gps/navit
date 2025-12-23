@@ -1,5 +1,4 @@
-# Navit [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit)
-[![Build Navit Binaries](https://github.com/navit-gps/navit/actions/workflows/build.yml/badge.svg)](https://github.com/navit-gps/navit/actions/workflows/build.yml) [![CodeFactor](https://www.codefactor.io/repository/github/navit-gps/navit/badge)](https://www.codefactor.io/repository/github/navit-gps/navit) [![Translation](https://hosted.weblate.org/widgets/navit/-/svg-badge.svg)](https://hosted.weblate.org/engage/navit/)
+# Navit [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit) [![Build Navit Binaries](https://github.com/navit-gps/navit/actions/workflows/build.yml/badge.svg)](https://github.com/navit-gps/navit/actions/workflows/build.yml) [![CodeFactor](https://www.codefactor.io/repository/github/navit-gps/navit/badge)](https://www.codefactor.io/repository/github/navit-gps/navit) [![Translation](https://hosted.weblate.org/widgets/navit/-/svg-badge.svg)](https://hosted.weblate.org/engage/navit/)
 
 _A copylefted libre software car-navigation system with its own routing engine_.
 
