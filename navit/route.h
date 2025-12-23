@@ -31,6 +31,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "coord.h"
+#include "item.h"
+
 enum route_path_flags {
 	route_path_flag_none=0,
 	route_path_flag_cancel=1,
