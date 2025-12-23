@@ -107,6 +107,7 @@
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1900,45 +1901,31 @@ static void route_graph_destroy(struct route_graph *this) {
 static int route_seg_speed(struct vehicleprofile *profile, struct route_segment_data *over,
                            struct route_traffic_distortion *dist) {
     struct roadprofile *vehicleroadprofile = vehicleprofile_get_roadprofile(profile, over->item.type);
-    int calculatedspeed = INT_MAX;
-    int roadmaxspeed = INT_MAX;
-    int vehiclemaxspeed = INT_MAX;
-
-    if (vehicleroadprofile && vehicleroadprofile->speed)
-        vehiclemaxspeed = vehicleroadprofile->speed;
+    bool usable = true;
+    int vehiclemaxspeed = (vehicleroadprofile && vehicleroadprofile->speed) ? vehicleroadprofile->speed : INT_MAX;
+    int roadmaxspeed =
+        (over->flags & AF_SPEED_LIMIT)
+            ? RSD_MAXSPEED(over)
+            : ((vehicleroadprofile && vehicleroadprofile->maxspeed) ? vehicleroadprofile->maxspeed : INT_MAX);
+    roadmaxspeed = (dist && roadmaxspeed > dist->maxspeed) ? dist->maxspeed : roadmaxspeed;
 
     if (over->flags & AF_DANGEROUS_GOODS) {
         if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
-            calculatedspeed = 0;
+            usable = false;
     }
 
     if (over->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
         struct size_weight_limit *size_weight = &RSD_SIZE_WEIGHT(over);
-        if (size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
-            calculatedspeed = 0;
-        if (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
-            calculatedspeed = 0;
-        if (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
-            calculatedspeed = 0;
-        if (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
-            calculatedspeed = 0;
-        if (size_weight->axle_weight != -1 && profile->axle_weight != -1
-            && profile->axle_weight > size_weight->axle_weight)
-            calculatedspeed = 0;
+        if ((size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
+            || (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
+            || (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
+            || (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
+            || (size_weight->axle_weight != -1 && profile->axle_weight != -1
+                && profile->axle_weight > size_weight->axle_weight))
+            usable = false;
     }
 
-    if (calculatedspeed != 0) {
-        /* Get roadmaxspeed */
-        if (over->flags & AF_SPEED_LIMIT)
-            roadmaxspeed = (RSD_MAXSPEED(over)) ? RSD_MAXSPEED(over) : vehicleroadprofile->maxspeed;
-        if (dist && roadmaxspeed > dist->maxspeed)
-            roadmaxspeed = dist->maxspeed;
-
-        /* Set calculatedspeed */
-        calculatedspeed = MIN(roadmaxspeed, vehiclemaxspeed);
-    }
-
-    return calculatedspeed;
+    return usable ? MIN(roadmaxspeed, vehiclemaxspeed) : 0;
 }
 
 /**
