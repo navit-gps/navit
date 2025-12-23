@@ -1,5 +1,5 @@
 
-name: Build Navit Binarys
+name: Build Navit Binaries
 
 on: [push, pull_request]
 
