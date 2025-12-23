@@ -24,8 +24,8 @@ var geom_8h =
     [ "geom_poly_point_inside", "geom_8h.html#a83b4a75a2d554006053e3dcc8cef245a", null ],
     [ "geom_poly_segment_compatible", "geom_8h.html#aea5efc3e53159805d880dc44654b099f", null ],
     [ "geom_poly_segment_destroy", "geom_8h.html#addb2ddabf4a4d746cbbacadf09423ea5", null ],
-    [ "geom_poly_segments_insert", "geom_8h.html#a4255b43e23daee23c669d14e6f9d42a6", null ],
+    [ "geom_poly_segments_insert", "geom_8h.html#a5251bc45d4739f181b082959addbd53c", null ],
     [ "geom_poly_segments_point_inside", "geom_8h.html#a80c630f1e476578403f8b20232208ff3", null ],
-    [ "geom_poly_segments_remove", "geom_8h.html#a69bb22e4d9e34cce80e0394c0646bc9a", null ],
-    [ "geom_poly_segments_sort", "geom_8h.html#a9765e9bf9f71f76c462ad7636ebab50d", null ]
+    [ "geom_poly_segments_remove", "geom_8h.html#a5c42c437983f7d1e0b6e99e24cca40e4", null ],
+    [ "geom_poly_segments_sort", "geom_8h.html#abc6aecdbb699acb11d06b8e84d243587", null ]
 ];

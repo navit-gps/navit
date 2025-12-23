@@ -1,8 +1,8 @@
 var gui__internal__search_8c =
 [
-    [ "district_str", "gui__internal__search_8c.html#a4ed78d4533e919f897bea9534af7c190", null ],
-    [ "get_string_from_attr_list", "gui__internal__search_8c.html#ac35e52239545b1ac106e8575c065a13a", null ],
-    [ "gui_internal_create_resultlist_entry", "gui__internal__search_8c.html#a93243d7eee0c98ca54988a67fa253041", null ],
+    [ "district_str", "gui__internal__search_8c.html#a5522d8c0b8a602f7c228e885c7251a6f", null ],
+    [ "get_string_from_attr_list", "gui__internal__search_8c.html#addd98d188be01534c3fd285809401efc", null ],
+    [ "gui_internal_create_resultlist_entry", "gui__internal__search_8c.html#aa4d2802cc97f9e57b3a3ef77da87d6d6", null ],
     [ "gui_internal_find_next_possible_key", "gui__internal__search_8c.html#a0f2c5bfaffe9eb447aaf1e2484efe2f2", null ],
     [ "gui_internal_get_match_quality", "gui__internal__search_8c.html#adc114516048829884e9e381243d6424c", null ],
     [ "gui_internal_highlight_possible_keys", "gui__internal__search_8c.html#a151035beb4d034286a5269cfc31f0f79", null ],
@@ -22,7 +22,7 @@ var gui__internal__search_8c =
     [ "gui_internal_search_street_in_town", "gui__internal__search_8c.html#af705dd1fcd5afb219de65f4fb8f4e1b3", null ],
     [ "gui_internal_search_town", "gui__internal__search_8c.html#a0132083a3d3bf13e8f0b42c7c41caddb", null ],
     [ "gui_internal_search_town_in_country", "gui__internal__search_8c.html#a4d344f004d3e14c07c03abaac8e2ba3f", null ],
-    [ "postal_str", "gui__internal__search_8c.html#a55e6a400a09eb5a026bfa47d433450c7", null ],
-    [ "town_display_label", "gui__internal__search_8c.html#a3cfe036e4fcda6826e5a340afe2b8e01", null ],
+    [ "postal_str", "gui__internal__search_8c.html#a66f469fece8380bfb8f482276f9c8b9a", null ],
+    [ "town_display_label", "gui__internal__search_8c.html#a4bf1da882e6cb79189b10390017e15fc", null ],
     [ "possible_keys_incremental_search", "gui__internal__search_8c.html#ae18bf060ccae932e6e5db6de6665e922", null ]
 ];

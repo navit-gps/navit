@@ -4,7 +4,7 @@ var popup_8c =
     [ "popup", "popup_8c.html#a3d7a909a7f21ca807a96913fb19483db", null ],
     [ "popup_display", "popup_8c.html#a31a02701201e0dfe6c7b85331268a7d3", null ],
     [ "popup_item_dump", "popup_8c.html#ad3f43c5450a12a4c15090a4c66689ebf", null ],
-    [ "popup_printf_cb", "popup_8c.html#a41ab898f955cf61922c28a3d6d00979c", null ],
+    [ "popup_printf_cb", "popup_8c.html#ac019720f518e04119985514871886630", null ],
     [ "popup_set_bookmark", "popup_8c.html#a1a2187c0bd9ab9a2216bc3e3ab0fbcb6", null ],
     [ "popup_set_destination", "popup_8c.html#aa92e1ddd0959ca989f2844b3bd64f4e7", null ],
     [ "popup_set_position", "popup_8c.html#a26f8fb90edd10daefc29af18d04b9cf1", null ],

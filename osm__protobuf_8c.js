@@ -11,8 +11,8 @@ var osm__protobuf_8c =
     [ "process_relation", "osm__protobuf_8c.html#a48c6e0de74a8a25d89bb0e35901f7445", null ],
     [ "process_tag", "osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d", null ],
     [ "process_way", "osm__protobuf_8c.html#a908239a7edafe07a82215dad3d5849d6", null ],
-    [ "read_blob", "osm__protobuf_8c.html#a6808b1ef44624293817e99ebf1c926ee", null ],
-    [ "read_header", "osm__protobuf_8c.html#a526dfec606340f7d7254728c05c08b68", null ],
-    [ "uncompress_blob", "osm__protobuf_8c.html#accd10b96e092f1211bf68b28617b0e02", null ],
+    [ "read_blob", "osm__protobuf_8c.html#ae0338ce59c877f1ba68fad426a142d8a", null ],
+    [ "read_header", "osm__protobuf_8c.html#aded80fa3c8d425add909ca94aabbc302", null ],
+    [ "uncompress_blob", "osm__protobuf_8c.html#a5dc79b3d9cb0edf13632f6a29f62a678", null ],
     [ "latlon_scale", "osm__protobuf_8c.html#a933d758f17d6368d11d83b13dfedac41", null ]
 ];

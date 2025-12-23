@@ -47,7 +47,7 @@ var structgraphics__priv =
     [ "dwFlag", "structgraphics__priv.html#a1e90d0bdf5e6095a3cca738a7ae467bc", null ],
     [ "fill_poly", "structgraphics__priv.html#aee53b0d448d56dce27d644d38dac2608", null ],
     [ "flags", "structgraphics__priv.html#a7922fc52a91494efd7b043aa21934265", null ],
-    [ "font_freetype_new", "structgraphics__priv.html#ac85072281f1d0abb9b4388a0d15662b9", null ],
+    [ "font_freetype_new", "structgraphics__priv.html#a6aa6afcf96cd6da6c5a422d1a567cc63", null ],
     [ "force_redraw", "structgraphics__priv.html#a2dcbeaf1ede6fda8faaa940d62083b7c", null ],
     [ "frame", "structgraphics__priv.html#a82514fcd8bd5135a87082a4cdad59bbf", null ],
     [ "frame", "structgraphics__priv.html#a5e77f66abe7534fbc9a41db3254cd7ca", null ],

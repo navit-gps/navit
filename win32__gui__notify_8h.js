@@ -12,5 +12,5 @@ var win32__gui__notify_8h =
     ] ],
     [ "message_handler", "win32__gui__notify_8h.html#a20aa59f039aa453b7cc4837e54d080b2", null ],
     [ "win32_gui_notify", "win32__gui__notify_8h.html#aebbbae49b54ef842cb8f085f855f519f", null ],
-    [ "win32_gui_notify_new", "win32__gui__notify_8h.html#a403cfd7972e64e28222eba83a8b2659f", null ]
+    [ "win32_gui_notify_new", "win32__gui__notify_8h.html#a08f037182e758a6c6c6ff78fda64891f", null ]
 ];

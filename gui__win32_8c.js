@@ -1,7 +1,7 @@
 var gui__win32_8c =
 [
     [ "GET_WHEEL_DELTA_WPARAM", "gui__win32_8c.html#aaaff79813bf5453ec4c2d6f8d379cf7c", null ],
-    [ "add_menu", "gui__win32_8c.html#a628dcf8e3cda40e10445aba151d98127", null ],
+    [ "add_menu", "gui__win32_8c.html#a8cbe6f59bcb30af60abdbf77c32043a7", null ],
     [ "CreateToolBar", "gui__win32_8c.html#abaeb8cc5eae5b0b33ccf419e41f4ef4e", null ],
     [ "CreateWin32Window", "gui__win32_8c.html#abe286ea42784089f9425d87fdf03d5d8", null ],
     [ "get_toggle", "gui__win32_8c.html#ae8987a896d80edd9b5e02c6cae99522b", null ],
@@ -11,8 +11,8 @@ var gui__win32_8c =
     [ "set_toggle", "gui__win32_8c.html#a5f87bbcc1ee2f8aefdb1153c2e6eb55a", null ],
     [ "win32_gui_add_bookmark", "gui__win32_8c.html#a99b15f22d5a33bc87206bec121121522", null ],
     [ "win32_gui_add_bookmark_do", "gui__win32_8c.html#aea79db9a7bfb6a786e6ec9fca4fbfb85", null ],
-    [ "win32_gui_new", "gui__win32_8c.html#abd645c005e49bb0816ced75b03c9f0b1", null ],
-    [ "win32_gui_popup_new", "gui__win32_8c.html#a423340858ce5ca5bb5bd89f80e809e94", null ],
+    [ "win32_gui_new", "gui__win32_8c.html#af8a519da389a9aa7ecf4fde111220490", null ],
+    [ "win32_gui_popup_new", "gui__win32_8c.html#adc3584691db6e39bea52883268a94aca", null ],
     [ "win32_gui_set_graphics", "gui__win32_8c.html#a4ca4ef0c10aa7d6e67f1b5f12b02c865", null ],
     [ "window_layout", "gui__win32_8c.html#ad20bb69bea623ef4417434c652e4d77c", null ],
     [ "WndProc", "gui__win32_8c.html#a1a7695d6e433d68208a0e82252dfe2ef", null ],

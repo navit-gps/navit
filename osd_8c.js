@@ -5,7 +5,7 @@ var osd_8c =
     [ "osd_evaluate_command", "osd_8c.html#a0cea1894cc85b4456485c0d55abca10d", null ],
     [ "osd_fill_with_bgcolor", "osd_8c.html#a9f451d32667e1745917e76a9133bb469", null ],
     [ "osd_get_attr", "osd_8c.html#af06e33c03ece06ebd596ca8014784a09", null ],
-    [ "osd_new", "osd_8c.html#a2fe824b03a6b5cd14326fac42470beba", null ],
+    [ "osd_new", "osd_8c.html#a5dbde50e33837184d99b5a32f2313990", null ],
     [ "osd_set_attr", "osd_8c.html#aac49f97b5a2c83888fb509638e9aa1d2", null ],
     [ "osd_set_keypress", "osd_8c.html#aece83edca7d9c275c679d5ab91ab23b9", null ],
     [ "osd_set_methods", "osd_8c.html#a16b2ab73df0e992026741c0c0e2fd7c6", null ],

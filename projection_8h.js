@@ -13,5 +13,5 @@ var projection_8h =
       [ "projection_utm", "projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1aa9a76e9e7fd7f6f52f907149c2bfef3e", null ]
     ] ],
     [ "projection_from_name", "projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019", null ],
-    [ "projection_to_name", "projection_8h.html#ab6bea86ce7e97569e9eedba942a880a2", null ]
+    [ "projection_to_name", "projection_8h.html#a68eb71483131cbd92118aa31788241bc", null ]
 ];

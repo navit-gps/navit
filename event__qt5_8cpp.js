@@ -1,13 +1,13 @@
 var event__qt5_8cpp =
 [
     [ "event_watch", "structevent__watch.html", "structevent__watch" ],
-    [ "event_qt5_add_idle", "event__qt5_8cpp.html#a2cb219754d42ca284c527401a77ff9a6", null ],
-    [ "event_qt5_add_timeout", "event__qt5_8cpp.html#ac44b836b60e1ed61fe5338fc31faeb2c", null ],
-    [ "event_qt5_add_watch", "event__qt5_8cpp.html#aeb7efe4b53b5244719ef0f777f08937f", null ],
+    [ "event_qt5_add_idle", "event__qt5_8cpp.html#a1ea43b8806e99f3bca0018138398daa6", null ],
+    [ "event_qt5_add_timeout", "event__qt5_8cpp.html#a17ef9468d99c127676e0d77998f94931", null ],
+    [ "event_qt5_add_watch", "event__qt5_8cpp.html#a189468253c1485a0ba7a879a9ac70c7c", null ],
     [ "event_qt5_call_callback", "event__qt5_8cpp.html#a2e9f22e25cd05bb22fde5478f8dc998c", null ],
     [ "event_qt5_main_loop_quit", "event__qt5_8cpp.html#a12c0ae648bd64015ad3412c43910b4d7", null ],
     [ "event_qt5_main_loop_run", "event__qt5_8cpp.html#a703a0ebb3f80a59175d4a0987848a2d8", null ],
-    [ "event_qt5_new", "event__qt5_8cpp.html#a76a536d12eed647a8a8500f9ff5551ed", null ],
+    [ "event_qt5_new", "event__qt5_8cpp.html#a312e39659055d90f5b9aa6d92a2c36f7", null ],
     [ "event_qt5_remove_idle", "event__qt5_8cpp.html#ab8e242dfdbe807cc9dc8efc04db148f4", null ],
     [ "event_qt5_remove_timeout", "event__qt5_8cpp.html#acaf5ae9c5d84d305188ff4df895a80ec", null ],
     [ "event_qt5_remove_watch", "event__qt5_8cpp.html#a3ce4d00cb51705b564e8765c35585a5d", null ],

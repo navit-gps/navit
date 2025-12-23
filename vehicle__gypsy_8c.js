@@ -7,7 +7,7 @@ var vehicle__gypsy_8c =
     [ "vehicle_gypsy_course_changed", "group__vehicle-gypsy.html#gadc4045e2c765776fb2b9a0940a6dd4b9", null ],
     [ "vehicle_gypsy_destroy", "group__vehicle-gypsy.html#gacbdf7d787cf3c7d46cab963d046db6cc", null ],
     [ "vehicle_gypsy_fixstatus_changed", "group__vehicle-gypsy.html#gaca1dd86f7ce02caa387d9775c99570e4", null ],
-    [ "vehicle_gypsy_new_gypsy", "group__vehicle-gypsy.html#gad1c188e5fb343bcd97d26af524e7d9c0", null ],
+    [ "vehicle_gypsy_new_gypsy", "group__vehicle-gypsy.html#ga970fa895d981911106faa45d40dbee56", null ],
     [ "vehicle_gypsy_open", "group__vehicle-gypsy.html#gae1b3bba396d10c4264db14d0d8aa4f0e", null ],
     [ "vehicle_gypsy_position_attr_get", "group__vehicle-gypsy.html#ga10a2c3cb655d680b54ffeb3665db86a5", null ],
     [ "vehicle_gypsy_position_changed", "group__vehicle-gypsy.html#ga17146f813a211dcfd475569812f295d6", null ],

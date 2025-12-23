@@ -9,7 +9,7 @@ var osd_8h =
     [ "TRANSPARENT_BG", "osd_8h.html#a19b4a408970988b69eab1ac5ef8bcc36", null ],
     [ "osd_fill_with_bgcolor", "osd_8h.html#a9f451d32667e1745917e76a9133bb469", null ],
     [ "osd_get_attr", "osd_8h.html#a913b3b1aa3bc3cd937e1b525b5a0850c", null ],
-    [ "osd_new", "osd_8h.html#a2fe824b03a6b5cd14326fac42470beba", null ],
+    [ "osd_new", "osd_8h.html#a5dbde50e33837184d99b5a32f2313990", null ],
     [ "osd_set_attr", "osd_8h.html#aac49f97b5a2c83888fb509638e9aa1d2", null ],
     [ "osd_set_keypress", "osd_8h.html#aece83edca7d9c275c679d5ab91ab23b9", null ],
     [ "osd_set_methods", "osd_8h.html#a16b2ab73df0e992026741c0c0e2fd7c6", null ],

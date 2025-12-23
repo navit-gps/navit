@@ -11,8 +11,8 @@ var gar2navit_8h =
     [ "G2N_RGN2", "gar2navit_8h.html#a63403b6aa014c238ed2e840dd834574f", null ],
     [ "GROUP_RGN1", "gar2navit_8h.html#a66e8d4f839fb9dde2c8c6494eb5e347e", null ],
     [ "GROUP_RGN2", "gar2navit_8h.html#a44725350943d5f56a5a0118087f7a177", null ],
-    [ "g2n_conv_load", "gar2navit_8h.html#a67a9c77cfe3bafe1f7cfc9f52ac3884d", null ],
-    [ "g2n_default_conv", "gar2navit_8h.html#a16401723ace6d96de9ab6cee7297c96b", null ],
-    [ "g2n_get_descr", "gar2navit_8h.html#abacee9b3d6c486d332cb1acbaf40fa16", null ],
+    [ "g2n_conv_load", "gar2navit_8h.html#aa4cece4ca23bdb10d4a28521ce125c43", null ],
+    [ "g2n_default_conv", "gar2navit_8h.html#addff28015b9c8527724418ce52ff379a", null ],
+    [ "g2n_get_descr", "gar2navit_8h.html#a610c771ed0e956978cb657cc995e64ba", null ],
     [ "g2n_get_type", "gar2navit_8h.html#a57b81a6fa88976690877ad5762fc4921", null ]
 ];

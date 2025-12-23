@@ -2,7 +2,6 @@ var files_dup =
 [
     [ "android", "dir_c0734f77ea3dea2197fe756876cb58bd.html", "dir_c0734f77ea3dea2197fe756876cb58bd" ],
     [ "binding", "dir_62ed8f96c89320da3fd7e16a2b85192c.html", "dir_62ed8f96c89320da3fd7e16a2b85192c" ],
-    [ "fib-1.1", "dir_bf5346e9592bc1ac9fb591bd6d4d769a.html", "dir_bf5346e9592bc1ac9fb591bd6d4d769a" ],
     [ "font", "dir_e6c54268d011365494e6c4da02774db2.html", "dir_e6c54268d011365494e6c4da02774db2" ],
     [ "graphics", "dir_e79632891301b850df87e9c0030293fa.html", "dir_e79632891301b850df87e9c0030293fa" ],
     [ "gui", "dir_11bc0974ce736ce9a6fadebbeb7a8314.html", "dir_11bc0974ce736ce9a6fadebbeb7a8314" ],
@@ -25,6 +24,7 @@ var files_dup =
     [ "attr.c", "attr_8c.html", "attr_8c" ],
     [ "attr.h", "attr_8h.html", "attr_8h" ],
     [ "attr_def.h", "attr__def_8h.html", "attr__def_8h" ],
+    [ "attr_type_def.h", "attr__type__def_8h.html", "attr__type__def_8h" ],
     [ "navigation.c", "navigation_8c.html", "navigation_8c" ],
     [ "navit.c", "navit_8c.html", "navit_8c" ],
     [ "route.c", "route_8c.html", "route_8c" ],
@@ -47,15 +47,11 @@ var files_dup =
     [ "data.h", "data_8h.html", "data_8h" ],
     [ "data_window.c", "data__window_8c.html", "data__window_8c" ],
     [ "data_window.h", "data__window_8h.html", "data__window_8h" ],
-    [ "data_window_int.h", "data__window__int_8h.html", [
-      [ "data_window", "structdata__window.html", "structdata__window" ]
-    ] ],
+    [ "data_window_int.h", "data__window__int_8h.html", "data__window__int_8h" ],
     [ "debug.c", "debug_8c.html", "debug_8c" ],
     [ "debug.h", "debug_8h.html", "debug_8h" ],
     [ "destination.h", "destination_8h.html", "destination_8h" ],
-    [ "draw_info.h", "draw__info_8h.html", [
-      [ "draw_info", "structdraw__info.html", "structdraw__info" ]
-    ] ],
+    [ "draw_info.h", "draw__info_8h.html", "draw__info_8h" ],
     [ "endianess.h", "endianess_8h.html", "endianess_8h" ],
     [ "event.c", "event_8c.html", "event_8c" ],
     [ "event.h", "event_8h.html", "event_8h" ],
@@ -74,6 +70,7 @@ var files_dup =
     [ "item.c", "item_8c.html", "item_8c" ],
     [ "item.h", "item_8h.html", "item_8h" ],
     [ "item_def.h", "item__def_8h.html", "item__def_8h" ],
+    [ "item_type_def.h", "item__type__def_8h.html", "item__type__def_8h" ],
     [ "keys.h", "keys_8h.html", "keys_8h" ],
     [ "layer.h", "layer_8h.html", "layer_8h" ],
     [ "layout.c", "layout_8c.html", "layout_8c" ],
@@ -111,10 +108,7 @@ var files_dup =
     [ "plugin.c", "plugin_8c.html", "plugin_8c" ],
     [ "plugin.h", "plugin_8h.html", "plugin_8h" ],
     [ "plugin_def.h", "plugin__def_8h.html", null ],
-    [ "point.h", "point_8h.html", [
-      [ "point", "structpoint.html", "structpoint" ],
-      [ "point_rect", "structpoint__rect.html", "structpoint__rect" ]
-    ] ],
+    [ "point.h", "point_8h.html", "point_8h" ],
     [ "popup.c", "popup_8c.html", "popup_8c" ],
     [ "popup.h", "popup_8h.html", "popup_8h" ],
     [ "profile.c", "profile_8c.html", "profile_8c" ],
@@ -152,9 +146,7 @@ var files_dup =
     [ "vehicle.h", "vehicle_8h.html", "vehicle_8h" ],
     [ "vehicleprofile.c", "vehicleprofile_8c.html", "vehicleprofile_8c" ],
     [ "vehicleprofile.h", "vehicleprofile_8h.html", "vehicleprofile_8h" ],
-    [ "window.h", "window_8h.html", [
-      [ "window", "structwindow.html", "structwindow" ]
-    ] ],
+    [ "window.h", "window_8h.html", "window_8h" ],
     [ "xmlconfig.c", "xmlconfig_8c.html", "xmlconfig_8c" ],
     [ "xmlconfig.h", "xmlconfig_8h.html", "xmlconfig_8h" ],
     [ "zipfile.h", "zipfile_8h.html", "zipfile_8h" ]

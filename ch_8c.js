@@ -17,7 +17,7 @@ var ch_8c =
     [ "ch_process_node", "ch_8c.html#a803b9fdb1688e719124a3a0edf30b0cf", null ],
     [ "ch_process_nodes", "ch_8c.html#a0e4456ad820f8889a7b92bff39abbaf7", null ],
     [ "ch_setup", "ch_8c.html#add0317bec33d27260949b0221a7b3d0b", null ],
-    [ "coord_hash_new", "ch_8c.html#af958dcfe6fdaa5acf307dfb1b57dd6da", null ],
+    [ "coord_hash_new", "ch_8c.html#a8f86c3b0fe945eee323088826c0b0e27", null ],
     [ "coord_slice_free", "ch_8c.html#a2fa82718b51b2e0c665385f0107b303a", null ],
     [ "edge_hash_equal", "ch_8c.html#ab626b658e8e0391fa272ffd6907f5509", null ],
     [ "edge_hash_hash", "ch_8c.html#a856a22664534f75391eac43d1474aadb", null ],

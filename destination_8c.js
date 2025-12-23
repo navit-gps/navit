@@ -7,7 +7,7 @@ var destination_8c =
     [ "button_destination", "destination_8c.html#aaf6914a63c58d3f049dac4df81ecb924", null ],
     [ "button_map", "destination_8c.html#a555516e2f17569087159471d6b4285a7", null ],
     [ "changed", "destination_8c.html#a681e98f77a60b3cc1d3c54de208b92f9", null ],
-    [ "description", "destination_8c.html#a83a6bff093a1144aca515982229c94ca", null ],
+    [ "description", "destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c", null ],
     [ "destination_address", "destination_8c.html#a82e09fc269e6e404e23ba0bc6e55c7b6", null ],
     [ "next_focus", "destination_8c.html#aad4533a202379beacc802d66e5bbea71", null ],
     [ "parse_xkbd_args", "destination_8c.html#addde9006790c194b938e6274e683b40d", null ],

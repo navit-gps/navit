@@ -6,7 +6,7 @@ var browserplugin_8c =
     [ "PLUGIN_NAME", "browserplugin_8c.html#a0acf7475326cdcd31d690b72033de33a", null ],
     [ "PLUGIN_VERSION", "browserplugin_8c.html#afccad64028fb6c9ac2923be268a89efb", null ],
     [ "InstanceData", "browserplugin_8c.html#aff25d5caf3eec80bde887c689a88f822", null ],
-    [ "allocate", "browserplugin_8c.html#a4699bb4a398d8a9e43bdfc3614a18f16", null ],
+    [ "allocate", "browserplugin_8c.html#a81a21762552ffb9b6b99b3bda4786cb2", null ],
     [ "fillPluginFunctionTable", "browserplugin_8c.html#af7a0dd5587e343208243acec9cef2526", null ],
     [ "getProperty", "browserplugin_8c.html#abc67e80fe9f0f93515436bcaf4ccd2cc", null ],
     [ "hasMethod", "browserplugin_8c.html#ac291f37e1e216451b82645505345efd9", null ],

@@ -40,7 +40,7 @@ var gpx2navit__txt_8h =
     [ "getSpeed", "gpx2navit__txt_8h.html#ae1346355b49884207f632b74832a3c2f", null ],
     [ "getTimeInterval", "gpx2navit__txt_8h.html#a6525e88995be546da14436017c0cdd51", null ],
     [ "initPathAttr", "gpx2navit__txt_8h.html#af0340666eaebe35da5165ad74ac69293", null ],
-    [ "myMallocRep", "gpx2navit__txt_8h.html#a0b177babb78d9e5beb924166666d62bd", null ],
+    [ "myMallocRep", "gpx2navit__txt_8h.html#a95dfdb4d31961f2f4ccfe5ae31857d92", null ],
     [ "parseMain", "gpx2navit__txt_8h.html#ac80ec0656f515c93abf717b20f96c018", null ],
     [ "setColsDefault", "gpx2navit__txt_8h.html#aac1f38216659b57ffcf4472985f19956", null ],
     [ "setMetadata", "gpx2navit__txt_8h.html#aa595440e74cb0ddecd57aa243f79ad8f", null ],

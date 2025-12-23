@@ -16,10 +16,10 @@ var gui__internal__keyboard_8h =
       [ "VKBD_FLAG_1024", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ab477653b79aac5ff4f1ac1e013aa1cf9", null ],
       [ "VKBD_LAYOUT_MASK", "gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347", null ]
     ] ],
-    [ "gui_internal_keyboard", "gui__internal__keyboard_8h.html#a756426e334809f29f3196545deff9c24", null ],
-    [ "gui_internal_keyboard_do", "gui__internal__keyboard_8h.html#ace472a470dcb7f3505a37a32c270fd61", null ],
+    [ "gui_internal_keyboard", "gui__internal__keyboard_8h.html#a6d95f9bea2d6964d86d485cb9d874a70", null ],
+    [ "gui_internal_keyboard_do", "gui__internal__keyboard_8h.html#a3ea2a1a4e52c02d1fc41baa07ea6a181", null ],
     [ "gui_internal_keyboard_init_mode", "gui__internal__keyboard_8h.html#a451eb46ad7ef67e4ca70b1f03d55c000", null ],
-    [ "gui_internal_keyboard_show_native", "gui__internal__keyboard_8h.html#a93c375702a2583e5f23b05e4f195995b", null ],
+    [ "gui_internal_keyboard_show_native", "gui__internal__keyboard_8h.html#ac6d04287735332439c966cc20c78c7f8", null ],
     [ "gui_internal_keyboard_to_lower_case", "gui__internal__keyboard_8h.html#a92502b1eecf81df256d2758d6fce26e6", null ],
     [ "gui_internal_keyboard_to_upper_case", "gui__internal__keyboard_8h.html#a2c2c1c8a502c402a4306b54713b0e4d7", null ]
 ];

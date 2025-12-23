@@ -8,11 +8,6 @@ var namespaces_dup =
       [ "navit", "namespaceeval.html#a75f2b03140ec919d5a1efaf7b42e5083", null ],
       [ "navit_iface", "namespaceeval.html#a15f98ded951fdf8e02a788234f10f16b", null ]
     ] ],
-    [ "org", null, [
-      [ "navitproject", null, [
-        [ "navit", "namespaceorg_1_1navitproject_1_1navit.html", "namespaceorg_1_1navitproject_1_1navit" ]
-      ] ]
-    ] ],
     [ "startup", "namespacestartup.html", [
       [ "dest", "namespacestartup.html#a2fd577439fdb6590469c7be5ff2dca86", null ],
       [ "inst", "namespacestartup.html#a97695fa5ef9ffbef647f0e4c0e1ab56e", null ],

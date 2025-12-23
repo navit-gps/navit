@@ -6,7 +6,7 @@ var event__sdl_8c =
     [ "event_sdl_call_callback", "event__sdl_8c.html#a82fd01a60c6b6fc1648d12d807dda6bf", null ],
     [ "event_sdl_main_loop_quit", "event__sdl_8c.html#a00c8c7f76a1fc929f86dae12fbdc315f", null ],
     [ "event_sdl_main_loop_run", "event__sdl_8c.html#a3eae4f33188fa305d822592aa0b3a602", null ],
-    [ "event_sdl_new", "event__sdl_8c.html#a097c5164c3b86cd35cad2aab5c8680a7", null ],
+    [ "event_sdl_new", "event__sdl_8c.html#ab2524dbc2a8fb16c5332057153e8b710", null ],
     [ "event_sdl_register", "event__sdl_8c.html#aa94393dbd1040a063fc7f214c5fac5f8", null ],
     [ "event_sdl_remove_idle", "event__sdl_8c.html#ae8a3a334f082b77a66d83e4664305df4", null ],
     [ "event_sdl_remove_timeout", "event__sdl_8c.html#a0a052b6a310ab13744a35d6d6576268e", null ],

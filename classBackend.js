@@ -1,11 +1,11 @@
 var classBackend =
 [
     [ "Backend", "classBackend.html#a57e21c0be0119a102f8ae27db6ac3106", null ],
-    [ "activePoi", "classBackend.html#af6166b6f8ddb49d9bd0f42d4aca75f8e", null ],
+    [ "activePoi", "classBackend.html#a1d8776a2464c7e1ee209eabda7fbf3e8", null ],
     [ "activePoiChanged", "classBackend.html#af9e5b1076b3b2a0dfa4f07d628c316ef", null ],
     [ "block_draw", "classBackend.html#a46fafebd51076ae0991d13dd8e8fa0a9", null ],
     [ "bookmarksChanged", "classBackend.html#a96c7820d85e5974a4b3d0af17bf586ae", null ],
-    [ "currentBookmark", "classBackend.html#aea20d4dc32c4f4940b2e01c0047fc785", null ],
+    [ "currentBookmark", "classBackend.html#ac67b4b90230c9f5c82fb07c031a5ddf9", null ],
     [ "currentBookmarkChanged", "classBackend.html#a65797a33de9bfb20ae88dcf9af4072de", null ],
     [ "currentCountry", "classBackend.html#a6bc355468d5910c1e0023de4285ed571", null ],
     [ "currentCountryChanged", "classBackend.html#aff44a64e97a914a0a327d300fe806b04", null ],
@@ -15,7 +15,7 @@ var classBackend =
     [ "currentStreetChanged", "classBackend.html#a79e79c87794af039a20070ffecbbffa5", null ],
     [ "currentTown", "classBackend.html#afd88e8f49c1e70eb140f7e4408760f44", null ],
     [ "currentTownChanged", "classBackend.html#afd8b6ed0dd81e39a9398200fa03bcc83", null ],
-    [ "currentVehicle", "classBackend.html#a0bffb5ba8151dcb62f52578bc81212c2", null ],
+    [ "currentVehicle", "classBackend.html#ab8f67ef7a89a01bc9de443c18a828062", null ],
     [ "currentVehicleChanged", "classBackend.html#af373aeb349af54b3104d40f677ba746d", null ],
     [ "displayMenu", "classBackend.html#a38e979a166fe0d95bce7dc2d0c772fad", null ],
     [ "filter_pois", "classBackend.html#abb9b2de08cd20b766b984e3dd12f6df8", null ],

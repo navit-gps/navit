@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['the_20navit_20core_20instance_17195',['The navit core instance',['../group__navit.html',1,'']]]
+  ['dbus_0',['Vehicle Gpsd DBus',['../group__vehicle-gpsd-dbus.html',1,'']]],
+  ['demo_1',['Vehicle Demo',['../group__vehicle-demo.html',1,'']]]
 ];

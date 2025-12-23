@@ -7,5 +7,5 @@ var utils_8c =
     [ "getDistanceCore", "utils_8c.html#a89f226c061f975fb7b4894716e0a5a49", null ],
     [ "getSpeed", "utils_8c.html#ae1346355b49884207f632b74832a3c2f", null ],
     [ "getTimeInterval", "utils_8c.html#a6525e88995be546da14436017c0cdd51", null ],
-    [ "myMallocRep", "utils_8c.html#a0b177babb78d9e5beb924166666d62bd", null ]
+    [ "myMallocRep", "utils_8c.html#a95dfdb4d31961f2f4ccfe5ae31857d92", null ]
 ];

@@ -4,7 +4,7 @@ var plugin_8h =
     [ "PLUGIN_FUNC1", "plugin_8h.html#a10d46f9607007f0f1618352a0952ac88", null ],
     [ "PLUGIN_FUNC3", "plugin_8h.html#a8912cbf255b3c615a08c9c6283f33d66", null ],
     [ "PLUGIN_FUNC4", "plugin_8h.html#aa295519398a5f294d261a152ee757718", null ],
-    [ "plugin_init", "group__vehicle-gypsy.html#ga3335a101bc391b14e24c570d44f23c5c", null ],
+    [ "plugin_init", "plugin_8h.html#a3335a101bc391b14e24c570d44f23c5c", null ],
     [ "plugin_module_cat", "plugin_8h.html#ad888c2599192a99d7310178c396cec6f", null ],
     [ "plugin_module_cat2", "plugin_8h.html#af83b45e2ac34539b67742516b4d16546", null ],
     [ "plugin_module_cat3", "plugin_8h.html#a0f3715b35225c25b670bb9d763af0751", null ],
@@ -24,14 +24,14 @@ var plugin_8h =
     [ "plugin_call_init", "group__plugins.html#ga82f7feb9e3bb4cb8bf4de87e8113b28e", null ],
     [ "plugin_destroy", "group__plugins.html#gafc5b0a4338dad8856b34b29895a6e737", null ],
     [ "plugin_get_active", "group__plugins.html#gabed5f2c35cf99b78d26116f415394b00", null ],
-    [ "plugin_get_category", "group__plugins.html#ga701f281e06dd1782a7cb86301b82128a", null ],
-    [ "plugin_get_name", "group__plugins.html#ga24464c75a8865fd8cd94ed9d021ab48e", null ],
+    [ "plugin_get_category", "group__plugins.html#ga46c06ab913627dae1b3646ccd49b0380", null ],
+    [ "plugin_get_name", "group__plugins.html#ga1acb3f1c9e370cd7c6403ff5fe7dd9d8", null ],
     [ "plugin_load", "group__plugins.html#ga13c8e90a535267c5e3204797595b9ed5", null ],
-    [ "plugin_new", "group__plugins.html#ga4b58f7c17849d07d37964c136e731008", null ],
+    [ "plugin_new", "group__plugins.html#ga27f93e6ed286fecc11dfbc7356923d54", null ],
     [ "plugin_set_active", "group__plugins.html#ga9adccb89a7f4ad7bd46ad22b14fa0588", null ],
     [ "plugin_set_lazy", "group__plugins.html#gabe372cf2cc6efa95f3e3222e8bd5acd9", null ],
     [ "plugin_unload", "group__plugins.html#ga9e1aeae5081d2538162ec8154adc2c7d", null ],
     [ "plugins_destroy", "group__plugins.html#gafa2ed379c854b20ec13846d3abf36a73", null ],
     [ "plugins_init", "group__plugins.html#ga5c62f9df06a33d24aac62672053e0a73", null ],
-    [ "plugins_new", "group__plugins.html#gadf79082b8c3560d4058b0c64fc72981f", null ]
+    [ "plugins_new", "group__plugins.html#ga45582b97719bb7a2dc6eace3de9bdad1", null ]
 ];

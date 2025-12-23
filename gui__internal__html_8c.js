@@ -5,8 +5,8 @@ var gui__internal__html_8c =
     [ "div_flags_map", "structdiv__flags__map.html", "structdiv__flags__map" ],
     [ "div_flag", "gui__internal__html_8c.html#ab046403671d3100662517839f5af5e54", null ],
     [ "div_flags", "gui__internal__html_8c.html#aef080e55d664dce44ea99f9f530d1b3e", null ],
-    [ "find_attr", "gui__internal__html_8c.html#a2e726359cfe15e6d0c67e9866fd03b14", null ],
-    [ "find_attr_dup", "gui__internal__html_8c.html#a7128a3f58b8e8fb6b3be5109f006d893", null ],
+    [ "find_attr", "gui__internal__html_8c.html#ab44b14965b11b6ce36c2ff9143958bb3", null ],
+    [ "find_attr_dup", "gui__internal__html_8c.html#a12a0fbfedf9a727e548b6eb0eff81cbd", null ],
     [ "gui_internal_html_command", "gui__internal__html_8c.html#a44d3c3d7b209b950a4abf25f21e6effe", null ],
     [ "gui_internal_html_end", "gui__internal__html_8c.html#a0ea1bdae95fd58b4bd25bd400a6cda5d", null ],
     [ "gui_internal_html_href", "gui__internal__html_8c.html#a0e20c4404c470c048cb609dae96d4baf", null ],
@@ -20,7 +20,7 @@ var gui__internal__html_8c =
     [ "gui_internal_html_text", "gui__internal__html_8c.html#a9227b99f06947c55cf19da5798f32ef5", null ],
     [ "gui_internal_refresh_callback_called", "gui__internal__html_8c.html#a9c4e8cbff770ac3105a663aae4cef296", null ],
     [ "gui_internal_set_refresh_callback", "gui__internal__html_8c.html#a18c18878d98b084ae858628c645dbfbf", null ],
-    [ "html_image", "gui__internal__html_8c.html#a717969949db309c61b182df1481152c9", null ],
+    [ "html_image", "gui__internal__html_8c.html#a617251bd8580798f2174369acbb70304", null ],
     [ "div_flags_map", "gui__internal__html_8c.html#a8a581aaa2a00dc0b9057cc8eddda7174", null ],
     [ "html_tag_map", "gui__internal__html_8c.html#acaa23fd1f1d30735b805d2292ab5242f", null ]
 ];

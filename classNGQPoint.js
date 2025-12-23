@@ -11,7 +11,7 @@ var classNGQPoint =
     [ "coordString", "classNGQPoint.html#a04b9e2d80fd1a2a85eb40eae63795691", null ],
     [ "getInformation", "classNGQPoint.html#a8d53afda2ecea29a7fdacd13074145c7", null ],
     [ "getPOI", "classNGQPoint.html#ae78867c696a50e9f08c988283c04e2e8", null ],
-    [ "pc", "classNGQPoint.html#a0f3067d34e0478d4cc6f9173b196a44e", null ],
+    [ "pc", "classNGQPoint.html#a3c6cdaeca127e64e8a896833e4e93f57", null ],
     [ "pointName", "classNGQPoint.html#af2fd550bb235dfabaa8be49b87cda70c", null ],
     [ "pointType", "classNGQPoint.html#a2f5f62dbcbb7cf73949da9298b842a06", null ],
     [ "pointUrl", "classNGQPoint.html#a69e3470ebb1aab0122a6e56115a86677", null ],

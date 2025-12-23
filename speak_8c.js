@@ -13,10 +13,10 @@ var speak_8c =
       [ "state_speaking_phase_2", "speak_8c.html#a1bd18a0005d6904cb7d9b5547757e95fa133eb9140c2bec4dfc9cd61b328d0c98", null ],
       [ "state_speaking_phase_3", "speak_8c.html#a1bd18a0005d6904cb7d9b5547757e95fa1547ba5e5a018958126ace154630202b", null ]
     ] ],
-    [ "Alloc", "speak_8c.html#aa279b4ebb6707b7d3224cae69f2cc072", null ],
+    [ "Alloc", "speak_8c.html#a437c73e10d76b1547a6e28c0a66bc3f8", null ],
     [ "create_buffers", "speak_8c.html#a01adb155fa9798d6415d8d2f6e54e89f", null ],
     [ "espeak_destroy", "speak_8c.html#acca238f78cc222318d7724db007fe2c1", null ],
-    [ "espeak_new", "speak_8c.html#a6bde1ee2ae28ae519a38fec7d4b4bdf7", null ],
+    [ "espeak_new", "speak_8c.html#aa9f7832bfbc4acb734a43c684fa15905", null ],
     [ "espeak_say", "speak_8c.html#a77255d600c048d01bae6cf3b7217bfc9", null ],
     [ "fill_buffer", "speak_8c.html#afa4d0cb8a7c6b8f8be61066d67409422", null ],
     [ "Free", "speak_8c.html#a2b9bb176fa6405b0237f05cb6d5dc3e6", null ],

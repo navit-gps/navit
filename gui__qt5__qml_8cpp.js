@@ -5,7 +5,7 @@ var gui__qt5__qml_8cpp =
     [ "gui_qt5_qml_button", "gui__qt5__qml_8cpp.html#a095509a539d20dfcf5036269c347d525", null ],
     [ "gui_qt5_qml_get_attr", "gui__qt5__qml_8cpp.html#a4611d834caf6a4d9c939f1d5789608d8", null ],
     [ "gui_qt5_qml_motion", "gui__qt5__qml_8cpp.html#a418a8b4400675f58373a8115af065282", null ],
-    [ "gui_qt5_qml_new", "gui__qt5__qml_8cpp.html#ae6584a457f267616bf4d5155a100ecf7", null ],
+    [ "gui_qt5_qml_new", "gui__qt5__qml_8cpp.html#afc954aa11b24ac9e2bbe5e97892d7bca", null ],
     [ "gui_qt5_qml_resize", "gui__qt5__qml_8cpp.html#ab3a3fdcc664d441df92d89ac072945d9", null ],
     [ "gui_qt5_qml_set_attr", "gui__qt5__qml_8cpp.html#a0f8b2d91dafbf1789f4052cf440dec68", null ],
     [ "gui_qt5_qml_set_graphics", "gui__qt5__qml_8cpp.html#aaf6b70a8801d35cebf9cc7a2bdedf6a4", null ],

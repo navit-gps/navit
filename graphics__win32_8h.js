@@ -18,10 +18,10 @@ var graphics__win32_8h =
     [ "ID_FILE_EXIT", "graphics__win32_8h.html#a3a6cb842433474b721f52d5f3d23ebd4", null ],
     [ "ID_STUFF_GO", "graphics__win32_8h.html#a2d8997eb04d052b92d917e930c46d7e4", null ],
     [ "POPUP_MENU_OFFSET", "graphics__win32_8h.html#aa619410a3ecf21cdb67bde8bc30bdae3", null ],
-    [ "gui_gtk_datawindow_new", "graphics__win32_8h.html#a033bfd57391341071819b9b338d1e4ee", null ],
-    [ "gui_gtk_menubar_new", "graphics__win32_8h.html#a4bd6e0e2623df3c61f3cdd922c4ff76b", null ],
-    [ "gui_gtk_popup_new", "graphics__win32_8h.html#a49a9d00040f4c52e6c6433d880f5411c", null ],
-    [ "gui_gtk_statusbar_new", "graphics__win32_8h.html#a91667ac564b0e000882ef76783f6d3fb", null ],
-    [ "gui_gtk_toolbar_new", "graphics__win32_8h.html#a5f906bddb85be3324185182353d6bbd7", null ],
-    [ "win32_graphics_new", "graphics__win32_8h.html#a6702a1c4b10a3e14e1d5557bbffc488b", null ]
+    [ "gui_gtk_datawindow_new", "graphics__win32_8h.html#a35d521764c35006197bc2eee42e0a7b8", null ],
+    [ "gui_gtk_menubar_new", "graphics__win32_8h.html#a5e371e22cc0e59dff2144bc41e33ca85", null ],
+    [ "gui_gtk_popup_new", "graphics__win32_8h.html#a14874c5d341b7924479899e09559282b", null ],
+    [ "gui_gtk_statusbar_new", "graphics__win32_8h.html#a517b954b815e8a36e24746f61acc73b3", null ],
+    [ "gui_gtk_toolbar_new", "graphics__win32_8h.html#ad585af9c73cf6c029825a2a450779faf", null ],
+    [ "win32_graphics_new", "graphics__win32_8h.html#a6d1eb27afdd03a70d2676da2bcdd3fd9", null ]
 ];

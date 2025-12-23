@@ -7,7 +7,7 @@ var classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader =
     [ "download_osm_map", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa77d95b27ab3d03b40659c69414be6c8", null ],
     [ "downloadData", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aca8322ae68d468bde523a5f32d5c5b9d", null ],
     [ "enableRetry", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a8c9d4b53cfa1eb21b3857d05686a6027", null ],
-    [ "getAvailableMaps", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#aa6e5d43000eeefad5d17d6171aece28f", null ],
+    [ "getAvailableMaps", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a842a069578fccd08fdd2b54dfdf2f633", null ],
     [ "getDestinationFile", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a9308f7cdb963228bc0b18634dcf50e33", null ],
     [ "getDownloadURL", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#a3b5a0e66e91dd0266bd0bbb791b16a34", null ],
     [ "getInputStream", "classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html#acc71ac4664b9518772050c4e272ee8c5", null ],

@@ -5,11 +5,7 @@ var dir_8b19c315ddc03d8f73d70316e3e36453 =
     [ "graphics_qt5.cpp", "graphics__qt5_8cpp.html", "graphics__qt5_8cpp" ],
     [ "graphics_qt5.h", "graphics__qt5_8h.html", "graphics__qt5_8h" ],
     [ "QNavitQuick.cpp", "QNavitQuick_8cpp.html", "QNavitQuick_8cpp" ],
-    [ "QNavitQuick.h", "QNavitQuick_8h.html", [
-      [ "QNavitQuick", "classQNavitQuick.html", "classQNavitQuick" ]
-    ] ],
+    [ "QNavitQuick.h", "QNavitQuick_8h.html", "QNavitQuick_8h" ],
     [ "QNavitWidget.cpp", "QNavitWidget_8cpp.html", "QNavitWidget_8cpp" ],
-    [ "QNavitWidget.h", "QNavitWidget_8h.html", [
-      [ "QNavitWidget", "classQNavitWidget.html", "classQNavitWidget" ]
-    ] ]
+    [ "QNavitWidget.h", "QNavitWidget_8h.html", "QNavitWidget_8h" ]
 ];

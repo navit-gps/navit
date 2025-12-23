@@ -8,7 +8,7 @@ var gui__qml_8cpp =
     [ "gui_qml_get_attr", "gui__qml_8cpp.html#abe048dfbe3d5467e2b58449632eed693", null ],
     [ "gui_qml_keypress", "gui__qml_8cpp.html#a44c18e7dd204c91e4b21b7f99d2d2d46", null ],
     [ "gui_qml_motion", "gui__qml_8cpp.html#a903c05dde04c397dfd5dff7030d8bb7a", null ],
-    [ "gui_qml_new", "gui__qml_8cpp.html#a75168507db89d4d3c3a61178fc6c825c", null ],
+    [ "gui_qml_new", "gui__qml_8cpp.html#a336414104b1486515a42f8038bd7eadf", null ],
     [ "gui_qml_resize", "gui__qml_8cpp.html#a29370b32a8dbb8c90a0bcdbfb3fb69dd", null ],
     [ "gui_qml_set_attr", "gui__qml_8cpp.html#a09da1bd0fa956d7a10634d56cd3601b7", null ],
     [ "gui_qml_set_graphics", "gui__qml_8cpp.html#ad1bacfaaf484ddb29cf57d37ba886daf", null ],

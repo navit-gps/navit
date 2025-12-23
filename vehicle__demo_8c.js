@@ -3,7 +3,7 @@ var vehicle__demo_8c =
     [ "nmea_chksum", "vehicle__demo_8c.html#a11f821124a4cfe286968be8ccdfadc15", null ],
     [ "plugin_init", "vehicle__demo_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "vehicle_demo_destroy", "vehicle__demo_8c.html#a1ef345208068f7734c1c0b5138909303", null ],
-    [ "vehicle_demo_new", "vehicle__demo_8c.html#a09ae19730e9f7118267b2475f9076dc5", null ],
+    [ "vehicle_demo_new", "vehicle__demo_8c.html#ad6cf23d2b0d1611d83f6ac4dad2e4a15", null ],
     [ "vehicle_demo_position_attr_get", "vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30", null ],
     [ "vehicle_demo_set_attr", "vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71", null ],
     [ "vehicle_demo_set_attr_do", "vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d", null ],
