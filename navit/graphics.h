@@ -25,8 +25,8 @@
 #ifndef NAVIT_GRAPHICS_H
 #define NAVIT_GRAPHICS_H
 #include "coord.h"
-#include "point.h"
 #include "navit.h"
+#include "point.h"
 
 #include <glib.h>
 
@@ -47,7 +47,9 @@ struct mapset;
 
 /* This enum must be synchronized with the constants in NavitGraphics.java. */
 enum draw_mode_num {
-    draw_mode_begin, draw_mode_end, draw_mode_begin_clear
+    draw_mode_begin,
+    draw_mode_end,
+    draw_mode_begin_clear
 };
 
 struct graphics_priv;
@@ -64,23 +66,23 @@ struct graphics_keyboard_priv;
  * Describes an instance of the native on-screen keyboard or other input method.
  */
 struct graphics_keyboard {
-    int w;										/**< The width of the area obscured by the keyboard (-1 for full width) */
-    int h;										/**< The height of the area obscured by the keyboard (-1 for full height) */
+    int w; /**< The width of the area obscured by the keyboard (-1 for full width) */
+    int h; /**< The height of the area obscured by the keyboard (-1 for full height) */
     /* TODO mode is currently a copy of the respective value in the internal GUI and uses the same values.
      * This may need to be changed to something with globally available enum, possibly with revised values.
      * The Android implementation (the first to support a native on-screen keyboard) does not use this field
      * due to limitations of the platform. */
-    int mode;									/**< Mode flags for the keyboard */
-    char *lang;									/**< The preferred language for text input, may be {@code NULL}. */
-    void *gui_priv;								/**< Private data determined by the GUI. The GUI may store
-												 *   a pointer to a data structure of its choice here. It is
-												 *   the responsibility of the GUI to free the data structure
-												 *   when it is no longer needed. The graphics plugin should
-												 *   not access this member. */
-    struct graphics_keyboard_priv *gra_priv;	/**< Private data determined by the graphics plugin. The
-												 *   graphics plugin is responsible for its management. If it
-												 *   uses this member, it must free the associated data in
-												 *   its {@code hide_native_keyboard} method. */
+    int mode;                                /**< Mode flags for the keyboard */
+    char *lang;                              /**< The preferred language for text input, may be {@code NULL}. */
+    void *gui_priv;                          /**< Private data determined by the GUI. The GUI may store
+                                              *   a pointer to a data structure of its choice here. It is
+                                              *   the responsibility of the GUI to free the data structure
+                                              *   when it is no longer needed. The graphics plugin should
+                                              *   not access this member. */
+    struct graphics_keyboard_priv *gra_priv; /**< Private data determined by the graphics plugin. The
+                                              *   graphics plugin is responsible for its management. If it
+                                              *   uses this member, it must free the associated data in
+                                              *   its {@code hide_native_keyboard} method. */
 };
 
 /** Magic value for unset/unspecified width/height. */
@@ -126,8 +128,8 @@ struct graphics_methods {
                                            int size, int flags);
     struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
     void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
-    struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w,
-                                         int h, int wraparound);
+    struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+                                         int w, int h, int wraparound);
     /** @brief Load an image from a file.
      *
      * @param gr graphics object
@@ -142,7 +144,7 @@ struct graphics_methods {
      * @see image_free()
      */
     struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
-            int *w, int *h, struct point *hot, int rotation);
+                                             int *w, int *h, struct point *hot, int rotation);
     void *(*get_data)(struct graphics_priv *gr, const char *type);
     void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
     void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy,
@@ -152,11 +154,10 @@ struct graphics_methods {
     int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
     int (*show_native_keyboard)(struct graphics_keyboard *kbd);
     void (*hide_native_keyboard)(struct graphics_keyboard *kbd);
-    navit_float (*get_dpi)(struct graphics_priv * gr);
-    void (*draw_polygon_with_holes) (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
-                                     int hole_count, int* ccount, struct point **holes);
+    navit_float (*get_dpi)(struct graphics_priv *gr);
+    void (*draw_polygon_with_holes)(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                    int hole_count, int *ccount, struct point **holes);
 };
-
 
 struct graphics_font_methods {
     void (*font_destroy)(struct graphics_font_priv *font);
@@ -264,7 +265,7 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy,
                             struct point *ret, int estimate);
 void graphics_overlay_disable(struct graphics *this_, int disable);
-int  graphics_is_disabled(struct graphics *this_);
+int graphics_is_disabled(struct graphics *this_);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 int graphics_draw_drag(struct graphics *this_, struct point *p);
 void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
@@ -294,8 +295,8 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
-int graphics_show_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
-int graphics_hide_native_keyboard (struct graphics *this_, struct graphics_keyboard *kbd);
+int graphics_show_native_keyboard(struct graphics *this_, struct graphics_keyboard *kbd);
+int graphics_hide_native_keyboard(struct graphics *this_, struct graphics_keyboard *kbd);
 void graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in);
 void graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count,
                                     int *width, int poly);
@@ -307,4 +308,3 @@ navit_float graphics_get_dpi(struct graphics *gra);
 #endif
 
 #endif
-

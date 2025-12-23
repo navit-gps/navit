@@ -36,30 +36,30 @@ extern "C" {
 #include "item.h"
 
 enum route_path_flags {
-	route_path_flag_none=0,
-	route_path_flag_cancel=1,
-	route_path_flag_async=2,
-	route_path_flag_no_rebuild=4,
+    route_path_flag_none = 0,
+    route_path_flag_cancel = 1,
+    route_path_flag_async = 2,
+    route_path_flag_no_rebuild = 4,
 };
 
 enum route_status {
-	route_status_no_destination=0,
-	route_status_destination_set=1,
-	route_status_not_found=1|2,
-	route_status_building_path=1|4,
-	route_status_building_graph=1|4|8,
-	route_status_path_done_new=1|16,
-	route_status_path_done_incremental=1|32,
+    route_status_no_destination = 0,
+    route_status_destination_set = 1,
+    route_status_not_found = 1 | 2,
+    route_status_building_path = 1 | 4,
+    route_status_building_graph = 1 | 4 | 8,
+    route_status_path_done_new = 1 | 16,
+    route_status_path_done_incremental = 1 | 32,
 };
 
 struct route_crossing {
-	long segid;
-	int dir;
+    long segid;
+    int dir;
 };
 
 struct route_crossings {
-	int count;
-	struct route_crossing crossing[0];
+    int count;
+    struct route_crossing crossing[0];
 };
 
 /**
@@ -68,12 +68,12 @@ struct route_crossings {
  * This contains information about a certain street
  */
 struct street_data {
-	struct item item;	/**< The map item for this street */
-	int count;			/**< Number of coordinates this street has */
-	int flags;
-	int maxspeed;		/**< Maximum speed allowed on this street. */
-	struct coord c[0];	/**< Pointer to the coordinates of this street.
-						 *   DO NOT INSERT FIELDS AFTER THIS. */
+    struct item item; /**< The map item for this street */
+    int count;        /**< Number of coordinates this street has */
+    int flags;
+    int maxspeed;      /**< Maximum speed allowed on this street. */
+    struct coord c[0]; /**< Pointer to the coordinates of this street.
+                        *   DO NOT INSERT FIELDS AFTER THIS. */
 };
 
 /* prototypes */
@@ -113,7 +113,7 @@ void route_set_destination(struct route *this_, struct pcoord *dst, int async);
 void route_append_destination(struct route *this_, struct pcoord *dst, int async);
 void route_remove_nth_waypoint(struct route *this_, int n);
 void route_remove_waypoint(struct route *this_);
-char* route_get_destination_description(struct route *this_, int n);
+char *route_get_destination_description(struct route *this_, int n);
 struct coord route_get_coord_dist(struct route *this_, int dist);
 struct street_data *street_get_data(struct item *item);
 struct street_data *street_data_dup(struct street_data *orig);
@@ -129,7 +129,7 @@ void route_set_destinations(struct route *this_, struct pcoord *dst, int count, 
 int route_set_attr(struct route *this_, struct attr *attr);
 int route_add_attr(struct route *this_, struct attr *attr);
 int route_remove_attr(struct route *this_, struct attr *attr);
-struct attr_iter * route_attr_iter_new(void);
+struct attr_iter *route_attr_iter_new(void);
 void route_attr_iter_destroy(struct attr_iter *iter);
 int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void route_init(void);
@@ -140,4 +140,3 @@ void route_destroy(struct route *this_);
 #endif
 
 #endif
-

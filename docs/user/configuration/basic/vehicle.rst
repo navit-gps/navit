@@ -73,7 +73,7 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 
 * source="file:/home/myhome/mynmea.log" : here, navit will replay the nmea logfile (under Windows it is currently not possible in Navit)
 * source="pipe:/usr/bin/gpspipe -r" - any executable that produces NMEA output - gpsbabel, gpspipe, ...
-* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source. A demo vehicle spec could look like this: 
+* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source. A demo vehicle spec could look like this:
 
 .. code-block:: xml
 
@@ -95,7 +95,7 @@ To record your trip , you can add a sub-instance "log" to the vehicle. It is pos
 This will give a log file named YearMonthDaySequencenumber.gpx/.nmea which will be kept in memory and flushed to disk when it is 1048576 bytes large or the oldest data is older than 900 seconds.
 .. how to define, where the file get's stored?
 
-To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display 
+To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display
 .. do I need to add it as a map source?
 
 .. code-block:: xml
