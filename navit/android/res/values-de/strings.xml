@@ -77,4 +77,10 @@
     <string name="canary_islands">Kanarische Inseln</string>
     <string name="congo">Demokratische Republik Kongo</string>
     <string name="ethiopia">Äthiopien</string>
+    <string name="kenya">Kenia</string>
+    <string name="lesotho">Lesotho</string>
+    <string name="liberia">Liberia</string>
+    <string name="libya">Libyen</string>
+    <string name="madagascar">Madagaskar</string>
+    <string name="namibia">Namibia</string>
 </resources>
