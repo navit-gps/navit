@@ -493,7 +493,7 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         char *name;
         ret = 1;
     } break;
-    case 8: /* Show contextual actions for a geo position */
+    case 8:   /* Show contextual actions for a geo position */
     case 3: { /* Navigate to geo position */
         s = (*env)->GetStringUTFChars(env, str, NULL);
         char *name;
@@ -534,7 +534,8 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         if (channel == 8) {
             if (gui_show_coord_actions(navit_get_gui(attr.u.navit), NULL, NULL) == -1) {
                 gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
-                break;	/* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected */
+                break; /* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected
+                        */
             }
             /* If previous gui_show_coord_actions() probe failed, then fall back to channel=3 block below */
             dbg(lvl_warning, "No contextual coord actions available, starting default action: navigate to destination");
