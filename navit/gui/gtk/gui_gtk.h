@@ -17,7 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef NAVIT_GUI_GTK_GUI_GTK_H
+#define NAVIT_GUI_GTK_GUI_GTK_H
+
 #include "coord.h"
+#include <gtk/gtk.h>
 
 struct menu_methods;
 struct datawindow_methods;
@@ -43,7 +47,7 @@ struct gui_priv {
     GList *dest_menuitems;
     GList *bookmarks_menuitems;
     GList *vehicle_menuitems;
-    GtkUIManager *menu_manager; // old
+    GtkUIManager *menu_manager;  // old
     struct statusbar_priv *statusbar;
     int menubar_enable;
     int toolbar_enable;
@@ -57,7 +61,8 @@ struct menu_priv *gui_gtk_menubar_new(struct gui_priv *gui, struct menu_methods 
 struct statusbar_priv *gui_gtk_statusbar_new(struct gui_priv *gui);
 struct menu_priv *gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth);
 struct datawindow_priv *gui_gtk_datawindow_new(struct gui_priv *gui, const char *name, struct callback *click,
-        struct callback *close, struct datawindow_methods *meth);
+                                               struct callback *close, struct datawindow_methods *meth);
 void gui_gtk_datawindow_destroy(struct datawindow_priv *win);
 void gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn);
 
+#endif /* NAVIT_GUI_GTK_GUI_GTK_H */
