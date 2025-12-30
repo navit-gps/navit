@@ -1,5 +1,9 @@
 var NAVTREEINDEX32 =
 {
+"structcmd__interface.html#a87d0ad5964c65912e46048adaee513c6":[2,0,39,5],
+"structcmd__interface.html#a88a3b9f82cf327d2687d6563a7b1b293":[2,0,39,3],
+"structcmd__interface.html#a9c39a2c2d0cd598e1f72ad1fcb22dd1a":[2,0,39,4],
+"structcmd__interface.html#aaa034116bf9d2a579bffb68de89aa92f":[2,0,39,6],
 "structcmd__interface.html#ab9a8c2e9ba74ba111aac6e640af08d82":[2,0,39,1],
 "structcmd__interface.html#abae3ffb3056e021fba9a38891432c2e3":[2,0,39,7],
 "structcmd__interface.html#adeb52e183b8422ce3767b0af31ae13ab":[2,0,39,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX32 =
 "structdraw__polyline__shape.html#a8b21f0d16a2bbe766c24ecbd4101f5ba":[2,0,85,1],
 "structdraw__polyline__shape.html#a8b3c2674fa9090ffa5bd932987da8305":[2,0,85,8],
 "structdraw__polyline__shape.html#a8f86022640bd839f05c0150462e7b7f7":[2,0,85,4],
-"structdraw__polyline__shape.html#a97208522bda043cde75359ed2ae89089":[2,0,85,6],
-"structdraw__polyline__shape.html#ae4273dbf9bde39b3bc3d6ff17cde6260":[2,0,85,7],
-"structduplicate.html":[2,0,86],
-"structduplicate.html#a30907b1a9e2417f52b16e09dda17aa41":[2,0,86,1],
-"structduplicate.html#af73cdd6437f2d3938b1d950ed2b8deea":[2,0,86,0]
+"structdraw__polyline__shape.html#a97208522bda043cde75359ed2ae89089":[2,0,85,6]
 };

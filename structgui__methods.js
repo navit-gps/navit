@@ -9,5 +9,6 @@ var structgui__methods =
     [ "popup_new", "structgui__methods.html#ac09ccc72bc96525bbb55638c73c04036", null ],
     [ "run_main_loop", "structgui__methods.html#aa1d374384a546c5968fe3ea849dafd9c", null ],
     [ "set_attr", "structgui__methods.html#a8e2adeba2c0ac3c7a3fef5fcb759be3a", null ],
-    [ "set_graphics", "structgui__methods.html#a405dbb54c703abb831c7d96bec25b012", null ]
+    [ "set_graphics", "structgui__methods.html#a405dbb54c703abb831c7d96bec25b012", null ],
+    [ "show_coord_actions", "structgui__methods.html#a8cfec1910788580fed165ef2fc47a35b", null ]
 ];

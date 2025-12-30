@@ -97,34 +97,34 @@ $(document).ready(function(){initNavTree('gui__gtk__window_8c.html',''); initRes
   <div class="headertitle"><div class="title">gui_gtk_window.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;gdk/gdkkeysyms.h&gt;</code><br />
 <code>#include &lt;locale.h&gt;</code><br />
-<code>#include &lt;gdk/gdkkeysyms.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;X11/XF86keysym.h&gt;</code><br />
-<code>#include &lt;gtk/gtk.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__gtk_8h_source.html">gui_gtk.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="layout_8h_source.html">layout.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="bookmarks_8h_source.html">bookmarks.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__gtk_8h_source.html">gui_gtk.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout_8h_source.html">layout.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
+<code>#include &lt;gtk/gtk.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -1437,17 +1437,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    NULL,</div>
+<div class="line">    NULL,  </div>
 <div class="line">    <a class="code hl_function" href="graphics__win32_8h.html#a14874c5d341b7924479899e09559282b">gui_gtk_popup_new</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a>,</div>
-<div class="line">    NULL,</div>
+<div class="line">    NULL,  </div>
 <div class="line">    <a class="code hl_function" href="graphics__win32_8h.html#a35d521764c35006197bc2eee42e0a7b8">gui_gtk_datawindow_new</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a>,</div>
+<div class="line">    NULL,  </div>
 <div class="line">}</div>
 <div class="ttc" id="agraphics__win32_8h_html_a14874c5d341b7924479899e09559282b"><div class="ttname"><a href="graphics__win32_8h.html#a14874c5d341b7924479899e09559282b">gui_gtk_popup_new</a></div><div class="ttdeci">struct menu_priv * gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth)</div><div class="ttdef"><b>Definition</b> gui_gtk_action.c:616</div></div>
 <div class="ttc" id="agraphics__win32_8h_html_a35d521764c35006197bc2eee42e0a7b8"><div class="ttname"><a href="graphics__win32_8h.html#a35d521764c35006197bc2eee42e0a7b8">gui_gtk_datawindow_new</a></div><div class="ttdeci">struct datawindow_priv * gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth)</div></div>
-<div class="ttc" id="agui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition</b> gui_gtk_window.c:244</div></div>
-<div class="ttc" id="agui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition</b> gui_gtk_window.c:204</div></div>
+<div class="ttc" id="agui__gtk__window_8c_html_a3d7aa8746d43f4e8289e04607829e855"><div class="ttname"><a href="gui__gtk__window_8c.html#a3d7aa8746d43f4e8289e04607829e855">gui_gtk_add_bookmark</a></div><div class="ttdeci">static int gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)</div><div class="ttdef"><b>Definition</b> gui_gtk_window.c:240</div></div>
+<div class="ttc" id="agui__gtk__window_8c_html_adfbac38c45ad5bda0a6481d761df1996"><div class="ttname"><a href="gui__gtk__window_8c.html#adfbac38c45ad5bda0a6481d761df1996">gui_gtk_set_graphics</a></div><div class="ttdeci">static int gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition</b> gui_gtk_window.c:200</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="gui__gtk__window_8c.html#a77f488689fb438e3f86704f132e8f530">gui_gtk_new()</a>.</p>
 

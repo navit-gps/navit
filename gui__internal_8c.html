@@ -97,62 +97,65 @@ $(document).ready(function(){initNavTree('gui__internal_8c.html',''); initResiza
   <div class="headertitle"><div class="title">gui_internal.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;config.h&quot;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
 <code>#include &lt;sys/time.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="bookmarks_8h_source.html">bookmarks.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="command_8h_source.html">command.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="config___8h_source.html">config_.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;fib.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal_8h_source.html">gui_internal.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__bookmark_8h_source.html">gui_internal_bookmark.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__command_8h_source.html">gui_internal_command.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__gesture_8h_source.html">gui_internal_gesture.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__html_8h_source.html">gui_internal_html.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__keyboard_8h_source.html">gui_internal_keyboard.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__menu_8h_source.html">gui_internal_menu.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__poi_8h_source.html">gui_internal_poi.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__priv_8h_source.html">gui_internal_priv.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__search_8h_source.html">gui_internal_search.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__widget_8h_source.html">gui_internal_widget.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="search_8h_source.html">navit/search.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="track_8h_source.html">track.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicleprofile_8h_source.html">vehicleprofile.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="config___8h_source.html">config_.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="search_8h_source.html">navit/search.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="track_8h_source.html">track.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal_8h_source.html">gui_internal.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="command_8h_source.html">command.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="bookmarks_8h_source.html">bookmarks.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;fib.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__widget_8h_source.html">gui_internal_widget.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__priv_8h_source.html">gui_internal_priv.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__html_8h_source.html">gui_internal_html.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__bookmark_8h_source.html">gui_internal_bookmark.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__menu_8h_source.html">gui_internal_menu.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__search_8h_source.html">gui_internal_search.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__gesture_8h_source.html">gui_internal_gesture.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__poi_8h_source.html">gui_internal_poi.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__command_8h_source.html">gui_internal_command.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__keyboard_8h_source.html">gui_internal_keyboard.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvehicle__and__profilename.html">vehicle_and_profilename</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgui__internal__show__coord__args.html">gui_internal_show_coord_args</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure containing the context (arguments) to run gui_internal_show_coord()  <a href="structgui__internal__show__coord__args.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -247,9 +250,9 @@ Functions</h2></td></tr>
 <tr class="separator:a55a45baca580bcafa2d23927da1136a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9720cd19aab6aed4353e60f36fce8c61" id="r_a9720cd19aab6aed4353e60f36fce8c61"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a9720cd19aab6aed4353e60f36fce8c61">gui_internal_cmd_delete_waypoint</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *wm, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
 <tr class="separator:a9720cd19aab6aed4353e60f36fce8c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a182f39c0a04cd59ff393a6dc66062f55" id="r_a182f39c0a04cd59ff393a6dc66062f55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structpcoord.html">pcoord</a> *pc_in, struct <a class="el" href="structcoord__geo.html">coord_geo</a> *g_in, struct <a class="el" href="structwidget.html">widget</a> *wm, const char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, int <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9">flags</a>)</td></tr>
-<tr class="memdesc:a182f39c0a04cd59ff393a6dc66062f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays the commands available for a location.  <br /></td></tr>
-<tr class="separator:a182f39c0a04cd59ff393a6dc66062f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e03dc9f4784eaf924a03578b51ccd1" id="r_aa5e03dc9f4784eaf924a03578b51ccd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, const struct <a class="el" href="structpcoord.html">pcoord</a> *pc_in, struct <a class="el" href="structcoord__geo.html">coord_geo</a> *g_in, struct <a class="el" href="structwidget.html">widget</a> *wm, const char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, int <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9">flags</a>)</td></tr>
+<tr class="memdesc:aa5e03dc9f4784eaf924a03578b51ccd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays the commands available for a location.  <br /></td></tr>
+<tr class="separator:aa5e03dc9f4784eaf924a03578b51ccd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fe85a83b61f23f74103cbfc17b696c7" id="r_a7fe85a83b61f23f74103cbfc17b696c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7">gui_internal_cmd_position</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *wm, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
 <tr class="separator:a7fe85a83b61f23f74103cbfc17b696c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79dd50c54ad2681581e7134f3fc06b1f" id="r_a79dd50c54ad2681581e7134f3fc06b1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a79dd50c54ad2681581e7134f3fc06b1f">gui_internal_cmd_bookmarks</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *wm, void *<a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>)</td></tr>
@@ -302,12 +305,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a753483ffd990f0ce15a75f26fdbb5bdf" id="r_a753483ffd990f0ce15a75f26fdbb5bdf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a753483ffd990f0ce15a75f26fdbb5bdf">gui_internal_leave</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this)</td></tr>
 <tr class="separator:a753483ffd990f0ce15a75f26fdbb5bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cddae9cf6f17e3d7c519e14ce6e3ef5" id="r_a1cddae9cf6f17e3d7c519e14ce6e3ef5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a1cddae9cf6f17e3d7c519e14ce6e3ef5">gui_internal_set_click_coord</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structpoint.html">point</a> *<a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</td></tr>
+<tr class="memdesc:a1cddae9cf6f17e3d7c519e14ce6e3ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the internal state of the internal GUI to store a specific point clicked on the display.  <br /></td></tr>
 <tr class="separator:a1cddae9cf6f17e3d7c519e14ce6e3ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3444bdad0acb71fbdf542994cccb61e9" id="r_a3444bdad0acb71fbdf542994cccb61e9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a3444bdad0acb71fbdf542994cccb61e9">gui_internal_set_position_coord</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this)</td></tr>
+<tr class="memdesc:a3444bdad0acb71fbdf542994cccb61e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the internal state of the internal GUI to store the current vehicle position.  <br /></td></tr>
 <tr class="separator:a3444bdad0acb71fbdf542994cccb61e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d3b3178c593c276855a5c1e1325d0f8" id="r_a8d3b3178c593c276855a5c1e1325d0f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8">gui_internal_enter_setup</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this)</td></tr>
 <tr class="separator:a8d3b3178c593c276855a5c1e1325d0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a015bfc0405e0ff20ce45a7433686524a" id="r_a015bfc0405e0ff20ce45a7433686524a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a">gui_internal_cmd_menu</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, int ignore, char *href)</td></tr>
+<tr class="memdesc:a015bfc0405e0ff20ce45a7433686524a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display an internal GUI menu.  <br /></td></tr>
 <tr class="separator:a015bfc0405e0ff20ce45a7433686524a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4c0e191f5b1d46616e8d237c223dd73" id="r_ad4c0e191f5b1d46616e8d237c223dd73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#ad4c0e191f5b1d46616e8d237c223dd73">gui_internal_cmd_log_do</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structwidget.html">widget</a> *<a class="el" href="structwidget.html">widget</a>)</td></tr>
 <tr class="separator:ad4c0e191f5b1d46616e8d237c223dd73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -346,6 +352,12 @@ Functions</h2></td></tr>
 <tr class="separator:a24a4c5e476783c673ad1dbcde8ab7621"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e352b9135c2fe853c9158bcca0629fc" id="r_a7e352b9135c2fe853c9158bcca0629fc"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgraphics.html">graphics</a> *gra)</td></tr>
 <tr class="separator:a7e352b9135c2fe853c9158bcca0629fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a20183479626fe36c29c24ddca3d7a" id="r_ab1a20183479626fe36c29c24ddca3d7a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structpcoord.html">pcoord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, char *<a class="el" href="destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c">description</a>)</td></tr>
+<tr class="memdesc:ab1a20183479626fe36c29c24ddca3d7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display an internal contextual menu for the specified geographical coordinates.  <br /></td></tr>
+<tr class="separator:ab1a20183479626fe36c29c24ddca3d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4563459cca1dbdb72dd52b860411ff9" id="r_ad4563459cca1dbdb72dd52b860411ff9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#ad4563459cca1dbdb72dd52b860411ff9">gui_internal_deferred_show_coord_actions</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this, struct <a class="el" href="structgui__internal__show__coord__args.html">gui_internal_show_coord_args</a> *<a class="el" href="structcontext.html">context</a>)</td></tr>
+<tr class="memdesc:ad4563459cca1dbdb72dd52b860411ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a context (as a pointer to a <a class="el" href="structgui__internal__show__coord__args.html" title="A structure containing the context (arguments) to run gui_internal_show_coord()">gui_internal_show_coord_args</a> structure) and run <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a" title="Display an internal contextual menu for the specified geographical coordinates.">gui_internal_show_coord_actions()</a> with these arguments.  <br /></td></tr>
+<tr class="separator:ad4563459cca1dbdb72dd52b860411ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a03d72c29bf13bf8ff111c80bcc3345" id="r_a8a03d72c29bf13bf8ff111c80bcc3345"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *this)</td></tr>
 <tr class="separator:a8a03d72c29bf13bf8ff111c80bcc3345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c6fd1c4b4260a0548264ff63d6f033" id="r_ac5c6fd1c4b4260a0548264ff63d6f033"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a> (struct <a class="el" href="structgui__priv.html">gui_priv</a> *priv, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
@@ -387,11 +399,11 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a8a1d1c70bc585110cb2998de78c70bfd" id="r_a8a1d1c70bc585110cb2998de78c70bfd"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a8a1d1c70bc585110cb2998de78c70bfd">LARGE_PROFILE</a> =0</td></tr>
+<tr class="memitem:a8a1d1c70bc585110cb2998de78c70bfd" id="r_a8a1d1c70bc585110cb2998de78c70bfd"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a8a1d1c70bc585110cb2998de78c70bfd">LARGE_PROFILE</a> = 0</td></tr>
 <tr class="separator:a8a1d1c70bc585110cb2998de78c70bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27c5cff5306473fa9754b28d5b91e3de" id="r_a27c5cff5306473fa9754b28d5b91e3de"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a27c5cff5306473fa9754b28d5b91e3de">MEDIUM_PROFILE</a> =1</td></tr>
+<tr class="memitem:a27c5cff5306473fa9754b28d5b91e3de" id="r_a27c5cff5306473fa9754b28d5b91e3de"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a27c5cff5306473fa9754b28d5b91e3de">MEDIUM_PROFILE</a> = 1</td></tr>
 <tr class="separator:a27c5cff5306473fa9754b28d5b91e3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19257ecdc4590b0af7e73ff56afa3aa5" id="r_a19257ecdc4590b0af7e73ff56afa3aa5"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a19257ecdc4590b0af7e73ff56afa3aa5">SMALL_PROFILE</a> =2</td></tr>
+<tr class="memitem:a19257ecdc4590b0af7e73ff56afa3aa5" id="r_a19257ecdc4590b0af7e73ff56afa3aa5"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a19257ecdc4590b0af7e73ff56afa3aa5">SMALL_PROFILE</a> = 2</td></tr>
 <tr class="separator:a19257ecdc4590b0af7e73ff56afa3aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66964d0c3bf3da7cc54ec6fed3d3a17c" id="r_a66964d0c3bf3da7cc54ec6fed3d3a17c"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgui__config__settings.html">gui_config_settings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal_8c.html#a66964d0c3bf3da7cc54ec6fed3d3a17c">config_profiles</a> []</td></tr>
 <tr class="separator:a66964d0c3bf3da7cc54ec6fed3d3a17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1090,7 +1102,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structattr.html#a1075170f522c70bc3c75543259d80145">attr::bookmarks</a>, <a class="el" href="bookmarks_8c.html#af75688dbc4da9d7339d829f4acf54f06">bookmarks_delete_bookmark()</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="structwidget.html#af7be213fd3a5b9bef8f712a17cbaa190">widget::text</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -1136,7 +1148,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, <a class="el" href="structwidget.html#a166a33b2f89d0346b58e662d93b93715">widget::item</a>, <a class="el" href="item_8c.html#a088682cd8951907090cbf68b4c9e0f83">item_coord_get_pro()</a>, <a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#a584b936a035cbfdc7f83cd2dd38aa420">map_rect_get_item()</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="group__navit.html#ga63045a5874ba3acc198aa2ec6fbc1e9b">navit_get_destination_count()</a>, <a class="el" href="group__navit.html#gac728762c29dd5092117c69705d40ef83">navit_get_destinations()</a>, <a class="el" href="group__navit.html#ga8c4ba89eaca2dc43b6f6263b4be97d97">navit_set_destinations()</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -1260,7 +1272,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">_</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="gui__internal_8c.html#a855d657d7772d655c89c1ca3f61eecca">gui_internal_cmd_insert_destination_do()</a>, and <a class="el" href="gui__internal_8c.html#aab8e3696d93fc4b25eb6df4d841f6e4c">gui_internal_select_waypoint()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -1574,6 +1586,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Display an internal GUI menu. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Our gui context </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">ignore</td><td>Whether the current triggering button press should be ignored by subsequent handlers (see <a class="el" href="group__navit.html#ga2a37e823307eea0de189c40d4de11ee2" title="Sets a flag indicating that the current button event should be ignored by subsequent handlers.">navit_ignore_button()</a>) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">href</td><td>The anchor of the HTML menu to display (or NULL to display the main menu) </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal_8c.html#a53b6431af49ec8203c72046e0512fec4">gui_internal_enter()</a>, <a class="el" href="gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8">gui_internal_enter_setup()</a>, <a class="el" href="gui__internal__html_8c.html#a18427c7c14b755157c6dfc6294392ffd">gui_internal_html_load_href()</a>, <a class="el" href="gui__internal__html_8c.html#aeba89f5cc2970e5e20589fc44dcf5b17">gui_internal_html_main_menu()</a>, and <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a34fe8cf132c93e8c6addcc9c1f6ca6c8">gui_internal_button()</a>, <a class="el" href="gui__internal__command_8c.html#a77eb06d171112d60145a51d3a21963b2">gui_internal_cmd_menu2()</a>, and <a class="el" href="gui__internal_8c.html#a24a4c5e476783c673ad1dbcde8ab7621">gui_internal_keypress()</a>.</p>
@@ -1612,14 +1634,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="structwidget.html#a36cd56303bd04427cf049c2dd848a39a">widget::data</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, <a class="el" href="gui__internal_8c.html#ad6c83fa36110df848b0e32b68fd1cba5">gui_internal_cmd_set_destination()</a>, <a class="el" href="gui__internal__search_8c.html#a3624343a2a325a37041da405d13be37e">gui_internal_search_house_number_in_street()</a>, <a class="el" href="gui__internal__search_8c.html#a4d344f004d3e14c07c03abaac8e2ba3f">gui_internal_search_town_in_country()</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, and <a class="el" href="structwidget.html#af7be213fd3a5b9bef8f712a17cbaa190">widget::text</a>.</p>
+<p class="reference">References <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="structwidget.html#a36cd56303bd04427cf049c2dd848a39a">widget::data</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>, <a class="el" href="gui__internal_8c.html#ad6c83fa36110df848b0e32b68fd1cba5">gui_internal_cmd_set_destination()</a>, <a class="el" href="gui__internal__search_8c.html#a3624343a2a325a37041da405d13be37e">gui_internal_search_house_number_in_street()</a>, <a class="el" href="gui__internal__search_8c.html#a4d344f004d3e14c07c03abaac8e2ba3f">gui_internal_search_town_in_country()</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, and <a class="el" href="structwidget.html#af7be213fd3a5b9bef8f712a17cbaa190">widget::text</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a93b1775ab8a266524d1c9f1652656911">gui_internal_cmd2_waypoints()</a>, <a class="el" href="gui__internal_8c.html#a79dd50c54ad2681581e7134f3fc06b1f">gui_internal_cmd_bookmarks()</a>, <a class="el" href="gui__internal_8c.html#a90d508481c4707730064b7140909161f">gui_internal_cmd_enter_coord_do()</a>, <a class="el" href="gui__internal__command_8c.html#a4054371dcc1d39673d5e9044f59aa97b">gui_internal_cmd_formerdests()</a>, <a class="el" href="gui__internal__poi_8c.html#a4410ef1e368b1f1b48e9dca53917a39e">gui_internal_cmd_pois_item()</a>, <a class="el" href="gui__internal__search_8c.html#aa4d2802cc97f9e57b3a3ef77da87d6d6">gui_internal_create_resultlist_entry()</a>, and <a class="el" href="gui__internal_8c.html#a256ca02bb66cea534b532813ec454cf8">gui_internal_populate_route_table()</a>.</p>
 
 </div>
 </div>
-<a id="a182f39c0a04cd59ff393a6dc66062f55" name="a182f39c0a04cd59ff393a6dc66062f55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a182f39c0a04cd59ff393a6dc66062f55">&#9670;&#160;</a></span>gui_internal_cmd_position_do()</h2>
+<a id="aa5e03dc9f4784eaf924a03578b51ccd1" name="aa5e03dc9f4784eaf924a03578b51ccd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e03dc9f4784eaf924a03578b51ccd1">&#9670;&#160;</a></span>gui_internal_cmd_position_do()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1633,7 +1655,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
+          <td class="paramtype">const struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
           <td class="paramname"><em>pc_in</em>, </td>
         </tr>
         <tr>
@@ -1677,14 +1699,15 @@ Variables</h2></td></tr>
     <tr><td class="paramname">g_in</td><td>WGS84 coordinates of the position </td></tr>
     <tr><td class="paramname">wm</td><td>The widget that points to this function as a callback </td></tr>
     <tr><td class="paramname">name</td><td>The display name for the position </td></tr>
-    <tr><td class="paramname">flags</td><td>Flags specifying the operations available from the GUI </td></tr>
+    <tr><td class="paramname">flags</td><td>Flags specifying the operations available from the GUI</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>Position input can be done either using pc_in or g_in (if both are provided, pc_in takes precedence) </dd></dl>
 
 <p class="reference">References <a class="el" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">_</a>, <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="structwidget.html#a36cd56303bd04427cf049c2dd848a39a">widget::data</a>, <a class="el" href="structwidget.html#a085a4daf5ca7501c5a072dc299f2438d">widget::data_free</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="graphics__opengl_8c.html#aa56c53aab8eb86f3bde703cb491ef326">display()</a>, <a class="el" href="graphics_8c.html#afb3a676406554baaa2616a4f1392c15c">displaylist_get_clicked_list()</a>, <a class="el" href="graphics_8c.html#a618e010a2d74d7f05e715cccf3381f7f">displaylist_get_selection()</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9ac18d33ee6e4f7b4d8cc0dad08e716939">flags_expand</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a87db84be64930d3e625b30e1de8b9fc3">flags_fill</a>, <a class="el" href="debug_8h.html#a473ad2646fb4369e125569ef901da176">g_free_func</a>, <a class="el" href="graphics_8c.html#a6f45ef508af8d4c6cc39f339973a56a1">graphics_displayitem_get_item()</a>, <a class="el" href="graphics_8c.html#aa541f937ed35329f6bb1c3cd6c90fd70">graphics_displaylist_close()</a>, <a class="el" href="graphics_8c.html#a7bafe709b21541ad4ab337b2774968cb">graphics_displaylist_open()</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9af62460aa6e1076006f9351349c04dc94">gravity_left</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a970093fee14eb6ad63152a00ef8b4d88">gravity_left_center</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a338cd9ca0438927a17533413a7ba6087">gravity_left_top</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a0c975197b7a9406fc67a268b032c6c81">gravity_top_center</a>, <a class="el" href="gui__internal__widget_8c.html#a0b57ca107665969610b3c905937f43c1">gui_internal_box_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a06601292a770667fa7b86b3f89771af0">gui_internal_button_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a6d65815ae15c5b88755f934b3f8daf58">gui_internal_button_new_with_callback()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a976fb2aa8dc093943569f83715d171de">gui_internal_cmd_add_bookmark2()</a>, <a class="el" href="gui__internal__bookmark_8c.html#ac8814e3322eb4d20868b6d1c36a986ff">gui_internal_cmd_copy_bookmark()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a8b373eb57bec2a9ffed1de61594adb2d">gui_internal_cmd_cut_bookmark()</a>, <a class="el" href="gui__internal_8c.html#ab7ea8b4a9cf1c1f03788b6eb1935b0a2">gui_internal_cmd_delete_bookmark()</a>, <a class="el" href="gui__internal_8c.html#a9720cd19aab6aed4353e60f36fce8c61">gui_internal_cmd_delete_waypoint()</a>, <a class="el" href="gui__internal_8c.html#abdeab92572821b1697244c94cfa68d9c">gui_internal_cmd_insert_destination()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a405706357df2faf49ee2a3696179fc67">gui_internal_cmd_paste_bookmark()</a>, <a class="el" href="gui__internal__poi_8c.html#a760d19f7179ca5b9502b7a270cf5963d">gui_internal_cmd_pois()</a>, <a class="el" href="gui__internal__poi_8c.html#a4410ef1e368b1f1b48e9dca53917a39e">gui_internal_cmd_pois_item()</a>, <a class="el" href="gui__internal__bookmark_8c.html#af890b054a58ec6e26b4669f646e2c78b">gui_internal_cmd_rename_bookmark()</a>, <a class="el" href="gui__internal_8c.html#a55a45baca580bcafa2d23927da1136a4">gui_internal_cmd_results_map_clean()</a>, <a class="el" href="gui__internal_8c.html#a7c867bbd47d97507f36a622a11c23a66">gui_internal_cmd_results_to_map()</a>, <a class="el" href="gui__internal_8c.html#ad6c83fa36110df848b0e32b68fd1cba5">gui_internal_cmd_set_destination()</a>, <a class="el" href="gui__internal_8c.html#aa121818f2ebc657a936ef1e4cc8fee38">gui_internal_cmd_set_position()</a>, <a class="el" href="gui__internal_8c.html#a825fdba772c1ebb6c22801a46b9a772a">gui_internal_cmd_view_attributes()</a>, <a class="el" href="gui__internal_8c.html#ad82ad0f8ba8a81232532bbaf0f20c9a6">gui_internal_cmd_view_in_browser()</a>, <a class="el" href="gui__internal_8c.html#ac41a535355714f8867a8ae7bb821bc70">gui_internal_cmd_view_on_map()</a>, <a class="el" href="gui__internal__widget_8c.html#ab097497b782e948a4ffca7bf1bff02d1">gui_internal_label_new()</a>, <a class="el" href="gui__internal__menu_8c.html#adf08c31a11e30347a969bb70891e8087">gui_internal_menu()</a>, <a class="el" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render()</a>, <a class="el" href="gui__internal__search_8c.html#a3624343a2a325a37041da405d13be37e">gui_internal_search_house_number_in_street()</a>, <a class="el" href="gui__internal__search_8c.html#af705dd1fcd5afb219de65f4fb8f4e1b3">gui_internal_search_street_in_town()</a>, <a class="el" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append()</a>, <a class="el" href="gui__internal__widget_8c.html#a29913c698a9b989af889624ef24dd6bf">gui_internal_widget_table_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a32cc6b294a0b197db05ca1d7c62d3672">gui_internal_widget_table_row_new()</a>, <a class="el" href="structitem.html#a193c3e2ec0076325a4f3139f9d33e06e">item::id_hi</a>, <a class="el" href="structitem.html#a8be73452bc1e39e9054361ab579c9dc1">item::id_lo</a>, <a class="el" href="gui__internal_8c.html#aab10f07938ce41888f4f269fa598ebd4">image_new_xs()</a>, <a class="el" href="structwidget.html#a166a33b2f89d0346b58e662d93b93715">widget::item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="item_8c.html#a588dd0a89c0d8f7aa40ecc1e970b4513">item_to_name()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#a671705110e567ef09006f5b6410115ea">map_convert_string_tmp()</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#a874ad809bf48a2b30b5675616c59f7d3">map_rect_get_item_byid()</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="map_8c.html#a51455e36692349b9fecdd677a40c6c4f">map_selection_destroy()</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga63045a5874ba3acc198aa2ec6fbc1e9b">navit_get_destination_count()</a>, <a class="el" href="group__navit.html#ga87f47ef10312b19cc593530ac900b653">navit_get_displaylist()</a>, <a class="el" href="group__navit.html#ga05e743c4b3a4f1c05faa42d2811df5f0">navit_get_trans()</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a7c7eb81eeed26f5f58a264a110defbea">orientation_horizontal</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a7e06d32bdc0e9c0134fffd7561c25cd6">orientation_vertical</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="structattr.html#a64b169265cf7d88891b946e72adcf8aa">attr::projection</a>, <a class="el" href="structwidget.html#ad45343e56d886402b7d16ef4152b5af6">widget::selection_id</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>, <a class="el" href="structwidget.html#af7be213fd3a5b9bef8f712a17cbaa190">widget::text</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#ab29bf5854aa785839e1217a4e60d5d94">transform_point()</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, <a class="el" href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr()</a>, <a class="el" href="structwidget.html#a8d7281b9809930f7c182fc65535e18fe">widget::w</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8839de6ba7d6a65b6459ef80bb42e814">gui_internal_cmd2_position()</a>, and <a class="el" href="gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7">gui_internal_cmd_position()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a8839de6ba7d6a65b6459ef80bb42e814">gui_internal_cmd2_position()</a>, <a class="el" href="gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7">gui_internal_cmd_position()</a>, and <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -1730,7 +1753,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="gui__internal_8c.html#a7c867bbd47d97507f36a622a11c23a66">gui_internal_cmd_results_to_map()</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, and <a class="el" href="group__navit.html#gad7c73db8437d87f3470c88f8a619c292">navit_draw()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -1786,7 +1809,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, and <a class="el" href="gui__internal_8c.html#aae575f81dd560b1ad110926a359d883a">gui_internal_prepare_search_results_map()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, and <a class="el" href="gui__internal_8c.html#a55a45baca580bcafa2d23927da1136a4">gui_internal_cmd_results_map_clean()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>, and <a class="el" href="gui__internal_8c.html#a55a45baca580bcafa2d23927da1136a4">gui_internal_cmd_results_map_clean()</a>.</p>
 
 </div>
 </div>
@@ -1964,7 +1987,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="group__navit.html#gab059a4aca70ca8da61aab4ee461f8392">navit_set_destination()</a>, <a class="el" href="group__navit.html#ga38e803366dc39957f5dfcfbbcfd2b853">navit_zoom_to_route()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7">gui_internal_cmd_position()</a>, and <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7">gui_internal_cmd_position()</a>, and <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -2010,7 +2033,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, <a class="el" href="group__navit.html#gac65ecc6668141c098cafd1802736478f">navit_set_attr()</a>, <a class="el" href="group__navit.html#gaf0224062b4a1b7e4ec04c67343d79f15">navit_set_position()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, and <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -2232,7 +2255,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="navit__nls_8h.html#ab92bb4161a6308b302d283816975c3a6">_</a>, <a class="el" href="attr_8c.html#ac32fbb9a85064163c9b86d1f159dc234">attr_to_name()</a>, <a class="el" href="attr_8c.html#a0f28ebe3254c5862123c07e8207affe3">attr_to_text()</a>, <a class="el" href="structwidget.html#a9e2e7120af088874f5da62344ef6f483">widget::datai</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9ac18d33ee6e4f7b4d8cc0dad08e716939">flags_expand</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a87db84be64930d3e625b30e1de8b9fc3">flags_fill</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a970093fee14eb6ad63152a00ef8b4d88">gravity_left_center</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a0c975197b7a9406fc67a268b032c6c81">gravity_top_center</a>, <a class="el" href="gui__internal__widget_8c.html#a0b57ca107665969610b3c905937f43c1">gui_internal_box_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a06601292a770667fa7b86b3f89771af0">gui_internal_button_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a6d65815ae15c5b88755f934b3f8daf58">gui_internal_button_new_with_callback()</a>, <a class="el" href="gui__internal_8c.html#aabc381a6a01918ee25f0defb9d668040">gui_internal_cmd_view_attribute_details()</a>, <a class="el" href="gui__internal__menu_8c.html#adf08c31a11e30347a969bb70891e8087">gui_internal_menu()</a>, <a class="el" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render()</a>, <a class="el" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append()</a>, <a class="el" href="structitem.html#a193c3e2ec0076325a4f3139f9d33e06e">item::id_hi</a>, <a class="el" href="structitem.html#a8be73452bc1e39e9054361ab579c9dc1">item::id_lo</a>, <a class="el" href="structwidget.html#a166a33b2f89d0346b58e662d93b93715">widget::item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="item_8c.html#a588dd0a89c0d8f7aa40ecc1e970b4513">item_to_name()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#a874ad809bf48a2b30b5675616c59f7d3">map_rect_get_item_byid()</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a7c7eb81eeed26f5f58a264a110defbea">orientation_horizontal</a>, <a class="el" href="gui__internal_8h.html#ab6b306ef981f5e21bb41ea2c2dbe8cd9a7e06d32bdc0e9c0134fffd7561c25cd6">orientation_vertical</a>, <a class="el" href="structattr.html#ab8f6cdf1ba2ede1d4dded1f7ddc729c9">attr::text</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, and <a class="el" href="structwidget.html#a8d7281b9809930f7c182fc65535e18fe">widget::w</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -2278,7 +2301,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structitem.html#a193c3e2ec0076325a4f3139f9d33e06e">item::id_hi</a>, <a class="el" href="structitem.html#a8be73452bc1e39e9054361ab579c9dc1">item::id_lo</a>, <a class="el" href="structwidget.html#a166a33b2f89d0346b58e662d93b93715">widget::item</a>, <a class="el" href="item_8c.html#a1f97d6a6d85956aa73deb31d4a16397f">item_attr_get()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>, <a class="el" href="structitem.html#a9d90a195a3654c3b1e872ad92ae74369">item::map</a>, <a class="el" href="map_8c.html#a671705110e567ef09006f5b6410115ea">map_convert_string_tmp()</a>, <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, <a class="el" href="map_8c.html#a874ad809bf48a2b30b5675616c59f7d3">map_rect_get_item_byid()</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, and <a class="el" href="gui__internal_8c.html#aabc381a6a01918ee25f0defb9d668040">gui_internal_cmd_view_attribute_details()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>, and <a class="el" href="gui__internal_8c.html#aabc381a6a01918ee25f0defb9d668040">gui_internal_cmd_view_attribute_details()</a>.</p>
 
 </div>
 </div>
@@ -2334,7 +2357,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structwidget.html#a7b3ab41921090831e4a11dd7b23305ad">widget::c</a>, <a class="el" href="graphics_8c.html#a42965b4c0229fa80f02e50170684617e">graphics_add_selection()</a>, <a class="el" href="graphics_8c.html#a642e73d34f816f1c4d1ad7df73c92ddb">graphics_clear_selection()</a>, <a class="el" href="gui__internal__widget_8c.html#acf9e46064f04986ac2593a91aaa97677">gui_internal_box_new_with_label()</a>, <a class="el" href="gui__internal_8c.html#aae575f81dd560b1ad110926a359d883a">gui_internal_prepare_search_results_map()</a>, <a class="el" href="gui__internal__menu_8c.html#abfb64071a4ae22e26f067b6514c0e02f">gui_internal_prune_menu()</a>, <a class="el" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append()</a>, <a class="el" href="gui__internal__widget_8c.html#ad6803d7bd5b0371612a013cf62f06e04">gui_internal_widget_destroy()</a>, <a class="el" href="gui__internal__widget_8c.html#a29913c698a9b989af889624ef24dd6bf">gui_internal_widget_table_new()</a>, <a class="el" href="gui__internal__widget_8c.html#a32cc6b294a0b197db05ca1d7c62d3672">gui_internal_widget_table_row_new()</a>, <a class="el" href="structwidget.html#a166a33b2f89d0346b58e662d93b93715">widget::item</a>, <a class="el" href="garmin__img_8c.html#a6db8523928c426c16ad964797cd0098c">label</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, <a class="el" href="group__navit.html#ga12fa1d859b626d14a7737e80eeedd6bb">navit_set_center()</a>, <a class="el" href="structitem.html#a2f4abb10408f4c6f272e7f19f6701c22">item::priv_data</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structwidget.html#a8d7281b9809930f7c182fc65535e18fe">widget::w</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>.</p>
 
 </div>
 </div>
@@ -2433,6 +2456,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ad4563459cca1dbdb72dd52b860411ff9" name="ad4563459cca1dbdb72dd52b860411ff9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4563459cca1dbdb72dd52b860411ff9">&#9670;&#160;</a></span>gui_internal_deferred_show_coord_actions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void gui_internal_deferred_show_coord_actions </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structgui__internal__show__coord__args.html">gui_internal_show_coord_args</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Takes a context (as a pointer to a <a class="el" href="structgui__internal__show__coord__args.html" title="A structure containing the context (arguments) to run gui_internal_show_coord()">gui_internal_show_coord_args</a> structure) and run <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a" title="Display an internal contextual menu for the specified geographical coordinates.">gui_internal_show_coord_actions()</a> with these arguments. </p>
+<p>This function is used as a callback to invoke <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a" title="Display an internal contextual menu for the specified geographical coordinates.">gui_internal_show_coord_actions()</a> asynchronously</p>
+<dl class="section note"><dt>Note</dt><dd>We will also take care of deallocating all dynamic memory in this context struct) </dd></dl>
+
+<p class="reference">References <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
+
+</div>
+</div>
 <a id="a8a03d72c29bf13bf8ff111c80bcc3345" name="a8a03d72c29bf13bf8ff111c80bcc3345"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a03d72c29bf13bf8ff111c80bcc3345">&#9670;&#160;</a></span>gui_internal_disable_suspend()</h2>
 
@@ -2487,7 +2554,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="graphics_8c.html#ac5bc899c6a208b7c45558f850cc703d4">graphics_overlay_disable()</a>, and <a class="el" href="group__navit.html#gaecb03d2a7edcf4ff636bd473033888c7">navit_block()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#af3a921d3856e4b8f0a304c67852cd28a">gui_internal_cmd2()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, and <a class="el" href="gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a">gui_internal_cmd_menu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#af3a921d3856e4b8f0a304c67852cd28a">gui_internal_cmd2()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, <a class="el" href="gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a">gui_internal_cmd_menu()</a>, and <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -2509,7 +2576,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="gui__internal_8c.html#a3444bdad0acb71fbdf542994cccb61e9">gui_internal_set_position_coord()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#af3a921d3856e4b8f0a304c67852cd28a">gui_internal_cmd2()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, and <a class="el" href="gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a">gui_internal_cmd_menu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#af3a921d3856e4b8f0a304c67852cd28a">gui_internal_cmd2()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, <a class="el" href="gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a">gui_internal_cmd_menu()</a>, and <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -3182,7 +3249,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="graphics_8h.html#ad01f84cc748ef81b278a4be6ff1ea89aa88298faad2fed2eb4fd66dc5a4848c57">draw_mode_end</a>, and <a class="el" href="graphics_8c.html#a4346119c6921341dfc973a00579286a9">graphics_draw_mode()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, and <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -3844,9 +3911,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Update the internal state of the internal GUI to store a specific point clicked on the display. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Our gui context </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>The position of the point clicked on the display </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="reference">References <a class="el" href="attr_8c.html#a0bbe4e0a6bf711386cc6fe47301002a2">attr_dup()</a>, <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="group__navit.html#ga05e743c4b3a4f1c05faa42d2811df5f0">navit_get_trans()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="transform_8c.html#a25bc1227373c93717d0350e1fe0130dd">transform_to_geo()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a34fe8cf132c93e8c6addcc9c1f6ca6c8">gui_internal_button()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, and <a class="el" href="gui__internal_8c.html#a24a4c5e476783c673ad1dbcde8ab7621">gui_internal_keypress()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a34fe8cf132c93e8c6addcc9c1f6ca6c8">gui_internal_button()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, <a class="el" href="gui__internal_8c.html#a24a4c5e476783c673ad1dbcde8ab7621">gui_internal_keypress()</a>, and <a class="el" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -4064,6 +4140,14 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Update the internal state of the internal GUI to store the current vehicle position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Our gui context </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="reference">References <a class="el" href="attr_8c.html#a0bbe4e0a6bf711386cc6fe47301002a2">attr_dup()</a>, <a class="el" href="attr_8c.html#a9cc68377e3ec7cb976c69bb8cbdc5691">attr_free()</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="group__navit.html#gad65e35daa2f1f3182f161b6d1e062030">navit_get_attr()</a>, <a class="el" href="group__navit.html#ga05e743c4b3a4f1c05faa42d2811df5f0">navit_get_trans()</a>, <a class="el" href="transform_8c.html#a429351cbffb0701a9ffb7afae6c0ad6e">transform_from_geo()</a>, <a class="el" href="transform_8c.html#a15d0284f89bb7b2d2cc240847aa942d3">transform_get_projection()</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, <a class="el" href="structattr.html#a592bb1bf6ed4efcb2cc91280e53545c5">attr::vehicle</a>, <a class="el" href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr()</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a34fe8cf132c93e8c6addcc9c1f6ca6c8">gui_internal_button()</a>, and <a class="el" href="gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8">gui_internal_enter_setup()</a>.</p>
@@ -4132,9 +4216,66 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="file_8c.html#a3e0f16dad4101c49069636f434ecfc81">file_get_contents()</a>, <a class="el" href="graphics_8c.html#a377c1ce959211cb253c274b731e3aae6">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="group__navit.html#ga662384837793e48873871aa0bc8b04f6">navit_get_user_data_directory()</a>, and <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>.</p>
+<p class="reference">References <a class="el" href="command_8c.html#a6f4393a77b5faecd3074563d45d2dce6">command_evaluate()</a>, <a class="el" href="event_8c.html#a0c6c999d9849124775bfd2cbec4701d1">event_add_timeout()</a>, <a class="el" href="file_8c.html#a3e0f16dad4101c49069636f434ecfc81">file_get_contents()</a>, <a class="el" href="graphics_8c.html#a377c1ce959211cb253c274b731e3aae6">graphics_gc_new()</a>, <a class="el" href="graphics_8c.html#ac651bf3017237dc4233681517f77a178">graphics_gc_set_foreground()</a>, <a class="el" href="group__navit.html#ga662384837793e48873871aa0bc8b04f6">navit_get_user_data_directory()</a>, and <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a12c566d0e48b80701f75877b657c9aaf">gui_internal_resize()</a>, and <a class="el" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics()</a>.</p>
+
+</div>
+</div>
+<a id="ab1a20183479626fe36c29c24ddca3d7a" name="ab1a20183479626fe36c29c24ddca3d7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a20183479626fe36c29c24ddca3d7a">&#9670;&#160;</a></span>gui_internal_show_coord_actions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int gui_internal_show_coord_actions </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structgui__priv.html">gui_priv</a> *&#160;</td>
+          <td class="paramname"><em>this</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structpcoord.html">pcoord</a> *&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>description</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Display an internal contextual menu for the specified geographical coordinates. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">this</td><td>The internal GUI instance </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">c</td><td>The geographical coordinates to use (or NULL if we just want to probe that this feature is supported without actually displaing the menu) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">description</td><td>A label to use for the geographical coordinates (ex: "Map Point"), or NULL if no specific label has been chosen. In that case, we will use the geographical coordinates as a label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on failure, 1 on success, -1 if argument c is NULL </dd></dl>
+
+<p class="reference">References <a class="el" href="structwidget.html#abb2df5139a5f9aae5f5e6a709656d6df">widget::background</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="callback_8h.html#aefbe6726c48359199c9051cb5e4ca942">callback_cast</a>, <a class="el" href="callback_8h.html#aa2eb347f5b5f786023d4cebf9bfad2e8">callback_new_2</a>, <a class="el" href="structgui__internal__show__coord__args.html#a388627e8f26632aa831d84d9adcb55dc">gui_internal_show_coord_args::coord</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c">description()</a>, <a class="el" href="structgui__internal__show__coord__args.html#a9fb8eb0a97593904ba1e615cff1ebe6d">gui_internal_show_coord_args::description</a>, <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>, <a class="el" href="gui__internal_8c.html#ad4563459cca1dbdb72dd52b860411ff9">gui_internal_deferred_show_coord_actions()</a>, <a class="el" href="gui__internal_8c.html#a53b6431af49ec8203c72046e0512fec4">gui_internal_enter()</a>, <a class="el" href="gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8">gui_internal_enter_setup()</a>, <a class="el" href="gui__internal_8c.html#a753483ffd990f0ce15a75f26fdbb5bdf">gui_internal_leave()</a>, <a class="el" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render()</a>, <a class="el" href="gui__internal_8c.html#a1cddae9cf6f17e3d7c519e14ce6e3ef5">gui_internal_set_click_coord()</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25ae8f0c4875bfa25147150a74f41c86c53">lvl_warning</a>, <a class="el" href="structwidget.html#ae47d6be5804e728b88d14f7b0fdd3cbe">widget::name</a>, <a class="el" href="group__coord.html#ga519c10d47cd6b29afc805d8fbb2ccb8d">pcoord_format_degree_short()</a>, <a class="el" href="structwidget.html#af7be213fd3a5b9bef8f712a17cbaa190">widget::text</a>, and <a class="el" href="structwidget.html#a8d7281b9809930f7c182fc65535e18fe">widget::w</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#ad4563459cca1dbdb72dd52b860411ff9">gui_internal_deferred_show_coord_actions()</a>.</p>
 
 </div>
 </div>
@@ -4378,7 +4519,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="gui__internal_8c.html#aa3029001863e86c0229323a9b7529458">image_new_scaled()</a>, and <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a3fec6cfe0d7369a966d68104d7fe0b9e">gui_internal_add_vehicle_profile()</a>, <a class="el" href="gui__internal_8c.html#a2341e9dce14b96066e94e2975c711cbb">gui_internal_button_attr_update()</a>, <a class="el" href="gui__internal_8c.html#ae654e191ce403da43c2a54cd9171e2a9">gui_internal_button_map_attr_new()</a>, <a class="el" href="gui__internal_8c.html#a2c5ce8c9e2aacab5c7d2a26892cfbb31">gui_internal_button_navit_attr_new()</a>, <a class="el" href="gui__internal__command_8c.html#a6f960eaa1460521ee382b121307cf81c">gui_internal_cmd2_about()</a>, <a class="el" href="gui__internal__command_8c.html#abc276191e560e928e33d6dee19cebd77">gui_internal_cmd2_setting_maps()</a>, <a class="el" href="gui__internal__command_8c.html#ac20e1e8f49cea701b59183fcca52ddc4">gui_internal_cmd2_setting_vehicle()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a976fb2aa8dc093943569f83715d171de">gui_internal_cmd_add_bookmark2()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a2b4f59877eab3292eb9201d890bd2581">gui_internal_cmd_add_bookmark_folder2()</a>, <a class="el" href="gui__internal_8c.html#a79dd50c54ad2681581e7134f3fc06b1f">gui_internal_cmd_bookmarks()</a>, <a class="el" href="gui__internal__command_8c.html#aa0b11d205f8b1310584bb58cbc441418">gui_internal_cmd_enter_coord()</a>, <a class="el" href="gui__internal__command_8c.html#a4054371dcc1d39673d5e9044f59aa97b">gui_internal_cmd_formerdests()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, <a class="el" href="gui__internal__poi_8c.html#afac1c682c96db985af5852e374772079">gui_internal_cmd_pois_filter()</a>, <a class="el" href="gui__internal__poi_8c.html#a4410ef1e368b1f1b48e9dca53917a39e">gui_internal_cmd_pois_item()</a>, <a class="el" href="gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55">gui_internal_cmd_position_do()</a>, <a class="el" href="gui__internal__bookmark_8c.html#af890b054a58ec6e26b4669f646e2c78b">gui_internal_cmd_rename_bookmark()</a>, <a class="el" href="gui__internal_8c.html#aabc381a6a01918ee25f0defb9d668040">gui_internal_cmd_view_attribute_details()</a>, <a class="el" href="gui__internal__search_8c.html#aa4d2802cc97f9e57b3a3ef77da87d6d6">gui_internal_create_resultlist_entry()</a>, <a class="el" href="gui__internal_8c.html#a740c6b2e98e9b223a1094551d22c7db4">gui_internal_menu_vehicle_settings()</a>, <a class="el" href="gui__internal__poi_8c.html#a21eed84f8932691488b54d02ae72ce47">gui_internal_poi_icon()</a>, <a class="el" href="gui__internal__widget_8c.html#a8cc60212389d11f0fed2ca4f533a62e3">gui_internal_scroll_buttons_init()</a>, <a class="el" href="gui__internal__search_8c.html#a93233a0aa1e39dde17916461018af515">gui_internal_search()</a>, <a class="el" href="gui__internal_8c.html#aab8e3696d93fc4b25eb6df4d841f6e4c">gui_internal_select_waypoint()</a>, and <a class="el" href="gui__internal__html_8c.html#a617251bd8580798f2174369acbb70304">html_image()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a3fec6cfe0d7369a966d68104d7fe0b9e">gui_internal_add_vehicle_profile()</a>, <a class="el" href="gui__internal_8c.html#a2341e9dce14b96066e94e2975c711cbb">gui_internal_button_attr_update()</a>, <a class="el" href="gui__internal_8c.html#ae654e191ce403da43c2a54cd9171e2a9">gui_internal_button_map_attr_new()</a>, <a class="el" href="gui__internal_8c.html#a2c5ce8c9e2aacab5c7d2a26892cfbb31">gui_internal_button_navit_attr_new()</a>, <a class="el" href="gui__internal__command_8c.html#a6f960eaa1460521ee382b121307cf81c">gui_internal_cmd2_about()</a>, <a class="el" href="gui__internal__command_8c.html#abc276191e560e928e33d6dee19cebd77">gui_internal_cmd2_setting_maps()</a>, <a class="el" href="gui__internal__command_8c.html#ac20e1e8f49cea701b59183fcca52ddc4">gui_internal_cmd2_setting_vehicle()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a976fb2aa8dc093943569f83715d171de">gui_internal_cmd_add_bookmark2()</a>, <a class="el" href="gui__internal__bookmark_8c.html#a2b4f59877eab3292eb9201d890bd2581">gui_internal_cmd_add_bookmark_folder2()</a>, <a class="el" href="gui__internal_8c.html#a79dd50c54ad2681581e7134f3fc06b1f">gui_internal_cmd_bookmarks()</a>, <a class="el" href="gui__internal__command_8c.html#aa0b11d205f8b1310584bb58cbc441418">gui_internal_cmd_enter_coord()</a>, <a class="el" href="gui__internal__command_8c.html#a4054371dcc1d39673d5e9044f59aa97b">gui_internal_cmd_formerdests()</a>, <a class="el" href="gui__internal__command_8c.html#a1919dbf0a1345f6534d43368600e4157">gui_internal_cmd_log()</a>, <a class="el" href="gui__internal__poi_8c.html#afac1c682c96db985af5852e374772079">gui_internal_cmd_pois_filter()</a>, <a class="el" href="gui__internal__poi_8c.html#a4410ef1e368b1f1b48e9dca53917a39e">gui_internal_cmd_pois_item()</a>, <a class="el" href="gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1">gui_internal_cmd_position_do()</a>, <a class="el" href="gui__internal__bookmark_8c.html#af890b054a58ec6e26b4669f646e2c78b">gui_internal_cmd_rename_bookmark()</a>, <a class="el" href="gui__internal_8c.html#aabc381a6a01918ee25f0defb9d668040">gui_internal_cmd_view_attribute_details()</a>, <a class="el" href="gui__internal__search_8c.html#aa4d2802cc97f9e57b3a3ef77da87d6d6">gui_internal_create_resultlist_entry()</a>, <a class="el" href="gui__internal_8c.html#a740c6b2e98e9b223a1094551d22c7db4">gui_internal_menu_vehicle_settings()</a>, <a class="el" href="gui__internal__poi_8c.html#a21eed84f8932691488b54d02ae72ce47">gui_internal_poi_icon()</a>, <a class="el" href="gui__internal__widget_8c.html#a8cc60212389d11f0fed2ca4f533a62e3">gui_internal_scroll_buttons_init()</a>, <a class="el" href="gui__internal__search_8c.html#a93233a0aa1e39dde17916461018af515">gui_internal_search()</a>, <a class="el" href="gui__internal_8c.html#aab8e3696d93fc4b25eb6df4d841f6e4c">gui_internal_select_waypoint()</a>, and <a class="el" href="gui__internal__html_8c.html#a617251bd8580798f2174369acbb70304">html_image()</a>.</p>
 
 </div>
 </div>
@@ -4567,10 +4708,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {545,32,48,96,10}</div>
-<div class="line">    , {300,32,48,64,3}</div>
-<div class="line">    ,{200,16,32,48,2}</div>
-<div class="line">}</div>
+<div class="line">    {545, 32, 48, 96, 10}, {300, 32, 48, 64, 3}, {200, 16, 32, 48, 2}}</div>
 </div><!-- fragment --><p>The default config profiles.</p>
 <p>[0] =&gt; LARGE_PROFILE (screens 640 in one dimension) [1] =&gt; MEDIUM PROFILE (screens larger than 320 in one dimension [2] =&gt; Small profile (default) </p>
 
@@ -4590,22 +4728,24 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
+<div class="line">    NULL,  </div>
+<div class="line">    NULL,  </div>
 <div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a>,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
+<div class="line">    NULL,  </div>
+<div class="line">    NULL,  </div>
+<div class="line">    NULL,  </div>
+<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a>,</div>
 <div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agui__internal_8c_html_a2d40b1d17a4dea0b735080892f69077b"><div class="ttname"><a href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a></div><div class="ttdeci">static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2284</div></div>
-<div class="ttc" id="agui__internal_8c_html_a5b17ef0a88b0e101f3a4615f3c67bad5"><div class="ttname"><a href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a></div><div class="ttdeci">static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2239</div></div>
-<div class="ttc" id="agui__internal_8c_html_a79b45619a5131141e564306cb1404e77"><div class="ttname"><a href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a></div><div class="ttdeci">static int gui_internal_add_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2273</div></div>
-<div class="ttc" id="agui__internal_8c_html_a7e352b9135c2fe853c9158bcca0629fc"><div class="ttname"><a href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a></div><div class="ttdeci">static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2874</div></div>
-<div class="ttc" id="agui__internal_8c_html_a8a03d72c29bf13bf8ff111c80bcc3345"><div class="ttname"><a href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a></div><div class="ttdeci">static void gui_internal_disable_suspend(struct gui_priv *this)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2908</div></div>
+<div class="ttc" id="agui__internal_8c_html_a2d40b1d17a4dea0b735080892f69077b"><div class="ttname"><a href="gui__internal_8c.html#a2d40b1d17a4dea0b735080892f69077b">gui_internal_set_attr</a></div><div class="ttdeci">static int gui_internal_set_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2238</div></div>
+<div class="ttc" id="agui__internal_8c_html_a5b17ef0a88b0e101f3a4615f3c67bad5"><div class="ttname"><a href="gui__internal_8c.html#a5b17ef0a88b0e101f3a4615f3c67bad5">gui_internal_get_attr</a></div><div class="ttdeci">static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2193</div></div>
+<div class="ttc" id="agui__internal_8c_html_a79b45619a5131141e564306cb1404e77"><div class="ttname"><a href="gui__internal_8c.html#a79b45619a5131141e564306cb1404e77">gui_internal_add_attr</a></div><div class="ttdeci">static int gui_internal_add_attr(struct gui_priv *this, struct attr *attr)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2227</div></div>
+<div class="ttc" id="agui__internal_8c_html_a7e352b9135c2fe853c9158bcca0629fc"><div class="ttname"><a href="gui__internal_8c.html#a7e352b9135c2fe853c9158bcca0629fc">gui_internal_set_graphics</a></div><div class="ttdeci">static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2832</div></div>
+<div class="ttc" id="agui__internal_8c_html_a8a03d72c29bf13bf8ff111c80bcc3345"><div class="ttname"><a href="gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345">gui_internal_disable_suspend</a></div><div class="ttdeci">static void gui_internal_disable_suspend(struct gui_priv *this)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2958</div></div>
+<div class="ttc" id="agui__internal_8c_html_ab1a20183479626fe36c29c24ddca3d7a"><div class="ttname"><a href="gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a">gui_internal_show_coord_actions</a></div><div class="ttdeci">static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description)</div><div class="ttdoc">Display an internal contextual menu for the specified geographical coordinates.</div><div class="ttdef"><b>Definition</b> gui_internal.c:2909</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a094a318dd48b369ff94d415278c6f08b">gui_internal_new()</a>.</p>
 
@@ -4631,16 +4771,12 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#aab10f07938ce41888f4f269fa598ebd4">image_new_xs</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a79a788ec3b65ce6cd9b57315dadce010">image_new_l</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a>, <a class="code hl_function" href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a>, <a class="code hl_function" href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a>, <a class="code hl_function" href="gui__internal_8c.html#aab10f07938ce41888f4f269fa598ebd4">image_new_xs</a>, <a class="code hl_function" href="gui__internal_8c.html#a79a788ec3b65ce6cd9b57315dadce010">image_new_l</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agui__internal_8c_html_a79a788ec3b65ce6cd9b57315dadce010"><div class="ttname"><a href="gui__internal_8c.html#a79a788ec3b65ce6cd9b57315dadce010">image_new_l</a></div><div class="ttdeci">struct graphics_image * image_new_l(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to l (large) size.</div><div class="ttdef"><b>Definition</b> gui_internal.c:189</div></div>
-<div class="ttc" id="agui__internal_8c_html_aab10f07938ce41888f4f269fa598ebd4"><div class="ttname"><a href="gui__internal_8c.html#aab10f07938ce41888f4f269fa598ebd4">image_new_xs</a></div><div class="ttdeci">struct graphics_image * image_new_xs(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to xs (extra small) size.</div><div class="ttdef"><b>Definition</b> gui_internal.c:164</div></div>
-<div class="ttc" id="agui__internal_8c_html_ac5c6fd1c4b4260a0548264ff63d6f033"><div class="ttname"><a href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a></div><div class="ttdeci">static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2932</div></div>
-<div class="ttc" id="agui__internal_8c_html_af205c9c6fb57d8ca2b20ac1ea1358605"><div class="ttname"><a href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a></div><div class="ttdeci">static void gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2936</div></div>
+<div class="ttc" id="agui__internal_8c_html_a79a788ec3b65ce6cd9b57315dadce010"><div class="ttname"><a href="gui__internal_8c.html#a79a788ec3b65ce6cd9b57315dadce010">image_new_l</a></div><div class="ttdeci">struct graphics_image * image_new_l(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to l (large) size.</div><div class="ttdef"><b>Definition</b> gui_internal.c:180</div></div>
+<div class="ttc" id="agui__internal_8c_html_aab10f07938ce41888f4f269fa598ebd4"><div class="ttname"><a href="gui__internal_8c.html#aab10f07938ce41888f4f269fa598ebd4">image_new_xs</a></div><div class="ttdeci">struct graphics_image * image_new_xs(struct gui_priv *this, const char *name)</div><div class="ttdoc">Displays an image scaled to xs (extra small) size.</div><div class="ttdef"><b>Definition</b> gui_internal.c:157</div></div>
+<div class="ttc" id="agui__internal_8c_html_ac5c6fd1c4b4260a0548264ff63d6f033"><div class="ttname"><a href="gui__internal_8c.html#ac5c6fd1c4b4260a0548264ff63d6f033">gui_internal_add_callback</a></div><div class="ttdeci">static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2982</div></div>
+<div class="ttc" id="agui__internal_8c_html_af205c9c6fb57d8ca2b20ac1ea1358605"><div class="ttname"><a href="gui__internal_8c.html#af205c9c6fb57d8ca2b20ac1ea1358605">gui_internal_remove_callback</a></div><div class="ttdeci">static void gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2986</div></div>
 <div class="ttc" id="agui__internal__menu_8c_html_a8effabae5efb5065b298aa3ca495ee7c"><div class="ttname"><a href="gui__internal__menu_8c.html#a8effabae5efb5065b298aa3ca495ee7c">gui_internal_menu_render</a></div><div class="ttdeci">void gui_internal_menu_render(struct gui_priv *this)</div><div class="ttdoc">Renders a menu GUI on the display.</div><div class="ttdef"><b>Definition</b> gui_internal_menu.c:307</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a094a318dd48b369ff94d415278c6f08b">gui_internal_new()</a>.</p>
@@ -4667,30 +4803,20 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a06601292a770667fa7b86b3f89771af0">gui_internal_button_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a6d65815ae15c5b88755f934b3f8daf58">gui_internal_button_new_with_callback</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a0b57ca107665969610b3c905937f43c1">gui_internal_box_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#ab097497b782e948a4ffca7bf1bff02d1">gui_internal_label_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#aa17bb014958a893c53e0830364d4bd63">gui_internal_image_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a6d95f9bea2d6964d86d485cb9d874a70">gui_internal_keyboard</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal__menu_8c.html#adf08c31a11e30347a969bb70891e8087">gui_internal_menu</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a>,</div>
-<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a90d1f528dbfb40b8b54053fe8bbde8c5">gui_internal_widget_append</a>, <a class="code hl_function" href="gui__internal__widget_8c.html#a06601292a770667fa7b86b3f89771af0">gui_internal_button_new</a>, <a class="code hl_function" href="gui__internal__widget_8c.html#a6d65815ae15c5b88755f934b3f8daf58">gui_internal_button_new_with_callback</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal__widget_8c.html#a0b57ca107665969610b3c905937f43c1">gui_internal_box_new</a>,       <a class="code hl_function" href="gui__internal__widget_8c.html#ab097497b782e948a4ffca7bf1bff02d1">gui_internal_label_new</a>,  <a class="code hl_function" href="gui__internal__widget_8c.html#aa17bb014958a893c53e0830364d4bd63">gui_internal_image_new</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a6d95f9bea2d6964d86d485cb9d874a70">gui_internal_keyboard</a>,      <a class="code hl_function" href="gui__internal__menu_8c.html#adf08c31a11e30347a969bb70891e8087">gui_internal_menu</a>,       <a class="code hl_function" href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a>,     <a class="code hl_function" href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a>,  <a class="code hl_function" href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a>,</div>
+<div class="line">    <a class="code hl_function" href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a>,      <a class="code hl_function" href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a>,   <a class="code hl_function" href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agui__internal_8c_html_a06bf743053b89f875eb16064d003319f"><div class="ttname"><a href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a></div><div class="ttdeci">static void gui_internal_set_state(struct widget *widget, int state)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2962</div></div>
-<div class="ttc" id="agui__internal_8c_html_a0bb5b3871f3aac731b7cc55df8c65a3c"><div class="ttname"><a href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a></div><div class="ttdeci">static void gui_internal_set_func(struct widget *widget, void(*func)(struct gui_priv *priv, struct widget *widget, void *data))</div><div class="ttdef"><b>Definition</b> gui_internal.c:2966</div></div>
-<div class="ttc" id="agui__internal_8c_html_a188a93f0cd5b6cb95827453e057f0a80"><div class="ttname"><a href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a></div><div class="ttdeci">static void gui_internal_set_flags(struct widget *widget, enum flags flags)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2954</div></div>
-<div class="ttc" id="agui__internal_8c_html_a42a9260bce254e9987674ddb187d669c"><div class="ttname"><a href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a></div><div class="ttdeci">static void gui_internal_set_data(struct widget *widget, void *data)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2971</div></div>
-<div class="ttc" id="agui__internal_8c_html_a54921ca353606bbfe738c5389b371ec4"><div class="ttname"><a href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a></div><div class="ttdeci">static void gui_internal_set_default_background(struct gui_priv *this, struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2975</div></div>
+<div class="ttc" id="agui__internal_8c_html_a06bf743053b89f875eb16064d003319f"><div class="ttname"><a href="gui__internal_8c.html#a06bf743053b89f875eb16064d003319f">gui_internal_set_state</a></div><div class="ttdeci">static void gui_internal_set_state(struct widget *widget, int state)</div><div class="ttdef"><b>Definition</b> gui_internal.c:3006</div></div>
+<div class="ttc" id="agui__internal_8c_html_a0bb5b3871f3aac731b7cc55df8c65a3c"><div class="ttname"><a href="gui__internal_8c.html#a0bb5b3871f3aac731b7cc55df8c65a3c">gui_internal_set_func</a></div><div class="ttdeci">static void gui_internal_set_func(struct widget *widget, void(*func)(struct gui_priv *priv, struct widget *widget, void *data))</div><div class="ttdef"><b>Definition</b> gui_internal.c:3010</div></div>
+<div class="ttc" id="agui__internal_8c_html_a188a93f0cd5b6cb95827453e057f0a80"><div class="ttname"><a href="gui__internal_8c.html#a188a93f0cd5b6cb95827453e057f0a80">gui_internal_set_flags</a></div><div class="ttdeci">static void gui_internal_set_flags(struct widget *widget, enum flags flags)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2998</div></div>
+<div class="ttc" id="agui__internal_8c_html_a42a9260bce254e9987674ddb187d669c"><div class="ttname"><a href="gui__internal_8c.html#a42a9260bce254e9987674ddb187d669c">gui_internal_set_data</a></div><div class="ttdeci">static void gui_internal_set_data(struct widget *widget, void *data)</div><div class="ttdef"><b>Definition</b> gui_internal.c:3015</div></div>
+<div class="ttc" id="agui__internal_8c_html_a54921ca353606bbfe738c5389b371ec4"><div class="ttname"><a href="gui__internal_8c.html#a54921ca353606bbfe738c5389b371ec4">gui_internal_set_default_background</a></div><div class="ttdeci">static void gui_internal_set_default_background(struct gui_priv *this, struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:3019</div></div>
 <div class="ttc" id="agui__internal_8c_html_a6d95f9bea2d6964d86d485cb9d874a70"><div class="ttname"><a href="gui__internal_8c.html#a6d95f9bea2d6964d86d485cb9d874a70">gui_internal_keyboard</a></div><div class="ttdeci">struct widget * gui_internal_keyboard(struct gui_priv *this, int mode)</div><div class="ttdoc">Creates a keyboard widget.</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.c:676</div></div>
-<div class="ttc" id="agui__internal_8c_html_a9abfde2c256b26e1222d4723c38c9969"><div class="ttname"><a href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a></div><div class="ttdeci">static int gui_internal_get_state(struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2958</div></div>
-<div class="ttc" id="agui__internal_8c_html_ad5c5d0795232c315a51939cb0e0c0b20"><div class="ttname"><a href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a></div><div class="ttdeci">static enum flags gui_internal_get_flags(struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2950</div></div>
+<div class="ttc" id="agui__internal_8c_html_a9abfde2c256b26e1222d4723c38c9969"><div class="ttname"><a href="gui__internal_8c.html#a9abfde2c256b26e1222d4723c38c9969">gui_internal_get_state</a></div><div class="ttdeci">static int gui_internal_get_state(struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:3002</div></div>
+<div class="ttc" id="agui__internal_8c_html_ad5c5d0795232c315a51939cb0e0c0b20"><div class="ttname"><a href="gui__internal_8c.html#ad5c5d0795232c315a51939cb0e0c0b20">gui_internal_get_flags</a></div><div class="ttdeci">static enum flags gui_internal_get_flags(struct widget *widget)</div><div class="ttdef"><b>Definition</b> gui_internal.c:2994</div></div>
 <div class="ttc" id="agui__internal__menu_8c_html_adf08c31a11e30347a969bb70891e8087"><div class="ttname"><a href="gui__internal__menu_8c.html#adf08c31a11e30347a969bb70891e8087">gui_internal_menu</a></div><div class="ttdeci">struct widget * gui_internal_menu(struct gui_priv *this, const char *label)</div><div class="ttdoc">Initializes a GUI menu screen.</div><div class="ttdef"><b>Definition</b> gui_internal_menu.c:223</div></div>
 <div class="ttc" id="agui__internal__widget_8c_html_a06601292a770667fa7b86b3f89771af0"><div class="ttname"><a href="gui__internal__widget_8c.html#a06601292a770667fa7b86b3f89771af0">gui_internal_button_new</a></div><div class="ttdeci">struct widget * gui_internal_button_new(struct gui_priv *this, const char *text, struct graphics_image *image, enum flags flags)</div><div class="ttdef"><b>Definition</b> gui_internal_widget.c:261</div></div>
 <div class="ttc" id="agui__internal__widget_8c_html_a0b57ca107665969610b3c905937f43c1"><div class="ttname"><a href="gui__internal__widget_8c.html#a0b57ca107665969610b3c905937f43c1">gui_internal_box_new</a></div><div class="ttdeci">struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags)</div><div class="ttdef"><b>Definition</b> gui_internal_widget.c:357</div></div>
@@ -4710,7 +4836,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int LARGE_PROFILE =0</td>
+          <td class="memname">const int LARGE_PROFILE = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4730,7 +4856,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int MEDIUM_PROFILE =1</td>
+          <td class="memname">const int MEDIUM_PROFILE = 1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4746,7 +4872,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int SMALL_PROFILE =2</td>
+          <td class="memname">const int SMALL_PROFILE = 2</td>
         </tr>
       </table>
 </div><div class="memdoc">

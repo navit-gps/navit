@@ -1,6 +1,7 @@
 var gui__internal_8c =
 [
     [ "vehicle_and_profilename", "structvehicle__and__profilename.html", "structvehicle__and__profilename" ],
+    [ "gui_internal_show_coord_args", "structgui__internal__show__coord__args.html", "structgui__internal__show__coord__args" ],
     [ "NO_RESULT_YET", "gui__internal_8c.html#a7ddca880413fe571801fc18926301cb9", null ],
     [ "RESULT_FOUND", "gui__internal_8c.html#ae149e460ed704eb9e5894f2220884362", null ],
     [ "gui_internal_add_attr", "gui__internal_8c.html#a79b45619a5131141e564306cb1404e77", null ],
@@ -32,7 +33,7 @@ var gui__internal_8c =
     [ "gui_internal_cmd_match_expand", "gui__internal_8c.html#adafe385a4f071fefdb03f58e092137bb", null ],
     [ "gui_internal_cmd_menu", "gui__internal_8c.html#a015bfc0405e0ff20ce45a7433686524a", null ],
     [ "gui_internal_cmd_position", "gui__internal_8c.html#a7fe85a83b61f23f74103cbfc17b696c7", null ],
-    [ "gui_internal_cmd_position_do", "gui__internal_8c.html#a182f39c0a04cd59ff393a6dc66062f55", null ],
+    [ "gui_internal_cmd_position_do", "gui__internal_8c.html#aa5e03dc9f4784eaf924a03578b51ccd1", null ],
     [ "gui_internal_cmd_results_map_clean", "gui__internal_8c.html#a55a45baca580bcafa2d23927da1136a4", null ],
     [ "gui_internal_cmd_results_to_map", "gui__internal_8c.html#a7c867bbd47d97507f36a622a11c23a66", null ],
     [ "gui_internal_cmd_return", "gui__internal_8c.html#af00b3903acf4ca75a951a86a96c26fd3", null ],
@@ -49,6 +50,7 @@ var gui__internal_8c =
     [ "gui_internal_cmd_view_on_map", "gui__internal_8c.html#ac41a535355714f8867a8ae7bb821bc70", null ],
     [ "gui_internal_coordinate_parse", "gui__internal_8c.html#a0eb6bc4874e7ab710b26dc29104bd60c", null ],
     [ "gui_internal_dbus_signal", "gui__internal_8c.html#a89fda47eb3664b3a0194006059432f87", null ],
+    [ "gui_internal_deferred_show_coord_actions", "gui__internal_8c.html#ad4563459cca1dbdb72dd52b860411ff9", null ],
     [ "gui_internal_disable_suspend", "gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345", null ],
     [ "gui_internal_enter", "gui__internal_8c.html#a53b6431af49ec8203c72046e0512fec4", null ],
     [ "gui_internal_enter_setup", "gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8", null ],
@@ -92,6 +94,7 @@ var gui__internal_8c =
     [ "gui_internal_set_position_coord", "gui__internal_8c.html#a3444bdad0acb71fbdf542994cccb61e9", null ],
     [ "gui_internal_set_state", "gui__internal_8c.html#a06bf743053b89f875eb16064d003319f", null ],
     [ "gui_internal_setup", "gui__internal_8c.html#a401f7e7d432258eef9b441dcb984782d", null ],
+    [ "gui_internal_show_coord_actions", "gui__internal_8c.html#ab1a20183479626fe36c29c24ddca3d7a", null ],
     [ "gui_internal_time_help", "gui__internal_8c.html#af6c455a26283ebd8061685f8078c334d", null ],
     [ "gui_internal_window_closed", "gui__internal_8c.html#aed77f116f25b8b2cb8a93662e4ea847b", null ],
     [ "image_new_l", "gui__internal_8c.html#a79a788ec3b65ce6cd9b57315dadce010", null ],

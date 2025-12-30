@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a_0',['a',['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a'],['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A']]],
+  ['a_0',['a',['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A'],['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a']]],
   ['a2w_1',['A2W',['../group__vehicle-wince.html#ga7f743aef33e1a85946b61fe1e4e8d034',1,'vehicle_wince.c']]],
   ['aa_2',['aa',['../structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05',1,'graphics_priv::aa'],['../structquadtree__node.html#a035b4a5aa2c54fcad185239f96ea77dd',1,'quadtree_node::aa']]],
   ['aabits_3',['AAbits',['../raster_8c.html#a2e16571bedf7a97c6fc02d86b48994eb',1,'raster.c']]],
@@ -320,7 +320,7 @@ var searchData=
   ['attr_5fto_5ftext_317',['attr_to_text',['../attr_8c.html#a0f28ebe3254c5862123c07e8207affe3',1,'attr_to_text(struct attr *attr, struct map *map, int pretty):&#160;attr.c'],['../attr_8h.html#a0f28ebe3254c5862123c07e8207affe3',1,'attr_to_text(struct attr *attr, struct map *map, int pretty):&#160;attr.c']]],
   ['attr_5fto_5ftext_5fext_318',['attr_to_text_ext',['../attr_8c.html#a6f2161923aa1b6761384e2f09467aae5',1,'attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map):&#160;attr.c'],['../attr_8h.html#a6f2161923aa1b6761384e2f09467aae5',1,'attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum attr_format def_fmt, struct map *map):&#160;attr.c']]],
   ['attr_5ftyp_319',['attr_typ',['../structosd__text__item.html#a8a51793e1e0e88a9b3d3c17ecb95d9a7',1,'osd_text_item']]],
-  ['attr_5ftype_320',['attr_type',['../attr__type__def_8h.html#a9a9ab3c12bda86add06f89976f36f98c',1,'attr_type:&#160;attr_type_def.h'],['../common_8h.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26',1,'attr_Type:&#160;attr.c'],['../binding_2python_2attr_8c.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26',1,'attr_Type:&#160;attr.c']]],
+  ['attr_5ftype_320',['attr_type',['../binding_2python_2attr_8c.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26',1,'attr_Type:&#160;attr.c'],['../attr__type__def_8h.html#a9a9ab3c12bda86add06f89976f36f98c',1,'attr_type:&#160;attr_type_def.h'],['../common_8h.html#a9b7b6c0a6ddd0d8fdde79568cbd61b26',1,'attr_Type:&#160;attr.c']]],
   ['attr_5ftype_5fbegin_321',['attr_type_begin',['../attr_8c.html#ac64bd30dd261e054d18af84cee82ea57',1,'attr_type_begin(enum attr_type type):&#160;attr.c'],['../attr_8h.html#ac64bd30dd261e054d18af84cee82ea57',1,'attr_type_begin(enum attr_type type):&#160;attr.c']]],
   ['attr_5ftype_5fdef_2eh_322',['attr_type_def.h',['../attr__type__def_8h.html',1,'']]],
   ['attr_5ftype_5fget_5ffrom_5fmessage_323',['attr_type_get_from_message',['../binding__dbus_8c.html#a074657f7f2ab62ba98bb77da40545603',1,'binding_dbus.c']]],

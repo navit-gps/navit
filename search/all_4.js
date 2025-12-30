@@ -205,7 +205,7 @@ var searchData=
   ['buffer_5fend_202',['buffer_end',['../structo5m.html#ac5e4273e71e8b08f8640b2ce17921f82',1,'o5m::buffer_end'],['../osm__o5m_8c.html#a8dab7a92a3fb403becd5e0fe38fa270b',1,'buffer_end:&#160;osm_o5m.c']]],
   ['buffer_5flen_203',['buffer_len',['../structfile.html#a07933ed4e00500de90ab37013de4d904',1,'file']]],
   ['buffer_5fpos_204',['buffer_pos',['../group__vehicle-file.html#gaf57268ae8641adb4ec87dccc06d8370c',1,'vehicle_priv']]],
-  ['buffer_5fsize_205',['buffer_size',['../maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7',1,'BUFFER_SIZE:&#160;maptool.h'],['../group__vehicle-file.html#gaf22ff4ab7a026e6c3b4b08eafb2df027',1,'buffer_size:&#160;vehicle_file.c'],['../group__vehicle-wince.html#gaf22ff4ab7a026e6c3b4b08eafb2df027',1,'buffer_size:&#160;vehicle_wince.c'],['../structo5m.html#a6c51177ef003dfa758e58be2859684bd',1,'o5m::buffer_size']]],
+  ['buffer_5fsize_205',['buffer_size',['../group__vehicle-file.html#gaf22ff4ab7a026e6c3b4b08eafb2df027',1,'buffer_size:&#160;vehicle_file.c'],['../group__vehicle-wince.html#gaf22ff4ab7a026e6c3b4b08eafb2df027',1,'buffer_size:&#160;vehicle_wince.c'],['../maptool_8h.html#a6b20d41d6252e9871430c242cb1a56e7',1,'BUFFER_SIZE:&#160;maptool.h'],['../structo5m.html#a6c51177ef003dfa758e58be2859684bd',1,'o5m::buffer_size']]],
   ['buffer_5fstart_206',['buffer_start',['../structo5m.html#a85da6d9b7b33280a661f8f3c2934b8b5',1,'o5m']]],
   ['bufferlength_207',['BUFFERLENGTH',['../qt5__espeak_8cpp.html#a5a69f707d5405fe875b322c6bfbace46',1,'qt5_espeak.cpp']]],
   ['buffers_208',['BUFFERS',['../speak_8c.html#aabe0f927d44a09f458bd5fe5ab4e2f7f',1,'speak.c']]],

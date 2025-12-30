@@ -24,12 +24,13 @@ var NAVTREEINDEX9 =
 "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1CmdType.html#adb0437be8e010fe07af0e49aaccc25ba":[2,0,0,0,0,6,1,1],
 "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1CmdType.html#adee81a1c744a36ea47b6a5691b859ed4":[2,0,0,0,0,6,1,4],
 "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html":[2,0,0,0,0,6,2],
-"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a0fc13814762f24e4669d99d6719bb6c5":[2,0,0,0,0,6,2,4],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a0fc13814762f24e4669d99d6719bb6c5":[2,0,0,0,0,6,2,5],
 "enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a2c01e7f1821eacabb667901ec25ed036":[2,0,0,0,0,6,2,0],
-"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a2f4dc00f7f4f23f08a85789c8082452a":[2,0,0,0,0,6,2,1],
-"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a801ff2e8538ea72c5bea425053698b5d":[2,0,0,0,0,6,2,3],
-"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a957e2658d28d6c25ea6318ccfdea37be":[2,0,0,0,0,6,2,5],
-"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a971d3b3827782f5b2094cc125f57be14":[2,0,0,0,0,6,2,2],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a2f4dc00f7f4f23f08a85789c8082452a":[2,0,0,0,0,6,2,2],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a77b76b993cdf077b299ee54e6ba7bea9":[2,0,0,0,0,6,2,1],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a801ff2e8538ea72c5bea425053698b5d":[2,0,0,0,0,6,2,4],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a957e2658d28d6c25ea6318ccfdea37be":[2,0,0,0,0,6,2,6],
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a971d3b3827782f5b2094cc125f57be14":[2,0,0,0,0,6,2,3],
 "errorcode_8h.html":[3,0,12,0,0,2],
 "errorcode_8h.html#a251e2622c7ae45db78fa605c73a02508":[3,0,12,0,0,2,1],
 "errorcode_8h.html#a30588a864f54f7d06ed0a922923dc4a6":[3,0,12,0,0,2,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "filter_8c.html#a539f4bc9b7e8c996735e95eb1f525efa":[3,0,6,2,0,20],
 "filter_8c.html#a60cfaa79aa904fc0e2c5e8c0363e60a7":[3,0,6,2,0,23],
 "filter_8c.html#a62daabf2d5176e9bb32cc29c5c1f9c7d":[3,0,6,2,0,11],
-"filter_8c.html#a6a1f24db57b2bb66e10ff4b7327b7166":[3,0,6,2,0,5],
-"filter_8c.html#a6c80ac294dfb106ef6fbf59c9fe70aaf":[3,0,6,2,0,15]
+"filter_8c.html#a6a1f24db57b2bb66e10ff4b7327b7166":[3,0,6,2,0,5]
 };

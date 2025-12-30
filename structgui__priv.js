@@ -23,6 +23,7 @@ var structgui__priv =
     [ "data", "structgui__priv.html#a787c663e579aceed4bcecaaba92b0d75", null ],
     [ "datawindow", "structgui__priv.html#a4b43041c482c072b0ee58026f9a17fc6", null ],
     [ "debug_group", "structgui__priv.html#a055cdc970c6f7f17e452a3b7ad71ab7c", null ],
+    [ "deferred_exec_at_init", "structgui__priv.html#ad24b36e35730b5fb5e033e69d4b1752d", null ],
     [ "dest_menuitems", "structgui__priv.html#a18c3297e9a46f70d1d3a65e8f64825f4", null ],
     [ "dialog_coord", "structgui__priv.html#a1a3c0ce8da6dbf60d1d096227bfa0d74", null ],
     [ "dialog_entry", "structgui__priv.html#afdc630a7a8f5a44595ec6dbd67aa8f52", null ],

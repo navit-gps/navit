@@ -170,6 +170,7 @@ var hierarchy =
     [ "gui_internal_data", "structgui__internal__data.html", null ],
     [ "gui_internal_keyb_mode", "structgui__internal__keyb__mode.html", null ],
     [ "gui_internal_methods", "structgui__internal__methods.html", null ],
+    [ "gui_internal_show_coord_args", "structgui__internal__show__coord__args.html", null ],
     [ "gui_internal_widget_methods", "structgui__internal__widget__methods.html", null ],
     [ "gui_menu_info", "structgui__menu__info.html", null ],
     [ "gui_methods", "structgui__methods.html", null ],

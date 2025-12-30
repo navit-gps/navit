@@ -1,6 +1,10 @@
 var NAVTREEINDEX31 =
 {
-"structXPMCOLORENTRY__TAG.html#a96a18a6f67c6230c07afdb5a4f1e4816":[2,0,436,1],
+"structXPMCOLORENTRY__TAG.html":[2,0,437],
+"structXPMCOLORENTRY__TAG.html#a3e2c7bb03fa90e2ba97860ca022d886b":[2,0,437,2],
+"structXPMCOLORENTRY__TAG.html#a8360fec37ba3704f64de4c76328e41f9":[2,0,437,0],
+"structXPMCOLORENTRY__TAG.html#a9641c166b8d4781ec5a1375e15422f6f":[2,0,437,3],
+"structXPMCOLORENTRY__TAG.html#a96a18a6f67c6230c07afdb5a4f1e4816":[2,0,437,1],
 "struct__VIDEO__POWER__MANAGEMENT.html":[2,0,1],
 "struct__VIDEO__POWER__MANAGEMENT.html#a43253ec73dd9843f8e72d6180a99c7bd":[2,0,1,1],
 "struct__VIDEO__POWER__MANAGEMENT.html#a8581452edec1f719c78bccc7c7883e6f":[2,0,1,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX31 =
 "structcircle.html#a6808fdab287a92b678d6beef168fb6b5":[2,0,38,0],
 "structcircle.html#a800b8a4734fd9d613ac4d1833d7cb3b6":[2,0,38,2],
 "structcmd__interface.html":[2,0,39],
-"structcmd__interface.html#a2e4454c662f150b267f06b4a4ba89393":[2,0,39,2],
-"structcmd__interface.html#a87d0ad5964c65912e46048adaee513c6":[2,0,39,5],
-"structcmd__interface.html#a88a3b9f82cf327d2687d6563a7b1b293":[2,0,39,3],
-"structcmd__interface.html#a9c39a2c2d0cd598e1f72ad1fcb22dd1a":[2,0,39,4],
-"structcmd__interface.html#aaa034116bf9d2a579bffb68de89aa92f":[2,0,39,6]
+"structcmd__interface.html#a2e4454c662f150b267f06b4a4ba89393":[2,0,39,2]
 };

@@ -12,5 +12,6 @@ var gui_8c =
     [ "gui_popup_new", "gui_8c.html#a23e49a904d7efd4366d99d7519955241", null ],
     [ "gui_run_main_loop", "gui_8c.html#a27f1858c984f777f6944956cae7027e2", null ],
     [ "gui_set_attr", "gui_8c.html#a3f10b3ff5af790194cb5d2583b4c1da5", null ],
-    [ "gui_set_graphics", "gui_8c.html#ab6a6f8e051c6721b8bb59adb90991189", null ]
+    [ "gui_set_graphics", "gui_8c.html#ab6a6f8e051c6721b8bb59adb90991189", null ],
+    [ "gui_show_coord_actions", "gui_8c.html#a7580b058034229659f60199cb25cec05", null ]
 ];

@@ -36,8 +36,9 @@ var searchData=
   ['gui_5finternal_5fdata_33',['gui_internal_data',['../structgui__internal__data.html',1,'']]],
   ['gui_5finternal_5fkeyb_5fmode_34',['gui_internal_keyb_mode',['../structgui__internal__keyb__mode.html',1,'']]],
   ['gui_5finternal_5fmethods_35',['gui_internal_methods',['../structgui__internal__methods.html',1,'']]],
-  ['gui_5finternal_5fwidget_5fmethods_36',['gui_internal_widget_methods',['../structgui__internal__widget__methods.html',1,'']]],
-  ['gui_5fmenu_5finfo_37',['gui_menu_info',['../structgui__menu__info.html',1,'']]],
-  ['gui_5fmethods_38',['gui_methods',['../structgui__methods.html',1,'']]],
-  ['gui_5fpriv_39',['gui_priv',['../structgui__priv.html',1,'']]]
+  ['gui_5finternal_5fshow_5fcoord_5fargs_36',['gui_internal_show_coord_args',['../structgui__internal__show__coord__args.html',1,'']]],
+  ['gui_5finternal_5fwidget_5fmethods_37',['gui_internal_widget_methods',['../structgui__internal__widget__methods.html',1,'']]],
+  ['gui_5fmenu_5finfo_38',['gui_menu_info',['../structgui__menu__info.html',1,'']]],
+  ['gui_5fmethods_39',['gui_methods',['../structgui__methods.html',1,'']]],
+  ['gui_5fpriv_40',['gui_priv',['../structgui__priv.html',1,'']]]
 ];

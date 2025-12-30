@@ -174,6 +174,7 @@ var annotated_dup =
     [ "gui_internal_data", "structgui__internal__data.html", "structgui__internal__data" ],
     [ "gui_internal_keyb_mode", "structgui__internal__keyb__mode.html", "structgui__internal__keyb__mode" ],
     [ "gui_internal_methods", "structgui__internal__methods.html", "structgui__internal__methods" ],
+    [ "gui_internal_show_coord_args", "structgui__internal__show__coord__args.html", "structgui__internal__show__coord__args" ],
     [ "gui_internal_widget_methods", "structgui__internal__widget__methods.html", "structgui__internal__widget__methods" ],
     [ "gui_menu_info", "structgui__menu__info.html", "structgui__menu__info" ],
     [ "gui_methods", "structgui__methods.html", "structgui__methods" ],
