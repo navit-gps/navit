@@ -103,6 +103,7 @@ static char *environment_vars[][6] = {
 static void main_setup_environment(int mode) {
     int i = 0;
     char *var, *val, *homedir;
+    char homedirfallback[3] = "./";
     while ((var = environment_vars[i][0])) {
         val = environment_vars[i][mode + 1];
         if (val) {
@@ -120,7 +121,8 @@ static void main_setup_environment(int mode) {
                 homedir = getenv("HOME");
 #endif
                 if (!homedir)
-                    homedir = "./";
+                    homedir = homedirfallback;
+
                 val = g_strdup_printf("%s%s", homedir, val + 1);
                 break;
             default:
