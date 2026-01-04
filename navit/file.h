@@ -33,6 +33,8 @@ extern "C" {
 #include "param.h"
 #include <stdio.h>
 
+#include "glib.h"
+
 struct file {
 	struct file *next;
 	unsigned char *begin;

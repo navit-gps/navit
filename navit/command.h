@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+#include "attr.h"
+
 struct command_table {
 	const char *command;
 	int (*func)(void *data, char *cmd, struct attr **in, struct attr ***out);
