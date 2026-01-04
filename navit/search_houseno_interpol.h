@@ -17,6 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef NAVIT_SEARCH_HOUSENO_INTERPOL_H
+#define NAVIT_SEARCH_HOUSENO_INTERPOL_H
+
+#include "item.h"
+
 enum include_end_nodes {
 	end_nodes_yes,
 	end_nodes_no,
@@ -51,5 +56,6 @@ char *
 search_next_interpolated_house_number(struct item *item, struct house_number_interpolation
 		*inter, char *inter_match, int inter_partial);
 
-struct pcoord *
-search_house_number_coordinate(struct item *item, struct house_number_interpolation *inter);
+struct pcoord *search_house_number_coordinate(struct item *item, struct house_number_interpolation *inter);
+
+#endif  //  NAVIT_SEARCH_HOUSENO_INTERPOL_H

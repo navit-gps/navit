@@ -17,10 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef NAVIT_ROADPROFILE_H
+#define NAVIT_ROADPROFILE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "navit.h"
+
 struct roadprofile {
     NAVIT_OBJECT
     int speed;
@@ -38,3 +43,4 @@ void roadprofile_attr_iter_destroy(struct attr_iter *iter);
 #ifdef __cplusplus
 }
 #endif
+#endif  // NAVIT_ROADPROFILE_H
