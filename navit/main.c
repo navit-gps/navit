@@ -52,7 +52,6 @@
 #include "util.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
-#include <winbase.h>
 #endif
 
 #ifdef HAVE_API_WIN32_CE
