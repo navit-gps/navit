@@ -51,7 +51,8 @@ static void get_line(struct map_rect_priv *mr) {
         else
             mr->pos+=mr->lastlen;
         if(fgets(mr->line, TEXTFILE_LINE_SIZE, mr->f) == NULL) {
-            dbg(lvl_error, "Unable to get line (%s)", strerror(errno));
+            if (!feof(mr->f))
+                dbg(lvl_error, "Unable to get line (%s) in file %s", strerror(errno), mr->m->filename);
             mr->line[0]=0;
         }
         dbg(lvl_debug,"read textfile line: %s", mr->line);
