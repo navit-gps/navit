@@ -2797,7 +2797,6 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 }
 
 int navit_set_attr(struct navit *this_, struct attr *attr) {
-    dbg(lvl_debug, "-------------------------------- calling generic setter method for attribute type %s", attr_to_name(attr->type))
     return navit_set_attr_do(this_, attr, 0);
 }
 

@@ -15,7 +15,7 @@
 
 	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
 	<!-- Possible debug levels: error, warning, info, debug. -->
-	<debug name="global" dbg_level="debug"/>
+	<debug name="global" dbg_level="error"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
@@ -385,7 +385,7 @@ Waypoint</text></img>
 		If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
 		The default is text output to the shell
 		-->
-		<speech name="Fix this" type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
+		<speech name="Dummy Text output" type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!--
                 <speech name="Dutch female" type="cmdline" name="Dutch female" data="espeak-ng -v dutch-mbrola-3 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
 

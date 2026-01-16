@@ -102,8 +102,6 @@ void Backend::get_vehicles() {
     struct attr active_vehicle;
     _vehicles.clear();
 
-dbg(lvl_debug, "---------- get_vehicles() from backend");
-
     iter=navit_attr_iter_new(NULL);
     if (navit_get_attr(this->nav, attr_vehicle, &attr, iter) && !navit_get_attr(this->nav, attr_vehicle, &attr2, iter)) {
         vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
