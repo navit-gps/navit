@@ -25,7 +25,7 @@
 #endif
 
 #ifdef HAVE_COMPLIANT_POSIX_MEMALIGN
-#define _XOPEN_SOURCE 600       /* posix_memalign() */
+#define _XOPEN_SOURCE 700       /* posix_memalign(), nanosleep */
 #endif
 #include <stdlib.h>             /* posix_memalign() */
 #include <string.h>

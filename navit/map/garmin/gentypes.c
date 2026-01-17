@@ -45,6 +45,8 @@ GROUP is
 1 - NT types in RGN2-4 5 is completely unknown yet
  */
 
+#define _DEFAULT_SOURCE
+
 #include "gar2navit.h"
 #include "item.h"
 #include <malloc.h>

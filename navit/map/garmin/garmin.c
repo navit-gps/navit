@@ -20,6 +20,8 @@
 
 */
 
+#define _POSIX_C_SOURCE 200809L  // strdup()
+
 #include "garmin.h"
 #include "attr.h"
 #include "config.h"
@@ -42,6 +44,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#ifndef PATH_MAX
+#    define PATH_MAX 256
+#endif
 
 static int map_id;
 

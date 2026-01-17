@@ -1,3 +1,5 @@
+#define _DEFAULT_SOURCE  // strcasecmp()
+
 #include "gui_internal_html.h"
 #include "attr.h"
 #include "attr_type_def.h"

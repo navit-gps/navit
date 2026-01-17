@@ -16,8 +16,13 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+
+#define _POSIX_C_SOURCE 200112L  // popen()
+#define _DEFAULT_SOURCE          // cfmakeraw(), inet_aton()
+
 #include "attr.h"
 #include "attr_type_def.h"
+#include "config.h"
 #include "callback.h"
 #include "config.h"
 #include "coord.h"

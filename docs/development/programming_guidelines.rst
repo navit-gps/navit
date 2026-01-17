@@ -56,65 +56,7 @@ All non-ascii-strings must be utf-8 encoded. Line breaks consist of a linefeed (
 C Standard
 ----------
 
-C95. That means:
- * No inline declarations of variables
-
-Instead of
-
-.. code-block:: C
-
-  {
-     do_something();
-     int a=do_something_else();
-  }
-
-use
-
-.. code-block:: C
-
-  {
-     int a;
-     do_something();
-     a=do_something_else();
-  }
-
- * No dynamic arrays
-
-Instead of
-
-.. code-block:: C
-
-  void myfunc(int count) {
-     struct mystruct x[count]
-  }
-
-use
-
-.. code-block:: C
-
-  void myfunc(int count) {
-     struct mystruct *x=g_alloca(count*sizeof(struct mystruct));
-  }
-
- * No empty initializers
-
-Instead of
-
-.. code-block:: C
-
-  struct mystruct m={};
-
-use
-
-.. code-block:: C
-
-  struct mystruct m={0,};
-
-* Use ``/*`` and ``*/`` for comments instead of ``//``
-
-.. note::
-
-  The restriction to C95 exists mainly to help the `WinCE` port, which uses a compiler without full support for C99. Once all platforms supported by Navit use a compiler capable of C99, this decision may be reconsidered.
+C99.
 
 
 Use of libraries

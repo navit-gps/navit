@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _DEFAULT_SOURCE
 #include "debug.h"
 #include "attr.h"
 #include "attr_type_def.h"
@@ -24,6 +25,7 @@
 #include "debug.h"
 #include "file.h"
 #include "item.h"
+
 #include <glib.h>
 #include <glib/gtypes.h>
 #include <signal.h>

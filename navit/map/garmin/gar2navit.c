@@ -45,6 +45,8 @@ GROUP is
 1 - RGN2-4
  */
 
+#define _DEFAULT_SOURCE  // strncasecmp()
+
 #include "gar2navit.h"
 #include "attr.h"
 #include "garmin.h"

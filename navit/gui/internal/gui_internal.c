@@ -25,7 +25,7 @@
 // # Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 // #
 // ##############################################################################################################
-
+#define _POSIX_C_SOURCE 200809L  // getline()
 #include "config.h"
 #include <glib.h>
 #include <math.h>

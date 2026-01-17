@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _POSIX_C_SOURCE 200112L  // gmtime_r
 #include "config.h"
 
 #include "callback.h"
@@ -27,6 +28,7 @@
 #include "plugin.h"
 #include "types.h"
 #include "vehicle.h"
+
 #include <config.h>
 #include <glib.h>
 #include <gps.h>
@@ -225,7 +227,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len, int 
  */
 static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
     char *source = g_strdup(priv->source);
-    char *colon = index(source + 7, ':');
+    char *colon = strchr(source + 7, ':');
     char *port = NULL;
     if (colon) {
         *colon = '\0';
