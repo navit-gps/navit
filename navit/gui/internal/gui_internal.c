@@ -1896,10 +1896,10 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
  */
 static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
     struct voice_and_profilename *vapn = data;
-
-    // TODO Voice Change the active profile
-    dbg(lvl_debug, "----------------------------------- setting speech to '%s' (%s) with navit_set_attr", vapn->profilename, vapn->speech);
-    navit_set_attr(this->nav, &vapn->speech);
+    struct attr speech_attr;
+    speech_attr.type = attr_speech;
+    speech_attr.u.speech = vapn->speech;
+    navit_set_attr(this->nav, &speech_attr);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
