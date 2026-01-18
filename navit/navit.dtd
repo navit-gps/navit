@@ -136,6 +136,9 @@
 <!ELEMENT polygon (coord*)>
 <!ATTLIST polygon color CDATA #REQUIRED>
 <!ATTLIST polygon oneway CDATA #IMPLIED>
+<!ATTLIST polygon src CDATA #IMPLIED>
+<!ATTLIST polygon w CDATA #IMPLIED>
+<!ATTLIST polygon h CDATA #IMPLIED>
 <!ELEMENT polyline (coord*)>
 <!ATTLIST polyline color CDATA #REQUIRED>
 <!ATTLIST polyline width CDATA #IMPLIED>
