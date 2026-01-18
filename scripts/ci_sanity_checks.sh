@@ -20,7 +20,7 @@ trap cleanup EXIT
 # Check if any file has been modified. If yes, that means the best practices
 # have not been followed, so we will fail the job later but print a message here.
 check_diff(){
-    git diff --exit-code -- "$@"
+    git diff --exit-code --stat
     code=$?
     if [[ $code -ne 0 ]]; then
         echo "[ERROR] You may need to do some cleanup in the file $*, see the git diff output above." >&2
@@ -70,7 +70,6 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
             echo "[INFO] Checking for trailing spaces on ${f}..."
             if [[ "$(file -bi """${f}""")" =~ ^text ]]; then
                 sed 's/\s*$//' -i "${f}"
-                check_diff "${f}"
             fi
         fi
 
@@ -78,7 +77,6 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
         if [[ "${f: -2}" == ".h" ]] || [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
             echo "[INFO] Checking for indentation and style compliance on ${f}..."
             clang-format -i "${f}"
-            check_diff "${f}"
         fi
 
         if [[ "${f: -11}" == "shipped.xml" ]]; then
@@ -92,5 +90,6 @@ for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
         fi
     fi
 done
-git diff --stat
+
+check_diff
 exit $return_code
