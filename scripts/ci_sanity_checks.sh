@@ -42,6 +42,7 @@ check_po() {
 		if diff -u $po ../../po/$po.in 2>&1 | grep -Eq "[+-]msgid"
 		then
 			echo "[ERROR] new or changed msgid found in $po.in" >&2
+			cp $po ../../po/$po.in
 			retval=2
 		fi
 	done
@@ -50,7 +51,7 @@ check_po() {
 }
 
 check_po || {
-	echo "[ERROR] found outdated po-files. Please build navit locally and overwrite the files in po/<pofile>.in with the contents of build/po/<pofile>" >&2
+	echo "[ERROR] found outdated po-files. Please check the differences in the current source tree for po/*.po" >&2
 	exit 2
 }
 
