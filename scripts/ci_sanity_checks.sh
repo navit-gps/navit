@@ -13,9 +13,10 @@ set -u
 
 return_code=0
 GIT_DIFF_OUTPUT="${1:-/dev/stdout}"
+KEEPTEMP=${2:-false}
 
 cleanup() {
-	rm -rf build-locale-$$
+	$KEEPTEMP || rm -rf build-locale
 }
 trap cleanup EXIT
 
@@ -35,8 +36,8 @@ check_diff(){
 check_po() {
 	local retval=0
 
-	mkdir build-locale-$$
-	cd build-locale-$$
+	mkdir -p build-locale
+	cd build-locale
 	cmake .. >/dev/null
 	cd po
 	make -j5 locales >/dev/null
