@@ -20,15 +20,18 @@
 #ifndef NAVIT_XMLCONFIG_H
 #define NAVIT_XMLCONFIG_H
 
-#include "navit.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "config.h"
+#include "attr.h"           // for attr
+#include "attr_type_def.h"  // for attr_type
+#include "config.h"         // for HAVE_GLIB
+#include "navit.h"          // for attr_iter, NAVIT_OBJECT
+#include <glib.h>           // for GError, GMarkupParseContext, gboolean
+struct attr_iter;
 
-#include <glib.h>
+
 
 #ifndef USE_EZXML
 #ifdef HAVE_GLIB
