@@ -32,12 +32,19 @@
 extern "C" {
 #endif
 
-struct map_priv;
+#include <stdio.h>          // for FILE
+
+#include "attr_type_def.h"  // for attr_type
+#include "coord.h"          // for coord, coord_rect
+#include "debug.h"          // for dbg_assert
+#include "item.h"           // for item_range
+#include "item_type_def.h"  // for item_type
+#include "point.h"          // for point_rect
+#include "projection.h"     // for projection
+
 struct attr;
-#include "coord.h"
-#include "point.h"
-#include "layer.h"
-#include "debug.h"
+
+
 
 #define WORLD_BOUNDINGBOX_MIN_X -20000000
 #define WORLD_BOUNDINGBOX_MAX_X  20000000
@@ -64,6 +71,53 @@ struct map_selection {
 	int order;		    	/**< Holds the order */
 	struct item_range range;	/**< Range of items which should be delivered */
 };
+
+struct attr_iter;
+struct callback;
+/**
+ * @brief Holds information about a map
+ *
+ * A map holds data used for screen display, search and routing. Maps can come in different forms, such as stored in
+ * files or created on the fly in memory. Flat-file maps typically hold the data commonly found in a road map, such as
+ * roads, land uses, buildings and POIs. In-memory maps are used internally for data which changes at runtime, such as
+ * information on the currently active route or traffic reports.
+ *
+ * To read data from a map (or add data if the map driver supports it), you need to obtain a map rectangle by calling
+ * the map’s `map_rect_new` method. By passing a map selection it is possible to restrict the items retrieved from the
+ * map to a certain region or to certain item types.
+ */
+struct map;
+/**
+ * @brief Implementation-specific map data.
+ *
+ * This struct is defined individually by each map driver and not ment to be accessed outside the map driver.
+ */
+struct map_priv;
+/**
+ * @brief Describes an extract of a map
+ *
+ * A map rectangle is the result of a map query. It can be obtained from the map by calling `map_rect_new` and passing
+ * a map selection. The resulting map rectangle can be queried for items. Contrary to its name, a map rectangle does
+ * not necessarily correspond to a rectangle: depending on the map selection it was created from, it can hold data from
+ * multiple rectangular areas (which may or may not overlap) or from the entire map.
+ *
+ * Map rectangles are not guaranteed to be thread-safe, i.e. a map rectangle should never be accessed by more than one
+ * thread without proper external synchronization. It is recommended that each thread obtain a separate map rectangle.
+ *
+ * Map implementations must ensure, however, that accesses to different map rectangles of the same map by different
+ * threads are properly synchronized. Most importantly, they must ensure that threads reading from one map rectangle
+ * receive consistent data while another thread is writing to another (which may also happen when reloading data from a
+ * stored map).
+ */
+struct map_rect;
+/**
+ * @brief Holds information about a search on a map
+ *
+ * This structure holds information about a search performed on a map. This can be
+ * used as "handle" to retrieve items from a search.
+ */
+struct map_search;
+
 
 /**
  * @brief Holds all functions a map plugin has to implement to be usable
@@ -229,64 +283,6 @@ map_selection_contains_polygon(struct map_selection *sel, struct coord *c, int c
 	}
 	return map_selection_contains_rect(sel, &r);
 }
-
-/* prototypes */
-enum attr_type;
-enum projection;
-struct attr;
-struct attr_iter;
-struct callback;
-struct item;
-
-/**
- * @brief Holds information about a map
- *
- * A map holds data used for screen display, search and routing. Maps can come in different forms, such as stored in
- * files or created on the fly in memory. Flat-file maps typically hold the data commonly found in a road map, such as
- * roads, land uses, buildings and POIs. In-memory maps are used internally for data which changes at runtime, such as
- * information on the currently active route or traffic reports.
- *
- * To read data from a map (or add data if the map driver supports it), you need to obtain a map rectangle by calling
- * the map’s `map_rect_new` method. By passing a map selection it is possible to restrict the items retrieved from the
- * map to a certain region or to certain item types.
- */
-struct map;
-
-/**
- * @brief Implementation-specific map data.
- *
- * This struct is defined individually by each map driver and not ment to be accessed outside the map driver.
- */
-struct map_priv;
-
-/**
- * @brief Describes an extract of a map
- *
- * A map rectangle is the result of a map query. It can be obtained from the map by calling `map_rect_new` and passing
- * a map selection. The resulting map rectangle can be queried for items. Contrary to its name, a map rectangle does
- * not necessarily correspond to a rectangle: depending on the map selection it was created from, it can hold data from
- * multiple rectangular areas (which may or may not overlap) or from the entire map.
- *
- * Map rectangles are not guaranteed to be thread-safe, i.e. a map rectangle should never be accessed by more than one
- * thread without proper external synchronization. It is recommended that each thread obtain a separate map rectangle.
- *
- * Map implementations must ensure, however, that accesses to different map rectangles of the same map by different
- * threads are properly synchronized. Most importantly, they must ensure that threads reading from one map rectangle
- * receive consistent data while another thread is writing to another (which may also happen when reloading data from a
- * stored map).
- */
-struct map_rect;
-
-/**
- * @brief Holds information about a search on a map
- *
- * This structure holds information about a search performed on a map. This can be
- * used as "handle" to retrieve items from a search.
- */
-struct map_search;
-
-struct map_selection;
-struct pcoord;
 struct map *map_new(struct attr *parent, struct attr **attrs);
 struct map *map_ref(struct map* m);
 void map_unref(struct map* m);
