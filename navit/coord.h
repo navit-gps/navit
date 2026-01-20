@@ -143,7 +143,6 @@ enum coord_format
 	DEGREES_MINUTES_SECONDS_BRIEF
 };
 
-enum projection;
 struct attr;
 
 struct coord * coord_get(unsigned char **p);
@@ -166,12 +165,6 @@ void pcoord_format_absolute(const struct pcoord *pc, char *buffer, int size, cha
 char *coordinates_geo(const struct coord_geo *gc, char sep);
 
 /* prototypes */
-enum coord_format;
-enum projection;
-struct attr;
-struct coord;
-struct coord_rect;
-struct pcoord;
 struct coord *coord_get(unsigned char **p);
 struct coord *coord_new(int x, int y);
 struct coord *coord_new_from_attrs(struct attr *parent, struct attr **attrs);
