@@ -22,19 +22,20 @@
 #include "debug.h"
 #include "file.h"
 #include "item.h"
+#include "item_type_def.h"
+#include "layer.h"
 #include "map.h"
-#include "maptype.h"
 #include "plugin.h"
 #include "projection.h"
-#include "transform.h"
+#include "textfile.h"
+
 #include <errno.h>
 #include <glib.h>
-#include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-#include "textfile.h"
+struct callback_list;
 
 static int map_id;
 

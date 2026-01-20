@@ -17,9 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifndef __NAVIT_TEXTFILE_H_
+#define __NAVIT_TEXTFILE_H_
+
 #include <stdio.h>
-#include "attr.h"
+
 #include "coord.h"
+#include "item.h"
+#include "attr_type_def.h"
 
 #define TEXTFILE_COMMENT_CHAR '#'
 
@@ -53,4 +58,6 @@ struct map_rect_priv {
 	char *args;
 	int lastlen;
 };
+
+#endif // __NAVIT_TEXTFILE_H_
 
