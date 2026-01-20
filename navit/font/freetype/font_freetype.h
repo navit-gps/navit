@@ -29,8 +29,15 @@
  * @li optionally, obtain a "shadow" of the glyph from font_freetype_methods.get_shadow(), to make
  * the text easier to read against a colored background (like the map)
  */
+#ifndef __NAVIG_FONT_FREETYPE_H_
+#define __NAVIG_FONT_FREETYPE_H_
+
+struct color;
 struct font_freetype_font;
 struct font_freetype_glyph;
+struct graphics_font_methods;
+struct graphics_priv;
+struct point;
 
 /** Methods provided by this plugin. */
 struct font_freetype_methods {
@@ -106,3 +113,5 @@ struct font_freetype_text {
 	int glyph_count;
 	struct font_freetype_glyph *glyph[0];
 };
+
+#endif
