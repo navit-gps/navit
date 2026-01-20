@@ -100,18 +100,18 @@ $(document).ready(function(){initNavTree('osm_8c.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="navit__lfs_8h_source.html">navit_lfs.h</a>&quot;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;ctype.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="profile_8h_source.html">profile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -152,11 +152,11 @@ Macros</h2></td></tr>
 <tr class="separator:ad8ff47ec415b43267adb3f1fe87a2dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c11a0dbe3b67655bb9f247047ccb1f2" id="r_a9c11a0dbe3b67655bb9f247047ccb1f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a9c11a0dbe3b67655bb9f247047ccb1f2">REF_MASK</a>&#160;&#160;&#160;(3ull &lt;&lt; 30)</td></tr>
 <tr class="separator:a9c11a0dbe3b67655bb9f247047ccb1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3514a2e2cfaa8f4ae37c9f85c13b02b" id="r_ab3514a2e2cfaa8f4ae37c9f85c13b02b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b">IS_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;(((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; <a class="el" href="osm_8c.html#a9c11a0dbe3b67655bb9f247047ccb1f2">REF_MASK</a>)==<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)</td></tr>
+<tr class="memitem:ab3514a2e2cfaa8f4ae37c9f85c13b02b" id="r_ab3514a2e2cfaa8f4ae37c9f85c13b02b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b">IS_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;(((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; <a class="el" href="osm_8c.html#a9c11a0dbe3b67655bb9f247047ccb1f2">REF_MASK</a>) == <a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)</td></tr>
 <tr class="separator:ab3514a2e2cfaa8f4ae37c9f85c13b02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06a84d471b5554386bc7bdaea86a9199" id="r_a06a84d471b5554386bc7bdaea86a9199"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a06a84d471b5554386bc7bdaea86a9199">GET_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; ~<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)&lt;&lt;31) + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y )</td></tr>
+<tr class="memitem:a06a84d471b5554386bc7bdaea86a9199" id="r_a06a84d471b5554386bc7bdaea86a9199"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a06a84d471b5554386bc7bdaea86a9199">GET_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; ~<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>) &lt;&lt; 31) + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y)</td></tr>
 <tr class="separator:a06a84d471b5554386bc7bdaea86a9199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a537de5978441ee08c8f79369128b843d" id="r_a537de5978441ee08c8f79369128b843d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a537de5978441ee08c8f79369128b843d">SET_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>,  ref)&#160;&#160;&#160;do { (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x = <a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a> | ((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref)&gt;&gt;31); (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y = (<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &amp; 0x7fffffffull; } while(0)</td></tr>
+<tr class="memitem:a537de5978441ee08c8f79369128b843d" id="r_a537de5978441ee08c8f79369128b843d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a537de5978441ee08c8f79369128b843d">SET_REF</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>,  ref)</td></tr>
 <tr class="separator:a537de5978441ee08c8f79369128b843d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20ecad6148374a0a6e1edae1badccd2f" id="r_a20ecad6148374a0a6e1edae1badccd2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a20ecad6148374a0a6e1edae1badccd2f">MAX_TOWN_ADMIN_LEVELS</a>&#160;&#160;&#160;11</td></tr>
 <tr class="separator:a20ecad6148374a0a6e1edae1badccd2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -457,7 +457,7 @@ Variables</h2></td></tr>
 <tr class="separator:a7a3c109e44b5bc4ada441dfcfd26ec1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10569c7234850512cdfe61c4351aeccb" id="r_a10569c7234850512cdfe61c4351aeccb"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a10569c7234850512cdfe61c4351aeccb">attr_strings</a> [<a class="el" href="osm_8c.html#a3b5bc14c770e788a3dc714704d0cad0eadb1f2cf219c22cf2a64c64d4e52ede6a">attr_string_last</a>]</td></tr>
 <tr class="separator:a10569c7234850512cdfe61c4351aeccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbee59bd0cc2d71bd75b17b0a8d92b6e" id="r_abbee59bd0cc2d71bd75b17b0a8d92b6e"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a> [] = {&quot;unknown&quot;,&quot;node&quot;,&quot;way&quot;,&quot;relation&quot;}</td></tr>
+<tr class="memitem:abbee59bd0cc2d71bd75b17b0a8d92b6e" id="r_abbee59bd0cc2d71bd75b17b0a8d92b6e"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#abbee59bd0cc2d71bd75b17b0a8d92b6e">osm_types</a> [] = {&quot;unknown&quot;, &quot;node&quot;, &quot;way&quot;, &quot;relation&quot;}</td></tr>
 <tr class="separator:abbee59bd0cc2d71bd75b17b0a8d92b6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a227c2b3655c7221b718fc53b4a77baf4" id="r_a227c2b3655c7221b718fc53b4a77baf4"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcountry__table.html">country_table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a227c2b3655c7221b718fc53b4a77baf4">country_table</a> []</td></tr>
 <tr class="separator:a227c2b3655c7221b718fc53b4a77baf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -497,7 +497,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></td><td>)</td>
-          <td>&#160;&#160;&#160;((((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; ~<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)&lt;&lt;31) + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y )</td>
+          <td>&#160;&#160;&#160;((((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; ~<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>) &lt;&lt; 31) + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -515,7 +515,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></td><td>)</td>
-          <td>&#160;&#160;&#160;(((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; <a class="el" href="osm_8c.html#a9c11a0dbe3b67655bb9f247047ccb1f2">REF_MASK</a>)==<a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)</td>
+          <td>&#160;&#160;&#160;(((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x &amp; <a class="el" href="osm_8c.html#a9c11a0dbe3b67655bb9f247047ccb1f2">REF_MASK</a>) == <a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -627,11 +627,18 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;do { (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x = <a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a> | ((<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref)&gt;&gt;31); (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y = (<a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &amp; 0x7fffffffull; } while(0)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                                               \</div>
+<div class="line">        (<a class="code hl_variable" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x = <a class="code hl_define" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a> | ((<a class="code hl_typedef" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &gt;&gt; 31);                                                                     \</div>
+<div class="line">        (<a class="code hl_variable" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y = (<a class="code hl_typedef" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &amp; 0x7fffffffull;                                                                          \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="amaptool_8h_html_abe8b7806b2d8aaf7604b547999ebc45a"><div class="ttname"><a href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a></div><div class="ttdeci">unsigned long long int osmid</div><div class="ttdef"><b>Definition</b> maptool.h:131</div></div>
+<div class="ttc" id="aosm_8c_html_ad8ff47ec415b43267adb3f1fe87a2dc4"><div class="ttname"><a href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a></div><div class="ttdeci">#define REF_MARKER</div><div class="ttdef"><b>Definition</b> osm.c:126</div></div>
+<div class="ttc" id="apopup_8c_html_aafe71b070668214be9b4b4849985dc6b"><div class="ttname"><a href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></div><div class="ttdeci">static struct pcoord c</div><div class="ttdef"><b>Definition</b> popup.c:375</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -5214,7 +5221,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* osm_types[] = {&quot;unknown&quot;,&quot;node&quot;,&quot;way&quot;,&quot;relation&quot;}</td>
+          <td class="memname">char* osm_types[] = {&quot;unknown&quot;, &quot;node&quot;, &quot;way&quot;, &quot;relation&quot;}</td>
         </tr>
       </table>
 </div><div class="memdoc">

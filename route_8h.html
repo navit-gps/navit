@@ -99,7 +99,9 @@ $(document).ready(function(){initNavTree('route_8h.html',''); initResizable(); }
 
 <p>Contains exported code for route.c.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+</div>
 <p><a href="route_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -114,21 +116,21 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a1e90604386a268d7a2fef169495ad81c" id="r_a1e90604386a268d7a2fef169495ad81c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81c">route_path_flags</a> { <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81ca58e788126546f169f5ca28ab85fcb033">route_path_flag_none</a> =0
-, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81caf17539ef3ca1f04981c7a921a9a93d77">route_path_flag_cancel</a> =1
-, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81ca8920749226208e321b9d3927ffd3d00e">route_path_flag_async</a> =2
-, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81cada18f3f37c54daba5451074e29cd1fbc">route_path_flag_no_rebuild</a> =4
+<tr class="memitem:a1e90604386a268d7a2fef169495ad81c" id="r_a1e90604386a268d7a2fef169495ad81c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81c">route_path_flags</a> { <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81ca58e788126546f169f5ca28ab85fcb033">route_path_flag_none</a> = 0
+, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81caf17539ef3ca1f04981c7a921a9a93d77">route_path_flag_cancel</a> = 1
+, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81ca8920749226208e321b9d3927ffd3d00e">route_path_flag_async</a> = 2
+, <a class="el" href="route_8h.html#a1e90604386a268d7a2fef169495ad81cada18f3f37c54daba5451074e29cd1fbc">route_path_flag_no_rebuild</a> = 4
  }</td></tr>
 <tr class="separator:a1e90604386a268d7a2fef169495ad81c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2da05cda4fd5fbd6a95516ca0f162a87" id="r_a2da05cda4fd5fbd6a95516ca0f162a87"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87">route_status</a> { <br />
-&#160;&#160;<a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aeba93e2b7f9516e2403112fe1468e4ea">route_status_no_destination</a> =0
-, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aa28a6601704d4f9f2d61bebb1e45858a">route_status_destination_set</a> =1
-, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a5fe6ac02ecfb847b72ae215a4045fff7">route_status_not_found</a> =1|2
-, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a467af9642a5e7b543f884615951548d5">route_status_building_path</a> =1|4
+&#160;&#160;<a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aeba93e2b7f9516e2403112fe1468e4ea">route_status_no_destination</a> = 0
+, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87aa28a6601704d4f9f2d61bebb1e45858a">route_status_destination_set</a> = 1
+, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a5fe6ac02ecfb847b72ae215a4045fff7">route_status_not_found</a> = 1 | 2
+, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a467af9642a5e7b543f884615951548d5">route_status_building_path</a> = 1 | 4
 , <br />
-&#160;&#160;<a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a9c1c240788bb0486dd5306704b100145">route_status_building_graph</a> =1|4|8
-, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87ac10a7b932765724288ad30e0a575d854">route_status_path_done_new</a> =1|16
-, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87af980434883796bc5445bfe7548d542d6">route_status_path_done_incremental</a> =1|32
+&#160;&#160;<a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87a9c1c240788bb0486dd5306704b100145">route_status_building_graph</a> = 1 | 4 | 8
+, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87ac10a7b932765724288ad30e0a575d854">route_status_path_done_new</a> = 1 | 16
+, <a class="el" href="route_8h.html#a2da05cda4fd5fbd6a95516ca0f162a87af980434883796bc5445bfe7548d542d6">route_status_path_done_incremental</a> = 1 | 32
 <br />
  }</td></tr>
 <tr class="separator:a2da05cda4fd5fbd6a95516ca0f162a87"><td class="memSeparator" colspan="2">&#160;</td></tr>

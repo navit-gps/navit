@@ -98,8 +98,8 @@ $(document).ready(function(){initNavTree('item_8h.html',''); initResizable(); })
   <div class="headertitle"><div class="title">item.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 </div>
 <p><a href="item_8h_source.html">Go to the source code of this file.</a></p>
@@ -141,11 +141,11 @@ Macros</h2></td></tr>
 <tr class="separator:ae2602ad4c795073c9f1533aa3466e069"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4721681f78bf2b288e24e0b8d443532" id="r_ab4721681f78bf2b288e24e0b8d443532"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>(a,  b)&#160;&#160;&#160;((a).id_hi == (b).id_hi &amp;&amp; (a).id_lo == (b).id_lo)</td></tr>
 <tr class="separator:ab4721681f78bf2b288e24e0b8d443532"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87c714b27638a65053277c278c2bc3b6" id="r_a87c714b27638a65053277c278c2bc3b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a87c714b27638a65053277c278c2bc3b6">item_is_equal</a>(a,  b)&#160;&#160;&#160;(<a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>(a,b) &amp;&amp; (a).<a class="el" href="structmap.html">map</a> == (b).<a class="el" href="structmap.html">map</a>)</td></tr>
+<tr class="memitem:a87c714b27638a65053277c278c2bc3b6" id="r_a87c714b27638a65053277c278c2bc3b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a87c714b27638a65053277c278c2bc3b6">item_is_equal</a>(a,  b)&#160;&#160;&#160;(<a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>(a, b) &amp;&amp; (a).<a class="el" href="structmap.html">map</a> == (b).<a class="el" href="structmap.html">map</a>)</td></tr>
 <tr class="separator:a87c714b27638a65053277c278c2bc3b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a933de3334c70a27fd070e4cc34866881" id="r_a933de3334c70a27fd070e4cc34866881"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a933de3334c70a27fd070e4cc34866881">ITEM_ID_FMT</a>&#160;&#160;&#160;&quot;(0x%x,0x%x)&quot;</td></tr>
 <tr class="separator:a933de3334c70a27fd070e4cc34866881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a164d1145c8ea7df8adb35f782b02949f" id="r_a164d1145c8ea7df8adb35f782b02949f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a164d1145c8ea7df8adb35f782b02949f">ITEM_ID_ARGS</a>(x)&#160;&#160;&#160;(x).id_hi,(x).id_lo</td></tr>
+<tr class="memitem:a164d1145c8ea7df8adb35f782b02949f" id="r_a164d1145c8ea7df8adb35f782b02949f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8h.html#a164d1145c8ea7df8adb35f782b02949f">ITEM_ID_ARGS</a>(x)&#160;&#160;&#160;(x).id_hi, (x).id_lo</td></tr>
 <tr class="separator:a164d1145c8ea7df8adb35f782b02949f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -257,7 +257,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;(x).id_hi,(x).id_lo</td>
+          <td>&#160;&#160;&#160;(x).id_hi, (x).id_lo</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -335,7 +335,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(<a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>(a,b) &amp;&amp; (a).<a class="el" href="structmap.html">map</a> == (b).<a class="el" href="structmap.html">map</a>)</td>
+          <td></td><td>&#160;&#160;&#160;(<a class="el" href="item_8h.html#ab4721681f78bf2b288e24e0b8d443532">item_is_equal_id</a>(a, b) &amp;&amp; (a).<a class="el" href="structmap.html">map</a> == (b).<a class="el" href="structmap.html">map</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -385,18 +385,18 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">                        (((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_lake &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_land_feature &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_zoo) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_gc_multi &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_cafe) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_peak &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_image) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_townhall &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_ruins) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_post_box &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_tennis) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_vending_machine &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_shop_shoes) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_tree &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_shop_photo) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_pub &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_bahai) \</div>
-<div class="line">                        || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_customh &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_customf))</div>
+<b>Value:</b><div class="fragment"><div class="line">    (((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_lake &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi)                                                         \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_land_feature &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_zoo)                                          \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_gc_multi &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_cafe)                                             \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_peak &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_image)                                                \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_townhall &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_ruins)                                            \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_post_box &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_tennis)                                           \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_vending_machine &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_shop_shoes)                                \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_tree &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_shop_photo)                                           \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_poi_pub &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_poi_bahai)                                                 \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_poi_customh &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_poi_customf))</div>
 <div class="ttc" id="agarmin__img_8c_html_a8f7b0321b1954f07b747aeb1e311814e"><div class="ttname"><a href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a></div><div class="ttdeci">char type[3]</div><div class="ttdef"><b>Definition</b> garmin_img.c:2</div></div>
-<div class="ttc" id="astructitem_html"><div class="ttname"><a href="structitem.html">item</a></div><div class="ttdoc">Represents an object on a map.</div><div class="ttdef"><b>Definition</b> item.h:124</div></div>
+<div class="ttc" id="astructitem_html"><div class="ttname"><a href="structitem.html">item</a></div><div class="ttdoc">Represents an object on a map.</div><div class="ttdef"><b>Definition</b> item.h:122</div></div>
 </div><!-- fragment -->
 <p>Determines if the given item's type is a POI or not. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -460,14 +460,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">                               (((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_street_nopass &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_roundabout) \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).type == type_street_service \</div>
-<div class="line">                               || ((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_street_pedestrian &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_track_grass) \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).type == type_living_street  \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> == type_street_construction  \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).type == type_path \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> == type_street_parking_lane \</div>
-<div class="line">                               ||  (<a class="code hl_struct" href="structitem.html">item</a>).type == type_footway )</div>
+<b>Value:</b><div class="fragment"><div class="line">    (((<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &gt;= type_street_nopass &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).type &lt;= type_roundabout)                                             \</div>
+<div class="line">     || ((<a class="code hl_struct" href="structitem.html">item</a>).type &gt;= type_street_pedestrian &amp;&amp; (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> &lt;= type_track_grass)                                     \</div>
+<div class="line">     || (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> == type_street_service || (<a class="code hl_struct" href="structitem.html">item</a>).type == type_living_street                                        \</div>
+<div class="line">     || (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> == type_street_construction || (<a class="code hl_struct" href="structitem.html">item</a>).type == type_path || (<a class="code hl_struct" href="structitem.html">item</a>).<a class="code hl_variable" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a> == type_street_parking_lane \</div>
+<div class="line">     || (<a class="code hl_struct" href="structitem.html">item</a>).type == type_footway)</div>
 </div><!-- fragment -->
 </div>
 </div>

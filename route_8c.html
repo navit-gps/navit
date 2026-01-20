@@ -100,35 +100,35 @@ $(document).ready(function(){initNavTree('route_8c.html',''); initResizable(); }
 
 <p>Contains code related to finding a route from a position to a destination.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="glib__slice_8h_source.html">glib_slice.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="profile_8h_source.html">profile.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;fib.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="glib__slice_8h_source.html">glib_slice.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="route__protected_8h_source.html">route_protected.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="profile_8h_source.html">profile.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="roadprofile_8h_source.html">roadprofile.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="route__protected_8h_source.html">route_protected.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="track_8h_source.html">track.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;fib.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicleprofile_8h_source.html">vehicleprofile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="roadprofile_8h_source.html">roadprofile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -167,7 +167,7 @@ Macros</h2></td></tr>
 <tr class="separator:a043664048192f29757f5995cbf1a202a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc4091925e9044d94a577da7eeaa30b6" id="r_abc4091925e9044d94a577da7eeaa30b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#abc4091925e9044d94a577da7eeaa30b6">RSD_DANGEROUS_GOODS</a>(x)&#160;&#160;&#160;*((int *)<a class="el" href="route_8c.html#a66b0a0f5cf4e815acca01bb15aa57dea">route_segment_data_field_pos</a>((x), attr_vehicle_dangerous_goods))</td></tr>
 <tr class="separator:abc4091925e9044d94a577da7eeaa30b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8358f2ba025f6d605147a4f859d1fb24" id="r_a8358f2ba025f6d605147a4f859d1fb24"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#a8358f2ba025f6d605147a4f859d1fb24">HASHCOORD</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;x +(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;y) * 2654435761UL) &amp; (<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a>-1))</td></tr>
+<tr class="memitem:a8358f2ba025f6d605147a4f859d1fb24" id="r_a8358f2ba025f6d605147a4f859d1fb24"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#a8358f2ba025f6d605147a4f859d1fb24">HASHCOORD</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;x + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;y) * 2654435761UL) &amp; (<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a> - 1))</td></tr>
 <tr class="separator:a8358f2ba025f6d605147a4f859d1fb24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -538,7 +538,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a2ce0d27052b039e875248c6359a968e5" id="r_a2ce0d27052b039e875248c6359a968e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#a2ce0d27052b039e875248c6359a968e5">debug_route</a> =0</td></tr>
+<tr class="memitem:a2ce0d27052b039e875248c6359a968e5" id="r_a2ce0d27052b039e875248c6359a968e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#a2ce0d27052b039e875248c6359a968e5">debug_route</a> = 0</td></tr>
 <tr class="separator:a2ce0d27052b039e875248c6359a968e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a85a74de6740a4737c0ec1ab36737ed" id="r_a7a85a74de6740a4737c0ec1ab36737ed"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmap__selection.html">map_selection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="route_8c.html#a7a85a74de6740a4737c0ec1ab36737ed">route_selection</a></td></tr>
 <tr class="separator:a7a85a74de6740a4737c0ec1ab36737ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -585,7 +585,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></td><td>)</td>
-          <td>&#160;&#160;&#160;((((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;x +(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;y) * 2654435761UL) &amp; (<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a>-1))</td>
+          <td>&#160;&#160;&#160;((((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;x + (<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)-&gt;y) * 2654435761UL) &amp; (<a class="el" href="graphics_8c.html#ad6074dd11ab3c97c8135c43aab03ae95">HASH_SIZE</a> - 1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -6469,7 +6469,7 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int debug_route =0</td>
+          <td class="memname">int debug_route = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -6503,10 +6503,10 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 <div class="line">    <a class="code hl_function" href="route_8c.html#a6bd0e6f00744b3a9b7dd963afc80d339">rp_attr_rewind</a>,</div>
 <div class="line">    <a class="code hl_function" href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="aroute_8c_html_a3fc913818d73fb36c38f693015865114"><div class="ttname"><a href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get</a></div><div class="ttdeci">static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:3640</div></div>
-<div class="ttc" id="aroute_8c_html_a6bd0e6f00744b3a9b7dd963afc80d339"><div class="ttname"><a href="route_8c.html#a6bd0e6f00744b3a9b7dd963afc80d339">rp_attr_rewind</a></div><div class="ttdeci">static void rp_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3635</div></div>
-<div class="ttc" id="aroute_8c_html_aaaf0237b9ce7f45982435aa75a131009"><div class="ttname"><a href="route_8c.html#aaaf0237b9ce7f45982435aa75a131009">rm_coord_rewind</a></div><div class="ttdeci">static void rm_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3491</div></div>
-<div class="ttc" id="aroute_8c_html_ae67805f4bb28d827a61a2bfb96b1f85b"><div class="ttname"><a href="route_8c.html#ae67805f4bb28d827a61a2bfb96b1f85b">rp_coord_get</a></div><div class="ttdeci">static int rp_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdoc">Returns the coordinates of a route graph item.</div><div class="ttdef"><b>Definition</b> route.c:3775</div></div>
+<div class="ttc" id="aroute_8c_html_a3fc913818d73fb36c38f693015865114"><div class="ttname"><a href="route_8c.html#a3fc913818d73fb36c38f693015865114">rp_attr_get</a></div><div class="ttdeci">static int rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:3629</div></div>
+<div class="ttc" id="aroute_8c_html_a6bd0e6f00744b3a9b7dd963afc80d339"><div class="ttname"><a href="route_8c.html#a6bd0e6f00744b3a9b7dd963afc80d339">rp_attr_rewind</a></div><div class="ttdeci">static void rp_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3624</div></div>
+<div class="ttc" id="aroute_8c_html_aaaf0237b9ce7f45982435aa75a131009"><div class="ttname"><a href="route_8c.html#aaaf0237b9ce7f45982435aa75a131009">rm_coord_rewind</a></div><div class="ttdeci">static void rm_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3480</div></div>
+<div class="ttc" id="aroute_8c_html_ae67805f4bb28d827a61a2bfb96b1f85b"><div class="ttname"><a href="route_8c.html#ae67805f4bb28d827a61a2bfb96b1f85b">rp_coord_get</a></div><div class="ttdeci">static int rp_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdoc">Returns the coordinates of a route graph item.</div><div class="ttdef"><b>Definition</b> route.c:3764</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="route_8c.html#a30aab0e9803a20a4c5786816d0511940">rp_rect_new()</a>.</p>
 
@@ -6537,9 +6537,9 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 <div class="line">    <a class="code hl_function" href="route_8c.html#a484f2e82e17e8b891a2270a61749d698">rm_attr_rewind</a>,</div>
 <div class="line">    <a class="code hl_function" href="route_8c.html#aee1c15a1967b729232323b77491787a1">rm_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="aroute_8c_html_a484f2e82e17e8b891a2270a61749d698"><div class="ttname"><a href="route_8c.html#a484f2e82e17e8b891a2270a61749d698">rm_attr_rewind</a></div><div class="ttdeci">static void rm_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3496</div></div>
-<div class="ttc" id="aroute_8c_html_aee1c15a1967b729232323b77491787a1"><div class="ttname"><a href="route_8c.html#aee1c15a1967b729232323b77491787a1">rm_attr_get</a></div><div class="ttdeci">static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:3501</div></div>
-<div class="ttc" id="aroute_8c_html_af725826ed9e5e2d79e5349ab59082005"><div class="ttname"><a href="route_8c.html#af725826ed9e5e2d79e5349ab59082005">rm_coord_get</a></div><div class="ttdeci">static int rm_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> route.c:3587</div></div>
+<div class="ttc" id="aroute_8c_html_a484f2e82e17e8b891a2270a61749d698"><div class="ttname"><a href="route_8c.html#a484f2e82e17e8b891a2270a61749d698">rm_attr_rewind</a></div><div class="ttdeci">static void rm_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> route.c:3485</div></div>
+<div class="ttc" id="aroute_8c_html_aee1c15a1967b729232323b77491787a1"><div class="ttname"><a href="route_8c.html#aee1c15a1967b729232323b77491787a1">rm_attr_get</a></div><div class="ttdeci">static int rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:3490</div></div>
+<div class="ttc" id="aroute_8c_html_af725826ed9e5e2d79e5349ab59082005"><div class="ttname"><a href="route_8c.html#af725826ed9e5e2d79e5349ab59082005">rm_coord_get</a></div><div class="ttdeci">static int rm_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> route.c:3577</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="route_8c.html#a8d40f0bb8ff5c31e1f06f93c3377667f">rm_rect_new()</a>.</p>
 
@@ -6571,13 +6571,13 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="aroute_8c_html_a33e761f05d25b8ae66c7a8d091291ee7"><div class="ttname"><a href="route_8c.html#a33e761f05d25b8ae66c7a8d091291ee7">route_dup</a></div><div class="ttdeci">struct route * route_dup(struct route *orig)</div><div class="ttdoc">Duplicates a route object.</div><div class="ttdef"><b>Definition</b> route.c:438</div></div>
-<div class="ttc" id="aroute_8c_html_a6d8a75a45bed6f61c1783c4e6447c414"><div class="ttname"><a href="route_8c.html#a6d8a75a45bed6f61c1783c4e6447c414">route_remove_attr</a></div><div class="ttdeci">int route_remove_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4278</div></div>
-<div class="ttc" id="aroute_8c_html_abd93888210687905589913b58a7c3c47"><div class="ttname"><a href="route_8c.html#abd93888210687905589913b58a7c3c47">route_new</a></div><div class="ttdeci">struct route * route_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a completely new route structure.</div><div class="ttdef"><b>Definition</b> route.c:414</div></div>
-<div class="ttc" id="aroute_8c_html_acad5a08b925ad1fa0429997b0febde9b"><div class="ttname"><a href="route_8c.html#acad5a08b925ad1fa0429997b0febde9b">route_set_attr</a></div><div class="ttdeci">int route_set_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4228</div></div>
-<div class="ttc" id="aroute_8c_html_acd57c04075f3eae04f5c3fb4fc4d7689"><div class="ttname"><a href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr</a></div><div class="ttdeci">int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> route.c:4292</div></div>
-<div class="ttc" id="aroute_8c_html_acf5630829e3459305171d52db6e24fe6"><div class="ttname"><a href="route_8c.html#acf5630829e3459305171d52db6e24fe6">route_add_attr</a></div><div class="ttdeci">int route_add_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4268</div></div>
-<div class="ttc" id="aroute_8c_html_ae7d2ff1bc3006c9967b0a4ae3e54fe90"><div class="ttname"><a href="route_8c.html#ae7d2ff1bc3006c9967b0a4ae3e54fe90">route_destroy</a></div><div class="ttdeci">void route_destroy(struct route *this_)</div><div class="ttdef"><b>Definition</b> route.c:4380</div></div>
+<div class="ttc" id="aroute_8c_html_a33e761f05d25b8ae66c7a8d091291ee7"><div class="ttname"><a href="route_8c.html#a33e761f05d25b8ae66c7a8d091291ee7">route_dup</a></div><div class="ttdeci">struct route * route_dup(struct route *orig)</div><div class="ttdoc">Duplicates a route object.</div><div class="ttdef"><b>Definition</b> route.c:436</div></div>
+<div class="ttc" id="aroute_8c_html_a6d8a75a45bed6f61c1783c4e6447c414"><div class="ttname"><a href="route_8c.html#a6d8a75a45bed6f61c1783c4e6447c414">route_remove_attr</a></div><div class="ttdeci">int route_remove_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4256</div></div>
+<div class="ttc" id="aroute_8c_html_abd93888210687905589913b58a7c3c47"><div class="ttname"><a href="route_8c.html#abd93888210687905589913b58a7c3c47">route_new</a></div><div class="ttdeci">struct route * route_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a completely new route structure.</div><div class="ttdef"><b>Definition</b> route.c:413</div></div>
+<div class="ttc" id="aroute_8c_html_acad5a08b925ad1fa0429997b0febde9b"><div class="ttname"><a href="route_8c.html#acad5a08b925ad1fa0429997b0febde9b">route_set_attr</a></div><div class="ttdeci">int route_set_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4206</div></div>
+<div class="ttc" id="aroute_8c_html_acd57c04075f3eae04f5c3fb4fc4d7689"><div class="ttname"><a href="route_8c.html#acd57c04075f3eae04f5c3fb4fc4d7689">route_get_attr</a></div><div class="ttdeci">int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> route.c:4270</div></div>
+<div class="ttc" id="aroute_8c_html_acf5630829e3459305171d52db6e24fe6"><div class="ttname"><a href="route_8c.html#acf5630829e3459305171d52db6e24fe6">route_add_attr</a></div><div class="ttdeci">int route_add_attr(struct route *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> route.c:4246</div></div>
+<div class="ttc" id="aroute_8c_html_ae7d2ff1bc3006c9967b0a4ae3e54fe90"><div class="ttname"><a href="route_8c.html#ae7d2ff1bc3006c9967b0a4ae3e54fe90">route_destroy</a></div><div class="ttdeci">void route_destroy(struct route *this_)</div><div class="ttdef"><b>Definition</b> route.c:4359</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a66413cce5610bb877cc25f77803a2e9c"><div class="ttname"><a href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1313</div></div>
 <div class="ttc" id="axmlconfig_8c_html_aaf5d0d4afa6fc99f63e55be0ca05cce8"><div class="ttname"><a href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1307</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a080f3b0bde669c292c4256ac394b2cbe"><div class="ttname"><a href="xmlconfig_8h.html#a080f3b0bde669c292c4256ac394b2cbe">object_func_iter_new</a></div><div class="ttdeci">struct attr_iter *(* object_func_iter_new)(void *)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:60</div></div>
@@ -6617,23 +6617,23 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div>
-<div class="line">    <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a64460a79bd6ca7b2dbf9e617fe050330">rp_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a30aab0e9803a20a4c5786816d0511940">rp_rect_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a3f737be3c4fd3250ce7db2c86c76f018">rp_get_item</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#aa2d7ce1bbf74f2d0f5138e6029635456">rp_get_item_byid</a>,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
+<div class="line">    .pro = <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div>
+<div class="line">    .charset = <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
+<div class="line">    .map_destroy = <a class="code hl_function" href="route_8c.html#a64460a79bd6ca7b2dbf9e617fe050330">rp_destroy</a>,</div>
+<div class="line">    .map_rect_new = <a class="code hl_function" href="route_8c.html#a30aab0e9803a20a4c5786816d0511940">rp_rect_new</a>,</div>
+<div class="line">    .map_rect_destroy = <a class="code hl_function" href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a>,</div>
+<div class="line">    .map_rect_get_item = <a class="code hl_function" href="route_8c.html#a3f737be3c4fd3250ce7db2c86c76f018">rp_get_item</a>,</div>
+<div class="line">    .map_rect_get_item_byid = <a class="code hl_function" href="route_8c.html#aa2d7ce1bbf74f2d0f5138e6029635456">rp_get_item_byid</a>,</div>
+<div class="line">    .map_search_new = NULL,</div>
+<div class="line">    .map_search_destroy = NULL,</div>
+<div class="line">    .map_search_get_item = NULL,</div>
 <div class="line">}</div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
-<div class="ttc" id="aroute_8c_html_a026e1a4bdfe49d2a1249fa72c0041876"><div class="ttname"><a href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a></div><div class="ttdeci">static void rm_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3888</div></div>
-<div class="ttc" id="aroute_8c_html_a30aab0e9803a20a4c5786816d0511940"><div class="ttname"><a href="route_8c.html#a30aab0e9803a20a4c5786816d0511940">rp_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * rp_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdoc">Opens a new map rectangle on the route graph's map.</div><div class="ttdef"><b>Definition</b> route.c:3868</div></div>
-<div class="ttc" id="aroute_8c_html_a3f737be3c4fd3250ce7db2c86c76f018"><div class="ttname"><a href="route_8c.html#a3f737be3c4fd3250ce7db2c86c76f018">rp_get_item</a></div><div class="ttdeci">static struct item * rp_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3906</div></div>
-<div class="ttc" id="aroute_8c_html_a64460a79bd6ca7b2dbf9e617fe050330"><div class="ttname"><a href="route_8c.html#a64460a79bd6ca7b2dbf9e617fe050330">rp_destroy</a></div><div class="ttdeci">static void rp_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> route.c:3829</div></div>
-<div class="ttc" id="aroute_8c_html_aa2d7ce1bbf74f2d0f5138e6029635456"><div class="ttname"><a href="route_8c.html#aa2d7ce1bbf74f2d0f5138e6029635456">rp_get_item_byid</a></div><div class="ttdeci">static struct item * rp_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> route.c:3971</div></div>
+<div class="ttc" id="aroute_8c_html_a026e1a4bdfe49d2a1249fa72c0041876"><div class="ttname"><a href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a></div><div class="ttdeci">static void rm_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3874</div></div>
+<div class="ttc" id="aroute_8c_html_a30aab0e9803a20a4c5786816d0511940"><div class="ttname"><a href="route_8c.html#a30aab0e9803a20a4c5786816d0511940">rp_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * rp_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdoc">Opens a new map rectangle on the route graph's map.</div><div class="ttdef"><b>Definition</b> route.c:3854</div></div>
+<div class="ttc" id="aroute_8c_html_a3f737be3c4fd3250ce7db2c86c76f018"><div class="ttname"><a href="route_8c.html#a3f737be3c4fd3250ce7db2c86c76f018">rp_get_item</a></div><div class="ttdeci">static struct item * rp_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3892</div></div>
+<div class="ttc" id="aroute_8c_html_a64460a79bd6ca7b2dbf9e617fe050330"><div class="ttname"><a href="route_8c.html#a64460a79bd6ca7b2dbf9e617fe050330">rp_destroy</a></div><div class="ttdeci">static void rp_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> route.c:3815</div></div>
+<div class="ttc" id="aroute_8c_html_aa2d7ce1bbf74f2d0f5138e6029635456"><div class="ttname"><a href="route_8c.html#aa2d7ce1bbf74f2d0f5138e6029635456">rp_get_item_byid</a></div><div class="ttdeci">static struct item * rp_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> route.c:3955</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="route_8c.html#a14b6b00b5437d1da5eeef897211e8b37">route_map_new_helper()</a>.</p>
 
@@ -6659,21 +6659,21 @@ Access restrictions for dangerous goods, size or weight are evaluated, and 0 is 
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div>
-<div class="line">    <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a9aa9b8088e8c18d26b950173d3004140">rm_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a8d40f0bb8ff5c31e1f06f93c3377667f">rm_rect_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#a5cb46671c861d0b82429c419398f7ecb">rm_get_item</a>,</div>
-<div class="line">    <a class="code hl_function" href="route_8c.html#af36fada269138fdcd3506862105ee53b">rm_get_item_byid</a>,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
+<div class="line">    .pro = <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a>,</div>
+<div class="line">    .charset = <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
+<div class="line">    .map_destroy = <a class="code hl_function" href="route_8c.html#a9aa9b8088e8c18d26b950173d3004140">rm_destroy</a>,</div>
+<div class="line">    .map_rect_new = <a class="code hl_function" href="route_8c.html#a8d40f0bb8ff5c31e1f06f93c3377667f">rm_rect_new</a>,</div>
+<div class="line">    .map_rect_destroy = <a class="code hl_function" href="route_8c.html#a026e1a4bdfe49d2a1249fa72c0041876">rm_rect_destroy</a>,</div>
+<div class="line">    .map_rect_get_item = <a class="code hl_function" href="route_8c.html#a5cb46671c861d0b82429c419398f7ecb">rm_get_item</a>,</div>
+<div class="line">    .map_rect_get_item_byid = <a class="code hl_function" href="route_8c.html#af36fada269138fdcd3506862105ee53b">rm_get_item_byid</a>,</div>
+<div class="line">    .map_search_new = NULL,</div>
+<div class="line">    .map_search_destroy = NULL,</div>
+<div class="line">    .map_search_get_item = NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="aroute_8c_html_a5cb46671c861d0b82429c419398f7ecb"><div class="ttname"><a href="route_8c.html#a5cb46671c861d0b82429c419398f7ecb">rm_get_item</a></div><div class="ttdeci">static struct item * rm_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3979</div></div>
-<div class="ttc" id="aroute_8c_html_a8d40f0bb8ff5c31e1f06f93c3377667f"><div class="ttname"><a href="route_8c.html#a8d40f0bb8ff5c31e1f06f93c3377667f">rm_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * rm_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> route.c:3837</div></div>
-<div class="ttc" id="aroute_8c_html_a9aa9b8088e8c18d26b950173d3004140"><div class="ttname"><a href="route_8c.html#a9aa9b8088e8c18d26b950173d3004140">rm_destroy</a></div><div class="ttdeci">static void rm_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> route.c:3833</div></div>
-<div class="ttc" id="aroute_8c_html_af36fada269138fdcd3506862105ee53b"><div class="ttname"><a href="route_8c.html#af36fada269138fdcd3506862105ee53b">rm_get_item_byid</a></div><div class="ttdeci">static struct item * rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> route.c:4046</div></div>
+<div class="ttc" id="aroute_8c_html_a5cb46671c861d0b82429c419398f7ecb"><div class="ttname"><a href="route_8c.html#a5cb46671c861d0b82429c419398f7ecb">rm_get_item</a></div><div class="ttdeci">static struct item * rm_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> route.c:3962</div></div>
+<div class="ttc" id="aroute_8c_html_a8d40f0bb8ff5c31e1f06f93c3377667f"><div class="ttname"><a href="route_8c.html#a8d40f0bb8ff5c31e1f06f93c3377667f">rm_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * rm_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> route.c:3823</div></div>
+<div class="ttc" id="aroute_8c_html_a9aa9b8088e8c18d26b950173d3004140"><div class="ttname"><a href="route_8c.html#a9aa9b8088e8c18d26b950173d3004140">rm_destroy</a></div><div class="ttdeci">static void rm_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> route.c:3819</div></div>
+<div class="ttc" id="aroute_8c_html_af36fada269138fdcd3506862105ee53b"><div class="ttname"><a href="route_8c.html#af36fada269138fdcd3506862105ee53b">rm_get_item_byid</a></div><div class="ttdeci">static struct item * rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> route.c:4029</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="route_8c.html#a14b6b00b5437d1da5eeef897211e8b37">route_map_new_helper()</a>.</p>
 
