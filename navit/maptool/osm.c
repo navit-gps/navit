@@ -42,9 +42,16 @@
 #include "glib.h"
 #include "item.h"
 #include "item_type_def.h"
+#include "linguistics.h"
+#include "profile.h"
 #include "maptool.h"
 #include "projection.h"
 #include "transform.h"
+#include "types.h"
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct relations;
 struct relations_func;
@@ -1206,15 +1213,14 @@ void osm_add_tag(char *k, char *v) {
     }
     if (!g_strcmp0(k, "note"))
         level = 5;
-    if (g_str_has_prefix(k,"name:")) {
+    if (g_str_has_prefix(k, "name:")) {
         if (g_str_has_suffix(k, "de"))
             attr_strings_save(attr_string_label, v);
         level = 5;
-    }
-    else if (! g_strcmp0(k, "name")) {
+    } else if (!g_strcmp0(k, "name")) {
         attr_strings_save(attr_string_label, v);
         level = 5;
-    } else if (! g_strcmp0(k,"description")) {
+    } else if (!g_strcmp0(k, "description")) {
         /* try description if no name is there */
         attr_strings_save(attr_string_label, v);
         level = 5;
