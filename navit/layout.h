@@ -20,9 +20,13 @@
 #ifndef NAVIT_LAYOUT_H
 #define NAVIT_LAYOUT_H
 
-#include "item.h"
+
+
 #include "color.h"
 #include "coord.h"
+#include "navit.h"
+#include "attr.h"
+#include "attr_type_def.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -128,22 +132,8 @@ struct layout {
     int active;
 };
 
-/* prototypes */
-enum attr_type;
-struct arrows;
-struct attr;
 struct attr_iter;
-struct circle;
-struct cursor;
-struct element;
-struct icon;
-struct image;
-struct itemgra;
-struct layer;
-struct layout;
-struct polygon;
-struct polyline;
-struct text;
+
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
 struct attr_iter *layout_attr_iter_new(void* unused);
 void layout_attr_iter_destroy(struct attr_iter *iter);
