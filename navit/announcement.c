@@ -17,10 +17,10 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
+#include "announcement.h"
 #include "debug.h"
 #include "item.h"
-#include "announcement.h"
+#include <glib.h>
 
 struct announcement {
     struct attr **attrs;
