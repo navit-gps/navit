@@ -19,6 +19,9 @@
 	of Garmin Ltd. or one of its subsidiaries.
 
 */
+#ifndef __NAVIT_GAR2NAVIT__
+#define __NAVIT_GAR2NAVIT__
+#include "item_type_def.h"
 
 #define GROUP_RGN1	0
 #define GROUP_RGN2	1
@@ -50,3 +53,5 @@ struct gar2nav_conv *g2n_conv_load(char *file);
 enum item_type g2n_get_type(struct gar2nav_conv *c, unsigned int type, unsigned short id);
 char *g2n_get_descr(struct gar2nav_conv *c, int type, unsigned short id);
 struct gar2nav_conv *g2n_default_conv(void);
+
+#endif // __NAVIT_GAR2NAVIT__
