@@ -20,8 +20,16 @@
 #ifndef NAVIT_OSD_H
 #define NAVIT_OSD_H
 
-struct osd_priv;
+#include "attr_type_def.h"  // for attr_type
+#include "color.h"          // for color
+#include "point.h"          // for point
 struct attr;
+struct attr_iter;
+struct navit;
+struct osd;
+struct osd_priv;
+struct vehicle;
+
 
 #define TRANSPARENT_BG 1
 #define ITEM_HAS_TEXT 2
@@ -63,9 +71,6 @@ struct osd_item {
 };
 
 /* prototypes */
-struct attr;
-struct navit;
-struct osd;
 struct osd *osd_new(struct attr *parent, struct attr **attrs);
 int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out);
 void osd_wrap_point(struct point *p, struct navit *nav);
