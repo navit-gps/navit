@@ -20,6 +20,13 @@
 #ifndef NAVIT_SEARCH_H
 #define NAVIT_SEARCH_H
 
+#include "attr_type_def.h"  // for attr_type
+#include "item.h"           // for item
+
+struct attr;
+struct mapset;
+struct search_list;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -72,11 +79,6 @@ struct search_list_result {
 };
 
 /* prototypes */
-struct attr;
-struct mapset;
-struct search_list;
-struct search_list_result;
-struct jni_object;
 struct search_list *search_list_new(struct mapset *ms);
 int search_list_level(enum attr_type attr_type);
 void search_list_search(struct search_list *this_, struct attr *search_attr, int partial);
@@ -94,4 +96,3 @@ char *search_fix_spaces(const char *str);
 #endif
 
 #endif
-
