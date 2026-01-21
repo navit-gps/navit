@@ -21,8 +21,8 @@
 #define NAVIT_PARAM_H
 
 struct param_list {
-	const char *name;
-	const char *value;
+    const char *name;
+    const char *value;
 };
 
 void param_add_string(const char *name, const char *value, struct param_list **param, int *count);
@@ -31,4 +31,3 @@ void param_add_hex(const char *name, unsigned long value, struct param_list **pa
 void param_add_hex_sig(const char *name, long value, struct param_list **param, int *count);
 
 #endif
-

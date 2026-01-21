@@ -23,12 +23,14 @@ struct callback_list;
 struct gui;
 PLUGIN_FUNC1(draw, struct container *, co)
 PLUGIN_FUNC3(popup, struct container *, map, struct popup *, p, struct popup_item **, list)
-PLUGIN_CATEGORY(graphics, (struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl))
-PLUGIN_CATEGORY(gui, (struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui))
-PLUGIN_CATEGORY(map, (struct map_methods *meth, struct attr **attrs, struct callback_list *cbl))
-PLUGIN_CATEGORY(osd, (struct navit *nav, struct osd_methods *meth, struct attr **attrs))
-PLUGIN_CATEGORY(speech, (struct speech_methods *meth, struct attr **attrs, struct attr *parent))
-PLUGIN_CATEGORY(vehicle, (struct vehicle_methods *meth, struct callback_list *cbl, struct attr **attrs))
-PLUGIN_CATEGORY(event, (struct event_methods *meth))
+PLUGIN_CATEGORY(graphics,
+                (struct navit * nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl))
+PLUGIN_CATEGORY(gui, (struct navit * nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui))
+PLUGIN_CATEGORY(map, (struct map_methods * meth, struct attr **attrs, struct callback_list *cbl))
+PLUGIN_CATEGORY(osd, (struct navit * nav, struct osd_methods *meth, struct attr **attrs))
+PLUGIN_CATEGORY(speech, (struct speech_methods * meth, struct attr **attrs, struct attr *parent))
+PLUGIN_CATEGORY(vehicle, (struct vehicle_methods * meth, struct callback_list *cbl, struct attr **attrs))
+PLUGIN_CATEGORY(event, (struct event_methods * meth))
 PLUGIN_CATEGORY(font, (void *meth))
-PLUGIN_CATEGORY(traffic, (struct navit *nav, struct traffic_methods *meth, struct attr **attrs, struct callback_list *cbl))
+PLUGIN_CATEGORY(traffic,
+                (struct navit * nav, struct traffic_methods *meth, struct attr **attrs, struct callback_list *cbl))
