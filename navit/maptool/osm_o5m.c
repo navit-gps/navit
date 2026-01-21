@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+
 #include "maptool.h"
+#include "types.h"
 
 static int print;
 

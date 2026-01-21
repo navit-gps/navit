@@ -21,29 +21,30 @@
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
-#include <stdlib.h>
 #include <glib.h>
-#include <assert.h>
 #include <string.h>
-#include <signal.h>
 #include <stdio.h>
-#include <math.h>
 #ifndef _MSC_VER
 #include <getopt.h>
 #include <unistd.h>
 #endif
+
 #include <fcntl.h>
-#include <sys/stat.h>
-#include <zlib.h>
-#include "file.h"
+#include <stdlib.h>
+
 #include "item.h"
 #include "map.h"
-#include "main.h"
-#include "config.h"
-#include "zipfile.h"
-#include "linguistics.h"
-#include "plugin.h"
 #include "maptool.h"
+#include "attr.h"
+#include "attr_type_def.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "geom.h"
+#include "item_type_def.h"
+#include "types.h"
+
+struct zip_info;
 
 #define phase1_coord_max 16384
 

@@ -16,13 +16,21 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "config.h"
+
+#ifndef __NAVIT_MAPTOOL_H_
+#define __NAVIT_MAPTOOL_H_
+
 #include <glib.h>
+#include <stdio.h>
+
+#include "config.h"
 #include "coord.h"
 #include "item.h"
 #include "attr.h"
 #include "geom.h"
 #include "types.h"
+#include "attr_type_def.h"
+#include "item_type_def.h"
 
 #define sq(x) ((double)(x)*(x))
 
@@ -121,7 +129,6 @@ unsigned long long int nd_id:
 };
 
 struct zip_info;
-
 struct country_table;
 
 /**
@@ -442,3 +449,5 @@ int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequ
 struct maptool_force_64 {
     char s[sizeof(gpointer)<sizeof(osmid)?-1:1];
 };
+
+#endif // __NAVIT_MAPTOOL_H_

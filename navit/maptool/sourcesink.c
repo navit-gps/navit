@@ -19,9 +19,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <string.h>
-#include "coord.h"
-#include "item.h"
-#include "attr.h"
+
 #include "maptool.h"
 
 struct item_bin_sink *
