@@ -20,6 +20,11 @@
 #include <zlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include <glib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <zconf.h>
+
 #include "debug.h"
 #include "maptool.h"
 #include "config.h"

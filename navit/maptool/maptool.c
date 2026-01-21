@@ -17,32 +17,30 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
-#include "navit_lfs.h"
 #include <stdlib.h>
 #include <glib.h>
 #include <assert.h>
 #include <string.h>
 #include <signal.h>
 #include <stdio.h>
-#include <math.h>
 #include <errno.h>
+#include <limits.h>
+#include <time.h>
+
+#include "config.h"
+#include "debug.h"
 #ifdef _MSC_VER
 #include "getopt_long.h"
+
 #define atoll _atoi64
 #else
 #include <getopt.h>
 #include <unistd.h>
 #include <sys/time.h>
 #endif
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <zlib.h>
 #include "file.h"
-#include "item.h"
 #include "map.h"
 #include "main.h"
-#include "zipfile.h"
 #include "linguistics.h"
 #include "plugin.h"
 #include "util.h"

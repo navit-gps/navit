@@ -17,9 +17,12 @@
  * Boston, MA  02110-1301, USA.
  */
 #include <stdio.h>
-#include <string.h>
+#include <glib.h>
+
 #include "maptool.h"
-#include "attr.h"
+#include "attr_type_def.h"
+#include "coord.h"
+#include "item_type_def.h"
 
 /** Information about all members of a relation type and how to process them. */
 struct relations {
