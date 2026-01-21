@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "textfile.h"
 #include "attr.h"
 #include "config.h"
 #include "debug.h"
@@ -27,12 +28,11 @@
 #include "map.h"
 #include "plugin.h"
 #include "projection.h"
-#include "textfile.h"
 
 #include <errno.h>
 #include <glib.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct callback_list;

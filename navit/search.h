@@ -31,51 +31,51 @@ struct search_list;
 extern "C" {
 #endif
 struct search_list_common {
-	void *parent;
-	struct item unique,item;
-	int selected;
-	struct pcoord *c;
-	char *town_name;
-	char *district_name;
-	char *postal;
-	char *postal_mask;
-	char *county_name;
-	struct attr **attrs;
+    void *parent;
+    struct item unique, item;
+    int selected;
+    struct pcoord *c;
+    char *town_name;
+    char *district_name;
+    char *postal;
+    char *postal_mask;
+    char *county_name;
+    struct attr **attrs;
 };
 
 struct search_list_country {
-	struct search_list_common common;
-	char *car;
-	char *iso2;
-	char *iso3;
-	char *name;
-	char *flag;
+    struct search_list_common common;
+    char *car;
+    char *iso2;
+    char *iso3;
+    char *name;
+    char *flag;
 };
 
 struct search_list_town {
-	struct search_list_common common;
-	struct item itemt;
-	char *county;
+    struct search_list_common common;
+    struct item itemt;
+    char *county;
 };
 
 struct search_list_street {
-	struct search_list_common common;
-	char *name;
+    struct search_list_common common;
+    char *name;
 };
 
 struct search_list_house_number {
-	struct search_list_common common;
-	char *house_number;
-	int house_number_interpolation;
+    struct search_list_common common;
+    char *house_number;
+    int house_number_interpolation;
 };
 
 struct search_list_result {
-	int id;
-	struct pcoord *c;
-	struct search_list_country *country;
-	struct search_list_town *town;
-	struct search_list_street *street;
-	struct search_list_house_number *house_number;
+    int id;
+    struct pcoord *c;
+    struct search_list_country *country;
+    struct search_list_town *town;
+    struct search_list_street *street;
+    struct search_list_house_number *house_number;
 };
 
 /* prototypes */

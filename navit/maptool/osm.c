@@ -23,27 +23,27 @@
 #    include <unistd.h>
 #endif
 #include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 
-#include "country.h"
-#include "debug.h"
-#include "maptool.h"
-#include "transform.h"
 #include "attr.h"
 #include "attr_type_def.h"
 #include "coord.h"
+#include "country.h"
+#include "debug.h"
 #include "geom.h"
 #include "glib.h"
 #include "item.h"
 #include "item_type_def.h"
+#include "maptool.h"
 #include "projection.h"
+#include "transform.h"
 
 struct relations;
 struct relations_func;

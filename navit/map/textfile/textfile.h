@@ -22,42 +22,41 @@
 
 #include <stdio.h>
 
+#include "attr_type_def.h"
 #include "coord.h"
 #include "item.h"
-#include "attr_type_def.h"
 
 #define TEXTFILE_COMMENT_CHAR '#'
 
 struct map_priv {
-	int id;
-	char *filename;
-	char *charset;
-	int is_pipe;
-	int no_warning_if_map_file_missing;
-	int flags;
+    int id;
+    char *filename;
+    char *charset;
+    int is_pipe;
+    int no_warning_if_map_file_missing;
+    int flags;
 };
 
 #define TEXTFILE_LINE_SIZE 512
 
 struct map_rect_priv {
-	struct map_selection *sel;
+    struct map_selection *sel;
 
-	FILE *f;
-	long pos;
-	char line[TEXTFILE_LINE_SIZE];
-	int attr_pos;
-	enum attr_type attr_last;
-	char attrs[TEXTFILE_LINE_SIZE];
-	char attr[TEXTFILE_LINE_SIZE];
-	char attr_name[TEXTFILE_LINE_SIZE];
-	struct coord c;
-	int eoc;
-	int more;
-	struct map_priv *m;
-	struct item item;
-	char *args;
-	int lastlen;
+    FILE *f;
+    long pos;
+    char line[TEXTFILE_LINE_SIZE];
+    int attr_pos;
+    enum attr_type attr_last;
+    char attrs[TEXTFILE_LINE_SIZE];
+    char attr[TEXTFILE_LINE_SIZE];
+    char attr_name[TEXTFILE_LINE_SIZE];
+    struct coord c;
+    int eoc;
+    int more;
+    struct map_priv *m;
+    struct item item;
+    char *args;
+    int lastlen;
 };
 
-#endif // __NAVIT_TEXTFILE_H_
-
+#endif  // __NAVIT_TEXTFILE_H_
