@@ -15,6 +15,7 @@ jobs:
         - name: run sanity check script
           run: bash scripts/ci_sanity_checks.sh ci_sanity_checks.diff
         - uses: actions/upload-artifact@v4
+          if: failure()
           with:
             name: Upload Patchset
             path: ci_sanity_checks.diff
