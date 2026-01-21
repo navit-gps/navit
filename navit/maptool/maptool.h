@@ -16,23 +16,23 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "config.h"
-#include <glib.h>
-#include "coord.h"
-#include "item.h"
 #include "attr.h"
+#include "config.h"
+#include "coord.h"
 #include "geom.h"
+#include "item.h"
 #include "types.h"
+#include <glib.h>
 
-#define sq(x) ((double)(x)*(x))
+#define sq(x) ((double)(x) * (x))
 
 #define BUFFER_SIZE 1280
 
 #define debug_tile(x) 0
 #define debug_itembin(x) 0
 
-#define RELATION_MEMBER_PRINT_FORMAT "%d:"LONGLONG_FMT":%s"
-#define RELATION_MEMBER_PARSE_FORMAT "%d:"LONGLONG_FMT":%n"
+#define RELATION_MEMBER_PRINT_FORMAT "%d:" LONGLONG_FMT ":%s"
+#define RELATION_MEMBER_PARSE_FORMAT "%d:" LONGLONG_FMT ":%n"
 
 struct tile_data {
     char buffer[1024];
@@ -68,7 +68,6 @@ extern struct tile_head {
     // char subtiles[0];
 } *tile_head_root;
 
-
 /**
  * A map item (street, POI, border etc.) as it is stored in a Navit binfile.
  * Note that this struct only has fields for the header of the item. The
@@ -102,7 +101,6 @@ struct attr_bin {
     enum attr_type type;
 };
 
-
 struct item_bin_sink_func {
     int (*func)(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data);
     void *priv_data[8];
@@ -115,8 +113,7 @@ struct item_bin_sink {
 #define NODE_ID_BITS 56
 struct node_item {
     struct coord c;
-unsigned long long int nd_id:
-    NODE_ID_BITS;
+    unsigned long long int nd_id : NODE_ID_BITS;
     char ref_way;
 };
 
@@ -147,7 +144,7 @@ struct boundary {
     struct item_bin *ib;
     struct country_table *country;
     char *iso2;
-    GList *segments,*sorted_segments;
+    GList *segments, *sorted_segments;
     GList *children;
     struct rect r;
     osmid admin_centre;
@@ -207,11 +204,11 @@ void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data
 void item_bin_add_attr(struct item_bin *ib, struct attr *attr);
 void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val);
 void *item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last);
-struct attr_bin * item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type, void *last);
-struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
+struct attr_bin *item_bin_get_attr_bin(struct item_bin *ib, enum attr_type type, void *last);
+struct attr_bin *item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
-void item_bin_add_hole(struct item_bin * ib, struct coord * coord, int ccount);
+void item_bin_add_hole(struct item_bin *ib, struct coord *coord, int ccount);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
 void item_bin_remove_attr(struct item_bin *ib, void *ptr);
 void item_bin_write(struct item_bin *ib, FILE *out);
@@ -234,8 +231,7 @@ struct item_bin *init_item(enum item_type type);
 extern struct item_bin *tmp_item_bin;
 
 /* itembin_slicer.c */
-void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *reference, char * buffer, int min);
-
+void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *reference, char *buffer, int min);
 
 /* maptool.c */
 
@@ -251,13 +247,13 @@ extern int processed_nodes, processed_nodes_out, processed_ways, processed_relat
 extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
+extern char *hardcoded_country;
 extern int experimental;
 void sig_alrm(int sig);
 void sig_alrm_end(void);
 
 /* misc.c */
 extern struct rect world_bbox;
-
 
 void bbox_extend(struct coord *c, struct rect *r);
 void bbox(struct coord *c, int count, struct rect *r);
@@ -273,7 +269,6 @@ void process_binfile(FILE *in, FILE *out);
 void add_aux_tiles(char *name, struct zip_info *info);
 void cat(FILE *in, FILE *out);
 int item_order_by_type(enum item_type type);
-
 
 /* osm.c */
 struct maptool_osm {
@@ -324,13 +319,13 @@ unsigned long long item_bin_get_wayid(struct item_bin *ib);
 unsigned long long item_bin_get_relationid(struct item_bin *ib);
 void process_way2poi(FILE *in, FILE *out, int type);
 int map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph,
-        FILE *out_coastline, int final);
+                                                  FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info, int max_index_size);
 void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix);
 void load_countries(void);
 void remove_countryfiles(void);
-struct country_table * country_from_iso2(char *iso);
-void osm_init(FILE*);
+struct country_table *country_from_iso2(char *iso);
+void osm_init(FILE *);
 
 /* osm_o5m.c */
 int map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm);
@@ -343,28 +338,27 @@ int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm);
 int osm_protobufdb_load(FILE *in, char *dir);
 
 /* osm_relations.c */
-struct relations * relations_new(void);
+struct relations *relations_new(void);
 struct relations_func *relations_func_new(void (*func)(void *func_priv, void *relation_priv, struct item_bin *member,
-        void *member_priv), void *func_priv);
+                                                       void *member_priv),
+                                          void *func_priv);
 void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void *relation_priv,
-        void *member_priv, enum relation_member_type type, osmid id);
+                                         void *member_priv, enum relation_member_type type, osmid id);
 void relations_add_relation_default_entry(struct relations *rel, struct relations_func *func);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_process_multi(struct relations **rel, int count, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
-
 
 /* osm_xml.c */
 int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
 void osm_xml_decode_entities(char *buffer);
 int map_collect_data_osm(FILE *in, struct maptool_osm *osm);
 
-
 /* sourcesink.c */
 
 struct item_bin_sink *item_bin_sink_new(void);
 struct item_bin_sink_func *item_bin_sink_func_new(int (*func)(struct item_bin_sink_func *func, struct item_bin *ib,
-        struct tile_data *tile_data));
+                                                              struct tile_data *tile_data));
 void item_bin_sink_func_destroy(struct item_bin_sink_func *func);
 void item_bin_sink_add_func(struct item_bin_sink *sink, struct item_bin_sink_func *func);
 void item_bin_sink_destroy(struct item_bin_sink *sink);
@@ -387,7 +381,7 @@ char *tempfile_obtain_prefix(void);
 void tempfile_cleanup(void);
 
 /* tile.c */
-extern GHashTable *tile_hash,*tile_hash2;
+extern GHashTable *tile_hash, *tile_hash2;
 
 struct aux_tile {
     char *name;
@@ -431,14 +425,14 @@ void zip_close(struct zip_info *info);
 void zip_destroy(struct zip_info *info);
 
 /* osm.c */
-int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin ** parts, int **scount,
-                                     int *** sequences,
+int process_multipolygons_find_loops(osmid relid, int in_count, struct item_bin **parts, int **scount, int ***sequences,
                                      int **direction);
-int process_multipolygons_loop_dump(struct item_bin** bin, int scount, int*sequence, int*direction,
-                                    struct coord *  buffer);
-int process_multipolygons_loop_count(struct item_bin** bin, int scount, int*sequence);
+int process_multipolygons_loop_dump(struct item_bin **bin, int scount, int *sequence, int *direction,
+                                    struct coord *buffer);
+int process_multipolygons_loop_count(struct item_bin **bin, int scount, int *sequence);
 
-/* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to GHashTable's */
+/* Break compilation on 32 bit architectures, as we're going to cast osmid's to gpointer to use them as keys to
+ * GHashTable's */
 struct maptool_force_64 {
-    char s[sizeof(gpointer)<sizeof(osmid)?-1:1];
+    char s[sizeof(gpointer) < sizeof(osmid) ? -1 : 1];
 };

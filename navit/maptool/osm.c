@@ -2036,8 +2036,13 @@ static struct town_country *town_country_list_insert_if_new(GList **town_country
 
 static GList *osm_process_town_unknown_country(void) {
     static struct country_table *unknown;
-    if (!unknown)
-        unknown = country_from_countryid(999);
+    int country = 999;
+
+    if (!unknown) {
+        if (!!hardcoded_country)
+            country = country_id_from_iso2(hardcoded_country);
+        unknown = country_from_countryid(country);
+    }
 
     return g_list_prepend(NULL, town_country_new(unknown));
 }
