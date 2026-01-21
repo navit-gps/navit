@@ -24,8 +24,8 @@ trap cleanup EXIT
 # Check if any file has been modified. If yes, that means the best practices
 # have not been followed, so we will fail the job later but print a message here.
 check_diff(){
-    git diff > "${GIT_DIFF_OUTPUT}"
-    git diff --exit-code --stat
+    git --no-pager diff > "${GIT_DIFF_OUTPUT}"
+    git --no-pager diff --exit-code --stat
     code=$?
     if [[ $code -ne 0 ]]; then
         echo "[ERROR] You may need to do some cleanup in the file $*, see the git diff output above." >&2
@@ -63,7 +63,7 @@ check_po || {
 git config --global --add safe.directory $(pwd)
 
 # List the files that are different from the trunk
-for f in $(git diff --name-only refs/remotes/origin/trunk | sort -u); do
+for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u); do
     if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
         echo "[DEBUG] Skipping file ${f} ..."
         continue
