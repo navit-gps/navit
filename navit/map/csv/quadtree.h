@@ -41,27 +41,32 @@ struct quadtree_node {
     struct quadtree_node *bb;
     double xmin, xmax, ymin, ymax;
     int is_leaf;
-    struct quadtree_node*parent;
+    struct quadtree_node *parent;
     int ref_count;
 };
 
 struct quadtree_iter;
 
-struct quadtree_node* quadtree_node_new(struct quadtree_node* parent, double xmin, double xmax, double ymin, double ymax );
-struct quadtree_item* quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* item, double current_max, struct quadtree_node* toSkip);
-struct quadtree_item* quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item);
-struct quadtree_item* quadtree_find_item(struct quadtree_node* this_, struct quadtree_item* item);
-struct quadtree_node* quadtree_find_containing_node(struct quadtree_node* root, struct quadtree_item* item);
-int  quadtree_delete_item(struct quadtree_node* root, struct quadtree_item* item);
-void quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax, double dYMin, double dYMax, GList**out);
-void quadtree_split(struct quadtree_node* this_);
-void quadtree_add(struct quadtree_node* this_, struct quadtree_item* item, struct quadtree_iter* iter);
-void quadtree_destroy(struct quadtree_node* this_);
-struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, double dXMax, double dYMin, double dYMax,void (*item_free)(void *context, struct quadtree_item *qitem), void *context);
-struct quadtree_item * quadtree_item_next(struct quadtree_iter *iter);
+struct quadtree_node *quadtree_node_new(struct quadtree_node *parent, double xmin, double xmax, double ymin,
+                                        double ymax);
+struct quadtree_item *quadtree_find_nearest_flood(struct quadtree_node *this_, struct quadtree_item *item,
+                                                  double current_max, struct quadtree_node *toSkip);
+struct quadtree_item *quadtree_find_nearest(struct quadtree_node *this_, struct quadtree_item *item);
+struct quadtree_item *quadtree_find_item(struct quadtree_node *this_, struct quadtree_item *item);
+struct quadtree_node *quadtree_find_containing_node(struct quadtree_node *root, struct quadtree_item *item);
+int quadtree_delete_item(struct quadtree_node *root, struct quadtree_item *item);
+void quadtree_find_rect_items(struct quadtree_node *this_, double dXMin, double dXMax, double dYMin, double dYMax,
+                              GList **out);
+void quadtree_split(struct quadtree_node *this_);
+void quadtree_add(struct quadtree_node *this_, struct quadtree_item *item, struct quadtree_iter *iter);
+void quadtree_destroy(struct quadtree_node *this_);
+struct quadtree_iter *quadtree_query(struct quadtree_node *this_, double dXMin, double dXMax, double dYMin,
+                                     double dYMax, void (*item_free)(void *context, struct quadtree_item *qitem),
+                                     void *context);
+struct quadtree_item *quadtree_item_next(struct quadtree_iter *iter);
 void quadtree_query_free(struct quadtree_iter *iter);
 void quadtree_item_delete(struct quadtree_iter *iter);
 struct quadtree_data *quadtree_data_dup(struct quadtree_data *qdata);
-void quadtree_node_drop_garbage(struct quadtree_node* node, struct quadtree_iter *iter);
+void quadtree_node_drop_garbage(struct quadtree_node *node, struct quadtree_iter *iter);
 
 #endif

@@ -1,11 +1,10 @@
 #ifndef POIOBJECT_H
 #define POIOBJECT_H
 
-#include <QObject>
 #include "coord.h"
+#include <QObject>
 
-class PoiObject : public QObject
-{
+class PoiObject : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -14,9 +13,10 @@ class PoiObject : public QObject
     Q_PROPERTY(QString icon READ icon WRITE setIcon NOTIFY iconChanged)
     Q_PROPERTY(struct pcoord coords NOTIFY coordsChanged)
 
-public:
-    PoiObject(QObject *parent=0);
-    PoiObject(const QString &name, const QString &type, const int distance, const QString &icon, struct pcoord &coords, QObject *parent=0);
+  public:
+    PoiObject(QObject *parent = 0);
+    PoiObject(const QString &name, const QString &type, const int distance, const QString &icon, struct pcoord &coords,
+              QObject *parent = 0);
     QString name() const;
     void setName(const QString &name);
 
@@ -30,16 +30,16 @@ public:
     void setIcon(const QString &icon);
 
     struct pcoord coords() const;
-//    void setcoords(const struct pcoord &c);
+    //    void setcoords(const struct pcoord &c);
 
-signals:
+  signals:
     void nameChanged();
     void typeChanged();
     void distanceChanged();
     void iconChanged();
-//    void coordsChanged();
+    //    void coordsChanged();
 
-private:
+  private:
     struct pcoord m_coords;
     QString m_name;
     QString m_type;
@@ -47,5 +47,4 @@ private:
     QString m_icon;
 };
 
-#endif // POIOBJECT_H
-
+#endif  // POIOBJECT_H

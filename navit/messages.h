@@ -23,10 +23,10 @@
 struct messagelist;
 
 struct message {
-	struct message *next;
-	int id;
-	time_t time;
-	char *text;
+    struct message *next;
+    int id;
+    time_t time;
+    char *text;
 };
 
 /* Prototypes */

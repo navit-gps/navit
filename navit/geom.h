@@ -23,17 +23,16 @@
 extern "C" {
 #endif
 
-#include <glib.h>
+#include "attr.h"
 #include "config.h"
 #include "coord.h"
 #include "item.h"
-#include "attr.h"
+#include <glib.h>
 
-
-#define sq(x) ((double)(x)*(x))
+#define sq(x) ((double)(x) * (x))
 
 struct rect {
-    struct coord l,h;
+    struct coord l, h;
 };
 
 enum geom_poly_segment_type {
@@ -43,12 +42,11 @@ enum geom_poly_segment_type {
     geom_poly_segment_type_way_left_side,
     geom_poly_segment_type_way_right_side,
     geom_poly_segment_type_way_unknown,
-
 };
 
 struct geom_poly_segment {
     enum geom_poly_segment_type type;
-    struct coord *first,*last;
+    struct coord *first, *last;
 };
 /* prototypes */
 void geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse);
@@ -60,7 +58,7 @@ int geom_poly_point_inside(struct coord *cp, int count, struct coord *c);
 int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct coord *c);
 GList *geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second,
                                  struct geom_poly_segment *third);
-void geom_poly_segment_destroy(struct geom_poly_segment *seg, void * unused);
+void geom_poly_segment_destroy(struct geom_poly_segment *seg, void *unused);
 GList *geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg);
 int geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir);
 GList *geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type);
@@ -75,4 +73,3 @@ void geom_init(void);
 #endif
 
 #endif
-

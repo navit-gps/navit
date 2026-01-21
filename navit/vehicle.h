@@ -45,7 +45,7 @@ struct point;
 struct vehicle;
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
 void vehicle_destroy(struct vehicle *this_);
-struct attr_iter *vehicle_attr_iter_new(void * unused);
+struct attr_iter *vehicle_attr_iter_new(void *unused);
 void vehicle_attr_iter_destroy(struct attr_iter *iter);
 int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr);
@@ -55,7 +55,7 @@ void vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor, int overwr
 void vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int angle, int speed);
 int vehicle_get_cursor_data(struct vehicle *this_, struct point *pnt, int *angle, int *speed);
 void vehicle_log_gpx_add_tag(char *tag, char **logstr);
-struct vehicle * vehicle_ref(struct vehicle *this_);
+struct vehicle *vehicle_ref(struct vehicle *this_);
 void vehicle_unref(struct vehicle *this_);
 /* end of prototypes */
 
@@ -64,4 +64,3 @@ void vehicle_unref(struct vehicle *this_);
 #endif
 
 #endif
-

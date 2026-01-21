@@ -43,20 +43,20 @@ struct mapset_handle;
 struct mapset_search;
 struct mapset *mapset_new(struct attr *parent, struct attr **attrs);
 struct mapset *mapset_dup(struct mapset *ms);
-struct attr_iter *mapset_attr_iter_new(void * unused);
+struct attr_iter *mapset_attr_iter_new(void *unused);
 void mapset_attr_iter_destroy(struct attr_iter *iter);
 int mapset_add_attr(struct mapset *ms, struct attr *attr);
 int mapset_remove_attr(struct mapset *ms, struct attr *attr);
 int mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void mapset_destroy(struct mapset *ms);
-struct map *mapset_get_map_by_name(struct mapset *ms, const char*map_name);
+struct map *mapset_get_map_by_name(struct mapset *ms, const char *map_name);
 struct mapset_handle *mapset_open(struct mapset *ms);
 struct map *mapset_next(struct mapset_handle *msh, int active);
 void mapset_close(struct mapset_handle *msh);
 struct mapset_search *mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial);
 struct item *mapset_search_get_item(struct mapset_search *this_);
 void mapset_search_destroy(struct mapset_search *this_);
-struct mapset * mapset_ref(struct mapset* m);
+struct mapset *mapset_ref(struct mapset *m);
 void mapset_unref(struct mapset *m);
 /* end of prototypes */
 #ifdef __cplusplus
